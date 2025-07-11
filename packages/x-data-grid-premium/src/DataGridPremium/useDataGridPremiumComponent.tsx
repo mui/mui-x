@@ -107,6 +107,7 @@ import {
   useGridAiAssistant,
   aiAssistantStateInitializer,
 } from '../hooks/features/aiAssistant/useGridAiAssistant';
+import { useGridSidebar, sidebarStateInitializer } from '../hooks/features/sidebar/useGridSidebar';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -160,6 +161,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(sidebarStateInitializer, apiRef, props);
   useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
@@ -182,6 +184,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
 
+  useGridSidebar(apiRef, props);
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);

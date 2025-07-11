@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 
 const getPivotDerivedColumns = (column) => {
   if (column.type === 'date') {
@@ -72,8 +72,11 @@ export default function GridGetPivotDerivedColumns() {
           initialState={{
             pivoting: {
               enabled: false,
-              panelOpen: true,
               model: pivotModel,
+            },
+            sidebar: {
+              open: true,
+              value: GridSidebarValue.Pivot,
             },
           }}
           showToolbar

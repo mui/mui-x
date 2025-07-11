@@ -17,6 +17,10 @@ import {
   GridAiAssistantInitialState,
   GridAiAssistantState,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import {
+  GridSidebarInitialState,
+  GridSidebarState,
+} from '../hooks/features/sidebar/gridSidebarState';
 
 /**
  * The state of Data Grid Premium.
@@ -27,6 +31,7 @@ export interface GridStatePremium extends GridStatePro {
   cellSelection: GridCellSelectionModel;
   pivoting: GridPivotingState;
   aiAssistant: GridAiAssistantState;
+  sidebar: GridSidebarState;
 }
 
 /**
@@ -38,4 +43,5 @@ export interface GridInitialStatePremium extends GridInitialStatePro {
   cellSelection?: GridCellSelectionModel;
   pivoting?: GridPivotingInitialState;
   aiAssistant?: GridAiAssistantInitialState;
+  sidebar?: GridSidebarInitialState;
 }

@@ -460,6 +460,22 @@
     "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
   },
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "sidebarClose",
+    "description": "Fired when the sidebar is closed.",
+    "params": "{ value: GridSidebarValue }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onSidebarClose"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "sidebarOpen",
+    "description": "Fired when the sidebar is opened.",
+    "params": "{ value: GridSidebarValue }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onSidebarOpen"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "sortModelChange",
     "description": "Fired when the sort model changes.",

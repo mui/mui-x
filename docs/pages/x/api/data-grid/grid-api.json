@@ -222,6 +222,11 @@
     "hideFilterPanel": { "type": { "description": "() =&gt; void" }, "required": true },
     "hideHeaderFilterMenu": { "type": { "description": "() =&gt; void" }, "required": true },
     "hidePreferences": { "type": { "description": "() =&gt; void" }, "required": true },
+    "hideSidebar": {
+      "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "ignoreDiacritics": {
       "type": { "description": "DataGridProcessedProps['ignoreDiacritics']" },
       "required": true
@@ -450,6 +455,13 @@
         "description": "(newValue: GridPreferencePanelsValue, panelId?: string, labelId?: string) =&gt; void"
       },
       "required": true
+    },
+    "showSidebar": {
+      "type": {
+        "description": "(newValue: GridSidebarValue, sidebarId?: string, labelId?: string) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
     },
     "sortColumn": {
       "type": {
