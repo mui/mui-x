@@ -1,53 +1,29 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { AxisValueFormatterContext } from '@mui/x-charts/internals';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function GroupedAxes() {
   return (
     <BarChart
       xAxis={[
         {
-          id: 'months',
           scaleType: 'band',
           data: time,
-          valueFormatter: formatShortMonth,
-          height: 24,
-        },
-        {
-          scaleType: 'band',
-          data: time.filter((_, index) => index % 3 === 0),
-          valueFormatter: formatQuarterYear,
-          position: 'bottom',
-          tickLabelPlacement: 'middle',
-          height: 35,
-          disableLine: true,
-          disableTicks: true,
+          height: 50,
+          getGrouping: (value: Date) => [
+            value.toLocaleDateString('en-US', { month: 'short' }),
+            formatQuarterYear(value),
+          ],
         },
       ]}
       {...chartConfig}
-      sx={{
-        [`& .${axisClasses.id}-months .${axisClasses.tickContainer}:nth-child(3n - 1) .${axisClasses.tick}`]:
-          { transform: 'scaleY(4)' },
-      }}
     />
   );
 }
 
-const formatQuarterYear = (date: Date, context: AxisValueFormatterContext) => {
-  if (context.location === 'tick') {
-    const quarter = Math.floor(date.getMonth() / 3) + 1;
-    const year = date.getFullYear().toString().slice(-2);
-    return `Q${quarter} '${year}`;
-  }
-  return date.toLocaleDateString('en-US', { month: 'long' });
-};
-
-const formatShortMonth = (date: Date, context: AxisValueFormatterContext) => {
-  if (context.location === 'tick') {
-    return date.toLocaleDateString('en-US', { month: 'short' });
-  }
-  return date.toLocaleDateString('en-US', { month: 'long' });
+const formatQuarterYear = (date: Date) => {
+  const quarter = Math.floor(date.getMonth() / 3) + 1;
+  const year = date.getFullYear().toString().slice(-2);
+  return `Q${quarter} '${year}`;
 };
 
 const time = [
@@ -64,12 +40,8 @@ const time = [
   new Date(2015, 10, 1),
   new Date(2015, 11, 1),
 ];
-const a = [
-  4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2400,
-];
-const b = [
-  2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000, 3908,
-];
+const a = [4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800];
+const b = [2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000];
 
 const getPercents = (array: number[]) =>
   array.map((v, index) => (100 * v) / (a[index] + b[index]));
