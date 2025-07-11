@@ -20,6 +20,12 @@ To enable exporting from the chart's toolbar, you need to enable it by passing t
 
 The toolbar then renders a button that opens a menu with the export options.
 
+:::info
+By default, the toolbar will not be shown in the exported media.
+
+You can override the `onBeforeExport` callback to customize this behavior.
+:::
+
 {{"demo": "ExportChartToolbar.js"}}
 
 :::warning
@@ -94,7 +100,7 @@ To add custom styles or modify the chart's appearance before exporting, use the 
 When exporting, the chart is rendered onto an iframe and then exported as an image or PDF.
 The `onBeforeExport` callback gives you access to the iframe before the export process starts.
 
-For example, you can hide the toolbar when exporting the chart, as shown below:
+For example, you can hide the toolbar and only show the legend when exporting the chart, as shown below:
 
 {{"demo": "ExportChartOnBeforeExport.js"}}
 
