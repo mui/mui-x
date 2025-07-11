@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
 import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
+import { microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -38,17 +39,18 @@ describe('<DataGrid /> - Column grouping', () => {
   }
 
   describe('Header grouping columns', () => {
-    it('should add one header row when columns have a group', () => {
+    it('should add one header row when columns have a group', async () => {
       render(
         <TestDataGrid
           nbColumns={2}
           columnGroupingModel={[{ groupId: 'A', children: [{ field: 'col1' }, { field: 'col2' }] }]}
         />,
       );
+      await microtasks();
       expect(screen.queryAllByRole('row')).to.have.length(3);
     });
 
-    it('should add header rows to match max depth of column groups', () => {
+    it('should add header rows to match max depth of column groups', async () => {
       render(
         <TestDataGrid
           nbColumns={3}
@@ -63,10 +65,11 @@ describe('<DataGrid /> - Column grouping', () => {
           ]}
         />,
       );
+      await microtasks();
       expect(screen.queryAllByRole('row')).to.have.length(4);
     });
 
-    it('should add correct aria-colspan, aria-colindex on headers', () => {
+    it('should add correct aria-colspan, aria-colindex on headers', async () => {
       render(
         <TestDataGrid
           nbColumns={3}
@@ -81,6 +84,7 @@ describe('<DataGrid /> - Column grouping', () => {
           ]}
         />,
       );
+      await microtasks();
 
       const row1Headers = document.querySelectorAll<HTMLElement>(
         '[aria-rowindex="1"] [role="columnheader"]',
@@ -104,7 +108,7 @@ describe('<DataGrid /> - Column grouping', () => {
       ).to.deep.equal(['1', '3']);
     });
 
-    it('should support non connexe groups', () => {
+    it('should support non connexe groups', async () => {
       render(
         <TestDataGrid
           nbColumns={4}
@@ -119,6 +123,7 @@ describe('<DataGrid /> - Column grouping', () => {
           ]}
         />,
       );
+      await microtasks();
 
       const row1Headers = document.querySelectorAll<HTMLElement>(
         '[aria-rowindex="1"] [role="columnheader"]',
@@ -142,7 +147,7 @@ describe('<DataGrid /> - Column grouping', () => {
       ).to.deep.equal(['1', '2', '3', '4']);
     });
 
-    it('should only consider visible columns non connexe groups', () => {
+    it('should only consider visible columns non connexe groups', async () => {
       const { setProps } = render(
         <TestDataGrid
           nbColumns={3}
@@ -165,9 +170,10 @@ describe('<DataGrid /> - Column grouping', () => {
       // hide the last  column with a group
       setProps({ columnVisibilityModel: { col1: false, col2: false } });
       expect(screen.queryAllByRole('row')).to.have.length(2);
+      await microtasks();
     });
 
-    it('should update headers when `columnGroupingModel` is modified', () => {
+    it('should update headers when `columnGroupingModel` is modified', async () => {
       const { setProps } = render(
         <TestDataGrid
           nbColumns={3}
@@ -186,9 +192,10 @@ describe('<DataGrid /> - Column grouping', () => {
       // remove the top group
       setProps({ columnGroupingModel: [{ groupId: 'col2', children: [{ field: 'col2' }] }] });
       expect(screen.queryAllByRole('row')).to.have.length(3);
+      await microtasks();
     });
 
-    it('should split empty group cell if they are children of different group', () => {
+    it('should split empty group cell if they are children of different group', async () => {
       render(
         <TestDataGrid
           nbColumns={3}
@@ -213,6 +220,7 @@ describe('<DataGrid /> - Column grouping', () => {
           ]}
         />,
       );
+      await microtasks();
 
       const row2Headers = document.querySelectorAll<HTMLElement>(
         '[aria-rowindex="2"] [role="columnheader"]',
@@ -226,7 +234,7 @@ describe('<DataGrid /> - Column grouping', () => {
       ).to.deep.equal(['1', '2', '3']);
     });
 
-    it('should merge empty group cell if they are children of the group', () => {
+    it('should merge empty group cell if they are children of the group', async () => {
       render(
         <TestDataGrid
           nbColumns={3}
@@ -247,6 +255,7 @@ describe('<DataGrid /> - Column grouping', () => {
           ]}
         />,
       );
+      await microtasks();
 
       const row2Headers = document.querySelectorAll<HTMLElement>(
         '[aria-rowindex="2"] [role="columnheader"]',
@@ -260,7 +269,7 @@ describe('<DataGrid /> - Column grouping', () => {
       ).to.deep.equal(['1', '3']);
     });
 
-    it('should not throw warning when all columns are hidden', () => {
+    it('should not throw warning when all columns are hidden', async () => {
       const { setProps } = render(
         <TestDataGrid
           nbColumns={3}
@@ -283,10 +292,11 @@ describe('<DataGrid /> - Column grouping', () => {
           col3: false,
         },
       });
+      await microtasks();
     });
 
     // See https://github.com/mui/mui-x/issues/8602
-    it('should not throw when both `columns` and `columnGroupingModel` are updated', () => {
+    it('should not throw when both `columns` and `columnGroupingModel` are updated', async () => {
       const defaultProps = getDefaultProps(2);
       const { setProps } = render(
         <TestDataGrid
@@ -324,10 +334,11 @@ describe('<DataGrid /> - Column grouping', () => {
       expect(
         Array.from(row2Headers).map((header) => header.getAttribute('aria-colindex')),
       ).to.deep.equal(['1', '2', '3']);
+      await microtasks();
     });
 
     // https://github.com/mui/mui-x/issues/13985
-    it('should not throw when both `columns` and `columnGroupingModel` are updated twice', () => {
+    it('should not throw when both `columns` and `columnGroupingModel` are updated twice', async () => {
       function Demo() {
         const [props, setProps] = React.useState<
           Pick<DataGridProps, 'columns' | 'columnGroupingModel'>
@@ -372,6 +383,7 @@ describe('<DataGrid /> - Column grouping', () => {
       expect(Array.from(row2Headers).map((header) => header.textContent)).to.deep.equal([
         'field_1',
       ]);
+      await microtasks();
     });
   });
 

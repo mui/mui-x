@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
-import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnHeadersTextContent, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -11,32 +11,24 @@ describe('<DataGrid /> - Column headers', () => {
   const baselineProps = {
     autoHeight: isJSDOM,
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
   };
 
   describe('headerClassName', () => {
-    it('should append the CSS class defined in headerClassName', () => {
+    it('should append the CSS class defined in headerClassName', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid {...baselineProps} columns={[{ field: 'brand', headerClassName: 'foobar' }]} />
         </div>,
       );
+      await microtasks();
       expect(getColumnHeaderCell(0)).to.have.class('foobar');
     });
 
-    it('should append the CSS class returned by headerClassName', () => {
+    it('should append the CSS class returned by headerClassName', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
@@ -45,6 +37,7 @@ describe('<DataGrid /> - Column headers', () => {
           />
         </div>,
       );
+      await microtasks();
       expect(getColumnHeaderCell(0)).to.have.class('foobar');
     });
   });

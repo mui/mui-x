@@ -8,7 +8,12 @@ import {
   gridClasses,
   gridColumnLookupSelector,
 } from '@mui/x-data-grid';
-import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
+import {
+  getCell,
+  getColumnHeaderCell,
+  getColumnHeadersTextContent,
+  microtasks,
+} from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridApiCommunity } from '@mui/x-data-grid/internals';
@@ -32,7 +37,7 @@ describe('<DataGrid /> - Columns', () => {
   }
 
   describe('prop: initialState.columns.orderedFields / initialState.columns.dimensions', () => {
-    it('should allow to initialize the columns order and dimensions', () => {
+    it('should allow to initialize the columns order and dimensions', async () => {
       render(
         <TestDataGrid
           initialState={{
@@ -40,36 +45,37 @@ describe('<DataGrid /> - Columns', () => {
           }}
         />,
       );
+      await microtasks();
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis', 'id']);
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '150px' });
     });
 
-    it('should not add a column when present in the initial state but not in the props', () => {
+    it('should not add a column when present in the initial state but not in the props', async () => {
       render(<TestDataGrid initialState={{ columns: { orderedFields: ['idTres'] } }} />);
-
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     });
 
-    it('should move the columns not present in the initial state after the one present in it', () => {
+    it('should move the columns not present in the initial state after the one present in it', async () => {
       render(<TestDataGrid initialState={{ columns: { orderedFields: ['idBis'] } }} />);
-
+      await microtasks();
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis', 'id']);
     });
 
-    it('should allow to remove the sizing properties by setting them to `undefined`', () => {
+    it('should allow to remove the sizing properties by setting them to `undefined`', async () => {
       render(
         <TestDataGrid
           columns={[{ field: 'id', flex: 1 }]}
           initialState={{ columns: { dimensions: { id: { flex: undefined } } } }}
         />,
       );
-
+      await microtasks();
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
   });
 
-  it('should allow to change the column type', () => {
+  it('should allow to change the column type', async () => {
     const { setProps } = render(
       <TestDataGrid columns={[{ field: 'id', type: 'string' }, { field: 'idBis' }]} />,
     );
@@ -77,9 +83,10 @@ describe('<DataGrid /> - Columns', () => {
 
     setProps({ columns: [{ field: 'id', type: 'number' }, { field: 'idBis' }] });
     expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--numeric');
+    await microtasks();
   });
 
-  it('should not persist valueFormatter on column type change', () => {
+  it('should not persist valueFormatter on column type change', async () => {
     const { setProps } = render(
       <TestDataGrid
         columns={[{ field: 'price', type: 'number', valueFormatter: (value) => `$${value}` }]}
@@ -90,9 +97,10 @@ describe('<DataGrid /> - Columns', () => {
 
     setProps({ columns: [{ field: 'price' }] });
     expect(getCell(0, 0).textContent).to.equal('1');
+    await microtasks();
   });
 
-  it('should not override column properties when changing column type', () => {
+  it('should not override column properties when changing column type', async () => {
     const { setProps } = render(
       <TestDataGrid
         columns={[
@@ -127,6 +135,7 @@ describe('<DataGrid /> - Columns', () => {
     expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--numeric');
     // should not override valueFormatter with the default numeric one
     expect(getCell(0, 0).textContent).to.equal('formatted: 1');
+    await microtasks();
   });
 
   // https://github.com/mui/mui-x/issues/13719
@@ -202,5 +211,6 @@ describe('<DataGrid /> - Columns', () => {
       sortable: true,
       filterable: true,
     });
+    await microtasks();
   });
 });

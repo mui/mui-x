@@ -20,6 +20,7 @@ import {
   getActiveCell,
   grid,
   includeRowSelection,
+  microtasks,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -211,12 +212,14 @@ describe('<DataGrid /> - Row selection', () => {
   });
 
   describe('prop: checkboxSelection = true (multi selection)', () => {
-    it('should allow to toggle prop.checkboxSelection', () => {
+    it('should allow to toggle prop.checkboxSelection', async () => {
       const { setProps } = render(<TestDataGridSelection />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
       expect(getColumnHeaderCell(0).querySelectorAll('input')).to.have.length(0);
       setProps({ checkboxSelection: true });
-      expect(getColumnHeadersTextContent()).to.deep.equal(['', 'id', 'Currency Pair']);
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal(['', 'id', 'Currency Pair']);
+      });
       expect(getColumnHeaderCell(0).querySelectorAll('input')).to.have.length(1);
     });
 
@@ -274,18 +277,20 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
-    it('should check the checkbox when there is no rows', () => {
+    it('should check the checkbox when there is no rows', async () => {
       render(<TestDataGridSelection rows={[]} checkboxSelection />);
+      await microtasks();
       const selectAll = screen.getByRole('checkbox', {
         name: /select all rows/i,
       });
       expect(selectAll).to.have.property('checked', false);
     });
 
-    it('should disable the checkbox if isRowSelectable returns false', () => {
+    it('should disable the checkbox if isRowSelectable returns false', async () => {
       render(
         <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
       );
+      await microtasks();
       expect(getRow(0).querySelector('input')).to.have.property('disabled', false);
       expect(getRow(1).querySelector('input')).to.have.property('disabled', true);
     });
@@ -360,6 +365,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
       setProps({ checkboxSelection: false });
       expect(getSelectedRowIds()).to.deep.equal([]);
+      await microtasks();
     });
 
     it('should reset row selection in the current page as selected when turning off checkboxSelection', async () => {
@@ -379,6 +385,7 @@ describe('<DataGrid /> - Row selection', () => {
       setProps({ checkboxSelection: false });
       expect(getSelectedRowIds()).to.deep.equal([]);
       expect(screen.queryByText('2 row selected')).to.equal(null);
+      await microtasks();
     });
 
     it('should set the correct aria-label on the column header checkbox', async () => {
@@ -665,7 +672,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0]);
     });
 
-    it('should not select unselectable rows given in rowSelectionModel', () => {
+    it('should not select unselectable rows given in rowSelectionModel', async () => {
       const { setProps } = render(
         <TestDataGridSelection
           rowSelectionModel={includeRowSelection([0, 1])}
@@ -673,13 +680,14 @@ describe('<DataGrid /> - Row selection', () => {
           checkboxSelection
         />,
       );
+      await microtasks();
 
       expect(getSelectedRowIds()).to.deep.equal([0]);
       setProps({ rowSelectionModel: includeRowSelection([0, 1, 2, 3]) });
       expect(getSelectedRowIds()).to.deep.equal([0, 2]);
     });
 
-    it('should filter out unselectable rows when the rowSelectionModel prop changes', () => {
+    it('should filter out unselectable rows when the rowSelectionModel prop changes', async () => {
       const { setProps } = render(
         <TestDataGridSelection
           rowSelectionModel={includeRowSelection([1])}
@@ -687,6 +695,7 @@ describe('<DataGrid /> - Row selection', () => {
           checkboxSelection
         />,
       );
+      await microtasks();
       expect(getSelectedRowIds()).to.deep.equal([1]);
       expect(getColumnHeaderCell(0).querySelector('input')).to.have.attr(
         'data-indeterminate',
@@ -701,8 +710,8 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
-    it('should not crash when paginationMode="server" and some selected rows are not provided to the grid', () => {
-      expect(() => {
+    it('should not crash when paginationMode="server" and some selected rows are not provided to the grid', async () => {
+      expect(async () => {
         render(
           <TestDataGridSelection
             paginationMode="server"
@@ -712,6 +721,7 @@ describe('<DataGrid /> - Row selection', () => {
             checkboxSelection
           />,
         );
+        await microtasks();
       }).not.toErrorDev();
     });
 
@@ -722,13 +732,14 @@ describe('<DataGrid /> - Row selection', () => {
           isRowSelectable={({ id }) => Number(id) % 2 === 0}
         />,
       );
+      await microtasks();
       await user.click(getColumnHeaderCell(0).querySelector('input')!);
       expect(getColumnHeaderCell(0).querySelector('input')).to.have.property('checked', true);
     });
   });
 
   describe('prop: rows', () => {
-    it('should remove the outdated selected rows when rows prop changes', () => {
+    it('should remove the outdated selected rows when rows prop changes', async () => {
       const data = getBasicGridData(4, 2);
 
       const { setProps } = render(
@@ -738,6 +749,7 @@ describe('<DataGrid /> - Row selection', () => {
           {...data}
         />,
       );
+      await microtasks();
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
 
       setProps({
@@ -747,7 +759,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     // Related to https://github.com/mui/mui-x/issues/14964
-    it('should call `onRowSelectionModelChange` when outdated selected rows are removed', () => {
+    it('should call `onRowSelectionModelChange` when outdated selected rows are removed', async () => {
       const data = getBasicGridData(4, 2);
       const onRowSelectionModelChangeSpy = spy();
 
@@ -759,6 +771,7 @@ describe('<DataGrid /> - Row selection', () => {
           {...data}
         />,
       );
+      await microtasks();
 
       setProps({
         rows: data.rows.slice(0, 1),
@@ -767,7 +780,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(onRowSelectionModelChangeSpy.called).to.equal(true);
     });
 
-    it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
+    it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', async () => {
       const data = getBasicGridData(10, 2);
       const onRowSelectionModelChange = spy();
 
@@ -780,6 +793,7 @@ describe('<DataGrid /> - Row selection', () => {
           {...data}
         />,
       );
+      await microtasks();
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
 
       setProps({ rows: data.rows.slice(0, 1) });
@@ -793,12 +807,13 @@ describe('<DataGrid /> - Row selection', () => {
   });
 
   describe('prop: rowSelectionModel and onRowSelectionModelChange', () => {
-    it('should select rows when initialised', () => {
+    it('should select rows when initialised', async () => {
       render(<TestDataGridSelection rowSelectionModel={includeRowSelection([1])} />);
+      await microtasks();
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
-    it('should not call onRowSelectionModelChange on initialization or on rowSelectionModel prop change', () => {
+    it('should not call onRowSelectionModelChange on initialization or on rowSelectionModel prop change', async () => {
       const onRowSelectionModelChange = spy();
 
       const { setProps } = render(
@@ -807,6 +822,7 @@ describe('<DataGrid /> - Row selection', () => {
           rowSelectionModel={includeRowSelection([0])}
         />,
       );
+      await microtasks();
       expect(onRowSelectionModelChange.callCount).to.equal(0);
       setProps({ rowSelectionModel: includeRowSelection([1]) });
       expect(onRowSelectionModelChange.callCount).to.equal(0);
@@ -830,6 +846,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([0, 2]));
       setProps({ checkboxSelection: false, isRowSelectable: () => false });
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([]));
+      await microtasks();
     });
 
     it('should call onRowSelectionModelChange with the correct reason when clicking on a row', async () => {
@@ -874,9 +891,10 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(screen.getByRole('button', { name: /next page/i }));
       setProps({ checkboxSelection: false });
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(includeRowSelection([]));
+      await microtasks();
     });
 
-    it('should deselect the old selected rows when updating rowSelectionModel', () => {
+    it('should deselect the old selected rows when updating rowSelectionModel', async () => {
       const { setProps } = render(
         <TestDataGridSelection rowSelectionModel={includeRowSelection([0])} />,
       );
@@ -885,6 +903,7 @@ describe('<DataGrid /> - Row selection', () => {
 
       setProps({ rowSelectionModel: includeRowSelection([1]) });
       expect(getSelectedRowIds()).to.deep.equal([1]);
+      await microtasks();
     });
 
     it('should update the selection when neither the model nor the onChange are set', async () => {
@@ -943,7 +962,7 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
 
-    it('should throw if rowSelectionModel contains more than 1 row', () => {
+    it('should throw if rowSelectionModel contains more than 1 row', async () => {
       let apiRef: RefObject<GridApi | null>;
       function ControlCase() {
         apiRef = useGridApiRef();
@@ -951,12 +970,13 @@ describe('<DataGrid /> - Row selection', () => {
       }
 
       render(<ControlCase />);
+      await microtasks();
       expect(() => apiRef.current?.setRowSelectionModel(includeRowSelection([0, 1]))).to.throw(
         /`rowSelectionModel` can only contain 1 item in DataGrid/,
       );
     });
 
-    it('should not throw if rowSelectionModel contains more than 1 item with checkbox selection', () => {
+    it('should not throw if rowSelectionModel contains more than 1 item with checkbox selection', async () => {
       let apiRef: RefObject<GridApi | null>;
       function ControlCase() {
         apiRef = useGridApiRef();
@@ -964,6 +984,7 @@ describe('<DataGrid /> - Row selection', () => {
       }
 
       render(<ControlCase />);
+      await microtasks();
       expect(() =>
         act(() => {
           apiRef.current?.setRowSelectionModel(includeRowSelection([0, 1]));
@@ -992,10 +1013,11 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
-    it('should not select rows passed in the rowSelectionModel prop', () => {
+    it('should not select rows passed in the rowSelectionModel prop', async () => {
       render(
         <TestDataGridSelection rowSelection={false} rowSelectionModel={includeRowSelection([0])} />,
       );
+      await microtasks();
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
   });

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
-import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getCell, getActiveCell, getColumnHeaderCell, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Column spanning', () => {
@@ -33,7 +33,7 @@ describe('<DataGrid /> - Column spanning', () => {
     ],
   };
 
-  it('should support `colSpan` number signature', () => {
+  it('should support `colSpan` number signature', async () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
@@ -48,13 +48,14 @@ describe('<DataGrid /> - Column spanning', () => {
         />
       </div>,
     );
+    await microtasks();
     expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
     expect(() => getCell(0, 2)).to.throw(/not found/);
     expect(() => getCell(0, 3)).not.to.throw();
   });
 
-  it('should support `colSpan` function signature', () => {
+  it('should support `colSpan` function signature', async () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
@@ -69,6 +70,7 @@ describe('<DataGrid /> - Column spanning', () => {
         />
       </div>,
     );
+    await microtasks();
     // Nike
     expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
@@ -88,7 +90,7 @@ describe('<DataGrid /> - Column spanning', () => {
     expect(() => getCell(2, 3)).to.throw(/not found/);
   });
 
-  it('should treat `colSpan` 0 value as 1', () => {
+  it('should treat `colSpan` 0 value as 1', async () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
@@ -102,6 +104,7 @@ describe('<DataGrid /> - Column spanning', () => {
         />
       </div>,
     );
+    await microtasks();
     // First Nike row
     expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).not.to.throw();
@@ -459,7 +462,7 @@ describe('<DataGrid /> - Column spanning', () => {
     });
   });
 
-  it('should work with filtering', () => {
+  it('should work with filtering', async () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
@@ -525,6 +528,7 @@ describe('<DataGrid /> - Column spanning', () => {
         />
       </div>,
     );
+    await microtasks();
     // First Nike row
     expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
@@ -552,7 +556,7 @@ describe('<DataGrid /> - Column spanning', () => {
         />
       </div>,
     );
-
+    await microtasks();
     // hide `category` column
     await user.click(within(getColumnHeaderCell(1)).getByLabelText('category column menu'));
     await user.click(screen.getByRole('menuitem', { name: 'Hide column' }));
@@ -575,7 +579,7 @@ describe('<DataGrid /> - Column spanning', () => {
     expect(() => getCell(2, 2)).to.throw(/not found/);
   });
 
-  it('should add `aria-colspan` attribute when `colSpan` > 1', () => {
+  it('should add `aria-colspan` attribute when `colSpan` > 1', async () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataGrid
@@ -589,6 +593,7 @@ describe('<DataGrid /> - Column spanning', () => {
         />
       </div>,
     );
+    await microtasks();
 
     expect(getCell(0, 0)).to.have.attribute('aria-colspan', '2');
     expect(getCell(0, 2)).to.have.attribute('aria-colspan', '1');

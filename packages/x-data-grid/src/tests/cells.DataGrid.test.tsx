@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, microtasks } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -12,32 +12,24 @@ describe('<DataGrid /> - Cells', () => {
   const baselineProps = {
     autoHeight: isJSDOM,
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
   };
 
   describe('cellClassName', () => {
-    it('should append the CSS class defined in cellClassName', () => {
+    it('should append the CSS class defined in cellClassName', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid {...baselineProps} columns={[{ field: 'brand', cellClassName: 'foobar' }]} />
         </div>,
       );
+      await microtasks();
       expect(getCell(0, 0)).to.have.class('foobar');
     });
 
-    it('should append the CSS class returned by cellClassName', () => {
+    it('should append the CSS class returned by cellClassName', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
@@ -46,6 +38,7 @@ describe('<DataGrid /> - Cells', () => {
           />
         </div>,
       );
+      await microtasks();
       expect(getCell(0, 0)).to.have.class('foobar');
     });
   });
@@ -62,7 +55,7 @@ describe('<DataGrid /> - Cells', () => {
       expect(color).not.to.equal('rgba(0, 0, 0, 0)');
     }
 
-    it('should add right border to cells', () => {
+    it('should add right border to cells', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
@@ -72,6 +65,7 @@ describe('<DataGrid /> - Cells', () => {
           />
         </div>,
       );
+      await microtasks();
 
       expectRightBorder(getCell(0, 0));
       expectRightBorder(getCell(1, 0));
@@ -79,7 +73,7 @@ describe('<DataGrid /> - Cells', () => {
     });
 
     // See https://github.com/mui/mui-x/issues/4122
-    it('should add right border to cells in the last row', () => {
+    it('should add right border to cells in the last row', async () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid
@@ -90,11 +84,12 @@ describe('<DataGrid /> - Cells', () => {
           />
         </div>,
       );
+      await microtasks();
       expectRightBorder(getCell(2, 0));
     });
   });
 
-  it('should append the CSS class returned by cellClassName', () => {
+  it('should append the CSS class returned by cellClassName', async () => {
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
@@ -104,10 +99,11 @@ describe('<DataGrid /> - Cells', () => {
         />
       </div>,
     );
+    await microtasks();
     expect(getCell(0, 0)).to.have.class('foobar');
   });
 
-  it('should allow renderCell to return a false-ish value', () => {
+  it('should allow renderCell to return a false-ish value', async () => {
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
@@ -117,10 +113,11 @@ describe('<DataGrid /> - Cells', () => {
         />
       </div>,
     );
+    await microtasks();
     expect(getCell(0, 0)).to.have.text('0');
   });
 
-  it('should render nothing in cell when renderCell returns a `null` value', () => {
+  it('should render nothing in cell when renderCell returns a `null` value', async () => {
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
@@ -130,10 +127,11 @@ describe('<DataGrid /> - Cells', () => {
         />
       </div>,
     );
+    await microtasks();
     expect(getCell(0, 0)).to.have.text('');
   });
 
-  it('should call the valueFormatter with the correct params', () => {
+  it('should call the valueFormatter with the correct params', async () => {
     const valueFormatter = spy<GridValueFormatter<{ id: number; isActive: boolean }>>((value) =>
       value ? 'Yes' : 'No',
     );
@@ -151,6 +149,7 @@ describe('<DataGrid /> - Cells', () => {
         />
       </div>,
     );
+    await microtasks();
     expect(getCell(0, 0)).to.have.text('Yes');
     // expect(valueFormatter.lastCall.args[0]).to.have.keys('id', 'field', 'value', 'api');
     expect(valueFormatter.lastCall.args[0]).to.equal(true);
@@ -168,6 +167,7 @@ describe('<DataGrid /> - Cells', () => {
         />
       </div>,
     );
+    await microtasks();
 
     expect(() => {
       getCell(1, 0).focus();
