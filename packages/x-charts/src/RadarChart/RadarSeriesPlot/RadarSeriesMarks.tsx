@@ -30,7 +30,6 @@ export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVG
     fill: color,
     stroke: color,
     opacity: fillArea && isItemFaded ? 0.5 : 1,
-    pointerEvents: 'none',
     className: clsx(
       classes.mark,
       (isItemHighlighted && classes.highlighted) || (isItemFaded && classes.faded),
@@ -39,7 +38,7 @@ export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVG
 }
 
 function RadarSeriesMarks(props: RadarSeriesMarksProps) {
-  const { seriesId, ...other } = props;
+  const { seriesId, onItemClick, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(props.seriesId);
 
   const classes = useUtilityClasses(props.classes);
@@ -66,6 +65,11 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                   isHighlighted,
                   classes,
                 })}
+                pointerEvents={onItemClick ? undefined : 'none'}
+                onClick={(event) =>
+                  onItemClick?.(event, { type: 'radar', seriesId: id, dataIndex: index })
+                }
+                cursor={onItemClick ? 'pointer' : 'unset'}
                 {...other}
               />
             ))}

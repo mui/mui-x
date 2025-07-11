@@ -9,12 +9,13 @@ import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
-  const seriesCoordinates = useRadarSeriesData(props.seriesId);
+  const { seriesId: inSeriesId, classes: inClasses, onAreaClick, onMarkClick } = props;
+  const seriesCoordinates = useRadarSeriesData(inSeriesId);
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
-  const classes = useUtilityClasses(props.classes);
+  const classes = useUtilityClasses(inClasses);
 
   return (
     <g className={classes.root}>
@@ -33,6 +34,8 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   isHighlighted,
                   classes,
                 })}
+                onClick={(event) => onAreaClick?.(event, { type: 'radar', seriesId })}
+                cursor={onAreaClick ? 'pointer' : 'unset'}
                 {...interactionProps[seriesIndex]}
               />
             }
@@ -49,6 +52,10 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                     isHighlighted,
                     classes,
                   })}
+                  onClick={(event) =>
+                    onMarkClick?.(event, { type: 'radar', seriesId, dataIndex: index })
+                  }
+                  cursor={onMarkClick ? 'pointer' : 'unset'}
                 />
               ))}
           </g>

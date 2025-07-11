@@ -40,7 +40,7 @@ export function getPathProps(params: GetPathPropsParams): React.SVGProps<SVGPath
 }
 
 function RadarSeriesArea(props: RadarSeriesAreaProps) {
-  const { seriesId, ...other } = props;
+  const { seriesId, onItemClick, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(seriesId);
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
@@ -62,6 +62,8 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               isHighlighted,
               classes,
             })}
+            onClick={(event) => onItemClick?.(event, { type: 'radar', seriesId: id })}
+            cursor={onItemClick ? 'pointer' : 'unset'}
             {...interactionProps[seriesIndex]}
             {...other}
           />

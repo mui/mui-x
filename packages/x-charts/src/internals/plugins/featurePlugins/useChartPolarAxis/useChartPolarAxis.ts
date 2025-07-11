@@ -19,6 +19,8 @@ import {
   generateSvg2polar,
   generateSvg2rotation,
 } from './coordinateTransformation';
+import { getAxisIndex } from './getAxisIndex';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -46,6 +48,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   }
 
   const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const processedSeries = useSelector(store, selectorChartSeriesProcessed);
   const center = useSelector(store, selectorChartPolarCenter);
   const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
   const { axis: rotationAxisWithScale, axisIds: rotationAxisIds } = useSelector(
@@ -102,7 +105,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   React.useEffect(() => {
     const element = svgRef.current;
     if (!isInteractionEnabled || element === null || params.disableAxisListener) {
-      return () => {};
+      return () => { };
     }
 
     // Clean the interaction when the mouse leaves the chart.
@@ -206,6 +209,66 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     svg2rotation,
   ]);
 
+  React.useEffect(() => {
+    const element = svgRef.current;
+    const onAxisClick = params.onAxisClick;
+    if (element === null || !onAxisClick) {
+      return () => { };
+    }
+
+    const axisClickHandler = instance.addInteractionListener('tap', (event) => {
+      let dataIndex: number | null = null;
+      let isRotationAxis: boolean = false;
+
+      const svgPoint = getSVGPoint(element, event.detail.srcEvent);
+
+      const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y)
+      const rotationIndex = getAxisIndex(rotationAxisWithScale[usedRotationAxisId], rotation);
+      isRotationAxis = rotationIndex !== -1;
+
+
+      dataIndex = isRotationAxis
+        ? rotationIndex
+        : null; // radius index is not yet implemented.
+
+      const USED_AXIS_ID = isRotationAxis ? usedRotationAxisId : usedRadiusAxisId;
+      if (dataIndex == null || dataIndex === -1) {
+        return;
+      }
+
+      // The .data exist because otherwise the dataIndex would be null or -1.
+      const axisValue = (isRotationAxis ? rotationAxisWithScale : radiusAxisWithScale)[USED_AXIS_ID]
+        .data![dataIndex];
+
+      const seriesValues: Record<string, number | null | undefined> = {};
+
+      Object.keys(processedSeries)
+        .filter((seriesType): seriesType is 'radar' => seriesType === 'radar')
+        .forEach((seriesType) => {
+          processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
+            const seriesItem = processedSeries[seriesType]!.series[seriesId];
+
+            // The series to axis mapping is not yet-needed
+
+            // const providedRotationAxisId = seriesItem.rotationAxisId;
+            // const providedRadiusAxisId = seriesItem.radiusAxisId;
+
+            // const axisKey = isRotationAxis ? providedXAxisId : providedYAxisId;
+            // if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+            seriesValues[seriesId] = seriesItem.data[dataIndex];
+            // }
+          });
+        });
+
+      onAxisClick(event.detail.srcEvent, { dataIndex, axisValue, seriesValues });
+    });
+
+    return () => {
+      axisClickHandler.cleanup();
+    };
+  }, [
+    center, instance, params.onAxisClick, processedSeries, radiusAxisWithScale, rotationAxisWithScale, svgRef, usedRadiusAxisId, usedRotationAxisId]);
+
   return {
     instance: {
       svg2polar,
@@ -220,6 +283,7 @@ useChartPolarAxis.params = {
   radiusAxis: true,
   dataset: true,
   disableAxisListener: true,
+  onAxisClick: true,
 };
 
 useChartPolarAxis.getInitialState = (params) => ({
