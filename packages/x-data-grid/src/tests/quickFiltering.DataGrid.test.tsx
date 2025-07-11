@@ -9,7 +9,7 @@ import {
   GridLogicOperator,
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
-import { getColumnValues, sleep } from 'test/utils/helperFn';
+import { getColumnValues, microtasks, sleep } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Quick filter', () => {
@@ -19,18 +19,9 @@ describe('<DataGrid /> - Quick filter', () => {
     autoHeight: isJSDOM,
     disableVirtualization: true,
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
   };
@@ -110,7 +101,7 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas   nike');
     });
 
-    it('should update input when the state is modified', () => {
+    it('should update input when the state is modified', async () => {
       const { setProps } = render(<TestCase />);
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
@@ -130,9 +121,10 @@ describe('<DataGrid /> - Quick filter', () => {
         },
       });
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
+      await microtasks();
     });
 
-    it('should allow to customize input formatting', () => {
+    it('should allow to customize input formatting', async () => {
       const { setProps } = render(
         <TestCase
           slotProps={{
@@ -153,10 +145,12 @@ describe('<DataGrid /> - Quick filter', () => {
         },
       });
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas, nike');
+      await microtasks();
     });
 
-    it('should be collapsed by default if there is no value', () => {
+    it('should be collapsed by default if there is no value', async () => {
       render(<TestCase />);
+      await microtasks();
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
       expect(screen.getByRole<HTMLInputElement>('searchbox').tabIndex).to.equal(-1);
@@ -165,8 +159,9 @@ describe('<DataGrid /> - Quick filter', () => {
       );
     });
 
-    it('should be expanded by default if there is a value', () => {
+    it('should be expanded by default if there is a value', async () => {
       render(<TestCase filterModel={{ items: [], quickFilterValues: ['adidas'] }} />);
+      await microtasks();
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas');
       expect(screen.getByRole<HTMLInputElement>('searchbox').tabIndex).to.equal(0);
@@ -359,7 +354,7 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('should apply filters on quickFilterExcludeHiddenColumns value change', () => {
+    it('should apply filters on quickFilterExcludeHiddenColumns value change', async () => {
       const { setProps } = render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
@@ -382,9 +377,10 @@ describe('<DataGrid /> - Quick filter', () => {
         },
       });
       expect(getColumnValues(0)).to.deep.equal([]);
+      await microtasks();
     });
 
-    it('should apply filters on column visibility change when quickFilterExcludeHiddenColumns=true', () => {
+    it('should apply filters on column visibility change when quickFilterExcludeHiddenColumns=true', async () => {
       const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
@@ -420,9 +416,10 @@ describe('<DataGrid /> - Quick filter', () => {
       setProps({ columnVisibilityModel: { brand: true } });
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 2);
+      await microtasks();
     });
 
-    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=true but no quick filter values', () => {
+    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=true but no quick filter values', async () => {
       const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
@@ -451,9 +448,10 @@ describe('<DataGrid /> - Quick filter', () => {
       setProps({ columnVisibilityModel: { brand: true } });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
+      await microtasks();
     });
 
-    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false', () => {
+    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false', async () => {
       const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
@@ -486,6 +484,7 @@ describe('<DataGrid /> - Quick filter', () => {
       setProps({ columnVisibilityModel: { brand: true } });
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+      await microtasks();
     });
   });
 
@@ -658,26 +657,10 @@ describe('<DataGrid /> - Quick filter', () => {
             quickFilterValues,
           }}
           rows={[
-            {
-              id: 0,
-              country: undefined,
-              year: undefined,
-            },
-            {
-              id: 1,
-              country: null,
-              year: null,
-            },
-            {
-              id: 2,
-              country: 'United States',
-              year: 1974,
-            },
-            {
-              id: 3,
-              country: 'Germany',
-              year: 1984,
-            },
+            { id: 0, country: undefined, year: undefined },
+            { id: 1, country: null, year: null },
+            { id: 2, country: 'United States', year: 1974 },
+            { id: 3, country: 'Germany', year: 1984 },
           ]}
           columns={[
             {
@@ -708,7 +691,7 @@ describe('<DataGrid /> - Quick filter', () => {
     const ALL_ROWS_COUNTRY = ['', '', 'United States', 'Germany'];
     const ALL_ROWS_YEAR = ['', '', 'Year 1974', 'Year 1984'];
 
-    it('should filter with operator "contains"', () => {
+    it('should filter with operator "contains"', async () => {
       // With simple options
       expect(getRows({ quickFilterValues: ['germa'] }).country).to.deep.equal(['Germany']);
       expect(getRows({ quickFilterValues: [''] }).country).to.deep.equal(ALL_ROWS_COUNTRY);
@@ -759,7 +742,7 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   // https://github.com/mui/mui-x/issues/9666
-  it('should not fail when the data changes', () => {
+  it('should not fail when the data changes', async () => {
     const getApplyQuickFilterFn: GetApplyQuickFilterFn<any, string> = (value) => {
       if (!value) {
         return null;
@@ -787,5 +770,6 @@ describe('<DataGrid /> - Quick filter', () => {
     setProps({
       rows: [],
     });
+    await microtasks();
   });
 });

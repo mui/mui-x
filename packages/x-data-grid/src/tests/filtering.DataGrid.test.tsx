@@ -20,18 +20,9 @@ describe('<DataGrid /> - Filter', () => {
     autoHeight: isJSDOM,
     disableVirtualization: true,
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
   };
@@ -88,16 +79,13 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      await waitFor(() => {
-        // filter has been applied
-        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      });
+      await microtasks();
+      // filter has been applied
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
       // field has the applied value and is read-only
       const valueInput = screen.getByRole('textbox', { name: 'Value' });
-      await waitFor(() => {
-        expect(valueInput).to.have.value('Adidas');
-      });
+      expect(valueInput).to.have.value('Adidas');
       expect(valueInput).to.have.property('disabled', true);
     });
 
@@ -107,9 +95,8 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'a' }] }}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
-      });
+      await microtasks();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
     });
 
     it('should apply the model when row prop changes', async () => {
@@ -123,9 +110,8 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Asics']);
-      });
+      await microtasks();
+      expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
 
     it('should support new dataset', async () => {
@@ -134,9 +120,7 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'a' }] }}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
 
       setProps({
         rows: [
@@ -147,9 +131,8 @@ describe('<DataGrid /> - Filter', () => {
         columns: [{ field: 'country' }],
         filterModel: { items: [{ field: 'country', operator: 'contains', value: 'a' }] },
       });
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['France']);
-      });
+      await microtasks();
+      expect(getColumnValues(0)).to.deep.equal(['France']);
     });
   });
 
@@ -166,9 +149,8 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      });
+      await microtasks();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
     it('should allow to initialize the filterModel for non-filterable columns', async () => {
@@ -184,10 +166,8 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      });
+      await microtasks();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
     it('should use the control state upon the initialize state when both are defined', async () => {
@@ -205,10 +185,8 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      });
+      await microtasks();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
     it('should not update the filters when updating the initial state', async () => {
@@ -234,9 +212,8 @@ describe('<DataGrid /> - Filter', () => {
         },
       });
 
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await microtasks();
     });
 
     it('should allow to update the filters when initialized with initialState', async () => {
@@ -255,14 +232,13 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Adidas']);
       });
+
       fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
         target: { value: 'Puma' },
       });
-
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Puma']);
       });
@@ -279,9 +255,8 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Nike']);
-      });
+      await microtasks();
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
     });
 
     it('works with quick filter', async () => {
@@ -294,9 +269,8 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Nike']);
-      });
+      await microtasks();
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
     });
   });
 
@@ -1226,25 +1200,20 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['0']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({
         filterModel: {
           items: [{ field: 'status', operator: 'not', value: 0 }],
         },
       });
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['1', '2']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['1', '2']);
       setProps({
         filterModel: {
           items: [{ field: 'status', operator: 'isAnyOf', value: [0, 2] }],
         },
       });
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['0', '2']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['0', '2']);
+      await microtasks();
     });
 
     it('should support a function for `valueOptions`', async () => {
@@ -1268,15 +1237,12 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
       setProps({
         filterModel: { items: [{ field: 'voltage', operator: 'is', value: 220 }] },
       });
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
+      await microtasks();
     });
 
     it('should work if valueOptions is not provided', async () => {
@@ -1291,15 +1257,12 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={{ items: [{ field: 'voltage', operator: 'is' }] }}
         />,
       );
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
       setProps({
         filterModel: { items: [{ field: 'voltage', operator: 'is', value: 220 }] },
       });
-      await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
-      });
+      expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
+      await microtasks();
     });
   });
 
@@ -1345,9 +1308,8 @@ describe('<DataGrid /> - Filter', () => {
           }}
         />,
       );
-      await waitFor(() => {
-        expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
-      });
+      await microtasks();
+      expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
     });
   });
 
@@ -1473,12 +1435,7 @@ describe('<DataGrid /> - Filter', () => {
       return (
         <div style={{ height: 400, width: '100%' }}>
           <DataGrid
-            rows={[
-              {
-                id: 1,
-                quantity: 1,
-              },
-            ]}
+            rows={[{ id: 1, quantity: 1 }]}
             columns={[{ field: 'quantity', type: 'number', width: 150 }]}
             filterModel={{
               items: [
@@ -1522,16 +1479,13 @@ describe('<DataGrid /> - Filter', () => {
       );
     }
     const { setProps } = render(<Demo rows={rows} />);
-    await waitFor(() => {
-      expect(getColumnValues(1)).to.deep.equal(['Puma']);
-    });
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
 
     setProps({ columns: [{ field: 'id' }] });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({ items: [] });
+    await microtasks();
   });
 
   // See https://github.com/mui/mui-x/issues/9204
@@ -1561,9 +1515,7 @@ describe('<DataGrid /> - Filter', () => {
       );
     }
     const { setProps } = render(<Demo rows={rows} />);
-    await waitFor(() => {
-      expect(getColumnValues(1)).to.deep.equal(['Puma']);
-    });
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
 
     setProps({
       columns: [{ field: 'id' }],
@@ -1571,9 +1523,8 @@ describe('<DataGrid /> - Filter', () => {
         items: [{ field: 'id', operator: 'equals', value: '1' }],
       },
     });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['1']);
-    });
+    expect(getColumnValues(0)).to.deep.equal(['1']);
     expect(onFilterModelChange.callCount).to.equal(0);
+    await microtasks();
   });
 });
