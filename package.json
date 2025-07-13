@@ -82,7 +82,7 @@
     "@babel/preset-typescript": "catalog:",
     "@babel/register": "^7.27.1",
     "@babel/traverse": "catalog:",
-    "@babel/types": "^7.28.0",
+    "@babel/types": "^7.28.1",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@emotion/styled": "catalog:",
