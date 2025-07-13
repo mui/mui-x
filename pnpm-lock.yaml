@@ -435,7 +435,7 @@ importers:
         specifier: npm:date-fns@2.30.0
         version: date-fns@2.30.0
       esbuild:
-        specifier: ^0.25.5
+        specifier: ^0.25.6
         version: 0.25.6
       eslint:
         specifier: ^9.30.1
