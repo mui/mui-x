@@ -36,9 +36,9 @@ export interface BarSeriesType
    */
   stackOffset?: StackOffsetType;
   /**
-   * If provided, this will be used as the minimum size of the bar.
+   * If provided, the value will be used as the minimum size of the bar in pixels.
    * This is useful to avoid bars with a size of 0.
-   * @default 0
+   * @default 0px
    */
   minBarSize?: number;
 }
