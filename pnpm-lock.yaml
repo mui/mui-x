@@ -899,7 +899,7 @@ importers:
         specifier: 'catalog:'
         version: 8.36.0(eslint@9.31.0)(typescript@5.8.3)
       '@typescript-eslint/rule-tester':
-        specifier: ^8.36.0
+        specifier: ^8.35.1
         version: 8.36.0(eslint@9.31.0)(typescript@5.8.3)
 
   packages/x-charts:
