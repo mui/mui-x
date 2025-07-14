@@ -14,6 +14,9 @@
       "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
     },
     "layout": { "description": "Layout of the bars. All bar should have the same layout." },
+    "minBarSize": {
+      "description": "If provided, this will be used as the minimum size of the bar.<br />This is useful to avoid bars with a size of 0."
+    },
     "stack": {
       "description": "The key that identifies the stacking group.<br />Series with the same <code>stack</code> property will be stacked together."
     },
