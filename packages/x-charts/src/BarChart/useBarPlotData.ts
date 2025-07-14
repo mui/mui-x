@@ -89,8 +89,8 @@ export function useBarPlotData(
             layout,
             x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
             y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
-            xOrigin: xScale(0)!,
-            yOrigin: yScale(0)!,
+            xOrigin: xScale(0) ?? 0,
+            yOrigin: yScale(0) ?? 0,
             height: verticalLayout ? barSize : barWidth,
             width: verticalLayout ? barWidth : barSize,
             color: colorGetter(dataIndex),
@@ -189,15 +189,10 @@ function getValueCoordinate(
   const isSizeLessThanMin = Math.abs(maxValueCoord - minValueCoord) < minBarSize;
   const barSize = isSizeLessThanMin ? minBarSize : Math.abs(maxValueCoord - minValueCoord);
 
-  // Size is above the minimum size, so we can return the bar size and the min value coordinate.
-  if (!isSizeLessThanMin) {
-    return { barSize, startCoordinate: minValueCoord };
-  }
-
   const isVerticalAndPositive = isVertical && baseValue >= 0;
   const isHorizontalAndNegative = !isVertical && baseValue < 0;
 
-  if (isVerticalAndPositive || isHorizontalAndNegative) {
+  if (isSizeLessThanMin && (isVerticalAndPositive || isHorizontalAndNegative)) {
     return {
       barSize,
       startCoordinate: maxValueCoord - barSize,
