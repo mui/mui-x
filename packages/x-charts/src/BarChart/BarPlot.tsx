@@ -201,27 +201,29 @@ function generateClipPath(
   height: number,
 ) {
   const id = `${stackId ?? seriesId}-${dataIndex}`;
+  const bR = Math.min(borderRadius, width / 2, height / 2);
+
   if (layout === 'vertical') {
     const positiveStack = positiveStacks.get(id);
 
     if (positiveStack && positiveStack.seriesId === seriesId) {
-      return `path("M0,${height} v-${height - borderRadius} a${borderRadius},${borderRadius} 0 0 1 ${borderRadius},-${borderRadius} h${width - borderRadius * 2} a${borderRadius},${borderRadius} 0 0 1 ${borderRadius},${borderRadius} v${height - borderRadius} Z")`;
+      return `path("M0,${height} v-${height - bR} a${bR},${bR} 0 0 1 ${bR},-${bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${height} Z")`;
     }
 
     const negativeStack = negativeStacks.get(id);
     if (negativeStack && negativeStack.seriesId === seriesId) {
-      return `path("M0,0 v${height - borderRadius} a${borderRadius},${borderRadius} 0 0 0 ${borderRadius},${borderRadius} h${width - borderRadius * 2} a${borderRadius},${borderRadius} 0 0 0 ${borderRadius},-${borderRadius} v-${height - borderRadius} Z")`;
+      return `path("M0,0 v${height - bR} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR * 2} a${bR},${bR} 0 0 0 ${bR},-${bR} v-${height - bR} Z")`;
     }
   } else if (layout === 'horizontal') {
     const positiveStack = positiveStacks.get(id);
 
     if (positiveStack && positiveStack.seriesId === seriesId) {
-      return `path("M0,0 h${width - borderRadius} a${borderRadius},${borderRadius} 0 0 1 ${borderRadius},${borderRadius} v${height - borderRadius * 2} a${borderRadius},${borderRadius} 0 0 1 -${borderRadius},${borderRadius} h-${width - borderRadius} Z")`;
+      return `path("M0,0 h${width - bR} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 -${bR},${bR} h-${width - bR} Z")`;
     }
 
     const negativeStack = negativeStacks.get(id);
     if (negativeStack && negativeStack.seriesId === seriesId) {
-      return `path("M${width},0 h-${width - borderRadius} a${borderRadius},${borderRadius} 0 0 0 -${borderRadius},${borderRadius} v${height - borderRadius * 2} a${borderRadius},${borderRadius} 0 0 0 ${borderRadius},${borderRadius} h${width - borderRadius} Z")`;
+      return `path("M${width},0 h-${width - bR} a${bR},${bR} 0 0 0 -${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR} Z")`;
     }
   }
 
