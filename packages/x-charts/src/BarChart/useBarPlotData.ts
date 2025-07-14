@@ -75,7 +75,7 @@ export function useBarPlotData(
 
           const stackId = series[seriesId].stack;
 
-          const [barSize, adaptedValueCoord] = getValueCoordinate(
+          const { barSize, valueCoordinate } = getValueCoordinate(
             verticalLayout,
             minValueCoord,
             maxValueCoord,
@@ -87,8 +87,8 @@ export function useBarPlotData(
             seriesId,
             dataIndex,
             layout,
-            x: verticalLayout ? xScale(baseValue)! + barOffset : adaptedValueCoord,
-            y: verticalLayout ? adaptedValueCoord : yScale(baseValue)! + barOffset,
+            x: verticalLayout ? xScale(baseValue)! + barOffset : valueCoordinate,
+            y: verticalLayout ? valueCoordinate : yScale(baseValue)! + barOffset,
             xOrigin: xScale(0) ?? 0,
             yOrigin: yScale(0) ?? 0,
             height: verticalLayout ? barSize : barWidth,
@@ -191,15 +191,15 @@ function getValueCoordinate(
 
   // Size is above the minimum size, so we can return the bar size and the min value coordinate.
   if (!isSizeLessThanMin) {
-    return [barSize, minValueCoord];
+    return { barSize, valueCoordinate: minValueCoord };
   }
 
   const isVerticalAndPositive = isVertical && baseValue >= 0;
   const isHorizontalAndNegative = !isVertical && baseValue < 0;
 
   if (isVerticalAndPositive || isHorizontalAndNegative) {
-    return [barSize, minValueCoord - barSize];
+    return { barSize, valueCoordinate: minValueCoord - barSize };
   }
 
-  return [barSize, minValueCoord];
+  return { barSize, valueCoordinate: minValueCoord };
 }
