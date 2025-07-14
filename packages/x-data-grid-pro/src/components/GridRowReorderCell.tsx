@@ -49,6 +49,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   // eslint-disable-next-line no-underscore-dangle
   const cellValue = params.row.__reorder__ || params.id;
   const cellRef = React.useRef<HTMLDivElement>(null);
+  const listenerNodeRef = React.useRef<HTMLDivElement>(null);
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
   const isDraggable = React.useMemo(
@@ -102,40 +103,34 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   }, [apiRef]);
 
   const handleDragEnd = React.useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      handleMouseUp();
-      publish('rowDragEnd')(event);
-    },
-    [publish, handleMouseUp],
-  );
-
-  const handleNativeDragEnd = React.useCallback(
     (event: DragEvent) => {
-      // Always publish `dragEnd` event, even if element was virtualized out
+      handleMouseUp();
       if (apiRef.current.getRow(params.id)) {
         apiRef.current.publishEvent('rowDragEnd', apiRef.current.getRowParams(params.id), event);
       }
-      handleMouseUp();
+
+      listenerNodeRef.current!.removeEventListener('dragend', handleDragEnd);
+      listenerNodeRef.current = null;
     },
     [apiRef, params.id, handleMouseUp],
   );
 
-  // Setup event listeners - key is to depend on the DOM node, not the handlers
-  const node = cellRef.current;
-  React.useEffect(() => {
-    if (!node || !isDraggable) {
-      return;
-    }
-    node.addEventListener('dragend', handleNativeDragEnd);
-
-    return () => {
-      node.removeEventListener('dragend', handleNativeDragEnd);
-    };
-  }, [handleNativeDragEnd, node, isDraggable]);
+  const handleDragStart = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (!cellRef.current) {
+        return;
+      }
+      publish('rowDragStart')(event);
+      cellRef.current.addEventListener('dragend', handleDragEnd);
+      // cache the node to remove the listener when the drag ends
+      listenerNodeRef.current = cellRef.current;
+    },
+    [publish, handleDragEnd],
+  );
 
   const draggableEventHandlers = isDraggable
     ? {
-        onDragStart: publish('rowDragStart'),
+        onDragStart: handleDragStart,
         onDragOver: publish('rowDragOver'),
         onMouseDown: handleMouseDown,
         onMouseUp: handleMouseUp,
