@@ -829,6 +829,11 @@ export const GridRootStyles = styled('div', {
         height: '2px',
         backgroundColor: vars.colors.interactive.selected,
       },
+      [`&.${c['row--lastVisible']}`]: {
+        '&::before': {
+          bottom: '0px',
+        },
+      },
     },
     [`& .${c['row--beingDragged']}`]: {
       backgroundColor: vars.colors.background.overlay,
