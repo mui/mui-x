@@ -75,6 +75,7 @@ export const useGridRowReorder = (
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const previousDropIndicatorRef = React.useRef<HTMLElement | null>(null);
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
@@ -102,11 +103,14 @@ export const useGridRowReorder = (
 
   const applyDropIndicator = React.useCallback(
     (targetRowId: GridRowId | null, position: 'above' | 'below' | null) => {
-      // Remove existing drop indicators
-      const allRows = apiRef.current.rootElementRef?.current?.querySelectorAll('[data-id]');
-      allRows?.forEach((row) => {
-        row.classList.remove(classes.rowDropAbove, classes.rowDropBelow);
-      });
+      // Remove existing drop indicator from previous target
+      if (previousDropIndicatorRef.current) {
+        previousDropIndicatorRef.current.classList.remove(
+          classes.rowDropAbove,
+          classes.rowDropBelow,
+        );
+        previousDropIndicatorRef.current = null;
+      }
 
       // Apply new drop indicator
       if (targetRowId && position) {
@@ -117,6 +121,7 @@ export const useGridRowReorder = (
           targetRow.classList.add(
             position === 'above' ? classes.rowDropAbove : classes.rowDropBelow,
           );
+          previousDropIndicatorRef.current = targetRow as HTMLElement;
         }
       }
     },
