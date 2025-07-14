@@ -10,7 +10,7 @@ function Chart() {
 
   // prettier-ignore
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <SparkLineChart data={data} color={'red'} />
       <SparkLineChart data={data} color={typeof fn === "function" ? mode => fn(mode)?.[0] : fn} />
       <SparkLineChart
@@ -21,6 +21,6 @@ function Chart() {
         data={data}
         /* mui-x-codemod: We renamed the `colors` prop to `color`, but didn't change the value. Please ensure sure this prop receives a string or a function that returns a string. */
         color="red" />
-    </React.Fragment>)
+    </React.Fragment>
   );
 }

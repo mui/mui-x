@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
-import { describeSkipIf } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
@@ -38,7 +36,7 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
   getOptions,
 ) => {
   const { componentFamily, views, variant = 'desktop' } = getOptions();
-  describeSkipIf(!views.includes('day') || componentFamily === 'field')(
+  describe.skipIf(!views.includes('day') || componentFamily === 'field')(
     'validation in day view:',
     () => {
       const isDesktop = variant === 'desktop';
@@ -79,9 +77,8 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
         it('should apply disablePast', () => {
           const { render } = getOptions();
 
-          let now;
+          const now = adapterToUse.date();
           function WithFakeTimer(props: any) {
-            now = adapterToUse.date();
             const { referenceDate, ...otherProps } = props;
             return <ElementToTest value={[now, null]} {...otherProps} />;
           }
@@ -114,9 +111,8 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
         it('should apply disableFuture', () => {
           const { render } = getOptions();
 
-          let now;
+          const now = adapterToUse.date();
           function WithFakeTimer(props: any) {
-            now = adapterToUse.date();
             const { referenceDate, ...otherProps } = props;
             return <ElementToTest value={[now, null]} {...otherProps} />;
           }

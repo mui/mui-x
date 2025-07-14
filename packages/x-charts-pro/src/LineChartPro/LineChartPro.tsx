@@ -20,6 +20,10 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
@@ -28,8 +32,14 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { LINE_CHART_PRO_PLUGINS, LineChartProPluginsSignatures } from './LineChartPro.plugins';
 
-export interface LineChartProSlots extends LineChartSlots, Partial<ChartsSlotsPro> {}
-export interface LineChartProSlotProps extends LineChartSlotProps, Partial<ChartsSlotPropsPro> {}
+export interface LineChartProSlots
+  extends Omit<LineChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
+export interface LineChartProSlotProps
+  extends Omit<LineChartSlotProps, 'toolbar'>,
+    ChartsToolbarProSlotProps,
+    Partial<ChartsSlotPropsPro> {}
 
 export interface LineChartProProps
   extends Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
@@ -173,6 +183,12 @@ LineChartPro.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preferStrictDomainInLineCharts: PropTypes.bool,
+  }),
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -187,6 +203,16 @@ LineChartPro.propTypes = {
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
+  /**
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
+   */
+  highlightedAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
@@ -252,6 +278,14 @@ LineChartPro.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a line element is clicked.
    */
@@ -394,6 +428,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -485,6 +520,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -567,6 +603,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -649,6 +686,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -731,6 +769,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -813,6 +852,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -895,6 +935,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -977,6 +1018,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1078,6 +1120,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1168,6 +1211,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1249,6 +1293,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1330,6 +1375,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1411,6 +1457,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1492,6 +1539,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1573,6 +1621,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1654,6 +1703,7 @@ LineChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),

@@ -1,0 +1,16 @@
+<BarChart
+  {...settings}
+  sx={{
+    [`& .${barClasses.series}[data-series="2"] .${barElementClasses.root}`]: {
+      fill: 'url(#gradient)',
+    },
+    [`& .${barClasses.seriesLabels}[data-series="2"] .${barLabelClasses.root}`]:
+      {
+        fontWeight: 'bold',
+      },
+  }}
+>
+  <defs>
+    <Gradient id="gradient" />
+  </defs>
+</BarChart>

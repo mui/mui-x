@@ -17,6 +17,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
+      { pathname: `/x/introduction/mcp`, title: 'AI support via MCP', newFeature: true },
       { pathname: `/x/introduction/priority-support`, newFeature: true, plan: 'premium' },
       { pathname: `/x/guides/telemetry`, plan: 'pro' },
       { pathname: `/x/introduction/roadmap` },
@@ -52,7 +53,11 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/column-menu' },
               { pathname: '/x/react-data-grid/column-spanning' },
               { pathname: '/x/react-data-grid/column-groups' },
-              { pathname: '/x/react-data-grid/column-ordering', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/column-ordering',
+                title: 'Column reordering',
+                plan: 'pro',
+              },
               { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
               { pathname: '/x/react-data-grid/column-recipes', title: 'Recipes' },
             ],
@@ -64,8 +69,12 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/row-updates' },
               { pathname: '/x/react-data-grid/row-height' },
               { pathname: '/x/react-data-grid/row-spanning', newFeature: true },
-              { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
-              { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/master-detail',
+                plan: 'pro',
+                title: 'Master-detail row panels',
+              },
+              { pathname: '/x/react-data-grid/row-ordering', plan: 'pro', title: 'Row reordering' },
               { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
               { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
             ],
@@ -176,6 +185,9 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
                 plan: 'premium',
               },
+              {
+                pathname: '/x/react-data-grid/server-side-data/recipes',
+              },
             ],
           },
           {
@@ -275,6 +287,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
               { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
               { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+              { pathname: '/x/api/data-grid/grid-render-context', title: 'GridRenderContext' },
               {
                 pathname: '/x/api/data-grid/grid-row-class-name-params',
                 title: 'GridRowClassNameParams',
@@ -520,7 +533,16 @@ const pages: MuiPage[] = [
             title: 'Heatmap',
             plan: 'pro',
           },
-          { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', unstable: true },
+          {
+            pathname: '/x/react-charts-funnel',
+            title: 'Funnel',
+            plan: 'pro',
+            unstable: true,
+            children: [
+              { pathname: '/x/react-charts/funnel', title: 'Funnel overview' },
+              { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
+            ],
+          },
           {
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
@@ -567,6 +589,14 @@ const pages: MuiPage[] = [
                       { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
                       { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
                       { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                      {
+                        pathname: '/x/api/charts/chart-image-export-options',
+                        title: 'ChartImageExportOptions',
+                      },
+                      {
+                        pathname: '/x/api/charts/chart-print-export-options',
+                        title: 'ChartPrintExportOptions',
+                      },
                     ],
                   },
                 ],

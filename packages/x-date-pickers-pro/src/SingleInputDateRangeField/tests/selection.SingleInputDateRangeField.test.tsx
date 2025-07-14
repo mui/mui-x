@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import {

@@ -12,6 +12,10 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
@@ -20,14 +24,20 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { BAR_CHART_PRO_PLUGINS, BarChartProPluginsSignatures } from './BarChartPro.plugins';
 
-export interface BarChartProSlots extends BarChartSlots, Partial<ChartsSlotsPro> {}
-export interface BarChartProSlotProps extends BarChartSlotProps, Partial<ChartsSlotPropsPro> {}
+export interface BarChartProSlots
+  extends Omit<BarChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
+export interface BarChartProSlotProps
+  extends Omit<BarChartSlotProps, 'toolbar'>,
+    ChartsToolbarProSlotProps,
+    Partial<ChartsSlotPropsPro> {}
 
 export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -182,6 +192,16 @@ BarChartPro.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
+   */
+  highlightedAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
@@ -247,6 +267,14 @@ BarChartPro.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -387,6 +415,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -478,6 +507,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -560,6 +590,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -642,6 +673,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -724,6 +756,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -806,6 +839,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -888,6 +922,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -970,6 +1005,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1071,6 +1107,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1161,6 +1198,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1242,6 +1280,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1323,6 +1362,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1404,6 +1444,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1485,6 +1526,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1566,6 +1608,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1647,6 +1690,7 @@ BarChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),

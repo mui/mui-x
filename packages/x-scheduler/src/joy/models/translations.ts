@@ -1,3 +1,5 @@
+import { ViewType } from './views';
+
 export interface SchedulerTranslations {
   // ViewSwitcher
   agenda: string;
@@ -9,4 +11,25 @@ export interface SchedulerTranslations {
 
   // WeekView
   allDay: string;
+
+  // MonthView
+  hiddenEvents: (hiddenEventsCount: number) => string;
+  nextTimeSpan: (timeSpan: ViewType) => string;
+  noResourceAriaLabel: string;
+  previousTimeSpan: (timeSpan: ViewType) => string;
+  resourceAriaLabel: (resourceName: string) => string;
+  weekAbbreviation: string;
+  weekNumberAriaLabel: (weekNumber: number) => string;
+
+  // EventPopover
+  closeButtonAriaLabel: string;
+  deleteEvent: string;
+  descriptionLabel: string;
+  endDateLabel: string;
+  endTimeLabel: string;
+  eventTitleAriaLabel: string;
+  saveChanges: string;
+  startDateAfterEndDateError: string;
+  startDateLabel: string;
+  startTimeLabel: string;
 }

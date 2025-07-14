@@ -9,11 +9,11 @@ function GridToolbar() {
 // prettier-ignore
 function App() {
   return (
-    (<DataGrid
+    <DataGrid
       slots={{
         toolbar: GridToolbar,
       }}
-      showToolbar />)
+      showToolbar />
   );
 }
 
