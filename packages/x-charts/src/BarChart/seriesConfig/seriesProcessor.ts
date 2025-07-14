@@ -1,9 +1,8 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import type { DefaultizedBarSeriesType } from '../../models';
 import { getStackingGroups } from '../../internals/stackSeries';
-import { ChartSeries, DatasetElementType, DatasetType } from '../../models/seriesType/config';
-import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
+import { DatasetElementType, DatasetType } from '../../models/seriesType/config';
 import { SeriesId } from '../../models/seriesType/common';
 import { SeriesProcessor } from '../../internals/plugins/models';
 
@@ -36,7 +35,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
   });
 
   const completedSeries: {
-    [id: string]: DefaultizedProps<ChartSeries<'bar'>, 'data' | 'layout'> & {
+    [id: string]: DefaultizedBarSeriesType & {
       stackedData: [number, number][];
     };
   } = {};
@@ -61,6 +60,8 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
       completedSeries[id] = {
         layout: 'vertical',
         labelMarkType: 'square',
+        minBarSize: 0,
+        valueFormatter: series[id].valueFormatter ?? ((v) => (v == null ? '' : v.toLocaleString())),
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {
@@ -87,7 +88,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => (v == null ? '' : v.toLocaleString())),
+    series: completedSeries,
   };
 };
 
