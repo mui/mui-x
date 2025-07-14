@@ -100,7 +100,7 @@ catalogs:
       specifier: ^1.5.0
       version: 1.5.0
     '@typescript-eslint/parser':
-      specifier: ^8.35.1
+      specifier: ^8.36.0
       version: 8.36.0
     '@vitejs/plugin-react':
       specifier: ^4.6.0
@@ -889,7 +889,7 @@ importers:
   packages/eslint-plugin-mui-x:
     dependencies:
       '@typescript-eslint/utils':
-        specifier: ^8.35.1
+        specifier: ^8.36.0
         version: 8.36.0(eslint@9.31.0)(typescript@5.8.3)
     devDependencies:
       '@types/eslint':
@@ -899,7 +899,7 @@ importers:
         specifier: 'catalog:'
         version: 8.36.0(eslint@9.31.0)(typescript@5.8.3)
       '@typescript-eslint/rule-tester':
-        specifier: ^8.35.1
+        specifier: ^8.36.0
         version: 8.36.0(eslint@9.31.0)(typescript@5.8.3)
 
   packages/x-charts:
