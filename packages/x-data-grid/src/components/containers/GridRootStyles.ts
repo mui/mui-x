@@ -823,7 +823,7 @@ export const GridRootStyles = styled('div', {
       '&::before': {
         content: '""',
         position: 'absolute',
-        bottom: '-1px',
+        bottom: '-2px',
         left: 0,
         width: '100%',
         height: '2px',
@@ -831,8 +831,8 @@ export const GridRootStyles = styled('div', {
       },
     },
     [`& .${c['row--beingDragged']}`]: {
-      opacity: vars.colors.interactive.disabledOpacity,
       backgroundColor: vars.colors.background.overlay,
+      color: vars.colors.foreground.disabled,
     },
   };
 
