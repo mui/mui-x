@@ -21,7 +21,7 @@ catalog:
   '@mui/stylis-plugin-rtl': ^7.2.0
   '@mui/system': ^7.2.0
   '@mui/utils': ^7.2.0
-  '@playwright/test': ^1.53.2
+  '@playwright/test': ^1.54.1
   '@react-spring/web': ^10.0.1
   '@types/chance': ^1.1.7
   '@types/d3-scale': ^4.0.9
