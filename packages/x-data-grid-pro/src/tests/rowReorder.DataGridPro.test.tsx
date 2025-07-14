@@ -46,14 +46,15 @@ describe('<DataGridPro /> - Row reorder', () => {
     render(<Test />);
 
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-    const rowReorderCell = getCell(0, 0).firstChild!;
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
     const targetCell = getCell(1, 0);
 
     fireEvent.dragStart(rowReorderCell);
     fireEvent.dragEnter(targetCell);
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
-    expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    const targetRow = targetCell.closest('[data-id]');
+    expect(targetRow).to.have.class(gridClasses['row--dropBelow']);
 
     const dragEndEvent = createDragEndEvent(rowReorderCell, true);
     fireEvent(rowReorderCell, dragEndEvent);
@@ -218,13 +219,23 @@ describe('<DataGridPro /> - Row reorder', () => {
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
     expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Skechers']);
-    const rowReorderCell = getCell(2, 0).firstChild!;
+    const rowReorderCell = getCell(2, 0).firstChild! as Element;
     const targetCell = getCell(3, 0);
 
     fireEvent.dragStart(rowReorderCell);
     fireEvent.dragEnter(targetCell);
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
+
+    const sourceRow = rowReorderCell.closest('[data-id]');
+    expect(sourceRow).to.have.class(gridClasses['row--beingDragged']);
+
+    // Add the drop indicator
+    const targetRow = targetCell.closest('[data-id]');
+    expect(targetRow).to.have.class(gridClasses['row--dropBelow']);
+
+    const dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Puma']);
   });
 
