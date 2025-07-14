@@ -110,6 +110,12 @@
   font-size: var(--font-size-5);
   font-weight: var(--font-weight-3);
   line-height: 1;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-3);
+}
+
+.TimeGridHeaderDayNumber.Today {
+  background-color: var(--primary-3);
 }
 
 .TimeGridBody {
