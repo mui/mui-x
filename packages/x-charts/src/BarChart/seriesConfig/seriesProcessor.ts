@@ -8,6 +8,9 @@ import { SeriesProcessor } from '../../internals/plugins/models';
 
 type BarDataset = DatasetType<number | null>;
 
+const barValueFormatter = ((v) =>
+  v == null ? '' : v.toLocaleString()) as DefaultizedBarSeriesType['valueFormatter'];
+
 const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
@@ -61,7 +64,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
         layout: 'vertical',
         labelMarkType: 'square',
         minBarSize: 0,
-        valueFormatter: series[id].valueFormatter ?? ((v) => (v == null ? '' : v.toLocaleString())),
+        valueFormatter: series[id].valueFormatter ?? barValueFormatter,
         ...series[id],
         data: dataKey
           ? dataset!.map((data) => {
