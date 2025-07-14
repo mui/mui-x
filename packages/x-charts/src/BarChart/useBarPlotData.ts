@@ -75,7 +75,7 @@ export function useBarPlotData(
 
           const stackId = series[seriesId].stack;
 
-          const { barSize, valueCoordinate } = getValueCoordinate(
+          const { barSize, startCoordinate } = getValueCoordinate(
             verticalLayout,
             minValueCoord,
             maxValueCoord,
@@ -87,10 +87,10 @@ export function useBarPlotData(
             seriesId,
             dataIndex,
             layout,
-            x: verticalLayout ? xScale(baseValue)! + barOffset : valueCoordinate,
-            y: verticalLayout ? valueCoordinate : yScale(baseValue)! + barOffset,
-            xOrigin: xScale(0) ?? 0,
-            yOrigin: yScale(0) ?? 0,
+            x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
+            y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
+            xOrigin: xScale(0)!,
+            yOrigin: yScale(0)!,
             height: verticalLayout ? barSize : barWidth,
             width: verticalLayout ? barWidth : barSize,
             color: colorGetter(dataIndex),
@@ -185,21 +185,24 @@ function getValueCoordinate(
   maxValueCoord: number,
   baseValue: number,
   minBarSize: number,
-) {
+): { barSize: number; startCoordinate: number } {
   const isSizeLessThanMin = Math.abs(maxValueCoord - minValueCoord) < minBarSize;
   const barSize = isSizeLessThanMin ? minBarSize : Math.abs(maxValueCoord - minValueCoord);
 
   // Size is above the minimum size, so we can return the bar size and the min value coordinate.
   if (!isSizeLessThanMin) {
-    return { barSize, valueCoordinate: minValueCoord };
+    return { barSize, startCoordinate: minValueCoord };
   }
 
   const isVerticalAndPositive = isVertical && baseValue >= 0;
   const isHorizontalAndNegative = !isVertical && baseValue < 0;
 
   if (isVerticalAndPositive || isHorizontalAndNegative) {
-    return { barSize, valueCoordinate: minValueCoord - barSize };
+    return {
+      barSize,
+      startCoordinate: maxValueCoord - barSize,
+    };
   }
 
-  return { barSize, valueCoordinate: minValueCoord };
+  return { barSize, startCoordinate: minValueCoord };
 }

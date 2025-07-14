@@ -28,7 +28,7 @@ export default function MinBarSize() {
         onChange={handleChange}
         aria-labelledby="min-bar-size-slider"
         min={0}
-        max={50}
+        max={200}
         sx={{ width: 300 }}
       />
       <BarChart
