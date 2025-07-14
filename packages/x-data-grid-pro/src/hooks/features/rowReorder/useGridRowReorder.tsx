@@ -13,7 +13,6 @@ import {
   useGridEventPriority,
   gridRowNodeSelector,
   GridRowId,
-  gridDimensionsSelector,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
@@ -268,12 +267,10 @@ export const useGridRowReorder = (
         return;
       }
 
-      const rowHeight = gridDimensionsSelector(apiRef).rowHeight;
-      const midPoint = Math.floor(rowHeight / 2);
-
       // Find the relative 'y' mouse position based on the event.target
       const targetRect = (event.target as Element).getBoundingClientRect();
       const relativeY = Math.floor(event.clientY - targetRect.top);
+      const midPoint = Math.floor(targetRect.height / 2);
 
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
