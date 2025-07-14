@@ -186,8 +186,8 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.12.4",
+  "packageManager": "pnpm@10.13.1",
   "engines": {
-    "pnpm": "10.12.4"
+    "pnpm": "10.13.1"
   }
 }
