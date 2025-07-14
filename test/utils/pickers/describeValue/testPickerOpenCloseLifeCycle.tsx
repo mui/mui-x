@@ -435,4 +435,38 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     }
     expect(toolbarButton.querySelector('[data-selected="true"]')).to.not.equal(null);
   });
+
+  it.skipIf(
+    componentFamily !== 'picker' ||
+      (pickerParams as any).fieldType === 'multi-input' ||
+      pickerParams.variant === 'mobile',
+  )(
+    'should close a Desktop Picker when clicking outside of the picker after selecting a value with "Enter" key',
+    async () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      const { user } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          closeOnSelect: false,
+        },
+        { componentFamily },
+      );
+
+      await openPickerAsync(user, pickerParams);
+
+      await user.keyboard('{Enter}');
+
+      await user.click(document.body);
+      expect(onChange.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(1);
+      expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
+    },
+  );
 };
