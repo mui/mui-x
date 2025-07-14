@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>mui/mui-public//renovate/default"],
+  "schedule": "on monday before 6:00am",
+  "lockFileMaintenance": {
+    "schedule": "before 6:00am on the second day of the month"
+  },
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
