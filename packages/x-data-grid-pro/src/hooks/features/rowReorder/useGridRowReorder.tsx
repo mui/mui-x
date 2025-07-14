@@ -147,20 +147,18 @@ export const useGridRowReorder = (
   );
 
   const applyRowAnimation = React.useCallback(
-    (draggedRowId: GridRowId, reorderCallback: () => void) => {
-      // TODO: Test performance implication
-      // Should be good because of the virtualization
+    (callback: () => void) => {
       const rootElement = apiRef.current.rootElementRef?.current;
       if (!rootElement) {
         return;
       }
 
-      const allRows = rootElement.querySelectorAll('[data-id]');
-      if (!allRows.length) {
+      const visibleRows = rootElement.querySelectorAll('[data-id]');
+      if (!visibleRows.length) {
         return;
       }
 
-      const rowsArray = Array.from(allRows) as HTMLElement[];
+      const rowsArray = Array.from(visibleRows) as HTMLElement[];
 
       const initialPositions = new Map<string, DOMRect>();
       rowsArray.forEach((row) => {
@@ -170,11 +168,12 @@ export const useGridRowReorder = (
         }
       });
 
-      reorderCallback();
+      callback();
 
       // Use `requestAnimationFrame` to ensure DOM has updated
       requestAnimationFrame(() => {
         const newRows = rootElement.querySelectorAll('[data-id]') as NodeListOf<HTMLElement>;
+        const animations: Animation[] = [];
 
         newRows.forEach((row) => {
           const rowId = row.getAttribute('data-id');
@@ -188,35 +187,24 @@ export const useGridRowReorder = (
           }
 
           const currentRect = row.getBoundingClientRect();
-
           const deltaY = prevRect.top - currentRect.top;
 
-          // Only animate if there's actual movement
           if (Math.abs(deltaY) > 1) {
-            // Apply the inverted transform immediately (without transition)
-            row.style.transition = 'none';
-            row.style.transform = `translateY(${deltaY}px)`;
+            const animation = row.animate(
+              [{ transform: `translateY(${deltaY}px)` }, { transform: 'translateY(0)' }],
+              {
+                duration: 200,
+                easing: 'ease-in-out',
+                fill: 'forwards',
+              },
+            );
 
-            // Force a repaint by accessing a property that triggers layout recalculation
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-            row.offsetHeight;
-
-            // Apply transition
-            row.style.transition = 'transform 0.2s ease-in-out';
-            row.style.transform = 'translateY(0)';
-
-            if (rowId !== String(draggedRowId)) {
-              row.style.backgroundColor = 'var(--unstable_DataGrid-overlayBackground)';
-            }
-
-            // Clean up after animation
-            setTimeout(() => {
-              row.style.transition = '';
-              row.style.transform = '';
-              row.style.backgroundColor = '';
-            }, 200);
+            animations.push(animation);
           }
         });
+        if (animations.length > 0) {
+          Promise.allSettled(animations.map((a) => a.finished)).then(() => {});
+        }
       });
     },
     [apiRef],
@@ -395,7 +383,7 @@ export const useGridRowReorder = (
             dropTarget.targetRowId === dragRowId; // dragging to the same row
 
           if (!isReorderInvalid) {
-            applyRowAnimation(dragRowId, () => {
+            applyRowAnimation(() => {
               apiRef.current.setRowIndex(dragRowId, finalTargetIndex);
 
               // Emit the rowOrderChange event only once when the reordering stops.
