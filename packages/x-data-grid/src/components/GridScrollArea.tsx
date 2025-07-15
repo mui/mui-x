@@ -58,7 +58,6 @@ const GridScrollAreaRawRoot = styled('div', {
 })<{ ownerState: OwnerState }>(() => ({
   position: 'absolute',
   zIndex: 101,
-  border: '1px solid red',
   // Horizontal scroll areas
   [`&.${gridClasses['scrollArea--left']}`]: {
     top: 0,
