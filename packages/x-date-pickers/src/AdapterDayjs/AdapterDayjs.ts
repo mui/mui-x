@@ -203,7 +203,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
 
       if (timezone === 'UTC') {
         date = dayjs(value);
-      } /* v8 ignore next */ else {
+      } /* v8 ignore next 3 */ else {
         // We can't change the system timezone in the tests
         date = dayjs.tz(value, timezone);
       }
