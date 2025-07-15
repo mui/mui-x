@@ -831,7 +831,8 @@ export const GridRootStyles = styled('div', {
       },
       [`&.${c['row--lastVisible']}`]: {
         '&::before': {
-          bottom: '0px',
+          bottom:
+            'calc(var(--DataGrid-hasScrollY) * 0px + (1 - var(--DataGrid-hasScrollY)) * -2px)',
         },
       },
     },
