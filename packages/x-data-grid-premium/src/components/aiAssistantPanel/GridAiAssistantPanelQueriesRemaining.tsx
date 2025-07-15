@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { getDataGridUtilityClass, useGridSelector } from '@mui/x-data-grid-premium';
+import { getDataGridUtilityClass, useGridSelector } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
