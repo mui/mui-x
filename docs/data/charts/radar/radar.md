@@ -112,7 +112,7 @@ const clickHandler = (
 {{"demo": "RadarClick.js"}}
 
 :::info
-Their is a slight difference between the `event` of `onAxisClick` and the others:
+There is a slight difference between the `event` of `onAxisClick` and the others:
 
 - For `onAxisClick` it's a native mouse event emitted by the svg component.
 - For others, it's a React synthetic mouse event emitted by the area, line, or mark component.

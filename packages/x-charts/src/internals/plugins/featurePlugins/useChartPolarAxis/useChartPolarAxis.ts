@@ -245,15 +245,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
           processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
             const seriesItem = processedSeries[seriesType]!.series[seriesId];
 
-            // The series to axis mapping is not yet-needed
-
-            // const providedRotationAxisId = seriesItem.rotationAxisId;
-            // const providedRadiusAxisId = seriesItem.radiusAxisId;
-
-            // const axisKey = isRotationAxis ? providedXAxisId : providedYAxisId;
-            // if (axisKey === undefined || axisKey === USED_AXIS_ID) {
             seriesValues[seriesId] = seriesItem.data[dataIndex];
-            // }
           });
         });
 

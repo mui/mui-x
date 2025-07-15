@@ -7,10 +7,12 @@ import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useUtilityClasses } from './radarSeriesPlotClasses';
 import { getPathProps } from './RadarSeriesArea';
 import { getCircleProps } from './RadarSeriesMarks';
+import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 function RadarSeriesPlot(props: RadarSeriesPlotProps) {
   const { seriesId: inSeriesId, classes: inClasses, onAreaClick, onMarkClick } = props;
   const seriesCoordinates = useRadarSeriesData(inSeriesId);
+  const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
@@ -34,7 +36,14 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   isHighlighted,
                   classes,
                 })}
-                onClick={(event) => onAreaClick?.(event, { type: 'radar', seriesId })}
+                onClick={(event) => {
+                  const dataIndex = getRotationIndex(event);
+                  onAreaClick?.(event, {
+                    type: 'radar',
+                    seriesId,
+                    ...(dataIndex === null ? {} : { dataIndex }),
+                  });
+                }}
                 cursor={onAreaClick ? 'pointer' : 'unset'}
                 {...interactionProps[seriesIndex]}
               />

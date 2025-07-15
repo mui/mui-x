@@ -9,6 +9,7 @@ import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
 import { SeriesId } from '../../models/seriesType/common';
 import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {
   seriesId: SeriesId;
@@ -42,6 +43,7 @@ export function getPathProps(params: GetPathPropsParams): React.SVGProps<SVGPath
 function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const { seriesId, onItemClick, ...other } = props;
   const seriesCoordinates = useRadarSeriesData(seriesId);
+  const getRotationIndex = useRadarRotationIndex();
 
   const interactionProps = useInteractionAllItemProps(seriesCoordinates);
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
@@ -62,7 +64,14 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               isHighlighted,
               classes,
             })}
-            onClick={(event) => onItemClick?.(event, { type: 'radar', seriesId: id })}
+            onClick={(event) => {
+              const dataIndex = getRotationIndex(event);
+              onItemClick?.(event, {
+                type: 'radar',
+                seriesId: id,
+                ...(dataIndex === null ? {} : { dataIndex }),
+              });
+            }}
             cursor={onItemClick ? 'pointer' : 'unset'}
             {...interactionProps[seriesIndex]}
             {...other}
