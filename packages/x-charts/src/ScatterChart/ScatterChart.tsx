@@ -280,7 +280,7 @@ ScatterChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the scatter chart.
-   * An array of [[ScatterSeriesType]] objects.
+   * An array of [[ScatterSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

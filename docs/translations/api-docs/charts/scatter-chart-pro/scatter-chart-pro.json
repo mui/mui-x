@@ -57,7 +57,7 @@
       "typeDescriptions": { "zoomData": "Updated zoom data." }
     },
     "series": {
-      "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series-type/'>ScatterSeriesType</a> objects."
+      "description": "The series to display in the scatter chart. An array of ScatterSeries objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {

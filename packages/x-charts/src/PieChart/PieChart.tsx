@@ -243,7 +243,7 @@ PieChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the pie chart.
-   * An array of [[PieSeriesType]] objects.
+   * An array of [[PieSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
