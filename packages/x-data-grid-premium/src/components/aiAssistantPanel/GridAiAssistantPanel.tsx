@@ -14,6 +14,7 @@ import { GridAiAssistantPanelConversation } from './GridAiAssistantPanelConversa
 import { GridPromptField } from '../promptField/GridPromptField';
 import { GridAiAssistantPanelSuggestions } from './GridAiAssistantPanelSuggestions';
 import { GridAiAssistantPanelConversationsMenu } from './GridAiAssistantPanelConversationsMenu';
+import { GridAiAssistantPanelQueriesRemaining } from './GridAiAssistantPanelQueriesRemaining';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -195,6 +196,7 @@ function GridAiAssistantPanel() {
       </AiAssistantPanelBody>
       <AiAssistantPanelFooter className={classes.footer} ownerState={rootProps}>
         <GridPromptField onSubmit={apiRef.current.aiAssistant.processPrompt} />
+        <GridAiAssistantPanelQueriesRemaining />
         {rootProps.aiAssistantSuggestions && rootProps.aiAssistantSuggestions.length > 0 && (
           <GridAiAssistantPanelSuggestions suggestions={rootProps.aiAssistantSuggestions} />
         )}

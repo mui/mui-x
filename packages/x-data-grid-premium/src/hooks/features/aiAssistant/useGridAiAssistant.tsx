@@ -43,6 +43,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
       aiAssistant: {
         activeConversationIndex: 0,
         conversations: [],
+        estimatedRemainingQueries: undefined,
       } as GridAiAssistantState,
     };
   }
@@ -53,6 +54,7 @@ export const aiAssistantStateInitializer: GridStateInitializer<
       activeConversationIndex: 0,
       conversations:
         props.aiAssistantConversations ?? props.initialState?.aiAssistant?.conversations ?? [],
+      estimatedRemainingQueries: props.initialState?.aiAssistant?.estimatedRemainingQueries,
     } as GridAiAssistantState,
   };
 };
@@ -297,6 +299,26 @@ export const useGridAiAssistant = (
     [apiRef, isAiAssistantAvailable],
   );
 
+  const setEstimatedRemainingQueries = React.useCallback(
+    (estimatedRemainingQueries: number | undefined) => {
+      if (estimatedRemainingQueries === undefined) {
+        return;
+      }
+      if (!isAiAssistantAvailable) {
+        return;
+      }
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        aiAssistant: {
+          ...state.aiAssistant,
+          estimatedRemainingQueries,
+        },
+      }));
+    },
+    [apiRef, isAiAssistantAvailable],
+  );
+
   const setConversationPrompts = React.useCallback(
     (index: number, callback: (prevPrompts: Prompt[]) => Prompt[]) => {
       if (!isAiAssistantAvailable) {
@@ -359,7 +381,9 @@ export const useGridAiAssistant = (
           activeConversation?.id,
         );
         applyPromptResult(response);
+        console.warn('response.estimatedRemainingQueries', response.estimatedRemainingQueries);
         setActiveConversationId(response.conversationId);
+        setEstimatedRemainingQueries(response.estimatedRemainingQueries);
         setConversationPrompts(activeConversationIndex, (prevPrompts) =>
           prevPrompts.map((item) =>
             item.createdAt.getTime() === date
@@ -398,6 +422,7 @@ export const useGridAiAssistant = (
       applyPromptResult,
       setConversationPrompts,
       setActiveConversationId,
+      setEstimatedRemainingQueries,
     ],
   );
 

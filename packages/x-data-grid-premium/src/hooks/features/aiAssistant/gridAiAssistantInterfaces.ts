@@ -19,6 +19,7 @@ export type Conversation = {
 export type GridAiAssistantState = {
   activeConversationIndex: number;
   conversations: Conversation[];
+  estimatedRemainingQueries?: number;
 };
 
 export type GridAiAssistantInitialState = Partial<GridAiAssistantState>;
@@ -60,6 +61,7 @@ export type PromptResponse = {
   sorting: ColumnSort[];
   grouping: Grouping[];
   pivoting: Pivoting;
+  estimatedRemainingQueries?: number;
 };
 
 export type PromptResolverOptions = {
