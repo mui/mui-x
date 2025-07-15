@@ -100,13 +100,7 @@ const scatterXAxis = {
   valueFormatter: (v) => gdpPerCapitaFormatter.format(v),
 };
 const scatterSettings = {
-  yAxis: [
-    {
-      id: 'y',
-      width: 44,
-      min: 0,
-    },
-  ],
+  yAxis: [{ id: 'y', width: 16, min: 0 }],
   series: continents.map((continent) => ({
     label: continent,
     data: countriesInContinent[continent]

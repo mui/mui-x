@@ -11,7 +11,7 @@ const calendarEvent: CalendarEvent = {
   id: '1',
   start: DateTime.fromISO('2025-05-26T07:30:00'),
   end: DateTime.fromISO('2025-05-26T08:15:00'),
-  title: 'Footing',
+  title: 'Running',
   description: 'Morning run',
 };
 
@@ -43,7 +43,7 @@ describe('<EventPopover />', () => {
         <EventPopover {...defaultProps} />
       </Popover.Root>,
     );
-    expect(screen.getByDisplayValue('Footing')).not.to.equal(null);
+    expect(screen.getByDisplayValue('Running')).not.to.equal(null);
     expect(screen.getByDisplayValue('Morning run')).not.to.equal(null);
     expect(screen.getByLabelText(/start date/i)).to.have.value('2025-05-26');
     expect(screen.getByLabelText(/end date/i)).to.have.value('2025-05-26');
@@ -61,7 +61,7 @@ describe('<EventPopover />', () => {
     await user.type(screen.getByLabelText(/event title/i), ' test');
     await user.click(screen.getByRole('button', { name: /save changes/i }));
     expect(onEventEdit.calledOnce).to.equal(true);
-    expect(onEventEdit.firstCall.args[0].title).to.equal('Footing test');
+    expect(onEventEdit.firstCall.args[0].title).to.equal('Running test');
   });
 
   it('should show error if start date is after end date', async () => {

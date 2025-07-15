@@ -14,6 +14,7 @@ import {
   SOURCE_CODE_REPO as DOCS_SOURCE_CODE_REPO,
   SOURCE_GITHUB_BRANCH as DOCS_SOURCE_GITHUB_BRANCH,
 } from '../docs/constants';
+import { resolvePrettierConfigPath } from '../docs/scripts/utils';
 
 // @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
@@ -438,7 +439,7 @@ async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
             baseTranslationsByGroup,
           );
 
-          const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.mjs');
+          const prettierConfigPath = await resolvePrettierConfigPath();
           const prettierConfig = await prettier.resolveConfig(localePath, {
             config: prettierConfigPath,
           });

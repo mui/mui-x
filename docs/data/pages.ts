@@ -99,8 +99,15 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-data-grid/filtering', title: 'Overview' },
               { pathname: '/x/react-data-grid/filtering/customization' },
               { pathname: '/x/react-data-grid/filtering/quick-filter' },
-              { pathname: '/x/react-data-grid/filtering/server-side', title: 'Server-side filter' },
-              { pathname: '/x/react-data-grid/filtering/multi-filters', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/filtering/server-side',
+                title: 'Server-side filtering',
+              },
+              {
+                pathname: '/x/react-data-grid/filtering/multi-filters',
+                title: 'Multi-filters',
+                plan: 'pro',
+              },
               {
                 pathname: '/x/react-data-grid/filtering/header-filters',
                 plan: 'pro',
@@ -533,7 +540,16 @@ const pages: MuiPage[] = [
             title: 'Heatmap',
             plan: 'pro',
           },
-          { pathname: '/x/react-charts/funnel', title: 'Funnel', plan: 'pro', unstable: true },
+          {
+            pathname: '/x/react-charts-funnel',
+            title: 'Funnel',
+            plan: 'pro',
+            unstable: true,
+            children: [
+              { pathname: '/x/react-charts/funnel', title: 'Funnel overview' },
+              { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
+            ],
+          },
           {
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
