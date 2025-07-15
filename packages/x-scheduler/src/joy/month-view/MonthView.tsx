@@ -2,12 +2,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@base-ui-components/react/utils';
+import { useSelector } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
-import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';

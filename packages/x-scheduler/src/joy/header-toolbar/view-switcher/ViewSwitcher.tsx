@@ -3,12 +3,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Menu } from '@base-ui-components/react/menu';
 import { useForkRef } from '@base-ui-components/react/utils';
+import { useSelector } from '@base-ui-components/utils/store';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { ViewType } from '../../models/views';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { useEventCalendarStore } from '../../internals/hooks/useEventCalendarStore';
-import { useSelector } from '../../../base-ui-copy/utils/store';
 import { selectors } from '../../event-calendar/store';
 import './ViewSwitcher.css';
 

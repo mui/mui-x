@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react/popover';
+import { useSelector } from '@base-ui-components/utils/store';
 import { CalendarEvent } from '../../models/events';
 import { EventPopover } from '../../event-popover/EventPopover';
 import { selectors } from '../../event-calendar/store';
 import { useEventCalendarStore } from '../hooks/useEventCalendarStore';
-import { useSelector } from '../../../base-ui-copy/utils/store';
 
 type EventPopoverContextProps = {
   onEventClick: (event: React.MouseEvent, calendarEvent: CalendarEvent) => void;

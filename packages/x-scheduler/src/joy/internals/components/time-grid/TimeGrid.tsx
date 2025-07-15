@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { useSelector } from '@base-ui-components/utils/store';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid';
@@ -10,7 +11,6 @@ import { CalendarEvent } from '../../../models/events';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
 import { selectors } from '../../../event-calendar/store';
 import { EventPopoverProvider } from '../../utils/EventPopoverProvider';
