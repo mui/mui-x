@@ -466,7 +466,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onChange.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
+      await waitFor(() => expect(screen.queryByRole(viewWrapperRole)).to.equal(null));
     },
   );
 };
