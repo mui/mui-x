@@ -23,11 +23,24 @@ export const dataGridStyles: SxProps<Theme> = {
 
 export const detailPanelDataGridStyles: SxProps<Theme> = {
   ...dataGridStyles,
-  '& .MuiDataGrid-columnHeaders': {
-    borderRadius: '12px',
-  },
   '& .MuiDataGrid-cell': {
-    padding: '0 16px',
+    padding: '0 10px',
     border: 'none',
+  },
+  '& .MuiDataGrid-columnHeader': {
+    backgroundColor: 'background.paper',
+  },
+};
+
+export const inventoryDataGridStyles: SxProps<Theme> = {
+  ...dataGridStyles,
+  '& .MuiDataGrid-virtualScroller': {
+    overflow: 'auto',
+  },
+  '& .MuiDataGrid-virtualScrollerContent': {
+    minHeight: '100%',
+  },
+  '& .MuiDataGrid-virtualScrollerRenderZone': {
+    position: 'relative',
   },
 };

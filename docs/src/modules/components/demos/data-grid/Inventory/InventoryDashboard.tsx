@@ -11,7 +11,7 @@ import { inventoryTheme } from './theme';
 import { Product, products } from './data/products';
 import { ProductDetailPanel } from './DetailPanel';
 import { InventoryToolbar } from './InventoryToolbar';
-import { dataGridStyles } from './styles';
+import { dataGridStyles, inventoryDataGridStyles } from './styles';
 import { CustomExpandIcon, CustomCollapseIcon } from './icons';
 
 const StatusChip = styled(Chip)(({ theme }) => ({
@@ -202,16 +202,7 @@ function InventoryDashboard() {
                   detailPanelCollapseIcon: CustomCollapseIcon,
                 }}
                 sx={{
-                  ...dataGridStyles,
-                  '& .MuiDataGrid-virtualScroller': {
-                    overflow: 'auto',
-                  },
-                  '& .MuiDataGrid-virtualScrollerContent': {
-                    minHeight: '100%',
-                  },
-                  '& .MuiDataGrid-virtualScrollerRenderZone': {
-                    position: 'relative',
-                  },
+                  ...inventoryDataGridStyles,
                 }}
               />
             </Box>
