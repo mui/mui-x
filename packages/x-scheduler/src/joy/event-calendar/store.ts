@@ -13,7 +13,11 @@ export type State = {
   views: ViewType[];
   events: CalendarEvent[];
   resources: CalendarResource[];
-  visibleResourceIds: CalendarResourceId[];
+  /**
+   * Visibility status for each resource.
+   * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
+   */
+  visibleResources: Map<CalendarResourceId, boolean>;
 };
 
 export type EventCalendarStore = Store<State>;
@@ -23,7 +27,6 @@ export const selectors = {
   currentView: createSelector((state: State) => state.currentView),
   views: createSelector((state: State) => state.views),
   resources: createSelector((state: State) => state.resources),
-  visibleResourceIds: createSelector((state: State) => state.visibleResourceIds),
   resourcesByIdMap: createSelectorMemoized(
     (state: State) => state.resources,
     (resources) => {
@@ -36,9 +39,14 @@ export const selectors = {
   ),
   getEventsStartingInDay: createSelectorMemoized(
     (state: State) => state.events,
-    (events) => {
+    (state: State) => state.visibleResources,
+    (events, visibleResources) => {
       const map = new Map<string, CalendarEvent[]>();
       for (const event of events) {
+        if (event.resource && visibleResources.get(event.resource) === false) {
+          continue; // Skip events for hidden resources
+        }
+
         const dayKey = adapter.format(event.start, 'keyboardDate');
         if (!map.has(dayKey)) {
           map.set(dayKey, []);
@@ -51,5 +59,9 @@ export const selectors = {
         return map.get(dayKey) || [];
       };
     },
+  ),
+  isResourceVisible: createSelector(
+    (state: State, resourceId: CalendarResourceId) =>
+      !state.visibleResources.has(resourceId) || state.visibleResources.get(resourceId) === true,
   ),
 };
