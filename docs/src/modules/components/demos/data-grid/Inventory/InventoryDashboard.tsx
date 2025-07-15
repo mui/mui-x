@@ -1,5 +1,12 @@
 import React from 'react';
-import { DataGridPro, GridColDef, GridRenderCellParams, GridEventListener, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPremium,
+  GridColDef,
+  GridRenderCellParams,
+  GridEventListener,
+  useGridApiRef,
+  GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
+} from '@mui/x-data-grid-premium';
 import { Box, Typography, Rating, Chip, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
@@ -11,7 +18,7 @@ import { inventoryTheme } from './theme';
 import { Product, products } from './data/products';
 import { ProductDetailPanel } from './DetailPanel';
 import { InventoryToolbar } from './InventoryToolbar';
-import { dataGridStyles, inventoryDataGridStyles } from './styles';
+import { inventoryDataGridStyles } from './styles';
 import { CustomExpandIcon, CustomCollapseIcon } from './icons';
 
 const StatusChip = styled(Chip)(({ theme }) => ({
@@ -58,23 +65,29 @@ const ProductImage = styled('img')({
 const columns: GridColDef<Product>[] = [
   {
     field: 'product',
+    groupable: false,
+    aggregable: false,
     headerName: 'Product',
     flex: 1,
     minWidth: 250,
-    renderCell: (params: GridRenderCellParams<Product, string>) => (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <ProductImage src={params.row.image} alt={params.value} />
-        <Typography sx={{ fontSize: '0.875rem', fontWeight: '500' }}>{params.value}</Typography>
-      </Box>
-    ),
+    renderCell: (params: GridRenderCellParams<Product, string>) =>
+      params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID ? null : (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <ProductImage src={params.row.image} alt={params.value} />
+          <Typography sx={{ fontSize: '0.875rem', fontWeight: '500' }}>{params.value}</Typography>
+        </Box>
+      ),
   },
-  { field: 'sku', headerName: 'SKU', width: 120, flex: 1 },
+  { field: 'sku', groupable: false, aggregable: false, headerName: 'SKU', width: 120, flex: 1 },
   {
     field: 'status',
+    groupable: false,
+    aggregable: false,
     headerName: 'Status',
     width: 120,
     flex: 1,
     renderCell: (params: GridRenderCellParams<Product, string>) => {
+      if (params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID) return null;
       const statusMap = {
         in_stock: 'In Stock',
         out_of_stock: 'Out of Stock',
@@ -91,42 +104,53 @@ const columns: GridColDef<Product>[] = [
           label={statusMap[params.value as keyof typeof statusMap]}
           className={params.value}
           clickable={false}
-          onClick={() => {}} // TODO: Fix. Adding as placeholder. These shouldnt be clickable but for some reason it's giving me a runtime error for now, even if setting clickable to false. 
+          onClick={() => {}} // TODO: Fix. Adding as placeholder. These shouldnt be clickable but for some reason it's giving me a runtime error for now, even if setting clickable to false.
         />
       );
     },
   },
-  { field: 'stock', headerName: 'Stock', width: 100, flex: 1 },
+  { field: 'stock', groupable: false, aggregable: false, headerName: 'Stock', width: 100, flex: 1 },
   {
     field: 'price',
+    groupable: false,
+    aggregable: false,
     headerName: 'Price',
     width: 150,
+    type: 'number',
     flex: 1,
-    renderCell: (params: GridRenderCellParams<Product, number>) => (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography sx={{ fontSize: '0.875rem' }}>${params.value}</Typography>
-      </Box>
-    ),
+    valueFormatter: (value: number) => (value != null ? `$${value}` : ''),
   },
   {
     field: 'cost',
+    groupable: false,
+    aggregable: false,
     headerName: 'Cost',
     width: 120,
+    type: 'number',
     flex: 1,
-    renderCell: (params: GridRenderCellParams<Product, number>) => (
-      <Typography sx={{ fontSize: '0.875rem' }}>${params.value}</Typography>
-    ),
+    valueFormatter: (value: number) => (value != null ? `$${value}` : ''),
   },
   {
     field: 'rating',
     headerName: 'Rating',
+    aggregable: false,
     width: 150,
     flex: 1,
-    renderCell: (params: GridRenderCellParams<Product, number>) => (
-      <Rating value={params.value} precision={0.1} readOnly size="small" />
-    ),
+    renderCell: (params: GridRenderCellParams<Product, number>) =>
+      params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID ? (
+        <Typography>Sales:</Typography>
+      ) : (
+        <Rating value={params.value} precision={0.1} readOnly size="small" />
+      ),
   },
-  { field: 'sales', headerName: 'Sales', width: 100, flex: 1 },
+  {
+    field: 'sales',
+    type: 'number',
+    headerName: 'Sales',
+    width: 100,
+    flex: 1,
+    availableAggregationFunctions: ['sum'],
+  },
 ];
 
 function InventoryDashboard() {
@@ -138,7 +162,7 @@ function InventoryDashboard() {
     (params) => {
       apiRef.current?.toggleDetailPanel(params.id);
     },
-    [apiRef]
+    [apiRef],
   );
 
   const filteredProducts = React.useMemo(() => {
@@ -182,11 +206,16 @@ function InventoryDashboard() {
               onStatusChange={setStatusFilter}
             />
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-              <DataGridPro<Product>
+              <DataGridPremium<Product>
                 apiRef={apiRef}
                 rows={filteredProducts}
                 columns={columns}
                 initialState={{
+                  aggregation: {
+                    model: {
+                      sales: 'sum',
+                    },
+                  },
                   pagination: {
                     paginationModel: { pageSize: 5 },
                   },
@@ -201,9 +230,7 @@ function InventoryDashboard() {
                   detailPanelExpandIcon: CustomExpandIcon,
                   detailPanelCollapseIcon: CustomCollapseIcon,
                 }}
-                sx={{
-                  ...inventoryDataGridStyles,
-                }}
+                sx={inventoryDataGridStyles}
               />
             </Box>
           </Paper>

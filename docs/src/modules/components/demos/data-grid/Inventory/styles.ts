@@ -43,4 +43,11 @@ export const inventoryDataGridStyles: SxProps<Theme> = {
   '& .MuiDataGrid-virtualScrollerRenderZone': {
     position: 'relative',
   },
+  '& .MuiDataGrid-pinnedRows--bottom': {
+    '& [data-field="__detail_panel_toggle__"]': {
+      '& button': {
+        display: 'none',
+      },
+    },
+  },
 };

@@ -1,8 +1,8 @@
-import React from 'react';
+import * as React from 'react';
 import { Box, Typography, Alert, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {
-  DataGridPro,
+  DataGridPremium,
   GridApiPro,
   GridColDef,
   GridColumnVisibilityModel,
@@ -10,7 +10,7 @@ import {
   gridRowSelectionIdsSelector,
   useGridApiRef,
   useGridSelector,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { LineChartPro, SparkLineChart } from '@mui/x-charts-pro';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -88,7 +88,7 @@ function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPro> }) 
                 context.location === 'tooltip'
                   ? format(value, 'yyyy/MM/dd hh:mm:ss')
                   : format(value, 'hh:mm:ss'),
-              zoom: {slider: { enabled: true, preview: true }  },
+              zoom: { slider: { enabled: true, preview: true } },
             },
           ]}
           height={280}
@@ -295,7 +295,7 @@ function StockDashboard() {
         )}
 
         <Box sx={{ flex: 1, minHeight: 300 }}>
-          <DataGridPro
+          <DataGridPremium
             apiRef={apiRef}
             columns={columns}
             loading={loading}

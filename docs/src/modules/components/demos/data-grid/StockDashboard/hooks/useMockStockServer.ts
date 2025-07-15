@@ -10,7 +10,12 @@ import { COMPANY_NAMES } from '../data/stockConstants';
  * @param stepMs The gap between each item in milliseconds
  * @param baseDate The end date of the array
  */
-const generateHistoricalData = (basePrice: number, size: number = 30, stepMs: number = 1000, baseDate?: Date) => {
+const generateHistoricalData = (
+  basePrice: number,
+  size: number = 30,
+  stepMs: number = 1000,
+  baseDate?: Date,
+) => {
   const data = [];
   const now = baseDate ?? new Date();
   let price = basePrice;
@@ -30,11 +35,16 @@ const generateHistoricalData = (basePrice: number, size: number = 30, stepMs: nu
   return data;
 };
 
-const generatePredictionData = (lastPrice: number, size: number = 7, stepMs: number = 1000, baseDate?: Date) => {
+const generatePredictionData = (
+  lastPrice: number,
+  size: number = 7,
+  stepMs: number = 1000,
+  baseDate?: Date,
+) => {
   const data = [];
   const now = baseDate ?? new Date();
 
-  let price = lastPrice
+  let price = lastPrice;
   for (let step = 1; step <= size; step++) {
     const date = new Date(now.getTime() + step * stepMs);
 
@@ -50,9 +60,9 @@ const generatePredictionData = (lastPrice: number, size: number = 7, stepMs: num
   return data;
 };
 
-const UPDATE_STEP = 1000 // One point per second.
-const DATA_STEP = 100 // One point per second.
-const DATA_SIZE = 1000 // Number of data point in the price.
+const UPDATE_STEP = 1000; // One point per second.
+const DATA_STEP = 100; // One point per second.
+const DATA_SIZE = 1000; // Number of data point in the price.
 
 const generateMockStockData = (): StockData[] => {
   const data = Object.entries(COMPANY_NAMES).map(([symbol], index) => {
@@ -103,24 +113,35 @@ export const useMockStockServer = () => {
     if (!currentData) return;
 
     const interval = setInterval(() => {
-      const now = new Date()
-      const historyMinDate = new Date(now.getTime() - DATA_SIZE * DATA_STEP)
+      const now = new Date();
+      const historyMinDate = new Date(now.getTime() - DATA_SIZE * DATA_STEP);
 
       const updatedRows = currentData.rows.map((row) => {
-
         // Keep the part of history that is still in the requested time window.
-        const firstValidIndex = row.history.findIndex((historyRecord: { date: string }) => historyRecord.date >= historyMinDate.toISOString())
-        const keptHistory = firstValidIndex === -1 ? [] : row.history.slice(firstValidIndex, row.history.length);
+        const firstValidIndex = row.history.findIndex(
+          (historyRecord: { date: string }) => historyRecord.date >= historyMinDate.toISOString(),
+        );
+        const keptHistory =
+          firstValidIndex === -1 ? [] : row.history.slice(firstValidIndex, row.history.length);
 
         // Generate the additional data.
-        const lastPrice = keptHistory.length === 0 ? row.price : keptHistory[keptHistory.length - 1].price
-        const startTime = keptHistory.length === 0 ? historyMinDate : new Date(keptHistory[keptHistory.length - 1].date)
-        const newHistory = generatePredictionData(lastPrice, DATA_SIZE - keptHistory.length, DATA_STEP, startTime);
+        const lastPrice =
+          keptHistory.length === 0 ? row.price : keptHistory[keptHistory.length - 1].price;
+        const startTime =
+          keptHistory.length === 0
+            ? historyMinDate
+            : new Date(keptHistory[keptHistory.length - 1].date);
+        const newHistory = generatePredictionData(
+          lastPrice,
+          DATA_SIZE - keptHistory.length,
+          DATA_STEP,
+          startTime,
+        );
 
-        const history = [...keptHistory, ...newHistory]
+        const history = [...keptHistory, ...newHistory];
 
-        const price = history[history.length - 1].price
-        const prevPrice = history[history.length - 2].price
+        const price = history[history.length - 1].price;
+        const prevPrice = history[history.length - 2].price;
         const change = Number((price - prevPrice).toFixed(2));
         const changePercent = Number(((change / prevPrice) * 100).toFixed(2));
 
