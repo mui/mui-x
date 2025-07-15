@@ -1,6 +1,6 @@
-import type { ChartsLabelMarkProps } from '../../ChartsLabel';
 import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
+import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
 
 export type SeriesId = number | string;
 
@@ -17,7 +17,13 @@ export type SeriesValueFormatter<TValue> = (
 ) => string | null;
 
 export type CommonSeriesType<TValue> = {
+  /**
+   * The id of this series.
+   */
   id?: SeriesId;
+  /**
+   * Color used to render the series.
+   */
   color?: string;
   /**
    * Formatter used to render values in tooltip or other data display.
@@ -29,13 +35,13 @@ export type CommonSeriesType<TValue> = {
   /**
    * The scope to apply when the series is highlighted.
    */
-  highlightScope?: Partial<HighlightScope>;
+  highlightScope?: HighlightScope;
   /**
    * Defines the mark type for the series.
    *
    * There is a default mark type for each series type.
    */
-  labelMarkType?: ChartsLabelMarkProps['type'];
+  labelMarkType?: ChartsLabelMarkType;
 };
 
 export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';

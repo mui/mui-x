@@ -10,12 +10,12 @@
     "color": { "type": { "description": "string" } },
     "fillArea": { "type": { "description": "boolean" } },
     "hideMark": { "type": { "description": "boolean" } },
-    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "highlightScope": { "type": { "description": "HighlightScope" } },
     "id": { "type": { "description": "SeriesId" } },
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } }
   }
 }

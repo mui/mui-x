@@ -9,12 +9,12 @@
     "color": { "type": { "description": "string" } },
     "data": { "type": { "description": "readonly (number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
-    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "highlightScope": { "type": { "description": "HighlightScope" } },
     "id": { "type": { "description": "SeriesId" } },
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "layout": { "type": { "description": "'horizontal' | 'vertical'" }, "default": "'vertical'" },
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },

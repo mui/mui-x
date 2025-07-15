@@ -13,7 +13,7 @@
       "description": "<p>Controls how the funnel is drawn.<br />Ignored on <code>step</code> and <code>linear-sharp</code> curves.<br /><br />This affects different curves in different ways:<br />- <code>bump</code> &amp; <code>linear</code>: Controls which section is the &quot;starting&quot; point of the funnel. This section has straight edges.<br />- <code>pyramid</code> &amp; <code>step-pyramid</code>: Fully changes the direction of the shape.</p>\n"
     },
     "highlightScope": { "description": "The scope to apply when the series is highlighted." },
-    "id": { "description": "" },
+    "id": { "description": "The id of this series." },
     "label": {
       "description": "The label to display on the tooltip or the legend. It can be a string or a function."
     },

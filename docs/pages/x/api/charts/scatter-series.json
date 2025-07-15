@@ -14,12 +14,12 @@
       }
     },
     "disableHover": { "type": { "description": "boolean" }, "default": "false" },
-    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "highlightScope": { "type": { "description": "HighlightScope" } },
     "id": { "type": { "description": "SeriesId" } },
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
-    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
     "markerSize": { "type": { "description": "number" } },
     "preview": {
       "type": {

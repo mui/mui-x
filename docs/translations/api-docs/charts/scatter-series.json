@@ -2,7 +2,7 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "type": { "description": "" },
-    "color": { "description": "" },
+    "color": { "description": "Color used to render the series." },
     "data": { "description": "" },
     "datasetKeys": {
       "description": "The keys used to retrieve data from the dataset.<br /><br />When this prop is provided, all of <code>x</code>, <code>y</code>, and <code>id</code> must be provided.<br />While <code>z</code> is optional."
@@ -11,7 +11,7 @@
       "description": "If true, the interaction will not use element hover for this series."
     },
     "highlightScope": { "description": "The scope to apply when the series is highlighted." },
-    "id": { "description": "" },
+    "id": { "description": "The id of this series." },
     "label": {
       "description": "The label to display on the tooltip or the legend. It can be a string or a function."
     },
