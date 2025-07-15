@@ -22,7 +22,7 @@ export type CommonSeriesType<TValue> = {
    */
   id?: SeriesId;
   /**
-   * Color used to render the series.
+   * Color to use when displaying the series.
    */
   color?: string;
   /**

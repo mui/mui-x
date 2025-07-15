@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import type { MakeOptional, SimplifyDeep } from '@mui/x-internals/types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSlotProps, ChartsSlots } from '../internals/material';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
@@ -46,7 +46,7 @@ export interface BarChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
-export type BarSeries = SimplifyDeep<MakeOptional<BarSeriesType, 'type'>>;
+export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginsSignatures>,

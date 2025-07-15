@@ -6,7 +6,7 @@ import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import type { MakeOptional, SimplifyDeep } from '@mui/x-internals/types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -21,7 +21,7 @@ import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
 import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 
-export type FunnelSeries = SimplifyDeep<MakeOptional<FunnelSeriesType, 'type'>>;
+export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends Omit<
       ChartContainerProProps<'funnel', FunnelChartPluginsSignatures>,

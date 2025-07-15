@@ -6,4 +6,3 @@ export * from './MuiEvent';
 export * from './PrependKeys';
 export * from './RefObject';
 export * from './SlotComponentPropsFromProps';
-export * from './SimplifyDeep';
