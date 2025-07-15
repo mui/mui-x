@@ -471,6 +471,7 @@
   { "name": "UseMultiInputRangeFieldTextFieldProps", "kind": "TypeAlias" },
   { "name": "useParsedFormat", "kind": "Variable" },
   { "name": "usePickerActionsContext", "kind": "Variable" },
+  { "name": "usePickerAdapter", "kind": "Variable" },
   { "name": "usePickerContext", "kind": "Variable" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
   { "name": "usePickerRangePositionContext", "kind": "Function" },

@@ -558,11 +558,6 @@ export const GridRootStyles = styled('div', {
       },
       '&.Mui-selected': selectedStyles,
     },
-    [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
-      '[role=row]': {
-        background: vars.colors.background.base,
-      },
-    },
 
     /* Cell styles */
     [`& .${c.cell}`]: {
@@ -779,6 +774,7 @@ export const GridRootStyles = styled('div', {
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
         backgroundColor: vars.cell.background.pinned,
         position: 'sticky',
+        zIndex: 40, // Should be above the column separator
         right: 0,
       },
     },

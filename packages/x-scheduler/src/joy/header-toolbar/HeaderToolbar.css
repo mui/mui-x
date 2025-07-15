@@ -1,16 +1,6 @@
 @import '../styles/tokens.css';
 
 .HeaderToolbarContainer {
-  --toolbar-text: var(--gray-9);
-  --toolbar-base-bg: var(--surface);
-}
-
-.mode-dark .HeaderToolbarContainer {
-  --toolbar-text: var(--gray-2);
-  --toolbar-base-bg: var(--gray-9);
-}
-
-.HeaderToolbarContainer {
   display: flex;
   gap: var(--space-4);
   width: 100%;
@@ -22,11 +12,10 @@
 }
 
 .joy .HeaderToolbarButton {
-  background: var(--toolbar-base-bg);
+  background: var(--surface);
   user-select: none;
   padding: var(--space-3) var(--space-4);
-  color: var(--toolbar-text);
-  border: 1px solid var(--gray-2);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
   font-size: inherit;
   line-height: inherit;

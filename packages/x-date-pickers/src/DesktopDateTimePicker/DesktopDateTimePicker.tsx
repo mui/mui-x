@@ -9,7 +9,7 @@ import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
@@ -108,7 +108,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   inProps: DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
@@ -141,7 +141,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: resolveDateTimeFormat(utils, defaultizedProps),
+    format: resolveDateTimeFormat(adapter, defaultizedProps),
     views,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
@@ -192,7 +192,7 @@ DesktopDateTimePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**

@@ -10,7 +10,6 @@ import {
   BaseClockProps,
   ExportedBaseClockProps,
   TimeViewWithMeridiem,
-  useUtils,
   applyDefaultViewProps,
   resolveTimeViewsResponse,
   UseViewsOptions,
@@ -25,6 +24,7 @@ import {
   MultiSectionDigitalClockSlotProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import {
   TimeRangePickerToolbar,
   TimeRangePickerToolbarProps,
@@ -127,14 +127,14 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
   props: Props,
   name: string,
 ): UseTimeRangePickerDefaultizedProps<Props> {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
   const validationProps = useApplyDefaultValuesToTimeValidationProps(themeProps);
-  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const ampm = themeProps.ampm ?? adapter.is12HourCycleInCurrentLocale();
 
   const { openTo, views: defaultViews } = applyDefaultViewProps<TimeView>({
     views: themeProps.views,

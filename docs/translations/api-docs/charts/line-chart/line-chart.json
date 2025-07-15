@@ -15,11 +15,17 @@
     "disableLineItemHighlight": {
       "description": "If <code>true</code>, render the line highlight item."
     },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
+    },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
+    "highlightedAxis": {
+      "description": "The controlled axis highlight. Identified by the axis id, and data index."
+    },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
     },
@@ -42,6 +48,10 @@
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+    },
+    "onHighlightedAxisChange": {
+      "description": "The function called when the pointer position corresponds to a new axis data item. This update can either be caused by a pointer movement, or an axis update. In case of multiple axes, the function is called if at least one axis is updated. The argument contains the identifier for all axes with a <code>data</code> property.",
+      "typeDescriptions": { "axisItems": "The array of axes item identifiers." }
     },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },

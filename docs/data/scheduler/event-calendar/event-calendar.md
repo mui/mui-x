@@ -33,8 +33,8 @@ All the views of the Event Calendar can be used as standalone components:
 
 ### Month
 
-TODO: Add a demo of a standalone `<MonthView />` when available.
+{{"demo": "StandaloneMonthView.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Agenda
 
-TODO: Add a demo of a standalone `<AgendaView />` when available.
+{{"demo": "StandaloneAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}

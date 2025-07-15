@@ -5,18 +5,22 @@ import { useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { SchedulerValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
+import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
-import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import '../index.css';
-import './EventCalendar.css';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { getColorClassName } from '../internals/utils/color-utils';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
 import { Store, useSelector } from '../../base-ui-copy/utils/store';
 import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
 import { selectors, State } from './store';
 import { EventCalendarStoreContext } from '../internals/hooks/useEventCalendarStore';
+import { MonthView } from '../month-view';
+import { DateNavigator } from '../date-navigator/DateNavigator';
+import '../index.css';
+import './EventCalendar.css';
+import { useDateNavigation } from '../internals/hooks/useDateNavigation';
 
 const adapter = getAdapter();
 
@@ -38,7 +42,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       new Store<State>({
         events: eventsProp,
         resources: resourcesProp || [],
-        visibleDate: adapter.date('2025-05-26'),
+        visibleDate: adapter.startOfDay(adapter.date()),
         currentView: 'week',
         views: ['week', 'day', 'month', 'agenda'],
       }),
@@ -46,6 +50,17 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 
   const currentView = useSelector(store, selectors.currentView);
   const resources = useSelector(store, selectors.resources);
+  const visibleDate = useSelector(store, selectors.visibleDate);
+
+  const setVisibleDate = useEventCallback((date: SchedulerValidDate) => {
+    store.apply({ visibleDate: date });
+  });
+
+  const { onNextClick, onPreviousClick, onTodayClick } = useDateNavigation({
+    visibleDate,
+    setVisibleDate,
+    view: currentView,
+  });
 
   const handleDayHeaderClick = useEventCallback((day: SchedulerValidDate) => {
     store.apply({ visibleDate: day, currentView: 'day' });
@@ -61,16 +76,20 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   let content: React.ReactNode;
   switch (currentView) {
     case 'week':
-      content = <WeekView onDayHeaderClick={handleDayHeaderClick} />;
+      content = (
+        <WeekView onDayHeaderClick={handleDayHeaderClick} onEventsChange={onEventsChange} />
+      );
       break;
     case 'day':
-      content = <DayView />;
+      content = <DayView onEventsChange={onEventsChange} />;
       break;
     case 'month':
-      content = <div>TODO: Month view</div>;
+      content = (
+        <MonthView onDayHeaderClick={handleDayHeaderClick} onEventsChange={onEventsChange} />
+      );
       break;
     case 'agenda':
-      content = <div>TODO: Agenda view</div>;
+      content = <AgendaView onEventsChange={onEventsChange} />;
       break;
     default:
       content = null;
@@ -79,15 +98,14 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   return (
     <EventCalendarStoreContext.Provider value={store}>
       <TranslationsProvider translations={translations}>
-        <div
-          className={clsx(className, 'EventCalendarRoot', 'joy', 'light')}
-          ref={forwardedRef}
-          {...other}
-        >
+        <div className={clsx(className, 'EventCalendarRoot', 'joy')} ref={forwardedRef} {...other}>
           <aside className="EventCalendarSidePanel">
-            <span style={{ display: 'flex', alignItems: 'center', height: 42 }}>
-              TODO: Time nav
-            </span>
+            <DateNavigator
+              visibleDate={visibleDate}
+              onNextClick={onNextClick}
+              onPreviousClick={onPreviousClick}
+              currentView={currentView}
+            />
             <section
               className="EventCalendarMonthCalendarPlaceholder"
               // TODO: Add localization
@@ -115,8 +133,13 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
               </section>
             )}
           </aside>
-          <div className="EventCalendarMainPanel">
-            <HeaderToolbar onTodayClick={() => {}} />
+          <div
+            className={clsx(
+              'EventCalendarMainPanel',
+              currentView === 'month' && 'EventCalendarMainPanel--month',
+            )}
+          >
+            <HeaderToolbar onTodayClick={onTodayClick} />
             <section
               // TODO: Add localization
               className="EventCalendarContent"

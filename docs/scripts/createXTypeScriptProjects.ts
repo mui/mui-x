@@ -11,7 +11,6 @@ const workspaceRoot = path.resolve(__dirname, '../../');
 export interface XTypeScriptProject extends Omit<TypeScriptProject, 'name'> {
   name: XProjectNames;
   workspaceRoot: string;
-  prettierConfigPath: string;
   /**
    * @param {Project} project The project to generate the prop-types from.
    * @returns {string[]} Path to the component files from which we want to generate the prop-types.
@@ -67,7 +66,6 @@ const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTy
     ...other,
     name,
     workspaceRoot,
-    prettierConfigPath: path.join(workspaceRoot, 'prettier.config.js'),
   };
 };
 
@@ -132,6 +130,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
 
       // Params
       'GridCellParams',
+      'GridRenderContext',
       'GridRowParams',
       'GridRowClassNameParams',
       'GridRowSpacingParams',
@@ -170,6 +169,8 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'PieSeriesType',
       'ScatterSeriesType',
       'AxisConfig',
+      'ChartImageExportOptions',
+      'ChartPrintExportOptions',
     ],
   },
 ];

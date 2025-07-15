@@ -9,6 +9,7 @@ import { ScatterChartProps } from '../ScatterChart/ScatterChart';
 import { PieChartProps } from '../PieChart/PieChart';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
+import { ChartDataProviderProps } from '../ChartDataProvider';
 
 export interface ChartsComponentsPropsList {
   MuiChartsXAxis: ChartsXAxisProps;
@@ -18,6 +19,8 @@ export interface ChartsComponentsPropsList {
   MuiChartsLocalizationProvider: ChartsLocalizationProviderProps;
   MuiChartsTooltip: ChartsTooltipProps;
   MuiChartsSurface: ChartsSurfaceProps;
+
+  MuiChartDataProvider: ChartDataProviderProps;
 
   // BarChart components
   MuiBarChart: BarChartProps;

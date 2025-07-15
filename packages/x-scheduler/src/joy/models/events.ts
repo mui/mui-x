@@ -13,6 +13,10 @@ export interface CalendarEvent {
    */
   title: string;
   /**
+   * The description of the event.
+   */
+  description?: string;
+  /**
    * The start date and time of the event.
    */
   start: SchedulerValidDate;
