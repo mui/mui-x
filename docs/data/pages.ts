@@ -585,10 +585,13 @@ const pages: MuiPage[] = [
                     subheader: 'Interfaces',
                     children: [
                       { pathname: '/x/api/charts/axis-config', title: 'AxisConfig' },
-                      { pathname: '/x/api/charts/bar-series-type', title: 'BarSeriesType' },
-                      { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
-                      { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
-                      { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                      { pathname: '/x/api/charts/bar-series', title: 'BarSeries' },
+                      { pathname: '/x/api/charts/funnel-series', title: 'FunnelSeries' },
+                      { pathname: '/x/api/charts/heatmap-series', title: 'HeatmapSeries' },
+                      { pathname: '/x/api/charts/line-series', title: 'LineSeries' },
+                      { pathname: '/x/api/charts/pie-series', title: 'PieSeries' },
+                      { pathname: '/x/api/charts/radar-series', title: 'RadarSeries' },
+                      { pathname: '/x/api/charts/scatter-series', title: 'ScatterSeries' },
                       {
                         pathname: '/x/api/charts/chart-image-export-options',
                         title: 'ChartImageExportOptions',
