@@ -10,7 +10,7 @@ import { useRotationAxis } from '../../hooks/useAxis';
 
 /**
  * This hook provides a function that from pointer event returns the rotation index.
- * @return {(event: PointerEvent) => number | null} rotationIndexGetter Returns the data index, or `null` if the index can't be computed.
+ * @return {(event: { clientX: number; clientY: number }) => number | null} rotationIndexGetter Returns the rotation data index.
  */
 export function useRadarRotationIndex() {
   const svgRef = useSvgRef();
@@ -24,7 +24,10 @@ export function useRadarRotationIndex() {
     function rotationIndexGetter(event: { clientX: number; clientY: number }) {
       const element = svgRef.current;
       if (!element || !rotationAxis) {
-        return null;
+        // Should never append
+        throw new Error(
+          `MUI X Charts: The ${!element ? 'SVG' : 'rotation axis'} was not found to compute radar dataIndex.`,
+        );
       }
 
       const svgPoint = getSVGPoint(element, event);

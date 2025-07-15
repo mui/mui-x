@@ -64,14 +64,13 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
               isHighlighted,
               classes,
             })}
-            onClick={(event) => {
-              const dataIndex = getRotationIndex(event);
+            onClick={(event) =>
               onItemClick?.(event, {
                 type: 'radar',
                 seriesId: id,
-                ...(dataIndex === null ? {} : { dataIndex }),
-              });
-            }}
+                dataIndex: getRotationIndex(event),
+              })
+            }
             cursor={onItemClick ? 'pointer' : 'unset'}
             {...interactionProps[seriesIndex]}
             {...other}

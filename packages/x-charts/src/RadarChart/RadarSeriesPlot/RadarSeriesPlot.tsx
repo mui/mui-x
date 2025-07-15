@@ -36,14 +36,13 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
                   isHighlighted,
                   classes,
                 })}
-                onClick={(event) => {
-                  const dataIndex = getRotationIndex(event);
+                onClick={(event) =>
                   onAreaClick?.(event, {
                     type: 'radar',
                     seriesId,
-                    ...(dataIndex === null ? {} : { dataIndex }),
-                  });
-                }}
+                    dataIndex: getRotationIndex(event),
+                  })
+                }
                 cursor={onAreaClick ? 'pointer' : 'unset'}
                 {...interactionProps[seriesIndex]}
               />

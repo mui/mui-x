@@ -16,14 +16,20 @@ interface CommonRadarSeriesPlotProps {
 
 export interface RadarSeriesPlotProps extends CommonRadarSeriesPlotProps {
   /**
-   * Callback fired when an area element is clicked.
+   * Callback fired when an area is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onAreaClick?: RadarSeriesAreaProps['onItemClick'];
   /**
-   * Callback fired when a line element is clicked.
+   * Callback fired when a mark is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onMarkClick?: RadarSeriesMarksProps['onItemClick'];
 }
+
+type RadarClickIdentifier = Required<RadarItemIdentifier>;
 
 export interface RadarSeriesMarksProps
   extends CommonRadarSeriesPlotProps,
@@ -31,11 +37,11 @@ export interface RadarSeriesMarksProps
   /**
    * Callback fired when a mark is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {RadarItemIdentifier} radarItemIdentifier The line item identifier.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    radarItemIdentifier: Required<RadarItemIdentifier>,
+    radarItemIdentifier: RadarClickIdentifier,
   ) => void;
 }
 
@@ -45,10 +51,10 @@ export interface RadarSeriesAreaProps
   /**
    * Callback fired when an area is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {RadarItemIdentifier} radarItemIdentifier The line item identifier.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    radarItemIdentifier: Omit<RadarItemIdentifier, 'dataIndex'>,
+    radarItemIdentifier: RadarClickIdentifier,
   ) => void;
 }
