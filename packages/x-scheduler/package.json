@@ -59,6 +59,7 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.7.4",
     "@babel/runtime": "catalog:",
     "@base-ui-components/react": "1.0.0-beta.1",
     "@floating-ui/react": "^0.27.13",

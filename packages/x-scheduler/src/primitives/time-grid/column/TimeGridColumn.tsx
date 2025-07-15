@@ -1,11 +1,14 @@
 'use client';
 import * as React from 'react';
+import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 import { SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
+import { useTimeGridRootContext } from '../root/TimeGridRootContext';
+import { TimeGridEvent } from '../event';
 
 const adapter = getAdapter();
 
@@ -25,6 +28,9 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     ...elementProps
   } = componentProps;
 
+  const ref = React.useRef<HTMLDivElement>(null);
+  const { onEventChange } = useTimeGridRootContext();
+
   const contextValue: TimeGridColumnContext = React.useMemo(
     () => ({
       start:
@@ -40,9 +46,45 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
   const element = useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: [forwardedRef, ref],
     props: [props, elementProps],
   });
+
+  React.useEffect(() => {
+    return dropTargetForElements({
+      element: ref.current!,
+      canDrop: (args) => args.source.data.type === 'event',
+      getData: () => ({ type: 'column' }),
+      onDrop: ({ source, location }) => {
+        const data = source.data as unknown as TimeGridEvent.EventDragData;
+
+        const pageY = location.current.input.pageY;
+        const columnOffsetTop = ref.current!.offsetTop;
+        const columnHeight = ref.current!.offsetHeight;
+        const y = pageY - columnOffsetTop;
+
+        const newTime = Math.round((y / columnHeight) * 1440); // 1440 minutes in a day
+
+        const eventDuration =
+          (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
+          (60 * 1000);
+
+        const newStartDate = adapter.setMinutes(
+          adapter.setHours(value, Math.floor(newTime / 60)),
+          newTime % 60,
+        );
+
+        // TODO: Avoid JS Date conversion
+        const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
+
+        onEventChange({
+          start: newStartDate,
+          end: newEndDate,
+          id: data.id,
+        });
+      },
+    });
+  }, []);
 
   return (
     <TimeGridColumnContext.Provider value={contextValue}>{element}</TimeGridColumnContext.Provider>

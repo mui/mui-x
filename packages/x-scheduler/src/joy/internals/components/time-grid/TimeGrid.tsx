@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { TimeGridRoot } from '../../../../primitives/time-grid/root';
 import { TimeGrid as TimeGridPrimitive } from '../../../../primitives/time-grid';
 import { TimeGridProps } from './TimeGrid.types';
 import { CalendarEvent } from '../../../models/events';
@@ -55,6 +56,17 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     [onDayHeaderClick],
   );
 
+  const handleEventChangeFromPrimitive = React.useCallback((data: TimeGridRoot.EventData) => {
+    const prevEvents = store.state.events;
+    const updatedEvents = prevEvents.map((ev) =>
+      ev.id === data.id ? { ...ev, start: data.start, end: data.end } : ev,
+    );
+
+    if (onEventsChange) {
+      onEventsChange(updatedEvents);
+    }
+  }, []);
+
   const renderHeaderContent = (day: SchedulerValidDate) => (
     <span className="TimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
@@ -69,7 +81,10 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     <div ref={handleRef} className={clsx('TimeGridContainer', 'joy', className)} {...other}>
       <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
         {({ onEventClick }) => (
-          <TimeGridPrimitive.Root className="TimeGridRoot">
+          <TimeGridPrimitive.Root
+            className="TimeGridRoot"
+            onEventChange={handleEventChangeFromPrimitive}
+          >
             <div ref={headerWrapperRef} className="TimeGridHeader">
               <div className="TimeGridGridRow TimeGridHeaderRow" role="row">
                 <div className="TimeGridAllDayEventsCell" />

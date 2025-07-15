@@ -95,7 +95,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         aria-labelledby={`${ariaLabelledBy} ${id}`}
         onClick={(event) => onEventClick?.(event, eventProp)}
         render={
-          <TimeGrid.Event start={eventProp.start} end={eventProp.end}>
+          <TimeGrid.Event start={eventProp.start} end={eventProp.end} eventId={eventProp.id}>
             {renderContent}
           </TimeGrid.Event>
         }

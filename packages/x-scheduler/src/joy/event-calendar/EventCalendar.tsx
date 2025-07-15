@@ -42,7 +42,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       new Store<State>({
         events: eventsProp,
         resources: resourcesProp || [],
-        visibleDate: adapter.startOfDay(adapter.date()),
+        visibleDate: eventsProp.length
+          ? adapter.startOfDay(eventsProp[0].start)
+          : adapter.startOfDay(adapter.date()),
         currentView: 'week',
         views: ['week', 'day', 'month', 'agenda'],
       }),
