@@ -1,0 +1,36 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "data": { "description": "Data associated to the funnel section." },
+    "type": { "description": "" },
+    "borderRadius": {
+      "description": "The radius, in pixels, of the corners of the funnel sections."
+    },
+    "curve": {
+      "description": "<p>The type of curve to use for the line.<br /><br />- <code>bump</code>: A curve that creates a smooth transition between points, with a bump in the middle.<br />- <code>linear</code>: A straight line between points.<br />- <code>linear-sharp</code>: A straight line between points, the smaller end of the funnel is a triangle.<br />- <code>step</code>: A step line that creates a staircase effect.<br />- <code>pyramid</code>: A pyramid shape that connects the points.<br />- <code>step-pyramid</code>: A step line that creates a staircase effect, with a pyramid shape.<br /><br />Read more about curves at <a href=\"https://mui.com/x/react-charts/funnel/#curve-interpolation\">curve interpolation</a>.</p>\n"
+    },
+    "funnelDirection": {
+      "description": "<p>Controls how the funnel is drawn.<br />Ignored on <code>step</code> and <code>linear-sharp</code> curves.<br /><br />This affects different curves in different ways:<br />- <code>bump</code> &amp; <code>linear</code>: Controls which section is the &quot;starting&quot; point of the funnel. This section has straight edges.<br />- <code>pyramid</code> &amp; <code>step-pyramid</code>: Fully changes the direction of the shape.</p>\n"
+    },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
+    "id": { "description": "" },
+    "label": {
+      "description": "The label to display on the tooltip or the legend. It can be a string or a function."
+    },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
+    },
+    "layout": { "description": "Layout of the funnel." },
+    "sectionLabel": {
+      "description": "The label configuration for the funnel plot.<br />Allows to customize the position and margin of the label that is displayed on the funnel sections.<br /><br />If set to <code>false</code>, the label will not be displayed."
+    },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    },
+    "variant": {
+      "description": "Defines if the funnel sections are filled or outlined.<br /><br />An <code>outlined</code> funnel will have a stroke around the sections and a translucent fill.<br />A <code>filled</code> funnel will have a solid fill and no stroke."
+    },
+    "xAxisId": { "description": "The id of the x-axis used to render the series." },
+    "yAxisId": { "description": "The id of the y-axis used to render the series." }
+  }
+}

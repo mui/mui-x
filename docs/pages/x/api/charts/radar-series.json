@@ -1,0 +1,21 @@
+{
+  "name": "RadarSeries",
+  "imports": [
+    "import { RadarSeries } from '@mui/x-charts-pro'",
+    "import { RadarSeries } from '@mui/x-charts'"
+  ],
+  "properties": {
+    "data": { "type": { "description": "number[]" }, "required": true },
+    "type": { "type": { "description": "'radar'" }, "required": true },
+    "color": { "type": { "description": "string" } },
+    "fillArea": { "type": { "description": "boolean" } },
+    "hideMark": { "type": { "description": "boolean" } },
+    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "id": { "type": { "description": "SeriesId" } },
+    "label": {
+      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
+    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } }
+  }
+}

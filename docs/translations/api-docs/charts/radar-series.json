@@ -1,0 +1,21 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "data": { "description": "" },
+    "type": { "description": "" },
+    "color": { "description": "" },
+    "fillArea": { "description": "If <code>true</code> fill the series area." },
+    "hideMark": { "description": "If <code>true</code> hide marks at value position." },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
+    "id": { "description": "" },
+    "label": {
+      "description": "The label to display on the tooltip or the legend. It can be a string or a function."
+    },
+    "labelMarkType": {
+      "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
+    },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    }
+  }
+}

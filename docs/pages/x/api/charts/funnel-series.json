@@ -1,0 +1,59 @@
+{
+  "name": "FunnelSeries",
+  "imports": ["import { FunnelSeries } from '@mui/x-charts-pro'"],
+  "properties": {
+    "data": {
+      "type": { "description": "Readonly&lt;FunnelValueType[]&gt;" },
+      "required": true,
+      "isProPlan": true
+    },
+    "type": { "type": { "description": "'funnel'" }, "required": true, "isProPlan": true },
+    "borderRadius": { "type": { "description": "number" }, "default": "8", "isProPlan": true },
+    "curve": {
+      "type": { "description": "FunnelCurveType" },
+      "default": "'linear'",
+      "isProPlan": true
+    },
+    "funnelDirection": {
+      "type": { "description": "'increasing' | 'decreasing' | 'auto'" },
+      "default": "'auto'",
+      "isProPlan": true
+    },
+    "highlightScope": {
+      "type": { "description": "Partial&lt;HighlightScope&gt;" },
+      "isProPlan": true
+    },
+    "id": { "type": { "description": "SeriesId" }, "isProPlan": true },
+    "label": {
+      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" },
+      "isProPlan": true
+    },
+    "labelMarkType": {
+      "type": { "description": "ChartsLabelMarkProps['type']" },
+      "isProPlan": true
+    },
+    "layout": {
+      "type": { "description": "'horizontal' | 'vertical'" },
+      "default": "'vertical'",
+      "isProPlan": true
+    },
+    "sectionLabel": {
+      "type": {
+        "description": "FunnelLabelOptions | ((item: FunnelItem) =&gt; FunnelLabelOptions | false) | false"
+      },
+      "default": "{ vertical: 'middle', horizontal: 'center' }",
+      "isProPlan": true
+    },
+    "valueFormatter": {
+      "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
+      "isProPlan": true
+    },
+    "variant": {
+      "type": { "description": "'filled' | 'outlined'" },
+      "default": "'filled'",
+      "isProPlan": true
+    },
+    "xAxisId": { "type": { "description": "string" }, "isProPlan": true },
+    "yAxisId": { "type": { "description": "string" }, "isProPlan": true }
+  }
+}
