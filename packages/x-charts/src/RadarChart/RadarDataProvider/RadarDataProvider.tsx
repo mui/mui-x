@@ -14,6 +14,7 @@ import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
 const RADAR_SERIES_CONFIG = { radar: radarSeriesConfig };
 const DEFAULT_RADAR_MARGIN = { top: 30, bottom: 30, left: 50, right: 50 };
 
+export type RadarSeries = MakeOptional<RadarSeriesType, 'type'>;
 export type RadarDataProviderProps<
   TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginsSignatures,
 > = Omit<
@@ -24,7 +25,7 @@ export type RadarDataProviderProps<
    * The series to display in the bar chart.
    * An array of [[RadarSeriesType]] objects.
    */
-  series: Readonly<MakeOptional<RadarSeriesType, 'type'>>[];
+  series: Readonly<RadarSeries>[];
   /**
    * The configuration of the radar scales.
    */

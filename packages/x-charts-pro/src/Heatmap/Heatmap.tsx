@@ -73,6 +73,7 @@ export interface HeatmapSlotProps
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 
+export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
@@ -105,7 +106,7 @@ export interface HeatmapProps
    * The series to display in the bar chart.
    * An array of [[HeatmapSeriesType]] objects.
    */
-  series: Readonly<MakeOptional<HeatmapSeriesType, 'type'>[]>;
+  series: Readonly<HeatmapSeries[]>;
   /**
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.

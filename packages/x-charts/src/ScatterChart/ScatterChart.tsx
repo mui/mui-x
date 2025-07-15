@@ -51,6 +51,7 @@ export interface ScatterChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
+export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
 export interface ScatterChartProps
   extends Omit<
       ChartContainerProps<'scatter', ScatterChartPluginsSignatures>,
@@ -65,9 +66,9 @@ export interface ScatterChartProps
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the scatter chart.
-   * An array of [[ScatterSeriesType]] objects.
+   * An array of [[ScatterSeries]] objects.
    */
-  series: Readonly<MakeOptional<ScatterSeriesType, 'type'>[]>;
+  series: Readonly<ScatterSeries[]>;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
