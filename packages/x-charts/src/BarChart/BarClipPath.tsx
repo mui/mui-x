@@ -126,6 +126,8 @@ export interface BarClipPathProps {
   layout?: 'vertical' | 'horizontal';
   x: number;
   y: number;
+  xOrigin: number;
+  yOrigin: number;
   width: number;
   height: number;
   skipAnimation: boolean;
@@ -143,16 +145,65 @@ function BarClipPath(props: BarClipPathProps) {
 
   return (
     <clipPath id={maskId}>
-      <BarClipRect
-        ownerState={rest}
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        skipAnimation={skipAnimation}
+      <path
+        d={generateClipPath(
+          props.hasNegative,
+          props.hasPositive,
+          props.layout ?? 'vertical',
+          x,
+          y,
+          width,
+          height,
+          props.xOrigin,
+          props.yOrigin,
+          props.borderRadius,
+        )}
       />
     </clipPath>
   );
+}
+
+function generateClipPath(
+  hasNegative: boolean,
+  hasPositive: boolean,
+  layout: 'vertical' | 'horizontal',
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  xOrigin: number,
+  yOrigin: number,
+  borderRadius: number,
+) {
+  const bR = borderRadius;
+
+  if (layout === 'vertical') {
+    let path = '';
+    if (hasPositive) {
+      path += `M${x},${yOrigin} v${-(yOrigin - y - bR)} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${yOrigin - y - bR} Z`;
+    }
+
+    if (hasNegative) {
+      path += `M${x},${yOrigin} v${y + height - yOrigin - bR} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR * 2} a${bR},${bR} 0 0 0 ${bR},${-bR} v${-(y + height - yOrigin - bR)} Z`;
+    }
+
+    return path;
+  }
+
+  if (layout === 'horizontal') {
+    const positiveStack = positiveStacks.get(id);
+
+    if (positiveStack && positiveStack.seriesId === seriesId) {
+      return `path("M0,0 h${width - bR} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 -${bR},${bR} h-${width - bR} Z")`;
+    }
+
+    const negativeStack = negativeStacks.get(id);
+    if (negativeStack && negativeStack.seriesId === seriesId) {
+      return `path("M${width},0 h-${width - bR} a${bR},${bR} 0 0 0 -${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR} Z")`;
+    }
+  }
+
+  return undefined;
 }
 
 export { BarClipPath };
