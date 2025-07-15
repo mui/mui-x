@@ -9,6 +9,7 @@ import { SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import { TimeGridEvent } from '../event';
+import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
 
 const adapter = getAdapter();
 
@@ -57,24 +58,22 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       getData: () => ({ type: 'column' }),
       onDrop: ({ source, location }) => {
         const data = source.data as unknown as TimeGridEvent.EventDragData;
+        const position = getCursorPositionRelativeToElement({ ref, input: location.current.input });
+        const eventTopPosition = position.y - data.position.y;
 
-        const pageY = location.current.input.pageY;
-        const columnOffsetTop = ref.current!.offsetTop;
-        const columnHeight = ref.current!.offsetHeight;
-        const y = pageY - columnOffsetTop;
+        const newStartMinuteInDay =
+          Math.round(((eventTopPosition / ref.current?.offsetHeight!) * 1440) / 15) * 15; // Round to nearest 15 minutes
 
-        const newTime = Math.round((y / columnHeight) * 1440); // 1440 minutes in a day
-
+        // TODO: Avoid JS Date conversion
         const eventDuration =
           (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
           (60 * 1000);
 
         const newStartDate = adapter.setMinutes(
-          adapter.setHours(value, Math.floor(newTime / 60)),
-          newTime % 60,
+          adapter.setHours(value, Math.floor(newStartMinuteInDay / 60)),
+          newStartMinuteInDay % 60,
         );
 
-        // TODO: Avoid JS Date conversion
         const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
 
         onEventChange({

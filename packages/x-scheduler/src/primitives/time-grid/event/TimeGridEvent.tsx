@@ -9,6 +9,7 @@ import { getAdapter } from '../../utils/adapter/getAdapter';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
 import { SchedulerValidDate } from '../../models';
+import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
 
 const adapter = getAdapter();
 
@@ -75,7 +76,15 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   React.useEffect(() => {
     return draggable({
       element: ref.current!,
-      getInitialData: () => ({ type: 'event', id: eventId, start, end }),
+      getInitialData: ({ input }) => {
+        return {
+          type: 'event',
+          id: eventId,
+          start,
+          end,
+          position: getCursorPositionRelativeToElement({ ref, input }),
+        };
+      },
       onDragStart: () => setIsMoving(true),
       onDrop: () => setIsMoving(false),
     });
@@ -108,5 +117,6 @@ export namespace TimeGridEvent {
     id: string | number;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
+    position: { y: number };
   }
 }
