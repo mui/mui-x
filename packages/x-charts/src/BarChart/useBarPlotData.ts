@@ -60,7 +60,7 @@ export function useBarPlotData(
       });
       const barOffset = groupIndex * (barWidth + offset);
 
-      const { stackedData, data: currentSeriesData, layout } = series[seriesId];
+      const { stackedData, data: currentSeriesData, layout, minBarSize } = series[seriesId];
 
       const seriesDataPoints = baseScaleConfig
         .data!.map((baseValue, dataIndex: number) => {
@@ -75,16 +75,24 @@ export function useBarPlotData(
 
           const stackId = series[seriesId].stack;
 
+          const { barSize, startCoordinate } = getValueCoordinate(
+            verticalLayout,
+            minValueCoord,
+            maxValueCoord,
+            currentSeriesData[dataIndex],
+            minBarSize,
+          );
+
           const result = {
             seriesId,
             dataIndex,
             layout,
-            x: verticalLayout ? xScale(baseValue)! + barOffset : minValueCoord,
-            y: verticalLayout ? minValueCoord : yScale(baseValue)! + barOffset,
+            x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
+            y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
             xOrigin: xScale(0) ?? 0,
             yOrigin: yScale(0) ?? 0,
-            height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
-            width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
+            height: verticalLayout ? barSize : barWidth,
+            width: verticalLayout ? barWidth : barSize,
             color: colorGetter(dataIndex),
             value: currentSeriesData[dataIndex],
             maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
@@ -169,4 +177,27 @@ function getBandSize({
     barWidth,
     offset,
   };
+}
+
+function getValueCoordinate(
+  isVertical: boolean,
+  minValueCoord: number,
+  maxValueCoord: number,
+  baseValue: number,
+  minBarSize: number,
+): { barSize: number; startCoordinate: number } {
+  const isSizeLessThanMin = maxValueCoord - minValueCoord < minBarSize;
+  const barSize = isSizeLessThanMin ? minBarSize : maxValueCoord - minValueCoord;
+
+  const isVerticalAndPositive = isVertical && baseValue >= 0;
+  const isHorizontalAndNegative = !isVertical && baseValue < 0;
+
+  if (isSizeLessThanMin && (isVerticalAndPositive || isHorizontalAndNegative)) {
+    return {
+      barSize,
+      startCoordinate: maxValueCoord - barSize,
+    };
+  }
+
+  return { barSize, startCoordinate: minValueCoord };
 }

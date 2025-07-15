@@ -77,6 +77,13 @@ You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
 
+### Minimum bar size
+
+You can set a minimum bar size with the `minBarSize` property.
+This property is useful when you want to ensure that bars are always visible, even when the data is sparse or the chart is small.
+
+{{"demo": "MinBarSize.js"}}
+
 ## Customization
 
 ### Grid
