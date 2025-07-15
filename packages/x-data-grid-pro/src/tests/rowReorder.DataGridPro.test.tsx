@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, createEvent } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
 import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import { isJSDOM } from 'test/utils/skipIf';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
 function createDragOverEvent(target: ChildNode) {
@@ -24,7 +25,7 @@ function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false
   return dragEndEvent;
 }
 
-describe('<DataGridPro /> - Row reorder', () => {
+describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
   const { render } = createRenderer();
 
   it('should cancel the reordering when dropping the row outside the grid', () => {
