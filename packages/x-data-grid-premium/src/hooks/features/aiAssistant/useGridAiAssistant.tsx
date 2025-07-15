@@ -381,7 +381,6 @@ export const useGridAiAssistant = (
           activeConversation?.id,
         );
         applyPromptResult(response);
-        console.warn('response.estimatedRemainingQueries', response.estimatedRemainingQueries);
         setActiveConversationId(response.conversationId);
         setEstimatedRemainingQueries(response.estimatedRemainingQueries);
         setConversationPrompts(activeConversationIndex, (prevPrompts) =>
