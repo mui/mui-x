@@ -172,8 +172,8 @@ export default function LineWithUncertaintyArea() {
             { y0: 4.4, y1: 5.8 },
           ]}
         />
-        <MarkPlot />
       </g>
+      <MarkPlot />
       <ChartsTooltip />
       <ChartsClipPath id={clipPathId} />
     </ChartContainer>
