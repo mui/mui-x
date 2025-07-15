@@ -1,11 +1,11 @@
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_generateUtilityClasses as generateUtilityClasses,
-} from '@mui/utils';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 export interface PickersToolbarClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the title element. */
+  title: string;
   /** Styles applied to the content element. */
   content: string;
 }
@@ -18,5 +18,6 @@ export function getPickersToolbarUtilityClass(slot: string) {
 
 export const pickersToolbarClasses = generateUtilityClasses('MuiPickersToolbar', [
   'root',
+  'title',
   'content',
 ]);

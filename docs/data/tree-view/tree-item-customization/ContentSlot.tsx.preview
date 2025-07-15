@@ -1,0 +1,7 @@
+<RichTreeView
+  defaultExpandedItems={['pickers']}
+  defaultSelectedItems={'grid'}
+  items={MUI_X_PRODUCTS}
+  slots={{ item: CustomTreeItem }}
+  isItemDisabled={(item) => Boolean(item?.disabled)}
+/>

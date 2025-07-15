@@ -1,5 +1,7 @@
+'use client';
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { ChartsLoadingOverlay } from './ChartsLoadingOverlay';
 import { useSeries } from '../hooks/useSeries';
 import { SeriesId } from '../models/seriesType/common';
@@ -21,6 +23,8 @@ export function useNoData() {
 export type CommonOverlayProps = React.SVGAttributes<SVGTextElement> & {
   /**
    * The message displayed by the overlay.
+   * @deprecated The customization of the message should be done with the localization key `loading` and `noData`.
+   * @see See {@link https://mui.com/x/react-charts/localization/ localization docs} for more details.
    */
   message?: string;
   sx?: SxProps<Theme>;
@@ -39,8 +43,8 @@ export interface ChartsOverlaySlots {
   noDataOverlay?: React.ElementType<CommonOverlayProps>;
 }
 export interface ChartsOverlaySlotProps {
-  loadingOverlay?: Partial<CommonOverlayProps>;
-  noDataOverlay?: Partial<CommonOverlayProps>;
+  loadingOverlay?: SlotComponentPropsFromProps<CommonOverlayProps, {}, {}>;
+  noDataOverlay?: SlotComponentPropsFromProps<CommonOverlayProps, {}, {}>;
 }
 
 export interface ChartsOverlayProps {

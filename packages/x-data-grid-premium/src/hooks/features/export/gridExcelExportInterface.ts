@@ -3,8 +3,6 @@ import {
   GridFileExportOptions,
   GridExportFormat as GridExportFormatCommunity,
   GridExportExtension as GridExportExtensionCommunity,
-  GridToolbarExportProps as GridToolbarExportPropsCommunity,
-  GridExportDisplayOptions,
 } from '@mui/x-data-grid-pro';
 
 export type GridExportFormat = GridExportFormatCommunity | 'excel';
@@ -60,10 +58,6 @@ export interface GridExcelExportOptions extends GridFileExportOptions {
    * @default true
    */
   includeColumnGroupsHeaders?: boolean;
-}
-
-export interface GridToolbarExportProps extends GridToolbarExportPropsCommunity {
-  excelOptions: GridExcelExportOptions & GridExportDisplayOptions;
 }
 
 /**

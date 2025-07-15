@@ -1,3 +1,4 @@
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   GridColumnGroupingModel,
   GridColumnNode,
@@ -5,7 +6,6 @@ import {
   isLeaf,
 } from '../../../models/gridColumnGrouping';
 import { GridColDef } from '../../../models/colDef';
-import { isDeepEqual } from '../../../utils/utils';
 import { GridGroupingStructure } from './gridColumnGroupsInterfaces';
 
 type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['groupId'][] };

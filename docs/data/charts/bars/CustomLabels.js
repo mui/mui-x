@@ -15,8 +15,8 @@ export default function CustomLabels() {
         }
         return context.bar.height < 60 ? null : item.value?.toString();
       }}
-      width={600}
       height={350}
+      margin={{ left: 0 }}
     />
   );
 }

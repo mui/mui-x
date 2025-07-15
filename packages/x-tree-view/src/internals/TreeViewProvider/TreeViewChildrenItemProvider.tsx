@@ -1,30 +1,26 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTreeViewContext } from './useTreeViewContext';
+import { useTreeViewContext } from './TreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
 import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import type { UseTreeViewIdSignature } from '../plugins/useTreeViewId';
+import { selectorItemOrderedChildrenIds } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
 
-if (process.env.NODE_ENV !== 'production') {
-  TreeViewChildrenItemContext.displayName = 'TreeViewChildrenItemContext';
-}
-
 interface TreeViewChildrenItemProviderProps {
-  itemId?: string;
+  itemId: string | null;
+  idAttribute: string | null;
   children: React.ReactNode;
 }
 
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
-  const { children, itemId = null } = props;
+  const { children, itemId = null, idAttribute } = props;
 
-  const { instance, rootRef } =
-    useTreeViewContext<
-      [UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature, UseTreeViewIdSignature]
-    >();
+  const { instance, store, rootRef } =
+    useTreeViewContext<[UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature]>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
 
   React.useEffect(() => {
@@ -32,23 +28,8 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       return;
     }
 
-    let idAttr: string | null = null;
-    if (itemId == null) {
-      idAttr = rootRef.current.id;
-    } else {
-      // Undefined during 1st render
-      const itemMeta = instance.getItemMeta(itemId);
-      if (itemMeta !== undefined) {
-        idAttr = instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute);
-      }
-    }
-
-    if (idAttr == null) {
-      return;
-    }
-
-    const previousChildrenIds = instance.getItemOrderedChildrenIds(itemId ?? null) ?? [];
-    const escapedIdAttr = escapeOperandAttributeSelector(idAttr);
+    const previousChildrenIds = selectorItemOrderedChildrenIds(store.value, itemId ?? null) ?? [];
+    const escapedIdAttr = escapeOperandAttributeSelector(idAttribute ?? rootRef.current.id);
     const childrenElements = rootRef.current.querySelectorAll(
       `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );

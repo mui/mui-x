@@ -1,128 +1,75 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
-import { InteractionProvider } from '../context/InteractionProvider';
-import { ColorProvider } from '../context/ColorProvider';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import {
-  CartesianContextProvider,
-  CartesianContextProviderProps,
-} from '../context/CartesianProvider';
-import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import {
-  HighlightedProvider,
-  HighlightedProviderProps,
-  ZAxisContextProvider,
-  ZAxisContextProviderProps,
-} from '../context';
-import { ChartsPluginType } from '../models/plugin';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { useChartContainerHooks } from './useChartContainerHooks';
+import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
+import { useChartContainerProps } from './useChartContainerProps';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
-export type ChartContainerProps = Omit<
-  ChartsSurfaceProps &
-    Omit<SeriesContextProviderProps, 'seriesFormatters'> &
-    Omit<DrawingProviderProps, 'svgRef'> &
-    Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'> &
-    ZAxisContextProviderProps &
-    HighlightedProviderProps,
-  'children'
-> & {
-  children?: React.ReactNode;
-  /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
-   */
-  plugins?: ChartsPluginType<ChartSeriesType>[];
-};
+export type ChartContainerProps<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<SeriesType>,
+> = Omit<ChartDataProviderProps<SeriesType, TSignatures>, 'children'> & ChartsSurfaceProps;
 
-const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
-  const {
-    width,
-    height,
-    series,
-    margin,
-    xAxis,
-    yAxis,
-    zAxis,
-    colors,
-    dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
-    children,
-  } = props;
-  const {
-    svgRef,
-    handleRef,
-    xExtremumGetters,
-    yExtremumGetters,
-    seriesFormatters,
-    colorProcessors,
-  } = useChartContainerHooks(ref, plugins);
+/**
+ * It sets up the data providers as well as the `<svg>` for the chart.
+ *
+ * This is a combination of both the `ChartDataProvider` and `ChartsSurface` components.
+ *
+ * Demos:
+ *
+ * - [Composition](https://mui.com/x/api/charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartContainer API](https://mui.com/x/api/charts/chart-container/)
+ *
+ * @example
+ * ```jsx
+ * <ChartContainer
+ *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
+ *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
+ * >
+ *    <BarPlot />
+ *    <ChartsXAxis axisId="x-axis" />
+ * </ChartContainer>
+ * ```
+ */
+const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends ChartSeriesType>(
+  props: ChartContainerProps<TSeries>,
+  ref: React.Ref<SVGSVGElement>,
+) {
+  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps(
+    props,
+    ref,
+  );
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <ColorProvider colorProcessors={colorProcessors}>
-        <SeriesContextProvider
-          series={series}
-          colors={colors}
-          dataset={dataset}
-          seriesFormatters={seriesFormatters}
-        >
-          <CartesianContextProvider
-            xAxis={xAxis}
-            yAxis={yAxis}
-            dataset={dataset}
-            xExtremumGetters={xExtremumGetters}
-            yExtremumGetters={yExtremumGetters}
-          >
-            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
-              <InteractionProvider>
-                <HighlightedProvider
-                  highlightedItem={highlightedItem}
-                  onHighlightChange={onHighlightChange}
-                >
-                  <ChartsSurface
-                    width={width}
-                    height={height}
-                    ref={handleRef}
-                    sx={sx}
-                    title={title}
-                    desc={desc}
-                    disableAxisListener={disableAxisListener}
-                  >
-                    <ChartsAxesGradients />
-                    {children}
-                  </ChartsSurface>
-                </HighlightedProvider>
-              </InteractionProvider>
-            </ZAxisContextProvider>
-          </CartesianContextProvider>
-        </SeriesContextProvider>
-      </ColorProvider>
-    </DrawingProvider>
+    <ChartDataProvider<TSeries, AllPluginSignatures<TSeries>> {...chartDataProviderProps}>
+      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+    </ChartDataProvider>
   );
-});
+}) as <TSeries extends ChartSeriesType>(
+  props: ChartContainerProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
+) => React.JSX.Element;
+
+// @ts-ignore
 
 ChartContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
+   * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   /**
@@ -137,28 +84,68 @@ ChartContainer.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * The height of the chart in px.
+   * If true, the voronoi interaction are ignored.
    */
-  height: PropTypes.number.isRequired,
+  disableVoronoi: PropTypes.bool,
   /**
-   * The item currently highlighted. Turns highlighting into a controlled prop.
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preferStrictDomainInLineCharts: PropTypes.bool,
+  }),
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   */
+  height: PropTypes.number,
+  /**
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
+   */
+  highlightedAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
+   * The highlighted item.
+   * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   }),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
-   * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin: PropTypes.shape({
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-    top: PropTypes.number,
-  }),
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *
@@ -166,51 +153,29 @@ ChartContainer.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
    */
-  plugins: PropTypes.arrayOf(PropTypes.object),
+  onHighlightedAxisChange: PropTypes.func,
   /**
-   * The array of series to display.
-   * Each type of series has its own specificity.
-   * Please refer to the appropriate docs page to learn more about it.
+   * Callback fired when clicking close to an item.
+   * This is only available for scatter plot for now.
+   * @param {MouseEvent} event Mouse event caught at the svg level
+   * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
-  series: PropTypes.arrayOf(PropTypes.object).isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-  title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
+  onItemClick: PropTypes.func,
   /**
-   * The width of the chart in px.
-   */
-  width: PropTypes.number.isRequired,
-  /**
-   * The configuration of the x-axes.
+   * The configuration of the radial-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis: PropTypes.arrayOf(
+  radiusAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
         PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -232,21 +197,30 @@ ChartContainer.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
+      height: PropTypes.number,
       hideTooltip: PropTypes.bool,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      maxRadius: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['bottom', 'top']),
+      minRadius: PropTypes.number,
+      offset: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'none', 'top']),
       reverse: PropTypes.bool,
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['linear']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -264,75 +238,1686 @@ ChartContainer.propTypes = {
     }),
   ),
   /**
+   * The configuration of the rotation-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  rotationAxis: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        barGapRatio: PropTypes.number,
+        categoryGapRatio: PropTypes.number,
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            type: PropTypes.oneOf(['ordinal']).isRequired,
+            unknownColor: PropTypes.string,
+            values: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+                .isRequired,
+            ),
+          }),
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        endAngle: PropTypes.number,
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelGap: PropTypes.number,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['band']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        startAngle: PropTypes.number,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            type: PropTypes.oneOf(['ordinal']).isRequired,
+            unknownColor: PropTypes.string,
+            values: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+                .isRequired,
+            ),
+          }),
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        endAngle: PropTypes.number,
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelGap: PropTypes.number,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['point']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        startAngle: PropTypes.number,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        endAngle: PropTypes.number,
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelGap: PropTypes.number,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['log']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        startAngle: PropTypes.number,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        endAngle: PropTypes.number,
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelGap: PropTypes.number,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['pow']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        startAngle: PropTypes.number,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        endAngle: PropTypes.number,
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelGap: PropTypes.number,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['sqrt']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        startAngle: PropTypes.number,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        endAngle: PropTypes.number,
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelGap: PropTypes.number,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['time']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        startAngle: PropTypes.number,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        endAngle: PropTypes.number,
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelGap: PropTypes.number,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['utc']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        startAngle: PropTypes.number,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        endAngle: PropTypes.number,
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelGap: PropTypes.number,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['linear']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        startAngle: PropTypes.number,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+    ]).isRequired,
+  ),
+  /**
+   * The array of series to display.
+   * Each type of series has its own specificity.
+   * Please refer to the appropriate docs page to learn more about it.
+   */
+  series: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props for the slots.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Slots to customize charts' components.
+   */
+  slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
+  title: PropTypes.string,
+  /**
+   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * If `undefined`, the radius is assumed to be infinite.
+   */
+  voronoiMaxRadius: PropTypes.number,
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   */
+  width: PropTypes.number,
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  xAxis: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        barGapRatio: PropTypes.number,
+        categoryGapRatio: PropTypes.number,
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            type: PropTypes.oneOf(['ordinal']).isRequired,
+            unknownColor: PropTypes.string,
+            values: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+                .isRequired,
+            ),
+          }),
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['band']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            type: PropTypes.oneOf(['ordinal']).isRequired,
+            unknownColor: PropTypes.string,
+            values: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+                .isRequired,
+            ),
+          }),
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['point']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['log']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['pow']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['sqrt']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['time']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['utc']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['linear']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+      }),
+    ]).isRequired,
+  ),
+  /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
   yAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      classes: PropTypes.object,
-      colorMap: PropTypes.oneOfType([
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        barGapRatio: PropTypes.number,
+        categoryGapRatio: PropTypes.number,
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            type: PropTypes.oneOf(['ordinal']).isRequired,
+            unknownColor: PropTypes.string,
+            values: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+                .isRequired,
+            ),
+          }),
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['band']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
           ),
-        }),
-        PropTypes.shape({
-          color: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.string.isRequired),
-            PropTypes.func,
-          ]).isRequired,
-          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          type: PropTypes.oneOf(['continuous']).isRequired,
-        }),
-        PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          thresholds: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
-          ).isRequired,
-          type: PropTypes.oneOf(['piecewise']).isRequired,
-        }),
-      ]),
-      data: PropTypes.array,
-      dataKey: PropTypes.string,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      hideTooltip: PropTypes.bool,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      position: PropTypes.oneOf(['left', 'right']),
-      reverse: PropTypes.bool,
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
-      slotProps: PropTypes.object,
-      slots: PropTypes.object,
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickInterval: PropTypes.oneOfType([
-        PropTypes.oneOf(['auto']),
-        PropTypes.array,
-        PropTypes.func,
-      ]),
-      tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
-      tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
-      tickLabelStyle: PropTypes.object,
-      tickMaxStep: PropTypes.number,
-      tickMinStep: PropTypes.number,
-      tickNumber: PropTypes.number,
-      tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
-      tickSize: PropTypes.number,
-      valueFormatter: PropTypes.func,
-    }),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            type: PropTypes.oneOf(['ordinal']).isRequired,
+            unknownColor: PropTypes.string,
+            values: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+                .isRequired,
+            ),
+          }),
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['point']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['log']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['pow']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['sqrt']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['time']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['utc']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['linear']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+      }),
+    ]).isRequired,
   ),
   /**
    * The configuration of the z-axes.
@@ -369,6 +1954,8 @@ ChartContainer.propTypes = {
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

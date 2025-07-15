@@ -14,6 +14,7 @@ import {
   SOURCE_CODE_REPO as DOCS_SOURCE_CODE_REPO,
   SOURCE_GITHUB_BRANCH as DOCS_SOURCE_GITHUB_BRANCH,
 } from '../docs/constants';
+import { resolvePrettierConfigPath } from '../docs/scripts/utils';
 
 // @ts-ignore
 const MyOctokit = Octokit.plugin(retry);
@@ -38,6 +39,13 @@ const packagesWithL10n = [
     constantsRelativePath: 'packages/x-date-pickers/src/locales/enUS.ts',
     localesRelativePath: 'packages/x-date-pickers/src/locales',
     documentationReportPath: 'docs/data/date-pickers/localization/data.json',
+  },
+  {
+    key: 'charts',
+    reportName: '📊 Charts',
+    constantsRelativePath: 'packages/x-charts/src/locales/enUS.ts',
+    localesRelativePath: 'packages/x-charts/src/locales',
+    documentationReportPath: 'docs/data/charts/localization/data.json',
   },
 ];
 
@@ -72,7 +80,7 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
           }
 
           // Test if the variable name follows the pattern xxXXGrid or xxXXPickers
-          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers)/.test(node.id.name)) {
+          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers|LocalText)/.test(node.id.name)) {
             visitorPath.skip();
             return;
           }
@@ -144,7 +152,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
           (property.key as babelTypes.Identifier).name ||
           `'${(property.key as babelTypes.StringLiteral).value}'`;
 
-        // Ignore translations for MUI Core components, for example MuiTablePagination
+        // Ignore translations for Core components, for example MuiTablePagination
         if (key.startsWith('Mui')) {
           return;
         }
@@ -225,8 +233,9 @@ function injectTranslations(
 
       const valueAsCode = result!.code!.replace(/^const _ = (.*);/gs, '$1');
       const comment = !existingTranslations[key] && !existingTranslations[`'${key}'`] ? '// ' : '';
+      const content = `${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`;
 
-      lines.push(`${comment}${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`);
+      lines.push(...content.split('\n').map((line) => `${comment}${line}`));
     });
   });
 
@@ -430,7 +439,7 @@ async function run(argv: ArgumentsCamelCase<HandlerArgv>) {
             baseTranslationsByGroup,
           );
 
-          const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
+          const prettierConfigPath = await resolvePrettierConfigPath();
           const prettierConfig = await prettier.resolveConfig(localePath, {
             config: prettierConfigPath,
           });

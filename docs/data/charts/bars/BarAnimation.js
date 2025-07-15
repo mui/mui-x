@@ -32,6 +32,7 @@ export default function BarAnimation() {
           .slice(0, seriesNb)
           .map((s) => ({ ...s, data: s.data.slice(0, itemNb) }))}
         skipAnimation={skipAnimation}
+        margin={{ left: 0 }}
       />
       <FormControlLabel
         checked={skipAnimation}
@@ -68,8 +69,8 @@ export default function BarAnimation() {
 }
 
 const highlightScope = {
-  highlighted: 'series',
-  faded: 'global',
+  highlight: 'series',
+  fade: 'global',
 };
 
 const series = [

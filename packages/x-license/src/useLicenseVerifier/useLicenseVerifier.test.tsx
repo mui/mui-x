@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import {
   useLicenseVerifier,
   LicenseInfo,
@@ -8,7 +7,8 @@ import {
   Unstable_LicenseInfoProvider as LicenseInfoProvider,
   MuiCommercialPackageName,
 } from '@mui/x-license';
-import { sharedLicenseStatuses } from './useLicenseVerifier';
+import { isJSDOM } from 'test/utils/skipIf';
+import { clearLicenseStatusCache } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 
 const oneDayInMS = 1000 * 60 * 60 * 24;
@@ -20,12 +20,8 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
   return <div data-testid="status">Status: {licenseStatus.status}</div>;
 }
 
-describe('useLicenseVerifier', function test() {
-  // Can't change the process.env.NODE_ENV in Karma
-  if (!/jsdom/.test(window.navigator.userAgent)) {
-    return;
-  }
-
+// Can't change the process.env.NODE_ENV in Browser
+describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
   let env: any;
@@ -45,10 +41,7 @@ describe('useLicenseVerifier', function test() {
 
   describe('error', () => {
     beforeEach(() => {
-      Object.keys(sharedLicenseStatuses).forEach((key) => {
-        // @ts-ignore
-        delete sharedLicenseStatuses[key];
-      });
+      clearLicenseStatusCache();
     });
 
     it('should log the missing license key error only once', () => {
@@ -61,9 +54,9 @@ describe('useLicenseVerifier', function test() {
     it('should detect an override of a valid license key in the context', () => {
       const key = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        licensingModel: 'perpetual',
+        licenseModel: 'perpetual',
         orderNumber: '12345',
-        scope: 'pro',
+        planScope: 'pro',
         planVersion: 'initial',
       });
 
@@ -88,25 +81,26 @@ describe('useLicenseVerifier', function test() {
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'subscription',
+        planScope: 'pro',
+        licenseModel: 'subscription',
         planVersion: 'initial',
       });
       LicenseInfo.setLicenseKey(expiredLicenseKey);
 
-      let actualErrorMsg;
+      const errorRef = React.createRef<any>();
+
       expect(() => {
-        try {
-          render(<TestComponent />);
-        } catch (error: any) {
-          actualErrorMsg = error.message;
-        }
+        render(
+          <ErrorBoundary ref={errorRef}>
+            <TestComponent />
+          </ErrorBoundary>,
+        );
       }).to.toErrorDev([
         'MUI X: Expired license key',
-        'MUI X: Expired license key',
-        'The above error occurred in the <TestComponent> component',
+        reactMajor < 19 && 'MUI X: Expired license key',
+        reactMajor < 19 && 'The above error occurred in the <TestComponent> component',
       ]);
-      expect(actualErrorMsg).to.match(/MUI X: Expired license key/);
+      expect((errorRef.current as any).errors[0].toString()).to.match(/MUI X: Expired license key/);
     });
 
     it('should throw if the license is not covering charts and tree-view', () => {
@@ -117,8 +111,8 @@ describe('useLicenseVerifier', function test() {
       const licenseKey = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'subscription',
+        planScope: 'pro',
+        licenseModel: 'subscription',
         planVersion: 'initial',
       });
 
@@ -126,11 +120,13 @@ describe('useLicenseVerifier', function test() {
 
       expect(() => {
         render(<TestComponent packageName={'x-charts-pro'} />);
-      }).to.toErrorDev(['MUI X: Product not covered by plan.']);
+      }).to.toErrorDev(['MUI X: Component not included in your license.']);
+
+      // TODO: CHARTS-PREMIUM: Define how license will work for x-charts-premium
 
       expect(() => {
         render(<TestComponent packageName={'x-tree-view-pro'} />);
-      }).to.toErrorDev(['MUI X: Product not covered by plan.']);
+      }).to.toErrorDev(['MUI X: Component not included in your license.']);
     });
 
     it('should not throw if the license is covering charts and tree-view', () => {
@@ -141,8 +137,8 @@ describe('useLicenseVerifier', function test() {
       const licenseKey = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'subscription',
+        planScope: 'pro',
+        licenseModel: 'subscription',
         planVersion: 'Q3-2024',
       });
 
@@ -165,8 +161,8 @@ describe('useLicenseVerifier', function test() {
       const licenseKey = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
         orderNumber: 'MUI-123',
-        scope: 'premium',
-        licensingModel: 'subscription',
+        planScope: 'premium',
+        licenseModel: 'subscription',
         planVersion: 'Q3-2024',
       });
 

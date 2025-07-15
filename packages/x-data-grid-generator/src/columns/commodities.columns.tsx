@@ -174,6 +174,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
   },
   {
     field: 'incoTerm',
+    headerName: 'Incoterm',
     generateData: randomIncoterm,
     renderCell: renderIncoterm,
     renderEditCell: renderEditIncoterm,
@@ -250,7 +251,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
       return value;
     },
     valueFormatter: (value: { label: string }) => value?.label,
-    groupingValueGetter: (value: { code: string }) => value.code,
+    groupingValueGetter: (value: { label: string } | undefined) => value?.label,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
     editable,

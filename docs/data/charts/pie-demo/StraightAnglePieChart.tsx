@@ -20,7 +20,8 @@ export default function StraightAnglePieChart() {
           data,
         },
       ]}
-      height={300}
+      height={200}
+      width={200}
     />
   );
 }

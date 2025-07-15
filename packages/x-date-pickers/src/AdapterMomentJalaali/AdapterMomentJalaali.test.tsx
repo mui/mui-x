@@ -1,6 +1,5 @@
-import { expect } from 'chai';
 import moment from 'moment';
-import jMoment from 'moment-jalaali';
+import jMoment, { Moment } from 'moment-jalaali';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import {
@@ -23,11 +22,11 @@ describe('<AdapterMomentJalaali />', () => {
   });
 
   describe('Adapter localization', () => {
-    before(() => {
+    beforeAll(() => {
       jMoment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
     });
 
-    after(() => {
+    afterAll(() => {
       moment.locale('en');
     });
 
@@ -35,25 +34,24 @@ describe('<AdapterMomentJalaali />', () => {
       const adapter = new AdapterMomentJalaali();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Moment;
 
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
       expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
       expectDate('keyboardDate', '۱۳۹۸/۱۱/۱۲');
-      expectDate('keyboardDateTime', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
       expectDate('keyboardDateTime12h', '۱۳۹۸/۱۱/۱۲ ۱۱:۴۴ ب.ظ');
       expectDate('keyboardDateTime24h', '۱۳۹۸/۱۱/۱۲ ۲۳:۴۴');
     });
   });
 
   describe('Picker localization', () => {
-    before(() => {
+    beforeAll(() => {
       jMoment.loadPersian();
     });
 
-    after(() => {
+    afterAll(() => {
       moment.locale('en');
     });
 
@@ -69,34 +67,29 @@ describe('<AdapterMomentJalaali />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-jalaali',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

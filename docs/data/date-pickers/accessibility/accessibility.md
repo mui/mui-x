@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Date and Time Pickers - Accessibility
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -17,12 +17,25 @@ Common conformance guidelines for accessibility include:
 - US:
   - [ADA](https://www.ada.gov/) - US Department of Justice
   - [Section 508](https://www.section508.gov/) - US federal agencies
-- Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
+- Europe: [EAA](https://employment-social-affairs.ec.europa.eu/policies-and-activities/social-protection-social-inclusion/persons-disabilities/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en) (European Accessibility Act)
 
 WCAG 2.1 has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
 
 The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) and [Date Picker Spin Button](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) patterns, which provide valuable information on how to optimize the accessibility of these components.
+
+### Dialog considerations
+
+Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
+This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
+A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
+
+- Use `toolbar` id if the toolbar is visible;
+- Use the id of the input label if the toolbar is hidden;
+
+:::info
+Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` slots in case you are using Date and Time Pickers component with **hidden toolbar** and **without a label**.
+:::
 
 ## Screen reader compatibility
 

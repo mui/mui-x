@@ -31,7 +31,7 @@ const predefinedFilters = [
 ];
 
 export default function FilteredRowCount() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 1000,
     maxColumns: 10,
@@ -45,10 +45,14 @@ export default function FilteredRowCount() {
 
   const getFilteredRowsCount = React.useCallback(
     (filterModel) => {
-      const { filteredRowsLookup } = apiRef.current.getFilterState(filterModel);
-      return Object.keys(filteredRowsLookup).filter(
-        (rowId) => filteredRowsLookup[rowId] === true,
-      ).length;
+      const rowIds = apiRef.current?.getAllRowIds();
+      const filterState = apiRef.current?.getFilterState(filterModel);
+      if (!rowIds || !filterState) {
+        return 0;
+      }
+
+      const { filteredRowsLookup } = filterState;
+      return rowIds.filter((rowId) => filteredRowsLookup[rowId] !== false).length;
     },
     [apiRef],
   );
@@ -72,7 +76,7 @@ export default function FilteredRowCount() {
           return (
             <Button
               key={label}
-              onClick={() => apiRef.current.setFilterModel(filterModel)}
+              onClick={() => apiRef.current?.setFilterModel(filterModel)}
               variant="outlined"
             >
               {label} {count !== undefined ? `(${count})` : ''}
@@ -81,7 +85,7 @@ export default function FilteredRowCount() {
         })}
       </Stack>
       <Box sx={{ height: 520, width: '100%' }}>
-        <DataGridPro {...data} loading={data.rows.length === 0} apiRef={apiRef} />
+        <DataGridPro {...data} loading={loading} apiRef={apiRef} />
       </Box>
     </div>
   );

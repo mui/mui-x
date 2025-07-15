@@ -2,17 +2,16 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';
-import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridToolbar, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, gridClasses, GridToolbar } from '@mui/x-data-grid';
+import { isJSDOM } from 'test/utils/skipIf';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
 } from '../hooks/features/density/densitySelector';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-describe('<DataGrid /> - Density', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+// JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
+describe.skipIf(isJSDOM)('<DataGrid /> - Density', () => {
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -50,13 +49,6 @@ describe('<DataGrid /> - Density', () => {
     );
   }
 
-  before(function beforeHook() {
-    if (isJSDOM) {
-      // JSDOM seem to not support CSS variables properly and `height: var(--height)` ends up being `height: ''`
-      this.skip();
-    }
-  });
-
   describe('prop: `initialState.density`', () => {
     it('should set the density to the value of initialState.density', () => {
       const rowHeight = 30;
@@ -65,9 +57,7 @@ describe('<DataGrid /> - Density', () => {
           <DataGrid
             {...baselineProps}
             initialState={{ density: 'compact' }}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
             rowHeight={rowHeight}
           />
         </div>,
@@ -95,34 +85,27 @@ describe('<DataGrid /> - Density', () => {
       function Grid(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              slots={{
-                toolbar: GridToolbar,
-              }}
-              {...props}
-            />
+            <DataGrid {...baselineProps} showToolbar slots={{ toolbar: GridToolbar }} {...props} />
           </div>
         );
       }
 
-      const { setProps, getByText } = render(<Grid rowHeight={rowHeight} density="standard" />);
+      const { setProps } = render(<Grid rowHeight={rowHeight} density="standard" />);
 
       expectHeight(rowHeight);
 
-      fireEvent.click(getByText('Density'));
-      clock.tick(100);
-      fireEvent.click(getByText('Compact'));
+      fireEvent.click(screen.getByText('Density'));
+      fireEvent.click(screen.getByText('Compact'));
 
       // Not updated because of the controlled prop
       expectHeight(rowHeight);
 
       // Explicitly update the prop
       setProps({ density: 'compact' });
-      clock.tick(200);
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
+    // TODO: Remove when we remove the legacy GridToolbar
     it('should call `onDensityChange` prop when density gets updated', () => {
       const onDensityChange = spy();
       function Test() {
@@ -133,57 +116,56 @@ describe('<DataGrid /> - Density', () => {
               slots={{
                 toolbar: GridToolbar,
               }}
+              showToolbar
               onDensityChange={onDensityChange}
             />
           </div>
         );
       }
-      const { getByText } = render(<Test />);
-      fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('Comfortable'));
+      render(<Test />);
+      fireEvent.click(screen.getByText('Density'));
+      fireEvent.click(screen.getByText('Comfortable'));
       expect(onDensityChange.callCount).to.equal(1);
       expect(onDensityChange.firstCall.args[0]).to.equal('comfortable');
     });
   });
 
+  // TODO: Remove when we remove the legacy GridToolbar
   describe('density selection menu', () => {
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
-      const { getByText } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
+            slots={{ toolbar: GridToolbar }}
             rowHeight={rowHeight}
           />
         </div>,
       );
 
-      fireEvent.click(getByText('Density'));
-      clock.tick(100);
-      fireEvent.click(getByText('Compact'));
+      fireEvent.click(screen.getByText('Density'));
+      fireEvent.click(screen.getByText('Compact'));
 
       expectHeight(rowHeight * COMPACT_DENSITY_FACTOR);
     });
 
     it('should decrease grid density when selecting comfortable density', () => {
       const rowHeight = 30;
-      const { getByText } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            slots={{
-              toolbar: GridToolbar,
-            }}
+            showToolbar
+            slots={{ toolbar: GridToolbar }}
             rowHeight={rowHeight}
           />
         </div>,
       );
 
-      fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('Comfortable'));
+      fireEvent.click(screen.getByText('Density'));
+      fireEvent.click(screen.getByText('Comfortable'));
 
       expectHeight(rowHeight * COMFORTABLE_DENSITY_FACTOR);
     });

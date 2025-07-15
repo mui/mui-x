@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import Stack from '@mui/material/Stack';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import TextField from '@mui/material/TextField';
@@ -19,7 +18,7 @@ export default function BorderRadius() {
           <Typography gutterBottom>Border Radius</Typography>
           <Slider
             value={radius}
-            onChange={(e, v) => setRadius(v)}
+            onChange={(event, value) => setRadius(value)}
             valueLabelDisplay="auto"
             min={0}
             max={50}
@@ -42,13 +41,15 @@ export default function BorderRadius() {
           { dataKey: 'high', label: 'High', layout, stack: 'stack' },
           { dataKey: 'low', label: 'Low', layout, stack: 'stack' },
         ]}
+        margin={{ left: 0 }}
         {...(layout === 'vertical' ? chartSettingsV : chartSettingsH)}
         borderRadius={radius}
       />
       <HighlightedCode
-        code={[`<BarChart`, `  /* ... */`, `  borderRadius={${radius}}`, `/>`].join(
-          '\n',
-        )}
+        code={`<BarChart
+  // ...
+  borderRadius={${radius}}
+/>`}
         language="jsx"
         copyButtonHidden
       />
@@ -70,21 +71,15 @@ const chartSettingsH = {
   dataset,
   height: 300,
   yAxis: [{ scaleType: 'band', dataKey: 'order' }],
-  sx: {
-    [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
-      transform: 'translateX(-10px)',
-    },
-  },
   slotProps: {
     legend: {
-      direction: 'row',
-      position: { vertical: 'bottom', horizontal: 'middle' },
-      padding: -5,
+      direction: 'horizontal',
+      position: { vertical: 'bottom', horizontal: 'center' },
     },
   },
 };
 const chartSettingsV = {
   ...chartSettingsH,
-  xAxis: [{ scaleType: 'band', dataKey: 'order' }],
+  xAxis: [{ dataKey: 'order' }],
   yAxis: undefined,
 };

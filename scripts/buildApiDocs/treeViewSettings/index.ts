@@ -1,20 +1,30 @@
 import path from 'path';
+import fs from 'fs';
 import { LANGUAGES } from 'docs/config';
-import { ProjectSettings } from '@mui-internal/api-docs-builder';
+import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
-import { ReactApi as ComponentReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/ComponentApiBuilder';
-import { ReactApi as HookReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/HookApiBuilder';
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_isGlobalState as isGlobalState,
-} from '@mui/utils';
+import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
+function getNonComponentFolders(): string[] {
+  try {
+    return fs
+      .readdirSync(path.join(process.cwd(), 'docs/data/tree-view'), { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory() && dirent.name !== 'components')
+      .map((dirent) => `tree-view/${dirent.name}`)
+      .sort();
+  } catch (error) {
+    // Fallback to empty array if directory doesn't exist
+    console.warn('Could not read the directories:', error);
+    return [];
+  }
+}
+
 export const projectTreeSettings: ProjectSettings = {
   output: {
-    apiManifestPath: path.join(process.cwd(), 'docs/data/tree-view-component-api-pages.ts'),
+    apiManifestPath: path.join(process.cwd(), 'docs/data/treeViewApiPages.ts'),
   },
   onWritingManifestFile: (
     builds: PromiseSettledResult<ComponentReactApi | HookReactApi | null | never[]>[],
@@ -36,10 +46,10 @@ export const projectTreeSettings: ProjectSettings = {
       .filter((page): page is PageType => page !== null)
       .sort((a: PageType, b: PageType) => a.title.localeCompare(b.title));
 
-    return `import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+    return `import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
-export default apiPages;
+const treeViewApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
+export default treeViewApiPages;
 `;
   },
   typeScriptProjects: [
@@ -48,11 +58,11 @@ export default apiPages;
       rootPath: path.join(process.cwd(), 'packages/x-tree-view'),
       entryPointPath: 'src/index.ts',
     },
-    // {
-    //   name: 'tree-view-pro',
-    //   rootPath: path.join(process.cwd(), 'packages/x-tree-view-pro'),
-    //   entryPointPath: 'src/index.ts',
-    // },
+    {
+      name: 'tree-view-pro',
+      rootPath: path.join(process.cwd(), 'packages/x-tree-view-pro'),
+      entryPointPath: 'src/index.ts',
+    },
   ],
   getApiPages: () => findApiPages('docs/pages/x/api/tree-view'),
   getComponentInfo,
@@ -69,4 +79,10 @@ export default apiPages;
   },
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,
+  nonComponentFolders: [
+    ...getNonComponentFolders(),
+    'migration/migration-tree-view-v7',
+    'migration/migration-tree-view-v6',
+    'migration/migration-tree-view-lab',
+  ],
 };

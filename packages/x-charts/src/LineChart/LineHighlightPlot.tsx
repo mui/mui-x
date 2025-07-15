@@ -1,19 +1,27 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useCartesianContext } from '../context/CartesianProvider';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { InteractionContext } from '../context/InteractionProvider';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import getColor from './getColor';
-import { useLineSeries } from '../hooks/useSeries';
+import { useLineSeriesContext } from '../hooks/useLineSeries';
+import getColor from './seriesConfig/getColor';
+import { useChartContext } from '../context/ChartProvider';
+import {
+  UseChartCartesianAxisSignature,
+  selectorChartsHighlightXAxisIndex,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
 }
 
 export interface LineHighlightPlotSlotProps {
-  lineHighlight?: Partial<LineHighlightElementProps>;
+  lineHighlight?: SlotComponentPropsFromProps<LineHighlightElementProps, {}, {}>;
 }
 
 export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElement> {
@@ -42,12 +50,16 @@ export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElemen
 function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
-  const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
-  const { axis } = React.useContext(InteractionContext);
+  const seriesData = useLineSeriesContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
-  const highlightedIndex = axis.x?.index;
-  if (highlightedIndex === undefined) {
+  const { instance } = useChartContext();
+
+  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const highlightedIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+
+  if (highlightedIndexes.length === 0) {
     return null;
   }
 
@@ -55,7 +67,6 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
     return null;
   }
   const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
@@ -63,49 +74,60 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
   return (
     <g {...other}>
-      {stackingGroups.flatMap(({ ids: groupIds }) => {
-        return groupIds.flatMap((seriesId) => {
-          const {
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
-            stackedData,
-            data,
-            disableHighlight,
-          } = series[seriesId];
+      {highlightedIndexes.flatMap(({ dataIndex: highlightedIndex, axisId: highlightedAxisId }) =>
+        stackingGroups.flatMap(({ ids: groupIds }) => {
+          return groupIds.flatMap((seriesId) => {
+            const {
+              xAxisId = defaultXAxisId,
+              yAxisId = defaultYAxisId,
+              stackedData,
+              data,
+              disableHighlight,
+              shape = 'circle',
+            } = series[seriesId];
 
-          if (disableHighlight || data[highlightedIndex] == null) {
-            return null;
-          }
-          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
-          const yScale = yAxis[yAxisKey].scale;
-          const xData = xAxis[xAxisKey].data;
+            if (disableHighlight || data[highlightedIndex] == null) {
+              return null;
+            }
+            if (highlightedAxisId !== xAxisId) {
+              return null;
+            }
+            const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+            const yScale = yAxis[yAxisId].scale;
+            const xData = xAxis[xAxisId].data;
 
-          if (xData === undefined) {
-            throw new Error(
-              `MUI X Charts: ${
-                xAxisKey === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisKey}"`
-              } should have data property to be able to display a line plot.`,
+            if (xData === undefined) {
+              throw new Error(
+                `MUI X Charts: ${
+                  xAxisId === DEFAULT_X_AXIS_KEY
+                    ? 'The first `xAxis`'
+                    : `The x-axis with id "${xAxisId}"`
+                } should have data property to be able to display a line plot.`,
+              );
+            }
+
+            const x = xScale(xData[highlightedIndex]);
+            const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
+
+            if (!instance.isPointInside(x, y)) {
+              return null;
+            }
+
+            const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
+            return (
+              <Element
+                key={`${seriesId}`}
+                id={seriesId}
+                color={colorGetter(highlightedIndex)}
+                x={x}
+                y={y}
+                shape={shape}
+                {...slotProps?.lineHighlight}
+              />
             );
-          }
-
-          const x = xScale(xData[highlightedIndex]);
-          const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
-
-          const colorGetter = getColor(series[seriesId], xAxis[xAxisKey], yAxis[yAxisKey]);
-          return (
-            <Element
-              key={`${seriesId}`}
-              id={seriesId}
-              color={colorGetter(highlightedIndex)}
-              x={x}
-              y={y}
-              {...slotProps?.lineHighlight}
-            />
-          );
-        });
-      })}
+          });
+        }),
+      )}
     </g>
   );
 }

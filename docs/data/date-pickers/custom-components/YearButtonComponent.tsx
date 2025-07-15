@@ -6,7 +6,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 const CustomYearButton = styled('button')({
-  margin: '8px 0',
   height: 36,
   width: 72,
 });

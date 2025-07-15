@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'מרידיאם',
 };
 
-const heILPickers: Partial<PickersLocaleText<any>> = {
+const heILPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'חודש קודם',
   nextMonth: 'חודש הבא',
@@ -35,16 +35,18 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'ניקוי',
   okButtonLabel: 'אישור',
   todayButtonLabel: 'היום',
+  nextStepButtonLabel: 'הבא',
 
   // Toolbar titles
   datePickerToolbarTitle: 'בחירת תאריך',
   dateTimePickerToolbarTitle: 'בחירת תאריך ושעה',
   timePickerToolbarTitle: 'בחירת שעה',
   dateRangePickerToolbarTitle: 'בחירת טווח תאריכים',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `בחירת ${views[view]}. ${time === null ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `בחירת ${views[view]}. ${!formattedTime ? 'לא נבחרה שעה' : `השעה הנבחרת היא ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} שעות`,
   minutesClockNumberText: (minutes) => `${minutes} דקות`,
   secondsClockNumberText: (seconds) => `${seconds} שניות`,
@@ -58,15 +60,12 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `שבוע ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `בחירת תאריך, התאריך שנבחר הוא ${utils.format(value, 'fullDate')}`
-      : 'בחירת תאריך',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `בחירת שעה, השעה שנבחרה היא ${utils.format(value, 'fullTime')}`
-      : 'בחירת שעה',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `בחירת תאריך, התאריך שנבחר הוא ${formattedDate}` : 'בחירת תאריך',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `בחירת שעה, השעה שנבחרה היא ${formattedTime}` : 'בחירת שעה',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'נקה ערך',
 
   // Table labels
@@ -91,7 +90,7 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   hours: 'שעות',
   minutes: 'דקות',
   seconds: 'שניות',
-  // meridiem: 'Meridiem',
+  meridiem: 'יחידת זמן',
 
   // Common
   empty: 'ריק',

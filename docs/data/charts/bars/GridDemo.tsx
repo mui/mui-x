@@ -1,18 +1,12 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { dataset } from '../dataset/weather';
+import { dataset, valueFormatter } from '../dataset/weather';
 
 const chartSetting = {
-  xAxis: [
-    {
-      label: 'rainfall (mm)',
-    },
-  ],
-  width: 500,
+  xAxis: [{ label: 'rainfall (mm)' }],
   height: 400,
+  margin: { left: 0 },
 };
-
-const valueFormatter = (value: number | null) => `${value}mm`;
 
 export default function GridDemo() {
   return (

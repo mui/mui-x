@@ -1,15 +1,5 @@
 {
   "props": {
-    "onViewChange": {
-      "type": { "name": "func" },
-      "required": true,
-      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
-    },
-    "view": { "type": { "name": "enum", "description": "'day'" }, "required": true },
-    "views": {
-      "type": { "name": "arrayOf", "description": "Array&lt;'day'&gt;" },
-      "required": true
-    },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "sx": {

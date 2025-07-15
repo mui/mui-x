@@ -3,7 +3,7 @@ productId: x-tree-view
 title: Simple Tree View - Expansion
 components: SimpleTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
@@ -32,6 +32,12 @@ Use the `onItemExpansionToggle` prop to trigger an action upon an item being exp
 
 {{"demo": "TrackItemExpansionToggle.js"}}
 
+## Limit expansion to icon container
+
+You can use the `expansionTrigger` prop to decide if the expansion interaction should be triggered by clicking on the icon container instead of the whole Tree Item content.
+
+{{"demo": "IconExpansionTreeView.js"}}
+
 ## Imperative API
 
 :::success
@@ -49,17 +55,19 @@ After this initial render, `apiRef` holds methods to interact imperatively with 
 
 ### Change an item expansion
 
-Use the `setItemExpansion` API method to change the expansion of an item.
+Use the `setItemExpansion()` API method to change the expansion of an item.
 
 ```ts
-apiRef.current.setItemExpansion(
+apiRef.current.setItemExpansion({
   // The DOM event that triggered the change
   event,
-  // The ID of the item to expand or collapse
+  // The id of the item to expand or collapse
   itemId,
-  // `true` if the item should be expanded, `false` if it should be collapsed
-  isExpanded,
-);
+  // If `true` the item will be expanded
+  // If `false` the item will be collapsed
+  // If not defined, the item's expansion status will be toggled.
+  shouldBeExpanded,
+});
 ```
 
 {{"demo": "ApiMethodSetItemExpansion.js"}}

@@ -4,16 +4,21 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
+    "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": { "type": { "name": "bool" }, "default": "false" },
+    "autoHeight": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/x/react-data-grid/layout/#flex-parent-container\">https://mui.com/x/react-data-grid/layout/#flex-parent-container</a>"
+    },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -22,8 +27,18 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
+    "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
+    "dataSource": {
+      "type": {
+        "name": "shape",
+        "description": "{ getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
+      }
+    },
+    "dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "defaultGroupingExpansionDepth": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
@@ -32,9 +47,7 @@
       },
       "default": "\"standard\""
     },
-    "detailPanelExpandedRowIds": {
-      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
-    },
+    "detailPanelExpandedRowIds": { "type": { "name": "instanceOf", "description": "Set" } },
     "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
     "disableChildrenFiltering": { "type": { "name": "bool" }, "default": "false" },
     "disableChildrenSorting": { "type": { "name": "bool" }, "default": "false" },
@@ -182,7 +195,17 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "loading": { "type": { "name": "bool" } },
+    "label": { "type": { "name": "string" } },
+    "lazyLoading": { "type": { "name": "bool" }, "default": "false" },
+    "lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
+    "listView": { "type": { "name": "bool" } },
+    "listViewColumn": {
+      "type": {
+        "name": "shape",
+        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
+      }
+    },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
       "type": {
@@ -197,6 +220,10 @@
         "description": "'debug'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;false"
       },
       "default": "\"error\" (\"warn\" in dev mode)"
+    },
+    "multipleColumnsSortingMode": {
+      "type": { "name": "enum", "description": "'always'<br>&#124;&nbsp;'withModifierKey'" },
+      "default": "\"withModifierKey\""
     },
     "nonce": { "type": { "name": "string" } },
     "onCellClick": {
@@ -250,6 +277,13 @@
       "signature": {
         "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderContextMenu": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
       }
     },
     "onColumnHeaderDoubleClick": {
@@ -315,6 +349,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onDataSourceError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: GridGetRowsError | GridUpdateRowError) => void",
+        "describedArgs": ["error"]
+      }
+    },
     "onDensityChange": {
       "type": { "name": "func" },
       "signature": {
@@ -331,6 +372,8 @@
     },
     "onFetchRows": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead.",
       "signature": {
         "type": "function(params: GridFetchRowsParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -458,6 +501,8 @@
     },
     "onRowsScrollEnd": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading</a> Server-side data-Infinite loading} instead.",
       "signature": {
         "type": "function(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -496,8 +541,8 @@
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(newRow: R, oldRow: R) => Promise<R> | R",
-        "describedArgs": ["newRow", "oldRow"],
+        "type": "function(newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R",
+        "describedArgs": ["newRow", "oldRow", "params"],
         "returned": "Promise<R> | R"
       }
     },
@@ -506,7 +551,6 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
     "rowReordering": { "type": { "name": "bool" }, "default": "false" },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -515,21 +559,30 @@
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
-        "name": "union",
-        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
+        "name": "shape",
+        "description": "{ ids: Set, type: 'exclude'<br>&#124;&nbsp;'include' }"
       }
     },
+    "rowSelectionPropagation": {
+      "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
+      "default": "{ parents: true, descendants: true }"
+    },
     "rowsLoadingMode": {
-      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }
+      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "default": "\"client\"",
+      "deprecated": true,
+      "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading\">https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading</a> Server-side data-Viewport loading} instead."
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
+    "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "sortingMode": {
@@ -554,7 +607,8 @@
       "additionalInfo": { "sx": true }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" }, "default": "false" }
+    "treeData": { "type": { "name": "bool" }, "default": "false" },
+    "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPro",
   "imports": [
@@ -576,9 +630,9 @@
       "class": null
     },
     {
-      "name": "baseChip",
-      "description": "The custom Chip component used in the grid.",
-      "default": "Chip",
+      "name": "bottomContainer",
+      "description": "Component rendered for the bottom container.",
+      "default": "GridBottomContainer",
       "class": null
     },
     {
@@ -600,6 +654,12 @@
       "class": null
     },
     {
+      "name": "columnHeaderSortIcon",
+      "description": "Sort icon component rendered in each column header.",
+      "default": "GridColumnHeaderSortIcon",
+      "class": null
+    },
+    {
       "name": "columnMenu",
       "description": "Column menu component rendered by clicking on the 3 dots \"kebab\" icon in column headers.",
       "default": "GridColumnMenu",
@@ -615,7 +675,7 @@
       "name": "detailPanels",
       "description": "Component responsible for rendering the detail panels.",
       "default": "GridDetailPanels",
-      "class": "MuiDataGridPro-detailPanels"
+      "class": null
     },
     {
       "name": "footer",
@@ -631,9 +691,8 @@
     },
     {
       "name": "toolbar",
-      "description": "Toolbar component rendered inside the Header component.",
-      "default": "null",
-      "class": null
+      "description": "Toolbar component rendered in the grid header.",
+      "class": "MuiDataGridPro-toolbar"
     },
     {
       "name": "loadingOverlay",
@@ -651,6 +710,12 @@
       "name": "noRowsOverlay",
       "description": "No rows overlay component rendered when the grid has no rows.",
       "default": "GridNoRowsOverlay",
+      "class": null
+    },
+    {
+      "name": "noColumnsOverlay",
+      "description": "No columns overlay component rendered when the grid has no columns.",
+      "default": "GridNoColumnsOverlay",
       "class": null
     },
     {
@@ -690,27 +755,63 @@
       "class": "MuiDataGridPro-row"
     },
     {
+      "name": "baseAutocomplete",
+      "description": "The custom Autocomplete component used in the grid for both header and cells.",
+      "default": "Autocomplete",
+      "class": null
+    },
+    {
+      "name": "baseBadge",
+      "description": "The custom Badge component used in the grid for both header and cells.",
+      "default": "Badge",
+      "class": null
+    },
+    {
       "name": "baseCheckbox",
       "description": "The custom Checkbox component used in the grid for both header and cells.",
       "default": "Checkbox",
       "class": null
     },
     {
-      "name": "baseInputAdornment",
-      "description": "The custom InputAdornment component used in the grid.",
-      "default": "InputAdornment",
+      "name": "baseChip",
+      "description": "The custom Chip component used in the grid.",
+      "default": "Chip",
+      "class": null
+    },
+    {
+      "name": "baseCircularProgress",
+      "description": "The custom CircularProgress component used in the grid.",
+      "default": "CircularProgress",
+      "class": null
+    },
+    {
+      "name": "baseDivider",
+      "description": "The custom Divider component used in the grid.",
+      "default": "Divider",
+      "class": null
+    },
+    {
+      "name": "baseLinearProgress",
+      "description": "The custom LinearProgress component used in the grid.",
+      "default": "LinearProgress",
+      "class": null
+    },
+    {
+      "name": "baseMenuList",
+      "description": "The custom MenuList component used in the grid.",
+      "default": "MenuList",
+      "class": null
+    },
+    {
+      "name": "baseMenuItem",
+      "description": "The custom MenuItem component used in the grid.",
+      "default": "MenuItem",
       "class": null
     },
     {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
-      "class": null
-    },
-    {
-      "name": "baseFormControl",
-      "description": "The custom FormControl component used in the grid.",
-      "default": "FormControl",
       "class": null
     },
     {
@@ -732,9 +833,21 @@
       "class": null
     },
     {
+      "name": "baseInput",
+      "description": "The custom Input component used in the grid.",
+      "default": "Input",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
+      "class": null
+    },
+    {
+      "name": "basePagination",
+      "description": "The custom Pagination component used in the grid.",
+      "default": "Pagination",
       "class": null
     },
     {
@@ -744,15 +857,21 @@
       "class": null
     },
     {
-      "name": "baseInputLabel",
-      "description": "The custom InputLabel component used in the grid.",
-      "default": "InputLabel",
+      "name": "baseSelectOption",
+      "description": "The custom SelectOption component used in the grid.",
+      "default": "SelectOption",
       "class": null
     },
     {
-      "name": "baseSelectOption",
-      "description": "The custom SelectOption component used in the grid.",
-      "default": "MenuItem",
+      "name": "baseSkeleton",
+      "description": "The custom Skeleton component used in the grid.",
+      "default": "Skeleton",
+      "class": null
+    },
+    {
+      "name": "baseSwitch",
+      "description": "The custom Switch component used in the grid.",
+      "default": "Switch",
       "class": null
     },
     {
@@ -789,12 +908,6 @@
       "name": "columnSelectorIcon",
       "description": "Icon displayed on the column menu selector tab.",
       "default": "GridColumnIcon",
-      "class": null
-    },
-    {
-      "name": "columnUnsortedIcon",
-      "description": "Icon displayed on the side of the column header title when unsorted.",
-      "default": "GridColumnUnsortedIcon",
       "class": null
     },
     {
@@ -836,7 +949,7 @@
     {
       "name": "exportIcon",
       "description": "Icon displayed on the open export button present in the toolbar by default.",
-      "default": "GridSaveAltIcon",
+      "default": "GridDownloadIcon",
       "class": null
     },
     {
@@ -903,7 +1016,7 @@
       "name": "rowReorderIcon",
       "description": "Icon displayed on the `reorder` column type to reorder a row.",
       "default": "GridDragIcon",
-      "class": null
+      "class": "MuiDataGridPro-rowReorderIcon"
     },
     {
       "name": "quickFilterIcon",
@@ -936,6 +1049,12 @@
       "class": null
     },
     {
+      "name": "columnMenuUnsortIcon",
+      "description": "Icon displayed in column menu for unsort",
+      "default": "null",
+      "class": null
+    },
+    {
       "name": "columnMenuFilterIcon",
       "description": "Icon displayed in column menu for filter",
       "default": "GridFilterAltIcon",
@@ -963,6 +1082,12 @@
       "name": "columnReorderIcon",
       "description": "Icon displayed on the column reorder button.",
       "default": "GridDragIcon",
+      "class": null
+    },
+    {
+      "name": "menuItemCheckIcon",
+      "description": "Icon displayed to indicate that a menu item is selected.",
+      "default": "GridCheckIcon",
       "class": null
     },
     {
@@ -1013,6 +1138,96 @@
       "key": "aggregationColumnHeaderLabel",
       "className": "MuiDataGridPro-aggregationColumnHeaderLabel",
       "description": "Styles applied to the aggregation label in the column header when aggregated.",
+      "isGlobal": false
+    },
+    {
+      "key": "aggregationRowOverlayWrapper",
+      "className": "MuiDataGridPro-aggregationRowOverlayWrapper",
+      "description": "Styles applied to the aggregation row overlay wrapper.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanel",
+      "className": "MuiDataGridPro-aiAssistantPanel",
+      "description": "Styles applied to the root element of the AI assistant panel.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelBody",
+      "className": "MuiDataGridPro-aiAssistantPanelBody",
+      "description": "Styles applied to the AI assistant panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversation",
+      "className": "MuiDataGridPro-aiAssistantPanelConversation",
+      "description": "Styles applied to the AI assistant panel conversation.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationList",
+      "className": "MuiDataGridPro-aiAssistantPanelConversationList",
+      "description": "Styles applied to the AI assistant panel conversation list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelConversationTitle",
+      "className": "MuiDataGridPro-aiAssistantPanelConversationTitle",
+      "description": "Styles applied to the AI assistant panel conversation title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelEmptyText",
+      "className": "MuiDataGridPro-aiAssistantPanelEmptyText",
+      "description": "Styles applied to the AI assistant panel empty text.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelFooter",
+      "className": "MuiDataGridPro-aiAssistantPanelFooter",
+      "description": "Styles applied to the AI assistant panel footer.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelHeader",
+      "className": "MuiDataGridPro-aiAssistantPanelHeader",
+      "description": "Styles applied to the AI assistant panel header.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestions",
+      "className": "MuiDataGridPro-aiAssistantPanelSuggestions",
+      "description": "Styles applied to the AI assistant panel suggestions.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsItem",
+      "className": "MuiDataGridPro-aiAssistantPanelSuggestionsItem",
+      "description": "Styles applied to the AI assistant panel suggestions item.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsLabel",
+      "className": "MuiDataGridPro-aiAssistantPanelSuggestionsLabel",
+      "description": "Styles applied to the AI assistant panel suggestions label.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelSuggestionsList",
+      "className": "MuiDataGridPro-aiAssistantPanelSuggestionsList",
+      "description": "Styles applied to the AI assistant panel suggestions list.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitle",
+      "className": "MuiDataGridPro-aiAssistantPanelTitle",
+      "description": "Styles applied to the AI assistant panel title.",
+      "isGlobal": false
+    },
+    {
+      "key": "aiAssistantPanelTitleContainer",
+      "className": "MuiDataGridPro-aiAssistantPanelTitleContainer",
+      "description": "Styles applied to the AI assistant panel title container.",
       "isGlobal": false
     },
     {
@@ -1148,6 +1363,30 @@
       "isGlobal": false
     },
     {
+      "key": "collapsible",
+      "className": "MuiDataGridPro-collapsible",
+      "description": "Styles applied to the collapsible element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsibleIcon",
+      "className": "MuiDataGridPro-collapsibleIcon",
+      "description": "Styles applied to the collapsible icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsiblePanel",
+      "className": "MuiDataGridPro-collapsiblePanel",
+      "description": "Styles applied to the collapsible panel element.",
+      "isGlobal": false
+    },
+    {
+      "key": "collapsibleTrigger",
+      "className": "MuiDataGridPro-collapsibleTrigger",
+      "description": "Styles applied to the collapsible trigger element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeader",
       "className": "MuiDataGridPro-columnHeader",
       "description": "Styles applied to the column header element.",
@@ -1187,6 +1426,12 @@
       "key": "columnHeader--filledGroup",
       "className": "MuiDataGridPro-columnHeader--filledGroup",
       "description": "Styles applied to the column group header cell if not empty.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeader--filter",
+      "className": "MuiDataGridPro-columnHeader--filter",
+      "description": "Styles applied to the header filter cell.",
       "isGlobal": false
     },
     {
@@ -1262,6 +1507,18 @@
       "isGlobal": false
     },
     {
+      "key": "columnHeaderFilterInput",
+      "className": "MuiDataGridPro-columnHeaderFilterInput",
+      "description": "Styles applied to the header filter input element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnHeaderFilterOperatorLabel",
+      "className": "MuiDataGridPro-columnHeaderFilterOperatorLabel",
+      "description": "Styles applied to the header filter operator label element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnHeaderTitle",
       "className": "MuiDataGridPro-columnHeaderTitle",
       "description": "Styles applied to the column header's title element;",
@@ -1310,6 +1567,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementEmptyText",
+      "className": "MuiDataGridPro-columnsManagementEmptyText",
+      "description": "Styles applied to the columns management empty text element.",
+      "isGlobal": false
+    },
+    {
       "key": "columnsManagementFooter",
       "className": "MuiDataGridPro-columnsManagementFooter",
       "description": "Styles applied to the columns management footer element.",
@@ -1325,6 +1588,18 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGridPro-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementScrollArea",
+      "className": "MuiDataGridPro-columnsManagementScrollArea",
+      "description": "Styles applied to the columns management scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementSearchInput",
+      "className": "MuiDataGridPro-columnsManagementSearchInput",
+      "description": "Styles applied to the columns management search input element.",
       "isGlobal": false
     },
     {
@@ -1466,6 +1741,12 @@
       "isGlobal": false
     },
     {
+      "key": "mainContent",
+      "className": "MuiDataGridPro-mainContent",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "menu",
       "className": "MuiDataGridPro-menu",
       "description": "Styles applied to the menu element.",
@@ -1544,12 +1825,6 @@
       "isGlobal": false
     },
     {
-      "key": "pinnedColumns",
-      "className": "MuiDataGridPro-pinnedColumns",
-      "description": "Styles applied to the pinned columns.",
-      "isGlobal": false
-    },
-    {
       "key": "pinnedRows",
       "className": "MuiDataGridPro-pinnedRows",
       "description": "Styles applied to the pinned rows container.",
@@ -1568,9 +1843,195 @@
       "isGlobal": false
     },
     {
-      "key": "pinnedRowsRenderZone",
-      "className": "MuiDataGridPro-pinnedRowsRenderZone",
-      "description": "Styles applied to pinned rows render zones.",
+      "key": "pivotPanelAvailableFields",
+      "className": "MuiDataGridPro-pivotPanelAvailableFields",
+      "description": "Styles applied to the pivot panel available fields.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelBody",
+      "className": "MuiDataGridPro-pivotPanelBody",
+      "description": "Styles applied to the pivot panel body.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField",
+      "className": "MuiDataGridPro-pivotPanelField",
+      "description": "Styles applied to the pivot panel field.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelField--sorted",
+      "className": "MuiDataGridPro-pivotPanelField--sorted",
+      "description": "Styles applied to the pivot panel field when sorted.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldActionContainer",
+      "className": "MuiDataGridPro-pivotPanelFieldActionContainer",
+      "description": "Styles applied to the pivot panel field action container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldCheckbox",
+      "className": "MuiDataGridPro-pivotPanelFieldCheckbox",
+      "description": "Styles applied to the pivot panel field checkbox.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldDragIcon",
+      "className": "MuiDataGridPro-pivotPanelFieldDragIcon",
+      "description": "Styles applied to the pivot panel field drag icon.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldList",
+      "className": "MuiDataGridPro-pivotPanelFieldList",
+      "description": "Styles applied to the pivot panel field list.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelFieldName",
+      "className": "MuiDataGridPro-pivotPanelFieldName",
+      "description": "Styles applied to the pivot panel field name.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelHeader",
+      "className": "MuiDataGridPro-pivotPanelHeader",
+      "description": "Styles applied to the pivot panel header.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelPlaceholder",
+      "className": "MuiDataGridPro-pivotPanelPlaceholder",
+      "description": "Styles applied to the pivot panel placeholder.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelScrollArea",
+      "className": "MuiDataGridPro-pivotPanelScrollArea",
+      "description": "Styles applied to the pivot panel scroll area.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSearchContainer",
+      "className": "MuiDataGridPro-pivotPanelSearchContainer",
+      "description": "Styles applied to the pivot panel search container.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSection",
+      "className": "MuiDataGridPro-pivotPanelSection",
+      "description": "Styles applied to the pivot panel section.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSections",
+      "className": "MuiDataGridPro-pivotPanelSections",
+      "description": "Styles applied to the pivot panel sections.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSectionTitle",
+      "className": "MuiDataGridPro-pivotPanelSectionTitle",
+      "description": "Styles applied to the pivot panel section title.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSwitch",
+      "className": "MuiDataGridPro-pivotPanelSwitch",
+      "description": "Styles applied to the pivot panel switch.",
+      "isGlobal": false
+    },
+    {
+      "key": "pivotPanelSwitchLabel",
+      "className": "MuiDataGridPro-pivotPanelSwitchLabel",
+      "description": "Styles applied to the pivot panel switch label.",
+      "isGlobal": false
+    },
+    {
+      "key": "prompt",
+      "className": "MuiDataGridPro-prompt",
+      "description": "Styles applied to the prompt root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptAction",
+      "className": "MuiDataGridPro-promptAction",
+      "description": "Styles applied to the prompt action element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangeList",
+      "className": "MuiDataGridPro-promptChangeList",
+      "description": "Styles applied to the prompt change list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggle",
+      "className": "MuiDataGridPro-promptChangesToggle",
+      "description": "Styles applied to the prompt changes toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptChangesToggleIcon",
+      "className": "MuiDataGridPro-promptChangesToggleIcon",
+      "description": "Styles applied to the prompt changes toggle icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptContent",
+      "className": "MuiDataGridPro-promptContent",
+      "description": "Styles applied to the prompt content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptError",
+      "className": "MuiDataGridPro-promptError",
+      "description": "Styles applied to the prompt error element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptFeedback",
+      "className": "MuiDataGridPro-promptFeedback",
+      "description": "Styles applied to the prompt feedback element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIcon",
+      "className": "MuiDataGridPro-promptIcon",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptIconContainer",
+      "className": "MuiDataGridPro-promptIconContainer",
+      "description": "Styles applied to the prompt icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "promptText",
+      "className": "MuiDataGridPro-promptText",
+      "description": "Styles applied to the prompt text element.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle",
+      "className": "MuiDataGridPro-resizablePanelHandle",
+      "description": "Styles applied to resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle--horizontal",
+      "className": "MuiDataGridPro-resizablePanelHandle--horizontal",
+      "description": "Styles applied to horizontal resizable panel handles.",
+      "isGlobal": false
+    },
+    {
+      "key": "resizablePanelHandle--vertical",
+      "className": "MuiDataGridPro-resizablePanelHandle--vertical",
+      "description": "Styles applied to vertical resizable panel handles.",
       "isGlobal": false
     },
     {
@@ -1676,9 +2137,21 @@
       "isGlobal": false
     },
     {
+      "key": "rowSkeleton",
+      "className": "MuiDataGridPro-rowSkeleton",
+      "description": "Styles applied to the skeleton row element.",
+      "isGlobal": false
+    },
+    {
       "key": "scrollArea",
       "className": "MuiDataGridPro-scrollArea",
       "description": "Styles applied to both scroll area elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollArea--down",
+      "className": "MuiDataGridPro-scrollArea--down",
+      "description": "Styles applied to the bottom scroll area element.",
       "isGlobal": false
     },
     {
@@ -1691,6 +2164,12 @@
       "key": "scrollArea--right",
       "className": "MuiDataGridPro-scrollArea--right",
       "description": "Styles applied to the right scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollArea--up",
+      "className": "MuiDataGridPro-scrollArea--up",
+      "description": "Styles applied to the top scroll area element.",
       "isGlobal": false
     },
     {
@@ -1718,9 +2197,27 @@
       "isGlobal": false
     },
     {
+      "key": "sidebar",
+      "className": "MuiDataGridPro-sidebar",
+      "description": "Styles applied to the sidebar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidebarHeader",
+      "className": "MuiDataGridPro-sidebarHeader",
+      "description": "Styles applied to the sidebar header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sortButton",
+      "className": "MuiDataGridPro-sortButton",
+      "description": "Styles applied to the sort button element.",
+      "isGlobal": false
+    },
+    {
       "key": "sortIcon",
       "className": "MuiDataGridPro-sortIcon",
-      "description": "Styles applied to the sort icon element.",
+      "description": "Styles applied to the sort button icon element.",
       "isGlobal": false
     },
     {
@@ -1730,9 +2227,39 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarDivider",
+      "className": "MuiDataGridPro-toolbarDivider",
+      "description": "Styles applied to the toolbar divider element.",
+      "isGlobal": false
+    },
+    {
       "key": "toolbarFilterList",
       "className": "MuiDataGridPro-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarLabel",
+      "className": "MuiDataGridPro-toolbarLabel",
+      "description": "Styles applied to the toolbar label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilter",
+      "className": "MuiDataGridPro-toolbarQuickFilter",
+      "description": "Styles applied to the toolbar quick filter root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterControl",
+      "className": "MuiDataGridPro-toolbarQuickFilterControl",
+      "description": "Styles applied to the toolbar quick filter control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarQuickFilterTrigger",
+      "className": "MuiDataGridPro-toolbarQuickFilterTrigger",
+      "description": "Styles applied to the toolbar quick filter trigger element.",
       "isGlobal": false
     },
     {
@@ -1778,6 +2305,12 @@
       "isGlobal": false
     },
     {
+      "key": "withSidePanel",
+      "className": "MuiDataGridPro-withSidePanel",
+      "description": "",
+      "isGlobal": false
+    },
+    {
       "key": "withVerticalBorder",
       "className": "MuiDataGridPro-withVerticalBorder",
       "description": "Styles applied the grid if `showColumnVerticalBorder={true}`.",
@@ -1788,6 +2321,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

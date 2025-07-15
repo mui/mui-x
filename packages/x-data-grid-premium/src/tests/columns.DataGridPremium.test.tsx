@@ -1,22 +1,16 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 import { getCell, getColumnHeaderCell } from 'test/utils/helperFn';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Columns', () => {
   const { render } = createRenderer();
 
   describe('resizing', () => {
     // https://github.com/mui/mui-x/issues/10078
-    it('should properly resize aggregated column', function test() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-
+    // Needs layout
+    it.skipIf(isJSDOM)('should properly resize aggregated column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPremium

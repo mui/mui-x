@@ -1,5 +1,4 @@
-import moment from 'moment';
-import { expect } from 'chai';
+import moment, { Moment } from 'moment-hijri';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
@@ -9,12 +8,28 @@ import {
   describeHijriAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
-import 'moment/locale/ar';
+import 'moment/locale/ar-sa';
+import { beforeAll } from 'vitest';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<AdapterMomentHijri />', () => {
+  beforeAll(() => {
+    if (!isJSDOM) {
+      // Vitest browser mode does not correctly load the locale
+      // This is the minimal amount of locale data needed to run the tests
+      moment.updateLocale('ar-sa', {
+        weekdays: 'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت'.split('_'),
+        weekdaysShort: 'أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت'.split('_'),
+        meridiem: (hour) => (hour < 12 ? 'ص' : 'م'),
+        postformat: (input) =>
+          input.replace(/\d/g, (match) => '٠١٢٣٤٥٦٧٨٩'[match]).replace(/,/g, '،'),
+      });
+    }
+  });
+
   describeHijriAdapter(AdapterMomentHijri, {
     before: () => {
-      moment.locale('ar-SA');
+      moment.locale('ar-sa');
     },
     after: () => {
       moment.locale('en');
@@ -26,7 +41,7 @@ describe('<AdapterMomentHijri />', () => {
       const adapter = new AdapterMomentHijri();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithArSA: string) => {
-        const date = adapter.date('2020-01-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-01-01T23:44:00.000Z') as Moment;
 
         expect(adapter.format(date, format)).to.equal(expectedWithArSA);
       };
@@ -62,34 +77,29 @@ describe('<AdapterMomentHijri />', () => {
       const localeObject = { code: localeKey };
 
       describe(`test with the locale "${localeKey}"`, () => {
-        const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
+        const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-hijri',
           locale: localeObject,
         });
 
         const { renderWithProps } = buildFieldInteractions({
           render,
-          clock,
           Component: DateTimeField,
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

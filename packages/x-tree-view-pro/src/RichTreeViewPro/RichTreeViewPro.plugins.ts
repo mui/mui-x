@@ -1,6 +1,4 @@
 import {
-  useTreeViewId,
-  UseTreeViewIdParameters,
   useTreeViewItems,
   UseTreeViewItemsParameters,
   useTreeViewExpansion,
@@ -10,41 +8,40 @@ import {
   useTreeViewFocus,
   UseTreeViewFocusParameters,
   useTreeViewKeyboardNavigation,
-  useTreeViewIcons,
-  UseTreeViewIconsParameters,
   ConvertPluginsIntoSignatures,
-  MergeSignaturesProperty,
+  TreeViewCorePluginParameters,
+  useTreeViewLabel,
+  UseTreeViewLabelParameters,
+  UseTreeViewLazyLoadingParameters,
 } from '@mui/x-tree-view/internals';
+import {
+  useTreeViewItemsReordering,
+  UseTreeViewItemsReorderingParameters,
+} from '../internals/plugins/useTreeViewItemsReordering';
+import { useTreeViewLazyLoading } from '../internals/plugins/useTreeViewLazyLoading';
 
 export const RICH_TREE_VIEW_PRO_PLUGINS = [
-  useTreeViewId,
   useTreeViewItems,
   useTreeViewExpansion,
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
-  useTreeViewIcons,
+  useTreeViewLabel,
+  useTreeViewLazyLoading,
+  useTreeViewItemsReordering,
 ] as const;
 
 export type RichTreeViewProPluginSignatures = ConvertPluginsIntoSignatures<
   typeof RICH_TREE_VIEW_PRO_PLUGINS
 >;
 
-export type RichTreeViewProPluginSlots = MergeSignaturesProperty<
-  RichTreeViewProPluginSignatures,
-  'slots'
->;
-
-export type RichTreeViewProPluginSlotProps = MergeSignaturesProperty<
-  RichTreeViewProPluginSignatures,
-  'slotProps'
->;
-
 // We can't infer this type from the plugin, otherwise we would lose the generics.
 export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends boolean | undefined>
-  extends UseTreeViewIdParameters,
+  extends TreeViewCorePluginParameters,
     UseTreeViewItemsParameters<R>,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewIconsParameters {}
+    UseTreeViewLabelParameters<R>,
+    UseTreeViewLazyLoadingParameters<R>,
+    UseTreeViewItemsReorderingParameters {}

@@ -5,4 +5,5 @@
     }
   }}
   {...data}
+  loading={loading}
 />

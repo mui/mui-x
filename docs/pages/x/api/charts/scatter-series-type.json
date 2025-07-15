@@ -1,20 +1,34 @@
 {
   "name": "ScatterSeriesType",
-  "imports": ["import { ScatterSeriesType } from '@mui/x-charts'"],
+  "imports": [
+    "import { ScatterSeriesType } from '@mui/x-charts-pro'",
+    "import { ScatterSeriesType } from '@mui/x-charts'"
+  ],
   "properties": {
-    "data": { "type": { "description": "ScatterValueType[]" }, "required": true },
     "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },
+    "data": { "type": { "description": "readonly ScatterValueType[]" } },
+    "datasetKeys": {
+      "type": {
+        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
+      }
+    },
     "disableHover": { "type": { "description": "boolean" }, "default": "false" },
     "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
     "id": { "type": { "description": "SeriesId" } },
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
     "markerSize": { "type": { "description": "number" } },
+    "preview": {
+      "type": {
+        "description": "{<br />  /**<br />   * The size of the preview marker.<br />   * @default 1<br />   */<br />  markerSize?: number<br />}"
+      }
+    },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisKey": { "type": { "description": "string" } },
-    "yAxisKey": { "type": { "description": "string" } },
-    "zAxisKey": { "type": { "description": "string" } }
+    "xAxisId": { "type": { "description": "string" } },
+    "yAxisId": { "type": { "description": "string" } },
+    "zAxisId": { "type": { "description": "string" } }
   }
 }

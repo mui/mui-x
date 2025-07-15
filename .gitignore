@@ -15,13 +15,14 @@ __diff_output__
 !/docs/pages/playground/tsconfig.json
 /docs/.env.local
 /docs/export
+/docs/public/x/
 /test/regressions/screenshots
+/test/performance-charts/traces
 build
 dist
 node_modules
 size-snapshot.json
 performance-snapshot.json
 # vale downloaded config
-.github/styles/Google
-.github/styles/MUI
-.github/styles/.vale-config
+.github/styles/
+test-results

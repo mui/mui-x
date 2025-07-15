@@ -1,20 +1,30 @@
 import path from 'path';
+import fs from 'fs';
 import { LANGUAGES } from 'docs/config';
-import { ProjectSettings } from '@mui-internal/api-docs-builder';
+import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
-import { ReactApi as ComponentReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/ComponentApiBuilder';
-import { ReactApi as HookReactApi } from '@mui-internal/api-docs-builder/ApiBuilders/HookApiBuilder';
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_isGlobalState as isGlobalState,
-} from '@mui/utils';
+import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
+function getNonComponentFolders(): string[] {
+  try {
+    return fs
+      .readdirSync(path.join(process.cwd(), 'docs/data/date-pickers'), { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory() && dirent.name !== 'components')
+      .map((dirent) => `date-pickers/${dirent.name}`)
+      .sort();
+  } catch (error) {
+    // Fallback to empty array if directory doesn't exist
+    console.warn('Could not read the directories:', error);
+    return [];
+  }
+}
+
 export const projectPickersSettings: ProjectSettings = {
   output: {
-    apiManifestPath: path.join(process.cwd(), 'docs/data/date-pickers-component-api-pages.ts'),
+    apiManifestPath: path.join(process.cwd(), 'docs/data/datePickersApiPages.ts'),
   },
   onWritingManifestFile: (
     builds: PromiseSettledResult<ComponentReactApi | HookReactApi | null | never[]>[],
@@ -36,10 +46,10 @@ export const projectPickersSettings: ProjectSettings = {
       .filter((page): page is PageType => page !== null)
       .sort((a: PageType, b: PageType) => a.title.localeCompare(b.title));
 
-    return `import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+    return `import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
-export default apiPages;
+const datePickersApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
+export default datePickersApiPages;
 `;
   },
   typeScriptProjects: [
@@ -76,6 +86,16 @@ export default apiPages;
       'desktopModeMediaQuery',
     ],
   },
+  sortingStrategies: {
+    slotsSort: (a, b) => a.name.localeCompare(b.name),
+  },
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,
+  nonComponentFolders: [
+    ...getNonComponentFolders(),
+    'migration/migration-date-pickers-v7',
+    'migration/migration-date-pickers-v6',
+    'migration/migration-date-pickers-v5',
+    'migration/migration-date-pickers-lab',
+  ],
 };

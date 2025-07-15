@@ -1,79 +1,86 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
+import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
-import { ItemInteractionData } from '../context/InteractionProvider';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import { ChartsTooltipClasses } from './chartsTooltipClasses';
-import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
-import { useCartesianContext } from '../context/CartesianProvider';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
-import { useColorProcessor } from '../hooks/useColor';
-import { useSeries } from '../hooks/useSeries';
+import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { useInternalItemTooltip } from './useItemTooltip';
+import {
+  ChartsTooltipCell,
+  ChartsTooltipPaper,
+  ChartsTooltipRow,
+  ChartsTooltipTable,
+} from './ChartsTooltipTable';
+import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
-export type ChartsItemContentProps<T extends ChartSeriesType = ChartSeriesType> = {
-  /**
-   * The data used to identify the triggered item.
-   */
-  itemData: ItemInteractionData<T>;
-  /**
-   * The series linked to the triggered axis.
-   */
-  series: ChartSeriesDefaultized<T>;
+export interface ChartsItemTooltipContentProps {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes: ChartsTooltipClasses;
-  /**
-   * Get the color of the item with index `dataIndex`.
-   * @param {number} dataIndex The data index of the item.
-   * @returns {string} The color to display.
-   */
-  getColor: (dataIndex: number) => string;
+  classes?: Partial<ChartsTooltipClasses>;
   sx?: SxProps<Theme>;
-};
+}
 
-function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
-  itemData: ItemInteractionData<T>;
-  content?: React.ElementType<ChartsItemContentProps<T>>;
-  contentProps?: Partial<ChartsItemContentProps<T>>;
-  sx?: SxProps<Theme>;
-  classes: ChartsItemContentProps<T>['classes'];
-}) {
-  const { content, itemData, sx, classes, contentProps } = props;
+function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
+  const { classes: propClasses, sx } = props;
+  const tooltipData = useInternalItemTooltip();
 
-  const series = useSeries()[itemData.type]!.series[itemData.seriesId] as ChartSeriesDefaultized<T>;
+  const classes = useUtilityClasses(propClasses);
 
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
-  const colorProcessors = useColorProcessor();
+  if (!tooltipData) {
+    return null;
+  }
 
-  const xAxisKey = (series as any).xAxisKey ?? xAxisIds[0];
-  const yAxisKey = (series as any).yAxisKey ?? yAxisIds[0];
-  const zAxisKey = (series as any).zAxisKey ?? zAxisIds[0];
+  if ('values' in tooltipData) {
+    const { label: seriesLabel, color, markType } = tooltipData;
+    return (
+      <ChartsTooltipPaper sx={sx} className={classes.paper}>
+        <ChartsTooltipTable className={classes.table}>
+          <Typography component="caption">
+            <div className={classes.markContainer}>
+              <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+            </div>
+            {seriesLabel}
+          </Typography>
+          <tbody>
+            {tooltipData.values.map(({ formattedValue, label }) => (
+              <ChartsTooltipRow key={label} className={classes.row}>
+                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+                  {label}
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+                  {formattedValue}
+                </ChartsTooltipCell>
+              </ChartsTooltipRow>
+            ))}
+          </tbody>
+        </ChartsTooltipTable>
+      </ChartsTooltipPaper>
+    );
+  }
 
-  const getColor =
-    colorProcessors[series.type]?.(
-      series as any,
-      xAxisKey && xAxis[xAxisKey],
-      yAxisKey && yAxis[yAxisKey],
-      zAxisKey && zAxis[zAxisKey],
-    ) ?? (() => '');
+  const { color, label, formattedValue, markType } = tooltipData;
 
-  const Content = content ?? DefaultChartsItemTooltipContent;
-  const chartTooltipContentProps = useSlotProps({
-    elementType: Content,
-    externalSlotProps: contentProps,
-    additionalProps: {
-      itemData,
-      series,
-      sx,
-      classes,
-      getColor,
-    },
-    ownerState: {},
-  });
-  return <Content {...chartTooltipContentProps} />;
+  return (
+    <ChartsTooltipPaper sx={sx} className={classes.paper}>
+      <ChartsTooltipTable className={classes.table}>
+        <tbody>
+          <ChartsTooltipRow className={classes.row}>
+            <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)} component="th">
+              <div className={classes.markContainer}>
+                <ChartsLabelMark type={markType} color={color} className={classes.mark} />
+              </div>
+              {label}
+            </ChartsTooltipCell>
+            <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)} component="td">
+              {formattedValue}
+            </ChartsTooltipCell>
+          </ChartsTooltipRow>
+        </tbody>
+      </ChartsTooltipTable>
+    </ChartsTooltipPaper>
+  );
 }
 
 ChartsItemTooltipContent.propTypes = {
@@ -81,28 +88,10 @@ ChartsItemTooltipContent.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object.isRequired,
-  content: PropTypes.elementType,
-  contentProps: PropTypes.shape({
-    classes: PropTypes.object,
-    getColor: PropTypes.func,
-    itemData: PropTypes.shape({
-      dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-    }),
-    series: PropTypes.object,
-    sx: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-      PropTypes.func,
-      PropTypes.object,
-    ]),
-  }),
-  itemData: PropTypes.shape({
-    dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    type: PropTypes.oneOf(['bar', 'line', 'pie', 'scatter']).isRequired,
-  }).isRequired,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

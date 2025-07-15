@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid
 ---
 
 # Charts - Scatter
@@ -11,9 +11,22 @@ components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
 ## Basics
 
 Scatter chart series should contain a `data` property containing an array of objects.
-Those objects require `x`, `y`, and `id` properties.
+Those objects require the `x` and `y` properties.
+With an optional `id` property if more optimization is needed.
 
 {{"demo": "BasicScatter.js"}}
+
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
+
+You can reuse this data when defining the series.
+The scatter series work a bit differently than in other charts.
+You need to specify the `datasetKeys` properties which is an object that requires the `x` and `y` keys.
+With an optional `id` and `z` keys if needed.
+
+{{"demo": "ScatterDataset.js"}}
 
 ## Interaction
 
@@ -27,12 +40,6 @@ Or set the `disableVoronoi` prop to `true` to trigger interactions only when hov
 
 {{"demo": "VoronoiInteraction.js"}}
 
-To use this feature with composition, add the `ChartsVoronoiHandler`.
-
-```jsx
-<ChartsVoronoiHandler voronoiMaxRadius={50} />
-```
-
 ## Click event
 
 Scatter Chart provides an `onItemClick` handler for handling clicks on specific scatter items.
@@ -45,7 +52,7 @@ const onItemClick = (
 ) => {};
 ```
 
-{{"demo": "ScatterClickNoSnap.js"}}
+{{"demo": "ScatterClick.js"}}
 
 If `disableVoronoi=true`, users need to click precisely on the scatter element, and the mouse event will come from this element.
 
@@ -98,8 +105,75 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
-### CSS 🚧
+### CSS
 
-### Shape 🚧
+You can target scatter markers with the following CSS selectors:
 
-### Size 🚧
+- `[data-series='<series id>']` Selects the group containing markers of the series with the given id.
+- `[data-highlighted=true]` Selects markers with highlighted state.
+- `[data-faded=true]` Selects markers with faded state.
+
+To select all marker groups, use the `scatterClasses.root` class name.
+
+Here is an example that customizes the look of highlighted items depending on the series they belong to.
+
+{{"demo": "ScatterCSSSelectors.js"}}
+
+### Shape
+
+The shape of points in a scatter chart can be customized by passing a component to the `marker` slot.
+
+If you want the legend and tooltip to match, then you also need to customize the `labelMarkType` of each series, as shown in the example below.
+
+{{"demo": "ScatterCustomShape.js"}}
+
+### Size
+
+You can customize the size of points in a scatter chart using the `markerSize` prop of every series.
+For circles, the `markerSize` is the radius of the point in pixels.
+
+{{"demo": "ScatterCustomSize.js"}}
+
+## Plot customization
+
+You can customize the plotting of the data in a scatter chart by providing custom components as `children` of the `ScatterChart` component.
+
+A scatter chart's series can be accessed through the `useScatterSeries` hook.
+This hook returns the order of the series and information about the series themselves, including their data points, color, etc.
+
+See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
+
+{{"demo": "CustomScatter.js"}}
+
+## Composition
+
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<ScatterPlot />` component that renders the scatter marks.
+
+Here's how the Scatter Chart is composed:
+
+```jsx
+<ChartDataProvider>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsAxis />
+      <ChartsGrid />
+      <g data-drawing-container>
+        {/* Elements able to overflow the drawing area. */}
+        <ScatterPlot />
+      </g>
+      <ChartsOverlay />
+      <ChartsAxisHighlight />
+    </ChartsSurface>
+    <ChartsTooltip trigger="item" />
+  </ChartsWrapper>
+</ChartDataProvider>
+```
+
+:::info
+The `data-drawing-container` indicates that children of this element should be considered part of the drawing area, even if they overflow.
+
+See the [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
+:::

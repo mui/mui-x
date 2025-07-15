@@ -51,7 +51,6 @@ export default function ColumnPinningDynamicRowHeight() {
                 </Button>
               </React.Fragment>
             )}
-
             <Button variant="outlined" size="small" startIcon={<PrintIcon />}>
               Print
             </Button>
@@ -67,7 +66,7 @@ export default function ColumnPinningDynamicRowHeight() {
   }, []);
 
   React.useLayoutEffect(() => {
-    apiRef.current.resetRowHeights();
+    apiRef.current?.resetRowHeights();
   }, [apiRef, showEditDelete]);
 
   return (

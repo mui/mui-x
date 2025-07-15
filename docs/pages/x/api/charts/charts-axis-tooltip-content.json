@@ -1,11 +1,18 @@
 {
-  "props": {},
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
   "name": "ChartsAxisTooltipContent",
   "imports": [
     "import { ChartsAxisTooltipContent } from '@mui/x-charts/ChartsTooltip';",
-    "import { ChartsAxisTooltipContent } from '@mui/x-charts';"
+    "import { ChartsAxisTooltipContent } from '@mui/x-charts';",
+    "import { ChartsAxisTooltipContent } from '@mui/x-charts-pro';"
   ],
   "classes": [
+    {
+      "key": "axisValueCell",
+      "className": "MuiChartsAxisTooltipContent-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "isGlobal": false
+    },
     {
       "key": "cell",
       "className": "MuiChartsAxisTooltipContent-cell",
@@ -25,9 +32,15 @@
       "isGlobal": false
     },
     {
-      "key": "markCell",
-      "className": "MuiChartsAxisTooltipContent-markCell",
-      "description": "Styles applied to the markCell element.",
+      "key": "markContainer",
+      "className": "MuiChartsAxisTooltipContent-markContainer",
+      "description": "Styles applied to the markContainer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiChartsAxisTooltipContent-paper",
+      "description": "Styles applied to the paper element.",
       "isGlobal": false
     },
     {

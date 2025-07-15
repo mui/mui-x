@@ -1,7 +1,7 @@
 import * as React from 'react';
 import InstallationInstructions from './InstallationInstructions';
 
-// #default-branch-switch
+// #npm-tag-reference
 
 const packages = {
   Community: '@mui/x-date-pickers',
@@ -10,7 +10,6 @@ const packages = {
 
 const peerDependency = {
   label: 'Date library',
-  installationComment: '// Install date library (if not already installed)',
   packages: ['dayjs', 'date-fns', 'luxon', 'moment'],
 };
 

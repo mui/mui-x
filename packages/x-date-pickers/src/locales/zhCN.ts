@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: '十二小时制',
 };
 
-const zhCNPickers: Partial<PickersLocaleText<any>> = {
+const zhCNPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: '上个月',
   nextMonth: '下个月',
@@ -33,16 +33,18 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: '清除',
   okButtonLabel: '确认',
   todayButtonLabel: '今天',
+  nextStepButtonLabel: '下个',
 
   // Toolbar titles
   datePickerToolbarTitle: '选择日期',
   dateTimePickerToolbarTitle: '选择日期和时间',
   timePickerToolbarTitle: '选择时间',
-  dateRangePickerToolbarTitle: '选择时间范围',
+  dateRangePickerToolbarTitle: '选择日期范围',
+  timeRangePickerToolbarTitle: '选择时间范围',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `选择 ${views[view]}. ${time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `选择 ${views[view]}. ${!formattedTime ? '未选择时间' : `已选择${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
@@ -56,15 +58,13 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `第${weekNumber}周`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `选择日期，已选择${utils.format(value, 'fullDate')}`
-      : '选择日期',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `选择时间，已选择${utils.format(value, 'fullTime')}`
-      : '选择时间',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `选择日期，已选择${formattedDate}` : '选择日期',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `选择时间，已选择${formattedTime}` : '选择时间',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `选择范围，已选范围是 ${formattedRange}` : '选择范围',
   fieldClearLabel: '清除',
 
   // Table labels

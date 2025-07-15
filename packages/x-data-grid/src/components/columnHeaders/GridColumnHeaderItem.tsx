@@ -1,12 +1,14 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { fastMemo } from '../../utils/fastMemo';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
+import { fastMemo } from '@mui/x-internals/fastMemo';
+import { useRtl } from '@mui/system/RtlProvider';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
@@ -16,8 +18,8 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
-import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { PinnedColumnPosition } from '../../internals/constants';
+import { attachPinnedStyle } from '../../internals/utils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -34,11 +36,13 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
   disableReorder?: boolean;
   separatorSide?: GridColumnHeaderSeparatorProps['side'];
-  pinnedPosition?: GridPinnedColumnPosition;
+  pinnedPosition?: PinnedColumnPosition;
+  pinnedOffset?: number;
   style?: React.CSSProperties;
-  indexInSection: number;
-  sectionLength: number;
-  gridHasFiller: boolean;
+  isLastUnpinned: boolean;
+  isSiblingFocused: boolean;
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -57,6 +61,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     showLeftBorder,
     filterItemsCounter,
     pinnedPosition,
+    isLastUnpinned,
+    isSiblingFocused,
   } = ownerState;
 
   const isColumnSorted = sortDirection != null;
@@ -78,8 +84,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
-      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
-      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
+      // TODO: Remove classes below and restore `:has` selectors when they are supported in jsdom
+      // See https://github.com/mui/mui-x/pull/14559
+      isLastUnpinned && 'columnHeader--lastUnpinned',
+      isSiblingFocused && 'columnHeader--siblingFocused',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -104,14 +114,14 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     tabIndex,
     disableReorder,
     separatorSide,
-    style,
+    showLeftBorder,
+    showRightBorder,
     pinnedPosition,
-    indexInSection,
-    sectionLength,
-    gridHasFiller,
+    pinnedOffset,
   } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId = useId();
   const columnMenuButtonId = useId();
@@ -127,15 +137,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   if (colDef.renderHeader) {
     headerComponent = colDef.renderHeader(apiRef.current.getColumnHeaderParams(colDef.field));
   }
-
-  const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
-  const showRightBorder = shouldCellShowRightBorder(
-    pinnedPosition,
-    indexInSection,
-    sectionLength,
-    rootProps.showCellVerticalBorder,
-    gridHasFiller,
-  );
 
   const ownerState = {
     ...props,
@@ -165,6 +166,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const mouseEventsHandlers = React.useMemo(
     () => ({
       onClick: publish('columnHeaderClick'),
+      onContextMenu: publish('columnHeaderContextMenu'),
       onDoubleClick: publish('columnHeaderDoubleClick'),
       onMouseOver: publish('columnHeaderOver'), // TODO remove as it's not used
       onMouseOut: publish('columnHeaderOut'), // TODO remove as it's not used
@@ -184,7 +186,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
             onDragStart: publish('columnHeaderDragStart'),
             onDragEnter: publish('columnHeaderDragEnter'),
             onDragOver: publish('columnHeaderDragOver'),
-            onDragEnd: publish('columnHeaderDragEnd'),
+            onDragEndCapture: publish('columnHeaderDragEnd'),
           }
         : {},
     [isDraggable, publish],
@@ -248,11 +250,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       )}
 
       {showSortIcon && (
-        <GridColumnHeaderSortIcon
+        <rootProps.slots.columnHeaderSortIcon
+          field={colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
           disabled={!colDef.sortable}
+          {...rootProps.slotProps?.columnHeaderSortIcon}
         />
       )}
     </React.Fragment>
@@ -276,6 +280,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       : colDef.headerClassName;
 
   const label = colDef.headerName ?? colDef.field;
+
+  const style = React.useMemo(
+    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
+    [pinnedPosition, pinnedOffset, props.style, isRtl],
+  );
 
   return (
     <GridGenericColumnHeaderItem
@@ -319,16 +328,18 @@ GridColumnHeaderItem.propTypes = {
   columnMenuOpen: PropTypes.bool.isRequired,
   disableReorder: PropTypes.bool,
   filterItemsCounter: PropTypes.number,
-  gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
-  indexInSection: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLast: PropTypes.bool.isRequired,
+  isLastUnpinned: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
-  pinnedPosition: PropTypes.oneOf(['left', 'right']),
-  sectionLength: PropTypes.number.isRequired,
+  isSiblingFocused: PropTypes.bool.isRequired,
+  pinnedOffset: PropTypes.number,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]),
   separatorSide: PropTypes.oneOf(['left', 'right']),
+  showLeftBorder: PropTypes.bool.isRequired,
+  showRightBorder: PropTypes.bool.isRequired,
   sortDirection: PropTypes.oneOf(['asc', 'desc']),
   sortIndex: PropTypes.number,
   style: PropTypes.object,

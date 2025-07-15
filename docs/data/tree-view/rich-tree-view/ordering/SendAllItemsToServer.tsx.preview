@@ -1,0 +1,16 @@
+<Box sx={{ minHeight: 352, minWidth: 300 }}>
+  <RichTreeViewPro
+    apiRef={apiRefTreeViewA}
+    items={MUI_X_PRODUCTS}
+    itemsReordering
+    defaultExpandedItems={['grid', 'pickers']}
+    onItemPositionChange={handleItemPositionChangeTreeViewA}
+  />
+</Box>
+<Box sx={{ minHeight: 352, minWidth: 300 }}>
+  <RichTreeViewPro
+    items={itemsTreeViewB}
+    expandedItems={getAllItemsWithChildrenItemIds(itemsTreeViewB)}
+    isItemDisabled={() => true}
+  />
+</Box>

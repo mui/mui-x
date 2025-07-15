@@ -11,15 +11,12 @@ import {
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
   Series,
-} from 'd3-shape';
-import type { BarSeriesType, LineSeriesType } from '../models/seriesType';
+} from '@mui/x-charts-vendor/d3-shape';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
-import { SeriesId } from '../models/seriesType/common';
+import { SeriesId, StackableSeriesType } from '../models/seriesType/common';
 
-type StackableSeries = Record<SeriesId, BarSeriesType> | Record<SeriesId, LineSeriesType>;
-
-type FormatterParams = {
-  series: StackableSeries;
+type FormatterParams<T> = {
+  series: Record<SeriesId, T>;
   seriesOrder: SeriesId[];
   defaultStrategy?: {
     stackOrder?: StackOrderType;
@@ -92,7 +89,7 @@ export const StackOffset: {
  * @param series the object of all bars series
  * @returns an array of groups, including the ids, the stacking order, and the stacking offset.
  */
-export const getStackingGroups = (params: FormatterParams) => {
+export const getStackingGroups = <T extends StackableSeriesType>(params: FormatterParams<T>) => {
   const { series, seriesOrder, defaultStrategy } = params;
 
   const stackingGroups: StackingGroupsType = [];

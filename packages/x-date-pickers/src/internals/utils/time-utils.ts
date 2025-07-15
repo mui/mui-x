@@ -1,25 +1,29 @@
-import { MuiPickersAdapter, PickerValidDate, TimeView } from '../../models';
+import { MuiPickersAdapter, PickerValidDate } from '../../models';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
-const timeViews = ['hours', 'minutes', 'seconds'];
-export const isTimeView = (view: DateOrTimeViewWithMeridiem) => timeViews.includes(view);
+export const EXPORTED_TIME_VIEWS = ['hours', 'minutes', 'seconds'] as const;
+
+export const TIME_VIEWS = ['hours', 'minutes', 'seconds', 'meridiem'] as const;
+
+export const isTimeView = (view: DateOrTimeViewWithMeridiem) =>
+  EXPORTED_TIME_VIEWS.includes(view as any);
 
 export const isInternalTimeView = (
   view: DateOrTimeViewWithMeridiem,
-): view is TimeViewWithMeridiem => timeViews.includes(view) || view === 'meridiem';
+): view is TimeViewWithMeridiem => TIME_VIEWS.includes(view as any);
 
 export type Meridiem = 'am' | 'pm';
 
-export const getMeridiem = <TDate extends PickerValidDate>(
-  date: TDate | null,
-  utils: MuiPickersAdapter<TDate>,
+export const getMeridiem = (
+  date: PickerValidDate | null,
+  adapter: MuiPickersAdapter,
 ): Meridiem | null => {
   if (!date) {
     return null;
   }
 
-  return utils.getHours(date) >= 12 ? 'pm' : 'am';
+  return adapter.getHours(date) >= 12 ? 'pm' : 'am';
 };
 
 export const convertValueToMeridiem = (value: number, meridiem: Meridiem | null, ampm: boolean) => {
@@ -33,45 +37,43 @@ export const convertValueToMeridiem = (value: number, meridiem: Meridiem | null,
   return value;
 };
 
-export const convertToMeridiem = <TDate extends PickerValidDate>(
-  time: TDate,
+export const convertToMeridiem = (
+  time: PickerValidDate,
   meridiem: Meridiem,
   ampm: boolean,
-  utils: MuiPickersAdapter<TDate>,
-) => {
-  const newHoursAmount = convertValueToMeridiem(utils.getHours(time), meridiem, ampm);
-  return utils.setHours(time, newHoursAmount);
+  adapter: MuiPickersAdapter,
+): PickerValidDate => {
+  const newHoursAmount = convertValueToMeridiem(adapter.getHours(time), meridiem, ampm);
+  return adapter.setHours(time, newHoursAmount);
 };
 
-export const getSecondsInDay = <TDate extends PickerValidDate>(
-  date: TDate,
-  utils: MuiPickersAdapter<TDate>,
-) => {
-  return utils.getHours(date) * 3600 + utils.getMinutes(date) * 60 + utils.getSeconds(date);
+export const getSecondsInDay = (date: PickerValidDate, adapter: MuiPickersAdapter) => {
+  return adapter.getHours(date) * 3600 + adapter.getMinutes(date) * 60 + adapter.getSeconds(date);
 };
 
 export const createIsAfterIgnoreDatePart =
-  <TDate extends PickerValidDate>(
-    disableIgnoringDatePartForTimeValidation: boolean,
-    utils: MuiPickersAdapter<TDate>,
-  ) =>
-  (dateLeft: TDate, dateRight: TDate) => {
+  (disableIgnoringDatePartForTimeValidation: boolean, adapter: MuiPickersAdapter) =>
+  (dateLeft: PickerValidDate, dateRight: PickerValidDate) => {
     if (disableIgnoringDatePartForTimeValidation) {
-      return utils.isAfter(dateLeft, dateRight);
+      return adapter.isAfter(dateLeft, dateRight);
     }
 
-    return getSecondsInDay(dateLeft, utils) > getSecondsInDay(dateRight, utils);
+    return getSecondsInDay(dateLeft, adapter) > getSecondsInDay(dateRight, adapter);
   };
 
-export const resolveTimeFormat = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  { format, views, ampm }: { format?: string; views: readonly TimeView[]; ampm: boolean },
+export const resolveTimeFormat = (
+  adapter: MuiPickersAdapter,
+  {
+    format,
+    views,
+    ampm,
+  }: { format?: string; views: readonly TimeViewWithMeridiem[]; ampm: boolean },
 ) => {
   if (format != null) {
     return format;
   }
 
-  const formats = utils.formats;
+  const formats = adapter.formats;
   if (areViewsEqual(views, ['hours'])) {
     return ampm ? `${formats.hours12h} ${formats.meridiem}` : formats.hours24h;
   }

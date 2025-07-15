@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createSvgIcon } from '@mui/material/utils';
+import { createSvgIcon } from './createSvgIcon';
 
 export const GridArrowUpwardIcon = createSvgIcon(
   <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />,
@@ -46,11 +46,14 @@ export const GridCheckCircleIcon = createSvgIcon(
 );
 
 export const GridColumnIcon = createSvgIcon(
-  <path d="M6 5H3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm14 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1zm-7 0h-3c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1z" />,
+  <path d="M14.67 5v14H9.33V5zm1 14H21V5h-5.33zm-7.34 0V5H3v14z" />,
   'ColumnIcon',
 );
 
-export const GridSeparatorIcon = createSvgIcon(<path d="M11 19V5h2v14z" />, 'Separator');
+export const GridSeparatorIcon = createSvgIcon(
+  <rect width="1" height="24" x="11.5" rx="0.5" />,
+  'Separator',
+);
 
 export const GridViewHeadlineIcon = createSvgIcon(
   <path d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z" />,
@@ -91,11 +94,6 @@ export const GridDragIcon = createSvgIcon(
   'Drag',
 );
 
-export const GridSaveAltIcon = createSvgIcon(
-  <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />,
-  'SaveAlt',
-);
-
 export const GridCheckIcon = createSvgIcon(
   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />,
   'Check',
@@ -119,7 +117,7 @@ export const GridViewColumnIcon = createSvgIcon(
 );
 
 export const GridClearIcon = createSvgIcon(
-  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />,
+  <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2m5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12z" />,
   'Clear',
 );
 
@@ -131,4 +129,9 @@ export const GridDeleteIcon = createSvgIcon(
 export const GridDeleteForeverIcon = createSvgIcon(
   <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z" />,
   'Delete',
+);
+
+export const GridDownloadIcon = createSvgIcon(
+  <path d="M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z" />,
+  'Download',
 );

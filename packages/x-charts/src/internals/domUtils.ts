@@ -5,15 +5,8 @@ function isSsr(): boolean {
   return typeof window === 'undefined';
 }
 
-interface StringCache {
-  widthCache: Record<string, any>;
-  cacheCount: number;
-}
+const stringCache = new Map<string, { width: number; height: number }>();
 
-const stringCache: StringCache = {
-  widthCache: {},
-  cacheCount: 0,
-};
 const MAX_CACHE_NUM = 2000;
 const SPAN_STYLE = {
   position: 'absolute',
@@ -45,7 +38,7 @@ const STYLE_LIST = [
   'marginTop',
   'marginBottom',
 ];
-const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
+export const MEASUREMENT_SPAN_ID = 'mui_measurement_span';
 
 /**
  *
@@ -97,6 +90,8 @@ export const getStyleString = (style: React.CSSProperties) =>
       '',
     );
 
+let domCleanTimeout: ReturnType<typeof setTimeout> | undefined;
+
 /**
  *
  * @param text The string to estimate
@@ -112,8 +107,9 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   const styleString = getStyleString(style);
   const cacheKey = `${str}-${styleString}`;
 
-  if (stringCache.widthCache[cacheKey]) {
-    return stringCache.widthCache[cacheKey];
+  const size = stringCache.get(cacheKey);
+  if (size) {
+    return size;
   }
 
   try {
@@ -134,21 +130,30 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
       return styleKey;
     });
     measurementSpan.textContent = str;
-
     const rect = measurementSpan.getBoundingClientRect();
     const result = { width: rect.width, height: rect.height };
 
-    stringCache.widthCache[cacheKey] = result;
+    stringCache.set(cacheKey, result);
 
-    if (stringCache.cacheCount + 1 > MAX_CACHE_NUM) {
-      stringCache.cacheCount = 0;
-      stringCache.widthCache = {};
+    if (stringCache.size + 1 > MAX_CACHE_NUM) {
+      stringCache.clear();
+    }
+
+    if (process.env.NODE_ENV === 'test') {
+      // In test environment, we clean the measurement span immediately
+      measurementSpan.textContent = '';
     } else {
-      stringCache.cacheCount += 1;
+      if (domCleanTimeout) {
+        clearTimeout(domCleanTimeout);
+      }
+      domCleanTimeout = setTimeout(() => {
+        // Limit node cleaning to once per render cycle
+        measurementSpan.textContent = '';
+      }, 0);
     }
 
     return result;
-  } catch (e) {
+  } catch {
     return { width: 0, height: 0 };
   }
 };

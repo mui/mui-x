@@ -1,0 +1,1 @@
+export { fastObjectShallowCompare } from './fastObjectShallowCompare';

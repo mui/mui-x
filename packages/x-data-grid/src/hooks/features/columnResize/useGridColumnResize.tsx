@@ -1,10 +1,10 @@
+'use client';
 import * as React from 'react';
-import {
-  unstable_ownerDocument as ownerDocument,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import { RefObject } from '@mui/x-internals/types';
+import useEventCallback from '@mui/utils/useEventCallback';
+import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { useTheme, Direction } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   findGridCellElementsFromCol,
   findGridElement,
@@ -30,9 +30,9 @@ import { CursorCoordinates } from '../../../models/cursorCoordinates';
 import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
 import {
-  useGridApiEventHandler,
+  useGridEvent,
   useGridApiMethod,
-  useGridApiOptionHandler,
+  useGridEventPriority,
   useGridLogger,
   useGridNativeEventListener,
   useGridSelector,
@@ -112,11 +112,11 @@ function flipResizeDirection(side: ResizeDirection) {
   return 'Right';
 }
 
-function getResizeDirection(separator: HTMLElement, direction: Direction) {
+function getResizeDirection(separator: HTMLElement, isRtl: boolean) {
   const side = separator.classList.contains(gridClasses['columnSeparator--sideRight'])
     ? 'Right'
     : 'Left';
-  if (direction === 'rtl') {
+  if (isRtl) {
     // Resizing logic should be mirrored in the RTL case
     return flipResizeDirection(side);
   }
@@ -132,8 +132,8 @@ function preventClick(event: MouseEvent) {
  * Checker that returns a promise that resolves when the column virtualization
  * is disabled.
  */
-function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
-  const promise = React.useRef<ControllablePromise>();
+function useColumnVirtualizationDisabled(apiRef: RefObject<GridPrivateApiCommunity>) {
+  const promise = React.useRef<ControllablePromise>(undefined);
   const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
   const value = useGridSelector(apiRef, selector);
 
@@ -184,7 +184,7 @@ function excludeOutliers(inputValues: number[], factor: number) {
 }
 
 function extractColumnWidths(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   options: AutosizeOptionsRequired,
   columns: GridStateColDef[],
 ) {
@@ -270,7 +270,7 @@ function createResizeRefs() {
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'autosizeOptions'
@@ -278,9 +278,10 @@ export const useGridColumnResize = (
     | 'disableAutosize'
     | 'onColumnResize'
     | 'onColumnWidthChange'
+    | 'disableVirtualization'
   >,
 ) => {
-  const theme = useTheme();
+  const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const refs = useLazyRef(createResizeRefs).current;
@@ -288,11 +289,11 @@ export const useGridColumnResize = (
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
   // This ref stores the offset between the click and the separator.
-  const initialOffsetToSeparator = React.useRef<number>();
-  const resizeDirection = React.useRef<ResizeDirection>();
+  const initialOffsetToSeparator = React.useRef<number>(null);
+  const resizeDirection = React.useRef<ResizeDirection>(null);
 
   const stopResizeEventTimeout = useTimeout();
-  const touchId = React.useRef<number>();
+  const touchId = React.useRef<number>(undefined);
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${refs.colDef!.field}`);
@@ -300,26 +301,24 @@ export const useGridColumnResize = (
     const prevWidth = refs.columnHeaderElement!.offsetWidth;
     const widthDiff = newWidth - prevWidth;
     const columnWidthDiff = newWidth - refs.initialColWidth;
-    const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
 
-    apiRef.current.rootElementRef?.current?.style.setProperty(
-      '--DataGrid-rowWidth',
-      `${newTotalWidth}px`,
-    );
+    if (columnWidthDiff > 0) {
+      const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        '--DataGrid-rowWidth',
+        `${newTotalWidth}px`,
+      );
+    }
 
     refs.colDef!.computedWidth = newWidth;
     refs.colDef!.width = newWidth;
     refs.colDef!.flex = 0;
 
     refs.columnHeaderElement!.style.width = `${newWidth}px`;
-    refs.columnHeaderElement!.style.minWidth = `${newWidth}px`;
-    refs.columnHeaderElement!.style.maxWidth = `${newWidth}px`;
 
     const headerFilterElement = refs.headerFilterElement;
     if (headerFilterElement) {
       headerFilterElement.style.width = `${newWidth}px`;
-      headerFilterElement.style.minWidth = `${newWidth}px`;
-      headerFilterElement.style.maxWidth = `${newWidth}px`;
     }
 
     refs.groupHeaderElements!.forEach((element) => {
@@ -335,8 +334,6 @@ export const useGridColumnResize = (
       }
 
       div.style.width = finalWidth;
-      div.style.minWidth = finalWidth;
-      div.style.maxWidth = finalWidth;
     });
 
     refs.cellElements!.forEach((element) => {
@@ -401,6 +398,7 @@ export const useGridColumnResize = (
         nativeEvent.clientY === prevClientY
       ) {
         refs.previousMouseClickEvent = undefined;
+        apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
         return;
       }
     }
@@ -412,7 +410,7 @@ export const useGridColumnResize = (
       // Since during resizing we update the columns width outside of React, React is unable to
       // reapply the right style properties. We need to sync the state manually.
       // So we reapply the same logic as in https://github.com/mui/mui-x/blob/0511bf65543ca05d2602a5a3e0a6156f2fc8e759/packages/x-data-grid/src/hooks/features/columnHeaders/useGridColumnHeaders.tsx#L405
-      const columnsState = gridColumnsStateSelector(apiRef.current.state);
+      const columnsState = gridColumnsStateSelector(apiRef);
       refs.groupHeaderElements!.forEach((element) => {
         const fields = getFieldsFromGroupHeaderElem(element);
         const div = element as HTMLDivElement;
@@ -426,8 +424,6 @@ export const useGridColumnResize = (
         const finalWidth: `${number}px` = `${newWidth}px`;
 
         div.style.width = finalWidth;
-        div.style.minWidth = finalWidth;
-        div.style.maxWidth = finalWidth;
       });
     }
 
@@ -463,8 +459,14 @@ export const useGridColumnResize = (
 
     refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
 
-    refs.fillerLeft = findGridElement(apiRef.current, 'filler--pinnedLeft');
-    refs.fillerRight = findGridElement(apiRef.current, 'filler--pinnedRight');
+    refs.fillerLeft = findGridElement(
+      apiRef.current,
+      isRtl ? 'filler--pinnedRight' : 'filler--pinnedLeft',
+    );
+    refs.fillerRight = findGridElement(
+      apiRef.current,
+      isRtl ? 'filler--pinnedLeft' : 'filler--pinnedRight',
+    );
 
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
@@ -475,22 +477,22 @@ export const useGridColumnResize = (
     refs.leftPinnedCellsAfter =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
-        : findLeftPinnedCellsAfterCol(apiRef.current, refs.columnHeaderElement);
+        : findLeftPinnedCellsAfterCol(apiRef.current, refs.columnHeaderElement, isRtl);
     refs.rightPinnedCellsBefore =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
-        : findRightPinnedCellsBeforeCol(apiRef.current, refs.columnHeaderElement);
+        : findRightPinnedCellsBeforeCol(apiRef.current, refs.columnHeaderElement, isRtl);
 
     refs.leftPinnedHeadersAfter =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
-        : findLeftPinnedHeadersAfterCol(apiRef.current, refs.columnHeaderElement);
+        : findLeftPinnedHeadersAfterCol(apiRef.current, refs.columnHeaderElement, isRtl);
     refs.rightPinnedHeadersBefore =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
-        : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement);
+        : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement, isRtl);
 
-    resizeDirection.current = getResizeDirection(separator, theme.direction);
+    resizeDirection.current = getResizeDirection(separator, isRtl);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       xStart,
@@ -622,7 +624,6 @@ export const useGridColumnResize = (
         ...state,
         columnResize: { ...state.columnResize, resizingColumnField: field },
       }));
-      apiRef.current.forceUpdate();
     },
     [apiRef],
   );
@@ -632,7 +633,6 @@ export const useGridColumnResize = (
       ...state,
       columnResize: { ...state.columnResize, resizingColumnField: '' },
     }));
-    apiRef.current.forceUpdate();
   }, [apiRef]);
 
   const handleColumnResizeMouseDown: GridEventListener<'columnSeparatorMouseDown'> =
@@ -686,6 +686,7 @@ export const useGridColumnResize = (
 
       apiRef.current.autosizeColumns({
         ...props.autosizeOptions,
+        disableColumnVirtualization: false,
         columns: [column.field],
       });
     });
@@ -707,7 +708,7 @@ export const useGridColumnResize = (
       }
       isAutosizingRef.current = true;
 
-      const state = gridColumnsStateSelector(apiRef.current.state);
+      const state = gridColumnsStateSelector(apiRef);
       const options = {
         ...DEFAULT_GRID_AUTOSIZE_OPTIONS,
         ...userOptions,
@@ -718,8 +719,10 @@ export const useGridColumnResize = (
       const columns = options.columns.map((c) => apiRef.current.state.columns.lookup[c]);
 
       try {
-        apiRef.current.unstable_setColumnVirtualization(false);
-        await columnVirtualizationDisabled();
+        if (!props.disableVirtualization && options.disableColumnVirtualization) {
+          apiRef.current.unstable_setColumnVirtualization(false);
+          await columnVirtualizationDisabled();
+        }
 
         const widthByField = extractColumnWidths(apiRef, options, columns);
 
@@ -727,6 +730,7 @@ export const useGridColumnResize = (
           ...column,
           width: widthByField[column.field],
           computedWidth: widthByField[column.field],
+          flex: 0,
         }));
 
         if (options.expand) {
@@ -739,7 +743,8 @@ export const useGridColumnResize = (
               total + (widthByField[column.field] ?? column.computedWidth ?? column.width),
             0,
           );
-          const availableWidth = apiRef.current.getRootDimensions().viewportInnerSize.width;
+          const dimensions = apiRef.current.getRootDimensions();
+          const availableWidth = dimensions.viewportInnerSize.width;
           const remainingWidth = availableWidth - totalWidth;
 
           if (remainingWidth > 0) {
@@ -764,11 +769,14 @@ export const useGridColumnResize = (
           }
         });
       } finally {
-        apiRef.current.unstable_setColumnVirtualization(true);
+        if (!props.disableVirtualization) {
+          apiRef.current.unstable_setColumnVirtualization(true);
+        }
+
         isAutosizingRef.current = false;
       }
     },
-    [apiRef, columnVirtualizationDisabled],
+    [apiRef, columnVirtualizationDisabled, props.disableVirtualization],
   );
 
   /**
@@ -801,13 +809,13 @@ export const useGridColumnResize = (
     'public',
   );
 
-  useGridApiEventHandler(apiRef, 'columnResizeStop', handleResizeStop);
-  useGridApiEventHandler(apiRef, 'columnResizeStart', handleResizeStart);
-  useGridApiEventHandler(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
-  useGridApiEventHandler(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
+  useGridEvent(apiRef, 'columnResizeStop', handleResizeStop);
+  useGridEvent(apiRef, 'columnResizeStart', handleResizeStart);
+  useGridEvent(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
+  useGridEvent(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
 
-  useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
-  useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
+  useGridEventPriority(apiRef, 'columnResize', props.onColumnResize);
+  useGridEventPriority(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };
 
 function updateProperty(

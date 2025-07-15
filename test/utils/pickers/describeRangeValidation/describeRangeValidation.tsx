@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { testDayViewRangeValidation } from './testDayViewRangeValidation';
@@ -18,7 +17,7 @@ function innerDescribeRangeValidation(
 ) {
   const { after: runAfterHook = () => {}, views } = getOptions();
 
-  after(runAfterHook);
+  afterAll(runAfterHook);
 
   function getTestOptions() {
     return {
@@ -29,7 +28,7 @@ function innerDescribeRangeValidation(
   }
 
   TEST_SUITES.forEach((testSuite) => {
-    testSuite(ElementToTest, getTestOptions);
+    testSuite(ElementToTest as any, getTestOptions);
   });
 }
 

@@ -1,11 +1,17 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createRootSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 /**
  * @category ColumnGrouping
  * @ignore - do not document.
  */
-export const gridColumnGroupingSelector = (state: GridStateCommunity) => state.columnGrouping;
+export const gridColumnGroupingSelector = createRootSelector(
+  (state: GridStateCommunity) => state.columnGrouping,
+);
 
 export const gridColumnGroupsUnwrappedModelSelector = createSelectorMemoized(
   gridColumnGroupingSelector,

@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Calendar component
 components: DateCalendar, MonthCalendar, YearCalendar, PickersDay, DayCalendarSkeleton
-githubLabel: 'component: DatePicker'
+githubLabel: 'scope: DatePicker'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -62,6 +62,13 @@ Learn more about the `referenceDate` in the [dedicated doc section](/x/react-dat
 If you only need the `year` view or the `month` view, you can use the `YearCalendar` / `MonthCalendar` components:
 
 {{"demo": "YearMonthCalendar.js", "defaultCodeOpen": false}}
+
+### Order of years
+
+By default, years are displayed in ascending order, chronologically from the minimum year to the maximum.
+Set the `yearsOrder` prop to `desc` to show the years in descending order.
+
+{{"demo": "YearsOrderDescendingCalendar.js",  "defaultCodeOpen": false}}
 
 ## Day view customization
 

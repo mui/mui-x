@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridColDef,
-  GridRowsProp,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridColDef, GridRowsProp } from '@mui/x-data-grid-premium';
 
 const rows: GridRowsProp = [
   {
@@ -117,26 +111,10 @@ const columns: GridColDef[] = [
   },
 ];
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport />
-    </GridToolbarContainer>
-  );
-}
-
 export default function PageSizeAutoPremium() {
   return (
     <div style={{ height: 320, width: '100%' }}>
-      <DataGridPremium
-        rows={rows}
-        columns={columns}
-        slots={{
-          toolbar: CustomToolbar,
-        }}
-        pagination
-        autoPageSize
-      />
+      <DataGridPremium pagination rows={rows} columns={columns} autoPageSize />
     </div>
   );
 }

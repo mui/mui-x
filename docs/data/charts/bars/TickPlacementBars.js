@@ -6,8 +6,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { dataset } from '../dataset/weather';
+import { dataset, valueFormatter } from '../dataset/weather';
 
 function TickParamsSelector({
   tickPlacement,
@@ -57,21 +56,16 @@ function TickParamsSelector({
   );
 }
 
-const valueFormatter = (value) => `${value}mm`;
-
 const chartSetting = {
   yAxis: [
     {
       label: 'rainfall (mm)',
+      width: 60,
     },
   ],
   series: [{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }],
   height: 300,
-  sx: {
-    [`& .${axisClasses.directionY} .${axisClasses.label}`]: {
-      transform: 'translateX(-10px)',
-    },
-  },
+  margin: { left: 0 },
 };
 
 export default function TickPlacementBars() {
@@ -88,9 +82,7 @@ export default function TickPlacementBars() {
       />
       <BarChart
         dataset={dataset}
-        xAxis={[
-          { scaleType: 'band', dataKey: 'month', tickPlacement, tickLabelPlacement },
-        ]}
+        xAxis={[{ dataKey: 'month', tickPlacement, tickLabelPlacement }]}
         {...chartSetting}
       />
     </div>

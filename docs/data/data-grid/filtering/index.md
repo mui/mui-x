@@ -2,10 +2,10 @@
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 
-The filters can be modified through the data grid interface in several ways:
+The filters can be modified through the Data Grid interface in several ways:
 
 - By opening the column menu and clicking the _Filter_ menu item.
-- By clicking the _Filters_ button in the data grid toolbar (if enabled).
+- By clicking the _Filters_ button in the Data Grid toolbar (if enabled).
 
 Each column type has its own filter operators.
 The demo below lets you explore all the operators for each built-in column type.
@@ -45,7 +45,7 @@ Some operators do not need any value (for instance the `isEmpty` operator of the
 
 #### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-The `logicOperator` tells the data grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
+The `logicOperator` tells the Data Grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
 ```ts
 // Example 1: get rows with rating > 4 OR isAdmin = true
@@ -67,7 +67,7 @@ const filterModel: GridFilterModel = {
 };
 ```
 
-If no `logicOperator` is provided, the data grid will use `GridLogicOperator.Or` by default.
+If no `logicOperator` is provided, the Data Grid will use `GridLogicOperator.Or` by default.
 
 ### Initialize the filters
 
@@ -153,10 +153,12 @@ You can ignore diacritics (accents) when filtering the rows. See [Quick filter -
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the filtering feature.
+The reference below describes the relevant functions.
+See [API object](/x/react-data-grid/api-object/) for more details.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the Data Grid.
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

@@ -6,6 +6,7 @@
     "import { GridCellParams } from '@mui/x-data-grid'"
   ],
   "properties": {
+    "api": { "type": { "description": "GridApiCommunity" }, "required": true },
     "cellMode": { "type": { "description": "GridCellMode" }, "required": true },
     "colDef": { "type": { "description": "GridStateColDef" }, "required": true },
     "field": { "type": { "description": "string" }, "required": true },

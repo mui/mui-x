@@ -46,6 +46,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         .filter((page) => page.pathname.startsWith('/charts') && page.components.includes(name))
         .map((page) => {
           return {
+            filePath: page.filename,
             demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
             demoPathname: `${page.pathname.replace('/charts', '/x/react-charts')}/`,
           };
@@ -75,10 +76,11 @@ export function getComponentImports(name: string, filename: string) {
 
   const reExportPackage = [rootImportPath];
 
-  // TODO x-charts-pro uncomment when making the package public
-  // if (rootImportPath === '@mui/x-charts') {
-  //   reExportPackage.push('@mui/x-charts-pro');
-  // }
+  if (rootImportPath === '@mui/x-charts') {
+    reExportPackage.push('@mui/x-charts-pro');
+    // TODO: CHARTS-PREMIUM: Uncomment when ready
+    // reExportPackage.push('@mui/x-charts-premium');
+  }
 
   return [
     `import { ${name} } from '${subdirectoryImportPath}';`,

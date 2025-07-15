@@ -1,0 +1,10 @@
+<DataGrid
+  {...data}
+  loading
+  slotProps={{
+    loadingOverlay: {
+      variant: 'circular-progress',
+      noRowsVariant: 'circular-progress',
+    },
+  }}
+/>

@@ -1,5 +1,5 @@
-import { MuiBaseEvent } from '../muiEvent';
-import { GridEventLookup, GridEvents } from './gridEventLookup';
+import type { MuiBaseEvent } from '@mui/x-internals/types';
+import type { GridEventLookup, GridEvents } from './gridEventLookup';
 
 type PublisherArgsNoEvent<E extends GridEvents, T extends { params: any }> = [E, T['params']];
 

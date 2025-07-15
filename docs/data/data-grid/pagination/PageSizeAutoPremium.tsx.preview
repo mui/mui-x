@@ -1,9 +1,1 @@
-<DataGridPremium
-  rows={rows}
-  columns={columns}
-  slots={{
-    toolbar: CustomToolbar,
-  }}
-  pagination
-  autoPageSize
-/>
+<DataGridPremium pagination rows={rows} columns={columns} autoPageSize />

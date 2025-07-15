@@ -10,8 +10,15 @@ import {
   pickersSlideTransitionClasses,
   PickersSlideTransitionClasses,
 } from './pickersSlideTransitionClasses';
+import { PickerOwnerState } from '../models/pickers';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export type SlideDirection = 'right' | 'left';
+
+export interface PickerSlideTransitionOwnerState extends PickerOwnerState {
+  slideDirection: SlideDirection;
+}
+
 export interface ExportedSlideTransitionProps {
   /**
    * Override or extend the styles applied to the component.
@@ -21,15 +28,19 @@ export interface ExportedSlideTransitionProps {
 export interface SlideTransitionProps
   extends Omit<CSSTransitionProps, 'timeout'>,
     ExportedSlideTransitionProps {
-  children: React.ReactElement;
+  children: React.ReactElement<any>;
   className?: string;
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
   transKey: React.Key;
 }
 
-const useUtilityClasses = (ownerState: SlideTransitionProps) => {
-  const { classes, slideDirection } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<PickersSlideTransitionClasses> | undefined,
+  ownerState: PickerSlideTransitionOwnerState,
+) => {
+  const { slideDirection } = ownerState;
+
   const slots = {
     root: ['root'],
     exit: ['slideExit'],
@@ -59,7 +70,7 @@ const PickersSlideTransitionRoot = styled(TransitionGroup, {
         styles['slideExitActiveLeft-right'],
     },
   ],
-})<TransitionGroupProps>(({ theme }) => {
+})<TransitionGroupProps & { ownerState?: PickerSlideTransitionOwnerState }>(({ theme }) => {
   const slideTransition = theme.transitions.create('transform', {
     duration: theme.transitions.duration.complex,
     easing: 'cubic-bezier(0.35, 0.8, 0.4, 1)',
@@ -117,11 +128,13 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
     reduceAnimations,
     slideDirection,
     transKey,
-    // extracting `classes` from `other`
-    classes: providedClasses,
+    classes: classesProp,
     ...other
   } = props;
-  const classes = useUtilityClasses(props);
+
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const ownerState = { ...pickerOwnerState, slideDirection };
+  const classes = useUtilityClasses(classesProp, ownerState);
   const theme = useTheme();
   if (reduceAnimations) {
     return <div className={clsx(classes.root, className)}>{children}</div>;
@@ -137,12 +150,13 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
   return (
     <PickersSlideTransitionRoot
       className={clsx(classes.root, className)}
-      childFactory={(element: React.ReactElement) =>
+      childFactory={(element: React.ReactElement<any>) =>
         React.cloneElement(element, {
           classNames: transitionClasses,
         })
       }
       role="presentation"
+      ownerState={ownerState}
     >
       <CSSTransition
         mountOnEnter

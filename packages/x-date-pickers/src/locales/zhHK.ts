@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: '子午線',
 };
 
-const zhHKPickers: Partial<PickersLocaleText<any>> = {
+const zhHKPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: '上個月',
   nextMonth: '下個月',
@@ -33,16 +33,18 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: '清除',
   okButtonLabel: '確認',
   todayButtonLabel: '今日',
+  nextStepButtonLabel: '下個',
 
   // Toolbar titles
   datePickerToolbarTitle: '選擇日期',
   dateTimePickerToolbarTitle: '選擇日期和時間',
   timePickerToolbarTitle: '選擇時間',
-  dateRangePickerToolbarTitle: '選擇時間範圍',
+  dateRangePickerToolbarTitle: '選擇日期範圍',
+  timeRangePickerToolbarTitle: '選擇時間範圍',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `選擇 ${views[view]}. ${time === null ? '未選擇時間' : `已選擇${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `選擇 ${views[view]}. ${!formattedTime ? '未選擇時間' : `已選擇${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours}小時`,
   minutesClockNumberText: (minutes) => `${minutes}分鐘`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
@@ -56,16 +58,14 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `第${weekNumber}週`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `選擇日期，已選擇${utils.format(value, 'fullDate')}`
-      : '選擇日期',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `選擇時間，已選擇${utils.format(value, 'fullTime')}`
-      : '選擇時間',
-  // fieldClearLabel: 'Clear value',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `選擇日期，已選擇${formattedDate}` : '選擇日期',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `選擇時間，已選擇${formattedTime}` : '選擇時間',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange ? `選擇範圍，已選擇嘅範圍係 ${formattedRange}` : '選擇範圍',
+  fieldClearLabel: '清除',
 
   // Table labels
   timeTableLabel: '選擇時間',

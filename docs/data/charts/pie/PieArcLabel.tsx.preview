@@ -1,14 +1,14 @@
 <PieChart
   series={[
     {
-      arcLabel: (item) => `${item.label} (${item.value})`,
-      arcLabelMinAngle: 45,
-      data,
+      arcLabel: (item) => `${item.value}%`,
+      arcLabelMinAngle: 35,
+      arcLabelRadius: '60%',
+      ...data,
     },
   ]}
   sx={{
     [`& .${pieArcLabelClasses.root}`]: {
-      fill: 'white',
       fontWeight: 'bold',
     },
   }}

@@ -1,6 +1,4 @@
-/* eslint-env mocha */
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, fireEvent, createDescribe } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
@@ -11,23 +9,18 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
 
   const propsToOpen = variant === 'static' ? {} : { open: true };
 
-  it('should forward the `inputRef` prop to the text field (<input /> textfield DOM structure only)', function test() {
-    if (fieldType === 'multi-input' || variant === 'static') {
-      this.skip();
-    }
+  it.skipIf(fieldType === 'multi-input' || variant === 'static')(
+    'should forward the `inputRef` prop to the text field (<input /> textfield DOM structure only)',
+    () => {
+      const inputRef = React.createRef<HTMLInputElement>();
+      render(<ElementToTest inputRef={inputRef} enableAccessibleFieldDOMStructure={false} />);
 
-    const inputRef = React.createRef<HTMLInputElement>();
-    render(<ElementToTest inputRef={inputRef} enableAccessibleFieldDOMStructure={false} />);
-
-    expect(inputRef.current).to.have.tagName('input');
-  });
+      expect(inputRef.current).to.have.tagName('input');
+    },
+  );
 
   describe('Localization', () => {
-    it('should respect the `localeText` prop', function test() {
-      if (hasNoView) {
-        this.skip();
-      }
-
+    it.skipIf(Boolean(hasNoView))('should respect the `localeText` prop', () => {
       render(
         <ElementToTest
           {...propsToOpen}
@@ -41,39 +34,32 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: OpenPickerIcon', () => {
-    it('should render custom component', function test() {
-      if (variant === 'static' || fieldType === 'multi-input') {
-        this.skip();
-      }
+    it.skipIf(variant === 'static' || fieldType === 'multi-input')(
+      'should render custom component',
+      () => {
+        function HomeIcon(props: SvgIconProps) {
+          return (
+            <SvgIcon data-testid="component-test" {...props}>
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </SvgIcon>
+          );
+        }
 
-      function HomeIcon(props: SvgIconProps) {
-        return (
-          <SvgIcon data-testid="component-test" {...props}>
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-          </SvgIcon>
+        const { queryAllByTestId } = render(
+          <ElementToTest
+            slots={{
+              openPickerIcon: HomeIcon,
+            }}
+          />,
         );
-      }
 
-      const { queryAllByTestId } = render(
-        <ElementToTest
-          slots={{
-            openPickerIcon: HomeIcon,
-          }}
-        />,
-      );
-
-      const shouldRenderOpenPickerIcon = !hasNoView && variant !== 'mobile';
-
-      expect(queryAllByTestId('component-test')).to.have.length(shouldRenderOpenPickerIcon ? 1 : 0);
-    });
+        expect(queryAllByTestId('component-test')).to.have.length(hasNoView ? 0 : 1);
+      },
+    );
   });
 
   describe('Component slot: DesktopPaper', () => {
-    it('should forward onClick and onTouchStart', function test() {
-      if (hasNoView || variant !== 'desktop') {
-        this.skip();
-      }
-
+    it.skipIf(hasNoView || variant !== 'desktop')('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
@@ -99,11 +85,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: Popper', () => {
-    it('should forward onClick and onTouchStart', function test() {
-      if (hasNoView || variant !== 'desktop') {
-        this.skip();
-      }
-
+    it.skipIf(hasNoView || variant !== 'desktop')('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
@@ -129,30 +111,25 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('Component slot: Toolbar', () => {
-    it('should render toolbar on mobile but not on desktop when `hidden` is not defined', function test() {
-      if (hasNoView) {
-        this.skip();
-      }
+    it.skipIf(Boolean(hasNoView))(
+      'should render toolbar on mobile but not on desktop when `hidden` is not defined',
+      () => {
+        render(
+          <ElementToTest
+            {...propsToOpen}
+            slotProps={{ toolbar: { 'data-testid': 'pickers-toolbar' } }}
+          />,
+        );
 
-      render(
-        <ElementToTest
-          {...propsToOpen}
-          slotProps={{ toolbar: { 'data-testid': 'pickers-toolbar' } }}
-        />,
-      );
+        if (variant === 'desktop') {
+          expect(screen.queryByTestId('pickers-toolbar')).to.equal(null);
+        } else {
+          expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
+        }
+      },
+    );
 
-      if (variant === 'desktop') {
-        expect(screen.queryByTestId('pickers-toolbar')).to.equal(null);
-      } else {
-        expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
-      }
-    });
-
-    it('should render toolbar when `hidden` is `false`', function test() {
-      if (hasNoView) {
-        this.skip();
-      }
-
+    it.skipIf(Boolean(hasNoView))('should render toolbar when `hidden` is `false`', () => {
       render(
         <ElementToTest
           {...propsToOpen}
@@ -163,11 +140,7 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
       expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
     });
 
-    it('should not render toolbar when `hidden` is `true`', function test() {
-      if (hasNoView) {
-        this.skip();
-      }
-
+    it.skipIf(Boolean(hasNoView))('should not render toolbar when `hidden` is `true`', () => {
       render(
         <ElementToTest
           {...propsToOpen}
@@ -180,32 +153,48 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
   });
 
   describe('prop: disableOpenPicker', () => {
-    it('should not render the open picker button, but still render the picker if its open', function test() {
-      if (variant === 'static') {
-        this.skip();
-      }
-
-      render(
-        <ElementToTest
-          disableOpenPicker
-          {...propsToOpen}
-          slotProps={{
-            layout: {
-              classes: {
-                contentWrapper: 'test-pickers-content-wrapper',
+    it.skipIf(variant === 'static')(
+      'should not render the open picker button, but still render the picker if its open',
+      () => {
+        render(
+          <ElementToTest
+            disableOpenPicker
+            {...propsToOpen}
+            slotProps={{
+              layout: {
+                classes: {
+                  contentWrapper: 'test-pickers-content-wrapper',
+                },
               },
-            },
-          }}
-        />,
-      );
+            }}
+          />,
+        );
 
-      expect(screen.queryByRole('button', { name: /Choose/ })).to.equal(null);
-      // check if anything has been rendered inside the layout content wrapper
-      expect(document.querySelector('.test-pickers-content-wrapper')?.hasChildNodes()).to.equal(
-        true,
-      );
-    });
+        expect(screen.queryByRole('button', { name: /Choose/ })).to.equal(null);
+        // check if anything has been rendered inside the layout content wrapper
+        expect(document.querySelector('.test-pickers-content-wrapper')?.hasChildNodes()).to.equal(
+          true,
+        );
+      },
+    );
   });
+
+  it.skipIf(variant === 'static' || fieldType === 'multi-input')(
+    'should bring the focus back to the open button when the picker is closed',
+    async () => {
+      const { user } = render(<ElementToTest />);
+
+      const openButton = screen.getByRole('button', { name: /Choose/ });
+      // open Picker
+      await user.click(openButton);
+
+      // close Picker
+      await user.keyboard('[Escape]');
+
+      expect(openButton).to.toHaveFocus();
+      expect(document.activeElement).to.equal(openButton);
+    },
+  );
 }
 
 /**

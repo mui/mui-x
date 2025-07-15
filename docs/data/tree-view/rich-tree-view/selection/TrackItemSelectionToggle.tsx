@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import Typography from '@mui/material/Typography';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
@@ -41,7 +41,7 @@ export default function TrackItemSelectionToggle() {
   );
 
   const handleItemSelectionToggle = (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     itemId: string,
     isSelected: boolean,
   ) => {

@@ -118,6 +118,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     generateData: randomCountry,
     renderCell: renderCountry,
     renderEditCell: renderEditCountry,
+    groupingValueGetter: (value: { label: string } | undefined) => value?.label,
     sortComparator: (v1, v2, param1, param2) =>
       gridStringOrNumberComparator(v1.label, v2.label, param1, param2),
     width: 150,
@@ -132,6 +133,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
   },
   {
     field: 'position',
+    description: 'Job title',
     headerName: 'Position',
     generateData: randomJobTitle,
     width: 180,
@@ -170,7 +172,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
       if (!value || typeof value !== 'number') {
         return value;
       }
-      return `${value.toLocaleString()}$`;
+      return `$${value.toLocaleString()}`;
     },
   },
 ];

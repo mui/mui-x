@@ -1,4 +1,6 @@
+'use client';
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
@@ -6,10 +8,10 @@ import {
   GridRenderCellParams,
   GridGroupNode,
   GridRowId,
-  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
@@ -19,7 +21,7 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { filterRowTreeFromTreeData, TREE_DATA_STRATEGY } from './gridTreeDataUtils';
+import { filterRowTreeFromTreeData, TreeDataStrategy } from './gridTreeDataUtils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -36,7 +38,7 @@ import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 
 export const useGridTreeDataPreProcessors = (
-  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+  privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'treeData'
@@ -46,15 +48,16 @@ export const useGridTreeDataPreProcessors = (
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
+    | 'dataSource'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
-      'rowTree',
-      TREE_DATA_STRATEGY,
-      props.treeData ? () => true : () => false,
+      GridStrategyGroup.RowTree,
+      TreeDataStrategy.Default,
+      props.treeData && !props.dataSource ? () => true : () => false,
     );
-  }, [privateApiRef, props.treeData]);
+  }, [privateApiRef, props.treeData, props.dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
@@ -62,7 +65,7 @@ export const useGridTreeDataPreProcessors = (
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
     if (typeof groupingColDefProp === 'function') {
       const params: GridGroupingColDefOverrideParams = {
-        groupingName: TREE_DATA_STRATEGY,
+        groupingName: TreeDataStrategy.Default,
         fields: [],
       };
 
@@ -93,6 +96,9 @@ export const useGridTreeDataPreProcessors = (
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
+      if (props.dataSource) {
+        return columnsState;
+      }
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
       const shouldHaveGroupingColumn = props.treeData;
@@ -106,12 +112,7 @@ export const useGridTreeDataPreProcessors = (
         }
         columnsState.lookup[groupingColDefField] = newGroupingColumn;
         if (prevGroupingColumn == null) {
-          const index = columnsState.orderedFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
-          columnsState.orderedFields = [
-            ...columnsState.orderedFields.slice(0, index),
-            groupingColDefField,
-            ...columnsState.orderedFields.slice(index),
-          ];
+          columnsState.orderedFields = [groupingColDefField, ...columnsState.orderedFields];
         }
       } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
         delete columnsState.lookup[groupingColDefField];
@@ -122,7 +123,7 @@ export const useGridTreeDataPreProcessors = (
 
       return columnsState;
     },
-    [props.treeData, getGroupingColDef],
+    [props.treeData, props.dataSource, getGroupingColDef],
   );
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
@@ -154,7 +155,7 @@ export const useGridTreeDataPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: TREE_DATA_STRATEGY,
+          groupingName: TreeDataStrategy.Default,
           onDuplicatePath,
         });
       }
@@ -169,7 +170,7 @@ export const useGridTreeDataPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: TREE_DATA_STRATEGY,
+        groupingName: TreeDataStrategy.Default,
       });
     },
     [props.getTreeDataPath, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
@@ -207,15 +208,20 @@ export const useGridTreeDataPreProcessors = (
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    TREE_DATA_STRATEGY,
+    TreeDataStrategy.Default,
     'rowTreeCreation',
     createRowTreeForTreeData,
   );
-  useGridRegisterStrategyProcessor(privateApiRef, TREE_DATA_STRATEGY, 'filtering', filterRows);
-  useGridRegisterStrategyProcessor(privateApiRef, TREE_DATA_STRATEGY, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    TREE_DATA_STRATEGY,
+    TreeDataStrategy.Default,
+    'filtering',
+    filterRows,
+  );
+  useGridRegisterStrategyProcessor(privateApiRef, TreeDataStrategy.Default, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(
+    privateApiRef,
+    TreeDataStrategy.Default,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );

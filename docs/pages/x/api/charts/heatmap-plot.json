@@ -1,0 +1,21 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "HeatmapPlot",
+  "imports": [
+    "import { HeatmapPlot } from '@mui/x-charts-pro/Heatmap';",
+    "import { HeatmapPlot } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiHeatmapPlot",
+  "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

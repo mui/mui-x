@@ -1,7 +1,5 @@
-import {
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_generateUtilityClasses as generateUtilityClasses,
-} from '@mui/utils';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 export interface PickersArrowSwitcherClasses {
   /** Styles applied to the root element. */
@@ -10,6 +8,14 @@ export interface PickersArrowSwitcherClasses {
   spacer: string;
   /** Styles applied to the button element. */
   button: string;
+  /** Styles applied to the previous icon button element. */
+  previousIconButton: string;
+  /** Styles applied to the next icon button element. */
+  nextIconButton: string;
+  /** Styles applied to the left icon element. */
+  leftArrowIcon: string;
+  /** Styles applied to the right icon element. */
+  rightArrowIcon: string;
 }
 
 export type PickersArrowSwitcherClassKey = keyof PickersArrowSwitcherClasses;
@@ -22,4 +28,8 @@ export const pickersArrowSwitcherClasses = generateUtilityClasses('MuiPickersArr
   'root',
   'spacer',
   'button',
+  'previousIconButton',
+  'nextIconButton',
+  'leftArrowIcon',
+  'rightArrowIcon',
 ]);

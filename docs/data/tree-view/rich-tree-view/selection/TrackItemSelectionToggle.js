@@ -1,9 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-
 import Typography from '@mui/material/Typography';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
 const MUI_X_PRODUCTS = [
   {

@@ -24,7 +24,8 @@ export default function TinyLineChart() {
       width={500}
       height={300}
       series={[{ type: 'line', data: pData }]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
+      xAxis={[{ scaleType: 'point', data: xLabels, position: 'none' }]}
+      yAxis={[{ position: 'none' }]}
       sx={{
         [`& .${lineElementClasses.root}`]: {
           stroke: '#8884d8',
@@ -32,7 +33,7 @@ export default function TinyLineChart() {
         },
         [`& .${markElementClasses.root}`]: {
           stroke: '#8884d8',
-          scale: '0.6',
+          r: 4, // Modify the circle radius
           fill: '#fff',
           strokeWidth: 2,
         },

@@ -9,7 +9,7 @@
  * List of demos to ignore when transpiling
  * Example: "app-bar/BottomAppBar.tsx"
  */
-const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx'];
+const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx', 'types.ts'];
 
 const fs = require('fs');
 const fse = require('fs-extra');
@@ -17,6 +17,7 @@ const path = require('path');
 const babel = require('@babel/core');
 const prettier = require('prettier');
 const yargs = require('yargs');
+const { hideBin } = require('yargs/helpers');
 const ts = require('typescript');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
@@ -42,7 +43,7 @@ const babelConfig = {
 
 const workspaceRoot = path.join(__dirname, '../../');
 
-async function getFiles(root) {
+async function getFiles(root, excludeRoot = false) {
   const files = [];
 
   try {
@@ -55,8 +56,10 @@ async function getFiles(root) {
           files.push(...(await getFiles(filePath)));
         } else if (
           stat.isFile() &&
-          filePath.endsWith('.tsx') &&
-          !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath)))
+          /\.tsx?$/.test(filePath) &&
+          !filePath.endsWith('.d.ts') &&
+          !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath))) &&
+          !(excludeRoot && path.dirname(filePath) === root)
         ) {
           files.push(filePath);
         }
@@ -79,7 +82,7 @@ const TranspileResult = {
 };
 
 async function transpileFile(tsxPath, program, ignoreCache = false) {
-  const jsPath = tsxPath.replace('.tsx', '.js');
+  const jsPath = tsxPath.replace(/\.tsx?$/, '.js');
   try {
     if (!ignoreCache && (await fse.exists(jsPath))) {
       const [jsStat, tsxStat] = await Promise.all([fse.stat(jsPath), fse.stat(tsxPath)]);
@@ -103,8 +106,15 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     }
     const { code } = await babel.transformAsync(source, transformOptions);
 
+    const prettierConfigPath = await prettier.resolveConfigFile();
+    if (!prettierConfigPath) {
+      throw new Error(
+        `Could not resolve prettier config file.
+        Please provide a valid prettier config path or ensure that a prettier config file exists in the project root.`,
+      );
+    }
     const prettierConfig = await prettier.resolveConfig(jsPath, {
-      config: path.join(workspaceRoot, 'prettier.config.js'),
+      config: prettierConfigPath,
     });
     const prettierFormat = async (jsSource) =>
       prettier.format(jsSource, { ...prettierConfig, filepath: jsPath });
@@ -127,7 +137,7 @@ async function main(argv) {
 
   const tsxFiles = [
     ...(await getFiles(path.join(workspaceRoot, 'docs/src/pages'))), // old structure
-    ...(await getFiles(path.join(workspaceRoot, 'docs/data'))), // new structure
+    ...(await getFiles(path.join(workspaceRoot, 'docs/data'), true)), // new structure
   ];
 
   const program = ts.createProgram({
@@ -190,7 +200,7 @@ async function main(argv) {
   console.log('\nWatching for file changes...');
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     description: 'transpile TypeScript demos',

@@ -9,7 +9,7 @@ export default function CheckboxSelectionVisibleOnlyGrid() {
   const [checkboxSelectionVisibleOnly, setCheckboxSelectionVisibleOnly] =
     React.useState(false);
 
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 300,
     maxColumns: 5,
@@ -33,6 +33,7 @@ export default function CheckboxSelectionVisibleOnlyGrid() {
       <div style={{ height: 400 }}>
         <DataGridPro
           {...data}
+          loading={loading}
           initialState={{
             ...data.initialState,
             pagination: { paginationModel: { pageSize: 50 } },

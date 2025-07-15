@@ -1,6 +1,6 @@
 import type { GridEditingApi } from './gridEditingApi';
 
-export * from './gridParamsApi';
+export type { GridParamsApi } from './gridParamsApi';
 export type { GridCoreApi } from './gridCoreApi';
 export * from './gridColumnApi';
 export * from './gridDensityApi';

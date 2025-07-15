@@ -5,7 +5,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function RemoveBuiltInOperators() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 100,
     visibleFields: VISIBLE_FIELDS,
@@ -32,6 +32,7 @@ export default function RemoveBuiltInOperators() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         initialState={{
           ...data.initialState,

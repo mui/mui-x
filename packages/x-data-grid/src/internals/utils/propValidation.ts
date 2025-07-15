@@ -1,6 +1,7 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { isNumber } from '../../utils/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridSignature } from '../../hooks/utils/useGridApiEventHandler';
+import { GridSignature } from '../../constants/signature';
 
 export type PropValidator<TProps> = (props: TProps) => string | undefined;
 
@@ -35,6 +36,7 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
   (props) =>
     (props.paginationMode === 'server' &&
       props.rowCount == null &&
+      !props.dataSource &&
       [
         "MUI X: The `rowCount` prop must be passed using `paginationMode='server'`",
         'For more detail, see http://mui.com/components/data-grid/pagination/#index-based-pagination',
@@ -42,23 +44,11 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
     undefined,
 ];
 
-const warnedOnceCache = new Set();
-function warnOnce(message: string) {
-  if (!warnedOnceCache.has(message)) {
-    console.error(message);
-    warnedOnceCache.add(message);
-  }
-}
-
 export function validateProps<TProps>(props: TProps, validators: PropValidator<TProps>[]) {
   validators.forEach((validator) => {
-    const warning = validator(props);
-    if (warning) {
-      warnOnce(warning);
+    const message = validator(props);
+    if (message) {
+      warnOnce(message, 'error');
     }
   });
-}
-
-export function clearWarningsCache() {
-  warnedOnceCache.clear();
 }

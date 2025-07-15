@@ -1,14 +1,12 @@
 <DataGrid
   {...data}
-  slots={{
-    toolbar: CustomToolbar as GridSlots['toolbar'],
-  }}
+  loading={loading}
+  slots={{ toolbar: CustomToolbar }}
+  showToolbar
   slotProps={{
     panel: {
-      anchorEl: filterButtonEl,
+      target: filterButtonEl,
     },
-    toolbar: {
-      setFilterButtonEl,
-    },
+    toolbar: { setFilterButtonEl },
   }}
 />

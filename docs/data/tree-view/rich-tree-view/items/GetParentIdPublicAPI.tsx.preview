@@ -1,0 +1,16 @@
+{selectedItemParent ? (
+  <Alert severity="info">
+    Selected child of <em>{selectedItemParent}</em>
+  </Alert>
+) : (
+  <Alert severity="info">No child node selected</Alert>
+)}
+
+<Box sx={{ minHeight: 352, minWidth: 250 }}>
+  <RichTreeView
+    apiRef={apiRef}
+    items={MUI_X_PRODUCTS}
+    defaultSelectedItems="tree-view"
+    onSelectedItemsChange={handleSelectedItemsChange}
+  />
+</Box>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { fireEvent, act } from '@mui/internal-test-utils';
 import {
   describeTreeView,
@@ -10,9 +9,9 @@ describeTreeView<[]>(
   'useTreeView hook',
   ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
     it('should have the role="tree" on the root slot', () => {
-      const response = render({ items: [{ id: '1' }] });
+      const view = render({ items: [{ id: '1' }] });
 
-      expect(response.getRoot()).to.have.attribute('role', 'tree');
+      expect(view.getRoot()).to.have.attribute('role', 'tree');
     });
 
     it('should work inside a Portal', () => {

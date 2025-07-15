@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseMobilePickerSlots,
   ExportedUseMobilePickerSlotProps,
@@ -8,37 +9,27 @@ import {
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView, PickerValidDate } from '../models';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileDateTimePickerSlots<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends BaseDateTimePickerSlots<TDate>,
-    MakeOptional<UseMobilePickerSlots<TDate, TView>, 'field'> {}
+export interface MobileDateTimePickerSlots
+  extends BaseDateTimePickerSlots,
+    MakeOptional<UseMobilePickerSlots, 'field'> {}
 
-export interface MobileDateTimePickerSlotProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseDateTimePickerSlotProps<TDate>,
-    ExportedUseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure> {}
+export interface MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends BaseDateTimePickerSlotProps,
+    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileDateTimePickerProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
-> extends BaseDateTimePickerProps<TDate, TView>,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> extends BaseDateTimePickerProps,
     MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: MobileDateTimePickerSlots<TDate, TView>;
+  slots?: MobileDateTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

@@ -7,4 +7,5 @@
   slots={{
     toolbar: Toolbar,
   }}
+  showToolbar
 />

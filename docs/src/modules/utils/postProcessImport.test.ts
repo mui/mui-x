@@ -1,8 +1,19 @@
-import { expect } from 'chai';
-import { DATE_ADAPTER_VERSIONS, ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
+import { vi } from 'vitest';
+import { getPickerAdapterDeps } from './getPickerAdapterDeps';
+import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
+
+const adapterDependencies = getPickerAdapterDeps();
 
 describe('postProcessImport', () => {
   const ADAPTERS = ['AdapterDateFns', 'AdapterDayjs', 'AdapterLuxon', 'AdapterMoment'];
+
+  beforeEach(() => {
+    vi.stubEnv('PICKERS_ADAPTERS_DEPS', JSON.stringify(adapterDependencies));
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
 
   describe('@mui/lab imports', () => {
     ADAPTERS.forEach((adapter) => {
@@ -11,7 +22,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: DATE_ADAPTER_VERSIONS[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });
@@ -30,7 +41,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: DATE_ADAPTER_VERSIONS[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });
@@ -49,7 +60,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: DATE_ADAPTER_VERSIONS[expectedLibrary],
+          [expectedLibrary]: adapterDependencies[expectedLibrary],
         });
       });
     });

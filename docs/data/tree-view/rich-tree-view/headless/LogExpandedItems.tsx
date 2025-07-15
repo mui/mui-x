@@ -8,10 +8,7 @@ import {
   RichTreeViewRoot,
   RICH_TREE_VIEW_PLUGINS,
   RichTreeViewPluginParameters,
-  RichTreeViewPluginSlots,
-  RichTreeViewPluginSlotProps,
 } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import {
   UseTreeViewExpansionSignature,
   TreeViewPlugin,
@@ -19,6 +16,7 @@ import {
   useTreeView,
   TreeViewProvider,
   ConvertPluginsIntoSignatures,
+  RichTreeViewItems,
 } from '@mui/x-tree-view/internals';
 
 interface TreeViewLogExpandedParameters {
@@ -26,7 +24,7 @@ interface TreeViewLogExpandedParameters {
   logMessage?: (message: string) => void;
 }
 
-interface TreeViewLogExpandedDefaultizedParameters {
+interface TreeViewLogExpandedParametersWithDefaults {
   areLogsEnabled: boolean;
   logMessage?: (message: string) => void;
 }
@@ -35,16 +33,16 @@ type TreeViewLogExpandedSignature = TreeViewPluginSignature<{
   // The parameters of this plugin as they are passed to `useTreeView`
   params: TreeViewLogExpandedParameters;
   // The parameters of this plugin as they are passed to the plugin after calling `plugin.getDefaultizedParams`
-  defaultizedParams: TreeViewLogExpandedDefaultizedParameters;
+  paramsWithDefaults: TreeViewLogExpandedParametersWithDefaults;
   // Dependencies of this plugin (we need the expansion plugin to access its model)
   dependencies: [UseTreeViewExpansionSignature];
 }>;
 
 const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
   params,
-  models,
+  store,
 }) => {
-  const expandedStr = JSON.stringify(models.expandedItems.value);
+  const expandedStr = JSON.stringify(store.value.expansion.expandedItems);
 
   React.useEffect(() => {
     if (params.areLogsEnabled && params.logMessage) {
@@ -56,7 +54,7 @@ const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
 };
 
 // Sets the default value of this plugin parameters.
-useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
+useTreeViewLogExpanded.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   areLogsEnabled: params.areLogsEnabled ?? false,
 });
@@ -69,10 +67,7 @@ useTreeViewLogExpanded.params = {
 export interface TreeViewProps<R extends {}, Multiple extends boolean | undefined>
   extends RichTreeViewPluginParameters<R, Multiple>,
     TreeViewLogExpandedParameters,
-    RichTreeViewPropsBase {
-  slots?: RichTreeViewPluginSlots;
-  slotProps?: RichTreeViewPluginSlotProps;
-}
+    RichTreeViewPropsBase {}
 
 const TREE_VIEW_PLUGINS = [
   ...RICH_TREE_VIEW_PLUGINS,
@@ -86,31 +81,24 @@ type TreeViewPluginSignatures = ConvertPluginsIntoSignatures<
 function TreeView<R extends {}, Multiple extends boolean | undefined>(
   props: TreeViewProps<R, Multiple>,
 ) {
-  const { getRootProps, contextValue, instance } = useTreeView<
+  const { getRootProps, contextValue } = useTreeView<
     TreeViewPluginSignatures,
+    // @ts-ignore
     typeof props
   >({
     plugins: TREE_VIEW_PLUGINS,
     props,
   });
 
-  const itemsToRender = instance.getItemsToRender();
-
-  const renderItem = ({
-    children: itemChildren,
-    ...itemProps
-  }: ReturnType<typeof instance.getItemsToRender>[number]) => {
-    return (
-      <TreeItem key={itemProps.itemId} {...itemProps}>
-        {itemChildren?.map(renderItem)}
-      </TreeItem>
-    );
-  };
-
   return (
-    <TreeViewProvider value={contextValue}>
+    <TreeViewProvider
+      contextValue={contextValue}
+      classes={{}}
+      slots={{}}
+      slotProps={{}}
+    >
       <RichTreeViewRoot {...getRootProps()}>
-        {itemsToRender.map(renderItem)}
+        <RichTreeViewItems slots={undefined} slotProps={undefined} />
       </RichTreeViewRoot>
     </TreeViewProvider>
   );

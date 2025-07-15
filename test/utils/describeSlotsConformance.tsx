@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
 import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 
 interface DescribeSlotsConformanceParams {
   getElement: (params: { slotName: string; props: any }) => React.ReactElement<any>;
-  render: (node: React.ReactElement) => MuiRenderResult;
+  render: (node: React.ReactElement<any>) => MuiRenderResult;
   slots: { [slotName: string]: { className: string } };
 }
 
@@ -33,7 +32,7 @@ export function innerDescribeSlotsConformance(params: DescribeSlotsConformancePa
         expect(response.container.querySelector(`.${slotConfig.className}`)).to.equal(null);
 
         // Check if the custom slot is being rendered
-        expect(response.getByTestId('custom-slot')).to.not.equal(null);
+        expect(response.getByTestId('custom-slot')).not.to.equal(null);
       });
 
       it('should pass props to the default slot', () => {

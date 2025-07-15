@@ -1,11 +1,14 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DrawingContext } from '../context/DrawingProvider';
 import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
-import { getPercentageValue } from '../internals/utils';
+import { getPercentageValue } from '../internals/getPercentageValue';
 import { getPieCoordinates } from './getPieCoordinates';
-import { usePieSeries } from '../hooks/useSeries';
+import { usePieSeriesContext } from '../hooks/usePieSeries';
+import { useSkipAnimation } from '../hooks/useSkipAnimation';
+import { useDrawingArea } from '../hooks';
+import { useUtilityClasses } from './pieClasses';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
@@ -35,9 +38,11 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
  * - [PiePlot API](https://mui.com/x/api/charts/pie-plot/)
  */
 function PiePlot(props: PiePlotProps) {
-  const { skipAnimation, slots, slotProps, onItemClick } = props;
-  const seriesData = usePieSeries();
-  const { left, top, width, height } = React.useContext(DrawingContext);
+  const { skipAnimation: inSkipAnimation, slots, slotProps, onItemClick } = props;
+  const seriesData = usePieSeriesContext();
+  const { left, top, width, height } = useDrawingArea();
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
+  const classes = useUtilityClasses();
 
   if (seriesData === undefined) {
     return null;
@@ -71,7 +76,12 @@ function PiePlot(props: PiePlotProps) {
         );
         const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
         return (
-          <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
+          <g
+            key={seriesId}
+            className={classes.series}
+            transform={`translate(${left + cx}, ${top + cy})`}
+            data-series={seriesId}
+          >
             <PieArcPlot
               innerRadius={innerRadius}
               outerRadius={outerRadius}
@@ -120,7 +130,12 @@ function PiePlot(props: PiePlotProps) {
             : getPercentageValue(arcLabelRadiusParam, availableRadius);
 
         return (
-          <g key={seriesId} transform={`translate(${left + cx}, ${top + cy})`}>
+          <g
+            key={seriesId}
+            className={classes.seriesLabels}
+            transform={`translate(${left + cx}, ${top + cy})`}
+            data-series={seriesId}
+          >
             <PieArcLabelPlot
               innerRadius={innerRadius}
               outerRadius={outerRadius ?? availableRadius}

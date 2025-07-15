@@ -1,10 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
-import MenuList from '@mui/material/MenuList';
-import { ButtonProps } from '@mui/material/Button';
-import { TooltipProps } from '@mui/material/Tooltip';
-import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
+import useId from '@mui/utils/useId';
+import useForkRef from '@mui/utils/useForkRef';
+import { forwardRef } from '@mui/x-internals/forwardRef';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -15,10 +15,13 @@ interface GridToolbarExportContainerProps {
    * The props used for each slot inside.
    * @default {}
    */
-  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+  slotProps?: {
+    button?: Partial<GridSlotProps['baseButton']>;
+    tooltip?: Partial<GridSlotProps['baseTooltip']>;
+  };
 }
 
-const GridToolbarExportContainer = React.forwardRef<
+const GridToolbarExportContainer = forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<GridToolbarExportContainerProps>
 >(function GridToolbarExportContainer(props, ref) {
@@ -42,15 +45,6 @@ const GridToolbarExportContainer = React.forwardRef<
 
   const handleMenuClose = () => setOpen(false);
 
-  const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (isTabKey(event.key)) {
-      event.preventDefault();
-    }
-    if (isHideMenuKey(event.key)) {
-      handleMenuClose();
-    }
-  };
-
   if (children == null) {
     return null;
   }
@@ -60,11 +54,10 @@ const GridToolbarExportContainer = React.forwardRef<
       <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('toolbarExportLabel')}
         enterDelay={1000}
-        {...tooltipProps}
         {...rootProps.slotProps?.baseTooltip}
+        {...tooltipProps}
       >
         <rootProps.slots.baseButton
-          ref={handleRef}
           size="small"
           startIcon={<rootProps.slots.exportIcon />}
           aria-expanded={open}
@@ -72,9 +65,10 @@ const GridToolbarExportContainer = React.forwardRef<
           aria-haspopup="menu"
           aria-controls={open ? exportMenuId : undefined}
           id={exportButtonId}
+          {...rootProps.slotProps?.baseButton}
           {...buttonProps}
           onClick={handleMenuOpen}
-          {...rootProps.slotProps?.baseButton}
+          ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
         </rootProps.slots.baseButton>
@@ -83,13 +77,12 @@ const GridToolbarExportContainer = React.forwardRef<
         open={open}
         target={buttonRef.current}
         onClose={handleMenuClose}
-        position="bottom-start"
+        position="bottom-end"
       >
-        <MenuList
+        <rootProps.slots.baseMenuList
           id={exportMenuId}
           className={gridClasses.menuList}
           aria-labelledby={exportButtonId}
-          onKeyDown={handleListKeyDown}
           autoFocusItem={open}
         >
           {React.Children.map(children, (child) => {
@@ -98,7 +91,7 @@ const GridToolbarExportContainer = React.forwardRef<
             }
             return React.cloneElement<any>(child, { hideMenu: handleMenuClose });
           })}
-        </MenuList>
+        </rootProps.slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   );

@@ -1,0 +1,8 @@
+<DataGrid
+  columns={columns}
+  dataSource={dataSource}
+  dataSourceCache={lowTTLCache}
+  pagination
+  initialState={initialStateWithPagination}
+  pageSizeOptions={[10, 20, 50]}
+/>

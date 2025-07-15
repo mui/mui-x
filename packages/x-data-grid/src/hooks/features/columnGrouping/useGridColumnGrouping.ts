@@ -1,4 +1,6 @@
+'use client';
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -15,7 +17,7 @@ import { GridColumnGroupLookup } from './gridColumnGroupsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { getColumnGroupsHeaderStructure, unwrapGroupingColumnModel } from './gridColumnGroupsUtils';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { GridEventListener } from '../../../models/events';
 import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../columns';
 
@@ -51,7 +53,7 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
 };
 
 export const columnGroupsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>
+  Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
   if (!props.columnGroupingModel) {
     return state;
@@ -88,7 +90,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method)
  */
 export const useGridColumnGrouping = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'columnGroupingModel'>,
 ) => {
   /**
@@ -173,11 +175,11 @@ export const useGridColumnGrouping = (
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, 'columnIndexChange', handleColumnIndexChange);
-  useGridApiEventHandler(apiRef, 'columnsChange', () => {
+  useGridEvent(apiRef, 'columnIndexChange', handleColumnIndexChange);
+  useGridEvent(apiRef, 'columnsChange', () => {
     updateColumnGroupingState(props.columnGroupingModel);
   });
-  useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
+  useGridEvent(apiRef, 'columnVisibilityModelChange', () => {
     updateColumnGroupingState(props.columnGroupingModel);
   });
 

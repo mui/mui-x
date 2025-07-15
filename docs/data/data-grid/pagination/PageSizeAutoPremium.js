@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridToolbarContainer,
-  GridToolbarExport,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 const rows = [
   {
@@ -115,26 +111,10 @@ const columns = [
   },
 ];
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport />
-    </GridToolbarContainer>
-  );
-}
-
 export default function PageSizeAutoPremium() {
   return (
     <div style={{ height: 320, width: '100%' }}>
-      <DataGridPremium
-        rows={rows}
-        columns={columns}
-        slots={{
-          toolbar: CustomToolbar,
-        }}
-        pagination
-        autoPageSize
-      />
+      <DataGridPremium pagination rows={rows} columns={columns} autoPageSize />
     </div>
   );
 }

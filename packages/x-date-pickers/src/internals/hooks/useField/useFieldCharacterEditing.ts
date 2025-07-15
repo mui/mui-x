@@ -1,8 +1,5 @@
-import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType, FieldSection, PickersTimezone, PickerValidDate } from '../../../models';
-import { useUtils } from '../useUtils';
-import { FieldSectionsValueBoundaries } from './useField.types';
+import { FieldSection, InferFieldSection } from '../../../models';
 import {
   changeSectionValueFormat,
   cleanDigitSectionValue,
@@ -14,69 +11,12 @@ import {
   removeLocalizedDigits,
   isStringNumber,
 } from './useField.utils';
-import { UpdateSectionValueParams } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
+import { PickerValidValue } from '../../models';
+import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 
-interface CharacterEditingQuery {
-  value: string;
-  sectionIndex: number;
-  sectionType: FieldSectionType;
-}
-
-export interface ApplyCharacterEditingParams {
-  keyPressed: string;
-  sectionIndex: number;
-}
-
-interface UseFieldCharacterEditingParams<
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
-  sections: TSection[];
-  updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
-  localizedDigits: string[];
-  setTempAndroidValueStr: (newValue: string | null) => void;
-  timezone: PickersTimezone;
-}
-
-export interface UseFieldCharacterEditingResponse {
-  applyCharacterEditing: (params: ApplyCharacterEditingParams) => void;
-  resetCharacterQuery: () => void;
-}
-
-/**
- * The letter editing and the numeric editing each define a `CharacterEditingApplier`.
- * This function decides what the new section value should be and if the focus should switch to the next section.
- *
- * If it returns `null`, then the section value is not updated and the focus does not move.
- */
-type CharacterEditingApplier = (
-  params: ApplyCharacterEditingParams,
-) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
-
-/**
- * Function called by `applyQuery` which decides:
- * - what is the new section value ?
- * - should the query used to get this value be stored for the next key press ?
- *
- * If it returns `{ sectionValue: string; shouldGoToNextSection: boolean }`,
- * Then we store the query and update the section with the new value.
- *
- * If it returns `{ saveQuery: true` },
- * Then we store the query and don't update the section.
- *
- * If it returns `{ saveQuery: false },
- * Then we do nothing.
- */
-type QueryApplier<TSection extends FieldSection> = (
-  queryValue: string,
-  activeSection: TSection,
-) => { sectionValue: string; shouldGoToNextSection: boolean } | { saveQuery: boolean };
-
-const QUERY_LIFE_DURATION_MS = 5000;
-
-const isQueryResponseWithoutValue = <TSection extends FieldSection>(
-  response: ReturnType<QueryApplier<TSection>>,
+const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
+  response: ReturnType<QueryApplier<TValue>>,
 ): response is { saveQuery: boolean } => (response as { saveQuery: boolean }).saveQuery != null;
 
 /**
@@ -86,64 +26,45 @@ const isQueryResponseWithoutValue = <TSection extends FieldSection>(
  * 1. The numeric editing when the user presses a digit
  * 2. The letter editing when the user presses another key
  */
-export const useFieldCharacterEditing = <
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
->({
-  sections,
-  updateSectionValue,
-  sectionsValueBoundaries,
-  localizedDigits,
-  setTempAndroidValueStr,
-  timezone,
-}: UseFieldCharacterEditingParams<TDate, TSection>): UseFieldCharacterEditingResponse => {
-  const utils = useUtils<TDate>();
+export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
+  stateResponse: {
+    // States and derived states
+    localizedDigits,
+    sectionsValueBoundaries,
+    state,
+    timezone,
 
-  const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
-
-  const resetQuery = useEventCallback(() => setQuery(null));
-
-  React.useEffect(() => {
-    if (query != null && sections[query.sectionIndex]?.type !== query.sectionType) {
-      resetQuery();
-    }
-  }, [sections, query, resetQuery]);
-
-  React.useEffect(() => {
-    if (query != null) {
-      const timeout = setTimeout(() => resetQuery(), QUERY_LIFE_DURATION_MS);
-
-      return () => {
-        clearTimeout(timeout);
-      };
-    }
-
-    return () => {};
-  }, [query, resetQuery]);
+    // Methods to update the states
+    setCharacterQuery,
+    setTempAndroidValueStr,
+    updateSectionValue,
+  },
+}: UseFieldCharacterEditingParameters<TValue>): UseFieldCharacterEditingReturnValue => {
+  const adapter = usePickerAdapter();
 
   const applyQuery = (
-    { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
-    getFirstSectionValueMatchingWithQuery: QueryApplier<TSection>,
+    { keyPressed, sectionIndex }: ApplyCharacterEditingParameters,
+    getFirstSectionValueMatchingWithQuery: QueryApplier<TValue>,
     isValidQueryValue?: (queryValue: string) => boolean,
   ): ReturnType<CharacterEditingApplier> => {
     const cleanKeyPressed = keyPressed.toLowerCase();
-    const activeSection = sections[sectionIndex];
+    const activeSection = state.sections[sectionIndex];
 
     // The current query targets the section being editing
     // We can try to concatenate the value
     if (
-      query != null &&
-      (!isValidQueryValue || isValidQueryValue(query.value)) &&
-      query.sectionIndex === sectionIndex
+      state.characterQuery != null &&
+      (!isValidQueryValue || isValidQueryValue(state.characterQuery.value)) &&
+      state.characterQuery.sectionIndex === sectionIndex
     ) {
-      const concatenatedQueryValue = `${query.value}${cleanKeyPressed}`;
+      const concatenatedQueryValue = `${state.characterQuery.value}${cleanKeyPressed}`;
 
       const queryResponse = getFirstSectionValueMatchingWithQuery(
         concatenatedQueryValue,
         activeSection,
       );
       if (!isQueryResponseWithoutValue(queryResponse)) {
-        setQuery({
+        setCharacterQuery({
           sectionIndex,
           value: concatenatedQueryValue,
           sectionType: activeSection.type,
@@ -154,11 +75,11 @@ export const useFieldCharacterEditing = <
 
     const queryResponse = getFirstSectionValueMatchingWithQuery(cleanKeyPressed, activeSection);
     if (isQueryResponseWithoutValue(queryResponse) && !queryResponse.saveQuery) {
-      resetQuery();
+      setCharacterQuery(null);
       return null;
     }
 
-    setQuery({
+    setCharacterQuery({
       sectionIndex,
       value: cleanKeyPressed,
       sectionType: activeSection.type,
@@ -176,7 +97,7 @@ export const useFieldCharacterEditing = <
       format: string,
       options: string[],
       queryValue: string,
-    ): ReturnType<QueryApplier<TSection>> => {
+    ): ReturnType<QueryApplier<TValue>> => {
       const matchingValues = options.filter((option) =>
         option.toLowerCase().startsWith(queryValue),
       );
@@ -193,12 +114,12 @@ export const useFieldCharacterEditing = <
 
     const testQueryOnFormatAndFallbackFormat = (
       queryValue: string,
-      activeSection: TSection,
+      activeSection: InferFieldSection<TValue>,
       fallbackFormat?: string,
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
       const getOptions = (format: string) =>
-        getLetterEditingOptions(utils, timezone, activeSection.type, format);
+        getLetterEditingOptions(adapter, timezone, activeSection.type, format);
 
       if (activeSection.contentType === 'letter') {
         return findMatchingOptions(
@@ -214,7 +135,7 @@ export const useFieldCharacterEditing = <
       if (
         fallbackFormat &&
         formatFallbackValue != null &&
-        getDateSectionConfigFromFormatToken(utils, fallbackFormat).contentType === 'letter'
+        getDateSectionConfigFromFormatToken(adapter, fallbackFormat).contentType === 'letter'
       ) {
         const fallbackOptions = getOptions(fallbackFormat);
         const response = findMatchingOptions(fallbackFormat, fallbackOptions, queryValue);
@@ -231,7 +152,7 @@ export const useFieldCharacterEditing = <
       return { saveQuery: false };
     };
 
-    const getFirstSectionValueMatchingWithQuery: QueryApplier<TSection> = (
+    const getFirstSectionValueMatchingWithQuery: QueryApplier<TValue> = (
       queryValue,
       activeSection,
     ) => {
@@ -239,16 +160,16 @@ export const useFieldCharacterEditing = <
         case 'month': {
           const formatFallbackValue = (fallbackValue: string) =>
             changeSectionValueFormat(
-              utils,
+              adapter,
               fallbackValue,
-              utils.formats.month,
+              adapter.formats.month,
               activeSection.format,
             );
 
           return testQueryOnFormatAndFallbackFormat(
             queryValue,
             activeSection,
-            utils.formats.month,
+            adapter.formats.month,
             formatFallbackValue,
           );
         }
@@ -260,7 +181,7 @@ export const useFieldCharacterEditing = <
           return testQueryOnFormatAndFallbackFormat(
             queryValue,
             activeSection,
-            utils.formats.weekday,
+            adapter.formats.weekday,
             formatFallbackValue,
           );
         }
@@ -279,8 +200,13 @@ export const useFieldCharacterEditing = <
   };
 
   const applyNumericEditing: CharacterEditingApplier = (params) => {
-    const getNewSectionValue = (
-      queryValue: string,
+    const getNewSectionValue = ({
+      queryValue,
+      skipIfBelowMinimum,
+      section,
+    }: {
+      queryValue: string;
+      skipIfBelowMinimum: boolean;
       section: Pick<
         FieldSection,
         | 'format'
@@ -289,8 +215,8 @@ export const useFieldCharacterEditing = <
         | 'hasLeadingZerosInFormat'
         | 'hasLeadingZerosInInput'
         | 'maxLength'
-      >,
-    ): ReturnType<QueryApplier<TSection>> => {
+      >;
+    }): ReturnType<QueryApplier<TValue>> => {
       const cleanQueryValue = removeLocalizedDigits(queryValue, localizedDigits);
       const queryValueNumber = Number(cleanQueryValue);
       const sectionBoundaries = sectionsValueBoundaries[section.type]({
@@ -306,7 +232,7 @@ export const useFieldCharacterEditing = <
       // If the user types `0` on a month section,
       // It is below the minimum, but we want to store the `0` in the query,
       // So that when he pressed `1`, it will store `01` and move to the next section.
-      if (queryValueNumber < sectionBoundaries.minimum) {
+      if (skipIfBelowMinimum && queryValueNumber < sectionBoundaries.minimum) {
         return { saveQuery: true };
       }
 
@@ -315,7 +241,7 @@ export const useFieldCharacterEditing = <
         cleanQueryValue.length === sectionBoundaries.maximum.toString().length;
 
       const newSectionValue = cleanDigitSectionValue(
-        utils,
+        adapter,
         queryValueNumber,
         sectionBoundaries,
         localizedDigits,
@@ -325,7 +251,7 @@ export const useFieldCharacterEditing = <
       return { sectionValue: newSectionValue, shouldGoToNextSection };
     };
 
-    const getFirstSectionValueMatchingWithQuery: QueryApplier<TSection> = (
+    const getFirstSectionValueMatchingWithQuery: QueryApplier<TValue> = (
       queryValue,
       activeSection,
     ) => {
@@ -333,27 +259,34 @@ export const useFieldCharacterEditing = <
         activeSection.contentType === 'digit' ||
         activeSection.contentType === 'digit-with-letter'
       ) {
-        return getNewSectionValue(queryValue, activeSection);
+        return getNewSectionValue({
+          queryValue,
+          skipIfBelowMinimum: false,
+          section: activeSection,
+        });
       }
 
       // When editing a letter-format month and the user presses a digit,
       // We can support the numeric editing by using the digit-format month and re-formatting the result.
       if (activeSection.type === 'month') {
         const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
-          utils,
-          timezone,
+          adapter,
           'digit',
           'month',
           'MM',
         );
 
-        const response = getNewSectionValue(queryValue, {
-          type: activeSection.type,
-          format: 'MM',
-          hasLeadingZerosInFormat,
-          hasLeadingZerosInInput: true,
-          contentType: 'digit',
-          maxLength: 2,
+        const response = getNewSectionValue({
+          queryValue,
+          skipIfBelowMinimum: true,
+          section: {
+            type: activeSection.type,
+            format: 'MM',
+            hasLeadingZerosInFormat,
+            hasLeadingZerosInInput: true,
+            contentType: 'digit',
+            maxLength: 2,
+          },
         });
 
         if (isQueryResponseWithoutValue(response)) {
@@ -361,7 +294,7 @@ export const useFieldCharacterEditing = <
         }
 
         const formattedValue = changeSectionValueFormat(
-          utils,
+          adapter,
           response.sectionValue,
           'MM',
           activeSection.format,
@@ -376,12 +309,16 @@ export const useFieldCharacterEditing = <
       // When editing a letter-format weekDay and the user presses a digit,
       // We can support the numeric editing by returning the nth day in the week day array.
       if (activeSection.type === 'weekDay') {
-        const response = getNewSectionValue(queryValue, activeSection);
+        const response = getNewSectionValue({
+          queryValue,
+          skipIfBelowMinimum: true,
+          section: activeSection,
+        });
         if (isQueryResponseWithoutValue(response)) {
           return response;
         }
 
-        const formattedValue = getDaysInWeekStr(utils, timezone, activeSection.format)[
+        const formattedValue = getDaysInWeekStr(adapter, activeSection.format)[
           Number(response.sectionValue) - 1
         ];
         return {
@@ -398,8 +335,8 @@ export const useFieldCharacterEditing = <
     );
   };
 
-  const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
-    const activeSection = sections[params.sectionIndex];
+  return useEventCallback((params: ApplyCharacterEditingParameters) => {
+    const section = state.sections[params.sectionIndex];
     const isNumericEditing = isStringNumber(params.keyPressed, localizedDigits);
     const response = isNumericEditing
       ? applyNumericEditing({
@@ -413,14 +350,49 @@ export const useFieldCharacterEditing = <
     }
 
     updateSectionValue({
-      activeSection,
+      section,
       newSectionValue: response.sectionValue,
       shouldGoToNextSection: response.shouldGoToNextSection,
     });
   });
-
-  return {
-    applyCharacterEditing,
-    resetCharacterQuery: resetQuery,
-  };
 };
+
+export interface ApplyCharacterEditingParameters {
+  keyPressed: string;
+  sectionIndex: number;
+}
+
+interface UseFieldCharacterEditingParameters<TValue extends PickerValidValue> {
+  stateResponse: UseFieldStateReturnValue<TValue>;
+}
+
+export type UseFieldCharacterEditingReturnValue = (params: ApplyCharacterEditingParameters) => void;
+
+/**
+ * The letter editing and the numeric editing each define a `CharacterEditingApplier`.
+ * This function decides what the new section value should be and if the focus should switch to the next section.
+ *
+ * If it returns `null`, then the section value is not updated and the focus does not move.
+ */
+type CharacterEditingApplier = (
+  params: ApplyCharacterEditingParameters,
+) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
+
+/**
+ * Function called by `applyQuery` which decides:
+ * - what is the new section value ?
+ * - should the query used to get this value be stored for the next key press ?
+ *
+ * If it returns `{ sectionValue: string; shouldGoToNextSection: boolean }`,
+ * Then we store the query and update the section with the new value.
+ *
+ * If it returns `{ saveQuery: true` },
+ * Then we store the query and don't update the section.
+ *
+ * If it returns `{ saveQuery: false },
+ * Then we do nothing.
+ */
+type QueryApplier<TValue extends PickerValidValue> = (
+  queryValue: string,
+  activeSection: InferFieldSection<TValue>,
+) => { sectionValue: string; shouldGoToNextSection: boolean } | { saveQuery: boolean };

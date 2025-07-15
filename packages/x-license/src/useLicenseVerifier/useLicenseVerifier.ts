@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { sendMuiXTelemetryEvent, muiXTelemetryEvents } from '@mui/x-telemetry';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
@@ -8,18 +9,11 @@ import {
   showMissingLicenseKeyError,
   showLicenseKeyPlanMismatchError,
   showExpiredPackageVersionError,
-  showProductNotCoveredError,
+  showNotAvailableInInitialProPlanError,
 } from '../utils/licenseErrorMessageUtils';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
-import { extractAcceptedScopes, extractProductScope } from '../utils/licenseScope';
 import MuiLicenseInfoContext from '../Unstable_LicenseInfoProvider/MuiLicenseInfoContext';
-
-export type MuiCommercialPackageName =
-  | 'x-data-grid-pro'
-  | 'x-data-grid-premium'
-  | 'x-date-pickers-pro'
-  | 'x-tree-view-pro'
-  | 'x-charts-pro';
+import { MuiCommercialPackageName } from '../utils/commercialPackages';
 
 export const sharedLicenseStatuses: {
   [packageName in MuiCommercialPackageName]?: {
@@ -29,6 +23,18 @@ export const sharedLicenseStatuses: {
     };
   };
 } = {};
+
+/**
+ * Clears the license status cache for all packages.
+ * This should not be used in production code, but can be useful for testing purposes.
+ */
+export function clearLicenseStatusCache() {
+  for (const packageName in sharedLicenseStatuses) {
+    if (Object.prototype.hasOwnProperty.call(sharedLicenseStatuses, packageName)) {
+      delete sharedLicenseStatuses[packageName as MuiCommercialPackageName];
+    }
+  }
+}
 
 export function useLicenseVerifier(
   packageName: MuiCommercialPackageName,
@@ -48,25 +54,32 @@ export function useLicenseVerifier(
       return sharedLicenseStatuses[packageName]!.licenseVerifier;
     }
 
-    const acceptedScopes = extractAcceptedScopes(packageName);
-    const productScope = extractProductScope(packageName);
-
     const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
       releaseInfo,
       licenseKey,
-      acceptedScopes,
-      productScope,
+      packageName,
     });
 
     const fullPackageName = `@mui/${packageName}`;
+
+    sendMuiXTelemetryEvent(
+      muiXTelemetryEvents.licenseVerification(
+        { licenseKey },
+        {
+          packageName,
+          packageReleaseInfo: releaseInfo,
+          licenseStatus: licenseStatus?.status,
+        },
+      ),
+    );
 
     if (licenseStatus.status === LICENSE_STATUS.Valid) {
       // Skip
     } else if (licenseStatus.status === LICENSE_STATUS.Invalid) {
       showInvalidLicenseKeyError();
-    } else if (licenseStatus.status === LICENSE_STATUS.ProductNotCovered) {
-      showProductNotCoveredError();
+    } else if (licenseStatus.status === LICENSE_STATUS.NotAvailableInInitialProPlan) {
+      showNotAvailableInInitialProPlanError();
     } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
       showLicenseKeyPlanMismatchError();
     } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {

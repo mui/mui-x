@@ -1,3 +1,5 @@
+import { ComponentNameToClassKey, ComponentsPropsList } from '@mui/material/styles';
+import { CSSObject, CSSInterpolation, Interpolation } from '@mui/system';
 /**
  * All standard components exposed by `material-ui` are `StyledComponents` with
  * certain `classes`, on which one can also set a top-level `className` and inline
@@ -8,20 +10,34 @@ export type ExtendMui<C, Removals extends keyof C = never> = Omit<
   'classes' | 'theme' | Removals
 >;
 
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+// This and `ComponentsOverrides` are extracted from the `@mui/material/styles` package
+// with the addition of supporting explicit `OwnerState` type.
+// https://github.com/mui/material-ui/blob/master/packages/mui-material/src/styles/overrides.ts
+type OverridesStyleRules<
+  ClassKey extends string = string,
+  ComponentName = keyof ComponentsPropsList,
+  Theme = unknown,
+  OwnerState = unknown,
+> = Record<
+  ClassKey,
+  Interpolation<
+    (ComponentName extends keyof ComponentsPropsList
+      ? ComponentsPropsList[ComponentName] &
+          Record<string, unknown> & {
+            ownerState: OwnerState extends Object
+              ? OwnerState
+              : ComponentsPropsList[ComponentName] & Record<string, unknown>;
+          }
+      : {}) & {
+      theme: Theme;
+    } & Record<string, unknown>
+  >
+>;
 
-export type MakeRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
-
-export type DefaultizedProps<
-  P extends {},
-  RequiredProps extends keyof P,
-  AdditionalProps extends {} = {},
-> = Omit<P, RequiredProps | keyof AdditionalProps> &
-  Required<Pick<P, RequiredProps>> &
-  AdditionalProps;
-
-export type SlotComponentPropsFromProps<
-  TProps extends {},
-  TOverrides extends {},
-  TOwnerState extends {},
-> = (Partial<TProps> & TOverrides) | ((ownerState: TOwnerState) => Partial<TProps> & TOverrides);
+export type ComponentsOverrides<Theme = unknown, OwnerState = unknown> = {
+  [Name in keyof ComponentNameToClassKey]?: Partial<
+    OverridesStyleRules<ComponentNameToClassKey[Name], Name, Theme, OwnerState>
+  >;
+} & {
+  MuiCssBaseline?: CSSObject | string | ((theme: Theme) => CSSInterpolation);
+};

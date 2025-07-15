@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
+import { vi } from 'vitest';
 
 describe('<YearCalendar />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
+  const { render } = createPickerRenderer();
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
@@ -49,14 +49,39 @@ describe('<YearCalendar />', () => {
     expect(onChangeMock.callCount).to.equal(0);
   });
 
+  it('should display years in ascending (chronological order) by default', () => {
+    render(
+      <YearCalendar
+        minDate={adapterToUse.date('2020-01-01')}
+        maxDate={adapterToUse.date('2024-12-31')}
+      />,
+    );
+
+    const yearButtons = screen.queryAllByRole('radio');
+    expect(yearButtons[0]?.textContent).to.equal('2020');
+  });
+
+  it('should display years in descending (reverse chronological) order when props.yearsOrder = "desc"', () => {
+    render(
+      <YearCalendar
+        minDate={adapterToUse.date('2020-01-01')}
+        maxDate={adapterToUse.date('2024-12-31')}
+        yearsOrder="desc"
+      />,
+    );
+
+    const yearButtons = screen.queryAllByRole('radio');
+    expect(yearButtons[0]?.textContent).to.equal('2024');
+  });
+
   describe('Disabled', () => {
     it('should disable all years if props.disabled = true', () => {
       const onChange = spy();
       render(<YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />);
 
-      screen.getAllByRole('radio').forEach((monthButton) => {
-        expect(monthButton).to.have.attribute('disabled');
-        fireEvent.click(monthButton);
+      screen.getAllByRole('radio').forEach((yearButton) => {
+        expect(yearButton).to.have.attribute('disabled');
+        fireEvent.click(yearButton);
         expect(onChange.callCount).to.equal(0);
       });
     });
@@ -145,24 +170,34 @@ describe('<YearCalendar />', () => {
     expect(document.activeElement).to.have.text('2020');
   });
 
-  it('should disable years after initial render when "disableFuture" prop changes', () => {
-    const { setProps } = render(<YearCalendar />);
+  describe('with fake timers', () => {
+    beforeEach(() => {
+      vi.setSystemTime(new Date(2019, 0, 1));
+    });
 
-    const year2019 = screen.getByText('2019', { selector: 'button' });
-    const year2020 = screen.getByText('2020', { selector: 'button' });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
 
-    expect(year2019).not.to.have.attribute('disabled');
-    expect(year2020).not.to.have.attribute('disabled');
+    it('should disable years after initial render when "disableFuture" prop changes', () => {
+      const { setProps } = render(<YearCalendar />);
 
-    setProps({ disableFuture: true });
+      const year2019 = screen.getByText('2019', { selector: 'button' });
+      const year2020 = screen.getByText('2020', { selector: 'button' });
 
-    expect(year2019).not.to.have.attribute('disabled');
-    expect(year2020).to.have.attribute('disabled');
+      expect(year2019).not.to.have.attribute('disabled');
+      expect(year2020).not.to.have.attribute('disabled');
+
+      setProps({ disableFuture: true });
+
+      expect(year2019).not.to.have.attribute('disabled');
+      expect(year2020).to.have.attribute('disabled');
+    });
   });
 
   it('should not mark the `referenceDate` year as selected', () => {
     render(<YearCalendar referenceDate={adapterToUse.date('2018-02-02')} />);
 
-    expect(screen.getByRole('radio', { name: '2018', checked: false })).to.not.equal(null);
+    expect(screen.getByRole('radio', { name: '2018', checked: false })).not.to.equal(null);
   });
 });

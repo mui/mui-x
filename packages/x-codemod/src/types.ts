@@ -1,9 +1,8 @@
 import type { FileInfo, API } from 'jscodeshift';
+import { MakeOptional } from '@mui/x-internals/types';
 
-type MakeRequired<Type, Key extends keyof Type> = Pick<Type, Key> & Partial<Omit<Type, Key>>;
-
-type MakeOptional<Type, Key extends keyof Type> = Omit<Type, Key> & Partial<Pick<Type, Key>>;
+type KeepRequired<Type, Key extends keyof Type> = Pick<Type, Key> & Partial<Omit<Type, Key>>;
 
 export type JsCodeShiftFileInfo = MakeOptional<FileInfo, 'path'>;
 
-export type JsCodeShiftAPI = MakeRequired<API, 'jscodeshift'>;
+export type JsCodeShiftAPI = KeepRequired<API, 'jscodeshift'>;

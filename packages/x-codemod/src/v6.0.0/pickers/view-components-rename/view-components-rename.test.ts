@@ -1,5 +1,4 @@
 import path from 'path';
-import { expect } from 'chai';
 import jscodeshift from 'jscodeshift';
 import transform from '.';
 import readFile from '../../../util/readFile';
@@ -16,7 +15,7 @@ describe('v6.0.0/pickers', () => {
       const actualPath = `./actual-${testFile}.spec.tsx`;
       const expectedPath = `./expected-${testFile}.spec.tsx`;
 
-      describe(`Community package (${testFile.replace(/-/g, ' ')})`, () => {
+      describe(`Package (${testFile.replace(/-/g, ' ')})`, () => {
         it('transforms imports as needed', () => {
           const actual = transform(
             { source: read(actualPath) },

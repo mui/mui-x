@@ -4,7 +4,7 @@
 
 ## MUI X roadmap
 
-To learn more about our plans for MUI X, visit the [public roadmap](https://github.com/mui/mui-x/projects/1).
+To learn more about our plans for MUI X, visit the [public roadmap](https://github.com/orgs/mui/projects/35).
 
 :::warning
 We operate in a dynamic environment,so things are subject to change.

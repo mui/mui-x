@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Meridiem',
 };
 
-const daDKPickers: Partial<PickersLocaleText<any>> = {
+const daDKPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Forrige måned',
   nextMonth: 'Næste måned',
@@ -36,16 +36,18 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Ryd',
   okButtonLabel: 'OK',
   todayButtonLabel: 'I dag',
+  nextStepButtonLabel: 'Næste',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Vælg dato',
   dateTimePickerToolbarTitle: 'Vælg dato & tidspunkt',
   timePickerToolbarTitle: 'Vælg tidspunkt',
   dateRangePickerToolbarTitle: 'Vælg datointerval',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Vælg ${timeViews[view] ?? view}. ${time === null ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Vælg ${timeViews[view] ?? view}. ${!formattedTime ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
@@ -59,15 +61,12 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `Uge ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vælg dato, valgte dato er ${utils.format(value, 'fullDate')}`
-      : 'Vælg dato',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vælg tidspunkt, valgte tidspunkt er ${utils.format(value, 'fullTime')}`
-      : 'Vælg tidspunkt',
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Vælg dato, valgte dato er ${formattedDate}` : 'Vælg dato',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Vælg tidspunkt, valgte tidspunkt er ${formattedTime}` : 'Vælg tidspunkt',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'ryd felt',
 
   // Table labels

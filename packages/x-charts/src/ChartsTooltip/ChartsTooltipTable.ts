@@ -1,72 +1,89 @@
 import { styled } from '@mui/material/styles';
-import { shouldForwardProp } from '@mui/system';
+import Typography from '@mui/material/Typography';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Container',
+  overridesResolver: (props, styles) => styles.paper, // FIXME: Inconsistent naming with slot
 })(({ theme }) => ({
-  boxShadow: theme.shadows[1],
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
-  transition: theme.transitions.create('box-shadow'),
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: (theme.vars || theme).shape?.borderRadius,
+  border: `solid ${(theme.vars || theme).palette.divider} 1px`,
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipTable = styled('table', {
   name: 'MuiChartsTooltip',
   slot: 'Table',
 })(({ theme }) => ({
   borderSpacing: 0,
-  '& thead td': {
+  [`& .${chartsTooltipClasses.markContainer}`]: {
+    display: 'inline-block',
+    width: `calc(20px + ${theme.spacing(1.5)})`,
+    verticalAlign: 'middle',
+  },
+  '& caption': {
     borderBottom: `solid ${(theme.vars || theme).palette.divider} 1px`,
+    padding: theme.spacing(0.5, 1.5),
+    textAlign: 'start',
+    whiteSpace: 'nowrap',
+    '& span': {
+      marginRight: theme.spacing(1.5),
+    },
   },
 }));
 
+/**
+ * @ignore - internal component.
+ */
 export const ChartsTooltipRow = styled('tr', {
   name: 'MuiChartsTooltip',
   slot: 'Row',
 })(({ theme }) => ({
   'tr:first-of-type& td': {
-    paddingTop: theme.spacing(1),
+    paddingTop: theme.spacing(0.5),
   },
   'tr:last-of-type& td': {
-    paddingBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(0.5),
   },
 }));
 
-export const ChartsTooltipCell = styled('td', {
+/**
+ * @ignore - internal component.
+ */
+export const ChartsTooltipCell = styled(Typography, {
   name: 'MuiChartsTooltip',
   slot: 'Cell',
-})(({ theme }) => ({
+})<{ component?: React.ElementType }>(({ theme }) => ({
   verticalAlign: 'middle',
   color: (theme.vars || theme).palette.text.secondary,
-  [`&.${chartsTooltipClasses.labelCell}`]: {
+  textAlign: 'start',
+  [`&.${chartsTooltipClasses.cell}`]: {
     paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  },
+  [`&.${chartsTooltipClasses.labelCell}`]: {
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+  [`&.${chartsTooltipClasses.valueCell}, &.${chartsTooltipClasses.axisValueCell}`]: {
+    color: (theme.vars || theme).palette.text.primary,
+    fontWeight: theme.typography.fontWeightMedium,
   },
   [`&.${chartsTooltipClasses.valueCell}`]: {
-    paddingLeft: theme.spacing(4),
-    color: (theme.vars || theme).palette.text.primary,
+    paddingLeft: theme.spacing(1.5),
+    paddingRight: theme.spacing(1.5),
   },
-  'td:first-of-type&': {
-    paddingLeft: theme.spacing(2),
+  'td:first-of-type&, th:first-of-type&': {
+    paddingLeft: theme.spacing(1.5),
   },
-  'td:last-of-type&': {
-    paddingRight: theme.spacing(2),
+  'td:last-of-type&, th:last-of-type&': {
+    paddingRight: theme.spacing(1.5),
   },
-}));
-
-export const ChartsTooltipMark = styled('div', {
-  name: 'MuiChartsTooltip',
-  slot: 'Mark',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'color',
-})<{ color: string }>(({ theme, color }) => ({
-  width: theme.spacing(1),
-  height: theme.spacing(1),
-  borderRadius: '50%',
-  boxShadow: theme.shadows[1],
-  backgroundColor: color,
-  borderColor: (theme.vars || theme).palette.background.paper,
-  border: `solid ${(theme.vars || theme).palette.background.paper} ${theme.spacing(0.25)}`,
-  boxSizing: 'content-box',
 }));

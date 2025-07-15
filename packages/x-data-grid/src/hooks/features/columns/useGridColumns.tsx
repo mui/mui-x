@@ -1,4 +1,6 @@
+'use client';
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
@@ -14,7 +16,8 @@ import {
   gridVisibleColumnDefinitionsSelector,
   gridColumnPositionsSelector,
 } from './gridColumnsSelector';
-import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature } from '../../../constants/signature';
+import { useGridEvent } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridPipeProcessor,
@@ -37,6 +40,7 @@ import {
 import { GridPreferencePanelsValue } from '../preferencesPanel';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { gridPivotActiveSelector } from '../pivoting';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
@@ -65,7 +69,7 @@ export const columnsStateInitializer: GridStateInitializer<
  * TODO: Impossible priority - useGridParamsApi also needs to be after useGridColumns
  */
 export function useGridColumns(
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -96,8 +100,6 @@ export function useGridColumns(
 
       apiRef.current.setState(mergeColumnsState(columnsState));
       apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
-      apiRef.current.updateRenderContext?.();
-      apiRef.current.forceUpdate();
     },
     [logger, apiRef],
   );
@@ -154,7 +156,6 @@ export function useGridColumns(
           }),
         }));
         apiRef.current.updateRenderContext?.();
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef],
@@ -162,11 +163,16 @@ export function useGridColumns(
 
   const updateColumns = React.useCallback<GridColumnApi['updateColumns']>(
     (columns) => {
+      if (gridPivotActiveSelector(apiRef)) {
+        apiRef.current.updateNonPivotColumns(columns);
+        return;
+      }
       const columnsState = createColumnsState({
         apiRef,
         columnsToUpsert: columns,
         initialState: undefined,
         keepOnlyColumnsToUpsert: false,
+        updateInitialVisibilityModel: true,
       });
       setGridColumnsState(columnsState);
     },
@@ -212,7 +218,7 @@ export function useGridColumns(
       const fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
       updatedColumns.splice(targetIndexPosition, 0, fieldRemoved);
       setGridColumnsState({
-        ...gridColumnsStateSelector(apiRef.current.state),
+        ...gridColumnsStateSelector(apiRef),
         orderedFields: updatedColumns,
       });
 
@@ -230,7 +236,7 @@ export function useGridColumns(
     (field, width) => {
       logger.debug(`Updating column ${field} width to ${width}`);
 
-      const columnsState = gridColumnsStateSelector(apiRef.current.state);
+      const columnsState = gridColumnsStateSelector(apiRef);
       const column = columnsState.lookup[field];
       const newColumn: GridStateColDef = { ...column, width, hasBeenResized: true };
 
@@ -333,10 +339,10 @@ export function useGridColumns(
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
-      const columnVisibilityModelToImport = context.stateToRestore.columns?.columnVisibilityModel;
       const initialState = context.stateToRestore.columns;
+      const columnVisibilityModelToImport = initialState?.columnVisibilityModel;
 
-      if (columnVisibilityModelToImport == null && initialState == null) {
+      if (initialState == null) {
         return params;
       }
 
@@ -347,7 +353,30 @@ export function useGridColumns(
         columnVisibilityModel: columnVisibilityModelToImport,
         keepOnlyColumnsToUpsert: false,
       });
-      apiRef.current.setState(mergeColumnsState(columnsState));
+
+      if (initialState != null) {
+        apiRef.current.setState((prevState) => ({
+          ...prevState,
+          columns: {
+            ...prevState.columns,
+            lookup: columnsState.lookup,
+            orderedFields: columnsState.orderedFields,
+            initialColumnVisibilityModel: columnsState.initialColumnVisibilityModel,
+          },
+        }));
+      }
+
+      // separate column visibility model state update as it can be controlled
+      // https://github.com/mui/mui-x/issues/17681#issuecomment-3012528602
+      if (columnVisibilityModelToImport != null) {
+        apiRef.current.setState((prevState) => ({
+          ...prevState,
+          columns: {
+            ...prevState.columns,
+            columnVisibilityModel: columnVisibilityModelToImport,
+          },
+        }));
+      }
 
       if (initialState != null) {
         apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
@@ -372,13 +401,15 @@ export function useGridColumns(
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems) => {
-      if (props.disableColumnSelector) {
+      const isPivotActive = gridPivotActiveSelector(apiRef);
+
+      if (props.disableColumnSelector || isPivotActive) {
         return columnMenuItems;
       }
 
       return [...columnMenuItems, 'columnMenuColumnsItem'];
     },
-    [props.disableColumnSelector],
+    [props.disableColumnSelector, apiRef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
@@ -391,21 +422,24 @@ export function useGridColumns(
    */
 
   const prevInnerWidth = React.useRef<number | null>(null);
-  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (
-    viewportInnerSize,
-  ) => {
-    if (prevInnerWidth.current !== viewportInnerSize.width) {
-      prevInnerWidth.current = viewportInnerSize.width;
+  const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (size) => {
+    if (prevInnerWidth.current !== size.width) {
+      prevInnerWidth.current = size.width;
+
+      const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
+        (col) => col.flex && col.flex > 0,
+      );
+      if (!hasFlexColumns) {
+        return;
+      }
+
       setGridColumnsState(
-        hydrateColumnsWidth(
-          gridColumnsStateSelector(apiRef.current.state),
-          apiRef.current.getRootDimensions(),
-        ),
+        hydrateColumnsWidth(gridColumnsStateSelector(apiRef), apiRef.current.getRootDimensions()),
       );
     }
   };
 
-  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
+  useGridEvent(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
 
   /**
    * APPLIERS
@@ -448,6 +482,7 @@ export function useGridColumns(
       // If the user provides a model, we don't want to set it in the state here because it has it's dedicated `useEffect` which calls `setColumnVisibilityModel`
       columnsToUpsert: props.columns,
       keepOnlyColumnsToUpsert: true,
+      updateInitialVisibilityModel: true,
     });
     previousColumnsProp.current = props.columns;
     setGridColumnsState(columnsState);

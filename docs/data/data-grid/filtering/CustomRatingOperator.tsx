@@ -5,17 +5,8 @@ import {
   GridFilterInputValueProps,
   DataGrid,
   GridFilterOperator,
-  GridToolbarFilterButton,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function Toolbar() {
-  return (
-    <div>
-      <GridToolbarFilterButton />
-    </div>
-  );
-}
 
 function RatingInputValue(props: GridFilterInputValueProps) {
   const { item, applyValue, focusElementRef } = props;
@@ -67,7 +58,6 @@ const ratingOnlyOperators: GridFilterOperator<any, number>[] = [
       };
     },
     InputComponent: RatingInputValue,
-    InputComponentProps: { type: 'number' },
     getValueAsString: (value: number) => `${value} Stars`,
   },
 ];
@@ -75,7 +65,7 @@ const ratingOnlyOperators: GridFilterOperator<any, number>[] = [
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function CustomRatingOperator() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -98,10 +88,9 @@ export default function CustomRatingOperator() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
-        slots={{
-          toolbar: Toolbar,
-        }}
+        showToolbar
         initialState={{
           ...data.initialState,
           filter: {

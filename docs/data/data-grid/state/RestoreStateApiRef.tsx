@@ -339,6 +339,7 @@ export default function RestoreStateApiRef() {
     <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         slots={{ toolbar: CustomToolbar }}
+        showToolbar
         loading={loading}
         apiRef={apiRef}
         pagination

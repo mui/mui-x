@@ -7,17 +7,19 @@
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "build",
+    "outDir": "build/esm",
     "rootDir": "./src",
     "types": [
-      "node",
+      "../../mui-env.d.ts",
       "@mui/material/themeCssVarsAugmentation",
       "@emotion/styled",
-      "@react-spring/shared",
-      "@react-spring/core",
       "csstype"
     ]
   },
+  "references": [
+    { "path": "../x-internals/tsconfig.build.json" },
+    { "path": "../x-internal-gestures/tsconfig.build.json" }
+  ],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

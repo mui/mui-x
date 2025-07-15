@@ -1,10 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
-import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { GridCellEditStopReasons } from '../../models/params/gridEditCellParams';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
-import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
 import {
@@ -14,16 +14,17 @@ import {
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-export interface GridEditSingleSelectCellProps
-  extends GridRenderEditCellParams,
-    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
+export interface GridEditSingleSelectCellProps extends GridRenderEditCellParams {
   /**
    * Callback called when the value is changed by the user.
-   * @param {SelectChangeEvent<any>} event The event source of the callback.
+   * @param {Event<any>} event The event source of the callback.
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onValueChange?: (event: SelectChangeEvent<any>, newValue: any) => Promise<void> | void;
+  onValueChange?: (
+    event: Parameters<NonNullable<GridSlotProps['baseSelect']['onOpen']>>[0],
+    newValue: any,
+  ) => Promise<void> | void;
   /**
    * If true, the select opens by default.
    */
@@ -55,17 +56,17 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     error,
     onValueChange,
     initialOpen = rootProps.editMode === GridEditModes.Cell,
+    slotProps,
     ...other
   } = props;
 
   const apiRef = useGridApiContext();
-  const ref = React.useRef<any>();
-  const inputRef = React.useRef<any>();
+  const ref = React.useRef<any>(null);
+  const inputRef = React.useRef<any>(null);
   const [open, setOpen] = React.useState(initialOpen);
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
-  const { MenuProps, ...otherBaseSelectProps } = rootProps.slotProps?.baseSelect || {};
 
   useEnhancedEffect(() => {
     if (hasFocus) {
@@ -85,7 +86,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const getOptionValue = colDef.getOptionValue!;
   const getOptionLabel = colDef.getOptionLabel!;
 
-  const handleChange: SelectProps['onChange'] = async (event) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
     if (!isSingleSelectColDef(colDef) || !valueOptions) {
       return;
     }
@@ -111,18 +112,19 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       setOpen(false);
       return;
     }
-    if (reason === 'backdropClick' || isEscapeKey(event.key)) {
+    if (reason === 'backdropClick' || event.key === 'Escape') {
       const params = apiRef.current.getCellParams(id, field);
       apiRef.current.publishEvent('cellEditStop', {
         ...params,
-        reason: isEscapeKey(event.key)
-          ? GridCellEditStopReasons.escapeKeyDown
-          : GridCellEditStopReasons.cellFocusOut,
+        reason:
+          event.key === 'Escape'
+            ? GridCellEditStopReasons.escapeKeyDown
+            : GridCellEditStopReasons.cellFocusOut,
       });
     }
   };
 
-  const handleOpen: SelectProps['onOpen'] = (event) => {
+  const handleOpen: GridSlotProps['baseSelect']['onOpen'] = (event) => {
     if (isKeyboardEvent(event) && event.key === 'Enter') {
       return;
     }
@@ -136,20 +138,22 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   return (
     <rootProps.slots.baseSelect
       ref={ref}
-      inputRef={inputRef}
       value={valueProp}
-      onChange={handleChange}
+      onChange={handleChange as any}
       open={open}
       onOpen={handleOpen}
-      MenuProps={{
-        onClose: handleClose,
-        ...MenuProps,
-      }}
+      onClose={handleClose}
       error={error}
       native={isSelectNative}
       fullWidth
+      slotProps={{
+        htmlInput: {
+          ref: inputRef,
+        },
+      }}
       {...other}
-      {...otherBaseSelectProps}
+      {...slotProps?.root}
+      {...rootProps.slotProps?.baseSelect}
     >
       {valueOptions.map((valueOption) => {
         const value = getOptionValue(valueOption);
@@ -215,7 +219,7 @@ GridEditSingleSelectCell.propTypes = {
   isValidating: PropTypes.bool,
   /**
    * Callback called when the value is changed by the user.
-   * @param {SelectChangeEvent<any>} event The event source of the callback.
+   * @param {Event<any>} event The event source of the callback.
    * @param {any} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */

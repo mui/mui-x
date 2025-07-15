@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Délután',
 };
 
-const huHUPickers: Partial<PickersLocaleText<any>> = {
+const huHUPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Előző hónap',
   nextMonth: 'Következő hónap',
@@ -36,16 +36,18 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Törlés',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Ma',
+  nextStepButtonLabel: 'Következő',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Dátum kiválasztása',
   dateTimePickerToolbarTitle: 'Dátum és idő kiválasztása',
   timePickerToolbarTitle: 'Idő kiválasztása',
   dateRangePickerToolbarTitle: 'Dátumhatárok kiválasztása',
+  // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} kiválasztása. ${time === null ? 'Nincs kiválasztva idő' : `A kiválasztott idő ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `${timeViews[view] ?? view} kiválasztása. ${!formattedTime ? 'Nincs kiválasztva idő' : `A kiválasztott idő ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours.toLowerCase()}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes.toLowerCase()}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds.toLowerCase()}`,
@@ -59,15 +61,14 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}. hét`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
-  // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Válasszon dátumot, a kiválasztott dátum: ${utils.format(value, 'fullDate')}`
+  // Open Picker labels
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate
+      ? `Válasszon dátumot, a kiválasztott dátum: ${formattedDate}`
       : 'Válasszon dátumot',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Válasszon időt, a kiválasztott idő: ${utils.format(value, 'fullTime')}`
-      : 'Válasszon időt',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Válasszon időt, a kiválasztott idő: ${formattedTime}` : 'Válasszon időt',
+  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'Tartalom ürítése',
 
   // Table labels

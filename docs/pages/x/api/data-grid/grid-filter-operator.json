@@ -16,8 +16,8 @@
       "type": { "description": "(value: GridFilterItem['value']) =&gt; string" }
     },
     "headerLabel": { "type": { "description": "string" } },
-    "InputComponent": { "type": { "description": "React.JSXElementConstructor&lt;any&gt;" } },
-    "InputComponentProps": { "type": { "description": "Record&lt;string, any&gt;" } },
+    "InputComponent": { "type": { "description": "React.JSXElementConstructor&lt;I&gt;" } },
+    "InputComponentProps": { "type": { "description": "Partial&lt;I&gt;" } },
     "label": { "type": { "description": "string" } },
     "requiresFilterValue": { "type": { "description": "boolean" }, "default": "true" }
   }

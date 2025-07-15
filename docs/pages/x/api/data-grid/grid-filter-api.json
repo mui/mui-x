@@ -9,7 +9,7 @@
     },
     {
       "name": "getFilterState",
-      "description": "Returns the filter state for the given filter model without applying it to the data grid.",
+      "description": "Returns the filter state for the given filter model without applying it to the Data Grid.",
       "type": "(filterModel: GridFilterModel) => GridStateCommunity['filter']"
     },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },

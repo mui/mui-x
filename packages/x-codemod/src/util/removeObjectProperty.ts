@@ -1,4 +1,4 @@
-import type { Collection, JSCodeshift, JSXAttribute } from 'jscodeshift';
+import type { Collection, JSCodeshift, JSXAttribute, Identifier } from 'jscodeshift';
 
 const getAttributeName = (attribute: JSXAttribute): string =>
   attribute.name.type === 'JSXIdentifier' ? attribute.name.name : attribute.name.name.name;
@@ -48,11 +48,21 @@ export default function removeObjectProperty({
         return;
       }
       const definedKeys: any[] = [];
-      const objectProperties = j(targetAttribute).find(j.Property);
-      objectProperties.forEach((path) => {
-        const objectKey = (path.value.key as any).name as any;
-        definedKeys.push(objectKey);
+      const properties = j(targetAttribute).find(j.Property);
+      const objectProperties = j(targetAttribute).find(j.ObjectProperty);
+
+      const propertiesToProcess = properties.length > 0 ? properties : objectProperties;
+      if (propertiesToProcess.length === 0) {
+        return;
+      }
+
+      propertiesToProcess.forEach((path) => {
+        const keyName = (path.value.key as Identifier).name;
+        if (keyName) {
+          definedKeys.push(keyName);
+        }
       });
+
       if (definedKeys.length === 1 && definedKeys[0] === propKey) {
         // only that property is defined, remove the whole prop
         j(element)
@@ -62,8 +72,9 @@ export default function removeObjectProperty({
             j(path).remove();
           });
       } else {
-        objectProperties.forEach((path) => {
-          if ((path.value.key as any).name === propKey) {
+        propertiesToProcess.forEach((path) => {
+          const name = (path.value.key as Identifier).name;
+          if (name === propKey) {
             j(path).remove();
           }
         });

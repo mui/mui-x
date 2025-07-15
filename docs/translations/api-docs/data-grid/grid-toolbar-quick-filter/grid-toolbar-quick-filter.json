@@ -1,5 +1,6 @@
 {
   "componentDescription": "",
+  "deprecationInfo": "Use the {@link <a href=\"https://mui.com/x/react-data-grid/components/quick-filter/\">https://mui.com/x/react-data-grid/components/quick-filter/</a> Quick Filter} component instead. This component will be removed in a future major release.",
   "propDescriptions": {
     "debounceMs": { "description": "The debounce time in milliseconds." },
     "quickFilterFormatter": {
@@ -17,5 +18,5 @@
       }
     }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+  "classDescriptions": {}
 }

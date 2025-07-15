@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
 import { TEST_DATE_ISO_STRING } from '../describeGregorianAdapter';
 
@@ -161,7 +160,7 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
   });
 
   it('Method: getWeekNumber', () => {
-    expect(adapter.getWeekNumber!(testDateIso)).to.equal(8);
+    expect(adapter.getWeekNumber(testDateIso)).to.equal(8);
   });
 
   describe('Method: getYearRange', () => {

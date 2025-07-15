@@ -1,20 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function QuickSearchToolbar() {
-  return (
-    <Box
-      sx={{
-        p: 0.5,
-        pb: 0,
-      }}
-    >
-      <GridToolbarQuickFilter />
-    </Box>
-  );
-}
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
@@ -32,7 +19,7 @@ const getApplyQuickFilterFnSameYear = (value) => {
 };
 
 export default function QuickFilteringCustomLogic() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -53,7 +40,7 @@ export default function QuickFilteringCustomLogic() {
           if (column.field === 'name') {
             return {
               ...column,
-              getApplyQuickFilterFn: undefined,
+              getApplyQuickFilterFn: () => null,
             };
           }
           return column;
@@ -63,11 +50,7 @@ export default function QuickFilteringCustomLogic() {
 
   return (
     <Box sx={{ height: 400, width: 1 }}>
-      <DataGrid
-        {...data}
-        columns={columns}
-        slots={{ toolbar: QuickSearchToolbar }}
-      />
+      <DataGrid {...data} loading={loading} columns={columns} showToolbar />
     </Box>
   );
 }

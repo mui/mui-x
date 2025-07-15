@@ -17,9 +17,18 @@
   "name": "ScatterPlot",
   "imports": [
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
-    "import { ScatterPlot } from '@mui/x-charts';"
+    "import { ScatterPlot } from '@mui/x-charts';",
+    "import { ScatterPlot } from '@mui/x-charts-pro';"
   ],
-  "slots": [{ "name": "scatter", "description": "", "class": null }],
+  "slots": [
+    {
+      "name": "marker",
+      "description": "The component that renders the marker for a scatter point.",
+      "default": "ScatterMarker",
+      "class": null
+    },
+    { "name": "scatter", "description": "", "class": null }
+  ],
   "classes": [],
   "muiName": "MuiScatterPlot",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterPlot.tsx",

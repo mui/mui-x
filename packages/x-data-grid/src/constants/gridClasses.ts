@@ -1,9 +1,63 @@
-import {
-  unstable_generateUtilityClasses as generateUtilityClasses,
-  unstable_generateUtilityClass as generateUtilityClass,
-} from '@mui/utils';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 export interface GridClasses {
+  /**
+   * Styles applied to the root element of the AI assistant panel.
+   */
+  aiAssistantPanel: string;
+  /**
+   * Styles applied to the AI assistant panel header.
+   */
+  aiAssistantPanelHeader: string;
+  /**
+   * Styles applied to the AI assistant panel title.
+   */
+  aiAssistantPanelTitle: string;
+  /**
+   * Styles applied to the AI assistant panel title container.
+   */
+  aiAssistantPanelTitleContainer: string;
+  /**
+   * Styles applied to the AI assistant panel body.
+   */
+  aiAssistantPanelBody: string;
+  /**
+   * Styles applied to the AI assistant panel conversation title.
+   */
+  aiAssistantPanelConversationTitle: string;
+  /**
+   * Styles applied to the AI assistant panel empty text.
+   */
+  aiAssistantPanelEmptyText: string;
+  /**
+   * Styles applied to the AI assistant panel footer.
+   */
+  aiAssistantPanelFooter: string;
+  /**
+   * Styles applied to the AI assistant panel conversation.
+   */
+  aiAssistantPanelConversation: string;
+  /**
+   * Styles applied to the AI assistant panel conversation list.
+   */
+  aiAssistantPanelConversationList: string;
+  /**
+   * Styles applied to the AI assistant panel suggestions.
+   */
+  aiAssistantPanelSuggestions: string;
+  /**
+   * Styles applied to the AI assistant panel suggestions list.
+   */
+  aiAssistantPanelSuggestionsList: string;
+  /**
+   * Styles applied to the AI assistant panel suggestions item.
+   */
+  aiAssistantPanelSuggestionsItem: string;
+  /**
+   * Styles applied to the AI assistant panel suggestions label.
+   */
+  aiAssistantPanelSuggestionsLabel: string;
   /**
    * Styles applied to the root element of the cell with type="actions".
    */
@@ -29,6 +83,10 @@ export interface GridClasses {
    */
   aggregationColumnHeaderLabel: string;
   /**
+   * Styles applied to the aggregation row overlay wrapper.
+   */
+  aggregationRowOverlayWrapper: string;
+  /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
   autoHeight: string;
@@ -36,6 +94,7 @@ export interface GridClasses {
    * Styles applied to the root element while it is being autosized.
    */
   autosizing: string;
+  withSidePanel: string;
   /**
    * Styles applied to the icon of the boolean cell.
    */
@@ -122,6 +181,22 @@ export interface GridClasses {
    */
   columnHeader: string;
   /**
+   * Styles applied to the collapsible element.
+   */
+  collapsible: string;
+  /**
+   * Styles applied to the collapsible icon element.
+   */
+  collapsibleIcon: string;
+  /**
+   * Styles applied to the collapsible trigger element.
+   */
+  collapsibleTrigger: string;
+  /**
+   * Styles applied to the collapsible panel element.
+   */
+  collapsiblePanel: string;
+  /**
    * Styles applied to the column header if `headerAlign="center"`.
    */
   'columnHeader--alignCenter': string;
@@ -164,6 +239,24 @@ export interface GridClasses {
    */
   'columnHeader--last': string;
   /**
+   * Styles applied to the last unpinned column header item.
+   * @ignore - do not document.
+   */
+  'columnHeader--lastUnpinned': string;
+  /**
+   * Styles applied to a column header item when its sibling with a bordering separator is focused.
+   * @ignore - do not document.
+   */
+  'columnHeader--siblingFocused': string;
+  /**
+   * Styles applied to the header filter input element.
+   */
+  columnHeaderFilterInput: string;
+  /**
+   * Styles applied to the header filter operator label element.
+   */
+  columnHeaderFilterOperatorLabel: string;
+  /**
    * Styles applied to the header checkbox cell element.
    */
   columnHeaderCheckbox: string;
@@ -195,6 +288,10 @@ export interface GridClasses {
    * Styles applied to the empty column group header cell.
    */
   'columnHeader--emptyGroup': string;
+  /**
+   * Styles applied to the header filter cell.
+   */
+  'columnHeader--filter': string;
   /**
    * Styles applied to the column headers.
    */
@@ -232,9 +329,21 @@ export interface GridClasses {
    */
   columnsManagementHeader: string;
   /**
+   * Styles applied to the columns management search input element.
+   */
+  columnsManagementSearchInput: string;
+  /**
    * Styles applied to the columns management footer element.
    */
   columnsManagementFooter: string;
+  /**
+   * Styles applied to the columns management scroll area element.
+   */
+  columnsManagementScrollArea: string;
+  /**
+   * Styles applied to the columns management empty text element.
+   */
+  columnsManagementEmptyText: string;
   /**
    * Styles applied to the top container.
    */
@@ -247,10 +356,6 @@ export interface GridClasses {
    * Styles applied to the detail panel element.
    */
   detailPanel: string;
-  /**
-   * Styles applied to the detail panels wrapper element.
-   */
-  detailPanels: string;
   /**
    * Styles applied to the detail panel toggle cell element.
    */
@@ -297,10 +402,10 @@ export interface GridClasses {
    */
   filler: string;
   /**
-   * Styles applied to the filler row with top border.
+   * Styles applied to the filler row with bottom border.
    * @ignore - do not document.
    */
-  'filler--borderTop': string;
+  'filler--borderBottom': string;
   /**
    * Styles applied to the filler row pinned left section.
    * @ignore - do not document.
@@ -359,6 +464,7 @@ export interface GridClasses {
    * Styles applied to the column header filter row.
    */
   headerFilterRow: string;
+  mainContent: string; // TODO: come up with a better name
   /**
    * Styles applied to the main container element.
    */
@@ -367,6 +473,11 @@ export interface GridClasses {
    * Styles applied to the main container element when it has right pinned columns.
    */
   'main--hasPinnedRight': string;
+  /**
+   * Styles applied to the main container element to hide the contents of the grid.
+   * @ignore - do not document.
+   */
+  'main--hiddenContent': string;
   /**
    * Styles applied to the menu element.
    */
@@ -404,6 +515,11 @@ export interface GridClasses {
    */
   virtualScroller: string;
   /**
+   * Styles applied to the virtualization container when it is scrollable in the horizontal direction.
+   * @ignore - do not document.
+   */
+  'virtualScroller--hasScrollX': string;
+  /**
    * Styles applied to the virtualization content.
    */
   virtualScrollerContent: string;
@@ -416,9 +532,17 @@ export interface GridClasses {
    */
   virtualScrollerRenderZone: string;
   /**
-   * Styles applied to the pinned columns.
+   * Styles applied to resizable panel handles.
    */
-  pinnedColumns: string;
+  resizablePanelHandle: string;
+  /**
+   * Styles applied to horizontal resizable panel handles.
+   */
+  'resizablePanelHandle--horizontal': string;
+  /**
+   * Styles applied to vertical resizable panel handles.
+   */
+  'resizablePanelHandle--vertical': string;
   /**
    * Styles applied to the root element.
    */
@@ -439,6 +563,11 @@ export interface GridClasses {
    * Styles applied to the root element when user selection is disabled.
    */
   'root--disableUserSelection': string;
+  /**
+   * Used to fix header outline border radius.
+   * @ignore - do not document.
+   */
+  'root--noToolbar': string;
   /**
    * Styles applied to the row element if the row is editable.
    */
@@ -468,6 +597,11 @@ export interface GridClasses {
    */
   'row--detailPanelExpanded': string;
   /**
+   * Styles applied to the row cells if the row needs a bottom border.
+   * @ignore - do not document.
+   */
+  'row--borderBottom': string;
+  /**
    * Styles applied to the row element.
    */
   row: string;
@@ -489,6 +623,14 @@ export interface GridClasses {
    */
   'rowReorderCell--draggable': string;
   /**
+   * Styles applied to the row reorder icon element.
+   */
+  rowReorderIcon: string;
+  /**
+   * Styles applied to the skeleton row element.
+   */
+  rowSkeleton: string;
+  /**
    * Styles applied to both scroll area elements.
    */
   scrollArea: string;
@@ -500,6 +642,14 @@ export interface GridClasses {
    * Styles applied to the right scroll area element.
    */
   'scrollArea--right': string;
+  /**
+   * Styles applied to the top scroll area element.
+   */
+  'scrollArea--up': string;
+  /**
+   * Styles applied to the bottom scroll area element.
+   */
+  'scrollArea--down': string;
   /**
    * Styles applied to the scrollbars.
    */
@@ -529,6 +679,11 @@ export interface GridClasses {
   'scrollbarFiller--borderTop': string;
   /**
    * @ignore - do not document.
+   * Styles applied to the scrollbar filler cell, with a border bottom.
+   */
+  'scrollbarFiller--borderBottom': string;
+  /**
+   * @ignore - do not document.
    * Styles applied to the scrollbar filler cell.
    */
   'scrollbarFiller--pinnedRight': string;
@@ -537,9 +692,38 @@ export interface GridClasses {
    */
   selectedRowCount: string;
   /**
-   * Styles applied to the sort icon element.
+   * Styles applied to the sort button element.
+   */
+  sortButton: string;
+  /**
+   * Styles applied to the sort button icon element.
    */
   sortIcon: string;
+  /**
+   * Styles applied to the toolbar root element.
+   */
+  toolbar: string;
+  /**
+   * Styles applied to the toolbar label element.
+   */
+  toolbarLabel: string;
+  /**
+   * Styles applied to the toolbar divider element.
+   */
+  toolbarDivider: string;
+  /**
+   * Styles applied to the shadow scroll area element.
+   * @ignore - do not document.
+   */
+  shadowScrollArea: string;
+  /**
+   * Styles applied to the sidebar element.
+   */
+  sidebar: string;
+  /**
+   * Styles applied to the sidebar header element.
+   */
+  sidebarHeader: string;
   /**
    * Styles applied to the toolbar container element.
    */
@@ -548,6 +732,18 @@ export interface GridClasses {
    * Styles applied to the toolbar filter list element.
    */
   toolbarFilterList: string;
+  /**
+   * Styles applied to the toolbar quick filter root element.
+   */
+  toolbarQuickFilter: string;
+  /**
+   * Styles applied to the toolbar quick filter trigger element.
+   */
+  toolbarQuickFilterTrigger: string;
+  /**
+   * Styles applied to the toolbar quick filter control element.
+   */
+  toolbarQuickFilterControl: string;
   /**
    * Styles applied the grid if `showColumnVerticalBorder={true}`.
    */
@@ -579,6 +775,11 @@ export interface GridClasses {
    */
   treeDataGroupingCellToggle: string;
   /**
+   * Styles applied to the loading container of the grouping cell of the tree data.
+   * @ignore - do not document.
+   */
+  treeDataGroupingCellLoadingContainer: string;
+  /**
    * Styles applied to the root element of the grouping criteria cell
    */
   groupingCriteriaCell: string;
@@ -586,6 +787,11 @@ export interface GridClasses {
    * Styles applied to the toggle of the grouping criteria cell
    */
   groupingCriteriaCellToggle: string;
+  /**
+   * Styles applied to the loading container of the grouping cell of the tree data.
+   * @ignore - do not document.
+   */
+  groupingCriteriaCellLoadingContainer: string;
   /**
    * Styles applied to the pinned rows container.
    */
@@ -599,9 +805,121 @@ export interface GridClasses {
    */
   'pinnedRows--bottom': string;
   /**
-   * Styles applied to pinned rows render zones.
+   * Styles applied to the pivot panel available fields.
    */
-  pinnedRowsRenderZone: string;
+  pivotPanelAvailableFields: string;
+  /**
+   * Styles applied to the pivot panel body.
+   */
+  pivotPanelBody: string;
+  /**
+   * Styles applied to the pivot panel field.
+   */
+  pivotPanelField: string;
+  /**
+   * Styles applied to the pivot panel field action container.
+   */
+  pivotPanelFieldActionContainer: string;
+  /**
+   * Styles applied to the pivot panel field checkbox.
+   */
+  pivotPanelFieldCheckbox: string;
+  /**
+   * Styles applied to the pivot panel field drag icon.
+   */
+  pivotPanelFieldDragIcon: string;
+  /**
+   * Styles applied to the pivot panel field list.
+   */
+  pivotPanelFieldList: string;
+  /**
+   * Styles applied to the pivot panel field name.
+   */
+  pivotPanelFieldName: string;
+  /**
+   * Styles applied to the pivot panel field when sorted.
+   */
+  'pivotPanelField--sorted': string;
+  /**
+   * Styles applied to the pivot panel header.
+   */
+  pivotPanelHeader: string;
+  /**
+   * Styles applied to the pivot panel placeholder.
+   */
+  pivotPanelPlaceholder: string;
+  /**
+   * Styles applied to the pivot panel scroll area.
+   */
+  pivotPanelScrollArea: string;
+  /**
+   * Styles applied to the pivot panel search container.
+   */
+  pivotPanelSearchContainer: string;
+  /**
+   * Styles applied to the pivot panel section.
+   */
+  pivotPanelSection: string;
+  /**
+   * Styles applied to the pivot panel section title.
+   */
+  pivotPanelSectionTitle: string;
+  /**
+   * Styles applied to the pivot panel sections.
+   */
+  pivotPanelSections: string;
+  /**
+   * Styles applied to the pivot panel switch.
+   */
+  pivotPanelSwitch: string;
+  /**
+   * Styles applied to the pivot panel switch label.
+   */
+  pivotPanelSwitchLabel: string;
+  /**
+   * Styles applied to the prompt root element.
+   */
+  prompt: string;
+  /**
+   * Styles applied to the prompt content element.
+   */
+  promptContent: string;
+  /**
+   * Styles applied to the prompt text element.
+   */
+  promptText: string;
+  /**
+   * Styles applied to the prompt feedback element.
+   */
+  promptFeedback: string;
+  /**
+   * Styles applied to the prompt change list element.
+   */
+  promptChangeList: string;
+  /**
+   * Styles applied to the prompt changes toggle element.
+   */
+  promptChangesToggle: string;
+  /**
+   * Styles applied to the prompt changes toggle icon element.
+   */
+  promptChangesToggleIcon: string;
+  /**
+   * Styles applied to the prompt icon element.
+   */
+  promptIconContainer: string;
+  /**
+   * Styles applied to the prompt icon element.
+   */
+  promptIcon: string;
+  /**
+   * Styles applied to the prompt error element.
+   */
+  promptError: string;
+  /**
+   * Styles applied to the prompt action element.
+   */
+  promptAction: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -611,14 +929,31 @@ export function getDataGridUtilityClass(slot: string): string {
 }
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
+  'aiAssistantPanel',
+  'aiAssistantPanelHeader',
+  'aiAssistantPanelTitleContainer',
+  'aiAssistantPanelTitle',
+  'aiAssistantPanelBody',
+  'aiAssistantPanelEmptyText',
+  'aiAssistantPanelFooter',
+  'aiAssistantPanelConversation',
+  'aiAssistantPanelConversationList',
+  'aiAssistantPanelConversationTitle',
+  'aiAssistantPanelSuggestions',
+  'aiAssistantPanelSuggestionsList',
+  'aiAssistantPanelSuggestionsItem',
+  'aiAssistantPanelSuggestionsLabel',
   'actionsCell',
   'aggregationColumnHeader',
   'aggregationColumnHeader--alignLeft',
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
   'aggregationColumnHeaderLabel',
+  'aggregationRowOverlayWrapper',
   'autoHeight',
   'autosizing',
+  'mainContent',
+  'withSidePanel',
   'booleanCell',
   'cell--editable',
   'cell--editing',
@@ -639,6 +974,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cellSkeleton',
   'cellOffsetLeft',
   'checkboxInput',
+  'collapsible',
+  'collapsibleTrigger',
+  'collapsibleIcon',
+  'collapsiblePanel',
   'columnHeader',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',
@@ -652,6 +991,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--pinnedLeft',
   'columnHeader--pinnedRight',
   'columnHeader--last',
+  'columnHeader--lastUnpinned',
+  'columnHeader--siblingFocused',
+  'columnHeader--filter',
+  'columnHeaderFilterInput',
+  'columnHeaderFilterOperatorLabel',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',
@@ -668,11 +1012,13 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagement',
   'columnsManagementRow',
   'columnsManagementHeader',
+  'columnsManagementSearchInput',
   'columnsManagementFooter',
+  'columnsManagementScrollArea',
+  'columnsManagementEmptyText',
   'container--top',
   'container--bottom',
   'detailPanel',
-  'detailPanels',
   'detailPanelToggleCell',
   'detailPanelToggleCell--expanded',
   'footerCell',
@@ -685,7 +1031,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editBooleanCell',
   'editInputCell',
   'filler',
-  'filler--borderTop',
+  'filler--borderBottom',
   'filler--pinnedLeft',
   'filler--pinnedRight',
   'filterForm',
@@ -701,6 +1047,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'iconSeparator',
   'main',
   'main--hasPinnedRight',
+  'main--hiddenContent',
   'menu',
   'menuIcon',
   'menuIconButton',
@@ -714,6 +1061,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'root--densityComfortable',
   'root--densityCompact',
   'root--disableUserSelection',
+  'root--noToolbar',
   'row',
   'row--editable',
   'row--editing',
@@ -722,13 +1070,18 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--dragging',
   'row--dynamicHeight',
   'row--detailPanelExpanded',
+  'row--borderBottom',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',
   'rowReorderCell',
   'rowReorderCell--draggable',
+  'rowReorderIcon',
+  'rowSkeleton',
   'scrollArea--left',
   'scrollArea--right',
+  'scrollArea--up',
+  'scrollArea--down',
   'scrollArea',
   'scrollbar',
   'scrollbar--vertical',
@@ -736,16 +1089,27 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbarFiller',
   'scrollbarFiller--header',
   'scrollbarFiller--borderTop',
+  'scrollbarFiller--borderBottom',
   'scrollbarFiller--pinnedRight',
   'selectedRowCount',
+  'sortButton',
   'sortIcon',
+  'shadowScrollArea',
+  'sidebar',
+  'sidebarHeader',
   'toolbarContainer',
+  'toolbar',
+  'toolbarLabel',
+  'toolbarDivider',
   'toolbarFilterList',
+  'toolbarQuickFilter',
+  'toolbarQuickFilterTrigger',
+  'toolbarQuickFilterControl',
   'virtualScroller',
+  'virtualScroller--hasScrollX',
   'virtualScrollerContent',
   'virtualScrollerContent--overflowed',
   'virtualScrollerRenderZone',
-  'pinnedColumns',
   'withVerticalBorder',
   'withBorderColor',
   'cell--withRightBorder',
@@ -754,10 +1118,39 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--withLeftBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
+  'treeDataGroupingCellLoadingContainer',
   'groupingCriteriaCell',
   'groupingCriteriaCellToggle',
+  'groupingCriteriaCellLoadingContainer',
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',
-  'pinnedRowsRenderZone',
+  'pivotPanelAvailableFields',
+  'pivotPanelField',
+  'pivotPanelField--sorted',
+  'pivotPanelFieldActionContainer',
+  'pivotPanelFieldCheckbox',
+  'pivotPanelFieldDragIcon',
+  'pivotPanelFieldList',
+  'pivotPanelFieldName',
+  'pivotPanelHeader',
+  'pivotPanelPlaceholder',
+  'pivotPanelScrollArea',
+  'pivotPanelSearchContainer',
+  'pivotPanelSection',
+  'pivotPanelSectionTitle',
+  'pivotPanelSections',
+  'pivotPanelSwitch',
+  'pivotPanelSwitchLabel',
+  'prompt',
+  'promptContent',
+  'promptText',
+  'promptFeedback',
+  'promptChangeList',
+  'promptChangesToggle',
+  'promptChangesToggleIcon',
+  'promptIcon',
+  'promptIconContainer',
+  'promptError',
+  'promptAction',
 ]);

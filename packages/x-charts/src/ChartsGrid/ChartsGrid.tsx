@@ -1,35 +1,14 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled, useThemeProps } from '@mui/material/styles';
-
-import { useCartesianContext } from '../context/CartesianProvider';
-import { useTicks } from '../hooks/useTicks';
-import {
-  ChartsGridClasses,
-  getChartsGridUtilityClass,
-  chartsGridClasses,
-} from './chartsGridClasses';
-
-const GridRoot = styled('g', {
-  name: 'MuiChartsGrid',
-  slot: 'Root',
-  overridesResolver: (props, styles) => [
-    { [`&.${chartsGridClasses.verticalLine}`]: styles.verticalLine },
-    { [`&.${chartsGridClasses.horizontalLine}`]: styles.horizontalLine },
-    styles.root,
-  ],
-})({});
-
-const GridLine = styled('line', {
-  name: 'MuiChartsGrid',
-  slot: 'Line',
-  overridesResolver: (props, styles) => styles.line,
-})(({ theme }) => ({
-  stroke: (theme.vars || theme).palette.divider,
-  shapeRendering: 'crispEdges',
-  strokeWidth: 1,
-}));
+import { useThemeProps } from '@mui/material/styles';
+import { ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
+import { useDrawingArea } from '../hooks/useDrawingArea';
+import { GridRoot } from './styledComponents';
+import { ChartsGridVertical } from './ChartsVerticalGrid';
+import { ChartsGridHorizontal } from './ChartsHorizontalGrid';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 const useUtilityClasses = ({ classes }: ChartsGridProps) => {
   const slots = {
@@ -65,56 +44,38 @@ export interface ChartsGridProps {
  *
  * - [ChartsGrid API](https://mui.com/x/api/charts/charts-axis/)
  */
-function ChartsGrid(props: ChartsGridProps) {
-  const themeProps = useThemeProps({ props, name: 'MuiChartsGrid' });
+function ChartsGrid(inProps: ChartsGridProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiChartsGrid' });
 
-  const { vertical, horizontal, ...other } = themeProps;
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
+  const drawingArea = useDrawingArea();
+  const { vertical, horizontal, ...other } = props;
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
-  const classes = useUtilityClasses(themeProps);
+  const classes = useUtilityClasses(props);
 
-  const horizontalAxisId = yAxisIds[0];
-  const verticalAxisId = xAxisIds[0];
-
-  const {
-    scale: xScale,
-    tickNumber: xTickNumber,
-    tickInterval: xTickInterval,
-  } = xAxis[verticalAxisId];
-
-  const {
-    scale: yScale,
-    tickNumber: yTickNumber,
-    tickInterval: yTickInterval,
-  } = yAxis[horizontalAxisId];
-
-  const xTicks = useTicks({ scale: xScale, tickNumber: xTickNumber, tickInterval: xTickInterval });
-  const yTicks = useTicks({ scale: yScale, tickNumber: yTickNumber, tickInterval: yTickInterval });
+  const horizontalAxis = yAxis[yAxisIds[0]];
+  const verticalAxis = xAxis[xAxisIds[0]];
 
   return (
     <GridRoot {...other} className={classes.root}>
-      {vertical &&
-        xTicks.map(({ formattedValue, offset }) => (
-          <GridLine
-            key={`vertical-${formattedValue}`}
-            y1={yScale.range()[0]}
-            y2={yScale.range()[1]}
-            x1={offset}
-            x2={offset}
-            className={classes.verticalLine}
-          />
-        ))}
-      {horizontal &&
-        yTicks.map(({ formattedValue, offset }) => (
-          <GridLine
-            key={`horizontal-${formattedValue}`}
-            y1={offset}
-            y2={offset}
-            x1={xScale.range()[0]}
-            x2={xScale.range()[1]}
-            className={classes.horizontalLine}
-          />
-        ))}
+      {vertical && (
+        <ChartsGridVertical
+          axis={verticalAxis}
+          start={drawingArea.top}
+          end={drawingArea.height + drawingArea.top}
+          classes={classes}
+        />
+      )}
+
+      {horizontal && (
+        <ChartsGridHorizontal
+          axis={horizontalAxis}
+          start={drawingArea.left}
+          end={drawingArea.width + drawingArea.left}
+          classes={classes}
+        />
+      )}
     </GridRoot>
   );
 }

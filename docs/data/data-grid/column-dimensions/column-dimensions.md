@@ -23,7 +23,7 @@ To change the minimum width of a column, use the `minWidth` property available i
 Column fluidity or responsiveness can be achieved by setting the `flex` property in `GridColDef`.
 
 The `flex` property accepts a value between 0 and ∞.
-It works by dividing the remaining space in the data grid among all flex columns in proportion to their `flex` value.
+It works by dividing the remaining space in the Data Grid among all flex columns in proportion to their `flex` value.
 
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and the third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
@@ -34,7 +34,7 @@ To set a minimum and maximum width for a `flex` column set the `minWidth` and th
 Before using fluid width, note that:
 
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
-- `flex` doesn't work if the combined width of the columns that have `width` is more than the width of the data grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
+- `flex` doesn't work if the combined width of the columns that have `width` is more than the width of the Data Grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
 
 :::
 

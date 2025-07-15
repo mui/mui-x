@@ -1,23 +1,32 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useSlotProps } from '@mui/base/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { useCartesianContext } from '../context/CartesianProvider';
-import { useTicks, TickItemType } from '../hooks/useTicks';
-import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
+import useSlotProps from '@mui/utils/useSlotProps';
+import composeClasses from '@mui/utils/composeClasses';
+import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
+import { useIsHydrated } from '../hooks/useIsHydrated';
+import { getStringSize } from '../internals/domUtils';
+import { useTicks } from '../hooks/useTicks';
+import { AxisConfig, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { getWordsByLines } from '../internals/getWordsByLines';
+import { isInfinity } from '../internals/isInfinity';
+import { isBandScale } from '../internals/isBandScale';
+import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useXAxes } from '../hooks/useAxis';
+import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
+import { invertTextAnchor } from '../internals/invertTextAnchor';
+import { shortenLabels } from './shortenLabels';
+import { getVisibleLabels } from './getVisibleLabels';
 
-const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
-  const { classes, position } = ownerState;
+const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
+  const { classes, position, id } = ownerState;
   const slots = {
-    root: ['root', 'directionX', position],
+    root: ['root', 'directionX', position, `id-${id}`],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
@@ -28,64 +37,21 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
 
-type LabelExtraData = { width: number; height: number; skipLabel?: boolean };
+/* Gap between a tick and its label. */
+const TICK_LABEL_GAP = 3;
+/* Gap between the axis label and tick labels. */
+const AXIS_LABEL_TICK_LABEL_GAP = 4;
 
-function addLabelDimension(
-  xTicks: TickItemType[],
-  {
-    tickLabelStyle: style,
-    tickLabelInterval,
-    reverse,
-    isMounted,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
-    Pick<AxisDefaultized, 'reverse'> & { isMounted: boolean },
-): (TickItemType & LabelExtraData)[] {
-  const withDimension = xTicks.map((tick) => {
-    if (!isMounted || tick.formattedValue === undefined) {
-      return { ...tick, width: 0, height: 0 };
-    }
-    const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
-    return {
-      ...tick,
-      width: Math.max(...tickSizes.map((size) => size.width)),
-      height: Math.max(tickSizes.length * tickSizes[0].height),
-    };
-  });
-
-  if (typeof tickLabelInterval === 'function') {
-    return withDimension.map((item, index) => ({
-      ...item,
-      skipLabel: !tickLabelInterval(item.value, index),
-    }));
-  }
-
-  // Filter label to avoid overlap
-  let currentTextLimit = 0;
-  let previousTextLimit = 0;
-  const direction = reverse ? -1 : 1;
-  return withDimension.map((item, labelIndex) => {
-    const { width, offset, labelOffset, height } = item;
-
-    const distance = getMinXTranslation(width, height, style?.angle);
-    const textPosition = offset + labelOffset;
-    const gapRatio = 1.2; // Ratio applied to the minimal distance to add some margin.
-
-    currentTextLimit = textPosition - (direction * (gapRatio * distance)) / 2;
-    if (labelIndex > 0 && direction * currentTextLimit < direction * previousTextLimit) {
-      // Except for the first label, we skip all label that overlap with the last accepted.
-      // Notice that the early return prevents `previousTextLimit` from being updated.
-      return { ...item, skipLabel: true };
-    }
-    previousTextLimit = textPosition + (direction * (gapRatio * distance)) / 2;
-    return item;
-  });
-}
+const XAxisRoot = styled(AxisRoot, {
+  name: 'MuiChartsXAxis',
+  slot: 'Root',
+})({});
 
 const defaultProps = {
-  position: 'bottom',
   disableLine: false,
   disableTicks: false,
   tickSize: 6,
+  tickLabelMinGap: 4,
 } as const;
 
 /**
@@ -98,7 +64,7 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const { xAxisIds, xAxis } = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   const isMounted = useMounted();
@@ -117,8 +83,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelStyle,
     label,
     labelStyle,
-    tickFontSize,
-    labelFontSize,
     tickSize: tickSizeProp,
     valueFormatter,
     slots,
@@ -127,11 +91,19 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickPlacement,
     tickLabelPlacement,
+    tickLabelMinGap,
+    sx,
+    offset,
+    height: axisHeight,
   } = defaultizedProps;
 
   const theme = useTheme();
-  const classes = useUtilityClasses({ ...defaultizedProps, theme });
-  const { left, top, width, height } = useDrawingArea();
+  const isRtl = useRtl();
+  const classes = useUtilityClasses(defaultizedProps);
+  const drawingArea = useDrawingArea();
+  const { left, top, width, height } = drawingArea;
+  const { instance } = useChartContext();
+  const isHydrated = useIsHydrated();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -142,14 +114,23 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
+  const defaultTextAnchor = getDefaultTextAnchor(
+    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
+  );
+  const defaultDominantBaseline = getDefaultBaseline(
+    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
+  );
+
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       style: {
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
-        fontSize: tickFontSize ?? 12,
+        ...theme.typography.caption,
+        fontSize: 12,
+        lineHeight: 1.25,
+        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+        dominantBaseline: defaultDominantBaseline,
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -164,28 +145,28 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    direction: 'x',
   });
 
-  const xTicksWithDimension = addLabelDimension(xTicks, {
+  const visibleLabels = getVisibleLabels(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
+    tickLabelMinGap,
     reverse,
     isMounted,
+    isXInside: instance.isXInside,
   });
-
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * (tickSize + 22),
-  };
 
   const axisLabelProps = useSlotProps({
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
-        fontSize: labelFontSize ?? 14,
+        ...theme.typography.body1,
+        lineHeight: 1,
+        fontSize: 14,
         textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+        dominantBaseline: position === 'bottom' ? 'text-after-edge' : 'text-before-edge',
         ...labelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -193,32 +174,67 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   });
 
   const domain = xScale.domain();
-  if (domain.length === 0 || domain[0] === domain[1]) {
-    // Skip axis rendering if
-    // - the data is empty (for band and point axis)
-    // - No data is associated to the axis (other scale types)
+  const ordinalAxis = isBandScale(xScale);
+  // Skip axis rendering if no data is available
+  // - The domain is an empty array for band/point scales.
+  // - The domains contains Infinity for continuous scales.
+  // - The position is set to 'none'.
+  if (
+    (ordinalAxis && domain.length === 0) ||
+    (!ordinalAxis && domain.some(isInfinity)) ||
+    position === 'none'
+  ) {
     return null;
   }
+
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * axisHeight,
+  };
+
+  /* If there's an axis title, the tick labels have less space to render  */
+  const tickLabelsMaxHeight = Math.max(
+    0,
+    axisHeight - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
+  );
+
+  const tickLabels = isHydrated
+    ? shortenLabels(
+        visibleLabels,
+        drawingArea,
+        tickLabelsMaxHeight,
+        isRtl,
+        axisTickLabelProps.style,
+      )
+    : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
+
   return (
-    <AxisRoot
-      transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
+    <XAxisRoot
+      transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
       className={classes.root}
+      sx={sx}
     >
       {!disableLine && (
-        <Line
-          x1={xScale.range()[0]}
-          x2={xScale.range()[1]}
-          className={classes.line}
-          {...slotProps?.axisLine}
-        />
+        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
+      {xTicks.map((item, index) => {
+        const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSign * (tickSize + 3);
+        const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
+
+        const showTick = instance.isXInside(tickOffset);
+        const tickLabel = tickLabels.get(item);
+        const showTickLabel = visibleLabels.has(item);
+
         return (
-          <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-            {!disableTicks && (
+          <g
+            key={index}
+            transform={`translate(${tickOffset}, 0)`}
+            className={classes.tickContainer}
+          >
+            {!disableTicks && showTick && (
               <Tick
                 y2={positionSign * tickSize}
                 className={classes.tick}
@@ -226,12 +242,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && !skipLabel && (
+            {tickLabel !== undefined && showTickLabel && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
+                data-testid="ChartsXAxisTickLabel"
                 {...axisTickLabelProps}
-                text={formattedValue.toString()}
+                text={tickLabel}
               />
             )}
           </g>
@@ -243,7 +260,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
-    </AxisRoot>
+    </XAxisRoot>
   );
 }
 
@@ -252,6 +269,7 @@ ChartsXAxis.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  axis: PropTypes.oneOf(['x']),
   /**
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
@@ -281,19 +299,9 @@ ChartsXAxis.propTypes = {
    */
   label: PropTypes.string,
   /**
-   * The font size of the axis label.
-   * @default 14
-   * @deprecated Consider using `labelStyle.fontSize` instead.
-   */
-  labelFontSize: PropTypes.number,
-  /**
    * The style applied to the axis label.
    */
   labelStyle: PropTypes.object,
-  /**
-   * Position of the axis.
-   */
-  position: PropTypes.oneOf(['bottom', 'top']),
   /**
    * The props used for each component slot.
    * @default {}
@@ -309,12 +317,11 @@ ChartsXAxis.propTypes = {
    * @default 'currentColor'
    */
   stroke: PropTypes.string,
-  /**
-   * The font size of the axis ticks text.
-   * @default 12
-   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
-   */
-  tickFontSize: PropTypes.number,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Defines which ticks are displayed.
    * Its value can be:
@@ -332,6 +339,12 @@ ChartsXAxis.propTypes = {
    * @default 'auto'
    */
   tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+  /**
+   * The minimum gap in pixels between two tick labels.
+   * If two tick labels are closer than this minimum gap, one of them will be hidden.
+   * @default 4
+   */
+  tickLabelMinGap: PropTypes.number,
   /**
    * The placement of ticks label. Can be the middle of the band, or the tick position.
    * Only used if scale is 'band'.

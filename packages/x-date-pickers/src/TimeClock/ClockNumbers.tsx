@@ -3,9 +3,9 @@ import { ClockNumber } from './ClockNumber';
 import { MuiPickersAdapter, PickerValidDate } from '../models';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
-interface GetHourNumbersOptions<TDate extends PickerValidDate> {
+interface GetHourNumbersOptions {
   ampm: boolean;
-  value: TDate | null;
+  value: PickerValidDate | null;
   getClockNumberText: (hour: string) => string;
   isDisabled: (value: number) => boolean;
   onChange: (value: number, isFinish?: PickerSelectionState) => void;
@@ -14,21 +14,21 @@ interface GetHourNumbersOptions<TDate extends PickerValidDate> {
    * Should only be `undefined` on the server
    */
   selectedId: string | undefined;
-  utils: MuiPickersAdapter<TDate>;
+  adapter: MuiPickersAdapter;
 }
 
 /**
  * @ignore - internal component.
  */
-export const getHourNumbers = <TDate extends PickerValidDate>({
+export const getHourNumbers = ({
   ampm,
   value,
   getClockNumberText,
   isDisabled,
   selectedId,
-  utils,
-}: GetHourNumbersOptions<TDate>) => {
-  const currentHours = value ? utils.getHours(value) : null;
+  adapter,
+}: GetHourNumbersOptions) => {
+  const currentHours = value ? adapter.getHours(value) : null;
 
   const hourNumbers: React.JSX.Element[] = [];
   const startHour = ampm ? 1 : 0;
@@ -58,7 +58,7 @@ export const getHourNumbers = <TDate extends PickerValidDate>({
     }
 
     const inner = !ampm && (hour === 0 || hour > 12);
-    label = utils.formatNumber(label);
+    label = adapter.formatNumber(label);
 
     const selected = isSelected(hour);
 
@@ -79,14 +79,14 @@ export const getHourNumbers = <TDate extends PickerValidDate>({
   return hourNumbers;
 };
 
-export const getMinutesNumbers = <TDate extends PickerValidDate>({
-  utils,
+export const getMinutesNumbers = ({
+  adapter,
   value,
   isDisabled,
   getClockNumberText,
   selectedId,
-}: Omit<GetHourNumbersOptions<TDate>, 'ampm' | 'value'> & { value: number }) => {
-  const f = utils.formatNumber;
+}: Omit<GetHourNumbersOptions, 'ampm' | 'value'> & { value: number }) => {
+  const f = adapter.formatNumber;
 
   return (
     [

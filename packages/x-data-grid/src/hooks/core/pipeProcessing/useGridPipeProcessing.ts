@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
   GridPipeProcessingApi,
@@ -13,7 +14,7 @@ type Cache = {
 };
 
 type GroupCache = {
-  processors: Map<string, GridPipeProcessor<any>>;
+  processors: Map<string, GridPipeProcessor<any> | null>;
   processorsAsArray: GridPipeProcessor<any>[];
   appliers: {
     [applierId: string]: () => void;
@@ -49,7 +50,7 @@ type GroupCache = {
  *   * a processor is registered.
  *   * `apiRef.current.requestPipeProcessorsApplication` is called for the given group.
  */
-export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
+export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) => {
   const cache = React.useRef<Cache>({});
 
   const isRunning = React.useRef(false);
@@ -80,15 +81,17 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
       const oldProcessor = groupCache.processors.get(id);
       if (oldProcessor !== processor) {
         groupCache.processors.set(id, processor);
-        groupCache.processorsAsArray = Array.from(cache.current[group]!.processors.values());
+        groupCache.processorsAsArray = Array.from(cache.current[group]!.processors.values()).filter(
+          (processorValue) => processorValue !== null,
+        );
         runAppliers(groupCache);
       }
 
       return () => {
-        cache.current[group]!.processors.delete(id);
+        cache.current[group]!.processors.set(id, null);
         cache.current[group]!.processorsAsArray = Array.from(
           cache.current[group]!.processors.values(),
-        );
+        ).filter((processorValue) => processorValue !== null);
       };
     },
     [runAppliers],

@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+/* v8 ignore next */
 import defaultHMoment, { Moment } from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
 import {
@@ -62,12 +63,10 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'iYYYY, iMMMM Do',
-  keyboardDateTime: 'iYYYY/iMM/iDD LT',
   shortDate: 'iD iMMM',
   normalDate: 'dddd, iD iMMM',
   normalDateWithWeekday: 'DD iMMMM',
 
-  fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
@@ -120,7 +119,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapter<Moment, string> {
+export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapter<string> {
   public lib = 'moment-hijri';
 
   public moment: typeof defaultHMoment;
@@ -137,21 +136,21 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = <T extends string | null | undefined>(
-    value?: T,
-  ): DateBuilderReturnType<T, Moment> => {
-    type R = DateBuilderReturnType<T, Moment>;
+  public date = <T extends string | null | undefined>(value?: T): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
-    return <R>this.moment(value).locale('ar-SA');
+    return this.moment(value).locale('ar-SA') as unknown as R;
   };
 
+  /* v8 ignore next 3 */
   public getTimezone = (): string => {
     return 'default';
   };
 
+  /* v8 ignore next 3 */
   public setTimezone = (value: Moment): Moment => {
     return value;
   };
