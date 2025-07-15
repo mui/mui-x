@@ -1,3 +1,3 @@
-import { ExportedTimeGridProps } from '../internals/components/time-grid/TimeGrid.types';
+import { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/DayTimeGrid.types';
 
-export interface WeekViewProps extends ExportedTimeGridProps {}
+export interface WeekViewProps extends ExportedDayTimeGridProps {}
