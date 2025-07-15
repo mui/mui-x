@@ -58,6 +58,7 @@ const GridScrollAreaRawRoot = styled('div', {
 })<{ ownerState: OwnerState }>(() => ({
   position: 'absolute',
   zIndex: 101,
+  border: '1px solid red',
   // Horizontal scroll areas
   [`&.${gridClasses['scrollArea--left']}`]: {
     top: 0,
@@ -213,7 +214,9 @@ function GridVerticalScrollAreaContent(props: ScrollAreaProps) {
       // Only render if the user has not reached yet the bottom of the list
       const totalRowsHeight = rowsMeta.currentPageTotalHeight || 0;
       const maxScrollTop =
-        totalRowsHeight - dimensions.viewportInnerSize.height - dimensions.scrollbarSize;
+        totalRowsHeight -
+        dimensions.viewportInnerSize.height -
+        (dimensions.hasScrollX ? dimensions.scrollbarSize : 0);
       return scrollPosition.current.top < maxScrollTop;
     }
 
