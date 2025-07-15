@@ -186,8 +186,8 @@ function getValueCoordinate(
   baseValue: number,
   minBarSize: number,
 ): { barSize: number; startCoordinate: number } {
-  const isSizeLessThanMin = Math.abs(maxValueCoord - minValueCoord) < minBarSize;
-  const barSize = isSizeLessThanMin ? minBarSize : Math.abs(maxValueCoord - minValueCoord);
+  const isSizeLessThanMin = maxValueCoord - minValueCoord < minBarSize;
+  const barSize = isSizeLessThanMin ? minBarSize : maxValueCoord - minValueCoord;
 
   const isVerticalAndPositive = isVertical && baseValue >= 0;
   const isHorizontalAndNegative = !isVertical && baseValue < 0;
