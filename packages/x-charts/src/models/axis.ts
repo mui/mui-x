@@ -358,13 +358,14 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
       /**
        * The tick label shown by default if the value isn't formatted.
        * This value might be an empty string if no tick label should be displayed, which is particularly useful in log
-       * scales where we want to show ticks to demonstrate it's a log scale, but not label them to avoid labels overlapping.
+       * scales where we want to show ticks to demonstrate it's a log scale, but not labels to avoid them overlapping.
+       * @see See {@link https://d3js.org/d3-scale/log#log_tickFormat D3 log scale docs} for more details.
        */
       defaultTickLabel: string;
       /**
        * A suggestion of the number of ticks to show.
        * Can be provided to the scale's `ticks` method to compute the ticks, or to `tickFormat` to format the ticks.
-       * Can be undefined if the scale doesn't support it, e.g., band, point scales.
+       * Can be `undefined` if the scale doesn't support it, e.g., band, point scales.
        */
       tickNumber?: number;
     };
