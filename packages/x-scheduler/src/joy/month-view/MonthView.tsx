@@ -12,7 +12,7 @@ import { selectors } from '../event-calendar/store';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
-import { EventPopoverProvider, EventPopoverTrigger } from '../internals/utils/EventPopover';
+import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { SchedulerValidDate } from '../../primitives/models';
 import { isWeekend } from '../internals/utils/date-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';

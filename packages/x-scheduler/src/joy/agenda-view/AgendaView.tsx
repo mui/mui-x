@@ -8,7 +8,7 @@ import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
-import { EventPopoverProvider, EventPopoverTrigger } from '../internals/utils/EventPopover';
+import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import './AgendaView.css';
 

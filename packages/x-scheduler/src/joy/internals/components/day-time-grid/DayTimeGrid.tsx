@@ -12,7 +12,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
 import { selectors } from '../../../event-calendar/store';
-import { EventPopoverProvider, EventPopoverTrigger } from '../../utils/EventPopover';
+import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
 const adapter = getAdapter();
