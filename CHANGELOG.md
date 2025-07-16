@@ -22,7 +22,7 @@ The following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.8.0`
 
-- [data grid][docs] Revise the Pro filter docs (#17929) @mapache-salvaje
+Internal changes.
 
 #### `@mui/x-data-grid-pro@8.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -76,7 +76,8 @@ Internal changes.
 
 ### Docs
 
-- [docs] Move mark outside clip-path (#18806) @alexfauquette
+- [data grid][docs] Revise the Pro filter docs (#17929) @mapache-salvaje
+- [charts][docs] Move mark outside clip-path (#18806) @alexfauquette
 
 ### Miscellaneous
 
