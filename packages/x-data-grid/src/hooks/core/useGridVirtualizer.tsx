@@ -3,6 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
+import { useSelectorEffect } from '@mui/x-internals/store';
 import { useVirtualizer } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
@@ -36,6 +37,10 @@ import {
   rowHeightWarning,
 } from '../features/rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../features/columns/gridColumnsUtils';
+
+function identity<T>(x: T) {
+  return x;
+}
 
 type RootProps = DataGridProcessedProps;
 
@@ -268,36 +273,31 @@ export function useGridVirtualizer(
   // initialization code runs between those two moments.
   //
   // TODO(v9): Remove this
-  const disposeRef = React.useRef<Function>(null);
   useFirstRender(() => {
     apiRef.current.store.state.dimensions = virtualizer.store.state.dimensions;
     apiRef.current.store.state.rowsMeta = virtualizer.store.state.rowsMeta;
     apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
-
-    disposeRef.current = virtualizer.store.subscribe((state) => {
-      if (state.dimensions !== apiRef.current.state.dimensions) {
-        apiRef.current.setState((gridState) => ({
-          ...gridState,
-          dimensions: state.dimensions,
-        }));
-      }
-      if (state.rowsMeta !== apiRef.current.state.rowsMeta) {
-        apiRef.current.setState((gridState) => ({
-          ...gridState,
-          rowsMeta: state.rowsMeta,
-        }));
-      }
-      if (state.virtualization !== apiRef.current.state.virtualization) {
-        apiRef.current.setState((gridState) => ({
-          ...gridState,
-          virtualization: state.virtualization,
-        }));
-      }
-    });
   });
-  // HACK: We don't cleanup because there are async issues with the autosizing promise
-  // code in testing.
-  // useOnMount(() => () => { disposeRef.current?.(); });
+  useSelectorEffect(virtualizer.store, identity, (_, state) => {
+    if (state.dimensions !== apiRef.current.state.dimensions) {
+      apiRef.current.setState((gridState) => ({
+        ...gridState,
+        dimensions: state.dimensions,
+      }));
+    }
+    if (state.rowsMeta !== apiRef.current.state.rowsMeta) {
+      apiRef.current.setState((gridState) => ({
+        ...gridState,
+        rowsMeta: state.rowsMeta,
+      }));
+    }
+    if (state.virtualization !== apiRef.current.state.virtualization) {
+      apiRef.current.setState((gridState) => ({
+        ...gridState,
+        virtualization: state.virtualization,
+      }));
+    }
+  });
 
   apiRef.current.register('private', {
     virtualizer,
