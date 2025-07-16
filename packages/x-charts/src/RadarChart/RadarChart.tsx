@@ -15,7 +15,7 @@ import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartsWrapper, ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
+import { RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlotProps } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
 import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
@@ -42,7 +42,8 @@ export interface RadarChartProps
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<ChartsWrapperProps, 'sx'>,
-    Omit<ChartsSurfaceProps, 'sx'> {
+    Omit<ChartsSurfaceProps, 'sx'>,
+    Pick<RadarSeriesPlotProps, 'onAreaClick' | 'onMarkClick'> {
   /**
    * If `true`, the legend is not rendered.
    */
@@ -52,6 +53,7 @@ export interface RadarChartProps
    * @default false
    */
   showToolbar?: boolean;
+
   /**
    * Overridable component slots.
    * @default {}
@@ -83,6 +85,8 @@ const RadarChart = React.forwardRef(function RadarChart(
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
+    radarSeriesAreaProps,
+    radarSeriesMarksProps,
     overlayProps,
     legendProps,
     highlight,
@@ -100,9 +104,9 @@ const RadarChart = React.forwardRef(function RadarChart(
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
-          <RadarSeriesArea />
+          <RadarSeriesArea {...radarSeriesAreaProps} />
           {highlight === 'axis' && <RadarAxisHighlight />}
-          <RadarSeriesMarks />
+          <RadarSeriesMarks {...radarSeriesMarksProps} />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -189,11 +193,30 @@ RadarChart.propTypes = {
     }),
   ]),
   /**
+   * Callback fired when an area is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
+   */
+  onAreaClick: PropTypes.func,
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * Callback fired when a mark is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
+   */
+  onMarkClick: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */
