@@ -175,26 +175,27 @@ function generateClipPath(
   yOrigin: number,
   borderRadius: number,
 ) {
-  const bR = Math.min(borderRadius, width / 2);
-
   if (layout === 'vertical') {
     if (hasPositive && hasNegative) {
+      const bR = Math.min(borderRadius, width / 2, height / 2);
       let path = '';
       path += `M${x},${y + height / 2} v${-(height / 2 - bR)} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${height / 2 - bR} Z`;
       path += `M${x},${y + height / 2} v${height / 2 - bR} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR * 2} a${bR},${bR} 0 0 0 ${bR},${-bR} v${-(height / 2 - bR)} Z`;
       return path;
     }
 
+    const bR = Math.min(borderRadius, width / 2);
     if (hasPositive) {
-      return `M${x},${yOrigin} v${-(yOrigin - y - bR)} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${yOrigin - y - bR} Z`;
+      return `M${x},${Math.max(yOrigin, y + bR)} v${Math.min(0, -(yOrigin - y - bR))} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${Math.max(0, yOrigin - y - bR)} Z`;
     }
 
     if (hasNegative) {
-      return `M${x},${yOrigin} v${y + height - yOrigin - bR} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR * 2} a${bR},${bR} 0 0 0 ${bR},${-bR} v${-(y + height - yOrigin - bR)} Z`;
+      return `M${x},${Math.min(yOrigin, y + height - bR)} v${Math.max(0, height - bR)} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR * 2} a${bR},${bR} 0 0 0 ${bR},${-bR} v${-Math.max(0, height - bR)} Z`;
     }
   }
 
   if (layout === 'horizontal') {
+    const bR = Math.min(borderRadius, height / 2);
     const positiveStack = positiveStacks.get(id);
 
     if (positiveStack && positiveStack.seriesId === seriesId) {
