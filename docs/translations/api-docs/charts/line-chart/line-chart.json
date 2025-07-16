@@ -56,7 +56,7 @@
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
     "series": {
-      "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series-type/'>LineSeriesType</a> objects."
+      "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series/'>LineSeries</a> objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
