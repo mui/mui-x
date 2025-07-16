@@ -316,7 +316,7 @@ importers:
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mui/monorepo':
         specifier: github:LukasTy/material-ui#generate-templates-doc-retry
-        version: https://codeload.github.com/LukasTy/material-ui/tar.gz/a53317b454b23752a50f9191d65b22d94d895815(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
+        version: https://codeload.github.com/LukasTy/material-ui/tar.gz/7e46a323c2f3a96c0350ac2a10824196f216f237(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.2.0(@types/react@19.1.8)(react@19.1.0)
@@ -4323,8 +4323,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/LukasTy/material-ui/tar.gz/a53317b454b23752a50f9191d65b22d94d895815':
-    resolution: {tarball: https://codeload.github.com/LukasTy/material-ui/tar.gz/a53317b454b23752a50f9191d65b22d94d895815}
+  '@mui/monorepo@https://codeload.github.com/LukasTy/material-ui/tar.gz/7e46a323c2f3a96c0350ac2a10824196f216f237':
+    resolution: {tarball: https://codeload.github.com/LukasTy/material-ui/tar.gz/7e46a323c2f3a96c0350ac2a10824196f216f237}
     version: 7.2.0
     engines: {pnpm: 10.13.1}
 
@@ -15109,7 +15109,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@types/react': 19.1.8
 
-  '@mui/monorepo@https://codeload.github.com/LukasTy/material-ui/tar.gz/a53317b454b23752a50f9191d65b22d94d895815(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
+  '@mui/monorepo@https://codeload.github.com/LukasTy/material-ui/tar.gz/7e46a323c2f3a96c0350ac2a10824196f216f237(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
     dependencies:
       '@googleapis/sheets': 9.8.0(encoding@0.1.13)
       '@netlify/functions': 3.1.10(encoding@0.1.13)(rollup@4.44.2)
