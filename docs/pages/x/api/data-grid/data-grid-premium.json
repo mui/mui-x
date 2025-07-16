@@ -1835,6 +1835,12 @@
       "isGlobal": false
     },
     {
+      "key": "scrollArea--down",
+      "className": "MuiDataGridPremium-scrollArea--down",
+      "description": "Styles applied to the bottom scroll area element.",
+      "isGlobal": false
+    },
+    {
       "key": "scrollArea--left",
       "className": "MuiDataGridPremium-scrollArea--left",
       "description": "Styles applied to the left scroll area element.",
@@ -1844,6 +1850,12 @@
       "key": "scrollArea--right",
       "className": "MuiDataGridPremium-scrollArea--right",
       "description": "Styles applied to the right scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollArea--up",
+      "className": "MuiDataGridPremium-scrollArea--up",
+      "description": "Styles applied to the top scroll area element.",
       "isGlobal": false
     },
     {

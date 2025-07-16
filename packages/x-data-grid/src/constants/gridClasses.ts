@@ -540,6 +540,14 @@ export interface GridClasses {
    */
   'scrollArea--right': string;
   /**
+   * Styles applied to the top scroll area element.
+   */
+  'scrollArea--up': string;
+  /**
+   * Styles applied to the bottom scroll area element.
+   */
+  'scrollArea--down': string;
+  /**
    * Styles applied to the scrollbars.
    */
   scrollbar: string;
@@ -794,6 +802,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'rowSkeleton',
   'scrollArea--left',
   'scrollArea--right',
+  'scrollArea--up',
+  'scrollArea--down',
   'scrollArea',
   'scrollbar',
   'scrollbar--vertical',
