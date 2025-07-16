@@ -1,4 +1,5 @@
 // @ts-check
+/* eslint-disable no-console */
 import fs from 'node:fs/promises';
 // eslint-disable-next-line import/extensions
 import { compareResults } from './compare-benchmark-results.js';
