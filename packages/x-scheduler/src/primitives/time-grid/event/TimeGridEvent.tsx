@@ -73,7 +73,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onDragStart: () => setIsMoving(true),
       onDrop: () => setIsMoving(false),
     });
-  }, []);
+  }, [start, end, eventId]);
 
   return useRenderElement('div', componentProps, {
     state,

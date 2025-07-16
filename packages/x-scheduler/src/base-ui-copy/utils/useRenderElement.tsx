@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { mergeClassNames } from '@base-ui-components/react/merge-props';
 import type { BaseUIComponentProps, ComponentRenderFn, HTMLProps } from './types';
 import { CustomStyleHookMapping, getStyleHookProps } from './getStyleHookProps';
 import { useForkRef, useForkRefN } from './useForkRef';
@@ -6,7 +7,6 @@ import { resolveClassName } from './resolveClassName';
 import { isReactVersionAtLeast } from './reactVersion';
 import { mergeProps, mergePropsN } from '../merge-props';
 import { mergeObjects } from './mergeObjects';
-import { mergeClassNames } from '@base-ui-components/react/merge-props';
 
 const EMPTY_OBJECT = {};
 

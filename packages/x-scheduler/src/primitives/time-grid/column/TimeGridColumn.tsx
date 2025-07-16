@@ -86,7 +86,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         setPlaceholder(null);
       },
     });
-  }, []);
+  }, [onEventChange, setPlaceholder, value]);
 
   return (
     <TimeGridColumnContext.Provider value={contextValue}>{element}</TimeGridColumnContext.Provider>

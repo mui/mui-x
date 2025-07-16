@@ -56,16 +56,19 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
     [onDayHeaderClick],
   );
 
-  const handleEventChangeFromPrimitive = React.useCallback((data: TimeGridRoot.EventData) => {
-    const prevEvents = store.state.events;
-    const updatedEvents = prevEvents.map((ev) =>
-      ev.id === data.id ? { ...ev, start: data.start, end: data.end } : ev,
-    );
+  const handleEventChangeFromPrimitive = React.useCallback(
+    (data: TimeGridRoot.EventData) => {
+      const prevEvents = store.state.events;
+      const updatedEvents = prevEvents.map((ev) =>
+        ev.id === data.id ? { ...ev, start: data.start, end: data.end } : ev,
+      );
 
-    if (onEventsChange) {
-      onEventsChange(updatedEvents);
-    }
-  }, []);
+      if (onEventsChange) {
+        onEventsChange(updatedEvents);
+      }
+    },
+    [onEventsChange, store],
+  );
 
   const renderHeaderContent = (day: SchedulerValidDate) => (
     <span className="TimeGridHeaderContent">
