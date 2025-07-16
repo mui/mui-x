@@ -295,8 +295,8 @@ export function useGridVirtualizer(
       }
     });
   });
-  // XXX: We don't cleanup because there are async issues with the autosizing promise
-  // code in testing. This could cause a memory leak.
+  // HACK: We don't cleanup because there are async issues with the autosizing promise
+  // code in testing.
   // useOnMount(() => () => { disposeRef.current?.(); });
 
   apiRef.current.register('private', {
