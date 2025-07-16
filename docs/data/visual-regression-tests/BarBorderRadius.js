@@ -10,6 +10,7 @@ const dataset = [
   [1, 0, 'Fifth'],
   [0, -1, 'Sixth'],
   [1, -1, 'Seventh'],
+  [2, -2, 'Eighth'],
 ].map(([high, low, order]) => ({
   high,
   low,
