@@ -79,7 +79,7 @@ export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'ContentWrapper',
 })<{ ownerState: PickerLayoutOwnerState }>({
-  gridColumn: '1 / 4',
+  gridColumn: '2 / 4',
   gridRow: 2,
   display: 'flex',
   flexDirection: 'column',
