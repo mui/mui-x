@@ -48,6 +48,7 @@ Same changes as in `@mui/x-date-pickers@8.9.0`.
 #### `@mui/x-charts@8.9.0`
 
 - [charts] Add `minBarSize` to prevent bars from having 0 height (#18798) @JCQuintas
+- [charts] Add click listener to radar charts (#18773) @alexfauquette
 - [charts] Improve scatter chart pointer move performance (#18775) @bernardobelchior
 - [charts] Simplify radar internal hooks (#18760) @alexfauquette
 - [charts] `minBarSize` now ignores `0` and `null` values (#18816) @JCQuintas
