@@ -1,14 +1,14 @@
 import { CalendarEvent } from '../../../models/events';
 import { SchedulerValidDate } from '../../../../primitives/models';
 
-export interface TimeGridProps extends ExportedTimeGridProps {
+export interface DayTimeGridProps extends ExportedDayTimeGridProps {
   /**
    * The days to render in the time grid view.
    */
   days: SchedulerValidDate[];
 }
 
-export interface ExportedTimeGridProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ExportedDayTimeGridProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Callback fired when a day header is clicked in the view.
    */
