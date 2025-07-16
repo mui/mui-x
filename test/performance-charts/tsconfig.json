@@ -3,6 +3,6 @@
   "include": ["tests/**/*", "utils/**/*", "./vitest-browser-mode.d.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "types": [ "@vitest/browser/providers/playwright", "vite/client", "./vitest-browser-mode.d.ts"]
+    "types": ["@vitest/browser/providers/playwright", "vite/client", "./vitest-browser-mode.d.ts"]
   }
 }
