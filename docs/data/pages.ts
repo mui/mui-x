@@ -37,7 +37,6 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-data-grid/columns',
         children: [
-          { pathname: '/x/react-data-grid/layout' },
           {
             pathname: '/x/react-data-grid/columns',
             children: [
