@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v7.29.8
+
+_Jul 4, 2025_
+
+We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@sai6855
+
+The following are all team members who have contributed to this release:
+@bernardobelchior, @michelengelen
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.8`
+
+- [DataGrid] Fix `apiRef` not being passed on `onCellClick` params (#17528) @sai6855
+
+#### `@mui/x-data-grid-pro@7.29.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.8`.
+
+#### `@mui/x-data-grid-premium@7.29.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.8`.
+
+### Miscellaneous
+
+- [infra] Add `test_package` to fix CI (#18553) @bernardobelchior
+- [infra] Aligned preparation script with master version (#18672) @michelengelen
+- [infra] Updates release script to fetch latest major version from upstream (#18649) @michelengelen
+
 ## v7.29.7
 
 <!-- generated comparing v7.29.6..v7.x -->

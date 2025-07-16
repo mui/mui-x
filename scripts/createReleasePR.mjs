@@ -30,7 +30,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import fs from 'fs/promises';
 import path from 'path';
-import inquirer from 'inquirer';
+import { input, select, confirm } from '@inquirer/prompts';
 import { generateChangelog as generateChangelogFromModule } from './changelogUtils.mjs';
 import pck from '../package.json' with { type: 'json' };
 
@@ -52,8 +52,8 @@ const ORG = 'mui';
 const REPO = 'mui-x';
 
 // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-// eslint-disable-next-line no-useless-escape
-const getRemoteRegex = (owner) => new RegExp(`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
+const getRemoteRegex = (owner) =>
+  new RegExp(String.raw`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
 
 /**
  * Command line arguments for the script
@@ -99,7 +99,6 @@ async function findMuiXRemote() {
     const { stdout } = await execa('git', ['remote', '-v']);
     const remotes = stdout.split('\n');
     // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-    // eslint-disable-next-line no-useless-escape
     const rx = getRemoteRegex(ORG);
 
     console.log('Checking for MUI-X remote...', stdout);
@@ -173,7 +172,6 @@ async function findForkRemote() {
     let forkRemote = '';
     for (const line of remotes) {
       // we need to disable the no-useless-escape to include the `/` in the regex single character capturing group
-      // eslint-disable-next-line no-useless-escape
       const rx = getRemoteRegex(forkOwner);
 
       if (line.match(rx)) {
@@ -198,39 +196,140 @@ async function findForkRemote() {
 }
 
 /**
+ * Find the latest major version from the upstream remote
+ * @returns {Promise<string>} The latest major version (e.g., '7', '6', etc.)
+ */
+async function findLatestMajorVersion() {
+  try {
+    // fetch tags from the GitHub API and return the last one
+    const { data: tags } = await octokit.rest.repos.listTags({
+      owner: ORG,
+      repo: REPO,
+    });
+    const tagName = tags[0].name.trim();
+    const match = tagName.match(/^v(\d+)\.(\d+)\.(\d+)/);
+    if (!match) {
+      console.error(`Error: Unable to parse version from tag ${tagName}`);
+      process.exit(1);
+    }
+    return match[1];
+  } catch (error) {
+    console.error('Error finding latest major version:', error);
+    process.exit(1);
+  }
+}
+
+/**
+ * Compares and sorts version strings extracted from tags following semantic versioning logic.
+ * @param {string} a The first tag string prefixed with 'v' (e.g., 'v1.2.3-alpha.1').
+ * @param {string} b The second tag string prefixed with 'v' (e.g., 'v1.2.3').
+ * @return {number} A negative number if `a` is less than `b`, a positive number if `a` is greater than `b`, or 0 if they are equal.
+ */
+function sortVersionsFromTags(a, b) {
+  // Sort versions using semver logic
+  // Remove 'v' prefix
+  const aVersion = a.substring(1);
+  const bVersion = b.substring(1);
+
+  // Split into version parts and prerelease parts
+  const [aVersionPart, aPrereleasePart] = aVersion.split('-');
+  const [bVersionPart, bPrereleasePart] = bVersion.split('-');
+
+  // Compare version parts (major.minor.patch)
+  const aParts = aVersionPart.split('.').map(Number);
+  const bParts = bVersionPart.split('.').map(Number);
+
+  for (let i = 0; i < 3; i += 1) {
+    if (aParts[i] !== bParts[i]) {
+      return aParts[i] - bParts[i];
+    }
+  }
+
+  // If version parts are equal, handle prerelease parts
+
+  // If one has prerelease and the other doesn't, the one without prerelease is greater
+  if (!aPrereleasePart && bPrereleasePart) {
+    return 1;
+  }
+  if (aPrereleasePart && !bPrereleasePart) {
+    return -1;
+  }
+  if (!aPrereleasePart && !bPrereleasePart) {
+    return 0;
+  }
+
+  // Both have prerelease parts, compare them
+  const aPrereleaseParts = aPrereleasePart.split('.');
+  const bPrereleaseParts = bPrereleasePart.split('.');
+
+  // Compare prerelease identifiers (alpha, beta, etc.)
+  if (aPrereleaseParts[0] !== bPrereleaseParts[0]) {
+    // alphabetical order for identifiers, since we basically only use alpha and beta
+    return aPrereleaseParts[0].localeCompare(bPrereleaseParts[0]);
+  }
+
+  // Same prerelease identifier, compare the version number
+  if (aPrereleaseParts.length > 1 && bPrereleaseParts.length > 1) {
+    return Number(aPrereleaseParts[1]) - Number(bPrereleaseParts[1]);
+  }
+
+  // this should never happen, but just in case
+  // If one has a version number and the other doesn't, the one with version is greater
+  return aPrereleaseParts.length - bPrereleaseParts.length;
+}
+
+/**
+ * Find the latest version for a specific major version
+ * @param majorVersion - The major version to search for (e.g., '7', '6', etc.)
+ * @returns {Promise<*|null>} - The latest tag for the specified major version, or null if not found
+ */
+async function findLastVersionForMajor(majorVersion) {
+  try {
+    const { stdout } = await execa('git', ['tag', '-l', `v${majorVersion}.*`]);
+    const tags = stdout.split('\n').filter(Boolean).sort(sortVersionsFromTags);
+
+    if (tags.length === 0) {
+      console.warn(`Warning: No tags found for major version ${majorVersion}`);
+      return null;
+    }
+    return tags[tags.length - 1].substring(1); // Remove 'v' prefix
+  } catch (error) {
+    console.error('Error finding latest tag for major version:', error);
+    return null;
+  }
+}
+
+/**
  * Select the major version to update
+ * @param {string} latestMajorVersion - The latest major version found from the upstream remote
  * @returns {Promise<string>} The selected major version
  */
-async function selectMajorVersion() {
+async function selectMajorVersion(latestMajorVersion) {
   const currentMajorVersion = packageVersion.split('.')[0];
 
-  const selection = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'majorVersion',
-      message: 'Please select the major version you are trying to update:',
-      default: currentMajorVersion,
-      validate: (input) => {
-        if (!/^\d+$/.test(input)) {
-          return 'Major version must be a number';
-        }
+  const majorVersion = await input({
+    message: 'Please select the major version you are trying to update:',
+    default: currentMajorVersion,
+    validate: (answer) => {
+      if (!/^\d+$/.test(answer)) {
+        return 'Major version must be a number';
+      }
 
-        if (parseInt(input, 10) > parseInt(currentMajorVersion, 10)) {
-          return `Cannot select a major version (${input}) higher than the current major version (${currentMajorVersion})`;
-        }
+      if (parseInt(answer, 10) > parseInt(latestMajorVersion, 10)) {
+        return `Cannot select a major version (${answer}) higher than the current major version (${latestMajorVersion})`;
+      }
 
-        return true;
-      },
+      return true;
     },
-  ]);
+  });
 
-  console.log(`Selected major version: ${selection.majorVersion}`);
-  return selection.majorVersion;
+  console.log(`Selected major version: ${majorVersion}`);
+  return majorVersion;
 }
 
 /**
  * Calculate versions from git tags
- * @param {string} majorVersion - The selected major version
+ * @param {string} lastVersion - The selected major version
  * @returns {Promise<{
  *   success: boolean,
  *   nextPatch?: string,
@@ -238,42 +337,13 @@ async function selectMajorVersion() {
  *   nextMajor?: string
  * }>}
  */
-async function calculateVersionsFromTags(majorVersion) {
+async function getNextSemanticVersions(lastVersion) {
   try {
-    // Get all tags matching the selected major version
-    const { stdout: tagsOutput } = await execa('git', ['tag', '-l', `v${majorVersion}.*`]);
-    const tags = tagsOutput
-      .split('\n')
-      .filter(Boolean)
-      .sort((a, b) => {
-        // Sort versions using semver logic
-        const aParts = a.substring(1).split('.').map(Number);
-        const bParts = b.substring(1).split('.').map(Number);
+    // Split into version parts and prerelease parts
+    const [versionPart] = lastVersion.split('-');
 
-        for (let i = 0; i < 3; i += 1) {
-          if (aParts[i] !== bParts[i]) {
-            return aParts[i] - bParts[i];
-          }
-        }
-
-        return 0;
-      });
-
-    const latestTag = tags[tags.length - 1];
-
-    if (!latestTag) {
-      console.warn(`Warning: No tags found for major version ${majorVersion}`);
-      console.warn('Will calculate versions from package.json instead');
-      return { success: false };
-    }
-
-    console.log(`Latest tag: ${latestTag}`);
-
-    // Remove the 'v' prefix
-    const versionWithoutV = latestTag.substring(1);
-
-    // Split the version into components
-    const [tagMajor, tagMinor, tagPatch] = versionWithoutV.split('.').map(Number);
+    // Split the version part into components
+    const [tagMajor, tagMinor, tagPatch] = versionPart.split('.').map(Number);
 
     // Calculate next versions
     const nextPatchVersion = `${tagMajor}.${tagMinor}.${tagPatch + 1}`;
@@ -306,8 +376,7 @@ async function calculateVersionsFromTags(majorVersion) {
 async function selectVersionType(majorVersion) {
   console.log(`Fetching latest tag for major version ${majorVersion}...`);
 
-  const { success, nextPatch, nextMinor, nextMajor } =
-    await calculateVersionsFromTags(majorVersion);
+  const { success, nextPatch, nextMinor, nextMajor } = await getNextSemanticVersions(majorVersion);
 
   let nextPatchDisplay = nextPatch;
   let nextMinorDisplay = nextMinor;
@@ -373,15 +442,11 @@ async function selectVersionType(majorVersion) {
   }
 
   // First prompt for version type
-  const { versionChoice } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'versionChoice',
-      message: 'Please select the version type:',
-      default: 'patch',
-      choices,
-    },
-  ]);
+  const versionChoice = await select({
+    message: 'Please select the version type:',
+    default: 'patch',
+    choices,
+  });
 
   // Handle the selected version type
   switch (versionChoice) {
@@ -418,14 +483,10 @@ async function selectVersionType(majorVersion) {
         defaultCustomVersion = `${defaultMajor}.${defaultMinor}.${defaultPatch + 1}`;
       }
 
-      const { customVersion } = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'customVersion',
-          message: 'Enter custom version:',
-          default: defaultCustomVersion,
-        },
-      ]);
+      const customVersion = await input({
+        message: 'Enter custom version:',
+        default: defaultCustomVersion,
+      });
 
       console.log(`Selected: Custom version ${customVersion}`);
       return {
@@ -549,14 +610,10 @@ async function checkUncommittedChanges() {
       console.warn('  git stash');
       console.warn('in another terminal window.');
       // eslint-disable-next-line no-await-in-loop
-      await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'continue',
-          message: 'Press Enter to check again, or Ctrl+C to abort...',
-          default: true,
-        },
-      ]);
+      await confirm({
+        message: 'Press Enter to check again, or Ctrl+C to abort...',
+        default: true,
+      });
       // eslint-disable-next-line no-await-in-loop
       const result = await execa('git', ['status', '--porcelain']);
       stdout = result.stdout;
@@ -594,16 +651,23 @@ async function updatePackageJson(newVersion) {
 /**
  * Generate the changelog
  * @param {string} newVersion - The new version
+ * @param {string} lastVersion - The last version to compare against
+ * @param {string} [releaseBranch='master'] - The branch to compare against (default is 'master')
  * @returns {Promise<string>} The changelog content
  */
-async function generateChangelog(newVersion) {
+async function generateChangelog(newVersion, lastVersion, releaseBranch = 'master') {
   try {
     console.log('Generating changelog...');
+
+    console.log(`Using release branch: ${releaseBranch}`);
+    console.log(`New version: ${newVersion}`);
+    console.log(`Last version: ${lastVersion}`);
 
     return await generateChangelogFromModule({
       octokit,
       nextVersion: newVersion,
-      release: 'master', // Default value from releaseChangelog.mjs
+      lastRelease: `v${lastVersion}`,
+      release: releaseBranch,
       returnEntry: true,
     });
   } catch (error) {
@@ -629,7 +693,11 @@ async function updateChangelog(changelogContent) {
     const firstVersionLineIndex = lines.findIndex((line) => /^## [0-9]/.test(line));
 
     if (firstVersionLineIndex === -1) {
-      throw new Error('Could not find the first version entry in CHANGELOG.md');
+      console.error(
+        'Error updating changelog:',
+        'Could not find the first version entry in CHANGELOG.md',
+      );
+      process.exit(1);
     }
 
     // Create a new changelog with the new content
@@ -857,6 +925,9 @@ async function main({ githubToken }) {
       process.exit(1);
     }
 
+    console.log('package.json and CHANGELOG.md found, proceeding...');
+    console.log(`Current package version: ${packageVersion}`);
+
     // If no token is provided, throw an error
     if (!githubToken) {
       console.error(
@@ -868,6 +939,17 @@ async function main({ githubToken }) {
     octokit = new MyOctokit({
       auth: githubToken,
     });
+
+    // Find the upstream remote
+    const upstreamRemote = await findMuiXRemote();
+    console.log(`Found upstream remote: ${upstreamRemote}`);
+
+    // Find the fork remote
+    const forkRemote = await findForkRemote();
+    console.log(`Found fork remote: ${upstreamRemote}`);
+
+    const latestMajorVersion = await findLatestMajorVersion();
+    console.log(`Found latest major version: ${latestMajorVersion}`);
 
     // Initialize variables
     let versionType = '';
@@ -886,7 +968,10 @@ async function main({ githubToken }) {
     }
 
     // Always prompt for major version first
-    const majorVersion = await selectMajorVersion();
+    const majorVersion = await selectMajorVersion(latestMajorVersion);
+
+    const previousVersion = await findLastVersionForMajor(majorVersion);
+    console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
     // If no arguments provided, use interactive menu to select version type
     // Initialize prerelease variables (used for alpha/beta versions)
@@ -894,7 +979,7 @@ async function main({ githubToken }) {
     let prereleaseNumber = 0;
 
     if (!versionType && !customVersion) {
-      const result = await selectVersionType(majorVersion);
+      const result = await selectVersionType(previousVersion);
       versionType = result.versionType;
       calculatedVersion = result.calculatedVersion;
       customVersion = result.customVersion;
@@ -903,7 +988,7 @@ async function main({ githubToken }) {
     } else {
       // Command-line arguments provided, calculate versions from tags
       const { success, nextPatch, nextMinor, nextMajor } =
-        await calculateVersionsFromTags(majorVersion);
+        await getNextSemanticVersions(previousVersion);
 
       // If a version type was specified, set the calculated version
       if (versionType && success) {
@@ -930,13 +1015,8 @@ async function main({ githubToken }) {
     );
     console.log(`New version: ${newVersion}`);
 
-    // Find the upstream remote
-    const upstreamRemote = await findMuiXRemote();
-    console.log(`Found upstream remote: ${upstreamRemote}`);
-
     // Determine which branch to update based on the selected major version
-    const currentMajorVersion = packageVersion.split('.')[0];
-    if (majorVersion === currentMajorVersion) {
+    if (majorVersion === latestMajorVersion) {
       console.log('Updating the upstream master branch for current major version...');
       await execa('git', ['fetch', upstreamRemote, 'master']);
     } else {
@@ -953,7 +1033,7 @@ async function main({ githubToken }) {
 
     // Determine the source branch based on the selected major version
     let branchSource;
-    if (majorVersion === currentMajorVersion) {
+    if (majorVersion === latestMajorVersion) {
       branchSource = `${upstreamRemote}/master`;
       console.log(`Creating branch from master for current major version: ${branchSource}`);
     } else {
@@ -986,20 +1066,20 @@ async function main({ githubToken }) {
     console.log(`New version: ${newVersion}`);
 
     // Generate the changelog
-    const changelogContent = await generateChangelog(newVersion);
+    const changelogContent = await generateChangelog(
+      newVersion,
+      previousVersion,
+      majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
+    );
 
     // Add the new changelog entry to the CHANGELOG.md file
     await updateChangelog(changelogContent);
 
     // Wait for user confirmation
-    await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'continue',
-        message: 'Press Enter to continue after reviewing the changes, or Ctrl+C to abort...',
-        default: true,
-      },
-    ]);
+    await confirm({
+      message: 'Press Enter to continue after reviewing the changes, or Ctrl+C to abort...',
+      default: true,
+    });
 
     // Commit the changes
     console.log('Committing changes...');
@@ -1011,7 +1091,6 @@ async function main({ githubToken }) {
     // Push the committed changes to fork remote
     console.log('Pushing committed changes to fork remote...');
     try {
-      const forkRemote = await findForkRemote();
       await execa('git', ['push', forkRemote, branchName]);
       console.log(`Changes pushed to ${forkRemote}/${branchName}`);
     } catch (error) {
@@ -1028,7 +1107,7 @@ async function main({ githubToken }) {
     console.log('Opening a PR...');
     try {
       // Determine the base branch based on the selected major version
-      const baseBranch = majorVersion === currentMajorVersion ? 'master' : `v${majorVersion}.x`;
+      const baseBranch = majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`;
 
       // Get the origin owner (username or organization)
       const forkOwner = await findForkOwner();
