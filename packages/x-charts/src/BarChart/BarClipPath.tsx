@@ -195,16 +195,22 @@ function generateClipPath(
   }
 
   if (layout === 'horizontal') {
-    const bR = Math.min(borderRadius, height / 2);
-    const positiveStack = positiveStacks.get(id);
+    if (hasPositive && hasNegative) {
+      const bR = Math.min(borderRadius, width / 2, height / 2);
+      let path = '';
+      path += `M${x + width / 2},${y} h${width / 2 - bR} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-(width / 2 - bR)} Z`;
+      path += `M${x + width / 2},${y} h${-(width / 2 - bR)} a${bR},${bR} 0 0 0 ${-bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${width / 2 - bR} Z`;
 
-    if (positiveStack && positiveStack.seriesId === seriesId) {
-      return `path("M0,0 h${width - bR} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 -${bR},${bR} h-${width - bR} Z")`;
+      return path;
     }
 
-    const negativeStack = negativeStacks.get(id);
-    if (negativeStack && negativeStack.seriesId === seriesId) {
-      return `path("M${width},0 h-${width - bR} a${bR},${bR} 0 0 0 -${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR} Z")`;
+    const bR = Math.min(borderRadius, height / 2);
+    if (hasPositive) {
+      return `M${Math.min(xOrigin, x + bR)},${y} h${Math.max(0, width - bR)} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-Math.max(0, width - bR)} Z`;
+    }
+
+    if (hasNegative) {
+      return `M${Math.max(xOrigin, x + width - bR)},${y} h${-Math.max(0, width - bR)} a${bR},${bR} 0 0 0 ${-bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${Math.max(0, width - bR)} Z`;
     }
   }
 
