@@ -30,7 +30,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   } = componentProps;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const { onEventChange } = useTimeGridRootContext();
+  const { onEventChange, setPlaceholder } = useTimeGridRootContext();
 
   const contextValue: TimeGridColumnContext = React.useMemo(
     () => ({
@@ -54,33 +54,36 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   React.useEffect(() => {
     return dropTargetForElements({
       element: ref.current!,
-      canDrop: (args) => args.source.data.type === 'event',
+      canDrop: ({ source }) => source.data.type === 'event',
       getData: () => ({ type: 'column' }),
+      onDrag: ({ source, location }) => {
+        if (source.data.type !== 'event') {
+          return;
+        }
+
+        const data = source.data as unknown as TimeGridEvent.EventDragData;
+
+        const { start, end } = getEventDropDates({
+          ref,
+          data,
+          columnValue: value,
+          input: location.current.input,
+        });
+
+        setPlaceholder({ start, end });
+      },
       onDrop: ({ source, location }) => {
         const data = source.data as unknown as TimeGridEvent.EventDragData;
-        const position = getCursorPositionRelativeToElement({ ref, input: location.current.input });
-        const eventTopPosition = position.y - data.position.y;
 
-        const newStartMinuteInDay =
-          Math.round(((eventTopPosition / ref.current?.offsetHeight!) * 1440) / 15) * 15; // Round to nearest 15 minutes
-
-        // TODO: Avoid JS Date conversion
-        const eventDuration =
-          (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
-          (60 * 1000);
-
-        const newStartDate = adapter.setMinutes(
-          adapter.setHours(value, Math.floor(newStartMinuteInDay / 60)),
-          newStartMinuteInDay % 60,
-        );
-
-        const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
-
-        onEventChange({
-          start: newStartDate,
-          end: newEndDate,
-          id: data.id,
+        const { start, end } = getEventDropDates({
+          ref,
+          data,
+          columnValue: value,
+          input: location.current.input,
         });
+
+        onEventChange({ start, end, id: data.id });
+        setPlaceholder(null);
       },
     });
   }, []);
@@ -111,4 +114,39 @@ export namespace TimeGridColumn {
      */
     endTime?: SchedulerValidDate;
   }
+}
+
+function getEventDropDates({
+  data,
+  input,
+  ref,
+  columnValue,
+}: {
+  data: TimeGridEvent.EventDragData;
+  input: { clientY: number };
+  ref: React.RefObject<HTMLElement | null>;
+  columnValue: SchedulerValidDate;
+}) {
+  if (!ref.current) {
+    return { start: data.start, end: data.end };
+  }
+
+  const position = getCursorPositionRelativeToElement({ ref, input });
+  const eventTopPosition = position.y - data.position.y;
+
+  const newStartMinuteInDay =
+    Math.round(((eventTopPosition / ref.current.offsetHeight) * 1440) / 15) * 15; // Round to nearest 15 minutes
+
+  // TODO: Avoid JS Date conversion
+  const eventDuration =
+    (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) / (60 * 1000);
+
+  const newStartDate = adapter.setMinutes(
+    adapter.setHours(columnValue, Math.floor(newStartMinuteInDay / 60)),
+    newStartMinuteInDay % 60,
+  );
+
+  const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
+
+  return { start: newStartDate, end: newEndDate };
 }

@@ -1,9 +1,12 @@
 'use client';
 import * as React from 'react';
 import type { TimeGridRoot } from './TimeGridRoot';
+import { SchedulerValidDate } from '../../models';
 
 export interface TimeGridRootContext {
   onEventChange: (data: TimeGridRoot.EventData) => void;
+  placeholder: TimeGridRoot.PlaceholderData | null;
+  setPlaceholder: (placeholder: TimeGridRoot.PlaceholderData | null) => void;
 }
 
 export const TimeGridRootContext = React.createContext<TimeGridRootContext | undefined>(undefined);

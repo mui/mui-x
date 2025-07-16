@@ -168,6 +168,7 @@ export const TimeGrid = React.forwardRef(function TimeGrid(
                           onEventClick={onEventClick}
                         />
                       ))}
+                      <TimeGridPrimitive.EventPlaceholder className="TimeGridEventPlaceholder" />
                     </TimeGridPrimitive.Column>
                   ))}
                 </div>

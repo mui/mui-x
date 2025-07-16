@@ -5,11 +5,14 @@ import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useEventCallback } from '../../../base-ui-copy/utils/useEventCallback';
 import { SchedulerValidDate } from '../../models';
 import { TimeGridRootContext } from './TimeGridRootContext';
+import { useAdapter } from '../../utils/adapter/useAdapter';
 
 export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   componentProps: TimeGridRoot.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const adapter = useAdapter();
+
   const {
     // Rendering props
     className,
@@ -19,6 +22,23 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
+
+  const [placeholder, setPlaceholder] = React.useState<TimeGridRoot.PlaceholderData | null>(null);
+
+  const handlePlaceholderChange = useEventCallback(
+    (newPlaceholder: TimeGridRoot.PlaceholderData | null) => {
+      if (
+        newPlaceholder != null &&
+        placeholder != null &&
+        adapter.isEqual(newPlaceholder.start, placeholder.start) &&
+        adapter.isEqual(newPlaceholder.end, placeholder.end)
+      ) {
+        return;
+      }
+
+      setPlaceholder(newPlaceholder);
+    },
+  );
 
   const props = React.useMemo(() => ({ role: 'grid' }), []);
 
@@ -33,8 +53,8 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   const onEventChange = useEventCallback(onEventChangeProp);
 
   const contextValue: TimeGridRootContext = React.useMemo(
-    () => ({ onEventChange }),
-    [onEventChange],
+    () => ({ onEventChange, placeholder, setPlaceholder: handlePlaceholderChange }),
+    [onEventChange, placeholder, handlePlaceholderChange],
   );
 
   return (
@@ -51,6 +71,11 @@ export namespace TimeGridRoot {
 
   export interface EventData {
     id: string | number;
+    start: SchedulerValidDate;
+    end: SchedulerValidDate;
+  }
+
+  export interface PlaceholderData {
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }
