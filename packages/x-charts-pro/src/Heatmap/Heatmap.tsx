@@ -83,6 +83,7 @@ export interface HeatmapProps
       | 'skipAnimation'
       | 'slots'
       | 'slotProps'
+      | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
     >,

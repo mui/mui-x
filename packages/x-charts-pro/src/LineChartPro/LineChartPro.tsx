@@ -183,6 +183,12 @@ LineChartPro.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preferStrictDomainInLineCharts: PropTypes.bool,
+  }),
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
