@@ -200,16 +200,30 @@ describe('RadarChart - click event', () => {
 
       const marks = document.querySelectorAll<HTMLElement>('path.MuiRadarSeriesPlot-area');
 
-      await user.click(marks[0]);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: marks[0],
+          coords: { clientX: 50, clientY: 45 },
+        },
+      ]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's1',
+        dataIndex: 0,
       });
 
-      await user.click(marks[1]);
+      await user.pointer([
+        {
+          keys: '[MouseLeft]',
+          target: marks[1],
+          coords: { clientX: 50, clientY: 55 },
+        },
+      ]);
       expect(onItemClick.lastCall.args[1]).to.deep.equal({
         type: 'radar',
         seriesId: 's2',
+        dataIndex: 2,
       });
     });
   });
