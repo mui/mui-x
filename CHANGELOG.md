@@ -7,8 +7,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.9.0
 
-<!-- generated comparing v8.8.0..master -->
-
 _Jul 17, 2025_
 
 We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
@@ -20,17 +18,17 @@ The following are all team members who have contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.8.0`
+#### `@mui/x-data-grid@8.9.0`
 
 Internal changes.
 
-#### `@mui/x-data-grid-pro@8.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.8.0`.
+Same changes as in `@mui/x-data-grid@8.9.0`.
 
-#### `@mui/x-data-grid-premium@8.8.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.8.0`, plus:
+Same changes as in `@mui/x-data-grid-pro@8.9.0`, plus:
 
 - [DataGridPremium] Allow group column overrides with pivoting (#18765) @arminmeh
 
@@ -81,9 +79,9 @@ Internal changes.
 
 ### Miscellaneous
 
-- [code-infra] Fix ESLint import restriction rule for test files (#18669) @LukasTy
+- [code-infra] Fix ESLint `import` restriction rule for test files (#18669) @LukasTy
 - [code-infra] Remove charts benchmarks dependency on `@testing-library/jest-dom` (#18800) @bernardobelchior
-- [code-infra] Remove duplicate dependency from eslint-plugin-mui-x (#18797) @bernardobelchior
+- [code-infra] Remove duplicate dependency from `eslint-plugin-mui-x` (#18797) @bernardobelchior
 
 ## 8.8.0
 
