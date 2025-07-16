@@ -1,3 +1,4 @@
+'use client';
 import { SlotComponentProps } from '@mui/utils/types';
 import * as React from 'react';
 
@@ -62,10 +63,6 @@ export const TreeViewStyleContext = React.createContext<TreeViewStyleContextValu
   slots: {},
   slotProps: {},
 });
-
-if (process.env.NODE_ENV !== 'production') {
-  TreeViewStyleContext.displayName = 'TreeViewStyleContext';
-}
 
 export const useTreeViewStyleContext = () => {
   return React.useContext(TreeViewStyleContext);

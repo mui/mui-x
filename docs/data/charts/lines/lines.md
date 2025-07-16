@@ -41,20 +41,44 @@ You can fill the area of the line by setting the series' `area` property to `tru
 
 {{"demo": "BasicArea.js"}}
 
-## Stacking
+### Stacking
 
 Each line series can get a `stack` property which expects a string value.
 Series with the same `stack` will be stacked on top of each other.
 
-{{"demo": "StackedAreas.js"}}
-
-### Stacking strategy
-
 You can use the `stackOffset` and `stackOrder` properties to define how the series will be stacked.
-
 By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
+
+{{"demo": "StackedAreas.js"}}
+
+### Axis domain
+
+By default axes round their limits to match human readable values.
+For example, if your data ranges from 2 to 195, the axis displays values from 0 to 200.
+This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
+
+:::info
+The current default behavior can lead to empty space on left/right of the line chart.
+To fix that issue, future major version will default the x-axis domain limit to `'strict'`.
+
+To test this behavior, add the `experimentalFeatures` prop to your chart with `preferStrictDomainInLineCharts: true` value.
+You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
+
+```js
+components: {
+  MuiChartDataProvider: {
+    defaultProps: {
+       experimentalFeatures: { preferStrictDomainInLineCharts: true }
+    },
+  },
+}
+```
+
+:::
+
+{{"demo": "LineDefaultDomainLimit.js"}}
 
 ## Partial data
 
@@ -216,22 +240,24 @@ The highlighted data has a mark regardless if it has an even or odd index.
 Line plots are made of three elements named `LineElement`, `AreaElement`, and `MarkElement`.
 Each element can be selected with the CSS class name `.MuiLineElement-root`, `.MuiAreaElement-root`, or `.MuiMarkElement-root`.
 
-If you want to select the element of a given series, you can use classes `.MuiLineElement-series-<seriesId>` with `<seriesId>` the id of the series you want to customize.
+If you want to select the element of a given series, you can use the `data-series` attribute.
 
 In the next example, each line style is customized with dashes, and marks are removed.
 The area of Germany's GDP also gets a custom gradient color.
 The definition of `myGradient` is passed as a children of the chart component.
 
 ```jsx
-sx={{
-  '& .MuiLineElement-root': {
-    strokeDasharray: '10 5',
-    strokeWidth: 4,
-  },
-  '& .MuiAreaElement-series-Germany': {
-    fill: "url('#myGradient')",
-  },
-}}
+<LineChart
+  sx={{
+    '& .MuiLineElement-root': {
+      strokeDasharray: '10 5',
+      strokeWidth: 4,
+    },
+    '& .MuiAreaElement-root[data-series="Germany"]': {
+      fill: "url('#myGradient')",
+    },
+  }}
+/>
 ```
 
 {{"demo": "CSSCustomization.js"}}
@@ -294,9 +320,9 @@ Here's how the Line Chart is composed:
         <MarkPlot />
       </g>
       <LineHighlightPlot />
-      <ChartsTooltip />
       <ChartsClipPath id={clipPathId} />
     </ChartsSurface>
+    <ChartsTooltip />
   </ChartsWrapper>
 </ChartDataProvider>
 ```

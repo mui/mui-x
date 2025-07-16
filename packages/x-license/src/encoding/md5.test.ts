@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { md5 } from './md5';
 
 describe('License: md5', () => {

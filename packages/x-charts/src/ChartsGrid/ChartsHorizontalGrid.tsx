@@ -19,13 +19,13 @@ export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
 
   const { scale, tickNumber, tickInterval } = axis;
 
-  const yTicks = useTicks({ scale, tickNumber, tickInterval });
+  const yTicks = useTicks({ scale, tickNumber, tickInterval, direction: 'y' });
 
   return (
     <React.Fragment>
       {yTicks.map(({ value, offset }) => (
         <GridLine
-          key={`horizontal-${value.getTime?.() ?? value}`}
+          key={`horizontal-${value?.getTime?.() ?? value}`}
           y1={offset}
           y2={offset}
           x1={start}

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -129,7 +130,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
         apiRef.current.updateNestedRows(rows, rowNode.path);
-        apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
+        if (cachedData.rowCount !== undefined) {
+          apiRef.current.setRowCount(cachedData.rowCount);
+        }
         apiRef.current.setRowChildrenExpansion(id, true);
         apiRef.current.dataSource.setChildrenLoading(id, false);
         return;
@@ -158,9 +161,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           cache.set(key, response);
         });
 
-        apiRef.current.setRowCount(
-          getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
-        );
+        if (getRowsResponse.rowCount !== undefined) {
+          apiRef.current.setRowCount(getRowsResponse.rowCount);
+        }
         // Remove existing outdated rows before setting the new ones
         const rowsToDelete: GridRowModelUpdate[] = [];
         getRowsResponse.rows.forEach((row) => {

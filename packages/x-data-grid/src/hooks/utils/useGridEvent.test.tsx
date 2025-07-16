@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
-import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { useGridEvent, internal_registryContainer } from './useGridEvent';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
@@ -15,7 +14,7 @@ describe('useGridEvent', () => {
 
   describe('FinalizationRegistry-based implementation', () => {
     // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
-    testSkipIf(
+    it.skipIf(
       !isJSDOM || typeof FinalizationRegistry === 'undefined' || typeof global.gc === 'undefined',
     )('should unsubscribe event listeners registered by uncommitted components', async () => {
       internal_registryContainer.current = new FinalizationRegistryBasedCleanupTracking();
@@ -72,7 +71,7 @@ describe('useGridEvent', () => {
       // unable to unsubscribe the last listener using the cleanup function.
       // Since React 19, StrictMode works differently
       // https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
-      const expectedCallCount = reactMajor >= 19 ? 1 : 3;
+      const expectedCallCount = reactMajor >= 19 ? 2 : 3;
       expect(apiRef.current.subscribeEvent.callCount).to.equal(expectedCallCount);
 
       unmount();

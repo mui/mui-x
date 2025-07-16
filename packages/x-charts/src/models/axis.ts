@@ -324,6 +324,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tick'` The value is displayed on the axis ticks.
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
        */
       location: 'legend';
     }
@@ -333,8 +334,9 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tick'` The value is displayed on the axis ticks.
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
        */
-      location: 'tick' | 'tooltip';
+      location: 'tick' | 'tooltip' | 'zoom-slider-tooltip';
       /**
        * The d3-scale instance associated to the axis.
        */
@@ -513,6 +515,23 @@ export interface ChartsAxisData {
    * The mapping of series ids to their value for this particular axis index.
    */
   seriesValues: Record<string, number | null | undefined>;
+}
+
+export type CartesianDirection = 'x' | 'y';
+export type PolarDirection = 'rotation' | 'radius';
+
+/**
+ * Identifies a data point within an axis.
+ */
+export interface AxisItemIdentifier {
+  /**
+   * The axis id.
+   */
+  axisId: AxisId;
+  /**
+   * The data index.
+   */
+  dataIndex: number;
 }
 
 export type XAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName

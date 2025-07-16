@@ -5,14 +5,12 @@ import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_useControlled as useControlled,
-  unstable_composeClasses as composeClasses,
-  unstable_useEventCallback as useEventCallback,
-} from '@mui/utils';
+import useControlled from '@mui/utils/useControlled';
+import composeClasses from '@mui/utils/composeClasses';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { MonthCalendarButton } from './MonthCalendarButton';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { useNow } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass, MonthCalendarClasses } from './monthCalendarClasses';
 import { getMonthsInYear } from '../internals/utils/date-utils';
 import { MonthCalendarProps } from './MonthCalendar.types';
@@ -23,6 +21,7 @@ import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 const useUtilityClasses = (classes: Partial<MonthCalendarClasses> | undefined) => {
   const slots = {
@@ -131,14 +130,14 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 
   const now = useNow(timezone);
   const isRtl = useRtl();
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const { ownerState } = usePickerPrivateContext();
 
   const referenceDate = React.useMemo(
     () =>
       singleItemValueManager.getInitialReferenceValue({
         value,
-        utils,
+        adapter,
         props,
         timezone,
         referenceDate: referenceDateProp,
@@ -149,17 +148,17 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 
   const classes = useUtilityClasses(classesProp);
 
-  const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
+  const todayMonth = React.useMemo(() => adapter.getMonth(now), [adapter, now]);
 
   const selectedMonth = React.useMemo(() => {
     if (value != null) {
-      return utils.getMonth(value);
+      return adapter.getMonth(value);
     }
 
     return null;
-  }, [value, utils]);
+  }, [value, adapter]);
   const [focusedMonth, setFocusedMonth] = React.useState(
-    () => selectedMonth || utils.getMonth(referenceDate),
+    () => selectedMonth || adapter.getMonth(referenceDate),
   );
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
@@ -179,21 +178,21 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 
   const isMonthDisabled = React.useCallback(
     (dateToValidate: PickerValidDate) => {
-      const firstEnabledMonth = utils.startOfMonth(
-        disablePast && utils.isAfter(now, minDate) ? now : minDate,
+      const firstEnabledMonth = adapter.startOfMonth(
+        disablePast && adapter.isAfter(now, minDate) ? now : minDate,
       );
 
-      const lastEnabledMonth = utils.startOfMonth(
-        disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
+      const lastEnabledMonth = adapter.startOfMonth(
+        disableFuture && adapter.isBefore(now, maxDate) ? now : maxDate,
       );
 
-      const monthToValidate = utils.startOfMonth(dateToValidate);
+      const monthToValidate = adapter.startOfMonth(dateToValidate);
 
-      if (utils.isBefore(monthToValidate, firstEnabledMonth)) {
+      if (adapter.isBefore(monthToValidate, firstEnabledMonth)) {
         return true;
       }
 
-      if (utils.isAfter(monthToValidate, lastEnabledMonth)) {
+      if (adapter.isAfter(monthToValidate, lastEnabledMonth)) {
         return true;
       }
 
@@ -203,7 +202,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 
       return shouldDisableMonth(monthToValidate);
     },
-    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, utils],
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, adapter],
   );
 
   const handleMonthSelection = useEventCallback((event: React.MouseEvent, month: number) => {
@@ -211,12 +210,12 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       return;
     }
 
-    const newDate = utils.setMonth(value ?? referenceDate, month);
+    const newDate = adapter.setMonth(value ?? referenceDate, month);
     handleValueChange(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(utils.setMonth(value ?? referenceDate, month))) {
+    if (!isMonthDisabled(adapter.setMonth(value ?? referenceDate, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -281,10 +280,10 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       monthsPerRow={monthsPerRow}
       {...other}
     >
-      {getMonthsInYear(utils, value ?? referenceDate).map((month) => {
-        const monthNumber = utils.getMonth(month);
-        const monthText = utils.format(month, 'monthShort');
-        const monthLabel = utils.format(month, 'month');
+      {getMonthsInYear(adapter, value ?? referenceDate).map((month) => {
+        const monthNumber = adapter.getMonth(month);
+        const monthText = adapter.format(month, 'monthShort');
+        const monthLabel = adapter.format(month, 'month');
         const isSelected = monthNumber === selectedMonth;
         const isDisabled = disabled || isMonthDisabled(month);
 

@@ -27,6 +27,12 @@
     },
     "height": { "type": { "name": "number" } },
     "hideLegend": { "type": { "name": "bool" } },
+    "highlightedAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, dataIndex: number }&gt;"
+      }
+    },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -60,6 +66,13 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "onHighlightedAxisChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(axisItems: Array<AxisItemIdentifier>) => void",
+        "describedArgs": ["axisItems"]
+      }
+    },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
@@ -67,6 +80,7 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -131,6 +145,8 @@
       "default": "BarLabel",
       "class": null
     },
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "legend",
       "description": "Custom rendering of the legend.",
@@ -147,6 +163,12 @@
       "name": "noDataOverlay",
       "description": "Overlay component rendered when the chart has no data to display.",
       "default": "ChartsNoDataOverlay",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
       "class": null
     },
     {

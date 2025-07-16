@@ -19,13 +19,13 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
 
   const { scale, tickNumber, tickInterval } = axis;
 
-  const xTicks = useTicks({ scale, tickNumber, tickInterval });
+  const xTicks = useTicks({ scale, tickNumber, tickInterval, direction: 'x' });
 
   return (
     <React.Fragment>
       {xTicks.map(({ value, offset }) => (
         <GridLine
-          key={`vertical-${value.getTime?.() ?? value}`}
+          key={`vertical-${value?.getTime?.() ?? value}`}
           y1={start}
           y2={end}
           x1={offset}

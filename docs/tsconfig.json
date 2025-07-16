@@ -2,7 +2,6 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "allowJs": true,
-    "isolatedModules": true,
     /* files are emitted by babel */
     "noEmit": true,
     "noUnusedLocals": true,
@@ -10,8 +9,17 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "incremental": true,
-    "types": ["@mui/internal-test-utils/initMatchers", "chai-dom", "mocha"]
+    "jsx": "preserve",
+    "types": ["@mui/internal-test-utils/initMatchers", "vitest/globals"]
   },
-  "include": ["next-env.d.ts", "next.config.mjs", "docs-env.d.ts", "src", "pages/**/*.ts*", "data"],
+  "include": [
+    "next-env.d.ts",
+    "next.config.mjs",
+    "docs-env.d.ts",
+    "src",
+    "pages/**/*.ts*",
+    "data",
+    "../test/utils/addChaiAssertions.ts"
+  ],
   "exclude": ["docs/.next", "docs/export", "pages/playground"]
 }

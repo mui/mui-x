@@ -889,7 +889,7 @@
       "name": "rowReorderIcon",
       "description": "Icon displayed on the `reorder` column type to reorder a row.",
       "default": "GridDragIcon",
-      "class": null
+      "class": "MuiDataGrid-rowReorderIcon"
     },
     {
       "name": "quickFilterIcon",
@@ -2010,6 +2010,12 @@
       "isGlobal": false
     },
     {
+      "key": "scrollArea--down",
+      "className": "MuiDataGrid-scrollArea--down",
+      "description": "Styles applied to the bottom scroll area element.",
+      "isGlobal": false
+    },
+    {
       "key": "scrollArea--left",
       "className": "MuiDataGrid-scrollArea--left",
       "description": "Styles applied to the left scroll area element.",
@@ -2019,6 +2025,12 @@
       "key": "scrollArea--right",
       "className": "MuiDataGrid-scrollArea--right",
       "description": "Styles applied to the right scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollArea--up",
+      "className": "MuiDataGrid-scrollArea--up",
+      "description": "Styles applied to the top scroll area element.",
       "isGlobal": false
     },
     {

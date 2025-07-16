@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { defaultSlotsMaterial, ChartsSlotProps, ChartsSlots } from '../internals/material';
+import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
@@ -18,7 +20,16 @@ export type ChartDataProviderProps<
   ChartProviderProps<TSeries, TSignatures>['pluginParams'] &
     Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'>
 > &
-  ChartsLocalizationProviderProps;
+  ChartsLocalizationProviderProps & {
+    /**
+     * Slots to customize charts' components.
+     */
+    slots?: Partial<ChartsSlots>;
+    /**
+     * The props for the slots.
+     */
+    slotProps?: Partial<ChartsSlotProps>;
+  };
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -51,11 +62,20 @@ function ChartDataProvider<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(props: ChartDataProviderProps<TSeries, TSignatures>) {
-  const { children, localeText, chartProviderProps } = useChartDataProviderProps(props);
+  const { children, localeText, chartProviderProps, slots, slotProps } =
+    useChartDataProviderProps(props);
 
   return (
     <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
-      <ChartsLocalizationProvider localeText={localeText}>{children}</ChartsLocalizationProvider>
+      <ChartsLocalizationProvider localeText={localeText}>
+        <ChartsSlotsProvider
+          slots={slots}
+          slotProps={slotProps}
+          defaultSlots={defaultSlotsMaterial}
+        >
+          {children}
+        </ChartsSlotsProvider>
+      </ChartsLocalizationProvider>
     </ChartProvider>
   );
 }
@@ -77,6 +97,12 @@ ChartDataProvider.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preferStrictDomainInLineCharts: PropTypes.bool,
+  }),
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -116,6 +142,14 @@ ChartDataProvider.propTypes = {
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
+  /**
+   * The props for the slots.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Slots to customize charts' components.
+   */
+  slots: PropTypes.object,
   theme: PropTypes.oneOf(['dark', 'light']),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

@@ -1,7 +1,5 @@
-import {
-  unstable_generateUtilityClasses as generateUtilityClasses,
-  unstable_generateUtilityClass as generateUtilityClass,
-} from '@mui/utils';
+import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
 export interface GridClasses {
   /**
@@ -625,6 +623,10 @@ export interface GridClasses {
    */
   'rowReorderCell--draggable': string;
   /**
+   * Styles applied to the row reorder icon element.
+   */
+  rowReorderIcon: string;
+  /**
    * Styles applied to the skeleton row element.
    */
   rowSkeleton: string;
@@ -640,6 +642,14 @@ export interface GridClasses {
    * Styles applied to the right scroll area element.
    */
   'scrollArea--right': string;
+  /**
+   * Styles applied to the top scroll area element.
+   */
+  'scrollArea--up': string;
+  /**
+   * Styles applied to the bottom scroll area element.
+   */
+  'scrollArea--down': string;
   /**
    * Styles applied to the scrollbars.
    */
@@ -1066,9 +1076,12 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'rowReorderCellContainer',
   'rowReorderCell',
   'rowReorderCell--draggable',
+  'rowReorderIcon',
   'rowSkeleton',
   'scrollArea--left',
   'scrollArea--right',
+  'scrollArea--up',
+  'scrollArea--down',
   'scrollArea',
   'scrollbar',
   'scrollbar--vertical',

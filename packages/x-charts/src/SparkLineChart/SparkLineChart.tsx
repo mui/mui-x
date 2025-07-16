@@ -6,7 +6,9 @@ import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsColor, ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
+import { ChartDataProvider } from '../ChartDataProvider';
+import { ChartsSurface } from '../ChartsSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
@@ -47,6 +49,9 @@ export interface SparkLineChartProps
     | 'margin'
     | 'plugins'
     | 'colors'
+    | 'slots'
+    | 'slotProps'
+    | 'experimentalFeatures'
   > {
   /**
    * The xAxis configuration.
@@ -205,9 +210,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
   }, [color]);
 
   return (
-    <ChartContainer
-      {...other}
-      ref={ref}
+    <ChartDataProvider
       series={[
         {
           type: plotType,
@@ -219,7 +222,6 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       width={width}
       height={height}
       margin={margin}
-      className={className}
       xAxis={[
         {
           id: DEFAULT_X_AXIS_KEY,
@@ -238,30 +240,30 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         },
       ]}
       colors={colors}
-      sx={sx}
       disableAxisListener={
         (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
         axisHighlight?.x === 'none' &&
         axisHighlight?.y === 'none'
       }
     >
-      <g clipPath={`url(#${clipPathId})`}>
-        {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
+      <ChartsSurface className={className} ref={ref} sx={sx} {...other}>
+        <g clipPath={`url(#${clipPathId})`}>
+          {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
 
-        {plotType === 'line' && (
-          <React.Fragment>
-            <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
-            <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
-          </React.Fragment>
-        )}
-      </g>
-      {plotType === 'line' && <LineHighlightPlot slots={slots} slotProps={slotProps} />}
-      {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}
-      <ChartsAxisHighlight {...axisHighlight} />
+          {plotType === 'line' && (
+            <React.Fragment>
+              <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
+              <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
+            </React.Fragment>
+          )}
+        </g>
+        {plotType === 'line' && <LineHighlightPlot slots={slots} slotProps={slotProps} />}
+        {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}
+        <ChartsAxisHighlight {...axisHighlight} />
+        {children}
+      </ChartsSurface>
       {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
-
-      {children}
-    </ChartContainer>
+    </ChartDataProvider>
   );
 });
 
@@ -348,6 +350,16 @@ SparkLineChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
+   */
+  highlightedAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
@@ -393,6 +405,14 @@ SparkLineChart.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when clicking close to an item.
    * This is only available for scatter plot for now.

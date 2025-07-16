@@ -4,12 +4,12 @@ import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { useChartRootRef } from '@mui/x-charts/hooks';
 import Button from '@mui/material/Button';
-import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
 import { Stack } from '@mui/system';
 import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 
 function CustomChartWrapper({ children }: React.PropsWithChildren) {
   const chartRootRef = useChartRootRef();
@@ -25,7 +25,7 @@ function CustomChartWrapper({ children }: React.PropsWithChildren) {
 }
 
 export default function ExportCompositionNoSnap() {
-  const apiRef = React.useRef<ChartProApi>(undefined);
+  const apiRef = useChartProApiRef<'composition'>();
 
   return (
     <Stack width="100%" sx={{ display: 'block' }}>

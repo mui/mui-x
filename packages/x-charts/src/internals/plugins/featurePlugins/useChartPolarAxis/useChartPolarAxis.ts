@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { useSelector } from '../../../store/useSelector';
@@ -96,8 +97,6 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
   // Use a ref to avoid rerendering on every mousemove event.
   const mousePosition = React.useRef({
     isInChart: false,
-    x: -1,
-    y: -1,
   });
 
   React.useEffect(() => {
@@ -106,25 +105,58 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       return () => {};
     }
 
-    const handleOut = () => {
-      mousePosition.current = {
-        isInChart: false,
-        x: -1,
-        y: -1,
-      };
+    // Clean the interaction when the mouse leaves the chart.
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
+        mousePosition.current.isInChart = false;
+        instance.cleanInteraction();
+      }
+    });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (!event.detail.activeGestures.move) {
+        mousePosition.current.isInChart = false;
+        instance.cleanInteraction();
+      }
+    });
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
+        mousePosition.current.isInChart = false;
+        instance.cleanInteraction();
+      }
+    });
 
-      instance.cleanInteraction?.();
-    };
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      const srcEvent = event.detail.srcEvent;
 
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
-      const svgPoint = getSVGPoint(element, target);
+      // On touch, we want to allow user to interact with the entire svg area in
+      // order to better display the tooltip.
+      if (event.detail.srcEvent.pointerType === 'touch') {
+        const svgRect = element.getBoundingClientRect();
 
-      mousePosition.current.x = svgPoint.x;
-      mousePosition.current.y = svgPoint.y;
+        if (
+          srcEvent.clientX < svgRect.left ||
+          srcEvent.clientX > svgRect.right ||
+          srcEvent.clientY < svgRect.top ||
+          srcEvent.clientY > svgRect.bottom
+        ) {
+          mousePosition.current.isInChart = false;
+          instance.cleanInteraction();
+          return;
+        }
+
+        const svgPoint = getSVGPoint(element, srcEvent);
+
+        mousePosition.current.isInChart = true;
+        instance.setPointerCoordinate(svgPoint);
+        return;
+      }
+
+      // On mouse, we want to restrict the interaction to the drawing area and radar circle.
+
+      const svgPoint = getSVGPoint(element, srcEvent);
 
       // Test if it's in the drawing area
-      if (!instance.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
+      if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.detail.target)) {
         if (mousePosition.current.isInChart) {
           instance?.cleanInteraction();
           mousePosition.current.isInChart = false;
@@ -148,31 +180,17 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       instance.setPointerCoordinate?.(svgPoint);
     };
 
-    const handleDown = (event: PointerEvent) => {
-      const target = event.currentTarget;
-      if (!target) {
-        return;
-      }
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
-      if (
-        'hasPointerCapture' in target &&
-        (target as HTMLElement).hasPointerCapture(event.pointerId)
-      ) {
-        (target as HTMLElement).releasePointerCapture(event.pointerId);
-      }
-    };
-
-    element.addEventListener('pointerdown', handleDown);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointerout', handleOut);
-    element.addEventListener('pointercancel', handleOut);
-    element.addEventListener('pointerleave', handleOut);
     return () => {
-      element.removeEventListener('pointerdown', handleDown);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointerout', handleOut);
-      element.removeEventListener('pointercancel', handleOut);
-      element.removeEventListener('pointerleave', handleOut);
+      moveHandler.cleanup();
+      moveEndHandler.cleanup();
+      panHandler.cleanup();
+      panEndHandler.cleanup();
+      pressHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [
     svgRef,

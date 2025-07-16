@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import { DesktopDateTimePicker } from '../DesktopDateTimePicker';
 import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { DateTimePickerProps } from './DateTimePicker.types';
@@ -51,7 +51,7 @@ DateTimePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -394,8 +394,8 @@ DateTimePicker.propTypes = {
   thresholdToRenderTimeInASingleColumn: PropTypes.number,
   /**
    * The time steps between two time unit options.
-   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * For example, if `timeSteps.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeSteps.minutes` will be used.
    * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
   timeSteps: PropTypes.shape({

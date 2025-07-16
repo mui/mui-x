@@ -77,6 +77,18 @@ You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
 
+### Minimum bar size
+
+You can set a minimum bar size with the `minBarSize` property.
+This property is useful when you want to ensure that bars are always visible, even when the data is sparse or the chart is small.
+
+The `minBarSize` property is ignored if the series value is `null` or `0`.
+It also doesn't work with stacked series.
+
+{{"demo": "MinBarSize.js"}}
+
+## Customization
+
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
@@ -107,6 +119,15 @@ To give your bar chart rounded corners, you can change the value of the `borderR
 It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
 
 {{"demo": "BorderRadius.js"}}
+
+### CSS
+
+You can customize the bar chart elements using CSS selectors.
+
+Each series renders a `g` element that contains a `data-series` attribute.
+You can use this attribute to target elements based on their series.
+
+{{"demo": "BarGradient.js"}}
 
 ## Labels
 
@@ -207,9 +228,9 @@ Here's how the Bar Chart is composed:
         <ChartsAxisHighlight />
       </g>
       <ChartsAxis />
-      <ChartsTooltip />
       <ChartsClipPath id={clipPathId} />
     </ChartsSurface>
+    <ChartsTooltip />
   </ChartsWrapper>
 </ChartDataProvider>
 ```

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -14,7 +13,7 @@ import {
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, waitFor, act, reactMajor } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer();
@@ -32,7 +31,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   }
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not allow to expand rows that do not specify a detail element',
     async () => {
       const { user } = render(
@@ -46,7 +45,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   );
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not consider the height of the detail panels when rendering new rows during scroll',
     async () => {
       const rowHeight = 50;
@@ -79,7 +78,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   );
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should derive the height from the content if getDetailPanelHeight returns "auto"',
     async () => {
       const rowHeight = 50;
@@ -115,7 +114,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   );
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"',
     async () => {
       function ExpandableCell() {
@@ -166,7 +165,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   );
 
   // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)('should position correctly the detail panels', () => {
+  it.skipIf(isJSDOM)('should position correctly the detail panels', () => {
     const rowHeight = 50;
     const evenHeight = rowHeight;
     const oddHeight = 2 * rowHeight;
@@ -211,7 +210,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should consider the height of the detail panel when scrolling to a cell',
     async () => {
       const rowHeight = 50;
@@ -240,7 +239,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   );
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not scroll vertically when navigating expanded row cells',
     async () => {
       function Component() {
@@ -387,7 +386,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should update the panel height if getDetailPanelHeight is changed while the panel is open',
     async () => {
       const getDetailPanelHeight = spy(() => 100);
@@ -464,7 +463,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   // See https://github.com/mui/mui-x/issues/4607
   // Needs layout
-  testSkipIf(isJSDOM)('should make detail panel to take full width of the content', async () => {
+  it.skipIf(isJSDOM)('should make detail panel to take full width of the content', async () => {
     const { user } = render(
       <TestCase
         getDetailPanelContent={() => <div>Detail</div>}
@@ -491,7 +490,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   // See https://github.com/mui/mui-x/issues/6694
   // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should add a bottom margin to the expanded row when using `getRowSpacing`',
     async () => {
       const { user } = render(
@@ -523,7 +522,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     "should not render detail panel for the focused row if it's outside of the viewport",
     async () => {
       const { user } = render(

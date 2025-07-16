@@ -23,7 +23,7 @@ export type FunnelValueType = {
   /**
    * The label to display on the tooltip, funnel section, or the legend. It can be a string or a function.
    */
-  label?: string | ((location: 'tooltip' | 'legend' | 'section') => string);
+  label?: string | ((location: 'tooltip' | 'legend' | 'section') => string | undefined);
   /**
    * The color of the funnel section
    */
@@ -57,6 +57,7 @@ export interface FunnelSeriesType
    *
    * - `bump`: A curve that creates a smooth transition between points, with a bump in the middle.
    * - `linear`: A straight line between points.
+   * - `linear-sharp`: A straight line between points, the smaller end of the funnel is a triangle.
    * - `step`: A step line that creates a staircase effect.
    * - `pyramid`: A pyramid shape that connects the points.
    * - `step-pyramid`: A step line that creates a staircase effect, with a pyramid shape.
@@ -87,6 +88,17 @@ export interface FunnelSeriesType
    * @default 'filled'
    */
   variant?: 'filled' | 'outlined';
+  /**
+   * Controls how the funnel is drawn.
+   * Ignored on `step` and `linear-sharp` curves.
+   *
+   * This affects different curves in different ways:
+   * - `bump` & `linear`: Controls which section is the "starting" point of the funnel. This section has straight edges.
+   * - `pyramid` & `step-pyramid`: Fully changes the direction of the shape.
+   *
+   * @default 'auto'
+   */
+  funnelDirection?: 'increasing' | 'decreasing' | 'auto';
 }
 
 /**
@@ -121,9 +133,13 @@ export type FunnelItem = {
 };
 
 export interface DefaultizedFunnelSeriesType
-  extends DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'> {
+  extends Omit<
+    DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'>,
+    'funnelDirection'
+  > {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
+  funnelDirection: 'increasing' | 'decreasing';
 }
 
 export type FunnelDataPoints = Record<'x' | 'y', number> & {

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
@@ -46,7 +47,7 @@ export function GridCSSVariablesContext(props: { children: any }) {
 function variablesToString(variables: Record<string, any>) {
   let output = '';
   for (const key in variables) {
-    if (Object.hasOwn(variables, key)) {
+    if (Object.hasOwn(variables, key) && variables[key] !== undefined) {
       output += `${key}:${variables[key]};`;
     }
   }

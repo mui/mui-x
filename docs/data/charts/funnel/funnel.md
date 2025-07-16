@@ -29,6 +29,14 @@ To disable the legend, set the `hideLegend` prop to `true`.
 
 {{"demo": "FunnelLegend.js"}}
 
+## Pyramid Chart
+
+The pyramid chart is a variation of the funnel chart.
+
+To create a pyramid chart, set the `curve` property to `pyramid` in the series.
+
+{{"demo": "PyramidFunnel.js"}}
+
 ## Labels
 
 The funnel chart displays labels by default.
@@ -36,6 +44,12 @@ It shows the `value` of the data item in each section.
 To format the labels, a `valueFormatter` function can be provided.
 
 {{"demo": "FunnelLabels.js"}}
+
+### Styling labels
+
+The labels can be styled by using the `funnelSectionClasses.label` helper.
+
+{{"demo": "FunnelLabelStyling.js"}}
 
 ### Positioning labels
 
@@ -58,7 +72,7 @@ It also accepts a function that receives the data object and should return the l
 ### Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bump'`, `'pyramid'`, `'step'` and `'step-pyramid'`.
+This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'linear-sharp'`, `'bump'`, `'pyramid'`, `'step'` and `'step-pyramid'`.
 
 This series property adds the option to control the interpolation of a series.
 
@@ -77,8 +91,8 @@ The border radius of the sections can be customized by the `borderRadius` proper
 It accepts a number that represents the radius in pixels.
 
 - The `bump` curve interpolation will not respect the border radius.
-- The `linear` and `pyramid` curve respects the border radius to some extent due to the angle of the sections.
-- The `step` and `step-pyramid` curve respects the border radius.
+- The `linear`, `linear-sharp` and `pyramid` curves respect the border radius to some extent due to the angle of the sections.
+- The `step` and `step-pyramid` curves respect the border radius.
 
 To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
 
@@ -108,6 +122,16 @@ The funnel colors can be customized in two ways.
 2. You can provide a `color` property in `data` objects, which overrides the palette.
 
 {{"demo": "FunnelColor.js"}}
+
+### CSS
+
+The funnel chart can be styled using CSS.
+
+Each section group has a `data-series` attribute that can be used to target specific series sections.
+
+In order to target specific sections, you can use the `:nth-child` or `:nth-child-of-type` selectors as shown in the example below.
+
+{{"demo": "FunnelDataAttributes.js"}}
 
 ## Multiple funnels
 

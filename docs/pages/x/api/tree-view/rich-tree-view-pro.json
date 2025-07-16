@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setIsItemDisabled: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setEditedItem: func, setIsItemDisabled: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
       }
     },
     "canMoveItemToNewPosition": {
@@ -16,6 +16,12 @@
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "dataSource": {
+      "type": { "name": "shape", "description": "{ getChildrenCount: func, getTreeItems: func }" }
+    },
+    "dataSourceCache": {
+      "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
+    },
     "defaultExpandedItems": {
       "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" },
       "default": "[]"
@@ -27,6 +33,15 @@
     "expansionTrigger": {
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
+    },
+    "getItemChildren": {
+      "type": { "name": "func" },
+      "default": "(item) => item.children",
+      "signature": {
+        "type": "function(item: R) => Array<R>",
+        "describedArgs": ["item"],
+        "returned": "Array<R>"
+      }
     },
     "getItemId": {
       "type": { "name": "func" },

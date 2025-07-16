@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
+import {
+  areaElementClasses,
+  LineChart,
+  lineElementClasses,
+} from '@mui/x-charts/LineChart';
 import { dataset } from './GDPperCapita';
 
 export default function CSSCustomization() {
@@ -11,7 +15,7 @@ export default function CSSCustomization() {
           strokeDasharray: '10 5',
           strokeWidth: 4,
         },
-        '& .MuiAreaElement-series-Germany': {
+        [`& .${areaElementClasses.root}[data-series="Germany"]`]: {
           fill: "url('#myGradient')",
           filter: 'none', // Remove the default filtering
         },
@@ -21,8 +25,6 @@ export default function CSSCustomization() {
           id: 'Years',
           dataKey: 'date',
           scaleType: 'time',
-          min: new Date(1990, 0, 1),
-          max: new Date(2018, 0, 1),
           valueFormatter: (date) => date.getFullYear().toString(),
         },
       ]}
@@ -54,6 +56,7 @@ export default function CSSCustomization() {
           showMark: false,
         },
       ]}
+      experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
       height={300}
     >
       <defs>

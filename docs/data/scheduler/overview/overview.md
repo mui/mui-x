@@ -2,12 +2,12 @@
 productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
-githubLabel: 'component: scheduler'
+githubLabel: 'scope: scheduler'
 ---
 
 # Scheduler - Overview
 
-<p class="description">A collection of React UI components to schedule your events. </p>
+<p class="description">A collection of React UI components to schedule your events.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
@@ -15,6 +15,6 @@ githubLabel: 'component: scheduler'
 This package is not published yet.
 :::
 
-## Event Calendar
-
-{{"demo": "BasicEventCalendar.js", "defaultCodeOpen": false}}
+- [Joy - Event Calendar](/x/react-scheduler/event-calendar/)
+- [Joy - Event Calendar (full screen demo)](/x/react-scheduler/full-screen-event-calendar/)
+- [Primitives](/x/react-scheduler/primitives/)

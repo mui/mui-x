@@ -15,11 +15,17 @@
     "disableLineItemHighlight": {
       "description": "If <code>true</code>, render the line highlight item."
     },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
+    },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
+    "highlightedAxis": {
+      "description": "The controlled axis highlight. Identified by the axis id, and data index."
+    },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
     },
@@ -43,11 +49,16 @@
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
+    "onHighlightedAxisChange": {
+      "description": "The function called when the pointer position corresponds to a new axis data item. This update can either be caused by a pointer movement, or an axis update. In case of multiple axes, the function is called if at least one axis is updated. The argument contains the identifier for all axes with a <code>data</code> property.",
+      "typeDescriptions": { "axisItems": "The array of axes item identifiers." }
+    },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
     "series": {
       "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series-type/'>LineSeriesType</a> objects."
     },
+    "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
@@ -68,12 +79,15 @@
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
+    "baseButton": "",
+    "baseIconButton": "",
     "legend": "Custom rendering of the legend.",
     "line": "The component that renders the line.",
     "lineHighlight": "",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "mark": "",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper."
   }
 }

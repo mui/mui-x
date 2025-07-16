@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { getRow } from 'test/utils/helperFn';
-import { expect } from 'chai';
+import { getCell, getRow } from 'test/utils/helperFn';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -11,13 +10,16 @@ import {
   GridDataSource,
   GridGetRowsParams,
   GridGetRowsResponse,
+  GridRowSelectionModel,
   useGridApiRef,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
+import { TestCache } from '@mui/x-data-grid/internals';
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
+describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
   const fetchRowsSpy = spy();
@@ -101,7 +103,6 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     );
   }
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     transformGetRowsResponse = defaultTransformGetRowsResponse;
   });
@@ -127,6 +128,43 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.equal(2);
     });
+  });
+
+  it('should keep the selection state on scroll', async () => {
+    let rowSelectionModel: GridRowSelectionModel = {
+      type: 'include',
+      ids: new Set(),
+    };
+
+    function TestCase() {
+      const handleSelectionChange: DataGridProProps['onRowSelectionModelChange'] = (newModel) => {
+        rowSelectionModel = newModel;
+      };
+
+      return (
+        <TestDataSourceLazyLoader
+          onRowSelectionModelChange={handleSelectionChange}
+          disableVirtualization={false}
+        />
+      );
+    }
+
+    render(<TestCase />);
+    // wait until the rows are rendered
+    await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(0);
+    await act(async () => apiRef.current?.selectRow(getCell(1, 0).textContent!));
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(1);
+
+    // arbitrary number to make sure that the bottom of the grid window is reached.
+    await act(async () => apiRef.current?.scroll({ top: 12345 }));
+
+    // wait until the row is not in the render context anymore
+    await waitFor(() => expect(() => getRow(1)).to.throw());
+
+    // selection is kept
+    expect(Array.from(rowSelectionModel.ids).length).to.equal(1);
   });
 
   describe('Viewport loading', () => {
@@ -420,6 +458,45 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
       // The 11th row should be a skeleton
       expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10');
+    });
+  });
+
+  describe('Cache', () => {
+    it('should combine cache chunks when possible to reduce the number of requests', async () => {
+      const testCache = new TestCache();
+      const cacheGetSpy = spy(testCache, 'get');
+      render(<TestDataSourceLazyLoader dataSourceCache={testCache} />);
+
+      await waitFor(() => {
+        expect(cacheGetSpy.called).to.equal(true);
+      });
+
+      cacheGetSpy.resetHistory();
+      fetchRowsSpy.resetHistory();
+
+      act(() => {
+        apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
+          start: 0,
+          end: 29,
+        });
+      });
+
+      await waitFor(() => {
+        expect(cacheGetSpy.callCount).to.equal(3);
+      });
+      expect(fetchRowsSpy.callCount).to.equal(1);
+
+      act(() => {
+        apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
+          start: 20,
+          end: 29,
+        });
+      });
+
+      await waitFor(() => {
+        expect(cacheGetSpy.callCount).to.equal(4);
+      });
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
   });
 });

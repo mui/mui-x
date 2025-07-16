@@ -11,6 +11,7 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
     },
@@ -36,6 +37,7 @@
     "series": {
       "description": "The series to display in the bar chart. An array of HeatmapSeriesType objects."
     },
+    "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "tooltip": {

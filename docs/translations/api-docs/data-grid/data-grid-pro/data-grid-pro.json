@@ -243,6 +243,9 @@
       "description": "Pass a custom logger in the components that implements the Logger interface."
     },
     "logLevel": { "description": "Allows to pass the logging level or false to turn off logging." },
+    "multipleColumnsSortingMode": {
+      "description": "If set to &quot;always&quot;, the multi-sorting is applied without modifier key. Otherwise, the modifier key is required for multi-sorting to be applied."
+    },
     "nonce": {
       "description": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>."
     },
@@ -1337,6 +1340,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "both scroll area elements"
     },
+    "scrollArea--down": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom scroll area element"
+    },
     "scrollArea--left": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the left scroll area element"
@@ -1344,6 +1351,10 @@
     "scrollArea--right": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the right scroll area element"
+    },
+    "scrollArea--up": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top scroll area element"
     },
     "scrollbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the scrollbars" },
     "scrollbar--horizontal": {

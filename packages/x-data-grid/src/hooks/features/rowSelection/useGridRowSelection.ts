@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -718,7 +719,9 @@ export const useGridRowSelection = (
     (value: boolean) => {
       const filterModel = gridFilterModelSelector(apiRef);
       const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
-      const hasFilters = filterModel.items.length > 0 || (quickFilterModel?.length || 0) > 0;
+      const hasFilters =
+        filterModel.items.length > 0 || quickFilterModel?.some((val) => val.length);
+
       if (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&

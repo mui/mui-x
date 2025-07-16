@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 components: RichTreeView, TreeItem
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 packageName: '@mui/x-tree-view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 packageName: '@mui/x-tree-view'
@@ -89,14 +89,27 @@ Use the `updateItemLabel()` API method to imperatively update the label of an it
 
 ```ts
 apiRef.current.updateItemLabel(
-  // The id of the item to to update
+  // The id of the item to update
   itemId,
-  // The new label of the item.
+  // The new label of the item
   newLabel,
 );
 ```
 
 {{"demo": "ApiMethodUpdateItemLabel.js"}}
+
+### Change edition mode of an item
+
+Use the `setEditedItem()` API method to set which item is being edited.
+
+```ts
+apiRef.current.setEditedItem(
+  // The id of the item to edit, or `null` to exit editing mode
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodSetEditedItem.js"}}
 
 ## Editing lazy loaded children
 

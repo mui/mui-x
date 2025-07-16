@@ -15,6 +15,7 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
+import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -32,37 +33,26 @@ const selectorChartZoomState = (state: ChartState<[], [UseChartCartesianAxisSign
  */
 
 export const selectorChartZoomIsInteracting = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom?.isInteracting,
 );
 
 export const selectorChartZoomMap = createSelector(
-  selectorChartZoomState,
+  [selectorChartZoomState],
   (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
 );
 
-const selectorChartXZoomOptionsLookup = createSelector(
-  selectorChartRawXAxis,
-  createZoomLookup('x'),
-);
-
-const selectorChartYZoomOptionsLookup = createSelector(
-  selectorChartRawYAxis,
-  createZoomLookup('y'),
-);
-
 export const selectorChartZoomOptionsLookup = createSelector(
-  [selectorChartXZoomOptionsLookup, selectorChartYZoomOptionsLookup],
-  (xLookup, yLookup) => ({ ...xLookup, ...yLookup }),
+  [selectorChartRawXAxis, selectorChartRawYAxis],
+  (xAxis, yAxis) => ({
+    ...createZoomLookup('x')(xAxis),
+    ...createZoomLookup('y')(yAxis),
+  }),
 );
 
 export const selectorChartAxisZoomOptionsLookup = createSelector(
-  [
-    selectorChartXZoomOptionsLookup,
-    selectorChartYZoomOptionsLookup,
-    (state, axisId: AxisId) => axisId,
-  ],
-  (xLookup, yLookup, axisId) => xLookup[axisId] ?? yLookup[axisId],
+  [selectorChartZoomOptionsLookup, (_, axisId: AxisId) => axisId],
+  (axisLookup, axisId) => axisLookup[axisId],
 );
 
 const selectorChartXFilter = createSelector(
@@ -103,7 +93,7 @@ const selectorChartYFilter = createSelector(
     }),
 );
 
-const selectorChartZoomAxisFilters = createSelector(
+export const selectorChartZoomAxisFilters = createSelector(
   [selectorChartXFilter, selectorChartYFilter, selectorChartRawXAxis, selectorChartRawYAxis],
   (xMapper, yMapper, xAxis, yAxis) => {
     if (xMapper === undefined || yMapper === undefined) {
@@ -148,8 +138,18 @@ export const selectorChartXAxis = createSelector(
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
+    selectorPreferStrictDomainInLineCharts,
   ],
-  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
+  (
+    axis,
+    drawingArea,
+    formattedSeries,
+    seriesConfig,
+    zoomMap,
+    zoomOptions,
+    getFilters,
+    preferStrictDomainInLineCharts,
+  ) =>
     computeAxisValue({
       drawingArea,
       formattedSeries,
@@ -159,6 +159,7 @@ export const selectorChartXAxis = createSelector(
       zoomMap,
       zoomOptions,
       getFilters,
+      preferStrictDomainInLineCharts,
     }),
 );
 
@@ -171,8 +172,18 @@ export const selectorChartYAxis = createSelector(
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
+    selectorPreferStrictDomainInLineCharts,
   ],
-  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters) =>
+  (
+    axis,
+    drawingArea,
+    formattedSeries,
+    seriesConfig,
+    zoomMap,
+    zoomOptions,
+    getFilters,
+    preferStrictDomainInLineCharts,
+  ) =>
     computeAxisValue({
       drawingArea,
       formattedSeries,
@@ -182,5 +193,24 @@ export const selectorChartYAxis = createSelector(
       zoomMap,
       zoomOptions,
       getFilters,
+      preferStrictDomainInLineCharts,
     }),
+);
+
+export const selectorChartAxis = createSelector(
+  [selectorChartXAxis, selectorChartYAxis, (_, axisId: AxisId) => axisId],
+  (xAxes, yAxes, axisId) => xAxes?.axis[axisId] ?? yAxes?.axis[axisId],
+);
+
+export const selectorChartRawAxis = createSelector(
+  [selectorChartRawXAxis, selectorChartRawYAxis, (state, axisId: AxisId) => axisId],
+  (xAxes, yAxes, axisId) => {
+    const axis = xAxes?.find((a) => a.id === axisId) ?? yAxes?.find((a) => a.id === axisId) ?? null;
+
+    if (!axis) {
+      return undefined;
+    }
+
+    return axis;
+  },
 );

@@ -9,8 +9,14 @@
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
     "disableVoronoi": { "description": "If true, the voronoi interaction are ignored." },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "highlightedAxis": {
+      "description": "The controlled axis highlight. Identified by the axis id, and data index."
     },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
@@ -33,6 +39,10 @@
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
+    "onHighlightedAxisChange": {
+      "description": "The function called when the pointer position corresponds to a new axis data item. This update can either be caused by a pointer movement, or an axis update. In case of multiple axes, the function is called if at least one axis is updated. The argument contains the identifier for all axes with a <code>data</code> property.",
+      "typeDescriptions": { "axisItems": "The array of axes item identifiers." }
+    },
     "onItemClick": {
       "description": "Callback fired when clicking close to an item. This is only available for scatter plot for now.",
       "typeDescriptions": {
@@ -52,6 +62,8 @@
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },
+    "slotProps": { "description": "The props for the slots." },
+    "slots": { "description": "Slots to customize charts&#39; components." },
     "voronoiMaxRadius": {
       "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
     },

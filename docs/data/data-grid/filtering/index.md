@@ -149,14 +149,27 @@ const columns = [
 
 ## Ignore diacritics (accents)
 
-You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).
+When filtering, diacritics—accented letters such as _é_ or _à_—are considered distinct from their standard counterparts (_e_ and _a_).
+This can lead to a poor experience when users expect them to be treated as equivalent.
+
+If your dataset includes diacritics that need to be ignored, you can pass the `ignoreDiacritics` prop to the Data Grid:
+
+```tsx
+<DataGrid ignoreDiacritics />
+```
+
+:::info
+The `ignoreDiacritics` prop affects all columns and filter types, including [standard filters](/x/react-data-grid/filtering/), [quick filters](/x/react-data-grid/filtering/quick-filter/), and [header filters](/x/react-data-grid/filtering/header-filters/).
+:::
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the filtering feature.
+The reference below describes the relevant functions.
+See [API object](/x/react-data-grid/api-object/) for more details.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the Data Grid.
+This API should only be used as a last resort when the Data Grid's built-in props aren't sufficient for your specific use case.
 :::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

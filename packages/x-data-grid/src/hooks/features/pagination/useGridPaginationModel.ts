@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -232,8 +233,9 @@ export const useGridPaginationModel = (
 
     const dimensions = apiRef.current.getRootDimensions();
 
-    const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / rowHeight,
+    const maximumPageSizeWithoutScrollBar = Math.max(
+      1,
+      Math.floor(dimensions.viewportInnerSize.height / rowHeight),
     );
 
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);

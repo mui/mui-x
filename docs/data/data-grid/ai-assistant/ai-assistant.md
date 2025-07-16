@@ -72,9 +72,9 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 
    ```ts
    fastify.register(proxy, {
-     upstream: 'https://api.mui.com',
+     upstream: 'https://backend.mui.com',
      prefix: '/api/my-custom-path',
-     rewritePrefix: '/v1/datagrid/prompt',
+     rewritePrefix: '/api/v1/datagrid/prompt',
      replyOptions: {
        rewriteRequestHeaders: (_, headers) => ({
          ...headers,
