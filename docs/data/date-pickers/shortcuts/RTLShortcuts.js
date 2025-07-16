@@ -1,8 +1,19 @@
-// eslint-disable-next-line no-restricted-imports
-import { LocalizationProvider, StaticDateTimePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import * as React from 'react';
 import dayjs from 'dayjs';
+import { prefixer } from 'stylis';
+import rtlPlugin from '@mui/stylis-plugin-rtl';
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+
+// Create rtl cache
+const cacheRtl = createCache({
+  key: 'picker-shortcuts-rtl-demo',
+  stylisPlugins: [prefixer, rtlPlugin],
+});
 
 const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
   // Helper to find the nth weekday in a given month.
@@ -67,16 +78,26 @@ const shortcutsItems = [
   },
 ];
 
-export default function StaticDateTimePickerShortcuts() {
+export default function RTLShortcuts() {
+  // Inherit the theme from the docs site (dark/light mode)
+  const existingTheme = useTheme();
+
+  const theme = React.useMemo(
+    () =>
+      createTheme({}, existingTheme, {
+        direction: 'rtl',
+      }),
+    [existingTheme],
+  );
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticDateTimePicker
-        slotProps={{
-          shortcuts: {
-            items: shortcutsItems,
-          },
-        }}
-      />
-    </LocalizationProvider>
+    <CacheProvider value={cacheRtl}>
+      <ThemeProvider theme={theme}>
+        <div dir="rtl">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <StaticDatePicker slotProps={{ shortcuts: { items: shortcutsItems } }} />
+          </LocalizationProvider>
+        </div>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
