@@ -82,6 +82,9 @@ You can test all configuration options in the following demo:
 You can set a minimum bar size with the `minBarSize` property.
 This property is useful when you want to ensure that bars are always visible, even when the data is sparse or the chart is small.
 
+The `minBarSize` property is ignored if the series value is `null` or `0`.
+It also doesn't work with stacked series.
+
 {{"demo": "MinBarSize.js"}}
 
 ## Customization

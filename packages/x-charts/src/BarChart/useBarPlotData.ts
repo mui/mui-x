@@ -183,9 +183,16 @@ function getValueCoordinate(
   isVertical: boolean,
   minValueCoord: number,
   maxValueCoord: number,
-  baseValue: number,
+  baseValue: number | null,
   minBarSize: number,
 ): { barSize: number; startCoordinate: number } {
+  if (baseValue === 0 || baseValue == null) {
+    return {
+      barSize: 0,
+      startCoordinate: minValueCoord,
+    };
+  }
+
   const isSizeLessThanMin = maxValueCoord - minValueCoord < minBarSize;
   const barSize = isSizeLessThanMin ? minBarSize : maxValueCoord - minValueCoord;
 

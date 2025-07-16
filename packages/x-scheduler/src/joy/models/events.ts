@@ -30,4 +30,16 @@ export interface CalendarEvent {
   resource?: CalendarResourceId;
 }
 
-export type CalendarEventColor = 'primary' | 'mauve' | 'violet' | 'cyan' | 'jade' | 'red';
+export type CalendarEventColor =
+  | 'primary'
+  | 'mauve'
+  | 'violet'
+  | 'cyan'
+  | 'jade'
+  | 'red'
+  | 'lime'
+  | 'orange'
+  | 'yellow'
+  | 'pink'
+  | 'indigo'
+  | 'blue';
