@@ -206,11 +206,11 @@ function generateClipPath(
 
     const bR = Math.min(borderRadius, height / 2);
     if (hasPositive) {
-      return `M${Math.min(xOrigin, x + bR)},${y} h${Math.max(0, width - bR)} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-Math.max(0, width - bR)} Z`;
+      return `M${Math.min(xOrigin, x - bR)},${y} h${width} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-width} Z`;
     }
 
     if (hasNegative) {
-      return `M${Math.max(xOrigin, x + width - bR)},${y} h${-Math.max(0, width - bR)} a${bR},${bR} 0 0 0 ${-bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${Math.max(0, width - bR)} Z`;
+      return `M${Math.max(xOrigin, x + width + bR)},${y} h${-width} a${bR},${bR} 0 0 0 ${-bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${width} Z`;
     }
   }
 
