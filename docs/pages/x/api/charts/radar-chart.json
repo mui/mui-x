@@ -41,7 +41,13 @@
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
-    "onAreaClick": { "type": { "name": "func" } },
+    "onAreaClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
@@ -56,7 +62,13 @@
         "describedArgs": ["highlightedItem"]
       }
     },
-    "onMarkClick": { "type": { "name": "func" } },
+    "onMarkClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"

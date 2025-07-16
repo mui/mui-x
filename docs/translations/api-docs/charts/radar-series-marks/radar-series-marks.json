@@ -6,7 +6,7 @@
       "description": "Callback fired when a mark is clicked.",
       "typeDescriptions": {
         "event": "The event source of the callback.",
-        "radarItemIdentifier": "The line item identifier."
+        "radarItemIdentifier": "The radar item identifier."
       }
     },
     "seriesId": {

@@ -1,8 +1,20 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "onAreaClick": { "type": { "name": "func" } },
-    "onMarkClick": { "type": { "name": "func" } },
+    "onAreaClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
+    "onMarkClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
     "seriesId": { "type": { "name": "string" } }
   },
   "name": "RadarSeriesPlot",
