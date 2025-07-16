@@ -193,7 +193,9 @@ RadarChart.propTypes = {
     }),
   ]),
   /**
-   * Callback fired when an area element is clicked.
+   * Callback fired when an area is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onAreaClick: PropTypes.func,
   /**
@@ -210,7 +212,9 @@ RadarChart.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
-   * Callback fired when a line element is clicked.
+   * Callback fired when a mark is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onMarkClick: PropTypes.func,
   /**

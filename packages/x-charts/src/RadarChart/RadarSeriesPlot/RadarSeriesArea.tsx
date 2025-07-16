@@ -93,7 +93,7 @@ RadarSeriesArea.propTypes = {
   /**
    * Callback fired when an area is clicked.
    * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
-   * @param {RadarItemIdentifier} radarItemIdentifier The line item identifier.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onItemClick: PropTypes.func,
   /**
