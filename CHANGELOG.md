@@ -52,8 +52,8 @@ Same changes as in `@mui/x-date-pickers@8.9.0`.
 - [charts] Improve scatter chart pointer move performance (#18775) @bernardobelchior
 - [charts] Simplify radar internal hooks (#18760) @alexfauquette
 - [charts] `minBarSize` now ignores `0` and `null` values (#18816) @JCQuintas
-- [charts] Fix y-axis tick label overlap when using log scale (#18744) @bernardobelchior 
-- [charts] Expose <ChartType>Series type for all chart types (#18805) @bernardobelchior 
+- [charts] Fix y-axis tick label overlap when using log scale (#18744) @bernardobelchior
+- [charts] Expose <ChartType>Series type for all chart types (#18805) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
