@@ -1,3 +1,4 @@
+/* eslint-disable id-denylist,@typescript-eslint/no-shadow */
 import { NodeBenchmarkRunner, VitestRunner } from 'vitest/runners';
 import { Benchmark, BenchmarkResult, BenchTask, RunnerTestSuite, Suite } from 'vitest';
 import { getBenchFn, getBenchOptions } from 'vitest/suite';
