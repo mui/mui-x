@@ -10,6 +10,7 @@ import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import { TimeGridEvent } from '../event';
 import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
+import { TimeGridRoot } from '../root';
 
 const adapter = getAdapter();
 
@@ -25,12 +26,13 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     value,
     startTime,
     endTime,
+    children,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const { onEventChange, setPlaceholder } = useTimeGridRootContext();
+  const { onEventChange, setPlaceholder, placeholder } = useTimeGridRootContext();
 
   const contextValue: TimeGridColumnContext = React.useMemo(
     () => ({
@@ -41,7 +43,33 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     [value, startTime, endTime],
   );
 
-  const props = React.useMemo(() => ({ role: 'gridcell' }), []);
+  const columnPlaceholder = React.useMemo(() => {
+    if (placeholder == null) {
+      return null;
+    }
+
+    if (
+      adapter.isBefore(placeholder.start, contextValue.start) ||
+      adapter.isAfter(placeholder.end, contextValue.end)
+    ) {
+      return null;
+    }
+
+    return placeholder;
+  }, [contextValue.start, contextValue.end, placeholder]);
+
+  const resolvedChildren = React.useMemo(() => {
+    if (!React.isValidElement(children) && typeof children === 'function') {
+      return children({ placeholder: columnPlaceholder });
+    }
+
+    return children;
+  }, [children, columnPlaceholder]);
+
+  const props = React.useMemo(
+    () => ({ role: 'gridcell', children: resolvedChildren }),
+    [resolvedChildren],
+  );
 
   const state: TimeGridColumn.State = React.useMemo(() => ({}), []);
 
@@ -70,7 +98,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
           input: location.current.input,
         });
 
-        setPlaceholder({ start, end });
+        setPlaceholder({ start, end, id: data.id });
       },
       onDrop: ({ source, location }) => {
         const data = source.data as unknown as TimeGridEvent.EventDragData;
@@ -96,7 +124,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 export namespace TimeGridColumn {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {
+  export interface Props extends Omit<BaseUIComponentProps<'div', State>, 'children'> {
     /**
      * The value of the column.
      */
@@ -113,6 +141,15 @@ export namespace TimeGridColumn {
      * @defaultValue 23:59:59
      */
     endTime?: SchedulerValidDate;
+    /**
+     * The children of the component.
+     * If a function is provided, it will be called with the column's placeholder as its parameter.
+     */
+    children?: React.ReactNode | ((parameters: ChildrenParameters) => React.ReactNode);
+  }
+
+  export interface ChildrenParameters {
+    placeholder: TimeGridRoot.EventData | null;
   }
 }
 

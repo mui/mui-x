@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react/popover';
-import { CalendarEvent } from '../../models/events';
+import { CalendarEvent, CalendarEventId } from '../../models/events';
 import { EventPopover } from '../../event-popover/EventPopover';
 import { selectors } from '../../event-calendar/store';
 import { useEventCalendarStore } from '../hooks/useEventCalendarStore';
@@ -59,7 +59,7 @@ export function EventPopoverProvider({
   );
 
   const handleEventDelete = React.useCallback(
-    (deletedEventId: string) => {
+    (deletedEventId: CalendarEventId) => {
       const prevEvents = store.state.events;
       const updatedEvents = prevEvents.filter((ev) => ev.id !== deletedEventId);
 

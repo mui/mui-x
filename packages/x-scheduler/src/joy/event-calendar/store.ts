@@ -1,7 +1,7 @@
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { createSelector, createSelectorMemoized, Store } from '../../base-ui-copy/utils/store';
 import { SchedulerValidDate } from '../../primitives/models';
-import { CalendarEvent } from '../models/events';
+import { CalendarEvent, CalendarEventId } from '../models/events';
 import { CalendarResource, CalendarResourceId } from '../models/resource';
 import { ViewType } from '../models/views';
 
@@ -49,5 +49,8 @@ export const selectors = {
         return map.get(dayKey) || [];
       };
     },
+  ),
+  getEventById: createSelector((state: State, eventId: CalendarEventId) =>
+    state.events.find((event) => event.id === eventId),
   ),
 };

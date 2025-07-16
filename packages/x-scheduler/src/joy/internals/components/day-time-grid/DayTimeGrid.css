@@ -183,13 +183,3 @@
 .DayTimeGridAllDayEventsCell[data-weekend] {
   background: var(--weekend-background);
 }
-
-.TimeGridEventPlaceholder {
-  position: absolute;
-  top: var(--y-position);
-  bottom: calc(100% - var(--y-position) - var(--height));
-  left: 0;
-  right: 0;
-  border: 1px solid red;
-  z-index: 1;
-}

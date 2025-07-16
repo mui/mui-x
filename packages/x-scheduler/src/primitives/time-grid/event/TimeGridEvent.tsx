@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
@@ -10,7 +11,6 @@ import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
 import { SchedulerValidDate } from '../../models';
 import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
-import { getTimeGridEventPosition } from '../../utils/date-utils';
 
 const adapter = getAdapter();
 
@@ -41,11 +41,27 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
 
   const style = React.useMemo(() => {
-    const position = getTimeGridEventPosition({ adapter, columnStart, columnEnd, start, end });
+    const getMinutes = (date: SchedulerValidDate) =>
+      adapter.getHours(date) * 60 + adapter.getMinutes(date);
+
+    const minutesInColumn = getMinutes(columnEnd) - getMinutes(columnStart);
+
+    const isStartingBeforeColumnStart = adapter.isBefore(start, columnStart);
+    const isEndingAfterColumnEnd = adapter.isAfter(end, columnEnd);
+    const startTime = isStartingBeforeColumnStart ? 0 : getMinutes(start) - getMinutes(columnStart);
+    const endTime = isEndingAfterColumnEnd
+      ? minutesInColumn
+      : getMinutes(end) - getMinutes(columnStart);
+
+    const yPositionInt = isStartingBeforeColumnStart ? 0 : (startTime / minutesInColumn) * 100;
+
+    const heightInt = isEndingAfterColumnEnd
+      ? 100 - yPositionInt
+      : ((endTime - startTime) / minutesInColumn) * 100;
 
     return {
-      [TimeGridEventCssVars.yPosition]: position.yPosition,
-      [TimeGridEventCssVars.height]: position.height,
+      [TimeGridEventCssVars.yPosition]: `${yPositionInt}%`,
+      [TimeGridEventCssVars.height]: `${heightInt}%`,
     } as React.CSSProperties;
   }, [columnStart, columnEnd, start, end]);
 
@@ -69,6 +85,9 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           end,
           position: getCursorPositionRelativeToElement({ ref, input }),
         };
+      },
+      onGenerateDragPreview: ({ nativeSetDragImage }) => {
+        disableNativeDragPreview({ nativeSetDragImage });
       },
       onDragStart: () => setIsMoving(true),
       onDrop: () => setIsMoving(false),

@@ -4,8 +4,8 @@ import type { TimeGridRoot } from './TimeGridRoot';
 
 export interface TimeGridRootContext {
   onEventChange: (data: TimeGridRoot.EventData) => void;
-  placeholder: TimeGridRoot.PlaceholderData | null;
-  setPlaceholder: (placeholder: TimeGridRoot.PlaceholderData | null) => void;
+  placeholder: TimeGridRoot.EventData | null;
+  setPlaceholder: (placeholder: TimeGridRoot.EventData | null) => void;
 }
 
 export const TimeGridRootContext = React.createContext<TimeGridRootContext | undefined>(undefined);

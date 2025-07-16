@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { Popover } from '@base-ui-components/react/popover';
 import { useId } from '@base-ui-components/react/utils';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
@@ -22,7 +21,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     ariaLabelledBy,
     variant,
     className,
-    onEventClick,
     id: idProp,
     ...other
   } = props;
@@ -80,26 +78,24 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   ]);
 
   return (
-    <div
+    <TimeGrid.Event
       ref={forwardedRef}
       id={id}
-      className={clsx('EventContainer', className, getColorClassName({ resource: eventResource }))}
+      className={clsx(
+        'EventContainer',
+        'EventCard',
+        `EventCard--${variant}`,
+        (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+        className,
+        getColorClassName({ resource: eventResource }),
+      )}
+      start={eventProp.start}
+      end={eventProp.end}
+      eventId={eventProp.id}
+      aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
     >
-      <Popover.Trigger
-        className={clsx(
-          'EventCard',
-          `EventCard--${variant}`,
-          (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
-        )}
-        aria-labelledby={`${ariaLabelledBy} ${id}`}
-        onClick={(event) => onEventClick?.(event, eventProp)}
-        render={
-          <TimeGrid.Event start={eventProp.start} end={eventProp.end} eventId={eventProp.id}>
-            {renderContent}
-          </TimeGrid.Event>
-        }
-      />
-    </div>
+      {renderContent}
+    </TimeGrid.Event>
   );
 });

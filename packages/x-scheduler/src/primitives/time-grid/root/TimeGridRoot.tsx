@@ -23,15 +23,16 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
     ...elementProps
   } = componentProps;
 
-  const [placeholder, setPlaceholder] = React.useState<TimeGridRoot.PlaceholderData | null>(null);
+  const [placeholder, setPlaceholder] = React.useState<TimeGridRoot.EventData | null>(null);
 
   const handlePlaceholderChange = useEventCallback(
-    (newPlaceholder: TimeGridRoot.PlaceholderData | null) => {
+    (newPlaceholder: TimeGridRoot.EventData | null) => {
       if (
         newPlaceholder != null &&
         placeholder != null &&
         adapter.isEqual(newPlaceholder.start, placeholder.start) &&
-        adapter.isEqual(newPlaceholder.end, placeholder.end)
+        adapter.isEqual(newPlaceholder.end, placeholder.end) &&
+        placeholder.id === newPlaceholder.id
       ) {
         return;
       }
@@ -71,11 +72,6 @@ export namespace TimeGridRoot {
 
   export interface EventData {
     id: string | number;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
-  }
-
-  export interface PlaceholderData {
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }
