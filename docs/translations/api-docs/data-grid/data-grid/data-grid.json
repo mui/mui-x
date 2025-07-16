@@ -564,6 +564,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the AI assistant panel header"
     },
+    "aiAssistantPanelQueriesRemaining": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the AI assistant panel queries remaining text"
+    },
     "aiAssistantPanelSuggestions": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the AI assistant panel suggestions"

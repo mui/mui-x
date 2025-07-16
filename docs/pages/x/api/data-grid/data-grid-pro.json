@@ -1195,6 +1195,12 @@
       "isGlobal": false
     },
     {
+      "key": "aiAssistantPanelQueriesRemaining",
+      "className": "MuiDataGridPro-aiAssistantPanelQueriesRemaining",
+      "description": "Styles applied to the AI assistant panel queries remaining text.",
+      "isGlobal": false
+    },
+    {
       "key": "aiAssistantPanelSuggestions",
       "className": "MuiDataGridPro-aiAssistantPanelSuggestions",
       "description": "Styles applied to the AI assistant panel suggestions.",
