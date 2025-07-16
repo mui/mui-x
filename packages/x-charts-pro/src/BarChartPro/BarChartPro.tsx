@@ -37,7 +37,7 @@ export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -289,7 +289,7 @@ BarChartPro.propTypes = {
   onZoomChange: PropTypes.func,
   /**
    * The series to display in the bar chart.
-   * An array of [[BarSeriesType]] objects.
+   * An array of [[BarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

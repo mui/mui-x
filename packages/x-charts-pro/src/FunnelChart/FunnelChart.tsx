@@ -21,6 +21,7 @@ import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
 import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 
+export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends Omit<
       ChartContainerProProps<'funnel', FunnelChartPluginsSignatures>,
@@ -36,15 +37,16 @@ export interface FunnelChartProps
       | 'radiusAxis'
       | 'slots'
       | 'slotProps'
+      | 'experimentalFeatures'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     FunnelChartSlotExtension {
   /**
    * The series to display in the funnel chart.
-   * An array of [[FunnelSeriesType]] objects.
+   * An array of [[FunnelSeries]] objects.
    */
-  series: Readonly<MakeOptional<FunnelSeriesType, 'type'>[]>;
+  series: Readonly<FunnelSeries[]>;
   /**
    * The configuration of the category axis.
    *
@@ -303,7 +305,7 @@ FunnelChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the funnel chart.
-   * An array of [[FunnelSeriesType]] objects.
+   * An array of [[FunnelSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

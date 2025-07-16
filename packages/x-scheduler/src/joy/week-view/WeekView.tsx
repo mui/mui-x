@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { WeekViewProps } from './WeekView.types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
+import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
@@ -25,6 +25,6 @@ export const WeekView = React.memo(
       [getDayList, visibleDate],
     );
 
-    return <TimeGrid ref={forwardedRef} days={days} {...props} />;
+    return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
 );

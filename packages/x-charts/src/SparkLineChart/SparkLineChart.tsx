@@ -51,6 +51,7 @@ export interface SparkLineChartProps
     | 'colors'
     | 'slots'
     | 'slotProps'
+    | 'experimentalFeatures'
   > {
   /**
    * The xAxis configuration.

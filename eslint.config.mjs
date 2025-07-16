@@ -296,7 +296,8 @@ export default defineConfig(
   {
     files: [
       `docs/**/*.${EXTENSION_TS}`,
-      `packages/{!x-data-grid*|!x-license|!x-telemetry}/src/**/*.{test|spec}.${EXTENSION_TS}`,
+      `packages/*/src/**/*.test.${EXTENSION_TS}`,
+      `packages/*/src/**/*.spec.${EXTENSION_TS}`,
     ],
     ignores: ['**/*.d.ts'],
     rules: {

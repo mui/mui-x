@@ -92,6 +92,33 @@ The `trigger` prop of the `tooltip` slot accepts the following values:
 
 {{"demo": "RadarTooltip.js" }}
 
+## Click event
+
+Radar charts provides multiple click handlers:
+
+- `onAreaClick` for click on a specific area.
+- `onMarkClick` for click on a specific mark.
+- `onAxisClick` for a click anywhere in the chart
+
+They all provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
+) => {};
+```
+
+{{"demo": "RadarClick.js"}}
+
+:::info
+There is a slight difference between the `event` of `onAxisClick` and the others:
+
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+- For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
+
+:::
+
 ## Composition
 
 Use the `<RadarDataProvider />` to provide `series` and `radar` props for composition.

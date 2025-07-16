@@ -1,3 +1,4 @@
+export * from './ChartsLabel';
 export type { ChartsLabelMarkProps, ChartsLabelCustomMarkProps } from './ChartsLabelMark';
 export { ChartsLabelMark } from './ChartsLabelMark';
 export { labelClasses } from './labelClasses';

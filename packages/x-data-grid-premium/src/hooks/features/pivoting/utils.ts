@@ -8,6 +8,7 @@ import {
   GridSingleSelectColDef,
   gridStringOrNumberComparator,
   GridLocaleTextApi,
+  GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { getDefaultColTypeDef } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
@@ -107,12 +108,14 @@ export const getPivotedData = ({
   pivotModel,
   apiRef,
   pivotingColDef,
+  groupingColDef,
 }: {
   rows: GridRowModel[];
   columns: Map<string, GridColDef>;
   pivotModel: GridPivotModel;
   apiRef: RefObject<GridApiPremium>;
   pivotingColDef: DataGridPremiumProcessedProps['pivotingColDef'];
+  groupingColDef: DataGridPremiumProcessedProps['groupingColDef'];
 }): GridPivotingPropsOverrides => {
   const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
@@ -312,6 +315,15 @@ export const getPivotedData = ({
 
   createColumns(columnGroupingModel);
 
+  const groupingColDefOverrides = (params: GridGroupingColDefOverrideParams) => ({
+    ...(typeof groupingColDef === 'function' ? groupingColDef(params) : groupingColDef || {}),
+    ...{
+      filterable: false,
+      aggregable: false,
+      hideable: false,
+    },
+  });
+
   return {
     rows: visibleRows.length > 0 ? newRows : [],
     columns: pivotColumns,
@@ -320,11 +332,7 @@ export const getPivotedData = ({
     getAggregationPosition: defaultGetAggregationPosition,
     columnVisibilityModel,
     columnGroupingModel,
-    groupingColDef: {
-      filterable: false,
-      aggregable: false,
-      hideable: false,
-    },
+    groupingColDef: groupingColDefOverrides,
     headerFilters: false,
     disableAggregation: false,
     disableRowGrouping: false,

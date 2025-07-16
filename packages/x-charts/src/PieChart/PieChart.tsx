@@ -42,18 +42,19 @@ export interface PieChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
+export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
   extends Omit<
       ChartContainerProps<'pie', PieChartPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
    * The series to display in the pie chart.
-   * An array of [[PieSeriesType]] objects.
+   * An array of [[PieSeries]] objects.
    */
-  series: Readonly<MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[]>;
+  series: Readonly<PieSeries[]>;
   /**
    * If `true`, the legend is not rendered.
    */
@@ -242,7 +243,7 @@ PieChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the pie chart.
-   * An array of [[PieSeriesType]] objects.
+   * An array of [[PieSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
