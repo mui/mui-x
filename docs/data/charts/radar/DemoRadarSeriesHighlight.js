@@ -5,7 +5,6 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 
 import Box from '@mui/material/Box';
-
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
