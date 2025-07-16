@@ -58,7 +58,7 @@ Pinned rows do not support the following features:
 - row grouping
 - tree data
 - row reordering
-- master detail
+- master-detail row panels
 
 When there are pinned rows present in a Grid, you can still use these features with rows that aren't pinned.
 
