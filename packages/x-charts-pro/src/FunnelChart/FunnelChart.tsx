@@ -44,7 +44,7 @@ export interface FunnelChartProps
     FunnelChartSlotExtension {
   /**
    * The series to display in the funnel chart.
-   * An array of [[FunnelSeriesType]] objects.
+   * An array of [[FunnelSeries]] objects.
    */
   series: Readonly<FunnelSeries[]>;
   /**
@@ -305,7 +305,7 @@ FunnelChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the funnel chart.
-   * An array of [[FunnelSeriesType]] objects.
+   * An array of [[FunnelSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

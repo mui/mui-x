@@ -214,7 +214,7 @@ RadarChartPro.propTypes = {
   }).isRequired,
   /**
    * The series to display in the bar chart.
-   * An array of [[RadarSeriesType]] objects.
+   * An array of [[RadarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

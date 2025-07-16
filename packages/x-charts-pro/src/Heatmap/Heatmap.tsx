@@ -104,7 +104,7 @@ export interface HeatmapProps
   yAxis: Readonly<Omit<MakeOptional<YAxis<'band'>, 'scaleType'>, 'zoom'>[]>;
   /**
    * The series to display in the bar chart.
-   * An array of [[HeatmapSeriesType]] objects.
+   * An array of [[HeatmapSeries]] objects.
    */
   series: Readonly<HeatmapSeries[]>;
   /**
@@ -373,7 +373,7 @@ Heatmap.propTypes = {
   onHighlightChange: PropTypes.func,
   /**
    * The series to display in the bar chart.
-   * An array of [[HeatmapSeriesType]] objects.
+   * An array of [[HeatmapSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

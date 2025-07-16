@@ -23,7 +23,7 @@ export type RadarDataProviderProps<
 > & {
   /**
    * The series to display in the bar chart.
-   * An array of [[RadarSeriesType]] objects.
+   * An array of [[RadarSeries]] objects.
    */
   series: Readonly<RadarSeries>[];
   /**
