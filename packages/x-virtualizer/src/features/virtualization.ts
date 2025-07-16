@@ -119,7 +119,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     onRenderContextChange,
     onScrollChange,
 
-    focusedVirtualCell: focusedCell,
     rowBufferPx,
     columnBufferPx,
 
@@ -368,14 +367,15 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       : createRange(firstRowToRender, lastRowToRender);
 
     let virtualRowIndex = -1;
-    if (!isPinnedSection && focusedCell) {
-      if (focusedCell.rowIndex < firstRowToRender) {
-        rowIndexes.unshift(focusedCell.rowIndex);
-        virtualRowIndex = focusedCell.rowIndex;
+    const focusedVirtualCell = params.focusedVirtualCell();
+    if (!isPinnedSection && focusedVirtualCell) {
+      if (focusedVirtualCell.rowIndex < firstRowToRender) {
+        rowIndexes.unshift(focusedVirtualCell.rowIndex);
+        virtualRowIndex = focusedVirtualCell.rowIndex;
       }
-      if (focusedCell.rowIndex > lastRowToRender) {
-        rowIndexes.push(focusedCell.rowIndex);
-        virtualRowIndex = focusedCell.rowIndex;
+      if (focusedVirtualCell.rowIndex > lastRowToRender) {
+        rowIndexes.push(focusedVirtualCell.rowIndex);
+        virtualRowIndex = focusedVirtualCell.rowIndex;
       }
     }
 
@@ -452,7 +452,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       }
 
       const isVirtualFocusRow = rowIndexInPage === virtualRowIndex;
-      const isVirtualFocusColumn = focusedCell?.rowIndex === rowIndex;
+      const isVirtualFocusColumn = focusedVirtualCell?.rowIndex === rowIndex;
 
       const offsetLeft = computeOffsetLeft(
         columnPositions,
@@ -475,7 +475,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
           columns,
           firstColumnIndex,
           lastColumnIndex,
-          focusedColumnIndex: isVirtualFocusColumn ? focusedCell!.columnIndex : undefined,
+          focusedColumnIndex: isVirtualFocusColumn ? focusedVirtualCell!.columnIndex : undefined,
           isFirstVisible,
           isLastVisible,
           isVirtualFocusRow,

@@ -95,8 +95,6 @@ export function useGridVirtualizer(
   const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
   const { autoHeight } = rootProps;
 
-  const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
-
   const scrollReset = listView;
 
   // <DIMENSIONS>
@@ -205,7 +203,7 @@ export function useGridVirtualizer(
     ),
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
 
-    focusedVirtualCell,
+    focusedVirtualCell: useEventCallback(() => gridFocusedVirtualCellSelector(apiRef)),
     rowBufferPx: rootProps.rowBufferPx,
     columnBufferPx: rootProps.columnBufferPx,
 

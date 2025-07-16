@@ -103,7 +103,7 @@ export type VirtualizerParams = {
     nextRenderContext: RenderContext,
   ) => void;
 
-  focusedVirtualCell: FocusedCell | null;
+  focusedVirtualCell: () => FocusedCell | null;
 
   rowBufferPx: number;
   columnBufferPx: number;
