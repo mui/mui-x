@@ -85,7 +85,7 @@ Here is an example with horizontal shortcuts.
 
 {{"demo": "CustomizedRangeShortcuts.js", "bg": "inline"}}
 
-## Shortcuts in RTL
+## RTL example
 
 Like other customizations, shortcuts also respect the RTL direction setting.
 
