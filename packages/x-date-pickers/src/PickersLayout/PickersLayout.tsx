@@ -32,7 +32,7 @@ export const PickersLayoutRoot = styled('div', {
   slot: 'Root',
 })<{ ownerState: PickerLayoutOwnerState }>({
   display: 'grid',
-  gridAutoColumns: 'max-content auto max-content',
+  gridAutoColumns: 'max-content 1fr max-content',
   gridAutoRows: 'max-content auto max-content',
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
   variants: [
@@ -79,7 +79,7 @@ export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'ContentWrapper',
 })<{ ownerState: PickerLayoutOwnerState }>({
-  gridColumn: '2 / 4',
+  gridColumn: '1 / 4',
   gridRow: 2,
   display: 'flex',
   flexDirection: 'column',
