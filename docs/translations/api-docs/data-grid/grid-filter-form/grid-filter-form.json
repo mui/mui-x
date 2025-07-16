@@ -4,12 +4,17 @@
     "applyFilterChanges": {
       "description": "Callback called when the operator, column field or value is changed.",
       "typeDescriptions": {
-        "item": "The updated <a href='/x/api/data-grid/grid-filter-item/'>GridFilterItem</a>."
+        "item": {
+          "name": "item",
+          "description": "The updated <a href='/x/api/data-grid/grid-filter-item/'>GridFilterItem</a>."
+        }
       }
     },
     "applyMultiFilterOperatorChanges": {
       "description": "Callback called when the logic operator is changed.",
-      "typeDescriptions": { "operator": "The new logic operator." }
+      "typeDescriptions": {
+        "operator": { "name": "operator", "description": "The new logic operator." }
+      }
     },
     "columnInputProps": { "description": "Props passed to the column input component." },
     "columnsSort": {
@@ -18,7 +23,10 @@
     "deleteFilter": {
       "description": "Callback called when the delete button is clicked.",
       "typeDescriptions": {
-        "item": "The deleted <a href='/x/api/data-grid/grid-filter-item/'>GridFilterItem</a>."
+        "item": {
+          "name": "item",
+          "description": "The deleted <a href='/x/api/data-grid/grid-filter-item/'>GridFilterItem</a>."
+        }
       }
     },
     "deleteIconProps": { "description": "Props passed to the delete icon." },
@@ -27,7 +35,9 @@
     },
     "filterColumns": {
       "description": "Allows to filter the columns displayed in the filter form.",
-      "typeDescriptions": { "args": "The columns of the grid and name of field." }
+      "typeDescriptions": {
+        "args": { "name": "args", "description": "The columns of the grid and name of field." }
+      }
     },
     "focusElementRef": {
       "description": "A ref allowing to set imperative focus. It can be passed to the el"
