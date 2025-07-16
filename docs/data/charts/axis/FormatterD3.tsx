@@ -32,7 +32,7 @@ export default function FormatterD3() {
               const d3Text = (
                 context.scale as ScaleLogarithmic<number, number, never>
               ).tickFormat(
-                30,
+                context.tickNumber!,
                 'e',
               )(f);
 
