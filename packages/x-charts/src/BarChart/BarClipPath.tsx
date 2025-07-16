@@ -150,8 +150,8 @@ function generateClipPath(
     if (hasPositive && hasNegative) {
       const bR = Math.min(borderRadius, width / 2, height / 2);
       let path = '';
-      path += `M${x},${y + height / 2} v${-(height / 2 - bR)} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${height / 2 - bR} Z`;
-      path += `M${x},${y + height / 2} v${height / 2 - bR} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR * 2} a${bR},${bR} 0 0 0 ${bR},${-bR} v${-(height / 2 - bR)} Z`;
+      path += `M${x},${Math.round(y + height / 2)} v${-(height / 2 - bR)} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${height / 2 - bR} Z`;
+      path += `M${x},${Math.round(y + height / 2)} v${height / 2 - bR} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR * 2} a${bR},${bR} 0 0 0 ${bR},${-bR} v${-(height / 2 - bR)} Z`;
       return path;
     }
 
@@ -169,8 +169,8 @@ function generateClipPath(
     if (hasPositive && hasNegative) {
       const bR = Math.min(borderRadius, width / 2, height / 2);
       let path = '';
-      path += `M${x + width / 2},${y} h${width / 2 - bR} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-(width / 2 - bR)} Z`;
-      path += `M${x + width / 2},${y} h${-(width / 2 - bR)} a${bR},${bR} 0 0 0 ${-bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${width / 2 - bR} Z`;
+      path += `M${Math.round(x + width / 2)},${y} h${width / 2 - bR} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-(width / 2 - bR)} Z`;
+      path += `M${Math.round(x + width / 2)},${y} h${-(width / 2 - bR)} a${bR},${bR} 0 0 0 ${-bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${width / 2 - bR} Z`;
 
       return path;
     }
