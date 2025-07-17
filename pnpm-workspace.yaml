@@ -87,7 +87,6 @@ ignoredBuiltDependencies:
 onlyBuiltDependencies:
   - '@swc/core'
   - '@vvago/vale'
-  - core-js
   - esbuild
   - nx
   - sharp
