@@ -19,7 +19,10 @@ export const TimeGridScrollableContent = React.forwardRef(function TimeGridScrol
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (!ref.current) {
+    // TODO: Try to add the behavior back in the test
+    // For now, it causes the following error in JSDOM:
+    // "Auto scrolling has been attached to an element that appears not to be scrollable"
+    if (!ref.current || process.env.NODE_ENV === 'test') {
       return () => {};
     }
 
