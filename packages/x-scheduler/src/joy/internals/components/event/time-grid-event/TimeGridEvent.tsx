@@ -35,7 +35,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const isMoreThan90Minutes = durationMinutes >= 90;
   const titleLineCountRegularVariant = isMoreThan90Minutes ? 2 : 1;
 
-  const renderContent = React.useMemo(() => {
+  const content = React.useMemo(() => {
     if (isBetween30and60Minutes || isLessThan30Minutes) {
       return (
         <p

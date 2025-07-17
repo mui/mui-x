@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { CalendarEvent, CalendarEventId } from '../models/events';
-import { CalendarResource } from '../models/resource';
+import { Popover } from '@base-ui-components/react/popover';
+import { CalendarEvent, CalendarEventId } from '../../../models/events';
+import { CalendarResource } from '../../../models/resource';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -33,4 +34,18 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
    * Handles the close action of the popover.
    */
   onClose: () => void;
+}
+
+export interface EventPopoverContextValue {
+  startEditing: (event: React.MouseEvent, calendarEvent: CalendarEvent) => void;
+}
+
+export interface EventPopoverProviderProps {
+  containerRef: React.RefObject<HTMLElement | null>;
+  children: React.ReactNode;
+  onEventsChange?: (value: CalendarEvent[]) => void;
+}
+
+export interface EventPopoverTriggerProps extends Popover.Trigger.Props {
+  event: CalendarEvent;
 }
