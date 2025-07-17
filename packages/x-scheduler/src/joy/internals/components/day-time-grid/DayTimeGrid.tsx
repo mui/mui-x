@@ -158,27 +158,21 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     className="DayTimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
-                    {({ placeholder }) => (
-                      <React.Fragment>
-                        {getEventsStartingInDay(day).map((event) => (
-                          <EventPopoverTrigger
-                            key={event.id}
+                    {getEventsStartingInDay(day).map((event) => (
+                      <EventPopoverTrigger
+                        key={event.id}
+                        event={event}
+                        render={
+                          <TimeGridEvent
                             event={event}
-                            render={
-                              <TimeGridEvent
-                                event={event}
-                                eventResource={resourcesByIdMap.get(event.resource)}
-                                variant="regular"
-                                ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
-                              />
-                            }
+                            eventResource={resourcesByIdMap.get(event.resource)}
+                            variant="regular"
+                            ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
                           />
-                        ))}
-                        {placeholder !== null && (
-                          <TimeGridEventPlaceholder placeholder={placeholder} day={day} />
-                        )}
-                      </React.Fragment>
-                    )}
+                        }
+                      />
+                    ))}
+                    <TimeGridEventPlaceholder day={day} />
                   </TimeGrid.Column>
                 ))}
               </div>
@@ -190,19 +184,14 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 });
 
-function TimeGridEventPlaceholder({
-  placeholder,
-  day,
-}: {
-  placeholder: TimeGrid.Root.EventData;
-  day: SchedulerValidDate;
-}) {
+function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
+  const placeholder = TimeGrid.useColumnPlaceholder();
   const store = useEventCalendarStore();
-  const event = useSelector(store, selectors.getEventById, placeholder.id);
+  const event = useSelector(store, selectors.getEventById, placeholder?.id ?? null);
   const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
 
   const updatedEvent = React.useMemo(() => {
-    if (!event) {
+    if (!event || !placeholder) {
       return null;
     }
 

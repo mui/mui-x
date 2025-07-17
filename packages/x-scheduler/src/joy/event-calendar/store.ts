@@ -50,7 +50,7 @@ export const selectors = {
       };
     },
   ),
-  getEventById: createSelector((state: State, eventId: CalendarEventId) =>
+  getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
     state.events.find((event) => event.id === eventId),
   ),
 };
