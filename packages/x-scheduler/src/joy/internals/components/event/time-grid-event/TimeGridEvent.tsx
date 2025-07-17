@@ -82,20 +82,20 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       ref={forwardedRef}
       id={id}
       className={clsx(
+        className,
         'EventContainer',
         'EventCard',
         `EventCard--${variant}`,
         (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
-        className,
         getColorClassName({ resource: eventResource }),
       )}
+      aria-labelledby={`${ariaLabelledBy} ${id}`}
+      eventId={eventProp.id}
       start={eventProp.start}
       end={eventProp.end}
-      eventId={eventProp.id}
-      aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
     >
-      {renderContent}
+      {content}
     </TimeGrid.Event>
   );
 });

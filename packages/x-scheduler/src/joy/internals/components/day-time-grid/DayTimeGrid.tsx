@@ -160,14 +160,14 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   >
                     {({ placeholder }) => (
                       <React.Fragment>
-                        {getEventsStartingInDay(day).map((calendarEvent) => (
+                        {getEventsStartingInDay(day).map((event) => (
                           <EventPopoverTrigger
-                            event={calendarEvent}
-                            key={calendarEvent.id}
+                            key={event.id}
+                            event={event}
                             render={
                               <TimeGridEvent
-                                event={calendarEvent}
-                                eventResource={resourcesByIdMap.get(calendarEvent.resource)}
+                                event={event}
+                                eventResource={resourcesByIdMap.get(event.resource)}
                                 variant="regular"
                                 ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
                               />
