@@ -297,7 +297,7 @@ StaticDateTimePicker.propTypes = {
   onMonthChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
