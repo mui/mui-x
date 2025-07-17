@@ -22,7 +22,12 @@
     },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
-      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+      "typeDescriptions": {
+        "highlightedItem": {
+          "name": "highlightedItem",
+          "description": "The newly highlighted item."
+        }
+      }
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
     "series": {
