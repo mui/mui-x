@@ -5,6 +5,8 @@ import {
   GridRenderCellParams,
   GridEventListener,
   useGridApiRef,
+  GridAggregationFunction,
+  GRID_AGGREGATION_FUNCTIONS,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
 } from '@mui/x-data-grid-premium';
 import { Box, Typography, Rating, Chip, Paper } from '@mui/material';
@@ -118,7 +120,7 @@ const columns: GridColDef<Product>[] = [
     width: 150,
     type: 'number',
     flex: 1,
-    valueFormatter: (value: number) => (value != null ? `$${value}` : ''),
+    valueFormatter: (value: number) => (value != null ? `$${value}` : 'Profit:'),
   },
   {
     field: 'cost',
@@ -138,7 +140,7 @@ const columns: GridColDef<Product>[] = [
     flex: 1,
     renderCell: (params: GridRenderCellParams<Product, number>) =>
       params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID ? (
-        <Typography>Sales:</Typography>
+        <Typography variant="body2">Sales:</Typography>
       ) : (
         <Rating value={params.value} precision={0.1} readOnly size="small" />
       ),
@@ -175,6 +177,16 @@ function InventoryDashboard() {
     });
   }, [searchQuery, statusFilter]);
 
+  const profitAggregation: GridAggregationFunction<string, string | null> = {
+    apply: (params) => {
+      const totalProfit = products.reduce(
+        (acc, product) => acc + product.sales * (product.price - product.cost),
+        0,
+      );
+      return totalProfit != null ? `${totalProfit}` : null;
+    },
+  };
+
   return (
     <DemoContainer theme={inventoryTheme}>
       <ThemeProvider theme={inventoryTheme}>
@@ -210,10 +222,12 @@ function InventoryDashboard() {
                 apiRef={apiRef}
                 rows={filteredProducts}
                 columns={columns}
+                aggregationFunctions={{ ...GRID_AGGREGATION_FUNCTIONS, profit: profitAggregation }}
                 initialState={{
                   aggregation: {
                     model: {
                       sales: 'sum',
+                      cost: 'profit',
                     },
                   },
                   pagination: {
