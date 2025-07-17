@@ -105,13 +105,13 @@ export type PointerManagerOptions = {
  */
 export class PointerManager {
   /** Root element where pointer events are captured */
-  private root: HTMLElement;
+  private root!: HTMLElement;
 
   /** CSS touch-action property value applied to the root element */
-  private touchAction: string;
+  private touchAction!: string;
 
   /** Whether to use passive event listeners */
-  private passive: boolean;
+  private passive!: boolean;
 
   /** Whether to prevent interrupt events like blur or contextmenu */
   private preventEventInterruption: boolean = true;
@@ -124,6 +124,10 @@ export class PointerManager {
     new Set();
 
   public constructor(options: PointerManagerOptions) {
+    this.init(options);
+  }
+
+  private init(options: PointerManagerOptions) {
     this.root = (options.root ?? document.documentElement) as HTMLElement;
     this.touchAction = options.touchAction || 'auto';
     this.passive = options.passive !== false;
@@ -150,6 +154,26 @@ export class PointerManager {
     return () => {
       this.gestureHandlers.delete(handler);
     };
+  }
+
+  /**
+   * Update the root element if the provided element is inside a shadow root.
+   *
+   * This assumes all previous and future pointer events should be handled by the shadow root.
+   *
+   * @param {TargetElement} element - The target element to check
+   */
+  public updateRootIfNeeded(element: TargetElement): void {
+    if (element.getRootNode() instanceof ShadowRoot && element.getRootNode() !== this.root) {
+      // If the element is inside a shadow root, use the shadow root as the new root
+      this.destroy();
+      this.init({
+        root: element.getRootNode() as TargetElement,
+        touchAction: this.touchAction,
+        passive: this.passive,
+        preventEventInterruption: this.preventEventInterruption,
+      });
+    }
   }
 
   /**

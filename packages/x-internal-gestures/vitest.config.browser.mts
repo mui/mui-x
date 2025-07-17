@@ -4,6 +4,12 @@ import { mergeConfig } from 'vitest/config';
 import sharedConfig from '../../vitest.shared.mts';
 import { getTestName } from '../../scripts/getTestName.mts';
 
+declare global {
+  interface MUIEnv {
+    npm_lifecycle_script?: string;
+  }
+}
+
 export default mergeConfig(sharedConfig, {
   test: {
     name: getTestName(import.meta.url),
@@ -24,12 +30,16 @@ export default mergeConfig(sharedConfig, {
             : {}),
         },
         // V8 Coverage in browser mode is not supported yet outside of chromium
-        // {
-        //   browser: 'webkit',
-        // },
-        // {
-        //   browser: 'firefox',
-        // },
+        ...(process.env.npm_lifecycle_script?.includes('--coverage')
+          ? []
+          : [
+              {
+                browser: 'webkit',
+              },
+              {
+                browser: 'firefox',
+              },
+            ]),
       ],
     },
   },

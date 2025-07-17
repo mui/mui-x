@@ -297,18 +297,15 @@ export class GestureManager<
     element: T,
     options?: Partial<Pick<GestureNameToOptionsMap, GN>>,
   ): GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T> {
+    this.pointerManager.updateRootIfNeeded(element);
     // Handle array of gesture names
-    if (Array.isArray(gestureNames)) {
-      gestureNames.forEach((name) => {
-        const gestureOptions = options?.[name];
-        this.registerSingleGesture(name, element, gestureOptions!);
-      });
-      return element as GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T>;
+    if (!Array.isArray(gestureNames)) {
+      gestureNames = [gestureNames as GN];
     }
-
-    // Handle single gesture name
-    const gestureOptions = options?.[gestureNames];
-    this.registerSingleGesture(gestureNames, element, gestureOptions!);
+    gestureNames.forEach((name) => {
+      const gestureOptions = options?.[name];
+      this.registerSingleGesture(name, element, gestureOptions!);
+    });
     return element as GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T>;
   }
 
