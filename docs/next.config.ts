@@ -90,6 +90,7 @@ export default withDocsInfra({
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
+    NEXT_PUBLIC_MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
   },
   // @ts-ignore
   webpack: (config, options) => {
