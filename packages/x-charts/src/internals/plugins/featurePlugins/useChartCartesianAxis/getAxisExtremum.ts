@@ -46,7 +46,9 @@ export const getAxisExtremum = <T extends CartesianChartSeriesType>(
   formattedSeries: ProcessedSeries<T>,
   getFilters?: GetZoomAxisFilters,
 ) => {
-  const charTypes = Object.keys(seriesConfig).filter(isCartesianSeriesType);
+  const charTypes = Object.keys(seriesConfig)
+    .filter(isCartesianSeriesType)
+    .filter((t) => Object.keys(formattedSeries).includes(t));
 
   const extremums = charTypes.reduce<CartesianExtremumGetterResult>(
     (acc, charType) =>
