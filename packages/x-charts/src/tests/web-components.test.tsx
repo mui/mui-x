@@ -28,42 +28,23 @@ describe('Web Components', () => {
     );
   }
 
+  const mount = (container: HTMLElement, ReactComponent: React.ComponentType, props: any) => {
+    const view = render(<ReactComponent {...props} />, { container });
+    root = view;
+    return {
+      root,
+      ReactComponent,
+    };
+  };
+
   customElements.define(
     'web-component-shadow',
-    reactToWebComponent(
-      BasicLineChart,
-      {
-        shadow: 'open',
-      },
-      {
-        mount: (container, ReactComponent, props) => {
-          const view = render(<ReactComponent {...props} />, { container });
-          root = view;
-          return {
-            root,
-            ReactComponent,
-          };
-        },
-      },
-    ),
+    reactToWebComponent(BasicLineChart, { shadow: 'open' }, { mount }),
   );
 
   customElements.define(
     'web-component-regular',
-    reactToWebComponent(
-      BasicLineChart,
-      {},
-      {
-        mount: (container, ReactComponent, props) => {
-          const view = render(<ReactComponent {...props} />, { container });
-          root = view;
-          return {
-            root,
-            ReactComponent,
-          };
-        },
-      },
-    ),
+    reactToWebComponent(BasicLineChart, {}, { mount }),
   );
 
   it('should render the web component in regular mode', async () => {
