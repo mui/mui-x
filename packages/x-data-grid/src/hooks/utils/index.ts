@@ -7,4 +7,5 @@ export * from './useGridNativeEventListener';
 // eslint-disable-next-line import/export
 export * from './useFirstRender';
 export * from './useOnMount';
+export * from './useRunOncePerLoop';
 export type { RenderProp } from '@mui/x-internals/useComponentRenderer';
