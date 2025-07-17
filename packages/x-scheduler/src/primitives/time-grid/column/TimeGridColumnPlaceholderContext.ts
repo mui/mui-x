@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
 import type { TimeGridRoot } from '../root';
 
 export interface TimeGridColumnPlaceholderContext {

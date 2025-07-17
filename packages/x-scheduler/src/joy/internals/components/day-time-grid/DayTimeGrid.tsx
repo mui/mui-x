@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { Popover } from '@base-ui-components/react/popover';
 import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
