@@ -7,24 +7,31 @@ import { reactToWebComponent } from './web-components';
 describe('Web Components', () => {
   const { render } = createRenderer();
   let root: MuiRenderResult;
-  const onClick = vi.fn();
+  const onAxisClick = vi.fn();
+  const onButtonClick = vi.fn();
 
   afterEach(() => {
-    onClick.mockClear();
+    onAxisClick.mockClear();
+    onButtonClick.mockClear();
   });
 
   function BasicLineChart() {
     return (
-      <LineChart
-        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-        series={[
-          {
-            data: [2, 5.5, 2, 8.5, 1.5, 5],
-          },
-        ]}
-        height={300}
-        onAxisClick={onClick}
-      />
+      <React.Fragment>
+        <LineChart
+          xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+          series={[
+            {
+              data: [2, 5.5, 2, 8.5, 1.5, 5],
+            },
+          ]}
+          height={300}
+          onAxisClick={onAxisClick}
+        />
+        <button type="button" onClick={onButtonClick}>
+          Click Me
+        </button>
+      </React.Fragment>
     );
   }
 
@@ -37,14 +44,18 @@ describe('Web Components', () => {
     };
   };
 
+  const unmount = (ctx: { root: MuiRenderResult }) => {
+    ctx.root.unmount();
+  };
+
   customElements.define(
     'web-component-shadow',
-    reactToWebComponent(BasicLineChart, { shadow: 'open' }, { mount }),
+    reactToWebComponent(BasicLineChart, { shadow: 'open' }, { mount, unmount }),
   );
 
   customElements.define(
     'web-component-regular',
-    reactToWebComponent(BasicLineChart, {}, { mount }),
+    reactToWebComponent(BasicLineChart, {}, { mount, unmount }),
   );
 
   it('should render the web component in regular mode', async () => {
@@ -52,17 +63,21 @@ describe('Web Components', () => {
     regularElement.setAttribute('data-testid', 'regular');
     document.body.appendChild(regularElement);
 
+    onTestFinished(() => {
+      regularElement.remove();
+    });
+
     screen.getByTestId('regular');
 
     const circle = regularElement?.querySelector('circle');
 
-    expect(circle).toBeDefined();
+    expect(circle).toBeTruthy();
 
     const { user } = root;
 
     await user.click(circle!);
 
-    expect(onClick).toHaveBeenCalledWith(expect.anything(), {
+    expect(onAxisClick).toHaveBeenCalledWith(expect.anything(), {
       axisValue: 1,
       dataIndex: 0,
       seriesValues: {
@@ -76,24 +91,72 @@ describe('Web Components', () => {
     shadowElement.setAttribute('data-testid', 'shadow');
     document.body.appendChild(shadowElement);
 
+    onTestFinished(() => {
+      shadowElement.remove();
+    });
+
     screen.getByTestId('shadow');
 
-    expect(shadowElement.shadowRoot).toBeDefined();
+    expect(shadowElement.shadowRoot).toBeTruthy();
 
     const circle = shadowElement.shadowRoot?.querySelector('circle');
 
-    expect(circle).toBeDefined();
+    expect(circle).toBeTruthy();
 
     const { user } = root;
 
     await user.click(circle!);
 
-    expect(onClick).toHaveBeenCalledWith(expect.anything(), {
+    expect(onAxisClick).toHaveBeenCalledWith(expect.anything(), {
       axisValue: 1,
       dataIndex: 0,
       seriesValues: {
         'auto-generated-id-0': 2,
       },
     });
+  });
+
+  it('should not prevent clicks on buttons inside the web component in regular mode', async () => {
+    const regularElement = document.createElement('web-component-regular');
+    regularElement.setAttribute('data-testid', 'regular');
+    document.body.appendChild(regularElement);
+
+    onTestFinished(() => {
+      regularElement.remove();
+    });
+
+    screen.getByTestId('regular');
+
+    const button = regularElement?.querySelector('button');
+
+    expect(button).toBeTruthy();
+
+    const { user } = root;
+
+    await user.click(button!);
+
+    expect(onButtonClick).toHaveBeenCalled();
+  });
+
+  it('should not prevent clicks on buttons inside the web component in shadow mode', async () => {
+    const shadowElement = document.createElement('web-component-shadow');
+    shadowElement.setAttribute('data-testid', 'shadow');
+    document.body.appendChild(shadowElement);
+
+    onTestFinished(() => {
+      shadowElement.remove();
+    });
+
+    screen.getByTestId('shadow');
+
+    const button = shadowElement.shadowRoot?.querySelector('button');
+
+    expect(button).toBeTruthy();
+
+    const { user } = root;
+
+    await user.click(button!);
+
+    expect(onButtonClick).toHaveBeenCalled();
   });
 });

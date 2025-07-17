@@ -3,6 +3,8 @@ const connectedSymbol = Symbol.for('connected');
 const contextSymbol = Symbol.for('context');
 const propsSymbol = Symbol.for('props');
 
+// This function creates a custom web component that wraps a React component.
+// Adapted from https://github.com/bitovi/react-to-web-component/blob/b1372bfd7bc67fe49920db840f1ed9cf736b2724/packages/core/src/core.ts
 export function reactToWebComponent<Props extends { container?: HTMLElement }, Ctx>(
   ReactComponent: React.ComponentType<Props>,
   options: { shadow?: 'open' | 'closed' },
@@ -12,6 +14,7 @@ export function reactToWebComponent<Props extends { container?: HTMLElement }, C
       ReactComponent: React.ComponentType<Props>,
       props: Props,
     ) => Ctx;
+    unmount: (ctx: Ctx) => void;
   },
 ): CustomElementConstructor {
   class ReactWebComponent extends HTMLElement {
@@ -44,6 +47,15 @@ export function reactToWebComponent<Props extends { container?: HTMLElement }, C
     connectedCallback() {
       this[connectedSymbol] = true;
       this[renderSymbol]();
+    }
+
+    disconnectedCallback() {
+      this[connectedSymbol] = false;
+
+      if (this[contextSymbol]) {
+        renderer.unmount(this[contextSymbol]);
+      }
+      delete this[contextSymbol];
     }
 
     [renderSymbol]() {
