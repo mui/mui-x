@@ -38,13 +38,13 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   const ref = React.useRef<HTMLDivElement>(null);
   const { onEventChange, setPlaceholder, placeholder } = useTimeGridRootContext();
 
-  const start = React.useMemo(
+  const columnStart = React.useMemo(
     () =>
       startTime == null ? adapter.startOfDay(value) : mergeDateAndTime(adapter, value, startTime),
     [adapter, value, startTime],
   );
 
-  const end = React.useMemo(
+  const columnEnd = React.useMemo(
     () => (endTime == null ? adapter.endOfDay(value) : mergeDateAndTime(adapter, value, endTime)),
     [adapter, value, endTime],
   );
@@ -54,19 +54,22 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       return null;
     }
 
-    if (adapter.isBefore(placeholder.start, start) || adapter.isAfter(placeholder.end, end)) {
+    if (
+      adapter.isBefore(placeholder.start, columnStart) ||
+      adapter.isAfter(placeholder.end, columnEnd)
+    ) {
       return null;
     }
 
     return placeholder;
-  }, [start, end, placeholder]);
+  }, [adapter, columnStart, columnEnd, placeholder]);
 
   const contextValue: TimeGridColumnContext = React.useMemo(
     () => ({
-      start,
-      end,
+      start: columnStart,
+      end: columnEnd,
     }),
-    [value, startTime, endTime, columnPlaceholder],
+    [columnStart, columnEnd],
   );
 
   const placeholderContextValue: TimeGridColumnPlaceholderContext = React.useMemo(
@@ -123,7 +126,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         setPlaceholder(null);
       },
     });
-  }, [onEventChange, setPlaceholder, value]);
+  }, [adapter, onEventChange, setPlaceholder, value]);
 
   return (
     <TimeGridColumnContext.Provider value={contextValue}>
