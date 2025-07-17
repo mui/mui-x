@@ -9,7 +9,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { getColumnValues, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -76,11 +76,10 @@ describe('<DataGridPremium /> - State persistence', () => {
     it('should export the initial values of the models', async () => {
       render(<TestCase initialState={FULL_INITIAL_STATE} />);
 
-      await microtasks();
-
       const exportedState = apiRef.current?.exportState();
       expect(exportedState?.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState?.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+      await microtasks();
     });
 
     it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
@@ -97,16 +96,16 @@ describe('<DataGridPremium /> - State persistence', () => {
       await act(() => {
         apiRef.current?.setRowGroupingModel(['category']);
       });
-      await act(async () => {
+      act(() => {
         apiRef.current?.setAggregationModel({
           id: 'size',
         });
-        await microtasks();
       });
 
       const exportedState = apiRef.current?.exportState();
       expect(exportedState?.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState?.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+      await microtasks();
     });
 
     it('should export the current version of the exportable state when using exportOnlyDirtyModels', async () => {
@@ -114,16 +113,16 @@ describe('<DataGridPremium /> - State persistence', () => {
       await act(() => {
         apiRef.current?.setRowGroupingModel(['category']);
       });
-      await act(async () => {
+      act(() => {
         apiRef.current?.setAggregationModel({
           id: 'size',
         });
-        await microtasks();
       });
 
       const exportedState = apiRef.current?.exportState({ exportOnlyDirtyModels: true });
       expect(exportedState?.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState?.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+      await microtasks();
     });
 
     it('should export the controlled values of the models', async () => {
@@ -133,7 +132,6 @@ describe('<DataGridPremium /> - State persistence', () => {
           aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
         />,
       );
-      await microtasks();
 
       expect(apiRef.current?.exportState().rowGrouping).to.deep.equal(
         FULL_INITIAL_STATE.rowGrouping,
@@ -141,6 +139,7 @@ describe('<DataGridPremium /> - State persistence', () => {
       expect(apiRef.current?.exportState().aggregation).to.deep.equal(
         FULL_INITIAL_STATE.aggregation,
       );
+      await microtasks();
     });
 
     it('should export the controlled values of the models when using exportOnlyDirtyModels', async () => {
@@ -150,13 +149,13 @@ describe('<DataGridPremium /> - State persistence', () => {
           aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
         />,
       );
-      await microtasks();
       expect(apiRef.current?.exportState().rowGrouping).to.deep.equal(
         FULL_INITIAL_STATE.rowGrouping,
       );
       expect(apiRef.current?.exportState().aggregation).to.deep.equal(
         FULL_INITIAL_STATE.aggregation,
       );
+      await microtasks();
     });
   });
 
@@ -165,18 +164,19 @@ describe('<DataGridPremium /> - State persistence', () => {
       render(<TestCase />);
 
       act(() => apiRef.current?.restoreState(FULL_INITIAL_STATE));
-      await microtasks();
-      expect(getColumnValues(0)).to.deep.equal([
-        'Cat A (3)',
-        '',
-        '',
-        '',
-        'Cat B (3)',
-        '',
-        '',
-        '',
-        '',
-      ]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (3)',
+          '',
+          '',
+          '',
+          'Cat B (3)',
+          '',
+          '',
+          '',
+          '',
+        ]);
+      });
       expect(getColumnValues(1)).to.deep.equal([
         '3' /* Agg */,
         '0',
