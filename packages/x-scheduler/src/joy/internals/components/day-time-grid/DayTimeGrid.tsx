@@ -134,7 +134,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
             </div>
-            <div ref={bodyRef} className="DayTimeGridBody">
+            <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
               <div className="DayTimeGridScrollableContent">
                 <div className="DayTimeGridTimeAxis" aria-hidden="true">
                   {/* TODO: Handle DST days where there are not exactly 24 hours */}
@@ -185,7 +185,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   ))}
                 </div>
               </div>
-            </div>
+            </TimeGrid.ScrollableContent>
           </TimeGrid.Root>
         )}
       </EventPopoverProvider>

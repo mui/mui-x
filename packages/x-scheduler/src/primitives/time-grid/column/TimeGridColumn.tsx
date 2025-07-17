@@ -9,7 +9,11 @@ import { SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import { TimeGridEvent } from '../event';
-import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
+import {
+  EVENT_DRAG_PRECISION_MINUTE,
+  getCursorPositionRelativeToElement,
+  isDraggingTimeGridEvent,
+} from '../../utils/drag-utils';
 import { TimeGridRoot } from '../root';
 
 const adapter = getAdapter();
@@ -82,14 +86,12 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   React.useEffect(() => {
     return dropTargetForElements({
       element: ref.current!,
-      canDrop: ({ source }) => source.data.type === 'event',
+      canDrop: (arg) => isDraggingTimeGridEvent(arg.source.data),
       getData: () => ({ type: 'column' }),
-      onDrag: ({ source, location }) => {
-        if (source.data.type !== 'event') {
+      onDrag: ({ source: { data }, location }) => {
+        if (!isDraggingTimeGridEvent(data)) {
           return;
         }
-
-        const data = source.data as unknown as TimeGridEvent.EventDragData;
 
         const { start, end } = getEventDropDates({
           ref,
@@ -100,8 +102,10 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
         setPlaceholder({ start, end, id: data.id });
       },
-      onDrop: ({ source, location }) => {
-        const data = source.data as unknown as TimeGridEvent.EventDragData;
+      onDrop: ({ source: { data }, location }) => {
+        if (!isDraggingTimeGridEvent(data)) {
+          return;
+        }
 
         const { start, end } = getEventDropDates({
           ref,
@@ -172,7 +176,9 @@ function getEventDropDates({
   const eventTopPosition = position.y - data.position.y;
 
   const newStartMinuteInDay =
-    Math.round(((eventTopPosition / ref.current.offsetHeight) * 1440) / 15) * 15; // Round to nearest 15 minutes
+    Math.round(
+      ((eventTopPosition / ref.current.offsetHeight) * 1440) / EVENT_DRAG_PRECISION_MINUTE,
+    ) * EVENT_DRAG_PRECISION_MINUTE;
 
   // TODO: Avoid JS Date conversion
   const eventDuration =

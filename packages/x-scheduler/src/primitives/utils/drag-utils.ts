@@ -1,3 +1,7 @@
+import type { TimeGridEvent } from '../time-grid/event';
+
+export const EVENT_DRAG_PRECISION_MINUTE = 15;
+
 export function getCursorPositionRelativeToElement({
   ref,
   input,
@@ -14,4 +18,8 @@ export function getCursorPositionRelativeToElement({
   const y = clientY - pos.y;
 
   return { y };
+}
+
+export function isDraggingTimeGridEvent(data: any): data is TimeGridEvent.EventDragData {
+  return data.type === 'event' && data.source === 'TimeGridEvent';
 }

@@ -77,15 +77,14 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   React.useEffect(() => {
     return draggable({
       element: ref.current!,
-      getInitialData: ({ input }) => {
-        return {
-          type: 'event',
-          id: eventId,
-          start,
-          end,
-          position: getCursorPositionRelativeToElement({ ref, input }),
-        };
-      },
+      getInitialData: ({ input }) => ({
+        type: 'event',
+        source: 'TimeGridEvent',
+        id: eventId,
+        start,
+        end,
+        position: getCursorPositionRelativeToElement({ ref, input }),
+      }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
@@ -118,6 +117,7 @@ export namespace TimeGridEvent {
 
   export interface EventDragData {
     type: 'event';
+    source: 'TimeGridEvent';
     id: string | number;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
