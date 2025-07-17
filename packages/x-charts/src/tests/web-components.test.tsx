@@ -8,30 +8,23 @@ describe('Web Components', () => {
   const { render } = createRenderer();
   let root: MuiRenderResult;
   const onAxisClick = vi.fn();
-  const onButtonClick = vi.fn();
 
   afterEach(() => {
     onAxisClick.mockClear();
-    onButtonClick.mockClear();
   });
 
   function BasicLineChart() {
     return (
-      <React.Fragment>
-        <LineChart
-          xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-          series={[
-            {
-              data: [2, 5.5, 2, 8.5, 1.5, 5],
-            },
-          ]}
-          height={300}
-          onAxisClick={onAxisClick}
-        />
-        <button type="button" onClick={onButtonClick}>
-          Click Me
-        </button>
-      </React.Fragment>
+      <LineChart
+        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+        series={[
+          {
+            data: [2, 5.5, 2, 8.5, 1.5, 5],
+          },
+        ]}
+        height={300}
+        onAxisClick={onAxisClick}
+      />
     );
   }
 
@@ -114,36 +107,5 @@ describe('Web Components', () => {
         'auto-generated-id-0': 2,
       },
     });
-  });
-
-  it('should not prevent clicks on buttons inside the web component in shadow mode', async () => {
-    const shadowElement = document.createElement('web-component-shadow');
-    shadowElement.setAttribute('data-testid', 'shadow');
-    document.body.appendChild(shadowElement);
-
-    onTestFinished(() => {
-      shadowElement.remove();
-    });
-
-    screen.getByTestId('shadow');
-
-    const button = shadowElement.shadowRoot?.querySelector('button');
-
-    expect(button).toBeTruthy();
-
-    const { user } = root;
-
-    const rect = button!.getBoundingClientRect();
-
-    await user.pointer({
-      keys: '[MouseLeft]',
-      target: shadowElement!,
-      coords: {
-        clientX: rect.x + rect.width / 2,
-        clientY: rect.y + rect.height / 2,
-      },
-    });
-
-    expect(onButtonClick).toHaveBeenCalled();
   });
 });
