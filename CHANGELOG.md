@@ -9,13 +9,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jul 17, 2025_
 
-We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - ✨ Improve the drag and drop interaction for Data Grid [row reordering](https://mui.com/x/react-data-grid/row-ordering/) feature. It uses a drop indicator to point to the position the row would be moving to.
 
   https://github.com/user-attachments/assets/37284c4f-e8d4-4fc6-a6af-a780592905ef
   
+- 🚀 Improve Data Grid Pivoting and Aggregation performance
+
 - 📊 Add `minBarSize` to set a minimum height for bars
+Special thanks go out to the community members for their valuable contributions:
+@lauri865
 
 The following are all team members who have contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @noraleonte, @MBilalShafi
@@ -37,6 +41,7 @@ Same changes as in `@mui/x-data-grid@8.9.0`, plus:
 Same changes as in `@mui/x-data-grid-pro@8.9.0`, plus:
 
 - [DataGridPremium] Allow group column overrides with pivoting (#18765) @arminmeh
+- [DataGridPremium] Support sort-dependent aggregation and improve performance (#18348) @lauri865
 
 ### Date and Time Pickers
 
@@ -77,7 +82,7 @@ Same changes as in `@mui/x-tree-view@8.9.0`.
 
 ### Codemod
 
-#### `@mui/x-codemod@8.8.0`
+#### `@mui/x-codemod@8.9.0`
 
 Internal changes.
 
