@@ -27,6 +27,17 @@ export const selectors = {
   currentView: createSelector((state: State) => state.currentView),
   views: createSelector((state: State) => state.views),
   resources: createSelector((state: State) => state.resources),
+  visibleResourcesList: createSelectorMemoized(
+    (state: State) => state.resources,
+    (state: State) => state.visibleResources,
+    (resources, visibleResources) =>
+      resources
+        .filter(
+          (resource) =>
+            !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true,
+        )
+        .map((resource) => resource.id),
+  ),
   resourcesByIdMap: createSelectorMemoized(
     (state: State) => state.resources,
     (resources) => {
@@ -59,9 +70,5 @@ export const selectors = {
         return map.get(dayKey) || [];
       };
     },
-  ),
-  isResourceVisible: createSelector(
-    (state: State, resourceId: CalendarResourceId) =>
-      !state.visibleResources.has(resourceId) || state.visibleResources.get(resourceId) === true,
   ),
 };
