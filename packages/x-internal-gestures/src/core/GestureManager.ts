@@ -423,5 +423,6 @@ export class GestureManager<
     this.elementGestureMap.clear();
     this.activeGesturesRegistry.destroy();
     this.keyboardManager.destroy();
+    this.pointerManager.destroy();
   }
 }
