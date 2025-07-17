@@ -88,7 +88,14 @@
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": { "view": { "name": "view", "description": "The new view." } }
+      "typeDescriptions": {
+        "view": {
+          "name": "view",
+          "description": "The new view.",
+          "argType": "TView",
+          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
+        }
+      }
     },
     "openTo": {
       "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."

@@ -158,7 +158,14 @@
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": { "view": { "name": "view", "description": "The new view." } }
+      "typeDescriptions": {
+        "view": {
+          "name": "view",
+          "description": "The new view.",
+          "argType": "TView",
+          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
+        }
+      }
     },
     "open": { "description": "Control the popup or dialog open state." },
     "openTo": {
