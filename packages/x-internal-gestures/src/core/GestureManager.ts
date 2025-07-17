@@ -226,7 +226,7 @@ export class GestureManager<
    * @param gestureName - Name of the gesture whose state should be updated
    * @param element - The DOM element where the gesture is attached
    * @param state - New state to apply to the gesture
-   * @returns false if the state was successfully updated, false if the gesture wasn't found
+   * @returns True if the state was successfully updated, false if the gesture wasn't found
    *
    * @example
    * ```typescript

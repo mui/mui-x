@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import { LineChart } from '@mui/x-charts/LineChart';
 import { createRenderer, screen, type MuiRenderResult } from '@mui/internal-test-utils';
+import { isJSDOM } from 'test/utils/skipIf';
 import { reactToWebComponent } from './web-components';
 
-describe('Web Components', () => {
+describe.skipIf(isJSDOM)('Web Components', () => {
   const { render } = createRenderer();
   let root: MuiRenderResult;
   const onAxisClick = vi.fn();
