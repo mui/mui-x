@@ -9,12 +9,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jul 17, 2025_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
 
+- ✨ Improve the drag and drop interaction for Data Grid [row reordering](https://mui.com/x/react-data-grid/row-ordering/) feature. It uses a drop indicator to point to the position the row would be moving to.
+
+  https://github.com/user-attachments/assets/37284c4f-e8d4-4fc6-a6af-a780592905ef
+  
 - 📊 Add `minBarSize` to set a minimum height for bars
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @noraleonte
+@alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @noraleonte, @MBilalShafi
 
 ### Data Grid
 
@@ -24,7 +28,9 @@ Internal changes.
 
 #### `@mui/x-data-grid-pro@8.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.9.0`.
+Same changes as in `@mui/x-data-grid@8.9.0`, plus:
+
+-  [DataGridPro] Row reorder using drop indicator (#18627) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@8.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
