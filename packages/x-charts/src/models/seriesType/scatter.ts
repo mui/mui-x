@@ -16,6 +16,9 @@ export interface ScatterSeriesType
     CartesianSeriesType {
   type: 'scatter';
   data?: readonly ScatterValueType[];
+  /**
+   * Size of the markers in the scatter plot, in pixels.
+   */
   markerSize?: number;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
@@ -57,7 +60,7 @@ export interface ScatterSeriesType
   };
   preview?: {
     /**
-     * The size of the preview marker.
+     * The size of the preview marker in pixels.
      * @default 1
      */
     markerSize?: number;

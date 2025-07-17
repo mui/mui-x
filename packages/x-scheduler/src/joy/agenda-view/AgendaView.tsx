@@ -4,12 +4,11 @@ import clsx from 'clsx';
 import { useForkRef } from '@base-ui-components/react/utils';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
-import { CalendarEvent } from '../models/events';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
-import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
+import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import './AgendaView.css';
 
@@ -43,45 +42,45 @@ export const AgendaView = React.memo(
     return (
       <div ref={handleRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>
         <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
-          {({ onEventClick }) => (
-            <React.Fragment>
-              {days.map((day) => (
-                <div
-                  className="AgendaViewRow"
-                  key={day.day.toString()}
-                  id={`AgendaViewRow-${day.day.toString()}`}
-                >
-                  <div
-                    id={`DayHeaderCell-${day.day.toString()}`}
-                    className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
-                    aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
-                  >
-                    <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
-                    <div className="WeekDayCell">
-                      <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
-                        {adapter.format(day, 'weekday')}
-                      </span>
-                      <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
-                        {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="EventsList">
-                    {getEventsStartingInDay(day).map((event: CalendarEvent) => (
+          {days.map((day) => (
+            <div
+              className="AgendaViewRow"
+              key={day.day.toString()}
+              id={`AgendaViewRow-${day.day.toString()}`}
+            >
+              <div
+                id={`DayHeaderCell-${day.day.toString()}`}
+                className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
+                aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+              >
+                <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
+                <div className="WeekDayCell">
+                  <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
+                    {adapter.format(day, 'weekday')}
+                  </span>
+                  <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
+                    {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
+                  </span>
+                </div>
+              </div>
+              <div className="EventsList">
+                {getEventsStartingInDay(day).map((event) => (
+                  <EventPopoverTrigger
+                    key={event.id}
+                    event={event}
+                    render={
                       <DayGridEvent
-                        key={event.id}
                         event={event}
                         variant="compact"
                         eventResource={resourcesByIdMap.get(event.resource)}
                         ariaLabelledBy={`DayHeaderCell-${day.day.toString()}`}
-                        onEventClick={onEventClick}
                       />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </React.Fragment>
-          )}
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </EventPopoverProvider>
       </div>
     );

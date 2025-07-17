@@ -5,8 +5,7 @@ import Slider from '@mui/material/Slider';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 // Create sparse data where some bars would be very small
-const sparseData = [0.02, 5, 0.05, 7, 0.01, 6, -0.03];
-const categories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const sparseData = [0.02, 5, null, 7, 0.01, 0, -0.03];
 
 export default function MinBarSize() {
   const [minBarSize, setMinBarSize] = React.useState(10);
@@ -28,11 +27,11 @@ export default function MinBarSize() {
         onChange={handleChange}
         aria-labelledby="min-bar-size-slider"
         min={0}
-        max={200}
+        max={50}
         sx={{ width: 300 }}
       />
       <BarChart
-        xAxis={[{ data: categories, scaleType: 'band' }]}
+        xAxis={[{ data: sparseData.map((v) => `${v}`), scaleType: 'band' }]}
         series={[{ data: sparseData, minBarSize }]}
         height={300}
         width={400}

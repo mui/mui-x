@@ -178,6 +178,9 @@ PieArcPlot.propTypes = {
     outerRadius: PropTypes.number,
     paddingAngle: PropTypes.number,
   }),
+  /**
+   * The id of this series.
+   */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The radius between circle center and the beginning of the arc.
