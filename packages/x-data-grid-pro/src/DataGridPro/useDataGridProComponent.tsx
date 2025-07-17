@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
@@ -187,7 +186,5 @@ export const useDataGridProComponent = (
   useGridListView(apiRef, props);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
-  React.useEffect(() => {
-    apiRef.current.runAppliersForPendingProcessors();
-  });
+  apiRef.current.runAppliersForPendingProcessors();
 };

@@ -239,9 +239,7 @@ export const useDataGridPremiumComponent = (
   useGridPivotingExportState(apiRef);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
-  React.useEffect(() => {
-    apiRef.current.runAppliersForPendingProcessors();
-  });
+  apiRef.current.runAppliersForPendingProcessors();
 
   return props;
 };
