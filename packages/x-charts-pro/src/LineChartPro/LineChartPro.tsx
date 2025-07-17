@@ -183,6 +183,12 @@ LineChartPro.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preferStrictDomainInLineCharts: PropTypes.bool,
+  }),
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -296,7 +302,7 @@ LineChartPro.propTypes = {
   onZoomChange: PropTypes.func,
   /**
    * The series to display in the line chart.
-   * An array of [[LineSeriesType]] objects.
+   * An array of [[LineSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

@@ -88,36 +88,60 @@
     "getCellClassName": {
       "description": "Function that applies CSS classes dynamically on cells.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>.",
-        "string": "The CSS class to apply to the cell."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+        },
+        "string": { "name": "string", "description": "The CSS class to apply to the cell." }
       }
     },
     "getDetailPanelContent": {
       "description": "Function that returns the element to render in row detail.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "React.JSX.Element": "The row detail element."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+        },
+        "React.JSX.Element": {
+          "name": "React.JSX.Element",
+          "description": "The row detail element."
+        }
       }
     },
     "getEstimatedRowHeight": {
       "description": "Function that returns the estimated height for a row. Only works if dynamic row height is used. Once the row height is measured this value is discarded.",
       "typeDescriptions": {
-        "params": "With all properties from GridRowHeightParams.",
-        "number | null": "The estimated row height value. If <code>null</code> or <code>undefined</code> then the default row height, based on the density, is applied."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridRowHeightParams."
+        },
+        "number | null": {
+          "name": "number | null",
+          "description": "The estimated row height value. If <code>null</code> or <code>undefined</code> then the default row height, based on the density, is applied."
+        }
       }
     },
     "getRowClassName": {
       "description": "Function that applies CSS classes dynamically on rows.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-row-class-name-params/'>GridRowClassNameParams</a>.",
-        "string": "The CSS class to apply to the row."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-class-name-params/'>GridRowClassNameParams</a>."
+        },
+        "string": { "name": "string", "description": "The CSS class to apply to the row." }
       }
     },
     "getRowHeight": {
       "description": "Function that sets the row height per row.",
       "typeDescriptions": {
-        "params": "With all properties from GridRowHeightParams.",
-        "GridRowHeightReturnValue": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridRowHeightParams."
+        },
+        "GridRowHeightReturnValue": {
+          "name": "GridRowHeightReturnValue",
+          "description": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content."
+        }
       }
     },
     "getRowId": {
@@ -126,8 +150,11 @@
     "getRowSpacing": {
       "description": "Function that allows to specify the spacing between rows.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-row-spacing-params/'>GridRowSpacingParams</a>.",
-        "GridRowSpacing": "The row spacing values."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-spacing-params/'>GridRowSpacingParams</a>."
+        },
+        "GridRowSpacing": { "name": "GridRowSpacing", "description": "The row spacing values." }
       }
     },
     "hideFooter": { "description": "If <code>true</code>, the footer component is hidden." },
@@ -149,15 +176,27 @@
     "isCellEditable": {
       "description": "Callback fired when a cell is rendered, returns true if the cell is editable.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>.",
-        "boolean": "A boolean indicating if the cell is editable."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the cell is editable."
+        }
       }
     },
     "isRowSelectable": {
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "boolean": "A boolean indicating if the row is selectable."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the row is selectable."
+        }
       }
     },
     "keepNonExistentRowsSelected": {
@@ -180,261 +219,348 @@
     "onCellClick": {
       "description": "Callback fired when any cell is clicked.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onCellDoubleClick": {
       "description": "Callback fired when a double click event comes from a cell element.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onCellEditStart": {
       "description": "Callback fired when the cell turns to edit mode.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>.",
-        "event": "The event that caused this prop to be called."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+        },
+        "event": { "name": "event", "description": "The event that caused this prop to be called." }
       }
     },
     "onCellEditStop": {
       "description": "Callback fired when the cell turns to view mode.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>.",
-        "event": "The event that caused this prop to be called."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+        },
+        "event": { "name": "event", "description": "The event that caused this prop to be called." }
       }
     },
     "onCellKeyDown": {
       "description": "Callback fired when a keydown event comes from a cell element.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-cell-params/'>GridCellParams</a>."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onCellModesModelChange": {
       "description": "Callback fired when the <code>cellModesModel</code> prop changes.",
       "typeDescriptions": {
-        "cellModesModel": "Object containing which cells are in &quot;edit&quot; mode.",
-        "details": "Additional details for this callback."
+        "cellModesModel": {
+          "name": "cellModesModel",
+          "description": "Object containing which cells are in &quot;edit&quot; mode."
+        },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onClipboardCopy": {
       "description": "Callback called when the data is copied to the clipboard.",
-      "typeDescriptions": { "data": "The data copied to the clipboard." }
+      "typeDescriptions": {
+        "data": { "name": "data", "description": "The data copied to the clipboard." }
+      }
     },
     "onColumnHeaderClick": {
       "description": "Callback fired when a click event comes from a column header element.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnHeaderParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnHeaderParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnHeaderContextMenu": {
       "description": "Callback fired when a contextmenu event comes from a column header element.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnHeaderParams.",
-        "event": "The event object."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnHeaderParams."
+        },
+        "event": { "name": "event", "description": "The event object." }
       }
     },
     "onColumnHeaderDoubleClick": {
       "description": "Callback fired when a double click event comes from a column header element.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnHeaderParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnHeaderParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnHeaderEnter": {
       "description": "Callback fired when a mouse enter event comes from a column header element.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnHeaderParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnHeaderParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnHeaderLeave": {
       "description": "Callback fired when a mouse leave event comes from a column header element.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnHeaderParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnHeaderParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnHeaderOut": {
       "description": "Callback fired when a mouseout event comes from a column header element.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnHeaderParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnHeaderParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnHeaderOver": {
       "description": "Callback fired when a mouseover event comes from a column header element.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnHeaderParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnHeaderParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnOrderChange": {
       "description": "Callback fired when a column is reordered.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnOrderChangeParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnOrderChangeParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnResize": {
       "description": "Callback fired while a column is being resized.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnResizeParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnResizeParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnVisibilityModelChange": {
       "description": "Callback fired when the column visibility model changes.",
       "typeDescriptions": {
-        "model": "The new model.",
-        "details": "Additional details for this callback."
+        "model": { "name": "model", "description": "The new model." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onColumnWidthChange": {
       "description": "Callback fired when the width of a column is changed.",
       "typeDescriptions": {
-        "params": "With all properties from GridColumnResizeParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridColumnResizeParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onDataSourceError": {
       "description": "Callback fired when a data source request fails.",
-      "typeDescriptions": { "error": "The data source error object." }
+      "typeDescriptions": {
+        "error": { "name": "error", "description": "The data source error object." }
+      }
     },
     "onDensityChange": {
       "description": "Callback fired when the density changes.",
-      "typeDescriptions": { "density": "New density value." }
+      "typeDescriptions": { "density": { "name": "density", "description": "New density value." } }
     },
     "onFilterModelChange": {
       "description": "Callback fired when the Filter model changes before the filters are applied.",
       "typeDescriptions": {
-        "model": "With all properties from <a href='/x/api/data-grid/grid-filter-model/'>GridFilterModel</a>.",
-        "details": "Additional details for this callback."
+        "model": {
+          "name": "model",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-filter-model/'>GridFilterModel</a>."
+        },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onMenuClose": {
       "description": "Callback fired when the menu is closed.",
       "typeDescriptions": {
-        "params": "With all properties from GridMenuParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridMenuParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onMenuOpen": {
       "description": "Callback fired when the menu is opened.",
       "typeDescriptions": {
-        "params": "With all properties from GridMenuParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridMenuParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onPaginationMetaChange": {
       "description": "Callback fired when the pagination meta has changed.",
-      "typeDescriptions": { "paginationMeta": "Updated pagination meta." }
+      "typeDescriptions": {
+        "paginationMeta": { "name": "paginationMeta", "description": "Updated pagination meta." }
+      }
     },
     "onPaginationModelChange": {
       "description": "Callback fired when the pagination model has changed.",
       "typeDescriptions": {
-        "model": "Updated pagination model.",
-        "details": "Additional details for this callback."
+        "model": { "name": "model", "description": "Updated pagination model." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onPreferencePanelClose": {
       "description": "Callback fired when the preferences panel is closed.",
       "typeDescriptions": {
-        "params": "With all properties from GridPreferencePanelParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridPreferencePanelParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onPreferencePanelOpen": {
       "description": "Callback fired when the preferences panel is opened.",
       "typeDescriptions": {
-        "params": "With all properties from GridPreferencePanelParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridPreferencePanelParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onProcessRowUpdateError": {
       "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
-      "typeDescriptions": { "error": "The error thrown." }
+      "typeDescriptions": { "error": { "name": "error", "description": "The error thrown." } }
     },
     "onResize": {
       "description": "Callback fired when the Data Grid is resized.",
       "typeDescriptions": {
-        "containerSize": "With all properties from ElementSize.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "containerSize": {
+          "name": "containerSize",
+          "description": "With all properties from ElementSize."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onRowClick": {
       "description": "Callback fired when a row is clicked. Not called if the target clicked is an interactive element added by the built-in columns.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onRowCountChange": {
       "description": "Callback fired when the row count has changed.",
-      "typeDescriptions": { "count": "Updated row count." }
+      "typeDescriptions": { "count": { "name": "count", "description": "Updated row count." } }
     },
     "onRowDoubleClick": {
       "description": "Callback fired when a double click event comes from a row container element.",
       "typeDescriptions": {
-        "params": "With all properties from RowParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": { "name": "params", "description": "With all properties from RowParams." },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onRowEditStart": {
       "description": "Callback fired when the row turns to edit mode.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "event": "The event that caused this prop to be called."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+        },
+        "event": { "name": "event", "description": "The event that caused this prop to be called." }
       }
     },
     "onRowEditStop": {
       "description": "Callback fired when the row turns to view mode.",
       "typeDescriptions": {
-        "params": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>.",
-        "event": "The event that caused this prop to be called."
+        "params": {
+          "name": "params",
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-params/'>GridRowParams</a>."
+        },
+        "event": { "name": "event", "description": "The event that caused this prop to be called." }
       }
     },
     "onRowModesModelChange": {
       "description": "Callback fired when the <code>rowModesModel</code> prop changes.",
       "typeDescriptions": {
-        "rowModesModel": "Object containing which rows are in &quot;edit&quot; mode.",
-        "details": "Additional details for this callback."
+        "rowModesModel": {
+          "name": "rowModesModel",
+          "description": "Object containing which rows are in &quot;edit&quot; mode."
+        },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onRowSelectionModelChange": {
       "description": "Callback fired when the selection state of one or multiple rows changes.",
       "typeDescriptions": {
-        "rowSelectionModel": "With all the row ids GridSelectionModel.",
-        "details": "Additional details for this callback."
+        "rowSelectionModel": {
+          "name": "rowSelectionModel",
+          "description": "With all the row ids GridSelectionModel."
+        },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onSortModelChange": {
       "description": "Callback fired when the sort model changes before a column is sorted.",
       "typeDescriptions": {
-        "model": "With all properties from GridSortModel.",
-        "details": "Additional details for this callback."
+        "model": { "name": "model", "description": "With all properties from GridSortModel." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "pageSizeOptions": { "description": "Select the pageSize dynamically using the component UI." },
@@ -450,10 +576,13 @@
     "processRowUpdate": {
       "description": "Callback called before updating a row with new values in the row and cell editing.",
       "typeDescriptions": {
-        "newRow": "Row object with the new values.",
-        "oldRow": "Row object with the old values.",
-        "params": "Additional parameters.",
-        "Promise<R> | R": "The final values to update the row."
+        "newRow": { "name": "newRow", "description": "Row object with the new values." },
+        "oldRow": { "name": "oldRow", "description": "Row object with the old values." },
+        "params": { "name": "params", "description": "Additional parameters." },
+        "Promise<R> | R": {
+          "name": "Promise<R> | R",
+          "description": "The final values to update the row."
+        }
       }
     },
     "resizeThrottleMs": { "description": "The milliseconds throttle delay for resizing the grid." },
@@ -1152,6 +1281,11 @@
       "nodeName": "the root element",
       "conditions": "user selection is disabled"
     },
+    "row--beingDragged": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the row element",
+      "conditions": "it is being dragged (entire row)"
+    },
     "row--detailPanelExpanded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row",
@@ -1161,6 +1295,16 @@
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the floating special row reorder cell element",
       "conditions": "it is dragged"
+    },
+    "row--dropAbove": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the row element",
+      "conditions": "it is a drop target above"
+    },
+    "row--dropBelow": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the row element",
+      "conditions": "it is a drop target below"
     },
     "row--dynamicHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

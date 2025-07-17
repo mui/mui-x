@@ -762,6 +762,7 @@
   { "name": "useKeepGroupedColumnsHidden", "kind": "Variable" },
   { "name": "useOnMount", "kind": "Function" },
   { "name": "useRunOnce", "kind": "Variable" },
+  { "name": "useRunOncePerLoop", "kind": "Function" },
   { "name": "ValueOptions", "kind": "TypeAlias" },
   { "name": "virtualizationStateInitializer", "kind": "Variable" }
 ]

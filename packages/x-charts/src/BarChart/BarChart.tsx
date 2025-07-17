@@ -46,19 +46,20 @@ export interface BarChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
+export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginsSignatures>,
-      'series' | 'plugins' | 'zAxis'
+      'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the bar chart.
-   * An array of [[BarSeriesType]] objects.
+   * An array of [[BarSeries]] objects.
    */
-  series: Readonly<MakeOptional<BarSeriesType, 'type'>[]>;
+  series: Readonly<BarSeries[]>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -300,7 +301,7 @@ BarChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the bar chart.
-   * An array of [[BarSeriesType]] objects.
+   * An array of [[BarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

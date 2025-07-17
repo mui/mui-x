@@ -3,6 +3,7 @@
   "imports": ["import { ChartPrintExportOptions } from '@mui/x-charts-pro'"],
   "demos": "<ul><li><a href=\"https://mui.com/x/react-charts/export/#print-export-as-pdf\">Print export</a></li></ul>",
   "properties": {
+    "copyStyles": { "type": { "description": "boolean" }, "default": "true", "isProPlan": true },
     "fileName": {
       "type": { "description": "string" },
       "default": "The title of the document the chart belongs to",

@@ -5,7 +5,7 @@ import { ChartPrintExportOptions } from './useChartProExport.types';
 
 export function printChart(
   element: HTMLElement | SVGElement,
-  { fileName, onBeforeExport }: ChartPrintExportOptions = {},
+  { fileName, onBeforeExport, copyStyles = true }: ChartPrintExportOptions = {},
 ) {
   const printWindow = createExportIframe(fileName);
   const doc = ownerDocument(element);
@@ -21,7 +21,9 @@ export function printChart(
     const root =
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
-    await Promise.all(loadStyleSheets(printDoc, root));
+    if (copyStyles) {
+      await Promise.all(loadStyleSheets(printDoc, root));
+    }
 
     const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
     mediaQueryList.addEventListener('change', (mql) => {
