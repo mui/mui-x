@@ -25,6 +25,7 @@ import type {
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
+import { GridPremiumSlotProps } from './gridPremiumSlotProps';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
@@ -160,6 +161,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   aiAssistant: boolean;
+  /**
+   * If `true`, the charts integration feature is enabled.
+   * @default false
+   */
+  chartsIntegration: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -177,6 +183,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
   initialState?: GridInitialStatePremium;
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps?: GridPremiumSlotProps;
   /**
    * Set the row grouping model of the grid.
    */
@@ -328,4 +338,23 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
     promptContext: string,
     conversationId?: string,
   ) => Promise<PromptResponse>;
+  /**
+   * If `true`, the charts side panel is visible.
+   * @default false
+   */
+  chartsPanelOpen?: boolean;
+  /**
+   * Callback fired when the charts side panel open state changes.
+   * @param {boolean} chartsPanelOpen Whether the charts side panel is visible.
+   */
+  onChartsPanelOpenChange?: (chartsPanelOpen: boolean) => void;
+  /**
+   * The id of the active chart.
+   */
+  activeChartId?: string;
+  /**
+   * Callback fired when the active chart changes.
+   * @param {string} activeChartId The new active chart id.
+   */
+  onActiveChartIdChange?: (activeChartId: string) => void;
 }

@@ -42,6 +42,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
@@ -128,6 +129,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -249,6 +251,31 @@ const frFRGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  chartsNoCharts: 'Aucun graphique disponible',
+  chartsChartNotSelected: 'Sélectionnez un type de graphique pour configurer ses options',
+  chartsTabChart: 'Graphique',
+  chartsTabFields: 'Champs',
+  chartsTabCustomize: 'Personnaliser',
+  chartsCloseButton: 'Fermer la configuration des graphiques',
+  chartsSyncButtonLabel: 'Synchroniser le graphique',
+  chartsSearchPlaceholder: 'Rechercher des champs',
+  chartsSearchLabel: 'Rechercher des champs',
+  chartsSearchClear: 'Effacer la recherche',
+  chartsNoFields: 'Aucun champ',
+  chartsCategories: 'Catégories',
+  chartsSeries: 'Séries',
+  chartsMenuAddToCategories: 'Ajouter aux catégories',
+  chartsMenuAddToSeries: 'Ajouter aux séries',
+  chartsMenuMoveUp: 'Déplacer vers le haut',
+  chartsMenuMoveDown: 'Déplacer vers le bas',
+  chartsMenuMoveToTop: 'Déplacer en haut',
+  chartsMenuMoveToBottom: 'Déplacer en bas',
+  chartsMenuOptions: 'Options du champ',
+  chartsMenuRemove: 'Supprimer',
+  chartsDragToCategories: 'Faites glisser ici pour utiliser la colonne comme catégorie',
+  chartsDragToSeries: 'Faites glisser ici pour utiliser la colonne comme série',
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
