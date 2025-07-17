@@ -321,6 +321,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     const domEvent = new CustomEvent(eventName, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 

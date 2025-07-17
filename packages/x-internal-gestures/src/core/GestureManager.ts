@@ -214,6 +214,7 @@ export class GestureManager<
       detail: options,
       bubbles: false,
       cancelable: false,
+      composed: false,
     });
 
     element.dispatchEvent(event);
@@ -225,7 +226,7 @@ export class GestureManager<
    * @param gestureName - Name of the gesture whose state should be updated
    * @param element - The DOM element where the gesture is attached
    * @param state - New state to apply to the gesture
-   * @returns True if the state was successfully updated, false if the gesture wasn't found
+   * @returns false if the state was successfully updated, false if the gesture wasn't found
    *
    * @example
    * ```typescript
@@ -250,6 +251,7 @@ export class GestureManager<
       detail: state,
       bubbles: false,
       cancelable: false,
+      composed: false,
     });
 
     element.dispatchEvent(event);
@@ -297,7 +299,6 @@ export class GestureManager<
     element: T,
     options?: Partial<Pick<GestureNameToOptionsMap, GN>>,
   ): GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T> {
-    this.pointerManager.updateRootIfNeeded(element);
     // Handle array of gesture names
     if (!Array.isArray(gestureNames)) {
       gestureNames = [gestureNames as GN];
