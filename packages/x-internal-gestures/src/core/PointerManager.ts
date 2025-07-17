@@ -124,7 +124,7 @@ export class PointerManager {
     new Set();
 
   public constructor(options: PointerManagerOptions) {
-    this.root = (options.root ?? document.getRootNode()) as HTMLElement;
+    this.root = (options.root ?? document.documentElement) as HTMLElement;
     this.touchAction = options.touchAction || 'auto';
     this.passive = options.passive !== false;
     this.preventEventInterruption = options.preventEventInterruption !== false;
