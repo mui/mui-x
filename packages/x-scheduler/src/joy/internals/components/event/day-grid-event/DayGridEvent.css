@@ -23,6 +23,13 @@
   cursor: pointer;
 }
 
+.EventCard--allDay {
+  container-type: inline-size;
+  border-radius: var(--radius-3);
+  background-color: var(--event-background);
+  cursor: pointer;
+}
+
 .EventCard--compact .DayGridEventCardContent {
   margin: 0;
 }

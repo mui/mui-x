@@ -38,9 +38,18 @@
   scrollbar-color: transparent transparent;
 }
 
-.DayTimeGridAllDayEventsRow {
+.DayTimeGridAllDayEventsCell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-1);
   max-height: 84px;
+  overflow-y: auto;
+  scrollbar-color: initial initial;
+}
 
+.DayTimeGridAllDayEventsRow {
+  height: 'fit-content';
   > *:not(:last-child) {
     border-right: 1px solid var(--border-color);
   }

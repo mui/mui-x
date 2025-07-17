@@ -5,6 +5,7 @@ import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/uti
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
+import { DayGrid } from '../../../../primitives/day-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { CalendarEvent } from '../../../models/events';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
@@ -15,6 +16,7 @@ import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
 import { selectors } from '../../../event-calendar/store';
 import { EventPopoverProvider } from '../../utils/EventPopoverProvider';
 import './DayTimeGrid.css';
+import { DayGridEvent } from '../event';
 
 const adapter = getAdapter();
 
@@ -97,7 +99,39 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   </div>
                 ))}
               </div>
-              <div
+              <DayGrid.Root
+                className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsRow')}
+                role="row"
+                data-weekend={lastIsWeekend ? '' : undefined}
+              >
+                <div
+                  className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
+                  role="columnheader"
+                >
+                  {translations.allDay}
+                </div>
+                {days.map((day) => (
+                  <DayGrid.Cell
+                    key={day.day.toString()}
+                    className="DayTimeGridAllDayEventsCell"
+                    aria-labelledby={`DayTimeGridHeaderCell-${day.day.toString()}`}
+                    role="gridcell"
+                    data-weekend={isWeekend(adapter, day) ? '' : undefined}
+                  >
+                    {getEventsStartingInDay(day).map((eventProp) => (
+                      <DayGridEvent
+                        key={eventProp.id}
+                        event={eventProp}
+                        eventResource={resourcesByIdMap.get(eventProp.resource)}
+                        variant="allDay"
+                        ariaLabelledBy={`MonthViewHeaderCell-${day.day.toString()}`}
+                        onEventClick={onEventClick}
+                      />
+                    ))}
+                  </DayGrid.Cell>
+                ))}
+              </DayGrid.Root>
+              {/* <div
                 className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsRow')}
                 role="row"
                 data-weekend={lastIsWeekend ? '' : undefined}
@@ -117,7 +151,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   />
                 ))}
-              </div>
+              </div> */}
             </div>
             <div ref={bodyRef} className="DayTimeGridBody">
               <div className="DayTimeGridScrollableContent">
