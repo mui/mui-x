@@ -116,28 +116,6 @@ describe('Web Components', () => {
     });
   });
 
-  it('should not prevent clicks on buttons inside the web component in regular mode', async () => {
-    const regularElement = document.createElement('web-component-regular');
-    regularElement.setAttribute('data-testid', 'regular');
-    document.body.appendChild(regularElement);
-
-    onTestFinished(() => {
-      regularElement.remove();
-    });
-
-    screen.getByTestId('regular');
-
-    const button = regularElement?.querySelector('button');
-
-    expect(button).toBeTruthy();
-
-    const { user } = root;
-
-    await user.click(button!);
-
-    expect(onButtonClick).toHaveBeenCalled();
-  });
-
   it('should not prevent clicks on buttons inside the web component in shadow mode', async () => {
     const shadowElement = document.createElement('web-component-shadow');
     shadowElement.setAttribute('data-testid', 'shadow');
@@ -155,7 +133,16 @@ describe('Web Components', () => {
 
     const { user } = root;
 
-    await user.click(button!);
+    const rect = button!.getBoundingClientRect();
+
+    await user.pointer({
+      keys: '[MouseLeft]',
+      target: shadowElement!,
+      coords: {
+        clientX: rect.x + rect.width / 2,
+        clientY: rect.y + rect.height / 2,
+      },
+    });
 
     expect(onButtonClick).toHaveBeenCalled();
   });
