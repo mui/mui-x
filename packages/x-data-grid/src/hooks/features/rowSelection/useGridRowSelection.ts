@@ -532,13 +532,14 @@ export const useGridRowSelection = (
       }
       const currentSelection = gridRowSelectionStateSelector(apiRef);
       const rowsLookup = gridRowsLookupSelector(apiRef);
+      const rowTree = gridRowTreeSelector(apiRef);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
       const isNonExistent = (id: GridRowId) => {
         if (props.filterMode === 'server') {
           return !rowsLookup[id];
         }
-        return !rowsLookup[id] || filteredRowsLookup[id] === false;
+        return !rowTree[id] || filteredRowsLookup[id] === false;
       };
 
       const newSelectionModel = {
