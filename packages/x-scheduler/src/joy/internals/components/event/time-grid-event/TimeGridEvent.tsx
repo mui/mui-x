@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { Popover } from '@base-ui-components/react/popover';
 import { useId } from '@base-ui-components/react/utils';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
@@ -37,7 +36,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const isMoreThan90Minutes = durationMinutes >= 90;
   const titleLineCountRegularVariant = isMoreThan90Minutes ? 2 : 1;
 
-  const renderContent = React.useMemo(() => {
+  const content = React.useMemo(() => {
     if (isBetween30and60Minutes || isLessThan30Minutes) {
       return (
         <p
@@ -80,26 +79,23 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   ]);
 
   return (
-    <div
+    <TimeGrid.Event
       ref={forwardedRef}
       id={id}
-      className={clsx('EventContainer', className, getColorClassName({ resource: eventResource }))}
+      className={clsx(
+        className,
+        'EventContainer',
+        'EventCard',
+        `EventCard--${variant}`,
+        (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+        getColorClassName({ resource: eventResource }),
+      )}
+      aria-labelledby={`${ariaLabelledBy} ${id}`}
+      start={eventProp.start}
+      end={eventProp.end}
       {...other}
     >
-      <Popover.Trigger
-        className={clsx(
-          'EventCard',
-          `EventCard--${variant}`,
-          (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
-        )}
-        aria-labelledby={`${ariaLabelledBy} ${id}`}
-        onClick={(event) => onEventClick?.(event, eventProp)}
-        render={
-          <TimeGrid.Event start={eventProp.start} end={eventProp.end}>
-            {renderContent}
-          </TimeGrid.Event>
-        }
-      />
-    </div>
+      {content}
+    </TimeGrid.Event>
   );
 });
