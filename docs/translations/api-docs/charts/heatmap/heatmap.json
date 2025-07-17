@@ -46,7 +46,7 @@
       }
     },
     "series": {
-      "description": "The series to display in the bar chart. An array of HeatmapSeriesType objects."
+      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/heatmap-series/'>HeatmapSeries</a> objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "slotProps": { "description": "The props used for each component slot." },
