@@ -6,14 +6,13 @@ import { TemporalValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
-import { CalendarEvent } from '../../../models/events';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
 import { selectors } from '../../../event-calendar/store';
-import { EventPopoverProvider } from '../../utils/EventPopoverProvider';
+import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
 const adapter = getAdapter();
@@ -70,98 +69,100 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   return (
     <div ref={handleRef} className={clsx('DayTimeGridContainer', 'joy', className)} {...other}>
       <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
-        {({ onEventClick }) => (
-          <TimeGrid.Root className="DayTimeGridRoot">
-            <div ref={headerWrapperRef} className="DayTimeGridHeader">
-              <div className="DayTimeGridGridRow DayTimeGridHeaderRow" role="row">
-                <div className="DayTimeGridAllDayEventsCell" />
-                {days.map((day) => (
+        <TimeGrid.Root className="DayTimeGridRoot">
+          <div ref={headerWrapperRef} className="DayTimeGridHeader">
+            <div className="DayTimeGridGridRow DayTimeGridHeaderRow" role="row">
+              <div className="DayTimeGridAllDayEventsCell" />
+              {days.map((day) => (
+                <div
+                  key={day.day.toString()}
+                  id={`DayTimeGridHeaderCell-${day.day.toString()}`}
+                  role="columnheader"
+                  aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+                >
+                  {onDayHeaderClick ? (
+                    <button
+                      type="button"
+                      className="DayTimeGridHeaderButton"
+                      onClick={handleHeaderClick(day)}
+                      tabIndex={0}
+                    >
+                      {renderHeaderContent(day)}
+                    </button>
+                  ) : (
+                    renderHeaderContent(day)
+                  )}
+                </div>
+              ))}
+            </div>
+            <div
+              className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsRow')}
+              role="row"
+              data-weekend={lastIsWeekend ? '' : undefined}
+            >
+              <div
+                className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
+                role="columnheader"
+              >
+                {translations.allDay}
+              </div>
+              {days.map((day) => (
+                <div
+                  key={day.day.toString()}
+                  className="DayTimeGridAllDayEventsCell"
+                  aria-labelledby={`DayTimeGridHeaderCell-${day.day.toString()}`}
+                  role="gridcell"
+                  data-weekend={isWeekend(adapter, day) ? '' : undefined}
+                />
+              ))}
+            </div>
+          </div>
+          <div ref={bodyRef} className="DayTimeGridBody">
+            <div className="DayTimeGridScrollableContent">
+              <div className="DayTimeGridTimeAxis" aria-hidden="true">
+                {/* TODO: Handle DST days where there are not exactly 24 hours */}
+                {Array.from({ length: 24 }, (_, hour) => (
                   <div
-                    key={day.day.toString()}
-                    id={`DayTimeGridHeaderCell-${day.day.toString()}`}
-                    role="columnheader"
-                    aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+                    key={hour}
+                    className="DayTimeGridTimeAxisCell"
+                    style={{ '--hour': hour } as React.CSSProperties}
                   >
-                    {onDayHeaderClick ? (
-                      <button
-                        type="button"
-                        className="DayTimeGridHeaderButton"
-                        onClick={handleHeaderClick(day)}
-                        tabIndex={0}
-                      >
-                        {renderHeaderContent(day)}
-                      </button>
-                    ) : (
-                      renderHeaderContent(day)
-                    )}
+                    <time className="DayTimeGridTimeAxisText">
+                      {hour === 0
+                        ? null
+                        : adapter.formatByString(adapter.setHours(visibleDate, hour), 'h:mm a')}
+                    </time>
                   </div>
                 ))}
               </div>
-              <div
-                className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsRow')}
-                role="row"
-                data-weekend={lastIsWeekend ? '' : undefined}
-              >
-                <div
-                  className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
-                  role="columnheader"
-                >
-                  {translations.allDay}
-                </div>
+              <div className="DayTimeGridGrid">
                 {days.map((day) => (
-                  <div
+                  <TimeGrid.Column
                     key={day.day.toString()}
-                    className="DayTimeGridAllDayEventsCell"
-                    aria-labelledby={`DayTimeGridHeaderCell-${day.day.toString()}`}
-                    role="gridcell"
+                    value={day}
+                    className="DayTimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                  />
+                  >
+                    {getEventsStartingInDay(day).map((event) => (
+                      <EventPopoverTrigger
+                        key={event.id}
+                        event={event}
+                        render={
+                          <TimeGridEvent
+                            event={event}
+                            eventResource={resourcesByIdMap.get(event.resource)}
+                            variant="regular"
+                            ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
+                          />
+                        }
+                      />
+                    ))}
+                  </TimeGrid.Column>
                 ))}
               </div>
             </div>
-            <div ref={bodyRef} className="DayTimeGridBody">
-              <div className="DayTimeGridScrollableContent">
-                <div className="DayTimeGridTimeAxis" aria-hidden="true">
-                  {/* TODO: Handle DST days where there are not exactly 24 hours */}
-                  {Array.from({ length: 24 }, (_, hour) => (
-                    <div
-                      key={hour}
-                      className="DayTimeGridTimeAxisCell"
-                      style={{ '--hour': hour } as React.CSSProperties}
-                    >
-                      <time className="DayTimeGridTimeAxisText">
-                        {hour === 0
-                          ? null
-                          : adapter.formatByString(adapter.setHours(visibleDate, hour), 'h:mm a')}
-                      </time>
-                    </div>
-                  ))}
-                </div>
-                <div className="DayTimeGridGrid">
-                  {days.map((day) => (
-                    <TimeGrid.Column
-                      key={day.day.toString()}
-                      value={day}
-                      className="DayTimeGridColumn"
-                      data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                    >
-                      {getEventsStartingInDay(day).map((event: CalendarEvent) => (
-                        <TimeGridEvent
-                          key={event.id}
-                          event={event}
-                          eventResource={resourcesByIdMap.get(event.resource)}
-                          variant="regular"
-                          ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
-                          onEventClick={onEventClick}
-                        />
-                      ))}
-                    </TimeGrid.Column>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </TimeGrid.Root>
-        )}
+          </div>
+        </TimeGrid.Root>
       </EventPopoverProvider>
     </div>
   );

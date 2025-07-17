@@ -32,7 +32,7 @@ export const PickersLayoutRoot = styled('div', {
   slot: 'Root',
 })<{ ownerState: PickerLayoutOwnerState }>({
   display: 'grid',
-  gridAutoColumns: 'max-content auto max-content',
+  gridAutoColumns: 'max-content 1fr max-content',
   gridAutoRows: 'max-content auto max-content',
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
   variants: [
@@ -68,7 +68,7 @@ export const PickersLayoutRoot = styled('div', {
       props: { pickerOrientation: 'portrait', layoutDirection: 'rtl' },
       style: {
         [`& .${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: 3,
+          gridColumn: 4,
         },
       },
     },
