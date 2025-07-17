@@ -63,15 +63,14 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
-})<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme, ownerState }) => {
-  console.log('MultiSectionDigitalClockSectionRoot', ownerState);
+})<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => {
   return {
     maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-    minWidth: 56,
-    flexGrow: 1,
+    width: 56,
     padding: 0,
     overflow: 'hidden',
     scrollbarWidth: 'thin',
+
     '@media (prefers-reduced-motion: no-preference)': {
       scrollBehavior: 'auto',
     },
@@ -114,12 +113,6 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
   // Container query approach
   containerType: 'inline-size',
-
-  // Styles that apply when width > 56px
-  '@container (max-width: 56px)': {
-    // Your conditional styles here
-    maxWidth: MULTI_SECTION_CLOCK_SECTION_WIDTH,
-  },
 
   justifyContent: 'center',
   '&:first-of-type': {
@@ -184,7 +177,6 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
     const { ownerState: pickerOwnerState } = usePickerPrivateContext();
     const ownerState: MultiSectionDigitalClockSectionOwnerState = {
       ...pickerOwnerState,
-      numberOfColumns: items.length,
       hasDigitalClockAlreadyBeenRendered: !!containerRef.current,
     };
 
