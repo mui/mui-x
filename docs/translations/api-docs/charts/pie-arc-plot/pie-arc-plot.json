@@ -16,9 +16,12 @@
     "onItemClick": {
       "description": "Callback fired when a pie item is clicked.",
       "typeDescriptions": {
-        "event": "The event source of the callback.",
-        "pieItemIdentifier": "The pie item identifier.",
-        "item": "The pie item."
+        "event": { "name": "event", "description": "The event source of the callback." },
+        "pieItemIdentifier": {
+          "name": "pieItemIdentifier",
+          "description": "The pie item identifier."
+        },
+        "item": { "name": "item", "description": "The pie item." }
       }
     },
     "outerRadius": { "description": "The radius between circle center and the end of the arc." },

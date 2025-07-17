@@ -13,8 +13,11 @@
     "dayOfWeekFormatter": {
       "description": "Formats the day of week displayed in the calendar header.",
       "typeDescriptions": {
-        "date": "The date of the day of week provided by the adapter.",
-        "string": "The name to display."
+        "date": {
+          "name": "date",
+          "description": "The date of the day of week provided by the adapter."
+        },
+        "string": { "name": "string", "description": "The name to display." }
       }
     },
     "defaultRangePosition": {
@@ -56,29 +59,45 @@
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": "The new value.",
-        "selectionState": "Indicates if the date selection is complete.",
-        "selectedView": "Indicates the view in which the selection has been made."
+        "value": {
+          "name": "value",
+          "description": "The new value.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "selectionState": {
+          "name": "selectionState",
+          "description": "Indicates if the date selection is complete."
+        },
+        "selectedView": {
+          "name": "selectedView",
+          "description": "Indicates the view in which the selection has been made."
+        }
       }
     },
     "onFocusedViewChange": {
       "description": "Callback fired on focused view change.",
       "typeDescriptions": {
-        "view": "The new view to focus or not.",
-        "hasFocus": "<code>true</code> if the view should be focused."
+        "view": { "name": "view", "description": "The new view to focus or not." },
+        "hasFocus": {
+          "name": "hasFocus",
+          "description": "<code>true</code> if the view should be focused."
+        }
       }
     },
     "onMonthChange": {
       "description": "Callback fired on month change.",
-      "typeDescriptions": { "month": "The new month." }
+      "typeDescriptions": { "month": { "name": "month", "description": "The new month." } }
     },
     "onRangePositionChange": {
       "description": "Callback fired when the range position changes.",
-      "typeDescriptions": { "rangePosition": "The new range position." }
+      "typeDescriptions": {
+        "rangePosition": { "name": "rangePosition", "description": "The new range position." }
+      }
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": { "view": "The new view." }
+      "typeDescriptions": { "view": { "name": "view", "description": "The new view." } }
     },
     "openTo": {
       "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
@@ -95,14 +114,25 @@
     },
     "renderLoading": {
       "description": "Component rendered on the &quot;day&quot; view when <code>props.loading</code> is true.",
-      "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
+      "typeDescriptions": {
+        "React.ReactNode": {
+          "name": "React.ReactNode",
+          "description": "The node to render when loading."
+        }
+      }
     },
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
-        "day": "The date to test.",
-        "position": "The date to test, &#39;start&#39; or &#39;end&#39;.",
-        "boolean": "Returns <code>true</code> if the date should be disabled."
+        "day": { "name": "day", "description": "The date to test." },
+        "position": {
+          "name": "position",
+          "description": "The date to test, &#39;start&#39; or &#39;end&#39;."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "Returns <code>true</code> if the date should be disabled."
+        }
       }
     },
     "showDaysOutsideCurrentMonth": {

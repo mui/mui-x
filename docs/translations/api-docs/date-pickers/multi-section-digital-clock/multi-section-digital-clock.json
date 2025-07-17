@@ -32,21 +32,35 @@
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": "The new value.",
-        "selectionState": "Indicates if the date selection is complete.",
-        "selectedView": "Indicates the view in which the selection has been made."
+        "value": {
+          "name": "value",
+          "description": "The new value.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "selectionState": {
+          "name": "selectionState",
+          "description": "Indicates if the date selection is complete."
+        },
+        "selectedView": {
+          "name": "selectedView",
+          "description": "Indicates the view in which the selection has been made."
+        }
       }
     },
     "onFocusedViewChange": {
       "description": "Callback fired on focused view change.",
       "typeDescriptions": {
-        "view": "The new view to focus or not.",
-        "hasFocus": "<code>true</code> if the view should be focused."
+        "view": { "name": "view", "description": "The new view to focus or not." },
+        "hasFocus": {
+          "name": "hasFocus",
+          "description": "<code>true</code> if the view should be focused."
+        }
       }
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": { "view": "The new view." }
+      "typeDescriptions": { "view": { "name": "view", "description": "The new view." } }
     },
     "openTo": {
       "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
@@ -60,9 +74,12 @@
     "shouldDisableTime": {
       "description": "Disable specific time.",
       "typeDescriptions": {
-        "value": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
+        "value": { "name": "value", "description": "The value to check." },
+        "view": { "name": "view", "description": "The clock type of the timeValue." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code> the time will be disabled."
+        }
       }
     },
     "skipDisabled": {
