@@ -30,6 +30,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | undefined) => {
   const slots = {
@@ -42,17 +43,26 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
+  shouldForwardProp: (prop) => prop !== 'numberOfColumns',
 })<{ ownerState: PickerOwnerState; numberOfColumns: number }>(({ theme, numberOfColumns }) => {
-  const containerMinWidth = 100; // Increased threshold for testing
+  const containerMinWidth = 56 * numberOfColumns + 1; // Increased threshold for testing
   return {
     flexDirection: 'row',
     width: '100%',
+    minWidth: 56 * numberOfColumns,
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-    containerType: 'inline-size',
+    containerType: 'inline-size', // This enables container queries!
     [`@container (min-width: ${containerMinWidth}px)`]: {
+      backgroundColor: 'red',
       '& > .MuiMultiSectionDigitalClockSection-root': {
-        flexGrow: 1,
+        width: '100%',
+        minWidth: 56,
         maxWidth: `${100 / numberOfColumns}%`,
+        scrollbarGutter: 'stable',
+        '& > .MuiMultiSectionDigitalClockSection-item': {
+          width: '100%',
+          minWidth: MULTI_SECTION_CLOCK_SECTION_WIDTH,
+        },
       },
     },
   };

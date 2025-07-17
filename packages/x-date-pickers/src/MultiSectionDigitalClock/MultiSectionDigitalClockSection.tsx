@@ -111,9 +111,6 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   padding: 8,
   margin: '2px 4px',
   width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
-  // Container query approach
-  containerType: 'inline-size',
-
   justifyContent: 'center',
   '&:first-of-type': {
     marginTop: 4,
