@@ -289,7 +289,7 @@ BarChartPro.propTypes = {
   onZoomChange: PropTypes.func,
   /**
    * The series to display in the bar chart.
-   * An array of [[BarSeriesType]] objects.
+   * An array of [[BarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

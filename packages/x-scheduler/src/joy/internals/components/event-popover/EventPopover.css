@@ -1,4 +1,4 @@
-@import '../styles/tokens.css';
+@import '../../../styles/tokens.css';
 
 .PopoverPositioner {
   max-width: 460px;
