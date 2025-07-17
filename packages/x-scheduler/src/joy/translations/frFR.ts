@@ -1,6 +1,6 @@
-import { SchedulerTranslations } from '../models/translations';
+import { EventCalendarTranslations } from '../models/translations';
 
-export const frFR: Partial<SchedulerTranslations> = {
+export const frFR: Partial<EventCalendarTranslations> = {
   // ViewSwitcher
   agenda: 'Agenda',
   day: 'Jour',

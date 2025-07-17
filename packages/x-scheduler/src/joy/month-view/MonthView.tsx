@@ -13,7 +13,7 @@ import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import { EventPopoverProvider } from '../internals/utils/EventPopoverProvider';
-import { SchedulerValidDate } from '../../primitives/models';
+import { TemporalValidDate } from '../../primitives/models';
 import { isWeekend } from '../internals/utils/date-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import './MonthView.css';
@@ -61,13 +61,13 @@ export const MonthView = React.memo(
     }, [getWeekList, visibleDate, getDayList, getEventsStartingInDay]);
 
     const handleHeaderClick = React.useCallback(
-      (day: SchedulerValidDate) => (event: React.MouseEvent) => {
+      (day: TemporalValidDate) => (event: React.MouseEvent) => {
         onDayHeaderClick?.(day, event);
       },
       [onDayHeaderClick],
     );
 
-    const renderCellNumberContent = (day: SchedulerValidDate) => {
+    const renderCellNumberContent = (day: TemporalValidDate) => {
       const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));
       return (
         <span className="MonthViewCellNumber">

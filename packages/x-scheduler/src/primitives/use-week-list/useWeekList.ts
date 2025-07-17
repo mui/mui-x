@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { getAdapter } from '../utils/adapter/getAdapter';
-import { SchedulerValidDate } from '../models';
+import { TemporalValidDate } from '../models';
 
 const adapter = getAdapter();
 
@@ -22,7 +22,7 @@ export function useWeekList(): useWeekList.ReturnValue {
 
     let current = start;
     let currentWeekNumber = adapter.getWeekNumber(current);
-    const weeks: SchedulerValidDate[] = [];
+    const weeks: TemporalValidDate[] = [];
 
     while (adapter.isBefore(current, end)) {
       weeks.push(current);
@@ -44,13 +44,13 @@ export function useWeekList(): useWeekList.ReturnValue {
 }
 
 export namespace useWeekList {
-  export type ReturnValue = (parameters: ReturnValueParameters) => SchedulerValidDate[];
+  export type ReturnValue = (parameters: ReturnValueParameters) => TemporalValidDate[];
 
   export interface ReturnValueParameters {
     /**
      * The date to get the weeks in month for.
      */
-    date: SchedulerValidDate;
+    date: TemporalValidDate;
     /**
      * The amount of weeks to return.
      * When equal to "end-of-month", the method will return all the weeks until the end of the month.

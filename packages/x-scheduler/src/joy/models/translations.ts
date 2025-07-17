@@ -1,6 +1,6 @@
 import { ViewType } from './views';
 
-export interface SchedulerTranslations {
+export interface EventCalendarTranslations {
   // ViewSwitcher
   agenda: string;
   day: string;

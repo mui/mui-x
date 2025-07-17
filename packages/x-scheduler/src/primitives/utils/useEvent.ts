@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { getAdapter } from './adapter/getAdapter';
 import { useOnEveryMinuteStart } from './useOnEveryMinuteStart';
-import { SchedulerValidDate } from '../models';
+import { TemporalValidDate } from '../models';
 
 const adapter = getAdapter();
 
@@ -43,11 +43,11 @@ export namespace useEvent {
     /**
      * The time at which the event starts.
      */
-    start: SchedulerValidDate;
+    start: TemporalValidDate;
     /**
      * The time at which the event ends.
      */
-    end: SchedulerValidDate;
+    end: TemporalValidDate;
   }
 
   export interface ReturnValue {

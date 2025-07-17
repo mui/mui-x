@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { SchedulerValidDate } from '../../../../primitives/models';
+import { TemporalValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
@@ -49,13 +49,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
   const handleHeaderClick = React.useCallback(
-    (day: SchedulerValidDate) => (event: React.MouseEvent) => {
+    (day: TemporalValidDate) => (event: React.MouseEvent) => {
       onDayHeaderClick?.(day, event);
     },
     [onDayHeaderClick],
   );
 
-  const renderHeaderContent = (day: SchedulerValidDate) => (
+  const renderHeaderContent = (day: TemporalValidDate) => (
     <span className="DayTimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
       <span className="DayTimeGridHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>

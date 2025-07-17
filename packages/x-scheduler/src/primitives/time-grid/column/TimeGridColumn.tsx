@@ -4,7 +4,7 @@ import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { getAdapter } from '../../utils/adapter/getAdapter';
-import { SchedulerValidDate } from '../../models';
+import { TemporalValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 
 const adapter = getAdapter();
@@ -56,18 +56,18 @@ export namespace TimeGridColumn {
     /**
      * The value of the column.
      */
-    value: SchedulerValidDate;
+    value: TemporalValidDate;
     /**
      * The start time of the column.
      * The date part is ignored, only the time part is used.
      * @defaultValue 00:00:00
      */
-    startTime?: SchedulerValidDate;
+    startTime?: TemporalValidDate;
     /**
      * The end time of the column.
      * The date part is ignored, only the time part is used.
      * @defaultValue 23:59:59
      */
-    endTime?: SchedulerValidDate;
+    endTime?: TemporalValidDate;
   }
 }
