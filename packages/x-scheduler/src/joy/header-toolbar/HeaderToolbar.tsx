@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../internals/utils/TranslationsContext';
-import './HeaderToolbar.css';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import './HeaderToolbar.css';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,
