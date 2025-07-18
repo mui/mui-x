@@ -6,6 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
+import { useMounted } from '../hooks/useMounted';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks } from '../hooks/useTicks';
 import { AxisConfig, ChartsXAxisProps } from '../models/axis';
@@ -66,6 +67,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
+  const isMounted = useMounted();
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
 
@@ -150,7 +152,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickLabelMinGap: 4, // Use the default value
     reverse,
-    isMounted: isHydrated,
+    isMounted,
     isXInside: instance.isXInside,
   });
 
@@ -190,7 +192,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     y: positionSign * axisHeight,
   };
 
-  /* Calculate the space needed for tick labels based on actual content */
+  /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxHeight = Math.max(
     0,
     axisHeight - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
