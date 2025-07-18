@@ -116,7 +116,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
   const goToDay = useEventCallback((visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     if (!store.state.views.includes('day')) {
       throw new Error(
-        'The "day" view is not available in the current calendar configuration. Please ensure that "day" is included in the views prop before using the goToDay method.',
+        'The "day" view is disabled on your Event Calendar. Please ensure that "day" is included in the views prop before using the goToDay method.',
       );
     }
     setVisibleDate(visibleDate, event);
