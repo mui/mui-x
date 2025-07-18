@@ -44,7 +44,7 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   slot: 'Root',
   shouldForwardProp: (prop) => prop !== 'numberOfColumns' && prop !== 'ownerState',
 })<{ ownerState: PickerOwnerState; numberOfColumns: number }>(({ theme, numberOfColumns }) => {
-  const containerMinWidth = 56 * numberOfColumns + 1; // Increased threshold for testing
+  const containerMinWidth = 56 * numberOfColumns + 1;
   return {
     flexDirection: 'row',
     width: '100%',
