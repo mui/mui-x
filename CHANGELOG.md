@@ -68,7 +68,9 @@ Same changes as in `@mui/x-date-pickers@8.9.0`.
 
 #### `@mui/x-charts-pro@8.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.9.0`.
+Same changes as in `@mui/x-charts@8.9.0` plus:
+
+[charts-pro] Fix issue where charts gestures weren't properly working when inside the shadow-dom (#18837) @JCQuintas  
 
 ### Tree View
 
