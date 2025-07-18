@@ -28,7 +28,7 @@ export default function ChartsCommunityOrPro() {
             'Requires a commercial license. Includes advanced charts and features such as zooming, panning, and exporting. Ideal for data-rich and enterprise applications.'
           }
           // premiumDescription={
-          //   'Requires a commercial license. Includes the most advanced features such as reordering, lazy loading, and virtualization.'
+          //   'Requires a commercial license. Includes the most advanced features such as... [complete this when ready to launch]'
           // }
         />
       </Stack>
