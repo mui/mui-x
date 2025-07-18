@@ -726,23 +726,27 @@ export const useGridRowSelection = (
       if (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&
-        applyAutoSelection &&
+        (!isNestedData || props.rowSelectionPropagation?.descendants) &&
         !hasFilters
       ) {
-        apiRef.current.setRowSelectionModel({
-          type: value ? 'exclude' : 'include',
-          ids: new Set(),
-        });
+        apiRef.current.setRowSelectionModel(
+          {
+            type: value ? 'exclude' : 'include',
+            ids: new Set(),
+          },
+          'multipleRowsSelection',
+        );
       } else {
         apiRef.current.selectRows(getRowsToBeSelected(), value);
       }
     },
     [
       apiRef,
-      applyAutoSelection,
       getRowsToBeSelected,
       props.checkboxSelectionVisibleOnly,
       props.isRowSelectable,
+      props.rowSelectionPropagation?.descendants,
+      isNestedData,
     ],
   );
 
