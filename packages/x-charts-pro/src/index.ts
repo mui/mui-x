@@ -48,6 +48,7 @@ export { ChartContainerPro } from './ChartContainerPro';
 export type { ChartContainerProProps } from './ChartContainerPro';
 export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
+export * from './SankeyChart';
 export * from './BarChartPro';
 export * from './LineChartPro';
 export * from './PieChartPro';

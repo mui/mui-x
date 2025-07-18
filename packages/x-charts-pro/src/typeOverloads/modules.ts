@@ -12,6 +12,12 @@ import {
   DefaultizedHeatmapSeriesType,
   HeatmapValueType,
 } from '../models/seriesType/heatmap';
+import {
+  SankeySeriesType,
+  type DefaultizedSankeySeriesType,
+  type SankeyItemIdentifier,
+  type SankeyValueType,
+} from '../SankeyChart/sankey.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -32,6 +38,14 @@ declare module '@mui/x-charts/internals' {
       itemIdentifier: FunnelItemIdentifier;
       valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
       axisType: 'cartesian';
+    };
+    sankey: {
+      seriesInput: DefaultizedProps<SankeySeriesType, 'id'>;
+      series: DefaultizedSankeySeriesType;
+      seriesProp: SankeySeriesType;
+      itemIdentifier: SankeyItemIdentifier;
+      valueType: SankeyValueType;
+      axisType: 'none';
     };
   }
 
