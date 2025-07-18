@@ -9,13 +9,13 @@ import { useAdapter } from '../../utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
-import { TimeGridEvent } from '../event';
+import type { TimeGridEvent } from '../event';
+import type { TimeGridRoot } from '../root';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
   getCursorPositionRelativeToElement,
   isDraggingTimeGridEvent,
 } from '../../utils/drag-utils';
-import { Adapter } from '../../utils/adapter/types';
 
 export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   componentProps: TimeGridColumn.Props,
@@ -90,8 +90,43 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   });
 
   React.useEffect(() => {
+    const domElement = ref.current;
+    if (!domElement) {
+      return () => {};
+    }
+
+    function getEventDropData({
+      data,
+      input,
+    }: {
+      data: TimeGridEvent.EventDragData;
+      input: { clientY: number };
+    }): TimeGridRoot.EventData {
+      const position = getCursorPositionRelativeToElement({ ref, input });
+      const eventTopPosition = position.y - data.position.y;
+
+      const newStartMinuteInDay =
+        Math.round(
+          ((eventTopPosition / domElement!.offsetHeight) * 1440) / EVENT_DRAG_PRECISION_MINUTE,
+        ) * EVENT_DRAG_PRECISION_MINUTE;
+
+      // TODO: Avoid JS Date conversion
+      const eventDuration =
+        (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
+        (60 * 1000);
+
+      const newStartDate = adapter.setMinutes(
+        adapter.setHours(value, Math.floor(newStartMinuteInDay / 60)),
+        newStartMinuteInDay % 60,
+      );
+
+      const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
+
+      return { start: newStartDate, end: newEndDate, id: data.id };
+    }
+
     return dropTargetForElements({
-      element: ref.current!,
+      element: domElement,
       canDrop: (arg) => isDraggingTimeGridEvent(arg.source.data),
       getData: () => ({ type: 'column' }),
       onDrag: ({ source: { data }, location }) => {
@@ -99,30 +134,24 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
           return;
         }
 
-        const { start, end } = getEventDropDates({
-          adapter,
-          ref,
+        const newPlaceholder = getEventDropData({
           data,
-          columnValue: value,
           input: location.current.input,
         });
 
-        setPlaceholder({ start, end, id: data.id });
+        setPlaceholder(newPlaceholder);
       },
       onDrop: ({ source: { data }, location }) => {
         if (!isDraggingTimeGridEvent(data)) {
           return;
         }
 
-        const { start, end } = getEventDropDates({
-          adapter,
-          ref,
+        const newEvent = getEventDropData({
           data,
-          columnValue: value,
           input: location.current.input,
         });
 
-        onEventChange({ start, end, id: data.id });
+        onEventChange(newEvent);
         setPlaceholder(null);
       },
     });
@@ -158,43 +187,4 @@ export namespace TimeGridColumn {
      */
     endTime?: SchedulerValidDate;
   }
-}
-
-function getEventDropDates({
-  adapter,
-  data,
-  input,
-  ref,
-  columnValue,
-}: {
-  adapter: Adapter;
-  data: TimeGridEvent.EventDragData;
-  input: { clientY: number };
-  ref: React.RefObject<HTMLElement | null>;
-  columnValue: SchedulerValidDate;
-}) {
-  if (!ref.current) {
-    return { start: data.start, end: data.end };
-  }
-
-  const position = getCursorPositionRelativeToElement({ ref, input });
-  const eventTopPosition = position.y - data.position.y;
-
-  const newStartMinuteInDay =
-    Math.round(
-      ((eventTopPosition / ref.current.offsetHeight) * 1440) / EVENT_DRAG_PRECISION_MINUTE,
-    ) * EVENT_DRAG_PRECISION_MINUTE;
-
-  // TODO: Avoid JS Date conversion
-  const eventDuration =
-    (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) / (60 * 1000);
-
-  const newStartDate = adapter.setMinutes(
-    adapter.setHours(columnValue, Math.floor(newStartMinuteInDay / 60)),
-    newStartMinuteInDay % 60,
-  );
-
-  const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
-
-  return { start: newStartDate, end: newEndDate };
 }
