@@ -391,7 +391,7 @@
   },
   {
     "name": "gridVisibleColumnDefinitionsSelector",
-    "returnType": "(GridListViewColDef & { computedWidth: number })[]",
+    "returnType": "GridStateColDef[]",
     "category": "Visible Columns",
     "description": "Get the visible columns as a lookup (an object containing the field for keys and the definition for values)."
   },

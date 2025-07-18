@@ -26,7 +26,6 @@ import { escapeOperandAttributeSelector } from '../utils/domUtils';
 import { GridScrollbarFillerCell } from './GridScrollbarFillerCell';
 import { rtlFlipSide } from '../utils/rtlFlipSide';
 import { attachPinnedStyle } from '../internals/utils';
-import { GridStateColDef } from '../models/colDef/gridColDef';
 
 const SkeletonOverlay = styled('div', {
   name: 'MuiDataGrid',
@@ -157,7 +156,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
           <slots.skeletonCell
             key={`skeleton-column-${i}-${column.field}`}
             field={column.field}
-            type={(column as GridStateColDef).type}
+            type={column.type}
             align={column.align}
             width="var(--width)"
             height={dimensions.rowHeight}

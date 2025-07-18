@@ -1,5 +1,6 @@
 import { createRootSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 /**
  * Get the list view state
@@ -16,5 +17,5 @@ export const gridListViewSelector = createRootSelector(
  * @ignore - Do not document
  */
 export const gridListColumnSelector = createRootSelector(
-  (state: GridStateCommunity) => state.listViewColumn,
+  (state: GridStateCommunity) => state.listViewColumn as GridStateColDef,
 );

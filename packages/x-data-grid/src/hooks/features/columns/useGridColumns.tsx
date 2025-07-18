@@ -428,7 +428,7 @@ export function useGridColumns(
       prevInnerWidth.current = size.width;
 
       const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
-        (col: GridStateColDef) => col.flex && col.flex > 0,
+        (col) => col.flex && col.flex > 0,
       );
       if (!hasFlexColumns) {
         return;
