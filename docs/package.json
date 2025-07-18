@@ -19,7 +19,6 @@
   "dependencies": {
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
-    "@babel/runtime-corejs2": "^7.27.6",
     "@docsearch/react": "^3.9.0",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
@@ -61,7 +60,6 @@
     "clean-css": "^5.3.3",
     "clipboard-copy": "^4.0.1",
     "clsx": "catalog:",
-    "core-js": "^2.6.12",
     "cross-env": "catalog:",
     "d3-scale-chromatic": "^3.1.0",
     "date-fns": "catalog:",

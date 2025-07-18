@@ -315,8 +315,8 @@ importers:
         specifier: 'catalog:'
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#346b01f3c5fca6b31789cf2fba5ea161a998f230
-        version: https://codeload.github.com/mui/material-ui/tar.gz/346b01f3c5fca6b31789cf2fba5ea161a998f230(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
+        specifier: github:mui/material-ui#d7f6a94617c66d8b853fc6b1ba2e218169f5e091
+        version: https://codeload.github.com/mui/material-ui/tar.gz/d7f6a94617c66d8b853fc6b1ba2e218169f5e091(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.2.0(@types/react@19.1.8)(react@19.1.0)
@@ -407,6 +407,9 @@ importers:
       babel-plugin-transform-react-remove-prop-types:
         specifier: 'catalog:'
         version: 0.4.24
+      babel-plugin-transform-remove-imports:
+        specifier: ^1.8.0
+        version: 1.8.0(@babel/core@7.28.0)
       babel-plugin-transform-replace-expressions:
         specifier: ^0.2.0
         version: 0.2.0(@babel/core@7.28.0)
@@ -587,9 +590,6 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.27.6
-      '@babel/runtime-corejs2':
-        specifier: ^7.27.6
-        version: 7.27.6
       '@docsearch/react':
         specifier: ^3.9.0
         version: 3.9.0(@algolia/client-search@5.31.0)(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(search-insights@2.17.3)
@@ -713,9 +713,6 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
-      core-js:
-        specifier: ^2.6.12
-        version: 2.6.12
       cross-env:
         specifier: 'catalog:'
         version: 7.0.3
@@ -3133,10 +3130,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/runtime-corejs2@7.27.6':
-    resolution: {integrity: sha512-WgvlQpGnm1rmvgrm+H+cVcAckEPlwURUCvv1ZVSFr9J9yixgFbNlu7+CjVKKAd4xQtMijPwxwcSi5SFFHKlmDw==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/runtime@7.27.6':
     resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
     engines: {node: '>=6.9.0'}
@@ -4323,8 +4316,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/346b01f3c5fca6b31789cf2fba5ea161a998f230':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/346b01f3c5fca6b31789cf2fba5ea161a998f230}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d7f6a94617c66d8b853fc6b1ba2e218169f5e091':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/d7f6a94617c66d8b853fc6b1ba2e218169f5e091}
     version: 7.2.0
     engines: {pnpm: 10.13.1}
 
@@ -6487,6 +6480,11 @@ packages:
   babel-plugin-transform-react-remove-prop-types@0.4.24:
     resolution: {integrity: sha512-eqj0hVcJUR57/Ug2zE1Yswsw4LhuqqHhD+8v120T1cl3kjg76QwtyBrdIk4WVwK+lAhBJVYCd/v+4nc4y+8JsA==}
 
+  babel-plugin-transform-remove-imports@1.8.0:
+    resolution: {integrity: sha512-QdE5ZnIjON1pSgTPU8KzLnl/LEzdq9PLmZNuHgGKTx0LOI9PBrHBj0fz9uCg2CdssiTw7v/zVRYs8GJxbvhKnQ==}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+
   babel-plugin-transform-replace-expressions@0.2.0:
     resolution: {integrity: sha512-Eh1rRd9hWEYgkgoA3D0kGp7xJ/wgVshgsqmq60iC4HVWD+Lux+fNHSHBa2v1Hsv+dHflShC71qKhiH40OiPtDA==}
     peerDependencies:
@@ -7066,10 +7064,6 @@ packages:
 
   core-js-compat@3.44.0:
     resolution: {integrity: sha512-JepmAj2zfl6ogy34qfWtcE7nHKAJnKsQFRn++scjVS2bZFllwptzw61BZcZFYBPpUznLfAvh0LGhxKppk04ClA==}
-
-  core-js@2.6.12:
-    resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
-    deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
 
   core-js@3.44.0:
     resolution: {integrity: sha512-aFCtd4l6GvAXwVEh3XbbVqJGHDJt0OZRa+5ePGx3LLwi12WfexqQxcsohb2wgsa/92xtl19Hd66G/L+TaAxDMw==}
@@ -13887,10 +13881,6 @@ snapshots:
       pirates: 4.0.7
       source-map-support: 0.5.21
 
-  '@babel/runtime-corejs2@7.27.6':
-    dependencies:
-      core-js: 2.6.12
-
   '@babel/runtime@7.27.6': {}
 
   '@babel/template@7.27.2':
@@ -15109,7 +15099,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@types/react': 19.1.8
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/346b01f3c5fca6b31789cf2fba5ea161a998f230(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d7f6a94617c66d8b853fc6b1ba2e218169f5e091(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
     dependencies:
       '@googleapis/sheets': 9.8.0(encoding@0.1.13)
       '@netlify/functions': 3.1.10(encoding@0.1.13)(rollup@4.44.2)
@@ -17644,6 +17634,10 @@ snapshots:
 
   babel-plugin-transform-react-remove-prop-types@0.4.24: {}
 
+  babel-plugin-transform-remove-imports@1.8.0(@babel/core@7.28.0):
+    dependencies:
+      '@babel/core': 7.28.0
+
   babel-plugin-transform-replace-expressions@0.2.0(@babel/core@7.28.0):
     dependencies:
       '@babel/core': 7.28.0
@@ -18254,8 +18248,6 @@ snapshots:
   core-js-compat@3.44.0:
     dependencies:
       browserslist: 4.25.1
-
-  core-js@2.6.12: {}
 
   core-js@3.44.0: {}
 
