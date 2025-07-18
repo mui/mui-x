@@ -43,6 +43,10 @@ export interface GridClasses {
    */
   aiAssistantPanelConversationList: string;
   /**
+   * Styles applied to the AI assistant panel queries remaining text.
+   */
+  aiAssistantPanelQueriesRemaining: string;
+  /**
    * Styles applied to the AI assistant panel suggestions.
    */
   aiAssistantPanelSuggestions: string;
@@ -951,6 +955,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aiAssistantPanelConversation',
   'aiAssistantPanelConversationList',
   'aiAssistantPanelConversationTitle',
+  'aiAssistantPanelQueriesRemaining',
   'aiAssistantPanelSuggestions',
   'aiAssistantPanelSuggestionsList',
   'aiAssistantPanelSuggestionsItem',

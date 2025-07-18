@@ -7,6 +7,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantConversationsSelector,
+  gridAiAssistantEstimatedRemainingQueriesSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -127,8 +128,25 @@ function GridAiAssistantPanel() {
   const classes = useUtilityClasses(rootProps);
   const activeConversation = useGridSelector(apiRef, gridAiAssistantActiveConversationSelector);
   const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
+  const estimatedRemainingQueries = useGridSelector(
+    apiRef,
+    gridAiAssistantEstimatedRemainingQueriesSelector,
+  );
   const conversationTitle =
     activeConversation?.title || apiRef.current.getLocaleText('aiAssistantPanelNewConversation');
+
+  // Format the main AI Assistant title with queries remaining
+  const formattedTitle = React.useMemo(() => {
+    const baseTitle = apiRef.current.getLocaleText('aiAssistantPanelTitle');
+    if (estimatedRemainingQueries !== undefined) {
+      const queriesText =
+        estimatedRemainingQueries === 1
+          ? '1 query left'
+          : `${estimatedRemainingQueries} queries left`;
+      return `${baseTitle} • ${queriesText}`;
+    }
+    return baseTitle;
+  }, [apiRef, estimatedRemainingQueries]);
 
   const createConversation = React.useCallback(() => {
     const newConversation = conversations.findIndex((conversation) => !conversation.prompts.length);
@@ -151,7 +169,7 @@ function GridAiAssistantPanel() {
       <AiAssistantPanelHeader className={classes.header} ownerState={rootProps}>
         <AiAssistantPanelTitleContainer className={classes.titleContainer} ownerState={rootProps}>
           <AiAssistantPanelTitle className={classes.title} ownerState={rootProps}>
-            {apiRef.current.getLocaleText('aiAssistantPanelTitle')}
+            {formattedTitle}
           </AiAssistantPanelTitle>
           <AiAssistantPanelConversationTitle
             className={classes.conversationTitle}
