@@ -315,8 +315,8 @@ importers:
         specifier: 'catalog:'
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#346b01f3c5fca6b31789cf2fba5ea161a998f230
-        version: https://codeload.github.com/mui/material-ui/tar.gz/346b01f3c5fca6b31789cf2fba5ea161a998f230(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
+        specifier: github:mui/material-ui#d7f6a94617c66d8b853fc6b1ba2e218169f5e091
+        version: https://codeload.github.com/mui/material-ui/tar.gz/d7f6a94617c66d8b853fc6b1ba2e218169f5e091(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.2.0(@types/react@19.1.8)(react@19.1.0)
@@ -407,6 +407,9 @@ importers:
       babel-plugin-transform-react-remove-prop-types:
         specifier: 'catalog:'
         version: 0.4.24
+      babel-plugin-transform-remove-imports:
+        specifier: ^1.8.0
+        version: 1.8.0(@babel/core@7.28.0)
       babel-plugin-transform-replace-expressions:
         specifier: ^0.2.0
         version: 0.2.0(@babel/core@7.28.0)
@@ -4323,8 +4326,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/346b01f3c5fca6b31789cf2fba5ea161a998f230':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/346b01f3c5fca6b31789cf2fba5ea161a998f230}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d7f6a94617c66d8b853fc6b1ba2e218169f5e091':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/d7f6a94617c66d8b853fc6b1ba2e218169f5e091}
     version: 7.2.0
     engines: {pnpm: 10.13.1}
 
@@ -6486,6 +6489,11 @@ packages:
 
   babel-plugin-transform-react-remove-prop-types@0.4.24:
     resolution: {integrity: sha512-eqj0hVcJUR57/Ug2zE1Yswsw4LhuqqHhD+8v120T1cl3kjg76QwtyBrdIk4WVwK+lAhBJVYCd/v+4nc4y+8JsA==}
+
+  babel-plugin-transform-remove-imports@1.8.0:
+    resolution: {integrity: sha512-QdE5ZnIjON1pSgTPU8KzLnl/LEzdq9PLmZNuHgGKTx0LOI9PBrHBj0fz9uCg2CdssiTw7v/zVRYs8GJxbvhKnQ==}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
 
   babel-plugin-transform-replace-expressions@0.2.0:
     resolution: {integrity: sha512-Eh1rRd9hWEYgkgoA3D0kGp7xJ/wgVshgsqmq60iC4HVWD+Lux+fNHSHBa2v1Hsv+dHflShC71qKhiH40OiPtDA==}
@@ -15109,7 +15117,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@types/react': 19.1.8
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/346b01f3c5fca6b31789cf2fba5ea161a998f230(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/d7f6a94617c66d8b853fc6b1ba2e218169f5e091(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
     dependencies:
       '@googleapis/sheets': 9.8.0(encoding@0.1.13)
       '@netlify/functions': 3.1.10(encoding@0.1.13)(rollup@4.44.2)
@@ -17643,6 +17651,10 @@ snapshots:
   babel-plugin-transform-inline-environment-variables@0.4.4: {}
 
   babel-plugin-transform-react-remove-prop-types@0.4.24: {}
+
+  babel-plugin-transform-remove-imports@1.8.0(@babel/core@7.28.0):
+    dependencies:
+      '@babel/core': 7.28.0
 
   babel-plugin-transform-replace-expressions@0.2.0(@babel/core@7.28.0):
     dependencies:

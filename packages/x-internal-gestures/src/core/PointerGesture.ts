@@ -107,8 +107,8 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
   ): void {
     super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
-    this.unregisterHandler = this.pointerManager!.registerGestureHandler((pointers, event) =>
-      this.handlePointerEvent(pointers, event),
+    this.unregisterHandler = this.pointerManager!.registerGestureHandler(
+      this.handlePointerEvent.bind(this),
     );
   }
 
@@ -147,11 +147,15 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
   ): PointerData[] {
     return pointers.filter(
       (pointer) =>
-        this.isPointerTypeAllowed(pointer.pointerType) &&
-        (calculatedTarget === pointer.target ||
-          pointer.target === this.originalTarget ||
-          calculatedTarget === this.originalTarget ||
-          calculatedTarget.contains(pointer.target as Node)),
+        (this.isPointerTypeAllowed(pointer.pointerType) &&
+          (calculatedTarget === pointer.target ||
+            pointer.target === this.originalTarget ||
+            calculatedTarget === this.originalTarget ||
+            ('contains' in calculatedTarget &&
+              calculatedTarget.contains(pointer.target as Node)))) ||
+        ('getRootNode' in calculatedTarget &&
+          calculatedTarget.getRootNode() instanceof ShadowRoot &&
+          pointer.srcEvent.composedPath().includes(calculatedTarget)),
     );
   }
 

@@ -290,6 +290,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
     const domEvent = new CustomEvent(this.name, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 
@@ -336,6 +337,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       const domEvent = new CustomEvent(eventName, {
         bubbles: true,
         cancelable: true,
+        composed: true,
         detail: customEventData,
       });
 

@@ -312,6 +312,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
     const domEvent = new CustomEvent(eventName, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 
