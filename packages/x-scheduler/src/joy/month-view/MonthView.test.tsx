@@ -59,29 +59,39 @@ describe('<MonthView />', () => {
     expect(within(may15Cell!).getByText('Doctor Appointment')).not.to.equal(null);
   });
 
-  it('should call onDayHeaderClick when a day is clicked', async () => {
-    const handleClick = spy();
+  it('should move to the day view when a day is clicked', async () => {
+    const handleViewChange = spy();
+    const handleVisibleDateChange = spy();
     const { user } = render(
-      <StandaloneView {...standaloneDefaults}>
-        <MonthView onDayHeaderClick={handleClick} />
+      <StandaloneView
+        {...standaloneDefaults}
+        onViewChange={handleViewChange}
+        onVisibleDateChange={handleVisibleDateChange}
+      >
+        <MonthView />
       </StandaloneView>,
     );
     const button = screen.getByRole('button', { name: '15' });
     await user.click(button);
 
-    expect(handleClick.calledOnce).to.equal(true);
-    expect(handleClick.firstCall.args[0].day).to.equal(15);
+    expect(handleViewChange.calledOnce).to.equal(true);
+    expect(handleViewChange.firstCall.firstArg).to.equal('day');
+    expect(handleVisibleDateChange.calledOnce).to.equal(true);
+    expect(handleVisibleDateChange.firstCall.firstArg).toEqualDateTime(
+      DateTime.fromISO('2025-05-15T00:00:00'),
+    );
   });
 
-  it('should render day numbers as plain text when onDayHeaderClick is not provided', () => {
-    render(
-      <StandaloneView {...standaloneDefaults}>
-        <MonthView />
-      </StandaloneView>,
-    );
-    expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
-    expect(screen.getByText('15')).not.to.equal(null);
-  });
+  // TODO: Use the views prop when available
+  // it('should render day numbers as plain text when the day view is not enabled', () => {
+  //   render(
+  //     <StandaloneView {...standaloneDefaults}>
+  //       <MonthView />
+  //     </StandaloneView>,
+  //   );
+  //   expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
+  //   expect(screen.getByText('15')).not.to.equal(null);
+  // });
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
     const manyEvents = [

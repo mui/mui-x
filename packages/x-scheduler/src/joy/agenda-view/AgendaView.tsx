@@ -5,12 +5,14 @@ import { useForkRef } from '@base-ui-components/react/utils';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
+import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import './AgendaView.css';
+
+export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 const adapter = getAdapter();
 
@@ -22,8 +24,8 @@ export const AgendaView = React.memo(
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useForkRef(forwardedRef, containerRef);
 
-    const { onEventsChange, className, ...other } = props;
-    const store = useEventCalendarStore();
+    const { className, ...other } = props;
+    const { store } = useEventCalendarContext();
 
     const today = adapter.date();
 
@@ -32,7 +34,7 @@ export const AgendaView = React.memo(
     const getDayList = useDayList();
 
     const days = React.useMemo(
-      () => getDayList({ date: visibleDate, amount: 12 }),
+      () => getDayList({ date: visibleDate, amount: AGENDA_VIEW_DAYS_AMOUNT }),
       [getDayList, visibleDate],
     );
 
@@ -41,7 +43,7 @@ export const AgendaView = React.memo(
 
     return (
       <div ref={handleRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>
-        <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
+        <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => (
             <div
               className="AgendaViewRow"

@@ -1,6 +1,7 @@
 <EventCalendar
   events={events}
-  onEventsChange={setEvents}
   resources={resources}
+  defaultVisibleDate={events[0].start}
+  onEventsChange={setEvents}
   className={classes.Container}
 />

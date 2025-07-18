@@ -5,6 +5,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { useTranslations } from '../internals/utils/TranslationsContext';
+import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { useSelector } from '../../base-ui-copy/utils/store';
+import { selectors } from '../event-calendar/store';
 import './DateNavigator.css';
 
 const adapter = getAdapter();
@@ -13,8 +16,11 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   props: DateNavigatorProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, visibleDate, onNextClick, onPreviousClick, currentView, ...other } = props;
+  const { className, ...other } = props;
+  const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
+  const view = useSelector(store, selectors.view);
+  const visibleDate = useSelector(store, selectors.visibleDate);
 
   return (
     <header
@@ -29,17 +35,17 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
       <div className="DateNavigatorButtonsContainer">
         <button
           className={clsx('NeutralTextButton', 'Button', 'DateNavigatorButton')}
-          onClick={onPreviousClick}
+          onClick={instance.goToPreviousVisibleDate}
           type="button"
-          aria-label={translations.previousTimeSpan(currentView)}
+          aria-label={translations.previousTimeSpan(view)}
         >
           <ChevronLeft size={24} strokeWidth={2} />
         </button>
         <button
           className={clsx('NeutralTextButton', 'Button', 'DateNavigatorButton')}
-          onClick={onNextClick}
+          onClick={instance.goToNextVisibleDate}
           type="button"
-          aria-label={translations.nextTimeSpan(currentView)}
+          aria-label={translations.nextTimeSpan(view)}
         >
           <ChevronRight size={24} strokeWidth={2} />
         </button>

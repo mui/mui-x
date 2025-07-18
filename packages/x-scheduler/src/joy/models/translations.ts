@@ -1,4 +1,4 @@
-import { ViewType } from './views';
+import { EventCalendarView } from '../event-calendar/EventCalendar.types';
 
 export interface SchedulerTranslations {
   // ResourceLegend
@@ -19,9 +19,9 @@ export interface SchedulerTranslations {
 
   // MonthView
   hiddenEvents: (hiddenEventsCount: number) => string;
-  nextTimeSpan: (timeSpan: ViewType) => string;
+  nextTimeSpan: (timeSpan: EventCalendarView) => string;
   noResourceAriaLabel: string;
-  previousTimeSpan: (timeSpan: ViewType) => string;
+  previousTimeSpan: (timeSpan: EventCalendarView) => string;
   resourceAriaLabel: (resourceName: string) => string;
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;

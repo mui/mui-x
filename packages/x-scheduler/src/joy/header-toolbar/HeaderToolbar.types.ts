@@ -1,3 +1,1 @@
-export interface HeaderToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
-  onTodayClick: () => void;
-}
+export interface HeaderToolbarProps extends React.HTMLAttributes<HTMLDivElement> {}
