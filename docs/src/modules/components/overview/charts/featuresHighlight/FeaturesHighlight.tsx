@@ -28,7 +28,7 @@ export default function FeaturesHighlight() {
         Elegant, effortless data visualization
       </Typography>
       <Typography sx={{ textAlign: 'center' }}>
-        Highly customizable SVG-rendered React charts with d3.js-based data manipulation.
+        Highly customizable, SVG-rendered React charts with D3-based data manipulation.
       </Typography>
       <Paper
         component="div"
