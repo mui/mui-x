@@ -2,9 +2,9 @@
 import { clampAngle } from '../internals/clampAngle';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
-import { ChartDrawingArea } from '../hooks';
+import { ChartDrawingArea } from '../hooks/useDrawingArea';
 import { TickItemType } from '../hooks/useTicks';
-import { ChartsYAxisProps } from '../models';
+import { ChartsYAxisProps } from '../models/axis';
 
 export function shortenLabels(
   visibleLabels: TickItemType[],
@@ -38,28 +38,63 @@ export function shortenLabels(
     [topBoundFactor, bottomBoundFactor] = [bottomBoundFactor, topBoundFactor];
   }
 
+  // Detect if we need expensive text measurement
+  const hasCustomStyling = tickLabelStyle?.fontSize !== undefined || angle > 0;
+  const MEASUREMENT_THRESHOLD = 12;
+  const needsPreciseMeasurement = hasCustomStyling || visibleLabels.length > MEASUREMENT_THRESHOLD;
+
   for (const item of visibleLabels) {
     if (item.formattedValue) {
+      const formattedValue = item.formattedValue.toString();
+
+      // Fast path for short text with default styling
+      const REASONABLE_TEXT_LENGTH = 20;
+      if (!needsPreciseMeasurement && formattedValue.length <= REASONABLE_TEXT_LENGTH) {
+        shortenedLabels.set(item, formattedValue);
+        continue;
+      }
+
       // That maximum height of the tick depends on its proximity to the axis bounds.
-      const height = Math.min(
+      let height = Math.min(
         (item.offset + item.labelOffset) * topBoundFactor,
         (drawingArea.top +
           drawingArea.height +
           drawingArea.bottom -
           item.offset -
           item.labelOffset) *
-          bottomBoundFactor,
+        bottomBoundFactor,
       );
 
-      const doesTextFit = (text: string) =>
-        doesTextFitInRect(text, {
+      // Adjust height calculations for custom styling to prevent label disappearing  
+      if (hasCustomStyling) {
+        if (angle > 0 && angle < 180) {
+          const angleMultiplier = 1.5 + (angle / 180) * 1.2;
+          height *= angleMultiplier;
+        }
+        height = Math.max(height, 50);
+      } else {
+        height = Math.max(height, 20);
+      }
+
+      const doesTextFit = (text: string) => {
+        if (!text || text.length === 0) {
+          return true;
+        }
+
+        return doesTextFitInRect(text, {
           width: maxWidth,
           height,
           angle,
           measureText: (string: string) => getStringSize(string, tickLabelStyle),
         });
+      };
 
-      shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));
+      if (doesTextFit(formattedValue)) {
+        shortenedLabels.set(item, formattedValue);
+      } else {
+        const ellipsizedText = ellipsize(formattedValue, doesTextFit);
+        shortenedLabels.set(item, ellipsizedText && ellipsizedText.length >= 3 ? ellipsizedText : formattedValue);
+      }
     }
   }
 

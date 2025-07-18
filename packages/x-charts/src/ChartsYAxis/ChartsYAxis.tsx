@@ -16,8 +16,8 @@ import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
-import { useChartContext } from '../context/ChartProvider';
-import { useYAxes } from '../hooks';
+import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useYAxes } from '../hooks/useAxis';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
 import { shortenLabels } from './shortenLabels';
 
@@ -49,6 +49,7 @@ const defaultProps = {
   disableLine: false,
   disableTicks: false,
   tickSize: 6,
+  tickLabelMinGap: 4,
 } as const;
 
 /**
@@ -191,13 +192,22 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     y: top + height / 2,
   };
   /* If there's an axis title, the tick labels have less space to render  */
-  const tickLabelsMaxWidth = Math.max(
+  let tickLabelsMaxWidth = Math.max(
     0,
     axisWidth -
       (label ? getStringSize(label, axisLabelProps.style).height + AXIS_LABEL_TICK_LABEL_GAP : 0) -
       tickSize -
       TICK_LABEL_GAP,
   );
+
+  // When labels are rotated, they need more space. Increase the available width for angled labels.
+  const labelAngle = Math.abs(tickLabelStyle?.angle ?? 0);
+  if (labelAngle > 0 && labelAngle < 180) {
+    // For angled text, we need to account for the additional width required
+    // This is a heuristic that provides more space for rotated text
+    const angleMultiplier = 1 + (labelAngle / 180) * 2; // Gradually increase space as angle increases
+    tickLabelsMaxWidth = Math.max(tickLabelsMaxWidth, tickLabelsMaxWidth * angleMultiplier);
+  }
 
   const tickLabels = isHydrated
     ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)

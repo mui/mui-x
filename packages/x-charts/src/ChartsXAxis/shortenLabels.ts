@@ -15,6 +15,11 @@ export function shortenLabels(
   const shortenedLabels = new Map<TickItemType, string>();
   const angle = clampAngle(tickLabelStyle?.angle ?? 0);
 
+  // Detect if we need expensive text measurement
+  const hasCustomStyling = tickLabelStyle?.fontSize !== undefined || angle > 0;
+  const MEASUREMENT_THRESHOLD = 12;
+  const needsPreciseMeasurement = hasCustomStyling || visibleLabels.size > MEASUREMENT_THRESHOLD;
+
   // Multiplying the space available to the left of the text position by leftBoundFactor returns the max width of the text.
   // Same for rightBoundFactor
   let leftBoundFactor = 1;
@@ -41,8 +46,17 @@ export function shortenLabels(
 
   for (const item of visibleLabels) {
     if (item.formattedValue) {
-      // That maximum width of the tick depends on its proximity to the axis bounds.
-      const width = Math.min(
+      const formattedValue = item.formattedValue.toString();
+
+      // Fast path for short text with default styling
+      const REASONABLE_TEXT_LENGTH = 20;
+      if (!needsPreciseMeasurement && formattedValue.length <= REASONABLE_TEXT_LENGTH) {
+        shortenedLabels.set(item, formattedValue);
+        continue;
+      }
+
+      // Calculate available width for complex cases
+      let width = Math.min(
         (item.offset + item.labelOffset) * leftBoundFactor,
         (drawingArea.left +
           drawingArea.width +
@@ -52,15 +66,39 @@ export function shortenLabels(
           rightBoundFactor,
       );
 
-      const doesTextFit = (text: string) =>
-        doesTextFitInRect(text, {
+      // Adjust width calculations for custom styling to prevent label disappearing
+      if (hasCustomStyling) {
+        if (angle > 0 && angle < 180) {
+          const angleMultiplier = 2.0 + (angle / 90) * 2.0;
+          width *= angleMultiplier;
+        }
+        width = Math.max(width, 120);
+      } else {
+        width = Math.max(width, 30);
+      }
+
+      const doesTextFit = (text: string) => {
+        if (!text || text.length === 0) {
+          return true;
+        }
+
+        return doesTextFitInRect(text, {
           width,
           height: maxHeight,
           angle,
           measureText: (string: string) => getStringSize(string, tickLabelStyle),
         });
+      };
 
-      shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));
+      if (doesTextFit(formattedValue)) {
+        shortenedLabels.set(item, formattedValue);
+      } else {
+        const ellipsizedText = ellipsize(formattedValue, doesTextFit);
+        shortenedLabels.set(
+          item,
+          ellipsizedText && ellipsizedText.length >= 3 ? ellipsizedText : formattedValue,
+        );
+      }
     }
   }
 

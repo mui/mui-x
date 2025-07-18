@@ -12,7 +12,6 @@ import { AxisConfig, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
@@ -67,7 +66,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
-  const isMounted = useMounted();
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
 
@@ -91,7 +89,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickPlacement,
     tickLabelPlacement,
-    tickLabelMinGap,
     sx,
     offset,
     height: axisHeight,
@@ -151,9 +148,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const visibleLabels = getVisibleLabels(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
-    tickLabelMinGap,
+    tickLabelMinGap: 4, // Use the default value
     reverse,
-    isMounted,
+    isMounted: isHydrated,
     isXInside: instance.isXInside,
   });
 
@@ -193,7 +190,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     y: positionSign * axisHeight,
   };
 
-  /* If there's an axis title, the tick labels have less space to render  */
+  /* Calculate the space needed for tick labels based on actual content */
   const tickLabelsMaxHeight = Math.max(
     0,
     axisHeight - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
