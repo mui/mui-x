@@ -51,7 +51,7 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
     width: '100%',
     minWidth: 56 * numberOfColumns,
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-    containerType: 'inline-size', // This enables container queries!
+    containerType: 'inline-size',
     [`@container (min-width: ${containerMinWidth}px)`]: {
       backgroundColor: 'red',
       '& > .MuiMultiSectionDigitalClockSection-root': {
