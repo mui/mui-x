@@ -295,6 +295,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     const domEvent = new CustomEvent(eventName, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 
