@@ -731,10 +731,13 @@ export const useGridRowSelection = (
           (props.rowSelectionPropagation?.descendants && props.rowSelectionPropagation?.parents)) &&
         !hasFilters
       ) {
-        apiRef.current.setRowSelectionModel({
-          type: value ? 'exclude' : 'include',
-          ids: new Set(),
-        });
+        apiRef.current.setRowSelectionModel(
+          {
+            type: value ? 'exclude' : 'include',
+            ids: new Set(),
+          },
+          'multipleRowsSelection',
+        );
       } else {
         apiRef.current.selectRows(getRowsToBeSelected(), value);
       }
