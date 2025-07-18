@@ -59,9 +59,12 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     if (viewProp !== undefined) {
       partialState.view = viewProp;
     }
+    if (visibleDateProp !== undefined) {
+      partialState.visibleDate = visibleDateProp;
+    }
 
     store.apply(partialState);
-  }, [store, eventsProp, resourcesProp, viewProp]);
+  }, [store, eventsProp, resourcesProp, viewProp, visibleDateProp]);
 
   const setVisibleDate = useEventCallback(
     (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
