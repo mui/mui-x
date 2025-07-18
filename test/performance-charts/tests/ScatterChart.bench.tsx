@@ -1,13 +1,12 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
+import { render } from 'vitest-browser-react/pure';
+import { describe, expect } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('ScatterChart', () => {
-  const dataLength = 1_400;
+  const dataLength = 5_000;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -18,7 +17,7 @@ describe('ScatterChart', () => {
   bench(
     'ScatterChart with big data amount',
     async () => {
-      const { findByText } = render(
+      const page = render(
         <ScatterChart
           xAxis={[{ data: xData, valueFormatter: (v: number) => v.toLocaleString('en-US') }]}
           series={[{ data }]}
@@ -27,9 +26,7 @@ describe('ScatterChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
-
-      cleanup();
+      expect(page.getByText(dataLength.toLocaleString('en-US'))).toBeInTheDocument();
     },
     options,
   );
