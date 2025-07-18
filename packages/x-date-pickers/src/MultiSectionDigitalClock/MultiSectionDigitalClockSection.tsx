@@ -110,7 +110,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
 })(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',
-  width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
+  minWidth: MULTI_SECTION_CLOCK_SECTION_WIDTH,
   justifyContent: 'center',
   '&:first-of-type': {
     marginTop: 4,
