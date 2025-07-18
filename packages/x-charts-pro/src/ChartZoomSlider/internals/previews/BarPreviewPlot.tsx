@@ -63,6 +63,7 @@ function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
 
   const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
   const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const withoutBorderRadius = true; // We don't support border radius in preview plots
 
-  return useBarPlotData(drawingArea, xAxes, yAxes);
+  return useBarPlotData(drawingArea, xAxes, yAxes, withoutBorderRadius);
 }
