@@ -6,13 +6,13 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
+import { useMounted } from '../hooks/useMounted';
 import { getStringSize } from '../internals/domUtils';
 import { useTicks } from '../hooks/useTicks';
 import { AxisConfig, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
@@ -91,7 +91,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickPlacement,
     tickLabelPlacement,
-    tickLabelMinGap,
     sx,
     offset,
     height: axisHeight,
@@ -151,7 +150,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const visibleLabels = getVisibleLabels(xTicks, {
     tickLabelStyle: axisTickLabelProps.style,
     tickLabelInterval,
-    tickLabelMinGap,
+    tickLabelMinGap: 4, // Use the default value
     reverse,
     isMounted,
     isXInside: instance.isXInside,

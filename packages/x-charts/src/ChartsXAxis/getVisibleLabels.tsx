@@ -4,7 +4,7 @@ import { ChartsXAxisProps, ComputedXAxis } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
 import { getWordsByLines } from '../internals/getWordsByLines';
 
-/* Returns a set of indices of the tick labels that should be visible.  */
+/* Returns a set of tick labels that should be visible. */
 export function getVisibleLabels(
   xTicks: TickItemType[],
   {
@@ -38,7 +38,6 @@ export function getVisibleLabels(
     return new Set(xTicks.filter((item, index) => tickLabelInterval(item.value, index)));
   }
 
-  // Filter label to avoid overlap
   let previousTextLimit = 0;
   const direction = reverse ? -1 : 1;
 
@@ -58,7 +57,6 @@ export function getVisibleLabels(
         return false;
       }
 
-      /* Measuring text width is expensive, so we need to delay it as much as possible to improve performance. */
       const { width, height } = getTickLabelSize(item);
 
       const distance = getMinXTranslation(width, height, style?.angle);
@@ -68,8 +66,6 @@ export function getVisibleLabels(
         labelIndex > 0 &&
         direction * currentTextLimit < direction * (previousTextLimit + tickLabelMinGap)
       ) {
-        // Except for the first label, we skip all label that overlap with the last accepted.
-        // Notice that the early return prevents `previousTextLimit` from being updated.
         return false;
       }
 

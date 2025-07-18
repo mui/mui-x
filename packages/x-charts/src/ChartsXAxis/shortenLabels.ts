@@ -15,6 +15,13 @@ export function shortenLabels(
   const shortenedLabels = new Map<TickItemType, string>();
   const angle = clampAngle(tickLabelStyle?.angle ?? 0);
 
+  // Detect if we need expensive text measurement
+  const hasCustomStyling =
+    tickLabelStyle?.fontSize !== undefined ||
+    (tickLabelStyle?.angle !== undefined && Math.abs(tickLabelStyle.angle) > 0);
+  const MEASUREMENT_THRESHOLD = 12;
+  const needsPreciseMeasurement = hasCustomStyling || visibleLabels.size > MEASUREMENT_THRESHOLD;
+
   // Multiplying the space available to the left of the text position by leftBoundFactor returns the max width of the text.
   // Same for rightBoundFactor
   let leftBoundFactor = 1;
@@ -41,6 +48,14 @@ export function shortenLabels(
 
   for (const item of visibleLabels) {
     if (item.formattedValue) {
+      const formattedValue = item.formattedValue.toString();
+
+      // Fast-path for short text without measurement
+      if (!needsPreciseMeasurement && formattedValue.length <= 4) {
+        shortenedLabels.set(item, formattedValue);
+        continue;
+      }
+
       // That maximum width of the tick depends on its proximity to the axis bounds.
       const width = Math.min(
         (item.offset + item.labelOffset) * leftBoundFactor,
@@ -60,7 +75,18 @@ export function shortenLabels(
           measureText: (string: string) => getStringSize(string, tickLabelStyle),
         });
 
-      shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));
+      const shortened = ellipsize(formattedValue, doesTextFit);
+
+      // For custom styling with short labels, prefer full text over ellipsization if result is too short
+      if (
+        hasCustomStyling &&
+        formattedValue.length <= 12 &&
+        (shortened === '' || shortened.length < formattedValue.length * 0.7)
+      ) {
+        shortenedLabels.set(item, formattedValue);
+      } else {
+        shortenedLabels.set(item, shortened);
+      }
     }
   }
 
