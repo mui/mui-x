@@ -16,7 +16,7 @@ const advancedFeatures = [
   },
   {
     title: 'Export',
-    description: 'Save your charts in PDF, PNG, or JPEG formats to share them beyond the web.',
+    description: 'Save your charts in PDF, PNG, or JPEG formats to share them anywhere.',
     iconLink: '/static/x/pro.svg',
   },
 ];
