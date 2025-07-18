@@ -718,6 +718,7 @@ export const useGridRowSelection = (
 
   const toggleAllRows = React.useCallback(
     (value: boolean) => {
+      const hasNestedData = gridRowMaximumTreeDepthSelector(apiRef) > 1;
       const filterModel = gridFilterModelSelector(apiRef);
       const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
       const hasFilters =
@@ -726,7 +727,8 @@ export const useGridRowSelection = (
       if (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&
-        applyAutoSelection &&
+        (!hasNestedData ||
+          (props.rowSelectionPropagation?.descendants && props.rowSelectionPropagation?.parents)) &&
         !hasFilters
       ) {
         apiRef.current.setRowSelectionModel({
@@ -739,10 +741,11 @@ export const useGridRowSelection = (
     },
     [
       apiRef,
-      applyAutoSelection,
       getRowsToBeSelected,
       props.checkboxSelectionVisibleOnly,
       props.isRowSelectable,
+      props.rowSelectionPropagation?.descendants,
+      props.rowSelectionPropagation?.parents,
     ],
   );
 
