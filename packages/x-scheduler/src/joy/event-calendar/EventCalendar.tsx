@@ -47,7 +47,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   });
 
   const view = useSelector(store, selectors.view);
-  const resources = useSelector(store, selectors.resources);
 
   let content: React.ReactNode;
   switch (view) {
