@@ -138,6 +138,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     goToPreviousVisibleDate,
     goToNextVisibleDate,
     goToDay,
+    setVisibleResources
   });
   const instance = instanceRef.current;
 
