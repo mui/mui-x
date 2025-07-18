@@ -8,7 +8,6 @@ import {
   GridColumnLookup,
   GridPinnedColumnFields,
   EMPTY_PINNED_COLUMN_FIELDS,
-  GridPinnedColumns,
 } from './gridColumnsInterfaces';
 import { gridIsRtlSelector } from '../../core/gridCoreSelector';
 import { gridListColumnSelector, gridListViewSelector } from '../listView';
@@ -126,7 +125,7 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   gridListViewSelector,
   (columnsState, model, visibleColumnFields, isRtl, listView) => {
     if (listView) {
-      return EMPTY_PINNED_COLUMN_FIELDS as unknown as GridPinnedColumns;
+      return EMPTY_PINNED_COLUMN_FIELDS;
     }
     const visiblePinnedFields = filterMissingColumns(model, visibleColumnFields, isRtl);
     const visiblePinnedColumns = {
