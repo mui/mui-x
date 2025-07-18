@@ -6,18 +6,17 @@ import ChartDemoNavigator from '../ChartDemoNavigator';
 
 const advancedFeatures = [
   {
-    title: 'Multi axes and series',
-    description:
-      'Support multiple axes and chart types to pick the visualization that matches your need.',
+    title: 'Multiple axes and series',
+    description: 'Layer multiple chart types and axes to meet complex visualization needs.',
   },
   {
-    title: 'Zoom & Pan',
-    description: 'Built-in zoom features to explore the details of your chart.',
+    title: 'Zoom and pan',
+    description: 'Explore the details of the data with zooming and panning.',
     iconLink: '/static/x/pro.svg',
   },
   {
     title: 'Export',
-    description: 'Save your charts as PDF, PNG, or JPEG format to share them outside of the web.',
+    description: 'Save your charts in PDF, PNG, or JPEG formats to share them anywhere.',
     iconLink: '/static/x/pro.svg',
   },
 ];
@@ -27,7 +26,7 @@ export default function AdvancedFeatures() {
 
   return (
     <ChartDemoNavigator
-      overline="Advanced Features"
+      overline="Advanced features"
       descriptions={advancedFeatures}
       activeItem={activeItem}
       setActiveItem={setActiveItem}

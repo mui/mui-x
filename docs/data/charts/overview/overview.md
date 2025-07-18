@@ -19,9 +19,9 @@ packageName: '@mui/x-charts'
 {{"component": "modules/components/overview/charts/advancedCharts/AdvancedChartDemo"}}
 {{"component": "modules/components/overview/charts/advancedFeatures/AdvancedFeatures"}}
 
-## Supported Features
+## Supported features
 
-Features such as axes and legends are shared across Chart components and are described in their separate documents.
+Features such as axes and legends are shared across Chart components and are described in their corresponding documents.
 
 {{"component": "modules/components/ChartFeaturesGrid.js"}}
 
