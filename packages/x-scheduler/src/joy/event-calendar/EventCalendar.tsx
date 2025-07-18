@@ -7,12 +7,12 @@ import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { getColorClassName } from '../internals/utils/color-utils';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from './store';
 import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { MonthView } from '../month-view';
 import { DateNavigator } from '../date-navigator/DateNavigator';
+import { ResourceLegend } from '../internals/components/resource-legend/ResourceLegend';
 import { useEventCalendar } from './useEventCalendar';
 import '../index.css';
 import './EventCalendar.css';
@@ -80,25 +80,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
             >
               Month Calendar
             </section>
-            {resources && resources.length > 0 && (
-              <section
-                // TODO: Add localization
-                aria-label="Resource legend"
-                className="EventCalendarResourceLegend"
-              >
-                {resources.map((resource) => (
-                  <div key={resource.id} className="EventCalendarResourceLegendItem">
-                    <span
-                      className={clsx(
-                        'EventCalendarResourceLegendColor',
-                        getColorClassName({ resource }),
-                      )}
-                    />
-                    <span className="EventCalendarResourceLegendName">{resource.name}</span>
-                  </div>
-                ))}
-              </section>
-            )}
+            <ResourceLegend />
           </aside>
           <div
             className={clsx(

@@ -1,6 +1,11 @@
 import { EventCalendarView } from '../event-calendar/EventCalendar.types';
 
 export interface SchedulerTranslations {
+  // ResourceLegend
+  hideEventsLabel: (resourceName: string) => string;
+  resourceLegendSectionLabel: string;
+  showEventsLabel: (resourceName: string) => string;
+
   // ViewSwitcher
   agenda: string;
   day: string;

@@ -45,6 +45,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
       new Store<State>({
         events: eventsProp,
         resources: resourcesProp || [],
+        visibleResources: new Map(),
         visibleDate: visibleDateProp ?? defaultVisibleDate,
         view: viewProp ?? defaultView,
         views: ['week', 'day', 'month', 'agenda'],
@@ -113,7 +114,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     },
   );
 
-  const goToDay = useEventCallback((visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+  const goToDay: EventCalendarInstance['goToDay'] = useEventCallback((visibleDate, event) => {
     if (!store.state.views.includes('day')) {
       throw new Error(
         'The "day" view is disabled on your Event Calendar. Please ensure that "day" is included in the views prop before using the goToDay method.',
@@ -122,6 +123,12 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     setVisibleDate(visibleDate, event);
     setView('day', event);
   });
+
+  const setVisibleResources: EventCalendarInstance['setVisibleResources'] = useEventCallback(
+    (visibleResources) => {
+      store.set('visibleResources', visibleResources);
+    },
+  );
 
   const instanceRef = React.useRef<EventCalendarInstance>({
     setView,

@@ -1,6 +1,6 @@
 import { SchedulerValidDate } from '../../primitives/models';
 import { CalendarEvent, CalendarEventId } from '../models/events';
-import { CalendarResource } from '../models/resource';
+import { CalendarResource, CalendarResourceId } from '../models/resource';
 import { SchedulerTranslations } from '../models/translations';
 
 export interface EventCalendarProps
@@ -57,33 +57,37 @@ export interface UseEventCalendarParameters {
 
 export interface EventCalendarInstance {
   /**
-   * Set the view of the calendar.
+   * Sets the view of the calendar.
    */
   setView: (view: EventCalendarView, event: React.UIEvent | Event) => void;
   /**
-   * Update an event in the calendar.
+   * Updates an event in the calendar.
    */
   updateEvent: (calendarEvent: CalendarEvent) => void;
   /**
-   * Delete an event from the calendar.
+   * Deletes an event from the calendar.
    */
   deleteEvent: (eventId: CalendarEventId) => void;
   /**
-   * Go to today's date without changing the view.
+   * Goes to today's date without changing the view.
    */
   setVisibleDateToToday: (event: React.UIEvent) => void;
   /**
-   * Go to the previous visible date span based on the current view.
+   * Goes to the previous visible date span based on the current view.
    */
   goToPreviousVisibleDate: (event: React.UIEvent) => void;
   /**
-   * Go to the next visible date span based on the current view.
+   * Goes to the next visible date span based on the current view.
    */
   goToNextVisibleDate: (event: React.UIEvent) => void;
   /**
-   * Go to a specific day and set the view to 'day'.
+   * Goes to a specific day and set the view to 'day'.
    */
   goToDay: (day: SchedulerValidDate, event: React.UIEvent) => void;
+  /**
+   * Updates the visible resources.
+   */
+  setVisibleResources: (visibleResources: Map<CalendarResourceId, boolean>) => void;
 }
 
 export type EventCalendarView = 'week' | 'day' | 'month' | 'agenda';
