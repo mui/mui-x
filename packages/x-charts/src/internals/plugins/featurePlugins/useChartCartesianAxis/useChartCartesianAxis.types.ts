@@ -61,6 +61,13 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    * Identified by the axis id, and data index.
    */
   highlightedAxis?: AxisItemIdentifier[];
+
+  onTooltipAxisChange?: (axisItems: AxisItemIdentifier[]) => void;
+  /**
+   * The controlled axis tooltip.
+   * Identified by the axis id, and data index.
+   */
+  tooltipAxis?: AxisItemIdentifier[];
   /**
    * If `true`, the charts will not listen to the mouse move event.
    * It might break interactive features, but will improve performance.
@@ -102,6 +109,10 @@ export interface UseChartCartesianAxisState {
    * The controlled axis item highlighted.
    */
   controlledCartesianAxisHighlight?: AxisItemIdentifier[];
+  /**
+   * The controlled axis item in the tooltip.
+   */
+  controlledCartesianAxisTooltip?: AxisItemIdentifier[];
 }
 
 export type ExtremumFilter = (
