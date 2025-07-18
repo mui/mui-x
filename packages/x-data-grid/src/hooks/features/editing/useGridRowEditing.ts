@@ -459,30 +459,41 @@ export const useGridRowEditing = (
       }
 
       columns
-        .filter((column) => column.editable && !!column.preProcessEditCellProps && deleteValue)
+        .filter((column) => {
+          const field = column.field;
+          const cellParams = apiRef.current.getCellParams(id, field);
+          return (
+            column.editable &&
+            !!column.preProcessEditCellProps &&
+            deleteValue &&
+            cellParams.isEditable
+          );
+        })
         .forEach((column) => {
           const field = column.field;
           const value = apiRef.current.getCellValue(id, field);
           const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
 
-          Promise.resolve(
-            column.preProcessEditCellProps!({
-              id,
-              row,
-              props: newProps[field],
-              hasChanged: newValue !== value,
-            }),
-          ).then((processedProps) => {
-            // Check if still in edit mode before updating
-            if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
-              const editingState = gridEditRowsStateSelector(apiRef);
-              updateOrDeleteFieldState(id, field, {
-                ...processedProps,
-                value: editingState[id][field].value,
-                isProcessingProps: false,
-              });
-            }
-          });
+          if (newProps[field]) {
+            Promise.resolve(
+              column.preProcessEditCellProps!({
+                id,
+                row,
+                props: newProps[field],
+                hasChanged: newValue !== value,
+              }),
+            ).then((processedProps) => {
+              // Check if still in edit mode before updating
+              if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
+                const editingState = gridEditRowsStateSelector(apiRef);
+                updateOrDeleteFieldState(id, field, {
+                  ...processedProps,
+                  value: editingState[id][field].value,
+                  isProcessingProps: false,
+                });
+              }
+            });
+          }
         });
     },
   ) as GridRowEditingApi['startRowEditMode'];
