@@ -2,42 +2,30 @@
 import * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from '../hooks/animation';
-import { getRadius, GetRadiusData } from './getRadius';
 
-function buildClipPath(
-  size: number,
-  borderRadius: number,
-  ownerState: Omit<GetRadiusData, 'borderRadius'>,
-) {
-  const radiusData = { ...ownerState, borderRadius };
-  const topLeft = Math.min(size, getRadius('top-left', radiusData));
-  const topRight = Math.min(size, getRadius('top-right', radiusData));
-  const bottomRight = Math.min(size, getRadius('bottom-right', radiusData));
-  const bottomLeft = Math.min(size, getRadius('bottom-left', radiusData));
-
-  return `inset(0px round ${topLeft}px ${topRight}px ${bottomRight}px ${bottomLeft}px)`;
+interface UseAnimateBarClipPathParams {
+  ref?: React.Ref<SVGPathElement>;
+  layout: 'vertical' | 'horizontal';
+  hasNegative: boolean;
+  hasPositive: boolean;
+  xOrigin: number;
+  yOrigin: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  borderRadius: number;
+  skipAnimation: boolean;
 }
 
-type UseAnimateBarClipRectParams = Pick<
-  BarClipRectProps,
-  'x' | 'y' | 'width' | 'height' | 'skipAnimation'
-> & {
-  ref?: React.Ref<SVGRectElement>;
-  borderRadius: number;
-  ownerState: Omit<GetRadiusData, 'borderRadius'>;
-};
-type UseAnimateBarClipRectReturn = {
-  ref: React.Ref<SVGRectElement>;
-  style: React.CSSProperties;
-} & Pick<BarClipRectProps, 'x' | 'y' | 'width' | 'height'>;
-type BarClipRectInterpolatedProps = Pick<
-  UseAnimateBarClipRectParams,
-  'x' | 'y' | 'width' | 'height'
-> & { borderRadius: number };
+type BarClipPathInterpolatedProps = Pick<
+  UseAnimateBarClipPathParams,
+  'x' | 'y' | 'width' | 'height' | 'borderRadius'
+>;
 
-function barClipRectPropsInterpolator(
-  from: BarClipRectInterpolatedProps,
-  to: BarClipRectInterpolatedProps,
+function barClipPathPropsInterpolator(
+  from: BarClipPathInterpolatedProps,
+  to: BarClipPathInterpolatedProps,
 ) {
   const interpolateX = interpolateNumber(from.x, to.x);
   const interpolateY = interpolateNumber(from.y, to.y);
@@ -56,14 +44,12 @@ function barClipRectPropsInterpolator(
   };
 }
 
-export function useAnimateBarClipRect(
-  props: UseAnimateBarClipRectParams,
-): UseAnimateBarClipRectReturn {
+export function useAnimateBarClipPath(props: UseAnimateBarClipPathParams) {
   const initialProps = {
-    x: props.x,
-    y: props.y + (props.ownerState.layout === 'vertical' ? props.height : 0),
-    width: props.ownerState.layout === 'vertical' ? props.width : 0,
-    height: props.ownerState.layout === 'vertical' ? 0 : props.height,
+    x: props.layout === 'vertical' ? props.x : props.xOrigin,
+    y: props.layout === 'vertical' ? props.yOrigin : props.y,
+    width: props.layout === 'vertical' ? props.width : 0,
+    height: props.layout === 'vertical' ? 0 : props.height,
     borderRadius: props.borderRadius,
   };
 
@@ -76,46 +62,31 @@ export function useAnimateBarClipRect(
       borderRadius: props.borderRadius,
     },
     {
-      createInterpolator: barClipRectPropsInterpolator,
+      createInterpolator: barClipPathPropsInterpolator,
       transformProps: (p) => ({
-        x: p.x,
-        y: p.y,
-        width: p.width,
-        height: p.height,
-        style: {
-          clipPath: buildClipPath(
-            props.ownerState.layout === 'vertical' ? p.height : p.width,
-            p.borderRadius,
-            props.ownerState,
-          ),
-        },
+        d: generateClipPath(
+          props.hasNegative,
+          props.hasPositive,
+          props.layout,
+          p.x,
+          p.y,
+          p.width,
+          p.height,
+          props.xOrigin,
+          props.yOrigin,
+          p.borderRadius,
+        ),
       }),
-      applyProps(element: SVGRectElement, animatedProps) {
-        element.setAttribute('x', animatedProps.x.toString());
-        element.setAttribute('y', animatedProps.y.toString());
-        element.setAttribute('width', animatedProps.width.toString());
-        element.setAttribute('height', animatedProps.height.toString());
-        element.style.clipPath = animatedProps.style.clipPath;
+      applyProps(element: SVGPathElement, { d }) {
+        if (d) {
+          element.setAttribute('d', d);
+        }
       },
       initialProps,
       skip: props.skipAnimation,
       ref: props.ref,
     },
   );
-}
-
-interface BarClipRectProps
-  extends Pick<BarClipPathProps, 'x' | 'y' | 'width' | 'height' | 'skipAnimation'> {
-  ownerState: GetRadiusData;
-}
-
-function BarClipRect(props: BarClipRectProps) {
-  const animatedProps = useAnimateBarClipRect({
-    ...props,
-    borderRadius: props.ownerState.borderRadius ?? 0,
-  });
-
-  return <rect {...animatedProps} />;
 }
 
 export interface BarClipPathProps {
@@ -126,6 +97,8 @@ export interface BarClipPathProps {
   layout?: 'vertical' | 'horizontal';
   x: number;
   y: number;
+  xOrigin: number;
+  yOrigin: number;
   width: number;
   height: number;
   skipAnimation: boolean;
@@ -135,7 +108,20 @@ export interface BarClipPathProps {
  * @ignore - internal component.
  */
 function BarClipPath(props: BarClipPathProps) {
-  const { maskId, x, y, width, height, skipAnimation, ...rest } = props;
+  const { maskId, x, y, width, height, skipAnimation } = props;
+  const { ref, d } = useAnimateBarClipPath({
+    layout: props.layout ?? 'vertical',
+    hasNegative: props.hasNegative,
+    hasPositive: props.hasPositive,
+    xOrigin: props.xOrigin,
+    yOrigin: props.yOrigin,
+    x,
+    y,
+    width,
+    height,
+    borderRadius: props.borderRadius ?? 0,
+    skipAnimation,
+  });
 
   if (!props.borderRadius || props.borderRadius <= 0) {
     return null;
@@ -143,16 +129,56 @@ function BarClipPath(props: BarClipPathProps) {
 
   return (
     <clipPath id={maskId}>
-      <BarClipRect
-        ownerState={rest}
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        skipAnimation={skipAnimation}
-      />
+      <path ref={ref} d={d} />
     </clipPath>
   );
+}
+
+function generateClipPath(
+  hasNegative: boolean,
+  hasPositive: boolean,
+  layout: 'vertical' | 'horizontal',
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  xOrigin: number,
+  yOrigin: number,
+  borderRadius: number,
+) {
+  if (layout === 'vertical') {
+    if (hasPositive && hasNegative) {
+      const bR = Math.min(borderRadius, width / 2, height / 2);
+      return `M${x},${y + height / 2} v${-(height / 2 - bR)} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - 2 * bR} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-(width - bR * 2)} a${bR},${bR} 0 0 1 ${-bR},${-bR} v${-(height / 2 - bR)}`;
+    }
+
+    const bR = Math.min(borderRadius, width / 2);
+    if (hasPositive) {
+      return `M${x},${Math.max(yOrigin, y + bR)} v${Math.min(0, -(yOrigin - y - bR))} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width - bR * 2} a${bR},${bR} 0 0 1 ${bR},${bR} v${Math.max(0, yOrigin - y - bR)} Z`;
+    }
+
+    if (hasNegative) {
+      return `M${x},${Math.min(yOrigin, y + height - bR)} v${Math.max(0, height - bR)} a${bR},${bR} 0 0 0 ${bR},${bR} h${width - bR * 2} a${bR},${bR} 0 0 0 ${bR},${-bR} v${-Math.max(0, height - bR)} Z`;
+    }
+  }
+
+  if (layout === 'horizontal') {
+    if (hasPositive && hasNegative) {
+      const bR = Math.min(borderRadius, width / 2, height / 2);
+      return `M${x + width / 2},${y} h${width / 2 - bR} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-(width - 2 * bR)} a${bR},${bR} 0 0 1 ${-bR},${-bR} v${-(height - bR * 2)} a${bR},${bR} 0 0 1 ${bR},${-bR} h${width / 2 - bR}`;
+    }
+
+    const bR = Math.min(borderRadius, height / 2);
+    if (hasPositive) {
+      return `M${Math.min(xOrigin, x - bR)},${y} h${width} a${bR},${bR} 0 0 1 ${bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 1 ${-bR},${bR} h${-width} Z`;
+    }
+
+    if (hasNegative) {
+      return `M${Math.max(xOrigin, x + width + bR)},${y} h${-width} a${bR},${bR} 0 0 0 ${-bR},${bR} v${height - bR * 2} a${bR},${bR} 0 0 0 ${bR},${bR} h${width} Z`;
+    }
+  }
+
+  return undefined;
 }
 
 export { BarClipPath };
