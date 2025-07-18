@@ -811,7 +811,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.callCount).to.equal(2);
+      expect(onRowSelectionModelChange.callCount).to.equal(4);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
