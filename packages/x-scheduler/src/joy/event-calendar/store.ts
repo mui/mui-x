@@ -1,6 +1,6 @@
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { createSelector, createSelectorMemoized, Store } from '../../base-ui-copy/utils/store';
-import { SchedulerValidDate } from '../../primitives/models';
+import { TemporalValidDate } from '../../primitives/models';
 import { CalendarEvent } from '../models/events';
 import { CalendarResource, CalendarResourceId } from '../models/resource';
 import { ViewType } from '../models/views';
@@ -8,7 +8,7 @@ import { ViewType } from '../models/views';
 const adapter = getAdapter();
 
 export type State = {
-  visibleDate: SchedulerValidDate;
+  visibleDate: TemporalValidDate;
   currentView: ViewType;
   views: ViewType[];
   events: CalendarEvent[];
@@ -44,7 +44,7 @@ export const selectors = {
         map.get(dayKey)!.push(event);
       }
 
-      return (day: SchedulerValidDate) => {
+      return (day: TemporalValidDate) => {
         const dayKey = adapter.format(day, 'keyboardDate');
         return map.get(dayKey) || [];
       };

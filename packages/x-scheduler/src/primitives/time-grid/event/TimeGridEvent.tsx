@@ -7,7 +7,7 @@ import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
-import { SchedulerValidDate } from '../../models';
+import { TemporalValidDate } from '../../models';
 
 const adapter = getAdapter();
 
@@ -35,7 +35,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
 
   const style = React.useMemo(() => {
-    const getMinutes = (date: SchedulerValidDate) =>
+    const getMinutes = (date: TemporalValidDate) =>
       adapter.getHours(date) * 60 + adapter.getMinutes(date);
 
     const minutesInColumn = getMinutes(columnEnd) - getMinutes(columnStart);

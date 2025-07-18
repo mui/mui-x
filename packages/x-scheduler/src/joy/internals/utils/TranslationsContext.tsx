@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { SchedulerTranslations } from '../../models/translations';
+import { EventCalendarTranslations } from '../../models/translations';
 import { enUS } from '../../translations/enUS';
 
-export type TranslationsContext = SchedulerTranslations;
+export type TranslationsContext = EventCalendarTranslations;
 
 /**
  * @internal
@@ -38,5 +38,5 @@ export function useTranslations() {
 
 interface TranslationProviderProps {
   children: React.ReactNode;
-  translations: Partial<SchedulerTranslations> | undefined;
+  translations: Partial<EventCalendarTranslations> | undefined;
 }

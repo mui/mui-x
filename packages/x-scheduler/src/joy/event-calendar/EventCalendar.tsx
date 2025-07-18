@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { SchedulerValidDate } from '../../primitives/models';
+import { TemporalValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
@@ -52,7 +52,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const resources = useSelector(store, selectors.resources);
   const visibleDate = useSelector(store, selectors.visibleDate);
 
-  const setVisibleDate = useEventCallback((date: SchedulerValidDate) => {
+  const setVisibleDate = useEventCallback((date: TemporalValidDate) => {
     store.apply({ visibleDate: date });
   });
 
@@ -62,7 +62,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     view: currentView,
   });
 
-  const handleDayHeaderClick = useEventCallback((day: SchedulerValidDate) => {
+  const handleDayHeaderClick = useEventCallback((day: TemporalValidDate) => {
     store.apply({ visibleDate: day, currentView: 'day' });
   });
 

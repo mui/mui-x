@@ -1,17 +1,17 @@
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { ViewType } from '../../models/views';
-import { SchedulerValidDate } from '../../../primitives/models';
+import { TemporalValidDate } from '../../../primitives/models';
 import { useEventCallback } from '../../../base-ui-copy/utils/useEventCallback';
 
 const adapter = getAdapter();
 
 type UseDateNavigationProps = {
-  visibleDate: SchedulerValidDate;
-  setVisibleDate: (date: SchedulerValidDate) => void;
+  visibleDate: TemporalValidDate;
+  setVisibleDate: (date: TemporalValidDate) => void;
   view: ViewType;
 };
 
-function getNavigationDate(view: ViewType, visibleDate: SchedulerValidDate, delta: number) {
+function getNavigationDate(view: ViewType, visibleDate: TemporalValidDate, delta: number) {
   switch (view) {
     case 'day':
       return adapter.addDays(visibleDate, delta);

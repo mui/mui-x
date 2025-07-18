@@ -1,4 +1,4 @@
-import { SchedulerValidDate } from '../../models';
+import { TemporalValidDate } from '../../models';
 
 type FieldSectionType =
   | 'year'
@@ -13,7 +13,7 @@ type FieldSectionType =
 
 type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
 
-export type SchedulerTimezone = 'default' | 'system' | 'UTC' | string;
+export type TemporalTimezone = 'default' | 'system' | 'UTC' | string;
 
 export interface AdapterFormats {
   // Token formats
@@ -158,7 +158,7 @@ export type AdapterOptions<TLocale, TInstance> = {
 
 export type DateBuilderReturnType<T extends string | null | undefined> = [T] extends [null]
   ? null
-  : SchedulerValidDate;
+  : TemporalValidDate;
 
 export interface Adapter<TLocale = any> {
   /**
@@ -185,45 +185,45 @@ export interface Adapter<TLocale = any> {
    * If no `value` parameter is provided, creates a date with the current timestamp.
    * If a `value` parameter is provided, pass it to the date library to try to parse it.
    * @param {string | null | undefined} value The optional value to parse.
-   * @param {SchedulerTimezone} timezone The timezone of the date. Default: "default"
-   * @returns {SchedulerValidDate | null} The parsed date.
+   * @param {TemporalTimezone} timezone The timezone of the date. Default: "default"
+   * @returns {TemporalValidDate | null} The parsed date.
    */
   date<T extends string | null | undefined>(
     value?: T,
-    timezone?: SchedulerTimezone,
+    timezone?: TemporalTimezone,
   ): DateBuilderReturnType<T>;
   /**
    * Creates an invalid date in the date library format.
    * @deprecated This method will be removed in the next major release (v9.0.0).
-   * @returns {SchedulerValidDate} The invalid date.
+   * @returns {TemporalValidDate} The invalid date.
    */
-  getInvalidDate(): SchedulerValidDate;
+  getInvalidDate(): TemporalValidDate;
   /**
    * Extracts the timezone from a date.
-   * @param {SchedulerValidDate | null} value The date from which we want to get the timezone.
-   * @returns {SchedulerValidDate} The timezone of the date.
+   * @param {TemporalValidDate | null} value The date from which we want to get the timezone.
+   * @returns {TemporalValidDate} The timezone of the date.
    */
-  getTimezone(value: SchedulerValidDate | null): SchedulerTimezone;
+  getTimezone(value: TemporalValidDate | null): TemporalTimezone;
   /**
    * Convert a date to another timezone.
-   * @param {SchedulerValidDate} value The date to convert.
-   * @param {SchedulerTimezone} timezone The timezone to convert the date to.
-   * @returns {SchedulerValidDate} The converted date.
+   * @param {TemporalValidDate} value The date to convert.
+   * @param {TemporalTimezone} timezone The timezone to convert the date to.
+   * @returns {TemporalValidDate} The converted date.
    */
-  setTimezone(value: SchedulerValidDate, timezone: SchedulerTimezone): SchedulerValidDate;
+  setTimezone(value: TemporalValidDate, timezone: TemporalTimezone): TemporalValidDate;
   /**
    * Convert a date in the library format into a JavaScript `Date` object.
-   * @param {SchedulerValidDate} value The value to convert.
-   * @returns {SchedulerValidDate} the JavaScript date.
+   * @param {TemporalValidDate} value The value to convert.
+   * @returns {TemporalValidDate} the JavaScript date.
    */
-  toJsDate(value: SchedulerValidDate): Date;
+  toJsDate(value: TemporalValidDate): Date;
   /**
    * Parse a string date in a specific format.
    * @param {string} value The string date to parse.
    * @param {string} format The format in which the string date is.
-   * @returns {SchedulerValidDate | null} The parsed date.
+   * @returns {TemporalValidDate | null} The parsed date.
    */
-  parse(value: string, format: string): SchedulerValidDate | null;
+  parse(value: string, format: string): TemporalValidDate | null;
   /**
    * Get the code of the locale currently used by the adapter.
    * @returns {string} The code of the locale.
@@ -242,24 +242,24 @@ export interface Adapter<TLocale = any> {
   expandFormat(format: string): string;
   /**
    * Check if the date is valid.
-   * @param {SchedulerValidDate | null} value The value to test.
+   * @param {TemporalValidDate | null} value The value to test.
    * @returns {boolean} `true` if the value is a valid date according to the date library.
    */
-  isValid(value: SchedulerValidDate | null): value is SchedulerValidDate;
+  isValid(value: TemporalValidDate | null): value is TemporalValidDate;
   /**
    * Format a date using an adapter format string (see the `AdapterFormats` interface)
-   * @param {SchedulerValidDate} value The date to format.
+   * @param {TemporalValidDate} value The date to format.
    * @param {keyof AdapterFormats} formatKey The formatKey to use.
    * @returns {string} The stringify date.
    */
-  format(value: SchedulerValidDate, formatKey: keyof AdapterFormats): string;
+  format(value: TemporalValidDate, formatKey: keyof AdapterFormats): string;
   /**
    * Format a date using a format of the date library.
-   * @param {SchedulerValidDate} value The date to format.
+   * @param {TemporalValidDate} value The date to format.
    * @param {string} formatString The format to use.
    * @returns {string} The stringify date.
    */
-  formatByString(value: SchedulerValidDate, formatString: string): string;
+  formatByString(value: TemporalValidDate, formatString: string): string;
   /**
    * Format a number to be rendered in the clock.
    * Is being used in hijri and jalali adapters.
@@ -269,313 +269,310 @@ export interface Adapter<TLocale = any> {
   formatNumber(numberToFormat: string): string;
   /**
    * Check if the two dates are equal (which means they represent the same timestamp).
-   * @param {SchedulerValidDate | null} value The reference date.
-   * @param {SchedulerValidDate | null} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate | null} value The reference date.
+   * @param {TemporalValidDate | null} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are equal.
    */
-  isEqual(value: SchedulerValidDate | null, comparing: SchedulerValidDate | null): boolean;
+  isEqual(value: TemporalValidDate | null, comparing: TemporalValidDate | null): boolean;
   /**
    * Check if the two dates are in the same year (using the timezone of the reference date).
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are in the same year.
    */
-  isSameYear(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isSameYear(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   /**
    * Check if the two dates are in the same month (using the timezone of the reference date).
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are in the same month.
    */
-  isSameMonth(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isSameMonth(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   /**
    * Check if the two dates are in the same day (using the timezone of the reference date).
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are in the same day.
    */
-  isSameDay(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isSameDay(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   /**
    * Check if the two dates are at the same hour (using the timezone of the reference date).
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are in the same hour.
    */
-  isSameHour(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isSameHour(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   /**
    * Check if the reference date is after the second date.
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the reference date is after the second date.
    */
-  isAfter(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isAfter(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
    * Check if the year of the reference date is after the year of the second date (using the timezone of the reference date).
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the year of the reference date is after the year of the second date.
    */
-  isAfterYear(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isAfterYear(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
    * Check if the day of the reference date is after the day of the second date (using the timezone of the reference date).
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the day of the reference date is after the day of the second date.
    */
-  isAfterDay(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isAfterDay(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   /**
    * Check if the reference date is before the second date.
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the reference date is before the second date.
    */
-  isBefore(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isBefore(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
    * Check if the year of the reference date is before the year of the second date (using the timezone of the reference date).
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the year of the reference date is before the year of the second date.
    */
-  isBeforeYear(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isBeforeYear(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
    * Check if the day of the reference date is before the day of the second date (using the timezone of the reference date).
-   * @param {SchedulerValidDate} value The reference date.
-   * @param {SchedulerValidDate} comparing The date to compare with the reference date.
+   * @param {TemporalValidDate} value The reference date.
+   * @param {TemporalValidDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the day of the reference date is before the day of the second date.
    */
-  isBeforeDay(value: SchedulerValidDate, comparing: SchedulerValidDate): boolean;
+  isBeforeDay(value: TemporalValidDate, comparing: TemporalValidDate): boolean;
   /**
    * Check if the value is within the provided range.
-   * @param {SchedulerValidDate} value The value to test.
-   * @param {[SchedulerValidDate, SchedulerValidDate]} range The range in which the value should be.
+   * @param {TemporalValidDate} value The value to test.
+   * @param {[TemporalValidDate, TemporalValidDate]} range The range in which the value should be.
    * @returns {boolean} `true` if the value is within the provided range.
    */
-  isWithinRange(
-    value: SchedulerValidDate,
-    range: [SchedulerValidDate, SchedulerValidDate],
-  ): boolean;
+  isWithinRange(value: TemporalValidDate, range: [TemporalValidDate, TemporalValidDate]): boolean;
   /**
    * Return the start of the year for the given date.
-   * @param {SchedulerValidDate} value The original date.
-   * @returns {SchedulerValidDate} The start of the year of the given date.
+   * @param {TemporalValidDate} value The original date.
+   * @returns {TemporalValidDate} The start of the year of the given date.
    */
-  startOfYear(value: SchedulerValidDate): SchedulerValidDate;
+  startOfYear(value: TemporalValidDate): TemporalValidDate;
   /**
    * Return the start of the month for the given date.
-   * @param {SchedulerValidDate} value The original date.
-   * @returns {SchedulerValidDate} The start of the month of the given date.
+   * @param {TemporalValidDate} value The original date.
+   * @returns {TemporalValidDate} The start of the month of the given date.
    */
-  startOfMonth(value: SchedulerValidDate): SchedulerValidDate;
+  startOfMonth(value: TemporalValidDate): TemporalValidDate;
   /**
    * Return the start of the week for the given date.
-   * @param {SchedulerValidDate} value The original date.
-   * @returns {SchedulerValidDate} The start of the week of the given date.
+   * @param {TemporalValidDate} value The original date.
+   * @returns {TemporalValidDate} The start of the week of the given date.
    */
-  startOfWeek(value: SchedulerValidDate): SchedulerValidDate;
+  startOfWeek(value: TemporalValidDate): TemporalValidDate;
   /**
    * Return the start of the day for the given date.
-   * @param {SchedulerValidDate} value The original date.
-   * @returns {SchedulerValidDate} The start of the day of the given date.
+   * @param {TemporalValidDate} value The original date.
+   * @returns {TemporalValidDate} The start of the day of the given date.
    */
-  startOfDay(value: SchedulerValidDate): SchedulerValidDate;
+  startOfDay(value: TemporalValidDate): TemporalValidDate;
   /**
    * Return the end of the year for the given date.
-   * @param {SchedulerValidDate} value The original date.
-   * @returns {SchedulerValidDate} The end of the year of the given date.
+   * @param {TemporalValidDate} value The original date.
+   * @returns {TemporalValidDate} The end of the year of the given date.
    */
-  endOfYear(value: SchedulerValidDate): SchedulerValidDate;
+  endOfYear(value: TemporalValidDate): TemporalValidDate;
   /**
    * Return the end of the month for the given date.
-   * @param {SchedulerValidDate} value The original date.
-   * @returns {SchedulerValidDate} The end of the month of the given date.
+   * @param {TemporalValidDate} value The original date.
+   * @returns {TemporalValidDate} The end of the month of the given date.
    */
-  endOfMonth(value: SchedulerValidDate): SchedulerValidDate;
+  endOfMonth(value: TemporalValidDate): TemporalValidDate;
   /**
    * Return the end of the week for the given date.
-   * @param {SchedulerValidDate} value The original date.
-   * @returns {SchedulerValidDate} The end of the week of the given date.
+   * @param {TemporalValidDate} value The original date.
+   * @returns {TemporalValidDate} The end of the week of the given date.
    */
-  endOfWeek(value: SchedulerValidDate): SchedulerValidDate;
+  endOfWeek(value: TemporalValidDate): TemporalValidDate;
   /**
    * Return the end of the day for the given date.
-   * @param {SchedulerValidDate} value The original date.
-   * @returns {SchedulerValidDate} The end of the day of the given date.
+   * @param {TemporalValidDate} value The original date.
+   * @returns {TemporalValidDate} The end of the day of the given date.
    */
-  endOfDay(value: SchedulerValidDate): SchedulerValidDate;
+  endOfDay(value: TemporalValidDate): TemporalValidDate;
   /**
    * Add the specified number of years to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} amount The amount of years to be added.
-   * @returns {SchedulerValidDate} The new date with the years added.
+   * @returns {TemporalValidDate} The new date with the years added.
    */
-  addYears(value: SchedulerValidDate, amount: number): SchedulerValidDate;
+  addYears(value: TemporalValidDate, amount: number): TemporalValidDate;
   /**
    * Add the specified number of months to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} amount The amount of months to be added.
-   * @returns {SchedulerValidDate} The new date with the months added.
+   * @returns {TemporalValidDate} The new date with the months added.
    */
-  addMonths(value: SchedulerValidDate, amount: number): SchedulerValidDate;
+  addMonths(value: TemporalValidDate, amount: number): TemporalValidDate;
   /**
    * Add the specified number of weeks to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} amount The amount of weeks to be added.
-   * @returns {SchedulerValidDate} The new date with the weeks added.
+   * @returns {TemporalValidDate} The new date with the weeks added.
    */
-  addWeeks(value: SchedulerValidDate, amount: number): SchedulerValidDate;
+  addWeeks(value: TemporalValidDate, amount: number): TemporalValidDate;
   /**
    * Add the specified number of days to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} amount The amount of days to be added.
-   * @returns {SchedulerValidDate} The new date with the days added.
+   * @returns {TemporalValidDate} The new date with the days added.
    */
-  addDays(value: SchedulerValidDate, amount: number): SchedulerValidDate;
+  addDays(value: TemporalValidDate, amount: number): TemporalValidDate;
   /**
    * Add the specified number of hours to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} amount The amount of hours to be added.
-   * @returns {SchedulerValidDate} The new date with the hours added.
+   * @returns {TemporalValidDate} The new date with the hours added.
    */
-  addHours(value: SchedulerValidDate, amount: number): SchedulerValidDate;
+  addHours(value: TemporalValidDate, amount: number): TemporalValidDate;
   /**
    * Add the specified number of minutes to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} amount The amount of minutes to be added.
-   * @returns {SchedulerValidDate} The new date with the minutes added.
+   * @returns {TemporalValidDate} The new date with the minutes added.
    */
-  addMinutes(value: SchedulerValidDate, amount: number): SchedulerValidDate;
+  addMinutes(value: TemporalValidDate, amount: number): TemporalValidDate;
   /**
    * Add the specified number of seconds to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} amount The amount of seconds to be added.
-   * @returns {SchedulerValidDate} The new date with the seconds added.
+   * @returns {TemporalValidDate} The new date with the seconds added.
    */
-  addSeconds(value: SchedulerValidDate, amount: number): SchedulerValidDate;
+  addSeconds(value: TemporalValidDate, amount: number): TemporalValidDate;
   /**
    * Get the year of the given date.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The year of the given date.
    */
-  getYear(value: SchedulerValidDate): number;
+  getYear(value: TemporalValidDate): number;
   /**
    * Get the month of the given date.
    * The value is 0-based, in the Gregorian calendar January = 0, February = 1, ...
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The month of the given date.
    */
-  getMonth(value: SchedulerValidDate): number;
+  getMonth(value: TemporalValidDate): number;
   /**
    * Get the date (day in the month) of the given date.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The date of the given date.
    */
-  getDate(value: SchedulerValidDate): number;
+  getDate(value: TemporalValidDate): number;
   /**
    * Get the hours of the given date.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The hours of the given date.
    */
-  getHours(value: SchedulerValidDate): number;
+  getHours(value: TemporalValidDate): number;
   /**
    * Get the minutes of the given date.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The minutes of the given date.
    */
-  getMinutes(value: SchedulerValidDate): number;
+  getMinutes(value: TemporalValidDate): number;
   /**
    * Get the seconds of the given date.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The seconds of the given date.
    */
-  getSeconds(value: SchedulerValidDate): number;
+  getSeconds(value: TemporalValidDate): number;
   /**
    * Get the milliseconds of the given date.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The milliseconds of the given date.
    */
-  getMilliseconds(value: SchedulerValidDate): number;
+  getMilliseconds(value: TemporalValidDate): number;
   /**
    * Set the year to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} year The year of the new date.
-   * @returns {SchedulerValidDate} The new date with the year set.
+   * @returns {TemporalValidDate} The new date with the year set.
    */
-  setYear(value: SchedulerValidDate, year: number): SchedulerValidDate;
+  setYear(value: TemporalValidDate, year: number): TemporalValidDate;
   /**
    * Set the month to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} month The month of the new date.
-   * @returns {SchedulerValidDate} The new date with the month set.
+   * @returns {TemporalValidDate} The new date with the month set.
    */
-  setMonth(value: SchedulerValidDate, month: number): SchedulerValidDate;
+  setMonth(value: TemporalValidDate, month: number): TemporalValidDate;
   /**
    * Set the date (day in the month) to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} date The date of the new date.
-   * @returns {SchedulerValidDate} The new date with the date set.
+   * @returns {TemporalValidDate} The new date with the date set.
    */
-  setDate(value: SchedulerValidDate, date: number): SchedulerValidDate;
+  setDate(value: TemporalValidDate, date: number): TemporalValidDate;
   /**
    * Set the hours to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} hours The hours of the new date.
-   * @returns {SchedulerValidDate} The new date with the hours set.
+   * @returns {TemporalValidDate} The new date with the hours set.
    */
-  setHours(value: SchedulerValidDate, hours: number): SchedulerValidDate;
+  setHours(value: TemporalValidDate, hours: number): TemporalValidDate;
   /**
    * Set the minutes to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} minutes The minutes of the new date.
-   * @returns {SchedulerValidDate} The new date with the minutes set.
+   * @returns {TemporalValidDate} The new date with the minutes set.
    */
-  setMinutes(value: SchedulerValidDate, minutes: number): SchedulerValidDate;
+  setMinutes(value: TemporalValidDate, minutes: number): TemporalValidDate;
   /**
    * Set the seconds to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} seconds The seconds of the new date.
-   * @returns {SchedulerValidDate} The new date with the seconds set.
+   * @returns {TemporalValidDate} The new date with the seconds set.
    */
-  setSeconds(value: SchedulerValidDate, seconds: number): SchedulerValidDate;
+  setSeconds(value: TemporalValidDate, seconds: number): TemporalValidDate;
   /**
    * Set the milliseconds to the given date.
-   * @param {SchedulerValidDate} value The date to be changed.
+   * @param {TemporalValidDate} value The date to be changed.
    * @param {number} milliseconds The milliseconds of the new date.
-   * @returns {SchedulerValidDate} The new date with the milliseconds set.
+   * @returns {TemporalValidDate} The new date with the milliseconds set.
    */
-  setMilliseconds(value: SchedulerValidDate, milliseconds: number): SchedulerValidDate;
+  setMilliseconds(value: TemporalValidDate, milliseconds: number): TemporalValidDate;
   /**
    * Get the number of days in a month of the given date.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The number of days in the month
    */
-  getDaysInMonth(value: SchedulerValidDate): number;
+  getDaysInMonth(value: TemporalValidDate): number;
   /**
    * Create a nested list with all the days of the month of the given date grouped by week.
-   * @param {SchedulerValidDate} value The given date.
-   * @returns {SchedulerValidDate[][]} A nested list with all the days of the month grouped by week.
+   * @param {TemporalValidDate} value The given date.
+   * @returns {TemporalValidDate[][]} A nested list with all the days of the month grouped by week.
    */
-  getWeekArray(value: SchedulerValidDate): SchedulerValidDate[][];
+  getWeekArray(value: TemporalValidDate): TemporalValidDate[][];
   /**
    * Get the number of the week of the given date.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The number of the week of the given date.
    */
-  getWeekNumber(value: SchedulerValidDate): number;
+  getWeekNumber(value: TemporalValidDate): number;
   /**
    * Get the number of the day of the week of the given date.
    * The value is 1-based, 1 - first day of the week, 7 - last day of the week.
-   * @param {SchedulerValidDate} value The given date.
+   * @param {TemporalValidDate} value The given date.
    * @returns {number} The number of the day of the week of the given date.
    */
-  getDayOfWeek(value: SchedulerValidDate): number;
+  getDayOfWeek(value: TemporalValidDate): number;
   /**
    * Create a list with all the years between the start and the end date.
-   * @param {[SchedulerValidDate, SchedulerValidDate]} range The range of year to create.
-   * @returns {SchedulerValidDate[]} List of all the years between the start end the end date.
+   * @param {[TemporalValidDate, TemporalValidDate]} range The range of year to create.
+   * @returns {TemporalValidDate[]} List of all the years between the start end the end date.
    */
-  getYearRange(range: [SchedulerValidDate, SchedulerValidDate]): SchedulerValidDate[];
+  getYearRange(range: [TemporalValidDate, TemporalValidDate]): TemporalValidDate[];
 }
