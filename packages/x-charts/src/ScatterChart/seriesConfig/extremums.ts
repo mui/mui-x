@@ -1,17 +1,4 @@
-import {
-  CartesianExtremumGetter,
-  CartesianExtremumGetterResult,
-} from '../../internals/plugins/models/seriesConfig';
-
-const mergeMinMax = (
-  acc: CartesianExtremumGetterResult,
-  val: CartesianExtremumGetterResult,
-): CartesianExtremumGetterResult => {
-  return [
-    val[0] === null ? acc[0] : Math.min(acc[0], val[0]),
-    val[1] === null ? acc[1] : Math.max(acc[1], val[1]),
-  ];
-};
+import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
 
 export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
