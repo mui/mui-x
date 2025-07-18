@@ -7,7 +7,7 @@ export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
   let max = -Infinity;
 
   for (const seriesId in series) {
-    if (!Object.prototype.hasOwnProperty.call(series, seriesId)) {
+    if (!Object.hasOwn(series, seriesId)) {
       continue;
     }
 
@@ -53,7 +53,7 @@ export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
   let max = -Infinity;
 
   for (const seriesId in series) {
-    if (!Object.prototype.hasOwnProperty.call(series, seriesId)) {
+    if (!Object.hasOwn(series, seriesId)) {
       continue;
     }
 
