@@ -32,17 +32,11 @@ export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
 export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
-export type {
-  ZoomData,
-  ZoomFilterMode,
-  ZoomSliderShowTooltip,
-  ZoomOptions,
-  ZoomSliderOptions,
-} from '@mui/x-charts/internals';
 
 // Pro components
 export * from './context';
 export * from './hooks';
+export * from './models';
 export * from './Heatmap';
 export { ChartContainerPro } from './ChartContainerPro';
 export type { ChartContainerProProps } from './ChartContainerPro';

@@ -2,7 +2,8 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { chartsToolbarClasses } from '@mui/x-charts/Toolbar';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
+import { defaultOnBeforeExport } from '@mui/x-charts-pro/models';
 import { inflationData } from '../dataset/inflationRates';
 
 const yAxisFormatter = new Intl.NumberFormat('en-US', {
@@ -61,10 +62,18 @@ const settings = {
 };
 
 function onBeforeExport(iframe: HTMLIFrameElement) {
+  // Apply default modification (removing the toolbar)
+  defaultOnBeforeExport(iframe);
   const document = iframe.contentDocument!;
-  const chartsToolbarEl = document.querySelector(`.${chartsToolbarClasses.root}`);
 
-  chartsToolbarEl?.remove();
+  // Show legend
+  const legend = document.querySelector(
+    `.${legendClasses.root}`,
+  ) as HTMLElement | null;
+
+  if (legend) {
+    legend.style.display = 'flex';
+  }
 }
 
 export default function ExportChartOnBeforeExport() {
@@ -82,6 +91,7 @@ export default function ExportChartOnBeforeExport() {
             imageExportOptions: [{ type: 'image/png', onBeforeExport }],
           },
         }}
+        sx={{ [`& .${legendClasses.root}`]: { display: 'none' } }}
       />
       <Typography variant="caption">Source: World Bank</Typography>
     </Stack>
