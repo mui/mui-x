@@ -12,6 +12,8 @@ import { EventPopoverProvider, EventPopoverTrigger } from '../internals/componen
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import './AgendaView.css';
 
+export const AGENDA_VIEW_DAYS_AMOUNT = 12;
+
 const adapter = getAdapter();
 
 export const AgendaView = React.memo(
@@ -32,7 +34,7 @@ export const AgendaView = React.memo(
     const getDayList = useDayList();
 
     const days = React.useMemo(
-      () => getDayList({ date: visibleDate, amount: 12 }),
+      () => getDayList({ date: visibleDate, amount: AGENDA_VIEW_DAYS_AMOUNT }),
       [getDayList, visibleDate],
     );
 

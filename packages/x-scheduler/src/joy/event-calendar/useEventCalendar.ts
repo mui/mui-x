@@ -10,9 +10,12 @@ import { useAssertModelConsistency } from '../internals/hooks/useAssertModelCons
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { Adapter } from '../../primitives/utils/adapter/types';
 import { SchedulerValidDate } from '../../primitives/models';
+import { AGENDA_VIEW_DAYS_AMOUNT } from '../agenda-view';
 
 export function useEventCalendar(parameters: UseEventCalendarParameters) {
   const adapter = useAdapter();
+
+  const defaultVisibleDateFallback = React.useRef(adapter.startOfDay(adapter.date())).current;
 
   const {
     events: eventsProp,
@@ -22,7 +25,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     defaultView = 'week',
     onViewChange,
     visibleDate: visibleDateProp,
-    defaultVisibleDate = adapter.startOfDay(adapter.date()),
+    defaultVisibleDate = defaultVisibleDateFallback,
     onVisibleDateChange,
   } = parameters;
 
@@ -163,12 +166,13 @@ function getNavigationDate({
   switch (view) {
     case 'day':
       return adapter.addDays(visibleDate, delta);
+    case 'week':
+      return adapter.addWeeks(adapter.startOfWeek(visibleDate), delta);
     case 'month':
       return adapter.addMonths(adapter.startOfMonth(visibleDate), delta);
     case 'agenda':
-      return adapter.addDays(visibleDate, 12 * delta);
-    case 'week':
+      return adapter.addDays(visibleDate, AGENDA_VIEW_DAYS_AMOUNT * delta);
     default:
-      return adapter.addWeeks(adapter.startOfWeek(visibleDate), delta);
+      return visibleDate;
   }
 }
