@@ -461,6 +461,36 @@ export type AxisConfig<
    * @default 0
    */
   offset?: number;
+  /**
+   * The function used to create axis groups.
+   *
+   * For each value in the returned array, a group will be created.
+   * Each group will have a label that is the stringified value of the group.
+   * For example, if the function returns `[31, "Jan", 2021]`, `[1, "Feb", 2021]`, `[2, "Feb", 2021]`,
+   * the axis will be rendered as:
+   *
+   * ```bash
+   * | 31   | 1    | 2    |
+   * | Jan  | Feb         |
+   * | 2021               |
+   * ```
+   *
+   * Each row in the example above is assigned a group index.
+   *
+   * @param {any} value The value of the axis item.
+   * @param {number} dataIndex  The index of the axis item in the `data` array.
+   * @returns {Array<string | number | Date>} The array of values that will be used to group the axis items.
+   */
+  getGrouping?: (value: V, dataIndex: number) => (string | number | Date)[];
+  /**
+   * The configuration for the axis grouping.
+   * Accepts a single object or an array of objects.
+   * If an array is provided, each group will use the corresponding object in the array.
+   * A group is defined by the `getGrouping` function.
+   * For example, if the `getGrouping` function returns `[31, "Jan", 2021]`, `[1, "Feb", 2021]`, `[2, "Feb", 2021]`,
+   * the group with index 1 will be `["Jan", "Feb", "Feb"]`
+   */
+  groupingConfig?: AxisGroupingConfig | AxisGroupingConfig[];
 } & CommonAxisConfig<S, V> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
@@ -469,6 +499,14 @@ export type AxisConfig<
   AxisConfigExtension;
 
 export interface AxisConfigExtension {}
+
+export type AxisGroupingConfig = {
+  /**
+   * The number of pixels between two groups.
+   * @default 6
+   */
+  tickSize?: number;
+};
 
 export type PolarAxisDefaultized<
   S extends ScaleName = ScaleName,

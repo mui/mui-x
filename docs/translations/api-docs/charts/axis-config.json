@@ -19,6 +19,12 @@
       "description": "Defines the axis scale domain based on the min/max values of series linked to it.<br />- &#39;nice&#39;: Rounds the domain at human friendly values.<br />- &#39;strict&#39;: Set the domain to the min/max value provided. No extra space is added.<br />- function: Receives the calculated extremums as parameters, and should return the axis domain."
     },
     "fill": { "description": "The fill color of the axis text." },
+    "getGrouping": {
+      "description": "The function used to create axis groups.<br /><br />For each value in the returned array, a group will be created.<br />Each group will have a label that is the stringified value of the group.<br />For example, if the function returns <code>[31, &quot;Jan&quot;, 2021]</code>, <code>[1, &quot;Feb&quot;, 2021]</code>, <code>[2, &quot;Feb&quot;, 2021]</code>,<br />the axis will be rendered as:<br /><br /><code>bash&lt;br /&gt;| 31   | 1    | 2    |&lt;br /&gt;| Jan  | Feb         |&lt;br /&gt;| 2021               |&lt;br /&gt;</code><br /><br />Each row in the example above is assigned a group index."
+    },
+    "groupingConfig": {
+      "description": "The configuration for the axis grouping.<br />Accepts a single object or an array of objects.<br />If an array is provided, each group will use the corresponding object in the array.<br />A group is defined by the <code>getGrouping</code> function.<br />For example, if the <code>getGrouping</code> function returns <code>[31, &quot;Jan&quot;, 2021]</code>, <code>[1, &quot;Feb&quot;, 2021]</code>, <code>[2, &quot;Feb&quot;, 2021]</code>,<br />the group with index 1 will be <code>[&quot;Jan&quot;, &quot;Feb&quot;, &quot;Feb&quot;]</code>"
+    },
     "height": { "description": "The height of the axis." },
     "hideTooltip": { "description": "If <code>true</code>, hide this value in the tooltip" },
     "ignoreTooltip": {

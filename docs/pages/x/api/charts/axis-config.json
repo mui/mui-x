@@ -21,6 +21,10 @@
       }
     },
     "fill": { "type": { "description": "string" }, "default": "'currentColor'" },
+    "getGrouping": {
+      "type": { "description": "(value: V, dataIndex: number) =&gt; (string | number | Date)[]" }
+    },
+    "groupingConfig": { "type": { "description": "AxisGroupingConfig | AxisGroupingConfig[]" } },
     "height": { "type": { "description": "number" }, "default": "30" },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
