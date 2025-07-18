@@ -21,7 +21,7 @@ To enable exporting from the chart's toolbar, you need to enable it by passing t
 The toolbar then renders a button that opens a menu with the export options.
 
 :::info
-By default, the toolbar will not be shown in the exported media.
+By default, the exported media does not show the toolbar.
 
 You can override the `onBeforeExport` callback to customize this behavior.
 :::

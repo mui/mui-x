@@ -62,6 +62,7 @@ const settings = {
 };
 
 function onBeforeExport(iframe: HTMLIFrameElement) {
+  // Apply default modification (removing the toolbar)
   defaultOnBeforeExport(iframe);
   const document = iframe.contentDocument!;
 
