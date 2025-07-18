@@ -46,7 +46,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         return (
           <div className="DayGridEventCardWrapper">
             <span
-              className="EventCalendarResourceLegendColor"
+              className="ResourceLegendColor"
               role="img"
               aria-label={
                 eventResource?.name

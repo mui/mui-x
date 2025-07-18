@@ -10,7 +10,6 @@ import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { getColorClassName } from '../internals/utils/color-utils';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
 import { Store, useSelector } from '../../base-ui-copy/utils/store';
 import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
@@ -21,6 +20,7 @@ import { DateNavigator } from '../date-navigator/DateNavigator';
 import '../index.css';
 import './EventCalendar.css';
 import { useDateNavigation } from '../internals/hooks/useDateNavigation';
+import { ResourceLegend } from '../internals/components/resource-legend/ResourceLegend';
 
 const adapter = getAdapter();
 
@@ -42,6 +42,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       new Store<State>({
         events: eventsProp,
         resources: resourcesProp || [],
+        visibleResources: new Map(),
         visibleDate: adapter.startOfDay(adapter.date()),
         currentView: 'week',
         views: ['week', 'day', 'month', 'agenda'],
@@ -49,7 +50,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   ).current;
 
   const currentView = useSelector(store, selectors.currentView);
-  const resources = useSelector(store, selectors.resources);
   const visibleDate = useSelector(store, selectors.visibleDate);
 
   const setVisibleDate = useEventCallback((date: SchedulerValidDate) => {
@@ -113,25 +113,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
             >
               Month Calendar
             </section>
-            {resources && resources.length > 0 && (
-              <section
-                // TODO: Add localization
-                aria-label="Resource legend"
-                className="EventCalendarResourceLegend"
-              >
-                {resources.map((resource) => (
-                  <div key={resource.id} className="EventCalendarResourceLegendItem">
-                    <span
-                      className={clsx(
-                        'EventCalendarResourceLegendColor',
-                        getColorClassName({ resource }),
-                      )}
-                    />
-                    <span className="EventCalendarResourceLegendName">{resource.name}</span>
-                  </div>
-                ))}
-              </section>
-            )}
+            <ResourceLegend />
           </aside>
           <div
             className={clsx(
