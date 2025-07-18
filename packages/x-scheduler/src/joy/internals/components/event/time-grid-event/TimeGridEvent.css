@@ -1,6 +1,10 @@
 .EventCard {
   border-radius: var(--radius-4);
   background-color: var(--event-background);
+
+  &[data-moving] {
+    opacity: 0.5;
+  }
 }
 
 .EventTitle {

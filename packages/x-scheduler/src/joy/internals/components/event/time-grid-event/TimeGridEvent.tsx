@@ -21,7 +21,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     ariaLabelledBy,
     variant,
     className,
-    onEventClick,
     id: idProp,
     ...other
   } = props;
@@ -91,6 +90,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         getColorClassName({ resource: eventResource }),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
+      eventId={eventProp.id}
       start={eventProp.start}
       end={eventProp.end}
       {...other}

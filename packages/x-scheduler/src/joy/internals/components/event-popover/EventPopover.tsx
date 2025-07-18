@@ -16,7 +16,7 @@ import {
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { CalendarEvent } from '../../../models/events';
+import { CalendarEvent, CalendarEventId } from '../../../models/events';
 import { selectors } from '../../../event-calendar/store';
 import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
@@ -267,7 +267,7 @@ export function EventPopoverProvider({
     }
   });
 
-  const handleDelete = useEventCallback((deletedEventId: string) => {
+  const handleDelete = useEventCallback((deletedEventId: CalendarEventId) => {
     const prevEvents = store.state.events;
     const updatedEvents = prevEvents.filter((ev) => ev.id !== deletedEventId);
 

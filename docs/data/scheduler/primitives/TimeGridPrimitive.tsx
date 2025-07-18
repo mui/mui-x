@@ -48,6 +48,7 @@ export default function TimeGridPrimitive() {
                     key={event.id}
                     start={event.start}
                     end={event.end}
+                    eventId={event.id}
                     data-resource={event.resource}
                     className={classes.Event}
                   >
