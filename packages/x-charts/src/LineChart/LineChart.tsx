@@ -59,6 +59,7 @@ export interface LineChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
+export type LineSeries = MakeOptional<LineSeriesType, 'type'>;
 export interface LineChartProps
   extends Omit<
       ChartContainerProps<'line', LineChartPluginsSignatures>,
@@ -68,9 +69,9 @@ export interface LineChartProps
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the line chart.
-   * An array of [[LineSeriesType]] objects.
+   * An array of [[LineSeries]] objects.
    */
-  series: Readonly<MakeOptional<LineSeriesType, 'type'>[]>;
+  series: Readonly<LineSeries[]>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -332,7 +333,7 @@ LineChart.propTypes = {
   onMarkClick: PropTypes.func,
   /**
    * The series to display in the line chart.
-   * An array of [[LineSeriesType]] objects.
+   * An array of [[LineSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
