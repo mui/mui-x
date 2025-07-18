@@ -72,8 +72,8 @@ export default function StandaloneWeekView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <StandaloneView events={events} resources={resources}>
-      <WeekView className={classes.Container} onEventsChange={setEvents} />
+    <StandaloneView events={events} resources={resources} onEventsChange={setEvents}>
+      <WeekView className={classes.Container} />
     </StandaloneView>
   );
 }

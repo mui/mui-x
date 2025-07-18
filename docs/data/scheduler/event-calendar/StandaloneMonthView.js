@@ -9,8 +9,8 @@ export default function StandaloneMonthView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <StandaloneView events={events} resources={resources}>
-      <MonthView className={classes.Container} onEventsChange={setEvents} />
+    <StandaloneView events={events} resources={resources} onEventsChange={setEvents}>
+      <MonthView className={classes.Container} />
     </StandaloneView>
   );
 }

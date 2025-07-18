@@ -1,8 +1,18 @@
-import { CalendarEvent } from '../models/events';
+import { SchedulerValidDate } from '../../primitives/models';
+import { CalendarEvent, CalendarEventId } from '../models/events';
 import { CalendarResource } from '../models/resource';
 import { SchedulerTranslations } from '../models/translations';
 
-export interface EventCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EventCalendarProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    UseEventCalendarParameters {
+  /**
+   * Translation overrides for the component's texts.
+   */
+  translations?: Partial<SchedulerTranslations>;
+}
+
+export interface UseEventCalendarParameters {
   /**
    * The events to render in the calendar.
    */
@@ -12,11 +22,68 @@ export interface EventCalendarProps extends React.HTMLAttributes<HTMLDivElement>
    */
   onEventsChange?: (value: CalendarEvent[]) => void;
   /**
-   * Translation overrides for the component's texts.
-   */
-  translations?: Partial<SchedulerTranslations>;
-  /**
    * The resources that can be assigned to events.
    */
   resources?: CalendarResource[];
+  /**
+   * The view currently displayed in the calendar.
+   */
+  view?: EventCalendarView;
+  /**
+   * The view initially displayed in the calendar.
+   * To render a controlled calendar, use the `view` prop.
+   * @default "week"
+   */
+  defaultView?: EventCalendarView;
+  /**
+   * Event handler called when the view changes.
+   */
+  onViewChange?: (view: EventCalendarView, event: React.UIEvent | Event) => void;
+  /**
+   * The date currently displayed in the calendar.
+   */
+  visibleDate?: SchedulerValidDate;
+  /**
+   * The date initially displayed in the calendar.
+   * To render a controlled calendar, use the `visibleDate` prop.
+   * @default today
+   */
+  defaultVisibleDate?: SchedulerValidDate;
+  /**
+   * Event handler called when the visible date changes.
+   */
+  onVisibleDateChange?: (visibleDate: SchedulerValidDate, event: React.UIEvent) => void;
 }
+
+export interface EventCalendarInstance {
+  /**
+   * Set the view of the calendar.
+   */
+  setView: (view: EventCalendarView, event: React.UIEvent | Event) => void;
+  /**
+   * Update an event in the calendar.
+   */
+  updateEvent: (calendarEvent: CalendarEvent) => void;
+  /**
+   * Delete an event from the calendar.
+   */
+  deleteEvent: (eventId: CalendarEventId) => void;
+  /**
+   * Go to today's date without changing the view.
+   */
+  setVisibleDateToToday: (event: React.UIEvent) => void;
+  /**
+   * Go to the previous visible date span based on the current view.
+   */
+  goToPreviousVisibleDate: (event: React.UIEvent) => void;
+  /**
+   * Go to the next visible date span based on the current view.
+   */
+  goToNextVisibleDate: (event: React.UIEvent) => void;
+  /**
+   * Go to a specific day and set the view to 'day'.
+   */
+  goToDay: (day: SchedulerValidDate, event: React.UIEvent) => void;
+}
+
+export type EventCalendarView = 'week' | 'day' | 'month' | 'agenda';

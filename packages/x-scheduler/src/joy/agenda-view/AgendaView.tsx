@@ -5,7 +5,7 @@ import { useForkRef } from '@base-ui-components/react/utils';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
+import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
@@ -22,8 +22,8 @@ export const AgendaView = React.memo(
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useForkRef(forwardedRef, containerRef);
 
-    const { onEventsChange, className, ...other } = props;
-    const store = useEventCalendarStore();
+    const { className, ...other } = props;
+    const { store } = useEventCalendarContext();
 
     const today = adapter.date();
 
@@ -41,7 +41,7 @@ export const AgendaView = React.memo(
 
     return (
       <div ref={handleRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>
-        <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
+        <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => (
             <div
               className="AgendaViewRow"

@@ -6,7 +6,7 @@ import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { MonthViewProps } from './MonthView.types';
-import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
+import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
@@ -29,15 +29,16 @@ export const MonthView = React.memo(
     props: MonthViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { className, onDayHeaderClick, onEventsChange, ...other } = props;
+    const { className, ...other } = props;
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useForkRef(forwardedRef, containerRef);
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const store = useEventCalendarStore();
+    const { store, instance } = useEventCalendarContext();
     const visibleDate = useSelector(store, selectors.visibleDate);
     const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+    const hasDayView = useSelector(store, selectors.hasDayView);
     const today = adapter.date();
     const translations = useTranslations();
 
@@ -59,13 +60,6 @@ export const MonthView = React.memo(
         }));
       });
     }, [getWeekList, visibleDate, getDayList, getEventsStartingInDay]);
-
-    const handleHeaderClick = React.useCallback(
-      (day: SchedulerValidDate) => (event: React.MouseEvent) => {
-        onDayHeaderClick?.(day, event);
-      },
-      [onDayHeaderClick],
-    );
 
     const renderCellNumberContent = (day: SchedulerValidDate) => {
       const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));
@@ -92,7 +86,7 @@ export const MonthView = React.memo(
 
     return (
       <div ref={handleRef} className={clsx('MonthViewContainer', 'joy', className)} {...other}>
-        <EventPopoverProvider containerRef={containerRef} onEventsChange={onEventsChange}>
+        <EventPopoverProvider containerRef={containerRef}>
           <DayGrid.Root className="MonthViewRoot">
             <div className="MonthViewHeader">
               <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
@@ -137,11 +131,11 @@ export const MonthView = React.memo(
                             isWeekend(adapter, day.date) && 'Weekend',
                           )}
                         >
-                          {onDayHeaderClick ? (
+                          {hasDayView ? (
                             <button
                               type="button"
                               className="MonthViewCellNumberButton"
-                              onClick={handleHeaderClick(day.date)}
+                              onClick={(event) => instance.goToDay(day.date, event)}
                               tabIndex={0}
                             >
                               {renderCellNumberContent(day.date)}

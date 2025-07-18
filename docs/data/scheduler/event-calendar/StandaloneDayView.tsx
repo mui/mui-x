@@ -31,8 +31,8 @@ export default function StandaloneDayView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
-    <StandaloneView events={events} resources={resources}>
-      <DayView className={classes.Container} onEventsChange={setEvents} />
+    <StandaloneView events={events} resources={resources} onEventsChange={setEvents}>
+      <DayView className={classes.Container} />
     </StandaloneView>
   );
 }

@@ -3,14 +3,14 @@ import { createSelector, createSelectorMemoized, Store } from '../../base-ui-cop
 import { SchedulerValidDate } from '../../primitives/models';
 import { CalendarEvent } from '../models/events';
 import { CalendarResource, CalendarResourceId } from '../models/resource';
-import { ViewType } from '../models/views';
+import { EventCalendarView } from './EventCalendar.types';
 
 const adapter = getAdapter();
 
 export type State = {
   visibleDate: SchedulerValidDate;
-  currentView: ViewType;
-  views: ViewType[];
+  view: EventCalendarView;
+  views: EventCalendarView[];
   events: CalendarEvent[];
   resources: CalendarResource[];
 };
@@ -19,8 +19,9 @@ export type EventCalendarStore = Store<State>;
 
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
-  currentView: createSelector((state: State) => state.currentView),
+  view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
+  hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
   resourcesByIdMap: createSelectorMemoized(
     (state: State) => state.resources,

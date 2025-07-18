@@ -1,0 +1,163 @@
+'use client';
+import * as React from 'react';
+import { useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { EventCalendarInstance, UseEventCalendarParameters } from './EventCalendar.types';
+import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
+import { Store } from '../../base-ui-copy/utils/store';
+import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
+import { State } from './store';
+import { useAssertModelConsistency } from '../internals/hooks/useAssertModelConsistency';
+import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
+import { Adapter } from '../../primitives/utils/adapter/types';
+import { SchedulerValidDate } from '../../primitives/models';
+
+export function useEventCalendar(parameters: UseEventCalendarParameters) {
+  const adapter = useAdapter();
+
+  const {
+    events: eventsProp,
+    onEventsChange,
+    resources: resourcesProp,
+    view: viewProp,
+    defaultView = 'week',
+    onViewChange,
+    visibleDate: visibleDateProp,
+    defaultVisibleDate = adapter.startOfDay(adapter.date()),
+    onVisibleDateChange,
+  } = parameters;
+
+  useAssertModelConsistency({
+    componentName: 'Event Calendar',
+    propName: 'view',
+    controlled: viewProp,
+    defaultValue: defaultView,
+  });
+
+  useAssertModelConsistency({
+    componentName: 'Event Calendar',
+    propName: 'visibleDate',
+    controlled: visibleDateProp,
+    defaultValue: defaultVisibleDate,
+  });
+
+  const store = useLazyRef(
+    () =>
+      new Store<State>({
+        events: eventsProp,
+        resources: resourcesProp || [],
+        visibleDate: visibleDateProp ?? defaultVisibleDate,
+        view: viewProp ?? defaultView,
+        views: ['week', 'day', 'month', 'agenda'],
+      }),
+  ).current;
+
+  useModernLayoutEffect(() => {
+    const partialState: Partial<State> = {
+      events: eventsProp,
+      resources: resourcesProp || [],
+    };
+    if (viewProp !== undefined) {
+      partialState.view = viewProp;
+    }
+
+    store.apply(partialState);
+  }, [store, eventsProp, resourcesProp, viewProp]);
+
+  const setVisibleDate = useEventCallback(
+    (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+      if (visibleDateProp === undefined) {
+        store.set('visibleDate', visibleDate);
+      }
+
+      onVisibleDateChange?.(visibleDate, event);
+    },
+  );
+
+  const setView: EventCalendarInstance['setView'] = useEventCallback((view, event) => {
+    if (viewProp === undefined) {
+      store.set('view', view);
+    }
+
+    onViewChange?.(view, event);
+  });
+
+  const updateEvent: EventCalendarInstance['updateEvent'] = useEventCallback((calendarEvent) => {
+    const updatedEvents = store.state.events.map((ev) =>
+      ev.id === calendarEvent.id ? calendarEvent : ev,
+    );
+    onEventsChange?.(updatedEvents);
+  });
+
+  const deleteEvent: EventCalendarInstance['deleteEvent'] = useEventCallback((eventId) => {
+    const updatedEvents = store.state.events.filter((ev) => ev.id !== eventId);
+    onEventsChange?.(updatedEvents);
+  });
+
+  const setVisibleDateToToday: EventCalendarInstance['setVisibleDateToToday'] = useEventCallback(
+    (event) => {
+      setVisibleDate(adapter.startOfDay(adapter.date()), event);
+    },
+  );
+
+  const goToPreviousVisibleDate: EventCalendarInstance['goToPreviousVisibleDate'] =
+    useEventCallback((event) => {
+      setVisibleDate(getNavigationDate({ adapter, store, delta: -1 }), event);
+    });
+
+  const goToNextVisibleDate: EventCalendarInstance['goToNextVisibleDate'] = useEventCallback(
+    (event) => {
+      setVisibleDate(getNavigationDate({ adapter, store, delta: 1 }), event);
+    },
+  );
+
+  const goToDay = useEventCallback((visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+    if (!store.state.views.includes('day')) {
+      throw new Error(
+        'The "day" view is not available in the current calendar configuration. Please ensure that "day" is included in the views prop before using the goToDay method.',
+      );
+    }
+    setVisibleDate(visibleDate, event);
+    setView('day', event);
+  });
+
+  const instanceRef = React.useRef<EventCalendarInstance>({
+    setView,
+    updateEvent,
+    deleteEvent,
+    setVisibleDateToToday,
+    goToPreviousVisibleDate,
+    goToNextVisibleDate,
+    goToDay,
+  });
+  const instance = instanceRef.current;
+
+  const contextValue = React.useMemo(
+    () => ({ store, instance, setVisibleDateToToday }),
+    [store, instance, setVisibleDateToToday],
+  );
+
+  return { store, instance, contextValue };
+}
+
+function getNavigationDate({
+  adapter,
+  store,
+  delta,
+}: {
+  adapter: Adapter;
+  store: Store<State>;
+  delta: number;
+}) {
+  const { view, visibleDate } = store.state;
+  switch (view) {
+    case 'day':
+      return adapter.addDays(visibleDate, delta);
+    case 'month':
+      return adapter.addMonths(adapter.startOfMonth(visibleDate), delta);
+    case 'agenda':
+      return adapter.addDays(visibleDate, 12 * delta);
+    case 'week':
+    default:
+      return adapter.addWeeks(adapter.startOfWeek(visibleDate), delta);
+  }
+}

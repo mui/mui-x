@@ -72,8 +72,8 @@ export default function StandaloneAgendaView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <StandaloneView events={events} resources={resources}>
-      <AgendaView className={classes.Container} onEventsChange={setEvents} />
+    <StandaloneView events={events} resources={resources} onEventsChange={setEvents}>
+      <AgendaView className={classes.Container} />
     </StandaloneView>
   );
 }
