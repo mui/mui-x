@@ -1,15 +1,21 @@
 import * as React from 'react';
-import { GridRowAriaAttributesInternalHook } from './gridRowConfiguration';
+import {
+  GridRowAriaAttributesInternalHook,
+  GridRowsOverridableMethodsInternalHook,
+} from './gridRowConfiguration';
 import type { GridCSSVariablesInterface } from '../../constants/cssVariables';
 import type { GridRowId } from '../gridRows';
+import type { GridPrivateApiCommon } from '../api/gridApiCommon';
+import type { GridPrivateApiCommunity } from '../api/gridApiCommunity';
 
 export interface GridAriaAttributesInternalHook {
   useGridAriaAttributes: () => React.HTMLAttributes<HTMLElement>;
 }
 
-export interface GridInternalHook
+export interface GridInternalHook<Api>
   extends GridAriaAttributesInternalHook,
-    GridRowAriaAttributesInternalHook {
+    GridRowAriaAttributesInternalHook,
+    GridRowsOverridableMethodsInternalHook<Api> {
   useCSSVariables: () => { id: string; variables: GridCSSVariablesInterface };
   useCellAggregationResult: (
     id: GridRowId,
@@ -17,6 +23,6 @@ export interface GridInternalHook
   ) => { position: 'footer' | 'inline'; value: any } | null;
 }
 
-export interface GridConfiguration {
-  hooks: GridInternalHook;
+export interface GridConfiguration<Api extends GridPrivateApiCommon = GridPrivateApiCommunity> {
+  hooks: GridInternalHook<Api>;
 }

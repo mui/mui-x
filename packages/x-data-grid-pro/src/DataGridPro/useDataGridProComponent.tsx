@@ -54,6 +54,7 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
+  GridConfiguration,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -95,6 +96,7 @@ import { useGridInfiniteLoadingIntersection } from '../hooks/features/serverSide
 export const useDataGridProComponent = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
+  configuration: GridConfiguration,
 ) => {
   useGridInitialization<GridPrivateApiPro>(apiRef, props);
 
@@ -153,7 +155,7 @@ export const useDataGridProComponent = (
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
+  useGridRows(apiRef, props, configuration);
   useGridRowSpanning(apiRef, props);
   useGridParamsApi(apiRef, props);
   useGridDetailPanel(apiRef, props);
