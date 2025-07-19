@@ -15,7 +15,7 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
-    "copy-files": "cpy README.md build && cpy package.json build",
+    "copy-files": "node ../../scripts/copyFiles.mjs",
     "build": "node ../../scripts/build.mjs node --babel-ignore 'src/types.ts' && pnpm copy-files"
   },
   "repository": {
