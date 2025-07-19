@@ -91,7 +91,7 @@
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#d7f6a94617c66d8b853fc6b1ba2e218169f5e091",
+    "@mui/monorepo": "github:brijeshb42/material-ui#infra-modify-pkgjson",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "15.3.5",
     "@octokit/plugin-retry": "^8.0.1",

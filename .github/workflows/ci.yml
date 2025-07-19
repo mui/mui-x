@@ -14,6 +14,6 @@ permissions: {}
 jobs:
   continuous-releases:
     name: Continuous Releases
-    uses: mui/mui-public/.github/workflows/ci-base.yml@master
+    uses: mui/mui-public/.github/workflows/ci-base.yml@use-pnpm-pack
     with:
       node-version: '22'
