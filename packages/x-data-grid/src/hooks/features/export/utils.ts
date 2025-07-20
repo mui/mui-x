@@ -36,7 +36,7 @@ export const getColumnsToExport = ({
   }
 
   const validColumns = options.allColumns ? columns : gridVisibleColumnDefinitionsSelector(apiRef);
-  return validColumns.filter((column) => !column.disableExport);
+  return validColumns.filter((column) => column.disableExport !== true);
 };
 
 export const defaultGetRowsToExport = ({ apiRef }: GridCsvGetRowsToExportParams): GridRowId[] => {
