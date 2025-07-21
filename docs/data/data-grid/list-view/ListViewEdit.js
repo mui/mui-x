@@ -211,6 +211,7 @@ export default function ListViewEdit() {
       style={{
         display: 'flex',
         flexDirection: 'column',
+        width: '100%',
         maxWidth: 360,
         height: 400,
       }}
