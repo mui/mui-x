@@ -1,18 +1,16 @@
 import { defineConfig } from 'vitest/config';
-import codspeedPlugin from '@codspeed/vitest-plugin';
 import react from '@vitejs/plugin-react';
 
-const isCI = process.env.CI === 'true';
-const isTrace = !isCI && process.env.TRACE === 'true';
-
 export default defineConfig({
-  plugins: [...(isCI ? [codspeedPlugin()] : []), react()],
+  plugins: [react()],
   test: {
     setupFiles: ['./setup.ts'],
-    env: { TRACE: isTrace ? 'true' : 'false' },
-    environment: isTrace ? 'node' : 'jsdom',
+    env: { TRACE: process.env.TRACE },
+    environment: 'node',
+    maxConcurrency: 1,
+    runner: './utils/vitest-bench-runner.ts',
     browser: {
-      enabled: isTrace,
+      enabled: true,
       headless: true,
       instances: [
         {
@@ -27,6 +25,9 @@ export default defineConfig({
           },
         },
       ],
+      commands: {
+        requestGC: (ctx) => ctx.page.requestGC(),
+      },
       provider: 'playwright',
     },
   },
