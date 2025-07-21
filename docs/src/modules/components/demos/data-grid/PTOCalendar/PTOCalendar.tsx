@@ -19,7 +19,6 @@ import DeviceThermostatOutlined from '@mui/icons-material/DeviceThermostatOutlin
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, startOfDay } from 'date-fns';
 import { getHolidaysForCountries } from './data/holidays';
 import { useCalendarState } from './hooks/useCalendarState';
-import { usePTOData } from './hooks/usePTOData';
 import { findContinuousPeriods, isCurrentDay } from './utils/dateUtils';
 import { HolidayData } from './types/pto';
 import { CalendarContext } from './CalendarContext';
@@ -27,6 +26,7 @@ import { CalendarToolbar } from './CalendarToolbar';
 import { FILTER_COLORS } from './constants';
 import { ptoCalendarTheme } from './theme';
 import { DemoContainer } from '../DemoContainer';
+import { samplePTOData } from './data/sampleData';
 
 interface RowData {
   id: number;
@@ -194,7 +194,7 @@ function PTOCalendar() {
   const { currentDate, activeFilters, density } = calendarState;
 
   const [holidays, setHolidays] = React.useState<HolidayData>({});
-  const ptoData = usePTOData(currentDate);
+  const ptoData = samplePTOData;
 
   const monthStart = React.useMemo(() => startOfMonth(currentDate), [currentDate]);
   const monthEnd = React.useMemo(() => endOfMonth(currentDate), [currentDate]);
