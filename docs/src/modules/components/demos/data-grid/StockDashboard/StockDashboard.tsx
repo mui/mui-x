@@ -192,9 +192,10 @@ function StockDashboard() {
         maxWidth: 200,
         renderCell: (params: GridRenderCellParams<StockData>) => {
           const history = params.row.history;
-          const historicalData = history
-            .filter((_, index) => index % 10 === 0)
-            .map((h: { price: number }) => h.price);
+          const historicalData: number[] = [];
+          for (let i = 0; i < history.length; i += 10) {
+            historicalData.push(history[i].price);
+          }
           const firstPrice = historicalData[0];
           const lastPrice = historicalData[historicalData.length - 1];
           const isTrendUp = lastPrice > firstPrice;
