@@ -160,6 +160,24 @@ const columns: GridColDef<Product>[] = [
   },
 ];
 
+const profitAggregation: GridAggregationFunction<
+  { sales: number; cost: number; price: number },
+  number | null
+> = {
+  getCellValue: ({ row }) => {
+    return { sales: row.sales, cost: row.cost, price: row.price };
+  },
+  apply: ({ values }) => {
+    const totalProfit = values.reduce((acc, value) => {
+      if (typeof value !== 'undefined') {
+        return acc + value.sales * (value.price - value.cost);
+      }
+      return acc;
+    }, 0);
+    return totalProfit ?? null;
+  },
+};
+
 function InventoryDashboard() {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState('all');
@@ -182,15 +200,10 @@ function InventoryDashboard() {
     });
   }, [searchQuery, statusFilter]);
 
-  const profitAggregation: GridAggregationFunction<string, string | null> = {
-    apply: (params) => {
-      const totalProfit = products.reduce(
-        (acc, product) => acc + product.sales * (product.price - product.cost),
-        0,
-      );
-      return totalProfit != null ? `${totalProfit}` : null;
-    },
-  };
+  const aggregationFunctions = React.useMemo(
+    () => ({ ...GRID_AGGREGATION_FUNCTIONS, profit: profitAggregation }),
+    [],
+  );
 
   return (
     <DemoContainer theme={inventoryTheme}>
@@ -227,7 +240,7 @@ function InventoryDashboard() {
                 apiRef={apiRef}
                 rows={filteredProducts}
                 columns={columns}
-                aggregationFunctions={{ ...GRID_AGGREGATION_FUNCTIONS, profit: profitAggregation }}
+                aggregationFunctions={aggregationFunctions}
                 initialState={{
                   aggregation: {
                     model: {
