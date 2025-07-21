@@ -69,8 +69,12 @@ function getIsFirstVisibleDayOfPTO(
   activeFilters: string[],
   isFirstDayOfPTO: boolean,
 ): boolean {
-  if (!params.value?.hasPTO) return false;
-  if (isFirstDayOfPTO) return true;
+  if (!params.value?.hasPTO) {
+    return false;
+  }
+  if (isFirstDayOfPTO) {
+    return true;
+  }
   const prevDayIndex = daysToShow.findIndex((d) => format(d, 'yyyy-MM-dd') === params.field) - 1;
   if (prevDayIndex >= 0) {
     const prevDayStr = format(daysToShow[prevDayIndex], 'yyyy-MM-dd');
@@ -100,12 +104,18 @@ function getCellTooltipTitle({
   showSick,
   currentSickPeriod,
 }: TooltipTitleParams): string {
-  if (showHoliday && hasHolidayBooked) return `${holidayName} (booked as PTO)`;
-  if (showHoliday) return `${holidayName}`;
-  if (showPTO)
+  if (showHoliday && hasHolidayBooked) {
+    return `${holidayName} (booked as PTO)`;
+  }
+  if (showHoliday) {
+    return `${holidayName}`;
+  }
+  if (showPTO) {
     return `Vacation (${currentPTOPeriod?.length} day${currentPTOPeriod?.length === 1 ? '' : 's'})`;
-  if (showSick)
+  }
+  if (showSick) {
     return `Sick leave (${currentSickPeriod?.length} day${currentSickPeriod?.length === 1 ? '' : 's'})`;
+  }
   return '';
 }
 
@@ -135,7 +145,7 @@ function renderCellIconLabel({
 }: RenderCellIconLabelParams) {
   if (showHoliday) {
     return (
-      <>
+      <React.Fragment>
         <Box
           component="img"
           src={`https://flagcdn.com/w40/${ptoData[params.row.employee].nationality.toLowerCase()}.png`}
@@ -148,31 +158,31 @@ function renderCellIconLabel({
           }}
         />
         {showLabel && 'Holiday'}
-      </>
+      </React.Fragment>
     );
   }
   if (isFirstVisibleDayOfPTO && showPTO) {
     return (
-      <>
+      <React.Fragment>
         <BeachAccessOutlined fontSize="small" />
         {showLabel && 'Vacation'}
-      </>
+      </React.Fragment>
     );
   }
   if (isFirstDayOfSick && showSick) {
     return (
-      <>
+      <React.Fragment>
         <DeviceThermostatOutlined fontSize="small" />
         {showLabel && 'Sick leave'}
-      </>
+      </React.Fragment>
     );
   }
   if (isBirthday && cellData.show) {
     return (
-      <>
+      <React.Fragment>
         <Cake fontSize="small" />
         {showLabel && 'Birthday'}
-      </>
+      </React.Fragment>
     );
   }
   return null;
@@ -408,8 +418,12 @@ function PTOCalendar() {
             </Box>
           ),
           colSpan: (value: any, row: any, column: any) => {
-            if (row.id === 'summary') return 1;
-            if (!value.show) return 1;
+            if (row.id === 'summary') {
+              return 1;
+            }
+            if (!value.show) {
+              return 1;
+            }
 
             const fields = Object.keys(row).filter((f) => f !== 'id' && f !== 'employee');
             const colIndex = fields.indexOf(column.field);
@@ -425,8 +439,9 @@ function PTOCalendar() {
             let span = 1;
             for (let i = colIndex + 1; i < fields.length; i++) {
               const nextCell = row[fields[i]];
-              if (!nextCell?.show || (nextCell.hasHoliday && activeFilters.includes('holidays')))
+              if (!nextCell?.show || (nextCell.hasHoliday && activeFilters.includes('holidays'))) {
                 break;
+              }
 
               const nextCellType =
                 nextCell.hasHoliday && activeFilters.includes('holidays')
@@ -436,7 +451,9 @@ function PTOCalendar() {
                     : nextCell.hasSick
                       ? 'sick'
                       : '';
-              if (nextCellType !== currentCellType) break;
+              if (nextCellType !== currentCellType) {
+                break;
+              }
 
               span++;
             }
@@ -474,7 +491,9 @@ function PTOCalendar() {
               hasHolidayBooked: boolean;
               show: boolean;
             };
-            if (!cellData.show) return null;
+            if (!cellData.show) {
+              return null;
+            }
 
             const ptoPeriods = findContinuousPeriods(ptoData[params.row.employee].ptoDates || []);
             const sickPeriods = findContinuousPeriods(ptoData[params.row.employee].sickDates || []);
