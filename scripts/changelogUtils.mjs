@@ -286,7 +286,7 @@ export async function generateChangelog({
   const codemodCommits = [];
 
   commitsItems
-    .filter((item) => !prsLabelsMap[item.sha].some((label) => excludeLabels.includes(label.name)))
+    .filter((item) => !prsLabelsMap[item.sha]?.some((label) => excludeLabels.includes(label.name)))
     .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
       const tag = parseTags(commitItem.commit.message);
