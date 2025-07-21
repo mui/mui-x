@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 
 export const dataGridStyles: SxProps<Theme> = {
   border: 'none',
