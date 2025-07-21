@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   DataGridPremium,
   GridColDef,
@@ -9,8 +9,12 @@ import {
   GRID_AGGREGATION_FUNCTIONS,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
 } from '@mui/x-data-grid-premium';
-import { Box, Typography, Rating, Chip, Paper } from '@mui/material';
-import { styled , ThemeProvider } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Rating from '@mui/material/Rating';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import { styled, ThemeProvider } from '@mui/material/styles';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
@@ -88,7 +92,9 @@ const columns: GridColDef<Product>[] = [
     minWidth: 150,
     flex: 1,
     renderCell: (params: GridRenderCellParams<Product, string>) => {
-      if (params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID) {return null;}
+      if (params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID) {
+        return null;
+      }
       const statusMap = {
         in_stock: 'In Stock',
         out_of_stock: 'Out of Stock',
