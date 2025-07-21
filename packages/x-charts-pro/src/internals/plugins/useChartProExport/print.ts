@@ -2,10 +2,15 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { createExportIframe } from './common';
 import { ChartPrintExportOptions } from './useChartProExport.types';
+import { defaultOnBeforeExport } from './defaults';
 
 export function printChart(
   element: HTMLElement | SVGElement,
-  { fileName, onBeforeExport, copyStyles = true }: ChartPrintExportOptions = {},
+  {
+    fileName,
+    onBeforeExport = defaultOnBeforeExport,
+    copyStyles = true,
+  }: ChartPrintExportOptions = {},
 ) {
   const printWindow = createExportIframe(fileName);
   const doc = ownerDocument(element);
@@ -33,7 +38,7 @@ export function printChart(
       }
     });
 
-    await onBeforeExport?.(printWindow);
+    await onBeforeExport(printWindow);
 
     printWindow.contentWindow!.print();
   };
