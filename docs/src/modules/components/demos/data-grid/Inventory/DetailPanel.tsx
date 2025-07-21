@@ -94,22 +94,12 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
     },
   ];
 
-  const detailRow = {
-    id: row.id,
-    model: row.model,
-    totalSold: row.totalSold,
-    incoming: row.incoming,
-    colors: row.colors,
-    stock: row.stock,
-    status: row.status,
-    price: row.price,
-    cost: row.cost,
-  };
+  const rows = React.useMemo(() => ([row]), [row]);
 
   return (
     <DetailPanelContainer>
       <DataGridPro
-        rows={[detailRow]}
+        rows={rows}
         columns={detailColumns}
         hideFooter
         disableColumnMenu
