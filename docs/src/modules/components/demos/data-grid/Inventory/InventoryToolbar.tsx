@@ -1,5 +1,8 @@
-import React from 'react';
-import { Box, TextField, ButtonGroup, Button } from '@mui/material';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
 const SearchTextField = styled(TextField)(({ theme }) => ({
@@ -90,7 +93,7 @@ export function InventoryToolbar({
       <SearchTextField
         placeholder="Search"
         value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
+        onChange={(event) => onSearchChange(event.target.value)}
         size="small"
       />
     </Box>
