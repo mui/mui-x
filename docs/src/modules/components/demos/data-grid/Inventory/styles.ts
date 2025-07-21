@@ -31,16 +31,3 @@ export const detailPanelDataGridStyles: SxProps<Theme> = {
     backgroundColor: 'background.paper',
   },
 };
-
-export const inventoryDataGridStyles: SxProps<Theme> = {
-  ...dataGridStyles,
-  '& .MuiDataGrid-virtualScroller': {
-    overflow: 'auto',
-  },
-  '& .MuiDataGrid-virtualScrollerContent': {
-    minHeight: '100%',
-  },
-  '& .MuiDataGrid-virtualScrollerRenderZone': {
-    position: 'relative',
-  },
-};

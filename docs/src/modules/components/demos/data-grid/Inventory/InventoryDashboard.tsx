@@ -25,7 +25,7 @@ import { inventoryTheme } from './theme';
 import { Product, products } from './data/products';
 import { ProductDetailPanel } from './DetailPanel';
 import { InventoryToolbar } from './InventoryToolbar';
-import { inventoryDataGridStyles } from './styles';
+import { dataGridStyles } from './styles';
 import { CustomExpandIcon, CustomCollapseIcon } from './icons';
 
 const StatusChip = styled(Chip)(({ theme }) => ({
@@ -269,7 +269,7 @@ function InventoryDashboard() {
                   detailPanelExpandIcon: CustomExpandIcon,
                   detailPanelCollapseIcon: CustomCollapseIcon,
                 }}
-                sx={inventoryDataGridStyles}
+                sx={dataGridStyles}
               />
             </Box>
           </Paper>
