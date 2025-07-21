@@ -229,11 +229,7 @@ function InventoryDashboard() {
                       cost: 'profit',
                     },
                   },
-                  pagination: {
-                    paginationModel: { pageSize: 5 },
-                  },
                 }}
-                pageSizeOptions={[5]}
                 disableRowSelectionOnClick
                 getDetailPanelContent={({ row }) => <ProductDetailPanel row={row} />}
                 getDetailPanelHeight={() => 115}
