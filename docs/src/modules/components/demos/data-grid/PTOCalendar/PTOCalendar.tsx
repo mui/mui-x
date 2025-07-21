@@ -235,23 +235,14 @@ function PTOCalendar() {
     return summary;
   }, [daysToShow, ptoData]);
 
-  const pinnedRow: GridPinnedRowsProp = React.useMemo(
-    () => ({
-      top: [
-        {
-          id: 'summary',
-          employee: 'Out of office:',
-          ...Object.fromEntries(
-            daysToShow.map((day) => {
-              const dateStr = format(day, 'yyyy-MM-dd');
-              return [dateStr, employeesOutOfOffice[dateStr]];
-            }),
-          ),
-        },
-      ],
-    }),
-    [daysToShow, employeesOutOfOffice],
-  );
+  const pinnedRow: GridPinnedRowsProp = React.useMemo(() => {
+    const row: any = { id: 'summary', employee: 'Out of office:' };
+    daysToShow.forEach((day) => {
+      const dateStr = format(day, 'yyyy-MM-dd');
+      row[dateStr] = employeesOutOfOffice[dateStr];
+    });
+    return { top: [row] };
+  }, [daysToShow, employeesOutOfOffice]);
 
   const rows = React.useMemo(() => {
     const allRows = Object.entries(ptoData).map(([name, data], index) => {
