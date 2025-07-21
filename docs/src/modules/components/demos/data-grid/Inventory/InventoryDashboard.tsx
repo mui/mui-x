@@ -10,8 +10,7 @@ import {
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
 } from '@mui/x-data-grid-premium';
 import { Box, Typography, Rating, Chip, Paper } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { ThemeProvider } from '@mui/material/styles';
+import { styled , ThemeProvider } from '@mui/material/styles';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
@@ -89,7 +88,7 @@ const columns: GridColDef<Product>[] = [
     minWidth: 150,
     flex: 1,
     renderCell: (params: GridRenderCellParams<Product, string>) => {
-      if (params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID) return null;
+      if (params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID) {return null;}
       const statusMap = {
         in_stock: 'In Stock',
         out_of_stock: 'Out of Stock',
