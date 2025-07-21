@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -8,19 +7,49 @@ import {
   gridFilterModelSelector,
   useGridApiContext,
   useGridSelector,
+  Toolbar,
+  ToolbarButton,
+  QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
+  QuickFilterTrigger,
 } from '@mui/x-data-grid-premium';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import CancelIcon from '@mui/icons-material/Cancel';
+import SearchIcon from '@mui/icons-material/Search';
+import Tooltip from '@mui/material/Tooltip';
 
-const SearchTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '8px',
-    backgroundColor: theme.palette.background.paper,
-    '& fieldset': {
-      borderColor: theme.palette.divider,
-    },
-    '&:hover fieldset': {
-      borderColor: theme.palette.primary.main,
-    },
-  },
+type OwnerState = {
+  expanded: boolean;
+};
+
+const StyledQuickFilter = styled(QuickFilter)({
+  display: 'grid',
+  alignItems: 'center',
+  marginLeft: 'auto',
+});
+
+const StyledToolbarButton = styled(ToolbarButton)<{ ownerState: OwnerState }>(
+  ({ theme, ownerState }) => ({
+    gridArea: '1 / 1',
+    width: 'min-content',
+    height: 'min-content',
+    zIndex: 1,
+    opacity: ownerState.expanded ? 0 : 1,
+    pointerEvents: ownerState.expanded ? 'none' : 'auto',
+    transition: theme.transitions.create(['opacity']),
+  }),
+);
+
+const StyledTextField = styled(TextField)<{
+  ownerState: OwnerState;
+}>(({ theme, ownerState }) => ({
+  gridArea: '1 / 1',
+  overflowX: 'clip',
+  width: ownerState.expanded ? 260 : 'var(--trigger-width)',
+  opacity: ownerState.expanded ? 1 : 0,
+  transition: theme.transitions.create(['width', 'opacity']),
 }));
 
 const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
@@ -42,22 +71,15 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
   },
 }));
 
-interface InventoryToolbarProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-}
-
-export function InventoryToolbar({ searchQuery, onSearchChange }: InventoryToolbarProps) {
+export function InventoryToolbar() {
   const apiRef = useGridApiContext();
 
   const onStatusChange = React.useCallback(
     (status: 'all' | 'in_stock' | 'out_of_stock' | 'restocking') => {
       if (status === 'all') {
-        apiRef.current!.setFilterModel({ items: [] });
+        apiRef.current!.upsertFilterItem({ field: 'status', operator: 'is', value: undefined });
       } else {
-        apiRef.current!.setFilterModel({
-          items: [{ field: 'status', operator: 'is', value: status }],
-        });
+        apiRef.current!.upsertFilterItem({ field: 'status', operator: 'is', value: status });
       }
     },
     [apiRef],
@@ -67,14 +89,18 @@ export function InventoryToolbar({ searchQuery, onSearchChange }: InventoryToolb
   const statusFilter = filterModel.items.find((item) => item.field === 'status')?.value || 'all';
 
   return (
-    <Box
-      sx={{
-        mb: 2,
-        display: 'flex',
-        gap: 2,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}
+    <Toolbar
+      render={
+        <Box
+          sx={{
+            mb: 2,
+            display: 'flex',
+            gap: 2,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        />
+      }
     >
       <StyledButtonGroup>
         <Button
@@ -106,12 +132,57 @@ export function InventoryToolbar({ searchQuery, onSearchChange }: InventoryToolb
           Restocking
         </Button>
       </StyledButtonGroup>
-      <SearchTextField
-        placeholder="Search"
-        value={searchQuery}
-        onChange={(event) => onSearchChange(event.target.value)}
-        size="small"
-      />
-    </Box>
+      <StyledQuickFilter>
+        <QuickFilterTrigger
+          render={(triggerProps, state) => (
+            <Tooltip title="Search" enterDelay={0}>
+              <StyledToolbarButton
+                {...triggerProps}
+                ownerState={{ expanded: state.expanded }}
+                color="default"
+                aria-disabled={state.expanded}
+              >
+                <SearchIcon fontSize="small" />
+              </StyledToolbarButton>
+            </Tooltip>
+          )}
+        />
+        <QuickFilterControl
+          render={({ ref, ...controlProps }, state) => (
+            <StyledTextField
+              {...controlProps}
+              ownerState={{ expanded: state.expanded }}
+              inputRef={ref}
+              aria-label="Search"
+              placeholder="Search..."
+              size="small"
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: state.value ? (
+                    <InputAdornment position="end">
+                      <QuickFilterClear
+                        edge="end"
+                        size="small"
+                        aria-label="Clear search"
+                        material={{ sx: { marginRight: -0.75 } }}
+                      >
+                        <CancelIcon fontSize="small" />
+                      </QuickFilterClear>
+                    </InputAdornment>
+                  ) : null,
+                  ...controlProps.slotProps?.input,
+                },
+                ...controlProps.slotProps,
+              }}
+            />
+          )}
+        />
+      </StyledQuickFilter>
+    </Toolbar>
   );
 }
