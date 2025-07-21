@@ -1,4 +1,5 @@
 import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
+import { findMinMax } from '../../internals/findMinMax';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {
@@ -17,20 +18,7 @@ const getBaseExtremum: CartesianExtremumGetter<'bar'> = (params) => {
 
   const data = filter ? axis.data?.filter((_, i) => filter({ x: null, y: null }, i)) : axis.data;
 
-  let min = Infinity;
-  let max = -Infinity;
-
-  for (const value of data ?? []) {
-    if (value < min) {
-      min = value;
-    }
-
-    if (value > max) {
-      max = value;
-    }
-  }
-
-  return [min, max];
+  return findMinMax(data ?? []);
 };
 
 const getValueExtremum =
