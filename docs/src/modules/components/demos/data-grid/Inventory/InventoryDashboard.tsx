@@ -254,6 +254,7 @@ function InventoryDashboard() {
                 rows={products}
                 columns={columns}
                 aggregationFunctions={aggregationFunctions}
+                aggregationRowsScope="all"
                 initialState={{
                   aggregation: {
                     model: {
