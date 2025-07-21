@@ -24,7 +24,9 @@ function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPro> }) 
   const selectedRow = useGridSelector(apiRef, gridRowSelectionIdsSelector);
   const selectedStock = selectedRow.size > 0 ? Array.from(selectedRow.values())[0] : null;
 
-  if (!selectedStock) return null;
+  if (!selectedStock) {
+    return null;
+  }
 
   const handleClose = () => {
     apiRef.current?.setRowSelectionModel({ type: 'include', ids: new Set() });
@@ -111,8 +113,8 @@ function StockDashboard() {
   const getColumnVisibility = React.useCallback(() => {
     return {
       symbol: true,
-      name: isSmallScreen ? false : true,
-      trend: isSmallScreen ? false : true,
+      name: !isSmallScreen,
+      trend: !isSmallScreen,
       price: true,
       change: true,
       changePercent: true,
@@ -128,7 +130,9 @@ function StockDashboard() {
   }, [isSmallScreen, getColumnVisibility]);
 
   React.useEffect(() => {
-    if (!isReady) return;
+    if (!isReady) {
+      return;
+    }
 
     const interval = setInterval(async () => {
       try {
