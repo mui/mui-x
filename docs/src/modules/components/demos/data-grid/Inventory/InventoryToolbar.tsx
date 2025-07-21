@@ -4,6 +4,11 @@ import TextField from '@mui/material/TextField';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import {
+  gridFilterModelSelector,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid-premium';
 
 const SearchTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
@@ -40,16 +45,27 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
 interface InventoryToolbarProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
-  statusFilter: string;
-  onStatusChange: (status: string) => void;
 }
 
-export function InventoryToolbar({
-  searchQuery,
-  onSearchChange,
-  statusFilter,
-  onStatusChange,
-}: InventoryToolbarProps) {
+export function InventoryToolbar({ searchQuery, onSearchChange }: InventoryToolbarProps) {
+  const apiRef = useGridApiContext();
+
+  const onStatusChange = React.useCallback(
+    (status: 'all' | 'in_stock' | 'out_of_stock' | 'restocking') => {
+      if (status === 'all') {
+        apiRef.current!.setFilterModel({ items: [] });
+      } else {
+        apiRef.current!.setFilterModel({
+          items: [{ field: 'status', operator: 'is', value: status }],
+        });
+      }
+    },
+    [apiRef],
+  );
+
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+  const statusFilter = filterModel.items.find((item) => item.field === 'status')?.value || 'all';
+
   return (
     <Box
       sx={{

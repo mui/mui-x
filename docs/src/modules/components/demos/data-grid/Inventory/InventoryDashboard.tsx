@@ -211,7 +211,6 @@ const profitAggregation: GridAggregationFunction<
 
 function InventoryDashboard() {
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [statusFilter, setStatusFilter] = React.useState('all');
   const apiRef = useGridApiRef();
 
   const onRowClick = React.useCallback<GridEventListener<'rowClick'>>(
@@ -226,10 +225,9 @@ function InventoryDashboard() {
       const matchesSearch =
         product.product.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.sku.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      return matchesSearch;
     });
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery]);
 
   const aggregationFunctions = React.useMemo(
     () => ({ ...GRID_AGGREGATION_FUNCTIONS, profit: profitAggregation }),
@@ -260,12 +258,6 @@ function InventoryDashboard() {
               flexDirection: 'column',
             }}
           >
-            <InventoryToolbar
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              statusFilter={statusFilter}
-              onStatusChange={setStatusFilter}
-            />
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <DataGridPremium<Product>
                 apiRef={apiRef}
@@ -288,6 +280,14 @@ function InventoryDashboard() {
                 slots={{
                   detailPanelExpandIcon: CustomExpandIcon,
                   detailPanelCollapseIcon: CustomCollapseIcon,
+                  toolbar: InventoryToolbar,
+                }}
+                showToolbar
+                slotProps={{
+                  toolbar: {
+                    searchQuery,
+                    onSearchChange: setSearchQuery,
+                  },
                 }}
                 sx={dataGridStyles}
               />
