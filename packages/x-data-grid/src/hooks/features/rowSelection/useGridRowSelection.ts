@@ -532,13 +532,14 @@ export const useGridRowSelection = (
       }
       const currentSelection = gridRowSelectionStateSelector(apiRef);
       const rowsLookup = gridRowsLookupSelector(apiRef);
+      const rowTree = gridRowTreeSelector(apiRef);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
       const isNonExistent = (id: GridRowId) => {
         if (props.filterMode === 'server') {
           return !rowsLookup[id];
         }
-        return !rowsLookup[id] || filteredRowsLookup[id] === false;
+        return !rowTree[id] || filteredRowsLookup[id] === false;
       };
 
       const newSelectionModel = {
@@ -725,23 +726,27 @@ export const useGridRowSelection = (
       if (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&
-        applyAutoSelection &&
+        (!isNestedData || props.rowSelectionPropagation?.descendants) &&
         !hasFilters
       ) {
-        apiRef.current.setRowSelectionModel({
-          type: value ? 'exclude' : 'include',
-          ids: new Set(),
-        });
+        apiRef.current.setRowSelectionModel(
+          {
+            type: value ? 'exclude' : 'include',
+            ids: new Set(),
+          },
+          'multipleRowsSelection',
+        );
       } else {
         apiRef.current.selectRows(getRowsToBeSelected(), value);
       }
     },
     [
       apiRef,
-      applyAutoSelection,
       getRowsToBeSelected,
       props.checkboxSelectionVisibleOnly,
       props.isRowSelectable,
+      props.rowSelectionPropagation?.descendants,
+      isNestedData,
     ],
   );
 

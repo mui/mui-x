@@ -344,6 +344,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
     const domEvent = new CustomEvent(eventName, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 
