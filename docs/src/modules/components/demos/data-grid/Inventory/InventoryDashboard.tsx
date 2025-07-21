@@ -10,6 +10,7 @@ import {
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GridDetailPanelToggleCell,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
+  isGroupingColumn,
 } from '@mui/x-data-grid-premium';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -69,6 +70,12 @@ const ProductImage = styled('img')({
   borderRadius: 4,
 });
 
+const productStatusMap = {
+  in_stock: 'In Stock',
+  out_of_stock: 'Out of Stock',
+  restocking: 'Restocking',
+} as const;
+
 const columns: GridColDef<Product>[] = [
   {
     ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
@@ -86,31 +93,44 @@ const columns: GridColDef<Product>[] = [
     headerName: 'Product',
     flex: 1,
     minWidth: 250,
-    renderCell: (params: GridRenderCellParams<Product, string>) =>
-      params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID ? null : (
+    renderCell: (params: GridRenderCellParams<Product, string>) => {
+      if (
+        params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID ||
+        (params.rowNode.type === 'group' && !isGroupingColumn(params.field))
+      ) {
+        return null;
+      }
+
+      return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <ProductImage src={params.row.image} alt={params.value} />
           <Typography sx={{ fontSize: '0.875rem', fontWeight: '500' }}>{params.value}</Typography>
         </Box>
-      ),
+      );
+    },
   },
   { field: 'sku', groupable: false, aggregable: false, headerName: 'SKU', width: 120, flex: 1 },
   {
     field: 'status',
-    groupable: false,
-    aggregable: false,
+    type: 'singleSelect',
+    valueOptions: Object.keys(productStatusMap),
+    getOptionLabel: (value) => productStatusMap[value as keyof typeof productStatusMap],
+    // groupable: false,
+    // aggregable: false,
     headerName: 'Status',
     minWidth: 150,
     flex: 1,
     renderCell: (params: GridRenderCellParams<Product, string>) => {
-      if (params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID) {
+      if (params.aggregation) {
+        return params.value;
+      }
+      if (
+        params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID ||
+        (params.rowNode.type === 'group' && !isGroupingColumn(params.field))
+      ) {
         return null;
       }
-      const statusMap = {
-        in_stock: 'In Stock',
-        out_of_stock: 'Out of Stock',
-        restocking: 'Restocking',
-      };
+
       const iconMap = {
         in_stock: <CheckCircleOutlineIcon />,
         out_of_stock: <CancelOutlinedIcon />,
@@ -119,7 +139,7 @@ const columns: GridColDef<Product>[] = [
       return (
         <StatusChip
           icon={iconMap[params.value as keyof typeof iconMap]}
-          label={statusMap[params.value as keyof typeof statusMap]}
+          label={productStatusMap[params.value as keyof typeof productStatusMap]}
           className={params.value}
           clickable={false}
           onClick={() => {}} // TODO: Fix. Adding as placeholder. These shouldnt be clickable but for some reason it's giving me a runtime error for now, even if setting clickable to false.
