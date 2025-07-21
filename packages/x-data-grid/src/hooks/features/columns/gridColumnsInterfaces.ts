@@ -27,8 +27,8 @@ export interface GridPinnedColumnFields {
 }
 
 export const EMPTY_PINNED_COLUMN_FIELDS = {
-  left: [] as string[],
-  right: [] as string[],
+  left: [],
+  right: [],
 };
 
 export interface GridPinnedColumns {
