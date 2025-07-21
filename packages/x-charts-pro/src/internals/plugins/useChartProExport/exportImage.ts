@@ -31,12 +31,6 @@ export async function exportImage(
   const drawDocumentPromise = getDrawDocument();
   const { width, height } = element.getBoundingClientRect();
   const doc = ownerDocument(element);
-  const canvas = document.createElement('canvas');
-  const ratio = window.devicePixelRatio || 1;
-  canvas.width = width * ratio;
-  canvas.height = height * ratio;
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
 
   const iframe = createExportIframe(fileName);
 
@@ -70,6 +64,13 @@ export async function exportImage(
   await onBeforeExport(iframe);
 
   const drawDocument = await drawDocumentPromise;
+
+  const canvas = document.createElement('canvas');
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
 
   try {
     await drawDocument(iframe.contentDocument!, canvas, {
