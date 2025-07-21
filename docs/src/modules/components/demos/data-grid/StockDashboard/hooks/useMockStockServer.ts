@@ -24,7 +24,7 @@ const generateHistoricalData = (
     const date = new Date(now.getTime() - step * stepMs);
 
     const variation = (Math.random() - 0.5) * (price * 0.03);
-    price = price + variation;
+    price += variation;
 
     data.push({
       date: date.toISOString(),
@@ -49,7 +49,7 @@ const generatePredictionData = (
     const date = new Date(now.getTime() + step * stepMs);
 
     const variation = (Math.random() - 0.5) * (price * 0.03);
-    price = price + variation;
+    price += variation;
 
     data.push({
       date: date.toISOString(),
@@ -110,7 +110,9 @@ export const useMockStockServer = () => {
 
   React.useEffect(() => {
     const currentData = dataRef.current;
-    if (!currentData) return;
+    if (!currentData) {
+      return;
+    }
 
     const interval = setInterval(() => {
       const now = new Date();

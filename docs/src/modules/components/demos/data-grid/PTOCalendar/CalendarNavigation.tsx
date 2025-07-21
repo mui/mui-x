@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
@@ -11,10 +11,10 @@ import {
   useSplitFieldProps,
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useCalendarContext } from './CalendarContext';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { format } from 'date-fns';
 import { ToolbarButton } from '@mui/x-data-grid-premium';
+import { useCalendarContext } from './CalendarContext';
 import { CalendarSearch } from './CalendarSearch';
 
 function ButtonField(props: any) {

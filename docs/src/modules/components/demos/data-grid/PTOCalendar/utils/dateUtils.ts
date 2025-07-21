@@ -14,7 +14,9 @@ export const isCurrentDay = (date: Date): boolean => {
 };
 
 export const findContinuousPeriods = (dates: string[]): string[][] => {
-  if (dates.length === 0) return [];
+  if (dates.length === 0) {
+    return [];
+  }
 
   const sortedDates = [...dates].sort();
   const periods: string[][] = [];

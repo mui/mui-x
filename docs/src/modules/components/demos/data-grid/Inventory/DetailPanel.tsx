@@ -96,7 +96,7 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
     },
   ];
 
-  const rows = React.useMemo(() => ([row]), [row]);
+  const rows = React.useMemo(() => [row], [row]);
 
   return (
     <DetailPanelContainer>

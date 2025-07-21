@@ -314,7 +314,7 @@ function PTOCalendar() {
               }}
             >
               <Avatar
-                // src={`/assets/${ptoData[params.value].avatar}.jpg`} // TODO: add assets to docs
+                src={`/static/x/data-grid/demos/${ptoData[params.value].avatar}.png`}
                 sx={{
                   flexShrink: 0,
                   width: 32,

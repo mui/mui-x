@@ -19,7 +19,9 @@ const simulatePriceChange = (price: number, volatility: number = 0.02): number =
 
 export const getStockData = (symbol: string): StockData => {
   const stock = stockData[symbol];
-  if (!stock) throw new Error(`Stock ${symbol} not found`);
+  if (!stock) {
+    throw new Error(`Stock ${symbol} not found`);
+  }
 
   const newPrice = simulatePriceChange(stock.price);
   const priceChange = newPrice - stock.price;

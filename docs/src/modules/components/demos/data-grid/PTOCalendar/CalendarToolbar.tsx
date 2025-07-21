@@ -1,11 +1,11 @@
 import Stack from '@mui/material/Stack';
-import { CalendarFilters } from './CalendarFilters';
-import { useCalendarContext } from './CalendarContext';
 import Typography from '@mui/material/Typography';
-import { CalendarNavigation } from './CalendarNavigation';
-import { CalendarDensity } from './CalendarDensity';
 import { Toolbar } from '@mui/x-data-grid-premium';
 import { styled } from '@mui/material/styles';
+import { CalendarFilters } from './CalendarFilters';
+import { useCalendarContext } from './CalendarContext';
+import { CalendarNavigation } from './CalendarNavigation';
+import { CalendarDensity } from './CalendarDensity';
 
 const StyledToolbar = styled(Toolbar)({
   display: 'flex',

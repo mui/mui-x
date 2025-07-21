@@ -332,7 +332,7 @@ export const samplePTOData: PTOData = {
     nationality: 'ES',
     team: 'Engineering',
     birthday: '01-15',
-    avatar: 'm_4',
+    avatar: 'm_5',
   },
   'Mia Johnson': {
     ptoDates: [
@@ -359,7 +359,7 @@ export const samplePTOData: PTOData = {
     nationality: 'US',
     team: 'People',
     birthday: '01-15',
-    avatar: '',
+    avatar: 'f_5',
   },
   'Cillian McGrath': {
     ptoDates: [
@@ -382,6 +382,6 @@ export const samplePTOData: PTOData = {
     nationality: 'IE',
     team: 'Engineering',
     birthday: '01-15',
-    avatar: 'm_5',
+    avatar: 'm_4',
   },
 };
