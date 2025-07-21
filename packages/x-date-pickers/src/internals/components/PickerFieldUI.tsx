@@ -98,7 +98,7 @@ export function PickerFieldUI<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(props: PickerFieldUIProps<TEnableAccessibleFieldDOMStructure, TProps>) {
-  const { slots, slotProps, fieldResponse, defaultOpenPickerIcon } = props;
+  const { fieldResponse, defaultOpenPickerIcon } = props;
 
   const translations = usePickerTranslations();
   const pickerContext = useNullablePickerContext();
@@ -123,18 +123,13 @@ export function PickerFieldUI<
   const openPickerButtonPosition = triggerStatus !== 'hidden' ? openPickerButtonPositionProp : null;
 
   const TextField =
-    slots?.textField ??
     pickerFieldUIContext.slots.textField ??
     (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
-  const InputAdornment =
-    slots?.inputAdornment ?? pickerFieldUIContext.slots.inputAdornment ?? MuiInputAdornment;
+  const InputAdornment = pickerFieldUIContext.slots.inputAdornment ?? MuiInputAdornment;
   const { ownerState: startInputAdornmentOwnerState, ...startInputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: mergeSlotProps(
-      pickerFieldUIContext.slotProps.inputAdornment,
-      slotProps?.inputAdornment,
-    ),
+    externalSlotProps: pickerFieldUIContext.slotProps.inputAdornment,
     additionalProps: {
       position: 'start' as const,
     },
@@ -142,7 +137,7 @@ export function PickerFieldUI<
   });
   const { ownerState: endInputAdornmentOwnerState, ...endInputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: slotProps?.inputAdornment,
+    externalSlotProps: pickerFieldUIContext.slotProps.inputAdornment,
     additionalProps: {
       position: 'end' as const,
     },
@@ -175,14 +170,11 @@ export function PickerFieldUI<
     ownerState,
   });
 
-  const ClearButton = slots?.clearButton ?? pickerFieldUIContext.slots.clearButton ?? MuiIconButton;
+  const ClearButton = pickerFieldUIContext.slots.clearButton ?? MuiIconButton;
   // We don't want to forward the `ownerState` to the `<IconButton />` component, see mui/material-ui#34056
   const { ownerState: clearButtonOwnerState, ...clearButtonProps } = useSlotProps({
     elementType: ClearButton,
-    externalSlotProps: mergeSlotProps(
-      pickerFieldUIContext.slotProps.clearButton,
-      slotProps?.clearButton,
-    ),
+    externalSlotProps: pickerFieldUIContext.slotProps.clearButton,
     className: 'clearButton',
     additionalProps: {
       title: translations.fieldClearLabel,
@@ -198,13 +190,10 @@ export function PickerFieldUI<
     ownerState,
   });
 
-  const ClearIcon = slots?.clearIcon ?? pickerFieldUIContext.slots.clearIcon ?? MuiClearIcon;
+  const ClearIcon = pickerFieldUIContext.slots.clearIcon ?? MuiClearIcon;
   const clearIconProps = useSlotProps({
     elementType: ClearIcon,
-    externalSlotProps: mergeSlotProps(
-      pickerFieldUIContext.slotProps.clearIcon,
-      slotProps?.clearIcon,
-    ),
+    externalSlotProps: pickerFieldUIContext.slotProps.clearIcon,
     additionalProps: {
       fontSize: 'small',
     },
@@ -260,6 +249,14 @@ export function PickerFieldUI<
       </InputAdornment>
     );
   }
+  // handle the case of showing custom `inputAdornment` for Field components
+  if (
+    !textFieldProps.InputProps?.endAdornment &&
+    !textFieldProps.InputProps?.startAdornment &&
+    pickerFieldUIContext.slots.inputAdornment
+  ) {
+    textFieldProps.InputProps.endAdornment = <InputAdornment {...endInputAdornmentProps} />;
+  }
 
   if (clearButtonPosition != null) {
     textFieldProps.sx = [
@@ -313,16 +310,6 @@ export interface PickerFieldUIProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TProps extends UseFieldProps<TEnableAccessibleFieldDOMStructure>,
 > {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: PickerFieldUISlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: PickerFieldUISlotProps;
   /**
    * Object returned by the `useField` hook or one of its wrapper (for example `useDateField`).
    */
