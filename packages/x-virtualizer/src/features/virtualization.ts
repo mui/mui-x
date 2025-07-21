@@ -285,7 +285,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     return nextRenderContext;
   });
 
-  const forceUpdateRenderContext = () => {
+  const forceUpdateRenderContext = useEventCallback(() => {
     // skip update if dimensions are not ready and virtualization is enabled
     if (
       !Dimensions.selectors.dimensions(store.state).isReady &&
@@ -298,7 +298,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     // Reset the frozen context when the render context changes, see the illustration in https://github.com/mui/mui-x/pull/12353
     frozenContext.current = undefined;
     updateRenderContext(nextRenderContext);
-  };
+  });
 
   const handleScroll = useEventCallback(() => {
     if (ignoreNextScrollEvent.current) {
@@ -537,9 +537,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       return;
     }
     forceUpdateRenderContext();
-    // NOTE: forceUpdateRenderContext is stable
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabledForColumns, enabledForRows]);
+  }, [enabledForColumns, enabledForRows, forceUpdateRenderContext]);
 
   useEnhancedEffect(() => {
     if (refs.scroller.current) {

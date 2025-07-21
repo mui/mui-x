@@ -303,7 +303,7 @@ function useRowsMeta(
   const pinnedRows = params.pinnedRows;
   const rowHeight = useSelector(store, selectors.rowHeight);
 
-  const getRowHeightEntry = (rowId: RowId) => {
+  const getRowHeightEntry = useEventCallback((rowId: RowId) => {
     let entry = heightCache.get(rowId);
     if (entry === undefined) {
       entry = {
@@ -317,7 +317,7 @@ function useRowsMeta(
       heightCache.set(rowId, entry);
     }
     return entry;
-  };
+  });
 
   const { rowIdToIndexMap, applyRowHeight } = params;
   const processHeightEntry = React.useCallback(
@@ -376,12 +376,11 @@ function useRowsMeta(
 
       return entry;
     },
-    // NOTE: getRowHeightEntry is stable
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       store,
       rows,
       getRowHeightProp,
+      getRowHeightEntry,
       getEstimatedRowHeight,
       rowHeight,
       getRowSpacing,
