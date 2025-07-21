@@ -45,11 +45,7 @@ You can fill the area of the line by setting the series' `area` property to `tru
 
 A y-axis with a log scale cannot plot a line that crosses zero nor an area chart because the logarithm of zero is undefined.
 
-To overcome this, you can use a symlog scale, which uses a linear scale for values close to zero and a logarithmic scale for the remaining ones.
-
-You can also configure the values at which the scale switches from linear to logarithmic with the `constant` property, which defaults to 1.
-
-{{"demo": "SymlogArea.js"}}
+You can work around this limitation by using a [symlog scale](/x/react-charts/axis/#symlog-scale).
 
 ### Stacking
 
