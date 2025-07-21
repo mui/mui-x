@@ -86,7 +86,7 @@ const columns: GridColDef<Product>[] = [
     groupable: false,
     aggregable: false,
     headerName: 'Status',
-    width: 120,
+    minWidth: 150,
     flex: 1,
     renderCell: (params: GridRenderCellParams<Product, string>) => {
       if (params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID) return null;
