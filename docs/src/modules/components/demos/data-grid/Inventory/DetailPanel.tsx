@@ -1,12 +1,14 @@
-import React from 'react';
+import * as React from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-import { Box, Typography, Tooltip } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 import { Product } from './data/products';
 import { getColorValue } from './utils/colors';
 import { detailPanelDataGridStyles } from './styles';
 
-const DetailPanelContainer = styled(Box)(({ theme }) => ({
+const DetailPanelContainer = styled('div')(({ theme }) => ({
   paddingLeft: theme.spacing(6),
   animation: 'fadeIn 0.7s ease-out',
   backgroundColor: theme.palette.background.paper,
@@ -84,8 +86,8 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
       field: 'revenuePercentage',
       headerName: 'Revenue',
       flex: 1,
-      valueGetter: (value, row, column, apiRef) => {
-        const revenuePercentage = ((row.price - row.cost) / row.price) * 100;
+      valueGetter: (value, rowData) => {
+        const revenuePercentage = ((rowData.price - rowData.cost) / rowData.price) * 100;
         return revenuePercentage.toFixed(1);
       },
       renderCell: (params) => (
