@@ -6,9 +6,20 @@ import {
 export const getExtremumX: CartesianExtremumGetter<'line'> = (params) => {
   const { axis } = params;
 
-  const minX = Math.min(...(axis.data ?? []));
-  const maxX = Math.max(...(axis.data ?? []));
-  return [minX, maxX];
+  let min = Infinity;
+  let max = -Infinity;
+
+  for (const value of axis.data ?? []) {
+    if (value < min) {
+      min = value;
+    }
+
+    if (value > max) {
+      max = value;
+    }
+  }
+
+  return [min, max];
 };
 
 type GetValues = (d: [number, number]) => [number, number];

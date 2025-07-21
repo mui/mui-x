@@ -16,9 +16,21 @@ const getBaseExtremum: CartesianExtremumGetter<'bar'> = (params) => {
   });
 
   const data = filter ? axis.data?.filter((_, i) => filter({ x: null, y: null }, i)) : axis.data;
-  const minX = Math.min(...(data ?? []));
-  const maxX = Math.max(...(data ?? []));
-  return [minX, maxX];
+
+  let min = Infinity;
+  let max = -Infinity;
+
+  for (const value of data ?? []) {
+    if (value < min) {
+      min = value;
+    }
+
+    if (value > max) {
+      max = value;
+    }
+  }
+
+  return [min, max];
 };
 
 const getValueExtremum =
