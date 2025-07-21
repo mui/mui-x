@@ -196,14 +196,14 @@ function PTOCalendar() {
   const [holidays, setHolidays] = React.useState<HolidayData>({});
   const ptoData = usePTOData(currentDate);
 
-  const monthStart = useMemo(() => startOfMonth(currentDate), [currentDate]);
-  const monthEnd = useMemo(() => endOfMonth(currentDate), [currentDate]);
-  const daysToShow = useMemo(
+  const monthStart = React.useMemo(() => startOfMonth(currentDate), [currentDate]);
+  const monthEnd = React.useMemo(() => endOfMonth(currentDate), [currentDate]);
+  const daysToShow = React.useMemo(
     () => eachDayOfInterval({ start: monthStart, end: monthEnd }),
     [monthStart, monthEnd],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchHolidays = async () => {
       try {
         const year = currentDate.getFullYear();
@@ -221,7 +221,7 @@ function PTOCalendar() {
     fetchHolidays();
   }, [currentDate, ptoData]);
 
-  const employeesOutOfOffice = useMemo(() => {
+  const employeesOutOfOffice = React.useMemo(() => {
     const summary: { [key: string]: number } = {};
 
     daysToShow.forEach((day) => {
@@ -253,7 +253,7 @@ function PTOCalendar() {
     [daysToShow, employeesOutOfOffice],
   );
 
-  const rows = useMemo(() => {
+  const rows = React.useMemo(() => {
     const allRows = Object.entries(ptoData).map(([name, data], index) => {
       const row: RowData = {
         id: index + 1,
@@ -284,7 +284,7 @@ function PTOCalendar() {
     return allRows;
   }, [daysToShow, activeFilters, holidays, ptoData]);
 
-  const columns = useMemo<GridColDef[]>(
+  const columns = React.useMemo<GridColDef[]>(
     () => [
       {
         field: 'employee',
