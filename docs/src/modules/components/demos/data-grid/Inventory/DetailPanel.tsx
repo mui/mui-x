@@ -109,9 +109,7 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
         disableColumnSelector
         disableDensitySelector
         disableRowSelectionOnClick
-        sx={{
-          ...detailPanelDataGridStyles,
-        }}
+        sx={detailPanelDataGridStyles}
       />
     </DetailPanelContainer>
   );
