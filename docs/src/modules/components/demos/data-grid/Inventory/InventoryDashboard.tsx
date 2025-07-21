@@ -8,6 +8,8 @@ import {
   GridAggregationFunction,
   GRID_AGGREGATION_FUNCTIONS,
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
+  GridDetailPanelToggleCell,
+  GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 } from '@mui/x-data-grid-premium';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -68,6 +70,15 @@ const ProductImage = styled('img')({
 });
 
 const columns: GridColDef<Product>[] = [
+  {
+    ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
+    renderCell: (params) => {
+      if (params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID) {
+        return null;
+      }
+      return <GridDetailPanelToggleCell {...params} />;
+    },
+  },
   {
     field: 'product',
     groupable: false,
