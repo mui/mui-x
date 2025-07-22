@@ -26,8 +26,6 @@ import { gridPinnedRowsSelector, gridRowCountSelector } from '../features/rows/g
 import { useGridVisibleRows } from '../utils/useGridVisibleRows';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridPaginationSelector } from '../features/pagination';
-import { gridListColumnSelector } from '../features/listView/gridListViewSelectors';
-import { EMPTY_PINNED_COLUMN_FIELDS, GridPinnedColumns } from '../features/columns';
 import { gridFocusedVirtualCellSelector } from '../features/virtualization/gridFocusedVirtualCellSelector';
 import { gridRowSelectionManagerSelector } from '../features/rowSelection';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../constants/dataGridPropsDefaultValues';
@@ -68,18 +66,10 @@ export function useGridVirtualizer(
 ): void {
   const isRtl = useRtl();
   const { listView } = rootProps;
-  const visibleColumns = useGridSelector(apiRef, () => {
-    if (listView) {
-      const column = gridListColumnSelector(apiRef);
-      return column ? [column] : [];
-    }
-    return gridVisibleColumnDefinitionsSelector(apiRef);
-  });
+  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const pinnedColumns = listView
-    ? (EMPTY_PINNED_COLUMN_FIELDS as unknown as GridPinnedColumns)
-    : gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+  const pinnedColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
 
   const rowSelectionManager = useGridSelector(apiRef, gridRowSelectionManagerSelector);
   const isRowSelected = (id: any) =>
