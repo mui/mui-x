@@ -489,13 +489,19 @@ function PTOCalendar() {
             </Box>
           ),
           colSpan: (value: any, row: any, column: any) => {
-            if (row.id === 'summary') {
+            if (row.id === 'summary' || column.field === 'employee') {
               return 1;
             }
             if (!value.show) {
               return 1;
             }
-
+            if (
+              (!activeFilters.includes('vacation') && !activeFilters.includes('sick')) ||
+              (!value.hasPTO && !value.hasSick)
+            ) {
+              // We only span vacation and sick days
+              return 1;
+            }
             const colIndex = daysToShow.findIndex((date) => date.dateStr === column.field);
             const currentCellType =
               value.hasHoliday && activeFilters.includes('holidays')
