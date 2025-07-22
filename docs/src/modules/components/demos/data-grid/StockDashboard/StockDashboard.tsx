@@ -220,6 +220,7 @@ function StockDashboard() {
       },
       {
         field: 'price',
+        type: 'number',
         headerName: 'Price',
         flex: 1,
         minWidth: 100,
@@ -235,12 +236,13 @@ function StockDashboard() {
               borderRadius: 3,
             }}
           >
-            ${params.value.toFixed(2)}
+            ${params.value?.toFixed(2)}
           </Typography>
         ),
       },
       {
         field: 'change',
+        type: 'number',
         headerName: 'Change',
         flex: 1,
         minWidth: 100,
@@ -258,6 +260,7 @@ function StockDashboard() {
       },
       {
         field: 'changePercent',
+        type: 'number',
         headerName: '% Change',
         flex: 1,
         minWidth: 100,
@@ -275,6 +278,7 @@ function StockDashboard() {
       },
       {
         field: 'volume',
+        type: 'number',
         headerName: 'Volume',
         flex: 1,
         minWidth: 100,
