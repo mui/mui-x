@@ -1,57 +1,65 @@
 import { DateTime } from 'luxon';
 
+export const boundaries = {
+  start: DateTime.fromISO('2027-01-31T00:00:00'),
+  end: DateTime.fromISO('2027-02-20T00:00:00'),
+};
+
 export const resources: Resource[] = [
   {
-    title: 'Resource A',
+    title: 'Room 1',
     events: [
       {
         id: '1',
-        start: DateTime.fromISO('2027-02-22T07:30:00'),
-        end: DateTime.fromISO('2027-02-22T09:00:00'),
+        start: DateTime.fromISO('2027-02-01T00:00:00'),
+        end: DateTime.fromISO('2027-02-03T00:00:00'),
         title: 'Event 1',
       },
       {
         id: '2',
-        start: DateTime.fromISO('2027-02-22T10:00:00'),
-        end: DateTime.fromISO('2027-02-22T13:15:00'),
+        start: DateTime.fromISO('2027-02-04T00:00:00'),
+        end: DateTime.fromISO('2027-02-05T00:00:00'),
         title: 'Event 2',
       },
-    ],
-  },
-  {
-    title: 'Resource B',
-    events: [
       {
         id: '2',
-        start: DateTime.fromISO('2027-02-22T11:00:00'),
-        end: DateTime.fromISO('2027-02-22T17:00:00'),
+        start: DateTime.fromISO('2027-02-08T00:00:00'),
+        end: DateTime.fromISO('2027-02-12T00:00:00'),
+        title: 'Event 3',
+      },
+      {
+        id: '2',
+        start: DateTime.fromISO('2027-02-15T00:00:00'),
+        end: DateTime.fromISO('2027-02-17T00:00:00'),
         title: 'Event 3',
       },
     ],
   },
   {
-    title: 'Resource C',
+    title: 'Room 2',
+    events: [
+      {
+        id: '2',
+        start: DateTime.fromISO('2027-02-01T00:00:00'),
+        end: DateTime.fromISO('2027-02-19T00:00:00'),
+        title: 'Event 4',
+      },
+    ],
+  },
+  {
+    title: 'Room 3',
     events: [],
   },
   {
-    title: 'Resource D',
-    events: [],
-  },
-  {
-    title: 'Resource E',
-    events: [],
-  },
-  {
-    title: 'Resource F',
-    events: [],
-  },
-  {
-    title: 'Resource G',
-    events: [],
-  },
-  {
-    title: 'Resource H',
-    events: [],
+    title: 'Room 4',
+    events: [
+      {
+        id: '2',
+        start: DateTime.fromISO('2027-02-01T00:00:00'),
+        end: DateTime.fromISO('2027-02-02T00:00:00'),
+        title: 'Event 4',
+      },
+    ],
   },
 ];
 

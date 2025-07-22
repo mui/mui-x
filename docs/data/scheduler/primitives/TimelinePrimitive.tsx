@@ -1,51 +1,19 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { DateTime } from 'luxon';
 import { Timeline } from '@mui/x-scheduler/primitives/timeline';
 import { useDayList } from '@mui/x-scheduler/primitives/use-day-list';
-import { resources, Resource } from './timeline-events';
+import { boundaries, resources, Resource } from './timeline-events';
 import classes from './TimelinePrimitive.module.css';
 
 export default function TimelinePrimitive() {
   const getDayList = useDayList();
 
-  const boundaries = React.useMemo(() => {
-    const tempBoundaries: { start: DateTime | null; end: DateTime | null } = {
-      start: null,
-      end: null,
-    };
-
-    for (const resource of resources) {
-      for (const event of resource.events) {
-        if (!tempBoundaries.start || event.start < tempBoundaries.start) {
-          tempBoundaries.start = event.start;
-        }
-        if (!tempBoundaries.end || event.end > tempBoundaries.end) {
-          tempBoundaries.end = event.end;
-        }
-      }
-    }
-
-    if (!tempBoundaries.start || !tempBoundaries.end) {
-      throw new Error('No events found to determine boundaries');
-    }
-
-    return {
-      start: tempBoundaries.start.startOf('day'),
-      end: tempBoundaries.end.endOf('day'),
-    };
-  }, []);
-
   const timeColumns = React.useMemo(() => {
     return getDayList({
       date: boundaries.start,
       amount: boundaries.end.diff(boundaries.start, 'days').days + 1,
-    }).flatMap((date) =>
-      Array.from({ length: 24 }, (_, hour) => date.set({ hour })),
-    );
-  }, [boundaries, getDayList]);
-
-  console.log(boundaries);
+    });
+  }, [getDayList]);
 
   return (
     <div className={classes.Container}>
