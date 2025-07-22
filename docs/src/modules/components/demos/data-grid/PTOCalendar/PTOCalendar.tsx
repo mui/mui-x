@@ -496,8 +496,7 @@ function PTOCalendar() {
               return 1;
             }
 
-            const fields = Object.keys(row).filter((f) => f !== 'id' && f !== 'employee');
-            const colIndex = fields.indexOf(column.field);
+            const colIndex = daysToShow.findIndex((date) => date.dateStr === column.field);
             const currentCellType =
               value.hasHoliday && activeFilters.includes('holidays')
                 ? 'holidays'
@@ -508,8 +507,8 @@ function PTOCalendar() {
                     : '';
 
             let span = 1;
-            for (let i = colIndex + 1; i < fields.length; i += 1) {
-              const nextCell = row[fields[i]];
+            for (let i = colIndex + 1; i < daysToShow.length; i += 1) {
+              const nextCell = row[daysToShow[i].dateStr];
               if (!nextCell?.show || (nextCell.hasHoliday && activeFilters.includes('holidays'))) {
                 break;
               }
