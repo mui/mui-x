@@ -134,8 +134,8 @@ function FastScatter(props: ScatterProps) {
       onPointerMove={eventHandlers?.onPointerMove}
       onPointerLeave={eventHandlers?.onPointerLeave}
     >
-      {paths.map((path, i) => (
-        <path key={i} fill={color} d={path} />
+      {paths.map((d, i) => (
+        <path key={i} fill={color} d={d} />
       ))}
     </g>
   );
