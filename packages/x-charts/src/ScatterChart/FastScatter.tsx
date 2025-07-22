@@ -2,11 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
-import {
-  DefaultizedScatterSeriesType,
-  ScatterItemIdentifier,
-  ScatterValueType,
-} from '../models/seriesType/scatter';
+import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
@@ -20,8 +16,9 @@ import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { SeriesId } from '../models/seriesType/common';
 import { getValueToPositionMapper } from '../hooks/useScale';
+import { getSVGPoint } from '../internals';
+import { useInteractionGroupProps } from '../hooks/useInteractionItemProps';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -70,13 +67,23 @@ function FastScatter(props: ScatterProps) {
     slotProps,
   } = props;
 
-  const { instance } =
+  const groupRef = React.useRef<SVGGElement>(null);
+  const { instance, svgRef } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   const store = useStore<[UseChartVoronoiSignature]>();
   const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
+  const skipInteractionHandlers = Boolean(isVoronoiEnabled || series.disableHover);
 
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
+  const eventHandlers = useInteractionGroupProps(
+    series.id,
+    series.data,
+    getXPosition,
+    getYPosition,
+    series.markerSize,
+    skipInteractionHandlers,
+  );
 
   const MAX_POINTS_PER_PATH = 1000;
   let points = 0;
@@ -121,7 +128,13 @@ function FastScatter(props: ScatterProps) {
   const classes = useUtilityClasses(inClasses);
 
   return (
-    <g data-series={series.id} className={classes.root}>
+    <g
+      ref={groupRef}
+      data-series={series.id}
+      className={classes.root}
+      onPointerMove={eventHandlers?.onPointerMove}
+      onPointerLeave={eventHandlers?.onPointerLeave}
+    >
       {paths.map((path, i) => (
         <path key={i} fill={color} d={path} />
       ))}
