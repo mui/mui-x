@@ -77,7 +77,7 @@ function FastScatter(props: ScatterProps) {
   const getYPosition = getValueToPositionMapper(yScale);
   const eventHandlers = useInteractionGroupProps(
     series.id,
-    series.data.map((x, i) => ({ dataIndex: i, x: x.x, y: x.y })),
+    series.data,
     getXPosition,
     getYPosition,
     series.markerSize,

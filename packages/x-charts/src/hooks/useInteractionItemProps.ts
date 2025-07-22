@@ -149,6 +149,9 @@ export function useInteractionGroupProps(
       return undefined;
     }
 
+    const map = new Map();
+    seriesData.forEach((item, i) => map.set(item, i));
+
     function onPointerLeave() {
       instance.removeItemInteraction();
       instance.clearHighlight();
@@ -163,8 +166,9 @@ export function useInteractionGroupProps(
         return;
       }
 
-      const point = getSVGPoint(element, event);
-      const dataIndex = qt!.find(point.x, point.y, markerSize)?.dataIndex;
+      const svgPoint = getSVGPoint(element, event);
+      const point = qt!.find(svgPoint.x, svgPoint.y, markerSize);
+      const dataIndex = point === undefined ? undefined : map.get(point);
 
       if (dataIndex === undefined) {
         instance.removeItemInteraction();
@@ -177,5 +181,5 @@ export function useInteractionGroupProps(
     }
 
     return { onPointerMove, onPointerLeave };
-  }, [instance, markerSize, qt, seriesId, skip, svgRef]);
+  }, [instance, markerSize, qt, seriesData, seriesId, skip, svgRef]);
 }
