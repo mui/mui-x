@@ -4,12 +4,9 @@ import Button from '@mui/material/Button';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import Tooltip from '@mui/material/Tooltip';
-import {
-  DatePicker,
-  LocalizationProvider,
-  usePickerContext,
-  useSplitFieldProps,
-} from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import useForkRef from '@mui/utils/useForkRef';
 import { format } from 'date-fns';

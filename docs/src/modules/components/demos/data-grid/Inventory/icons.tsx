@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export const CustomExpandIcon = React.forwardRef<SVGSVGElement, any>((props, ref) => (
