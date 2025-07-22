@@ -78,18 +78,11 @@ function FastScatter(props: ScatterProps) {
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
 
-  const temp: (ScatterValueType & {
-    dataIndex: number;
-    seriesId: SeriesId;
-    type: 'scatter';
-  })[] = [];
-
   const MAX_POINTS_PER_PATH = 1000;
   let points = 0;
   const paths: string[] = [];
   let path = '';
-  const markerSize = series.markerSize ?? 1;
-  const radius = markerSize / 2;
+  const radius = series.markerSize;
   for (let i = 0; i < series.data.length; i += 1) {
     const scatterPoint = series.data[i];
 
@@ -99,14 +92,6 @@ function FastScatter(props: ScatterProps) {
     const isInRange = instance.isPointInside(x, y);
 
     if (isInRange) {
-      temp.push({
-        x,
-        y,
-        id: scatterPoint.id,
-        seriesId: series.id,
-        type: 'scatter',
-        dataIndex: i,
-      });
       points += 1;
       path += `M${x + radius} ${y + radius} A${radius} ${radius} 0 1 1 ${x + radius} ${y + radius - 0.01}`;
     }
