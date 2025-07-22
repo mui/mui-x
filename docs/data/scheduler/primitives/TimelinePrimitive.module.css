@@ -1,0 +1,56 @@
+.Container {
+  --border-color: oklch(87.1% 0.006 286.286);
+  --event-work-bg-color: oklch(82.8% 0.111 230.318);
+  --event-personal-bg-color: oklch(81% 0.117 11.638);
+}
+
+:global(.mode-dark) .Container {
+  --border-color: oklch(44.2% 0.017 285.786);
+  --event-work-bg-color: oklch(50% 0.134 242.749);
+  --event-personal-bg-color: oklch(45.5% 0.188 13.697);
+}
+
+.Root {
+  display: flex;
+  width: 800px;
+  border: 1px solid var(--border-color);
+}
+
+.SubGrid {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+}
+
+.ScrollableSubGrid {
+  overflow-x: scroll;
+  flex: 1 1 100%;
+}
+
+.Row {
+  display: flex;
+  height: 48px;
+  line-height: 48px;
+}
+
+.Cell {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
+
+  &:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+}
+
+.TitleCell {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.TimeCell {
+  width: 48px;
+}
