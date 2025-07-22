@@ -6,35 +6,44 @@ export const FILTER_LABELS: Record<string, string> = {
   sick: 'Sick leave',
 };
 
-export const FILTER_COLORS = {
+export const FILTER_COLORS: Record<
+  (typeof FILTER_OPTIONS)[number],
+  { light: React.CSSProperties; dark: React.CSSProperties }
+> = {
   holidays: {
-    background: '#edf2fe',
-    text: '#2D4492',
-    border: '#e1e9ff',
+    light: {
+      backgroundColor: '#edf2fe',
+      color: '#2D4492',
+      borderColor: '#e1e9ff',
+    },
     dark: {
-      background: '#1f2d5c',
-      text: '#d2deff',
-      border: '#3a5bc7',
+      backgroundColor: '#1f2d5c',
+      color: '#d2deff',
+      borderColor: '#3a5bc7',
     },
   },
   vacation: {
-    background: '#e6f7ed',
-    text: '#1F5F4D',
-    border: '#d6f1e3',
+    light: {
+      backgroundColor: '#e6f7ed',
+      color: '#1F5F4D',
+      borderColor: '#d6f1e3',
+    },
     dark: {
-      background: '#1d3b31',
-      text: '#c3e9d7',
-      border: '#208368',
+      backgroundColor: '#1d3b31',
+      color: '#c3e9d7',
+      borderColor: '#208368',
     },
   },
   sick: {
-    background: '#fff7f7',
-    text: '#99222A',
-    border: '#feebec',
+    light: {
+      backgroundColor: '#fff7f7',
+      color: '#99222A',
+      borderColor: '#feebec',
+    },
     dark: {
-      background: '#641723',
-      text: '#ffdbdc',
-      border: '#ce2c31',
+      backgroundColor: '#641723',
+      color: '#ffdbdc',
+      borderColor: '#ce2c31',
     },
   },
 };

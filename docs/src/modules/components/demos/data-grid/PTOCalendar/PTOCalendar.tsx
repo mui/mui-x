@@ -191,6 +191,77 @@ function renderCellIconLabel({
   return null;
 }
 
+function getCellStyles(
+  showHoliday: boolean,
+  isBirthday: boolean,
+  showPTO: boolean,
+  showSick: boolean,
+  isCurrent: boolean,
+  cellData: CellData,
+  isDark: boolean,
+): React.CSSProperties {
+  if (showHoliday && cellData.hasHolidayBooked) {
+    if (isDark) {
+      return FILTER_COLORS.holidays.dark;
+    }
+    return {
+      ...FILTER_COLORS.holidays.light,
+      borderWidth: '1px',
+      borderStyle: 'solid',
+    };
+  }
+  if (showHoliday || isBirthday) {
+    if (isDark) {
+      return {
+        ...FILTER_COLORS.holidays.dark,
+        backgroundColor: 'transparent',
+      };
+    }
+    return {
+      ...FILTER_COLORS.holidays.light,
+      backgroundColor: 'transparent',
+      borderWidth: '1px',
+      borderStyle: 'dashed',
+    };
+  }
+  if (showPTO) {
+    if (isDark) {
+      return FILTER_COLORS.vacation.dark;
+    }
+    return {
+      ...FILTER_COLORS.vacation.light,
+      borderWidth: '1px',
+      borderStyle: 'solid',
+    };
+  }
+  if (showSick) {
+    if (isDark) {
+      return FILTER_COLORS.sick.dark;
+    }
+    return {
+      ...FILTER_COLORS.sick.light,
+      borderWidth: '1px',
+      borderStyle: 'solid',
+    };
+  }
+  if (isCurrent) {
+    if (isDark) {
+      return {
+        backgroundColor: '#1e2429',
+      };
+    }
+    return {
+      backgroundColor: '#faf9fb',
+      borderColor: 'transparent',
+    };
+  }
+  return {
+    backgroundColor: 'transparent',
+    color: 'transparent',
+    border: 'none',
+  };
+}
+
 function PTOCalendar() {
   const calendarState = useCalendarState();
   const { currentDate, activeFilters, density } = calendarState;
@@ -492,6 +563,10 @@ function PTOCalendar() {
               show: boolean;
             };
 
+            if (!cellData.show && isCurrent) {
+              return null;
+            }
+
             const ptoPeriods = findContinuousPeriods(ptoData[params.row.employee].ptoDates || []);
             const sickPeriods = findContinuousPeriods(ptoData[params.row.employee].sickDates || []);
             const currentPTOPeriod = ptoPeriods.find((period) => period.includes(params.field));
@@ -574,18 +649,15 @@ function PTOCalendar() {
                       isEndOfPeriodInRange || showHoliday || isBirthday ? '12px' : '0',
                     borderBottomRightRadius:
                       isEndOfPeriodInRange || showHoliday || isBirthday ? '12px' : '0',
-                    backgroundColor:
-                      showHoliday && cellData.hasHolidayBooked
-                        ? FILTER_COLORS.holidays.background
-                        : showHoliday || isBirthday
-                          ? 'transparent'
-                          : showPTO
-                            ? FILTER_COLORS.vacation.background
-                            : showSick
-                              ? FILTER_COLORS.sick.background
-                              : isCurrent
-                                ? '#faf9fb'
-                                : 'transparent',
+                    ...getCellStyles(
+                      showHoliday,
+                      isBirthday,
+                      showPTO,
+                      showSick,
+                      isCurrent,
+                      cellData,
+                      false,
+                    ),
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: density === 'comfortable' ? 'start' : 'center',
@@ -596,60 +668,17 @@ function PTOCalendar() {
                     fontSize: '0.8125rem',
                     fontWeight: 'medium',
                     gap: 0.5,
-                    color:
-                      showHoliday && cellData.hasHolidayBooked
-                        ? FILTER_COLORS.holidays.text
-                        : showHoliday || isBirthday
-                          ? FILTER_COLORS.holidays.text
-                          : showPTO
-                            ? FILTER_COLORS.vacation.text
-                            : showSick
-                              ? FILTER_COLORS.sick.text
-                              : 'transparent',
-                    border:
-                      showHoliday && cellData.hasHolidayBooked
-                        ? `1px solid ${FILTER_COLORS.holidays.border}`
-                        : showHoliday || isBirthday
-                          ? `1px dashed ${FILTER_COLORS.holidays.border}`
-                          : showPTO
-                            ? `1px solid ${FILTER_COLORS.vacation.border}`
-                            : showSick
-                              ? `1px solid ${FILTER_COLORS.sick.border}`
-                              : 'none',
                     alignSelf: 'center',
                     ...theme.applyStyles('dark', {
-                      backgroundColor:
-                        showHoliday && cellData.hasHolidayBooked
-                          ? FILTER_COLORS.holidays.dark.background
-                          : showHoliday || isBirthday
-                            ? 'transparent'
-                            : showPTO
-                              ? FILTER_COLORS.vacation.dark.background
-                              : showSick
-                                ? FILTER_COLORS.sick.dark.background
-                                : isCurrent
-                                  ? '#1e2429'
-                                  : 'transparent',
-                      borderColor:
-                        showHoliday && cellData.hasHolidayBooked
-                          ? FILTER_COLORS.holidays.dark.border
-                          : showHoliday || isBirthday
-                            ? FILTER_COLORS.holidays.dark.border
-                            : showPTO
-                              ? FILTER_COLORS.vacation.dark.border
-                              : showSick
-                                ? FILTER_COLORS.sick.dark.border
-                                : 'transparent',
-                      color:
-                        showHoliday && cellData.hasHolidayBooked
-                          ? FILTER_COLORS.holidays.dark.text
-                          : showHoliday || isBirthday
-                            ? FILTER_COLORS.holidays.dark.text
-                            : showPTO
-                              ? FILTER_COLORS.vacation.dark.text
-                              : showSick
-                                ? FILTER_COLORS.sick.dark.text
-                                : 'transparent',
+                      ...getCellStyles(
+                        showHoliday,
+                        isBirthday,
+                        showPTO,
+                        showSick,
+                        isCurrent,
+                        cellData,
+                        true,
+                      ),
                       '&:hover': {
                         backgroundColor:
                           showPTO || showSick ? 'none' : isCurrent ? 'transparent' : '#1e2429',
