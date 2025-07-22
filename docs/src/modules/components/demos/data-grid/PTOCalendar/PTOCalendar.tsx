@@ -63,7 +63,7 @@ function EmployeeHeader() {
 type PTOParams = GridRenderCellParams<RowData, CellData>;
 function getIsFirstVisibleDayOfPTO(
   params: PTOParams,
-  daysToShow: Date[],
+  daysToShow: { date: Date; dateStr: string }[],
   activeFilters: string[],
   isFirstDayOfPTO: boolean,
 ): boolean {
@@ -73,9 +73,9 @@ function getIsFirstVisibleDayOfPTO(
   if (isFirstDayOfPTO) {
     return true;
   }
-  const prevDayIndex = daysToShow.findIndex((d) => format(d, 'yyyy-MM-dd') === params.field) - 1;
+  const prevDayIndex = daysToShow.findIndex(({ dateStr }) => dateStr === params.field) - 1;
   if (prevDayIndex >= 0) {
-    const prevDayStr = format(daysToShow[prevDayIndex], 'yyyy-MM-dd');
+    const prevDayStr = daysToShow[prevDayIndex].dateStr;
     const prevCell = (params.row as Record<string, CellData>)[prevDayStr];
     if (prevCell && prevCell.hasHoliday && activeFilters.includes('holidays')) {
       return true;
@@ -271,10 +271,13 @@ function PTOCalendar() {
 
   const monthStart = React.useMemo(() => startOfMonth(currentDate), [currentDate]);
   const monthEnd = React.useMemo(() => endOfMonth(currentDate), [currentDate]);
-  const daysToShow = React.useMemo(
-    () => eachDayOfInterval({ start: monthStart, end: monthEnd }),
-    [monthStart, monthEnd],
-  );
+  const daysToShow = React.useMemo(() => {
+    const interval = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    return interval.map((d) => ({
+      date: d,
+      dateStr: format(d, 'yyyy-MM-dd'),
+    }));
+  }, [monthStart, monthEnd]);
 
   React.useEffect(() => {
     const fetchHolidays = async () => {
@@ -321,8 +324,7 @@ function PTOCalendar() {
       });
     }
 
-    daysToShow.forEach((day) => {
-      const dateStr = format(day, 'yyyy-MM-dd');
+    daysToShow.forEach(({ dateStr }) => {
       let count = 0;
       ptoDatesAsSets.forEach((data, index) => {
         if (typeof rowData[index] === 'undefined') {
@@ -438,8 +440,7 @@ function PTOCalendar() {
           );
         },
       },
-      ...daysToShow.map((day) => {
-        const dateStr = format(day, 'yyyy-MM-dd');
+      ...daysToShow.map(({ dateStr, date: day }) => {
         const isCurrent = isCurrentDay(day);
         return {
           field: dateStr,
@@ -573,7 +574,7 @@ function PTOCalendar() {
             const isFirstDayOfPTO = currentPTOPeriod && currentPTOPeriod[0] === params.field;
             const isFirstDayOfSick = currentSickPeriod && currentSickPeriod[0] === params.field;
             const isMiddleOfPeriod = !isFirstDayOfPTO && !isFirstDayOfSick;
-            const lastDayOfPeriod = daysToShow[daysToShow.length - 1];
+            const lastDayOfPeriod = daysToShow[daysToShow.length - 1].date;
             const isEndOfPTOPeriodInRange =
               currentPTOPeriod &&
               startOfDay(new Date(currentPTOPeriod[currentPTOPeriod.length - 1])) <=
@@ -703,6 +704,8 @@ function PTOCalendar() {
     [daysToShow, holidays, ptoData, activeFilters, density],
   );
 
+  const todayStr = format(new Date(), 'yyyy-MM-dd');
+
   return (
     <DemoContainer theme={ptoCalendarTheme}>
       <CalendarContext.Provider value={calendarState}>
@@ -726,9 +729,7 @@ function PTOCalendar() {
             columnHeaderHeight={50}
             rowHeight={50}
             slots={{ toolbar: CalendarToolbar }}
-            getCellClassName={(params) =>
-              params.field === format(new Date(), 'yyyy-MM-dd') ? 'today' : ''
-            }
+            getCellClassName={(params) => (params.field === todayStr ? 'today' : '')}
             hideFooter
             showToolbar
             showCellVerticalBorder
