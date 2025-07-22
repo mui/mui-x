@@ -8,7 +8,6 @@ import {
   DataGridPremium,
   GridColDef,
   GridRenderCellParams,
-  GridPinnedRowsProp,
   useGridApiContext,
   useGridSelector,
   gridFilteredRowCountSelector,
@@ -221,40 +220,44 @@ function PTOCalendar() {
     fetchHolidays();
   }, [currentDate, ptoData]);
 
-  const employeesOutOfOffice = React.useMemo(() => {
-    const summary: { [key: string]: number } = {};
+  const { rows, pinnedRows } = React.useMemo(() => {
+    const rowData: RowData[] = [];
+
+    const topPinnedRow: { id: string; employee: string; [key: string]: string | number } = {
+      id: 'summary',
+      employee: 'Out of office:',
+    };
+
+    const ptoDatesAsSets: {
+      employee: string;
+      nationality: string;
+      ptoDates: Set<string>;
+      sickDates: Set<string>;
+    }[] = [];
+
+    // eslint-disable-next-line guard-for-in
+    for (const key in ptoData) {
+      const data = ptoData[key];
+      ptoDatesAsSets.push({
+        employee: key,
+        nationality: data.nationality,
+        // Use Set for faster search, since we're iterating over each employee's dates for each day
+        ptoDates: new Set(data.ptoDates),
+        sickDates: new Set(data.sickDates),
+      });
+    }
 
     daysToShow.forEach((day) => {
       const dateStr = format(day, 'yyyy-MM-dd');
-      const count = Object.values(ptoData).filter(
-        (data) => data.ptoDates.includes(dateStr) || data.sickDates.includes(dateStr),
-      ).length;
-      summary[dateStr] = count;
-    });
+      let count = 0;
+      ptoDatesAsSets.forEach((data, index) => {
+        if (typeof rowData[index] === 'undefined') {
+          rowData[index] = { id: index + 1, employee: data.employee };
+        }
+        const row = rowData[index];
 
-    return summary;
-  }, [daysToShow, ptoData]);
-
-  const pinnedRow: GridPinnedRowsProp = React.useMemo(() => {
-    const row: any = { id: 'summary', employee: 'Out of office:' };
-    daysToShow.forEach((day) => {
-      const dateStr = format(day, 'yyyy-MM-dd');
-      row[dateStr] = employeesOutOfOffice[dateStr];
-    });
-    return { top: [row] };
-  }, [daysToShow, employeesOutOfOffice]);
-
-  const rows = React.useMemo(() => {
-    const allRows = Object.entries(ptoData).map(([name, data], index) => {
-      const row: RowData = {
-        id: index + 1,
-        employee: name,
-      };
-
-      daysToShow.forEach((day) => {
-        const dateStr = format(day, 'yyyy-MM-dd');
-        const hasPTO = data.ptoDates.includes(dateStr);
-        const hasSick = data.sickDates.includes(dateStr);
+        const hasPTO = data.ptoDates.has(dateStr);
+        const hasSick = data.sickDates.has(dateStr);
         const hasHoliday = !!holidays[data.nationality]?.[dateStr];
 
         row[dateStr] = {
@@ -267,13 +270,16 @@ function PTOCalendar() {
             (hasSick && activeFilters.includes('sick')) ||
             (hasHoliday && activeFilters.includes('holidays')),
         };
-      });
 
-      return row;
+        if (hasPTO || hasSick) {
+          count += 1;
+        }
+      });
+      topPinnedRow[dateStr] = count;
     });
 
-    return allRows;
-  }, [daysToShow, activeFilters, holidays, ptoData]);
+    return { rows: rowData, pinnedRows: { top: [topPinnedRow] } };
+  }, [activeFilters, daysToShow, holidays, ptoData]);
 
   const columns = React.useMemo<GridColDef[]>(
     () => [
@@ -678,7 +684,7 @@ function PTOCalendar() {
           }}
         >
           <DataGridPremium
-            pinnedRows={pinnedRow}
+            pinnedRows={pinnedRows}
             rows={rows}
             columns={columns}
             pinnedColumns={{
