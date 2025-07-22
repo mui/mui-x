@@ -18,7 +18,7 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, startOfDay } from 
 import { getHolidaysForCountries } from './data/holidays';
 import { useCalendarState } from './hooks/useCalendarState';
 import { findContinuousPeriods, isCurrentDay } from './utils/dateUtils';
-import { HolidayData } from './types/pto';
+import type { HolidayData, PTOData } from './types/pto';
 import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
 import { FILTER_COLORS } from './constants';
@@ -26,20 +26,20 @@ import { ptoCalendarTheme } from './theme';
 import { DemoContainer } from '../DemoContainer';
 import { samplePTOData } from './data/sampleData';
 
-interface RowData {
-  id: number;
+type RowDataEntry = PTOData[string];
+
+type DateTemplate = `${string}-${string}-${string}`;
+
+interface RowData extends RowDataEntry {
+  id: number | string;
   employee: string;
-  [key: string]:
-    | string
-    | number
-    | boolean
-    | {
-        hasPTO: boolean;
-        hasSick: boolean;
-        hasHoliday: boolean;
-        hasHolidayBooked: boolean;
-        show: boolean;
-      };
+  [key: DateTemplate]: {
+    hasPTO: boolean;
+    hasSick: boolean;
+    hasHoliday: boolean;
+    hasHolidayBooked: boolean;
+    show: boolean;
+  };
 }
 
 interface CellData {
@@ -63,7 +63,7 @@ function EmployeeHeader() {
 type PTOParams = GridRenderCellParams<RowData, CellData>;
 function getIsFirstVisibleDayOfPTO(
   params: PTOParams,
-  daysToShow: { date: Date; dateStr: string }[],
+  daysToShow: Array<{ date: Date; dateStr: DateTemplate }>,
   activeFilters: string[],
   isFirstDayOfPTO: boolean,
 ): boolean {
@@ -76,7 +76,7 @@ function getIsFirstVisibleDayOfPTO(
   const prevDayIndex = daysToShow.findIndex(({ dateStr }) => dateStr === params.field) - 1;
   if (prevDayIndex >= 0) {
     const prevDayStr = daysToShow[prevDayIndex].dateStr;
-    const prevCell = (params.row as Record<string, CellData>)[prevDayStr];
+    const prevCell = params.row[prevDayStr];
     if (prevCell && prevCell.hasHoliday && activeFilters.includes('holidays')) {
       return true;
     }
@@ -124,7 +124,6 @@ function getCellTooltipTitle({
 
 interface RenderCellIconLabelParams {
   showHoliday: boolean;
-  ptoData: any;
   params: PTOParams;
   isFirstVisibleDayOfPTO: boolean;
   showPTO: boolean;
@@ -136,7 +135,6 @@ interface RenderCellIconLabelParams {
 }
 function renderCellIconLabel({
   showHoliday,
-  ptoData,
   params,
   isFirstVisibleDayOfPTO,
   showPTO,
@@ -150,8 +148,8 @@ function renderCellIconLabel({
       <React.Fragment>
         <Box
           component="img"
-          src={`https://flagcdn.com/w40/${ptoData[params.row.employee].nationality.toLowerCase()}.png`}
-          alt={`${ptoData[params.row.employee].nationality} flag`}
+          src={`https://flagcdn.com/w40/${params.row.nationality.toLowerCase()}.png`}
+          alt={`${params.row.nationality} flag`}
           sx={{
             width: 18,
             height: 18,
@@ -266,7 +264,6 @@ function PTOCalendar() {
   const { currentDate, activeFilters, density } = calendarState;
 
   const [holidays, setHolidays] = React.useState<HolidayData>({});
-  const ptoData = samplePTOData;
 
   const monthStart = React.useMemo(() => startOfMonth(currentDate), [currentDate]);
   const monthEnd = React.useMemo(() => endOfMonth(currentDate), [currentDate]);
@@ -274,7 +271,7 @@ function PTOCalendar() {
     const interval = eachDayOfInterval({ start: monthStart, end: monthEnd });
     return interval.map((d) => ({
       date: d,
-      dateStr: format(d, 'yyyy-MM-dd'),
+      dateStr: format(d, 'yyyy-MM-dd') as DateTemplate,
     }));
   }, [monthStart, monthEnd]);
 
@@ -283,7 +280,7 @@ function PTOCalendar() {
       try {
         const year = currentDate.getFullYear();
         const countries = Array.from(
-          new Set(Object.values(ptoData).map((data) => data.nationality)),
+          new Set(Object.values(samplePTOData).map((data) => data.nationality)),
         );
         const holidayData = await getHolidaysForCountries(year, countries);
         setHolidays(holidayData);
@@ -294,7 +291,7 @@ function PTOCalendar() {
     };
 
     fetchHolidays();
-  }, [currentDate, ptoData]);
+  }, [currentDate]);
 
   const { rows, pinnedRows } = React.useMemo(() => {
     const rowData: RowData[] = [];
@@ -304,22 +301,23 @@ function PTOCalendar() {
       employee: 'Out of office:',
     };
 
-    const ptoDatesAsSets: {
-      employee: string;
-      nationality: string;
-      ptoDates: Set<string>;
-      sickDates: Set<string>;
-    }[] = [];
+    const ptoDatesAsSets: Array<
+      RowDataEntry & {
+        employee: string;
+        ptoDatesSet: Set<string>;
+        sickDatesSet: Set<string>;
+      }
+    > = [];
 
     // eslint-disable-next-line guard-for-in
-    for (const key in ptoData) {
-      const data = ptoData[key];
+    for (const key in samplePTOData) {
+      const data = samplePTOData[key];
       ptoDatesAsSets.push({
         employee: key,
-        nationality: data.nationality,
+        ...data,
         // Use Set for faster search, since we're iterating over each employee's dates for each day
-        ptoDates: new Set(data.ptoDates),
-        sickDates: new Set(data.sickDates),
+        ptoDatesSet: new Set(data.ptoDates),
+        sickDatesSet: new Set(data.sickDates),
       });
     }
 
@@ -327,12 +325,21 @@ function PTOCalendar() {
       let count = 0;
       ptoDatesAsSets.forEach((data, index) => {
         if (typeof rowData[index] === 'undefined') {
-          rowData[index] = { id: index + 1, employee: data.employee };
+          rowData[index] = {
+            id: index + 1,
+            employee: data.employee,
+            team: data.team,
+            nationality: data.nationality,
+            birthday: data.birthday,
+            avatar: data.avatar,
+            ptoDates: data.ptoDates,
+            sickDates: data.sickDates,
+          };
         }
         const row = rowData[index];
 
-        const hasPTO = data.ptoDates.has(dateStr);
-        const hasSick = data.sickDates.has(dateStr);
+        const hasPTO = data.ptoDatesSet.has(dateStr);
+        const hasSick = data.sickDatesSet.has(dateStr);
         const hasHoliday = !!holidays[data.nationality]?.[dateStr];
 
         row[dateStr] = {
@@ -354,7 +361,7 @@ function PTOCalendar() {
     });
 
     return { rows: rowData, pinnedRows: { top: [topPinnedRow] } };
-  }, [activeFilters, daysToShow, holidays, ptoData]);
+  }, [activeFilters, daysToShow, holidays]);
 
   const columns = React.useMemo<GridColDef[]>(() => {
     const vacationVisible = activeFilters.includes('vacation');
@@ -367,7 +374,7 @@ function PTOCalendar() {
         headerName: 'Employees',
         width: 180,
         renderHeader: EmployeeHeader,
-        renderCell: (params: GridRenderCellParams) => {
+        renderCell: (params: GridRenderCellParams<RowData>) => {
           if (params.row.id === 'summary') {
             return (
               <Typography
@@ -399,7 +406,7 @@ function PTOCalendar() {
               }}
             >
               <Avatar
-                src={`/static/x/data-grid/demos/${ptoData[params.value].avatar}.png`}
+                src={`/static/x/data-grid/demos/${params.row.avatar}.png`}
                 sx={{
                   flexShrink: 0,
                   width: 32,
@@ -436,7 +443,7 @@ function PTOCalendar() {
                     textOverflow: 'ellipsis',
                   }}
                 >
-                  {ptoData[params.value].team}
+                  {params.row.team}
                 </Typography>
               </Box>
             </Box>
@@ -572,8 +579,8 @@ function PTOCalendar() {
               return null;
             }
 
-            const ptoPeriods = findContinuousPeriods(ptoData[params.row.employee].ptoDates || []);
-            const sickPeriods = findContinuousPeriods(ptoData[params.row.employee].sickDates || []);
+            const ptoPeriods = findContinuousPeriods(params.row.ptoDates || []);
+            const sickPeriods = findContinuousPeriods(params.row.sickDates || []);
             const currentPTOPeriod = ptoPeriods.find((period) => period.includes(params.field));
             const currentSickPeriod = sickPeriods.find((period) => period.includes(params.field));
             const isFirstDayOfPTO = currentPTOPeriod && currentPTOPeriod[0] === params.field;
@@ -593,10 +600,8 @@ function PTOCalendar() {
             const showSick = cellData.hasSick && sickVisible;
             const showHoliday = cellData.hasHoliday && holidaysVisible;
 
-            const holidayName = showHoliday
-              ? holidays[ptoData[params.row.employee].nationality][params.field]
-              : '';
-            const isBirthday = format(day, 'MM-dd') === ptoData[params.row.employee].birthday;
+            const holidayName = showHoliday ? holidays[params.row.nationality][params.field] : '';
+            const isBirthday = format(day, 'MM-dd') === params.row.birthday;
 
             const isFirstVisibleDayOfPTO = getIsFirstVisibleDayOfPTO(
               params,
@@ -689,7 +694,6 @@ function PTOCalendar() {
                 >
                   {renderCellIconLabel({
                     showHoliday,
-                    ptoData,
                     params,
                     showLabel: density === 'comfortable',
                     isFirstVisibleDayOfPTO: !!isFirstVisibleDayOfPTO,
@@ -706,7 +710,7 @@ function PTOCalendar() {
         };
       }),
     ];
-  }, [daysToShow, holidays, ptoData, activeFilters, density]);
+  }, [daysToShow, holidays, activeFilters, density]);
 
   const todayStr = format(new Date(), 'yyyy-MM-dd');
 
