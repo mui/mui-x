@@ -679,10 +679,6 @@ function PTOCalendar() {
                         cellData,
                         true,
                       ),
-                      '&:hover': {
-                        backgroundColor:
-                          showPTO || showSick ? 'none' : isCurrent ? 'transparent' : '#1e2429',
-                      },
                     }),
                   })}
                 >
