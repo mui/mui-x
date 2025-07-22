@@ -17,7 +17,6 @@ import { useChartContext } from '../context/ChartProvider';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { getSVGPoint } from '../internals';
 import { useInteractionGroupProps } from '../hooks/useInteractionItemProps';
 
 export interface ScatterProps {
@@ -68,7 +67,7 @@ function FastScatter(props: ScatterProps) {
   } = props;
 
   const groupRef = React.useRef<SVGGElement>(null);
-  const { instance, svgRef } =
+  const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   const store = useStore<[UseChartVoronoiSignature]>();
   const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
@@ -78,7 +77,7 @@ function FastScatter(props: ScatterProps) {
   const getYPosition = getValueToPositionMapper(yScale);
   const eventHandlers = useInteractionGroupProps(
     series.id,
-    series.data,
+    series.data.map((x, i) => ({ dataIndex: i, x: x.x, y: x.y })),
     getXPosition,
     getYPosition,
     series.markerSize,
