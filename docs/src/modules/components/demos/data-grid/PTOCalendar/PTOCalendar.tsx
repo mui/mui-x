@@ -556,7 +556,7 @@ function PTOCalendar() {
                   sx={(theme) => ({
                     width: '100%',
                     userSelect: 'none',
-                    height: showPTO || showSick || showHoliday || isBirthday ? '40px' : '100%',
+                    height: '40px',
                     marginLeft:
                       !isMiddleOfPeriod || showHoliday || isBirthday || isFirstVisibleDayOfPTO
                         ? 0.5
