@@ -144,7 +144,6 @@ function renderCellIconLabel({
   showLabel,
   showSick,
   isBirthday,
-  cellData,
 }: RenderCellIconLabelParams) {
   if (showHoliday) {
     return (
@@ -509,7 +508,7 @@ function PTOCalendar() {
                     : '';
 
             let span = 1;
-            for (let i = colIndex + 1; i < fields.length; i++) {
+            for (let i = colIndex + 1; i < fields.length; i += 1) {
               const nextCell = row[fields[i]];
               if (!nextCell?.show || (nextCell.hasHoliday && activeFilters.includes('holidays'))) {
                 break;
@@ -527,7 +526,7 @@ function PTOCalendar() {
                 break;
               }
 
-              span++;
+              span += 1;
             }
             return span;
           },
