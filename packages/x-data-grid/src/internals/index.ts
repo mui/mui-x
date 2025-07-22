@@ -72,6 +72,7 @@ export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {

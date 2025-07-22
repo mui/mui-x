@@ -73,6 +73,15 @@ export interface GridPipeProcessingLookup {
     // `true` if the row hydration should be re-applied
     context: boolean;
   };
+  getRowReorderTargetIndex: {
+    value: number;
+    context: {
+      sourceRowId: GridRowId;
+      targetRowId: GridRowId;
+      dropPosition: 'above' | 'below';
+      dragDirection: 'up' | 'down';
+    };
+  };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (

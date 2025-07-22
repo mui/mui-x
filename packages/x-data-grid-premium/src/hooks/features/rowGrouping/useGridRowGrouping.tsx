@@ -6,6 +6,9 @@ import {
   useGridEvent,
   useGridApiMethod,
   gridColumnLookupSelector,
+  gridRowMaximumTreeDepthSelector,
+  gridRowTreeSelector,
+  gridExpandedSortedRowIdsSelector,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -13,6 +16,7 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
   GridStrategyGroup,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -66,6 +70,7 @@ export const useGridRowGrouping = (
     | 'slotProps'
     | 'slots'
     | 'dataSource'
+    | 'treeData'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -284,6 +289,107 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
+  const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
+    (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
+      if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || props.treeData) {
+        return initialValue;
+      }
+
+      const expandedSortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
+      const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
+      const rowTree = gridRowTreeSelector(apiRef);
+
+      const sourceRowIndex = expandedSortedRowIndexLookup[sourceRowId];
+      const targetRowIndex = expandedSortedRowIndexLookup[targetRowId];
+      const sourceNode = rowTree[sourceRowId];
+      const targetNode = rowTree[targetRowId];
+
+      if (!sourceNode || !targetNode) {
+        return -1;
+      }
+
+      // Check if the move would be a no-op (adjacent position)
+      const isAdjacent =
+        (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
+        (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1);
+
+      if (isAdjacent) {
+        return -1;
+      }
+
+      // Get previous node for context
+      const prevNode =
+        targetRowIndex > 0 ? rowTree[expandedSortedRowIds[targetRowIndex - 1]] : null;
+
+      // Case 1: Group source -> Leaf target (never allowed)
+      if (sourceNode.type === 'group' && targetNode.type === 'leaf') {
+        return -1;
+      }
+
+      // Case 2: Group source -> Group target
+      if (sourceNode.type === 'group' && targetNode.type === 'group') {
+        // Only allow if same parent (same depth and share parent)
+        if (sourceNode.parent !== targetNode.parent) {
+          return -1;
+        }
+        // Don't allow dropping below an expanded group (that position is for its children)
+        if (dropPosition === 'below' && targetNode.childrenExpanded) {
+          return -1;
+        }
+        // Dropping here would mean no actual movement
+        if (
+          dropPosition === 'above' &&
+          prevNode?.type === 'leaf' &&
+          prevNode.parent === sourceNode.id
+        ) {
+          return -1;
+        }
+      }
+
+      // Case 3: Leaf source -> Leaf target
+      if (sourceNode.type === 'leaf' && targetNode.type === 'leaf') {
+        // Allow if same parent or same depth (can change parents at same level)
+        if (sourceNode.depth !== targetNode.depth) {
+          return -1;
+        }
+      }
+
+      // Case 4: Leaf source -> Group target
+      if (sourceNode.type === 'leaf' && targetNode.type === 'group') {
+        if (dropPosition === 'above') {
+          // Check if there's a leaf before this group that can be sibling to source
+          if (!prevNode || prevNode.type !== 'leaf' || prevNode.depth !== sourceNode.depth) {
+            return -1;
+          }
+        } else {
+          // dropPosition === 'below'
+          if (!targetNode.childrenExpanded) {
+            // Cannot drop below collapsed group (would trigger expansion)
+            return -1;
+          }
+          // For expanded group, check if source can become first child
+          const firstChild = targetNode.children?.[0] ? rowTree[targetNode.children[0]] : null;
+          if (!firstChild || sourceNode.depth !== firstChild.depth) {
+            return -1;
+          }
+        }
+      }
+
+      // Calculate the final target index
+      let finalTargetIndex: number;
+
+      if (dragDirection === 'up') {
+        finalTargetIndex = dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
+      } else {
+        finalTargetIndex = dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
+      }
+
+      return finalTargetIndex;
+    },
+    [apiRef, props.treeData],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);
   useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridEvent(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridEvent(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);

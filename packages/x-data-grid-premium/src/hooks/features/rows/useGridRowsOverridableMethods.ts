@@ -4,7 +4,7 @@ import {
   GridGroupNode,
   gridRowTreeSelector,
   gridRowNodeSelector,
-  gridSortedRowIdsSelector,
+  gridExpandedSortedRowIdsSelector,
   GridLeafNode,
   gridRowsLookupSelector,
 } from '@mui/x-data-grid-pro';
@@ -16,7 +16,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
   const setRowIndex = React.useCallback(
     (sourceRowId: GridRowId, targetOriginalIndex: number) => {
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
-      const sortedFilteredRowIds = gridSortedRowIdsSelector(apiRef);
+      const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[targetOriginalIndex]);
 
       if (!sourceNode) {

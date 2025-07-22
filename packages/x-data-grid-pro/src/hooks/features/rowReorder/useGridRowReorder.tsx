@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import useTimeout from '@mui/utils/useTimeout';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridLogger,
@@ -12,10 +13,13 @@ import {
   useGridEventPriority,
   gridRowNodeSelector,
   GridRowId,
+  gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
-  gridSortedRowIndexLookupSelector,
+  GridPipeProcessor,
+  gridExpandedSortedRowIndexLookupSelector,
+  useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -24,14 +28,11 @@ import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
-enum Direction {
-  UP,
-  DOWN,
-}
+type GridRowReorderDirection = 'up' | 'down';
 
 interface ReorderStateProps {
   previousTargetId: GridRowId | null;
-  dragDirection: Direction | null;
+  dragDirection: GridRowReorderDirection | null;
   previousDropPosition: 'above' | 'below' | null;
 }
 
@@ -61,7 +62,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 /**
- * Only available in DataGridPro
+ * Hook for row reordering (Pro package)
  * @requires useGridRows (method)
  */
 export const useGridRowReorder = (
@@ -80,7 +81,10 @@ export const useGridRowReorder = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
-  const sortedRowIndexLookup = useGridSelector(apiRef, gridSortedRowIndexLookupSelector);
+  const sortedRowIndexLookup = useGridSelector(apiRef, gridExpandedSortedRowIndexLookupSelector);
+
+  const timeoutRowId = React.useRef<GridRowId>('');
+  const timeout = useTimeout();
 
   const previousReorderState = React.useRef<ReorderStateProps>(EMPTY_REORDER_STATE);
 
@@ -114,7 +118,7 @@ export const useGridRowReorder = (
       }
 
       // Apply new drop indicator
-      if (targetRowId && position) {
+      if (targetRowId !== undefined && position !== null) {
         const targetRow = apiRef.current.rootElementRef?.current?.querySelector(
           `[data-id="${targetRowId}"]`,
         );
@@ -219,6 +223,11 @@ export const useGridRowReorder = (
         return;
       }
 
+      if (timeoutRowId.current) {
+        timeout.clear();
+        timeoutRowId.current = '';
+      }
+
       logger.debug(`Start dragging row ${params.id}`);
       // Prevent drag events propagation.
       // For more information check here https://github.com/mui/mui-x/issues/2680.
@@ -244,8 +253,9 @@ export const useGridRowReorder = (
       isRowReorderDisabled,
       logger,
       classes.rowDragging,
-      sortedRowIndexLookup,
       applyDraggedState,
+      sortedRowIndexLookup,
+      timeout,
     ],
   );
 
@@ -255,9 +265,14 @@ export const useGridRowReorder = (
         return;
       }
 
-      const rowNode = gridRowNodeSelector(apiRef, params.id);
+      const targetNode = gridRowNodeSelector(apiRef, params.id);
 
-      if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow' || !event.target) {
+      if (
+        !targetNode ||
+        targetNode.type === 'footer' ||
+        targetNode.type === 'pinnedRow' ||
+        !event.target
+      ) {
         return;
       }
 
@@ -272,20 +287,38 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
+      if (timeoutRowId.current !== params.id) {
+        timeout.clear();
+        timeoutRowId.current = '';
+      }
+
       if (params.id !== dragRowId) {
+        const sourceNode = gridRowNodeSelector(apiRef, dragRowId);
+
+        if (
+          sourceNode.type === 'leaf' &&
+          targetNode.type === 'group' &&
+          // TODO: Handle leaf rows with missing groups i.e targetNode.depth >= sourceNode.depth
+          targetNode.depth < sourceNode.depth &&
+          !targetNode.childrenExpanded &&
+          !timeoutRowId.current
+        ) {
+          timeout.start(500, () => {
+            // TODO: Handle data source use case
+            apiRef.current.setRowChildrenExpansion(params.id, true);
+          });
+          timeoutRowId.current = params.id;
+          return;
+        }
+
         const targetRowIndex = sortedRowIndexLookup[params.id];
         const sourceRowIndex = sortedRowIndexLookup[dragRowId];
 
         // Determine drop position based on relativeY position within the row
         const dropPosition = relativeY < midPoint ? 'above' : 'below';
 
-        // Check if this drop would result in no actual movement
-        const wouldResultInNoMovement =
-          (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) || // dragging to immediately below (above next row)
-          (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1); // dragging to immediately above (below previous row)
-
         const currentReorderState: ReorderStateProps = {
-          dragDirection: targetRowIndex < sourceRowIndex ? Direction.UP : Direction.DOWN,
+          dragDirection: targetRowIndex < sourceRowIndex ? 'up' : 'down',
           previousTargetId: params.id,
           previousDropPosition: dropPosition,
         };
@@ -297,7 +330,24 @@ export const useGridRowReorder = (
           previousReorderState.current.previousTargetId !== params.id ||
           previousReorderState.current.previousDropPosition !== dropPosition
         ) {
-          if (wouldResultInNoMovement) {
+          const finalTargetIndex = apiRef.current.unstable_applyPipeProcessors(
+            'getRowReorderTargetIndex',
+            -1,
+            {
+              sourceRowId: dragRowId,
+              targetRowId: params.id,
+              dropPosition,
+              dragDirection: currentReorderState.dragDirection as GridRowReorderDirection,
+            },
+          );
+          if (finalTargetIndex >= 0) {
+            setDropTarget({
+              targetRowId: params.id,
+              targetRowIndex,
+              dropPosition,
+            });
+            applyDropIndicator(params.id, dropPosition);
+          } else {
             // Clear any existing indicators since this wouldn't result in movement
             setDropTarget({
               targetRowId: null,
@@ -305,13 +355,6 @@ export const useGridRowReorder = (
               dropPosition: null,
             });
             applyDropIndicator(null, null);
-          } else {
-            setDropTarget({
-              targetRowId: params.id,
-              targetRowIndex,
-              dropPosition,
-            });
-            applyDropIndicator(params.id, dropPosition);
           }
           previousReorderState.current = currentReorderState;
         }
@@ -329,7 +372,7 @@ export const useGridRowReorder = (
         };
       }
     },
-    [dragRowId, apiRef, logger, sortedRowIndexLookup, applyDropIndicator],
+    [dragRowId, apiRef, logger, timeout, sortedRowIndexLookup, applyDropIndicator],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
@@ -338,6 +381,11 @@ export const useGridRowReorder = (
       const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
+      }
+
+      if (timeoutRowId.current) {
+        timeout.clear();
+        timeoutRowId.current = '';
       }
 
       logger.debug('End dragging row');
@@ -364,48 +412,46 @@ export const useGridRowReorder = (
           dropPosition: null,
         });
         originRowIndex.current = null;
-      } else {
-        if (dropTarget.targetRowIndex !== null && dropTarget.targetRowId !== null) {
-          const sourceRowIndex = originRowIndex.current!;
-          const targetRowIndex = dropTarget.targetRowIndex;
-          const dropPosition = dropTarget.dropPosition;
-
-          // Calculate the correct target index based on drop position
-          let finalTargetIndex;
-          if (dragDirection === Direction.UP) {
-            finalTargetIndex = dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
-          } else {
-            finalTargetIndex = dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
-          }
-
-          const isReorderInvalid =
-            (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) || // dragging to immediately below (above next row)
-            (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1) || // dragging to immediately above (below previous row)
-            dropTarget.targetRowId === dragRowId; // dragging to the same row
-
-          if (!isReorderInvalid) {
-            applyRowAnimation(() => {
-              apiRef.current.setRowIndex(dragRowId, finalTargetIndex);
-
-              // Emit the rowOrderChange event only once when the reordering stops.
-              const rowOrderChangeParams: GridRowOrderChangeParams = {
-                row: apiRef.current.getRow(dragRowId)!,
-                targetIndex: finalTargetIndex,
-                oldIndex: sourceRowIndex,
-              };
-
-              apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
-            });
-          }
-        }
-
-        // Reset drop target state
-        setDropTarget({
-          targetRowId: null,
-          targetRowIndex: null,
-          dropPosition: null,
-        });
+        setDragRowId('');
+        return;
       }
+      if (dropTarget.targetRowIndex !== null && dropTarget.targetRowId !== null) {
+        const sourceRowIndex = originRowIndex.current!;
+        const targetRowIndex = dropTarget.targetRowIndex;
+
+        const finalTargetIndex = apiRef.current.unstable_applyPipeProcessors(
+          'getRowReorderTargetIndex',
+          targetRowIndex,
+          {
+            sourceRowId: dragRowId,
+            targetRowId: dropTarget.targetRowId,
+            dropPosition: dropTarget.dropPosition!,
+            dragDirection: dragDirection!,
+          },
+        );
+
+        if (finalTargetIndex !== -1) {
+          applyRowAnimation(() => {
+            apiRef.current.setRowIndex(dragRowId, finalTargetIndex);
+
+            // Emit the rowOrderChange event only once when the reordering stops.
+            const rowOrderChangeParams: GridRowOrderChangeParams = {
+              row: apiRef.current.getRow(dragRowId)!,
+              targetIndex: targetRowIndex,
+              oldIndex: sourceRowIndex,
+            };
+
+            apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
+          });
+        }
+      }
+
+      // Reset drop target state
+      setDropTarget({
+        targetRowId: null,
+        targetRowIndex: null,
+        dropPosition: null,
+      });
 
       setDragRowId('');
     },
@@ -414,13 +460,47 @@ export const useGridRowReorder = (
       dragRowId,
       isRowReorderDisabled,
       logger,
-      dropTarget,
       applyDropIndicator,
       applyDraggedState,
+      timeout,
+      dropTarget.targetRowIndex,
+      dropTarget.targetRowId,
+      dropTarget.dropPosition,
       applyRowAnimation,
     ],
   );
 
+  const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
+    (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
+      if (gridRowMaximumTreeDepthSelector(apiRef) > 1) {
+        return initialValue;
+      }
+
+      const targetRowIndex = sortedRowIndexLookup[targetRowId];
+      const sourceRowIndex = sortedRowIndexLookup[sourceRowId];
+
+      // Check if this drop would result in no actual movement
+      const isAdjacentNode =
+        (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) || // dragging to immediately below (above next row)
+        (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1); // dragging to immediately above (below previous row)
+
+      if (isAdjacentNode) {
+        // Return -1 to indicate that the row should not be reordered
+        return -1;
+      }
+
+      let finalTargetIndex;
+      if (dragDirection === 'up') {
+        finalTargetIndex = dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
+      } else {
+        finalTargetIndex = dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
+      }
+      return finalTargetIndex;
+    },
+    [apiRef, sortedRowIndexLookup],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);
   useGridEvent(apiRef, 'rowDragStart', handleDragStart);
   useGridEvent(apiRef, 'rowDragOver', handleDragOver);
   useGridEvent(apiRef, 'rowDragEnd', handleDragEnd);
