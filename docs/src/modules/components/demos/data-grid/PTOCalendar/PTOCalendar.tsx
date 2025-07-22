@@ -93,6 +93,7 @@ interface TooltipTitleParams {
   currentPTOPeriod: string[] | undefined;
   showSick: boolean;
   currentSickPeriod: string[] | undefined;
+  isBirthday: boolean;
 }
 function getCellTooltipTitle({
   showHoliday,
@@ -102,6 +103,7 @@ function getCellTooltipTitle({
   currentPTOPeriod,
   showSick,
   currentSickPeriod,
+  isBirthday,
 }: TooltipTitleParams): string {
   if (showHoliday && hasHolidayBooked) {
     return `${holidayName} (booked as PTO)`;
@@ -114,6 +116,9 @@ function getCellTooltipTitle({
   }
   if (showSick) {
     return `Sick leave (${currentSickPeriod?.length} day${currentSickPeriod?.length === 1 ? '' : 's'})`;
+  }
+  if (isBirthday) {
+    return `Birthday`;
   }
   return '';
 }
@@ -176,7 +181,7 @@ function renderCellIconLabel({
       </React.Fragment>
     );
   }
-  if (isBirthday && cellData.show) {
+  if (isBirthday) {
     return (
       <React.Fragment>
         <Cake fontSize="small" />
@@ -488,9 +493,6 @@ function PTOCalendar() {
               hasHolidayBooked: boolean;
               show: boolean;
             };
-            if (!cellData.show) {
-              return null;
-            }
 
             const ptoPeriods = findContinuousPeriods(ptoData[params.row.employee].ptoDates || []);
             const sickPeriods = findContinuousPeriods(ptoData[params.row.employee].sickDates || []);
@@ -532,6 +534,7 @@ function PTOCalendar() {
               currentPTOPeriod,
               showSick,
               currentSickPeriod,
+              isBirthday,
             });
             return (
               <Tooltip
@@ -555,20 +558,28 @@ function PTOCalendar() {
                   sx={{
                     width: '100%',
                     userSelect: 'none',
-                    height: showPTO || showSick || showHoliday ? '40px' : '100%',
+                    height: showPTO || showSick || showHoliday || isBirthday ? '40px' : '100%',
                     marginLeft:
-                      !isMiddleOfPeriod || showHoliday || isFirstVisibleDayOfPTO ? 0.5 : 0,
-                    marginRight: isEndOfPeriodInRange || showHoliday ? 0.5 : 0,
+                      !isMiddleOfPeriod || showHoliday || isBirthday || isFirstVisibleDayOfPTO
+                        ? 0.5
+                        : 0,
+                    marginRight: isEndOfPeriodInRange || showHoliday || isBirthday ? 0.5 : 0,
                     borderTopLeftRadius:
-                      !isMiddleOfPeriod || showHoliday || isFirstVisibleDayOfPTO ? '12px' : 0,
+                      !isMiddleOfPeriod || showHoliday || isBirthday || isFirstVisibleDayOfPTO
+                        ? '12px'
+                        : 0,
                     borderBottomLeftRadius:
-                      !isMiddleOfPeriod || showHoliday || isFirstVisibleDayOfPTO ? '12px' : 0,
-                    borderTopRightRadius: isEndOfPeriodInRange || showHoliday ? '12px' : '0',
-                    borderBottomRightRadius: isEndOfPeriodInRange || showHoliday ? '12px' : '0',
+                      !isMiddleOfPeriod || showHoliday || isBirthday || isFirstVisibleDayOfPTO
+                        ? '12px'
+                        : 0,
+                    borderTopRightRadius:
+                      isEndOfPeriodInRange || showHoliday || isBirthday ? '12px' : '0',
+                    borderBottomRightRadius:
+                      isEndOfPeriodInRange || showHoliday || isBirthday ? '12px' : '0',
                     backgroundColor:
                       showHoliday && cellData.hasHolidayBooked
                         ? FILTER_COLORS.holidays.background
-                        : showHoliday
+                        : showHoliday || isBirthday
                           ? 'transparent'
                           : showPTO
                             ? FILTER_COLORS.vacation.background
@@ -590,7 +601,7 @@ function PTOCalendar() {
                     color:
                       showHoliday && cellData.hasHolidayBooked
                         ? FILTER_COLORS.holidays.text
-                        : showHoliday
+                        : showHoliday || isBirthday
                           ? FILTER_COLORS.holidays.text
                           : showPTO
                             ? FILTER_COLORS.vacation.text
@@ -600,7 +611,7 @@ function PTOCalendar() {
                     border:
                       showHoliday && cellData.hasHolidayBooked
                         ? `1px solid ${FILTER_COLORS.holidays.border}`
-                        : showHoliday
+                        : showHoliday || isBirthday
                           ? `1px dashed ${FILTER_COLORS.holidays.border}`
                           : showPTO
                             ? `1px solid ${FILTER_COLORS.vacation.border}`
@@ -612,7 +623,7 @@ function PTOCalendar() {
                       backgroundColor:
                         showHoliday && cellData.hasHolidayBooked
                           ? FILTER_COLORS.holidays.dark.background
-                          : showHoliday
+                          : showHoliday || isBirthday
                             ? 'transparent'
                             : showPTO
                               ? FILTER_COLORS.vacation.dark.background
@@ -624,7 +635,7 @@ function PTOCalendar() {
                       borderColor:
                         showHoliday && cellData.hasHolidayBooked
                           ? FILTER_COLORS.holidays.dark.border
-                          : showHoliday
+                          : showHoliday || isBirthday
                             ? FILTER_COLORS.holidays.dark.border
                             : showPTO
                               ? FILTER_COLORS.vacation.dark.border
@@ -634,7 +645,7 @@ function PTOCalendar() {
                       color:
                         showHoliday && cellData.hasHolidayBooked
                           ? FILTER_COLORS.holidays.dark.text
-                          : showHoliday
+                          : showHoliday || isBirthday
                             ? FILTER_COLORS.holidays.dark.text
                             : showPTO
                               ? FILTER_COLORS.vacation.dark.text
