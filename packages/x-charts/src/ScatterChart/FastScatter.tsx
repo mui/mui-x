@@ -45,7 +45,7 @@ export interface FastScatterProps {
  * - [Scatter API](https://mui.com/x/api/charts/scatter/)
  */
 function FastScatter(props: FastScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, onItemClick, classes: inClasses } = props;
+  const { series, xScale, yScale, color, classes: inClasses } = props;
 
   const groupRef = React.useRef<SVGGElement>(null);
   const { instance } =
