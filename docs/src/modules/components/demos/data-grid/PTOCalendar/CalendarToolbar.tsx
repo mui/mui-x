@@ -18,7 +18,13 @@ const StyledToolbar = styled(Toolbar)({
 });
 
 function CalendarToolbar() {
-  const { activeFilters, handleFilterRemove, handleFilterAdd } = useCalendarContext();
+  const {
+    activeFilters,
+    showPresentToday,
+    handleFilterRemove,
+    handleFilterAdd,
+    handleTogglePresentToday,
+  } = useCalendarContext();
 
   return (
     <StyledToolbar>
@@ -55,8 +61,10 @@ function CalendarToolbar() {
       >
         <CalendarFilters
           activeFilters={activeFilters}
+          showPresentToday={showPresentToday}
           onFilterRemove={handleFilterRemove}
           onFilterAdd={handleFilterAdd}
+          onTogglePresentToday={handleTogglePresentToday}
         />
         <CalendarNavigation />
       </Stack>

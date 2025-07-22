@@ -31,3 +31,8 @@ export interface HolidayData {
     [date: string]: string;
   };
 }
+
+export interface EmployeeStatus {
+  isOutToday: boolean;
+  isPresentToday: boolean;
+}

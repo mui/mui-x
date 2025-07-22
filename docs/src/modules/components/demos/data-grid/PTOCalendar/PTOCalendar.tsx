@@ -17,7 +17,7 @@ import DeviceThermostatOutlined from '@mui/icons-material/DeviceThermostatOutlin
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, startOfDay } from 'date-fns';
 import { getHolidaysForCountries } from './data/holidays';
 import { useCalendarState } from './hooks/useCalendarState';
-import { findContinuousPeriods, isCurrentDay } from './utils/dateUtils';
+import { findContinuousPeriods, isCurrentDay, isEmployeeOutToday } from './utils/dateUtils';
 import type { HolidayData, PTOData } from './types/pto';
 import { CalendarContext } from './CalendarContext';
 import { CalendarToolbar } from './CalendarToolbar';
@@ -259,9 +259,27 @@ function getCellStyles(
   };
 }
 
+function getCellType(
+  hasHoliday: boolean,
+  hasPTO: boolean,
+  hasSick: boolean,
+  holidaysVisible: boolean,
+): string {
+  if (hasHoliday && holidaysVisible) {
+    return 'holidays';
+  }
+  if (hasPTO) {
+    return 'vacation';
+  }
+  if (hasSick) {
+    return 'sick';
+  }
+  return '';
+}
+
 function PTOCalendar() {
   const calendarState = useCalendarState();
-  const { currentDate, activeFilters, density } = calendarState;
+  const { currentDate, activeFilters, density, showPresentToday } = calendarState;
 
   const [holidays, setHolidays] = React.useState<HolidayData>({});
 
@@ -312,6 +330,19 @@ function PTOCalendar() {
     // eslint-disable-next-line guard-for-in
     for (const key in samplePTOData) {
       const data = samplePTOData[key];
+
+      // Add filter to hide out employees out in current day
+      if (showPresentToday) {
+        const isOutToday = isEmployeeOutToday(
+          data.ptoDates,
+          data.sickDates,
+          holidays[data.nationality] || {},
+        );
+        if (isOutToday) {
+          continue;
+        }
+      }
+
       ptoDatesAsSets.push({
         employee: key,
         ...data,
@@ -361,7 +392,7 @@ function PTOCalendar() {
     });
 
     return { rows: rowData, pinnedRows: { top: [topPinnedRow] } };
-  }, [activeFilters, daysToShow, holidays]);
+  }, [activeFilters, daysToShow, holidays, showPresentToday]);
 
   const columns = React.useMemo<GridColDef[]>(() => {
     const vacationVisible = activeFilters.includes('vacation');
@@ -511,14 +542,12 @@ function PTOCalendar() {
               return 1;
             }
             const colIndex = daysToShow.findIndex((date) => date.dateStr === column.field);
-            const currentCellType =
-              value.hasHoliday && holidaysVisible
-                ? 'holidays'
-                : value.hasPTO
-                  ? 'vacation'
-                  : value.hasSick
-                    ? 'sick'
-                    : '';
+            const currentCellType = getCellType(
+              value.hasHoliday,
+              value.hasPTO,
+              value.hasSick,
+              holidaysVisible,
+            );
 
             let span = 1;
             for (let i = colIndex + 1; i < daysToShow.length; i += 1) {
@@ -527,14 +556,12 @@ function PTOCalendar() {
                 break;
               }
 
-              const nextCellType =
-                nextCell.hasHoliday && holidaysVisible
-                  ? 'holidays'
-                  : nextCell.hasPTO
-                    ? 'vacation'
-                    : nextCell.hasSick
-                      ? 'sick'
-                      : '';
+              const nextCellType = getCellType(
+                nextCell.hasHoliday,
+                nextCell.hasPTO,
+                nextCell.hasSick,
+                holidaysVisible,
+              );
               if (nextCellType !== currentCellType) {
                 break;
               }

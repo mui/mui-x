@@ -12,6 +12,7 @@ export const useCalendarState = () => {
     'vacation',
     'sick',
   ]);
+  const [showPresentToday, setShowPresentToday] = React.useState(false);
 
   const handlePreviousMonth = React.useCallback(() => {
     setCurrentDate((prev) => {
@@ -42,6 +43,10 @@ export const useCalendarState = () => {
     setActiveFilters((prev) => [...prev, filter]);
   }, []);
 
+  const handleTogglePresentToday = React.useCallback(() => {
+    setShowPresentToday((prev) => !prev);
+  }, []);
+
   return {
     density,
     setDensity,
@@ -49,11 +54,13 @@ export const useCalendarState = () => {
     isDatePickerOpen,
     setIsDatePickerOpen,
     activeFilters,
+    showPresentToday,
     dateConstraints: DATE_CONSTRAINTS,
     handlePreviousMonth,
     handleNextMonth,
     handleDateChange,
     handleFilterRemove,
     handleFilterAdd,
+    handleTogglePresentToday,
   };
 };

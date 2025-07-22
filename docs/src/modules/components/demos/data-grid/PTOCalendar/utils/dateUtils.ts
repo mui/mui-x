@@ -22,7 +22,7 @@ export const findContinuousPeriods = (dates: string[]): string[][] => {
   const periods: string[][] = [];
   let currentPeriod: string[] = [sortedDates[0]];
 
-  for (let i = 1; i < sortedDates.length; i++) {
+  for (let i = 1; i < sortedDates.length; i += 1) {
     const currentDate = new Date(sortedDates[i]);
     const prevDate = new Date(sortedDates[i - 1]);
     const diffTime = currentDate.getTime() - prevDate.getTime();
@@ -41,4 +41,18 @@ export const findContinuousPeriods = (dates: string[]): string[][] => {
   }
 
   return periods;
+};
+
+export const isEmployeeOutToday = (
+  ptoDates: string[],
+  sickDates: string[],
+  holidays: Record<string, string>,
+): boolean => {
+  const today = format(new Date(), 'yyyy-MM-dd');
+
+  const hasPTO = ptoDates.includes(today);
+  const hasSick = sickDates.includes(today);
+  const hasHoliday = !!holidays[today];
+
+  return hasPTO || hasSick || hasHoliday;
 };
