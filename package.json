@@ -185,7 +185,8 @@
     "yargs": "catalog:"
   },
   "resolutions": {
-    "ast-types": "^0.14.2"
+    "ast-types": "^0.14.2",
+    "form-data": ">=4.0.4"
   },
   "packageManager": "pnpm@10.13.1",
   "engines": {
