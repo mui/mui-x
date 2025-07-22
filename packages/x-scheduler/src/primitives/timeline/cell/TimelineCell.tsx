@@ -15,7 +15,7 @@ export const TimelineCell = React.forwardRef(function TimelineCell(
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({ role: 'row' }), []);
+  const props = React.useMemo(() => ({ role: 'cell' }), []);
 
   const state: TimelineCell.State = React.useMemo(() => ({}), []);
 

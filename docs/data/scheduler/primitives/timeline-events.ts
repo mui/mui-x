@@ -7,7 +7,7 @@ export const resources: Resource[] = [
       {
         id: '1',
         start: DateTime.fromISO('2027-02-22T07:30:00'),
-        end: DateTime.fromISO('2027-02-22T08:15:00'),
+        end: DateTime.fromISO('2027-02-22T09:00:00'),
         title: 'Event 1',
       },
       {
@@ -20,7 +20,14 @@ export const resources: Resource[] = [
   },
   {
     title: 'Resource B',
-    events: [],
+    events: [
+      {
+        id: '2',
+        start: DateTime.fromISO('2027-02-22T11:00:00'),
+        end: DateTime.fromISO('2027-02-22T17:00:00'),
+        title: 'Event 3',
+      },
+    ],
   },
   {
     title: 'Resource C',

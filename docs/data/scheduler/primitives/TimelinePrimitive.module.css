@@ -1,13 +1,11 @@
 .Container {
   --border-color: oklch(87.1% 0.006 286.286);
-  --event-work-bg-color: oklch(82.8% 0.111 230.318);
-  --event-personal-bg-color: oklch(81% 0.117 11.638);
+  --event-bg-color: oklch(82.8% 0.111 230.318);
 }
 
 :global(.mode-dark) .Container {
   --border-color: oklch(44.2% 0.017 285.786);
-  --event-work-bg-color: oklch(50% 0.134 242.749);
-  --event-personal-bg-color: oklch(45.5% 0.188 13.697);
+  --event-bg-color: oklch(50% 0.134 242.749);
 }
 
 .Root {
@@ -16,9 +14,12 @@
   border: 1px solid var(--border-color);
 }
 
-.SubGrid {
+.ScrollableSubGridContainer {
+  overflow-x: scroll;
   display: flex;
-  flex-direction: column;
+}
+
+.SubGrid {
   flex-shrink: 0;
 
   &:not(:last-child) {
@@ -26,19 +27,22 @@
   }
 }
 
-.ScrollableSubGrid {
-  overflow-x: scroll;
-  flex: 1 1 100%;
-}
-
 .Row {
   display: flex;
   height: 48px;
   line-height: 48px;
+  position: relative;
+}
+
+.RowEvents {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .Cell {
-  flex-shrink: 0;
   border-bottom: 1px solid var(--border-color);
 
   &:not(:last-child) {
@@ -52,5 +56,19 @@
 }
 
 .TimeCell {
+  min-width: 48px;
   width: 48px;
+}
+
+.Event {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: var(--x-position);
+  right: calc(100% - var(--x-position) - var(--width));
+  background-color: var(--event-bg-color);
+  border-radius: 6px;
+  padding: 0 8px;
+  font-size: 14px;
+  line-height: 40px;
 }
