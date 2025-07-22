@@ -113,10 +113,9 @@ const columns: GridColDef<Product>[] = [
   {
     field: 'status',
     type: 'singleSelect',
+    editable: true, // TODO: Change styling of menu here to match the field
     valueOptions: Object.keys(productStatusMap),
     getOptionLabel: (value) => productStatusMap[value as keyof typeof productStatusMap],
-    // groupable: false,
-    // aggregable: false,
     headerName: 'Status',
     minWidth: 150,
     flex: 1,
@@ -147,11 +146,20 @@ const columns: GridColDef<Product>[] = [
       );
     },
   },
-  { field: 'stock', groupable: false, aggregable: false, headerName: 'Stock', width: 100, flex: 1 },
+  {
+    field: 'stock',
+    editable: true,
+    groupable: false,
+    aggregable: false,
+    headerName: 'Stock',
+    width: 100,
+    flex: 1,
+  },
   {
     field: 'price',
     groupable: false,
     aggregable: false,
+    editable: true,
     headerName: 'Price',
     width: 150,
     type: 'number',
@@ -253,6 +261,7 @@ function InventoryDashboard() {
                 apiRef={apiRef}
                 rows={products}
                 columns={columns}
+                editMode="row"
                 aggregationFunctions={aggregationFunctions}
                 aggregationRowsScope="all"
                 initialState={{

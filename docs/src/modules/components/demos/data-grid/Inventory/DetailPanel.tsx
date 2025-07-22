@@ -51,6 +51,7 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
       field: 'incoming',
       headerName: 'Incoming Stock',
       flex: 1,
+      editable: true,
       renderCell: (params) => (
         <Typography sx={{ fontSize: '0.875rem' }}>
           {params.row.incoming?.toLocaleString() || 0} units
@@ -102,6 +103,7 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
     <DetailPanelContainer>
       <DataGridPro
         rows={rows}
+        editMode="row"
         columns={detailColumns}
         hideFooter
         disableColumnMenu
