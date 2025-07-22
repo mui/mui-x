@@ -356,8 +356,8 @@ function PTOCalendar() {
     return { rows: rowData, pinnedRows: { top: [topPinnedRow] } };
   }, [activeFilters, daysToShow, holidays, ptoData]);
 
-  const columns = React.useMemo<GridColDef[]>(
-    () => [
+  const columns = React.useMemo<GridColDef[]>(() => {
+    return [
       {
         field: 'employee',
         headerName: 'Employees',
@@ -704,9 +704,8 @@ function PTOCalendar() {
           },
         };
       }),
-    ],
-    [daysToShow, holidays, ptoData, activeFilters, density],
-  );
+    ];
+  }, [daysToShow, holidays, ptoData, activeFilters, density]);
 
   const todayStr = format(new Date(), 'yyyy-MM-dd');
 
