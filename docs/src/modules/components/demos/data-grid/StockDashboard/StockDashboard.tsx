@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Box, Typography, Alert, IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   DataGridPremium,
@@ -11,7 +14,8 @@ import {
   useGridApiRef,
   useGridSelector,
 } from '@mui/x-data-grid-premium';
-import { LineChartPro, SparkLineChart } from '@mui/x-charts-pro';
+import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { format } from 'date-fns';
@@ -131,7 +135,7 @@ function StockDashboard() {
 
   React.useEffect(() => {
     if (!isReady) {
-      return;
+      return undefined;
     }
 
     const interval = setInterval(async () => {
@@ -141,7 +145,7 @@ function StockDashboard() {
           apiRef.current?.updateRows(response.rows as StockData[]);
           setLoading(false);
         }
-      } catch (error) {
+      } catch (err) {
         setError('Failed to update stock data');
       }
     }, 1000);
@@ -168,8 +172,8 @@ function StockDashboard() {
                 objectFit: 'contain',
                 borderRadius: 1,
               }}
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
+              onError={(event) => {
+                event.currentTarget.style.display = 'none';
               }}
             />
             <Typography variant="body2" sx={{ fontWeight: 'bold', fontSize: '0.875rem' }}>

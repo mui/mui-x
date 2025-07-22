@@ -20,7 +20,7 @@ const generateHistoricalData = (
   const now = baseDate ?? new Date();
   let price = basePrice;
 
-  for (let step = size; step > 0; step--) {
+  for (let step = size; step > 0; step -= 1) {
     const date = new Date(now.getTime() - step * stepMs);
 
     const variation = (Math.random() - 0.5) * (price * 0.03);
@@ -45,7 +45,7 @@ const generatePredictionData = (
   const now = baseDate ?? new Date();
 
   let price = lastPrice;
-  for (let step = 1; step <= size; step++) {
+  for (let step = 1; step <= size; step += 1) {
     const date = new Date(now.getTime() + step * stepMs);
 
     const variation = (Math.random() - 0.5) * (price * 0.03);
@@ -111,7 +111,7 @@ export const useMockStockServer = () => {
   React.useEffect(() => {
     const currentData = dataRef.current;
     if (!currentData) {
-      return;
+      return undefined;
     }
 
     const interval = setInterval(() => {

@@ -11,7 +11,7 @@ function DemoContainer({ theme, children }: { theme: Theme; children: React.Reac
       Object.assign(theme, theme.colorSchemes[docsMode]);
     }
     return theme;
-  }, [docsMode]);
+  }, [docsMode, theme]);
 
   return (
     <ThemeProvider theme={modifiedTheme}>
