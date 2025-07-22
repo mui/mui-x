@@ -21,6 +21,7 @@ export function StandaloneView(props: StandaloneViewProps) {
       new Store<State>({
         events,
         resources: resources || [],
+        visibleResources: new Map(),
         visibleDate: adapter.date('2025-05-26'),
         currentView: 'week',
         views: ['week', 'day', 'month', 'agenda'],

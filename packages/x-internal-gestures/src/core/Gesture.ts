@@ -313,7 +313,10 @@ export abstract class Gesture<GestureName extends string> {
     if (
       this.isActive ||
       this.element === event.target ||
-      this.element.contains(event.target as Node)
+      ('contains' in this.element && this.element.contains(event.target as Node)) ||
+      ('getRootNode' in this.element &&
+        this.element.getRootNode() instanceof ShadowRoot &&
+        event.composedPath().includes(this.element))
     ) {
       return this.element;
     }

@@ -1,6 +1,6 @@
 import type { CalendarEventColor } from './events';
 
-export type CalendarResourceId = string | number;
+export type CalendarResourceId = string;
 
 export interface CalendarResource {
   /**
