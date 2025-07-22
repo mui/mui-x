@@ -533,7 +533,6 @@ function PTOCalendar() {
           renderCell: (params: GridRenderCellParams) => {
             if (params.row.id === 'summary') {
               const count = params.value;
-              const isCurrent = isCurrentDay(day);
               return (
                 <Box
                   sx={(theme) => ({
