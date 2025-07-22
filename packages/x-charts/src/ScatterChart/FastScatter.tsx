@@ -1,7 +1,5 @@
 'use client';
 import * as React from 'react';
-import useSlotProps from '@mui/utils/useSlotProps';
-import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
 import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
@@ -10,7 +8,6 @@ import {
   selectorChartsVoronoiIsVoronoiEnabled,
   UseChartVoronoiSignature,
 } from '../internals/plugins/featurePlugins/useChartVoronoi';
-import { ScatterMarker } from './ScatterMarker';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
@@ -19,7 +16,7 @@ import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionGroupProps } from '../hooks/useInteractionItemProps';
 
-export interface ScatterProps {
+export interface FastScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
@@ -35,13 +32,7 @@ export interface ScatterProps {
     scatterItemIdentifier: ScatterItemIdentifier,
   ) => void;
   classes?: Partial<ScatterClasses>;
-  slots?: ScatterSlots;
-  slotProps?: ScatterSlotProps;
 }
-
-export interface ScatterSlots extends ScatterMarkerSlots {}
-
-export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
 
 /**
  * Demos:
@@ -53,18 +44,8 @@ export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
  *
  * - [Scatter API](https://mui.com/x/api/charts/scatter/)
  */
-function FastScatter(props: ScatterProps) {
-  const {
-    series,
-    xScale,
-    yScale,
-    color,
-    colorGetter,
-    onItemClick,
-    classes: inClasses,
-    slots,
-    slotProps,
-  } = props;
+function FastScatter(props: FastScatterProps) {
+  const { series, xScale, yScale, color, colorGetter, onItemClick, classes: inClasses } = props;
 
   const groupRef = React.useRef<SVGGElement>(null);
   const { instance } =
@@ -112,17 +93,6 @@ function FastScatter(props: ScatterProps) {
   if (path !== '') {
     paths.push(path);
   }
-
-  const Marker = slots?.marker ?? ScatterMarker;
-  const { ownerState, ...markerProps } = useSlotProps({
-    elementType: Marker,
-    externalSlotProps: slotProps?.marker,
-    additionalProps: {
-      seriesId: series.id,
-      size: series.markerSize,
-    },
-    ownerState: {},
-  });
 
   const classes = useUtilityClasses(inClasses);
 
