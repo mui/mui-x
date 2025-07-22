@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -193,7 +192,6 @@ function renderCellIconLabel({
 }
 
 function PTOCalendar() {
-  const theme = useTheme();
   const calendarState = useCalendarState();
   const { currentDate, activeFilters, density } = calendarState;
 
@@ -685,14 +683,14 @@ function PTOCalendar() {
     <DemoContainer theme={ptoCalendarTheme}>
       <CalendarContext.Provider value={calendarState}>
         <Box
-          sx={{
+          sx={(theme) => ({
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
             ...theme.applyStyles('dark', {
               backgroundColor: '#141A1F',
             }),
-          }}
+          })}
         >
           <DataGridPremium
             pinnedRows={pinnedRows}
