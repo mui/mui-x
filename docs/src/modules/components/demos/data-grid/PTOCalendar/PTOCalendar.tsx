@@ -357,6 +357,10 @@ function PTOCalendar() {
   }, [activeFilters, daysToShow, holidays, ptoData]);
 
   const columns = React.useMemo<GridColDef[]>(() => {
+    const vacationVisible = activeFilters.includes('vacation');
+    const sickVisible = activeFilters.includes('sick');
+    const holidaysVisible = activeFilters.includes('holidays');
+
     return [
       {
         field: 'employee',
@@ -495,16 +499,13 @@ function PTOCalendar() {
             if (!value.show) {
               return 1;
             }
-            if (
-              (!activeFilters.includes('vacation') && !activeFilters.includes('sick')) ||
-              (!value.hasPTO && !value.hasSick)
-            ) {
+            if ((!vacationVisible && !sickVisible) || (!value.hasPTO && !value.hasSick)) {
               // We only span vacation and sick days
               return 1;
             }
             const colIndex = daysToShow.findIndex((date) => date.dateStr === column.field);
             const currentCellType =
-              value.hasHoliday && activeFilters.includes('holidays')
+              value.hasHoliday && holidaysVisible
                 ? 'holidays'
                 : value.hasPTO
                   ? 'vacation'
@@ -515,12 +516,12 @@ function PTOCalendar() {
             let span = 1;
             for (let i = colIndex + 1; i < daysToShow.length; i += 1) {
               const nextCell = row[daysToShow[i].dateStr];
-              if (!nextCell?.show || (nextCell.hasHoliday && activeFilters.includes('holidays'))) {
+              if (!nextCell?.show || (nextCell.hasHoliday && holidaysVisible)) {
                 break;
               }
 
               const nextCellType =
-                nextCell.hasHoliday && activeFilters.includes('holidays')
+                nextCell.hasHoliday && holidaysVisible
                   ? 'holidays'
                   : nextCell.hasPTO
                     ? 'vacation'
@@ -588,9 +589,9 @@ function PTOCalendar() {
               startOfDay(new Date(currentSickPeriod[currentSickPeriod.length - 1])) <=
                 startOfDay(lastDayOfPeriod);
             const isEndOfPeriodInRange = isEndOfPTOPeriodInRange || isEndOfSickPeriodInRange;
-            const showPTO = cellData.hasPTO && activeFilters.includes('vacation');
-            const showSick = cellData.hasSick && activeFilters.includes('sick');
-            const showHoliday = cellData.hasHoliday && activeFilters.includes('holidays');
+            const showPTO = cellData.hasPTO && vacationVisible;
+            const showSick = cellData.hasSick && sickVisible;
+            const showHoliday = cellData.hasHoliday && holidaysVisible;
 
             const holidayName = showHoliday
               ? holidays[ptoData[params.row.employee].nationality][params.field]
