@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   DataGridPremium,
-  GridApiPro,
+  GridApiPremium,
   GridColDef,
   GridColumnVisibilityModel,
   GridRenderCellParams,
@@ -24,7 +24,7 @@ import { useMockStockServer } from './hooks/useMockStockServer';
 import { DemoContainer } from '../DemoContainer';
 import { stockDashboardTheme } from './theme';
 
-function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPro> }) {
+function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPremium> }) {
   const selectedRow = useGridSelector(apiRef, gridRowSelectionIdsSelector);
   const selectedStock = selectedRow.size > 0 ? Array.from(selectedRow.values())[0] : null;
 
@@ -320,7 +320,7 @@ function StockDashboard() {
           />
         </Box>
 
-        <StockDetailsPanel apiRef={apiRef as React.RefObject<GridApiPro>} />
+        <StockDetailsPanel apiRef={apiRef as React.RefObject<GridApiPremium>} />
       </Box>
     </DemoContainer>
   );
