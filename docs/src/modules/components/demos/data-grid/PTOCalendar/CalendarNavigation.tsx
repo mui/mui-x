@@ -11,7 +11,7 @@ import {
   useSplitFieldProps,
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
 import { format } from 'date-fns';
 import { ToolbarButton } from '@mui/x-data-grid-premium';
 import { useCalendarContext } from './CalendarContext';
