@@ -78,7 +78,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     <button
                       type="button"
                       className="DayTimeGridHeaderButton"
-                      onClick={(event) => instance.goToDay(day, event)}
+                      onClick={(event) => instance.switchToDay(day, event)}
                       tabIndex={0}
                     >
                       {renderHeaderContent(day)}

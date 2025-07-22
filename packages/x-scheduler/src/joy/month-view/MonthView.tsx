@@ -135,7 +135,7 @@ export const MonthView = React.memo(
                             <button
                               type="button"
                               className="MonthViewCellNumberButton"
-                              onClick={(event) => instance.goToDay(day.date, event)}
+                              onClick={(event) => instance.switchToDay(day.date, event)}
                               tabIndex={0}
                             >
                               {renderCellNumberContent(day.date)}

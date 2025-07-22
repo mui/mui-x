@@ -71,7 +71,7 @@ export interface EventCalendarInstance {
   /**
    * Goes to today's date without changing the view.
    */
-  setVisibleDateToToday: (event: React.UIEvent) => void;
+  goToToday: (event: React.UIEvent) => void;
   /**
    * Goes to the previous visible date span based on the current view.
    */
@@ -83,7 +83,7 @@ export interface EventCalendarInstance {
   /**
    * Goes to a specific day and set the view to 'day'.
    */
-  goToDay: (day: SchedulerValidDate, event: React.UIEvent) => void;
+  switchToDay: (day: SchedulerValidDate, event: React.UIEvent) => void;
   /**
    * Updates the visible resources.
    */

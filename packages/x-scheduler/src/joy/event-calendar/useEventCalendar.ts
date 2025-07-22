@@ -100,11 +100,9 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     onEventsChange?.(updatedEvents);
   });
 
-  const setVisibleDateToToday: EventCalendarInstance['setVisibleDateToToday'] = useEventCallback(
-    (event) => {
-      setVisibleDate(adapter.startOfDay(adapter.date()), event);
-    },
-  );
+  const goToToday: EventCalendarInstance['goToToday'] = useEventCallback((event) => {
+    setVisibleDate(adapter.startOfDay(adapter.date()), event);
+  });
 
   const goToPreviousVisibleDate: EventCalendarInstance['goToPreviousVisibleDate'] =
     useEventCallback((event) => {
@@ -117,15 +115,17 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     },
   );
 
-  const goToDay: EventCalendarInstance['goToDay'] = useEventCallback((visibleDate, event) => {
-    if (!store.state.views.includes('day')) {
-      throw new Error(
-        'The "day" view is disabled on your Event Calendar. Please ensure that "day" is included in the views prop before using the goToDay method.',
-      );
-    }
-    setVisibleDate(visibleDate, event);
-    setView('day', event);
-  });
+  const switchToDay: EventCalendarInstance['switchToDay'] = useEventCallback(
+    (visibleDate, event) => {
+      if (!store.state.views.includes('day')) {
+        throw new Error(
+          'The "day" view is disabled on your Event Calendar. Please ensure that "day" is included in the views prop before using the switchToDay method.',
+        );
+      }
+      setVisibleDate(visibleDate, event);
+      setView('day', event);
+    },
+  );
 
   const setVisibleResources: EventCalendarInstance['setVisibleResources'] = useEventCallback(
     (visibleResources) => {
@@ -137,18 +137,15 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     setView,
     updateEvent,
     deleteEvent,
-    setVisibleDateToToday,
+    goToToday,
     goToPreviousVisibleDate,
     goToNextVisibleDate,
-    goToDay,
+    switchToDay,
     setVisibleResources,
   });
   const instance = instanceRef.current;
 
-  const contextValue = React.useMemo(
-    () => ({ store, instance, setVisibleDateToToday }),
-    [store, instance, setVisibleDateToToday],
-  );
+  const contextValue = React.useMemo(() => ({ store, instance }), [store, instance]);
 
   return { store, instance, contextValue };
 }
