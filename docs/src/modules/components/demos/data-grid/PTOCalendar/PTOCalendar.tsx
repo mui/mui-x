@@ -555,7 +555,7 @@ function PTOCalendar() {
                 followCursor
               >
                 <Box
-                  sx={{
+                  sx={(theme) => ({
                     width: '100%',
                     userSelect: 'none',
                     height: showPTO || showSick || showHoliday || isBirthday ? '40px' : '100%',
@@ -657,7 +657,7 @@ function PTOCalendar() {
                           showPTO || showSick ? 'none' : isCurrent ? 'transparent' : '#1e2429',
                       },
                     }),
-                  }}
+                  })}
                 >
                   {renderCellIconLabel({
                     showHoliday,
@@ -678,7 +678,7 @@ function PTOCalendar() {
         };
       }),
     ],
-    [daysToShow, holidays, ptoData, activeFilters, density, theme.palette.mode],
+    [daysToShow, holidays, ptoData, activeFilters, density],
   );
 
   return (
