@@ -318,13 +318,6 @@ export const useGridRowGrouping = (
         return -1;
       }
 
-      if (sourceNode.type === targetNode.type && sourceNode.parent === targetNode.parent) {
-        if (dragDirection === 'up') {
-          return dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
-        }
-        return dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
-      }
-
       // Group -> Leaf
       if (sourceNode.type === 'group' && targetNode.type === 'leaf') {
         return -1;
@@ -415,6 +408,13 @@ export const useGridRowGrouping = (
         if (dropPosition === 'below' && nextNode?.type === 'leaf') {
           return targetRowIndex + 1;
         }
+      }
+
+      if (sourceNode.type === targetNode.type && sourceNode.parent === targetNode.parent) {
+        if (dragDirection === 'up') {
+          return dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
+        }
+        return dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
       }
 
       return -1;
