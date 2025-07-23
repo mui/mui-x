@@ -2071,6 +2071,12 @@
       "isGlobal": false
     },
     {
+      "key": "row--beingDragged",
+      "className": "MuiDataGridPro-row--beingDragged",
+      "description": "Styles applied to the row element when it is being dragged (entire row).",
+      "isGlobal": false
+    },
+    {
       "key": "row--detailPanelExpanded",
       "className": "MuiDataGridPro-row--detailPanelExpanded",
       "description": "Styles applied to the row if its detail panel is open.",
@@ -2080,6 +2086,18 @@
       "key": "row--dragging",
       "className": "MuiDataGridPro-row--dragging",
       "description": "Styles applied to the floating special row reorder cell element when it is dragged.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropAbove",
+      "className": "MuiDataGridPro-row--dropAbove",
+      "description": "Styles applied to the row element when it is a drop target above.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropBelow",
+      "className": "MuiDataGridPro-row--dropBelow",
+      "description": "Styles applied to the row element when it is a drop target below.",
       "isGlobal": false
     },
     {

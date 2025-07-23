@@ -60,20 +60,44 @@ Some series types also require specific axis attributes:
 
 ### Axis formatter
 
-Axis data can be displayed in the axes ticks and the tooltip.
+Axis data can be displayed in the axes ticks and the tooltip, among other locations.
 To modify how data is displayed use the `valueFormatter` property.
 
 The second argument of `valueFormatter` provides some rendering context for advanced use cases.
 
-In the next demo, `valueFormatter` is used to shorten months and introduce a breaking space for ticks only.
-To distinguish tick and tooltip, it uses the `context.location`.
+In the next demo, `valueFormatter` is used to shorten months and introduce a new line for ticks.
+It uses the `context.location` to determine where the value is rendered.
 
 {{"demo": "FormatterDemo.js"}}
 
+#### Ticks without labels
+
+In some cases, you may want to display ticks without labels.
+For example, it is common that an axis with a log scale has ticks that are not labeled, as the labels can be too numerous or too complex to display, but are still necessary to indicate that it is a logarithmic scale.
+
+The default tick formatter achieves this by rendering an empty string for ticks that should not show labels.
+If you want to customize the formatting, but want to keep the default behavior for ticks without labels, you can check that `context.defaultTickLabel` property is different from the empty string.
+
+```js
+<ScatterChart
+  xAxis={[
+    {
+      valueFormatter: (value, context) => {
+        if (context.location === 'tick' && context.defaultTickLabel === '') {
+          return '';
+        }
+
+        return `${value}€`;
+      },
+    },
+  ]}
+/>
+```
+
 #### Using the D3 formatter
 
-The context gives you access to the axis scale.
-The D3 [tickFormat(tickNumber, scpecifier)](https://d3js.org/d3-scale/linear#tickFormat) method can be interesting to adapt ticks format based on the scale properties.
+The context gives you access to the axis scale, number of ticks (if applicable) and the default formatted value.
+The D3 [tickFormat(tickNumber, specifier)](https://d3js.org/d3-scale/linear#tickFormat) method can be used to adapt the ticks' format based on the scale properties.
 
 {{"demo": "FormatterD3.js"}}
 

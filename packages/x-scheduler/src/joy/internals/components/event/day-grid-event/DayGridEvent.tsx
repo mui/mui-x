@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { Popover } from '@base-ui-components/react/popover';
 import { useId } from '@base-ui-components/react/utils';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../../../primitives/day-grid';
@@ -47,7 +46,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         return (
           <div className="DayGridEventCardWrapper">
             <span
-              className="EventCalendarResourceLegendColor"
+              className="ResourceLegendColor"
               role="img"
               aria-label={
                 eventResource?.name
@@ -76,22 +75,22 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   }, [variant, eventProp.title, eventProp.start, eventProp.end, eventResource?.name, translations]);
 
   return (
-    <div
+    <DayGrid.Event
       ref={forwardedRef}
       id={id}
-      className={clsx('EventContainer', className, getColorClassName({ resource: eventResource }))}
+      className={clsx(
+        className,
+        'EventContainer',
+        'EventCard',
+        `EventCard--${variant}`,
+        getColorClassName({ resource: eventResource }),
+      )}
+      aria-labelledby={`${ariaLabelledBy} ${id}`}
+      start={eventProp.start}
+      end={eventProp.end}
       {...other}
     >
-      <Popover.Trigger
-        className={clsx('EventCard', `EventCard--${variant}`)}
-        aria-labelledby={`${ariaLabelledBy} ${id}`}
-        onClick={(event) => onEventClick?.(event, eventProp)}
-        render={
-          <DayGrid.Event start={eventProp.start} end={eventProp.end}>
-            {renderContent}
-          </DayGrid.Event>
-        }
-      />
-    </div>
+      {renderContent}
+    </DayGrid.Event>
   );
 });
