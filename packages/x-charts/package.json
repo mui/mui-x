@@ -45,6 +45,7 @@
     "@mui/x-internals": "workspace:*",
     "bezier-easing": "^2.1.0",
     "clsx": "catalog:",
+    "kdbush": "^4.0.2",
     "prop-types": "catalog:",
     "reselect": "catalog:",
     "use-sync-external-store": "catalog:"

@@ -55,6 +55,11 @@ export const selectorChartAxisZoomOptionsLookup = createSelector(
   (axisLookup, axisId) => axisLookup[axisId],
 );
 
+export const selectorChartAxisZoomData = createSelector(
+  [selectorChartZoomMap, (_, axisId: AxisId) => axisId],
+  (zoomMap, axisId) => zoomMap?.get(axisId),
+);
+
 const selectorChartXFilter = createSelector(
   [
     selectorChartZoomMap,
