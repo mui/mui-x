@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 
 export default function SankeyChartExample() {
   const data = {
@@ -26,15 +26,13 @@ export default function SankeyChartExample() {
     <SankeyChart
       width={800}
       height={600}
-      series={[
-        {
-          data,
-          nodeWidth: 20,
-          nodeGap: 15,
-          showNodeLabels: true,
-          linkOpacity: 0.5,
-        },
-      ]}
+      series={{
+        data,
+        nodeWidth: 20,
+        nodeGap: 15,
+        showNodeLabels: true,
+        linkOpacity: 0.5,
+      }}
     />
   );
 }

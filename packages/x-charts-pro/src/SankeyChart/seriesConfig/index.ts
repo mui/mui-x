@@ -4,9 +4,25 @@ import type { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 const seriesProcessor = (series: any) => series;
 const getColor = (series: any) => series;
 const legendGetter = () => [];
-const tooltipGetter = () => ({});
-const getExtremumX = () => ({ min: 0, max: 1 });
-const getExtremumY = () => ({ min: 0, max: 1 });
+const tooltipGetter = () =>
+  ({
+    identifier: {
+      type: 'sankey',
+      seriesId: '',
+      subType: 'node',
+      id: '',
+    },
+    color: '',
+    label: undefined,
+    value: {
+      links: [],
+      nodes: [],
+    },
+    seriesId: undefined,
+    subType: undefined,
+    formattedValue: null,
+    markType: 'square',
+  }) as const;
 const getSeriesWithDefaultValues = (series: any) => series;
 
 export const seriesConfig: ChartSeriesTypeConfig<'sankey'> = {
@@ -14,7 +30,5 @@ export const seriesConfig: ChartSeriesTypeConfig<'sankey'> = {
   colorProcessor: getColor,
   legendGetter,
   tooltipGetter,
-  xExtremumGetter: getExtremumX,
-  yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
 };

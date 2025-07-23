@@ -45,7 +45,6 @@ declare module '@mui/x-charts/internals' {
       seriesProp: SankeySeriesType;
       itemIdentifier: SankeyItemIdentifier;
       valueType: SankeyValueType;
-      axisType: 'none';
     };
   }
 

@@ -1,10 +1,10 @@
 'use client';
 import {
-  SankeyData,
   SankeyLayout,
   SankeyLayoutLink,
   SankeyLayoutNode,
   SankeyLink,
+  type SankeyValueType,
 } from './sankey.types';
 
 /**
@@ -19,7 +19,7 @@ import {
  * @returns The calculated layout
  */
 export function calculateSankeyLayout(
-  data: SankeyData,
+  data: SankeyValueType,
   width: number,
   height: number,
   nodeWidth: number = 15,
@@ -125,7 +125,7 @@ function computeNodeDepths(
     // Process outgoing links from the current level
     for (const nodeIndex of currentNodes) {
       // Find outgoing links
-      links.forEach((link) => {
+      for (const link of links) {
         const sourceIndex = nodeMap.get(link.source)!;
         const targetIndex = nodeMap.get(link.target)!;
 
@@ -142,7 +142,7 @@ function computeNodeDepths(
             nextLevelNodes.push(targetIndex);
           }
         }
-      });
+      }
     }
   }
 

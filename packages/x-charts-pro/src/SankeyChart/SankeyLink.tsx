@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { SankeyLayoutLink } from './sankey.types';
+import useEventCallback from '@mui/utils/useEventCallback';
+import type { SeriesId } from '@mui/x-charts/internals';
+import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
 
 const SankeyLinkRoot = styled('path')(({ theme }) => ({
   fill: 'none',
@@ -15,66 +17,43 @@ const SankeyLinkRoot = styled('path')(({ theme }) => ({
 
 export interface SankeyLinkProps {
   /**
+   * The series ID to which the link belongs
+   */
+  seriesId: SeriesId;
+  /**
    * The link data
-   * @type {SankeyLayoutLink}
    */
   link: SankeyLayoutLink;
-
   /**
    * Color to apply to the link
-   * @type {string | undefined}
    */
   color?: string;
-
   /**
    * Opacity to apply to the link
-   * @type {number | undefined}
    */
   opacity?: number;
-
   /**
    * Handler for click events
    * @param {React.MouseEvent<SVGPathElement>} event - The click event
    * @param {SankeyLayoutLink} link - The link data
    */
-  onClick?: (event: React.MouseEvent<SVGPathElement>, link: SankeyLayoutLink) => void;
-
-  /**
-   * Handler for mouse enter events
-   * @param {React.MouseEvent<SVGPathElement>} event - The mouse enter event
-   * @param {SankeyLayoutLink} link - The link data
-   */
-  onMouseEnter?: (event: React.MouseEvent<SVGPathElement>, link: SankeyLayoutLink) => void;
-
-  /**
-   * Handler for mouse leave events
-   * @param {React.MouseEvent<SVGPathElement>} event - The mouse leave event
-   * @param {SankeyLayoutLink} link - The link data
-   */
-  onMouseLeave?: (event: React.MouseEvent<SVGPathElement>, link: SankeyLayoutLink) => void;
+  onClick?: (event: React.MouseEvent<SVGPathElement>, link: SankeyItemIdentifier) => void;
 }
 
 export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
   function SankeyLink(props, ref) {
-    const { link, color, opacity = 0.4, onClick, onMouseEnter, onMouseLeave } = props;
+    const { link, color, opacity = 0.4, onClick, seriesId } = props;
 
-    const handleClick = (event: React.MouseEvent<SVGPathElement>) => {
+    const handleClick = useEventCallback((event: React.MouseEvent<SVGPathElement>) => {
       if (onClick) {
-        onClick(event, link);
+        onClick(event, {
+          type: 'sankey',
+          subType: 'link',
+          id: `${link.source}-${link.target}`,
+          seriesId,
+        });
       }
-    };
-
-    const handleMouseEnter = (event: React.MouseEvent<SVGPathElement>) => {
-      if (onMouseEnter) {
-        onMouseEnter(event, link);
-      }
-    };
-
-    const handleMouseLeave = (event: React.MouseEvent<SVGPathElement>) => {
-      if (onMouseLeave) {
-        onMouseLeave(event, link);
-      }
-    };
+    });
 
     return (
       <SankeyLinkRoot
@@ -84,8 +63,6 @@ export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
         strokeWidth={link.width}
         strokeOpacity={opacity}
         onClick={handleClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
         data-testid={`sankey-link-${link.source}-${link.target}`}
       />
     );

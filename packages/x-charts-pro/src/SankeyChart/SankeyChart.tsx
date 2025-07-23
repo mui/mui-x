@@ -5,32 +5,39 @@ import { useThemeProps } from '@mui/material/styles';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { MakeOptional } from '@mui/x-internals/types';
+import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import type { MakeOptional } from '@mui/x-internals/types';
+import { ChartsWrapper, type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { SankeySeriesType } from './sankey.types';
-import { SankeyPlot, SankeyPlotProps } from './SankeyPlot';
-
-// Create a type for the plugin signatures
-export interface SankeyChartPluginsSignatures {}
+import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
+import { useSankeyChartProps } from './useSankeyChartProps';
+import { SANKEY_CHART_PLUGINS, type SankeyChartPluginsSignatures } from './SankeyChart.plugins';
+import type { SankeySeriesType } from './sankey.types';
+import { seriesConfig as sankeySeriesConfig } from './seriesConfig';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 
+const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig };
+
 export interface SankeyChartProps
   extends Omit<
-    ChartContainerProProps<'funnel', readonly []>,
-    'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zAxis'
-  > {
+      ChartContainerProProps<'sankey', SankeyChartPluginsSignatures>,
+      'plugins' | 'series'
+    >,
+    Omit<SankeyPlotProps, 'data'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the Sankey chart.
+   * A single object is expected.
    */
-  series: SankeySeries[];
-
+  series: SankeySeries;
   /**
-   * Props passed to the Sankey plot component.
+   * If `true`, the legend is not rendered.
+   * @default false
    */
-  sankeyPlotProps?: Omit<SankeyPlotProps, 'data' | 'width' | 'height'>;
+  hideLegend?: boolean;
 }
 
 /**
@@ -47,78 +54,47 @@ export interface SankeyChartProps
  *
  * - [SankeyChart API](https://mui.com/x/api/charts/sankey-chart/)
  */
-function SankeyChart(props: SankeyChartProps) {
-  const {
-    width,
-    height,
-    margin,
-    sx,
-    title,
-    desc,
-    series,
-    colors,
-    dataset,
-    sankeyPlotProps,
-    slotProps,
-    slots,
-    children,
-    ...other
-  } = useThemeProps({
-    props,
-    name: 'MuiSankeyChart',
-  });
+const SankeyChart = React.forwardRef(function SankeyChart(
+  props: SankeyChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
+  const themedProps = useThemeProps({ props, name: 'MuiSankeyChart' });
 
-  const seriesWithDefaults = React.useMemo(
-    () =>
-      series.map((item) => ({
-        type: 'sankey',
-        ...item,
-      })),
-    [series],
+  const {
+    chartContainerProps,
+    sankeyPlotProps,
+    overlayProps,
+    legendProps,
+    chartsWrapperProps,
+    children,
+  } = useSankeyChartProps(themedProps);
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
+    chartContainerProps,
+    ref,
   );
 
-  const chartProps = {
-    width,
-    height,
-    margin,
-    sx,
-    title,
-    desc,
-    colors,
-    dataset,
-    series: seriesWithDefaults,
-    ...other,
-  };
-
-  const containerProps = useChartContainerProProps(chartProps, []);
-
-  const firstSeries = seriesWithDefaults[0];
-
-  if (!firstSeries || !firstSeries.data) {
-    return null;
-  }
+  // const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
+  const Tooltip = ChartsTooltip;
 
   return (
-    <ChartDataProviderPro {...containerProps}>
-      <ChartsSurface>
-        <SankeyPlot
-          data={firstSeries.data}
-          nodeColor={firstSeries.nodeColor}
-          linkColor={firstSeries.linkColor}
-          linkOpacity={firstSeries.linkOpacity}
-          nodeGap={firstSeries.nodeGap}
-          nodeWidth={firstSeries.nodeWidth}
-          showNodeLabels={firstSeries.showNodeLabels}
-          iterations={firstSeries.iterations}
-          {...sankeyPlotProps}
-        />
-        {children}
-      </ChartsSurface>
-      <ChartsLegend />
-      <ChartsTooltip />
+    <ChartDataProviderPro<'sankey', SankeyChartPluginsSignatures>
+      {...chartDataProviderProProps}
+      seriesConfig={seriesConfig}
+      plugins={SANKEY_CHART_PLUGINS}
+    >
+      <ChartsWrapper {...chartsWrapperProps}>
+        {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
+        <ChartsSurface {...chartsSurfaceProps}>
+          <SankeyPlot {...sankeyPlotProps} />
+          <ChartsOverlay {...overlayProps} />
+          {children}
+        </ChartsSurface>
+        {/* {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />} */}
+        <Tooltip trigger="item" />
+      </ChartsWrapper>
     </ChartDataProviderPro>
   );
-}
+});
 
 SankeyChart.propTypes = {
   // ----------------------------- Warning -----------------------------

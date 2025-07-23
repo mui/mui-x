@@ -1,4 +1,4 @@
-export { SankeyChart } from './SankeyChart';
+export { SankeyChart as Unstable_SankeyChart } from './SankeyChart';
 export type { SankeyChartProps, SankeySeries } from './SankeyChart';
 export { SankeyPlot } from './SankeyPlot';
 export type { SankeyPlotProps } from './SankeyPlot';
@@ -7,7 +7,7 @@ export type { SankeyNodeProps } from './SankeyNode';
 export { SankeyLink } from './SankeyLink';
 export type { SankeyLinkProps } from './SankeyLink';
 export type {
-  SankeyData,
+  SankeyValueType,
   SankeyNode as SankeyNodeType,
   SankeyLink as SankeyLinkType,
   SankeySeriesType,

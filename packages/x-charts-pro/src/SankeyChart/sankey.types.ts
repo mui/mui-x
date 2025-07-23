@@ -1,6 +1,7 @@
 'use client';
 
-import type { SeriesId } from '@mui/x-charts/internals';
+import type { CommonDefaultizedProps, SeriesId } from '@mui/x-charts/internals';
+import type { DefaultizedProps } from '@mui/x-internals/types';
 
 export type NodeId = string | number;
 
@@ -57,19 +58,19 @@ export interface SankeyValueType {
   /**
    * Array of nodes in the Sankey diagram
    */
-  nodes: SankeyNode[];
+  nodes: readonly SankeyNode[];
 
   /**
    * Array of links between nodes
    */
-  links: SankeyLink[];
+  links: readonly SankeyLink[];
 }
 
 export interface SankeySeriesType {
   /**
    * Unique identifier for the series
    */
-  id: SeriesId;
+  id?: SeriesId;
 
   /**
    * Type identifier for Sankey series
@@ -120,6 +121,11 @@ export interface SankeySeriesType {
    * Number of iterations for the layout algorithm
    */
   iterations?: number;
+
+  /**
+   * Layout direction of the Sankey diagram
+   */
+  layout?: 'horizontal' | 'vertical';
 }
 
 /**
@@ -152,11 +158,12 @@ export interface SankeyLayoutLink extends SankeyLink {
  * Calculated layout for the Sankey diagram
  */
 export interface SankeyLayout {
-  nodes: SankeyLayoutNode[];
-  links: SankeyLayoutLink[];
+  nodes: readonly SankeyLayoutNode[];
+  links: readonly SankeyLayoutLink[];
 }
 
-export interface DefaultizedSankeySeriesType extends SankeySeriesType {}
+export interface DefaultizedSankeySeriesType
+  extends DefaultizedProps<SankeySeriesType, Exclude<CommonDefaultizedProps, 'valueFormatter'>> {}
 
 // Define SankeyItemIdentifier type
 export interface SankeyItemIdentifier {
@@ -166,11 +173,13 @@ export interface SankeyItemIdentifier {
    */
   seriesId: SeriesId;
   /**
-   * Unique identifier for the node, if applicable
+   * Subtype to differentiate between node and link
    */
-  nodeId?: string | number;
+  subType: 'node' | 'link';
   /**
-   * Index of the link in the series
+   * Unique identifier for the node or link.
+   * If subType is 'node', this is the node ID.
+   * If subType is 'link', this is a `{$sourceId}-${targetId}` string.
    */
-  linkIndex?: number;
+  id: NodeId;
 }
