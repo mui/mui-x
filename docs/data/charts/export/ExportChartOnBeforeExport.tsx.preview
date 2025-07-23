@@ -10,5 +10,6 @@
       imageExportOptions: [{ type: 'image/png', onBeforeExport }],
     },
   }}
+  sx={{ [`& .${legendClasses.root}`]: { display: 'none' } }}
 />
 <Typography variant="caption">Source: World Bank</Typography>

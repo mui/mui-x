@@ -7,13 +7,21 @@ import { Field } from '@base-ui-components/react/field';
 import { Form } from '@base-ui-components/react/form';
 import { X } from 'lucide-react';
 import { Input } from '@base-ui-components/react/input';
-import { EventPopoverProps } from './EventPopover.types';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { getColorClassName } from '../internals/utils/color-utils';
-import { useTranslations } from '../internals/utils/TranslationsContext';
+import {
+  EventPopoverContextValue,
+  EventPopoverProps,
+  EventPopoverProviderProps,
+  EventPopoverTriggerProps,
+} from './EventPopover.types';
+import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { getColorClassName } from '../../utils/color-utils';
+import { useTranslations } from '../../utils/TranslationsContext';
+import { CalendarEvent } from '../../../models/events';
+import { selectors } from '../../../event-calendar/store';
+import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { useSelector } from '../../../../base-ui-copy/utils/store';
+import { useEventCallback } from '../../../../base-ui-copy/utils/useEventCallback';
 import './EventPopover.css';
-
-const adapter = getAdapter();
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -26,13 +34,13 @@ export const EventPopover = React.forwardRef(function EventPopover(
     anchor,
     calendarEvent,
     calendarEventResource,
-    onEventEdit,
-    onEventDelete,
     onClose,
     ...other
   } = props;
 
+  const adapter = useAdapter();
   const translations = useTranslations();
+  const { instance } = useEventCalendarContext();
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
 
@@ -63,7 +71,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       return;
     }
 
-    onEventEdit({
+    instance.updateEvent({
       ...calendarEvent,
       title: (form.get('title') as string).trim(),
       description: (form.get('description') as string).trim(),
@@ -73,10 +81,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
     onClose();
   };
 
-  const handleDelete = React.useCallback(() => {
-    onEventDelete(calendarEvent.id);
+  const handleDelete = useEventCallback(() => {
+    instance.deleteEvent(calendarEvent.id);
     onClose();
-  }, [onEventDelete, calendarEvent.id, onClose]);
+  });
 
   return (
     <div ref={forwardedRef} className={className} {...other}>
@@ -218,3 +226,60 @@ export const EventPopover = React.forwardRef(function EventPopover(
     </div>
   );
 });
+
+const EventPopoverContext = React.createContext<EventPopoverContextValue>({
+  startEditing: () => {},
+});
+
+export function EventPopoverProvider(props: EventPopoverProviderProps) {
+  const { containerRef, children } = props;
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
+  const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
+  const { store } = useEventCalendarContext();
+  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+
+  const startEditing = useEventCallback((event: React.MouseEvent, calendarEvent: CalendarEvent) => {
+    setAnchor(event.currentTarget as HTMLElement);
+    setSelectedEvent(calendarEvent);
+    setIsPopoverOpen(true);
+  });
+
+  const handleClose = useEventCallback(() => {
+    if (!isPopoverOpen) {
+      return;
+    }
+    setIsPopoverOpen(false);
+    setAnchor(null);
+    setSelectedEvent(null);
+  });
+
+  const contextValue = React.useMemo<EventPopoverContextValue>(
+    () => ({ startEditing }),
+    [startEditing],
+  );
+
+  return (
+    <EventPopoverContext.Provider value={contextValue}>
+      <Popover.Root open={isPopoverOpen} onOpenChange={handleClose} modal>
+        {children}
+        {anchor && selectedEvent && (
+          <EventPopover
+            anchor={anchor}
+            calendarEvent={selectedEvent}
+            calendarEventResource={resourcesByIdMap.get(selectedEvent.resource)}
+            container={containerRef.current}
+            onClose={handleClose}
+          />
+        )}
+      </Popover.Root>
+    </EventPopoverContext.Provider>
+  );
+}
+
+export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
+  const { event: calendarEvent, ...other } = props;
+  const { startEditing } = React.useContext(EventPopoverContext);
+
+  return <Popover.Trigger onClick={(event) => startEditing(event, calendarEvent)} {...other} />;
+}
