@@ -35,9 +35,7 @@ export default function ComplexSankeyChart() {
 
   return (
     <SankeyChart
-      width={900}
       height={500}
-      margin={{ top: 20, right: 160, bottom: 20, left: 40 }}
       series={{
         data,
         nodeWidth: 20,

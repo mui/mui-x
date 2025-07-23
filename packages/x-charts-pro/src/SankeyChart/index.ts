@@ -11,8 +11,4 @@ export type {
   SankeyNode as SankeyNodeType,
   SankeyLink as SankeyLinkType,
   SankeySeriesType,
-  SankeyLayoutNode,
-  SankeyLayoutLink,
-  SankeyLayout,
 } from './sankey.types';
-export { calculateSankeyLayout } from './sankeyLayout';

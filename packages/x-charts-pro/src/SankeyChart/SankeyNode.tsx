@@ -5,10 +5,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { SankeyLayoutNode, type SankeyItemIdentifier } from './sankey.types';
 
-const SankeyNodeRoot = styled('rect')(({ theme }) => ({
-  cursor: 'pointer',
-  fill: theme.palette.primary.main,
+const SankeyNodeRoot = styled('rect')(({ onClick }) => ({
   stroke: 'none',
+  cursor: onClick ? 'pointer' : 'default',
   '&:hover': {
     opacity: 0.8,
   },
@@ -81,7 +80,7 @@ export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
           width={nodeWidth}
           height={nodeHeight}
           fill={color || node.color}
-          onClick={handleClick}
+          onClick={onClick ? handleClick : undefined}
           data-testid={`sankey-node-${node.id}`}
         />
 

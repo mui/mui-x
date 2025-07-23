@@ -5,11 +5,11 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
 
-const SankeyLinkRoot = styled('path')(({ theme }) => ({
+const SankeyLinkRoot = styled('path')(({ onClick }) => ({
   fill: 'none',
-  stroke: theme.palette.primary.light,
   strokeOpacity: 0.4,
   transition: 'stroke-opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+  cursor: onClick ? 'pointer' : 'default',
   '&:hover': {
     strokeOpacity: 0.7,
   },
@@ -62,7 +62,7 @@ export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
         stroke={color || link.color}
         strokeWidth={link.width}
         strokeOpacity={opacity}
-        onClick={handleClick}
+        onClick={onClick ? handleClick : undefined}
         data-testid={`sankey-link-${link.source}-${link.target}`}
       />
     );
