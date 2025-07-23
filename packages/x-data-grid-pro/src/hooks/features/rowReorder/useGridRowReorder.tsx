@@ -219,6 +219,7 @@ export const useGridRowReorder = (
     (params, event) => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
+      event.dataTransfer.effectAllowed = 'move';
       if (isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
@@ -280,6 +281,8 @@ export const useGridRowReorder = (
       const targetRect = (event.target as Element).getBoundingClientRect();
       const relativeY = Math.floor(event.clientY - targetRect.top);
       const midPoint = Math.floor(targetRect.height / 2);
+
+      console.log(event.target);
 
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
@@ -405,6 +408,8 @@ export const useGridRowReorder = (
 
       // Check if the row was dropped outside the grid.
       if (!event.dataTransfer || event.dataTransfer.dropEffect === 'none') {
+        console.log(event.dataTransfer);
+        console.log('dropped outside the grid');
         // Reset drop target state
         setDropTarget({
           targetRowId: null,
