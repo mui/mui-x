@@ -338,9 +338,11 @@ describe('<DataGrid /> - Column spanning', () => {
 
       await user.keyboard('{ArrowRight}');
 
-      expect(() => getCell(0, 3)).not.to.throw();
-      // should not be rendered because of first column colSpan
-      expect(() => getCell(0, 2)).to.throw(/not found/);
+      await waitFor(() => {
+        expect(() => getCell(0, 3)).not.to.throw();
+        // should not be rendered because of first column colSpan
+        expect(() => getCell(0, 2)).to.throw(/not found/);
+      });
     });
 
     it('should work with filtering', async () => {
@@ -445,13 +447,17 @@ describe('<DataGrid /> - Column spanning', () => {
 
       await user.keyboard('{ArrowRight}{ArrowRight}');
 
-      expect(getActiveCell()).to.equal('0-3');
+      await waitFor(() => {
+        expect(getActiveCell()).to.equal('0-3');
+      });
       // should be scrolled to the end of the cell
       expect(virtualScroller.scrollLeft).to.equal(3 * 100);
 
       await user.keyboard('{ArrowLeft}{ArrowLeft}');
 
-      expect(getActiveCell()).to.equal('0-0');
+      await waitFor(() => {
+        expect(getActiveCell()).to.equal('0-0');
+      });
 
       await waitFor(() => {
         expect(virtualScroller.scrollLeft).to.equal(0);
