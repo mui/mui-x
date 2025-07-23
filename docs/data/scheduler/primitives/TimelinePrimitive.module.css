@@ -14,7 +14,7 @@
   border: 1px solid var(--border-color);
 }
 
-.ScrollableSubGridContainer {
+.EventSubGridContainer {
   overflow-x: scroll;
   display: flex;
 }
@@ -27,24 +27,19 @@
   }
 }
 
-.Row {
-  display: flex;
-  height: 48px;
-  line-height: 48px;
-  position: relative;
+.EventSubGrid {
+  width: calc(var(--day-count) * 72px);
 }
 
-.RowEvents {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.Row {
+  display: flex;
+  height: 64px;
+  line-height: 64px;
+  position: relative;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .Cell {
-  border-bottom: 1px solid var(--border-color);
-
   &:not(:last-child) {
     border-right: 1px solid var(--border-color);
   }
@@ -62,13 +57,13 @@
 
 .Event {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
+  top: 12px;
+  bottom: 12px;
   left: var(--x-position);
   right: calc(100% - var(--x-position) - var(--width));
   background-color: var(--event-bg-color);
   border-radius: 6px;
-  padding: 0 8px;
+  padding: 0 12px;
   font-size: 14px;
   line-height: 40px;
 }

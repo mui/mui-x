@@ -3,10 +3,10 @@ import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { SchedulerValidDate } from '../../models';
-import { TimelineRowEventsContext } from './TImelineRowEventsContext';
+import { TimelineEventRowContext } from './TimelineEventRowContext';
 
-export const TimelineRowEvents = React.forwardRef(function TimelineRowEvents(
-  componentProps: TimelineRowEvents.Props,
+export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
+  componentProps: TimelineEventRow.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -20,17 +20,12 @@ export const TimelineRowEvents = React.forwardRef(function TimelineRowEvents(
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({}), []);
+  // TODO: Add aria-rowindex using Composite.
+  const props = React.useMemo(() => ({ role: 'row' }), []);
 
-  const state: TimelineRowEvents.State = React.useMemo(() => ({}), []);
+  const state: TimelineEventRow.State = React.useMemo(() => ({}), []);
 
-  const contextValue: TimelineRowEventsContext = React.useMemo(
-    () => ({
-      start,
-      end,
-    }),
-    [start, end],
-  );
+  const contextValue: TimelineEventRowContext = React.useMemo(() => ({ start, end }), [start, end]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -39,13 +34,13 @@ export const TimelineRowEvents = React.forwardRef(function TimelineRowEvents(
   });
 
   return (
-    <TimelineRowEventsContext.Provider value={contextValue}>
+    <TimelineEventRowContext.Provider value={contextValue}>
       {element}
-    </TimelineRowEventsContext.Provider>
+    </TimelineEventRowContext.Provider>
   );
 });
 
-export namespace TimelineRowEvents {
+export namespace TimelineEventRow {
   export interface State {}
 
   export interface Props extends BaseUIComponentProps<'div', State> {

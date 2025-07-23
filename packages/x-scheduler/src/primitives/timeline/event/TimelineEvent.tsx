@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useButton } from '../../../base-ui-copy/utils/useButton';
-import { useTimelineRowEventsContext } from '../row-events/TImelineRowEventsContext';
+import { useTimelineEventRowContext } from '../event-row/TimelineEventRowContext';
 import { useEvent } from '../../utils/useEvent';
 import { TimelineEventCssVars } from './TimelineEventCssVars';
 import { useEventPosition } from '../../utils/useEventPosition';
@@ -29,7 +29,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
-  const { start: rowStart, end: rowEnd } = useTimelineRowEventsContext();
+  const { start: rowStart, end: rowEnd } = useTimelineEventRowContext();
 
   const { position, duration } = useEventPosition({
     start,
