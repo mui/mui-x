@@ -40,7 +40,7 @@ export interface GridColumnsManagementProps {
    * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
    * @default 150
    */
-  searchDebounceMs?: number;
+  searchDebounceMs?: DataGridProcessedProps['columnFilterDebounceMs'];
   /**
    * If `true`, the column search field will be focused automatically.
    * If `false`, the first column switch input will be focused automatically.
