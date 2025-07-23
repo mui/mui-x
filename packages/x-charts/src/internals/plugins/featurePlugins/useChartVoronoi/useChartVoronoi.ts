@@ -114,7 +114,10 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       points = points.concat(seriesPoints);
     });
 
+    performance.mark('new Delaunay start');
     delauneyRef.current = new Delaunay(points);
+    performance.mark('new Delaunay end');
+    performance.measure('new Delaunay()', 'new Delaunay start', 'new Delaunay end');
     lastFind.current = undefined;
   }, [
     zoomIsInteracting,

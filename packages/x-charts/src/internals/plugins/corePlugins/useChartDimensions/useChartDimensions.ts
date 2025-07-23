@@ -197,7 +197,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     [drawingArea.height, drawingArea.top],
   );
   const isPointInside = React.useCallback(
-    (x: number, y: number, targetElement?: Element | EventTarget | null) => {
+    function isPointInside(x: number, y: number, targetElement?: Element | EventTarget | null) {
       // For element allowed to overflow, wrapping them in <g data-drawing-container /> make them fully part of the drawing area.
       if (
         targetElement &&
