@@ -82,13 +82,10 @@ export const useGridRowReorder = (
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
   const sortedRowIndexLookup = useGridSelector(apiRef, gridExpandedSortedRowIndexLookupSelector);
-
   const timeoutRowId = React.useRef<GridRowId>('');
   const timeout = useTimeout();
-
   const previousReorderState = React.useRef<ReorderStateProps>(EMPTY_REORDER_STATE);
-
-  const [dropTarget, setDropTarget] = React.useState<DropTarget>({
+  const dropTarget = React.useRef<DropTarget>({
     targetRowId: null,
     targetRowIndex: null,
     dropPosition: null,
@@ -219,7 +216,7 @@ export const useGridRowReorder = (
     (params, event) => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
-      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.effectAllowed = 'copy';
       if (isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
@@ -282,8 +279,6 @@ export const useGridRowReorder = (
       const relativeY = Math.floor(event.clientY - targetRect.top);
       const midPoint = Math.floor(targetRect.height / 2);
 
-      console.log(event.target);
-
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.
@@ -344,35 +339,41 @@ export const useGridRowReorder = (
             },
           );
           if (finalTargetIndex >= 0) {
-            setDropTarget({
+            dropTarget.current = {
               targetRowId: params.id,
               targetRowIndex,
               dropPosition,
-            });
+            };
             applyDropIndicator(params.id, dropPosition);
           } else {
             // Clear any existing indicators since this wouldn't result in movement
-            setDropTarget({
+            dropTarget.current = {
               targetRowId: null,
               targetRowIndex: null,
               dropPosition: null,
-            });
+            };
             applyDropIndicator(null, null);
           }
           previousReorderState.current = currentReorderState;
         }
       } else if (previousReorderState.current.previousTargetId !== null) {
-        setDropTarget({
+        dropTarget.current = {
           targetRowId: null,
           targetRowIndex: null,
           dropPosition: null,
-        });
+        };
         applyDropIndicator(null, null);
         previousReorderState.current = {
           previousTargetId: null,
           dragDirection: null,
           previousDropPosition: null,
         };
+      }
+
+      if (dropTarget.current.targetRowId === null) {
+        event.dataTransfer.dropEffect = 'none';
+      } else {
+        event.dataTransfer.dropEffect = 'copy';
       }
     },
     [dragRowId, apiRef, logger, timeout, sortedRowIndexLookup, applyDropIndicator],
@@ -408,29 +409,27 @@ export const useGridRowReorder = (
 
       // Check if the row was dropped outside the grid.
       if (!event.dataTransfer || event.dataTransfer.dropEffect === 'none') {
-        console.log(event.dataTransfer);
-        console.log('dropped outside the grid');
         // Reset drop target state
-        setDropTarget({
+        dropTarget.current = {
           targetRowId: null,
           targetRowIndex: null,
           dropPosition: null,
-        });
+        };
         originRowIndex.current = null;
         setDragRowId('');
         return;
       }
-      if (dropTarget.targetRowIndex !== null && dropTarget.targetRowId !== null) {
+      if (dropTarget.current.targetRowIndex !== null && dropTarget.current.targetRowId !== null) {
         const sourceRowIndex = originRowIndex.current!;
-        const targetRowIndex = dropTarget.targetRowIndex;
+        const targetRowIndex = dropTarget.current.targetRowIndex;
 
         const finalTargetIndex = apiRef.current.unstable_applyPipeProcessors(
           'getRowReorderTargetIndex',
           targetRowIndex,
           {
             sourceRowId: dragRowId,
-            targetRowId: dropTarget.targetRowId,
-            dropPosition: dropTarget.dropPosition!,
+            targetRowId: dropTarget.current.targetRowId,
+            dropPosition: dropTarget.current.dropPosition!,
             dragDirection: dragDirection!,
           },
         );
@@ -452,11 +451,11 @@ export const useGridRowReorder = (
       }
 
       // Reset drop target state
-      setDropTarget({
+      dropTarget.current = {
         targetRowId: null,
         targetRowIndex: null,
         dropPosition: null,
-      });
+      };
 
       setDragRowId('');
     },
@@ -468,9 +467,6 @@ export const useGridRowReorder = (
       applyDropIndicator,
       applyDraggedState,
       timeout,
-      dropTarget.targetRowIndex,
-      dropTarget.targetRowId,
-      dropTarget.dropPosition,
       applyRowAnimation,
     ],
   );
