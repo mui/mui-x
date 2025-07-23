@@ -68,7 +68,7 @@ export const PickersLayoutRoot = styled('div', {
       props: { pickerOrientation: 'portrait', layoutDirection: 'rtl' },
       style: {
         [`& .${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: 3,
+          gridColumn: 4,
         },
       },
     },

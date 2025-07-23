@@ -9,8 +9,8 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, act } from '@mui/internal-test-utils';
-import { getColumnValues } from 'test/utils/helperFn';
+import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
+import { getColumnValues, microtasks } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -73,12 +73,13 @@ describe('<DataGridPremium /> - State persistence', () => {
   }
 
   describe('apiRef: exportState', () => {
-    it('should export the initial values of the models', () => {
+    it('should export the initial values of the models', async () => {
       render(<TestCase initialState={FULL_INITIAL_STATE} />);
 
       const exportedState = apiRef.current?.exportState();
       expect(exportedState?.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState?.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+      await microtasks();
     });
 
     it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
@@ -95,7 +96,7 @@ describe('<DataGridPremium /> - State persistence', () => {
       await act(() => {
         apiRef.current?.setRowGroupingModel(['category']);
       });
-      await act(() => {
+      act(() => {
         apiRef.current?.setAggregationModel({
           id: 'size',
         });
@@ -104,6 +105,7 @@ describe('<DataGridPremium /> - State persistence', () => {
       const exportedState = apiRef.current?.exportState();
       expect(exportedState?.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState?.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+      await microtasks();
     });
 
     it('should export the current version of the exportable state when using exportOnlyDirtyModels', async () => {
@@ -111,7 +113,7 @@ describe('<DataGridPremium /> - State persistence', () => {
       await act(() => {
         apiRef.current?.setRowGroupingModel(['category']);
       });
-      await act(() => {
+      act(() => {
         apiRef.current?.setAggregationModel({
           id: 'size',
         });
@@ -120,9 +122,27 @@ describe('<DataGridPremium /> - State persistence', () => {
       const exportedState = apiRef.current?.exportState({ exportOnlyDirtyModels: true });
       expect(exportedState?.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState?.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+      await microtasks();
     });
 
-    it('should export the controlled values of the models', () => {
+    it('should export the controlled values of the models', async () => {
+      render(
+        <TestCase
+          rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
+          aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
+        />,
+      );
+
+      expect(apiRef.current?.exportState().rowGrouping).to.deep.equal(
+        FULL_INITIAL_STATE.rowGrouping,
+      );
+      expect(apiRef.current?.exportState().aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.aggregation,
+      );
+      await microtasks();
+    });
+
+    it('should export the controlled values of the models when using exportOnlyDirtyModels', async () => {
       render(
         <TestCase
           rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
@@ -135,40 +155,28 @@ describe('<DataGridPremium /> - State persistence', () => {
       expect(apiRef.current?.exportState().aggregation).to.deep.equal(
         FULL_INITIAL_STATE.aggregation,
       );
-    });
-
-    it('should export the controlled values of the models when using exportOnlyDirtyModels', () => {
-      render(
-        <TestCase
-          rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
-          aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
-        />,
-      );
-      expect(apiRef.current?.exportState().rowGrouping).to.deep.equal(
-        FULL_INITIAL_STATE.rowGrouping,
-      );
-      expect(apiRef.current?.exportState().aggregation).to.deep.equal(
-        FULL_INITIAL_STATE.aggregation,
-      );
+      await microtasks();
     });
   });
 
   describe('apiRef: restoreState', () => {
-    it('should restore the whole exportable state', () => {
+    it('should restore the whole exportable state', async () => {
       render(<TestCase />);
 
       act(() => apiRef.current?.restoreState(FULL_INITIAL_STATE));
-      expect(getColumnValues(0)).to.deep.equal([
-        'Cat A (3)',
-        '',
-        '',
-        '',
-        'Cat B (3)',
-        '',
-        '',
-        '',
-        '',
-      ]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (3)',
+          '',
+          '',
+          '',
+          'Cat B (3)',
+          '',
+          '',
+          '',
+          '',
+        ]);
+      });
       expect(getColumnValues(1)).to.deep.equal([
         '3' /* Agg */,
         '0',

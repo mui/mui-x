@@ -7,7 +7,7 @@ export interface CalendarEvent {
   /**
    * The unique identifier of the event.
    */
-  id: string;
+  id: CalendarEventId;
   /**
    * The title of the event.
    */
@@ -30,4 +30,18 @@ export interface CalendarEvent {
   resource?: CalendarResourceId;
 }
 
-export type CalendarEventColor = 'primary' | 'mauve' | 'violet' | 'cyan' | 'jade' | 'red';
+export type CalendarEventId = string | number;
+
+export type CalendarEventColor =
+  | 'primary'
+  | 'mauve'
+  | 'violet'
+  | 'cyan'
+  | 'jade'
+  | 'red'
+  | 'lime'
+  | 'orange'
+  | 'yellow'
+  | 'pink'
+  | 'indigo'
+  | 'blue';
