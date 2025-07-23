@@ -61,8 +61,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
             return state;
           }
           const updatedChildren = [...currentChildren];
-          updatedChildren[oldIndex] = targetNode.id;
-          updatedChildren[targetIndex] = sourceRowId;
+          updatedChildren.splice(targetIndex, 0, updatedChildren.splice(oldIndex, 1)[0]);
 
           return {
             ...state,
@@ -79,20 +78,37 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
           };
         });
       } else if (
-        sourceNode.type === 'leaf' &&
-        targetNode.type === 'leaf' &&
-        sourceNode.parent !== targetNode.parent &&
-        sourceNode.depth === targetNode.depth
+        (sourceNode.type === 'leaf' &&
+          targetNode.type === 'leaf' &&
+          sourceNode.parent !== targetNode.parent &&
+          sourceNode.depth === targetNode.depth) ||
+        (sourceNode.type === 'leaf' &&
+          targetNode.type === 'group' &&
+          targetNode.depth === sourceNode.depth - 1)
       ) {
-        // Case C
+        // Case C & D
+        const source = sourceNode as GridLeafNode;
+        let target = targetNode;
+        let isLastChild = false;
+        if (target.type === 'group') {
+          const prevIndex = targetOriginalIndex - 1;
+          if (prevIndex < 0) {
+            return;
+          }
+          const prevRowId = sortedFilteredRowIds[prevIndex];
+          const leafTargetNode = gridRowNodeSelector(apiRef, prevRowId);
+          if (!leafTargetNode || leafTargetNode.type !== 'leaf') {
+            return;
+          }
+          target = leafTargetNode as GridLeafNode;
+          isLastChild = true;
+        }
         apiRef.current.setState((state) => {
-          const source = sourceNode as GridLeafNode;
-          const target = targetNode as GridLeafNode;
           const sourceGroup = gridRowTreeSelector(apiRef)[source.parent] as GridGroupNode;
           const sourceChildren = sourceGroup.children;
 
           const targetGroup = gridRowTreeSelector(apiRef)[target.parent] as GridGroupNode;
-          const targetChildren = [...targetGroup.children];
+          const targetChildren = targetGroup.children;
 
           const sourceIndex = sourceChildren.findIndex((row) => row === sourceRowId);
           const targetIndex = targetChildren.findIndex((row) => row === target.id);
@@ -109,11 +125,13 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
             sourceGroupRemoved = true;
           }
 
-          const updatedTargetChildren = [
-            ...targetChildren.slice(0, targetIndex),
-            sourceRowId,
-            ...targetChildren.slice(targetIndex),
-          ];
+          const updatedTargetChildren = isLastChild
+            ? [...targetChildren, sourceRowId]
+            : [
+                ...targetChildren.slice(0, targetIndex),
+                sourceRowId,
+                ...targetChildren.slice(targetIndex),
+              ];
 
           const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
           const rowGroupingModel = gridRowGroupingModelSelector(apiRef);
@@ -123,6 +141,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
 
           for (let i = 0; i < rowGroupingModel.length; i += 1) {
             const field = rowGroupingModel[i];
+            // TODO: Accommodate `groupingValueSetter` and the data source counter part
             sourceRow[field] = targetRow[field];
           }
 
@@ -169,102 +188,9 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
             },
           };
         });
-      } else if (
-        sourceNode.type === 'leaf' &&
-        targetNode.type === 'group' &&
-        sourceNode.parent !== targetNode.id &&
-        targetNode.depth <= sourceNode.depth - 1
-      ) {
-        if (targetNode.depth < sourceNode.depth - 1) {
-          // Open the target node if on a lower depth than the source node
-          apiRef.current.setState((state) => {
-            const updatedTree = { ...state.rows.tree };
-            (updatedTree[targetNode.id] as GridGroupNode).childrenExpanded = true;
-            return {
-              ...state,
-              rows: {
-                ...state.rows,
-                tree: updatedTree,
-              },
-            };
-          });
-        } else {
-          // Case D
-          apiRef.current.setState((state) => {
-            const sourceGroup = gridRowTreeSelector(apiRef)[sourceNode.parent!] as GridGroupNode;
-            const sourceChildren = sourceGroup.children;
-
-            const targetChildren = targetNode.children;
-
-            const updatedSourceChildren = [...sourceChildren].filter((row) => row !== sourceRowId);
-            const updatedTargetChildren = [sourceRowId, ...targetChildren];
-
-            let sourceGroupRemoved = false;
-            const updatedTree = { ...state.rows.tree };
-            if (updatedSourceChildren.length === 0) {
-              delete updatedTree[sourceGroup.id];
-              sourceGroupRemoved = true;
-            }
-
-            const sourceGroupParent = gridRowTreeSelector(apiRef)[
-              sourceGroup.parent!
-            ] as GridGroupNode;
-
-            const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
-            const rowGroupingModel = gridRowGroupingModelSelector(apiRef);
-
-            const sourceRow = { ...dataRowIdToModelLookup[sourceRowId] };
-            const childOfTargetRow = { ...dataRowIdToModelLookup[targetChildren[0]] };
-
-            for (let i = 0; i < rowGroupingModel.length; i += 1) {
-              const field = rowGroupingModel[i];
-              sourceRow[field] = childOfTargetRow[field];
-            }
-
-            return {
-              ...state,
-              rows: {
-                ...state.rows,
-                totalTopLevelRowCount:
-                  state.rows.totalTopLevelRowCount - (sourceGroupRemoved ? 1 : 0),
-                tree: {
-                  ...updatedTree,
-                  ...(sourceGroupRemoved
-                    ? {
-                        [sourceGroupParent.id]: {
-                          ...sourceGroupParent,
-                          children: sourceGroupParent.children.filter(
-                            (childId) => childId !== sourceGroup.id,
-                          ),
-                        },
-                      }
-                    : {
-                        [sourceNode.parent!]: {
-                          ...sourceGroup,
-                          children: updatedSourceChildren,
-                        },
-                      }),
-                  [targetNode.id]: {
-                    ...targetNode,
-                    // Expand the target node to show the source node as a child
-                    childrenExpanded: true,
-                    children: updatedTargetChildren,
-                  },
-                  [sourceNode.id]: {
-                    ...sourceNode,
-                    parent: targetNode.id,
-                  },
-                },
-                dataRowIdToModelLookup: {
-                  ...dataRowIdToModelLookup,
-                  [sourceRowId]: sourceRow,
-                },
-              },
-            };
-          });
-        }
       } else {
         // Unsupported use cases, suppress the error instead of throwing it
+        // TODO: Throw error in dev mode
         return;
       }
 

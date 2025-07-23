@@ -303,88 +303,121 @@ export const useGridRowGrouping = (
       const targetRowIndex = expandedSortedRowIndexLookup[targetRowId];
       const sourceNode = rowTree[sourceRowId];
       const targetNode = rowTree[targetRowId];
+      const prevNode =
+        targetRowIndex > 0 ? rowTree[expandedSortedRowIds[targetRowIndex - 1]] : null;
 
       if (!sourceNode || !targetNode) {
         return -1;
       }
 
-      // Check if the move would be a no-op (adjacent position)
-      const isAdjacent =
+      // Adjacent position
+      if (
         (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
-        (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1);
-
-      if (isAdjacent) {
+        (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1)
+      ) {
         return -1;
       }
 
-      // Get previous node for context
-      const prevNode =
-        targetRowIndex > 0 ? rowTree[expandedSortedRowIds[targetRowIndex - 1]] : null;
+      if (sourceNode.type === targetNode.type && sourceNode.parent === targetNode.parent) {
+        if (dragDirection === 'up') {
+          return dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
+        }
+        return dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
+      }
 
-      // Case 1: Group source -> Leaf target (never allowed)
+      // Group -> Leaf
       if (sourceNode.type === 'group' && targetNode.type === 'leaf') {
         return -1;
       }
 
-      // Case 2: Group source -> Group target
+      // Group -> Group
       if (sourceNode.type === 'group' && targetNode.type === 'group') {
-        // Only allow if same parent (same depth and share parent)
+        // Groups at different levels
         if (sourceNode.parent !== targetNode.parent) {
           return -1;
         }
-        // Don't allow dropping below an expanded group (that position is for its children)
+        // Dropping inside an expanded group
         if (dropPosition === 'below' && targetNode.childrenExpanded) {
           return -1;
         }
         // Dropping here would mean no actual movement
-        if (
-          dropPosition === 'above' &&
-          prevNode?.type === 'leaf' &&
-          prevNode.parent === sourceNode.id
-        ) {
-          return -1;
+        if (dropPosition === 'above' && prevNode?.type === 'leaf') {
+          if (prevNode.parent === sourceNode.id) {
+            return -1;
+          }
+          return dragDirection === 'up'
+            ? targetRowIndex
+            : (expandedSortedRowIndexLookup[prevNode.parent] ?? -1);
         }
       }
 
-      // Case 3: Leaf source -> Leaf target
-      if (sourceNode.type === 'leaf' && targetNode.type === 'leaf') {
-        // Allow if same parent or same depth (can change parents at same level)
-        if (sourceNode.depth !== targetNode.depth) {
-          return -1;
-        }
+      // Leaf -> Leaf
+      if (
+        sourceNode.type === 'leaf' &&
+        targetNode.type === 'leaf' &&
+        sourceNode.depth !== targetNode.depth
+      ) {
+        return -1;
       }
 
-      // Case 4: Leaf source -> Group target
+      // Leaf -> Group
       if (sourceNode.type === 'leaf' && targetNode.type === 'group') {
         if (dropPosition === 'above') {
           // Check if there's a leaf before this group that can be sibling to source
           if (!prevNode || prevNode.type !== 'leaf' || prevNode.depth !== sourceNode.depth) {
             return -1;
           }
-        } else {
-          // dropPosition === 'below'
-          if (!targetNode.childrenExpanded) {
-            // Cannot drop below collapsed group (would trigger expansion)
-            return -1;
-          }
-          // For expanded group, check if source can become first child
-          const firstChild = targetNode.children?.[0] ? rowTree[targetNode.children[0]] : null;
-          if (!firstChild || sourceNode.depth !== firstChild.depth) {
-            return -1;
-          }
+        }
+        // Cannot drop below collapsed group (would trigger expansion)
+        if (!targetNode.childrenExpanded) {
+          return -1;
+        }
+        // For expanded group, check if source can become first child
+        const firstChild = targetNode.children?.[0] ? rowTree[targetNode.children[0]] : null;
+        if (!firstChild || sourceNode.depth !== firstChild.depth) {
+          return -1;
         }
       }
 
-      // Calculate the final target index
-      let finalTargetIndex: number;
-
-      if (dragDirection === 'up') {
-        finalTargetIndex = dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
-      } else {
-        finalTargetIndex = dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
+      if (
+        sourceNode.type === 'leaf' &&
+        targetNode.type === 'group' &&
+        sourceNode.depth === targetNode.depth + 1
+      ) {
+        if (dropPosition === 'above') {
+          return (
+            targetRowIndex -
+            (prevNode?.type === 'leaf' && prevNode.parent === sourceNode.parent ? 1 : 0)
+          );
+        }
+        if (dropPosition === 'below') {
+          return targetRowIndex + 1;
+        }
       }
 
-      return finalTargetIndex;
+      const nextNode = rowTree[expandedSortedRowIds[targetRowIndex + 1]];
+
+      if (
+        sourceNode.type === 'leaf' &&
+        targetNode.type === 'leaf' &&
+        targetNode.parent !== sourceNode.parent
+      ) {
+        if (
+          dropPosition === 'below' &&
+          nextNode?.type === 'group' &&
+          sourceNode.depth === nextNode.depth + 1
+        ) {
+          return targetRowIndex + 1;
+        }
+        if (dropPosition === 'above') {
+          return targetRowIndex;
+        }
+        if (dropPosition === 'below' && nextNode?.type === 'leaf') {
+          return targetRowIndex + 1;
+        }
+      }
+
+      return -1;
     },
     [apiRef, props.treeData],
   );

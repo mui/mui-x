@@ -14,6 +14,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         throw new Error(`MUI X: No row with id #${rowId} found.`);
       }
 
+      // TODO: Remove irrelevant checks
       if (node.parent !== GRID_ROOT_GROUP_ID) {
         throw new Error(`MUI X: The row reordering do not support reordering of grouped rows yet.`);
       }
