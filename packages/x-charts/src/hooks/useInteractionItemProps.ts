@@ -137,7 +137,7 @@ export function useInteractionGroupProps(
       skip
         ? null
         : quadtree(
-            seriesData as { dataIndex: number; x: number; y: number }[],
+            seriesData as { x: number; y: number }[],
             (d) => getXPosition(d.x),
             (d) => getYPosition(d.y),
           ),
