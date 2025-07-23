@@ -46,19 +46,20 @@ export interface BarChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
+export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginsSignatures>,
-      'series' | 'plugins' | 'zAxis'
+      'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the bar chart.
-   * An array of [[BarSeriesType]] objects.
+   * An array of [[BarSeries]] objects.
    */
-  series: Readonly<MakeOptional<BarSeriesType, 'type'>[]>;
+  series: Readonly<BarSeries[]>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -220,6 +221,16 @@ BarChart.propTypes = {
    */
   hideLegend: PropTypes.bool,
   /**
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
+   */
+  highlightedAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
    * The highlighted item.
    * Used when the highlight is controlled.
    */
@@ -275,6 +286,14 @@ BarChart.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onHighlightedAxisChange: PropTypes.func,
+  /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
@@ -282,7 +301,7 @@ BarChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the bar chart.
-   * An array of [[BarSeriesType]] objects.
+   * An array of [[BarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

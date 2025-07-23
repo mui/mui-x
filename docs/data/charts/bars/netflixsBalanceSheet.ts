@@ -14,11 +14,17 @@ const translations = {
   nonAffect: 'non Affected',
 } as const;
 
+export const valueFormatter = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  style: 'currency',
+  currency: 'USD',
+}).format;
+
 export function addLabels<T extends { dataKey: keyof typeof translations }>(series: T[]) {
   return series.map((item) => ({
     ...item,
     label: translations[item.dataKey],
-    valueFormatter: (v: number | null) => (v ? `$ ${v.toLocaleString()}k` : '-'),
+    valueFormatter: (v: number | null) => (v ? valueFormatter(v) : '-'),
   }));
 }
 

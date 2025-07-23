@@ -1,4 +1,11 @@
+import { EventCalendarView } from '../event-calendar/EventCalendar.types';
+
 export interface SchedulerTranslations {
+  // ResourceLegend
+  hideEventsLabel: (resourceName: string) => string;
+  resourceLegendSectionLabel: string;
+  showEventsLabel: (resourceName: string) => string;
+
   // ViewSwitcher
   agenda: string;
   day: string;
@@ -11,8 +18,13 @@ export interface SchedulerTranslations {
   allDay: string;
 
   // MonthView
+  hiddenEvents: (hiddenEventsCount: number) => string;
+  nextTimeSpan: (timeSpan: EventCalendarView) => string;
+  noResourceAriaLabel: string;
+  previousTimeSpan: (timeSpan: EventCalendarView) => string;
+  resourceAriaLabel: (resourceName: string) => string;
   weekAbbreviation: string;
-  weekNumberAriaLabel: string;
+  weekNumberAriaLabel: (weekNumber: number) => string;
 
   // EventPopover
   closeButtonAriaLabel: string;

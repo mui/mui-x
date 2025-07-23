@@ -312,11 +312,14 @@ const applyAggregation = (
       return;
     }
     const values = rows.map((row) => row[field]);
-    aggregateValues[`${field}Aggregate`] = aggregationFunction.apply({
-      values,
-      field,
-      groupId,
-    });
+    aggregateValues[`${field}Aggregate`] = aggregationFunction.apply(
+      {
+        values,
+        field,
+        groupId,
+      },
+      null as any, // we can't use apiRef here, and as long as we don't use advanced aggregation functions that depend on it, we're clear
+    );
   });
   return aggregateValues;
 };

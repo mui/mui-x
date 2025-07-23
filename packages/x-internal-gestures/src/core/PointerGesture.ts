@@ -1,5 +1,6 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
 import { Gesture, GestureEventData, GestureOptions } from './Gesture';
+import type { KeyboardManager } from './KeyboardManager';
 import { PointerData, PointerManager } from './PointerManager';
 import { TargetElement } from './types/TargetElement';
 
@@ -102,11 +103,12 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
     element: TargetElement,
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
+    keyboardManager: KeyboardManager,
   ): void {
-    super.init(element, pointerManager, gestureRegistry);
+    super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
-    this.unregisterHandler = this.pointerManager!.registerGestureHandler((pointers, event) =>
-      this.handlePointerEvent(pointers, event),
+    this.unregisterHandler = this.pointerManager!.registerGestureHandler(
+      this.handlePointerEvent.bind(this),
     );
   }
 
@@ -145,10 +147,15 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
   ): PointerData[] {
     return pointers.filter(
       (pointer) =>
-        calculatedTarget === pointer.target ||
-        calculatedTarget.contains(pointer.target as Node) ||
-        pointer.target === this.originalTarget ||
-        calculatedTarget === this.originalTarget,
+        (this.isPointerTypeAllowed(pointer.pointerType) &&
+          (calculatedTarget === pointer.target ||
+            pointer.target === this.originalTarget ||
+            calculatedTarget === this.originalTarget ||
+            ('contains' in calculatedTarget &&
+              calculatedTarget.contains(pointer.target as Node)))) ||
+        ('getRootNode' in calculatedTarget &&
+          calculatedTarget.getRootNode() instanceof ShadowRoot &&
+          pointer.srcEvent.composedPath().includes(calculatedTarget)),
     );
   }
 

@@ -59,6 +59,7 @@ export interface LineChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
+export type LineSeries = MakeOptional<LineSeriesType, 'type'>;
 export interface LineChartProps
   extends Omit<
       ChartContainerProps<'line', LineChartPluginsSignatures>,
@@ -68,9 +69,9 @@ export interface LineChartProps
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The series to display in the line chart.
-   * An array of [[LineSeriesType]] objects.
+   * An array of [[LineSeries]] objects.
    */
-  series: Readonly<MakeOptional<LineSeriesType, 'type'>[]>;
+  series: Readonly<LineSeries[]>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -230,6 +231,12 @@ LineChart.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preferStrictDomainInLineCharts: PropTypes.bool,
+  }),
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -244,6 +251,16 @@ LineChart.propTypes = {
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
+  /**
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
+   */
+  highlightedAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      dataIndex: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * The highlighted item.
    * Used when the highlight is controlled.
@@ -299,6 +316,14 @@ LineChart.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onHighlightedAxisChange: PropTypes.func,
+  /**
    * Callback fired when a line element is clicked.
    */
   onLineClick: PropTypes.func,
@@ -308,7 +333,7 @@ LineChart.propTypes = {
   onMarkClick: PropTypes.func,
   /**
    * The series to display in the line chart.
-   * An array of [[LineSeriesType]] objects.
+   * An array of [[LineSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

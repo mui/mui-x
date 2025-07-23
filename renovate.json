@@ -1,26 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "automerge": false,
-  "commitMessageAction": "Bump",
-  "commitMessageExtra": "to {{newValue}}",
-  "commitMessageTopic": "{{depName}}",
-  "dependencyDashboard": true,
-  "rebaseWhen": "conflicted",
-  "labels": ["dependencies"],
-  "stopUpdatingLabel": "on hold",
+  "extends": ["github>mui/mui-public//renovate/default"],
+  "schedule": "on monday before 6:00am",
+  "lockFileMaintenance": {
+    "schedule": "* 0-5 2 * *"
+  },
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
-    },
-    {
-      "matchDepTypes": ["peerDependencies"],
-      "rangeStrategy": "widen"
-    },
-    {
-      "groupName": "babel",
-      "matchPackageNames": ["@babel/**"]
     },
     {
       "groupName": "D3",
@@ -31,30 +20,9 @@
       "matchPackageNames": ["@react-spring/**"]
     },
     {
-      "groupName": "Emotion",
-      "matchPackageNames": ["@emotion/**"]
-    },
-    {
-      "groupName": "core-js",
-      "matchPackageNames": ["core-js"],
-      "allowedVersions": "< 2.0.0"
-    },
-    {
       "groupName": "react-docgen",
       "matchPackageNames": ["react-docgen"],
       "allowedVersions": "< 6.0.0"
-    },
-    {
-      "groupName": "React",
-      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"]
-    },
-    {
-      "groupName": "typescript-eslint",
-      "matchPackageNames": ["@typescript-eslint/**"]
-    },
-    {
-      "groupName": "ESLint plugins",
-      "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
     },
     {
       "groupName": "bundling fixtures",
@@ -62,55 +30,8 @@
       "schedule": "every 6 months on the first day of the month"
     },
     {
-      "groupName": "examples",
-      "matchFileNames": ["examples/**/package.json"],
-      "minor": {
-        "enabled": false
-      },
-      "patch": {
-        "enabled": false
-      }
-    },
-    {
-      "groupName": "node",
-      "matchPackageNames": ["node", "cimg/node"],
-      "enabled": false
-    },
-    {
       "groupName": "Material UI",
-      "matchPackageNames": [
-        "@mui/icons-material",
-        "@mui/joy",
-        "@mui/lab",
-        "@mui/material",
-        "@mui/material-nextjs",
-        "@mui/system",
-        "@mui/types",
-        "@mui/utils"
-      ]
-    },
-    {
-      "groupName": "Infra packages",
-      "matchPackageNames": ["@mui/internal-*", "@mui/docs"],
-      "followTag": "canary",
-      "schedule": null
-    },
-    {
-      "groupName": "Playwright",
-      "matchPackageNames": ["@playwright/test", "mcr.microsoft.com/playwright"]
-    },
-    {
-      "matchDepTypes": ["action"],
-      "pinDigests": true,
-      "automerge": true
-    },
-    {
-      "groupName": "GitHub Actions",
-      "matchManagers": ["github-actions"]
-    },
-    {
-      "groupName": "Vite & Vitest",
-      "matchPackageNames": ["@vitejs/**", "/vitest/", "esbuild"]
+      "matchPackageNames": ["@mui/*"]
     },
     {
       "groupName": "date-fns-v2",
@@ -136,15 +57,5 @@
       "matchPackageNames": ["conf"],
       "allowedVersions": "< 12.0.0"
     }
-  ],
-  "postUpdateOptions": ["pnpmDedupe"],
-  "prConcurrentLimit": 30,
-  "prHourlyLimit": 0,
-  "rangeStrategy": "bump",
-  "schedule": "on sunday before 6:00am",
-  "timezone": "UTC",
-  "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": "before 6:00am on the first day of the month"
-  }
+  ]
 }

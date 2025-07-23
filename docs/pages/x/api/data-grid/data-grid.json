@@ -1926,6 +1926,12 @@
       "isGlobal": false
     },
     {
+      "key": "row--beingDragged",
+      "className": "MuiDataGrid-row--beingDragged",
+      "description": "Styles applied to the row element when it is being dragged (entire row).",
+      "isGlobal": false
+    },
+    {
       "key": "row--detailPanelExpanded",
       "className": "MuiDataGrid-row--detailPanelExpanded",
       "description": "Styles applied to the row if its detail panel is open.",
@@ -1935,6 +1941,18 @@
       "key": "row--dragging",
       "className": "MuiDataGrid-row--dragging",
       "description": "Styles applied to the floating special row reorder cell element when it is dragged.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropAbove",
+      "className": "MuiDataGrid-row--dropAbove",
+      "description": "Styles applied to the row element when it is a drop target above.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropBelow",
+      "className": "MuiDataGrid-row--dropBelow",
+      "description": "Styles applied to the row element when it is a drop target below.",
       "isGlobal": false
     },
     {
@@ -2010,6 +2028,12 @@
       "isGlobal": false
     },
     {
+      "key": "scrollArea--down",
+      "className": "MuiDataGrid-scrollArea--down",
+      "description": "Styles applied to the bottom scroll area element.",
+      "isGlobal": false
+    },
+    {
       "key": "scrollArea--left",
       "className": "MuiDataGrid-scrollArea--left",
       "description": "Styles applied to the left scroll area element.",
@@ -2019,6 +2043,12 @@
       "key": "scrollArea--right",
       "className": "MuiDataGrid-scrollArea--right",
       "description": "Styles applied to the right scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollArea--up",
+      "className": "MuiDataGrid-scrollArea--up",
+      "description": "Styles applied to the top scroll area element.",
       "isGlobal": false
     },
     {

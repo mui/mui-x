@@ -5,9 +5,9 @@ import { Menu } from '@base-ui-components/react/menu';
 import { useForkRef } from '@base-ui-components/react/utils';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
-import { ViewType } from '../../models/views';
+import { EventCalendarView } from '../../event-calendar/EventCalendar.types';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { useEventCalendarStore } from '../../internals/hooks/useEventCalendarStore';
+import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
 import { useSelector } from '../../../base-ui-copy/utils/store';
 import { selectors } from '../../event-calendar/store';
 import './ViewSwitcher.css';
@@ -18,33 +18,28 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 ) {
   const { className, ...other } = props;
 
-  const store = useEventCalendarStore();
+  const { store, instance } = useEventCalendarContext();
   const views = useSelector(store, selectors.views);
-  const currentView = useSelector(store, selectors.currentView);
+  const view = useSelector(store, selectors.view);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useForkRef(forwardedRef, containerRef);
   const translations = useTranslations();
 
-  const handleSelectView = React.useCallback(
-    (view: ViewType) => store.set('currentView', view),
-    [store],
-  );
-
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      const view = event.currentTarget.getAttribute('data-view');
-      if (view) {
-        handleSelectView(view as ViewType);
+      const newView = event.currentTarget.getAttribute('data-view');
+      if (newView) {
+        instance.setView(newView as EventCalendarView, event);
       }
     },
-    [handleSelectView],
+    [instance],
   );
 
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
-  const currentOverflowView = dropdown.includes(currentView) ? currentView : null;
+  const currentOverflowView = dropdown.includes(view) ? view : null;
   const dropdownLabel = currentOverflowView
     ? translations[currentOverflowView]
     : translations.other;
@@ -52,17 +47,17 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
       <Menubar className="ViewSwitcherMenuBar">
-        {visible.map((view) => (
+        {visible.map((visibleView) => (
           <button
-            key={view}
+            key={visibleView}
             className="ViewSwitcherMainItem"
             onClick={handleClick}
-            data-view={view}
+            data-view={visibleView}
             type="button"
-            data-pressed={currentView === view || undefined}
-            aria-pressed={currentView === view}
+            data-pressed={view === visibleView || undefined}
+            aria-pressed={view === visibleView}
           >
-            {translations[view]}
+            {translations[visibleView]}
           </button>
         ))}
         {dropdown.length > 0 && (
@@ -70,7 +65,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             <Menu.Trigger
               className="ViewSwitcherMainItem"
               data-view="other"
-              data-highlighted={dropdown.includes(currentView) || undefined}
+              data-highlighted={dropdown.includes(view) || undefined}
             >
               {dropdownLabel} <ChevronDown size={16} strokeWidth={2} />
             </Menu.Trigger>
@@ -83,18 +78,18 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
               >
                 <Menu.Popup className="ViewSwitcherMenuPopup">
                   <Menu.RadioGroup
-                    value={currentView}
-                    onValueChange={handleSelectView}
+                    value={view}
+                    onValueChange={instance.setView}
                     className="ViewSwitcherRadioGroup"
                   >
-                    {dropdown.map((view) => (
+                    {dropdown.map((dropdownView) => (
                       <Menu.RadioItem
-                        key={view}
+                        key={dropdownView}
                         className="ViewSwitcherRadioItem"
-                        value={view}
+                        value={dropdownView}
                         closeOnClick
                       >
-                        {translations[view]}
+                        {translations[dropdownView]}
                       </Menu.RadioItem>
                     ))}
                   </Menu.RadioGroup>
