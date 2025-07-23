@@ -18,6 +18,10 @@ export type State = {
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
   visibleResources: Map<CalendarResourceId, boolean>;
+  /**
+   * Whether the items in the calendar are draggable to change their start and end dates without changing the duration.
+   */
+  areItemsDraggable: boolean;
 };
 
 export type EventCalendarStore = Store<State>;
@@ -75,4 +79,7 @@ export const selectors = {
   getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
     state.events.find((event) => event.id === eventId),
   ),
+  isEventDraggable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
+    return !readOnly && state.areItemsDraggable;
+  }),
 };

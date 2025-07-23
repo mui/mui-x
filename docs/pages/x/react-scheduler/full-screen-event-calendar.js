@@ -12,6 +12,7 @@ export default function FullEventCalendar() {
       resources={resources}
       defaultVisibleDate={events[0].start}
       onEventsChange={setEvents}
+      areItemsDraggable
     />
   );
 }

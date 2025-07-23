@@ -201,6 +201,7 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       eventResource={resourcesByIdMap.get(updatedEvent.resource)}
       variant="regular"
       ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
+      readOnly
     />
   );
 }

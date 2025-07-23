@@ -26,6 +26,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     start,
     end,
     eventId,
+    isDraggable = false,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -75,6 +76,11 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   );
 
   React.useEffect(() => {
+    if (!isDraggable) {
+      return;
+    }
+
+    // eslint-disable-next-line consistent-return
     return draggable({
       element: ref.current!,
       getInitialData: ({ input }) => ({
@@ -91,7 +97,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onDragStart: () => setIsMoving(true),
       onDrop: () => setIsMoving(false),
     });
-  }, [start, end, eventId]);
+  }, [isDraggable, start, end, eventId]);
 
   return useRenderElement('div', componentProps, {
     state,
@@ -113,6 +119,11 @@ export namespace TimeGridEvent {
      * The unique identifier of the event.
      */
     eventId: string | number;
+    /**
+     * Whether the event is draggable to change its start and end dates without changing its duration.
+     * @default false
+     */
+    isDraggable?: boolean;
   }
 
   export interface EventDragData {

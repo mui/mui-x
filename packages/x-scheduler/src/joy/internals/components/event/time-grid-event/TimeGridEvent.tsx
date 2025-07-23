@@ -3,9 +3,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useId } from '@base-ui-components/react/utils';
 import { TimeGridEventProps } from './TimeGridEvent.types';
+import { useSelector } from '../../../../../base-ui-copy/utils/store';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../../primitives/time-grid';
 import { getColorClassName } from '../../../utils/color-utils';
+import { selectors } from '../../../../event-calendar/store';
+import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import './TimeGridEvent.css';
 import '../index.css';
 
@@ -20,12 +23,15 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     eventResource,
     ariaLabelledBy,
     variant,
+    readOnly = false,
     className,
     id: idProp,
     ...other
   } = props;
 
   const id = useId(idProp);
+  const { store } = useEventCalendarContext();
+  const isDraggable = useSelector(store, selectors.isEventDraggable, { readOnly });
 
   const durationMs =
     adapter.toJsDate(eventProp.end).getTime() - adapter.toJsDate(eventProp.start).getTime();
@@ -81,6 +87,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     <TimeGrid.Event
       ref={forwardedRef}
       id={id}
+      isDraggable={isDraggable}
       className={clsx(
         className,
         'EventContainer',
