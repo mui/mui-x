@@ -1,53 +1,71 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
-
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import { LineChart } from '@mui/x-charts/LineChart';
+import { Box } from '@mui/system';
+import ChartsUsageDemo from '../../../src/modules/components/ChartsUsageDemo';
 
 export default function GroupedAxes() {
   return (
-    <BarChart
-      xAxis={[
-        {
-          id: 'months',
-          scaleType: 'band',
-          data: time,
-          valueFormatter: formatShortMonth,
-          height: 24,
+    <ChartsUsageDemo
+      componentName="Alert"
+      data={{
+        scaleType: {
+          knob: 'radio',
+          defaultValue: 'band',
+          options: ['band', 'point', 'time'],
         },
-        {
-          scaleType: 'band',
-          data: time.filter((_, index) => index % 3 === 0),
-          valueFormatter: formatQuarterYear,
-          position: 'bottom',
-          tickLabelPlacement: 'middle',
-          height: 35,
-          disableLine: true,
-          disableTicks: true,
+        tickSize: {
+          knob: 'slider',
+          min: 0,
+          max: 10,
+          defaultValue: 6,
         },
-      ]}
-      {...chartConfig}
-      sx={{
-        [`& .${axisClasses.id}-months .${axisClasses.tickContainer}:nth-child(3n - 1) .${axisClasses.tick}`]:
-          { transform: 'scaleY(4)' },
       }}
+      renderDemo={(props) => (
+        <Box sx={{ width: '100%', marginBottom: 3 }}>
+          <LineChart
+            xAxis={[
+              {
+                data: time,
+                scaleType: props.scaleType,
+                tickSize: props.tickSize,
+                height: 40,
+                getGrouping: (value) => [
+                  value.toLocaleDateString('en-US', { month: 'short' }),
+                  formatQuarterYear(value),
+                  value.toLocaleDateString('en-US', { year: 'numeric' }),
+                ],
+                valueFormatter: (v) =>
+                  v.toLocaleDateString('en-US', {
+                    month: 'short',
+                    year: 'numeric',
+                  }),
+              },
+            ]}
+            {...chartConfig}
+          />
+        </Box>
+      )}
+      getCode={({ props }) => `<LineChart
+  // ...
+  xAxis={{
+    getGrouping: (value: Date) => [
+      value.toLocaleDateString('en-US', { month: 'short' }),
+      formatQuarterYear(value),
+      value.toLocaleDateString('en-US', { year: 'numeric' }),
+    ],
+    scaleType: '${props.scaleType}',
+    tickSize: ${props.tickSize},
+  }}
+/>
+`}
     />
   );
 }
 
-const formatQuarterYear = (date, context) => {
-  if (context.location === 'tick') {
-    const quarter = Math.floor(date.getMonth() / 3) + 1;
-    const year = date.getFullYear().toString().slice(-2);
-    return `Q${quarter} '${year}`;
-  }
-  return date.toLocaleDateString('en-US', { month: 'long' });
-};
-
-const formatShortMonth = (date, context) => {
-  if (context.location === 'tick') {
-    return date.toLocaleDateString('en-US', { month: 'short' });
-  }
-  return date.toLocaleDateString('en-US', { month: 'long' });
+const formatQuarterYear = (date) => {
+  const quarter = Math.floor(date.getMonth() / 3) + 1;
+  const year = date.getFullYear().toString().slice(-2);
+  return `Q${quarter} '${year}`;
 };
 
 const time = [
@@ -63,21 +81,23 @@ const time = [
   new Date(2015, 9, 1),
   new Date(2015, 10, 1),
   new Date(2015, 11, 1),
+  new Date(2016, 0, 1),
 ];
 
 const a = [
-  4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2400,
+  4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2040,
 ];
 
 const b = [
-  2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000, 3908,
+  2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000, 2040,
 ];
 
 const getPercents = (array) =>
   array.map((v, index) => (100 * v) / (a[index] + b[index]));
 
 const chartConfig = {
-  height: 300,
+  height: 200,
+  margin: { left: 0 },
   series: [
     {
       data: getPercents(a),
