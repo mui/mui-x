@@ -76,6 +76,7 @@ export const selectors = {
       };
     },
   ),
+  // TODO: Add a new data structure (Map?) to avoid linear complexity here.
   getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
     state.events.find((event) => event.id === eventId),
   ),
