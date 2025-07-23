@@ -1,63 +1,26 @@
 import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
-import { Box } from '@mui/system';
-import ChartsUsageDemo from '../../../src/modules/components/ChartsUsageDemo';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function GroupedAxes() {
   return (
-    <ChartsUsageDemo
-      componentName="Alert"
-      data={{
-        scaleType: {
-          knob: 'radio',
-          defaultValue: 'band',
-          options: ['band', 'point', 'time'],
+    <BarChart
+      xAxis={[
+        {
+          data,
+          scaleType: 'band',
+          tickSize: 8,
+          height: 32,
+          grouping: {
+            getGrouping: (value) => [
+              value.toLocaleDateString('en-US', { month: 'short' }),
+              formatQuarterYear(value),
+              value.toLocaleDateString('en-US', { year: 'numeric' }),
+            ],
+          },
+          valueFormatter,
         },
-        tickSize: {
-          knob: 'slider',
-          min: 0,
-          max: 10,
-          defaultValue: 6,
-        },
-      }}
-      renderDemo={(props) => (
-        <Box sx={{ width: '100%', marginBottom: 3 }}>
-          <LineChart
-            xAxis={[
-              {
-                data: time,
-                scaleType: props.scaleType,
-                tickSize: props.tickSize,
-                height: 40,
-                getGrouping: (value) => [
-                  value.toLocaleDateString('en-US', { month: 'short' }),
-                  formatQuarterYear(value),
-                  value.toLocaleDateString('en-US', { year: 'numeric' }),
-                ],
-                valueFormatter: (v) =>
-                  v.toLocaleDateString('en-US', {
-                    month: 'short',
-                    year: 'numeric',
-                  }),
-              },
-            ]}
-            {...chartConfig}
-          />
-        </Box>
-      )}
-      getCode={({ props }) => `<LineChart
-  // ...
-  xAxis={{
-    getGrouping: (value: Date) => [
-      value.toLocaleDateString('en-US', { month: 'short' }),
-      formatQuarterYear(value),
-      value.toLocaleDateString('en-US', { year: 'numeric' }),
-    ],
-    scaleType: '${props.scaleType}',
-    tickSize: ${props.tickSize},
-  }}
-/>
-`}
+      ]}
+      {...chartConfig}
     />
   );
 }
@@ -68,7 +31,13 @@ const formatQuarterYear = (date) => {
   return `Q${quarter} '${year}`;
 };
 
-const time = [
+const valueFormatter = (v) =>
+  v.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
+
+const data = [
   new Date(2015, 0, 1),
   new Date(2015, 1, 1),
   new Date(2015, 2, 1),

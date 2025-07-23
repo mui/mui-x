@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function GroupedAxes() {
   return (
-    <LineChart
+    <BarChart
       xAxis={[
         {
-          data: time,
+          data,
           scaleType: 'band',
-          height: 40,
+          tickSize: 8,
+          height: 32,
           grouping: {
             getGrouping: (value: Date) => [
               value.toLocaleDateString('en-US', { month: 'short' }),
@@ -36,7 +37,7 @@ const valueFormatter = (v: Date) =>
     year: 'numeric',
   });
 
-const time = [
+const data = [
   new Date(2015, 0, 1),
   new Date(2015, 1, 1),
   new Date(2015, 2, 1),

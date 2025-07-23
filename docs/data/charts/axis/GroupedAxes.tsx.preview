@@ -1,0 +1,19 @@
+<BarChart
+  xAxis={[
+    {
+      data,
+      scaleType: 'band',
+      tickSize: 8,
+      height: 32,
+      grouping: {
+        getGrouping: (value: Date) => [
+          value.toLocaleDateString('en-US', { month: 'short' }),
+          formatQuarterYear(value),
+          value.toLocaleDateString('en-US', { year: 'numeric' }),
+        ],
+      },
+      valueFormatter,
+    },
+  ]}
+  {...chartConfig}
+/>

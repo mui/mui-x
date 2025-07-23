@@ -41,7 +41,7 @@ const getGroupingConfig = (
   groupIndex: number,
   tickSize: number | undefined,
 ) => {
-  const config = groupingConfig?.configs?.[groupIndex] ?? {};
+  const config = groupingConfig?.config?.[groupIndex] ?? {};
 
   return {
     ...DEFAULT_GROUPING_CONFIG,
@@ -50,7 +50,7 @@ const getGroupingConfig = (
     tickSize: calculateTickSize(
       groupIndex,
       config?.tickSize ?? tickSize ?? DEFAULT_GROUPING_CONFIG.tickSize,
-      Array.isArray(groupingConfig.configs),
+      Array.isArray(groupingConfig.config),
     ),
   };
 };
@@ -63,7 +63,9 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   if (!isBandScale(xScale)) {
-    throw new Error('MUI X Charts: ChartsGroupedXAxis only supports the `band` scale type.');
+    throw new Error(
+      'MUI X Charts: ChartsGroupedXAxis only supports the `band` and `point` scale types.',
+    );
   }
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name

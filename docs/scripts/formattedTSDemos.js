@@ -81,6 +81,10 @@ const TranspileResult = {
   Failed: 2,
 };
 
+const previewOverride = {
+  'docs/data/charts/axis/GroupedAxes.tsx': { maxLines: 20 },
+};
+
 async function transpileFile(tsxPath, program, ignoreCache = false) {
   const jsPath = tsxPath.replace(/\.tsx?$/, '.js');
   try {
@@ -93,14 +97,16 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     }
 
     const source = await fse.readFile(tsxPath, 'utf8');
+    const overrides = previewOverride[path.join('docs/', tsxPath.split('docs/')[1])];
 
     const transformOptions = { ...babelConfig, filename: tsxPath };
     const enableJSXPreview = !tsxPath.includes(path.join('pages', 'premium-themes'));
     if (enableJSXPreview) {
+      const config = overrides || { maxLines: 16 };
       transformOptions.plugins = transformOptions.plugins.concat([
         [
           path.resolve(DOCS_ROOT, './src/modules/utils/babel-plugin-jsx-preview'),
-          { maxLines: 16, outputFilename: `${tsxPath}.preview` },
+          { maxLines: config.maxLines, outputFilename: `${tsxPath}.preview` },
         ],
       ]);
     }

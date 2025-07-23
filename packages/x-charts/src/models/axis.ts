@@ -256,8 +256,8 @@ export type AxisGrouping = {
    * For example, if the `getGrouping` function returns `[31, "Jan", 2021]`, `[1, "Feb", 2021]`, `[2, "Feb", 2021]`,
    * the group with index `1` will be `["Jan", "Feb", "Feb"]`
    */
-  configs?: AxisGroupingConfig[];
-} & AxisGroupingConfig;
+  config?: AxisGroupingConfig[];
+};
 
 export interface AxisScaleConfig {
   band: {
@@ -285,6 +285,10 @@ export interface AxisScaleConfig {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
+    /**
+     * The configuration for the axis grouping.
+     */
+    grouping?: AxisGrouping;
   };
   log: {
     scaleType: 'log';
