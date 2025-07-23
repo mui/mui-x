@@ -1,0 +1,17 @@
+<BarChart
+  sx={{
+    [`& [data-group-index="1"] .${axisClasses.tick}`]: {
+      stroke: 'rgb(255, 180, 34)',
+    },
+    [`& [data-group-index="0"] .${axisClasses.tickLabel}`]: {
+      fill: 'gray',
+    },
+  }}
+  xAxis={[
+    {
+      data,
+      grouping: { getGrouping },
+    },
+  ]}
+  {...chartConfig}
+/>

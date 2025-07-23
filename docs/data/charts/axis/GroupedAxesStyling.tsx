@@ -16,11 +16,7 @@ export default function GroupedAxesStyling() {
       xAxis={[
         {
           data,
-          height: 32,
-          tickSize: 8,
-          grouping: {
-            getGrouping,
-          },
+          grouping: { getGrouping },
         },
       ]}
       {...chartConfig}
