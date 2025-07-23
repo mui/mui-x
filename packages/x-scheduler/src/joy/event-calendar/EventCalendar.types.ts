@@ -57,7 +57,7 @@ export interface UseEventCalendarParameters {
    * Whether the items in the calendar are draggable to change their start and end dates without changing the duration.
    * @default false
    */
-  areItemsDraggable?: boolean;
+  areEventsDraggable?: boolean;
 }
 
 export interface EventCalendarInstance {

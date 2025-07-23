@@ -27,7 +27,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     visibleDate: visibleDateProp,
     defaultVisibleDate = defaultVisibleDateFallback,
     onVisibleDateChange,
-    areItemsDraggable = false,
+    areEventsDraggable = false,
   } = parameters;
 
   useAssertModelConsistency({
@@ -53,7 +53,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
         visibleDate: visibleDateProp ?? defaultVisibleDate,
         view: viewProp ?? defaultView,
         views: ['week', 'day', 'month', 'agenda'],
-        areItemsDraggable,
+        areEventsDraggable,
       }),
   ).current;
 
@@ -61,7 +61,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     const partialState: Partial<State> = {
       events: eventsProp,
       resources: resourcesProp || [],
-      areItemsDraggable,
+      areEventsDraggable,
     };
     if (viewProp !== undefined) {
       partialState.view = viewProp;

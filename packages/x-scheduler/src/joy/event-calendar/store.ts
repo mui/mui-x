@@ -21,7 +21,7 @@ export type State = {
   /**
    * Whether the items in the calendar are draggable to change their start and end dates without changing the duration.
    */
-  areItemsDraggable: boolean;
+  areEventsDraggable: boolean;
 };
 
 export type EventCalendarStore = Store<State>;
@@ -81,6 +81,6 @@ export const selectors = {
     state.events.find((event) => event.id === eventId),
   ),
   isEventDraggable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
-    return !readOnly && state.areItemsDraggable;
+    return !readOnly && state.areEventsDraggable;
   }),
 };
