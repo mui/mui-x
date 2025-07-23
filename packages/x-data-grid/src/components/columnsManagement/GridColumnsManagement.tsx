@@ -383,9 +383,13 @@ GridColumnsManagement.propTypes = {
    * @returns {GridColDef['field'][]} The list of togglable columns' field names.
    */
   getTogglableColumns: PropTypes.func,
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  searchDebounceMs: PropTypes.number,
   searchInputProps: PropTypes.object,
   searchPredicate: PropTypes.func,
-  searchDebounceMs: PropTypes.number,
   sort: PropTypes.oneOf(['asc', 'desc']),
   /**
    * Changes the behavior of the `Show/Hide All` toggle when the search field is used:
