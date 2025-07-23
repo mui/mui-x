@@ -15,12 +15,9 @@ export function useEventPosition(
 
     const rowStartTimestamp = getTimestamp(collectionStart);
     const rowEndTimestamp = getTimestamp(collectionEnd);
-    const eventStartTimestamp = getTimestamp(start);
-    const eventEndTimestamp = getTimestamp(end);
     const rowDurationMs = rowEndTimestamp - rowStartTimestamp;
-
-    const startTimestamp = Math.max(eventStartTimestamp, rowStartTimestamp);
-    const endTimestamp = Math.min(eventEndTimestamp, rowEndTimestamp);
+    const startTimestamp = Math.max(getTimestamp(start), rowStartTimestamp);
+    const endTimestamp = Math.min(getTimestamp(end), rowEndTimestamp);
 
     return {
       position: (startTimestamp - rowStartTimestamp) / rowDurationMs,
