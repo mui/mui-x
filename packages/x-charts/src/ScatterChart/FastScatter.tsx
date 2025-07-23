@@ -1,10 +1,7 @@
 'use client';
 import * as React from 'react';
-import type {
-  Quadtree,
-  QuadtreeInternalNode,
-  QuadtreeLeaf,
-} from '@mui/x-charts-vendor/d3-quadtree';
+import type { Quadtree, QuadtreeLeaf } from '@mui/x-charts-vendor/d3-quadtree';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { DefaultizedScatterSeriesType, ScatterValueType } from '../models/seriesType/scatter';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
@@ -19,7 +16,11 @@ import { UseChartInteractionSignature } from '../internals/plugins/featurePlugin
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionGroupProps } from '../hooks/useInteractionItemProps';
-import { selectorChartSeriesQuadtree } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import {
+  selectorChartSeriesKdbush,
+  selectorChartSeriesQuadtree,
+} from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartAxisZoomData } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 
 export interface FastScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -69,8 +70,8 @@ function useCreatePathsQuadtree(
   const getYPosition = getValueToPositionMapper(yScale);
   const radius = series.markerSize;
 
-  const quadPaths: string[] = [];
-  let quadTemporaryPaths: string[] = [];
+  const paths: string[] = [];
+  let temporaryPaths: string[] = [];
 
   visitVisiblePoints(
     quadtree!,
@@ -80,24 +81,91 @@ function useCreatePathsQuadtree(
       const x = getXPosition(d.x);
       const y = getYPosition(d.y);
 
-      quadTemporaryPaths.push(
+      temporaryPaths.push(
         `M${x + radius} ${y + radius} A${radius} ${radius} 0 1 1 ${x + radius} ${y + radius - 0.01}`,
       );
 
-      if (quadTemporaryPaths.length >= MAX_POINTS_PER_PATH) {
-        quadPaths.push(quadTemporaryPaths.join(''));
-        quadTemporaryPaths = [];
+      if (temporaryPaths.length >= MAX_POINTS_PER_PATH) {
+        paths.push(temporaryPaths.join(''));
+        temporaryPaths = [];
       }
     },
   );
 
-  if (quadTemporaryPaths.length > 0) {
-    quadPaths.push(quadTemporaryPaths.join(''));
+  if (temporaryPaths.length > 0) {
+    paths.push(temporaryPaths.join(''));
   }
   performance.mark('quadtreeEnd');
   performance.measure('quadtree', 'quadtreeStart', 'quadtreeEnd');
 
-  return quadPaths;
+  return paths;
+}
+
+function useCreatePathsKdbush(
+  series: DefaultizedScatterSeriesType,
+  xScale: D3Scale,
+  yScale: D3Scale,
+) {
+  performance.mark('kdbushStart');
+  const store = useStore<[UseChartVoronoiSignature]>();
+  const { xAxisIds } = useXAxes();
+  const { yAxisIds } = useYAxes();
+  const xAxisZoom = useSelector(store, selectorChartAxisZoomData, [
+    series.xAxisId ?? xAxisIds[0],
+  ]) ?? {
+    start: 0,
+    end: 100,
+  };
+  const yAxisZoom = useSelector(store, selectorChartAxisZoomData, [
+    series.yAxisId ?? yAxisIds[0],
+  ]) ?? {
+    start: 0,
+    end: 100,
+  };
+  const kdbush = useSelector(store, selectorChartSeriesKdbush, [series.id]);
+
+  const getXPosition = getValueToPositionMapper(xScale);
+  const getYPosition = getValueToPositionMapper(yScale);
+  const radius = series.markerSize;
+
+  const xDomain = xScale.domain() as [number, number];
+  const yDomain = yScale.domain() as [number, number];
+  const xDomainRange = xDomain[1] - xDomain[0];
+  const yDomainRange = yDomain[1] - yDomain[0];
+  const xMin = xDomain[0] + (xAxisZoom.start / 100) * xDomainRange;
+  const xMax = xDomain[0] + (xAxisZoom.end / 100) * xDomainRange;
+  const yMin = xDomain[0] + (yAxisZoom.start / 100) * yDomainRange;
+  const yMax = xDomain[0] + (yAxisZoom.end / 100) * yDomainRange;
+
+  const indices = kdbush?.range(xMin, yMin, xMax, yMax) ?? [];
+
+  const paths: string[] = [];
+  let temporaryPaths: string[] = [];
+
+  for (const i of indices) {
+    const scatterPoint = series.data[i];
+
+    const x = getXPosition(scatterPoint.x);
+    const y = getYPosition(scatterPoint.y);
+
+    temporaryPaths.push(
+      `M${x + radius} ${y + radius} A${radius} ${radius} 0 1 1 ${x + radius} ${y + radius - 0.01}`,
+    );
+
+    if (temporaryPaths.length >= MAX_POINTS_PER_PATH) {
+      paths.push(temporaryPaths.join(''));
+      temporaryPaths = [];
+    }
+  }
+
+  if (temporaryPaths.length > 0) {
+    paths.push(temporaryPaths.join(''));
+  }
+
+  performance.mark('kdbushEnd');
+  performance.measure('kdbush', 'kdbushStart', 'kdbushEnd');
+
+  return paths;
 }
 
 function useCreatePathsIteratively(
@@ -146,7 +214,8 @@ function useCreatePathsIteratively(
 
 function useCreatePaths(series: DefaultizedScatterSeriesType, xScale: D3Scale, yScale: D3Scale) {
   useCreatePathsIteratively(series, xScale, yScale);
-  return useCreatePathsQuadtree(series, xScale, yScale);
+  useCreatePathsQuadtree(series, xScale, yScale);
+  return useCreatePathsKdbush(series, xScale, yScale);
 }
 
 /**
@@ -192,6 +261,28 @@ function FastScatter(props: FastScatterProps) {
       {paths.map((d, i) => (
         <path key={i} fill={color} d={d} />
       ))}
+    </g>
+  );
+}
+
+function ZoomHandlingGroups({ children }: React.PropsWithChildren<{}>) {
+  const store = useStore<[UseChartVoronoiSignature]>();
+  const { xAxisIds } = useXAxes();
+  const { yAxisIds } = useYAxes();
+  const xAxisZoom = useSelector(store, selectorChartAxisZoomData, [xAxisIds[0]]) ?? {
+    start: 0,
+    end: 100,
+  };
+  const yAxisZoom = useSelector(store, selectorChartAxisZoomData, [yAxisIds[0]]) ?? {
+    start: 0,
+    end: 100,
+  };
+  const xAxisRange = (xAxisZoom.end - xAxisZoom.start) / 100;
+  const yAxisRange = (yAxisZoom.end - yAxisZoom.start) / 100;
+
+  return (
+    <g transform={`scale(${xAxisRange}, ${yAxisRange})`}>
+      <g transform={`scale(${1 / xAxisRange}, ${1 / yAxisRange})`}>{children}</g>
     </g>
   );
 }
