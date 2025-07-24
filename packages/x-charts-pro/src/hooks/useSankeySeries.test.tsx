@@ -36,25 +36,25 @@ const options: any = {
 describe('useSankeySeriesContext', () => {
   it('should return all sankey series when no seriesIds are provided', () => {
     const { result } = renderHook(() => useSankeySeriesContext(), options);
-    expect(result.current?.seriesOrder).to.deep.equal(['1', '2']);
-    expect(Object.keys(result.current?.series ?? {})).to.deep.equal(['1', '2']);
+    expect(result.current?.seriesOrder).to.deep.equal(['1']);
+    expect(Object.keys(result.current?.series ?? {})).to.deep.equal(['1']);
   });
 });
 
 describe('useSankeySeries', () => {
   it('should return the specific sankey series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useSankeySeries('1'), options);
-    expect(result.current?.id).to.deep.equal(mockSeries[0].id);
+    expect(result.current?.id).to.deep.equal(mockSeries.id);
   });
 
   it('should return all sankey series when no seriesId is provided', () => {
     const { result } = renderHook(() => useSankeySeries(), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id, mockSeries[1].id]);
+    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries.id]);
   });
 
   it('should return the specific sankey series when multiple seriesIds are provided', () => {
-    const { result } = renderHook(() => useSankeySeries(['2', '1']), options);
-    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[1].id, mockSeries[0].id]);
+    const { result } = renderHook(() => useSankeySeries(['1']), options);
+    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries.id]);
   });
 
   it('should return undefined series when invalid seriesIds are provided', () => {
@@ -69,6 +69,6 @@ describe('useSankeySeries', () => {
       render = renderHook(() => useSankeySeries(['1', '3']), options);
     }).toWarnDev(message);
 
-    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries.id]);
   });
 });
