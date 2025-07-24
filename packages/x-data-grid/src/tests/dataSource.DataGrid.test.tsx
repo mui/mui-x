@@ -270,6 +270,38 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       });
       expect(pageChangeSpy.callCount).to.equal(2);
     });
+
+    it('should bypass cache when forceRefetch is true', async () => {
+      const testCache = new TestCache();
+      render(<TestDataSource dataSourceCache={testCache} />);
+
+      // Wait for initial fetch
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      expect(testCache.size()).to.equal(1);
+
+      // Fetch same data again with skipCache = true
+      act(() => {
+        apiRef.current?.dataSource.fetchRows(undefined, { skipCache: true });
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      // Cache should still be updated with new data
+      expect(testCache.size()).to.equal(1);
+
+      // Fetch same data again without skipCache (should use cache)
+      act(() => {
+        apiRef.current?.dataSource.fetchRows();
+      });
+
+      // Should not trigger another fetch since data is cached
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+    });
   });
 
   describe('Error handling', () => {

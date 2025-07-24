@@ -97,16 +97,18 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       options.clearDataSourceState?.();
 
+      const { skipCache, ...getRowsParams } = params || {};
+
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
-        ...params,
+        ...getRowsParams,
       };
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
-      if (responses.every((response) => response !== undefined)) {
+      if (!skipCache && responses.every((response) => response !== undefined)) {
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
