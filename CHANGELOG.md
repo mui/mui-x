@@ -5,6 +5,131 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.9.1
+
+_Jul 21, 2025_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+🐞 Fix package publish issue
+
+The following are all team members who have contributed to this release:
+@KenanYusuf, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.9.1`
+
+- [DataGrid] Move conditional list view column logic into `gridVisibleColumnDefinitionsSelector` (#18724) @KenanYusuf
+- [DataGrid] Fix row selection "exclude" model inconsistency (#18844) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@8.9.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@8.9.1`.
+
+#### `@mui/x-data-grid-premium@8.9.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@8.9.1`.
+
+### Core
+
+- [core] Follow yml syntax convention @oliviertassinari
+
+## 8.9.0
+
+_Jul 17, 2025_
+
+We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Improve the drag and drop interaction for Data Grid [row reordering](https://mui.com/x/react-data-grid/row-ordering/) feature. It uses a drop indicator to point to the position the row would be moving to.
+
+  https://github.com/user-attachments/assets/37284c4f-e8d4-4fc6-a6af-a780592905ef
+
+- 🚀 Improve Data Grid Pivoting and Aggregation performance
+
+- 📊 Add `minBarSize` to set a minimum height for bars
+
+Special thanks go out to the community members for their valuable contributions:
+@lauri865
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @noraleonte, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.9.0`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.9.0`, plus:
+
+- [DataGridPro] Row reorder using drop indicator (#18627) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.9.0`, plus:
+
+- [DataGridPremium] Allow group column overrides with pivoting (#18765) @arminmeh
+- [DataGridPremium] Support sort-dependent aggregation and improve performance (#18348) @lauri865
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.9.0`
+
+- [pickers] Avoid useless date creation in `AdapterDayjs` (#18429) @flaviendelangle
+- [pickers] Fix `timeSteps` JSDoc (#18807) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.9.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.9.0`
+
+- [charts] Add `minBarSize` to prevent bars from having 0 height (#18798) @JCQuintas
+- [charts] Add click listener to radar charts (#18773) @alexfauquette
+- [charts] Improve scatter chart pointer move performance (#18775) @bernardobelchior
+- [charts] Simplify radar internal hooks (#18760) @alexfauquette
+- [charts] `minBarSize` now ignores `0` and `null` values (#18816) @JCQuintas
+- [charts] Fix y-axis tick label overlap when using log scale (#18744) @bernardobelchior
+- [charts] Expose <ChartType>Series type for all chart types (#18805) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.9.0` plus:
+
+[charts-pro] Fix issue where charts gestures weren't properly working when inside the shadow-dom (#18837) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.9.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.9.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.9.0`
+
+Internal changes.
+
+### Docs
+
+- [data grid][docs] Revise the Pro filter docs (#17929) @mapache-salvaje
+- [charts][docs] Move mark outside clip-path (#18806) @alexfauquette
+
+### Miscellaneous
+
+- [code-infra] Fix ESLint `import` restriction rule for test files (#18669) @LukasTy
+- [code-infra] Remove charts benchmarks dependency on `@testing-library/jest-dom` (#18800) @bernardobelchior
+- [code-infra] Remove duplicate dependency from `eslint-plugin-mui-x` (#18797) @bernardobelchior
+
 ## 8.8.0
 
 _Jul 11, 2025_
@@ -216,6 +341,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 - 📅 Add `usePickerAdapter` hook to access the date adapter.
 
   You can use the adapter in your custom components if you need them to work with multiple date libraries — [Learn more](https://mui.com/x/react-date-pickers/custom-components/#access-date-adapter).
+
 - 🌎 Improve Danish (da-DK) locale
 - 🌎 Improve German (de-DE) locale
 
@@ -234,13 +360,13 @@ The following are all team members who have contributed to this release:
 - [l10n] Improve Danish (da-DK) locale (#18428) @ShahrazH
 - [l10n] Improve German (de-DE) locale (#18388) @omalyutin
 
-#### `@mui/x-data-grid-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-data-grid-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@8.6.0`, plus:
 
 - [DataGridPro] Fix lazy loading params calculated from rendering context (#18460) @arminmeh
 
-#### `@mui/x-data-grid-premium@8.6.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+#### `@mui/x-data-grid-premium@8.6.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@8.6.0`.
 
@@ -252,7 +378,7 @@ Same changes as in `@mui/x-data-grid-pro@8.6.0`.
 - [pickers] Fix to use latest `value` when updating `lastCommittedValue` in internal state (#18518) @LukasTy
 - [pickers] Use `usePickerAdapter` hook internally instead of `useUtils` (#18465) @LukasTy
 
-#### `@mui/x-date-pickers-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-date-pickers-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@8.6.0`.
 
@@ -269,7 +395,7 @@ Same changes as in `@mui/x-date-pickers@8.6.0`.
 - [charts] Improve touch behavior for polar axis (#18531) @JCQuintas
 - [charts] Add `isElementInside` helper (#18530) @JCQuintas
 
-#### `@mui/x-charts-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-charts-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@8.6.0`, plus:
 
@@ -283,7 +409,7 @@ Same changes as in `@mui/x-charts@8.6.0`, plus:
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-tree-view-pro@8.6.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-tree-view@8.6.0`, plus:
 
@@ -1498,7 +1624,6 @@ Same changes as in `@mui/x-date-pickers@8.0.0-beta.3`.
 
 - Removed `react-spring` as a dependency of `@mui/x-charts`.
   A consequence of this change is that the props of some slots have been changed because the `SpringValue` wrapper has been removed. The affected slots and props are:
-
   - the type of the `x`, `y`, `width` and `height` props of the `bar` slot are now `number`;
   - the type of `startAngle`, `endAngle`, `innerRadius`, `outerRadius`, `arcLabelRadius`, `cornerRadius` and `paddingAngle` props of `pieArc` and `pieArcLabel` slot are now `number`.
 
@@ -2066,7 +2191,6 @@ Following are all team members who have contributed to this release:
 - The `slots.baseFormControl` component was removed.
 
 - The "Reset" button in the column visibility panel now resets to the initial column visibility model. Previously it was reset to the model that was active at the time the panel was opened. The reset behavior follows these rules:
-
   1. If an initial `columnVisibilityModel` is provided, it resets to that model.
   2. If a controlled `columnVisibilityModel` is provided, it resets to the first model value.
   3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
@@ -2089,7 +2213,6 @@ Following are all team members who have contributed to this release:
   The `exclude` selection type allows to select all rows except the ones in the `ids` set.
 
   This change impacts the following props:
-
   - `rowSelectionModel`
   - `onRowSelectionModelChange`
   - `initialState.rowSelectionModel`
@@ -2413,7 +2536,6 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.12`, plus:
 - The `aria-label` on the `<Clock />` component and Time Picker opening button has been fixed to rely on the set `ampm` property instead of defaulting to the user's locale.
 
 - The following unused formats have been removed from the adapters and can no longer be overridden via the `dateFormats` prop on the `<LocalizationProvider />` component:
-
   - `fullTime` - please use `fullTime12h` and `fullTime24h` instead:
     ```diff
       <LocalizationProvider
@@ -2628,7 +2750,6 @@ Following are all team members who have contributed to this release:
 
 - `viewportInnerSize.width` now includes pinned columns' widths (fixes recursive loops in updating dimensions <-> columns)
 - The Data Grid now has a default background color, and its customization has moved from `theme.mixins.MuiDataGrid` to `theme.palette.DataGrid` with the following properties:
-
   - `bg`: Sets the background color of the entire grid (new property)
   - `headerBg`: Sets the background color of the header (previously named `containerBackground`)
   - `pinnedBg`: Sets the background color of pinned rows and columns (previously named `pinnedBackground`)
@@ -2657,7 +2778,6 @@ Following are all team members who have contributed to this release:
   Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.
 
   Depending on the context in which the API is being used, you can decide what is the best way to deal with `null` value. Some options are:
-
   - Use optional chaining
   - Use non-null assertion operator if you are sure your code is always executed when the `apiRef` is not `null`
   - Return early if `apiRef` is `null`
@@ -3181,7 +3301,6 @@ Following are all team members who have contributed to this release:
 #### Breaking changes
 
 - Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`:
-
   - For `.root` element, use `slotProps.root`.
   - For `.main` element (the one with `role="grid"`), use `slotProps.main`.
 
@@ -3698,14 +3817,12 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
 #### Breaking change
 
 - The DX of the Tooltip customization has been refactored
-
   - The `tooltip` prop has been removed in favor of `slotProps.tooltip` for consistency.
   - The `popper`, `axisContent`, and `itemContent` slots have been removed in favor of the `tooltip` slot which overrides the entire tooltip.
     - To override the tooltip content, use the `useItemTooltip` or `useAxisTooltip` hook to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
     - To override the tooltip placement, use the `ChartsItemTooltipContent` or `ChartsItemTooltipContent` to get default data and place them in your custom tooltip.
 
 - The library now uses the SVG `filter` attribute instead of `d3-color` for color manipulation.
-
   - This modification impacts the `LinePlot`, `AreaPlot`, and `BarPlot` components.
     If you've customized the `fill` of those elements, you might need to override it by using the CSS `filter`.
   - The `theme.styleOverride` is removed for `MuiLineElement`, `MuiAreaElement`, and `MuiBarElement` to improve performance.
@@ -3815,14 +3932,12 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 #### Breaking changes
 
 - The default DOM structure of the field has changed [Learn more](https://mui.com/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field).
-
   - Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
   - Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
 
 - Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue` — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#stop-passing-utils-and-the-date-object-to-some-translation-keys).
 
 - The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` — [Learn more](https://mui.com/x/migration/migration-pickers-v7/#removed-types).
-
   - `UseDateFieldComponentProps`
   - `UseTimeFieldComponentProps`
   - `UseDateTimeFieldComponentProps`
@@ -3870,7 +3985,6 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 - The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
 
 - Removed or renamed multiple props from Series — [Learn more](https://mui.com/x/migration/migration-charts-v7/#series-properties-renaming).
-
   - The `highlighted` and `faded` properties of highlightScope have been deprecated in favor of `highlight` and `fade`.
     The deprecated ones are now removed.
   - The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties have been deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
@@ -6134,7 +6248,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   <img width="287" src="https://github.com/user-attachments/assets/78bd83c5-7ce4-4ed7-acf9-be70b2dbce54" alt="Item reordering using drag and drop" />
 
 - 📦 Support CommonJS bundle out of the box on `@mui/x-charts` by adding vendored D3 dependencies.
-
   - This modifies how the package imports D3.js. It will impact you if you use `d3` packages installed by `@mui/x-charts` and don't have them in your `package.json`. You shouldn't be affected otherwise.
   - For more context, the initial issue is caused by D3 only exporting ESM.
 
@@ -7669,7 +7782,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 #### Breaking changes
 
 - The `density` is a [controlled prop](https://mui.com/x/react-data-grid/accessibility/#set-the-density-programmatically) now, if you were previously passing the `density` prop to the Data Grid, you will need to do one of the following:
-
   1. Move it to the `initialState.density` to initialize it.
 
   ```diff
@@ -8175,7 +8287,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
   ```
 
 - The following internal types were exported by mistake and have been removed from the public API:
-
   - `UseDateFieldDefaultizedProps`
   - `UseTimeFieldDefaultizedProps`
   - `UseDateTimeFieldDefaultizedProps`
@@ -8416,7 +8527,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🎁 The Line Chart component now has animation by default (#11620) @alexfauquette
 - 🚀 All charts have click handlers (#11411) @alexfauquette
   Test their respective documentation demonstrations to know more about the data format:
-
   - [Scatter Chart](https://v7.mui.com/x/react-charts/scatter/#click-event)
   - [Line Chart](https://v7.mui.com/x/react-charts/lines/#click-event)
   - [Bar Chart](https://v7.mui.com/x/react-charts/bars/#click-event)
@@ -8696,7 +8806,6 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   ```
 
   The most notable changes that might affect your application or tests are:
-
   - The `role="grid"` attribute along with related ARIA attributes are now applied to the inner `div` element instead of the root `div` element:
 
     ```diff
@@ -9247,7 +9356,6 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - The filter panel no longer uses the native version of the [`Select`](https://mui.com/material-ui/react-select/) component for all components.
 - The `getOptionValue` and `getOptionLabel` props were removed from the following components:
-
   - `GridEditSingleSelectCell`
   - `GridFilterInputSingleSelect`
   - `GridFilterInputMultipleSingleSelect`
@@ -9661,7 +9769,6 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.3`, plus:
 - Add new parameters to the `shortcuts` slot `onChange` callback
 
   The `onChange` callback fired when selecting a shortcut now requires two new parameters (previously they were optional):
-
   - The [`changeImportance`](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut) of the shortcut.
   - The `item` containing the entire shortcut object.
 

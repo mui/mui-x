@@ -2,13 +2,12 @@ import {
   CartesianExtremumFilter,
   CartesianExtremumGetter,
 } from '../../internals/plugins/models/seriesConfig';
+import { findMinMax } from '../../internals/findMinMax';
 
 export const getExtremumX: CartesianExtremumGetter<'line'> = (params) => {
   const { axis } = params;
 
-  const minX = Math.min(...(axis.data ?? []));
-  const maxX = Math.max(...(axis.data ?? []));
-  return [minX, maxX];
+  return findMinMax(axis.data ?? []);
 };
 
 type GetValues = (d: [number, number]) => [number, number];
