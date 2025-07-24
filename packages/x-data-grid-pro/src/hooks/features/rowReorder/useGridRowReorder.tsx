@@ -370,6 +370,7 @@ export const useGridRowReorder = (
         };
       }
 
+      // Render the native 'copy' cursor for additional visual feedback
       if (dropTarget.current.targetRowId === null) {
         event.dataTransfer.dropEffect = 'none';
       } else {

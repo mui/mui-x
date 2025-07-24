@@ -84,7 +84,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
           sourceNode.depth === targetNode.depth) ||
         (sourceNode.type === 'leaf' &&
           targetNode.type === 'group' &&
-          targetNode.depth === sourceNode.depth - 1)
+          targetNode.depth < sourceNode.depth)
       ) {
         // Case C & D
         const source = sourceNode as GridLeafNode;

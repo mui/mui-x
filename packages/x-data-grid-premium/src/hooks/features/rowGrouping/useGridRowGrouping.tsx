@@ -399,16 +399,6 @@ function handleGroupToGroupReorder({
   targetRowIndex,
   expandedSortedRowIndexLookup,
 }: ReorderParams): number {
-  // Groups must be at the same level (same parent)
-  if (sourceNode.parent !== targetNode.parent) {
-    return -1;
-  }
-
-  // Cannot drop below an expanded group
-  if (dropPosition === 'below' && (targetNode as GridGroupNode).childrenExpanded) {
-    return -1;
-  }
-
   // Special case: dropping above a group with a leaf before it
   if (dropPosition === 'above' && prevNode?.type === 'leaf') {
     // If the leaf belongs to the source group, no movement
@@ -419,6 +409,16 @@ function handleGroupToGroupReorder({
     return dragDirection === 'up'
       ? targetRowIndex
       : (expandedSortedRowIndexLookup[prevNode.parent] ?? -1);
+  }
+
+  // Groups must be at the same level (same parent)
+  if (sourceNode.parent !== targetNode.parent) {
+    return -1;
+  }
+
+  // Cannot drop below an expanded group
+  if (dropPosition === 'below' && (targetNode as GridGroupNode).childrenExpanded) {
+    return -1;
   }
 
   // Same-parent groups: calculate index based on drag direction
@@ -450,11 +450,7 @@ function handleLeafToLeafReorder({
   }
 
   // Different parents: check special cases
-  if (
-    dropPosition === 'below' &&
-    nextNode?.type === 'group' &&
-    sourceNode.depth === nextNode.depth + 1
-  ) {
+  if (dropPosition === 'below' && nextNode?.type === 'group' && sourceNode.depth > nextNode.depth) {
     return targetRowIndex + 1;
   }
 
@@ -478,25 +474,27 @@ function handleLeafToGroupReorder({
   targetRowIndex,
 }: ReorderParams): number {
   const targetNode = target as GridGroupNode;
-  // Check if leaf can be placed at group's child level
-  const isChildLevel = sourceNode.depth === targetNode.depth + 1;
 
   if (dropPosition === 'above') {
-    if (isChildLevel) {
+    if (!prevNode || prevNode.type !== 'leaf') {
+      return -1;
+    }
+
+    if (sourceNode.depth > targetNode.depth && targetNode.depth === 0) {
       // Adjust index if previous node is a sibling
       const adjustment = prevNode?.type === 'leaf' && prevNode.parent === sourceNode.parent ? 1 : 0;
       return targetRowIndex - adjustment;
     }
 
-    // For same-level placement, check if there's a valid leaf before
-    if (!prevNode || prevNode.type !== 'leaf' || prevNode.depth !== sourceNode.depth) {
+    if (prevNode.depth !== sourceNode.depth) {
       return -1;
     }
+
     return targetRowIndex;
   }
 
   if (dropPosition === 'below') {
-    if (isChildLevel) {
+    if (sourceNode.depth > targetNode.depth && targetNode.depth === sourceNode.depth - 1) {
       return targetRowIndex + 1;
     }
 
