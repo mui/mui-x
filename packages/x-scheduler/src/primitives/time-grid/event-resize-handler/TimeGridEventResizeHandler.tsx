@@ -5,6 +5,8 @@ import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/elem
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useTimeGridEventContext } from '../event/TimeGridEventContext';
+import { SchedulerValidDate } from '../../models';
+import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
 
 export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEventResizeHandler(
   componentProps: TimeGridEventResizeHandler.Props,
@@ -15,7 +17,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
     className,
     render,
     // Internal props
-    position,
+    side: position,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -44,7 +46,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
         id: eventId,
         start: eventStart,
         end: eventEnd,
-        // position: getCursorPositionRelativeToElement({ ref, input }),
+        position: getCursorPositionRelativeToElement({ ref, input }),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -81,6 +83,15 @@ export namespace TimeGridEventResizeHandler {
     /**
      * The date to edit when dragging the resize handler.
      */
-    position: 'start' | 'end';
+    side: 'start' | 'end';
+  }
+
+  export interface DragData {
+    source: 'TimeGridEventResizeHandler';
+    id: string | number;
+    start: SchedulerValidDate;
+    end: SchedulerValidDate;
+    side: 'start' | 'end';
+    position: { y: number };
   }
 }

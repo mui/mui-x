@@ -9,7 +9,6 @@ import { useAdapter } from '../../utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
-import type { TimeGridEvent } from '../event';
 import type { TimeGridRoot } from '../root';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
@@ -97,30 +96,46 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       data,
       input,
     }: {
-      data: TimeGridEvent.EventDragData;
+      data: Record<string, unknown>;
       input: { clientY: number };
-    }): TimeGridRoot.EventData {
+    }): TimeGridRoot.EventData | undefined {
       const position = getCursorPositionRelativeToElement({ ref, input });
-      const eventTopPosition = position.y - data.position.y;
 
-      const newStartMinuteInDay =
-        Math.round(
-          ((eventTopPosition / domElement!.offsetHeight) * 1440) / EVENT_DRAG_PRECISION_MINUTE,
-        ) * EVENT_DRAG_PRECISION_MINUTE;
+      // Move event
+      if (isDraggingTimeGridEvent(data)) {
+        const eventTopPosition = position.y - data.position.y;
 
-      // TODO: Avoid JS Date conversion
-      const eventDuration =
-        (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
-        (60 * 1000);
+        const relativePosition = eventTopPosition / domElement!.offsetHeight;
 
-      const newStartDate = adapter.setMinutes(
-        adapter.setHours(value, Math.floor(newStartMinuteInDay / 60)),
-        newStartMinuteInDay % 60,
-      );
+        const newStartMinuteInDay =
+          Math.round((relativePosition * 1440) / EVENT_DRAG_PRECISION_MINUTE) *
+          EVENT_DRAG_PRECISION_MINUTE;
 
-      const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
+        // TODO: Avoid JS Date conversion
+        const eventDuration =
+          (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
+          (60 * 1000);
 
-      return { start: newStartDate, end: newEndDate, id: data.id };
+        const newStartDate = adapter.setMinutes(
+          adapter.setHours(value, Math.floor(newStartMinuteInDay / 60)),
+          newStartMinuteInDay % 60,
+        );
+
+        const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
+
+        return { start: newStartDate, end: newEndDate, id: data.id };
+      }
+
+      // Resize event
+      if (isDraggingTimeGridEventResizeHandler(data)) {
+        if (data.side === 'start') {
+          return undefined;
+        }
+
+        return undefined;
+      }
+
+      return undefined;
     }
 
     return dropTargetForElements({
@@ -129,29 +144,25 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         isDraggingTimeGridEvent(arg.source.data) ||
         isDraggingTimeGridEventResizeHandler(arg.source.data),
       onDrag: ({ source: { data }, location }) => {
-        if (!isDraggingTimeGridEvent(data) && !isDraggingTimeGridEventResizeHandler(data)) {
-          return;
-        }
-
         const newPlaceholder = getEventDropData({
           data,
           input: location.current.input,
         });
 
-        setPlaceholder(newPlaceholder);
+        if (newPlaceholder) {
+          setPlaceholder(newPlaceholder);
+        }
       },
       onDrop: ({ source: { data }, location }) => {
-        if (!isDraggingTimeGridEvent(data) && !isDraggingTimeGridEventResizeHandler(data)) {
-          return;
-        }
-
         const newEvent = getEventDropData({
           data,
           input: location.current.input,
         });
 
-        onEventChange(newEvent);
-        setPlaceholder(null);
+        if (newEvent) {
+          onEventChange(newEvent);
+          setPlaceholder(null);
+        }
       },
     });
   }, [adapter, onEventChange, setPlaceholder, value]);

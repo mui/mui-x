@@ -1,4 +1,5 @@
 import type { TimeGridEvent } from '../time-grid/event';
+import type { TimeGridEventResizeHandler } from '../time-grid/event-resize-handler';
 
 export const EVENT_DRAG_PRECISION_MINUTE = 15;
 
@@ -20,12 +21,12 @@ export function getCursorPositionRelativeToElement({
   return { y };
 }
 
-export function isDraggingTimeGridEvent(data: any): data is TimeGridEvent.EventDragData {
+export function isDraggingTimeGridEvent(data: any): data is TimeGridEvent.DragData {
   return data.source === 'TimeGridEvent';
 }
 
 export function isDraggingTimeGridEventResizeHandler(
   data: any,
-): data is TimeGridEvent.EventDragData {
+): data is TimeGridEventResizeHandler.DragData {
   return data.source === 'TimeGridEventResizeHandler';
 }

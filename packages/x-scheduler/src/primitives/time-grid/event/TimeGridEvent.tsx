@@ -144,7 +144,7 @@ export namespace TimeGridEvent {
     isResizable?: boolean;
   }
 
-  export interface EventDragData {
+  export interface DragData {
     type: 'event';
     source: 'TimeGridEvent';
     id: string | number;
