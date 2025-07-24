@@ -316,7 +316,7 @@ importers:
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@mui/monorepo':
         specifier: github:Janpot/material-ui#wip-mjs
-        version: https://codeload.github.com/Janpot/material-ui/tar.gz/199d1b735ac684ce12add8f851b843efcbf34af8(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
+        version: https://codeload.github.com/Janpot/material-ui/tar.gz/244cf97d3d18b210bb0be4035642b8a01c663cef(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.2.0(@types/react@19.1.8)(react@19.1.0)
@@ -4334,8 +4334,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/199d1b735ac684ce12add8f851b843efcbf34af8':
-    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/199d1b735ac684ce12add8f851b843efcbf34af8}
+  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/244cf97d3d18b210bb0be4035642b8a01c663cef':
+    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/244cf97d3d18b210bb0be4035642b8a01c663cef}
     version: 7.2.0
     engines: {pnpm: 10.13.1}
 
@@ -15172,7 +15172,7 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@types/react': 19.1.8
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/199d1b735ac684ce12add8f851b843efcbf34af8(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
+  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/244cf97d3d18b210bb0be4035642b8a01c663cef(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.44.2)':
     dependencies:
       '@googleapis/sheets': 9.8.0(encoding@0.1.13)
       '@netlify/functions': 3.1.10(encoding@0.1.13)(rollup@4.44.2)
