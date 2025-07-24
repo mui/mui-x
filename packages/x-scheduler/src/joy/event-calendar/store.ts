@@ -55,6 +55,9 @@ export const selectors = {
     (events, visibleResources) => {
       const map = new Map<string, CalendarEvent[]>();
       for (const event of events) {
+        if (event.allDay) {
+          continue; // Only consider all-day events
+        }
         if (event.resource && visibleResources.get(event.resource) === false) {
           continue; // Skip events for hidden resources
         }
@@ -68,6 +71,44 @@ export const selectors = {
 
       return (day: SchedulerValidDate) => {
         const dayKey = adapter.format(day, 'keyboardDate');
+        return map.get(dayKey) || [];
+      };
+    },
+  ),
+  getAllDayEventsStartingInDay: createSelectorMemoized(
+    (state: State) => state.events,
+    (state: State) => state.visibleResources,
+    (events, visibleResources) => {
+      const map = new Map<string, CalendarEvent[]>();
+      for (const event of events) {
+        if (!event.allDay) {
+          continue; // Only consider all-day events
+        }
+        if (event.resource && visibleResources.get(event.resource) === false) {
+          continue; // Skip events for hidden resources
+        }
+
+        const dayKey = adapter.format(event.start, 'keyboardDate');
+        if (!map.has(dayKey)) {
+          map.set(dayKey, []);
+        }
+        map.get(dayKey)!.push(event);
+      }
+
+      return (day: SchedulerValidDate, startDateOfView: SchedulerValidDate) => {
+        const dayKey = adapter.format(day, 'keyboardDate');
+
+        if (adapter.isSameDay(day, startDateOfView)) {
+          const newEvents = events.filter(
+            (event) =>
+              event.allDay &&
+              (!event.resource || !visibleResources.get(event.resource)) &&
+              adapter.startOfDay(event.start) <= adapter.startOfDay(day) &&
+              adapter.startOfDay(event.end) >= adapter.startOfDay(day),
+          );
+          return newEvents;
+        }
+
         return map.get(dayKey) || [];
       };
     },

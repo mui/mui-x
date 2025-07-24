@@ -28,6 +28,11 @@ export interface CalendarEvent {
    * The id of the resource this event is associated with.
    */
   resource?: CalendarResourceId;
+
+  /**
+   * `true` if the event is an all-day event.
+   */
+  allDay?: boolean;
 }
 
 export type CalendarEventId = string | number;

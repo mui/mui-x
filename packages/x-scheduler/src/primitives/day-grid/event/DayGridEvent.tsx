@@ -21,6 +21,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const { state, props: eventProps } = useEvent({ start, end });
 
+  console.log('DayGridEvent', state, eventProps);
+
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],

@@ -5,8 +5,10 @@
 }
 
 .DayTimeGridContainer {
-  display: flex;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
 }
@@ -15,6 +17,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  overflow-y: auto;
 }
 
 .DayTimeGridHeader {
@@ -38,44 +41,62 @@
   scrollbar-color: transparent transparent;
 }
 
-.DayTimeGridAllDayEventsCell {
-  display: flex;
-  flex-direction: column;
+.DayTimeGridAllDayEventsRow {
+  position: relative;
+  background-color: transparent;
+  display: grid;
+  grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
   gap: var(--space-1);
-  padding: var(--space-1);
-  max-height: 84px;
-  overflow-y: auto;
-  scrollbar-color: initial initial;
+  grid-template-rows: 1fr auto;
+  width: 100%;
+  scrollbar-gutter: stable;
+  gap: var(--space-1) 0;
+  padding: var(--space-1) 0;
 }
 
-.DayTimeGridAllDayEventsRow {
-  height: 'fit-content';
+.DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-color: transparent transparent;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--weekend-background) var(--weekend-background);
+}
+
+.AllDayGridCells {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   > *:not(:last-child) {
     border-right: 1px solid var(--border-color);
   }
 }
-
-.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scrollbar-color: transparent transparent;
+.DayTimeGridAllDayEventsCell {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  overflow-y: auto;
+  scrollbar-color: initial initial;
 }
 
-.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow[data-weekend] {
+.DayTimeGridAllDayEventsGrid[data-weekend][style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow {
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
-
 /* Webkit (Chrome, Safari, Edge) */
-.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridHeaderRow::-webkit-scrollbar {
+.DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .DayTimeGridHeaderRow::-webkit-scrollbar {
   background: transparent;
 }
 
-.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow::-webkit-scrollbar {
+.DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1']
+  .DayTimeGridAllDayEventsRow::-webkit-scrollbar {
   background: transparent;
 }
 
-.DayTimeGridHeader[style*='--has-scroll: 1']
-  .DayTimeGridAllDayEventsRow[data-weekend]::-webkit-scrollbar {
+.DayTimeGridAllDayEventsGrid[data-weekend][style*='--has-scroll: 1']
+  .DayTimeGridAllDayEventsRow::-webkit-scrollbar {
   background: var(--weekend-background);
 }
 
@@ -107,6 +128,8 @@
   padding: var(--space-2);
   text-align: end;
   color: var(--secondary-text-color);
+  min-width: var(--fixed-cell-width);
+  border-right: 1px solid var(--border-color);
 }
 
 .DayTimeGridHeaderDayName {
@@ -130,7 +153,7 @@
 .DayTimeGridBody {
   flex: 1;
   border-top: 1px solid var(--border-color);
-  overflow-y: auto;
+  height: 100%;
 }
 
 .DayTimeGridScrollableContent {

@@ -21,7 +21,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     ariaLabelledBy,
     variant,
     className,
-    onEventClick,
     id: idProp,
     ...other
   } = props;
