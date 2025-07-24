@@ -301,7 +301,7 @@ importers:
         version: 2.0.7-canary.6(@babel/core@7.28.0)
       '@mui/internal-bundle-size-checker':
         specifier: ^1.0.9-canary.4
-        version: 1.0.9-canary.4(@swc/core@1.12.11)(@types/node@24.0.13)(esbuild@0.25.6)(rollup@4.44.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))(yaml@2.8.0)
+        version: 1.0.9-canary.4(@swc/core@1.12.11)(@types/node@24.0.13)(esbuild@0.25.6)(rollup@4.44.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1)(yaml@2.8.0)
       '@mui/internal-code-infra':
         specifier: ^0.0.2-canary.16
         version: 0.0.2-canary.16(@typescript-eslint/parser@8.36.0(eslint@9.31.0)(typescript@5.8.3))(eslint-import-resolver-webpack@0.13.10)(eslint@9.31.0)(prettier@3.6.2)(typescript@5.8.3)
@@ -571,7 +571,7 @@ importers:
         version: 0.7.1(vite@7.0.4(@types/node@24.0.13)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(vitest@3.2.4)
       webpack:
         specifier: ^5.100.1
-        version: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+        version: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
       webpack-bundle-analyzer:
         specifier: 'catalog:'
         version: 4.10.2
@@ -1113,6 +1113,9 @@ importers:
       '@types/d3-interpolate':
         specifier: ^3.0.4
         version: 3.0.4
+      '@types/d3-sankey':
+        specifier: ^0.12.4
+        version: 0.12.4
       '@types/d3-scale':
         specifier: 'catalog:'
         version: 4.0.9
@@ -1134,6 +1137,9 @@ importers:
       d3-interpolate:
         specifier: ^3.0.1
         version: 3.0.1
+      d3-sankey:
+        specifier: ^0.12.3
+        version: 0.12.3
       d3-scale:
         specifier: ^4.0.2
         version: 4.0.2
@@ -5539,14 +5545,23 @@ packages:
   '@types/d3-interpolate@3.0.4':
     resolution: {integrity: sha512-mgLPETlrpVV1YRJIglr4Ez47g7Yxjl1lj7YKsiMCb27VJH9W8NVM6Bb9d8kkpG/uAQS5AmbA48q2IAolKKo1MA==}
 
+  '@types/d3-path@1.0.11':
+    resolution: {integrity: sha512-4pQMp8ldf7UaB/gR8Fvvy69psNHkTpD/pVw3vmEi8iZAB9EPMBruB1JvHO4BIq9QkUUd2lV1F5YXpMNj7JPBpw==}
+
   '@types/d3-path@3.1.1':
     resolution: {integrity: sha512-VMZBYyQvbGmWyWVea0EHs/BwLgxc+MKi1zLDCONksozI4YJMcTt8ZEuIR4Sb1MMTE8MMW49v0IwI5+b7RmfWlg==}
+
+  '@types/d3-sankey@0.12.4':
+    resolution: {integrity: sha512-YTicQNwioitIlvuvlfW2GfO6sKxpohzg2cSQttlXAPjFwoBuN+XpGLhUN3kLutG/dI3GCLC+DUorqiJt7Naetw==}
 
   '@types/d3-scale-chromatic@3.1.0':
     resolution: {integrity: sha512-iWMJgwkK7yTRmWqRB5plb1kadXyQ5Sj8V/zYlFGMUBbIPKQScw+Dku9cAAMgJG+z5GYDoMjWGLVOvjghDEFnKQ==}
 
   '@types/d3-scale@4.0.9':
     resolution: {integrity: sha512-dLmtwB8zkAeO/juAMfnV+sItKjlsw2lKdZVVy6LRr0cBmegxSABiLEpGVmSJJ8O08i4+sGR6qQtb6WtuwJdvVw==}
+
+  '@types/d3-shape@1.3.12':
+    resolution: {integrity: sha512-8oMzcd4+poSLGgV0R1Q1rOlx/xdmozS4Xab7np0eamFFUYq71AU9pOCJEFnkXW2aI/oXdVYJzw6pssbSut7Z9Q==}
 
   '@types/d3-shape@3.1.7':
     resolution: {integrity: sha512-VLvUQ33C+3J+8p+Daf+nYSOsjB4GXp19/S/aGo60m9h1v6XaxjiT82lKVWJCfzhtuZ3yD7i/TPeC/fuKLLOSmg==}
@@ -7182,6 +7197,9 @@ packages:
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
+  d3-array@2.12.1:
+    resolution: {integrity: sha512-B0ErZK/66mHtEsR1TkPEEkwdy+WDesimkM5gpZr5Dsg54BiTA5RXtYW5qTLIAcekaS9xfZrzBLF/OAkB3Qn1YQ==}
+
   d3-array@3.2.4:
     resolution: {integrity: sha512-tdQAmyA18i4J7wprpYq8ClcxZy3SC31QMeByyCFyRt7BVHdREQZ5lpzoe5mFEYZUWe+oq8HBvk9JjpibyEV4Jg==}
     engines: {node: '>=12'}
@@ -7202,9 +7220,15 @@ packages:
     resolution: {integrity: sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==}
     engines: {node: '>=12'}
 
+  d3-path@1.0.9:
+    resolution: {integrity: sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg==}
+
   d3-path@3.1.0:
     resolution: {integrity: sha512-p3KP5HCf/bvjBSSKuXid6Zqijx7wIfNW+J/maPs+iwR35at5JCbLUT0LzF1cnjbCHWhqzQTIN2Jpe8pRebIEFQ==}
     engines: {node: '>=12'}
+
+  d3-sankey@0.12.3:
+    resolution: {integrity: sha512-nQhsBRmM19Ax5xEIPLMY9ZmJ/cDvd1BG3UVvt5h3WRxKg5zGRbvnteTyWAbzeSvlh3tW7ZEmq4VwR5mB3tutmQ==}
 
   d3-scale-chromatic@3.1.0:
     resolution: {integrity: sha512-A3s5PWiZ9YCXFye1o246KoscMWqf8BsD9eRiJ3He7C9OBaxKhAd5TFCdEx/7VbKtxxTsu//1mMJFrEt572cEyQ==}
@@ -7213,6 +7237,9 @@ packages:
   d3-scale@4.0.2:
     resolution: {integrity: sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ==}
     engines: {node: '>=12'}
+
+  d3-shape@1.3.7:
+    resolution: {integrity: sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==}
 
   d3-shape@3.2.0:
     resolution: {integrity: sha512-SaLBuwGm3MOViRq2ABk3eLoxwZELpH6zhl3FbAoJ7Vm1gofKx6El1Ib5z23NUEhF9AsGl7y+dzLe5Cw2AArGTA==}
@@ -8661,6 +8688,9 @@ packages:
   internal-slot@1.1.0:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
+
+  internmap@1.0.1:
+    resolution: {integrity: sha512-lDB5YccMydFBtasVtxnZ3MRBHuaoE8GKsppq+EchKL2U4nK/DmEpPHNH8MZe5HkMtpSiTSOZwfN0tzYjO/lJEw==}
 
   internmap@2.0.3:
     resolution: {integrity: sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==}
@@ -14906,7 +14936,7 @@ snapshots:
       '@babel/core': 7.28.0
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.4(@swc/core@1.12.11)(@types/node@24.0.13)(esbuild@0.25.6)(rollup@4.44.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))(yaml@2.8.0)':
+  '@mui/internal-bundle-size-checker@1.0.9-canary.4(@swc/core@1.12.11)(@types/node@24.0.13)(esbuild@0.25.6)(rollup@4.44.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1)(yaml@2.8.0)':
     dependencies:
       '@aws-sdk/client-s3': 3.842.0
       '@aws-sdk/credential-providers': 3.840.0
@@ -14928,7 +14958,7 @@ snapshots:
       rollup-plugin-visualizer: 6.0.3(rollup@4.44.2)
       terser-webpack-plugin: 5.3.14(@swc/core@1.12.11)(esbuild@0.25.6)(webpack@5.100.1)
       vite: 6.3.5(@types/node@24.0.13)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
       webpack-bundle-analyzer: 4.10.2
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -16515,13 +16545,23 @@ snapshots:
     dependencies:
       '@types/d3-color': 3.1.3
 
+  '@types/d3-path@1.0.11': {}
+
   '@types/d3-path@3.1.1': {}
+
+  '@types/d3-sankey@0.12.4':
+    dependencies:
+      '@types/d3-shape': 1.3.12
 
   '@types/d3-scale-chromatic@3.1.0': {}
 
   '@types/d3-scale@4.0.9':
     dependencies:
       '@types/d3-time': 3.0.4
+
+  '@types/d3-shape@1.3.12':
+    dependencies:
+      '@types/d3-path': 1.0.11
 
   '@types/d3-shape@3.1.7':
     dependencies:
@@ -16711,7 +16751,7 @@ snapshots:
     dependencies:
       '@types/node': 24.0.13
       tapable: 2.2.2
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -17147,19 +17187,19 @@ snapshots:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
 
-  '@webpack-cli/configtest@3.0.1(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))(webpack@5.100.1)':
+  '@webpack-cli/configtest@3.0.1(webpack-cli@6.0.1)(webpack@5.100.1)':
     dependencies:
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
       webpack-cli: 6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1)
 
-  '@webpack-cli/info@3.0.1(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))(webpack@5.100.1)':
+  '@webpack-cli/info@3.0.1(webpack-cli@6.0.1)(webpack@5.100.1)':
     dependencies:
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
       webpack-cli: 6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1)
 
-  '@webpack-cli/serve@3.0.1(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))(webpack@5.100.1)':
+  '@webpack-cli/serve@3.0.1(webpack-cli@6.0.1)(webpack@5.100.1)':
     dependencies:
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
       webpack-cli: 6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1)
 
   '@whatwg-node/disposablestack@0.0.6':
@@ -17582,7 +17622,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.0
       find-up: 5.0.0
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
 
   babel-plugin-macros@3.1.0:
     dependencies:
@@ -18127,13 +18167,13 @@ snapshots:
     dependencies:
       schema-utils: 4.3.2
       serialize-javascript: 6.0.2
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
 
   compression-webpack-plugin@11.1.0(webpack@5.100.1):
     dependencies:
       schema-utils: 4.3.2
       serialize-javascript: 6.0.2
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
 
   compression@1.7.4:
     dependencies:
@@ -18354,7 +18394,7 @@ snapshots:
       postcss-value-parser: 4.2.0
       semver: 7.7.2
     optionalDependencies:
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
 
   css-select@4.3.0:
     dependencies:
@@ -18383,6 +18423,10 @@ snapshots:
 
   csstype@3.1.3: {}
 
+  d3-array@2.12.1:
+    dependencies:
+      internmap: 1.0.1
+
   d3-array@3.2.4:
     dependencies:
       internmap: 2.0.3
@@ -18399,7 +18443,14 @@ snapshots:
     dependencies:
       d3-color: 3.1.0
 
+  d3-path@1.0.9: {}
+
   d3-path@3.1.0: {}
+
+  d3-sankey@0.12.3:
+    dependencies:
+      d3-array: 2.12.1
+      d3-shape: 1.3.7
 
   d3-scale-chromatic@3.1.0:
     dependencies:
@@ -18413,6 +18464,10 @@ snapshots:
       d3-interpolate: 3.0.1
       d3-time: 3.1.0
       d3-time-format: 4.1.0
+
+  d3-shape@1.3.7:
+    dependencies:
+      d3-path: 1.0.9
 
   d3-shape@3.2.0:
     dependencies:
@@ -19069,7 +19124,7 @@ snapshots:
       lodash: 4.17.21
       resolve: 2.0.0-next.5
       semver: 5.7.2
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -19524,7 +19579,7 @@ snapshots:
     dependencies:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
 
   file-uri-to-path@1.0.0: {}
 
@@ -20061,7 +20116,7 @@ snapshots:
       pretty-error: 4.0.0
       tapable: 2.2.2
     optionalDependencies:
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
 
   htmlparser2@6.1.0:
     dependencies:
@@ -20222,6 +20277,8 @@ snapshots:
       es-errors: 1.3.0
       hasown: 2.0.2
       side-channel: 1.1.0
+
+  internmap@1.0.1: {}
 
   internmap@2.0.3: {}
 
@@ -21824,7 +21881,7 @@ snapshots:
     dependencies:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
 
   nwsapi@2.2.20: {}
 
@@ -23380,7 +23437,7 @@ snapshots:
   string-replace-loader@3.2.0(webpack@5.100.1):
     dependencies:
       schema-utils: 4.3.2
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
 
   string-width@4.2.3:
     dependencies:
@@ -23600,7 +23657,7 @@ snapshots:
       schema-utils: 4.3.2
       serialize-javascript: 6.0.2
       terser: 5.43.1
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
     optionalDependencies:
       '@swc/core': 1.12.11
       esbuild: 0.25.6
@@ -24198,9 +24255,9 @@ snapshots:
   webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1):
     dependencies:
       '@discoveryjs/json-ext': 0.6.3
-      '@webpack-cli/configtest': 3.0.1(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))(webpack@5.100.1)
-      '@webpack-cli/info': 3.0.1(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))(webpack@5.100.1)
-      '@webpack-cli/serve': 3.0.1(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))(webpack@5.100.1)
+      '@webpack-cli/configtest': 3.0.1(webpack-cli@6.0.1)(webpack@5.100.1)
+      '@webpack-cli/info': 3.0.1(webpack-cli@6.0.1)(webpack@5.100.1)
+      '@webpack-cli/serve': 3.0.1(webpack-cli@6.0.1)(webpack@5.100.1)
       colorette: 2.0.20
       commander: 12.1.0
       cross-spawn: 7.0.6
@@ -24209,7 +24266,7 @@ snapshots:
       import-local: 3.2.0
       interpret: 3.1.1
       rechoir: 0.8.0
-      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1))
+      webpack: 5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1)
       webpack-merge: 6.0.1
     optionalDependencies:
       webpack-bundle-analyzer: 4.10.2
@@ -24222,7 +24279,7 @@ snapshots:
 
   webpack-sources@3.3.3: {}
 
-  webpack@5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.100.1)):
+  webpack@5.100.1(@swc/core@1.12.11)(esbuild@0.25.6)(webpack-cli@6.0.1):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
