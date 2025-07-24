@@ -77,6 +77,7 @@ export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPane
 export type {
   GridAggregatedFilterItemApplier,
   GridAggregatedFilterItemApplierResult,
+  GridVisibleRowsLookupState,
 } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
@@ -163,7 +164,8 @@ export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibl
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
-export type * as BaseSlots from '../models/gridBaseSlots';
+export * as BaseSlots from '../models/gridBaseSlots';
+export type { IconProps } from '../models/gridBaseSlots';
 
 export type * from '../models/props/DataGridProps';
 export type {
