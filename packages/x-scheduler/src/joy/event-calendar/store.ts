@@ -1,7 +1,7 @@
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { createSelector, createSelectorMemoized, Store } from '../../base-ui-copy/utils/store';
 import { SchedulerValidDate } from '../../primitives/models';
-import { CalendarEvent } from '../models/events';
+import { CalendarEvent, CalendarEventId } from '../models/events';
 import { CalendarResource, CalendarResourceId } from '../models/resource';
 import { EventCalendarView } from './EventCalendar.types';
 
@@ -18,6 +18,10 @@ export type State = {
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
   visibleResources: Map<CalendarResourceId, boolean>;
+  /**
+   * Whether the items in the calendar are draggable to change their start and end dates without changing the duration.
+   */
+  areEventsDraggable: boolean;
 };
 
 export type EventCalendarStore = Store<State>;
@@ -72,4 +76,11 @@ export const selectors = {
       };
     },
   ),
+  // TODO: Add a new data structure (Map?) to avoid linear complexity here.
+  getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
+    state.events.find((event) => event.id === eventId),
+  ),
+  isEventDraggable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
+    return !readOnly && state.areEventsDraggable;
+  }),
 };
