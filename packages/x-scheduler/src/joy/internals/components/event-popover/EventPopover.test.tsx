@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/joy';
+import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
 import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
 import { EventPopover } from './EventPopover';
@@ -30,8 +31,6 @@ describe('<EventPopover />', () => {
     container: document.body,
     calendarEvent,
     calendarEventResource,
-    onEventEdit: () => {},
-    onEventDelete: () => {},
     onClose: () => {},
   };
 
@@ -39,9 +38,11 @@ describe('<EventPopover />', () => {
 
   it('should render the event data in the form fields', () => {
     render(
-      <Popover.Root open>
-        <EventPopover {...defaultProps} />
-      </Popover.Root>,
+      <StandaloneView events={[calendarEvent]}>
+        <Popover.Root open>
+          <EventPopover {...defaultProps} />
+        </Popover.Root>
+      </StandaloneView>,
     );
     expect(screen.getByDisplayValue('Running')).not.to.equal(null);
     expect(screen.getByDisplayValue('Morning run')).not.to.equal(null);
@@ -51,24 +52,28 @@ describe('<EventPopover />', () => {
     expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
   });
 
-  it('should call "onEventEdit" with updated values on submit', async () => {
-    const onEventEdit = spy();
+  it('should call "onEventsChange" with updated values on submit', async () => {
+    const onEventsChange = spy();
     const { user } = render(
-      <Popover.Root open>
-        <EventPopover {...defaultProps} onEventEdit={onEventEdit} />
-      </Popover.Root>,
+      <StandaloneView events={[calendarEvent]} onEventsChange={onEventsChange}>
+        <Popover.Root open>
+          <EventPopover {...defaultProps} />
+        </Popover.Root>
+      </StandaloneView>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
     await user.click(screen.getByRole('button', { name: /save changes/i }));
-    expect(onEventEdit.calledOnce).to.equal(true);
-    expect(onEventEdit.firstCall.args[0].title).to.equal('Running test');
+    expect(onEventsChange.calledOnce).to.equal(true);
+    expect(onEventsChange.firstCall.firstArg[0].title).to.equal('Running test');
   });
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <Popover.Root open>
-        <EventPopover {...defaultProps} />
-      </Popover.Root>,
+      <StandaloneView events={[calendarEvent]}>
+        <Popover.Root open>
+          <EventPopover {...defaultProps} />
+        </Popover.Root>
+      </StandaloneView>,
     );
     await user.clear(screen.getByLabelText(/start date/i));
     await user.type(screen.getByLabelText(/start date/i), '2025-05-27');
@@ -81,15 +86,17 @@ describe('<EventPopover />', () => {
     );
   });
 
-  it('should call "onEventDelete" with the event id when delete button is clicked', async () => {
-    const onEventDelete = spy();
+  it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
+    const onEventsChange = spy();
     const { user } = render(
-      <Popover.Root open>
-        <EventPopover {...defaultProps} onEventDelete={onEventDelete} />
-      </Popover.Root>,
+      <StandaloneView events={[calendarEvent]} onEventsChange={onEventsChange}>
+        <Popover.Root open>
+          <EventPopover {...defaultProps} />
+        </Popover.Root>
+      </StandaloneView>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
-    expect(onEventDelete.calledOnce).to.equal(true);
-    expect(onEventDelete.firstCall.args[0]).to.equal('1');
+    expect(onEventsChange.calledOnce).to.equal(true);
+    expect(onEventsChange.firstCall.firstArg).to.deep.equal([]);
   });
 });

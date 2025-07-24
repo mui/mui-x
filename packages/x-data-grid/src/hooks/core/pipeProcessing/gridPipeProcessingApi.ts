@@ -146,4 +146,9 @@ export interface GridPipeProcessingPrivateApi {
    * @param {GridPipeProcessorGroup} group The group to apply.
    */
   requestPipeProcessorsApplication: (group: GridPipeProcessorGroup) => void;
+  /**
+   * Checks of there are any processors that have been updated and runs appliers for them.
+   * It is intended to be called in a useEffect in the top-level data grid hook (`useDataGridComponent`).
+   */
+  runAppliersForPendingProcessors: () => void;
 }

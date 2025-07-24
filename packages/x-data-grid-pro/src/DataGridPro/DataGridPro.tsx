@@ -161,6 +161,11 @@ DataGridProRaw.propTypes = {
    */
   columnBufferPx: PropTypes.number,
   /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  columnFilterDebounceMs: PropTypes.number,
+  /**
    * Sets the height in pixels of the column group headers in the Data Grid.
    * Inherits the `columnHeaderHeight` value if not set.
    */
