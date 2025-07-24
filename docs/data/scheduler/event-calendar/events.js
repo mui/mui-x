@@ -143,7 +143,7 @@ export const events = [
   },
   // Vacation events
   {
-    id: '2',
+    id: '20',
     start: DateTime.fromISO('2025-07-14T13:00:00'),
     end: DateTime.fromISO('2025-07-14T14:00:00'),
     title: 'Vacation Planning',

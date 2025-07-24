@@ -53,6 +53,11 @@ export interface UseEventCalendarParameters {
    * Event handler called when the visible date changes.
    */
   onVisibleDateChange?: (visibleDate: SchedulerValidDate, event: React.UIEvent) => void;
+  /**
+   * Whether the items in the calendar are draggable to change their start and end dates without changing the duration.
+   * @default false
+   */
+  areEventsDraggable?: boolean;
 }
 
 export interface EventCalendarInstance {
