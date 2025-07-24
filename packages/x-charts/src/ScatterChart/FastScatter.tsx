@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
@@ -75,9 +76,13 @@ function useCreatePathsIteratively(
 
 function useCreatePaths(series: DefaultizedScatterSeriesType, xScale: D3Scale, yScale: D3Scale) {
   return useCreatePathsIteratively(series, xScale, yScale);
-  // useCreatePathsQuadtree(series, xScale, yScale);
-  // return useCreatePathsKdbush(series, xScale, yScale);
 }
+
+const Group = styled('g')({
+  '& path': {
+    pointerEvents: 'none',
+  },
+});
 
 /**
  * Demos:
@@ -112,7 +117,7 @@ function FastScatter(props: FastScatterProps) {
   const classes = useUtilityClasses(inClasses);
 
   return (
-    <g
+    <Group
       ref={groupRef}
       data-series={series.id}
       className={classes.root}
@@ -122,7 +127,7 @@ function FastScatter(props: FastScatterProps) {
       {paths.map((d, i) => (
         <path key={i} fill={color} d={d} />
       ))}
-    </g>
+    </Group>
   );
 }
 
