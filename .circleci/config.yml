@@ -44,6 +44,7 @@ default-job: &default-job
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     REACT_VERSION: << parameters.react-version >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
+    MUI_EXPERIMENTAL_MJS: 1
   working_directory: /tmp/mui
   docker:
     - image: cimg/node:22.16

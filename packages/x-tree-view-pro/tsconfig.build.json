@@ -3,7 +3,7 @@
   // Actual .ts source files are transpiled via babel
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
+    "paths": {},
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
@@ -11,11 +11,6 @@
     "rootDir": "./src",
     "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"]
   },
-  "references": [
-    { "path": "../x-internals/tsconfig.build.json" },
-    { "path": "../x-tree-view/tsconfig.build.json" },
-    { "path": "../x-license/tsconfig.build.json" }
-  ],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

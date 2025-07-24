@@ -3,7 +3,13 @@
   // Actual .ts source files are transpiled via babel
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
+    "baseUrl": null,
+    "paths": {
+      // reset paths, but keep the one for @mui/x-date-pickers. Necessary to be able to build
+      // module augmentation for the adapters
+      "@mui/x-date-pickers": ["./src"],
+      "@mui/x-date-pickers/*": ["./src/*"]
+    },
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
@@ -18,7 +24,6 @@
       "@emotion/styled"
     ]
   },
-  "references": [{ "path": "../x-internals/tsconfig.build.json" }],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }
