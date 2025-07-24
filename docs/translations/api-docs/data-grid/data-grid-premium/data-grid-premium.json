@@ -348,7 +348,9 @@
     },
     "onActiveChartIdChange": {
       "description": "Callback fired when the active chart changes.",
-      "typeDescriptions": { "activeChartId": "The new active chart id." }
+      "typeDescriptions": {
+        "activeChartId": { "name": "activeChartId", "description": "The new active chart id." }
+      }
     },
     "onAggregationModelChange": {
       "description": "Callback fired when the row grouping model changes.",
@@ -456,7 +458,12 @@
     },
     "onChartsPanelOpenChange": {
       "description": "Callback fired when the charts side panel open state changes.",
-      "typeDescriptions": { "chartsPanelOpen": "Whether the charts side panel is visible." }
+      "typeDescriptions": {
+        "chartsPanelOpen": {
+          "name": "chartsPanelOpen",
+          "description": "Whether the charts side panel is visible."
+        }
+      }
     },
     "onClipboardCopy": {
       "description": "Callback called when the data is copied to the clipboard.",
