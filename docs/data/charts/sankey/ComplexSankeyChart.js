@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 
 export default function ComplexSankeyChart() {
   const data = {
@@ -33,30 +33,14 @@ export default function ComplexSankeyChart() {
     ],
   };
 
-  const handleNodeClick = (event, node) => {
-    console.log('Node clicked:', node);
-  };
-
-  const handleLinkClick = (event, link) => {
-    console.log('Link clicked:', link);
-  };
-
   return (
     <SankeyChart
-      width={900}
       height={500}
-      margin={{ top: 20, right: 160, bottom: 20, left: 40 }}
-      series={[
-        {
-          data,
-          nodeWidth: 20,
-          nodeGap: 15,
-          linkOpacity: 0.6,
-        },
-      ]}
-      sankeyPlotProps={{
-        onNodeClick: handleNodeClick,
-        onLinkClick: handleLinkClick,
+      series={{
+        data,
+        nodeWidth: 20,
+        nodeGap: 15,
+        linkOpacity: 0.6,
       }}
     />
   );

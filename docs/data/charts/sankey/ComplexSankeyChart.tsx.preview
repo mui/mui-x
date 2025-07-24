@@ -1,10 +1,9 @@
 <SankeyChart
-  height={300}
+  height={500}
   series={{
     data,
     nodeWidth: 20,
     nodeGap: 15,
-    showNodeLabels: true,
-    linkColor: 'gray',
+    linkOpacity: 0.6,
   }}
 />

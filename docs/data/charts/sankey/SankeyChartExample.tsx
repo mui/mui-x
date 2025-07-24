@@ -11,17 +11,12 @@ export default function SankeyChartExample() {
       { id: 'B', label: 'Node B' },
       { id: 'C', label: 'Node C' },
       { id: 'D', label: 'Node D' },
-      { id: 'E', label: 'Node E' },
-      { id: 'F', label: 'Node F' },
     ],
     links: [
       { source: 'A', target: 'B', value: 5, color: 'red' },
       { source: 'A', target: 'C', value: 3 },
-      { source: 'B', target: 'D', value: 2 },
-      { source: 'B', target: 'E', value: 3 },
-      { source: 'C', target: 'E', value: 1 },
-      { source: 'C', target: 'F', value: 2 },
-      { source: 'E', target: 'F', value: 1 },
+      { source: 'B', target: 'D', value: 3 },
+      { source: 'C', target: 'D', value: 1 },
     ],
   };
 
@@ -33,7 +28,6 @@ export default function SankeyChartExample() {
         nodeWidth: 20,
         nodeGap: 15,
         showNodeLabels: true,
-        linkOpacity: 0.5,
         linkColor: 'gray',
       }}
     />
