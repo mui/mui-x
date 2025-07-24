@@ -30,7 +30,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm release:build
-      - name: Publish packages to pkg.pr.new
         env:
           MUI_EXPERIMENTAL_MJS: 1
+      - name: Publish packages to pkg.pr.new
         uses: mui/mui-public/.github/actions/ci-publish@master
