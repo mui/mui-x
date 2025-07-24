@@ -48,6 +48,8 @@
     "flatbush": "^4.4.1",
     "kdbush": "^4.0.2",
     "prop-types": "catalog:",
+    "rbush": "^4.0.1",
+    "rbush-knn": "^4.0.0",
     "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
   },
@@ -72,6 +74,7 @@
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
+    "@types/rbush": "^4.0.0",
     "@types/use-sync-external-store": "catalog:",
     "csstype": "catalog:",
     "react": "catalog:",

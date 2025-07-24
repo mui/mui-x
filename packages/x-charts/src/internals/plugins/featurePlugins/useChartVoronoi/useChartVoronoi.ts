@@ -5,6 +5,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import Flatbush from 'flatbush';
+import RBush from 'rbush';
+import knn from 'rbush-knn';
 import { ChartPlugin } from '../../models';
 import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import { SeriesId } from '../../../../models/seriesType/common';
@@ -50,6 +52,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
   const flatbushRef = React.useRef<Flatbush | undefined>(undefined);
+  const rbushRef = React.useRef<any | undefined>(undefined);
   const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
   const lastFind = React.useRef<number | undefined>(undefined);
 
@@ -177,6 +180,62 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
     performance.mark('Flatbush-end');
     performance.measure('Flatbush', 'Flatbush-start', 'Flatbush-end');
 
+    performance.mark('RBush-start');
+    const tree = new RBush();
+    const rbushPoints = new Array<{ minX: number; minY: number; maxX: number; maxY: number }>(
+      dataPoints,
+    );
+    let rbushSeriesStartIndex = 0;
+    let rbushCurrentIndex = 0;
+
+    seriesOrder.forEach((seriesId) => {
+      const { data, xAxisId, yAxisId } = series[seriesId];
+
+      const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+      const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
+
+      const getXPosition = getValueToPositionMapper(xScale);
+      const getYPosition = getValueToPositionMapper(yScale);
+
+      rbushSeriesStartIndex = rbushCurrentIndex;
+
+      for (const datum of data) {
+        const pointX = getXPosition(datum.x);
+        const pointY = getYPosition(datum.y);
+
+        if (!instance.isPointInside(pointX, pointY)) {
+          // If the point is not displayed we move them to a trash coordinate.
+          // This avoids managing index mapping before/after filtering.
+          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
+          rbushPoints[rbushCurrentIndex] = {
+            minX: -drawingArea.width,
+            maxX: -drawingArea.width,
+            minY: -drawingArea.height,
+            maxY: -drawingArea.height,
+          };
+        } else {
+          rbushPoints[rbushCurrentIndex] = {
+            minX: pointX,
+            maxX: pointX,
+            minY: pointY,
+            maxY: pointY,
+          };
+        }
+
+        rbushCurrentIndex += 1;
+      }
+
+      voronoiRef.current[seriesId] = {
+        seriesId,
+        startIndex: rbushSeriesStartIndex,
+        endIndex: rbushSeriesStartIndex + rbushCurrentIndex,
+      };
+    });
+    tree.load(rbushPoints);
+    rbushRef.current = tree;
+    performance.mark('RBush-end');
+    performance.measure('RBush', 'RBush-start', 'RBush-end');
+
     lastFind.current = undefined;
   }, [
     zoomIsInteracting,
@@ -230,7 +289,16 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       const end1 = performance.now();
       performance.measure('Flatbush-find', { start: start1, end: end1 });
 
-      console.log({ delaunay: closestPointIndex, flatbush: closestFlatbushPointIndex });
+      const start2 = performance.now();
+      const closestRbushPointIndex = knn(rbushRef.current, svgPoint.x, svgPoint.y, 1)[0];
+      const end2 = performance.now();
+      performance.measure('RBush-find', { start: start2, end: end2 });
+
+      console.log({
+        delaunay: closestPointIndex,
+        flatbush: closestFlatbushPointIndex,
+        rbush: closestRbushPointIndex,
+      });
 
       if (closestPointIndex === undefined) {
         return 'no-point-found';
