@@ -833,17 +833,23 @@
     "onSidebarClose": {
       "description": "Callback fired when the sidebar is closed.",
       "typeDescriptions": {
-        "params": "With all properties from GridSidebarParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridSidebarParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onSidebarOpen": {
       "description": "Callback fired when the sidebar is opened.",
       "typeDescriptions": {
-        "params": "With all properties from GridSidebarParams.",
-        "event": "The event object.",
-        "details": "Additional details for this callback."
+        "params": {
+          "name": "params",
+          "description": "With all properties from GridSidebarParams."
+        },
+        "event": { "name": "event", "description": "The event object." },
+        "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
     "onSortModelChange": {

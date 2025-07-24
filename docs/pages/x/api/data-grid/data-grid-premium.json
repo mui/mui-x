@@ -520,7 +520,7 @@
     "onPivotPanelOpenChange": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use the <code>sidebarOpen</code> and <code>sidebarClose</code> events instead.",
+      "deprecationInfo": "Use the <code>sidebarOpen</code> and <code>sidebarClose</code> events or corresponding event handlers <code>onSidebarOpen()</code> and <code>onSidebarClose()</code> instead.",
       "signature": {
         "type": "function(pivotPanelOpen: boolean) => void",
         "describedArgs": ["pivotPanelOpen"]
@@ -690,7 +690,7 @@
       "type": { "name": "bool" },
       "default": "false",
       "deprecated": true,
-      "deprecationInfo": "Use the sidebar initial state instead."
+      "deprecationInfo": "Use <code>initialState.sidebar.open</code> instead."
     },
     "processRowUpdate": {
       "type": { "name": "func" },
