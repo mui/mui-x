@@ -213,9 +213,9 @@ function useCreatePathsIteratively(
 }
 
 function useCreatePaths(series: DefaultizedScatterSeriesType, xScale: D3Scale, yScale: D3Scale) {
-  useCreatePathsIteratively(series, xScale, yScale);
-  useCreatePathsQuadtree(series, xScale, yScale);
-  return useCreatePathsKdbush(series, xScale, yScale);
+  return useCreatePathsIteratively(series, xScale, yScale);
+  // useCreatePathsQuadtree(series, xScale, yScale);
+  // return useCreatePathsKdbush(series, xScale, yScale);
 }
 
 /**
