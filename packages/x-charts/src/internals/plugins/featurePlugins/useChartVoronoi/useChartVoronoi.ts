@@ -4,6 +4,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import Flatbush from 'flatbush';
 import { ChartPlugin } from '../../models';
 import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import { SeriesId } from '../../../../models/seriesType/common';
@@ -31,11 +32,6 @@ type VoronoiSeries = {
    * The first index in the voronoi data that is outside this series.
    */
   endIndex: number;
-  /**
-   * The mapping from voronoi point index to the series dataIndex.
-   * This takes into account removed points.
-   */
-  seriesIndexes: number[];
 };
 
 export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
@@ -53,6 +49,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
   const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
+  const flatbushRef = React.useRef<Flatbush | undefined>(undefined);
   const delauneyRef = React.useRef<Delaunay<any> | undefined>(undefined);
   const lastFind = React.useRef<number | undefined>(undefined);
 
@@ -80,9 +77,14 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       return;
     }
 
-    performance.mark('Delaunay-prepare-points-start');
     voronoiRef.current = {};
-    let points: number[] = [];
+    const dataPoints = Object.values(series).reduce((acc, aSeries) => acc + aSeries.data.length, 0);
+
+    performance.mark('Delaunay-prepare-points-start');
+    const points = new Float64Array(dataPoints * 2);
+    let seriesStartIndex = 0;
+    let currentIndex = 0;
+
     seriesOrder.forEach((seriesId) => {
       const { data, xAxisId, yAxisId } = series[seriesId];
 
@@ -92,27 +94,31 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       const getXPosition = getValueToPositionMapper(xScale);
       const getYPosition = getValueToPositionMapper(yScale);
 
-      const seriesPoints: number[] = [];
-      const seriesIndexes: number[] = [];
-      for (let dataIndex = 0; dataIndex < data.length; dataIndex += 1) {
-        const { x, y } = data[dataIndex];
-        const pointX = getXPosition(x);
-        const pointY = getYPosition(y);
+      seriesStartIndex = currentIndex;
 
-        if (instance.isPointInside(pointX, pointY)) {
-          seriesPoints.push(pointX);
-          seriesPoints.push(pointY);
-          seriesIndexes.push(dataIndex);
+      for (const datum of data) {
+        const pointX = getXPosition(datum.x);
+        const pointY = getYPosition(datum.y);
+
+        if (!instance.isPointInside(pointX, pointY)) {
+          // If the point is not displayed we move them to a trash coordinate.
+          // This avoids managing index mapping before/after filtering.
+          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
+          points[currentIndex * 2] = -drawingArea.width;
+          points[currentIndex * 2 + 1] = -drawingArea.height;
+        } else {
+          points[currentIndex * 2] = pointX;
+          points[currentIndex * 2 + 1] = pointY;
         }
+
+        currentIndex += 1;
       }
 
       voronoiRef.current[seriesId] = {
         seriesId,
-        seriesIndexes,
-        startIndex: points.length,
-        endIndex: points.length + seriesPoints.length,
+        startIndex: seriesStartIndex,
+        endIndex: seriesStartIndex + currentIndex,
       };
-      points = points.concat(seriesPoints);
     });
     performance.mark('Delaunay-prepare-points-end');
     performance.measure(
@@ -125,6 +131,52 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
     delauneyRef.current = new Delaunay(points);
     performance.mark('new Delaunay-end');
     performance.measure('new Delaunay()', 'new Delaunay-start', 'new Delaunay-end');
+
+    performance.mark('Flatbush-start');
+    const flatbush = new Flatbush(dataPoints);
+    flatbushRef.current = flatbush;
+    seriesStartIndex = 0;
+    currentIndex = 0;
+
+    seriesOrder.forEach((seriesId) => {
+      const { data, xAxisId, yAxisId } = series[seriesId];
+
+      const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+      const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
+
+      const getXPosition = getValueToPositionMapper(xScale);
+      const getYPosition = getValueToPositionMapper(yScale);
+
+      seriesStartIndex = currentIndex;
+
+      for (const datum of data) {
+        const pointX = getXPosition(datum.x);
+        const pointY = getYPosition(datum.y);
+
+        if (!instance.isPointInside(pointX, pointY)) {
+          // If the point is not displayed we move them to a trash coordinate.
+          // This avoids managing index mapping before/after filtering.
+          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
+          flatbush.add(-drawingArea.width, -drawingArea.height);
+        } else {
+          flatbush.add(pointX, pointY);
+        }
+
+        currentIndex += 1;
+      }
+
+      voronoiRef.current[seriesId] = {
+        seriesId,
+        startIndex: seriesStartIndex,
+        endIndex: seriesStartIndex + currentIndex,
+      };
+    });
+
+    flatbush.finish();
+
+    performance.mark('Flatbush-end');
+    performance.measure('Flatbush', 'Flatbush-start', 'Flatbush-end');
+
     lastFind.current = undefined;
   }, [
     zoomIsInteracting,
@@ -168,6 +220,18 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       const closestPointIndex = delauneyRef.current.find(svgPoint.x, svgPoint.y, lastFind.current);
       const end = performance.now();
       performance.measure('Delaunay-find', { start, end });
+
+      if (!flatbushRef.current) {
+        return 'no-point-found';
+      }
+
+      const start1 = performance.now();
+      const closestFlatbushPointIndex = flatbushRef.current.neighbors(svgPoint.x, svgPoint.y, 1)[0];
+      const end1 = performance.now();
+      performance.measure('Flatbush-find', { start: start1, end: end1 });
+
+      console.log({ delaunay: closestPointIndex, flatbush: closestFlatbushPointIndex });
+
       if (closestPointIndex === undefined) {
         return 'no-point-found';
       }
@@ -181,10 +245,8 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         return 'no-point-found';
       }
 
-      // The point index in the series with id=closestSeries.seriesId.
-      const seriesPointIndex =
+      const dataIndex =
         (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
-      const dataIndex = voronoiRef.current[closestSeries.seriesId].seriesIndexes[seriesPointIndex];
 
       if (voronoiMaxRadius !== undefined) {
         const pointX = delauneyRef.current.points[2 * closestPointIndex];

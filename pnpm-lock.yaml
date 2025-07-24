@@ -940,6 +940,9 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      flatbush:
+        specifier: ^4.4.1
+        version: 4.4.1
       kdbush:
         specifier: ^4.0.2
         version: 4.0.2
@@ -8235,6 +8238,13 @@ packages:
   flat@5.0.2:
     resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
     hasBin: true
+
+  flatbush@4.4.1:
+    resolution: {integrity: sha512-g3eA6ZF0viCV0UslH/mdUzCLcT7aGj0Fjk9MBxxNkbADSXqSHDZhthFBDFgo2umc6SVmSItNefTjWnfyo7DunA==}
+
+  flatqueue@2.0.3:
+    resolution: {integrity: sha512-RZCWZNkmxzUOh8jqEcEGZCycb3B8KAfpPwg3H//cURasunYxsg1eIvE+QDSjX+ZPHTIVfINfK1aLTrVKKO0i4g==}
+    engines: {node: '>= 12.17.0'}
 
   flatted@3.3.3:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
@@ -19821,6 +19831,12 @@ snapshots:
       keyv: 4.5.4
 
   flat@5.0.2: {}
+
+  flatbush@4.4.1:
+    dependencies:
+      flatqueue: 2.0.3
+
+  flatqueue@2.0.3: {}
 
   flatted@3.3.3: {}
 
