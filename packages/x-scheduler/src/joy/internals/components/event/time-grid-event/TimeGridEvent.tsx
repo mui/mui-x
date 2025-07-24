@@ -32,6 +32,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const id = useId(idProp);
   const { store } = useEventCalendarContext();
   const isDraggable = useSelector(store, selectors.isEventDraggable, { readOnly });
+  const isResizable = useSelector(store, selectors.isEventResizable, { readOnly });
 
   const durationMs =
     adapter.toJsDate(eventProp.end).getTime() - adapter.toJsDate(eventProp.start).getTime();
@@ -102,7 +103,11 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       end={eventProp.end}
       {...other}
     >
+      {isResizable && (
+        <TimeGrid.EventResizeHandler position="start" className="EventResizeHandler" />
+      )}
       {content}
+      {isResizable && <TimeGrid.EventResizeHandler position="end" className="EventResizeHandler" />}
     </TimeGrid.Event>
   );
 });

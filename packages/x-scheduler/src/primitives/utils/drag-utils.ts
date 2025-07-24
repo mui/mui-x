@@ -21,5 +21,11 @@ export function getCursorPositionRelativeToElement({
 }
 
 export function isDraggingTimeGridEvent(data: any): data is TimeGridEvent.EventDragData {
-  return data.type === 'event' && data.source === 'TimeGridEvent';
+  return data.source === 'TimeGridEvent';
+}
+
+export function isDraggingTimeGridEventResizeHandler(
+  data: any,
+): data is TimeGridEvent.EventDragData {
+  return data.source === 'TimeGridEventResizeHandler';
 }

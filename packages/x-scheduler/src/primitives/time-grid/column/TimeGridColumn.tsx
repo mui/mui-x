@@ -15,6 +15,7 @@ import {
   EVENT_DRAG_PRECISION_MINUTE,
   getCursorPositionRelativeToElement,
   isDraggingTimeGridEvent,
+  isDraggingTimeGridEventResizeHandler,
 } from '../../utils/drag-utils';
 
 export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
@@ -81,10 +82,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
-  const state: TimeGridColumn.State = React.useMemo(() => ({}), []);
-
   const element = useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef, ref],
     props: [props, elementProps],
   });
@@ -127,10 +125,11 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
     return dropTargetForElements({
       element: domElement,
-      canDrop: (arg) => isDraggingTimeGridEvent(arg.source.data),
-      getData: () => ({ type: 'column' }),
+      canDrop: (arg) =>
+        isDraggingTimeGridEvent(arg.source.data) ||
+        isDraggingTimeGridEventResizeHandler(arg.source.data),
       onDrag: ({ source: { data }, location }) => {
-        if (!isDraggingTimeGridEvent(data)) {
+        if (!isDraggingTimeGridEvent(data) && !isDraggingTimeGridEventResizeHandler(data)) {
           return;
         }
 
@@ -142,7 +141,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         setPlaceholder(newPlaceholder);
       },
       onDrop: ({ source: { data }, location }) => {
-        if (!isDraggingTimeGridEvent(data)) {
+        if (!isDraggingTimeGridEvent(data) && !isDraggingTimeGridEventResizeHandler(data)) {
           return;
         }
 

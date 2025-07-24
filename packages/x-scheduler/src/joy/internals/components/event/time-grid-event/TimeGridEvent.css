@@ -1,9 +1,14 @@
 .EventCard {
   border-radius: var(--radius-4);
   background-color: var(--event-background);
+  position: relative;
 
-  &[data-moving] {
+  &[data-dragging] {
     opacity: 0.5;
+  }
+
+  &:hover .EventResizeHandler {
+    display: initial;
   }
 }
 
@@ -81,4 +86,22 @@
   border-radius: var(--radius-1);
   background: var(--regular-line-bg);
   pointer-events: none;
+}
+
+.EventResizeHandler {
+  position: absolute;
+  height: 4px;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  cursor: ns-resize;
+  display: none;
+
+  &[data-start] {
+    top: 0;
+  }
+
+  &[data-end] {
+    bottom: 0;
+  }
 }

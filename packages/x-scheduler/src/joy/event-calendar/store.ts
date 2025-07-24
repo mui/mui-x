@@ -19,9 +19,13 @@ export type State = {
    */
   visibleResources: Map<CalendarResourceId, boolean>;
   /**
-   * Whether the items in the calendar are draggable to change their start and end dates without changing the duration.
+   * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
   areEventsDraggable: boolean;
+  /**
+   * Whether the event start or end can be dragged to change its duration without changing this other date.
+   */
+  areEventsResizable: boolean;
 };
 
 export type EventCalendarStore = Store<State>;
@@ -82,5 +86,8 @@ export const selectors = {
   ),
   isEventDraggable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
     return !readOnly && state.areEventsDraggable;
+  }),
+  isEventResizable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
+    return !readOnly && state.areEventsResizable;
   }),
 };
