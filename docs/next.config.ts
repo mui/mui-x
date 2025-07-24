@@ -91,7 +91,7 @@ export default withDocsInfra({
     TREE_VIEW_VERSION: treeViewPkg.version,
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
     MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
-    MUI_CHAT_SCOPES: 'x-data-grid',
+    MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
   },
   // @ts-ignore
   webpack: (config, options) => {
