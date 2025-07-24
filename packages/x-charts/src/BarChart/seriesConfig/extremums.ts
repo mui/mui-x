@@ -11,7 +11,6 @@ const createResult = (data: any, direction: 'x' | 'y') => {
 const getBaseExtremum: CartesianExtremumGetter<'bar'> = (params) => {
   const { axis, getFilters, isDefaultAxis } = params;
 
-  console.log(axis.data);
   const filter = getFilters?.({
     currentAxisId: axis.id,
     isDefaultAxis,
@@ -26,7 +25,6 @@ const getValueExtremum =
   (direction: 'x' | 'y'): CartesianExtremumGetter<'bar'> =>
   (params) => {
     const { series, axis, getFilters, isDefaultAxis } = params;
-    console.log('BarChart getValueExtremum', direction);
     performance.mark(`getValueExtremum-start-${direction}`);
     const start = performance.now();
 
