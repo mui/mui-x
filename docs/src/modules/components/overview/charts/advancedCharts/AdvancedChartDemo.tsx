@@ -7,16 +7,16 @@ import ChartDemoNavigator from '../ChartDemoNavigator';
 const advancedCharts = [
   {
     title: 'Radar',
-    description: 'Compare elements on multiple metrics.',
+    description: 'Compare multiple variables across different categories.',
   },
   {
     title: 'Heatmap',
-    description: 'Highlight patterns on bidimensional data.',
+    description: 'Visualize data density and distribution.',
     iconLink: '/static/x/pro.svg',
   },
   {
     title: 'Funnel',
-    description: 'Show pipeline performances.',
+    description: 'Display the sequential stages of a process.',
     iconLink: '/static/x/pro.svg',
   },
 ];
