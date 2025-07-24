@@ -164,7 +164,10 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         return 'no-point-found';
       }
 
+      const start = performance.now();
       const closestPointIndex = delauneyRef.current.find(svgPoint.x, svgPoint.y, lastFind.current);
+      const end = performance.now();
+      performance.measure('Delaunay-find', { start, end });
       if (closestPointIndex === undefined) {
         return 'no-point-found';
       }
