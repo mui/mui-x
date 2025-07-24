@@ -55,6 +55,10 @@ export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
       }
     });
 
+    if (!link.path) {
+      return null; // No path defined, nothing to render
+    }
+
     return (
       <SankeyLinkRoot
         ref={ref}
@@ -63,7 +67,6 @@ export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
         strokeWidth={link.width}
         strokeOpacity={opacity}
         onClick={onClick ? handleClick : undefined}
-        data-testid={`sankey-link-${link.source}-${link.target}`}
       />
     );
   },

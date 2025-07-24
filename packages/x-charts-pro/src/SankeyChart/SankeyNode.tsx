@@ -50,14 +50,19 @@ export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
   function SankeyNode(props, ref) {
     const { node, color, showLabel = true, onClick, seriesId } = props;
 
-    const nodeWidth = node.x1 - node.x0;
-    const nodeHeight = node.y1 - node.y0;
+    const x0 = node.x0 ?? 0;
+    const y0 = node.y0 ?? 0;
+    const x1 = node.x1 ?? 0;
+    const y1 = node.y1 ?? 0;
+
+    const nodeWidth = x1 - x0;
+    const nodeHeight = y1 - y0;
 
     // Determine label position
     const labelX =
       node.depth === 0
-        ? node.x1 + 6 // Right side for first column
-        : node.x0 - 6; // Left side for other columns
+        ? x1 + 6 // Right side for first column
+        : x0 - 6; // Left side for other columns
 
     const labelAnchor = node.depth === 0 ? 'start' : 'end';
 
@@ -81,16 +86,10 @@ export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
           height={nodeHeight}
           fill={color || node.color}
           onClick={onClick ? handleClick : undefined}
-          data-testid={`sankey-node-${node.id}`}
         />
 
         {showLabel && node.label && (
-          <SankeyNodeLabel
-            x={labelX}
-            y={(node.y0 + node.y1) / 2}
-            textAnchor={labelAnchor}
-            data-testid={`sankey-node-label-${node.id}`}
-          >
+          <SankeyNodeLabel x={labelX} y={(y0 + y1) / 2} textAnchor={labelAnchor}>
             {node.label}
           </SankeyNodeLabel>
         )}

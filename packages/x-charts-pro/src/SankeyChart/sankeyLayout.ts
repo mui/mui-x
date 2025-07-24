@@ -1,16 +1,12 @@
 'use client';
-import { 
-  sankey, 
-  sankeyLinkHorizontal, 
-  sankeyJustify,
-  SankeyGraph as D3SankeyGraph,
-  SankeyLink as D3SankeyLink,
-  SankeyNode as D3SankeyNode
-} from '@mui/x-charts-vendor/d3-sankey';
+import { sankey, sankeyLinkHorizontal, sankeyJustify } from '@mui/x-charts-vendor/d3-sankey';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   SankeyLayout,
   SankeyLayoutLink,
   SankeyLayoutNode,
+  type SankeyLink,
+  type SankeyNode,
   type SankeyValueType,
 } from './sankey.types';
 
@@ -37,93 +33,70 @@ export function calculateSankeyLayout(
     return { nodes: [], links: [] };
   }
 
-  // Create a copy of the data to avoid modifying the original
-  const sankeyNodes = data.nodes.map(node => ({
-    ...node,
-    // Add required d3-sankey node properties
-    index: 0, // Will be set by d3-sankey
-    x0: 0,
-    y0: 0,
-    x1: 0,
-    y1: 0,
-    value: 0,
-    depth: 0,
-  }));
-  
-  // Create a node id to index mapping
-  const nodeById = new Map<string | number, number>();
-  sankeyNodes.forEach((node, i) => {
-    nodeById.set(node.id, i);
-    // Set index for d3-sankey
-    node.index = i;
-  });
-  
-  // Create link objects for d3-sankey (needs references to actual node objects)
-  const sankeyLinks = data.links.map(link => {
-    const sourceIndex = nodeById.get(link.source);
-    const targetIndex = nodeById.get(link.target);
-    
-    if (sourceIndex === undefined || targetIndex === undefined) {
+  data.links.forEach((link) => {
+    if (link.source === undefined || link.target === undefined) {
       throw new Error(
         `Invalid link: source or target node not found (${link.source} -> ${link.target})`,
       );
     }
-    
-    return {
-      ...link,
-      source: sourceIndex,
-      target: targetIndex,
-      value: link.value,
-    };
+
+    if (link.source === link.target) {
+      warnOnce(`MUI X Charts: circular links are not allowed (${link.source} -> ${link.target})`);
+    }
   });
 
   // Create the sankey layout generator
-  const sankeyGenerator = sankey()
+  const sankeyGenerator = sankey<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>()
     .nodeWidth(nodeWidth)
     .nodePadding(nodeGap)
+    // TODO: make this configurable
     .nodeAlign(sankeyJustify)
-    .extent([[0, 0], [width, height]])
+    .extent([
+      // Todo: gotta take margins into account
+      [0, 0],
+      [width, height],
+    ])
+    .nodeId((d) => d.id)
     .iterations(iterations);
-  
+
   // Prepare the data structure expected by d3-sankey
   const graph = {
-    nodes: sankeyNodes,
-    links: sankeyLinks
+    nodes: data.nodes.map((v) => ({ ...v })),
+    links: data.links.map((v) => ({ ...v })),
   };
 
   // Generate the layout
-  const result = sankeyGenerator(graph) as unknown as D3SankeyGraph<{}, {}>;
+  const result = sankeyGenerator(graph);
   const { nodes, links } = result;
 
   // Link path generator
   const linkGenerator = sankeyLinkHorizontal();
-  
+
   // Convert d3-sankey links to our format
-  const layoutLinks: SankeyLayoutLink[] = links.map((link) => {
-    // d3-sankey modifies the source/target to be objects
-    const d3Link = link as unknown as D3SankeyLink<{}, {}>;
-    const sourceNode = d3Link.source as unknown as D3SankeyNode<{}, {}> & { id: string | number };
-    const targetNode = d3Link.target as unknown as D3SankeyNode<{}, {}> & { id: string | number };
-    
+  // Cast to SankeyLayoutLink as it has the correct properties
+  const layoutLinks: SankeyLayoutLink[] = (links as SankeyLayoutLink[]).map((link) => {
     // Get the original link data
-    const originalLink = data.links.find(l => 
-      l.source === sourceNode.id && l.target === targetNode.id);
-    
+    const originalLink = data.links.find((l) => {
+      return l.source === link.source.id && l.target === link.target.id;
+    });
+
     return {
-      source: sourceNode.id,
-      target: targetNode.id,
-      value: d3Link.value,
-      data: originalLink?.data,
-      color: originalLink?.color,
-      width: Math.max(1, d3Link.width || d3Link.value),
-      sourceNode: sourceNode as unknown as SankeyLayoutNode,
-      targetNode: targetNode as unknown as SankeyLayoutNode,
-      path: linkGenerator(d3Link) || '',
+      ...originalLink,
+      ...link,
+      path: linkGenerator(link),
     };
   });
 
-  return { 
-    nodes: nodes as unknown as SankeyLayoutNode[], 
-    links: layoutLinks 
+  const layoutNodes: SankeyLayoutNode[] = nodes.map((node) => {
+    const originalNode = data.nodes.find((n) => n.id === node.id);
+    return {
+      ...originalNode,
+      ...node,
+    };
+  });
+
+  return {
+    nodes: layoutNodes,
+    links: layoutLinks,
   };
 }

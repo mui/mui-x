@@ -107,7 +107,7 @@ export function SankeyPlot(props: SankeyPlotProps) {
         {layout.links.map((link) => (
           <SankeyLink
             seriesId={series.id}
-            key={`${link.source}-${link.target}`}
+            key={`${link.source.id}-${link.target.id}`}
             link={link}
             color={link.color || linkColor || theme.palette.primary.light}
             opacity={linkOpacity}

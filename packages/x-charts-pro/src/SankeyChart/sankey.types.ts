@@ -2,6 +2,10 @@
 
 import type { CommonDefaultizedProps, SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps } from '@mui/x-internals/types';
+import type {
+  SankeyLink as D3SankeyLink,
+  SankeyNode as D3SankeyNode,
+} from '@mui/x-charts-vendor/d3-sankey';
 
 export type NodeId = string | number;
 
@@ -131,27 +135,17 @@ export interface SankeySeriesType {
 /**
  * Represents the calculated positions and dimensions for a node in the Sankey diagram
  */
-export interface SankeyLayoutNode extends SankeyNode {
-  // Calculated positions and dimensions
-  x0: number;
-  y0: number;
-  x1: number;
-  y1: number;
-  value: number;
-  depth: number;
-  height?: number;
-  targetY?: number; // Used during layout calculation
-}
+export interface SankeyLayoutNode
+  extends D3SankeyNode<SankeyNode, Omit<SankeyLink, 'source' | 'target'>> {}
 
 /**
  * Represents the calculated positions and paths for a link in the Sankey diagram
  */
-export interface SankeyLayoutLink extends SankeyLink {
-  // Calculated positions and paths
-  width: number;
-  sourceNode: SankeyLayoutNode;
-  targetNode: SankeyLayoutNode;
-  path: string; // SVG path definition
+export interface SankeyLayoutLink
+  extends D3SankeyLink<SankeyNode, Omit<SankeyLink, 'source' | 'target'>> {
+  path: string | null;
+  source: SankeyLayoutNode;
+  target: SankeyLayoutNode;
 }
 
 /**
