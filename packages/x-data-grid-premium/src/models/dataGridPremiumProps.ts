@@ -269,13 +269,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * If `true`, the pivot side panel is visible.
    * @default false
-   * @deprecated Use the sidebar initial state instead.
+   * @deprecated Use `initialState.sidebar.open` instead.
    */
   pivotPanelOpen?: boolean;
   /**
    * Callback fired when the pivot side panel open state changes.
    * @param {boolean} pivotPanelOpen Whether the pivot side panel is visible.
-   * @deprecated Use the `sidebarOpen` and `sidebarClose` events instead.
+   * @deprecated Use the `sidebarOpen` and `sidebarClose` events or corresponding event handlers `onSidebarOpen()` and `onSidebarClose()` instead.
    */
   onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
 

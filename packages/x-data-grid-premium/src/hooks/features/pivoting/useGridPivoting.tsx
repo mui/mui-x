@@ -96,7 +96,7 @@ export const pivotingStateInitializer: GridStateInitializer<
       active: props.pivotActive ?? props.initialState?.pivoting?.enabled ?? false,
       model: props.pivotModel ?? props.initialState?.pivoting?.model ?? emptyPivotModel,
       initialColumns,
-    } as GridPivotingState,
+    },
     sidebar: {
       ...state.sidebar,
       ...sidebarStateUpdate,
@@ -379,22 +379,19 @@ export const useGridPivoting = (
       if (!isPivotingAvailable) {
         return;
       }
-      apiRef.current.setState((state) => {
-        const panelOpen = state.sidebar.open && state.sidebar.value === GridSidebarValue.Pivot;
-        const newPanelOpen = typeof callback === 'function' ? callback(panelOpen) : callback;
-        if (panelOpen === newPanelOpen) {
-          return state;
-        }
 
-        return {
-          ...state,
-          sidebar: {
-            ...state.sidebar,
-            open: newPanelOpen,
-            value: GridSidebarValue.Pivot,
-          },
-        };
-      });
+      const panelOpen = gridPivotPanelOpenSelector(apiRef);
+      const newPanelOpen = typeof callback === 'function' ? callback(panelOpen) : callback;
+
+      if (panelOpen === newPanelOpen) {
+        return;
+      }
+
+      if (newPanelOpen) {
+        apiRef.current.showSidebar(GridSidebarValue.Pivot);
+      } else {
+        apiRef.current.hideSidebar();
+      }
     },
     [apiRef, isPivotingAvailable],
   );
@@ -492,18 +489,18 @@ export const useGridPivoting = (
     [apiRef, computePivotingState, isPivotingAvailable, nonPivotDataRef],
   );
 
-  const sidebarPreProcessing = React.useCallback<GridPipeProcessor<'sidebar'>>(
+  const addPivotingPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
     (initialValue, value) => {
-      if (value === GridSidebarValue.Pivot) {
+      if (isPivotingAvailable && value === GridSidebarValue.Pivot) {
         return <GridPivotPanel />;
       }
 
       return initialValue;
     },
-    [],
+    [isPivotingAvailable],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'sidebar', sidebarPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'sidebar', addPivotingPanel);
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
   useGridApiMethod(

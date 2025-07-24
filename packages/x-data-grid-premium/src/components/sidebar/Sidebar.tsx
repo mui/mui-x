@@ -48,6 +48,10 @@ function Sidebar(props: SidebarProps) {
 
   const sidebarContent = apiRef.current.unstable_applyPipeProcessors('sidebar', null, value);
 
+  if (!sidebarContent) {
+    return null;
+  }
+
   return (
     <SidebarRoot
       id={sidebarId}
