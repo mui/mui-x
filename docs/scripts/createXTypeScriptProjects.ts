@@ -51,7 +51,14 @@ interface CreateXTypeScriptProjectOptions
     > {}
 
 const createXTypeScriptProject = (options: CreateXTypeScriptProjectOptions): XTypeScriptProject => {
-  const { name, rootPath, tsConfigPath, entryPointPath, files, ...other } = options;
+  const {
+    name,
+    rootPath,
+    tsConfigPath = 'tsconfig.json',
+    entryPointPath,
+    files,
+    ...other
+  } = options;
 
   const baseProject = createTypeScriptProject({
     name,
