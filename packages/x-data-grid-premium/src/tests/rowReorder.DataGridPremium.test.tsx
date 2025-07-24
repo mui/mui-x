@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, createEvent, screen } from '@mui/internal-test-utils';
-import { getCell, getColumnValues, getRowsFieldContent, getRow } from 'test/utils/helperFn';
+import { getColumnValues, getRow } from 'test/utils/helperFn';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -42,8 +42,25 @@ function createDragOverEvent(target: ChildNode, dropPosition: 'above' | 'below' 
 
   Object.defineProperty(dragOverEvent, 'clientY', { value: clientY });
   Object.defineProperty(dragOverEvent, 'target', { value: target });
+  Object.defineProperty(dragOverEvent, 'dataTransfer', {
+    value: {
+      dropEffect: 'copy',
+    },
+  });
 
   return dragOverEvent;
+}
+
+function fireDragStart(target: ChildNode) {
+  const dragStartEvent = createEvent.dragStart(target);
+  Object.defineProperty(dragStartEvent, 'dataTransfer', {
+    value: {
+      effectAllowed: 'copy',
+      setData: () => {},
+      getData: () => '',
+    },
+  });
+  fireEvent(target, dragStartEvent);
 }
 
 // Helper function to create drag end event
@@ -65,25 +82,12 @@ function performDragReorder(
   const targetCell = targetRowElement.querySelector('[role="gridcell"]')!;
 
   // Start drag - create event with dataTransfer
-  const dragStartEvent = createEvent.dragStart(sourceCell);
-  Object.defineProperty(dragStartEvent, 'dataTransfer', {
-    value: {
-      effectAllowed: '',
-      setData: () => {},
-      getData: () => '',
-    },
-  });
-  fireEvent(sourceCell, dragStartEvent);
+  fireDragStart(sourceCell);
 
   fireEvent.dragEnter(targetCell);
 
   // Drag over with position
   const dragOverEvent = createDragOverEvent(targetCell, dropPosition);
-  Object.defineProperty(dragOverEvent, 'dataTransfer', {
-    value: {
-      dropEffect: 'copy',
-    },
-  });
   fireEvent(targetCell, dragOverEvent);
 
   // End drag
@@ -365,24 +369,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const targetCell = itemB1Row.querySelector('[role="gridcell"]')!;
 
         // Start drag with dataTransfer
-        const dragStartEvent = createEvent.dragStart(sourceCell);
-        Object.defineProperty(dragStartEvent, 'dataTransfer', {
-          value: {
-            effectAllowed: 'copy',
-            setData: () => {},
-            getData: () => '',
-          },
-        });
-        fireEvent(sourceCell, dragStartEvent);
+        fireDragStart(sourceCell);
         fireEvent.dragEnter(targetCell);
 
         // Drag over - should show indicator
         const dragOverEvent = createDragOverEvent(targetCell, 'above');
-        Object.defineProperty(dragOverEvent, 'dataTransfer', {
-          value: {
-            dropEffect: 'copy',
-          },
-        });
         fireEvent(targetCell, dragOverEvent);
 
         const targetRow = targetCell.closest('[data-id]');
