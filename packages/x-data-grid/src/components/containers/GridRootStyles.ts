@@ -731,6 +731,7 @@ export const GridRootStyles = styled('div', {
       opacity: vars.colors.interactive.disabledOpacity,
 
       [`& .${c.rowReorderCellPlaceholder}`]: {
+        padding: '0 6px',
         display: 'flex',
       },
     },
