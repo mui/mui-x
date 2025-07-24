@@ -13,15 +13,15 @@ export function useEventPosition(
     // TODO: Avoid JS date conversion
     const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
 
-    const rowStartTimestamp = getTimestamp(collectionStart);
-    const rowEndTimestamp = getTimestamp(collectionEnd);
-    const rowDurationMs = rowEndTimestamp - rowStartTimestamp;
-    const startTimestamp = Math.max(getTimestamp(start), rowStartTimestamp);
-    const endTimestamp = Math.min(getTimestamp(end), rowEndTimestamp);
+    const collectionStartTimestamp = getTimestamp(collectionStart);
+    const collectionEndTimestamp = getTimestamp(collectionEnd);
+    const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
+    const startTimestamp = Math.max(getTimestamp(start), collectionStartTimestamp);
+    const endTimestamp = Math.min(getTimestamp(end), collectionEndTimestamp);
 
     return {
-      position: (startTimestamp - rowStartTimestamp) / rowDurationMs,
-      duration: (endTimestamp - startTimestamp) / rowDurationMs,
+      position: (startTimestamp - collectionStartTimestamp) / collectionDurationMs,
+      duration: (endTimestamp - startTimestamp) / collectionDurationMs,
     };
   }, [adapter, collectionStart, collectionEnd, start, end]);
 }
