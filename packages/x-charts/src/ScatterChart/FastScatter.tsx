@@ -173,7 +173,7 @@ function useCreatePathsIteratively(
   xScale: D3Scale,
   yScale: D3Scale,
 ) {
-  performance.mark('pathLoopStart');
+  performance.mark('useCreatePathsIteratively-start');
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   const getXPosition = getValueToPositionMapper(xScale);
@@ -206,8 +206,12 @@ function useCreatePathsIteratively(
   if (temporaryPaths.length > 0) {
     paths.push(temporaryPaths.join(''));
   }
-  performance.mark('pathLoopEnd');
-  performance.measure('pathLoop', 'pathLoopStart', 'pathLoopEnd');
+  performance.mark('useCreatePathsIteratively-end');
+  performance.measure(
+    'useCreatePathsIteratively',
+    'useCreatePathsIteratively-start',
+    'useCreatePathsIteratively-end',
+  );
 
   return paths;
 }
