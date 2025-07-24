@@ -38,6 +38,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const ref = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
+  const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
@@ -72,8 +73,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { state: eventState, props: eventProps } = useEvent({ start, end });
 
   const state: TimeGridEvent.State = React.useMemo(
-    () => ({ ...eventState, dragging: isDragging }),
-    [eventState, isDragging],
+    () => ({ ...eventState, dragging: isDragging, resizing: isResizing }),
+    [eventState, isDragging, isResizing],
   );
 
   const contextValue: TimeGridEventContext = React.useMemo(
@@ -81,6 +82,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       eventId,
       start,
       end,
+      setIsResizing,
     }),
     [eventId, start, end],
   );
@@ -126,6 +128,10 @@ export namespace TimeGridEvent {
      * Whether the event is being dragged.
      */
     dragging: boolean;
+    /**
+     * Whether the event is being resized.
+     */
+    resizing: boolean;
   }
 
   export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {
@@ -145,7 +151,6 @@ export namespace TimeGridEvent {
   }
 
   export interface DragData {
-    type: 'event';
     source: 'TimeGridEvent';
     id: string | number;
     start: SchedulerValidDate;

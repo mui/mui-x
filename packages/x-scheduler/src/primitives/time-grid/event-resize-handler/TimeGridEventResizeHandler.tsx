@@ -17,20 +17,19 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
     className,
     render,
     // Internal props
-    side: position,
+    side,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = React.useState(false);
-  const { eventId, start: eventStart, end: eventEnd } = useTimeGridEventContext();
+  const { eventId, setIsResizing, start: eventStart, end: eventEnd } = useTimeGridEventContext();
 
   const props = React.useMemo(() => ({}), []);
 
   const state: TimeGridEventResizeHandler.State = React.useMemo(
-    () => ({ start: position === 'start', end: position === 'end', dragging: isDragging }),
-    [position, isDragging],
+    () => ({ start: side === 'start', end: side === 'end' }),
+    [side],
   );
 
   React.useEffect(() => {
@@ -46,15 +45,16 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
         id: eventId,
         start: eventStart,
         end: eventEnd,
+        side,
         position: getCursorPositionRelativeToElement({ ref, input }),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDragStart: () => setIsDragging(true),
-      onDrop: () => setIsDragging(false),
+      onDragStart: () => setIsResizing(true),
+      onDrop: () => setIsResizing(false),
     });
-  }, [eventStart, eventEnd, eventId]);
+  }, [eventStart, eventEnd, eventId, side, setIsResizing]);
 
   return useRenderElement('div', componentProps, {
     state,
@@ -73,10 +73,6 @@ export namespace TimeGridEventResizeHandler {
      * Whether the resize handler is targeting the end date of the event.
      */
     end: boolean;
-    /**
-     * Whether the resize handler is being dragged.
-     */
-    dragging: boolean;
   }
 
   export interface Props extends BaseUIComponentProps<'div', State> {

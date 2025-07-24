@@ -3,12 +3,13 @@
   background-color: var(--event-background);
   position: relative;
 
-  &[data-dragging] {
+  &[data-dragging],
+  &[data-resizing] {
     opacity: 0.5;
   }
 
   &:hover .EventResizeHandler {
-    display: initial;
+    opacity: 1;
   }
 }
 
@@ -95,7 +96,7 @@
   right: 0;
   z-index: 3;
   cursor: ns-resize;
-  display: none;
+  opacity: 0;
 
   &[data-start] {
     top: 0;

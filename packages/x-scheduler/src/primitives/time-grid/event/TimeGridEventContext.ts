@@ -15,6 +15,10 @@ export interface TimeGridEventContext {
    * The end date and time of the event
    */
   end: SchedulerValidDate;
+  /**
+   * Sets whether the event is being resized.
+   */
+  setIsResizing: (isResizing: boolean) => void;
 }
 
 export const TimeGridEventContext = React.createContext<TimeGridEventContext | undefined>(

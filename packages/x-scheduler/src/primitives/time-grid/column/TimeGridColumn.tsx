@@ -11,6 +11,7 @@ import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import type { TimeGridRoot } from '../root';
 import {
+  createDateFromPositionInCollection,
   EVENT_DRAG_PRECISION_MINUTE,
   getCursorPositionRelativeToElement,
   isDraggingTimeGridEvent,
@@ -103,23 +104,19 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
       // Move event
       if (isDraggingTimeGridEvent(data)) {
-        const eventTopPosition = position.y - data.position.y;
-
-        const relativePosition = eventTopPosition / domElement!.offsetHeight;
-
-        const newStartMinuteInDay =
-          Math.round((relativePosition * 1440) / EVENT_DRAG_PRECISION_MINUTE) *
-          EVENT_DRAG_PRECISION_MINUTE;
+        const cursorPositionPx = position.y - data.position.y;
 
         // TODO: Avoid JS Date conversion
         const eventDuration =
           (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
           (60 * 1000);
 
-        const newStartDate = adapter.setMinutes(
-          adapter.setHours(value, Math.floor(newStartMinuteInDay / 60)),
-          newStartMinuteInDay % 60,
-        );
+        const newStartDate = createDateFromPositionInCollection({
+          adapter,
+          collectionStart: columnStart,
+          collectionEnd: columnEnd,
+          position: cursorPositionPx / domElement!.offsetHeight,
+        });
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
 
@@ -128,11 +125,39 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
       // Resize event
       if (isDraggingTimeGridEventResizeHandler(data)) {
+        const cursorPositionPx = position.y - data.position.y;
+        const cursorDate = createDateFromPositionInCollection({
+          adapter,
+          collectionStart: columnStart,
+          collectionEnd: columnEnd,
+          position: cursorPositionPx / domElement!.offsetHeight,
+        });
+
         if (data.side === 'start') {
-          return undefined;
+          const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
+
+          // Ensure the new start date is not after or too close to the end date.
+          const newStartDate = adapter.isBefore(cursorDate, maxStartDate)
+            ? cursorDate
+            : maxStartDate;
+
+          return {
+            start: newStartDate,
+            end: data.end,
+            id: data.id,
+          };
         }
 
-        return undefined;
+        const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
+
+        // Ensure the new end date is not before or too close to the start date.
+        const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
+
+        return {
+          start: data.start,
+          end: newEndDate,
+          id: data.id,
+        };
       }
 
       return undefined;
@@ -165,7 +190,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         }
       },
     });
-  }, [adapter, onEventChange, setPlaceholder, value]);
+  }, [adapter, onEventChange, setPlaceholder, columnStart, columnEnd]);
 
   return (
     <TimeGridColumnContext.Provider value={contextValue}>
