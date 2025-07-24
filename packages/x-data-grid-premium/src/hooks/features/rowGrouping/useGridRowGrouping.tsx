@@ -494,13 +494,13 @@ function handleLeafToGroupReorder({
   }
 
   if (dropPosition === 'below') {
-    if (sourceNode.depth > targetNode.depth && targetNode.depth === sourceNode.depth - 1) {
-      return targetRowIndex + 1;
-    }
-
     // Cannot drop below collapsed group
     if (!targetNode.childrenExpanded) {
       return -1;
+    }
+
+    if (sourceNode.depth > targetNode.depth && targetNode.depth === sourceNode.depth - 1) {
+      return targetRowIndex + 1;
     }
 
     // Check if source can become first child

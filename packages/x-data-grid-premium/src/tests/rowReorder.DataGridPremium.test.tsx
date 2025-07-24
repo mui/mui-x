@@ -388,6 +388,40 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(itemB1Row).not.to.have.class(gridClasses['row--dropAbove']);
         expect(itemB1Row).not.to.have.class(gridClasses['row--dropBelow']);
       });
+
+      it('should not allow group to be dropped on collapsed group', async () => {
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium
+              {...baselineProps}
+              isGroupExpandedByDefault={(node) => node.groupingKey === 'B'}
+            />
+          </div>,
+        );
+
+        // Expand group B
+        const bIndex = getColumnValues(1).indexOf('B (2)');
+        const groupValues = getColumnValues(1);
+
+        // Grab B's first child and try to drop on the collapsed A
+        const groupBChild = getRow(bIndex + 1);
+        const groupARow = getRow(groupValues.indexOf('A (3)'));
+
+        const sourceCell = groupBChild.querySelector('[role="gridcell"]')!.firstChild!;
+        const targetCell = groupARow.querySelector('[role="gridcell"]')!;
+
+        // Start drag with dataTransfer
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+
+        // Drag over - should show indicator
+        const dragOverEvent = createDragOverEvent(targetCell, 'below');
+        fireEvent(targetCell, dragOverEvent);
+
+        const targetRow = targetCell.closest('[data-id]');
+        // Check for drop indicator class
+        expect(targetRow).not.to.have.class(gridClasses['row--dropBelow']);
+      });
     });
   });
 
