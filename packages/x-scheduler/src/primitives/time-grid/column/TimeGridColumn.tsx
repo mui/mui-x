@@ -178,6 +178,11 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
           setPlaceholder(newPlaceholder);
         }
       },
+      onDragStart: ({ source: { data } }) => {
+        if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
+          setPlaceholder({ id: data.id, start: data.start, end: data.end });
+        }
+      },
       onDrop: ({ source: { data }, location }) => {
         const newEvent = getEventDropData({
           data,
