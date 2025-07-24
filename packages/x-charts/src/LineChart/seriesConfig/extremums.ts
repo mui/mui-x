@@ -39,8 +39,10 @@ function getSeriesExtremums(
 
 export const getExtremumY: CartesianExtremumGetter<'line'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
+  console.log('LineChart getExtremumY');
+  performance.mark('LineChart-getExtremumY-start');
 
-  return Object.keys(series)
+  const result: [number, number] = Object.keys(series)
     .filter((seriesId) => {
       const yAxisId = series[seriesId].yAxisId;
       return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
@@ -70,4 +72,13 @@ export const getExtremumY: CartesianExtremumGetter<'line'> = (params) => {
       },
       [Infinity, -Infinity],
     );
+
+  performance.mark('LineChart-getExtremumY-end');
+  performance.measure(
+    'LineChart-getExtremumY',
+    'LineChart-getExtremumY-start',
+    'LineChart-getExtremumY-end',
+  );
+
+  return result;
 };

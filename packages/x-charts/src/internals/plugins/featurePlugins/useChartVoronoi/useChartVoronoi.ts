@@ -80,6 +80,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       return;
     }
 
+    performance.mark('Delaunay-prepare-points-start');
     voronoiRef.current = {};
     let points: number[] = [];
     seriesOrder.forEach((seriesId) => {
@@ -113,11 +114,17 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       };
       points = points.concat(seriesPoints);
     });
+    performance.mark('Delaunay-prepare-points-end');
+    performance.measure(
+      'Delaunay-prepare-points',
+      'Delaunay-prepare-points-start',
+      'Delaunay-prepare-points-end',
+    );
 
-    performance.mark('new Delaunay start');
+    performance.mark('new Delaunay-start');
     delauneyRef.current = new Delaunay(points);
-    performance.mark('new Delaunay end');
-    performance.measure('new Delaunay()', 'new Delaunay start', 'new Delaunay end');
+    performance.mark('new Delaunay-end');
+    performance.measure('new Delaunay()', 'new Delaunay-start', 'new Delaunay-end');
     lastFind.current = undefined;
   }, [
     zoomIsInteracting,

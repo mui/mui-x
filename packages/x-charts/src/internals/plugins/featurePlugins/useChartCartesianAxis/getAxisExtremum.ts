@@ -19,6 +19,7 @@ const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(
   formattedSeries: ProcessedSeries<TSeriesType>,
   getFilters?: GetZoomAxisFilters,
 ): CartesianExtremumGetterResult => {
+  performance.mark(`axisExtremumCallback-start-${chartType}-${axisDirection}-${axis.id}`);
   const getter =
     axisDirection === 'x'
       ? seriesConfig[chartType].xExtremumGetter
@@ -35,6 +36,12 @@ const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(
 
   const [minData, maxData] = acc;
 
+  performance.mark(`axisExtremumCallback-end-${chartType}-${axisDirection}-${axis.id}`);
+  performance.measure(
+    `axisExtremumCallback-${chartType}-${axisDirection}-${axis.id}`,
+    `axisExtremumCallback-start-${chartType}-${axisDirection}-${axis.id}`,
+    `axisExtremumCallback-end-${chartType}-${axisDirection}-${axis.id}`,
+  );
   return [Math.min(minChartTypeData, minData), Math.max(maxChartTypeData, maxData)];
 };
 
