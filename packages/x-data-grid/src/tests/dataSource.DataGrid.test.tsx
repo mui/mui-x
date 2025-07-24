@@ -271,7 +271,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       expect(pageChangeSpy.callCount).to.equal(2);
     });
 
-    it('should bypass cache when forceRefetch is true', async () => {
+    it('should bypass cache when "skipCache" is true', async () => {
       const testCache = new TestCache();
       render(<TestDataSource dataSourceCache={testCache} />);
 
