@@ -96,13 +96,6 @@ function processPackage(basePackageName) {
     componentDirectories.join(', '),
   );
 
-  // Process base package first (create deep exports for base package too)
-  createDeepExportFile(basePackagePath, 'package', basePackageName, false);
-
-  for (const componentName of componentDirectories) {
-    createDeepExportFile(basePackagePath, componentName, basePackageName, false);
-  }
-
   // Process pro and premium packages
   const targetPackagePath = path.join(process.cwd(), 'packages', targetPackage);
 
