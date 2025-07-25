@@ -107,6 +107,15 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
   );
 
   const setView: EventCalendarInstance['setView'] = useEventCallback((view, event) => {
+    if (!store.state.views.includes(view)) {
+      throw new Error(
+        [
+          `Event Calendar: The view "${view}" provided to the setView method is not compatible with the available views: ${views.join(', ')}.`,
+          'Please ensure that the requested view is included in the views array.',
+        ].join('\n'),
+      );
+    }
+
     if (viewProp === undefined) {
       store.set('view', view);
     }
