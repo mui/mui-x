@@ -22,7 +22,8 @@ import { useSvgRef } from '../hooks';
 
 const noAxis = () => false;
 
-export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
+export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
+  extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
@@ -30,7 +31,7 @@ export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
    * - 'none': Does not display tooltip
    * @default 'axis'
    */
-  trigger?: TriggerOptions;
+  trigger?: T;
   /**
    * Override or extend the styles applied to the component.
    */
