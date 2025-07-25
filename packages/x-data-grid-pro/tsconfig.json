@@ -1,7 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"]
+    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"],
+    // TODO(Jan): Remove once MUI_EXPERIMENTAL_MJS=1 is the default option for the build
+    "skipLibCheck": false
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
