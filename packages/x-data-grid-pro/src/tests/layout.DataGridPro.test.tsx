@@ -6,6 +6,7 @@ import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-da
 import { ptBR } from '@mui/x-data-grid-pro/locales';
 import { grid } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 
 describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
   const { render } = createRenderer();

@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["@mui/material/themeCssVarsAugmentation"]
+    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"]
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
