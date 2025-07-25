@@ -9,7 +9,6 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "skipLibCheck": true,
     "types": ["../../mui-env.d.ts"]
   },
   "include": ["src/**/*.ts*"],

@@ -30,7 +30,9 @@
     "data-grid"
   ],
   "scripts": {
-    "typescript": "tsc -p tsconfig.json",
+    "typescript": "pnpm typescript:src && pnpm typescript:test",
+    "typescript:src": "tsc -p tsconfig.json",
+    "typescript:test": "tsc -p tsconfig.test.json",
     "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
     "build:node": "node ../../scripts/build.mjs node",
     "build:stable": "node ../../scripts/build.mjs stable",
