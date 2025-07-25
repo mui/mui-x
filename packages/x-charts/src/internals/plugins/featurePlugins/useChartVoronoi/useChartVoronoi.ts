@@ -5,7 +5,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import Flatbush from 'flatbush';
 import { ChartPlugin } from '../../models';
-import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { UseChartVoronoiSignature } from './useChartVoronoi.types';
 import { getSVGPoint } from '../../../getSVGPoint';
@@ -18,21 +17,6 @@ import {
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
-
-type VoronoiSeries = {
-  /**
-   * The series id
-   */
-  seriesId: SeriesId;
-  /**
-   * The first index in the voronoi data that is about this series.
-   */
-  startIndex: number;
-  /**
-   * The first index in the voronoi data that is outside this series.
-   */
-  endIndex: number;
-};
 
 export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   svgRef,
@@ -48,8 +32,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
 
   const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
-  const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
-  const flatbushRef = React.useRef<Flatbush | undefined>(undefined);
+  const flatbushMapRef = React.useRef<Record<SeriesId, Flatbush>>({});
 
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
@@ -75,14 +58,9 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       return;
     }
 
-    voronoiRef.current = {};
-    const dataPoints = Object.values(series).reduce((acc, aSeries) => acc + aSeries.data.length, 0);
-    const flatbush = new Flatbush(dataPoints);
-    let seriesStartIndex = 0;
-    let currentIndex = 0;
-
     seriesOrder.forEach((seriesId) => {
       const { data, xAxisId, yAxisId } = series[seriesId];
+      const flatbush = new Flatbush(data.length);
 
       const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
       const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
@@ -91,25 +69,15 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       originalXScale.range([0, 1]);
       originalYScale.range([0, 1]);
 
-      seriesStartIndex = currentIndex;
-
       for (const datum of data) {
         // Add the points using a [0, 1]. This makes it so that we don't need to recreate the Flatbush structure when zooming.
         flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
-
-        currentIndex += 1;
       }
 
-      voronoiRef.current[seriesId] = {
-        seriesId,
-        startIndex: seriesStartIndex,
-        endIndex: seriesStartIndex + currentIndex,
-      };
+      flatbush.finish();
+      // FIXME: This is slightly inefficient as we can have one flatbush per xAxisId and yAxisId combination.
+      flatbushMapRef.current[seriesId] = flatbush;
     });
-
-    // FIXME: This is slightly incorrect because we'll need one flatbush per series. Or more, accurately, one flatbush per xAxisId and yAxisId combination.
-    flatbush.finish();
-    flatbushRef.current = flatbush;
   }, [
     zoomIsInteracting,
     defaultXAxisId,
@@ -143,63 +111,81 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         return 'outside-chart';
       }
 
-      const flatbush = flatbushRef.current;
+      const flatbushMap = flatbushMapRef.current;
 
-      if (!flatbush) {
+      if (!flatbushMap) {
         return 'no-point-found';
       }
 
-      const xAxisZoom = selectorChartAxisZoomData(
-        store.getSnapshot(),
-        Object.values(series)[0].xAxisId ?? xAxisIds[0],
-      );
-      const yAxisZoom = selectorChartAxisZoomData(
-        store.getSnapshot(),
-        Object.values(series)[0].yAxisId ?? yAxisIds[0],
-      );
-      const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
-      const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
-      const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
-      const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
+      let closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined;
 
-      const excludeIfOutsideDrawingArea = function excludeIfOutsideDrawingArea(index: number) {
-        // eslint-disable-next-line no-underscore-dangle
-        const boxes = flatbush._boxes;
-        const x = boxes[index * 4];
-        const y = boxes[index * 4 + 1];
+      for (const seriesId of seriesOrder ?? []) {
+        const aSeries = (series ?? {})[seriesId];
+        const flatbush = flatbushMap[seriesId];
 
-        return x >= xZoomStart && x <= xZoomEnd && y >= yZoomStart && y <= yZoomEnd;
-      };
+        const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
+        const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
 
-      const pointX =
-        xZoomStart +
-        ((svgPoint.x - drawingArea.left) / drawingArea.width) * (xZoomEnd - xZoomStart);
-      const pointY =
-        yZoomStart +
-        (1 - (svgPoint.y - drawingArea.top) / drawingArea.height) * (yZoomEnd - yZoomStart);
-      const closestPointIndex = flatbush.neighbors(
-        pointX,
-        pointY,
-        1,
-        Infinity,
-        excludeIfOutsideDrawingArea,
-      )[0];
+        const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
+        const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
 
-      if (closestPointIndex === undefined) {
+        const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
+        const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
+        const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
+        const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
+
+        const xScale = xAxis[xAxisId].scale;
+        const yScale = yAxis[yAxisId].scale;
+        const originalXScale = xScale.copy();
+        const originalYScale = yScale.copy();
+        originalXScale.range([0, 1]);
+        originalYScale.range([0, 1]);
+
+        const excludeIfOutsideDrawingArea = function excludeIfOutsideDrawingArea(index: number) {
+          const x = originalXScale(aSeries.data[index].x)!;
+          const y = originalYScale(aSeries.data[index].y)!;
+
+          return x >= xZoomStart && x <= xZoomEnd && y >= yZoomStart && y <= yZoomEnd;
+        };
+
+        const pointX =
+          xZoomStart +
+          ((svgPoint.x - drawingArea.left) / drawingArea.width) * (xZoomEnd - xZoomStart);
+        const pointY =
+          yZoomStart +
+          (1 - (svgPoint.y - drawingArea.top) / drawingArea.height) * (yZoomEnd - yZoomStart);
+        const closestPointIndex = flatbush.neighbors(
+          pointX,
+          pointY,
+          1,
+          Infinity,
+          excludeIfOutsideDrawingArea,
+        )[0];
+
+        if (closestPointIndex === undefined) {
+          continue;
+        }
+
+        const point = aSeries.data[closestPointIndex];
+        const scaledX = xAxis[xAxisId].scale(point.x);
+        const scaledY = yAxis[yAxisId].scale(point.y);
+
+        const distSq = (scaledX! - svgPoint.x) ** 2 + (scaledY! - svgPoint.y) ** 2;
+
+        if (closestPoint === undefined || distSq < closestPoint?.distanceSq) {
+          closestPoint = {
+            dataIndex: closestPointIndex,
+            seriesId,
+            distanceSq: distSq,
+          };
+        }
+      }
+
+      if (closestPoint === undefined) {
         return 'no-point-found';
       }
 
-      const closestSeries = Object.values(voronoiRef.current).find((value) => {
-        return closestPointIndex >= value.startIndex && closestPointIndex < value.endIndex;
-      });
-
-      if (closestSeries === undefined) {
-        return 'no-point-found';
-      }
-
-      const dataIndex = closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex;
-
-      return { seriesId: closestSeries.seriesId, dataIndex };
+      return { seriesId: closestPoint.seriesId, dataIndex: closestPoint.dataIndex };
     }
 
     // Clean the interaction when the mouse leaves the chart.
@@ -267,7 +253,21 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       pressHandler.cleanup();
       pressEndHandler.cleanup();
     };
-  }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
+  }, [
+    svgRef,
+    yAxis,
+    xAxis,
+    voronoiMaxRadius,
+    onItemClick,
+    disableVoronoi,
+    drawingArea,
+    instance,
+    seriesOrder,
+    series,
+    defaultXAxisId,
+    defaultYAxisId,
+    store,
+  ]);
 
   // Instance implementation
   const enableVoronoiCallback = useEventCallback(() => {
