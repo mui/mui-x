@@ -9,16 +9,18 @@ import {
   gridRowsLookupSelector,
   gridColumnLookupSelector,
   useGridRootProps,
+  type GridUpdateRowParams,
 } from '@mui/x-data-grid-pro';
 import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 
 export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPremium>) => {
   const rootProps = useGridRootProps();
-  const { processRowUpdate, onProcessRowUpdateError } = rootProps;
+  const { processRowUpdate, onProcessRowUpdateError, dataSource } = rootProps;
 
   const setRowIndex = React.useCallback(
     (sourceRowId: GridRowId, targetOriginalIndex: number) => {
@@ -233,8 +235,27 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
           apiRef.current.publishEvent('rowsSet');
         };
 
-        // Handle processRowUpdate if provided
-        if (processRowUpdate) {
+        if (dataSource?.updateRow) {
+          if (isDeepEqual(originalSourceRow, updatedSourceRow)) {
+            commitStateUpdate(updatedSourceRow);
+            return;
+          }
+
+          const updateRowParams: GridUpdateRowParams = {
+            rowId: sourceRowId,
+            updatedRow: updatedSourceRow,
+            previousRow: originalSourceRow,
+          };
+
+          Promise.resolve(apiRef.current.dataSource.editRow(updateRowParams))
+            .then(() => {
+              commitStateUpdate(updatedSourceRow);
+            })
+            .catch(() => {
+              // Error occurred, don't update the state
+              // In edit mode, this would revert the mode, but for row reorder we just skip the update
+            });
+        } else if (processRowUpdate) {
           const handleError = (errorThrown: any) => {
             if (onProcessRowUpdateError) {
               onProcessRowUpdateError(errorThrown);
@@ -262,7 +283,6 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
             handleError(errorThrown);
           }
         } else {
-          // No `processRowUpdate` provided, commit directly
           commitStateUpdate(updatedSourceRow);
         }
       } else {
@@ -275,7 +295,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
         );
       }
     },
-    [apiRef, processRowUpdate, onProcessRowUpdateError],
+    [apiRef, processRowUpdate, onProcessRowUpdateError, dataSource?.updateRow],
   );
 
   return {
