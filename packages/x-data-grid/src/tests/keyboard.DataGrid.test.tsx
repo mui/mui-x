@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import {
   getActiveCell,
@@ -16,7 +16,6 @@ import {
   GridColDef,
   GridColType,
   GridValueSetter,
-  useGridApiRef,
 } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
@@ -200,9 +199,7 @@ describe('<DataGrid /> - Keyboard', () => {
         await user.click(cell);
         expect(getActiveCell()).to.equal('8-1');
         fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
-        await waitFor(() => {
-          expect(getActiveCell()).to.equal(`3-1`);
-        });
+        expect(getActiveCell()).to.equal(`3-1`);
       },
     );
 
@@ -251,49 +248,35 @@ describe('<DataGrid /> - Keyboard', () => {
       await user.click(cell);
       expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home' });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('8-0');
-      });
+      expect(getActiveCell()).to.equal('8-0');
       fireEvent.keyDown(document.activeElement!, { key: 'Home' });
       expect(getActiveCell()).to.equal('8-0'); // Already on the 1st cell
     });
 
     it('should navigate to the 1st cell of the 1st row when pressing "Home" + ctrlKey of metaKey of shiftKey', async () => {
-      const { user } = render(<NavigationTestCaseNoScrollX disableVirtualization />);
+      const { user } = render(<NavigationTestCaseNoScrollX />);
 
       const cell = getCell(8, 1);
       await user.click(cell);
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('8-1');
-      });
+      expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', ctrlKey: true });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('0-0');
-      });
+      expect(getActiveCell()).to.equal('0-0');
 
       if (!isJSDOM) {
         await act(async () => cell.scrollIntoView());
       }
       await user.click(cell);
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('8-1');
-      });
+      expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', metaKey: true });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('0-0');
-      });
+      expect(getActiveCell()).to.equal('0-0');
 
       if (!isJSDOM) {
         await act(async () => cell.scrollIntoView());
       }
       await user.click(cell);
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('8-1');
-      });
+      expect(getActiveCell()).to.equal('8-1');
       fireEvent.keyDown(document.activeElement!, { key: 'Home', shiftKey: true });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('0-0');
-      });
+      expect(getActiveCell()).to.equal('0-0');
     });
 
     it('should navigate to the last cell of the current row when pressing "End"', async () => {
