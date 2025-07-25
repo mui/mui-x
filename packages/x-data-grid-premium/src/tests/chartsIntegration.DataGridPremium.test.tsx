@@ -90,6 +90,21 @@ const configurationOptions: GridChartsConfigurationOptions = {
       },
     ],
   },
+  type3: {
+    label: 'Type 3',
+    icon: GridChartsIcon,
+    maxCategories: 1,
+    maxSeries: 1,
+    customization: [
+      {
+        id: 'mainSection',
+        label: 'Main Section',
+        controls: {
+          isTrue: { label: 'Is True', type: 'boolean', default: true },
+        },
+      },
+    ],
+  },
 };
 
 describe('<DataGridPremium /> - Charts Integration', () => {
@@ -364,7 +379,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
     });
 
-    it('should allow setting string columns as series', () => {
+    it('should not allow setting string columns as series', () => {
       render(<Test />);
 
       expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
@@ -375,6 +390,38 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       });
 
       expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+    });
+
+    it('should not allow adding more categories or series than the max limit', async () => {
+      render(
+        <Test
+          initialState={{
+            chartsIntegration: {
+              charts: {
+                test: {
+                  chartType: 'type3',
+                },
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+
+      act(() => {
+        apiRef!.current?.updateCategories('test', [{ field: 'category1' }, { field: 'category2' }]);
+      });
+
+      act(() => {
+        apiRef!.current?.updateSeries('test', [{ field: 'amount' }, { field: 'category2' }]);
+      });
+
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
+      });
+      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
     });
   });
 
