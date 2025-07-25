@@ -5,6 +5,7 @@ import {
   GridChartsPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
@@ -35,10 +36,11 @@ export default function GridChartsIntegrationBasic() {
               },
             }}
             initialState={{
+              sidebar: {
+                open: true,
+                value: GridSidebarValue.Charts,
+              },
               chartsIntegration: {
-                configurationPanel: {
-                  open: true,
-                },
                 charts: {
                   main: {
                     categories: ['name'],
