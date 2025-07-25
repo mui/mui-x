@@ -3,7 +3,6 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import Flatbush from 'flatbush';
 import { ChartPlugin } from '../../models';
 import { SeriesId } from '../../../../models/seriesType/common';
 import { UseChartVoronoiSignature } from './useChartVoronoi.types';
@@ -11,6 +10,7 @@ import { getSVGPoint } from '../../../getSVGPoint';
 import { useSelector } from '../../../store/useSelector';
 import {
   selectorChartAxisZoomData,
+  selectorChartSeriesFlatbushMap,
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../useChartCartesianAxis';
@@ -30,7 +30,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
   const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
-  const flatbushMapRef = React.useRef<Record<SeriesId, Flatbush>>({});
+  const flatbushMap = useSelector(store, selectorChartSeriesFlatbushMap);
 
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
@@ -47,36 +47,6 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
           },
     );
   }, [store, disableVoronoi]);
-
-  useEnhancedEffect(() => {
-    // This effect generate and store the data structure that's used to obtain the closest point to a given coordinate.
-
-    if (seriesOrder === undefined || series === undefined || disableVoronoi) {
-      // If there is no scatter chart series
-      return;
-    }
-
-    seriesOrder.forEach((seriesId) => {
-      const { data, xAxisId, yAxisId } = series[seriesId];
-      const flatbush = new Flatbush(data.length);
-
-      const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
-      const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
-      const originalXScale = xScale.copy();
-      const originalYScale = yScale.copy();
-      originalXScale.range([0, 1]);
-      originalYScale.range([0, 1]);
-
-      for (const datum of data) {
-        // Add the points using a [0, 1]. This makes it so that we don't need to recreate the Flatbush structure when zooming.
-        flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
-      }
-
-      flatbush.finish();
-      // FIXME: This is slightly inefficient as we can have one flatbush per xAxisId and yAxisId combination.
-      flatbushMapRef.current[seriesId] = flatbush;
-    });
-  }, [defaultXAxisId, defaultYAxisId, disableVoronoi, series, seriesOrder, xAxis, yAxis]);
 
   React.useEffect(() => {
     if (svgRef.current === null || disableVoronoi) {
@@ -98,17 +68,15 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         return 'outside-chart';
       }
 
-      const flatbushMap = flatbushMapRef.current;
-
-      if (!flatbushMap) {
-        return 'no-point-found';
-      }
-
       let closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined;
 
       for (const seriesId of seriesOrder ?? []) {
         const aSeries = (series ?? {})[seriesId];
-        const flatbush = flatbushMap[seriesId];
+        const flatbush = flatbushMap.get(seriesId);
+
+        if (!flatbush) {
+          continue;
+        }
 
         const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
         const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
@@ -265,6 +233,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
     defaultXAxisId,
     defaultYAxisId,
     store,
+    flatbushMap,
   ]);
 
   // Instance implementation
