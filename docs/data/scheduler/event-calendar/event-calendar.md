@@ -41,4 +41,6 @@ All the views of the Event Calendar can be used as standalone components:
 
 ## Customization
 
+### Change the available views
+
 {{"demo": "RemoveViews.js", "bg": "inline", "defaultCodeOpen": false}}

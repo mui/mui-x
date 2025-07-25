@@ -26,7 +26,6 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[2]).to.have.text('Other ');
   });
 
-
   it('should render the two first views + Others for a custom set of views (with more than 3 views)', () => {
     render(
       <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day', 'month']}>
@@ -41,10 +40,13 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[2]).to.have.text('Other ');
   });
 
-
   it('should render the two first views + the selected view for a custom set of views (with more than 3 views)', () => {
     render(
-      <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day', 'month']} view="month">
+      <StandaloneView
+        {...standaloneDefaults}
+        views={['agenda', 'week', 'day', 'month']}
+        view="month"
+      >
         <ViewSwitcher />
       </StandaloneView>,
     );
@@ -56,10 +58,9 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[2]).to.have.text('Month ');
   });
 
-
   it('should render the three first views for a custom set of views (with exactly 3 views)', () => {
     render(
-      <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day']} >
+      <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day']}>
         <ViewSwitcher />
       </StandaloneView>,
     );
@@ -71,11 +72,9 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[2]).to.have.text('Day');
   });
 
-
-
   it('should render the two first views for a custom set of views (with exactly 2 views)', () => {
     render(
-      <StandaloneView {...standaloneDefaults} views={['agenda', 'week']} >
+      <StandaloneView {...standaloneDefaults} views={['agenda', 'week']}>
         <ViewSwitcher />
       </StandaloneView>,
     );

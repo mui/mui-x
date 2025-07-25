@@ -15,7 +15,7 @@ export default function RemoveViews() {
       defaultVisibleDate={events[0].start}
       onEventsChange={setEvents}
       className={classes.Container}
-      views={["week", "month"]}
+      views={['week', 'month']}
     />
   );
 }
