@@ -59,7 +59,7 @@ export interface UseEventCalendarParameters {
    */
   areEventsDraggable?: boolean;
   /**
-   * Whether the event start or end can be dragged to change its duration without changing this other date.
+   * Whether the event start or end can be dragged to change its duration without changing its other date.
    * @default false
    */
   areEventsResizable?: boolean;
