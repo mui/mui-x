@@ -25,6 +25,7 @@ export interface FastScatterProps {
 }
 
 const MAX_POINTS_PER_PATH = 1000;
+const ALMOST_ZERO = 0.01;
 
 function useCreatePathsIteratively(
   series: DefaultizedScatterSeriesType,
@@ -50,9 +51,7 @@ function useCreatePathsIteratively(
     const isInRange = instance.isPointInside(x, y);
 
     if (isInRange) {
-      temporaryPaths.push(
-        `M${x + radius} ${y + radius} A${radius} ${radius} 0 1 1 ${x + radius} ${y + radius - 0.01}`,
-      );
+      temporaryPaths.push(`M${x - radius} ${y} a${radius} ${radius} 0 1 1 0 ${ALMOST_ZERO}`);
     }
 
     if (temporaryPaths.length >= MAX_POINTS_PER_PATH) {
