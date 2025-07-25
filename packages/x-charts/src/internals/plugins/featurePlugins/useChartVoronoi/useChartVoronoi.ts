@@ -11,6 +11,7 @@ import { UseChartVoronoiSignature } from './useChartVoronoi.types';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { useSelector } from '../../../store/useSelector';
 import {
+  selectorChartAxisZoomData,
   selectorChartXAxis,
   selectorChartYAxis,
   selectorChartZoomIsInteracting,
@@ -74,7 +75,6 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       return;
     }
 
-    const start = performance.now();
     voronoiRef.current = {};
     const dataPoints = Object.values(series).reduce((acc, aSeries) => acc + aSeries.data.length, 0);
     const flatbush = new Flatbush(dataPoints);
@@ -86,24 +86,16 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
       const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
       const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
-
-      const getXPosition = getValueToPositionMapper(xScale);
-      const getYPosition = getValueToPositionMapper(yScale);
+      const originalXScale = xScale.copy();
+      const originalYScale = yScale.copy();
+      originalXScale.range([0, 1]);
+      originalYScale.range([0, 1]);
 
       seriesStartIndex = currentIndex;
 
       for (const datum of data) {
-        const pointX = getXPosition(datum.x);
-        const pointY = getYPosition(datum.y);
-
-        if (!instance.isPointInside(pointX, pointY)) {
-          // If the point is not displayed we move them to a trash coordinate.
-          // This avoids managing index mapping before/after filtering.
-          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
-          flatbush.add(-drawingArea.width, -drawingArea.height);
-        } else {
-          flatbush.add(pointX, pointY);
-        }
+        // Add the points using a [0, 1]. This makes it so that we don't need to recreate the Flatbush structure when zooming.
+        flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
 
         currentIndex += 1;
       }
@@ -115,10 +107,9 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       };
     });
 
+    // FIXME: This is slightly incorrect because we'll need one flatbush per series. Or more, accurately, one flatbush per xAxisId and yAxisId combination.
     flatbush.finish();
     flatbushRef.current = flatbush;
-    const end = performance.now();
-    performance.measure('flatbush-init', { start, end });
   }, [
     zoomIsInteracting,
     defaultXAxisId,
@@ -152,19 +143,47 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         return 'outside-chart';
       }
 
-      if (!flatbushRef.current) {
+      const flatbush = flatbushRef.current;
+
+      if (!flatbush) {
         return 'no-point-found';
       }
 
-      const start = performance.now();
-      const closestPointIndex = flatbushRef.current.neighbors(
-        svgPoint.x,
-        svgPoint.y,
+      const xAxisZoom = selectorChartAxisZoomData(
+        store.getSnapshot(),
+        Object.values(series)[0].xAxisId ?? xAxisIds[0],
+      );
+      const yAxisZoom = selectorChartAxisZoomData(
+        store.getSnapshot(),
+        Object.values(series)[0].yAxisId ?? yAxisIds[0],
+      );
+      const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
+      const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
+      const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
+      const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
+
+      const excludeIfOutsideDrawingArea = function excludeIfOutsideDrawingArea(index: number) {
+        // eslint-disable-next-line no-underscore-dangle
+        const boxes = flatbush._boxes;
+        const x = boxes[index * 4];
+        const y = boxes[index * 4 + 1];
+
+        return x >= xZoomStart && x <= xZoomEnd && y >= yZoomStart && y <= yZoomEnd;
+      };
+
+      const pointX =
+        xZoomStart +
+        ((svgPoint.x - drawingArea.left) / drawingArea.width) * (xZoomEnd - xZoomStart);
+      const pointY =
+        yZoomStart +
+        (1 - (svgPoint.y - drawingArea.top) / drawingArea.height) * (yZoomEnd - yZoomStart);
+      const closestPointIndex = flatbush.neighbors(
+        pointX,
+        pointY,
         1,
-        voronoiMaxRadius ?? Infinity,
+        Infinity,
+        excludeIfOutsideDrawingArea,
       )[0];
-      const end = performance.now();
-      performance.measure('flatbush-neighbors', { start, end });
 
       if (closestPointIndex === undefined) {
         return 'no-point-found';
