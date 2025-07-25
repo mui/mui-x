@@ -6,18 +6,19 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridLogger,
   useGridEvent,
-  GridEventListener,
+  type GridEventListener,
   getDataGridUtilityClass,
   useGridSelector,
   gridSortModelSelector,
   useGridEventPriority,
   gridRowNodeSelector,
-  GridRowId,
+  type GridRowId,
   gridRowMaximumTreeDepthSelector,
+  type GridGroupNode,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
-  GridPipeProcessor,
+  type GridPipeProcessor,
   gridExpandedSortedRowIndexLookupSelector,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
@@ -69,7 +70,7 @@ export const useGridRowReorder = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'rowReordering' | 'onRowOrderChange' | 'classes' | 'treeData'
+    'rowReordering' | 'onRowOrderChange' | 'classes' | 'treeData' | 'dataSource'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
@@ -296,14 +297,17 @@ export const useGridRowReorder = (
         if (
           sourceNode.type === 'leaf' &&
           targetNode.type === 'group' &&
-          // TODO: Handle leaf rows with missing groups i.e targetNode.depth >= sourceNode.depth
           targetNode.depth < sourceNode.depth &&
           !targetNode.childrenExpanded &&
           !timeoutRowId.current
         ) {
           timeout.start(500, () => {
-            // TODO: Handle data source use case
-            apiRef.current.setRowChildrenExpansion(params.id, true);
+            const rowNode = gridRowNodeSelector(apiRef, params.id) as GridGroupNode;
+            if (!rowNode.childrenExpanded && props.dataSource) {
+              // always fetch/get from cache the children when the node is expanded
+              apiRef.current.dataSource.fetchRows(params.id);
+            }
+            apiRef.current.setRowChildrenExpansion(params.id, !rowNode.childrenExpanded);
           });
           timeoutRowId.current = params.id;
           return;
@@ -377,7 +381,15 @@ export const useGridRowReorder = (
         event.dataTransfer.dropEffect = 'copy';
       }
     },
-    [dragRowId, apiRef, logger, timeout, sortedRowIndexLookup, applyDropIndicator],
+    [
+      dragRowId,
+      apiRef,
+      logger,
+      timeout,
+      sortedRowIndexLookup,
+      applyDropIndicator,
+      props.dataSource,
+    ],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
