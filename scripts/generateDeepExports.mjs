@@ -65,7 +65,7 @@ function createDeepExportFile(targetPackagePath, componentName, sourcePackageNam
 
   if (isProOrPremium) {
     // For pro/premium packages, export from both the base package and the pro/premium specific exports
-    exportContent = `// Re-export from base package
+    exportContent = `// Re-export automatically generated with generateDeepExports.mjs
 export * from '@mui/${sourcePackageName}/${componentName}';
 `;
   }
@@ -108,7 +108,7 @@ function processPackage(basePackageName) {
 
   // Get additional components specific to pro/premium
   const targetComponentDirs = getComponentDirectories(targetPackagePath);
-  const allComponents = [...new Set([...componentDirectories, ...targetComponentDirs])];
+  const allComponents = componentDirectories.filter((name) => !targetComponentDirs.includes(name));
 
   console.warn(`Creating deep exports for ${allComponents.length} components`);
 
