@@ -6,18 +6,13 @@ import { GridChartsPanelDataHeader } from './GridChartsPanelDataHeader';
 
 export type SectionLimitLookup = Map<'categories' | 'series', number>;
 
-export interface GridChartsPanelDataProps {
-  sectionLimitLookup: SectionLimitLookup;
-}
-
-function GridChartsPanelData(props: GridChartsPanelDataProps) {
-  const { sectionLimitLookup } = props;
+function GridChartsPanelData() {
   const [searchValue, setSearchValue] = React.useState<string>('');
 
   return (
     <React.Fragment>
       <GridChartsPanelDataHeader searchValue={searchValue} onSearchValueChange={setSearchValue} />
-      <GridChartsPanelDataBody searchValue={searchValue} sectionLimitLookup={sectionLimitLookup} />
+      <GridChartsPanelDataBody searchValue={searchValue} />
     </React.Fragment>
   );
 }
