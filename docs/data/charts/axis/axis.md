@@ -277,6 +277,16 @@ You can test below how the value of `angle` influences them.
 
 {{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
+## Symlog scale
+
+A log scale cannot plot zero since the logarithm of zero is undefined.
+
+To overcome this, you can use a symlog scale, which uses a linear scale for values close to zero and a logarithmic scale for the remaining ones.
+
+You can also configure the values at which the scale switches from linear to logarithmic with the `constant` property, which defaults to 1.
+
+{{"demo": "SymlogScale.js"}}
+
 ## Composition
 
 If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.

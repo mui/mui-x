@@ -30,6 +30,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     visibleDate: visibleDateProp,
     defaultVisibleDate,
     onVisibleDateChange,
+    areEventsDraggable,
+    areEventsResizable,
     translations,
     className,
     ...other
@@ -44,6 +46,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     visibleDate: visibleDateProp,
     defaultVisibleDate,
     onVisibleDateChange,
+    areEventsDraggable,
+    areEventsResizable,
   });
 
   const view = useSelector(store, selectors.view);

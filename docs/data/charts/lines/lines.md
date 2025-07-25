@@ -41,6 +41,12 @@ You can fill the area of the line by setting the series' `area` property to `tru
 
 {{"demo": "BasicArea.js"}}
 
+### Log scale
+
+A y-axis with a log scale cannot plot a line that crosses zero nor an area chart because the logarithm of zero is undefined.
+
+You can work around this limitation by using a [symlog scale](/x/react-charts/axis/#symlog-scale).
+
 ### Stacking
 
 Each line series can get a `stack` property which expects a string value.

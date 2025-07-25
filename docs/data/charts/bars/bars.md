@@ -87,6 +87,12 @@ It also doesn't work with stacked series.
 
 {{"demo": "MinBarSize.js"}}
 
+### Log scale
+
+A bar chart renders a bar from 0 to the value of a data point. However, the logarithm of zero is undefined, meaning that a y-axis with a log scale cannot plot the bar.
+
+You can work around this limitation by using a [symlog scale](/x/react-charts/axis/#symlog-scale).
+
 ## Customization
 
 ### Grid
