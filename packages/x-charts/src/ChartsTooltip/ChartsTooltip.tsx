@@ -6,8 +6,10 @@ import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
+import { TriggerOptions } from './utils';
 
-export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'children'> {}
+export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions>
+  extends Omit<ChartsTooltipContainerProps<T>, 'children'> {}
 
 /**
  * Demos:
