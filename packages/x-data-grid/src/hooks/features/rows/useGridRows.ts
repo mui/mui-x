@@ -84,6 +84,8 @@ export const useGridRows = (
     | 'paginationMode'
     | 'loading'
     | 'dataSource'
+    | 'processRowUpdate'
+    | 'onProcessRowUpdateError'
   >,
   configuration: GridConfiguration,
 ): void => {
@@ -103,7 +105,7 @@ export const useGridRows = (
   const timeout = useTimeout();
 
   // Get overridable methods from configuration
-  const { setRowIndex } = configuration.hooks.useGridRowsOverridableMethods(apiRef);
+  const { setRowIndex } = configuration.hooks.useGridRowsOverridableMethods(apiRef, props);
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => {

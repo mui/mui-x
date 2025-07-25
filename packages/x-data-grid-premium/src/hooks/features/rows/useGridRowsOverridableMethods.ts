@@ -8,8 +8,7 @@ import {
   GridLeafNode,
   gridRowsLookupSelector,
   gridColumnLookupSelector,
-  useGridRootProps,
-  type GridUpdateRowParams,
+  GridUpdateRowParams,
 } from '@mui/x-data-grid-pro';
 import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -17,10 +16,16 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
-export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPremium>) => {
-  const rootProps = useGridRootProps();
-  const { processRowUpdate, onProcessRowUpdateError, dataSource } = rootProps;
+export const useGridRowsOverridableMethods = (
+  apiRef: RefObject<GridPrivateApiPremium>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    'processRowUpdate' | 'onProcessRowUpdateError' | 'dataSource'
+  >,
+) => {
+  const { processRowUpdate, onProcessRowUpdateError, dataSource } = props;
 
   const setRowIndex = React.useCallback(
     (sourceRowId: GridRowId, targetOriginalIndex: number) => {
@@ -236,53 +241,70 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
         };
 
         if (dataSource?.updateRow) {
-          if (isDeepEqual(originalSourceRow, updatedSourceRow)) {
-            commitStateUpdate(updatedSourceRow);
-            return;
-          }
+          if (!isDeepEqual(originalSourceRow, updatedSourceRow)) {
+            const params: GridUpdateRowParams = {
+              rowId: sourceRowId,
+              previousRow: originalSourceRow,
+              updatedRow: updatedSourceRow,
+            };
 
-          const updateRowParams: GridUpdateRowParams = {
-            rowId: sourceRowId,
-            updatedRow: updatedSourceRow,
-            previousRow: originalSourceRow,
-          };
-
-          Promise.resolve(apiRef.current.dataSource.editRow(updateRowParams))
-            .then(() => {
-              commitStateUpdate(updatedSourceRow);
-            })
-            .catch(() => {
-              // Error occurred, don't update the state
-              // In edit mode, this would revert the mode, but for row reorder we just skip the update
-            });
-        } else if (processRowUpdate) {
-          const handleError = (errorThrown: any) => {
-            if (onProcessRowUpdateError) {
-              onProcessRowUpdateError(errorThrown);
-            } else {
-              warnOnce(
-                [
-                  'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-                  'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-                  'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
-                ],
-                'error',
-              );
+            try {
+              Promise.resolve(dataSource.updateRow(params))
+                .then((syncedRow) => {
+                  const finalRow = syncedRow || updatedSourceRow;
+                  commitStateUpdate(finalRow);
+                })
+                .catch((error) => {
+                  if (onProcessRowUpdateError) {
+                    onProcessRowUpdateError(error);
+                  } else {
+                    throw error;
+                  }
+                });
+            } catch (error) {
+              if (onProcessRowUpdateError) {
+                onProcessRowUpdateError(error);
+              } else {
+                throw error;
+              }
             }
-          };
+          } else {
+            commitStateUpdate(updatedSourceRow);
+          }
+        } else if (processRowUpdate) {
+          if (!isDeepEqual(originalSourceRow, updatedSourceRow)) {
+            const params: GridUpdateRowParams = {
+              rowId: sourceRowId,
+              previousRow: originalSourceRow,
+              updatedRow: updatedSourceRow,
+            };
 
-          try {
-            Promise.resolve(
-              processRowUpdate(updatedSourceRow, originalSourceRow, { rowId: sourceRowId }),
-            )
-              .then((finalRowUpdate) => {
-                commitStateUpdate(finalRowUpdate);
-              })
-              .catch(handleError);
-          } catch (errorThrown) {
-            handleError(errorThrown);
+            try {
+              Promise.resolve(processRowUpdate(updatedSourceRow, originalSourceRow, params))
+                .then((processedRow) => {
+                  const finalRow = processedRow || updatedSourceRow;
+                  commitStateUpdate(finalRow);
+                })
+                .catch((error) => {
+                  if (onProcessRowUpdateError) {
+                    onProcessRowUpdateError(error);
+                  } else {
+                    throw error;
+                  }
+                });
+            } catch (error) {
+              if (onProcessRowUpdateError) {
+                onProcessRowUpdateError(error);
+              } else {
+                throw error;
+              }
+            }
+          } else {
+            // No changes, just commit the original state update
+            commitStateUpdate(updatedSourceRow);
           }
         } else {
+          // Priority 3: Direct state update
           commitStateUpdate(updatedSourceRow);
         }
       } else {
@@ -295,7 +317,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
         );
       }
     },
-    [apiRef, processRowUpdate, onProcessRowUpdateError, dataSource?.updateRow],
+    [apiRef, processRowUpdate, onProcessRowUpdateError, dataSource],
   );
 
   return {
