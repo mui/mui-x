@@ -8,6 +8,7 @@ import {
   GridChartsRendererProxy,
   gridColumnGroupsUnwrappedModelSelector,
   useGridApiRef,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { frFR as frFRGrid } from '@mui/x-data-grid-premium/locales';
 import {
@@ -68,10 +69,11 @@ export default function GridChartsIntegrationLocalization() {
       model: pivotModel,
       enabled: true,
     },
+    sidebar: {
+      open: true,
+      value: GridSidebarValue.Charts,
+    },
     chartsIntegration: {
-      configurationPanel: {
-        open: true,
-      },
       charts: {
         main: {
           categories: ['commodity'],

@@ -233,11 +233,6 @@ DataGridPremiumRaw.propTypes = {
    */
   chartsIntegration: PropTypes.bool,
   /**
-   * If `true`, the charts side panel is visible.
-   * @default false
-   */
-  chartsPanelOpen: PropTypes.bool,
-  /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
@@ -787,11 +782,6 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellSelectionModelChange: PropTypes.func,
-  /**
-   * Callback fired when the charts side panel open state changes.
-   * @param {boolean} chartsPanelOpen Whether the charts side panel is visible.
-   */
-  onChartsPanelOpenChange: PropTypes.func,
   /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.

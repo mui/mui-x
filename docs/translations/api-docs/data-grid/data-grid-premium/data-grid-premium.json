@@ -39,7 +39,6 @@
     "chartsIntegration": {
       "description": "If <code>true</code>, the charts integration feature is enabled."
     },
-    "chartsPanelOpen": { "description": "If <code>true</code>, the charts side panel is visible." },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },
@@ -454,15 +453,6 @@
           "description": "Object in the shape of GridCellSelectionModel containing the selected cells."
         },
         "details": { "name": "details", "description": "Additional details for this callback." }
-      }
-    },
-    "onChartsPanelOpenChange": {
-      "description": "Callback fired when the charts side panel open state changes.",
-      "typeDescriptions": {
-        "chartsPanelOpen": {
-          "name": "chartsPanelOpen",
-          "description": "Whether the charts side panel is visible."
-        }
       }
     },
     "onClipboardCopy": {

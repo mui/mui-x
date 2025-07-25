@@ -47,7 +47,6 @@
     "cellSelection": { "type": { "name": "bool" }, "default": "false" },
     "cellSelectionModel": { "type": { "name": "object" } },
     "chartsIntegration": { "type": { "name": "bool" }, "default": "false" },
-    "chartsPanelOpen": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -350,13 +349,6 @@
       "signature": {
         "type": "function(cellSelectionModel: GridCellSelectionModel, details: GridCallbackDetails) => void",
         "describedArgs": ["cellSelectionModel", "details"]
-      }
-    },
-    "onChartsPanelOpenChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(chartsPanelOpen: boolean) => void",
-        "describedArgs": ["chartsPanelOpen"]
       }
     },
     "onClipboardCopy": {

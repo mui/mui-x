@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
@@ -42,21 +41,16 @@ import {
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 import { isBlockedForSection } from './utils';
+import { GridSidebarValue } from '../sidebar';
 
 export const chartsIntegrationStateInitializer: GridStateInitializer<
-  Pick<
-    DataGridPremiumProcessedProps,
-    'chartsIntegration' | 'chartsPanelOpen' | 'initialState' | 'activeChartId'
-  >
+  Pick<DataGridPremiumProcessedProps, 'chartsIntegration' | 'initialState' | 'activeChartId'>
 > = (state, props) => {
   if (!props.chartsIntegration) {
     return {
       ...state,
       chartsIntegration: {
         activeChartId: '',
-        configurationPanel: {
-          open: false,
-        },
         charts: {},
       } as GridChartsIntegrationState,
     };
@@ -94,12 +88,6 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
     chartsIntegration: {
       activeChartId:
         props.activeChartId ?? props.initialState?.chartsIntegration?.activeChartId ?? '',
-      configurationPanel: {
-        open:
-          props.chartsPanelOpen ??
-          props.initialState?.chartsIntegration?.configurationPanel?.open ??
-          false,
-      },
       charts,
     } as GridChartsIntegrationState,
   };
@@ -123,11 +111,10 @@ export const useGridChartsIntegration = (
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'chartsIntegration'
-    | 'chartsPanelOpen'
-    | 'onChartsPanelOpenChange'
     | 'activeChartId'
     | 'onActiveChartIdChange'
     | 'initialState'
+    | 'slots'
     | 'slotProps'
   >,
 ) => {
@@ -178,14 +165,6 @@ export const useGridChartsIntegration = (
     },
     [apiRef, props.slotProps?.chartsPanel],
   );
-
-  apiRef.current.registerControlState({
-    stateId: 'chartsPanelOpen',
-    propModel: props.chartsPanelOpen,
-    propOnChange: props.onChartsPanelOpenChange,
-    stateSelector: gridChartsPanelOpenSelector,
-    changeEvent: 'chartsPanelOpenChange',
-  });
 
   apiRef.current.registerControlState({
     stateId: 'activeChartId',
@@ -368,28 +347,22 @@ export const useGridChartsIntegration = (
       if (!isChartsIntegrationAvailable) {
         return;
       }
-      apiRef.current.setState((state) => ({
-        ...state,
-        chartsIntegration: {
-          ...state.chartsIntegration,
-          configurationPanel: {
-            ...state.chartsIntegration.configurationPanel,
-            open:
-              typeof callback === 'function'
-                ? callback(state.chartsIntegration.configurationPanel.open)
-                : callback,
-          },
-        },
-      }));
+
+      const panelOpen = gridChartsPanelOpenSelector(apiRef);
+      const newPanelOpen = typeof callback === 'function' ? callback(panelOpen) : callback;
+
+      if (panelOpen === newPanelOpen) {
+        return;
+      }
+
+      if (newPanelOpen) {
+        apiRef.current.showSidebar(GridSidebarValue.Charts);
+      } else {
+        apiRef.current.hideSidebar();
+      }
     },
     [apiRef, isChartsIntegrationAvailable],
   );
-
-  useEnhancedEffect(() => {
-    if (props.chartsPanelOpen !== undefined) {
-      apiRef.current.setChartsPanelOpen(props.chartsPanelOpen);
-    }
-  }, [apiRef, props.chartsPanelOpen]);
 
   const updateCategories = React.useCallback(
     (
@@ -556,6 +529,23 @@ export const useGridChartsIntegration = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButton);
+
+  const addChartsPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
+    (initialValue, value) => {
+      if (
+        props.slots.chartsPanel &&
+        isChartsIntegrationAvailable &&
+        value === GridSidebarValue.Charts
+      ) {
+        return <props.slots.chartsPanel {...props.slotProps?.chartsPanel} />;
+      }
+
+      return initialValue;
+    },
+    [props, isChartsIntegrationAvailable],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'sidebar', addChartsPanel);
 
   useGridApiMethod(
     apiRef,

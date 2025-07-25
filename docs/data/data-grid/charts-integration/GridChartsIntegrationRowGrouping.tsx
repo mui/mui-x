@@ -6,6 +6,7 @@ import {
   GridChartsRendererProxy,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
@@ -37,10 +38,11 @@ export default function GridChartsIntegrationRowGrouping() {
           feeRate: 'sum',
         },
       },
+      sidebar: {
+        open: true,
+        value: GridSidebarValue.Charts,
+      },
       chartsIntegration: {
-        configurationPanel: {
-          open: true,
-        },
         charts: {
           main: {
             categories: ['commodity'],

@@ -11,6 +11,7 @@ import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 import { gridPivotActiveSelector, gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
+import { gridSidebarStateSelector, GridSidebarValue } from '../sidebar';
 
 const gridChartsIntegrationStateSelector = createRootSelector(
   (state: GridStatePremium) => state.chartsIntegration,
@@ -22,8 +23,8 @@ export const gridChartsIntegrationActiveChartIdSelector = createSelector(
 );
 
 export const gridChartsPanelOpenSelector = createSelector(
-  gridChartsIntegrationStateSelector,
-  (chartsIntegration) => chartsIntegration.configurationPanel.open,
+  gridSidebarStateSelector,
+  (sidebar) => sidebar.value === GridSidebarValue.Charts && sidebar.open,
 );
 
 export const gridChartableColumnsSelector = createSelectorMemoized(
