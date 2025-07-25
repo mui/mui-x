@@ -3,11 +3,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DateNavigatorProps } from './DateNavigator.types';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { useTranslations } from '../internals/utils/TranslationsContext';
-import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { useSelector } from '../../base-ui-copy/utils/store';
-import { selectors } from '../event-calendar/store';
+import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { useSelector } from '../../../../base-ui-copy/utils/store';
+import { selectors } from '../../../event-calendar/store';
 import './DateNavigator.css';
 
 const adapter = getAdapter();
