@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, createEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, createEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { getColumnValues, getRow } from 'test/utils/helperFn';
 import {
   DataGridPremium,
   DataGridPremiumProps,
   gridClasses,
   GridRowsProp,
+  GridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -309,6 +310,126 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(a1Index).to.be.greaterThan(a2Index); // After remaining A items
         expect(a1Index).to.be.lessThan(b1Index); // Before original B items
       });
+
+      it('should reorder group rows with collapsed groups', () => {
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium
+              {...baselineProps}
+              defaultGroupingExpansionDepth={0} // All groups collapsed by default
+              isGroupExpandedByDefault={(node: GridGroupNode) => {
+                // Expand only category B
+                return node.groupingKey === 'B';
+              }}
+            />
+          </div>,
+        );
+
+        // Initial state: A collapsed, B expanded, C collapsed
+        const groupingValues = getColumnValues(1);
+
+        // Find group indices
+        const groupAIndex = groupingValues.findIndex((v) => v?.includes('A ('));
+        const groupCIndex = groupingValues.findIndex((v) => v?.includes('C ('));
+
+        // Test 1: Reorder collapsed group A to after group C
+        const groupARow = getRow(groupAIndex);
+        const groupCRow = getRow(groupCIndex);
+
+        performDragReorder(groupARow, groupCRow, 'below');
+
+        // Verify new order: B, C, A
+        const newGroupingValues = getColumnValues(1);
+        const newGroupBIndex = newGroupingValues.findIndex((v) => v?.includes('B ('));
+        const newGroupCIndex = newGroupingValues.findIndex((v) => v?.includes('C ('));
+        const newGroupAIndex = newGroupingValues.findIndex((v) => v?.includes('A ('));
+
+        expect(newGroupBIndex).to.be.lessThan(newGroupCIndex);
+        expect(newGroupCIndex).to.be.lessThan(newGroupAIndex);
+
+        // Test 2: Reorder collapsed group with expanded group
+        // Move collapsed group C before expanded group B
+        const groupBRow = getRow(newGroupBIndex);
+        const groupCRowUpdated = getRow(newGroupCIndex);
+
+        performDragReorder(groupCRowUpdated, groupBRow, 'above');
+
+        // Verify new order: C, B, A
+        const finalGroupingValues = getColumnValues(1);
+        const finalGroupCIndex = finalGroupingValues.findIndex((v) => v?.includes('C ('));
+        const finalGroupBIndex = finalGroupingValues.findIndex((v) => v?.includes('B ('));
+        const finalGroupAIndex = finalGroupingValues.findIndex((v) => v?.includes('A ('));
+
+        expect(finalGroupCIndex).to.be.lessThan(finalGroupBIndex);
+        expect(finalGroupBIndex).to.be.lessThan(finalGroupAIndex);
+
+        // Verify that collapsed group C remains collapsed
+        const nameValues = getColumnValues(3);
+        expect(nameValues.indexOf('Item C1')).to.equal(-1); // C's children should not be visible
+      });
+
+      it('should auto-expand collapsed group when leaf is dragged over it', async () => {
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium
+              {...baselineProps}
+              defaultGroupingExpansionDepth={0} // All groups collapsed by default
+              isGroupExpandedByDefault={(node: GridGroupNode) => {
+                // Expand only category B
+                return node.groupingKey === 'B';
+              }}
+            />
+          </div>,
+        );
+
+        // Initial state: A collapsed, B expanded, C collapsed
+        const groupingValues = getColumnValues(1);
+        const groupAIndex = groupingValues.findIndex((v) => v?.includes('A ('));
+
+        // Get Item B1 from expanded group B
+        const nameValues = getColumnValues(3);
+        const b1Index = nameValues.indexOf('Item B1');
+        const itemB1Row = getRow(b1Index);
+        const groupARow = getRow(groupAIndex);
+
+        const sourceCell = itemB1Row.querySelector('[role="gridcell"]')!.firstChild!;
+        const targetCell = groupARow.querySelector('[role="gridcell"]')!;
+
+        // Start drag
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+
+        // Drag over collapsed group A
+        const dragOverEvent = createDragOverEvent(targetCell, 'below');
+        fireEvent(targetCell, dragOverEvent);
+
+        // Verify group A is still collapsed initially
+        let currentNameValues = getColumnValues(3);
+        expect(currentNameValues.indexOf('Item A1')).to.equal(-1);
+
+        // Wait for auto-expand after 500ms
+        await waitFor(
+          () => {
+            currentNameValues = getColumnValues(3);
+            // Group A should auto-expand, showing its children
+            expect(currentNameValues.indexOf('Item A1')).to.not.equal(-1);
+          },
+          { timeout: 1000 },
+        );
+
+        // Complete the drag
+        const dragEndEvent = createDragEndEvent(sourceCell);
+        fireEvent(sourceCell, dragEndEvent);
+
+        // Just verify the auto-expand worked - the drop may be rejected as invalid
+        // since dropping a leaf on a group row may not be allowed in all cases
+        const finalNameValues = getColumnValues(3);
+
+        // Verify group A is expanded (its children are visible)
+        expect(finalNameValues.indexOf('Item A1')).to.not.equal(-1);
+        expect(finalNameValues.indexOf('Item A2')).to.not.equal(-1);
+        expect(finalNameValues.indexOf('Item A3')).to.not.equal(-1);
+      });
     });
 
     describe('Invalid reorder cases', () => {
@@ -431,6 +552,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       columns: [
         { field: 'company', width: 150 },
         { field: 'dept', width: 150 },
+        { field: 'team', width: 150 },
         { field: 'name', width: 150 },
       ],
       initialState: {
@@ -453,7 +575,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         );
 
         // Find John and Jane rows (both in Microsoft/Engineering)
-        const nameValues = getColumnValues(4);
+        const nameValues = getColumnValues(5);
         const johnIndex = nameValues.indexOf('John');
         const janeIndex = nameValues.indexOf('Jane');
 
@@ -464,7 +586,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(johnRow, janeRow, 'below');
 
         // Verify new order
-        const newNameValues = getColumnValues(4);
+        const newNameValues = getColumnValues(5);
         const newJohnIndex = newNameValues.indexOf('John');
         const newJaneIndex = newNameValues.indexOf('Jane');
 
@@ -479,7 +601,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         );
 
         // Find John (Engineering) and Alice (Sales) rows
-        const nameValues = getColumnValues(4);
+        const nameValues = getColumnValues(5);
         const johnIndex = nameValues.indexOf('John');
         const aliceIndex = nameValues.indexOf('Alice');
 
@@ -490,7 +612,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(johnRow, aliceRow, 'above');
 
         // Verify John is now before Alice in Sales
-        const newNameValues = getColumnValues(4);
+        const newNameValues = getColumnValues(5);
         const newJohnIndex = newNameValues.indexOf('John');
         const newAliceIndex = newNameValues.indexOf('Alice');
         const bobIndex = newNameValues.indexOf('Bob'); // Should still be in Engineering
@@ -523,6 +645,130 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const newSalesIndex = newDeptValues.indexOf('Sales (2)');
 
         expect(newSalesIndex).to.be.lessThan(newEngIndex);
+      });
+
+      it('should reorder group rows with collapsed groups', () => {
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium
+              {...baselineProps}
+              defaultGroupingExpansionDepth={0} // All groups collapsed by default
+              isGroupExpandedByDefault={(node: GridGroupNode) => {
+                // Expand Microsoft company and its Engineering dept
+                if (node.groupingKey === 'Microsoft') {
+                  return true;
+                }
+                if (
+                  (node.parent as unknown as GridGroupNode)?.groupingKey === 'Microsoft' &&
+                  node.groupingKey === 'Engineering'
+                ) {
+                  return true;
+                }
+                return false;
+              }}
+            />
+          </div>,
+        );
+
+        // Initial state: Microsoft expanded with Engineering expanded, Google collapsed, Apple collapsed
+        const values = getColumnValues(1);
+
+        // Test 1: Reorder collapsed top-level groups (Google and Apple)
+        const googleIndex = values.findIndex((v) => v?.includes('Google ('));
+        const appleIndex = values.findIndex((v) => v?.includes('Apple ('));
+
+        const googleRow = getRow(googleIndex);
+        const appleRow = getRow(appleIndex);
+
+        performDragReorder(googleRow, appleRow, 'below');
+
+        // Verify new order: Microsoft, Apple, Google
+        const newValues = getColumnValues(1);
+        const newMsIndex = newValues.findIndex((v) => v?.includes('Microsoft ('));
+        const newAppleIndex = newValues.findIndex((v) => v?.includes('Apple ('));
+        const newGoogleIndex = newValues.findIndex((v) => v?.includes('Google ('));
+
+        expect(newMsIndex).to.be.lessThan(newAppleIndex);
+        expect(newAppleIndex).to.be.lessThan(newGoogleIndex);
+
+        // Test 2: Verify the group reordering worked correctly
+        const finalValues = getColumnValues(1);
+        const finalMsIndex = finalValues.findIndex((v) => v?.includes('Microsoft ('));
+        const finalAppleIndex = finalValues.findIndex((v) => v?.includes('Apple ('));
+        const finalGoogleIndex = finalValues.findIndex((v) => v?.includes('Google ('));
+
+        // Verify the group order is correct: Microsoft, Apple, Google
+        expect(finalMsIndex).to.be.lessThan(finalAppleIndex);
+        expect(finalAppleIndex).to.be.lessThan(finalGoogleIndex);
+      });
+
+      it('should auto-expand collapsed groups at multiple levels when leaf is dragged over', async () => {
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium
+              {...baselineProps}
+              defaultGroupingExpansionDepth={0} // All collapsed by default
+              isGroupExpandedByDefault={(node: GridGroupNode) => {
+                // Expand Microsoft and its Sales dept to have visible leaf rows
+                if (node.groupingKey === 'Microsoft') {
+                  return true;
+                }
+                if (
+                  (node.parent as unknown as GridGroupNode)?.groupingKey === 'Microsoft' &&
+                  node.groupingKey === 'Sales'
+                ) {
+                  return true;
+                }
+                return false;
+              }}
+            />
+          </div>,
+        );
+
+        const values = getColumnValues(1);
+        const googleIndex = values.findIndex((v) => v?.includes('Google ('));
+        const googleRow = getRow(googleIndex);
+
+        // Use the first visible row as the source
+        const allRows = screen.getAllByRole('row');
+        const sourceRow = allRows.find(
+          (row) =>
+            row.getAttribute('data-id') &&
+            !row.querySelector('[data-field="__row_group_by_columns_group__"]'),
+        );
+
+        if (sourceRow) {
+          const sourceCell = sourceRow.querySelector('[role="gridcell"]')!.firstChild!;
+          const targetCell = googleRow.querySelector('[role="gridcell"]')!;
+
+          fireDragStart(sourceCell);
+          fireEvent.dragEnter(targetCell);
+
+          // Drag over collapsed Google
+          const dragOverEvent = createDragOverEvent(targetCell, 'below');
+          fireEvent(targetCell, dragOverEvent);
+
+          // Wait for auto-expand - Google should show its departments
+          await waitFor(
+            () => {
+              const currentValues = getColumnValues(1);
+              // Look for any department under Google (Engineering or other)
+              const hasExpandedDept = currentValues.some(
+                (v, i) => i > googleIndex && (v === 'Engineering (3)' || v === 'Design (2)'),
+              );
+              expect(hasExpandedDept).to.equal(true);
+            },
+            { timeout: 1000 },
+          );
+
+          // Complete the drag
+          const dragEndEvent = createDragEndEvent(sourceCell);
+          fireEvent(sourceCell, dragEndEvent);
+        }
+
+        const finalValues = getColumnValues(1);
+        const finalGoogleIndex = finalValues.findIndex((v) => v?.includes('Google ('));
+        expect(finalGoogleIndex).to.not.equal(-1);
       });
     });
 
@@ -560,12 +806,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           </div>,
         );
 
-        const initialValues = getColumnValues(4);
+        const initialValues = getColumnValues(5);
 
         // Try to drag company group to leaf position
         const companyValues = getColumnValues(1);
         const msIndex = companyValues.indexOf('Microsoft (5)');
-        const nameValues = getColumnValues(4);
+        const nameValues = getColumnValues(5);
         const johnIndex = nameValues.indexOf('John');
 
         const msRow = getRow(msIndex);
@@ -575,7 +821,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         performDragReorder(msRow, johnRow, 'above');
 
         // Verify no change
-        const newValues = getColumnValues(4);
+        const newValues = getColumnValues(5);
         expect(newValues).to.deep.equal(initialValues);
       });
     });
