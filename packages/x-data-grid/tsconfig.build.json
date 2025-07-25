@@ -3,7 +3,11 @@
   // Actual .ts source files are transpiled via babel
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
+    "baseUrl": null,
+    "paths": {
+      "@mui/x-data-grid": ["./src"],
+      "@mui/x-data-grid/*": ["./src/*"]
+    },
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
@@ -16,7 +20,6 @@
       "@mui/types"
     ]
   },
-  "references": [{ "path": "../x-internals/tsconfig.build.json" }],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }

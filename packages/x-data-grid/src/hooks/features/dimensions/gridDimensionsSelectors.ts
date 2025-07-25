@@ -1,9 +1,9 @@
-import { createSelector, createRootSelector } from '../../../utils/createSelector';
+import { createSelector, createRootSelector, OutputSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridDimensions } from './gridDimensionsApi';
 
-export const gridDimensionsSelector = createRootSelector(
-  (state: GridStateCommunity) => state.dimensions,
-);
+export const gridDimensionsSelector: OutputSelector<GridStateCommunity, unknown, GridDimensions> =
+  createRootSelector((state: GridStateCommunity) => state.dimensions);
 
 /**
  * Get the summed width of all the visible columns.

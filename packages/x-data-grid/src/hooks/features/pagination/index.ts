@@ -5,4 +5,5 @@ export type {
   GridPaginationApi,
   GridPaginationState,
   GridPaginationInitialState,
+  GridVisibleRows,
 } from './gridPaginationInterfaces';
