@@ -1,0 +1,9 @@
+<SankeyChart
+  height={500}
+  series={{
+    data,
+    nodeWidth: 20,
+    nodeGap: 15,
+    linkOpacity: 0.6,
+  }}
+/>

@@ -13,3 +13,7 @@ The Sankey Chart component isn't available yet, but you can upvote [**this GitHu
 Don't hesitate to leave a comment there to influence what gets built.
 Especially if you already have a use case for this component, or if you're facing a pain point with your current solution.
 :::
+
+{{"demo": "ComplexSankeyChart.js"}}
+
+{{"demo": "SankeyChartExample.js"}}

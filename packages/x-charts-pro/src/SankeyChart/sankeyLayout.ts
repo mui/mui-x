@@ -1,0 +1,102 @@
+'use client';
+import { sankey, sankeyLinkHorizontal, sankeyJustify } from '@mui/x-charts-vendor/d3-sankey';
+import { warnOnce } from '@mui/x-internals/warning';
+import {
+  SankeyLayout,
+  SankeyLayoutLink,
+  SankeyLayoutNode,
+  type SankeyLink,
+  type SankeyNode,
+  type SankeyValueType,
+} from './sankey.types';
+
+/**
+ * Calculates the layout for a Sankey diagram using d3-sankey
+ *
+ * @param data The Sankey data (nodes and links)
+ * @param width The width of the chart area
+ * @param height The height of the chart area
+ * @param nodeWidth The width of each node
+ * @param nodeGap The gap between nodes in the same column
+ * @param iterations The number of iterations for the layout algorithm
+ * @returns The calculated layout
+ */
+export function calculateSankeyLayout(
+  data: SankeyValueType,
+  width: number,
+  height: number,
+  nodeWidth: number = 15,
+  nodeGap: number = 10,
+  iterations: number = 32,
+): SankeyLayout {
+  if (!data || !data.nodes || !data.links || data.nodes.length === 0) {
+    return { nodes: [], links: [] };
+  }
+
+  data.links.forEach((link) => {
+    if (link.source === undefined || link.target === undefined) {
+      throw new Error(
+        `Invalid link: source or target node not found (${link.source} -> ${link.target})`,
+      );
+    }
+
+    if (link.source === link.target) {
+      warnOnce(`MUI X Charts: circular links are not allowed (${link.source} -> ${link.target})`);
+    }
+  });
+
+  // Create the sankey layout generator
+  const sankeyGenerator = sankey<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>()
+    .nodeWidth(nodeWidth)
+    .nodePadding(nodeGap)
+    // TODO: make this configurable
+    .nodeAlign(sankeyJustify)
+    .extent([
+      // Todo: gotta take margins into account
+      [0, 0],
+      [width, height],
+    ])
+    .nodeId((d) => d.id)
+    .iterations(iterations);
+
+  // Prepare the data structure expected by d3-sankey
+  const graph = {
+    nodes: data.nodes.map((v) => ({ ...v })),
+    links: data.links.map((v) => ({ ...v })),
+  };
+
+  // Generate the layout
+  const result = sankeyGenerator(graph);
+  const { nodes, links } = result;
+
+  // Link path generator
+  const linkGenerator = sankeyLinkHorizontal();
+
+  // Convert d3-sankey links to our format
+  // Cast to SankeyLayoutLink as it has the correct properties
+  const layoutLinks: SankeyLayoutLink[] = (links as SankeyLayoutLink[]).map((link) => {
+    // Get the original link data
+    const originalLink = data.links.find((l) => {
+      return l.source === link.source.id && l.target === link.target.id;
+    });
+
+    return {
+      ...originalLink,
+      ...link,
+      path: linkGenerator(link),
+    };
+  });
+
+  const layoutNodes: SankeyLayoutNode[] = nodes.map((node) => {
+    const originalNode = data.nodes.find((n) => n.id === node.id);
+    return {
+      ...originalNode,
+      ...node,
+    };
+  });
+
+  return {
+    nodes: layoutNodes,
+    links: layoutLinks,
+  };
+}
