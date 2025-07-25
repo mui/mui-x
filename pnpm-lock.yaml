@@ -2044,6 +2044,9 @@ importers:
       '@mui/x-date-pickers-pro':
         specifier: workspace:*
         version: link:../../packages/x-date-pickers-pro/build
+      '@mui/x-telemetry':
+        specifier: workspace:*
+        version: link:../../packages/x-telemetry/build
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../../packages/x-tree-view/build

@@ -42,6 +42,7 @@ async function reportBundleSize() {
       '@mui/x-date-pickers-pro',
       '@mui/x-tree-view',
       '@mui/x-tree-view-pro',
+      '@mui/x-telemetry',
     ],
   });
 
