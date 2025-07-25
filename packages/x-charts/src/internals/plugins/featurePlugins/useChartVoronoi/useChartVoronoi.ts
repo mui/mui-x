@@ -13,7 +13,6 @@ import {
   selectorChartAxisZoomData,
   selectorChartXAxis,
   selectorChartYAxis,
-  selectorChartZoomIsInteracting,
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
@@ -29,7 +28,6 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
 
   const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
   const flatbushMapRef = React.useRef<Record<SeriesId, Flatbush>>({});
@@ -53,7 +51,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   useEnhancedEffect(() => {
     // This effect generate and store the data structure that's used to obtain the closest point to a given coordinate.
 
-    if (zoomIsInteracting || seriesOrder === undefined || series === undefined || disableVoronoi) {
+    if (seriesOrder === undefined || series === undefined || disableVoronoi) {
       // If there is no scatter chart series
       return;
     }
@@ -78,18 +76,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       // FIXME: This is slightly inefficient as we can have one flatbush per xAxisId and yAxisId combination.
       flatbushMapRef.current[seriesId] = flatbush;
     });
-  }, [
-    zoomIsInteracting,
-    defaultXAxisId,
-    defaultYAxisId,
-    series,
-    seriesOrder,
-    xAxis,
-    yAxis,
-    drawingArea,
-    instance,
-    disableVoronoi,
-  ]);
+  }, [defaultXAxisId, defaultYAxisId, disableVoronoi, series, seriesOrder, xAxis, yAxis]);
 
   React.useEffect(() => {
     if (svgRef.current === null || disableVoronoi) {
@@ -148,6 +135,12 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
           return x >= xZoomStart && x <= xZoomEnd && y >= yZoomStart && y <= yZoomEnd;
         };
 
+        const fx = xScale.range()[1] - xScale.range()[0];
+        const fy = yScale.range()[1] - yScale.range()[0];
+        function sqDistFn(dx: number, dy: number) {
+          return fx * fx * dx * dx + fy * fy * dy * dy;
+        }
+
         const pointX =
           xZoomStart +
           ((svgPoint.x - drawingArea.left) / drawingArea.width) * (xZoomEnd - xZoomStart);
@@ -158,8 +151,10 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
           pointX,
           pointY,
           1,
+          // FIXME: Re-introduce the `voronoiMaxRadius` parameter.
           Infinity,
           excludeIfOutsideDrawingArea,
+          sqDistFn,
         )[0];
 
         if (closestPointIndex === undefined) {

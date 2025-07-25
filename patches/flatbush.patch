@@ -1,0 +1,22 @@
+diff --git a/index.js b/index.js
+index 1efd613d9b9acfb56d8c6c6edb6b1c96016570ed..0628fd566fe102282795ef98c7d234137df4d6de 100644
+--- a/index.js
++++ b/index.js
+@@ -256,7 +256,7 @@ export default class Flatbush {
+      * @param {(index: number) => boolean} [filterFn] An optional function for filtering the results.
+      * @returns {number[]} An array of indices of items found.
+      */
+-    neighbors(x, y, maxResults = Infinity, maxDistance = Infinity, filterFn) {
++    neighbors(x, y, maxResults = Infinity, maxDistance = Infinity, filterFn, sqDistFn) {
+         if (this._pos !== this._boxes.length) {
+             throw new Error('Data not yet indexed - call index.finish().');
+         }
+@@ -281,7 +281,7 @@ export default class Flatbush {
+                 const maxY = this._boxes[pos + 3];
+                 const dx = x < minX ? minX - x : x > maxX ? x - maxX : 0;
+                 const dy = y < minY ? minY - y : y > maxY ? y - maxY : 0;
+-                const dist = dx * dx + dy * dy;
++                const dist = sqDistFn(dx, dy);
+                 if (dist > maxDistSquared) continue;
+ 
+                 if (nodeIndex >= this.numItems * 4) {
