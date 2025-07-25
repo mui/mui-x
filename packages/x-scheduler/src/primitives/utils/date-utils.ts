@@ -1,11 +1,11 @@
 import { SchedulerValidDate } from '../models';
 import { Adapter } from './adapter/types';
 
-export const mergeDateAndTime = (
+export function mergeDateAndTime(
   adapter: Adapter,
   dateParam: SchedulerValidDate,
   timeParam: SchedulerValidDate,
-): SchedulerValidDate => {
+): SchedulerValidDate {
   let mergedDate = dateParam;
   mergedDate = adapter.setHours(mergedDate, adapter.getHours(timeParam));
   mergedDate = adapter.setMinutes(mergedDate, adapter.getMinutes(timeParam));
@@ -13,4 +13,4 @@ export const mergeDateAndTime = (
   mergedDate = adapter.setMilliseconds(mergedDate, adapter.getMilliseconds(timeParam));
 
   return mergedDate;
-};
+}
