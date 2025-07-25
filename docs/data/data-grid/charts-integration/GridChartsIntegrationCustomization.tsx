@@ -8,6 +8,7 @@ import {
   GridEventListener,
   GridPivotModel,
   useGridApiRef,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
@@ -78,10 +79,11 @@ export default function GridChartsIntegrationCustomization() {
       model: pivotModel,
       enabled: true,
     },
+    sidebar: {
+      open: true,
+      value: GridSidebarValue.Charts,
+    },
     chartsIntegration: {
-      configurationPanel: {
-        open: true,
-      },
       charts: {
         main: {
           categories: ['commodity'],
