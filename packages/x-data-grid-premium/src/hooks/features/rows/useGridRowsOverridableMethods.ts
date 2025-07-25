@@ -8,13 +8,18 @@ import {
   GridLeafNode,
   gridRowsLookupSelector,
   gridColumnLookupSelector,
+  useGridRootProps,
 } from '@mui/x-data-grid-pro';
 import { RefObject } from '@mui/x-internals/types';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 
 export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPremium>) => {
+  const rootProps = useGridRootProps();
+  const { processRowUpdate, onProcessRowUpdateError } = rootProps;
+
   const setRowIndex = React.useCallback(
     (sourceRowId: GridRowId, targetOriginalIndex: number) => {
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
@@ -79,6 +84,7 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
             },
           };
         });
+        apiRef.current.publishEvent('rowsSet');
       } else if (
         (sourceNode.type === 'leaf' &&
           targetNode.type === 'leaf' &&
@@ -105,127 +111,171 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
           target = leafTargetNode as GridLeafNode;
           isLastChild = true;
         }
-        apiRef.current.setState((state) => {
-          const sourceGroup = gridRowTreeSelector(apiRef)[source.parent] as GridGroupNode;
-          const sourceChildren = sourceGroup.children;
 
-          const targetGroup = gridRowTreeSelector(apiRef)[target.parent] as GridGroupNode;
-          const targetChildren = targetGroup.children;
+        // Extract computation logic
+        const sourceGroup = gridRowTreeSelector(apiRef)[source.parent] as GridGroupNode;
+        const sourceChildren = sourceGroup.children;
 
-          const sourceIndex = sourceChildren.findIndex((row) => row === sourceRowId);
-          const targetIndex = targetChildren.findIndex((row) => row === target.id);
-          if (sourceIndex === -1 || targetIndex === -1) {
-            return state;
+        const targetGroup = gridRowTreeSelector(apiRef)[target.parent] as GridGroupNode;
+        const targetChildren = targetGroup.children;
+
+        const sourceIndex = sourceChildren.findIndex((row) => row === sourceRowId);
+        const targetIndex = targetChildren.findIndex((row) => row === target.id);
+        if (sourceIndex === -1 || targetIndex === -1) {
+          return;
+        }
+
+        const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
+        const columnsLookup = gridColumnLookupSelector(apiRef);
+        const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+
+        // Compute the updated source row
+        const originalSourceRow = dataRowIdToModelLookup[sourceRowId];
+        let updatedSourceRow = { ...originalSourceRow };
+        const targetRow = dataRowIdToModelLookup[target.id];
+
+        // Get grouping rules which include both getter and setter functions
+        const groupingRules = getGroupingRules({
+          sanitizedRowGroupingModel,
+          columnsLookup,
+        });
+
+        // Update each grouping field on the source row
+        for (const groupingRule of groupingRules) {
+          const colDef = columnsLookup[groupingRule.field];
+
+          if (groupingRule.groupingValueSetter && colDef) {
+            // Get the target row's grouping value for this field
+            const targetGroupingValue = getCellGroupingCriteria({
+              row: targetRow,
+              colDef,
+              groupingRule,
+              apiRef,
+            }).key;
+
+            // Use the setter to update the source row
+            updatedSourceRow = groupingRule.groupingValueSetter(
+              targetGroupingValue,
+              updatedSourceRow,
+              colDef,
+              apiRef,
+            );
+          } else {
+            // Fallback to direct field assignment
+            updatedSourceRow[groupingRule.field] = targetRow[groupingRule.field];
           }
+        }
 
-          const updatedSourceChildren = sourceChildren.filter((rowId) => rowId !== sourceRowId);
+        // Function to commit the state update
+        const commitStateUpdate = (finalSourceRow: any) => {
+          apiRef.current.setState((state) => {
+            const updatedSourceChildren = sourceChildren.filter((rowId) => rowId !== sourceRowId);
 
-          let sourceGroupRemoved = false;
-          const updatedTree = { ...state.rows.tree };
-          if (updatedSourceChildren.length === 0) {
-            delete updatedTree[sourceGroup.id];
-            sourceGroupRemoved = true;
-          }
+            let sourceGroupRemoved = false;
+            const updatedTree = { ...state.rows.tree };
+            if (updatedSourceChildren.length === 0) {
+              delete updatedTree[sourceGroup.id];
+              sourceGroupRemoved = true;
+            }
 
-          const updatedTargetChildren = isLastChild
-            ? [...targetChildren, sourceRowId]
-            : [
-                ...targetChildren.slice(0, targetIndex),
-                sourceRowId,
-                ...targetChildren.slice(targetIndex),
-              ];
+            const updatedTargetChildren = isLastChild
+              ? [...targetChildren, sourceRowId]
+              : [
+                  ...targetChildren.slice(0, targetIndex),
+                  sourceRowId,
+                  ...targetChildren.slice(targetIndex),
+                ];
 
-          const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
-          const columnsLookup = gridColumnLookupSelector(apiRef);
-          const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+            const sourceGroupParent = sourceGroupRemoved
+              ? (gridRowTreeSelector(apiRef)[sourceGroup.parent!] as GridGroupNode)
+              : null;
 
-          let sourceRow = { ...dataRowIdToModelLookup[sourceRowId] };
-          const targetRow = dataRowIdToModelLookup[target.id];
-
-          // Get grouping rules which include both getter and setter functions
-          const groupingRules = getGroupingRules({
-            sanitizedRowGroupingModel,
-            columnsLookup,
+            return {
+              ...state,
+              rows: {
+                ...state.rows,
+                totalTopLevelRowCount:
+                  state.rows.totalTopLevelRowCount - (sourceGroupRemoved ? 1 : 0),
+                tree: {
+                  ...updatedTree,
+                  ...(sourceGroupRemoved && sourceGroupParent
+                    ? {
+                        [sourceGroupParent.id]: {
+                          ...sourceGroupParent,
+                          children: sourceGroupParent.children.filter(
+                            (childId) => childId !== sourceGroup.id,
+                          ),
+                        },
+                      }
+                    : {
+                        [source.parent!]: {
+                          ...sourceGroup,
+                          children: updatedSourceChildren,
+                        },
+                      }),
+                  [target.parent]: {
+                    ...targetGroup,
+                    children: updatedTargetChildren,
+                  },
+                  [source.id]: {
+                    ...source,
+                    parent: target.parent,
+                  },
+                },
+                dataRowIdToModelLookup: {
+                  ...state.rows.dataRowIdToModelLookup,
+                  [source.id]: finalSourceRow,
+                },
+              },
+            };
           });
 
-          // Update each grouping field on the source row
-          for (const groupingRule of groupingRules) {
-            const colDef = columnsLookup[groupingRule.field];
+          apiRef.current.publishEvent('rowsSet');
+        };
 
-            if (groupingRule.groupingValueSetter && colDef) {
-              // Get the target row's grouping value for this field
-              const targetGroupingValue = getCellGroupingCriteria({
-                row: targetRow,
-                colDef,
-                groupingRule,
-                apiRef,
-              }).key;
-
-              // Use the setter to update the source row
-              sourceRow = groupingRule.groupingValueSetter(
-                targetGroupingValue,
-                sourceRow,
-                colDef,
-                apiRef,
-              );
+        // Handle processRowUpdate if provided
+        if (processRowUpdate) {
+          const handleError = (errorThrown: any) => {
+            if (onProcessRowUpdateError) {
+              onProcessRowUpdateError(errorThrown);
             } else {
-              // Fallback to direct field assignment
-              sourceRow[groupingRule.field] = targetRow[groupingRule.field];
+              warnOnce(
+                [
+                  'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+                  'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                  'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
+                ],
+                'error',
+              );
             }
-          }
-
-          const sourceGroupParent = gridRowTreeSelector(apiRef)[
-            sourceGroup.parent!
-          ] as GridGroupNode;
-
-          return {
-            ...state,
-            rows: {
-              ...state.rows,
-              totalTopLevelRowCount:
-                state.rows.totalTopLevelRowCount - (sourceGroupRemoved ? 1 : 0),
-              tree: {
-                ...updatedTree,
-                ...(sourceGroupRemoved
-                  ? {
-                      [sourceGroupParent.id]: {
-                        ...sourceGroupParent,
-                        children: sourceGroupParent.children.filter(
-                          (childId) => childId !== sourceGroup.id,
-                        ),
-                      },
-                    }
-                  : {
-                      [source.parent!]: {
-                        ...sourceGroup,
-                        children: updatedSourceChildren,
-                      },
-                    }),
-                [target.parent]: {
-                  ...targetGroup,
-                  children: updatedTargetChildren,
-                },
-                [source.id]: {
-                  ...source,
-                  parent: target.parent,
-                },
-              },
-              dataRowIdToModelLookup: {
-                ...dataRowIdToModelLookup,
-                [source.id]: sourceRow,
-              },
-            },
           };
-        });
-      } else {
-        // Unsupported use cases, suppress the error instead of throwing it
-        // TODO: Throw error in dev mode
-        return;
-      }
 
-      apiRef.current.publishEvent('rowsSet');
+          try {
+            Promise.resolve(
+              processRowUpdate(updatedSourceRow, originalSourceRow, { rowId: sourceRowId }),
+            )
+              .then((finalRowUpdate) => {
+                commitStateUpdate(finalRowUpdate);
+              })
+              .catch(handleError);
+          } catch (errorThrown) {
+            handleError(errorThrown);
+          }
+        } else {
+          // No `processRowUpdate` provided, commit directly
+          commitStateUpdate(updatedSourceRow);
+        }
+      } else {
+        warnOnce(
+          [
+            'MUI X: The parameters provided to the `setRowIndex()` resulted in a no-op.',
+            'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-grouping/',
+          ],
+          'warning',
+        );
+      }
     },
-    [apiRef],
+    [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
   return {
