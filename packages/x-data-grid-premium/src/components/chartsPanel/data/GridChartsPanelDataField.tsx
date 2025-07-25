@@ -54,7 +54,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridChartsPanelDataFieldRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataField',
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState; disabled: boolean }>(({ disabled }) => ({
   flexShrink: 0,
   position: 'relative',
   padding: vars.spacing(0, 1, 0, 2),
@@ -68,7 +68,8 @@ const GridChartsPanelDataFieldRoot = styled('div', {
   borderStyle: 'solid',
   borderColor: 'transparent',
   margin: '-1px 0', // collapse vertical borders
-  cursor: 'grab',
+  cursor: disabled ? 'not-allowed' : 'grab',
+  opacity: disabled ? 0.5 : 1,
   variants: [
     { props: { dropPosition: 'top' }, style: { borderTopColor: vars.colors.interactive.selected } },
     {
@@ -83,7 +84,7 @@ const GridChartsPanelDataFieldRoot = styled('div', {
   '&:hover': {
     backgroundColor: vars.colors.interactive.hover,
   },
-});
+}));
 
 const GridChartsPanelDataFieldName = styled('span', {
   name: 'MuiDataGrid',
@@ -324,7 +325,8 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
       onDrop={handleDrop}
       onDragStart={handleDragStart}
       onDragEnd={onDragEnd}
-      draggable="true"
+      draggable={!disabled}
+      disabled={!!disabled}
     >
       <GridChartsPanelDataFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
         <rootProps.slots.columnReorderIcon fontSize="small" />

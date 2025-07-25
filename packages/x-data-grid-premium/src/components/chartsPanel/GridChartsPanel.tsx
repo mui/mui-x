@@ -153,6 +153,8 @@ GridChartsPanelChartSelector.propTypes = {
           ).isRequired,
           configuration: PropTypes.object.isRequired,
           label: PropTypes.string,
+          maxCategories: PropTypes.number,
+          maxSeries: PropTypes.number,
           series: PropTypes.arrayOf(PropTypes.object).isRequired,
           synced: PropTypes.bool.isRequired,
           type: PropTypes.string.isRequired,
@@ -179,17 +181,6 @@ function GridChartsPanel(props: GridChartsPanelProps) {
   const currentChartConfiguration: GridChartsConfigurationOptions[string] = React.useMemo(() => {
     return schema[activeChartType] || {};
   }, [schema, activeChartType]);
-  const sectionLimitLookup = React.useMemo(() => {
-    return new Map(
-      [
-        ['categories', currentChartConfiguration.maxCategories],
-        ['series', currentChartConfiguration.maxSeries],
-      ].filter(([_, value]) => typeof value === 'number' && value > 0) as [
-        'categories' | 'series',
-        number,
-      ][],
-    );
-  }, [currentChartConfiguration]);
 
   const handleChartSyncChange = React.useCallback(
     (newSyncState: boolean) => {
@@ -200,9 +191,13 @@ function GridChartsPanel(props: GridChartsPanelProps) {
 
   const handleChartTypeChange = React.useCallback(
     (type: string) => {
-      setChartState(activeChartId, { type });
+      setChartState(activeChartId, {
+        type,
+        maxCategories: schema[type]?.maxCategories,
+        maxSeries: schema[type]?.maxSeries,
+      });
     },
-    [activeChartId, setChartState],
+    [activeChartId, setChartState, schema],
   );
 
   const tabItems = React.useMemo(
@@ -221,7 +216,7 @@ function GridChartsPanel(props: GridChartsPanelProps) {
       {
         value: 'data',
         label: apiRef.current.getLocaleText('chartsTabFields'),
-        children: <GridChartsPanelData sectionLimitLookup={sectionLimitLookup} />,
+        children: <GridChartsPanelData />,
       },
       {
         value: 'customize',
@@ -241,7 +236,6 @@ function GridChartsPanel(props: GridChartsPanelProps) {
       handleChartTypeChange,
       schema,
       currentChartConfiguration,
-      sectionLimitLookup,
     ],
   );
 

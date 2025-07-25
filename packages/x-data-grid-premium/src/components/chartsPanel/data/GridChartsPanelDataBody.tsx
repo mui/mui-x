@@ -20,9 +20,9 @@ import {
   gridChartsSeriesSelector,
 } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
+import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
 import { getBlockedSections } from '../../../hooks/features/chartsIntegration/utils';
 import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
-import { SectionLimitLookup } from './GridChartsPanelData';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -154,26 +154,52 @@ export interface FieldTransferObject {
 export type DropPosition = 'top' | 'bottom' | null;
 
 interface GridChartsPanelDataBodyProps {
-  sectionLimitLookup: SectionLimitLookup;
   searchValue: string;
 }
 
+// categories and series
+const SECTION_COUNT = 2;
+
 function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
-  const { searchValue, sectionLimitLookup } = props;
+  const { searchValue } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
+  const { chartStateLookup } = useGridChartsIntegrationContext();
   const categories = useGridSelector(apiRef, gridChartsCategoriesSelector, activeChartId);
   const series = useGridSelector(apiRef, gridChartsSeriesSelector, activeChartId);
   const classes = useUtilityClasses(rootProps);
   const chartableColumns = useGridSelector(apiRef, gridChartableColumnsSelector);
 
+  const fullSections = React.useMemo(() => {
+    const sections: string[] = [];
+
+    if (
+      chartStateLookup[activeChartId]?.maxCategories &&
+      categories.length >= chartStateLookup[activeChartId]?.maxCategories
+    ) {
+      sections.push('categories');
+    }
+
+    if (
+      chartStateLookup[activeChartId]?.maxSeries &&
+      series.length >= chartStateLookup[activeChartId]?.maxSeries
+    ) {
+      sections.push('series');
+    }
+
+    return sections;
+  }, [categories, series, chartStateLookup, activeChartId]);
+
   const blockedSectionsLookup = React.useMemo(
     () =>
       new Map<string, string[]>(
-        Object.values(chartableColumns).map((column) => [column.field, getBlockedSections(column)]),
+        Object.values(chartableColumns).map((column) => [
+          column.field,
+          Array.from(new Set([...getBlockedSections(column), ...fullSections])),
+        ]),
       ),
-    [chartableColumns],
+    [chartableColumns, fullSections],
   );
 
   const availableFields = React.useMemo(() => {
@@ -188,8 +214,16 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
         return fieldName.toLowerCase().includes(searchValue.toLowerCase());
       });
     }
-    return notUsedFields;
-  }, [apiRef, searchValue, chartableColumns, categories, series]);
+
+    // Fields with all sections blocked should be at the end
+    return notUsedFields.sort((a, b) => {
+      const aBlockedSections = blockedSectionsLookup.get(a)!.length;
+      const bBlockedSections = blockedSectionsLookup.get(b)!.length;
+      return (
+        (aBlockedSections >= SECTION_COUNT ? 1 : 0) - (bBlockedSections >= SECTION_COUNT ? 1 : 0)
+      );
+    });
+  }, [apiRef, searchValue, chartableColumns, categories, series, blockedSectionsLookup]);
 
   const [drag, setDrag] = React.useState<{
     active: boolean;
@@ -297,6 +331,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                 key={field}
                 field={field}
                 section={null}
+                disabled={blockedSectionsLookup.get(field)!.length >= SECTION_COUNT}
                 blockedSections={blockedSectionsLookup.get(field)}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
@@ -332,11 +367,11 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                 className={classes.sectionTitle}
               >
                 {apiRef.current.getLocaleText('chartsCategories')}
-                {(sectionLimitLookup.has('categories') || categories.length > 0) && (
+                {(chartStateLookup[activeChartId]?.maxCategories || categories.length > 0) && (
                   <rootProps.slots.baseBadge
                     badgeContent={
-                      sectionLimitLookup.has('categories')
-                        ? `${categories.length}/${sectionLimitLookup.get('categories')}`
+                      chartStateLookup[activeChartId]?.maxCategories
+                        ? `${categories.length}/${chartStateLookup[activeChartId]?.maxCategories}`
                         : categories.length
                     }
                   />
@@ -390,11 +425,11 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                 className={classes.sectionTitle}
               >
                 {apiRef.current.getLocaleText('chartsSeries')}
-                {(sectionLimitLookup.has('series') || series.length > 0) && (
+                {(chartStateLookup[activeChartId]?.maxSeries || series.length > 0) && (
                   <rootProps.slots.baseBadge
                     badgeContent={
-                      sectionLimitLookup.has('series')
-                        ? `${series.length}/${sectionLimitLookup.get('series')}`
+                      chartStateLookup[activeChartId]?.maxSeries
+                        ? `${series.length}/${chartStateLookup[activeChartId]?.maxSeries}`
                         : series.length
                     }
                   />

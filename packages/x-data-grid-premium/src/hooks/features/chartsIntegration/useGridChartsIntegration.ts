@@ -41,7 +41,7 @@ import {
 } from './gridChartsIntegrationSelectors';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
-import { getBlockedSections } from './utils';
+import { isBlockedForSection } from './utils';
 
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
@@ -74,9 +74,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
           .filter(
             (category) =>
               columnsLookup[category.field]?.chartable === true &&
-              !getBlockedSections(columnsLookup[category.field] as GridColDef).includes(
-                'categories',
-              ),
+              !isBlockedForSection(columnsLookup[category.field] as GridColDef, 'categories'),
           ),
         series: (chart.series || [])
           .map((seriesItem) =>
@@ -85,7 +83,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
           .filter(
             (seriesItem) =>
               columnsLookup[seriesItem.field]?.chartable === true &&
-              !getBlockedSections(columnsLookup[seriesItem.field] as GridColDef).includes('series'),
+              !isBlockedForSection(columnsLookup[seriesItem.field] as GridColDef, 'series'),
           ),
       },
     ]),
@@ -292,8 +290,20 @@ export const useGridChartsIntegration = (
         categories[chartId] = [];
         series[chartId] = [];
 
-        // Sanitize selectedSeries and selectedCategories while maintaining their order
-        for (let i = 0; i < selectedFields[chartId].series.length; i += 1) {
+        // loop through categories and series either through their length or to the max limit
+        // if the selection is greater than the max limit, the state will be updated
+        const categoriesSize = chartStateLookup[chartId]?.maxCategories
+          ? Math.min(
+              chartStateLookup[chartId].maxCategories,
+              selectedFields[chartId].categories.length,
+            )
+          : selectedFields[chartId].categories.length;
+        const seriesSize = chartStateLookup[chartId]?.maxSeries
+          ? Math.min(chartStateLookup[chartId].maxSeries, selectedFields[chartId].series.length)
+          : selectedFields[chartId].series.length;
+
+        // sanitize selectedSeries and selectedCategories while maintaining their order
+        for (let i = 0; i < seriesSize; i += 1) {
           if (chartableColumns[selectedFields[chartId].series[i].field]) {
             if (!series[chartId]) {
               series[chartId] = [];
@@ -303,7 +313,7 @@ export const useGridChartsIntegration = (
         }
 
         // categories cannot contain fields that are already in series
-        for (let i = 0; i < selectedFields[chartId].categories.length; i += 1) {
+        for (let i = 0; i < categoriesSize; i += 1) {
           const item = selectedFields[chartId].categories[i];
           if (
             !selectedFields[chartId].series.some((seriesItem) => seriesItem.field === item.field) &&
@@ -345,7 +355,7 @@ export const useGridChartsIntegration = (
 
       debouncedHandleRowDataUpdate(chartIds);
     },
-    [apiRef, debouncedHandleRowDataUpdate],
+    [apiRef, chartStateLookup, debouncedHandleRowDataUpdate],
   );
 
   const debouncedHandleColumnDataUpdate = React.useMemo(
@@ -480,8 +490,20 @@ export const useGridChartsIntegration = (
       const categories = gridChartsCategoriesSelector(apiRef, activeChartId);
       const series = gridChartsSeriesSelector(apiRef, activeChartId);
 
-      if (targetSection && getBlockedSections(columns[field]).includes(targetSection)) {
-        return;
+      if (targetSection) {
+        if (isBlockedForSection(columns[field], targetSection)) {
+          return;
+        }
+
+        const currentTargetItems = targetSection === 'categories' ? categories : series;
+        const currentMaxItems =
+          targetSection === 'categories'
+            ? chartStateLookup[activeChartId]?.maxCategories
+            : chartStateLookup[activeChartId]?.maxSeries;
+
+        if (currentMaxItems && currentTargetItems.length >= currentMaxItems) {
+          return;
+        }
       }
 
       let hidden: boolean | undefined;
@@ -520,7 +542,7 @@ export const useGridChartsIntegration = (
         }
       }
     },
-    [apiRef, activeChartId, updateCategories, updateSeries],
+    [apiRef, activeChartId, chartStateLookup, updateCategories, updateSeries],
   );
 
   const addColumnMenuButton = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -590,10 +612,14 @@ export const useGridChartsIntegration = (
     }
 
     isInitialized.current = true;
+    const schema = props.slotProps?.chartsPanel?.schema || {};
 
     availableChartIds.forEach((chartId) => {
+      const chartType = props.initialState?.chartsIntegration?.charts?.[chartId]?.chartType || '';
       setChartState(chartId, {
-        type: props.initialState?.chartsIntegration?.charts?.[chartId]?.chartType || '',
+        type: chartType,
+        maxCategories: schema[chartType]?.maxCategories,
+        maxSeries: schema[chartType]?.maxSeries,
         configuration:
           props.initialState?.chartsIntegration?.charts?.[chartId]?.configuration || {},
       });
@@ -604,6 +630,7 @@ export const useGridChartsIntegration = (
     availableChartIds,
     syncedChartIds,
     props.initialState?.chartsIntegration?.charts,
+    props.slotProps?.chartsPanel?.schema,
     setChartState,
     debouncedHandleColumnDataUpdate,
   ]);

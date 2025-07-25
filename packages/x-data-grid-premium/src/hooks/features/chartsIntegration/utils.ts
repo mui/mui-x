@@ -6,3 +6,7 @@ export const getBlockedSections = (column: GridColDef): string[] => {
   }
   return [];
 };
+
+export const isBlockedForSection = (column: GridColDef, section: string) => {
+  return getBlockedSections(column).includes(section);
+};
