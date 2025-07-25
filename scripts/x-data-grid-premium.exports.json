@@ -129,6 +129,7 @@
   { "name": "GridAggregationState", "kind": "Interface" },
   { "name": "gridAggregationStateSelector", "kind": "Variable" },
   { "name": "GridAiAssistantPanel", "kind": "Function" },
+  { "name": "GridAiAssistantPanelQueriesRemaining", "kind": "Function" },
   { "name": "GridAlignment", "kind": "TypeAlias" },
   { "name": "GridApi", "kind": "TypeAlias" },
   { "name": "GridApiCommon", "kind": "Interface" },
