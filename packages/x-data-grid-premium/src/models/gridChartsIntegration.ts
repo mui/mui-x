@@ -7,6 +7,8 @@ export type ChartState = {
   series: Axis<number | null>;
   type: string;
   configuration: Record<string, string | number | boolean | null>;
+  maxCategories?: number;
+  maxSeries?: number;
 };
 
 export interface GridChartsIntegrationContextValue {
