@@ -1,3 +1,4 @@
+import Flatbush from 'flatbush';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,
@@ -16,6 +17,7 @@ import {
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
+import { SeriesId } from '../../../../models/seriesType/common';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -217,5 +219,60 @@ export const selectorChartRawAxis = createSelector(
     }
 
     return axis;
+  },
+);
+
+export const selectorChartSeriesFlatbushMap = createSelector(
+  [selectorChartSeriesProcessed, selectorChartXAxis, selectorChartYAxis],
+  function selectChartSeriesFlatbushMap(
+    allSeries,
+    { axis: xAxes, axisIds: xAxesIds },
+    { axis: yAxes, axisIds: yAxesIds },
+  ) {
+    // FIXME: Do we want to support non-scatter series here?
+    const validSeries = allSeries.scatter;
+    const flatbushMap = new Map<SeriesId, Flatbush>();
+
+    if (!validSeries) {
+      return flatbushMap;
+    }
+
+    const defaultXAxisId = xAxesIds[0];
+    const defaultYAxisId = yAxesIds[0];
+
+    validSeries.seriesOrder.forEach((seriesId) => {
+      const {
+        data,
+        xAxisId = defaultXAxisId,
+        yAxisId = defaultYAxisId,
+      } = validSeries.series[seriesId];
+
+      const flatbush = new Flatbush(data.length);
+
+      const xScale = xAxes[xAxisId].scale;
+      const yScale = yAxes[yAxisId].scale;
+      const originalXScale = xScale.copy();
+      const originalYScale = yScale.copy();
+      originalXScale.range([0, 1]);
+      originalYScale.range([0, 1]);
+
+      for (const datum of data) {
+        // Add the points using a [0, 1]. This makes it so that we don't need to recreate the Flatbush structure when zooming.
+        flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
+      }
+
+      flatbush.finish();
+      flatbushMap.set(seriesId, flatbush);
+    });
+
+    console.log('new Flatbush for series', Array.from(flatbushMap.keys()));
+    return flatbushMap;
+  },
+);
+
+export const selectorChartSeriesFlatbush = createSelector(
+  [selectorChartSeriesFlatbushMap, (_, seriesId: SeriesId) => seriesId],
+  function selectChartSeriesFlatbush(flatbushMap, seriesId) {
+    return flatbushMap.get(seriesId);
   },
 );
