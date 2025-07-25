@@ -38,3 +38,7 @@ All the views of the Event Calendar can be used as standalone components:
 ### Agenda
 
 {{"demo": "StandaloneAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Customization
+
+{{"demo": "RemoveViews.js", "bg": "inline", "defaultCodeOpen": false}}
