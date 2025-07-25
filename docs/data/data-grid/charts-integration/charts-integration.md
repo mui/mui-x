@@ -88,6 +88,12 @@ React.useEffect(() => {
 
 {{"demo": "GridChartsIntegrationPivoting.js", "bg": "inline"}}
 
+## Server-side data
+
+The following demo shows charts integration with the grid using [Server-side data](/x/react-data-grid/server-side-data/).
+
+{{"demo": "GridChartsIntegrationDataSource.js", "bg": "inline"}}
+
 ## Multiple charts
 
 Control multiple charts with one grid by adding more `<GridChartsRendererProxy />` components with unique `id`s.
