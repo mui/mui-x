@@ -27,7 +27,7 @@ export interface GridRowsOverridableMethodsInternalHook<Api> {
     props: Pick<
       DataGridProcessedProps,
       'processRowUpdate' | 'onProcessRowUpdateError' | 'dataSource'
-    >
+    >,
   ) => {
     setRowIndex: (rowId: GridRowId, targetIndex: number) => void;
   };
