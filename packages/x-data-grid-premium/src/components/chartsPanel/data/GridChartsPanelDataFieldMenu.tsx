@@ -51,7 +51,7 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
   const triggerId = useId();
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-  const getMenuItems = React.useCallback((): (MenuAction | MenuDivider)[] => {
+  const menuItems = React.useMemo((): (MenuAction | MenuDivider)[] => {
     if (isAvailableField) {
       return [
         { key: 'categories', label: apiRef.current.getLocaleText('chartsMenuAddToCategories') },
@@ -117,6 +117,10 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
 
     return [...moveMenuItems, ...addToSectionMenuItems, ...removeMenuItem];
   }, [isAvailableField, apiRef, rootProps, canMoveUp, canMoveDown, section, blockedSections]);
+
+  if (menuItems.length === 0) {
+    return null;
+  }
 
   const handleClick = () => {
     setOpen(!open);
@@ -207,7 +211,7 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
           autoFocusItem
           {...rootProps.slotProps?.baseMenuList}
         >
-          {getMenuItems().map((item, index) =>
+          {menuItems.map((item, index) =>
             'divider' in item ? (
               <rootProps.slots.baseDivider key={`divider-${index}`} />
             ) : (
