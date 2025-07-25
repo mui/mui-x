@@ -25,14 +25,12 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { Sidebar } from '../components/sidebar';
-import { GridPivotPanel } from '../components/pivotPanel/GridPivotPanel';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
-import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
-import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
+import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -69,18 +67,12 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   const props = useDataGridPremiumComponent(privateApiRef, initialProps);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
-  const pivotSettingsOpen = useGridSelector(privateApiRef, gridPivotPanelOpenSelector);
-
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
 
-  const sidePanel =
-    isPivotingAvailable(props) && pivotSettingsOpen ? (
-      <Sidebar>
-        <GridPivotPanel />
-      </Sidebar>
-    ) : null;
+  const sidebarOpen = useGridSelector(privateApiRef, gridSidebarOpenSelector);
+  const sidePanel = sidebarOpen ? <Sidebar /> : null;
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
@@ -932,6 +924,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Callback fired when the pivot side panel open state changes.
    * @param {boolean} pivotPanelOpen Whether the pivot side panel is visible.
+   * @deprecated Use the `sidebarOpen` and `sidebarClose` events or corresponding event handlers `onSidebarOpen()` and `onSidebarClose()` instead.
    */
   onPivotPanelOpenChange: PropTypes.func,
   /**
@@ -1033,6 +1026,20 @@ DataGridPremiumRaw.propTypes = {
    * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
    */
   onRowsScrollEnd: PropTypes.func,
+  /**
+   * Callback fired when the sidebar is closed.
+   * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onSidebarClose: PropTypes.func,
+  /**
+   * Callback fired when the sidebar is opened.
+   * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onSidebarOpen: PropTypes.func,
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param {GridSortModel} model With all properties from [[GridSortModel]].
@@ -1151,6 +1158,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * If `true`, the pivot side panel is visible.
    * @default false
+   * @deprecated Use `initialState.sidebar.open` instead.
    */
   pivotPanelOpen: PropTypes.bool,
   /**
