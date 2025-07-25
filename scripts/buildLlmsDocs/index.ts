@@ -363,16 +363,13 @@ function processComponent(component: ComponentDocInfo): string | null {
 /**
  * Format markdown content using prettier
  */
-async function formatMarkdown(content: string): Promise<string> {
+async function formatMarkdown(content: string, filePath: string): Promise<string> {
   try {
     // Remove project prefixes from markdown link titles
     // e.g., "Date and Time Pickers - Custom layout" -> "Custom layout"
     const processedContent = content.replace(/\[([^[\]]*?)\s*-\s*([^[\]]*?)\]/g, '[$2]');
 
-    const prettierConfigPath = path.join(process.cwd(), 'prettier.config.js');
-    const prettierConfig = await prettier.resolveConfig(prettierConfigPath, {
-      config: prettierConfigPath,
-    });
+    const prettierConfig = await prettier.resolveConfig(filePath);
 
     return await prettier.format(processedContent, {
       ...prettierConfig,
@@ -978,8 +975,8 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
 
       // Generate llms.txt for this project with all files (including API files)
       const llmsContent = generateProjectLlmsTxt(currentProjectFiles, projectDisplayName, baseDir);
-      const formattedLlmsContent = await formatMarkdown(llmsContent);
       const llmsPath = path.join(outputDir, baseDir, 'llms.txt');
+      const formattedLlmsContent = await formatMarkdown(llmsContent, llmsPath);
 
       // Ensure directory exists
       const llmsDirPath = path.dirname(llmsPath);
@@ -1005,8 +1002,8 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
       'This documentation covers all MUI X packages including Data Grid, Date Pickers, Charts, Tree View, and other components.\n\n' +
       '---\n\n';
     const rootLlmsContent = rootHeader + projectLlmsContents.join('\n\n---\n\n');
-    const formattedRootLlmsContent = await formatMarkdown(rootLlmsContent);
     const rootLlmsPath = path.join(outputDir, 'x', 'llms.txt');
+    const formattedRootLlmsContent = await formatMarkdown(rootLlmsContent, rootLlmsPath);
 
     // Ensure directory exists
     const rootLlmsDirPath = path.dirname(rootLlmsPath);
