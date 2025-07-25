@@ -5,7 +5,7 @@ import type {
   GridChartsConfigurationControl,
 } from '@mui/x-internals/types';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { GridShadowScrollArea } from '@mui/x-data-grid-pro';
+import { GridOverlay, GridShadowScrollArea } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
@@ -65,7 +65,6 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   } = chartStateLookup[activeChartId] ?? EMPTY_CHART_INTEGRATION_CONTEXT_STATE;
 
   const handleChange = (field: string, value: any) => {
-    // TODO: keep configuration per chart type but share color palette state
     setChartState(activeChartId, {
       ...configuration,
       configuration: { ...configuration, [field]: value },
@@ -73,8 +72,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   };
 
   if (chartType === '') {
-    // TODO: make it prettier
-    return apiRef.current.getLocaleText('chartsChartNotSelected');
+    return <GridOverlay>{apiRef.current.getLocaleText('chartsChartNotSelected')}</GridOverlay>;
   }
 
   return (
