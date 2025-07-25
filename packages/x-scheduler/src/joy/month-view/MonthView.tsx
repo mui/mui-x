@@ -56,7 +56,7 @@ export const MonthView = React.memo(
         const weekDays = getDayList({ date: weekStart, amount: 7 });
         return weekDays.map((date) => ({
           date,
-          events: getEventsStartingInDay(date),
+          events: getEventsStartingInDay(date).regularEvents,
         }));
       });
     }, [getWeekList, visibleDate, getDayList, getEventsStartingInDay]);

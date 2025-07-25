@@ -66,7 +66,7 @@ export const AgendaView = React.memo(
                 </div>
               </div>
               <div className="EventsList">
-                {getEventsStartingInDay(day).map((event) => (
+                {getEventsStartingInDay(day).regularEvents.map((event) => (
                   <EventPopoverTrigger
                     key={event.id}
                     event={event}

@@ -34,7 +34,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const { store, instance } = useEventCalendarContext();
   const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
-  const getAllDayEventsStartingInDay = useSelector(store, selectors.getAllDayEventsStartingInDay);
   const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
   const visibleDate = useSelector(store, selectors.visibleDate);
   const hasDayView = useSelector(store, selectors.hasDayView);
@@ -132,7 +131,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
             {days.map((day, dayIndex) =>
-              getAllDayEventsStartingInDay(day, days[0]).map((event) => {
+              getEventsStartingInDay(day, days[0]).allDayEvents.map((event) => {
                 // Calculate the duration of the event in days
                 const eventStart = adapter.startOfDay(event.start);
                 const eventEnd = adapter.startOfDay(event.end);
@@ -204,7 +203,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     className="DayTimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
-                    {getEventsStartingInDay(day).map((event) => (
+                    {getEventsStartingInDay(day).regularEvents.map((event) => (
                       <EventPopoverTrigger
                         key={event.id}
                         event={event}
