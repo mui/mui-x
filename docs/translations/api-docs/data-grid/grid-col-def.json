@@ -45,6 +45,9 @@
     "groupingValueGetter": {
       "description": "Function that transforms a complex cell value into a key that be used for grouping the rows.<br />Not supported with the server-side row grouping. Use <code>dataSource.getGroupKey()</code> instead."
     },
+    "groupingValueSetter": {
+      "description": "Function that takes a grouping value and updates the row data accordingly.<br />This is the inverse operation of <code>groupingValueGetter</code>."
+    },
     "headerAlign": { "description": "Align column header content." },
     "headerClassName": { "description": "Class name added to the column header cell." },
     "headerName": { "description": "The title displayed in the column header cell." },
