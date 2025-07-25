@@ -624,7 +624,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Verify groupingValueSetter was called
         expect(groupingValueSetter.callCount).to.equal(1);
         expect(groupingValueSetter.firstCall.args[0]).to.equal('Clothing'); // groupingValue should be 'Clothing'
-        
+
         // Verify the row passed to the setter matches iPhone data
         const passedRow = groupingValueSetter.firstCall.args[1];
         expect(passedRow.name).to.equal('iPhone');
@@ -989,10 +989,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // The names should be in column 5 (name field), but may not be visible in grouped view
         // Instead, let's use a simpler approach: drag the first Microsoft employee to Google
-        // Find the first Microsoft employee (row index 2) and first Google employee  
+        // Find the first Microsoft employee (row index 2) and first Google employee
         const microsoftEmployeeIndex = 2; // First Microsoft Engineering employee
         const googleEmployeeIndex = 10; // First Google Engineering employee
-        
+
         const johnRow = getRow(microsoftEmployeeIndex);
         const bobRow = getRow(googleEmployeeIndex);
 
@@ -1009,7 +1009,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(companySetterRow.company).to.equal('Microsoft'); // Original company
         expect(companySetterRow.dept).to.equal('Engineering'); // Original dept
 
-        // Verify dept setter was called with correct parameters  
+        // Verify dept setter was called with correct parameters
         expect(deptValueSetter.firstCall.args[0]).to.equal('Engineering'); // target dept (Google has Engineering)
         const deptSetterRow = deptValueSetter.firstCall.args[1];
         expect(deptSetterRow.company).to.equal('Google'); // Already updated by company setter

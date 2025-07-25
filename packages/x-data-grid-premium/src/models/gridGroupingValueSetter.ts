@@ -5,7 +5,7 @@ import { GridApiPremium } from './gridApiPremium';
 /**
  * Function signature for setting a grouping value on a row.
  * This is the inverse operation of GridGroupingValueGetter.
- * 
+ *
  * @param {GridKeyValue | null | undefined} groupingValue The grouping value to set
  * @param {R} row The row to update
  * @param {GridColDef<R>} column The column definition

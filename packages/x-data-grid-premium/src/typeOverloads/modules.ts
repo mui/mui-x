@@ -4,7 +4,11 @@ import type {
   GridApiCachesPro,
   GridEventLookupPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
-import type { GridGroupingValueGetter, GridGroupingValueSetter, GridPastedValueParser } from '../models';
+import type {
+  GridGroupingValueGetter,
+  GridGroupingValueSetter,
+  GridPastedValueParser,
+} from '../models';
 import type {
   GridRowGroupingModel,
   GridAggregationModel,
