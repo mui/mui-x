@@ -248,6 +248,7 @@ export const useGridRowsOverridableMethods = (
               updatedRow: updatedSourceRow,
             };
 
+            apiRef.current.setLoading(true);
             try {
               Promise.resolve(dataSource.updateRow(params))
                 .then((syncedRow) => {
@@ -260,8 +261,12 @@ export const useGridRowsOverridableMethods = (
                   } else {
                     throw error;
                   }
+                })
+                .finally(() => {
+                  apiRef.current.setLoading(false);
                 });
             } catch (error) {
+              apiRef.current.setLoading(false);
               if (onProcessRowUpdateError) {
                 onProcessRowUpdateError(error);
               } else {
@@ -278,6 +283,7 @@ export const useGridRowsOverridableMethods = (
               previousRow: originalSourceRow,
               updatedRow: updatedSourceRow,
             };
+            apiRef.current.setLoading(true);
 
             try {
               Promise.resolve(processRowUpdate(updatedSourceRow, originalSourceRow, params))
@@ -291,8 +297,12 @@ export const useGridRowsOverridableMethods = (
                   } else {
                     throw error;
                   }
+                })
+                .finally(() => {
+                  apiRef.current.setLoading(false);
                 });
             } catch (error) {
+              apiRef.current.setLoading(false);
               if (onProcessRowUpdateError) {
                 onProcessRowUpdateError(error);
               } else {
