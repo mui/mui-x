@@ -82,16 +82,15 @@ describe('<MonthView />', () => {
     );
   });
 
-  // TODO: Use the views prop when available
-  // it('should render day numbers as plain text when the day view is not enabled', () => {
-  //   render(
-  //     <StandaloneView {...standaloneDefaults}>
-  //       <MonthView />
-  //     </StandaloneView>,
-  //   );
-  //   expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
-  //   expect(screen.getByText('15')).not.to.equal(null);
-  // });
+  it('should render day numbers as plain text when the day view is not enabled', () => {
+    render(
+      <StandaloneView {...standaloneDefaults} views={['week', 'month']}>
+        <MonthView />
+      </StandaloneView>,
+    );
+    expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
+    expect(screen.getByText('15')).not.to.equal(null);
+  });
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
     const manyEvents = [

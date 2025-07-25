@@ -36,6 +36,11 @@ export interface UseEventCalendarParameters {
    */
   defaultView?: EventCalendarView;
   /**
+   * The views available in the calendar.
+   * @default ["week", "day", "month", "agenda"]
+   */
+  views?: EventCalendarView[];
+  /**
    * Event handler called when the view changes.
    */
   onViewChange?: (view: EventCalendarView, event: React.UIEvent | Event) => void;
