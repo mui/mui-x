@@ -63,6 +63,11 @@ export interface UseEventCalendarParameters {
    * @default false
    */
   areEventsResizable?: boolean;
+  /**
+   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
+   * @default true
+   */
+  ampm?: boolean;
 }
 
 export interface EventCalendarInstance {

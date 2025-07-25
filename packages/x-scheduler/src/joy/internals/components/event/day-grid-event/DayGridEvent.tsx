@@ -7,6 +7,9 @@ import { DayGrid } from '../../../../../primitives/day-grid';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
+import { useSelector } from '../../../../../base-ui-copy/utils/store';
+import { selectors } from '../../../../event-calendar/store';
+import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import './DayGridEvent.css';
 import '../index.css';
 
@@ -29,8 +32,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const id = useId(idProp);
   const translations = useTranslations();
+  const { store } = useEventCalendarContext();
+  const ampm = useSelector(store, selectors.ampm);
 
-  const renderContent = React.useMemo(() => {
+  const content = React.useMemo(() => {
     switch (variant) {
       case 'allDay':
         return (
@@ -60,11 +65,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
             >
               <time className="DayGridEventTime">
                 <span className="DayGridEventTimeStart">
-                  {adapter.formatByString(eventProp.start, 'h:mm a')}
+                  {adapter.format(eventProp.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                 </span>
                 <span className="DayGridEventTimeEnd">
                   {' '}
-                  - {adapter.formatByString(eventProp.end, 'h:mm a')}
+                  - {adapter.format(eventProp.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                 </span>
               </time>
               <span className="DayGridEventTitle">{eventProp.title}</span>
@@ -72,7 +77,15 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
           </div>
         );
     }
-  }, [variant, eventProp.title, eventProp.start, eventProp.end, eventResource?.name, translations]);
+  }, [
+    variant,
+    eventProp.title,
+    eventProp.start,
+    eventProp.end,
+    eventResource?.name,
+    translations,
+    ampm,
+  ]);
 
   return (
     <DayGrid.Event
@@ -90,7 +103,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       end={eventProp.end}
       {...other}
     >
-      {renderContent}
+      {content}
     </DayGrid.Event>
   );
 });

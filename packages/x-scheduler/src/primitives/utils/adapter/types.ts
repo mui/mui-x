@@ -134,6 +134,17 @@ export interface AdapterFormats {
    * @example "02/13/2020 23:44"
    */
   keyboardDateTime24h: string;
+  // TODO: Make sure the Base UI adapter support the formats below
+  /**
+   * The hours with minutes and meridiem without leading zeros.
+   * @example "04:44 PM"
+   */
+  hoursMinutes12h: 'h:mm a';
+  /**
+   * The hours with minutes but without meridiem without leading zeros.
+   * @example "16:44"
+   */
+  hoursMinutes24h: 'H:mm';
 }
 
 export type FieldFormatTokenMap = {
