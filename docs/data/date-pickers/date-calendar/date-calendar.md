@@ -81,6 +81,20 @@ This value is usually set to `6` for Gregorian calendars, because month display 
 
 {{"demo": "CustomMonthLayout.js"}}
 
+### Wide Calendar
+
+We can fully customize calendar to display wide calendar.
+
+To create such layout we can do these steps:‌
+
+1. Hide original header
+2. Set width to 100%
+3. Use custom Day slot
+4. Allow overflow to be visible
+5. Adjust height according to day component heights
+
+{{"demo": "WideMonthLayout.js",  "defaultCodeOpen": false}}
+
 ### Display week number
 
 To display week number, use the `displayWeekNumber`.
