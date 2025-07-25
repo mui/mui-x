@@ -6,7 +6,7 @@ import { EventCalendarStore, selectors } from '../../event-calendar/store';
 /**
  * Make sure the state current value doesn't contain incompatible values.
  */
-function useAssertStateValidityOutsideOfProduction<T>(store: EventCalendarStore) {
+function useAssertStateValidityOutsideOfProduction(store: EventCalendarStore) {
   useSelector(store, () => {
     const views = selectors.views(store.state);
     const view = selectors.view(store.state);

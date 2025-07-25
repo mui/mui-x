@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
-import { ViewSwitcher } from './ViewSwitcher';
 import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
+import { ViewSwitcher } from './ViewSwitcher';
 
 describe('<ViewSwitcher />', () => {
   const { render } = createSchedulerRenderer();
