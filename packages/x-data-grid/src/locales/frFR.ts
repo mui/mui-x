@@ -184,18 +184,13 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Lignes par page :',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} sur ${count !== -1 ? count : `plus de ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `environ ${estimated}` : `plus de ${to}`;
+    return `${from}–${to} sur ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Aller à la première page';
