@@ -18,7 +18,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
 import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
 import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
@@ -222,8 +222,11 @@ function useClickAwayListener(
   });
 
   // Keep track of mouse/touch events that bubbled up through the portal.
-  const handleSynthetic = () => {
-    syntheticEventRef.current = true;
+  const handleSynthetic = (event: MuiEvent<React.SyntheticEvent>) => {
+    // Ignore events handled by our internal components
+    if (!event.defaultMuiPrevented) {
+      syntheticEventRef.current = true;
+    }
   };
 
   React.useEffect(() => {
@@ -370,7 +373,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const classes = useUtilityClasses(classesProp);
   const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
 
-  const handleClickAway = useEventCallback(() => {
+  const handleClickAway: OnClickAway = useEventCallback(() => {
     if (viewContainerRole === 'tooltip') {
       executeInTheNextEventLoopTick(() => {
         if (
