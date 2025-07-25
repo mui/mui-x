@@ -240,11 +240,32 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 {{"demo": "MultipleAxes.js"}}
 
-### Grouped Axes
+## Grouped Axes
 
-You can group axes together by rendering more than one axis on the same side.
+In order to group axes together, a user can provide a `grouping` property in the axis definition.
+This property expects an object with a `getGrouping` function.
+
+The `getGrouping` function receives the axis data value and should return an array of values.
+Each value is a group name. Groups are displayed in the order they are defined in the `getGrouping` function.
+
+In the next demo, the x-axis is grouped by month, quarter, and year.
 
 {{"demo": "GroupedAxes.js"}}
+
+### Tick size
+
+The tick size can be customized for each group.
+To do so, you can provide a `tickSize` property in the `grouping.config` array.
+Each item in the array corresponds to a group defined in the `getGrouping` function.
+
+{{"demo": "GroupedAxesTickSize.js"}}
+
+### Grouped axes styling
+
+In order to target a specific group, you can use the `data-group-index` attribute as a selector.
+In the example below, we change the tick color of the last group to yellow and the first group text to gray.
+
+{{"demo": "GroupedAxesStyling.js"}}
 
 ## Axis customization
 

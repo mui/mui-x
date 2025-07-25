@@ -1,23 +1,17 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-export default function GroupedAxes() {
+export default function GroupedAxesTickSize() {
   return (
     <BarChart
       xAxis={[
         {
           data,
-          scaleType: 'band',
-          tickSize: 8,
           height: 32,
           grouping: {
-            getGrouping: (value: Date) => [
-              value.toLocaleDateString('en-US', { month: 'short' }),
-              formatQuarterYear(value),
-              value.toLocaleDateString('en-US', { year: 'numeric' }),
-            ],
+            getGrouping,
+            config: [{ tickSize: 0 }, { tickSize: 32 }],
           },
-          valueFormatter,
         },
       ]}
       {...chartConfig}
@@ -25,17 +19,16 @@ export default function GroupedAxes() {
   );
 }
 
+const getGrouping = (value: Date) => [
+  value.toLocaleDateString('en-US', { month: 'short' }),
+  formatQuarterYear(value),
+];
+
 const formatQuarterYear = (date: Date) => {
   const quarter = Math.floor(date.getMonth() / 3) + 1;
   const year = date.getFullYear().toString().slice(-2);
   return `Q${quarter} '${year}`;
 };
-
-const valueFormatter = (v: Date) =>
-  v.toLocaleDateString('en-US', {
-    month: 'short',
-    year: 'numeric',
-  });
 
 const data = [
   new Date(2015, 0, 1),

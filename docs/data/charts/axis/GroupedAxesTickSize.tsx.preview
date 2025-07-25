@@ -1,0 +1,13 @@
+<BarChart
+  xAxis={[
+    {
+      data,
+      height: 32,
+      grouping: {
+        getGrouping,
+        config: [{ tickSize: 0 }, { tickSize: 32 }],
+      },
+    },
+  ]}
+  {...chartConfig}
+/>

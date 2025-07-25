@@ -5,8 +5,8 @@ import { getMinXTranslation } from '../internals/geometry';
 import { getWordsByLines } from '../internals/getWordsByLines';
 
 /* Returns a set of indices of the tick labels that should be visible.  */
-export function getVisibleLabels(
-  xTicks: TickItemType[],
+export function getVisibleLabels<T extends TickItemType>(
+  xTicks: T[],
   {
     tickLabelStyle: style,
     tickLabelInterval,
@@ -20,8 +20,8 @@ export function getVisibleLabels(
       tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
       isXInside: (x: number) => boolean;
     },
-): Set<TickItemType> {
-  const getTickLabelSize = (tick: TickItemType) => {
+): Set<T> {
+  const getTickLabelSize = (tick: T) => {
     if (!isMounted || tick.formattedValue === undefined) {
       return { width: 0, height: 0 };
     }
