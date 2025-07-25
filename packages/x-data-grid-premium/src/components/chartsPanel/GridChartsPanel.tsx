@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 import useId from '@mui/utils/useId';
 import type { GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { useGridSelector, vars } from '@mui/x-data-grid-pro/internals';
-import { GridMenu } from '@mui/x-data-grid-pro';
+import { GridMenu, GridOverlay } from '@mui/x-data-grid-pro';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -239,8 +239,6 @@ function GridChartsPanel(props: GridChartsPanelProps) {
     ],
   );
 
-  // TODO: render a placeholder if there are no charts available - use the locale text `chartsConfigurationNoCharts`
-
   return (
     <React.Fragment>
       <GridChartsPanelHeader ownerState={rootProps}>
@@ -249,22 +247,24 @@ function GridChartsPanel(props: GridChartsPanelProps) {
         ) : (
           <GridChartsPanelTitle ownerState={rootProps}>Charts</GridChartsPanelTitle>
         )}
-        <rootProps.slots.baseTooltip title={rootProps.localeText.chartsSyncButtonLabel}>
-          <rootProps.slots.baseToggleButton
-            value="sync"
-            aria-label={rootProps.localeText.chartsSyncButtonLabel}
-            selected={chartStateLookup[activeChartId]?.synced}
-            onClick={() => {
-              handleChartSyncChange(!chartStateLookup[activeChartId]?.synced);
-            }}
-          >
-            {chartStateLookup[activeChartId]?.synced ? (
-              <rootProps.slots.chartsSyncIcon fontSize="small" />
-            ) : (
-              <rootProps.slots.chartsSyncDisabledIcon fontSize="small" />
-            )}
-          </rootProps.slots.baseToggleButton>
-        </rootProps.slots.baseTooltip>
+        {chartEntries.length > 0 && (
+          <rootProps.slots.baseTooltip title={rootProps.localeText.chartsSyncButtonLabel}>
+            <rootProps.slots.baseToggleButton
+              value="sync"
+              aria-label={rootProps.localeText.chartsSyncButtonLabel}
+              selected={chartStateLookup[activeChartId]?.synced}
+              onClick={() => {
+                handleChartSyncChange(!chartStateLookup[activeChartId]?.synced);
+              }}
+            >
+              {chartStateLookup[activeChartId]?.synced ? (
+                <rootProps.slots.chartsSyncIcon fontSize="small" />
+              ) : (
+                <rootProps.slots.chartsSyncDisabledIcon fontSize="small" />
+              )}
+            </rootProps.slots.baseToggleButton>
+          </rootProps.slots.baseTooltip>
+        )}
         <rootProps.slots.baseIconButton
           onClick={() => {
             apiRef.current.setChartsPanelOpen(false);
@@ -275,14 +275,18 @@ function GridChartsPanel(props: GridChartsPanelProps) {
           <rootProps.slots.sidebarCloseIcon fontSize="small" />
         </rootProps.slots.baseIconButton>
       </GridChartsPanelHeader>
-      <rootProps.slots.baseTabs
-        items={tabItems}
-        value={activeTab}
-        onChange={(_event, value) => {
-          setActiveTab(value);
-        }}
-        {...rootProps.slotProps?.baseTabs}
-      />
+      {chartEntries.length > 0 ? (
+        <rootProps.slots.baseTabs
+          items={tabItems}
+          value={activeTab}
+          onChange={(_event, value) => {
+            setActiveTab(value);
+          }}
+          {...rootProps.slotProps?.baseTabs}
+        />
+      ) : (
+        <GridOverlay>{apiRef.current.getLocaleText('chartsNoCharts')}</GridOverlay>
+      )}
     </React.Fragment>
   );
 }
