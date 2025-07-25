@@ -15,6 +15,7 @@ import {
   GridApiPremium,
   GridValidRowModel,
   GridChartsIcon,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
@@ -557,11 +558,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         <Test
           initialState={{
             ...baseInitialState,
-            chartsIntegration: {
-              ...baseInitialState.chartsIntegration,
-              configurationPanel: {
-                open: true,
-              },
+            sidebar: {
+              open: true,
+              value: GridSidebarValue.Charts,
             },
           }}
         />,
@@ -578,11 +577,12 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         <Test
           initialState={{
             ...baseInitialState,
+            sidebar: {
+              open: true,
+              value: GridSidebarValue.Charts,
+            },
             chartsIntegration: {
               ...baseInitialState.chartsIntegration,
-              configurationPanel: {
-                open: true,
-              },
               charts: {
                 ...baseInitialState.chartsIntegration?.charts,
                 test: {
@@ -662,11 +662,12 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         <Test
           initialState={{
             ...baseInitialState,
+            sidebar: {
+              open: true,
+              value: GridSidebarValue.Charts,
+            },
             chartsIntegration: {
               ...baseInitialState.chartsIntegration,
-              configurationPanel: {
-                open: true,
-              },
               charts: {
                 ...baseInitialState.chartsIntegration?.charts,
                 test: {
