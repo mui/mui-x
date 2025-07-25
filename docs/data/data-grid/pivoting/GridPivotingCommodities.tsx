@@ -5,6 +5,7 @@ import {
   GridPivotModel,
   DataGridPremiumProps,
   GridInitialState,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -21,7 +22,10 @@ const pivotModel: GridPivotModel = {
 const initialState: GridInitialState = {
   pivoting: {
     model: pivotModel,
-    panelOpen: true,
+  },
+  sidebar: {
+    open: true,
+    value: GridSidebarValue.Pivot,
   },
   pinnedColumns: {
     left: [GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD],
