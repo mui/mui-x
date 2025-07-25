@@ -7,10 +7,12 @@ import {
   gridExpandedSortedRowIdsSelector,
   GridLeafNode,
   gridRowsLookupSelector,
+  gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
 import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { gridRowGroupingModelSelector } from '../rowGrouping';
+import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
+import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 
 export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPremium>) => {
   const setRowIndex = React.useCallback(
@@ -134,15 +136,42 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiPr
               ];
 
           const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
-          const rowGroupingModel = gridRowGroupingModelSelector(apiRef);
+          const columnsLookup = gridColumnLookupSelector(apiRef);
+          const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
-          const sourceRow = { ...dataRowIdToModelLookup[sourceRowId] };
+          let sourceRow = { ...dataRowIdToModelLookup[sourceRowId] };
           const targetRow = dataRowIdToModelLookup[target.id];
 
-          for (let i = 0; i < rowGroupingModel.length; i += 1) {
-            const field = rowGroupingModel[i];
-            // TODO: Accommodate `groupingValueSetter` and the data source counter part
-            sourceRow[field] = targetRow[field];
+          // Get grouping rules which include both getter and setter functions
+          const groupingRules = getGroupingRules({
+            sanitizedRowGroupingModel,
+            columnsLookup,
+          });
+
+          // Update each grouping field on the source row
+          for (const groupingRule of groupingRules) {
+            const colDef = columnsLookup[groupingRule.field];
+
+            if (groupingRule.groupingValueSetter && colDef) {
+              // Get the target row's grouping value for this field
+              const targetGroupingValue = getCellGroupingCriteria({
+                row: targetRow,
+                colDef,
+                groupingRule,
+                apiRef,
+              }).key;
+
+              // Use the setter to update the source row
+              sourceRow = groupingRule.groupingValueSetter(
+                targetGroupingValue,
+                sourceRow,
+                colDef,
+                apiRef,
+              );
+            } else {
+              // Fallback to direct field assignment
+              sourceRow[groupingRule.field] = targetRow[groupingRule.field];
+            }
           }
 
           const sourceGroupParent = gridRowTreeSelector(apiRef)[

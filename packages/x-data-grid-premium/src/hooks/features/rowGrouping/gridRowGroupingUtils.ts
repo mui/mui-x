@@ -254,6 +254,7 @@ export const getGroupingRules = ({
   sanitizedRowGroupingModel.map((field) => ({
     field,
     groupingValueGetter: columnsLookup[field]?.groupingValueGetter,
+    groupingValueSetter: columnsLookup[field]?.groupingValueSetter,
   }));
 
 /**
@@ -271,6 +272,10 @@ export const areGroupingRulesEqual = (
     const previousRule = previousValue[newRuleIndex];
 
     if (previousRule.groupingValueGetter !== newRule.groupingValueGetter) {
+      return false;
+    }
+
+    if (previousRule.groupingValueSetter !== newRule.groupingValueSetter) {
       return false;
     }
 

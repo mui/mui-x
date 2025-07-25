@@ -8,6 +8,7 @@ import {
   gridClasses,
   GridRowsProp,
   GridGroupNode,
+  GridApi,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -544,6 +545,104 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(targetRow).not.to.have.class(gridClasses['row--dropBelow']);
       });
     });
+
+    describe('Usage with `groupingValueSetter`', () => {
+      it('should call groupingValueSetter when moving leaf between groups with complex category data', () => {
+        const groupingValueSetter = spy((groupingValue, row, _column, _apiRef) => {
+          // Update category with complex nested data structure
+          return {
+            ...row,
+            category: {
+              main: groupingValue,
+              sub: (row.category as any)?.sub || 'General',
+            },
+          };
+        });
+
+        const complexCategoryData: GridRowsProp = [
+          { id: 1, category: { main: 'Electronics', sub: 'Phones' }, name: 'iPhone', price: 999 },
+          {
+            id: 2,
+            category: { main: 'Electronics', sub: 'Laptops' },
+            name: 'MacBook',
+            price: 1999,
+          },
+          { id: 3, category: { main: 'Clothing', sub: 'Shirts' }, name: 'T-Shirt', price: 25 },
+          { id: 4, category: { main: 'Clothing', sub: 'Pants' }, name: 'Jeans', price: 60 },
+        ];
+
+        const complexProps: DataGridPremiumProps = {
+          rows: complexCategoryData,
+          columns: [
+            {
+              field: 'category',
+              width: 150,
+              groupingValueGetter: (value: any) => value?.main || 'Uncategorized',
+              groupingValueSetter,
+              valueGetter: (value: any) => value?.main || 'Uncategorized',
+            },
+            { field: 'name', width: 150 },
+            { field: 'price', width: 100, type: 'number' },
+          ],
+          initialState: {
+            rowGrouping: {
+              model: ['category'],
+            },
+          },
+          defaultGroupingExpansionDepth: -1,
+          rowReordering: true,
+          disableVirtualization: true,
+          autoHeight: isJSDOM,
+        };
+
+        const apiRef = React.createRef<GridApi>();
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium {...complexProps} apiRef={apiRef} />
+          </div>,
+        );
+
+        // Verify initial grouping - iPhone should be in Electronics group
+        const initialGroupingValues = getColumnValues(1);
+        expect(initialGroupingValues).to.include('Electronics (2)');
+        expect(initialGroupingValues).to.include('Clothing (2)');
+
+        // Find the actual iPhone and T-Shirt rows (names are in column 3)
+        const nameValues = getColumnValues(3);
+        const iPhoneRowIndex = nameValues.indexOf('iPhone');
+        const tShirtRowIndex = nameValues.indexOf('T-Shirt');
+
+        expect(iPhoneRowIndex).to.not.equal(-1, 'iPhone should be found in the grid');
+        expect(tShirtRowIndex).to.not.equal(-1, 'T-Shirt should be found in the grid');
+
+        const iPhoneRow = getRow(iPhoneRowIndex);
+        const tShirtRow = getRow(tShirtRowIndex);
+
+        // Drag iPhone from Electronics to Clothing group (drop above T-Shirt)
+        performDragReorder(iPhoneRow, tShirtRow, 'above');
+
+        // Verify groupingValueSetter was called
+        expect(groupingValueSetter.callCount).to.equal(1);
+        expect(groupingValueSetter.firstCall.args[0]).to.equal('Clothing'); // groupingValue should be 'Clothing'
+        
+        // Verify the row passed to the setter matches iPhone data
+        const passedRow = groupingValueSetter.firstCall.args[1];
+        expect(passedRow.name).to.equal('iPhone');
+        expect(passedRow.price).to.equal(999);
+
+        // Verify the row data was updated correctly in dataRowIdToModelLookup
+        const updatedRow = apiRef.current!.getRow(1);
+        expect(updatedRow.category).to.deep.equal({
+          main: 'Clothing',
+          sub: 'Phones', // Original sub-category preserved
+        });
+
+        // Verify the row moved to the correct group
+        const newGroupingValues = getColumnValues(1);
+        expect(newGroupingValues).to.include('Electronics (1)'); // One less item
+        expect(newGroupingValues).to.include('Clothing (3)'); // One more item
+      });
+    });
   });
 
   describe('Multi-level row grouping (2 levels)', () => {
@@ -823,6 +922,108 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Verify no change
         const newValues = getColumnValues(5);
         expect(newValues).to.deep.equal(initialValues);
+      });
+    });
+
+    describe('Usage with `groupingValueSetter`', () => {
+      it('should call groupingValueSetter for multiple grouping levels when moving between groups', () => {
+        const companyValueSetter = spy((groupingValue, row, _column, _apiRef) => {
+          return {
+            ...row,
+            company: groupingValue,
+            // Reset dept to a default when changing companies
+            dept: 'Engineering',
+          };
+        });
+
+        const deptValueSetter = spy((groupingValue, row, _column, _apiRef) => {
+          return {
+            ...row,
+            dept: groupingValue,
+            // Reset team to a default when changing departments
+            team: 'General',
+          };
+        });
+
+        const multiLevelProps: DataGridPremiumProps = {
+          rows: multiLevelData, // Use existing test data
+          columns: [
+            {
+              field: 'company',
+              width: 150,
+              groupingValueSetter: companyValueSetter,
+            },
+            {
+              field: 'dept',
+              width: 150,
+              groupingValueSetter: deptValueSetter,
+            },
+            { field: 'team', width: 150 },
+            { field: 'name', width: 150 },
+          ],
+          initialState: {
+            rowGrouping: {
+              model: ['company', 'dept'],
+            },
+          },
+          defaultGroupingExpansionDepth: -1,
+          rowReordering: true,
+          disableVirtualization: true,
+          autoHeight: isJSDOM,
+        };
+
+        const apiRef = React.createRef<GridApi>();
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium {...multiLevelProps} apiRef={apiRef} />
+          </div>,
+        );
+
+        // Verify initial setup - John should be under Microsoft -> Engineering
+        const initialValues = getColumnValues(1);
+        expect(initialValues).to.include('Microsoft (5)');
+        expect(initialValues).to.include('Google (3)');
+        expect(initialValues).to.include('Apple (2)');
+
+        // Grid structure verified - proceeding with drag operation
+
+        // The names should be in column 5 (name field), but may not be visible in grouped view
+        // Instead, let's use a simpler approach: drag the first Microsoft employee to Google
+        // Find the first Microsoft employee (row index 2) and first Google employee  
+        const microsoftEmployeeIndex = 2; // First Microsoft Engineering employee
+        const googleEmployeeIndex = 10; // First Google Engineering employee
+        
+        const johnRow = getRow(microsoftEmployeeIndex);
+        const bobRow = getRow(googleEmployeeIndex);
+
+        // Drag Microsoft employee from Engineering to Google/Engineering (drop above Bob)
+        performDragReorder(johnRow, bobRow, 'above');
+
+        // Verify both setters were called in the correct order
+        expect(companyValueSetter.callCount).to.equal(1);
+        expect(deptValueSetter.callCount).to.equal(1);
+
+        // Verify company setter was called with correct parameters
+        expect(companyValueSetter.firstCall.args[0]).to.equal('Google'); // target company
+        const companySetterRow = companyValueSetter.firstCall.args[1];
+        expect(companySetterRow.company).to.equal('Microsoft'); // Original company
+        expect(companySetterRow.dept).to.equal('Engineering'); // Original dept
+
+        // Verify dept setter was called with correct parameters  
+        expect(deptValueSetter.firstCall.args[0]).to.equal('Engineering'); // target dept (Google has Engineering)
+        const deptSetterRow = deptValueSetter.firstCall.args[1];
+        expect(deptSetterRow.company).to.equal('Google'); // Already updated by company setter
+
+        // Verify the final row data was updated correctly
+        const updatedRow = apiRef.current!.getRow(1); // The first Microsoft employee (John)
+        expect(updatedRow.company).to.equal('Google');
+        expect(updatedRow.dept).to.equal('Engineering'); // Moved to Google Engineering
+        expect(updatedRow.team).to.equal('General'); // Reset by dept setter
+
+        // Verify group counts updated
+        const newValues = getColumnValues(1);
+        expect(newValues).to.include('Microsoft (4)'); // One less employee (was 5, now 4)
+        expect(newValues).to.include('Google (4)'); // One more employee (was 3, now 4)
       });
     });
   });
