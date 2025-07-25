@@ -1,5 +1,6 @@
 import { GridFeatureMode } from '../../../models/gridFeatureMode';
 import { GridPaginationMeta, GridPaginationModel } from '../../../models/gridPaginationProps';
+import { GridRowEntry, GridRowId, GridValidRowModel } from '../../../models/gridRows';
 
 export interface GridPaginationState {
   paginationModel: GridPaginationModel;
@@ -65,3 +66,9 @@ export interface GridPaginationApi
   extends GridPaginationModelApi,
     GridPaginationRowCountApi,
     GridPaginationMetaApi {}
+
+export interface GridVisibleRows {
+  rows: GridRowEntry<GridValidRowModel>[];
+  range: { firstRowIndex: number; lastRowIndex: number } | null;
+  rowIdToIndexMap: Map<GridRowId, number>;
+}

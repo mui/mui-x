@@ -12,6 +12,7 @@ import {
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { getPageCount } from './gridPaginationUtils';
 import { GridRowId } from '../../../models/gridRows';
+import { GridVisibleRows } from './gridPaginationInterfaces';
 
 const ALL_RESULTS_PAGE_VALUE = -1;
 
@@ -214,7 +215,12 @@ export const gridVisibleRowsSelector = createSelectorMemoized(
   gridPaginationRowRangeSelector,
   gridPaginatedVisibleSortedGridRowEntriesSelector,
   gridExpandedSortedRowEntriesSelector,
-  (clientPaginationEnabled, paginationRowRange, paginationRows, expandedSortedRowEntries) => {
+  (
+    clientPaginationEnabled,
+    paginationRowRange,
+    paginationRows,
+    expandedSortedRowEntries,
+  ): GridVisibleRows => {
     if (clientPaginationEnabled) {
       return {
         rows: paginationRows,

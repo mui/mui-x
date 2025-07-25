@@ -2,12 +2,14 @@ import {
   createSelector,
   createSelectorMemoized,
   createRootSelector,
+  OutputSelector,
 } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridColumnLookup,
   GridPinnedColumnFields,
   EMPTY_PINNED_COLUMN_FIELDS,
+  GridColumnsState,
 } from './gridColumnsInterfaces';
 import { gridIsRtlSelector } from '../../core/gridCoreSelector';
 import { gridListColumnSelector, gridListViewSelector } from '../listView';
@@ -17,7 +19,7 @@ import { gridListColumnSelector, gridListViewSelector } from '../listView';
  * @category Columns
  */
 export const gridColumnsStateSelector = createRootSelector(
-  (state: GridStateCommunity) => state.columns,
+  (state: GridStateCommunity): GridColumnsState => state.columns,
 );
 
 /**
@@ -35,7 +37,7 @@ export const gridColumnFieldsSelector = createSelector(
  */
 export const gridColumnLookupSelector = createSelector(
   gridColumnsStateSelector,
-  (columnsState) => columnsState.lookup,
+  (columnsState): GridColumnLookup => columnsState.lookup,
 );
 
 /**
@@ -97,9 +99,11 @@ export const gridVisibleColumnFieldsSelector = createSelectorMemoized(
  * Get the visible pinned columns model.
  * @category Visible Columns
  */
-export const gridPinnedColumnsSelector = createRootSelector(
-  (state: GridStateCommunity) => state.pinnedColumns,
-);
+export const gridPinnedColumnsSelector: OutputSelector<
+  GridStateCommunity,
+  unknown,
+  GridPinnedColumnFields
+> = createRootSelector((state: GridStateCommunity): GridPinnedColumnFields => state.pinnedColumns);
 
 /**
  * Get all existing pinned columns. Place the columns on the side that depends on the rtl state.

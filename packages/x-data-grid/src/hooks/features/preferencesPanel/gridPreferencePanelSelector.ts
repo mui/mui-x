@@ -1,9 +1,12 @@
-import { createSelector, createRootSelector } from '../../../utils/createSelector';
+import { createSelector, createRootSelector, OutputSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridPreferencePanelState } from './gridPreferencePanelState';
 
-export const gridPreferencePanelStateSelector = createRootSelector(
-  (state: GridStateCommunity) => state.preferencePanel,
-);
+export const gridPreferencePanelStateSelector: OutputSelector<
+  GridStateCommunity,
+  unknown,
+  GridPreferencePanelState
+> = createRootSelector((state: GridStateCommunity) => state.preferencePanel);
 
 export const gridPreferencePanelSelectorWithLabel = createSelector(
   gridPreferencePanelStateSelector,

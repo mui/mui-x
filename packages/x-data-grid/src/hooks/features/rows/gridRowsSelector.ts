@@ -1,10 +1,11 @@
-import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridRowId, GridRowModel, GridValidRowModel } from '../../../models/gridRows';
 import {
   createRootSelector,
   createSelector,
   createSelectorMemoized,
 } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GridRowIdToModelLookup } from './gridRowsInterfaces';
 
 export const gridRowsStateSelector = createRootSelector((state: GridStateCommunity) => state.rows);
 
@@ -26,7 +27,7 @@ export const gridTopLevelRowCountSelector = createSelector(
 // TODO rows v6: Rename
 export const gridRowsLookupSelector = createSelector(
   gridRowsStateSelector,
-  (rows) => rows.dataRowIdToModelLookup,
+  (rows): GridRowIdToModelLookup<GridValidRowModel> => rows.dataRowIdToModelLookup,
 );
 
 export const gridRowSelector = createSelector(
