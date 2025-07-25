@@ -23,7 +23,7 @@ export type State = {
    */
   areEventsDraggable: boolean;
   /**
-   * Whether the event start or end can be dragged to change its duration without changing this other date.
+   * Whether the event start or end can be dragged to change its duration without changing its other date.
    */
   areEventsResizable: boolean;
 };
