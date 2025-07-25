@@ -1,10 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import type { ChartState } from '../../../models/gridChartsIntegration';
 
-export interface ChartsPanelState {
-  open: boolean;
-}
-
 export type GridChartsIntegrationSection = 'categories' | 'series' | null;
 
 export type GridChartsIntegrationItem = {
@@ -14,7 +10,6 @@ export type GridChartsIntegrationItem = {
 
 export interface GridChartsIntegrationState {
   activeChartId: string;
-  configurationPanel: ChartsPanelState;
   charts: Record<
     string,
     {
@@ -25,7 +20,6 @@ export interface GridChartsIntegrationState {
 }
 
 export interface GridChartsIntegrationInitialState {
-  configurationPanel?: Partial<ChartsPanelState>;
   activeChartId?: string;
   charts?: Record<
     string,
