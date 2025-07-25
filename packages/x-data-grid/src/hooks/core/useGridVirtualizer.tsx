@@ -132,6 +132,8 @@ export function useGridVirtualizer(
   const { getRowHeight, getEstimatedRowHeight, getRowSpacing } = rootProps;
   // </ROWS_META>
 
+  const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
+
   const virtualizer = useVirtualizer({
     scrollbarSize: rootProps.scrollbarSize,
     dimensions,
@@ -193,7 +195,7 @@ export function useGridVirtualizer(
     ),
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
 
-    focusedVirtualCell: useEventCallback(() => gridFocusedVirtualCellSelector(apiRef)),
+    focusedVirtualCell: useEventCallback(() => focusedVirtualCell),
     rowBufferPx: rootProps.rowBufferPx,
     columnBufferPx: rootProps.columnBufferPx,
 
