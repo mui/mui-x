@@ -6,6 +6,12 @@ import {
   useGridEvent,
   useGridApiMethod,
   gridColumnLookupSelector,
+  gridRowMaximumTreeDepthSelector,
+  gridRowTreeSelector,
+  gridExpandedSortedRowIdsSelector,
+  GridGroupNode,
+  GridTreeNode,
+  GridRowId,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -13,6 +19,7 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
   GridStrategyGroup,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -66,6 +73,7 @@ export const useGridRowGrouping = (
     | 'slotProps'
     | 'slots'
     | 'dataSource'
+    | 'treeData'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -284,6 +292,66 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
+  const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
+    (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
+      if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || props.treeData) {
+        return initialValue;
+      }
+
+      const expandedSortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
+      const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
+      const rowTree = gridRowTreeSelector(apiRef);
+
+      const sourceRowIndex = expandedSortedRowIndexLookup[sourceRowId];
+      const targetRowIndex = expandedSortedRowIndexLookup[targetRowId];
+      const sourceNode = rowTree[sourceRowId];
+      const targetNode = rowTree[targetRowId];
+      const prevNode =
+        targetRowIndex > 0 ? rowTree[expandedSortedRowIds[targetRowIndex - 1]] : null;
+      const nextNode =
+        targetRowIndex < expandedSortedRowIds.length - 1
+          ? rowTree[expandedSortedRowIds[targetRowIndex + 1]]
+          : null;
+
+      if (
+        !sourceNode ||
+        !targetNode ||
+        isAdjacentPosition(sourceRowIndex, targetRowIndex, dropPosition) ||
+        (sourceNode.type === 'group' && targetNode.type === 'leaf')
+      ) {
+        return -1;
+      }
+
+      const reorderParams: ReorderParams = {
+        sourceNode,
+        targetNode,
+        prevNode,
+        nextNode,
+        rowTree,
+        dropPosition,
+        dragDirection,
+        targetRowIndex,
+        expandedSortedRowIndexLookup,
+      };
+
+      if (sourceNode.type === 'group' && targetNode.type === 'group') {
+        return handleGroupToGroupReorder(reorderParams);
+      }
+
+      if (sourceNode.type === 'leaf' && targetNode.type === 'leaf') {
+        return handleLeafToLeafReorder(reorderParams);
+      }
+
+      if (sourceNode.type === 'leaf' && targetNode.type === 'group') {
+        return handleLeafToGroupReorder(reorderParams);
+      }
+
+      return -1;
+    },
+    [apiRef, props.treeData],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);
   useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridEvent(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridEvent(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
@@ -297,3 +365,151 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.rowGroupingModel]);
 };
+
+// Helper functions for getRowReorderTargetIndex
+function isAdjacentPosition(
+  sourceRowIndex: number,
+  targetRowIndex: number,
+  dropPosition: 'above' | 'below',
+): boolean {
+  return (
+    (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
+    (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1)
+  );
+}
+
+interface ReorderParams {
+  sourceNode: GridTreeNode;
+  targetNode: GridTreeNode;
+  prevNode: GridTreeNode | null;
+  nextNode: GridTreeNode | null;
+  rowTree: Record<GridRowId, GridTreeNode>;
+  dropPosition: 'above' | 'below';
+  dragDirection: 'up' | 'down';
+  targetRowIndex: number;
+  expandedSortedRowIndexLookup: Record<GridRowId, number>;
+}
+
+function handleGroupToGroupReorder({
+  sourceNode,
+  targetNode,
+  prevNode,
+  dropPosition,
+  dragDirection,
+  targetRowIndex,
+  expandedSortedRowIndexLookup,
+}: ReorderParams): number {
+  // Special case: dropping above a group with a leaf before it
+  if (dropPosition === 'above' && prevNode?.type === 'leaf') {
+    // If the leaf belongs to the source group, no movement
+    if (prevNode.parent === sourceNode.id) {
+      return -1;
+    }
+    // Return appropriate index based on drag direction
+    return dragDirection === 'up'
+      ? targetRowIndex
+      : (expandedSortedRowIndexLookup[prevNode.parent] ?? -1);
+  }
+
+  // Groups must be at the same level (same parent)
+  if (sourceNode.parent !== targetNode.parent) {
+    return -1;
+  }
+
+  // Cannot drop below an expanded group
+  if (dropPosition === 'below' && (targetNode as GridGroupNode).childrenExpanded) {
+    return -1;
+  }
+
+  // Same-parent groups: calculate index based on drag direction
+  if (dragDirection === 'up') {
+    return dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
+  }
+  return dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
+}
+
+function handleLeafToLeafReorder({
+  sourceNode,
+  targetNode,
+  nextNode,
+  dropPosition,
+  dragDirection,
+  targetRowIndex,
+}: ReorderParams): number {
+  // Leaves at different depths cannot be reordered
+  if (sourceNode.depth !== targetNode.depth) {
+    return -1;
+  }
+
+  // Same parent: simple reorder
+  if (sourceNode.parent === targetNode.parent) {
+    if (dragDirection === 'up') {
+      return dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
+    }
+    return dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
+  }
+
+  // Different parents: check special cases
+  if (dropPosition === 'below' && nextNode?.type === 'group' && sourceNode.depth > nextNode.depth) {
+    return targetRowIndex + 1;
+  }
+
+  if (dropPosition === 'above') {
+    return targetRowIndex;
+  }
+
+  if (dropPosition === 'below' && nextNode?.type === 'leaf') {
+    return targetRowIndex + 1;
+  }
+
+  return -1;
+}
+
+function handleLeafToGroupReorder({
+  sourceNode,
+  targetNode: target,
+  prevNode,
+  rowTree,
+  dropPosition,
+  targetRowIndex,
+}: ReorderParams): number {
+  const targetNode = target as GridGroupNode;
+
+  if (dropPosition === 'above') {
+    if (!prevNode || prevNode.type !== 'leaf') {
+      return -1;
+    }
+
+    if (sourceNode.depth > targetNode.depth && targetNode.depth === 0) {
+      // Adjust index if previous node is a sibling
+      const adjustment = prevNode?.type === 'leaf' && prevNode.parent === sourceNode.parent ? 1 : 0;
+      return targetRowIndex - adjustment;
+    }
+
+    if (prevNode.depth !== sourceNode.depth) {
+      return -1;
+    }
+
+    return targetRowIndex;
+  }
+
+  if (dropPosition === 'below') {
+    // Cannot drop below collapsed group
+    if (!targetNode.childrenExpanded) {
+      return -1;
+    }
+
+    if (sourceNode.depth > targetNode.depth && targetNode.depth === sourceNode.depth - 1) {
+      return targetRowIndex + 1;
+    }
+
+    // Check if source can become first child
+    const firstChild = targetNode.children?.[0] ? rowTree[targetNode.children[0]] : null;
+    if (!firstChild || sourceNode.depth !== firstChild.depth) {
+      return -1;
+    }
+    return targetRowIndex + 1;
+  }
+
+  return -1;
+}

@@ -7,6 +7,7 @@ import {
   GridConfiguration,
   validateProps,
   useGridApiInitialization,
+  useGridRowsOverridableMethods,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -25,6 +26,7 @@ const configuration: GridConfiguration = {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useGridRowsOverridableMethods,
     useCellAggregationResult: () => null,
   },
 };
@@ -40,7 +42,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props.apiRef,
     props,
   );
-  useDataGridProComponent(privateApiRef, props);
+  useDataGridProComponent(privateApiRef, props, configuration);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {

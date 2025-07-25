@@ -731,6 +731,7 @@ export const GridRootStyles = styled('div', {
       opacity: vars.colors.interactive.disabledOpacity,
 
       [`& .${c.rowReorderCellPlaceholder}`]: {
+        padding: '0 6px',
         display: 'flex',
       },
     },
@@ -809,6 +810,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['row--dropAbove']}`]: {
       position: 'relative',
       '&::before': {
+        pointerEvents: 'none',
         content: '""',
         position: 'absolute',
         top: 0,
@@ -821,6 +823,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['row--dropBelow']}`]: {
       position: 'relative',
       '&::before': {
+        pointerEvents: 'none',
         content: '""',
         position: 'absolute',
         bottom: '-2px',
