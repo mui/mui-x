@@ -67,6 +67,9 @@ export interface GridPaginationApi
     GridPaginationRowCountApi,
     GridPaginationMetaApi {}
 
+/**
+ * Represents the rows, range and rowIndex lookup map after filtering and sorting.
+ */
 export interface GridVisibleRows {
   rows: GridRowEntry<GridValidRowModel>[];
   range: { firstRowIndex: number; lastRowIndex: number } | null;
