@@ -1,19 +1,12 @@
 'use client';
 import * as React from 'react';
-import useSlotProps from '@mui/utils/useSlotProps';
-import { useThemeProps, useTheme } from '@mui/material/styles';
-import { useRtl } from '@mui/system/RtlProvider';
 import { ChartsXAxisProps, type AxisGrouping } from '../models/axis';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
-import { useXAxes } from '../hooks/useAxis';
-import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
-import { invertTextAnchor } from '../internals/invertTextAnchor';
-import { defaultProps, TICK_LABEL_GAP, XAxisRoot, useUtilityClasses } from './utilities';
+import { TICK_LABEL_GAP, XAxisRoot } from './utilities';
 import { useTicksGrouped } from '../hooks/useTicksGrouped';
+import { useAxisProps } from './useAxisProps';
 
 const DEFAULT_GROUPING_CONFIG = {
   tickSize: 6,
@@ -59,8 +52,20 @@ const getGroupingConfig = (
  * @ignore - internal component.
  */
 function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
-  const { xAxis, xAxisIds } = useXAxes();
-  const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
+  const {
+    xScale,
+    defaultizedProps,
+    tickNumber,
+    positionSign,
+    skipAxisRendering,
+    classes,
+    Line,
+    Tick,
+    TickLabel,
+    Label,
+    axisTickLabelProps,
+    axisLabelProps,
+  } = useAxisProps(inProps);
 
   if (!isBandScale(xScale)) {
     throw new Error(
@@ -68,24 +73,13 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     );
   }
 
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
-  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
-
-  const defaultizedProps = {
-    ...defaultProps,
-    ...themedProps,
-  };
-
   const {
     position,
     disableLine,
     disableTicks,
-    tickLabelStyle,
     label,
-    labelStyle,
     tickSize,
     valueFormatter,
-    slots,
     slotProps,
     tickInterval,
     tickPlacement,
@@ -97,43 +91,14 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
 
   const groupingConfig = (defaultizedProps as { grouping: AxisGrouping }).grouping;
 
-  const theme = useTheme();
-  const isRtl = useRtl();
-  const classes = useUtilityClasses(defaultizedProps);
   const drawingArea = useDrawingArea();
   const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
 
-  const positionSign = position === 'bottom' ? 1 : -1;
-
-  const Line = slots?.axisLine ?? 'line';
-  const Tick = slots?.axisTick ?? 'line';
-  const TickLabel = slots?.axisTickLabel ?? ChartsText;
-  const Label = slots?.axisLabel ?? ChartsText;
-
-  const defaultTextAnchor = getDefaultTextAnchor(
-    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
-  );
-  const defaultDominantBaseline = getDefaultBaseline(
-    (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
-  );
-
-  const axisTickLabelProps = useSlotProps({
-    elementType: TickLabel,
-    externalSlotProps: slotProps?.axisTickLabel,
-    additionalProps: {
-      style: {
-        ...theme.typography.caption,
-        fontSize: 12,
-        lineHeight: 1.25,
-        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
-        dominantBaseline: defaultDominantBaseline,
-        ...tickLabelStyle,
-      },
-    } as Partial<ChartsTextProps>,
-    className: classes.tickLabel,
-    ownerState: {},
-  });
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * axisHeight,
+  };
 
   const xTicks = useTicksGrouped({
     scale: xScale,
@@ -146,40 +111,13 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     getGrouping: groupingConfig.getGrouping,
   });
 
-  const axisLabelProps = useSlotProps({
-    elementType: Label,
-    externalSlotProps: slotProps?.axisLabel,
-    additionalProps: {
-      style: {
-        ...theme.typography.body1,
-        lineHeight: 1,
-        fontSize: 14,
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'text-after-edge' : 'text-before-edge',
-        ...labelStyle,
-      },
-    } as Partial<ChartsTextProps>,
-    ownerState: {},
-  });
-
-  const domain = xScale.domain();
-  const isScaleBand = isBandScale(xScale);
   // Skip axis rendering if no data is available
   // - The domain is an empty array for band/point scales.
   // - The domains contains Infinity for continuous scales.
   // - The position is set to 'none'.
-  if (
-    (isScaleBand && domain.length === 0) ||
-    (!isScaleBand && domain.some(isInfinity)) ||
-    position === 'none'
-  ) {
+  if (skipAxisRendering) {
     return null;
   }
-
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * axisHeight,
-  };
 
   return (
     <XAxisRoot
