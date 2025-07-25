@@ -29,6 +29,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     onVisibleDateChange,
     areEventsDraggable = false,
     areEventsResizable = false,
+    ampm = true,
   } = parameters;
 
   useAssertModelConsistency({
@@ -56,6 +57,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
         views: ['week', 'day', 'month', 'agenda'],
         areEventsDraggable,
         areEventsResizable,
+        ampm,
       }),
   ).current;
 
@@ -64,6 +66,8 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
       events: eventsProp,
       resources: resourcesProp || [],
       areEventsDraggable,
+      areEventsResizable,
+      ampm,
     };
     if (viewProp !== undefined) {
       partialState.view = viewProp;
@@ -73,7 +77,16 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     }
 
     store.apply(partialState);
-  }, [store, eventsProp, resourcesProp, viewProp, visibleDateProp]);
+  }, [
+    store,
+    eventsProp,
+    resourcesProp,
+    viewProp,
+    visibleDateProp,
+    areEventsDraggable,
+    areEventsResizable,
+    ampm,
+  ]);
 
   const setVisibleDate = useEventCallback(
     (visibleDate: SchedulerValidDate, event: React.UIEvent) => {

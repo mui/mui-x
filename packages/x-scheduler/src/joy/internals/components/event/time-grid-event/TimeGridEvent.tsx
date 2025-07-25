@@ -33,6 +33,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { store } = useEventCalendarContext();
   const isDraggable = useSelector(store, selectors.isEventDraggable, { readOnly });
   const isResizable = useSelector(store, selectors.isEventResizable, { readOnly });
+  const ampm = useSelector(store, selectors.ampm);
+  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const durationMs =
     adapter.toJsDate(eventProp.end).getTime() - adapter.toJsDate(eventProp.start).getTime();
@@ -54,7 +56,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
           <span className="EventTitle">{eventProp.title}</span>
-          <time className="EventTime">{adapter.formatByString(eventProp.start, 'h:mm a')}</time>
+          <time className="EventTime">{adapter.format(eventProp.start, timeFormat)}</time>
         </p>
       );
     }
@@ -70,8 +72,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           className={clsx('EventTime', 'LinesClamp')}
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
-          {adapter.formatByString(eventProp.start, 'h:mm a')} -{' '}
-          {adapter.formatByString(eventProp.end, 'h:mm a')}
+          {adapter.format(eventProp.start, timeFormat)} -{' '}
+          {adapter.format(eventProp.end, timeFormat)}
         </time>
       </React.Fragment>
     );
@@ -82,6 +84,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     isBetween30and60Minutes,
     isLessThan30Minutes,
     titleLineCountRegularVariant,
+    timeFormat,
   ]);
 
   return (
