@@ -1,0 +1,15 @@
+<ToggleButtonGroup
+  value={chartType}
+  exclusive
+  onChange={handleChartType}
+  aria-label="chart type"
+  fullWidth
+>
+  {['bar', 'area'].map((type) => (
+    <ToggleButton key={type} value={type} aria-label="left aligned">
+      {type}
+    </ToggleButton>
+  ))}
+</ToggleButtonGroup>
+{chartType === 'bar' && <SymlogBarChart />}
+{chartType === 'area' && <SymlogAreaChart />}
