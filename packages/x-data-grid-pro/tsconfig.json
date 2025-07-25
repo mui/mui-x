@@ -1,7 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"],
+    "types": [
+      "../../mui-env.d.ts",
+      "@mui/material/themeCssVarsAugmentation",
+      // TODO: remove after https://github.com/mui/mui-x/pull/18911
+      "node"
+    ],
     // TODO(Jan): Remove once MUI_EXPERIMENTAL_MJS=1 is the default option for the build
     "skipLibCheck": true
   },
