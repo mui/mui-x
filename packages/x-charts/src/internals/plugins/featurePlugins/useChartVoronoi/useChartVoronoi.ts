@@ -135,6 +135,9 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
           return x >= xZoomStart && x <= xZoomEnd && y >= yZoomStart && y <= yZoomEnd;
         };
 
+        // We need to convert the distance from the original range [0, 1] to the current drawing area
+        // so the comparison is done on pixels instead of normalized values.
+        // fx and fy are the factors to convert the distance from [0, 1] to the current drawing area.
         const fx = xScale.range()[1] - xScale.range()[0];
         const fy = yScale.range()[1] - yScale.range()[0];
         function sqDistFn(dx: number, dy: number) {
