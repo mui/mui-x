@@ -12,7 +12,7 @@ declare namespace globalThis {
 const envEnabledValues = new Set(['1', 'true', 'yes', 'y']);
 const envDisabledValues = new Set(['0', 'false', 'no', 'n']);
 
-function parseBoolean(value?: string, varName: string): boolean | undefined {
+function parseBoolean(value: string | undefined, varName: string): boolean | undefined {
   if (!value) {
     return undefined;
   }
