@@ -87,18 +87,13 @@ function processApiFile(filePath: string): string {
 
   // Parse JSON content and replace "properties" key with "props"
   // Some API JSON files use `properties` key instead of `props`
-  try {
-    const jsonData = JSON.parse(content);
-    if (jsonData.properties) {
-      jsonData.props = jsonData.properties;
-      delete jsonData.properties;
-    }
-    const modifiedContent = JSON.stringify(jsonData, null, 2);
-    return processApiJson(modifiedContent);
-  } catch (error) {
-    console.warn(`Warning: Could not parse JSON for ${filePath}, using original content:`, error);
-    return processApiJson(content);
+  const jsonData = JSON.parse(content);
+  if (jsonData.properties) {
+    jsonData.props = jsonData.properties;
+    delete jsonData.properties;
   }
+  const modifiedContent = JSON.stringify(jsonData, null, 2);
+  return processApiJson(modifiedContent);
 }
 
 interface ComponentDocInfo {
@@ -337,24 +332,16 @@ function processComponent(component: ComponentDocInfo): string | null {
       );
 
       if (fs.existsSync(apiJsonPath)) {
-        try {
-          const apiMarkdown = processApiFile(apiJsonPath);
-          processedMarkdown += `\n\n${apiMarkdown}`;
-        } catch (error) {
-          console.error(`Warning: Could not process API for ${componentName}:`, error);
-        }
+        const apiMarkdown = processApiFile(apiJsonPath);
+        processedMarkdown += `\n\n${apiMarkdown}`;
       } else {
-        console.warn(`Warning: API JSON file not found for ${componentName}: ${apiJsonPath}`);
+        throw new Error(`Warning: API JSON file not found for ${componentName}: ${apiJsonPath}`);
       }
     }
   } else if (component.apiJsonPath) {
     // Fallback: Add API section for the primary component if no frontmatter components found
-    try {
-      const apiMarkdown = processApiFile(component.apiJsonPath);
-      processedMarkdown += `\n\n${apiMarkdown}`;
-    } catch (error) {
-      console.error(`Warning: Could not process API for ${component.name}:`, error);
-    }
+    const apiMarkdown = processApiFile(component.apiJsonPath);
+    processedMarkdown += `\n\n${apiMarkdown}`;
   }
 
   return processedMarkdown;
@@ -364,21 +351,16 @@ function processComponent(component: ComponentDocInfo): string | null {
  * Format markdown content using prettier
  */
 async function formatMarkdown(content: string, filePath: string): Promise<string> {
-  try {
-    // Remove project prefixes from markdown link titles
-    // e.g., "Date and Time Pickers - Custom layout" -> "Custom layout"
-    const processedContent = content.replace(/\[([^[\]]*?)\s*-\s*([^[\]]*?)\]/g, '[$2]');
+  // Remove project prefixes from markdown link titles
+  // e.g., "Date and Time Pickers - Custom layout" -> "Custom layout"
+  const processedContent = content.replace(/\[([^[\]]*?)\s*-\s*([^[\]]*?)\]/g, '[$2]');
 
-    const prettierConfig = await prettier.resolveConfig(filePath);
+  const prettierConfig = await prettier.resolveConfig(filePath);
 
-    return await prettier.format(processedContent, {
-      ...prettierConfig,
-      parser: 'markdown',
-    });
-  } catch (error) {
-    console.warn('Warning: Could not format markdown with prettier:', error);
-    return content;
-  }
+  return prettier.format(processedContent, {
+    ...prettierConfig,
+    parser: 'markdown',
+  });
 }
 
 /**
@@ -469,6 +451,12 @@ async function processApiSection(
         apiItem.pathname,
         `${lastSegment}.md`,
       );
+      const markdownFilePathPagesIndex = path.join(
+        process.cwd(),
+        'docs/pages',
+        apiItem.pathname,
+        `index.md`,
+      );
 
       let apiMarkdown: string;
 
@@ -485,11 +473,15 @@ async function processApiSection(
       } else if (fs.existsSync(markdownFilePathPages)) {
         // Process the markdown file from docs/pages
         apiMarkdown = processMarkdownFile(markdownFilePathPages);
+      } else if (fs.existsSync(markdownFilePathPagesIndex)) {
+        // Process the markdown file from docs/pages
+        apiMarkdown = processMarkdownFile(markdownFilePathPagesIndex);
       } else {
-        console.warn(
-          `Warning: API file not found (tried JSON and markdown in multiple patterns): ${apiItem.pathname}`,
+        throw new Error(
+          `Warning: API file not found (tried JSON and markdown in multiple patterns): ${apiItem.pathname}
+            - JSON: ${jsonFilePath}, ${jsonFilePathDouble}
+            - Markdown: ${markdownFilePath}, ${markdownFilePathPages}, ${markdownFilePathPagesIndex}`,
         );
-        continue;
       }
 
       // Create output path
