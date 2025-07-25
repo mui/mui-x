@@ -1,7 +1,14 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation"]
+    "types": [
+      "../../mui-env.d.ts",
+      "@mui/material/themeCssVarsAugmentation",
+      // TODO: remove after https://github.com/mui/mui-x/pull/18911
+      "node"
+    ],
+    // exceljs types fail on some missing node apis, we don't want to add @types/node here
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
