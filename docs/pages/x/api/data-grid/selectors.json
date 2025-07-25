@@ -416,7 +416,7 @@
   },
   {
     "name": "gridVisibleRowsSelector",
-    "returnType": "{ rows: GridRowEntry<GridValidRowModel>[]; range: { firstRowIndex: number; lastRowIndex: number } | null; rowIdToIndexMap: Map<GridRowId, number> }",
+    "returnType": "GridVisibleRows",
     "category": "Pagination",
     "description": "Get the rows, range and rowIndex lookup map after filtering and sorting.\nDoes not contain the collapsed children."
   }
