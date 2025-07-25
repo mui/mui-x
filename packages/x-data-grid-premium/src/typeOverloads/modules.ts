@@ -62,10 +62,6 @@ export interface GridControlledStateEventLookupPremium {
    */
   aiAssistantActiveConversationIndexChange: { params: number };
   /**
-   * Fired when the charts configuration side panel open state changes.
-   */
-  chartsPanelOpenChange: { params: boolean };
-  /**
    * Fired when the active chart id changes.
    */
   activeChartIdChange: { params: string };
@@ -88,10 +84,6 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when the sidebar is closed.
    */
   sidebarClose: { params: { value: GridSidebarValue } };
-  /**
-   * Fired when the active chart changes.
-   */
-  activeChartChange: { params: string };
   /**
    * Fired when the chart synchronization state changes.
    */
