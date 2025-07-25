@@ -9,35 +9,20 @@ declare namespace globalThis {
   let __MUI_X_TELEMETRY_DISABLED__: boolean | undefined;
 }
 
-const envEnabledValues = ['1', 'true', 'yes', 'y'];
-const envDisabledValues = ['0', 'false', 'no', 'n'];
+const envEnabledValues = new Set(['1', 'true', 'yes', 'y']);
+const envDisabledValues = new Set(['0', 'false', 'no', 'n']);
 
-function getBooleanEnv(value?: string): boolean | undefined {
+function parseBoolean(value?: string, varName: string): boolean | undefined {
   if (!value) {
     return undefined;
   }
-  if (envEnabledValues.includes(value)) {
+  if (envEnabledValues.has(value)) {
     return true;
   }
-  if (envDisabledValues.includes(value)) {
+  if (envDisabledValues.has(value)) {
     return false;
   }
-  return undefined;
-}
-
-function getBooleanEnvFromEnvObject(envKey: string, envObj: Record<string, any>) {
-  const keys = Object.keys(envObj);
-  for (let i = 0; i < keys.length; i += 1) {
-    const key = keys[i];
-    if (!key.endsWith(envKey)) {
-      continue;
-    }
-    const value = getBooleanEnv(envObj[key]?.toLowerCase());
-    if (typeof value === 'boolean') {
-      return value;
-    }
-  }
-
+  console.warn(`The environment variable "${varName}" ("${value}") is not a valid boolean value.`);
   return undefined;
 }
 
@@ -52,35 +37,6 @@ function getIsTelemetryCollecting(): boolean | undefined {
   }
 
   try {
-    if (typeof process !== 'undefined' && process.env && typeof process.env === 'object') {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', process.env);
-      if (typeof result === 'boolean') {
-        // If disabled=true, telemetry is disabled
-        // If disabled=false, telemetry is enabled
-        return !result;
-      }
-    }
-  } catch (_) {
-    // If there is an error, return the default value
-  }
-
-  try {
-    // e.g. Vite.js
-    // eslint-disable-next-line global-require
-    const { importMetaEnv } = require('./config.import-meta');
-    if (importMetaEnv) {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', importMetaEnv);
-      if (typeof result === 'boolean') {
-        // If disabled=true, telemetry is disabled
-        // If disabled=false, telemetry is enabled
-        return !result;
-      }
-    }
-  } catch (_) {
-    // If there is an error, return the default value
-  }
-
-  try {
     // Some build tools replace env variables on compilation
     // e.g. Next.js, webpack EnvironmentPlugin
     const envValue =
@@ -89,13 +45,13 @@ function getIsTelemetryCollecting(): boolean | undefined {
       process.env.GATSBY_MUI_X_TELEMETRY_DISABLED ||
       process.env.REACT_APP_MUI_X_TELEMETRY_DISABLED ||
       process.env.PUBLIC_MUI_X_TELEMETRY_DISABLED;
-    const result = getBooleanEnv(envValue);
+    const result = parseBoolean(envValue, 'MUI_X_TELEMETRY_DISABLED');
     if (typeof result === 'boolean') {
       // If disabled=true, telemetry is disabled
       // If disabled=false, telemetry is enabled
       return !result;
     }
-  } catch (_) {
+  } catch {
     // If there is an error, return the default value
   }
 
@@ -103,47 +59,15 @@ function getIsTelemetryCollecting(): boolean | undefined {
 }
 
 function getIsDebugModeEnabled(): boolean {
-  try {
-    // Check global variable
-    // eslint-disable-next-line no-underscore-dangle
-    const globalValue = (globalThis as any).__MUI_X_TELEMETRY_DEBUG__;
-    if (typeof globalValue === 'boolean') {
-      return globalValue;
-    }
-
-    if (typeof process !== 'undefined' && process.env && typeof process.env === 'object') {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', process.env);
-      if (typeof result === 'boolean') {
-        return result;
-      }
-    }
-
-    // e.g. Webpack EnvironmentPlugin
-    if (process.env.MUI_X_TELEMETRY_DEBUG) {
-      const result = getBooleanEnv(process.env.MUI_X_TELEMETRY_DEBUG);
-      if (typeof result === 'boolean') {
-        return result;
-      }
-    }
-  } catch (_) {
-    // If there is an error, return the default value
+  // Check global variable
+  // eslint-disable-next-line no-underscore-dangle
+  const globalValue = (globalThis as any).__MUI_X_TELEMETRY_DEBUG__;
+  if (typeof globalValue === 'boolean') {
+    return globalValue;
   }
 
   try {
-    // e.g. Vite.js
-    // eslint-disable-next-line global-require
-    const { importMetaEnv } = require('./config.import-meta');
-    if (importMetaEnv) {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', importMetaEnv);
-      if (typeof result === 'boolean') {
-        return result;
-      }
-    }
-  } catch (_) {
-    // If there is an error, return the default value
-  }
-
-  try {
+    // Some build tools replace env variables on compilation
     // e.g. Next.js, webpack EnvironmentPlugin
     const envValue =
       process.env.MUI_X_TELEMETRY_DEBUG ||
@@ -151,11 +75,11 @@ function getIsDebugModeEnabled(): boolean {
       process.env.GATSBY_MUI_X_TELEMETRY_DEBUG ||
       process.env.REACT_APP_MUI_X_TELEMETRY_DEBUG ||
       process.env.PUBLIC_MUI_X_TELEMETRY_DEBUG;
-    const result = getBooleanEnv(envValue);
+    const result = parseBoolean(envValue, 'MUI_X_TELEMETRY_DEBUG');
     if (typeof result === 'boolean') {
       return result;
     }
-  } catch (_) {
+  } catch {
     // If there is an error, return the default value
   }
 
@@ -165,7 +89,7 @@ function getIsDebugModeEnabled(): boolean {
 function getNodeEnv(): string {
   try {
     return process.env.NODE_ENV ?? '<unknown>';
-  } catch (_) {
+  } catch {
     return '<unknown>';
   }
 }
