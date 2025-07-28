@@ -131,8 +131,6 @@ function useCreatePathsFlatbush(
   const { store } = useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   performance.mark('useCreatePathsFlatbush-setup-start');
   const flatbush = useSelector(store, selectorChartSeriesFlatbush, [series.id]);
-  const getXPosition = getValueToPositionMapper(xScale);
-  const getYPosition = getValueToPositionMapper(yScale);
   const radius = series.markerSize;
   const xAxisZoom = useSelector(store, selectorChartAxisZoomData, [
     series.xAxisId ?? 'defaultized-x-axis-0',
@@ -144,6 +142,11 @@ function useCreatePathsFlatbush(
   const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
   const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
   const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
+  const fx = xScale.range()[1] - xScale.range()[0];
+  const fy = yScale.range()[1] - yScale.range()[0];
+  const xMin = xScale.range()[0];
+  const yMin = yScale.range()[0];
+
   performance.mark('useCreatePathsFlatbush-setup-end');
   performance.measure(
     'useCreatePathsFlatbush-setup',
@@ -160,7 +163,7 @@ function useCreatePathsFlatbush(
 
   performance.mark('useCreatePathsFlatbush-search-start');
   let start = performance.now();
-  const indices = flatbush?.search(xZoomStart, yZoomStart, xZoomEnd, yZoomEnd);
+  const points = flatbush?.search(xZoomStart, yZoomStart, xZoomEnd, yZoomEnd) ?? [];
   let end = performance.now();
   performance.mark('useCreatePathsFlatbush-search-end');
   performance.measure(
@@ -171,12 +174,10 @@ function useCreatePathsFlatbush(
   const timeSpentCheckingRange = end - start;
 
   performance.mark('useCreatePathsFlatbush-loop-start');
-  for (const i of indices ?? []) {
-    const scatterPoint = series.data[i];
-
+  for (let i = 0; i < points.length; i += 2) {
     start = performance.now();
-    const x = getXPosition(scatterPoint.x);
-    const y = getYPosition(scatterPoint.y);
+    const x = xMin + fx * points[i];
+    const y = yMin + fy * points[i + 1];
     end = performance.now();
     positionsGetters += 1;
     timeSpentGettingPosition += end - start;

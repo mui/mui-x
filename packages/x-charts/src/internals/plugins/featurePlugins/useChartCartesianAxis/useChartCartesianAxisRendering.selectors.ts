@@ -1,4 +1,4 @@
-import Flatbush from 'flatbush';
+import { Flatbush } from '../../../Flatbush';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import {
   selectorChartSeriesConfig,

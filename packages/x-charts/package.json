@@ -46,6 +46,7 @@
     "bezier-easing": "^2.1.0",
     "clsx": "catalog:",
     "flatbush": "^4.4.1",
+    "flatqueue": "^2.0.3",
     "prop-types": "catalog:",
     "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
