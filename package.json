@@ -82,7 +82,7 @@
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@emotion/styled": "catalog:",
-    "@inquirer/prompts": "^7.7.0",
+    "@inquirer/prompts": "^7.7.1",
     "@mui/icons-material": "catalog:",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.2",
     "@mui/internal-babel-plugin-resolve-imports": "^2.0.7-canary.11",
