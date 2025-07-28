@@ -14,21 +14,39 @@ import path from 'path';
 
 // Define package mappings (base -> pro])
 const PACKAGE_MAPPINGS = {
-  'x-charts': ['x-charts-pro', 'x-charts-premium'],
-  // 'x-data-grid': ['x-data-grid-pro', 'x-data-grid-premium'],
-  // 'x-date-pickers': ['x-date-pickers-pro'],
-  // 'x-tree-view': ['x-tree-view-pro'],
+  'x-charts': {
+    /**
+     * The list of target packages, they are traversed in order.
+     * In this case, `(base -> pro), (base + pro -> premium)`.
+     */
+    targets: ['x-charts-pro', 'x-charts-premium'],
+    /**
+     * These directories will check if they contain an export from the previous package in the index.ts file.
+     * If they do, they will be ignored.
+     * If they don't, they will be exported in an auto-generated block.
+     */
+    utilities: ['constants', 'hooks', 'context', 'models', 'locales', 'colorPalettes'],
+    /**
+     * These will be fully ignored.
+     */
+    ignore: ['internals', 'tests', 'themeAugmentation', 'typeOverloads'],
+  },
 };
 
 const IDENTIFIER_LINE =
   '// Re-export automatically generated, to customize, simply remove this line.';
 
+const BLOCK_IDENTIFIER_LINE_START =
+  '// Re-export-block automatically generated, to customize, simply remove the block.';
+const BLOCK_IDENTIFIER_LINE_END = '// End of re-export-block';
+
 /**
  * Get component directories from src folder
  * @param {string} packagePath
+ * @param {string[]} ignoreList
  * @returns {string[]}
  */
-function getComponentDirectories(packagePath) {
+function getComponentDirectories(packagePath, ignoreList) {
   const srcPath = path.join(packagePath, 'src');
 
   if (!fs.existsSync(srcPath)) {
@@ -40,22 +58,8 @@ function getComponentDirectories(packagePath) {
       .readdirSync(srcPath, { withFileTypes: true })
       .filter((dirent) => dirent.isDirectory())
       .map((dirent) => dirent.name)
-      .filter((name) => {
-        // Filter out utility directories that typically don't contain main components
-        const utilityDirs = [
-          'internals',
-          'context',
-          'hooks',
-          'models',
-          'constants',
-          'tests',
-          'themeAugmentation',
-          'locales',
-          'colorPalettes',
-          'typeOverloads',
-        ];
-        return !utilityDirs.includes(name);
-      })
+      // Filter out ignored directories
+      .filter((name) => !ignoreList.includes(name))
       // Also remove directories that don't have an index.ts file or the index.ts file starts with the IDENTIFIER_LINE
       .filter((name) => {
         const indexFile = path.join(srcPath, name, 'index.ts');
@@ -106,7 +110,7 @@ export * from '@mui/${sourcePackageName}/${componentName}';
  */
 function processPackage(basePackageName) {
   const basePackagePath = path.join(process.cwd(), 'packages', basePackageName);
-  /** @type {string[]} */
+  /** @type {{ targets: string[]; utilities: string[]; ignore: string[] }} */
   const targetPackages = PACKAGE_MAPPINGS[basePackageName] || [];
 
   if (!fs.existsSync(basePackagePath)) {
@@ -114,13 +118,13 @@ function processPackage(basePackageName) {
     return;
   }
 
-  console.warn(`\n📦 Processing ${basePackageName} -> ${targetPackages.join(' -> ')}...`);
+  console.warn(`\n📦 Processing ${basePackageName} -> ${targetPackages.targets.join(' -> ')}...`);
 
   // Get component directories from the base package
-  const componentDirectories = [getComponentDirectories(basePackagePath)];
+  const componentDirectories = [getComponentDirectories(basePackagePath, targetPackages.ignore)];
   const sourcePackageName = [basePackageName];
 
-  for (const targetPackage of targetPackages) {
+  for (const targetPackage of targetPackages.targets) {
     // Process pro and premium packages
     const targetPackagePath = path.join(process.cwd(), 'packages', targetPackage);
 
@@ -130,12 +134,12 @@ function processPackage(basePackageName) {
     }
 
     // Get additional components specific to pro/premium
-    const targetComponentDirs = getComponentDirectories(targetPackagePath);
+    const targetComponentDirs = getComponentDirectories(targetPackagePath, targetPackages.ignore);
     const targetDirectories = componentDirectories.map((dirs) =>
       dirs.filter((name) => !targetComponentDirs.includes(name)),
     );
 
-    console.warn(`Creating deep exports for ${targetDirectories.flat().length} components`);
+    console.warn(`\nCreating deep exports for ${targetDirectories.flat().length} components`);
 
     for (let i = 0; i < targetDirectories.length; i += 1) {
       for (const componentName of targetDirectories[i]) {
