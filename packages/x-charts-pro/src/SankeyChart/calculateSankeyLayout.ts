@@ -33,7 +33,8 @@ export function calculateSankeyLayout(
     return { nodes: [], links: [] };
   }
 
-  // TODO: Should we check only in prod?
+  // TODO: Should we check only in prod? We could also throw or provide an "onCycleError" callback
+  // to handle cycles differently.
   const circularLinks = findCycles(data);
 
   // Create the sankey layout generator
@@ -43,7 +44,7 @@ export function calculateSankeyLayout(
     // TODO: make this configurable
     .nodeAlign(sankeyJustify)
     .extent([
-      // Todo: gotta take margins into account
+      // TODO: gotta take margins into account
       [0, 0],
       [width, height],
     ])
