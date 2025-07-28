@@ -50,9 +50,11 @@ function useCreatePathsIteratively(
 
     const isInRange = instance.isPointInside(x, y);
 
-    if (isInRange) {
-      temporaryPaths.push(`M${x - radius} ${y} a${radius} ${radius} 0 1 1 0 ${ALMOST_ZERO}`);
+    if (!isInRange) {
+      continue;
     }
+
+    temporaryPaths.push(`M${x - radius} ${y} a${radius} ${radius} 0 1 1 0 ${ALMOST_ZERO}`);
 
     if (temporaryPaths.length >= MAX_POINTS_PER_PATH) {
       paths.push(temporaryPaths.join(''));
