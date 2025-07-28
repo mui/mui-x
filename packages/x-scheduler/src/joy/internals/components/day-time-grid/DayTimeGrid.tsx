@@ -90,28 +90,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               </div>
             ))}
           </div>
-
-          {/* <div
-              className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsRow')}
-              role="row"
-              data-weekend={lastIsWeekend ? '' : undefined}
-            >
-              <div
-                className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
-                role="columnheader"
-              >
-                {translations.allDay}
-              </div>
-              {days.map((day) => (
-                <div
-                  key={day.day.toString()}
-                  className="DayTimeGridAllDayEventsCell"
-                  aria-labelledby={`DayTimeGridHeaderCell-${day.day.toString()}`}
-                  role="gridcell"
-                  data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                />
-              ))}
-            </div> */}
         </div>
         <DayGrid.Root
           ref={allDayHeaderWrapperRef}
