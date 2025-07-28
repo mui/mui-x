@@ -28,6 +28,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     defaultVisibleDate = defaultVisibleDateFallback,
     onVisibleDateChange,
     areEventsDraggable = false,
+    areEventsResizable = false,
   } = parameters;
 
   useAssertModelConsistency({
@@ -54,6 +55,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
         view: viewProp ?? defaultView,
         views: ['week', 'day', 'month', 'agenda'],
         areEventsDraggable,
+        areEventsResizable,
       }),
   ).current;
 
