@@ -1,14 +1,19 @@
 .ResourceLegendContainer {
   display: flex;
   flex-direction: column;
-  padding: var(--space-2);
-  gap: var(--space-2);
 }
 
 .ResourceLegendItem {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-3);
+  cursor: pointer;
+}
+
+.ResourceLegendItem:hover {
+  background-color: var(--interactive-hover-bg);
 }
 
 .ResourceLegendColor {
@@ -27,4 +32,8 @@
 .joy .Button.ResourceLegendButton {
   padding: var(--space-1);
   margin-inline-start: auto;
+}
+
+.joy .Button.ResourceLegendButton:hover {
+  background-color: var(--interactive-hover-bg);
 }

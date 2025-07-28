@@ -1,28 +1,21 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { SchedulerValidDate } from '../../primitives/models';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { HeaderToolbar } from '../header-toolbar';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
-import { Store, useSelector } from '../../base-ui-copy/utils/store';
-import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
-import { selectors, State } from './store';
-import { EventCalendarStoreContext } from '../internals/hooks/useEventCalendarStore';
+import { useSelector } from '../../base-ui-copy/utils/store';
+import { selectors } from './store';
+import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { MonthView } from '../month-view';
 import { DateNavigator } from '../date-navigator/DateNavigator';
+import { ResourceLegend } from '../internals/components/resource-legend/ResourceLegend';
+import { useEventCalendar } from './useEventCalendar';
 import '../index.css';
 import './EventCalendar.css';
-import { useDateNavigation } from '../internals/hooks/useDateNavigation';
-import { ResourceLegend } from '../internals/components/resource-legend/ResourceLegend';
-
-const adapter = getAdapter();
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -32,80 +25,57 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     events: eventsProp,
     onEventsChange,
     resources: resourcesProp,
+    view: viewProp,
+    defaultView,
+    visibleDate: visibleDateProp,
+    defaultVisibleDate,
+    onVisibleDateChange,
+    areEventsDraggable,
+    areEventsResizable,
     translations,
     className,
     ...other
   } = props;
 
-  const store = useLazyRef(
-    () =>
-      new Store<State>({
-        events: eventsProp,
-        resources: resourcesProp || [],
-        visibleResources: new Map(),
-        visibleDate: adapter.startOfDay(adapter.date()),
-        currentView: 'week',
-        views: ['week', 'day', 'month', 'agenda'],
-      }),
-  ).current;
-
-  const currentView = useSelector(store, selectors.currentView);
-  const visibleDate = useSelector(store, selectors.visibleDate);
-
-  const setVisibleDate = useEventCallback((date: SchedulerValidDate) => {
-    store.apply({ visibleDate: date });
+  const { store, contextValue } = useEventCalendar({
+    events: eventsProp,
+    onEventsChange,
+    resources: resourcesProp,
+    view: viewProp,
+    defaultView,
+    visibleDate: visibleDateProp,
+    defaultVisibleDate,
+    onVisibleDateChange,
+    areEventsDraggable,
+    areEventsResizable,
   });
 
-  const { onNextClick, onPreviousClick, onTodayClick } = useDateNavigation({
-    visibleDate,
-    setVisibleDate,
-    view: currentView,
-  });
-
-  const handleDayHeaderClick = useEventCallback((day: SchedulerValidDate) => {
-    store.apply({ visibleDate: day, currentView: 'day' });
-  });
-
-  useModernLayoutEffect(() => {
-    store.apply({
-      events: eventsProp,
-      resources: resourcesProp || [],
-    });
-  }, [store, eventsProp, resourcesProp]);
+  const view = useSelector(store, selectors.view);
 
   let content: React.ReactNode;
-  switch (currentView) {
+  switch (view) {
     case 'week':
-      content = (
-        <WeekView onDayHeaderClick={handleDayHeaderClick} onEventsChange={onEventsChange} />
-      );
+      content = <WeekView />;
       break;
     case 'day':
-      content = <DayView onEventsChange={onEventsChange} />;
+      content = <DayView />;
       break;
     case 'month':
-      content = (
-        <MonthView onDayHeaderClick={handleDayHeaderClick} onEventsChange={onEventsChange} />
-      );
+      content = <MonthView />;
       break;
     case 'agenda':
-      content = <AgendaView onEventsChange={onEventsChange} />;
+      content = <AgendaView />;
       break;
     default:
       content = null;
   }
 
   return (
-    <EventCalendarStoreContext.Provider value={store}>
+    <EventCalendarContext.Provider value={contextValue}>
       <TranslationsProvider translations={translations}>
         <div className={clsx(className, 'EventCalendarRoot', 'joy')} ref={forwardedRef} {...other}>
           <aside className="EventCalendarSidePanel">
-            <DateNavigator
-              visibleDate={visibleDate}
-              onNextClick={onNextClick}
-              onPreviousClick={onPreviousClick}
-              currentView={currentView}
-            />
+            <DateNavigator />
             <section
               className="EventCalendarMonthCalendarPlaceholder"
               // TODO: Add localization
@@ -118,10 +88,10 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           <div
             className={clsx(
               'EventCalendarMainPanel',
-              currentView === 'month' && 'EventCalendarMainPanel--month',
+              view === 'month' && 'EventCalendarMainPanel--month',
             )}
           >
-            <HeaderToolbar onTodayClick={onTodayClick} />
+            <HeaderToolbar />
             <section
               // TODO: Add localization
               className="EventCalendarContent"
@@ -132,6 +102,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           </div>
         </div>
       </TranslationsProvider>
-    </EventCalendarStoreContext.Provider>
+    </EventCalendarContext.Provider>
   );
 });

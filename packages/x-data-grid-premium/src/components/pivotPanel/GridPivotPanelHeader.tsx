@@ -90,7 +90,7 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
         />
         <rootProps.slots.baseIconButton
           onClick={() => {
-            apiRef.current.setPivotPanelOpen(false);
+            apiRef.current.hideSidebar();
             if (isEmptyPivot) {
               apiRef.current.setPivotActive(false);
             }

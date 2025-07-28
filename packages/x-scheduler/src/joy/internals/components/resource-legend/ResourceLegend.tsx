@@ -7,7 +7,7 @@ import { CheckboxGroup } from '@base-ui-components/react/checkbox-group';
 import { ResourceLegendProps } from './ResourceLegend.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
-import { useEventCalendarStore } from '../../hooks/useEventCalendarStore';
+import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store/useSelector';
 import { selectors } from '../../../event-calendar/store';
 import { useEventCallback } from '../../../../base-ui-copy/utils/useEventCallback';
@@ -26,8 +26,8 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
         className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
         value={resource.id}
         render={(rootProps, state) => (
-          // eslint-disable-next-line react/button-has-type
           <button
+            type="button"
             aria-label={
               state.checked
                 ? translations.hideEventsLabel(resource.name)
@@ -58,7 +58,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
 ) {
   const { className, ...other } = props;
   const translations = useTranslations();
-  const store = useEventCalendarStore();
+  const { store, instance } = useEventCalendarContext();
   const resources = useSelector(store, selectors.resources);
   const visibleResourcesList = useSelector(store, selectors.visibleResourcesList);
 
@@ -70,7 +70,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
         .map((resource) => [resource.id, false]),
     );
 
-    store.set('visibleResources', newVisibleResourcesMap);
+    instance.setVisibleResources(newVisibleResourcesMap);
   });
 
   if (resources.length === 0) {
