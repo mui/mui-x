@@ -34,10 +34,6 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   const isZoomInteracting = useSelector(store, selectorChartZoomIsInteracting);
   const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
 
-  useEnhancedEffect(() => {
-    console.log({ isZoomInteracting });
-  }, [isZoomInteracting]);
-
   const flatbushMap = useSelector(
     store,
     // @ts-expect-error

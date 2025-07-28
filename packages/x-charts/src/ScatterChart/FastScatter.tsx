@@ -15,6 +15,10 @@ import { UseChartInteractionSignature } from '../internals/plugins/featurePlugin
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionGroupProps } from '../hooks/useInteractionItemProps';
+import {
+  selectorChartAxisZoomData,
+  selectorChartSeriesFlatbush,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 
 export interface FastScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -35,36 +39,71 @@ function useCreatePathsIteratively(
   performance.mark('useCreatePathsIteratively-start');
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+  performance.mark('useCreatePathsIteratively-setup-start');
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
   const radius = series.markerSize;
+  performance.mark('useCreatePathsIteratively-setup-end');
+  performance.measure(
+    'useCreatePathsIteratively-setup',
+    'useCreatePathsIteratively-setup-start',
+    'useCreatePathsIteratively-setup-end',
+  );
 
   const paths: string[] = [];
   let temporaryPaths: string[] = [];
+  let timeSpentGettingPosition = 0;
+  let timeSpentCheckingRange = 0;
+  let timeSpentCreatingPath = 0;
+  let timeSpentPushingPath = 0;
+  let positionsGetters = 0;
 
+  performance.mark('useCreatePathsIteratively-loop-start');
   for (let i = 0; i < series.data.length; i += 1) {
     const scatterPoint = series.data[i];
 
+    let start = performance.now();
     const x = getXPosition(scatterPoint.x);
     const y = getYPosition(scatterPoint.y);
+    let end = performance.now();
+    positionsGetters += 1;
+    timeSpentGettingPosition += end - start;
 
+    start = performance.now();
     const isInRange = instance.isPointInside(x, y);
+    end = performance.now();
+    timeSpentCheckingRange += end - start;
 
     if (!isInRange) {
       continue;
     }
 
+    start = performance.now();
     temporaryPaths.push(`M${x - radius} ${y} a${radius} ${radius} 0 1 1 0 ${ALMOST_ZERO}`);
+    end = performance.now();
+    timeSpentCreatingPath += end - start;
 
     if (temporaryPaths.length >= MAX_POINTS_PER_PATH) {
+      start = performance.now();
       paths.push(temporaryPaths.join(''));
+      end = performance.now();
+      timeSpentPushingPath += end - start;
       temporaryPaths = [];
     }
   }
 
   if (temporaryPaths.length > 0) {
+    const start = performance.now();
     paths.push(temporaryPaths.join(''));
+    const end = performance.now();
+    timeSpentPushingPath += end - start;
   }
+  performance.mark('useCreatePathsIteratively-loop-end');
+  performance.measure(
+    'useCreatePathsIteratively-loop',
+    'useCreatePathsIteratively-loop-start',
+    'useCreatePathsIteratively-loop-end',
+  );
   performance.mark('useCreatePathsIteratively-end');
   performance.measure(
     'useCreatePathsIteratively',
@@ -72,11 +111,123 @@ function useCreatePathsIteratively(
     'useCreatePathsIteratively-end',
   );
 
+  console.log('iteratively', {
+    timeSpentGettingPosition,
+    timeSpentCheckingRange,
+    timeSpentCreatingPath,
+    timeSpentPushingPath,
+    positionsGetters,
+  });
+
+  return paths;
+}
+
+function useCreatePathsFlatbush(
+  series: DefaultizedScatterSeriesType,
+  xScale: D3Scale,
+  yScale: D3Scale,
+) {
+  performance.mark('useCreatePathsFlatbush-start');
+  const { store } = useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+  performance.mark('useCreatePathsFlatbush-setup-start');
+  const flatbush = useSelector(store, selectorChartSeriesFlatbush, [series.id]);
+  const getXPosition = getValueToPositionMapper(xScale);
+  const getYPosition = getValueToPositionMapper(yScale);
+  const radius = series.markerSize;
+  const xAxisZoom = useSelector(store, selectorChartAxisZoomData, [
+    series.xAxisId ?? 'defaultized-x-axis-0',
+  ]);
+  const yAxisZoom = useSelector(store, selectorChartAxisZoomData, [
+    series.yAxisId ?? 'defaultized-y-axis-0',
+  ]);
+  const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
+  const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
+  const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
+  const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
+  performance.mark('useCreatePathsFlatbush-setup-end');
+  performance.measure(
+    'useCreatePathsFlatbush-setup',
+    'useCreatePathsFlatbush-setup-start',
+    'useCreatePathsFlatbush-setup-end',
+  );
+
+  const paths: string[] = [];
+  let temporaryPaths: string[] = [];
+  let timeSpentGettingPosition = 0;
+  let timeSpentCreatingPath = 0;
+  let timeSpentPushingPath = 0;
+  let positionsGetters = 0;
+
+  performance.mark('useCreatePathsFlatbush-search-start');
+  let start = performance.now();
+  const indices = flatbush?.search(xZoomStart, yZoomStart, xZoomEnd, yZoomEnd);
+  let end = performance.now();
+  performance.mark('useCreatePathsFlatbush-search-end');
+  performance.measure(
+    'useCreatePathsFlatbush-search',
+    'useCreatePathsFlatbush-search-start',
+    'useCreatePathsFlatbush-search-end',
+  );
+  const timeSpentCheckingRange = end - start;
+
+  performance.mark('useCreatePathsFlatbush-loop-start');
+  for (const i of indices ?? []) {
+    const scatterPoint = series.data[i];
+
+    start = performance.now();
+    const x = getXPosition(scatterPoint.x);
+    const y = getYPosition(scatterPoint.y);
+    end = performance.now();
+    positionsGetters += 1;
+    timeSpentGettingPosition += end - start;
+
+    start = performance.now();
+    temporaryPaths.push(`M${x - radius} ${y} a${radius} ${radius} 0 1 1 0 ${ALMOST_ZERO}`);
+    end = performance.now();
+    timeSpentCreatingPath += end - start;
+
+    if (temporaryPaths.length >= MAX_POINTS_PER_PATH) {
+      start = performance.now();
+      paths.push(temporaryPaths.join(''));
+      end = performance.now();
+      timeSpentPushingPath += end - start;
+      temporaryPaths = [];
+    }
+  }
+
+  if (temporaryPaths.length > 0) {
+    start = performance.now();
+    paths.push(temporaryPaths.join(''));
+    end = performance.now();
+    timeSpentPushingPath += end - start;
+  }
+  performance.mark('useCreatePathsFlatbush-loop-end');
+  performance.measure(
+    'useCreatePathsFlatbush-loop',
+    'useCreatePathsFlatbush-loop-start',
+    'useCreatePathsFlatbush-loop-end',
+  );
+  performance.mark('useCreatePathsFlatbush-end');
+  performance.measure(
+    'useCreatePathsFlatbush',
+    'useCreatePathsFlatbush-start',
+    'useCreatePathsFlatbush-end',
+  );
+
+  console.log('flatbush', {
+    timeSpentGettingPosition,
+    timeSpentCheckingRange,
+    timeSpentCreatingPath,
+    timeSpentPushingPath,
+    positionsGetters,
+  });
+
   return paths;
 }
 
 function useCreatePaths(series: DefaultizedScatterSeriesType, xScale: D3Scale, yScale: D3Scale) {
-  return useCreatePathsIteratively(series, xScale, yScale);
+  useCreatePathsIteratively(series, xScale, yScale);
+  return useCreatePathsFlatbush(series, xScale, yScale);
 }
 
 const Group = styled('g')({
@@ -117,6 +268,11 @@ function FastScatter(props: FastScatterProps) {
   const paths = useCreatePaths(series, xScale, yScale);
   const classes = useUtilityClasses(inClasses);
 
+  const start = performance.now();
+  const children = paths.map((d, i) => <path key={i} fill={color} d={d} />);
+  const end = performance.now();
+  performance.measure('FastScatter paths.map', { start, end });
+
   return (
     <Group
       ref={groupRef}
@@ -125,9 +281,7 @@ function FastScatter(props: FastScatterProps) {
       onPointerMove={eventHandlers?.onPointerMove}
       onPointerLeave={eventHandlers?.onPointerLeave}
     >
-      {paths.map((d, i) => (
-        <path key={i} fill={color} d={d} />
-      ))}
+      {children}
     </Group>
   );
 }

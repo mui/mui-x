@@ -2,18 +2,18 @@ import type { TickParams } from '../hooks/useTicks';
 
 export function getTickNumber(
   params: TickParams & {
-    range: number[];
     domain: any[];
+    defaultTickNumber: number;
   },
 ) {
-  const { tickMaxStep, tickMinStep, tickNumber, range, domain } = params;
+  const { tickMaxStep, tickMinStep, tickNumber, domain, defaultTickNumber } = params;
 
   const maxTicks =
     tickMinStep === undefined ? 999 : Math.floor(Math.abs(domain[1] - domain[0]) / tickMinStep);
   const minTicks =
     tickMaxStep === undefined ? 2 : Math.ceil(Math.abs(domain[1] - domain[0]) / tickMaxStep);
 
-  const defaultizedTickNumber = tickNumber ?? Math.floor(Math.abs(range[1] - range[0]) / 50);
+  const defaultizedTickNumber = tickNumber ?? defaultTickNumber;
 
   return Math.min(maxTicks, Math.max(minTicks, defaultizedTickNumber));
 }
@@ -27,4 +27,8 @@ export function scaleTickNumberByRange(tickNumber: number, range: number[]) {
   }
 
   return tickNumber / ((range[1] - range[0]) / 100);
+}
+
+export function calculateDefaultTickNumber(range: number[]): number {
+  return Math.floor(Math.abs(range[1] - range[0]) / 50);
 }

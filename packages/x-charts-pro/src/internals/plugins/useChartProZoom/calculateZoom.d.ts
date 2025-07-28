@@ -12,7 +12,16 @@ import { DefaultizedZoomOptions, ZoomData } from '@mui/x-charts/internals';
  * @param minStart Minimum allowed start value.
  * @param maxEnd Maximum allowed end value.
  */
-export declare function calculateZoom<T extends Readonly<Pick<ZoomData, 'start' | 'end'>>>(zoom: T, step: number, { minSpan, maxSpan, minStart, maxEnd, }: Pick<DefaultizedZoomOptions, 'minSpan' | 'maxSpan' | 'minStart' | 'maxEnd'>): T & {
-    start: number;
-    end: number;
+export declare function calculateZoom<T extends Readonly<Pick<ZoomData, 'start' | 'end'>>>(
+  zoom: T,
+  step: number,
+  {
+    minSpan,
+    maxSpan,
+    minStart,
+    maxEnd,
+  }: Pick<DefaultizedZoomOptions, 'minSpan' | 'maxSpan' | 'minStart' | 'maxEnd'>,
+): T & {
+  start: number;
+  end: number;
 };
