@@ -140,14 +140,10 @@ export namespace TimeGridEvent {
      */
     eventId: string | number;
     /**
-     * Whether the event can be dragged to change its start and end dates without changing the duration.
+     * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
      */
     isDraggable?: boolean;
-    /**
-     * Whether the event start or end can be dragged to change its duration without changing this other date.
-     */
-    isResizable?: boolean;
   }
 
   export interface DragData {

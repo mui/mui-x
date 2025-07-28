@@ -40,7 +40,8 @@ export default function TimeGridPrimitive() {
             {days.map((day) => (
               <TimeGrid.Column
                 key={day.date.toString()}
-                value={day.date}
+                start={day.date.startOf('day')}
+                end={day.date.endOf('day')}
                 className={classes.Column}
               >
                 {day.events.map((event) => (

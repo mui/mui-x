@@ -1,3 +1,4 @@
+import { DayGridEvent } from '../day-grid/event';
 import { SchedulerValidDate } from '../models';
 import type { TimeGridEvent } from '../time-grid/event';
 import type { TimeGridEventResizeHandler } from '../time-grid/event-resize-handler';
@@ -33,6 +34,10 @@ export function isDraggingTimeGridEventResizeHandler(
   data: any,
 ): data is TimeGridEventResizeHandler.DragData {
   return data.source === 'TimeGridEventResizeHandler';
+}
+
+export function isDraggingDayGridEvent(data: any): data is DayGridEvent.DragData {
+  return data.source === 'DayGridEvent';
 }
 
 export function createDateFromPositionInCollection(
