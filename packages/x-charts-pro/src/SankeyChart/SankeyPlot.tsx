@@ -6,7 +6,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useTheme } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { SankeyLayout, type SankeyItemIdentifier } from './sankey.types';
-import { calculateSankeyLayout } from './sankeyLayout';
+import { calculateSankeyLayout } from './calculateSankeyLayout';
 import { SankeyNode } from './SankeyNode';
 import { SankeyLink } from './SankeyLink';
 import { useSankeySeriesContext } from '../hooks/useSankeySeries';

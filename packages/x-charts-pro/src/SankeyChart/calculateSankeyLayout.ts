@@ -1,6 +1,5 @@
 'use client';
 import { sankey, sankeyLinkHorizontal, sankeyJustify } from '@mui/x-charts-vendor/d3-sankey';
-import { warnOnce } from '@mui/x-internals/warning';
 import {
   SankeyLayout,
   SankeyLayoutLink,
@@ -9,6 +8,7 @@ import {
   type SankeyNode,
   type SankeyValueType,
 } from './sankey.types';
+import { findCycles } from './findCycles';
 
 /**
  * Calculates the layout for a Sankey diagram using d3-sankey
@@ -33,17 +33,8 @@ export function calculateSankeyLayout(
     return { nodes: [], links: [] };
   }
 
-  data.links.forEach((link) => {
-    if (link.source === undefined || link.target === undefined) {
-      throw new Error(
-        `Invalid link: source or target node not found (${link.source} -> ${link.target})`,
-      );
-    }
-
-    if (link.source === link.target) {
-      warnOnce(`MUI X Charts: circular links are not allowed (${link.source} -> ${link.target})`);
-    }
-  });
+  // TODO: Should we check only in prod?
+  const circularLinks = findCycles(data);
 
   // Create the sankey layout generator
   const sankeyGenerator = sankey<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>()
@@ -62,7 +53,7 @@ export function calculateSankeyLayout(
   // Prepare the data structure expected by d3-sankey
   const graph = {
     nodes: data.nodes.map((v) => ({ ...v })),
-    links: data.links.map((v) => ({ ...v })),
+    links: data.links.filter((link) => !circularLinks.includes(link)).map((v) => ({ ...v })),
   };
 
   // Generate the layout
