@@ -112,16 +112,12 @@ Customize the chart configuration and rendering by:
 
 - Overriding configuration options to force certain values.
   Use it to hide or lock configuration controls in the panel.
-- Using `onRender()` prop on `<GridChartsRendererProxy />` to customize chart rendering for a single or all chart types.
+- Use `onRender()` prop on `<GridChartsRendererProxy />` to customize chart rendering for a single or all chart types.
 
-```tsx
-const onRender = (type, props, Component) => {
-  if (type !== 'line') return <Component {...props} />;
-  return <LineChart {...props} grid={{ vertical: true, horizontal: true }} />;
-};
+The demo below overrides the configuration and removes the option to change the color palette.
+Additionally, it adds axes formatting for line and area chart that cannot be controlled via the default customization panel.
 
-<GridChartsRendererProxy id="main" renderer={ChartsRenderer} onRender={onRender} />;
-```
+If needed, configuration can be extended to render the UI elements for the additional axes customization.
 
 {{"demo": "GridChartsIntegrationCustomization.js", "bg": "inline"}}
 
