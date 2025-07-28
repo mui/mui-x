@@ -113,7 +113,7 @@ const columns: GridColDef<Product>[] = [
   {
     field: 'status',
     type: 'singleSelect',
-    editable: true, // TODO: Change styling of menu here to match the field
+    // editable: true, // TODO: Change styling of menu here to match the field
     valueOptions: Object.keys(productStatusMap),
     getOptionLabel: (value) => productStatusMap[value as keyof typeof productStatusMap],
     headerName: 'Status',
@@ -148,7 +148,7 @@ const columns: GridColDef<Product>[] = [
   },
   {
     field: 'stock',
-    editable: true,
+    // editable: true,
     groupable: false,
     aggregable: false,
     headerName: 'Stock',
@@ -159,7 +159,7 @@ const columns: GridColDef<Product>[] = [
     field: 'price',
     groupable: false,
     aggregable: false,
-    editable: true,
+    // editable: true,
     headerName: 'Price',
     width: 150,
     type: 'number',
@@ -261,7 +261,7 @@ function InventoryDashboard() {
                 apiRef={apiRef}
                 rows={products}
                 columns={columns}
-                editMode="row"
+                // editMode="row" TODO: Uncomment when we fix the container size. Right now it's way too cramped
                 aggregationFunctions={aggregationFunctions}
                 aggregationRowsScope="all"
                 initialState={{

@@ -51,7 +51,7 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
       field: 'incoming',
       headerName: 'Incoming Stock',
       flex: 1,
-      editable: true,
+      // editable: true,
       renderCell: (params) => (
         <Typography sx={{ fontSize: '0.875rem' }}>
           {params.row.incoming?.toLocaleString() || 0} units
@@ -103,7 +103,7 @@ export function ProductDetailPanel({ row }: ProductDetailPanelProps) {
     <DetailPanelContainer>
       <DataGridPro
         rows={rows}
-        editMode="row"
+        // editMode="row" TODO: Uncomment when we fix the container size. Right now it's way too cramped
         columns={detailColumns}
         hideFooter
         disableColumnMenu
