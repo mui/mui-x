@@ -4,19 +4,53 @@ import {
   GridChartsPanel,
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
-  gridColumnGroupsUnwrappedModelSelector,
-  GridEventListener,
-  GridPivotModel,
-  useGridApiRef,
   GridSidebarValue,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
   configurationOptions,
   GridChartsConfigurationSection,
 } from '@mui/x-charts-premium/ChartsRenderer';
-import { LineChart, LineChartProps } from '@mui/x-charts/LineChart';
-import { useDemoData } from '@mui/x-data-grid-generator';
+// The import path has to include the docs folder because the demo is used in the charts docs as well
+// eslint-disable-next-line import/no-useless-path-segments
+import { downloads } from '../../../data/data-grid/charts-integration/dataset';
+
+const columns: GridColDef[] = [
+  { field: 'timestamp', headerName: 'Timestamp', type: 'date' },
+  { field: 'v4', headerName: 'v4', type: 'number' },
+  { field: 'v5', headerName: 'v5', type: 'number' },
+  { field: 'v6', headerName: 'v6', type: 'number' },
+  { field: 'v7', headerName: 'v7', type: 'number' },
+  { field: 'v8', headerName: 'v8', type: 'number' },
+];
+
+const versions = Object.keys(
+  downloads.versionDownloads,
+) as (keyof typeof downloads.versionDownloads)[];
+
+const rows = downloads.timestamps.map((timestamp, index) => {
+  const versionDownloads = versions.reduce(
+    (acc, version) => {
+      const fieldName = `v${version.split('.')[0]}` as keyof typeof acc;
+      acc[fieldName] += downloads.versionDownloads[version][index];
+      return acc;
+    },
+    {
+      v4: 0,
+      v5: 0,
+      v6: 0,
+      v7: 0,
+      v8: 0,
+    },
+  );
+
+  return {
+    id: timestamp,
+    timestamp: new Date(timestamp),
+    ...versionDownloads,
+  };
+});
 
 const hideColorsControl = (sections: GridChartsConfigurationSection[]) =>
   sections.map((section) => ({
@@ -53,110 +87,72 @@ const customConfiguration = {
   },
 };
 
-export default function GridChartsIntegrationCustomization() {
-  const { data } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 1000,
-    editable: true,
-  });
-  const apiRef = useGridApiRef();
-
-  const pivotModel: GridPivotModel = {
-    rows: [{ field: 'commodity' }],
-    columns: [
-      { field: 'maturityDate-year', sort: 'asc' },
-      { field: 'maturityDate-quarter', sort: 'asc' },
-    ],
-    values: [
-      { field: 'quantity', aggFunc: 'sum' },
-      { field: 'feeRate', aggFunc: 'avg' },
-    ],
-  };
-
-  const initialState = {
-    ...data.initialState,
-    pivoting: {
-      model: pivotModel,
-      enabled: true,
-    },
-    sidebar: {
-      open: true,
-      value: GridSidebarValue.Charts,
-    },
-    chartsIntegration: {
-      charts: {
-        main: {
-          categories: ['commodity'],
-          chartType: 'line',
-          configuration: {
-            colors: 'mangoFusionPalette',
-          },
+const initialState = {
+  sidebar: {
+    open: true,
+    value: GridSidebarValue.Charts,
+  },
+  chartsIntegration: {
+    charts: {
+      main: {
+        categories: ['timestamp'],
+        series: ['v4', 'v5', 'v6', 'v7', 'v8'],
+        chartType: 'line',
+        configuration: {
+          showMark: false,
+          height: 400,
         },
       },
     },
-  };
+  },
+};
 
-  const hasInitializedPivotingSeries = React.useRef(false);
-  React.useEffect(() => {
-    const handleColumnVisibilityModelChange: GridEventListener<
-      'columnVisibilityModelChange'
-    > = () => {
-      if (hasInitializedPivotingSeries.current) {
-        return;
-      }
+const onRender = (
+  type: string,
+  props: Record<string, any>,
+  Component: React.ComponentType<any>,
+) => {
+  const adjustedProps =
+    type === 'line' || type === 'area'
+      ? {
+          ...props,
+          grid: {
+            vertical: true,
+            horizontal: true,
+          },
+          xAxis: props.xAxis.map((axis: any) => ({
+            ...axis,
+            scaleType: 'time',
+            domainLimit: 'strict',
+            valueFormatter: (value: Date) =>
+              value.toLocaleDateString('en-US', {
+                day: '2-digit',
+                month: '2-digit',
+                year: '2-digit',
+              }),
+            tickLabelStyle: {
+              angle: 90,
+            },
+            height: 75,
+          })),
+          yAxis: [
+            {
+              valueFormatter: (value: number) => `${Math.round(value / 1000)}k`,
+            },
+          ],
+        }
+      : props;
+  return <Component {...adjustedProps} />;
+};
 
-      const unwrappedGroupingModel = Object.keys(
-        gridColumnGroupsUnwrappedModelSelector(apiRef),
-      );
-      // wait until pivoting creates column grouping model
-      if (unwrappedGroupingModel.length === 0) {
-        return;
-      }
-
-      hasInitializedPivotingSeries.current = true;
-      // pick up the first 5 dyamically created columns with quantity in the name and enable first 3
-      apiRef.current?.updateSeries(
-        'main',
-        unwrappedGroupingModel
-          .filter((field) => field.endsWith('quantity'))
-          .slice(0, 5)
-          .map((field, index) => ({ field, hidden: index >= 3 })),
-      );
-    };
-
-    return apiRef.current?.subscribeEvent(
-      'columnVisibilityModelChange',
-      handleColumnVisibilityModelChange,
-    );
-  }, [apiRef]);
-
-  const onRender = React.useCallback(
-    (
-      type: string,
-      props: Record<string, any>,
-      Component: React.ComponentType<any>,
-    ) => {
-      if (type !== 'line') {
-        return <Component {...props} />;
-      }
-
-      return (
-        <LineChart
-          {...(props as LineChartProps)}
-          grid={{ vertical: true, horizontal: true }}
-        />
-      );
-    },
-    [],
-  );
-
+export default function GridChartsIntegrationCustomization() {
   return (
     <GridChartsIntegrationContextProvider>
       <div style={{ gap: 32, width: '100%' }}>
         <div style={{ height: 575 }}>
           <DataGridPremium
-            {...data}
-            apiRef={apiRef}
+            columns={columns}
+            rows={rows}
             showToolbar
             chartsIntegration
             slots={{
@@ -168,8 +164,6 @@ export default function GridChartsIntegrationCustomization() {
               },
             }}
             initialState={initialState}
-            checkboxSelection
-            columnGroupHeaderHeight={35}
           />
         </div>
         <GridChartsRendererProxy

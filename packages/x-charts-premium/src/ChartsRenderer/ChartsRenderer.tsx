@@ -90,11 +90,10 @@ function ChartsRenderer({
 
   if (chartType === 'line' || chartType === 'area') {
     const area = chartType === 'area';
-    const showMark = !area;
     const seriesProp = series.map((ser) => ({
       ...ser,
       area,
-      showMark,
+      showMark: chartConfiguration.showMark,
       stack: chartConfiguration.stacked ? 'stack' : undefined,
     }));
 

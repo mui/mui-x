@@ -101,7 +101,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                 return (
                   <rootProps.slots.baseSwitch
                     key={key}
-                    checked={!!configuration[key]}
+                    checked={Boolean(configuration[key] ?? opt.default)}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                       handleChange(key, event.target.checked)
                     }

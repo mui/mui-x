@@ -219,7 +219,7 @@ const getBarColumnCustomization = (
 ];
 
 const getLineAreaCustomization = (
-  _: 'line' | 'area',
+  type: 'line' | 'area',
   localeText: ChartsLocaleText,
 ): GridChartsConfigurationSection[] => [
   {
@@ -233,6 +233,11 @@ const getLineAreaCustomization = (
         type: 'boolean',
         default: false,
         isDisabled: ({ series }: { series: any[] }) => series.length < 2,
+      },
+      showMark: {
+        label: localeText.chartConfigurationShowMark,
+        type: 'boolean',
+        default: type === 'line',
       },
       hideLegend: {
         label: localeText.chartConfigurationHideLegend,

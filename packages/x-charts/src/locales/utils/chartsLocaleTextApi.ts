@@ -183,6 +183,10 @@ export interface ChartsLocaleText {
    */
   chartConfigurationHideLegend: string;
   /**
+   * Label for the show mark configuration control.
+   */
+  chartConfigurationShowMark: string;
+  /**
    * Label for the height configuration control.
    */
   chartConfigurationHeight: string;

@@ -53,6 +53,7 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   chartConfigurationOuterRadius: 'Rayon extérieur',
   chartConfigurationColors: 'Couleurs',
   chartConfigurationHideLegend: 'Masquer la légende',
+  chartConfigurationShowMark: 'Afficher les marques',
   chartConfigurationHeight: 'Hauteur',
   chartConfigurationWidth: 'Largeur',
   chartConfigurationSeriesGap: 'Espacement des séries',

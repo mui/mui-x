@@ -54,6 +54,7 @@ export const elGRLocaleText: Partial<ChartsLocaleText> = {
   // chartConfigurationOuterRadius: 'Outer radius',
   // chartConfigurationColors: 'Colors',
   // chartConfigurationHideLegend: 'Hide legend',
+  // chartConfigurationShowMark: 'Show mark',
   // chartConfigurationHeight: 'Height',
   // chartConfigurationWidth: 'Width',
   // chartConfigurationSeriesGap: 'Series gap',
