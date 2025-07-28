@@ -23,6 +23,7 @@ import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { GridPivotPanel } from '../../../components/pivotPanel';
 import type {
   GridPivotingApi,
   GridPivotingPrivateApi,
@@ -40,6 +41,7 @@ import {
   isPivotingAvailable as isPivotingAvailableFn,
 } from './utils';
 import { getAvailableAggregationFunctions } from '../aggregation/gridAggregationUtils';
+import { GridSidebarValue } from '../sidebar';
 
 const emptyPivotModel: GridPivotModel = { rows: [], columns: [], values: [] };
 
@@ -53,7 +55,8 @@ export const pivotingStateInitializer: GridStateInitializer<
     | 'disablePivoting'
     | 'getPivotDerivedColumns'
     | 'columns'
-  >
+  >,
+  GridPrivateApiPremium
 > = (state, props, apiRef) => {
   apiRef.current.caches.pivoting = {
     exportedStateRef: {
@@ -69,7 +72,6 @@ export const pivotingStateInitializer: GridStateInitializer<
       pivoting: {
         active: false,
         model: emptyPivotModel,
-        panelOpen: false,
       } as GridPivotingState,
     };
   }
@@ -80,14 +82,25 @@ export const pivotingStateInitializer: GridStateInitializer<
     apiRef.current.getLocaleText,
   );
 
+  const open = props.pivotPanelOpen ?? props.initialState?.pivoting?.panelOpen ?? false;
+  const sidebarStateUpdate = open
+    ? {
+        open,
+        value: GridSidebarValue.Pivot,
+      }
+    : {};
+
   return {
     ...state,
     pivoting: {
       active: props.pivotActive ?? props.initialState?.pivoting?.enabled ?? false,
       model: props.pivotModel ?? props.initialState?.pivoting?.model ?? emptyPivotModel,
-      panelOpen: props.pivotPanelOpen ?? props.initialState?.pivoting?.panelOpen ?? false,
       initialColumns,
-    } as GridPivotingState,
+    },
+    sidebar: {
+      ...state.sidebar,
+      ...sidebarStateUpdate,
+    },
   };
 };
 
@@ -366,14 +379,19 @@ export const useGridPivoting = (
       if (!isPivotingAvailable) {
         return;
       }
-      apiRef.current.setState((state) => ({
-        ...state,
-        pivoting: {
-          ...state.pivoting,
-          panelOpen:
-            typeof callback === 'function' ? callback(state.pivoting?.panelOpen) : callback,
-        },
-      }));
+
+      const panelOpen = gridPivotPanelOpenSelector(apiRef);
+      const newPanelOpen = typeof callback === 'function' ? callback(panelOpen) : callback;
+
+      if (panelOpen === newPanelOpen) {
+        return;
+      }
+
+      if (newPanelOpen) {
+        apiRef.current.showSidebar(GridSidebarValue.Pivot);
+      } else {
+        apiRef.current.hideSidebar();
+      }
     },
     [apiRef, isPivotingAvailable],
   );
@@ -470,6 +488,19 @@ export const useGridPivoting = (
     },
     [apiRef, computePivotingState, isPivotingAvailable, nonPivotDataRef],
   );
+
+  const addPivotingPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
+    (initialValue, value) => {
+      if (isPivotingAvailable && value === GridSidebarValue.Pivot) {
+        return <GridPivotPanel />;
+      }
+
+      return initialValue;
+    },
+    [isPivotingAvailable],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'sidebar', addPivotingPanel);
 
   useGridApiMethod(apiRef, { setPivotModel, setPivotActive, setPivotPanelOpen }, 'public');
   useGridApiMethod(

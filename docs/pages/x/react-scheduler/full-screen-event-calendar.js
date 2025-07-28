@@ -13,6 +13,7 @@ export default function FullEventCalendar() {
       defaultVisibleDate={events[0].start}
       onEventsChange={setEvents}
       areEventsDraggable
+      areEventsResizable
     />
   );
 }
