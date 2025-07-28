@@ -41,6 +41,135 @@ const BLOCK_IDENTIFIER_LINE_START =
 const BLOCK_IDENTIFIER_LINE_END = '// End of re-export-block';
 
 /**
+ * Check if a utility already exports from the source package in its index.ts file
+ * @param {string} targetPackagePath
+ * @param {string} utilityName
+ * @param {string} sourcePackageName
+ * @returns {boolean}
+ */
+function isUtilityAlreadyExported(targetPackagePath, utilityName, sourcePackageName) {
+  const utilityIndexPath = path.join(targetPackagePath, 'src', utilityName, 'index.ts');
+  
+  if (!fs.existsSync(utilityIndexPath)) {
+    return false;
+  }
+
+  const content = fs.readFileSync(utilityIndexPath, 'utf8');
+  
+  // Remove any existing auto-generated blocks to check only manual exports
+  const contentWithoutBlocks = removeExistingBlock(content);
+  
+  // Check if the utility is exported from the source package
+  const exportLine = `export * from '@mui/${sourcePackageName}/${utilityName}';`;
+  return contentWithoutBlocks.includes(exportLine);
+}
+
+/**
+ * Remove existing re-export block from content
+ * @param {string} content
+ * @returns {string}
+ */
+function removeExistingBlock(content) {
+  const lines = content.split('\n');
+  const result = [];
+  let skipBlock = false;
+  
+  for (const line of lines) {
+    if (line.trim() === BLOCK_IDENTIFIER_LINE_START) {
+      skipBlock = true;
+      continue;
+    }
+    if (line.trim() === BLOCK_IDENTIFIER_LINE_END) {
+      skipBlock = false;
+      continue;
+    }
+    if (!skipBlock) {
+      result.push(line);
+    }
+  }
+  
+  return result.join('\n');
+}
+
+/**
+ * Check if a utility file has extra exports beyond the re-export block
+ * @param {string} targetPackagePath
+ * @param {string} utilityName
+ * @returns {boolean}
+ */
+function hasExtraExports(targetPackagePath, utilityName) {
+  const utilityIndexPath = path.join(targetPackagePath, 'src', utilityName, 'index.ts');
+  
+  if (!fs.existsSync(utilityIndexPath)) {
+    return false;
+  }
+
+  const content = fs.readFileSync(utilityIndexPath, 'utf8');
+  
+  // Remove the re-export block to see what's left
+  const contentWithoutBlock = removeExistingBlock(content);
+  
+  // Check if there's any meaningful content left (not just empty lines or comments)
+  const meaningfulLines = contentWithoutBlock
+    .split('\n')
+    .filter(line => {
+      const trimmed = line.trim();
+      return trimmed && !trimmed.startsWith('//') && !trimmed.startsWith('/*');
+    });
+  
+  return meaningfulLines.length > 0;
+}
+
+/**
+ * Determine the best source package to export from for a utility
+ * @param {string} targetPackagePath
+ * @param {string} utilityName
+ * @param {string[]} sourcePackageChain - Array of source packages in order (e.g., ['x-charts', 'x-charts-pro'])
+ * @returns {string} - The package name to export from
+ */
+function getBestSourcePackage(targetPackagePath, utilityName, sourcePackageChain) {
+  // Start from the most recent source package and work backwards
+  for (let i = sourcePackageChain.length - 1; i >= 0; i -= 1) {
+    const sourcePackage = sourcePackageChain[i];
+    
+    // Skip the current target package itself
+    const targetPackageName = path.basename(targetPackagePath);
+    if (sourcePackage === targetPackageName) {
+      continue;
+    }
+    
+    // Check if this source package has extra exports for this utility
+    const sourcePackagePath = path.join(process.cwd(), 'packages', sourcePackage);
+    if (hasExtraExports(sourcePackagePath, utilityName)) {
+      return sourcePackage;
+    }
+  }
+  
+  // If no source package has extra exports, use the base package
+  return sourcePackageChain[0];
+}
+
+/**
+ * Add re-export block at the beginning of the file
+ * @param {string} content
+ * @param {string} sourcePackageName
+ * @param {string} utilityName
+ * @returns {string}
+ */
+function addReExportBlock(content, sourcePackageName, utilityName) {
+  // Create the re-export block
+  const blockContent = [
+    BLOCK_IDENTIFIER_LINE_START,
+    `export * from '@mui/${sourcePackageName}/${utilityName}';`,
+    BLOCK_IDENTIFIER_LINE_END,
+    ''
+  ].join('\n');
+
+  // Add the block at the beginning
+  return blockContent + content;
+}
+
+/**
  * Get component directories from src folder
  * @param {string} packagePath
  * @param {string[]} ignoreList
@@ -73,14 +202,16 @@ function getComponentDirectories(packagePath, ignoreList) {
 }
 
 /**
- * Create deep export file for a component
+ * Create deep export file for a component or utility
  *
  * @param {string} targetPackagePath
  * @param {string} componentName
  * @param {string} sourcePackageName
  * @param {boolean} isProOrPremium
+ * @param {string[]} utilities - List of utilities that should use re-export blocks
+ * @param {string[]} sourcePackageChain - Array of all source packages in order
  */
-function createDeepExportFile(targetPackagePath, componentName, sourcePackageName, isProOrPremium) {
+function createDeepExportFile(targetPackagePath, componentName, sourcePackageName, isProOrPremium, utilities = [], sourcePackageChain = []) {
   const exportDir = path.join(targetPackagePath, 'src', componentName);
   const exportFile = path.join(exportDir, 'index.ts');
 
@@ -92,11 +223,41 @@ function createDeepExportFile(targetPackagePath, componentName, sourcePackageNam
   let exportContent;
 
   if (isProOrPremium) {
-    // For pro/premium packages, export from both the base package and the pro/premium specific exports
+    // Check if this is a utility that should use re-export blocks
+    if (utilities.includes(componentName)) {
+      // For utilities, check if already exported and handle re-export block
+      let existingContent = '';
+      if (fs.existsSync(exportFile)) {
+        existingContent = fs.readFileSync(exportFile, 'utf8');
+      }
+
+      // Determine the best source package to export from
+      const bestSourcePackage = getBestSourcePackage(targetPackagePath, componentName, sourcePackageChain);
+
+      // Check if already exported from the best source (outside of auto-generated blocks)
+      if (isUtilityAlreadyExported(targetPackagePath, componentName, bestSourcePackage)) {
+        // Skip if already exported manually
+        return;
+      }
+
+      // Remove existing block and add new one
+      let updatedContent = removeExistingBlock(existingContent);
+      updatedContent = addReExportBlock(updatedContent, bestSourcePackage, componentName);
+      
+      // Only write if content changed
+      if (updatedContent !== existingContent) {
+        fs.writeFileSync(exportFile, updatedContent);
+        console.warn(`  ✓ Added re-export block for utility ${componentName} from @mui/${bestSourcePackage} in ${path.relative(process.cwd(), targetPackagePath)}`);
+      }
+      return;
+    }
+    
+    // For regular components, export from the base package
     exportContent = `${IDENTIFIER_LINE}
 export * from '@mui/${sourcePackageName}/${componentName}';
 `;
   }
+  
   fs.writeFileSync(exportFile, exportContent);
 
   console.warn(
@@ -143,7 +304,15 @@ function processPackage(basePackageName) {
 
     for (let i = 0; i < targetDirectories.length; i += 1) {
       for (const componentName of targetDirectories[i]) {
-        createDeepExportFile(targetPackagePath, componentName, sourcePackageName[i], true);
+        createDeepExportFile(targetPackagePath, componentName, sourcePackageName[i], true, targetPackages.utilities, sourcePackageName);
+      }
+    }
+
+    // Also handle utilities that exist in the target package
+    for (const utilityName of targetPackages.utilities) {
+      const utilityDirPath = path.join(targetPackagePath, 'src', utilityName);
+      if (fs.existsSync(utilityDirPath)) {
+        createDeepExportFile(targetPackagePath, utilityName, sourcePackageName[0], true, targetPackages.utilities, sourcePackageName);
       }
     }
 
