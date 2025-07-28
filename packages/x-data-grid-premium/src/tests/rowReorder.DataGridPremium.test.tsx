@@ -1544,7 +1544,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(editRowSpy.callCount).to.equal(0);
       });
 
-      it('should call dataSource.setGroupKey when available instead of direct field assignment', async () => {
+      it.skip('should call dataSource.setGroupKey when available instead of direct field assignment', async () => {
+        // Remove `.skip` when `getGroupKey()` is implemented in the `dataSource`
         const editRowSpy = spy();
         const getRowsSpy = spy();
         const setGroupKeySpy = spy((row, groupKey) => {

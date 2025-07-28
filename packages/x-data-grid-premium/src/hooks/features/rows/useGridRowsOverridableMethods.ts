@@ -21,12 +21,9 @@ import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumPr
 
 export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<
-    DataGridPremiumProcessedProps,
-    'processRowUpdate' | 'onProcessRowUpdateError' | 'dataSource'
-  >,
+  props: Pick<DataGridPremiumProcessedProps, 'processRowUpdate' | 'onProcessRowUpdateError'>,
 ) => {
-  const { processRowUpdate, onProcessRowUpdateError, dataSource } = props;
+  const { processRowUpdate, onProcessRowUpdateError } = props;
 
   const setRowIndex = React.useCallback(
     (sourceRowId: GridRowId, targetOriginalIndex: number) => {
@@ -142,46 +139,32 @@ export const useGridRowsOverridableMethods = (
         let updatedSourceRow = { ...originalSourceRow };
         const targetRow = dataRowIdToModelLookup[target.id];
 
-        if (props.dataSource?.setGroupKey) {
-          // `setGroupKey()` handles the reverse of `getGroupKey()` for saving the row back to server
-          // For example if `getGroupKey()` extracts a complex key from the row, `setGroupKey()` will save the row back to server with the same key
-          // getGroupKey: (row) => row.user.firstName;
-          // setGroupKey: (row, key) => {
-          //   row.user.firstName = key;
-          //   return row;
-          // }
-          updatedSourceRow = props.dataSource.setGroupKey(
-            updatedSourceRow,
-            (targetGroup as GridGroupNode).groupingKey as string,
-          );
-        } else {
-          // Get grouping rules which include both getter and setter functions
-          const groupingRules = getGroupingRules({
-            sanitizedRowGroupingModel,
-            columnsLookup,
-          });
+        // Get grouping rules which include both getter and setter functions
+        const groupingRules = getGroupingRules({
+          sanitizedRowGroupingModel,
+          columnsLookup,
+        });
 
-          // Update each grouping field on the source row
-          for (const groupingRule of groupingRules) {
-            const colDef = columnsLookup[groupingRule.field];
+        // Update each grouping field on the source row
+        for (const groupingRule of groupingRules) {
+          const colDef = columnsLookup[groupingRule.field];
 
-            if (groupingRule.groupingValueSetter && colDef) {
-              const targetGroupingValue = getCellGroupingCriteria({
-                row: targetRow,
-                colDef,
-                groupingRule,
-                apiRef,
-              }).key;
+          if (groupingRule.groupingValueSetter && colDef) {
+            const targetGroupingValue = getCellGroupingCriteria({
+              row: targetRow,
+              colDef,
+              groupingRule,
+              apiRef,
+            }).key;
 
-              updatedSourceRow = groupingRule.groupingValueSetter(
-                targetGroupingValue,
-                updatedSourceRow,
-                colDef,
-                apiRef,
-              );
-            } else {
-              updatedSourceRow[groupingRule.field] = targetRow[groupingRule.field];
-            }
+            updatedSourceRow = groupingRule.groupingValueSetter(
+              targetGroupingValue,
+              updatedSourceRow,
+              colDef,
+              apiRef,
+            );
+          } else {
+            updatedSourceRow[groupingRule.field] = targetRow[groupingRule.field];
           }
         }
 
@@ -251,77 +234,37 @@ export const useGridRowsOverridableMethods = (
           apiRef.current.publishEvent('rowsSet');
         };
 
-        if (dataSource?.updateRow) {
-          if (!isDeepEqual(originalSourceRow, updatedSourceRow)) {
-            const params: GridUpdateRowParams = {
-              rowId: sourceRowId,
-              previousRow: originalSourceRow,
-              updatedRow: updatedSourceRow,
-            };
+        if (processRowUpdate && !isDeepEqual(originalSourceRow, updatedSourceRow)) {
+          const params: GridUpdateRowParams = {
+            rowId: sourceRowId,
+            previousRow: originalSourceRow,
+            updatedRow: updatedSourceRow,
+          };
+          apiRef.current.setLoading(true);
 
-            apiRef.current.setLoading(true);
-            try {
-              Promise.resolve(dataSource.updateRow(params))
-                .then((syncedRow) => {
-                  const finalRow = syncedRow || updatedSourceRow;
-                  commitStateUpdate(finalRow);
-                })
-                .catch((error) => {
-                  if (onProcessRowUpdateError) {
-                    onProcessRowUpdateError(error);
-                  } else {
-                    throw error;
-                  }
-                })
-                .finally(() => {
-                  apiRef.current.setLoading(false);
-                });
-            } catch (error) {
-              apiRef.current.setLoading(false);
-              if (onProcessRowUpdateError) {
-                onProcessRowUpdateError(error);
-              } else {
-                throw error;
-              }
+          try {
+            Promise.resolve(processRowUpdate(updatedSourceRow, originalSourceRow, params))
+              .then((processedRow) => {
+                const finalRow = processedRow || updatedSourceRow;
+                commitStateUpdate(finalRow);
+              })
+              .catch((error) => {
+                if (onProcessRowUpdateError) {
+                  onProcessRowUpdateError(error);
+                } else {
+                  throw error;
+                }
+              })
+              .finally(() => {
+                apiRef.current.setLoading(false);
+              });
+          } catch (error) {
+            apiRef.current.setLoading(false);
+            if (onProcessRowUpdateError) {
+              onProcessRowUpdateError(error);
+            } else {
+              throw error;
             }
-          } else {
-            commitStateUpdate(updatedSourceRow);
-          }
-        } else if (processRowUpdate) {
-          if (!isDeepEqual(originalSourceRow, updatedSourceRow)) {
-            const params: GridUpdateRowParams = {
-              rowId: sourceRowId,
-              previousRow: originalSourceRow,
-              updatedRow: updatedSourceRow,
-            };
-            apiRef.current.setLoading(true);
-
-            try {
-              Promise.resolve(processRowUpdate(updatedSourceRow, originalSourceRow, params))
-                .then((processedRow) => {
-                  const finalRow = processedRow || updatedSourceRow;
-                  commitStateUpdate(finalRow);
-                })
-                .catch((error) => {
-                  if (onProcessRowUpdateError) {
-                    onProcessRowUpdateError(error);
-                  } else {
-                    throw error;
-                  }
-                })
-                .finally(() => {
-                  apiRef.current.setLoading(false);
-                });
-            } catch (error) {
-              apiRef.current.setLoading(false);
-              if (onProcessRowUpdateError) {
-                onProcessRowUpdateError(error);
-              } else {
-                throw error;
-              }
-            }
-          } else {
-            commitStateUpdate(updatedSourceRow);
           }
         } else {
           commitStateUpdate(updatedSourceRow);
@@ -336,7 +279,7 @@ export const useGridRowsOverridableMethods = (
         );
       }
     },
-    [apiRef, processRowUpdate, onProcessRowUpdateError, dataSource, props.dataSource],
+    [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
   return {
