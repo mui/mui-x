@@ -1,6 +1,6 @@
 'use client';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { SankeyValueType, SankeyLink, NodeId } from './sankey.types';
+import type { SankeyLink, NodeId, SankeyNode } from './sankey.types';
 
 /**
  * Finds circular references in a Sankey diagram using DFS
@@ -8,7 +8,10 @@ import type { SankeyValueType, SankeyLink, NodeId } from './sankey.types';
  * @param data The Sankey data (nodes and links)
  * @returns Array of links that create circular references
  */
-export function findCycles(data: SankeyValueType): SankeyLink[] {
+export function findCycles(
+  links: readonly SankeyLink[],
+  nodes?: readonly SankeyNode[],
+): SankeyLink[] {
   const visited: Set<NodeId> = new Set();
   const stack: Set<NodeId> = new Set();
   const circularLinks: SankeyLink[] = [];
@@ -26,7 +29,7 @@ export function findCycles(data: SankeyValueType): SankeyLink[] {
     visited.add(nodeId);
     stack.add(nodeId);
 
-    const linksFromNode = data.links.filter((link) => link.source === nodeId);
+    const linksFromNode = links.filter((link) => link.source === nodeId);
     for (const link of linksFromNode) {
       if (dfs(link.target)) {
         circularLinks.push(link);
@@ -41,7 +44,7 @@ export function findCycles(data: SankeyValueType): SankeyLink[] {
     return false;
   }
 
-  data.nodes.forEach((node) => {
+  nodes?.forEach((node) => {
     if (!visited.has(node.id)) {
       dfs(node.id);
     }

@@ -16,7 +16,6 @@ const tooltipGetter = () =>
     label: undefined,
     value: {
       links: [],
-      nodes: [],
     },
     seriesId: undefined,
     subType: undefined,

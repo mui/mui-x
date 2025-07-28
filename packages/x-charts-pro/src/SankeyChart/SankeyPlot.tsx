@@ -90,7 +90,7 @@ export function SankeyPlot(props: SankeyPlotProps) {
   );
 
   // Early return if no data or dimensions
-  if (!data || !data.nodes || !data.links || data.nodes.length === 0) {
+  if (!data || !data.links) {
     return null;
   }
 
