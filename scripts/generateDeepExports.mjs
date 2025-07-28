@@ -9,7 +9,8 @@
  * import { DataGrid } from '@mui/x-data-grid-premium/DataGrid'
  */
 
-import fs from 'fs';
+import fs from 'fs/promises';
+import { existsSync } from 'fs';
 import path from 'path';
 
 // Define package mappings (base -> pro])
@@ -45,16 +46,16 @@ const BLOCK_IDENTIFIER_LINE_END = '// End of re-export-block';
  * @param {string} targetPackagePath
  * @param {string} utilityName
  * @param {string} sourcePackageName
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
-function isUtilityAlreadyExported(targetPackagePath, utilityName, sourcePackageName) {
+async function isUtilityAlreadyExported(targetPackagePath, utilityName, sourcePackageName) {
   const utilityIndexPath = path.join(targetPackagePath, 'src', utilityName, 'index.ts');
 
-  if (!fs.existsSync(utilityIndexPath)) {
+  if (!existsSync(utilityIndexPath)) {
     return false;
   }
 
-  const content = fs.readFileSync(utilityIndexPath, 'utf8');
+  const content = await fs.readFile(utilityIndexPath, 'utf8');
   const contentWithoutBlocks = removeExistingBlock(content);
   const exportLine = `export * from '@mui/${sourcePackageName}/${utilityName}';`;
 
@@ -92,16 +93,16 @@ function removeExistingBlock(content) {
  * Check if a utility file has extra exports beyond the re-export block
  * @param {string} targetPackagePath
  * @param {string} utilityName
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
-function hasExtraExports(targetPackagePath, utilityName) {
+async function hasExtraExports(targetPackagePath, utilityName) {
   const utilityIndexPath = path.join(targetPackagePath, 'src', utilityName, 'index.ts');
 
-  if (!fs.existsSync(utilityIndexPath)) {
+  if (!existsSync(utilityIndexPath)) {
     return false;
   }
 
-  const content = fs.readFileSync(utilityIndexPath, 'utf8');
+  const content = await fs.readFile(utilityIndexPath, 'utf8');
   const contentWithoutBlock = removeExistingBlock(content);
 
   // Check if there's any meaningful content left (not just empty lines or comments)
@@ -118,24 +119,25 @@ function hasExtraExports(targetPackagePath, utilityName) {
  * @param {string} targetPackagePath
  * @param {string} utilityName
  * @param {string[]} sourcePackageChain - Array of source packages in order (e.g., ['x-charts', 'x-charts-pro'])
- * @returns {string} - The package name to export from
+ * @returns {Promise<string>} - The package name to export from
  */
-function getBestSourcePackage(targetPackagePath, utilityName, sourcePackageChain) {
+async function getBestSourcePackage(targetPackagePath, utilityName, sourcePackageChain) {
   const targetPackageName = path.basename(targetPackagePath);
 
-  // Start from the most recent source package and work backwards
-  for (let i = sourcePackageChain.length - 1; i >= 0; i -= 1) {
-    const sourcePackage = sourcePackageChain[i];
+  const sourcePackageChecks = sourcePackageChain
+    .filter((sourcePackage) => sourcePackage !== targetPackageName) // Skip the current target package
+    .map(async (sourcePackage) => {
+      const sourcePackagePath = path.join(process.cwd(), 'packages', sourcePackage);
+      const hasExtras = await hasExtraExports(sourcePackagePath, utilityName);
+      return hasExtras ? sourcePackage : null;
+    });
 
-    // Skip the current target package itself
-    if (sourcePackage === targetPackageName) {
-      continue;
-    }
+  const results = await Promise.all(sourcePackageChecks);
 
-    // Check if this source package has extra exports for this utility
-    const sourcePackagePath = path.join(process.cwd(), 'packages', sourcePackage);
-    if (hasExtraExports(sourcePackagePath, utilityName)) {
-      return sourcePackage;
+  // Find the first non-null result (prioritizing later packages in the chain)
+  for (let i = results.length - 1; i >= 0; i -= 1) {
+    if (results[i] !== null) {
+      return results[i];
     }
   }
 
@@ -165,28 +167,33 @@ function addReExportBlock(content, sourcePackageName, utilityName) {
  * Get component directories from src folder
  * @param {string} packagePath
  * @param {string[]} ignoreList
- * @returns {string[]}
+ * @returns {Promise<string[]>}
  */
-function getComponentDirectories(packagePath, ignoreList) {
+async function getComponentDirectories(packagePath, ignoreList) {
   const srcPath = path.join(packagePath, 'src');
 
-  if (!fs.existsSync(srcPath)) {
+  if (!existsSync(srcPath)) {
     return [];
   }
 
-  return fs
-    .readdirSync(srcPath, { withFileTypes: true })
+  const dirents = await fs.readdir(srcPath, { withFileTypes: true });
+  const directories = dirents
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name)
-    .filter((name) => !ignoreList.includes(name))
-    .filter((name) => {
+    .filter((name) => !ignoreList.includes(name));
+
+  const validityChecks = await Promise.all(
+    directories.map(async (name) => {
       const indexFile = path.join(srcPath, name, 'index.ts');
-      if (!fs.existsSync(indexFile)) {
-        return false;
+      if (!existsSync(indexFile)) {
+        return { name, isValid: false };
       }
-      const content = fs.readFileSync(indexFile, 'utf8');
-      return !content.startsWith(IDENTIFIER_LINE);
-    });
+      const content = await fs.readFile(indexFile, 'utf8');
+      return { name, isValid: !content.startsWith(IDENTIFIER_LINE) };
+    }),
+  );
+
+  return validityChecks.filter(({ isValid }) => isValid).map(({ name }) => name);
 }
 
 /**
@@ -197,7 +204,7 @@ function getComponentDirectories(packagePath, ignoreList) {
  * @param {string[]} utilities - List of utilities that should use re-export blocks
  * @param {string[]} sourcePackageChain - Array of all source packages in order
  */
-function createDeepExportFile(
+async function createDeepExportFile(
   targetPackagePath,
   componentName,
   sourcePackageName,
@@ -208,25 +215,25 @@ function createDeepExportFile(
   const exportFile = path.join(exportDir, 'index.ts');
 
   // Create directory if it doesn't exist
-  if (!fs.existsSync(exportDir)) {
-    fs.mkdirSync(exportDir, { recursive: true });
+  if (!existsSync(exportDir)) {
+    await fs.mkdir(exportDir, { recursive: true });
   }
 
   if (utilities.includes(componentName)) {
     // Handle utility with re-export blocks
     let existingContent = '';
-    if (fs.existsSync(exportFile)) {
-      existingContent = fs.readFileSync(exportFile, 'utf8');
+    if (existsSync(exportFile)) {
+      existingContent = await fs.readFile(exportFile, 'utf8');
     }
 
-    const bestSourcePackage = getBestSourcePackage(
+    const bestSourcePackage = await getBestSourcePackage(
       targetPackagePath,
       componentName,
       sourcePackageChain,
     );
 
     // Check if already exported from the best source (outside of auto-generated blocks)
-    if (isUtilityAlreadyExported(targetPackagePath, componentName, bestSourcePackage)) {
+    if (await isUtilityAlreadyExported(targetPackagePath, componentName, bestSourcePackage)) {
       return;
     }
 
@@ -236,7 +243,7 @@ function createDeepExportFile(
 
     // Only write if content changed
     if (updatedContent !== existingContent) {
-      fs.writeFileSync(exportFile, updatedContent);
+      await fs.writeFile(exportFile, updatedContent);
       console.warn(
         `  ✓ Added re-export block for utility ${componentName} from @mui/${bestSourcePackage} in ${path.relative(process.cwd(), targetPackagePath)}`,
       );
@@ -248,7 +255,7 @@ function createDeepExportFile(
   const exportContent = `${IDENTIFIER_LINE}
 export * from '@mui/${sourcePackageName}/${componentName}';
 `;
-  fs.writeFileSync(exportFile, exportContent);
+  await fs.writeFile(exportFile, exportContent);
   console.warn(
     `✓ Created deep export for ${componentName} in ${path.relative(process.cwd(), targetPackagePath)}`,
   );
@@ -258,11 +265,12 @@ export * from '@mui/${sourcePackageName}/${componentName}';
  * Process a base package and create deep exports for its components in target packages.
  * @param {string} basePackageName
  */
-function processPackage(basePackageName) {
+async function processPackage(basePackageName) {
   const basePackagePath = path.join(process.cwd(), 'packages', basePackageName);
-  const targetPackages = PACKAGE_MAPPINGS[basePackageName] || [];
+  /** @type {{targets: string[]; ignore: string[]; utilities: string[];}} */
+  const targetPackages = PACKAGE_MAPPINGS[basePackageName] || {};
 
-  if (!fs.existsSync(basePackagePath)) {
+  if (!existsSync(basePackagePath)) {
     console.warn(`Base package not found: ${basePackagePath}`);
     return;
   }
@@ -270,64 +278,76 @@ function processPackage(basePackageName) {
   console.warn(`\n📦 Processing ${basePackageName} -> ${targetPackages.targets.join(' -> ')}...`);
 
   // Get component directories from the base package
-  const componentDirectories = [getComponentDirectories(basePackagePath, targetPackages.ignore)];
-  const sourcePackageName = [basePackageName];
+  const componentDirectories = [
+    await getComponentDirectories(basePackagePath, targetPackages.ignore),
+  ];
+  const sourcePackageChain = [basePackageName];
 
   for (const targetPackage of targetPackages.targets) {
     const targetPackagePath = path.join(process.cwd(), 'packages', targetPackage);
 
-    if (!fs.existsSync(targetPackagePath)) {
+    if (!existsSync(targetPackagePath)) {
       console.warn(`Target package not found: ${targetPackagePath}`);
       return;
     }
 
     // Get additional components specific to pro/premium
-    const targetComponentDirs = getComponentDirectories(targetPackagePath, targetPackages.ignore);
+    // eslint-disable-next-line no-await-in-loop
+    const targetComponentDirs = await getComponentDirectories(
+      targetPackagePath,
+      targetPackages.ignore,
+    );
     const targetDirectories = componentDirectories.map((dirs) =>
       dirs.filter((name) => !targetComponentDirs.includes(name)),
     );
 
     console.warn(`\nCreating deep exports for ${targetDirectories.flat().length} components`);
 
-    for (let i = 0; i < targetDirectories.length; i += 1) {
-      for (const componentName of targetDirectories[i]) {
+    const componentTasks = targetDirectories.flatMap((componentNames, i) =>
+      componentNames.map((componentName) =>
         createDeepExportFile(
           targetPackagePath,
           componentName,
-          sourcePackageName[i],
+          sourcePackageChain[i],
           targetPackages.utilities,
-          sourcePackageName,
-        );
-      }
-    }
+          sourcePackageChain,
+        ),
+      ),
+    );
 
-    // Also handle utilities that exist in the target package
-    for (const utilityName of targetPackages.utilities) {
-      const utilityDirPath = path.join(targetPackagePath, 'src', utilityName);
-      if (fs.existsSync(utilityDirPath)) {
+    const utilityTasks = targetPackages.utilities
+      .filter((utilityName) => {
+        const utilityDirPath = path.join(targetPackagePath, 'src', utilityName);
+        return existsSync(utilityDirPath);
+      })
+      .map((utilityName) =>
         createDeepExportFile(
           targetPackagePath,
           utilityName,
-          sourcePackageName[0],
+          sourcePackageChain[0],
           targetPackages.utilities,
-          sourcePackageName,
-        );
-      }
-    }
+          sourcePackageChain,
+        ),
+      );
+
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all([...componentTasks, ...utilityTasks]);
 
     // Merge component directories for the next target package
     componentDirectories.push(targetComponentDirs);
-    sourcePackageName.push(targetPackage);
+    sourcePackageChain.push(targetPackage);
   }
 }
 
 // Main execution
-function main() {
+async function main() {
   console.warn('🚀 Generating deep exports for pro and premium packages...\n');
 
+  // Process packages sequentially to maintain dependency order
   for (const basePackageName of Object.keys(PACKAGE_MAPPINGS)) {
     try {
-      processPackage(basePackageName);
+      // eslint-disable-next-line no-await-in-loop
+      await processPackage(basePackageName);
     } catch (error) {
       console.error(`Error processing ${basePackageName}:`, error);
       throw error;
