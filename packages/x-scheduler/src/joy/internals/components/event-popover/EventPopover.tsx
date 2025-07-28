@@ -55,8 +55,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const endDateValue = form.get('endDate');
     const endTimeValue = form.get('endTime');
 
-    const startISO = startTimeValue ? `${startDateValue}T${startTimeValue}` : `${startDateValue}`;
-    const endISO = endTimeValue ? `${endDateValue}T${endTimeValue}` : `${endDateValue}`;
+    const startISO = startTimeValue
+      ? `${startDateValue}T${startTimeValue}`
+      : `${startDateValue}T00:00`;
+    const endISO = endTimeValue ? `${endDateValue}T${endTimeValue}` : `${endDateValue}T23:59`;
 
     const start = adapter.date(startISO);
     const end = adapter.date(endISO);
@@ -140,22 +142,20 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         />
                       </Field.Label>
                     </Field.Root>
-                    {!isAllDay && (
-                      <Field.Root name="startTime">
-                        <Field.Label className="EventPopoverFormLabel">
-                          {translations.startTimeLabel}
-                          <Input
-                            className="EventPopoverInput"
-                            type="time"
-                            defaultValue={
-                              adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''
-                            }
-                            aria-describedby="startTime-error"
-                            required
-                          />
-                        </Field.Label>
-                      </Field.Root>
-                    )}
+
+                    <Field.Root name="startTime">
+                      <Field.Label className="EventPopoverFormLabel">
+                        {translations.startTimeLabel}
+                        <Input
+                          className="EventPopoverInput"
+                          type="time"
+                          defaultValue={adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''}
+                          disabled={isAllDay}
+                          aria-describedby="startTime-error"
+                          required
+                        />
+                      </Field.Label>
+                    </Field.Root>
                   </div>
                   <div className="EventPopoverDateTimeFieldsEndRow">
                     <Field.Root name="endDate">
@@ -171,19 +171,19 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         />
                       </Field.Label>
                     </Field.Root>
-                    {!isAllDay && (
-                      <Field.Root name="endTime">
-                        <Field.Label className="EventPopoverFormLabel">
-                          {translations.endTimeLabel}
-                          <Input
-                            className="EventPopoverInput"
-                            type="time"
-                            defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
-                            required
-                          />
-                        </Field.Label>
-                      </Field.Root>
-                    )}
+
+                    <Field.Root name="endTime">
+                      <Field.Label className="EventPopoverFormLabel">
+                        {translations.endTimeLabel}
+                        <Input
+                          className="EventPopoverInput"
+                          type="time"
+                          defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
+                          required
+                          disabled={isAllDay}
+                        />
+                      </Field.Label>
+                    </Field.Root>
                   </div>
                   <Field.Root
                     name="startDate"
@@ -206,7 +206,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       <Checkbox.Root
                         className="AllDayCheckboxRoot"
                         id="enable-all-day-checkbox"
-                        defaultChecked={calendarEvent.allDay}
+                        checked={isAllDay}
                         onCheckedChange={setIsAllDay}
                       >
                         <Checkbox.Indicator className="AllDayCheckboxIndicator">

@@ -99,6 +99,10 @@
   max-height: var(--space-7);
 }
 
+.joy .EventPopoverInput:disabled {
+  color: var(--disabled-text-color);
+}
+
 .joy .EventPopoverTitleInput:focus-visible {
   outline: 2px solid var(--event-color-5);
   outline-offset: var(--outline-focus-offset);
