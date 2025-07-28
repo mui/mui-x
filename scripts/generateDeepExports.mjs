@@ -136,8 +136,9 @@ async function getBestSourcePackage(targetPackagePath, utilityName, sourcePackag
 
   // Find the first non-null result (prioritizing later packages in the chain)
   for (let i = results.length - 1; i >= 0; i -= 1) {
-    if (results[i] !== null) {
-      return results[i];
+    const result = results[i];
+    if (result !== null) {
+      return result;
     }
   }
 
