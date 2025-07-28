@@ -41,7 +41,6 @@ export default function GridPivotingMovies() {
             pivoting: {
               enabled: true,
               model: pivotModel,
-              panelOpen: false,
             },
           }}
           showToolbar

@@ -13,6 +13,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../event-calendar/store';
+import { CalendarEvent } from '../../../models/events';
 import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 import { DayGridEvent } from '../event';
@@ -37,6 +38,19 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
   const visibleDate = useSelector(store, selectors.visibleDate);
   const hasDayView = useSelector(store, selectors.hasDayView);
+
+  const handleEventChangeFromPrimitive = React.useCallback(
+    (data: TimeGrid.Root.EventData) => {
+      const updatedEvent: CalendarEvent = {
+        ...selectors.getEventById(store.state, data.id)!,
+        start: data.start,
+        end: data.end,
+      };
+
+      instance.updateEvent(updatedEvent);
+    },
+    [instance, store],
+  );
 
   useModernLayoutEffect(() => {
     const body = bodyRef.current;
@@ -154,8 +168,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             </div>
           </DayGrid.Row>
         </DayGrid.Root>
-        <TimeGrid.Root className="DayTimeGridRoot">
-          <div ref={bodyRef} className="DayTimeGridBody">
+        <TimeGrid.Root className="DayTimeGridRoot" onEventChange={handleEventChangeFromPrimitive}>
+          <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
             <div className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">
                 {/* TODO: Handle DST days where there are not exactly 24 hours */}
@@ -195,13 +209,43 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                         }
                       />
                     ))}
+                    <TimeGridEventPlaceholder day={day} />
                   </TimeGrid.Column>
                 ))}
               </div>
             </div>
-          </div>
+          </TimeGrid.ScrollableContent>
         </TimeGrid.Root>
       </EventPopoverProvider>
     </div>
   );
 });
+
+function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
+  const placeholder = TimeGrid.useColumnPlaceholder();
+  const { store } = useEventCalendarContext();
+  const event = useSelector(store, selectors.getEventById, placeholder?.id ?? null);
+  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+
+  const updatedEvent = React.useMemo(() => {
+    if (!event || !placeholder) {
+      return null;
+    }
+
+    return { ...event, start: placeholder.start, end: placeholder.end };
+  }, [event, placeholder]);
+
+  if (!updatedEvent) {
+    return null;
+  }
+
+  return (
+    <TimeGridEvent
+      event={updatedEvent}
+      eventResource={resourcesByIdMap.get(updatedEvent.resource)}
+      variant="regular"
+      ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
+      readOnly
+    />
+  );
+}
