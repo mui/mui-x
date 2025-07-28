@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/export
 export * from '@mui/x-data-grid/internals';
 
 export { GridColumnHeaders } from '../components/GridColumnHeaders';
@@ -7,11 +6,9 @@ export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPro
 /**
  * x-data-grid-pro internals that are overriding the x-data-grid internals
  */
-/* eslint-disable import/export */
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-/* eslint-enable import/export */
 
 export {
   useGridColumnPinning,
