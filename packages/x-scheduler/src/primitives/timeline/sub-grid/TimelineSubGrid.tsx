@@ -46,7 +46,7 @@ export namespace TimelineSubGrid {
   export interface State {}
 
   export interface Props<Item = any> extends Omit<BaseUIComponentProps<'div', State>, 'children'> {
-    children: React.ReactNode | ((item: Item, index: number, items: Item[]) => React.ReactNode);
+    children?: React.ReactNode | ((item: Item, index: number, items: Item[]) => React.ReactNode);
   }
 
   export type Component = <Item = any>(
