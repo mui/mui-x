@@ -5,7 +5,7 @@ import {
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
 import { createSelector } from '../../utils/selectors';
-import { computeAxisValue } from './computeAxisValue';
+import { computeAxisOriginalScale, computeAxisValue } from './computeAxisValue';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
@@ -222,20 +222,71 @@ export const selectorChartRawAxis = createSelector(
   },
 );
 
+export const selectorChartDefaultXAxisId = createSelector(
+  [selectorChartRawXAxis],
+  (xAxes) => xAxes![0].id,
+);
+
+export const selectorChartDefaultYAxisId = createSelector(
+  [selectorChartRawYAxis],
+  (yAxes) => yAxes![0].id,
+);
+
+export const selectorChartXAxesScale = createSelector(
+  [
+    selectorChartRawXAxis,
+    selectorChartDrawingArea,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorPreferStrictDomainInLineCharts,
+  ],
+  (axis, drawingArea, formattedSeries, seriesConfig, preferStrictDomainInLineCharts) =>
+    computeAxisOriginalScale({
+      drawingArea,
+      formattedSeries,
+      axis,
+      seriesConfig,
+      axisDirection: 'x',
+      preferStrictDomainInLineCharts,
+    }),
+);
+
+export const selectorChartYAxesScale = createSelector(
+  [
+    selectorChartRawYAxis,
+    selectorChartDrawingArea,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorPreferStrictDomainInLineCharts,
+  ],
+  (axis, drawingArea, formattedSeries, seriesConfig, preferStrictDomainInLineCharts) =>
+    computeAxisOriginalScale({
+      drawingArea,
+      formattedSeries,
+      axis,
+      seriesConfig,
+      axisDirection: 'y',
+      preferStrictDomainInLineCharts,
+    }),
+);
+
 const EMPTY_MAP = new Map<SeriesId, Flatbush>();
 export const selectorChartSeriesEmptyFlatbushMap = createSelector([], () => EMPTY_MAP);
 
 export const selectorChartSeriesFlatbushMap = createSelector(
   [
     selectorChartSeriesProcessed,
-    selectorChartXAxis,
-    selectorChartYAxis,
-    selectorChartZoomIsInteracting,
+    selectorChartXAxesScale,
+    selectorChartYAxesScale,
+    selectorChartDefaultXAxisId,
+    selectorChartDefaultYAxisId,
   ],
   function selectChartSeriesFlatbushMap(
     allSeries,
-    { axis: xAxes, axisIds: xAxesIds },
-    { axis: yAxes, axisIds: yAxesIds },
+    xAxesScaleMap,
+    yAxesScaleMap,
+    defaultXAxisId,
+    defaultYAxisId,
   ) {
     // FIXME: Do we want to support non-scatter series here?
     const validSeries = allSeries.scatter;
@@ -244,9 +295,6 @@ export const selectorChartSeriesFlatbushMap = createSelector(
     if (!validSeries) {
       return flatbushMap;
     }
-
-    const defaultXAxisId = xAxesIds[0];
-    const defaultYAxisId = yAxesIds[0];
 
     validSeries.seriesOrder.forEach((seriesId) => {
       const {
@@ -257,12 +305,8 @@ export const selectorChartSeriesFlatbushMap = createSelector(
 
       const flatbush = new Flatbush(data.length);
 
-      const xScale = xAxes[xAxisId].scale;
-      const yScale = yAxes[yAxisId].scale;
-      const originalXScale = xScale.copy();
-      const originalYScale = yScale.copy();
-      originalXScale.range([0, 1]);
-      originalYScale.range([0, 1]);
+      const originalXScale = xAxesScaleMap[xAxisId];
+      const originalYScale = yAxesScaleMap[yAxisId];
 
       for (const datum of data) {
         // Add the points using a [0, 1]. This makes it so that we don't need to recreate the Flatbush structure when zooming.
@@ -275,5 +319,12 @@ export const selectorChartSeriesFlatbushMap = createSelector(
 
     console.log('new Flatbush for series', Array.from(flatbushMap.keys()));
     return flatbushMap;
+  },
+);
+
+export const selectorChartSeriesFlatbush = createSelector(
+  [selectorChartSeriesFlatbushMap, (_, seriesId: SeriesId) => seriesId],
+  function selectChartSeriesFlatbush(flatbushMap, seriesId) {
+    return flatbushMap.get(seriesId);
   },
 );
