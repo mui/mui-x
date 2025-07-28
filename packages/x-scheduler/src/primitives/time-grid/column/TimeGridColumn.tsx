@@ -8,9 +8,11 @@ import { useAdapter } from '../../utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../models';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import {
-  createDateFromPositionInCollection,
+  addRoundedOffsetToDate,
+  createDateFromPositionInCollectionOld,
   EVENT_DRAG_PRECISION_MINUTE,
   getCursorPositionRelativeToElement,
+  getOffsetMsInCollection,
   isDraggingTimeGridEvent,
   isDraggingTimeGridEventResizeHandler,
 } from '../../utils/drag-utils';
@@ -40,6 +42,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     () => ({
       start,
       end,
+      ref,
     }),
     [start, end],
   );
@@ -63,18 +66,22 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
       // Move event
       if (isDraggingTimeGridEvent(data)) {
-        const cursorPositionPx = position.y - data.position.y;
-
         // TODO: Avoid JS Date conversion
         const eventDuration =
           (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
           (60 * 1000);
 
-        const newStartDate = createDateFromPositionInCollection({
+        const cursorOffsetMs = getOffsetMsInCollection({
           adapter,
           collectionStart: start,
           collectionEnd: end,
-          position: cursorPositionPx / domElement!.offsetHeight,
+          position: position.y / domElement!.offsetHeight,
+        });
+
+        const newStartDate = addRoundedOffsetToDate({
+          adapter,
+          date: start,
+          offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs,
         });
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
@@ -85,7 +92,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       // Resize event
       if (isDraggingTimeGridEventResizeHandler(data)) {
         const cursorPositionPx = position.y - data.position.y;
-        const cursorDate = createDateFromPositionInCollection({
+        const cursorDate = createDateFromPositionInCollectionOld({
           adapter,
           collectionStart: start,
           collectionEnd: end,

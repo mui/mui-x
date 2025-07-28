@@ -40,9 +40,7 @@ export function isDraggingDayGridEvent(data: any): data is DayGridEvent.DragData
   return data.source === 'DayGridEvent';
 }
 
-export function createDateFromPositionInCollection(
-  parameters: CreateDateFromPositionInCollectionParameters,
-): SchedulerValidDate {
+export function getOffsetMsInCollection(parameters: GetOffsetMsInCollectionMsParameters): number {
   const { adapter, collectionStart, collectionEnd, position } = parameters;
 
   // TODO: Avoid JS date conversion
@@ -52,15 +50,10 @@ export function createDateFromPositionInCollection(
   const collectionEndTimestamp = getTimestamp(collectionEnd);
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
-  const positionInCollectionMs = collectionDurationMs * position;
-  const roundedPositionInCollectionMs =
-    Math.round(positionInCollectionMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
-
-  // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-  return adapter.addSeconds(collectionStart, roundedPositionInCollectionMs / 1000);
+  return Math.round(collectionDurationMs * position);
 }
 
-interface CreateDateFromPositionInCollectionParameters {
+interface GetOffsetMsInCollectionMsParameters {
   adapter: Adapter;
   collectionStart: SchedulerValidDate;
   collectionEnd: SchedulerValidDate;
@@ -69,4 +62,39 @@ interface CreateDateFromPositionInCollectionParameters {
    * Must be a value between 0 and 1, where 0 is the start of the collection and 1 is the end.
    */
   position: number;
+}
+
+export function createDateFromPositionInCollectionOld(
+  parameters: CreateDateFromPositionInCollectionParametersOld,
+): SchedulerValidDate {
+  const { adapter, collectionStart } = parameters;
+
+  const offsetMs = getOffsetMsInCollection(parameters);
+
+  // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
+  return addRoundedOffsetToDate({
+    date: collectionStart,
+    offsetMs,
+    adapter,
+  });
+}
+
+interface CreateDateFromPositionInCollectionParametersOld
+  extends GetOffsetMsInCollectionMsParameters {}
+
+export function addRoundedOffsetToDate(
+  parameters: AddRoundedOffsetToDateParameters,
+): SchedulerValidDate {
+  const { date, offsetMs, adapter } = parameters;
+
+  const roundedOffset = Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
+
+  // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
+  return adapter.addSeconds(date, roundedOffset / 1000);
+}
+
+interface AddRoundedOffsetToDateParameters {
+  adapter: Adapter;
+  date: SchedulerValidDate;
+  offsetMs: number;
 }

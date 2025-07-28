@@ -11,6 +11,10 @@ export interface TimeGridColumnContext {
    * The end date and time of the column
    */
   end: SchedulerValidDate;
+  /**
+   * The ref containing the DOM element of the column.
+   */
+  ref: React.RefObject<HTMLDivElement | null>;
 }
 
 export const TimeGridColumnContext = React.createContext<TimeGridColumnContext | undefined>(
