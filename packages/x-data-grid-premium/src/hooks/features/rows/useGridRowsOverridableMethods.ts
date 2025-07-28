@@ -9,6 +9,7 @@ import {
   gridRowsLookupSelector,
   gridColumnLookupSelector,
   GridUpdateRowParams,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -141,40 +142,50 @@ export const useGridRowsOverridableMethods = (
         let updatedSourceRow = { ...originalSourceRow };
         const targetRow = dataRowIdToModelLookup[target.id];
 
-        // Get grouping rules which include both getter and setter functions
-        const groupingRules = getGroupingRules({
-          sanitizedRowGroupingModel,
-          columnsLookup,
-        });
+        if (props.dataSource?.setGroupKey) {
+          // `setGroupKey()` handles the reverse of `getGroupKey()` for saving the row back to server
+          // For example if `getGroupKey()` extracts a complex key from the row, `setGroupKey()` will save the row back to server with the same key
+          // getGroupKey: (row) => row.user.firstName;
+          // setGroupKey: (row, key) => {
+          //   row.user.firstName = key;
+          //   return row;
+          // }
+          updatedSourceRow = props.dataSource.setGroupKey(
+            updatedSourceRow,
+            (targetGroup as GridGroupNode).groupingKey as string,
+          );
+        } else {
+          // Get grouping rules which include both getter and setter functions
+          const groupingRules = getGroupingRules({
+            sanitizedRowGroupingModel,
+            columnsLookup,
+          });
 
-        // Update each grouping field on the source row
-        for (const groupingRule of groupingRules) {
-          const colDef = columnsLookup[groupingRule.field];
+          // Update each grouping field on the source row
+          for (const groupingRule of groupingRules) {
+            const colDef = columnsLookup[groupingRule.field];
 
-          if (groupingRule.groupingValueSetter && colDef) {
-            // Get the target row's grouping value for this field
-            const targetGroupingValue = getCellGroupingCriteria({
-              row: targetRow,
-              colDef,
-              groupingRule,
-              apiRef,
-            }).key;
+            if (groupingRule.groupingValueSetter && colDef) {
+              const targetGroupingValue = getCellGroupingCriteria({
+                row: targetRow,
+                colDef,
+                groupingRule,
+                apiRef,
+              }).key;
 
-            // Use the setter to update the source row
-            updatedSourceRow = groupingRule.groupingValueSetter(
-              targetGroupingValue,
-              updatedSourceRow,
-              colDef,
-              apiRef,
-            );
-          } else {
-            // Fallback to direct field assignment
-            updatedSourceRow[groupingRule.field] = targetRow[groupingRule.field];
+              updatedSourceRow = groupingRule.groupingValueSetter(
+                targetGroupingValue,
+                updatedSourceRow,
+                colDef,
+                apiRef,
+              );
+            } else {
+              updatedSourceRow[groupingRule.field] = targetRow[groupingRule.field];
+            }
           }
         }
 
-        // Function to commit the state update
-        const commitStateUpdate = (finalSourceRow: any) => {
+        const commitStateUpdate = (finalSourceRow: GridValidRowModel) => {
           apiRef.current.setState((state) => {
             const updatedSourceChildren = sourceChildren.filter((rowId) => rowId !== sourceRowId);
 
@@ -310,11 +321,9 @@ export const useGridRowsOverridableMethods = (
               }
             }
           } else {
-            // No changes, just commit the original state update
             commitStateUpdate(updatedSourceRow);
           }
         } else {
-          // Priority 3: Direct state update
           commitStateUpdate(updatedSourceRow);
         }
       } else {
@@ -327,7 +336,7 @@ export const useGridRowsOverridableMethods = (
         );
       }
     },
-    [apiRef, processRowUpdate, onProcessRowUpdateError, dataSource],
+    [apiRef, processRowUpdate, onProcessRowUpdateError, dataSource, props.dataSource],
   );
 
   return {

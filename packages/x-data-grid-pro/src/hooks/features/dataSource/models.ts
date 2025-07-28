@@ -16,9 +16,9 @@ export interface GridGetRowsResponsePro extends GridGetRowsResponse {}
 
 export interface GridGetRowsParamsPro extends GridGetRowsParams {
   /**
-   * Array of keys returned by `getGroupKey` of all the parent rows until the row for which the data is requested
-   * `getGroupKey` prop must be implemented to use this.
-   * Useful for `treeData` and `rowGrouping` only.
+   * Array of keys returned by `getGroupKey()` of all the parent rows until the row for which the data is requested
+   * `getGroupKey()` prop must be implemented to use this.
+   * Used with "tree data" and "row grouping" features only.
    */
   groupKeys?: string[];
 }
@@ -31,11 +31,50 @@ export interface GridDataSourcePro extends Omit<GridDataSource, 'getRows'> {
    */
   getRows(params: GridGetRowsParamsPro): Promise<GridGetRowsResponsePro>;
   /**
-   * Used to group rows by their parent group. Replaces `getTreeDataPath` used in client side tree-data.
+   * Used to group rows by their parent group.
+   * Replaces `getTreeDataPath()` used in client side tree-data
+   * Replaces `colDef.groupingValueGetter` used in client side row grouping
+   *
    * @param {GridRowModel} row The row to get the group key of.
    * @returns {string} The group key for the row.
+   * @example
+   * // Simple data
+   * getGroupKey: (row) => row.name
+   *
+   * @example
+   * // Nested data
+   * getGroupKey: (row) => row.user.firstName
+   *
+   * @example
+   * // Complex data
+   * getGroupKey: (row) => `${row.firstName}-${row.occupation}`
    */
   getGroupKey?: (row: GridValidRowModel) => string;
+  /**
+   * Used to update the group key of a row when it's moved to a different group. e.g by row reordering
+   * This is the inverse operation of `getGroupKey()` and is done in order to sync the row with the server.
+   *
+   * @param {GridValidRowModel} row The row to update.
+   * @param {string} groupKey The new group key for the row.
+   * @returns {GridValidRowModel} The updated row with the new group key applied.
+   * @example
+   * // Simple data
+   * setGroupKey: (row, groupKey) => ({ ...row, name: groupKey })
+   *
+   * @example
+   * // Nested data
+   * setGroupKey: (row, groupKey) => ({
+   *   ...row, user: { ...row.user, firstName: groupKey }
+   * })
+   *
+   * @example
+   * // Complex data
+   * setGroupKey: (row, groupKey) => {
+   *   const [firstName, occupation] = groupKey.split('-');
+   *   return { ...row, firstName, occupation };
+   * }
+   */
+  setGroupKey?: (row: GridValidRowModel, groupKey: string) => GridValidRowModel;
   /**
    * Used to determine the number of children a row has on server.
    * @param {GridRowModel} row The row to check the number of children.
