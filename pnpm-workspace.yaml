@@ -10,7 +10,7 @@ catalog:
   '@babel/plugin-transform-react-constant-elements': ^7.27.1
   '@babel/plugin-transform-runtime': ^7.28.0
   '@babel/preset-typescript': ^7.27.1
-  '@babel/runtime': ^7.27.6
+  '@babel/runtime': ^7.28.2
   '@babel/traverse': ^7.28.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
