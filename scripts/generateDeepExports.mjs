@@ -37,7 +37,7 @@ const IDENTIFIER_LINE =
   '// Re-export automatically generated, to customize, simply remove this line.';
 
 const BLOCK_IDENTIFIER_LINE_START =
-  '// Re-export-block automatically generated, to customize, simply remove the block.';
+  '// This re-export-block is automatically generated, to customize, simply remove the block.';
 const BLOCK_IDENTIFIER_LINE_END = '// End of re-export-block';
 
 /**
