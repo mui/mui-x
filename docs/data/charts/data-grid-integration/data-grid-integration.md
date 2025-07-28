@@ -12,8 +12,6 @@ This integration is possible via the `<GridChartsIntegrationContextProvider />` 
 
 Check [Data Grid - Charts integration](/x/react-data-grid/charts-integration/) for more information and examples.
 
-## Basic integration
+The demo below shows the mentioned elements combined together to visualize the grid's data.
 
-The demo below shows all the elements needed to have the grid and charts integration working.
-
-{{"demo": "../../data-grid/charts-integration/GridChartsIntegrationRowGrouping.js", "bg": "inline"}}
+{{"demo": "../../data-grid/charts-integration/GridChartsIntegrationCustomization.js", "bg": "inline"}}
