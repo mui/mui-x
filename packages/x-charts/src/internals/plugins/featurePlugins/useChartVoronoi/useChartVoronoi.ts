@@ -10,9 +10,11 @@ import { getSVGPoint } from '../../../getSVGPoint';
 import { useSelector } from '../../../store/useSelector';
 import {
   selectorChartAxisZoomData,
+  selectorChartSeriesEmptyFlatbushMap,
   selectorChartSeriesFlatbushMap,
   selectorChartXAxis,
   selectorChartYAxis,
+  selectorChartZoomIsInteracting,
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
@@ -29,8 +31,18 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
+  const isZoomInteracting = useSelector(store, selectorChartZoomIsInteracting);
   const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
-  const flatbushMap = useSelector(store, selectorChartSeriesFlatbushMap);
+
+  useEnhancedEffect(() => {
+    console.log({ isZoomInteracting });
+  }, [isZoomInteracting]);
+
+  const flatbushMap = useSelector(
+    store,
+    // @ts-expect-error
+    isZoomInteracting ? selectorChartSeriesEmptyFlatbushMap : selectorChartSeriesFlatbushMap,
+  );
 
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
@@ -118,7 +130,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         const pointY =
           yZoomStart +
           (1 - (svgPoint.y - drawingArea.top) / drawingArea.height) * (yZoomEnd - yZoomStart);
-        const closestPointIndex = flatbush.neighbors(
+        const closestPointIndex = (flatbush as any).neighbors(
           pointX,
           pointY,
           1,

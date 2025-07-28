@@ -222,8 +222,16 @@ export const selectorChartRawAxis = createSelector(
   },
 );
 
+const EMPTY_MAP = new Map<SeriesId, Flatbush>();
+export const selectorChartSeriesEmptyFlatbushMap = createSelector([], () => EMPTY_MAP);
+
 export const selectorChartSeriesFlatbushMap = createSelector(
-  [selectorChartSeriesProcessed, selectorChartXAxis, selectorChartYAxis],
+  [
+    selectorChartSeriesProcessed,
+    selectorChartXAxis,
+    selectorChartYAxis,
+    selectorChartZoomIsInteracting,
+  ],
   function selectChartSeriesFlatbushMap(
     allSeries,
     { axis: xAxes, axisIds: xAxesIds },
@@ -267,12 +275,5 @@ export const selectorChartSeriesFlatbushMap = createSelector(
 
     console.log('new Flatbush for series', Array.from(flatbushMap.keys()));
     return flatbushMap;
-  },
-);
-
-export const selectorChartSeriesFlatbush = createSelector(
-  [selectorChartSeriesFlatbushMap, (_, seriesId: SeriesId) => seriesId],
-  function selectChartSeriesFlatbush(flatbushMap, seriesId) {
-    return flatbushMap.get(seriesId);
   },
 );
