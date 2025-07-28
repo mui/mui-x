@@ -51,6 +51,15 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     );
   }, [draggedEvent, placeholder, events]);
 
+  const isCurrentMonth = adapter.isSameMonth(date, visibleDate);
+  const isToday = adapter.isSameDay(date, today);
+
+  const visibleEvents =
+    eventsWithPlaceholder.length > maxEvents
+      ? eventsWithPlaceholder.slice(0, maxEvents - 1) // We keep one slot for the "X more" line
+      : eventsWithPlaceholder;
+  const hiddenCount = eventsWithPlaceholder.length - maxEvents;
+
   const cellNumberContent = (
     <span className="MonthViewCellNumber">
       {isFirstDayOfMonth
@@ -59,11 +68,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     </span>
   );
 
-  const isCurrentMonth = adapter.isSameMonth(date, visibleDate);
-  const isToday = adapter.isSameDay(date, today);
-
-  const visibleEvents = eventsWithPlaceholder.slice(0, maxEvents);
-  const hiddenCount = eventsWithPlaceholder.length - maxEvents;
   return (
     <DayGrid.Cell
       ref={ref}
@@ -101,7 +105,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           }
         />
       ))}
-      {hiddenCount > 0 && eventsWithPlaceholder.length > 0 && (
+      {hiddenCount > 0 && (
         <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
       )}
     </DayGrid.Cell>
