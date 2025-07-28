@@ -1,5 +1,6 @@
 'use client';
 import { sankey, sankeyLinkHorizontal, sankeyJustify } from '@mui/x-charts-vendor/d3-sankey';
+import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
   SankeyLayout,
   SankeyLayoutLink,
@@ -23,12 +24,12 @@ import { findCycles } from './findCycles';
  */
 export function calculateSankeyLayout(
   data: SankeyValueType,
-  width: number,
-  height: number,
+  drawingArea: ChartDrawingArea,
   nodeWidth: number = 15,
   nodeGap: number = 10,
   iterations: number = 32,
 ): SankeyLayout {
+  const { width, height, left, top, bottom, right } = drawingArea;
   if (!data || !data.nodes || !data.links || data.nodes.length === 0) {
     return { nodes: [], links: [] };
   }
@@ -45,8 +46,8 @@ export function calculateSankeyLayout(
     .nodeAlign(sankeyJustify)
     .extent([
       // TODO: gotta take margins into account
-      [0, 0],
-      [width, height],
+      [left, top],
+      [width + right, height + bottom],
     ])
     .nodeId((d) => d.id)
     .iterations(iterations);
