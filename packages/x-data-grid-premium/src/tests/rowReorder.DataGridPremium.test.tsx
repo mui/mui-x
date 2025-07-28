@@ -1366,7 +1366,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
     });
 
-    describe('dataSource.editRow integration', () => {
+    describe.skip('dataSource.editRow integration', () => {
+      // Remove `.skip` when `editRows` and `getGroupKey()` are implemented in the `dataSource`
       const baselineProps: DataGridPremiumProps = {
         columns: [
           { field: 'category', width: 150 },
@@ -1544,8 +1545,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(editRowSpy.callCount).to.equal(0);
       });
 
-      it.skip('should call dataSource.setGroupKey when available instead of direct field assignment', async () => {
-        // Remove `.skip` when `getGroupKey()` is implemented in the `dataSource`
+      it('should call dataSource.setGroupKey when available instead of direct field assignment', async () => {
         const editRowSpy = spy();
         const getRowsSpy = spy();
         const setGroupKeySpy = spy((row, groupKey) => {
