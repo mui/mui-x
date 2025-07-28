@@ -948,6 +948,9 @@ importers:
       flatbush:
         specifier: ^4.4.1
         version: 4.4.1(patch_hash=8acce5e8279055b3ac0534169bade2a3a7b5dbdb2d264ba775746a77d78ff41b)
+      flatqueue:
+        specifier: ^2.0.3
+        version: 2.0.3
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
