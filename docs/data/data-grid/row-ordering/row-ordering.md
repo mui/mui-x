@@ -85,14 +85,20 @@ This approach can also be used to change the location of the toggle column.
 For now, row reordering is disabled if sorting is applied to the Data Grid.
 :::
 
-## Row reordering with tree data and grouping 🚧
+## Row reordering with tree data 🚧
 
 :::warning
-This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/4821) to help us prioritize it.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/7774) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
 With this feature, users would be able to reorder rows in use cases that also involve tree data and/or row grouping.
+
+## Row reordering with row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+This feature allows users to reorder rows within grouped data, making it easy to adjust the order of groups and their contents directly in the grid.
+
+For more details, see the documentation section [Row grouping > Row reordering](/x/react-data-grid/row-grouping/#reorder-row-grouping-rows)
 
 ## API
 

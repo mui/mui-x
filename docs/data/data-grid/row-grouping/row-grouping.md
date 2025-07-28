@@ -215,10 +215,10 @@ In the following example, the **Company** column is not groupable through the in
 
 {{"demo": "RowGroupingReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Using groupingValueGetter for complex grouping value
+## Using groupingValueGetter() for complex grouping value
 
 The grouping value must be either a string, a number, `null`, or `undefined`.
-If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
+If your cell value is more complex, pass a `groupingValueGetter()` property to the column definition to convert it into a valid value.
 
 ```ts
 const columns: GridColDef[] = [
@@ -376,6 +376,53 @@ Row selection propagation has some limitations:
   Consider opening a [GitHub issue](https://github.com/mui/mui-x/issues/new?template=2.feature.yml) if you need this behavior.
 
 :::
+
+## Reorder row grouping rows
+
+Row reordering allows the users to drag and drop the rows to update their order.
+To enable this feature with the row grouping, pass the `rowReordering` prop on the Data Grid Premium component:
+
+```tsx
+<DataGridPremium rowGroupingModel={['category']} rowReordering />
+```
+
+{{"demo": "RowGroupingReordering.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+
+There's currently a limitation to the multi-level row grouping. You can not move a parent on second or higher to another parent at a lower level because it will essentially invoke bulk row editing.
+
+For example in movies grouped by Company and Director:
+
+⛔️ You can not move a director parent row from one company to another, because it would mean multiple rows being updated i.e. multiple `processRowUpdate` calls.
+
+✅ You can reorder leaf rows from one director to another or move directors around within same company.
+
+Please open a new issue if that is a use-case you are interested in.
+
+:::
+
+### Usage with groupingValueSetter()
+
+If you use [`colDef.groupingValueGetter()`](#using-groupingvaluegetter-for-complex-grouping-value) to handle complex grouping values, in order for grouping across rows to work, you must also use the `colDef.groupingValueSetter()` which is essentially the inverse of `groupingValueGetter()`.
+
+It should return the updated row based on the groupKey (`value`) corresponding to the target group.
+
+```ts
+const columns: GridColDef[] = [
+  {
+    field: 'composer',
+    groupingValueGetter: (value) => value.name,
+    groupingValueSetter: (value, row) => ({
+      ...row,
+      composer: { name: value },
+    }),
+  },
+  // ...
+];
+```
+
+{{"demo": "RowGroupingGroupingValueSetter.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Get all rows in a group
 
