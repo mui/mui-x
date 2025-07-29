@@ -89,8 +89,7 @@ MUI X Premium unlocks the most advanced features of the Data Grid, including ro
 The Premium version is available under a commercial license—visit the [Pricing page](https://mui.com/pricing/) for details.
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
-  <!-- TODO: CHARTS-PREMIUM: uncomment when ready -->
-  <!-- - [`@mui/x-charts-premium`](https://www.npmjs.com/package/@mui/x-charts-premium) -->
+- [`@mui/x-charts-premium`](https://www.npmjs.com/package/@mui/x-charts-premium)
 
 ## Support
 

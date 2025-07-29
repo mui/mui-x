@@ -1,8 +1,7 @@
 const publishDirs = {
   '@mui/x-charts': 'packages/x-charts',
   '@mui/x-charts-pro': 'packages/x-charts-pro',
-  // TODO: CHARTS-PREMIUM: Uncomment when ready
-  // '@mui/x-charts-premium': 'packages/x-charts-premium',
+  '@mui/x-charts-premium': 'packages/x-charts-premium',
   '@mui/x-charts-vendor': 'packages/x-charts-vendor',
   '@mui/x-codemod': 'packages/x-codemod',
   '@mui/x-data-grid': 'packages/x-data-grid',
