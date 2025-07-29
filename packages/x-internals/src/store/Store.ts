@@ -41,6 +41,7 @@ export class Store<State> {
       this.needsReset = true;
       return;
     }
+    this.isUpdating = true;
     let it = this.listeners.values();
     let result;
     while (((result = it.next()), !result.done)) {
@@ -52,6 +53,7 @@ export class Store<State> {
       const listener = result.value;
       listener(newState);
     }
+    this.isUpdating = false;
   }
 
   update(changes: Partial<State>) {
