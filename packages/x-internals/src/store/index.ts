@@ -1,4 +1,4 @@
 export * from './createSelector';
-export * from './useSelector';
-export * from './useSelectorEffect';
+export * from './useStore';
+export * from './useStoreEffect';
 export * from './Store';
