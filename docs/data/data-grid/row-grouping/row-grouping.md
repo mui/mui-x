@@ -435,7 +435,7 @@ There are some limitations when reordering grouped rows:
 - Leaf rows (the lowest level) can only be moved within their current group or another group at the same level—they cannot become parents.
 - Parent rows can only be reordered among other parents at the same level; they cannot be moved to a different level or group.
 
-**For single-level grouping**: You can move leaf rows between any parent, and parents can be reordered like regular rows.  
+**For single-level grouping**: You can move leaf rows between any parent, and parents can be reordered like regular rows.
 **For multi-level grouping**: Top-level groups can be reordered freely, but lower-level parents can only be reordered within their own parent group.
 
 For example, in movies grouped by "Company" and "Director":
