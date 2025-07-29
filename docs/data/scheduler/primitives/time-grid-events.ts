@@ -8,7 +8,7 @@ export const days = [
         id: '1',
         start: DateTime.fromISO('2027-02-22T07:30:00'),
         end: DateTime.fromISO('2027-02-22T08:15:00'),
-        title: 'Footing',
+        title: 'Running',
         resource: 'personal',
       },
       {
@@ -58,7 +58,7 @@ export const days = [
         id: '1',
         start: DateTime.fromISO('2027-02-25T07:30:00'),
         end: DateTime.fromISO('2027-02-25T08:15:00'),
-        title: 'Footing',
+        title: 'Running',
         resource: 'personal',
       },
     ],

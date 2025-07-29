@@ -1,0 +1,9 @@
+<CacheProvider value={cacheRtl}>
+  <ThemeProvider theme={theme}>
+    <div dir="rtl">
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <StaticDatePicker slotProps={{ shortcuts: { items: shortcutsItems } }} />
+      </LocalizationProvider>
+    </div>
+  </ThemeProvider>
+</CacheProvider>

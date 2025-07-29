@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "8.6.0",
+  "version": "8.9.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Charts components.",
   "main": "src/index.ts",
@@ -42,9 +42,9 @@
     "@mui/utils": "catalog:",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-vendor": "workspace:*",
+    "@mui/x-internal-gestures": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@mui/x-internal-gestures": "workspace:*",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },
