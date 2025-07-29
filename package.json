@@ -92,7 +92,7 @@
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:Janpot/material-ui#remove-module-field",
+    "@mui/monorepo": "github:mui/material-ui#318f6ffee1bb664f7171ca9293d3548dbafe5913",
     "@mui/utils": "catalog:",
     "@next/eslint-plugin-next": "15.4.4",
     "@octokit/plugin-retry": "^8.0.1",
