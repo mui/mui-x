@@ -718,7 +718,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.rowReorderCellPlaceholder}`]: {
       display: 'none',
     },
-    [`& .${c['columnHeader--dragging']}, & .${c['row--dragging']}`]: {
+    [`& .${c['columnHeader--dragging']}`]: {
       background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
@@ -728,7 +728,9 @@ export const GridRootStyles = styled('div', {
       background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: vars.colors.interactive.disabledOpacity,
+      border: '1px solid var(--DataGrid-rowBorderColor)',
+      color: vars.colors.foreground.base,
+      transform: 'translateZ(0)',
 
       [`& .${c.rowReorderCellPlaceholder}`]: {
         padding: '0 6px',
