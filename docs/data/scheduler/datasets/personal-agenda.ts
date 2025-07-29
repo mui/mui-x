@@ -89,7 +89,7 @@ export const initialEvents: CalendarEvent[] = [
     resource: 'work',
   },
   {
-    id: 'client-call-5',
+    id: 'design-review-1',
     start: DateTime.fromISO('2025-07-08T15:00:00'),
     end: DateTime.fromISO('2025-07-08T17:00:00'),
     title: 'Design review Scheduler',
@@ -130,7 +130,7 @@ export const initialEvents: CalendarEvent[] = [
 
   // Birthday events
   {
-    id: '7',
+    id: 'birthdays-1',
     start: DateTime.fromISO('2025-07-14T03:00:00'),
     end: DateTime.fromISO('2025-07-14T04:00:00'),
     title: "Alice's Birthday",
@@ -139,7 +139,7 @@ export const initialEvents: CalendarEvent[] = [
     allDay: true,
   },
   {
-    id: '8',
+    id: 'birthdays-2',
     start: DateTime.fromISO('2025-07-18T03:00:00'),
     end: DateTime.fromISO('2025-07-18T04:00:00'),
     title: `Bob's Birthday`,
@@ -148,7 +148,7 @@ export const initialEvents: CalendarEvent[] = [
     allDay: true,
   },
   {
-    id: '8',
+    id: 'birthdays-3',
     start: DateTime.fromISO('2025-07-25T03:00:00'),
     end: DateTime.fromISO('2025-07-25T04:00:00'),
     title: `Richard's Birthday`,

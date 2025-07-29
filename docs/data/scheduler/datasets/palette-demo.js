@@ -6,7 +6,6 @@ export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 const START_OF_FIRST_WEEK = defaultVisibleDate.startOf('week');
 
 export const initialEvents = [
-  // Resource A events
   {
     id: 'a-1',
     start: START_OF_FIRST_WEEK.set({ hour: 9 }),
@@ -36,10 +35,10 @@ export const initialEvents = [
     resource: 'b',
   },
   {
-    id: 'b-1',
+    id: 'b-2',
     start: START_OF_FIRST_WEEK.set({ hour: 14 }),
     end: START_OF_FIRST_WEEK.set({ hour: 17 }),
-    title: 'Event B1',
+    title: 'Event B2',
     resource: 'b',
   },
   {
