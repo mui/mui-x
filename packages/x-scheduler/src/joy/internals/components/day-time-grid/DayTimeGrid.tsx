@@ -181,7 +181,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 <div
                   key={day.toString()}
                   className="DayTimeGridAllDayEventsCell"
-                  aria-labelledby={`DayTimeGridHeaderCell-${day.toString()}`}
+                  aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
                   role="gridcell"
                   data-weekend={isWeekend(adapter, day) ? '' : undefined}
                 />
@@ -225,7 +225,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                             event={event}
                             eventResource={resourcesByIdMap.get(event.resource)}
                             variant="regular"
-                            ariaLabelledBy={`DayTimeGridHeaderCell-${day.toString()}`}
+                            ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
                           />
                         }
                       />
@@ -265,7 +265,7 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       event={updatedEvent}
       eventResource={resourcesByIdMap.get(updatedEvent.resource)}
       variant="regular"
-      ariaLabelledBy={`DayTimeGridHeaderCell-${day.toString()}`}
+      ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
       readOnly
     />
   );

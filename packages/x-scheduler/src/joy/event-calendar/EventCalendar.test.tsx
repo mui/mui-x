@@ -37,8 +37,8 @@ describe('EventCalendar', () => {
     expect(mondayEvent.textContent).to.equal('Running7:30 AM');
     expect(tuesdayEvent.textContent).to.equal('Weekly4:00 PM - 5:00 PM');
 
-    expect(mondayEvent.getAttribute('aria-labelledby')).to.include('TimeGridHeaderCell-26');
-    expect(tuesdayEvent.getAttribute('aria-labelledby')).to.include('TimeGridHeaderCell-27');
+    expect(mondayEvent.getAttribute('aria-labelledby')).to.include('DayTimeGridHeaderCell-26');
+    expect(tuesdayEvent.getAttribute('aria-labelledby')).to.include('DayTimeGridHeaderCell-27');
 
     expect(screen.getByRole('columnheader', { name: /Monday 26/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Tuesday 27/i })).not.to.equal(null);
