@@ -34,10 +34,33 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleRef = useForkRef(forwardedRef, containerRef);
 
   const { store, instance } = useEventCalendarContext();
-  const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
   const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
   const visibleDate = useSelector(store, selectors.visibleDate);
   const hasDayView = useSelector(store, selectors.hasDayView);
+  const daysWithEvents = useSelector(store, selectors.eventsToRenderGroupedByDay, {
+    days,
+    shouldOnlyRenderEventInOneCell: true,
+  });
+
+  const dayWithEventsGroupedByCategory = React.useMemo(() => {
+    return daysWithEvents.map(({ day, events }) => {
+      const regularEvents: CalendarEvent[] = [];
+      const allDayEvents: CalendarEvent[] = [];
+      for (const event of events) {
+        if (event.allDay) {
+          allDayEvents.push(event);
+        } else {
+          regularEvents.push(event);
+        }
+      }
+
+      return {
+        day,
+        allDayEvents,
+        regularEvents,
+      };
+    });
+  }, [daysWithEvents]);
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
@@ -60,7 +83,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     }
     const hasScroll = body.scrollHeight > body.clientHeight;
     allDayHeader.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
-  }, [getEventsStartingInDay]);
+  }, [daysWithEvents]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
@@ -82,10 +105,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <div className="DayTimeGridHeader">
           <div className="DayTimeGridGridRow DayTimeGridHeaderRow" role="row">
             <div className="DayTimeGridAllDayEventsCell" />
-            {days.map((day) => (
+            {dayWithEventsGroupedByCategory.map(({ day }) => (
               <div
-                key={day.day.toString()}
-                id={`DayTimeGridHeaderCell-${day.day.toString()}`}
+                key={day.toString()}
+                id={`DayTimeGridHeaderCell-${day.toString()}`}
                 role="columnheader"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
               >
@@ -122,12 +145,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
-            {days.map((day, dayIndex) =>
-              getEventsStartingInDay(day, days[0]).allDayEvents.map((event) => {
+            {dayWithEventsGroupedByCategory.map(({ day, allDayEvents }, dayIndex) =>
+              allDayEvents.map((event) => {
                 // Calculate the duration of the event in days
-                const eventStart = adapter.startOfDay(event.start);
-                const eventEnd = adapter.startOfDay(event.end);
-                const durationInDays = eventEnd.diff(eventStart, 'days').days + 1;
+                const durationInDays = adapter.startOfDay(event.end).diff(day, 'days').days + 1;
 
                 // Calculate grid column start (1-based) and span
                 const gridColumnStart = dayIndex + 1;
@@ -142,7 +163,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                         event={event}
                         eventResource={resourcesByIdMap.get(event.resource)}
                         variant="allDay"
-                        ariaLabelledBy={`MonthViewHeaderCell-${days[0].day.toString()}`}
+                        ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                         style={
                           {
                             '--grid-column-start': gridColumnStart,
@@ -158,9 +179,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             <div className="AllDayGridCells">
               {days.map((day) => (
                 <div
-                  key={day.day.toString()}
+                  key={day.toString()}
                   className="DayTimeGridAllDayEventsCell"
-                  aria-labelledby={`DayTimeGridHeaderCell-${day.day.toString()}`}
+                  aria-labelledby={`DayTimeGridHeaderCell-${day.toString()}`}
                   role="gridcell"
                   data-weekend={isWeekend(adapter, day) ? '' : undefined}
                 />
@@ -188,14 +209,14 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {days.map((day) => (
+                {dayWithEventsGroupedByCategory.map(({ day, regularEvents }) => (
                   <TimeGrid.Column
-                    key={day.day.toString()}
+                    key={day.toString()}
                     value={day}
                     className="DayTimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
-                    {getEventsStartingInDay(day).regularEvents.map((event) => (
+                    {regularEvents.map((event) => (
                       <EventPopoverTrigger
                         key={event.id}
                         event={event}
@@ -204,7 +225,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                             event={event}
                             eventResource={resourcesByIdMap.get(event.resource)}
                             variant="regular"
-                            ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
+                            ariaLabelledBy={`DayTimeGridHeaderCell-${day.toString()}`}
                           />
                         }
                       />
@@ -244,7 +265,7 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       event={updatedEvent}
       eventResource={resourcesByIdMap.get(updatedEvent.resource)}
       variant="regular"
-      ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
+      ariaLabelledBy={`DayTimeGridHeaderCell-${day.toString()}`}
       readOnly
     />
   );

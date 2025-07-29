@@ -37,21 +37,23 @@ export const AgendaView = React.memo(
       () => getDayList({ date: visibleDate, amount: AGENDA_VIEW_DAYS_AMOUNT }),
       [getDayList, visibleDate],
     );
-
-    const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
+    const daysWithEvents = useSelector(store, selectors.eventsToRenderGroupedByDay, {
+      days,
+      shouldOnlyRenderEventInOneCell: false,
+    });
     const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
 
     return (
       <div ref={handleRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>
         <EventPopoverProvider containerRef={containerRef}>
-          {days.map((day) => (
+          {daysWithEvents.map(({ day, events }) => (
             <div
               className="AgendaViewRow"
-              key={day.day.toString()}
-              id={`AgendaViewRow-${day.day.toString()}`}
+              key={day.toString()}
+              id={`AgendaViewRow-${day.toString()}`}
             >
               <div
-                id={`DayHeaderCell-${day.day.toString()}`}
+                id={`DayHeaderCell-${day.toString()}`}
                 className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
               >
@@ -66,7 +68,7 @@ export const AgendaView = React.memo(
                 </div>
               </div>
               <div className="EventsList">
-                {getEventsStartingInDay(day).regularEvents.map((event) => (
+                {events.map((event) => (
                   <EventPopoverTrigger
                     key={event.id}
                     event={event}
@@ -75,7 +77,7 @@ export const AgendaView = React.memo(
                         event={event}
                         variant="compact"
                         eventResource={resourcesByIdMap.get(event.resource)}
-                        ariaLabelledBy={`DayHeaderCell-${day.day.toString()}`}
+                        ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                       />
                     }
                   />
