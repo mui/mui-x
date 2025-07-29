@@ -1,6 +1,6 @@
 // Fake data of a personal agenda
 import { DateTime } from 'luxon';
-import { CalendarEvent } from '@mui/x-scheduler/material';
+import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/material';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 
@@ -218,7 +218,7 @@ export const initialEvents: CalendarEvent[] = [
   },
 ];
 
-export const resources = [
+export const resources: CalendarResource[] = [
   { name: 'Work', id: 'work', color: 'violet' },
   { name: 'Workout', id: 'workout', color: 'jade' },
   { name: 'Birthdays', id: 'birthdays', color: 'lime' },

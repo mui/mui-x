@@ -1,25 +1,23 @@
 import * as React from 'react';
 
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
-import { MonthView } from '@mui/x-scheduler/material/month-view';
+import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
+} from '../datasets/palette-demo';
 import classes from './FullEventCalendar.module.css';
 
-export default function StandaloneMonthView() {
+export default function ColorPalettes() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <StandaloneView
+    <EventCalendar
       events={events}
       resources={resources}
       defaultVisibleDate={defaultVisibleDate}
       onEventsChange={setEvents}
-    >
-      <MonthView className={classes.Container} />
-    </StandaloneView>
+      className={classes.Container}
+    />
   );
 }
