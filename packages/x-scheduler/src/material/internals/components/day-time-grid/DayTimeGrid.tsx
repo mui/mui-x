@@ -75,7 +75,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 
   return (
-    <div ref={handleRef} className={clsx('DayTimeGridContainer', 'joy', className)} {...other}>
+    <div ref={handleRef} className={clsx('DayTimeGridContainer', 'mui', className)} {...other}>
       <EventPopoverProvider containerRef={containerRef}>
         <TimeGrid.Root className="DayTimeGridRoot" onEventChange={handleEventChangeFromPrimitive}>
           <div ref={headerWrapperRef} className="DayTimeGridHeader">

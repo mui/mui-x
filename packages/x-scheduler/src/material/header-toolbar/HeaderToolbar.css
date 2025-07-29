@@ -11,7 +11,7 @@
   font-weight: var(--font-weight-1);
 }
 
-.joy .HeaderToolbarButton {
+.mui .HeaderToolbarButton {
   background: var(--surface);
   user-select: none;
   padding: var(--space-3) var(--space-4);

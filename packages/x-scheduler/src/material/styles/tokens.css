@@ -1,6 +1,6 @@
 /* Tokens that don't depend on the color scheme */
 
-.joy {
+.mui {
   --gray-1: var(--mauve-1);
   --gray-2: var(--mauve-2);
   --gray-2-rgb: var(--mauve-2-rgb);
@@ -392,7 +392,7 @@
   --shadow-tint: 215 22% 17%;
 }
 
-.mode-dark .joy {
+.mode-dark .mui {
   --mauve-1: #121113;
   --mauve-2: #1a191b;
   --mauve-2-rgb: 26, 25, 27;
@@ -557,6 +557,6 @@
   --shadow-tint: 0 0% 0%;
 }
 
-body .joy {
+body .mui {
   background-color: var(--surface);
 }

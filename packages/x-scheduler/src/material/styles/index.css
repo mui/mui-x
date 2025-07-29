@@ -1,6 +1,6 @@
 @import './tokens.css';
 
-.joy .Button {
+.mui .Button {
   display: flex;
   align-items: center;
   padding: var(--space-2) var(--space-3);
@@ -10,74 +10,74 @@
   line-height: var(--line-height-1);
 }
 
-.joy .NeutralButton {
+.mui .NeutralButton {
   background: var(--gray-3);
   color: var(--default-text-color);
 }
 
-.joy .NeutralButton:hover {
+.mui .NeutralButton:hover {
   background: var(--gray-4);
 }
 
-.joy .NeutralButton:active {
+.mui .NeutralButton:active {
   background: var(--gray-5);
 }
 
-.joy .NeutralButton:focus-visible {
+.mui .NeutralButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
 
-.joy .PrimaryButton {
+.mui .PrimaryButton {
   background: var(--primary-9);
   color: var(--primary-1);
 }
 
-.joy .PrimaryButton:hover {
+.mui .PrimaryButton:hover {
   background: var(--primary-10);
 }
 
-.joy .PrimaryButton:active {
+.mui .PrimaryButton:active {
   background: var(--gray-11);
 }
 
-.joy .PrimaryButton:focus-visible {
+.mui .PrimaryButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
 
-.joy .SecondaryErrorButton {
+.mui .SecondaryErrorButton {
   background: var(--gray-1);
   color: var(--error-11);
 }
 
-.joy .SecondaryErrorButton:hover {
+.mui .SecondaryErrorButton:hover {
   background: var(--error-4);
 }
 
-.joy .SecondaryErrorButton:active {
+.mui .SecondaryErrorButton:active {
   background: var(--error-5);
 }
 
-.joy .SecondaryErrorButton:focus-visible {
+.mui .SecondaryErrorButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
 
-.joy .NeutralTextButton {
+.mui .NeutralTextButton {
   background: transparent;
   color: var(--default-text-color);
 }
 
-.joy .NeutralTextButton:hover {
+.mui .NeutralTextButton:hover {
   background: var(--gray-4);
 }
 
-.joy .NeutralTextButton:active {
+.mui .NeutralTextButton:active {
   background: var(--gray-5);
 }
 
-.joy .NeutralTextButton:focus-visible {
+.mui .NeutralTextButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }

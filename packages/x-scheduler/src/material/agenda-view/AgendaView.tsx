@@ -42,7 +42,7 @@ export const AgendaView = React.memo(
     const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
 
     return (
-      <div ref={handleRef} className={clsx('AgendaViewContainer', 'joy', className)} {...other}>
+      <div ref={handleRef} className={clsx('AgendaViewContainer', 'mui', className)} {...other}>
         <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => (
             <div
