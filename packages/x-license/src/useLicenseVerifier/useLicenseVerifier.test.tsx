@@ -122,6 +122,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
         render(<TestComponent packageName={'x-charts-pro'} />);
       }).to.toErrorDev(['MUI X: Component not included in your license.']);
 
+      // Any specific rules?
       // TODO: CHARTS-PREMIUM: Define how license will work for x-charts-premium
 
       expect(() => {
