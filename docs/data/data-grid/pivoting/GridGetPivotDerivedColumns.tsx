@@ -4,6 +4,7 @@ import {
   DataGridPremiumProps,
   GridColDef,
   GridPivotModel,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 
 const getPivotDerivedColumns: DataGridPremiumProps['getPivotDerivedColumns'] = (
@@ -81,8 +82,11 @@ export default function GridGetPivotDerivedColumns() {
           initialState={{
             pivoting: {
               enabled: false,
-              panelOpen: true,
               model: pivotModel,
+            },
+            sidebar: {
+              open: true,
+              value: GridSidebarValue.Pivot,
             },
           }}
           showToolbar

@@ -18,7 +18,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { isElementInteractive } from '@mui/x-internals/isElementInteractive';
 import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
 import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
@@ -223,8 +223,11 @@ function useClickAwayListener(
   });
 
   // Keep track of mouse/touch events that bubbled up through the portal.
-  const handleSynthetic = () => {
-    syntheticEventRef.current = true;
+  const handleSynthetic = (event: MuiEvent<React.SyntheticEvent>) => {
+    // Ignore events handled by our internal components
+    if (!event.defaultMuiPrevented) {
+      syntheticEventRef.current = true;
+    }
   };
 
   React.useEffect(() => {
@@ -337,6 +340,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
   const { open, popupRef, reduceAnimations } = usePickerContext();
+  const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
   const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
 
@@ -362,7 +366,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
     }
 
     if (open) {
-      lastFocusedElementRef.current = getActiveElement(document);
+      lastFocusedElementRef.current = getActiveElement(rootRefObject.current);
     } else if (
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
@@ -375,17 +379,16 @@ export function PickerPopper(inProps: PickerPopperProps) {
         }
       });
     }
-  }, [open, viewContainerRole, getCurrentViewMode]);
+  }, [open, viewContainerRole, getCurrentViewMode, rootRefObject]);
 
   const classes = useUtilityClasses(classesProp);
-  const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
 
   const handleClickAway: OnClickAway = useEventCallback((event) => {
     if (viewContainerRole === 'tooltip') {
       executeInTheNextEventLoopTick(() => {
         if (
-          rootRefObject.current?.contains(getActiveElement(document)) ||
-          popupRef.current?.contains(getActiveElement(document))
+          rootRefObject.current?.contains(getActiveElement(rootRefObject.current)) ||
+          popupRef.current?.contains(getActiveElement(popupRef.current))
         ) {
           return;
         }

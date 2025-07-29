@@ -35,6 +35,16 @@ export interface BarSeriesType
    * @default 'diverging'
    */
   stackOffset?: StackOffsetType;
+  /**
+   * If provided, the value will be used as the minimum size of the bar in pixels.
+   * This is useful to avoid bars with a size of 0.
+   *
+   * The property is ignored if the series value is `null` or `0`.
+   * It also doesn't work with stacked series.
+   *
+   * @default 0px
+   */
+  minBarSize?: number;
 }
 
 /**
@@ -48,4 +58,7 @@ export type BarItemIdentifier = {
 };
 
 export interface DefaultizedBarSeriesType
-  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}
+  extends DefaultizedProps<
+    BarSeriesType,
+    CommonDefaultizedProps | 'color' | 'layout' | 'minBarSize'
+  > {}
