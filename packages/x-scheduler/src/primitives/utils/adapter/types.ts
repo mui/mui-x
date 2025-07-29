@@ -137,7 +137,7 @@ export interface AdapterFormats {
   // TODO: Make sure the Base UI adapter support the formats below
   /**
    * The hours with minutes and meridiem without leading zeros.
-   * @example "04:44 PM"
+   * @example "4:44 PM"
    */
   hoursMinutes12h: 'h:mm a';
   /**
