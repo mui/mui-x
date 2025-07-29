@@ -815,7 +815,7 @@ export const GridRootStyles = styled('div', {
         pointerEvents: 'none',
         content: '""',
         position: 'absolute',
-        top: 0,
+        top: '1px',
         left: 0,
         width: '100%',
         height: '2px',
@@ -824,26 +824,29 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['row--dropBelow']}`]: {
       position: 'relative',
-      '&::before': {
+      '&::after': {
+        zIndex: 100,
         pointerEvents: 'none',
         content: '""',
         position: 'absolute',
-        bottom: '-2px',
+        bottom: '-3px',
         left: 0,
         width: '100%',
         height: '2px',
         backgroundColor: vars.colors.interactive.selected,
       },
       [`&.${c['row--lastVisible']}`]: {
-        '&::before': {
+        '&::after': {
           bottom:
-            'calc(var(--DataGrid-hasScrollY) * 0px + (1 - var(--DataGrid-hasScrollY)) * -2px)',
+            'calc(var(--DataGrid-hasScrollY) * 0px + (1 - var(--DataGrid-hasScrollY)) * -3px)',
         },
       },
     },
     [`& .${c['row--beingDragged']}`]: {
-      backgroundColor: vars.colors.background.overlay,
       color: vars.colors.foreground.disabled,
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
     },
   };
 
