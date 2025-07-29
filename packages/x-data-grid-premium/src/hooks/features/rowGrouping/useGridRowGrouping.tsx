@@ -316,6 +316,7 @@ export const useGridRowGrouping = (
       if (
         !sourceNode ||
         !targetNode ||
+        sourceRowIndex === targetRowIndex ||
         isAdjacentPosition(sourceRowIndex, targetRowIndex, dropPosition) ||
         (sourceNode.type === 'group' && targetNode.type === 'leaf')
       ) {
