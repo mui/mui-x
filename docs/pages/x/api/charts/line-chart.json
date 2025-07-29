@@ -101,7 +101,8 @@
   "imports": [
     "import { LineChart } from '@mui/x-charts/LineChart';",
     "import { LineChart } from '@mui/x-charts';",
-    "import { LineChart } from '@mui/x-charts-pro';"
+    "import { LineChart } from '@mui/x-charts-pro';",
+    "import { LineChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

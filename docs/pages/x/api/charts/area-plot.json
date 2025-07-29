@@ -19,7 +19,8 @@
   "imports": [
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
     "import { AreaPlot } from '@mui/x-charts';",
-    "import { AreaPlot } from '@mui/x-charts-pro';"
+    "import { AreaPlot } from '@mui/x-charts-pro';",
+    "import { AreaPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

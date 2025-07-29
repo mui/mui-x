@@ -43,7 +43,8 @@
   "imports": [
     "import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';",
     "import { ChartsYAxis } from '@mui/x-charts';",
-    "import { ChartsYAxis } from '@mui/x-charts-pro';"
+    "import { ChartsYAxis } from '@mui/x-charts-pro';",
+    "import { ChartsYAxis } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

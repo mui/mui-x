@@ -1,6 +1,7 @@
 {
   "name": "PieSeries",
   "imports": [
+    "import { PieSeries } from '@mui/x-charts-premium'",
     "import { PieSeries } from '@mui/x-charts-pro'",
     "import { PieSeries } from '@mui/x-charts'"
   ],

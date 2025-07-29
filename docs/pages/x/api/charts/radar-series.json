@@ -1,6 +1,7 @@
 {
   "name": "RadarSeries",
   "imports": [
+    "import { RadarSeries } from '@mui/x-charts-premium'",
     "import { RadarSeries } from '@mui/x-charts-pro'",
     "import { RadarSeries } from '@mui/x-charts'"
   ],

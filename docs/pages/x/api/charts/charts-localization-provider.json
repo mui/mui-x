@@ -4,7 +4,8 @@
   "imports": [
     "import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';",
     "import { ChartsLocalizationProvider } from '@mui/x-charts';",
-    "import { ChartsLocalizationProvider } from '@mui/x-charts-pro';"
+    "import { ChartsLocalizationProvider } from '@mui/x-charts-pro';",
+    "import { ChartsLocalizationProvider } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "spread": true,

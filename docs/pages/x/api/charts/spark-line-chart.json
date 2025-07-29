@@ -111,7 +111,8 @@
   "imports": [
     "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
     "import { SparkLineChart } from '@mui/x-charts';",
-    "import { SparkLineChart } from '@mui/x-charts-pro';"
+    "import { SparkLineChart } from '@mui/x-charts-pro';",
+    "import { SparkLineChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {

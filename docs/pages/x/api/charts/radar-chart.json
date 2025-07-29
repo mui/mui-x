@@ -96,7 +96,8 @@
   "imports": [
     "import { RadarChart } from '@mui/x-charts/RadarChart';",
     "import { RadarChart } from '@mui/x-charts';",
-    "import { RadarChart } from '@mui/x-charts-pro';"
+    "import { RadarChart } from '@mui/x-charts-pro';",
+    "import { RadarChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },

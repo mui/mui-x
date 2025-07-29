@@ -4,7 +4,8 @@
   "imports": [
     "import { PieArcLabel } from '@mui/x-charts/PieChart';",
     "import { PieArcLabel } from '@mui/x-charts';",
-    "import { PieArcLabel } from '@mui/x-charts-pro';"
+    "import { PieArcLabel } from '@mui/x-charts-pro';",
+    "import { PieArcLabel } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

@@ -34,7 +34,8 @@
   "imports": [
     "import { GaugeContainer } from '@mui/x-charts/Gauge';",
     "import { GaugeContainer } from '@mui/x-charts';",
-    "import { GaugeContainer } from '@mui/x-charts-pro';"
+    "import { GaugeContainer } from '@mui/x-charts-pro';",
+    "import { GaugeContainer } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "muiName": "MuiGaugeContainer",

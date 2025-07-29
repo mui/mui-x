@@ -20,7 +20,8 @@
   "imports": [
     "import { RadarGrid } from '@mui/x-charts/RadarChart';",
     "import { RadarGrid } from '@mui/x-charts';",
-    "import { RadarGrid } from '@mui/x-charts-pro';"
+    "import { RadarGrid } from '@mui/x-charts-pro';",
+    "import { RadarGrid } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {
