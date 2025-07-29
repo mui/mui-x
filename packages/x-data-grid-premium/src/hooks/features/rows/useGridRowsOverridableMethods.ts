@@ -223,14 +223,11 @@ export const useGridRowsOverridableMethods = (
                     parent: target.parent,
                   },
                 },
-                dataRowIdToModelLookup: {
-                  ...state.rows.dataRowIdToModelLookup,
-                  [source.id]: finalSourceRow,
-                },
               },
             };
           });
 
+          apiRef.current.updateRows([finalSourceRow]);
           apiRef.current.publishEvent('rowsSet');
         };
 
