@@ -2270,6 +2270,9 @@ importers:
       tsx:
         specifier: 'catalog:'
         version: 4.20.3
+      vite:
+        specifier: 'catalog:'
+        version: 7.0.6(@types/node@24.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
 
 packages:
 
