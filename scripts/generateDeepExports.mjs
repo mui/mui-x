@@ -13,7 +13,7 @@ import fs from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
 
-// Define package mappings (base -> pro])
+// Define package mappings (base -> pro)
 const PACKAGE_MAPPINGS = {
   'x-charts': {
     /**
