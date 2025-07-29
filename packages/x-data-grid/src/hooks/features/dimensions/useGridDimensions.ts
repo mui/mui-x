@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { useSelectorEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { Dimensions } from '@mui/x-virtualizer';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
@@ -162,7 +162,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   useGridEventPriority(apiRef, 'resize', handleResize);
   useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
 
-  useSelectorEffect(virtualizer.store, Dimensions.selectors.dimensions, (previous, next) => {
+  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (previous, next) => {
     if (apiRef.current.rootElementRef.current) {
       setCSSVariables(apiRef.current.rootElementRef.current, next);
     }

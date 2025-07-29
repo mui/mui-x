@@ -9,7 +9,7 @@ import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
-import { createSelector, useSelector, useSelectorEffect, Store } from '@mui/x-internals/store';
+import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions } from './dimensions';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
@@ -128,19 +128,16 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     renderInfiniteLoadingTrigger,
   } = params;
 
-  const needsHorizontalScrollbar = useSelector(
-    store,
-    Dimensions.selectors.needsHorizontalScrollbar,
-  );
+  const needsHorizontalScrollbar = useStore(store, Dimensions.selectors.needsHorizontalScrollbar);
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRenderContextReady = React.useRef(false);
 
-  const renderContext = useSelector(store, selectors.renderContext);
-  const enabledForRows = useSelector(store, selectors.enabledForRows);
-  const enabledForColumns = useSelector(store, selectors.enabledForColumns);
+  const renderContext = useStore(store, selectors.renderContext);
+  const enabledForRows = useStore(store, selectors.enabledForRows);
+  const enabledForColumns = useStore(store, selectors.enabledForColumns);
 
   /*
    * Scroll context logic
@@ -596,7 +593,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   });
 
-  useSelectorEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
+  useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
   const getters = {
     setPanels,
@@ -661,7 +658,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   return {
     getters,
-    useVirtualization: () => useSelector(store, (state) => state),
+    useVirtualization: () => useStore(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,
     getCellColSpanInfo,

@@ -7,12 +7,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import {
-  Store,
-  useSelector,
-  useSelectorEffect,
-  createSelectorMemoized,
-} from '@mui/x-internals/store';
+import { Store, useStore, useStoreEffect, createSelectorMemoized } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 
@@ -266,7 +261,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
-  useSelectorEffect(store, selectors.rootSize, (_, size) => {
+  useStoreEffect(store, selectors.rootSize, (_, size) => {
     params.onResize?.(size);
 
     if (isFirstSizing.current || !debouncedUpdateDimensions) {
@@ -301,7 +296,7 @@ function useRowsMeta(
   const isHeightMetaValid = React.useRef(false);
 
   const pinnedRows = params.pinnedRows;
-  const rowHeight = useSelector(store, selectors.rowHeight);
+  const rowHeight = useStore(store, selectors.rowHeight);
 
   const getRowHeightEntry = useEventCallback((rowId: RowId) => {
     let entry = heightCache.get(rowId);
