@@ -14,9 +14,11 @@ describe('<Timeline.Event />', () => {
     render(node) {
       return render(
         <Timeline.Root items={[]}>
-          <Timeline.Event start={start} end={end}>
-            {node}
-          </Timeline.Event>
+          <Timeline.EventRow start={start} end={end}>
+            <Timeline.Event start={start} end={end}>
+              {node}
+            </Timeline.Event>
+          </Timeline.EventRow>
         </Timeline.Root>,
       );
     },
