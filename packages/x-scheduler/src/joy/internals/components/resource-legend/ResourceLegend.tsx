@@ -26,8 +26,8 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
         className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
         value={resource.id}
         render={(rootProps, state) => (
-          // eslint-disable-next-line react/button-has-type
           <button
+            type="button"
             aria-label={
               state.checked
                 ? translations.hideEventsLabel(resource.name)
