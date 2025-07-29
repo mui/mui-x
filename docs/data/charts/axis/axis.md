@@ -262,8 +262,8 @@ Each item in the array corresponds to a group defined in the `getGrouping` funct
 
 ### Grouped axes styling
 
-In order to target a specific group, you can use the `data-group-index` attribute as a selector.
-In the example below, we change the tick color of the last group to yellow and the first group text to gray.
+In order to target a specific group, the `data-group-index` attribute can be used as a selector.
+The example below has a yellow tick color for the last group and blue text for the first group.
 
 {{"demo": "GroupedAxesStyling.js"}}
 
