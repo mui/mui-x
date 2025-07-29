@@ -331,6 +331,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
   const { open, popupRef, reduceAnimations } = usePickerContext();
+  const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
   const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
 
@@ -355,7 +356,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
     }
 
     if (open) {
-      lastFocusedElementRef.current = getActiveElement(document);
+      lastFocusedElementRef.current = getActiveElement(rootRefObject.current);
     } else if (
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
@@ -368,17 +369,16 @@ export function PickerPopper(inProps: PickerPopperProps) {
         }
       });
     }
-  }, [open, viewContainerRole, getCurrentViewMode]);
+  }, [open, viewContainerRole, getCurrentViewMode, rootRefObject]);
 
   const classes = useUtilityClasses(classesProp);
-  const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
 
   const handleClickAway: OnClickAway = useEventCallback(() => {
     if (viewContainerRole === 'tooltip') {
       executeInTheNextEventLoopTick(() => {
         if (
-          rootRefObject.current?.contains(getActiveElement(document)) ||
-          popupRef.current?.contains(getActiveElement(document))
+          rootRefObject.current?.contains(getActiveElement(rootRefObject.current)) ||
+          popupRef.current?.contains(getActiveElement(popupRef.current))
         ) {
           return;
         }
