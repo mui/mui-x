@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import { LANGUAGES } from 'docs/config';
 import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
@@ -6,6 +7,20 @@ import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityC
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
+
+function getNonComponentFolders(): string[] {
+  try {
+    return fs
+      .readdirSync(path.join(process.cwd(), 'docs/data/data-grid'), { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory() && dirent.name !== 'components')
+      .map((dirent) => `data-grid/${dirent.name}`)
+      .sort();
+  } catch (error) {
+    // Fallback to empty array if directory doesn't exist
+    console.warn('Could not read the directories:', error);
+    return [];
+  }
+}
 
 const COMPONENT_API_PAGES = [
   'src/DataGridPremium/DataGridPremium.tsx',
@@ -96,4 +111,12 @@ export default dataGridApiPages;
   },
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,
+  nonComponentFolders: [
+    ...getNonComponentFolders(),
+    'data-grid/components/usage.md',
+    'migration/migration-data-grid-v7',
+    'migration/migration-data-grid-v6',
+    'migration/migration-data-grid-v5',
+    'migration/migration-data-grid-v4',
+  ],
 };

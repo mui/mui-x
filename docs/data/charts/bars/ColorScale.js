@@ -97,10 +97,11 @@ export default function ColorScale() {
               undefined,
           },
         ]}
+        margin={{ left: 0 }}
       />
       <HighlightedCode
         code={[
-          `<ScatterChart`,
+          `<BarChart`,
           '  /* ... */',
           // ColorX
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),

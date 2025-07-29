@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.5.3",
+  "version": "8.9.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "main": "src/index.js",
@@ -41,6 +41,7 @@
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-charts-vendor": "workspace:*",
+    "@mui/x-internal-gestures": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "bezier-easing": "^2.1.0",
     "clsx": "catalog:",

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -301,7 +302,7 @@ export const useFieldV7TextField = <
 };
 
 function getActiveSectionIndex(sectionListRef: React.RefObject<PickersSectionListRef | null>) {
-  const activeElement = getActiveElement(document) as HTMLElement | undefined;
+  const activeElement = getActiveElement(sectionListRef.current?.getRoot());
   if (
     !activeElement ||
     !sectionListRef.current ||
@@ -314,6 +315,6 @@ function getActiveSectionIndex(sectionListRef: React.RefObject<PickersSectionLis
 }
 
 function isFieldFocused(sectionListRef: React.RefObject<PickersSectionListRef | null>) {
-  const activeElement = getActiveElement(document);
+  const activeElement = getActiveElement(sectionListRef.current?.getRoot());
   return !!sectionListRef.current && sectionListRef.current.getRoot().contains(activeElement);
 }

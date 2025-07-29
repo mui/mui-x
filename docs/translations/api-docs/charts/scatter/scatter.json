@@ -4,8 +4,14 @@
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {
-        "event": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
-        "scatterItemIdentifier": "The scatter item identifier."
+        "event": {
+          "name": "event",
+          "description": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+        },
+        "scatterItemIdentifier": {
+          "name": "scatterItemIdentifier",
+          "description": "The scatter item identifier."
+        }
       }
     }
   },

@@ -1,21 +1,19 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
-import { LicenseInfo } from '@mui/x-license';
-import { sharedLicenseStatuses } from '@mui/x-license/useLicenseVerifier/useLicenseVerifier';
+import { clearLicenseStatusCache, LicenseInfo } from '@mui/x-license';
 import { BarChartPro } from './BarChartPro';
 
 describe('<BarChartPro /> - License', () => {
   const { render } = createRenderer();
 
   beforeEach(() => {
-    Object.keys(sharedLicenseStatuses).forEach((key) => {
-      delete sharedLicenseStatuses[key];
-    });
+    // Clear any previous license status cache to ensure a clean test environment
+    // Needed, because we run test with "isolate: false"
+    clearLicenseStatusCache();
+    LicenseInfo.setLicenseKey('');
   });
 
   it('should render watermark when the license is missing', async () => {
-    LicenseInfo.setLicenseKey('');
-
     expect(() => render(<BarChartPro series={[]} width={100} height={100} />)).toErrorDev([
       'MUI X: Missing license key.',
     ]);
