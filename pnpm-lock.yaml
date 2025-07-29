@@ -242,6 +242,9 @@ importers:
       '@babel/core':
         specifier: 'catalog:'
         version: 7.28.0
+      '@babel/plugin-syntax-typescript':
+        specifier: ^7.27.1
+        version: 7.27.1(@babel/core@7.28.0)
       '@babel/plugin-transform-class-properties':
         specifier: ^7.27.1
         version: 7.27.1(@babel/core@7.28.0)
