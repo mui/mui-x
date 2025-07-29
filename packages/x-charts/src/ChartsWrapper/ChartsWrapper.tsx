@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { useChartRootRef } from '../../../hooks/useChartRootRef';
-import { Direction } from '../../../ChartsLegend';
-import { Position } from '../../../models';
-import { useStore } from '../../store/useStore';
-import { useSelector } from '../../store/useSelector';
-import { selectorChartPropsSize } from '../../plugins/corePlugins/useChartDimensions';
+import { useChartRootRef } from '../hooks/useChartRootRef';
+import { Direction } from '../ChartsLegend';
+import { Position } from '../models';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
 
 export interface ChartsWrapperProps {
   // eslint-disable-next-line react/no-unused-prop-types
@@ -83,8 +83,6 @@ const Root = styled('div', {
 }));
 
 /**
- * @ignore - internal component.
- *
  * Wrapper for the charts components.
  * Its main purpose is to position the HTML legend in the correct place.
  */

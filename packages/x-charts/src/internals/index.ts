@@ -1,6 +1,6 @@
 // Components
 export * from './components/ChartsAxesGradients';
-export * from './components/ChartsWrapper';
+export * from '../ChartsWrapper';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 
