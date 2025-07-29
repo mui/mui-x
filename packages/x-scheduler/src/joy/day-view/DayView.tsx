@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { DayViewProps } from './DayView.types';
-import { TimeGrid } from '../internals/components/time-grid/TimeGrid';
+import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import { useSelector } from '../../base-ui-copy/utils/store';
-import { useEventCalendarStore } from '../internals/hooks/useEventCalendarStore';
+import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { selectors } from '../event-calendar/store';
 
 export const DayView = React.memo(
@@ -11,11 +11,11 @@ export const DayView = React.memo(
     props: DayViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const store = useEventCalendarStore();
+    const { store } = useEventCalendarContext();
     const visibleDate = useSelector(store, selectors.visibleDate);
 
     const days = React.useMemo(() => [visibleDate], [visibleDate]);
 
-    return <TimeGrid ref={forwardedRef} days={days} {...props} />;
+    return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
 );

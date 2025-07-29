@@ -45,7 +45,11 @@ import {
   isStartOfRange,
   isWithinRange,
 } from '../internals/utils/date-utils';
-import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
+import {
+  calculateRangeChange,
+  calculateRangePreview,
+  resolveReferenceDate,
+} from '../internals/utils/date-range-manager';
 import { RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -341,7 +345,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
   const { calendarState, setVisibleDate, onMonthSwitchingAnimationEnd } = useCalendarState({
     value: value[0] || value[1],
-    referenceDate,
+    referenceDate: resolveReferenceDate(referenceDate, rangePosition),
     disableFuture,
     disablePast,
     maxDate,
@@ -754,7 +758,7 @@ DateRangeCalendar.propTypes = {
   onChange: PropTypes.func,
   /**
    * Callback fired on focused view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view to focus or not.
    * @param {boolean} hasFocus `true` if the view should be focused.
    */
@@ -771,7 +775,7 @@ DateRangeCalendar.propTypes = {
   onRangePositionChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
@@ -801,7 +805,10 @@ DateRangeCalendar.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.object.isRequired),
+    PropTypes.object,
+  ]),
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.

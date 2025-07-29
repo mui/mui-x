@@ -1,30 +1,16 @@
-.EventContainer {
-  /* Regular */
-  --regular-accepted-bg: var(--event-color-3);
-  --regular-line-bg: var(--event-color-12);
-  --regular-accepted-primary-text: var(--event-color-12);
-  --regular-accepted-secondary-text: var(--event-color-11);
-
-  /* Compact */
-  --compact-accepted-bg: var(--surface);
-  --compact-square-bg: var(--event-color-12);
-  --compact-accepted-primary-text: var(--event-color-12);
-  --compact-accepted-secondary-text: var(--event-color-12);
-
-  /* All Day */
-  --allDay-accepted-bg: var(--event-color-5);
-  --allDay-accepted-primary-text: var(--event-color-12);
-}
-
-.mode-dark .EventContainer {
-  --regular-accepted-bg: var(--event-color-3);
-  --compact-accepted-bg: var(--surface);
-  --allDay-accepted-bg: var(--event-color-5);
-}
-
 .EventCard {
   border-radius: var(--radius-4);
   background-color: var(--event-background);
+  position: relative;
+
+  &[data-dragging],
+  &[data-resizing] {
+    opacity: 0.5;
+  }
+
+  &:hover .EventResizeHandler {
+    opacity: 1;
+  }
 }
 
 .EventTitle {
@@ -49,11 +35,7 @@
   top: var(--y-position);
   bottom: calc(100% - var(--y-position) - var(--height));
   z-index: 2;
-
   padding: var(--space-1) var(--space-3);
-  --event-background: var(--regular-accepted-bg);
-  --event-primary-text: var(--regular-accepted-primary-text);
-  --event-secondary-text: var(--regular-accepted-secondary-text);
 }
 
 .EventCard--regular.UnderHourEventCard {
@@ -107,36 +89,20 @@
   pointer-events: none;
 }
 
-.EventCard--compact {
-  --event-background: var(--compact-accepted-bg);
-  --event-primary-text: var(--compact-accepted-primary-text);
-  --event-secondary-text: var(--compact-accepted-secondary-text);
-
-  position: relative;
-  display: flex;
-  gap: var(--space-1);
-  padding: var(--space-1) 0 var(--space-1) var(--space-4);
-}
-
-.EventCard--compact::before {
-  content: '';
+.EventResizeHandler {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  height: 4px;
   left: 0;
-  width: var(--space-2);
-  height: var(--space-2);
-  border-radius: var(--radius-1);
-  border: 1px solid var(--compact-square-bg);
-  background-color: var(--compact-square-bg);
-}
+  right: 0;
+  z-index: 3;
+  cursor: ns-resize;
+  opacity: 0;
 
-.EventCard--compact .EventTime {
-  flex-shrink: 0;
-  opacity: 0.7;
-}
+  &[data-start] {
+    top: 0;
+  }
 
-.EventCard--allDay {
-  --event-background: var(--allDay-accepted-bg);
-  --event-primary-text: var(--allDay-accepted-primary-text);
+  &[data-end] {
+    bottom: 0;
+  }
 }

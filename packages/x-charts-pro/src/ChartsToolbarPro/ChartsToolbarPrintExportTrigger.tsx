@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
-import { useChartApiContext } from '../context';
+import { useChartProApiContext } from '../context';
 import { ChartPrintExportOptions } from '../internals/plugins/useChartProExport';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 
@@ -42,7 +42,7 @@ const ChartsToolbarPrintExportTrigger = forwardRef<
 >(function ChartsToolbarPrintExportTrigger(props, ref) {
   const { render, options, onClick, ...other } = props;
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
-  const apiRef = useChartApiContext();
+  const apiRef = useChartProApiContext();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     apiRef.current.exportAsPrint(options);
@@ -73,7 +73,9 @@ ChartsToolbarPrintExportTrigger.propTypes = {
    *   - [Print/Export as PDF](https://mui.com/x/react-charts/export/#print-export-as-pdf)
    */
   options: PropTypes.shape({
+    copyStyles: PropTypes.bool,
     fileName: PropTypes.string,
+    onBeforeExport: PropTypes.func,
   }),
   /**
    * A function to customize the rendering of the component.

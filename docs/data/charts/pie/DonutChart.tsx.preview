@@ -1,0 +1,4 @@
+<PieChart
+  series={[{ innerRadius: 50, outerRadius: 100, data, arcLabel: 'value' }]}
+  {...settings}
+/>

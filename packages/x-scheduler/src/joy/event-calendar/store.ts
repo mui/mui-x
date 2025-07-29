@@ -1,27 +1,52 @@
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { createSelector, createSelectorMemoized, Store } from '../../base-ui-copy/utils/store';
 import { SchedulerValidDate } from '../../primitives/models';
-import { CalendarEvent } from '../models/events';
+import { CalendarEvent, CalendarEventId } from '../models/events';
 import { CalendarResource, CalendarResourceId } from '../models/resource';
-import { ViewType } from '../models/views';
+import { EventCalendarView } from './EventCalendar.types';
 
 const adapter = getAdapter();
 
 export type State = {
   visibleDate: SchedulerValidDate;
-  currentView: ViewType;
-  views: ViewType[];
+  view: EventCalendarView;
+  views: EventCalendarView[];
   events: CalendarEvent[];
   resources: CalendarResource[];
+  /**
+   * Visibility status for each resource.
+   * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
+   */
+  visibleResources: Map<CalendarResourceId, boolean>;
+  /**
+   * Whether the event can be dragged to change its start and end dates without changing the duration.
+   */
+  areEventsDraggable: boolean;
+  /**
+   * Whether the event start or end can be dragged to change its duration without changing its other date.
+   */
+  areEventsResizable: boolean;
 };
 
 export type EventCalendarStore = Store<State>;
 
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
-  currentView: createSelector((state: State) => state.currentView),
+  view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
+  hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
+  visibleResourcesList: createSelectorMemoized(
+    (state: State) => state.resources,
+    (state: State) => state.visibleResources,
+    (resources, visibleResources) =>
+      resources
+        .filter(
+          (resource) =>
+            !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true,
+        )
+        .map((resource) => resource.id),
+  ),
   resourcesByIdMap: createSelectorMemoized(
     (state: State) => state.resources,
     (resources) => {
@@ -34,9 +59,14 @@ export const selectors = {
   ),
   getEventsStartingInDay: createSelectorMemoized(
     (state: State) => state.events,
-    (events) => {
+    (state: State) => state.visibleResources,
+    (events, visibleResources) => {
       const map = new Map<string, CalendarEvent[]>();
       for (const event of events) {
+        if (event.resource && visibleResources.get(event.resource) === false) {
+          continue; // Skip events for hidden resources
+        }
+
         const dayKey = adapter.format(event.start, 'keyboardDate');
         if (!map.has(dayKey)) {
           map.set(dayKey, []);
@@ -50,4 +80,14 @@ export const selectors = {
       };
     },
   ),
+  // TODO: Add a new data structure (Map?) to avoid linear complexity here.
+  getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
+    state.events.find((event) => event.id === eventId),
+  ),
+  isEventDraggable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
+    return !readOnly && state.areEventsDraggable;
+  }),
+  isEventResizable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
+    return !readOnly && state.areEventsResizable;
+  }),
 };
