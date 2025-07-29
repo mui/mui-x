@@ -404,7 +404,7 @@ For example, on a Data Grid having movies grouped by companies, if a row "Avatar
  }
 ```
 
-The Data Grid handles this row update automatically unless there's a [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) callback passed in which case, the user can handle how the row will be processed.
+The Data Grid updates the row internally, to persist the change on the server [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) callback must be used.
 
 ### Usage with groupingValueSetter()
 
