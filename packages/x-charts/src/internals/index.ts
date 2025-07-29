@@ -1,6 +1,20 @@
+import {
+  ChartsWrapper as OriginalChartsWrapper,
+  ChartsWrapperProps as OriginalChartsWrapperProps,
+} from '../ChartsWrapper';
+/**
+ * @deprecated Use `ChartsWrapper` from `@mui/x-charts/ChartsWrapper` instead.
+ * This will be removed in the next major version.
+ */
+export const ChartsWrapper = OriginalChartsWrapper;
+/**
+ * @deprecated Use `ChartsWrapperProps` from `@mui/x-charts/ChartsWrapper` instead.
+ * This will be removed in the next major version.
+ */
+export type ChartsWrapperProps = OriginalChartsWrapperProps;
+
 // Components
 export * from './components/ChartsAxesGradients';
-export * from '../ChartsWrapper';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 
