@@ -519,6 +519,8 @@
     },
     "onPivotPanelOpenChange": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>sidebarOpen</code> and <code>sidebarClose</code> events or corresponding event handlers <code>onSidebarOpen()</code> and <code>onSidebarClose()</code> instead.",
       "signature": {
         "type": "function(pivotPanelOpen: boolean) => void",
         "describedArgs": ["pivotPanelOpen"]
@@ -626,6 +628,20 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onSidebarClose": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridSidebarParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onSidebarOpen": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridSidebarParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
     "onSortModelChange": {
       "type": { "name": "func" },
       "signature": {
@@ -670,7 +686,12 @@
         "description": "{ columns: Array&lt;object&gt;, rows: Array&lt;{ field: string, hidden?: bool }&gt;, values: Array&lt;{ aggFunc: string, field: string, hidden?: bool }&gt; }"
       }
     },
-    "pivotPanelOpen": { "type": { "name": "bool" }, "default": "false" },
+    "pivotPanelOpen": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use <code>initialState.sidebar.open</code> instead."
+    },
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {

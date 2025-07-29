@@ -10,7 +10,7 @@ const tooltipGetter: TooltipGetter<'line'> = (params) => {
 
   const label = getLabel(series.label, 'tooltip');
   const value = series.data[identifier.dataIndex];
-  const formattedValue = series.valueFormatter(value as any, { dataIndex: identifier.dataIndex });
+  const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
 
   return {
     identifier,

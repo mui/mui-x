@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
+import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import { events as initialEvents, resources } from '../../../data/scheduler/event-calendar/events';
 
 export default function FullEventCalendar() {
@@ -13,6 +13,7 @@ export default function FullEventCalendar() {
       defaultVisibleDate={events[0].start}
       onEventsChange={setEvents}
       areEventsDraggable
+      areEventsResizable
     />
   );
 }
