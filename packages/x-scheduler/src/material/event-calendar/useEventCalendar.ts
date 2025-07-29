@@ -37,6 +37,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     onVisibleDateChange,
     areEventsDraggable = false,
     areEventsResizable = false,
+    ampm = true,
   } = parameters;
 
   const store = useLazyRef(
@@ -50,6 +51,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
         views,
         areEventsDraggable,
         areEventsResizable,
+        ampm,
       }),
   ).current;
 
@@ -76,6 +78,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
       views,
       areEventsDraggable,
       areEventsResizable,
+      ampm,
     };
     if (viewProp !== undefined) {
       partialState.view = viewProp;
@@ -94,6 +97,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     areEventsDraggable,
     areEventsResizable,
     views,
+    ampm,
   ]);
 
   const setVisibleDate = useEventCallback(
