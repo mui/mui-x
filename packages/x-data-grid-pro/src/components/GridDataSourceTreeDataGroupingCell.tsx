@@ -62,7 +62,6 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
     } else {
       // Collapse the node and remove child rows from the grid
       apiRef.current.setRowChildrenExpansion(id, false);
-      // Remove child rows to handle dynamic data updates properly
       apiRef.current.removeChildrenRows(id);
     }
     apiRef.current.setCellFocus(id, field);
