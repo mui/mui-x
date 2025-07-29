@@ -313,7 +313,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         apiRef.current.publishEvent('rowsSet');
       }
     },
-    [apiRef, setChildrenLoading, setChildrenFetchError],
+    [apiRef],
   );
 
   const dataSourceApi: GridDataSourceApiPro = {
