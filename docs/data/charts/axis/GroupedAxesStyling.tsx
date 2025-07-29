@@ -10,7 +10,7 @@ export default function GroupedAxesStyling() {
           stroke: 'rgb(255, 180, 34)',
         },
         [`& [data-group-index="0"] .${axisClasses.tickLabel}`]: {
-          fill: 'gray',
+          fill: 'rgb(66, 84, 251)',
         },
       }}
       xAxis={[
