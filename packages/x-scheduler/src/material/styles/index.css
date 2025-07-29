@@ -1,6 +1,6 @@
 @import './tokens.css';
 
-.mui .Button {
+.mui-x-scheduler .Button {
   display: flex;
   align-items: center;
   padding: var(--space-2) var(--space-3);
@@ -10,74 +10,74 @@
   line-height: var(--line-height-1);
 }
 
-.mui .NeutralButton {
+.mui-x-scheduler .NeutralButton {
   background: var(--gray-3);
   color: var(--default-text-color);
 }
 
-.mui .NeutralButton:hover {
+.mui-x-scheduler .NeutralButton:hover {
   background: var(--gray-4);
 }
 
-.mui .NeutralButton:active {
+.mui-x-scheduler .NeutralButton:active {
   background: var(--gray-5);
 }
 
-.mui .NeutralButton:focus-visible {
+.mui-x-scheduler .NeutralButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
 
-.mui .PrimaryButton {
+.mui-x-scheduler .PrimaryButton {
   background: var(--primary-9);
   color: var(--primary-1);
 }
 
-.mui .PrimaryButton:hover {
+.mui-x-scheduler .PrimaryButton:hover {
   background: var(--primary-10);
 }
 
-.mui .PrimaryButton:active {
+.mui-x-scheduler .PrimaryButton:active {
   background: var(--gray-11);
 }
 
-.mui .PrimaryButton:focus-visible {
+.mui-x-scheduler .PrimaryButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
 
-.mui .SecondaryErrorButton {
+.mui-x-scheduler .SecondaryErrorButton {
   background: var(--gray-1);
   color: var(--error-11);
 }
 
-.mui .SecondaryErrorButton:hover {
+.mui-x-scheduler .SecondaryErrorButton:hover {
   background: var(--error-4);
 }
 
-.mui .SecondaryErrorButton:active {
+.mui-x-scheduler .SecondaryErrorButton:active {
   background: var(--error-5);
 }
 
-.mui .SecondaryErrorButton:focus-visible {
+.mui-x-scheduler .SecondaryErrorButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }
 
-.mui .NeutralTextButton {
+.mui-x-scheduler .NeutralTextButton {
   background: transparent;
   color: var(--default-text-color);
 }
 
-.mui .NeutralTextButton:hover {
+.mui-x-scheduler .NeutralTextButton:hover {
   background: var(--gray-4);
 }
 
-.mui .NeutralTextButton:active {
+.mui-x-scheduler .NeutralTextButton:active {
   background: var(--gray-5);
 }
 
-.mui .NeutralTextButton:focus-visible {
+.mui-x-scheduler .NeutralTextButton:focus-visible {
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);
 }

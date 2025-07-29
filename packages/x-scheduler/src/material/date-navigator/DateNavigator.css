@@ -18,6 +18,6 @@
   gap: var(--space-1);
 }
 
-.mui .Button.DateNavigatorButton {
+.mui-x-scheduler .Button.DateNavigatorButton {
   padding: 0;
 }

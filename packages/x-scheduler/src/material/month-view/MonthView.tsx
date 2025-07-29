@@ -85,7 +85,11 @@ export const MonthView = React.memo(
     );
 
     return (
-      <div ref={handleRef} className={clsx('MonthViewContainer', 'mui', className)} {...other}>
+      <div
+        ref={handleRef}
+        className={clsx('MonthViewContainer', 'mui-x-scheduler', className)}
+        {...other}
+      >
         <EventPopoverProvider containerRef={containerRef}>
           <DayGrid.Root className="MonthViewRoot">
             <div className="MonthViewHeader">
