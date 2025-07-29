@@ -3,15 +3,19 @@
   // Actual .ts source files are transpiled via babel
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
+    "baseUrl": null,
+    "paths": {
+      // reset paths, but keep the one for @mui/x-tree-view. Necessary to be able to build
+      // modules that do module augementation
+      "@mui/x-tree-view": ["./src"],
+      "@mui/x-tree-view/*": ["./src/*"]
+    },
     "declaration": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
-    "rootDir": "./src",
-    "types": ["../../mui-env.d.ts", "@mui/material/themeCssVarsAugmentation", "@emotion/styled"]
+    "rootDir": "./src"
   },
-  "references": [{ "path": "../x-internals/tsconfig.build.json" }],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

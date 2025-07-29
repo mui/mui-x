@@ -7,14 +7,18 @@ import {
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridRowId } from '../../../models/gridRows';
 import { GridFilterItem } from '../../../models/gridFilterItem';
+import { GridFilterModel } from '../../../models/gridFilterModel';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { GridFilterState } from './gridFilterState';
 
 /**
  * @category Filtering
  */
-const gridFilterStateSelector = createRootSelector((state: GridStateCommunity) => state.filter);
+const gridFilterStateSelector = createRootSelector(
+  (state: GridStateCommunity): GridFilterState => state.filter,
+);
 
 /**
  * Get the current filter model.
@@ -22,7 +26,7 @@ const gridFilterStateSelector = createRootSelector((state: GridStateCommunity) =
  */
 export const gridFilterModelSelector = createSelector(
   gridFilterStateSelector,
-  (filterState) => filterState.filterModel,
+  (filterState): GridFilterModel => filterState.filterModel,
 );
 
 /**

@@ -29,6 +29,8 @@ import type { GridColumnResizeState } from '../hooks/features/columnResize';
 import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
 import type { GridListViewState } from '../hooks/features/listView/useGridListView';
 
+export { GridEditingState };
+
 /**
  * Some props are passed on the state to enable grid selectors to select
  * and react to them.
