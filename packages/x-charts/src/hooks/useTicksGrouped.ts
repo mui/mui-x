@@ -94,21 +94,18 @@ function mapToGrouping(
   let syncIndex = -1;
   return tickValues
     .flatMap((value, i) => {
-      // We only run ChartsGroupedXAxis if getGrouping is defined
-      return (getGrouping as AxisGrouping['getGrouping'])(value, i).map(
-        (groupValue, groupIndex) => ({
-          value: groupValue,
-          formattedValue: `${groupValue}`,
-          offset: isBandScale(scale)
-            ? scale(value)! -
-              (scale.step() - scale.bandwidth()) / 2 +
-              offsetRatio.extremities * scale.step()
-            : scale(value),
-          groupIndex,
-          dataIndex: i,
-          labelOffset: 0,
-        }),
-      );
+      return getGrouping(value, i).map((groupValue, groupIndex) => ({
+        value: groupValue,
+        formattedValue: `${groupValue}`,
+        offset: isBandScale(scale)
+          ? scale(value)! -
+            (scale.step() - scale.bandwidth()) / 2 +
+            offsetRatio.extremities * scale.step()
+          : scale(value),
+        groupIndex,
+        dataIndex: i,
+        labelOffset: 0,
+      }));
     })
     .sort((a, b) => a.groupIndex - b.groupIndex)
     .map((item, index, arr) => {
