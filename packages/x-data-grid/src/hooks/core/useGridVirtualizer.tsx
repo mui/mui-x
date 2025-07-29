@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { useSelectorEffect } from '@mui/x-internals/store';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { useVirtualizer } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
@@ -268,7 +268,7 @@ export function useGridVirtualizer(
     apiRef.current.store.state.rowsMeta = virtualizer.store.state.rowsMeta;
     apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
   });
-  useSelectorEffect(virtualizer.store, identity, (_, state) => {
+  useStoreEffect(virtualizer.store, identity, (_, state) => {
     if (state.dimensions !== apiRef.current.state.dimensions) {
       apiRef.current.setState((gridState) => ({
         ...gridState,

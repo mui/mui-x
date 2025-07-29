@@ -9,7 +9,7 @@ import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useSelector } from '@mui/x-internals/store';
+import { useStore } from '@mui/x-internals/store';
 import { Rowspan } from '@mui/x-virtualizer';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
@@ -209,8 +209,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   );
 
   const store = apiRef.current.virtualizer.store;
-  const hiddenCells = useSelector(store, Rowspan.selectors.hiddenCells);
-  const spannedCells = useSelector(store, Rowspan.selectors.spannedCells);
+  const hiddenCells = useStore(store, Rowspan.selectors.hiddenCells);
+  const spannedCells = useStore(store, Rowspan.selectors.spannedCells);
 
   const { hasFocus, isEditable = false, value } = cellParams;
 
