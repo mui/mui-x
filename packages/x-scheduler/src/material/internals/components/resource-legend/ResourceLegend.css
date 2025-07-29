@@ -29,11 +29,11 @@
   color: var(--text-secondary);
 }
 
-.joy .Button.ResourceLegendButton {
+.mui-x-scheduler .Button.ResourceLegendButton {
   padding: var(--space-1);
   margin-inline-start: auto;
 }
 
-.joy .Button.ResourceLegendButton:hover {
+.mui-x-scheduler .Button.ResourceLegendButton:hover {
   background-color: var(--interactive-hover-bg);
 }

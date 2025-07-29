@@ -73,7 +73,11 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   return (
     <EventCalendarContext.Provider value={contextValue}>
       <TranslationsProvider translations={translations}>
-        <div className={clsx(className, 'EventCalendarRoot', 'joy')} ref={forwardedRef} {...other}>
+        <div
+          className={clsx(className, 'EventCalendarRoot', 'mui-x-scheduler')}
+          ref={forwardedRef}
+          {...other}
+        >
           <aside className="EventCalendarSidePanel">
             <DateNavigator />
             <section

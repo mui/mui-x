@@ -2,10 +2,10 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
-import { CalendarEvent } from '@mui/x-scheduler/joy';
+import { CalendarEvent } from '@mui/x-scheduler/material';
 import { spy } from 'sinon';
-import { MonthView } from '@mui/x-scheduler/joy/month-view';
-import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
+import { MonthView } from '@mui/x-scheduler/material/month-view';
+import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 
 const events: CalendarEvent[] = [
   {

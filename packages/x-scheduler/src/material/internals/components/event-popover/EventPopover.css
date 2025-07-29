@@ -20,28 +20,28 @@
   padding: var(--space-6);
 }
 
-.joy .EventPopoverCloseButton {
+.mui-x-scheduler .EventPopoverCloseButton {
   padding: var(--space-1);
   display: flex;
   border-radius: var(--radius-4);
   background-color: var(--event-color-3);
 }
 
-.joy .EventPopoverCloseButton:hover {
+.mui-x-scheduler .EventPopoverCloseButton:hover {
   background-color: var(--event-color-4);
 }
 
-.joy .EventPopoverCloseButton:active {
+.mui-x-scheduler .EventPopoverCloseButton:active {
   background-color: var(--event-color-5);
 }
 
-.joy .EventPopoverCloseButton:focus-visible {
+.mui-x-scheduler .EventPopoverCloseButton:focus-visible {
   outline: 2px solid var(--event-color-5);
   outline-offset: var(--outline-focus-offset);
 }
 
-.joy .PopoverPositioner .PrimaryButton:focus-visible,
-.joy .PopoverPositioner .SecondaryErrorButton:focus-visible {
+.mui-x-scheduler .PopoverPositioner .PrimaryButton:focus-visible,
+.mui-x-scheduler .PopoverPositioner .SecondaryErrorButton:focus-visible {
   outline: 2px solid var(--event-color-5);
 }
 
@@ -49,7 +49,7 @@
   flex: 1;
 }
 
-.joy .EventPopoverTitleInput {
+.mui-x-scheduler .EventPopoverTitleInput {
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-4);
   color: var(--event-color-12);
@@ -85,8 +85,8 @@
   font-size: var(--font-size-1);
 }
 
-.joy .EventPopoverInput,
-.joy .EventPopoverTextarea {
+.mui-x-scheduler .EventPopoverInput,
+.mui-x-scheduler .EventPopoverTextarea {
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
@@ -95,17 +95,17 @@
   line-height: var(--line-height-1);
 }
 
-.joy .EventPopoverInput {
+.mui-x-scheduler .EventPopoverInput {
   max-height: var(--space-7);
 }
 
-.joy .EventPopoverTitleInput:focus-visible {
+.mui-x-scheduler .EventPopoverTitleInput:focus-visible {
   outline: 2px solid var(--event-color-5);
   outline-offset: var(--outline-focus-offset);
 }
 
-.joy .EventPopoverInput:focus-visible,
-.joy .EventPopoverTextarea:focus-visible {
+.mui-x-scheduler .EventPopoverInput:focus-visible,
+.mui-x-scheduler .EventPopoverTextarea:focus-visible {
   outline: 2px solid var(--gray-3);
   outline-offset: var(--outline-focus-offset);
 }

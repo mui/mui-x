@@ -1,4 +1,4 @@
-import { CalendarResource, CalendarEvent } from '@mui/x-scheduler/joy';
+import { CalendarResource, CalendarEvent } from '@mui/x-scheduler/material';
 import { DateTime } from 'luxon';
 
 export const events: CalendarEvent[] = [

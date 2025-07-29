@@ -27,7 +27,7 @@
   gap: var(--space-2);
 }
 
-.joy .ViewSwitcherMainItem {
+.mui-x-scheduler .ViewSwitcherMainItem {
   background: var(--surface);
   user-select: none;
   display: flex;
