@@ -179,12 +179,7 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Wierszy na stronę:',
-  paginationDisplayedRows: ({
-    from,
-    to,
-    count,
-    estimated
-  }) => {
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
       return `${from}–${to} z ${count !== -1 ? count : `więcej niż ${to}`}`;
     }
@@ -258,7 +253,8 @@ const plPLGrid: Partial<GridLocaleText> = {
   promptFieldPlaceholder: 'Wpisz polecenie…',
   promptFieldPlaceholderWithRecording: 'Wpisz lub nagraj polecenie…',
   promptFieldPlaceholderListening: 'Nasłuchiwanie polecenia…',
-  promptFieldSpeechRecognitionNotSupported: 'Rozpoznawanie głosu nie jest obsługiwane przez Twoją przeglądarkę.',
+  promptFieldSpeechRecognitionNotSupported:
+    'Rozpoznawanie głosu nie jest obsługiwane przez Twoją przeglądarkę.',
   promptFieldSend: 'Wyślij',
   promptFieldRecord: 'Nagrywaj',
   promptFieldStopRecording: 'Zatrzymaj nagrywanie',
