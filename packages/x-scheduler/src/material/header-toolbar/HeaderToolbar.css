@@ -11,6 +11,10 @@
   font-weight: var(--font-weight-1);
 }
 
+.SinglePrimaryAction {
+  justify-content: flex-end;
+}
+
 .mui-x-scheduler .HeaderToolbarButton {
   background: var(--surface);
   user-select: none;
