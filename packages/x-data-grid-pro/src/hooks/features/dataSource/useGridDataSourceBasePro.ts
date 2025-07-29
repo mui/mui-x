@@ -12,6 +12,7 @@ import {
   GridRowModel,
   gridRowTreeSelector,
   GridUpdateRowParams,
+  GridRowId,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -273,6 +274,48 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     });
   }, [apiRef]);
 
+  const removeChildrenRows = React.useCallback<GridDataSourcePrivateApiPro['removeChildrenRows']>(
+    (parentId) => {
+      const updatedTree = { ...gridRowTreeSelector(apiRef) };
+      const rowNode = gridRowNodeSelector(apiRef, parentId);
+      if (!rowNode || rowNode.type !== 'group' || rowNode.children.length === 0) {
+        return;
+      }
+
+      let areRowsRemoved = false;
+      const traverse = (nodeId: GridRowId) => {
+        const node = updatedTree[nodeId];
+        if (!node) {
+          return;
+        }
+
+        if (node.type === 'group' && node.children?.length > 0) {
+          node.children.forEach(traverse);
+        }
+        delete updatedTree[nodeId];
+        areRowsRemoved = true;
+      };
+
+      rowNode.children.forEach(traverse);
+
+      updatedTree[parentId] = { ...rowNode, children: [] };
+
+      if (areRowsRemoved) {
+        apiRef.current.setState((state) => {
+          return {
+            ...state,
+            rows: {
+              ...state.rows,
+              tree: updatedTree,
+            },
+          };
+        });
+        apiRef.current.publishEvent('rowsSet');
+      }
+    },
+    [apiRef, setChildrenLoading, setChildrenFetchError],
+  );
+
   const dataSourceApi: GridDataSourceApiPro = {
     dataSource: {
       ...api.public.dataSource,
@@ -284,6 +327,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const dataSourcePrivateApi: GridDataSourcePrivateApiPro = {
     fetchRowChildren,
     resetDataSourceState,
+    removeChildrenRows,
   };
 
   React.useEffect(() => {

@@ -60,7 +60,10 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
       // always fetch/get from cache the children when the node is expanded
       apiRef.current.dataSource.fetchRows(id);
     } else {
-      apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
+      // Collapse the node and remove child rows from the grid
+      apiRef.current.setRowChildrenExpansion(id, false);
+      // Remove child rows to handle dynamic data updates properly
+      apiRef.current.removeChildrenRows(id);
     }
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation(); // TODO remove event.stopPropagation
