@@ -21,7 +21,7 @@
     "minDate": { "description": "Minimal selectable date." },
     "onChange": {
       "description": "Callback fired when the value changes.",
-      "typeDescriptions": { "value": "The new value." }
+      "typeDescriptions": { "value": { "name": "value", "description": "The new value." } }
     },
     "readOnly": {
       "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
@@ -32,8 +32,11 @@
     "shouldDisableYear": {
       "description": "Disable specific year.",
       "typeDescriptions": {
-        "year": "The year to test.",
-        "boolean": "If <code>true</code>, the year will be disabled."
+        "year": { "name": "year", "description": "The year to test." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code>, the year will be disabled."
+        }
       }
     },
     "slotProps": { "description": "The props used for each component slot." },

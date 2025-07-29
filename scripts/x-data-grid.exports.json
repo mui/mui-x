@@ -359,6 +359,7 @@
   { "name": "GridLeafNode", "kind": "Interface" },
   { "name": "gridListColumnSelector", "kind": "Variable" },
   { "name": "GridListViewColDef", "kind": "TypeAlias" },
+  { "name": "gridListViewSelector", "kind": "Variable" },
   { "name": "GridLoadIcon", "kind": "Variable" },
   { "name": "GridLoadingOverlay", "kind": "Variable" },
   { "name": "GridLoadingOverlayProps", "kind": "Interface" },
@@ -626,6 +627,7 @@
   { "name": "useGridVirtualization", "kind": "Function" },
   { "name": "useOnMount", "kind": "Function" },
   { "name": "useRunOnce", "kind": "Variable" },
+  { "name": "useRunOncePerLoop", "kind": "Function" },
   { "name": "ValueOptions", "kind": "TypeAlias" },
   { "name": "virtualizationStateInitializer", "kind": "Variable" }
 ]

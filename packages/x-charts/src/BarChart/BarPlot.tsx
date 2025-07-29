@@ -83,23 +83,27 @@ function BarPlot(props: BarPlotProps) {
   return (
     <BarPlotRoot className={classes.root}>
       {!withoutBorderRadius &&
-        masksData.map(({ id, x, y, width, height, hasPositive, hasNegative, layout }) => {
-          return (
-            <BarClipPath
-              key={id}
-              maskId={id}
-              borderRadius={borderRadius}
-              hasNegative={hasNegative}
-              hasPositive={hasPositive}
-              layout={layout}
-              x={x}
-              y={y}
-              width={width}
-              height={height}
-              skipAnimation={skipAnimation ?? false}
-            />
-          );
-        })}
+        masksData.map(
+          ({ id, x, y, xOrigin, yOrigin, width, height, hasPositive, hasNegative, layout }) => {
+            return (
+              <BarClipPath
+                key={id}
+                maskId={id}
+                borderRadius={borderRadius}
+                hasNegative={hasNegative}
+                hasPositive={hasPositive}
+                layout={layout}
+                x={x}
+                y={y}
+                xOrigin={xOrigin}
+                yOrigin={yOrigin}
+                width={width}
+                height={height}
+                skipAnimation={skipAnimation ?? false}
+              />
+            );
+          },
+        )}
       {completedData.map(({ seriesId, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>

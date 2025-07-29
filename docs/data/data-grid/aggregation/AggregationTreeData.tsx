@@ -101,24 +101,15 @@ const columns: GridColDef<File>[] = [
     field: 'size',
     headerName: 'Size',
     type: 'number',
-    valueFormatter: (value) => {
+    valueGetter: (value) => {
       if (value == null) {
-        return '';
+        return 0;
       }
-      if (value < 100) {
-        return `${value} b`;
-      }
-
-      if (value < 1_000_000) {
-        return `${Math.floor(value / 100) / 10} Kb`;
-      }
-
-      if (value < 1_000_000_000) {
-        return `${Math.floor(value / 100_000) / 10} Mb`;
-      }
-
-      return `${Math.floor(value / 100_000_000) / 10} Gb`;
+      const sizeInKb = value / 1024;
+      // Round to 2 decimal places
+      return Math.round(sizeInKb * 100) / 100;
     },
+    valueFormatter: (value) => `${value} Kb`,
   },
   {
     field: 'updatedAt',
