@@ -215,56 +215,10 @@ export const useGridRows = (
 
   const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(
     (updates, groupKeys) => {
-      const insertedNodes = new Set<GridRowId>();
-      const nonPinnedRowsUpdates = computeRowsUpdates(
-        apiRef,
-        updates,
-        props.getRowId,
-        insertedNodes,
-      );
-
-      const tree = gridRowTreeSelector(apiRef);
-      const removedNodes = new Set<GridRowId>();
-
-      if (groupKeys && groupKeys.length > 0) {
-        const rootNode = tree[GRID_ROOT_GROUP_ID];
-        let parentNode = rootNode;
-        for (let i = 0; i < groupKeys.length; i += 1) {
-          const childrenFromPath = (parentNode as GridGroupNode).childrenFromPath;
-          const nodeId = childrenFromPath[Object.keys(childrenFromPath)[0]]?.[groupKeys[i]];
-          if (nodeId) {
-            parentNode = tree[nodeId];
-          }
-        }
-
-        const traverse = (node: GridGroupNode) => {
-          if (!node) {
-            return;
-          }
-          for (const childId of node.children) {
-            if (!insertedNodes.has(childId)) {
-              removedNodes.add(childId);
-              if (tree[childId].type === 'group') {
-                traverse(tree[childId] as GridGroupNode);
-              }
-            }
-          }
-        };
-
-        if (parentNode !== rootNode) {
-          traverse(parentNode as GridGroupNode);
-        }
-      }
-
-      const cacheUpdates = nonPinnedRowsUpdates.concat(
-        Array.from(removedNodes).map((rowId) => ({
-          id: rowId,
-          _action: 'delete' as const,
-        })),
-      );
+      const nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId);
 
       const cache = updateCacheWithNewRows({
-        updates: cacheUpdates,
+        updates: nonPinnedRowsUpdates,
         getRowId: props.getRowId,
         previousCache: apiRef.current.caches.rows,
         groupKeys: groupKeys ?? [],
