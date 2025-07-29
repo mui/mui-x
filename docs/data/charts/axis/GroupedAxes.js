@@ -13,7 +13,7 @@ export default function GroupedAxes() {
           grouping: {
             getGrouping: (value) => [
               value.toLocaleDateString('en-US', { month: 'short' }),
-              formatQuarterYear(value),
+              `Q${Math.floor(value.getMonth() / 3) + 1}`,
               value.toLocaleDateString('en-US', { year: 'numeric' }),
             ],
           },
@@ -24,12 +24,6 @@ export default function GroupedAxes() {
     />
   );
 }
-
-const formatQuarterYear = (date) => {
-  const quarter = Math.floor(date.getMonth() / 3) + 1;
-  const year = date.getFullYear().toString().slice(-2);
-  return `Q${quarter} '${year}`;
-};
 
 const valueFormatter = (v) =>
   v.toLocaleDateString('en-US', {

@@ -8,7 +8,7 @@
       grouping: {
         getGrouping: (value: Date) => [
           value.toLocaleDateString('en-US', { month: 'short' }),
-          formatQuarterYear(value),
+          `Q${Math.floor(value.getMonth() / 3) + 1}`,
           value.toLocaleDateString('en-US', { year: 'numeric' }),
         ],
       },
