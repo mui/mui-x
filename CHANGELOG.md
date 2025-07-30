@@ -72,15 +72,6 @@ Same changes as in `@mui/x-charts@8.9.2`, plus:
 - [charts-pro] Fix voronoi interaction with zoom (#18950) @alexfauquette
 - [charts-pro] Hide toolbar by default when exporting (#18764) @bernardobelchior
 
-### Tree View
-
-#### `@mui/x-tree-view@8.9.2`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@8.9.2`.
 
 ### Codemod
 
