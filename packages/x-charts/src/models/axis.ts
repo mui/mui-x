@@ -8,6 +8,7 @@ import type {
   ScaleSequential,
   ScaleThreshold,
   ScaleTime,
+  ScaleSymLog,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
@@ -25,6 +26,7 @@ export type D3Scale<
   Output = number,
 > =
   | ScaleBand<Domain>
+  | ScaleSymLog<Range, Output>
   | ScaleLogarithmic<Range, Output>
   | ScalePoint<Domain>
   | ScalePower<Range, Output>
@@ -32,6 +34,7 @@ export type D3Scale<
   | ScaleLinear<Range, Output>;
 
 export type D3ContinuousScale<Range = number, Output = number> =
+  | ScaleSymLog<Range, Output>
   | ScaleLogarithmic<Range, Output>
   | ScalePower<Range, Output>
   | ScaleTime<Range, Output>
@@ -217,7 +220,7 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
 }
 
 export type ScaleName = keyof AxisScaleConfig;
-export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ContinuousScaleName = 'linear' | 'log' | 'symlog' | 'pow' | 'sqrt' | 'time' | 'utc';
 
 export interface AxisScaleConfig {
   band: {
@@ -246,6 +249,16 @@ export interface AxisScaleConfig {
     scaleType: 'log';
     scale: ScaleLogarithmic<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+  };
+  symlog: {
+    scaleType: 'symlog';
+    scale: ScaleSymLog<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+    /**
+     * The constant used to define the zero point of the symlog scale.
+     * @default 1
+     */
+    constant?: number;
   };
   pow: {
     scaleType: 'pow';
@@ -296,6 +309,9 @@ export interface AxisScaleComputedConfig {
   log: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
+  symlog: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
   pow: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
@@ -326,7 +342,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'legend'` The value is displayed in the legend when using color legend.
        * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
        */
-      location: 'legend' | 'zoom-slider-tooltip';
+      location: 'legend';
     }
   | {
       /**
@@ -334,12 +350,40 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tick'` The value is displayed on the axis ticks.
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
        */
-      location: 'tick' | 'tooltip';
+      location: 'tooltip' | 'zoom-slider-tooltip';
       /**
        * The d3-scale instance associated to the axis.
        */
       scale: AxisScaleConfig[S]['scale'];
+    }
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       */
+      location: 'tick';
+      /**
+       * The d3-scale instance associated to the axis.
+       */
+      scale: AxisScaleConfig[S]['scale'];
+      /**
+       * The tick label shown by default if the value isn't formatted.
+       * This value might be an empty string if no tick label should be displayed, which is particularly useful in log
+       * scales where we want to show ticks to demonstrate it's a log scale, but not labels to avoid them overlapping.
+       * @see See {@link https://d3js.org/d3-scale/log#log_tickFormat D3 log scale docs} for more details.
+       */
+      defaultTickLabel: string;
+      /**
+       * A suggestion of the number of ticks to show.
+       * Can be provided to the scale's `ticks` method to compute the ticks, or to `tickFormat` to format the ticks.
+       * Can be `undefined` if the scale doesn't support it, e.g., band, point scales.
+       */
+      tickNumber?: number;
     };
 
 /**
@@ -498,6 +542,12 @@ export function isPointScaleConfig(
   return scaleConfig.scaleType === 'point';
 }
 
+export function isSymlogScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' } {
+  return scaleConfig.scaleType === 'symlog';
+}
+
 /**
  * The data format returned by onAxisClick.
  */
@@ -514,6 +564,23 @@ export interface ChartsAxisData {
    * The mapping of series ids to their value for this particular axis index.
    */
   seriesValues: Record<string, number | null | undefined>;
+}
+
+export type CartesianDirection = 'x' | 'y';
+export type PolarDirection = 'rotation' | 'radius';
+
+/**
+ * Identifies a data point within an axis.
+ */
+export interface AxisItemIdentifier {
+  /**
+   * The axis id.
+   */
+  axisId: AxisId;
+  /**
+   * The data index.
+   */
+  dataIndex: number;
 }
 
 export type XAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName

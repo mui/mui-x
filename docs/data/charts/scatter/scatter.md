@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ChartsWrapper
 ---
 
 # Charts - Scatter
@@ -105,7 +105,19 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
-### CSS 🚧
+### CSS
+
+You can target scatter markers with the following CSS selectors:
+
+- `[data-series='<series id>']` Selects the group containing markers of the series with the given id.
+- `[data-highlighted=true]` Selects markers with highlighted state.
+- `[data-faded=true]` Selects markers with faded state.
+
+To select all marker groups, use the `scatterClasses.root` class name.
+
+Here is an example that customizes the look of highlighted items depending on the series they belong to.
+
+{{"demo": "ScatterCSSSelectors.js"}}
 
 ### Shape
 

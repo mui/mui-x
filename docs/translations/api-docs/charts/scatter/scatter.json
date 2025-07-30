@@ -4,11 +4,17 @@
     "onItemClick": {
       "description": "Callback fired when clicking on a scatter item.",
       "typeDescriptions": {
-        "event": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
-        "scatterItemIdentifier": "The scatter item identifier."
+        "event": {
+          "name": "event",
+          "description": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+        },
+        "scatterItemIdentifier": {
+          "name": "scatterItemIdentifier",
+          "description": "The scatter item identifier."
+        }
       }
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }
 }

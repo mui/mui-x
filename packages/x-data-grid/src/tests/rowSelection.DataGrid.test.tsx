@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, act, waitFor } from '@mui/internal-test-utils';
@@ -11,6 +10,7 @@ import {
   useGridApiRef,
   GridApi,
   GridRowSelectionModel,
+  gridRowSelectionIdsSelector,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -23,7 +23,7 @@ import {
   includeRowSelection,
 } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
@@ -258,6 +258,77 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(checkboxInput!);
 
       expect(getActiveCell()).to.equal('0-0');
+    });
+
+    it('should return all row IDs when selection type is exclude with empty ids', async () => {
+      // Context: https://github.com/mui/mui-x/issues/17878#issuecomment-3084263294
+      const onRowSelectionModelChange = spy();
+      const apiRef: RefObject<GridApi | null> = { current: null };
+
+      function TestWithApiRef() {
+        return (
+          <TestDataGridSelection
+            checkboxSelection
+            apiRef={apiRef}
+            onRowSelectionModelChange={onRowSelectionModelChange}
+          />
+        );
+      }
+
+      const { user } = render(<TestWithApiRef />);
+
+      // Click "Select All" checkbox
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      await user.click(selectAllCheckbox);
+
+      // The callback should be called with exclude type and empty ids
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      const selectionModel = onRowSelectionModelChange.firstCall.args[0];
+      expect(selectionModel.type).to.equal('exclude');
+      expect(selectionModel.ids.size).to.equal(0);
+
+      // Verify that all rows are visually selected
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+
+      // Verify that `gridRowSelectionIdsSelector` returns all row data
+      act(() => {
+        if (apiRef.current) {
+          const selectedRows = gridRowSelectionIdsSelector(apiRef);
+          expect(selectedRows.size).to.equal(4);
+          expect(Array.from(selectedRows.keys())).to.deep.equal([0, 1, 2, 3]);
+        }
+      });
+    });
+
+    it('should handle exclude type selection when deselecting a single row after select all', async () => {
+      // Context: https://github.com/mui/mui-x/issues/17878#issuecomment-3084263294
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      // First select all rows
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      await user.click(selectAllCheckbox);
+
+      // Reset the spy to check the next call
+      onRowSelectionModelChange.resetHistory();
+
+      // Deselect one row
+      await user.click(getCell(1, 0).querySelector('input')!);
+
+      // Should still be exclude type but with the deselected row ID
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      const selectionModel = onRowSelectionModelChange.firstCall.args[0];
+      expect(selectionModel.type).to.equal('exclude');
+      expect(selectionModel.ids.size).to.equal(1);
+      expect(selectionModel.ids.has(1)).to.equal(true);
+
+      // Verify visual selection (all rows except row 1)
+      expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
     });
 
     it('should select all visible rows regardless of pagination', async () => {
@@ -580,7 +651,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     // HTMLElement.focus() only scrolls to the element on a real browser
-    testSkipIf(isJSDOM)(
+    it.skipIf(isJSDOM)(
       'should not jump during scroll while the focus is on the checkbox',
       async () => {
         const data = getBasicGridData(20, 1);
@@ -638,7 +709,7 @@ describe('<DataGrid /> - Row selection', () => {
     //
     //     // JSDOM doesn't fire "blur" when .focus is called in another element
     //     // FIXME Firefox doesn't show any ripple
-    //     testSkipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
+    //     it.skipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
     //       render(<TestDataGridSelection checkboxSelection />);
     //       const cell = getCell(1, 1);
     //       fireUserEvent.mousePress(cell);

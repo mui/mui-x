@@ -1,0 +1,26 @@
+import * as React from 'react';
+
+import { CalendarEvent } from '@mui/x-scheduler/material';
+import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { MonthView } from '@mui/x-scheduler/material/month-view';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../datasets/personal-agenda';
+import classes from './FullEventCalendar.module.css';
+
+export default function StandaloneMonthView() {
+  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
+
+  return (
+    <StandaloneView
+      events={events}
+      resources={resources}
+      defaultVisibleDate={defaultVisibleDate}
+      onEventsChange={setEvents}
+    >
+      <MonthView className={classes.Container} />
+    </StandaloneView>
+  );
+}

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
-import { ChartsToolbar } from '../Toolbar/internals/ChartsToolbar';
 import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 import { ChartsSlotProps, ChartsSlots } from '../internals/material';
 import { ChartContainerProps } from '../ChartContainer';
@@ -23,7 +22,7 @@ import {
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { ChartsWrapper } from '../ChartsWrapper';
 import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 
@@ -43,18 +42,19 @@ export interface PieChartSlotProps
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
+export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
   extends Omit<
       ChartContainerProps<'pie', PieChartPluginSignatures>,
-      'series' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
    * The series to display in the pie chart.
-   * An array of [[PieSeriesType]] objects.
+   * An array of [[PieSeries]] objects.
    */
-  series: Readonly<MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[]>;
+  series: Readonly<PieSeries[]>;
   /**
    * If `true`, the legend is not rendered.
    */
@@ -138,7 +138,7 @@ const PieChart = React.forwardRef(function PieChart(
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar ?? ChartsToolbar;
+  const Toolbar = props.slots?.toolbar;
 
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
@@ -147,7 +147,7 @@ const PieChart = React.forwardRef(function PieChart(
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
       >
-        {showToolbar ? <Toolbar /> : null}
+        {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
             direction={props?.slotProps?.legend?.direction ?? 'vertical'}
@@ -243,7 +243,7 @@ PieChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the pie chart.
-   * An array of [[PieSeriesType]] objects.
+   * An array of [[PieSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

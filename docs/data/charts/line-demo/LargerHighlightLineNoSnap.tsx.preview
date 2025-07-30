@@ -1,0 +1,11 @@
+<FormControlLabel
+  checked={showInteractionArea}
+  control={
+    <Checkbox
+      onChange={(event) => setShowInteractionArea(event.target.checked)}
+    />
+  }
+  label="Show highlight area"
+  labelPlacement="end"
+/>
+<LineChart {...settings} slots={{ line: CustomLine }} />

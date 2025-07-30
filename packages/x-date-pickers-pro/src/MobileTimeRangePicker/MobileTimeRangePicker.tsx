@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import refType from '@mui/utils/refType';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import {
   DIALOG_WIDTH,
   PickerRangeValue,
@@ -8,11 +10,8 @@ import {
   PickerViewRendererLookup,
   resolveTimeFormat,
   TimeViewWithMeridiem,
-  useUtils,
   VIEW_HEIGHT,
 } from '@mui/x-date-pickers/internals';
-import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import refType from '@mui/utils/refType';
 import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
@@ -24,6 +23,7 @@ import {
 } from '@mui/x-date-pickers/timeViewRenderers';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileTimeRangePickerProps } from './MobileTimeRangePicker.types';
 import { useTimeRangePickerDefaultizedProps } from '../TimeRangePicker/shared';
@@ -87,7 +87,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
   inProps: MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   // Props with the default values common to all time range pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<
@@ -110,7 +110,7 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
     ...defaultizedProps,
     ampmInClock: true,
     viewRenderers,
-    format: resolveTimeFormat(utils, defaultizedProps),
+    format: resolveTimeFormat(adapter, defaultizedProps),
     slots: {
       field: SingleInputTimeRangeField,
       ...defaultizedProps.slots,
@@ -156,7 +156,7 @@ MobileTimeRangePicker.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
+   * @default adapter.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -305,7 +305,7 @@ MobileTimeRangePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
@@ -340,7 +340,7 @@ MobileTimeRangePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   /**
    * The currently selected sections.
    * This prop accepts four formats:
@@ -397,8 +397,8 @@ MobileTimeRangePicker.propTypes = {
   thresholdToRenderTimeInASingleColumn: PropTypes.number,
   /**
    * The time steps between two time unit options.
-   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * For example, if `timeSteps.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeSteps.minutes` will be used.
    * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
   timeSteps: PropTypes.shape({

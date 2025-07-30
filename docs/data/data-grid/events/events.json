@@ -330,7 +330,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "renderedRowsIntervalChange",
-    "description": "Fired when the rendered rows index interval changes. Called with a GridRenderContext object.",
+    "description": "Fired when the rendered rows index interval changes. Called with a <a href=\"/x/api/data-grid/grid-render-context/\">GridRenderContext</a> object.",
     "params": "GridRenderContext",
     "event": "MuiEvent<{}>"
   },
@@ -458,6 +458,22 @@
     "description": "Fired during the scroll of the grid viewport.",
     "params": "GridScrollParams",
     "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "sidebarClose",
+    "description": "Fired when the sidebar is closed.",
+    "params": "{ value: GridSidebarValue }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onSidebarClose"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "sidebarOpen",
+    "description": "Fired when the sidebar is opened.",
+    "params": "{ value: GridSidebarValue }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onSidebarOpen"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

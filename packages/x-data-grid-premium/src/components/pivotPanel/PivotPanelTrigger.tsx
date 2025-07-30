@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useGridComponentRenderer, RenderProp } from '@mui/x-data-grid-pro/internals';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { GridSlotProps, useGridSelector } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -10,6 +10,7 @@ import {
   gridPivotPanelOpenSelector,
   gridPivotActiveSelector,
 } from '../../hooks/features/pivoting/gridPivotingSelectors';
+import { GridSidebarValue } from '../../hooks/features/sidebar';
 
 export interface PivotPanelState {
   /**
@@ -58,11 +59,15 @@ const PivotPanelTrigger = forwardRef<HTMLButtonElement, PivotPanelTriggerProps>(
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      apiRef.current.setPivotPanelOpen(!open);
+      if (open) {
+        apiRef.current.hideSidebar();
+      } else {
+        apiRef.current.showSidebar(GridSidebarValue.Pivot, panelId, buttonId);
+      }
       onClick?.(event);
     };
 
-    const element = useGridComponentRenderer(
+    const element = useComponentRenderer(
       rootProps.slots.baseButton,
       render,
       {

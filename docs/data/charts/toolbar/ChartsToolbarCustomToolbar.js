@@ -1,19 +1,32 @@
 import * as React from 'react';
-import ZoomIn from '@mui/icons-material/ZoomIn';
-import ZoomOut from '@mui/icons-material/ZoomOut';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import PrintIcon from '@mui/icons-material/Print';
+import PhotoIcon from '@mui/icons-material/Photo';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import {
-  ChartsToolbarZoomInButton,
-  ChartsToolbarZoomOutButton,
+  ChartsToolbarZoomInTrigger,
+  ChartsToolbarZoomOutTrigger,
+  ChartsToolbarPrintExportTrigger,
+  ChartsToolbarImageExportTrigger,
 } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { chartsToolbarClasses, Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
-import { useChartApiContext } from '@mui/x-charts-pro/context';
+import { useChartProApiContext } from '@mui/x-charts-pro/context';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import { data } from './randomData';
+
+const VerticalDivider = styled(Divider)(({ theme }) => ({
+  height: 20,
+  alignSelf: 'center',
+  marginLeft: theme.spacing(1),
+  marginRight: theme.spacing(1),
+}));
 
 const params = {
   height: 300,
@@ -30,7 +43,7 @@ const params = {
 };
 
 const ResetZoomButton = React.forwardRef(function ResetZoomButton(props, ref) {
-  const apiRef = useChartApiContext();
+  const apiRef = useChartProApiContext();
 
   return (
     <ToolbarButton
@@ -48,30 +61,55 @@ const ResetZoomButton = React.forwardRef(function ResetZoomButton(props, ref) {
 
 function CustomToolbar() {
   return (
-    <Toolbar>
+    <Stack
+      width="100%"
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      gap={1}
+      flexWrap="wrap"
+    >
       <Typography
-        flexGrow={1}
-        flexShrink={0}
         justifyContent="center"
         sx={{ textAlign: { xs: 'center', sm: 'left' } }}
+        variant="h6"
       >
         Chart with Custom Toolbar
       </Typography>
-      <Stack direction="row" flex={1} justifyContent={{ xs: 'center', sm: 'end' }}>
-        <Tooltip title="Zoom in">
-          <ChartsToolbarZoomInButton>
-            <ZoomIn />
-          </ChartsToolbarZoomInButton>
-        </Tooltip>
-        <Tooltip title="Zoom out">
-          <ChartsToolbarZoomOutButton>
-            <ZoomOut />
-          </ChartsToolbarZoomOutButton>
-        </Tooltip>
+      <Stack>
+        <Toolbar>
+          <Tooltip title="Zoom in">
+            <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
+              <ZoomInIcon />
+            </ChartsToolbarZoomInTrigger>
+          </Tooltip>
+          <Tooltip title="Zoom out">
+            <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
+              <ZoomOutIcon />
+            </ChartsToolbarZoomOutTrigger>
+          </Tooltip>
 
-        <ResetZoomButton>Reset</ResetZoomButton>
+          <ResetZoomButton>Reset</ResetZoomButton>
+          <VerticalDivider orientation="vertical" />
+          <Tooltip title="Print">
+            <ChartsToolbarPrintExportTrigger
+              render={<ToolbarButton render={<IconButton size="small" />} />}
+              options={{ fileName: 'ChartWithCustomToolbar' }}
+            >
+              <PrintIcon />
+            </ChartsToolbarPrintExportTrigger>
+          </Tooltip>
+          <Tooltip title="Export as PNG">
+            <ChartsToolbarImageExportTrigger
+              render={<ToolbarButton render={<IconButton size="small" />} />}
+              options={{ type: 'image/png', fileName: 'ChartWithCustomToolbar' }}
+            >
+              <PhotoIcon />
+            </ChartsToolbarImageExportTrigger>
+          </Tooltip>
+        </Toolbar>
       </Stack>
-    </Toolbar>
+    </Stack>
   );
 }
 

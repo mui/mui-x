@@ -27,11 +27,14 @@ const defaultAlias = {
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
   '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
   '@mui/x-charts-pro': resolveAliasPath('./packages/x-charts-pro/src'),
+  '@mui/x-charts-premium': resolveAliasPath('./packages/x-charts-premium/src'),
   '@mui/x-charts-vendor': resolveAliasPath('./packages/x-charts-vendor'),
   '@mui/x-scheduler': resolveAliasPath('./packages/x-scheduler'),
   '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': resolveAliasPath('./packages/x-tree-view-pro/src'),
   '@mui/x-internals': resolveAliasPath('./packages/x-internals/src'),
+  '@mui/x-internal-gestures': resolveAliasPath('./packages/x-internal-gestures/src'),
+  '@mui/x-virtualizer': resolveAliasPath('./packages/x-virtualizer/src'),
   '@mui/material-nextjs': '@mui/monorepo/packages/mui-material-nextjs/src',
   '@mui-internal/api-docs-builder': resolveAliasPath(
     './node_modules/@mui/monorepo/packages/api-docs-builder',
@@ -170,18 +173,6 @@ module.exports = function getBabelConfig(api) {
       /prettier/,
     ],
     env: {
-      coverage: {
-        plugins: [
-          'babel-plugin-istanbul',
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
-            },
-          ],
-        ],
-      },
       development: {
         plugins: [
           [
@@ -189,18 +180,6 @@ module.exports = function getBabelConfig(api) {
             {
               alias: defaultAlias,
               root: ['./'],
-            },
-          ],
-        ],
-      },
-      test: {
-        sourceMaps: 'both',
-        plugins: [
-          [
-            'babel-plugin-module-resolver',
-            {
-              root: ['./'],
-              alias: defaultAlias,
             },
           ],
         ],

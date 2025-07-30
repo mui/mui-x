@@ -30,7 +30,6 @@ function ExpandableCell({ value }) {
     <div>
       {expanded ? value : value.slice(0, 200)}&nbsp;
       {value.length > 200 && (
-        // eslint-disable-next-line jsx-a11y/anchor-is-valid
         <Link
           type="button"
           component="button"

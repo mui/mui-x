@@ -46,7 +46,7 @@ default-job: &default-job
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:23.11
+    - image: cimg/node:22.16
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -71,13 +71,21 @@ commands:
         description: The version of React to use.
         type: string
         default: << pipeline.parameters.react-version >>
-
     steps:
-      - run:
-          name: Install pnpm package manager
-          # See https://stackoverflow.com/a/73411601
-          command: corepack enable --install-directory ~/bin
-
+      - when:
+          condition: << parameters.playwright >>
+          steps:
+            - run:
+                name: Install pnpm package manager
+                command: corepack enable
+      - when:
+          condition:
+            not: << parameters.playwright >>
+          steps:
+            - run:
+                name: Install pnpm package manager
+                # See https://stackoverflow.com/a/73411601
+                command: corepack enable --install-directory ~/bin
       - run:
           name: View install environment
           command: |
@@ -98,40 +106,18 @@ commands:
             - run:
                 name: Install js dependencies without frozen lockfile
                 command: pnpm install --no-frozen-lockfile
-
       - run:
           name: Resolve React version
           command: |
             pnpm use-react-version
             # log a patch for maintainers who want to check out this change
             git --no-pager diff HEAD
-
       - when:
           condition: << pipeline.parameters.with-material-ui-6 >>
           steps:
             - run:
                 name: Install @mui/material v6
                 command: pnpm use-material-ui-v6
-      - when:
-          condition: << parameters.playwright >>
-          steps:
-            - restore_cache:
-                key: playwright-cache-{{ checksum "pnpm-lock.yaml" }}
-            - run:
-                name: Install playwright & ffmpeg
-                command: |
-                  pnpx playwright install --with-deps
-                  # Avoids installing a system version of ffmpeg
-                  ffmpeg_bin=$(find ~/.cache/ms-playwright -regex '.*/ffmpeg-[0-9]*')
-                  if [[ -z "$ffmpeg_bin" ]]; then
-                    >&2 echo "Could not find ffmpeg location"
-                    exit 1
-                  fi
-                  ln -s "$ffmpeg_bin" ~/bin/ffmpeg
-            - save_cache:
-                key: playwright-cache-{{ checksum "pnpm-lock.yaml" }}
-                paths:
-                  - ~/.cache/ms-playwright
 
 jobs:
   checkout:
@@ -161,9 +147,10 @@ jobs:
       - run:
           name: Test JSDOM
           command: pnpm test:unit:jsdom
-
   test_browser:
     <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.54.1-noble
     resource_class: medium+
     steps:
       - checkout
@@ -176,15 +163,23 @@ jobs:
               equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
-                command: pnpm test:unit:browser
+                command: |
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
                 name: Test Browser + Coverage
-                command: pnpm test:unit:browser --coverage
+                environment:
+                  TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                command: |
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
             - run:
                 name: Check coverage generated
                 command: |
@@ -198,7 +193,6 @@ jobs:
                   curl -Os https://uploader.codecov.io/latest/linux/codecov
                   chmod +x codecov
                   ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-browser"
-
   test_lint:
     <<: *default-job
     steps:
@@ -258,8 +252,8 @@ jobs:
       - run:
           name: '`pnpm @mui/x-charts-vendor build` was run?'
           command: |
-            # #target-branch-reference 
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]]; 
+            # #target-branch-reference
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
               echo "No changes to dependencies detected. Skipping..."
             else
@@ -294,6 +288,8 @@ jobs:
             NODE_OPTIONS: --max-old-space-size=3584
   test_e2e:
     <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.54.1-noble
     steps:
       - checkout
       - install_js:
@@ -304,6 +300,8 @@ jobs:
           command: pnpm test:e2e
   test_e2e_website:
     <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.54.1-noble
     steps:
       - checkout
       - install_js:
@@ -313,24 +311,20 @@ jobs:
           command: pnpm test:e2e-website
           environment:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
-
   test_package:
     <<: *default-job
     steps:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
-
       - run:
           name: prepare danger on PRs
           command: pnpm danger ci
           environment:
             DANGER_COMMAND: prepareBundleSizeReport
-
       - run:
           name: Build packages
           command: pnpm release:build
-
       - run:
           name: create and upload a size snapshot
           command: |
@@ -338,20 +332,23 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_ARTIFACTS
             export AWS_REGION=$AWS_REGION_ARTIFACTS
             pnpm size:snapshot
-
       - run:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
           environment:
             DANGER_COMMAND: reportBundleSize
-
   test_regressions:
     <<: *default-job
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.54.1-noble
     steps:
       - checkout
       - install_js:
           playwright: true
           react-version: << parameters.react-version >>
+      - run:
+          name: Install ffmpeg
+          command: apt update && apt upgrade -y && apt install ffmpeg -y
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions

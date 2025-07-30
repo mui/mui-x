@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Date and Time Pickers - Custom slots and subcomponents
-components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickersCalendarHeader, PickersRangeCalendarHeader, PickersShortcuts, DateRangePickerToolbar, MonthCalendar, YearCalendar, DateCalendar
+components: DateTimePickerTabs, PickersActionBar, DatePickerToolbar, TimePickerToolbar, DateTimePickerToolbar, PickerDay2, DateRangePickerDay2, PickersCalendarHeader, PickersRangeCalendarHeader, PickersShortcuts, DateRangePickerToolbar, MonthCalendar, YearCalendar, DateCalendar
 ---
 
 # Custom slots and subcomponents
@@ -34,8 +34,8 @@ You can override the actions displayed by passing the `actions` prop to the `act
       actions: ['clear'],
     },
     // The actions will be different between desktop and mobile
-    actionBar: ({ variant }) => ({
-      actions: variant === 'desktop' ? [] : ['clear'],
+    actionBar: ({ pickerVariant }) => ({
+      actions: pickerVariant === 'desktop' ? [] : ['clear'],
     }),
   }}
 />
@@ -47,14 +47,16 @@ In the example below, the action bar contains only one button, which resets the 
 
 #### Available actions
 
-The built-in `ActionBar` component supports four different actions:
+The built-in `<PickersActionBar />` component supports the following different actions:
 
-| Action   | Behavior                                                               |
-| :------- | :--------------------------------------------------------------------- |
-| `accept` | Accept the current value and close the picker view                     |
-| `cancel` | Reset to the last accepted date and close the picker view              |
-| `clear`  | Reset to the empty value and close the picker view                     |
-| `today`  | Reset to today's date (and time if relevant) and close the picker view |
+| Action         | Behavior                                                                         |
+| :------------- | :------------------------------------------------------------------------------- |
+| `accept`       | Accept the current value and close the picker view.                              |
+| `cancel`       | Reset to the last accepted date and close the picker view.                       |
+| `clear`        | Reset to the empty value and close the picker view.                              |
+| `next`         | Go to the next step in the value picking process.                                |
+| `nextOrAccept` | Shows the `accept` or `next` action depending on the value picking process step. |
+| `today`        | Reset to today's date (and time if relevant) and close the picker view.          |
 
 ### Component
 
@@ -186,6 +188,34 @@ You can pass a custom component to replace the year button, as shown below:
 
 {{"demo": "YearButtonComponent.js"}}
 
+## Day
+
+:::info
+The examples below use the new components, which might need further changes on your side to adjust to the new structure.
+
+Be sure to check that any custom styling configuration is compatible with the new structure.
+:::
+
+The `day` slot allows users to change the selected day in the calendar.
+
+You can use the `<PickerDay2 />` and `<DateRangePickerDay2 />` components to replace the day slot with a simplified DOM structure reduced to a single element.
+
+The `::before` pseudo element is used to create the highlighting effect on the days within the selected range.
+
+The `::after` pseudo element is used to create the previewing effect on hover.
+
+This new structure provides a better theming and customization experience.
+
+{{"demo": "PickerDay2Demo.js"}}
+
+Use the `--PickerDay-horizontalMargin` and `--PickerDay-size` CSS variables to easily customize the dimensions and spacing of the day slot.
+
+{{"demo": "PickerDay2DemoCSSVars.js"}}
+
+Customize the look and feel by creating a custom theme with `styleOverrides`.
+
+{{"demo": "PickerDay2DemoCustomTheme.js"}}
+
 ## Month button
 
 This button allows users to change the selected month in the `month` view.
@@ -222,6 +252,17 @@ You can pass props to the icons and buttons as shown below:
 You can pass custom components to replace the icons, as shown below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
+
+## Access date adapter
+
+In case you are building a custom component that needs to work with multiple date libraries, you can access the date adapter instance by using the `usePickerAdapter` hook.
+This hook returns the date adapter instance used by the picker, which you can use to format dates, parse strings, and perform other date-related operations.
+
+:::success
+If your application uses a single date library, prefer using the date library directly in your components to avoid unnecessary complexity and possible breaking changes.
+:::
+
+{{"demo": "UsePickerAdapter.js", "defaultCodeOpen": false}}
 
 ## Shortcuts
 

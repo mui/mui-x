@@ -3,12 +3,29 @@ import * as fs from 'fs';
 import * as url from 'url';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-// @ts-expect-error This expected error should be gone once we update the monorepo
 // eslint-disable-next-line no-restricted-imports
 import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra';
 import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
+import { getPickerAdapterDeps } from './src/modules/utils/getPickerAdapterDeps';
+
+declare global {
+  interface MUIEnv {
+    DEPLOY_ENV?: string;
+    DOCS_STATS_ENABLED?: string;
+    PULL_REQUEST?: string;
+    PICKERS_ADAPTERS_DEPS?: string;
+    LIB_VERSION?: string;
+    SOURCE_CODE_REPO?: string;
+    SOURCE_GITHUB_BRANCH?: string;
+    GITHUB_TEMPLATE_DOCS_FEEDBACK?: string;
+    DATA_GRID_VERSION?: string;
+    DATE_PICKERS_VERSION?: string;
+    CHARTS_VERSION?: string;
+    TREE_VIEW_VERSION?: string;
+  }
+}
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -34,6 +51,8 @@ const datePickersPkg = loadPkg('./packages/x-date-pickers');
 const chartsPkg = loadPkg('./packages/x-charts');
 const treeViewPkg = loadPkg('./packages/x-tree-view');
 
+const pickersAdaptersDeps = getPickerAdapterDeps();
+
 let localSettings = {};
 try {
   // eslint-disable-next-line import/extensions
@@ -43,6 +62,7 @@ try {
 }
 
 export default withDocsInfra({
+  reactStrictMode: true,
   typescript: {
     // The tsconfig also contains path aliases that are used by next.js.
     tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
@@ -69,6 +89,9 @@ export default withDocsInfra({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
+    PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
+    MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
+    MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
   },
   // @ts-ignore
   webpack: (config, options) => {

@@ -1,7 +1,9 @@
+'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import { SeriesId } from '../../../../models/seriesType/common';
@@ -16,7 +18,25 @@ import {
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 
-type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number };
+type VoronoiSeries = {
+  /**
+   * The series id
+   */
+  seriesId: SeriesId;
+  /**
+   * The first index in the voronoi data that is about this series.
+   */
+  startIndex: number;
+  /**
+   * The first index in the voronoi data that is outside this series.
+   */
+  endIndex: number;
+  /**
+   * The mapping from voronoi point index to the series dataIndex.
+   * This takes into account removed points.
+   */
+  seriesIndexes: number[];
+};
 
 export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   svgRef,
@@ -71,22 +91,23 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       const getXPosition = getValueToPositionMapper(xScale);
       const getYPosition = getValueToPositionMapper(yScale);
 
-      const seriesPoints = data.flatMap(({ x, y }) => {
+      const seriesPoints: number[] = [];
+      const seriesIndexes: number[] = [];
+      for (let dataIndex = 0; dataIndex < data.length; dataIndex += 1) {
+        const { x, y } = data[dataIndex];
         const pointX = getXPosition(x);
         const pointY = getYPosition(y);
 
-        if (!instance.isPointInside(pointX, pointY)) {
-          // If the point is not displayed we move them to a trash coordinate.
-          // This avoids managing index mapping before/after filtering.
-          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
-          return [-drawingArea.width, -drawingArea.height];
+        if (instance.isPointInside(pointX, pointY)) {
+          seriesPoints.push(pointX);
+          seriesPoints.push(pointY);
+          seriesIndexes.push(dataIndex);
         }
-
-        return [pointX, pointY];
-      });
+      }
 
       voronoiRef.current[seriesId] = {
         seriesId,
+        seriesIndexes,
         startIndex: points.length,
         endIndex: points.length + seriesPoints.length,
       };
@@ -147,8 +168,10 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         return 'no-point-found';
       }
 
-      const dataIndex =
+      // The point index in the series with id=closestSeries.seriesId.
+      const seriesPointIndex =
         (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
+      const dataIndex = voronoiRef.current[closestSeries.seriesId].seriesIndexes[seriesPointIndex];
 
       if (voronoiMaxRadius !== undefined) {
         const pointX = delauneyRef.current.points[2 * closestPointIndex];
@@ -162,13 +185,28 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       return { seriesId: closestSeries.seriesId, dataIndex };
     }
 
-    const handleMouseLeave = () => {
-      instance.cleanInteraction?.();
-      instance.clearHighlight?.();
-    };
+    // Clean the interaction when the mouse leaves the chart.
+    const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
+      if (!event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+        instance.clearHighlight?.();
+      }
+    });
+    const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
+      if (!event.detail.activeGestures.move) {
+        instance.cleanInteraction?.();
+        instance.clearHighlight?.();
+      }
+    });
+    const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
+      if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
+        instance.cleanInteraction?.();
+        instance.clearHighlight?.();
+      }
+    });
 
-    const handleMouseMove = (event: MouseEvent) => {
-      const closestPoint = getClosestPoint(event);
+    const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
+      const closestPoint = getClosestPoint(event.detail.srcEvent);
 
       if (closestPoint === 'outside-chart') {
         instance.cleanInteraction?.();
@@ -183,7 +221,6 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       }
 
       const { seriesId, dataIndex } = closestPoint;
-
       instance.setItemInteraction?.({ type: 'scatter', seriesId, dataIndex });
       instance.setHighlight?.({
         seriesId,
@@ -191,28 +228,27 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       });
     };
 
-    const handleMouseClick = (event: MouseEvent) => {
-      if (!onItemClick) {
-        return;
+    const tapHandler = instance.addInteractionListener('tap', (event) => {
+      const closestPoint = getClosestPoint(event.detail.srcEvent);
+
+      if (typeof closestPoint !== 'string' && onItemClick) {
+        const { seriesId, dataIndex } = closestPoint;
+        onItemClick(event.detail.srcEvent, { type: 'scatter', seriesId, dataIndex });
       }
-      const closestPoint = getClosestPoint(event);
+    });
 
-      if (typeof closestPoint === 'string') {
-        // No point fond for any reason
-        return;
-      }
+    const moveHandler = instance.addInteractionListener('move', gestureHandler);
+    const panHandler = instance.addInteractionListener('pan', gestureHandler);
+    const pressHandler = instance.addInteractionListener('quickPress', gestureHandler);
 
-      const { seriesId, dataIndex } = closestPoint;
-      onItemClick(event, { type: 'scatter', seriesId, dataIndex });
-    };
-
-    element.addEventListener('pointerleave', handleMouseLeave);
-    element.addEventListener('pointermove', handleMouseMove);
-    element.addEventListener('click', handleMouseClick);
     return () => {
-      element.removeEventListener('pointerleave', handleMouseLeave);
-      element.removeEventListener('pointermove', handleMouseMove);
-      element.removeEventListener('click', handleMouseClick);
+      tapHandler.cleanup();
+      moveHandler.cleanup();
+      moveEndHandler.cleanup();
+      panHandler.cleanup();
+      panEndHandler.cleanup();
+      pressHandler.cleanup();
+      pressEndHandler.cleanup();
     };
   }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
 

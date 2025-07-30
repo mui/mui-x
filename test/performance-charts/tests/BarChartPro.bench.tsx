@@ -1,12 +1,13 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { bench, describe } from 'vitest';
+import { describe } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { options } from '../utils/options';
+import { bench } from '../utils/bench';
 
 describe('BarChartPro', () => {
-  const dataLength = 400;
+  const dataLength = 800;
   const data = Array.from({ length: dataLength + 1 }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,

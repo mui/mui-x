@@ -1,16 +1,14 @@
-// eslint-disable-next-line import/export
 export * from '@mui/x-data-grid/internals';
 
 export { GridColumnHeaders } from '../components/GridColumnHeaders';
 export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
-/* eslint-disable import/export --
+/*
  * x-data-grid-pro internals that are overriding the x-data-grid internals
  */
-export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
-export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
-export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-// eslint-enable import/export
+export { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
+export { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export {
   useGridColumnPinning,
@@ -65,6 +63,10 @@ export { sortRowTree } from '../utils/tree/sortRowTree';
 export { insertNodeInTree, removeNodeFromTree, getVisibleRowsLookup } from '../utils/tree/utils';
 export type { RowTreeBuilderGroupingCriterion } from '../utils/tree/models';
 
-export { skipSorting, skipFiltering } from '../hooks/features/serverSideTreeData/utils';
+export {
+  skipSorting,
+  skipFiltering,
+  getParentPath,
+} from '../hooks/features/serverSideTreeData/utils';
 
 export * from './propValidation';

@@ -16,12 +16,16 @@
   },
   "exports": {
     "./joy": "./src/joy/index.ts",
+    "./joy/day-view": "./src/joy/day-view/index.ts",
     "./joy/event-calendar": "./src/joy/event-calendar/index.ts",
+    "./joy/standalone-view": "./src/joy/standalone-view/index.ts",
+    "./joy/week-view": "./src/joy/week-view/index.ts",
     "./joy/locales/enUS": "./src/joy/locales/enUS.ts",
     "./joy/locales/frFR": "./src/joy/locales/frFR.ts",
     "./primitives": "./src/primitives/index.ts",
     "./primitives/day-grid": "./src/primitives/day-grid/index.ts",
     "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
+    "./primitives/timeline": "./src/primitives/timeline/index.ts",
     "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
     "./primitives/use-week-list": "./src/primitives/use-week-list/index.ts"
   },
@@ -44,8 +48,8 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:node": "node ../../scripts/build.mjs node --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
+    "build:stable": "node ../../scripts/build.mjs stable --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
     "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
@@ -56,25 +60,32 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.1",
-    "@floating-ui/react": "^0.27.11",
+    "@atlaskit/pragmatic-drag-and-drop": "^1.7.4",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.1",
+    "@babel/runtime": "catalog:",
+    "@base-ui-components/react": "1.0.0-beta.1",
+    "@floating-ui/react": "^0.27.14",
     "@mui/x-internals": "workspace:*",
-    "clsx": "^2.1.1",
-    "prop-types": "^15.8.1"
+    "clsx": "catalog:",
+    "lucide-react": "^0.526.0",
+    "reselect": "catalog:",
+    "prop-types": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
+    "luxon": "^3.0.2",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0",
-    "luxon": "^3.0.2"
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.8",
-    "@types/luxon": "^3.6.2",
-    "@types/prop-types": "^15.7.14",
-    "luxon": "^3.6.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "rimraf": "^6.0.1",
+    "@mui/internal-test-utils": "catalog:",
+    "@types/luxon": "catalog:",
+    "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
+    "luxon": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:",
     "use-isomorphic-layout-effect": "^1.2.1"
   },
   "engines": {

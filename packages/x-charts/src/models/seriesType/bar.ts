@@ -5,6 +5,7 @@ import {
   CommonSeriesType,
   CommonDefaultizedProps,
   StackableSeriesType,
+  SeriesId,
 } from './common';
 
 export interface BarSeriesType
@@ -34,6 +35,16 @@ export interface BarSeriesType
    * @default 'diverging'
    */
   stackOffset?: StackOffsetType;
+  /**
+   * If provided, the value will be used as the minimum size of the bar in pixels.
+   * This is useful to avoid bars with a size of 0.
+   *
+   * The property is ignored if the series value is `null` or `0`.
+   * It also doesn't work with stacked series.
+   *
+   * @default 0px
+   */
+  minBarSize?: number;
 }
 
 /**
@@ -42,9 +53,12 @@ export interface BarSeriesType
  */
 export type BarItemIdentifier = {
   type: 'bar';
-  seriesId: DefaultizedBarSeriesType['id'];
+  seriesId: SeriesId;
   dataIndex: number;
 };
 
 export interface DefaultizedBarSeriesType
-  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}
+  extends DefaultizedProps<
+    BarSeriesType,
+    CommonDefaultizedProps | 'color' | 'layout' | 'minBarSize'
+  > {}

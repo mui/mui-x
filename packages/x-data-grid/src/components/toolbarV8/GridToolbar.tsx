@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
@@ -151,7 +152,10 @@ function GridToolbar(props: GridToolbarProps) {
 
       {showExportMenu && (
         <React.Fragment>
-          <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarExport')}>
+          <rootProps.slots.baseTooltip
+            title={apiRef.current.getLocaleText('toolbarExport')}
+            disableInteractive={exportMenuOpen}
+          >
             <ToolbarButton
               ref={exportMenuTriggerRef}
               id={exportMenuTriggerId}

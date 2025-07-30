@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import Grow from '@mui/material/Grow';
@@ -17,7 +18,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
 import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
 import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
@@ -67,7 +68,7 @@ export interface PickerPopperSlotProps {
   /**
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
-  popper?: SlotComponentPropsFromProps<PopperProps, {}, PickerPopperOwnerState>;
+  popper?: SlotComponentPropsFromProps<PopperProps, {}, PickerOwnerState>;
 }
 
 export interface ExportedPickerPopperProps {
@@ -100,7 +101,7 @@ const useUtilityClasses = (classes: Partial<PickerPopperClasses> | undefined) =>
 const PickerPopperRoot = styled(MuiPopper, {
   name: 'MuiPickerPopper',
   slot: 'Root',
-})(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
 
@@ -221,8 +222,11 @@ function useClickAwayListener(
   });
 
   // Keep track of mouse/touch events that bubbled up through the portal.
-  const handleSynthetic = () => {
-    syntheticEventRef.current = true;
+  const handleSynthetic = (event: MuiEvent<React.SyntheticEvent>) => {
+    // Ignore events handled by our internal components
+    if (!event.defaultMuiPrevented) {
+      syntheticEventRef.current = true;
+    }
   };
 
   React.useEffect(() => {
@@ -327,6 +331,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
   const { open, popupRef, reduceAnimations } = usePickerContext();
+  const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
   const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
 
@@ -351,7 +356,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
     }
 
     if (open) {
-      lastFocusedElementRef.current = getActiveElement(document);
+      lastFocusedElementRef.current = getActiveElement(rootRefObject.current);
     } else if (
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
@@ -364,21 +369,16 @@ export function PickerPopper(inProps: PickerPopperProps) {
         }
       });
     }
-  }, [open, viewContainerRole, getCurrentViewMode]);
+  }, [open, viewContainerRole, getCurrentViewMode, rootRefObject]);
 
   const classes = useUtilityClasses(classesProp);
-  const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
-  const ownerState: PickerPopperOwnerState = {
-    ...pickerOwnerState,
-    popperPlacement: placement,
-  };
 
-  const handleClickAway = useEventCallback(() => {
+  const handleClickAway: OnClickAway = useEventCallback(() => {
     if (viewContainerRole === 'tooltip') {
       executeInTheNextEventLoopTick(() => {
         if (
-          rootRefObject.current?.contains(getActiveElement(document)) ||
-          popupRef.current?.contains(getActiveElement(document))
+          rootRefObject.current?.contains(getActiveElement(rootRefObject.current)) ||
+          popupRef.current?.contains(getActiveElement(popupRef.current))
         ) {
           return;
         }
@@ -423,8 +423,13 @@ export function PickerPopper(inProps: PickerPopperProps) {
       onKeyDown: handleKeyDown,
     },
     className: classes.root,
-    ownerState,
+    ownerState: pickerOwnerState,
   });
+
+  const ownerState: PickerPopperOwnerState = React.useMemo(
+    () => ({ ...pickerOwnerState, popperPlacement: popperProps.placement }),
+    [pickerOwnerState, popperProps.placement],
+  );
 
   return (
     <Popper {...popperProps}>

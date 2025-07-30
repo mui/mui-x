@@ -65,13 +65,13 @@ function RadarAxisHighlight(props: RadarAxisHighlightProps) {
         pointerEvents="none"
         strokeDasharray="4 4"
       />
-      {points.map(({ highlighted }, seriesIndex) => {
+      {points.map((point, seriesIndex) => {
         return (
           <circle
             key={series[seriesIndex].id}
             fill={series[seriesIndex].color}
-            cx={highlighted.x}
-            cy={highlighted.y}
+            cx={point.x}
+            cy={point.y}
             className={classes.dot}
             pointerEvents="none"
             {...(series[seriesIndex].hideMark ? highlightMark : highlightMarkShadow)}

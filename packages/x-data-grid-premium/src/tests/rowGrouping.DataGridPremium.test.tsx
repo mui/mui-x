@@ -11,7 +11,6 @@ import {
   getRow,
   sleep,
 } from 'test/utils/helperFn';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -1508,5 +1507,26 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
 
     expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+  });
+
+  it('should not use the valueFormatter of the main grouping criteria on all grouping criteria', () => {
+    render(
+      <Test
+        columns={[
+          { field: 'id' },
+          {
+            field: 'year',
+            type: 'number',
+            valueFormatter: (value) => (typeof value === 'number' ? `${value}` : ''),
+          },
+          { field: 'company' },
+        ]}
+        rows={[{ id: 1, year: 2025, company: 'MUI' }]}
+        rowGroupingModel={['year', 'company']}
+        defaultGroupingExpansionDepth={-1}
+      />,
+    );
+
+    expect(getColumnValues(0)).to.deep.equal(['2025 (1)', 'MUI (1)', '']);
   });
 });

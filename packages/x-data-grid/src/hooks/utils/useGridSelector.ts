@@ -1,16 +1,11 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
-import type { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
-
-type Selector<Api extends GridApiCommon, Args, T> =
-  | ((apiRef: RefObject<Api>) => T)
-  | ((apiRef: RefObject<Api | null>) => T)
-  | OutputSelector<Api['state'], Args, T>;
 
 const defaultCompare = Object.is;
 export const objectShallowCompare = fastObjectShallowCompare as (a: unknown, b: unknown) => boolean;
@@ -39,19 +34,31 @@ const EMPTY = [] as unknown[];
 type Refs<T> = {
   state: T;
   equals: <U = T>(a: U, b: U) => boolean;
-  selector: Selector<any, any, T>;
+  selector: Function;
   args: any;
   subscription: undefined | (() => void);
 };
 
 const emptyGetSnapshot = () => null;
 
-export const useGridSelector = <Api extends GridApiCommon, Args, T>(
+export function useGridSelector<Api extends GridApiCommon, T>(
   apiRef: RefObject<Api>,
-  selector: Selector<Api, Args, T>,
+  selector: (apiRef: RefObject<Api>) => T,
+  args?: undefined,
+  equals?: <U = T>(a: U, b: U) => boolean,
+): T;
+export function useGridSelector<Api extends GridApiCommon, T, Args>(
+  apiRef: RefObject<Api>,
+  selector: (apiRef: RefObject<Api>, a1: Args) => T,
+  args: Args,
+  equals?: <U = T>(a: U, b: U) => boolean,
+): T;
+export function useGridSelector<Api extends GridApiCommon, Args, T>(
+  apiRef: RefObject<Api>,
+  selector: Function,
   args: Args = undefined as Args,
   equals: <U = T>(a: U, b: U) => boolean = defaultCompare,
-) => {
+) {
   if (process.env.NODE_ENV !== 'production') {
     if (!apiRef.current.state) {
       warnOnce([
@@ -104,6 +111,11 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   );
 
   const unsubscribe = React.useCallback(() => {
+    // Fixes issue in React Strict Mode, where getSnapshot is not called
+    if (!refs.current.subscription) {
+      subscribe();
+    }
+
     return () => {
       if (refs.current.subscription) {
         refs.current.subscription();
@@ -116,4 +128,4 @@ export const useGridSelector = <Api extends GridApiCommon, Args, T>(
   useSyncExternalStore(unsubscribe, subscribe, emptyGetSnapshot);
 
   return state;
-};
+}
