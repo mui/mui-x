@@ -1,4 +1,4 @@
-@import '../../styles/tokens.css';
+@import '../../../../styles/tokens.css';
 
 .ViewSwitcherMenuBar {
   display: flex;
