@@ -210,8 +210,6 @@ export default function DataGridDemoFrame({ children, demoName }: DataGridDemoFr
                   <Box
                     component="a"
                     href="/"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     onContextMenu={(event) => event.preventDefault()}
                     sx={{
                       display: 'flex',
