@@ -90,7 +90,7 @@ Internal changes.
 
 ### Docs
 
-- [docs] Add Data Grid demo pages (DX-5) (#18180) @KenanYusuf
+- [docs] Add Data Grid demo pages (#18180) @KenanYusuf
 - [docs] Copyedit the Charts Overview page (#18840) @mapache-salvaje
 - [docs] Fix incorrect parameter name in pickers "Custom components" page from `variant` to `pickerVariant` (#18919) @AmrElnaggar99
 
