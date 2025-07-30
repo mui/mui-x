@@ -92,8 +92,8 @@ function valueGetter(
 ): Value | Value[] {
   return Array.isArray(ids)
     ? ids.map((id, axisIndex) =>
-      getAxisValue(axes.axis[id], value, (indexes as (number | null)[])[axisIndex]),
-    )
+        getAxisValue(axes.axis[id], value, (indexes as (number | null)[])[axisIndex]),
+      )
     : getAxisValue(axes.axis[ids], value, indexes as number | null);
 }
 
