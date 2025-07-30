@@ -7,6 +7,46 @@ const START_OF_FIRST_WEEK = defaultVisibleDate.startOf('week');
 
 export const initialEvents = [
   {
+    id: 'allday-0',
+    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
+    title: 'Conference Day',
+    allDay: true,
+    resource: 'a',
+  },
+  {
+    id: 'allday-1',
+    start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
+    title: 'Conference Day',
+    allDay: true,
+    resource: 'b',
+  },
+  {
+    id: 'allday-2',
+    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
+    title: 'National Holiday',
+    allDay: true,
+    resource: 'c',
+  },
+  {
+    id: 'allday-3',
+    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
+    title: 'Weekend Retreat',
+    allDay: true,
+    resource: 'd',
+  },
+  {
+    id: 'allday-4',
+    start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 7, hour: 9 }),
+    title: 'Family Visit',
+    allDay: true,
+    resource: 'e',
+  },
+  {
     id: 'a-1',
     start: START_OF_FIRST_WEEK.set({ hour: 9 }),
     end: START_OF_FIRST_WEEK.set({ hour: 10 }),
