@@ -17,10 +17,10 @@ We'd like to extend a big thank you to the 21 contributors who made this release
 - 📊 Fix bar border radius on Firefox
 
 Special thanks go out to the community members for their valuable contributions:
-@AmrElnaggar99, @arminmeh, @atlanteh, @brijeshb42, @ddolcimascolo, @Jiseoup, @leonaha5, @mapache-salvaje, @noherczeg, @romgrk, @sai6855
+@AmrElnaggar99, @atlanteh, @ddolcimascolo, @Jiseoup, @leonaha5, @noherczeg, @sai6855
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @bharatkashyap, @cherniavskii, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @rita-codes, @siriwatknp
+@alexfauquette, @bernardobelchior, @bharatkashyap, @cherniavskii, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @rita-codes, @siriwatknp, @arminmeh, @brijeshb42, @mapache-salvaje, @romgrk
 
 ### Data Grid
 
