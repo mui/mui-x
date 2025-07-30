@@ -5,6 +5,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.9.2
+<!-- generated comparing v8.9.1..master -->
+_Jul 30, 2025_
+
+We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to the community members for their valuable contributions:
+@AmrElnaggar99, @arminmeh, @atlanteh, @brijeshb42, @ddolcimascolo, @Jiseoup, @leonaha5, @mapache-salvaje, @noherczeg, @romgrk, @sai6855
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @bharatkashyap, @cherniavskii, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @rita-codes, @siriwatknp
+
+### Data Grid
+
+From https://github.com/mui/mui-x/pull/18905
+
+Improved fr-FR locale
+
+- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/mui-x/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).
+
+#### `@mui/x-data-grid@8.9.2`
+
+- [DataGrid] Add debounce for columns panel search (#18719) @noherczeg
+- [DataGrid] Extract virtualization engine (#18275) @romgrk
+- [l10n] Improve French (fr-FR) locale (#18905) @ddolcimascolo
+- [l10n] Improve Hebrew (he-IL) locale (#18665) @atlanteh
+- [l10n] Improve polish (pl-PL) locale (#18068) @leonaha5
+
+#### `@mui/x-data-grid-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@8.9.2`.
+
+#### `@mui/x-data-grid-premium@8.9.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@8.9.2`, plus:
+
+- [DataGridPremium] Add `privateMode` to AI assistant prompt resolver (#18759) @bharatkashyap
+- [DataGridPremium] Fix empty nested group values caused by main criterial valueFormatter (#18916) @cherniavskii
+- [DataGridPremium] Sidebar content and state is managed the same way as for preference panel (#18741) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.9.2`
+
+- [l10n] Improve Korean (ko-KR) locale (#18664) @Jiseoup
+- [pickers] Fix popper click-away behavior (#18804) @LukasTy
+- [pickers] Fix usage not in main document (#18944) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@8.9.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.9.2`
+
+- [charts] Add symlog scale to charts (#18729) @bernardobelchior
+- [charts] Fix bar border radius on Firefox (#18824) @bernardobelchior
+- [charts] Fix crash when rendering large scatter dataset (#18845) @bernardobelchior
+- [charts] Remove unnecessary type assertion in tooltip valueFormatter (#18877) @sai6855
+- [charts][docs] Copyedit the Charts Overview page (#18840) @mapache-salvaje
+
+#### `@mui/x-charts-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@8.9.2`, plus:
+
+- [charts-pro] Fix voronoi interaction with zoom (#18950) @alexfauquette
+- [charts-pro] Hide toolbar by default when exporting (#18764) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.9.2`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@8.9.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.9.2`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add Data Grid demo pages (DX-5) (#18180) @KenanYusuf
+
+### Miscellaneous
+
+- Fix incorrect parameter name in date pickers custom components documentation from variant to pickerVariant (#18919) @AmrElnaggar99
+- [docs-infra] Turn on "Edit in Chat" for X docs  (#18869) @siriwatknp
+- [infra] Add specific bundle size tracking (#18884) @Janpot
+- [infra] Fix markdown formatting in llms generation (#18914) @Janpot
+- [infra] Use CI action from mui-public (#18709) @brijeshb42
+
 ## 8.9.1
 
 _Jul 21, 2025_
