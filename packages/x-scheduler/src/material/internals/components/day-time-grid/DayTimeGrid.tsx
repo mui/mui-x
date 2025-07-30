@@ -2,26 +2,25 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { SchedulerValidDate } from '../../../../primitives/models';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { EventData, SchedulerValidDate } from '../../../../primitives/models';
 import { TimeGrid } from '../../../../primitives/time-grid';
+import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { DayTimeGridProps } from './DayTimeGrid.types';
-import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../event-calendar/store';
 import { CalendarEvent } from '../../../models/events';
-import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
+import { EventPopoverProvider } from '../event-popover';
+import { TimeGridColumn } from './TimeGridColumn';
 import './DayTimeGrid.css';
-
-const adapter = getAdapter();
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const adapter = useAdapter();
   const { days, className, ...other } = props;
 
   const translations = useTranslations();
@@ -33,13 +32,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const { store, instance } = useEventCalendarContext();
   const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
   const visibleDate = useSelector(store, selectors.visibleDate);
   const hasDayView = useSelector(store, selectors.hasDayView);
   const ampm = useSelector(store, selectors.ampm);
 
   const handleEventChangeFromPrimitive = React.useCallback(
-    (data: TimeGrid.Root.EventData) => {
+    (data: EventData) => {
       const updatedEvent: CalendarEvent = {
         ...selectors.getEventById(store.state, data.id)!,
         start: data.start,
@@ -153,28 +151,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               </div>
               <div className="DayTimeGridGrid">
                 {days.map((day) => (
-                  <TimeGrid.Column
+                  <TimeGridColumn
                     key={day.day.toString()}
-                    value={day}
-                    className="DayTimeGridColumn"
-                    data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                  >
-                    {getEventsStartingInDay(day).map((event) => (
-                      <EventPopoverTrigger
-                        key={event.id}
-                        event={event}
-                        render={
-                          <TimeGridEvent
-                            event={event}
-                            eventResource={resourcesByIdMap.get(event.resource)}
-                            variant="regular"
-                            ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
-                          />
-                        }
-                      />
-                    ))}
-                    <TimeGridEventPlaceholder day={day} />
-                  </TimeGrid.Column>
+                    date={day}
+                    events={getEventsStartingInDay(day)}
+                  />
                 ))}
               </div>
             </div>
@@ -184,32 +165,3 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     </div>
   );
 });
-
-function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
-  const placeholder = TimeGrid.useColumnPlaceholder();
-  const { store } = useEventCalendarContext();
-  const event = useSelector(store, selectors.getEventById, placeholder?.id ?? null);
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
-
-  const updatedEvent = React.useMemo(() => {
-    if (!event || !placeholder) {
-      return null;
-    }
-
-    return { ...event, start: placeholder.start, end: placeholder.end };
-  }, [event, placeholder]);
-
-  if (!updatedEvent) {
-    return null;
-  }
-
-  return (
-    <TimeGridEvent
-      event={updatedEvent}
-      eventResource={resourcesByIdMap.get(updatedEvent.resource)}
-      variant="regular"
-      ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
-      readOnly
-    />
-  );
-}

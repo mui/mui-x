@@ -8,10 +8,13 @@ describe('<TimeGrid.Column />', () => {
 
   const day = DateTime.now();
 
-  describeConformance(<TimeGrid.Column value={day} />, () => ({
-    refInstanceof: window.HTMLDivElement,
-    render(node) {
-      return render(<TimeGrid.Root>{node}</TimeGrid.Root>);
-    },
-  }));
+  describeConformance(
+    <TimeGrid.Column start={day.startOf('day')} end={day.endOf('day')} />,
+    () => ({
+      refInstanceof: window.HTMLDivElement,
+      render(node) {
+        return render(<TimeGrid.Root>{node}</TimeGrid.Root>);
+      },
+    }),
+  );
 });

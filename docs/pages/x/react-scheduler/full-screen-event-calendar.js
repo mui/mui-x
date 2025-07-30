@@ -18,6 +18,7 @@ export default function FullEventCalendar() {
       onEventsChange={setEvents}
       areEventsDraggable
       areEventsResizable
+      defaultView="month"
     />
   );
 }

@@ -2,12 +2,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useId } from '@base-ui-components/react/utils';
+import { useSelector } from '../../../../../base-ui-copy/utils/store';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../../../primitives/day-grid';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { useSelector } from '../../../../../base-ui-copy/utils/store';
 import { selectors } from '../../../../event-calendar/store';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import './DayGridEvent.css';
@@ -24,6 +24,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     eventResource,
     ariaLabelledBy,
     variant,
+    readOnly = false,
     className,
     onEventClick,
     id: idProp,
@@ -33,6 +34,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const id = useId(idProp);
   const translations = useTranslations();
   const { store } = useEventCalendarContext();
+  const isDraggable = useSelector(store, selectors.isEventDraggable, { readOnly });
   const ampm = useSelector(store, selectors.ampm);
 
   const content = React.useMemo(() => {
@@ -91,6 +93,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <DayGrid.Event
       ref={forwardedRef}
       id={id}
+      isDraggable={isDraggable}
       className={clsx(
         className,
         'EventContainer',
@@ -99,6 +102,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         getColorClassName({ resource: eventResource }),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
+      eventId={eventProp.id}
       start={eventProp.start}
       end={eventProp.end}
       {...other}

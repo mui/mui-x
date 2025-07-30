@@ -5,18 +5,18 @@ import { useForkRef } from '@base-ui-components/react/utils';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { EventData } from '../../primitives/models';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
-import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
-import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
-import { SchedulerValidDate } from '../../primitives/models';
-import { isWeekend } from '../internals/utils/date-utils';
+import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import './MonthView.css';
+import { MonthViewCell } from './MonthViewCell';
+import { CalendarEvent } from '../models/events';
 
 const adapter = getAdapter();
 const EVENT_HEIGHT = 22;
@@ -37,9 +37,6 @@ export const MonthView = React.memo(
 
     const { store, instance } = useEventCalendarContext();
     const visibleDate = useSelector(store, selectors.visibleDate);
-    const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
-    const hasDayView = useSelector(store, selectors.hasDayView);
-    const today = adapter.date();
     const translations = useTranslations();
 
     const getWeekList = useWeekList();
@@ -61,16 +58,18 @@ export const MonthView = React.memo(
       });
     }, [getWeekList, visibleDate, getDayList, getEventsStartingInDay]);
 
-    const renderCellNumberContent = (day: SchedulerValidDate) => {
-      const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));
-      return (
-        <span className="MonthViewCellNumber">
-          {isFirstDayOfMonth
-            ? adapter.formatByString(day, adapter.formats.shortDate)
-            : adapter.formatByString(day, adapter.formats.dayOfMonth)}
-        </span>
-      );
-    };
+    const handleEventChangeFromPrimitive = React.useCallback(
+      (data: EventData) => {
+        const updatedEvent: CalendarEvent = {
+          ...selectors.getEventById(store.state, data.id)!,
+          start: data.start,
+          end: data.end,
+        };
+
+        instance.updateEvent(updatedEvent);
+      },
+      [instance, store],
+    );
 
     useResizeObserver(
       cellRef,
@@ -91,7 +90,7 @@ export const MonthView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          <DayGrid.Root className="MonthViewRoot">
+          <DayGrid.Root className="MonthViewRoot" onEventChange={handleEventChangeFromPrimitive}>
             <div className="MonthViewHeader">
               <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
               {weeks[0].map((day) => (
@@ -119,54 +118,14 @@ export const MonthView = React.memo(
                       {weekNumer}
                     </div>
                     {week.map((day, dayIdx) => {
-                      const isCurrentMonth = adapter.isSameMonth(day.date, visibleDate);
-                      const isToday = adapter.isSameDay(day.date, today);
-
-                      const visibleEvents = day.events.slice(0, maxEvents);
-                      const hiddenCount = day.events.length - maxEvents;
                       return (
-                        <DayGrid.Cell
-                          ref={weekIdx === 0 && dayIdx === 0 ? cellRef : undefined}
+                        <MonthViewCell
                           key={day.date.toString()}
-                          className={clsx(
-                            'MonthViewCell',
-                            !isCurrentMonth && 'OtherMonth',
-                            isToday && 'Today',
-                            isWeekend(adapter, day.date) && 'Weekend',
-                          )}
-                        >
-                          {hasDayView ? (
-                            <button
-                              type="button"
-                              className="MonthViewCellNumberButton"
-                              onClick={(event) => instance.switchToDay(day.date, event)}
-                              tabIndex={0}
-                            >
-                              {renderCellNumberContent(day.date)}
-                            </button>
-                          ) : (
-                            renderCellNumberContent(day.date)
-                          )}
-                          {visibleEvents.map((event) => (
-                            <EventPopoverTrigger
-                              key={event.id}
-                              event={event}
-                              render={
-                                <DayGridEvent
-                                  event={event}
-                                  eventResource={resourcesByIdMap.get(event.resource)}
-                                  variant="compact"
-                                  ariaLabelledBy={`MonthViewHeaderCell-${day.date.toString()}`}
-                                />
-                              }
-                            />
-                          ))}
-                          {hiddenCount > 0 && day.events.length > 0 && (
-                            <p className="MonthViewMoreEvents">
-                              {translations.hiddenEvents(hiddenCount)}
-                            </p>
-                          )}
-                        </DayGrid.Cell>
+                          ref={weekIdx === 0 && dayIdx === 0 ? cellRef : undefined}
+                          date={day.date}
+                          events={day.events}
+                          maxEvents={maxEvents}
+                        />
                       );
                     })}
                   </DayGrid.Row>

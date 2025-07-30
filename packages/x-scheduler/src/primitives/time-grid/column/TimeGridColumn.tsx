@@ -4,19 +4,19 @@ import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
-import { TimeGridColumnPlaceholderContext } from './TimeGridColumnPlaceholderContext';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../models';
-import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
-import type { TimeGridRoot } from '../root';
 import {
-  createDateFromPositionInCollection,
+  addRoundedOffsetToDate,
+  createDateFromPositionInCollectionOld,
   EVENT_DRAG_PRECISION_MINUTE,
   getCursorPositionRelativeToElement,
+  getOffsetMsInCollection,
   isDraggingTimeGridEvent,
   isDraggingTimeGridEventResizeHandler,
 } from '../../utils/drag-utils';
+import { EventData } from '../../models/event';
 
 export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   componentProps: TimeGridColumn.Props,
@@ -29,63 +29,25 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     className,
     render,
     // Internal props
-    value,
-    startTime,
-    endTime,
+    start,
+    end,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const { onEventChange, setPlaceholder, placeholder } = useTimeGridRootContext();
-
-  const columnStart = React.useMemo(
-    () =>
-      startTime == null ? adapter.startOfDay(value) : mergeDateAndTime(adapter, value, startTime),
-    [adapter, value, startTime],
-  );
-
-  const columnEnd = React.useMemo(
-    () => (endTime == null ? adapter.endOfDay(value) : mergeDateAndTime(adapter, value, endTime)),
-    [adapter, value, endTime],
-  );
-
-  const columnPlaceholder = React.useMemo(() => {
-    if (placeholder == null) {
-      return null;
-    }
-
-    if (
-      adapter.isBefore(placeholder.start, columnStart) ||
-      adapter.isAfter(placeholder.end, columnEnd)
-    ) {
-      return null;
-    }
-
-    return placeholder;
-  }, [adapter, columnStart, columnEnd, placeholder]);
+  const { onEventChange, setPlaceholder } = useTimeGridRootContext();
 
   const contextValue: TimeGridColumnContext = React.useMemo(
     () => ({
-      start: columnStart,
-      end: columnEnd,
+      start,
+      end,
+      ref,
     }),
-    [columnStart, columnEnd],
-  );
-
-  const placeholderContextValue: TimeGridColumnPlaceholderContext = React.useMemo(
-    () => ({
-      placeholder: columnPlaceholder,
-    }),
-    [columnPlaceholder],
+    [start, end],
   );
 
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
-
-  const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, ref],
-    props: [props, elementProps],
-  });
 
   React.useEffect(() => {
     const domElement = ref.current;
@@ -99,23 +61,27 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     }: {
       data: Record<string, unknown>;
       input: { clientY: number };
-    }): TimeGridRoot.EventData | undefined {
+    }): EventData | undefined {
       const position = getCursorPositionRelativeToElement({ ref, input });
 
       // Move event
       if (isDraggingTimeGridEvent(data)) {
-        const cursorPositionPx = position.y - data.position.y;
-
         // TODO: Avoid JS Date conversion
         const eventDuration =
           (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
           (60 * 1000);
 
-        const newStartDate = createDateFromPositionInCollection({
+        const cursorOffsetMs = getOffsetMsInCollection({
           adapter,
-          collectionStart: columnStart,
-          collectionEnd: columnEnd,
-          position: cursorPositionPx / domElement!.offsetHeight,
+          collectionStart: start,
+          collectionEnd: end,
+          position: position.y / domElement!.offsetHeight,
+        });
+
+        const newStartDate = addRoundedOffsetToDate({
+          adapter,
+          date: start,
+          offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs,
         });
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
@@ -126,10 +92,10 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       // Resize event
       if (isDraggingTimeGridEventResizeHandler(data)) {
         const cursorPositionPx = position.y - data.position.y;
-        const cursorDate = createDateFromPositionInCollection({
+        const cursorDate = createDateFromPositionInCollectionOld({
           adapter,
-          collectionStart: columnStart,
-          collectionEnd: columnEnd,
+          collectionStart: start,
+          collectionEnd: end,
           position: cursorPositionPx / domElement!.offsetHeight,
         });
 
@@ -195,14 +161,15 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         }
       },
     });
-  }, [adapter, onEventChange, setPlaceholder, columnStart, columnEnd]);
+  }, [adapter, onEventChange, setPlaceholder, start, end]);
+
+  const element = useRenderElement('div', componentProps, {
+    ref: [forwardedRef, ref],
+    props: [props, elementProps],
+  });
 
   return (
-    <TimeGridColumnContext.Provider value={contextValue}>
-      <TimeGridColumnPlaceholderContext.Provider value={placeholderContextValue}>
-        {element}
-      </TimeGridColumnPlaceholderContext.Provider>
-    </TimeGridColumnContext.Provider>
+    <TimeGridColumnContext.Provider value={contextValue}>{element}</TimeGridColumnContext.Provider>
   );
 });
 
@@ -211,20 +178,12 @@ export namespace TimeGridColumn {
 
   export interface Props extends BaseUIComponentProps<'div', State> {
     /**
-     * The value of the column.
+     * The date and time at which the event starts.
      */
-    value: SchedulerValidDate;
+    start: SchedulerValidDate;
     /**
-     * The start time of the column.
-     * The date part is ignored, only the time part is used.
-     * @defaultValue 00:00:00
+     * The date and time at which the event ends.
      */
-    startTime?: SchedulerValidDate;
-    /**
-     * The end time of the column.
-     * The date part is ignored, only the time part is used.
-     * @defaultValue 23:59:59
-     */
-    endTime?: SchedulerValidDate;
+    end: SchedulerValidDate;
   }
 }
