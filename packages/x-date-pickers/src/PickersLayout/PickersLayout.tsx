@@ -30,20 +30,36 @@ const useUtilityClasses = (
 export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
-})<{ ownerState: PickerLayoutOwnerState }>({
+})<{ ownerState: PickerLayoutOwnerState; hasShortcuts: boolean }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
   variants: [
     {
-      props: { pickerOrientation: 'landscape' },
+      props: { pickerOrientation: 'landscape', hasShortcuts: false },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: {
           gridColumn: 1,
-          gridRow: '2 / 3',
+          gridRow: '1 / 3',
         },
-        [`.${pickersLayoutClasses.shortcuts}`]: { gridColumn: '2 / 4', gridRow: 1 },
+      },
+    },
+    {
+      props: {
+        pickerOrientation: 'landscape',
+        hasShortcuts: true,
+      },
+      style: {
+        [`& .${pickersLayoutClasses.toolbar}`]: {
+          gridColumn: '2 / 4',
+          gridRow: 1,
+          maxWidth: 'max-content',
+        },
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
+          gridColumn: 1,
+          gridRow: 2,
+        },
       },
     },
     {
@@ -53,14 +69,6 @@ export const PickersLayoutRoot = styled('div', {
         [`& .${pickersLayoutClasses.shortcuts}`]: {
           gridColumn: 1,
           gridRow: '2 / 3',
-        },
-      },
-    },
-    {
-      props: { pickerOrientation: 'portrait', layoutDirection: 'rtl' },
-      style: {
-        [`& .${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: 4,
         },
       },
     },
@@ -96,7 +104,8 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
-  const { toolbar, content, tabs, actionBar, shortcuts, ownerState } = usePickerLayout(props);
+  const { toolbar, content, tabs, actionBar, shortcuts, ownerState, hasShortcuts } =
+    usePickerLayout(props);
   const { orientation, variant } = usePickerContext();
   const { sx, className, classes: classesProp } = props;
 
@@ -108,6 +117,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
       sx={sx}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      hasShortcuts={hasShortcuts}
     >
       {orientation === 'landscape' ? shortcuts : toolbar}
       {orientation === 'landscape' ? toolbar : shortcuts}
