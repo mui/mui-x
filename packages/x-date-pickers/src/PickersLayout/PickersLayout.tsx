@@ -47,14 +47,6 @@ export const PickersLayoutRoot = styled('div', {
       },
     },
     {
-      props: { pickerOrientation: 'landscape', layoutDirection: 'rtl' },
-      style: {
-        [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: 3,
-        },
-      },
-    },
-    {
       props: { pickerOrientation: 'portrait' },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: { gridColumn: '2 / 4', gridRow: 1 },
