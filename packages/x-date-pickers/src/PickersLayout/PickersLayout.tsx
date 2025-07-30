@@ -30,7 +30,7 @@ const useUtilityClasses = (
 export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
-})<{ ownerState: PickerLayoutOwnerState & { hasShortcuts: boolean } }>({
+})<{ ownerState: PickerLayoutOwnerState }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
@@ -104,8 +104,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
-  const { toolbar, content, tabs, actionBar, shortcuts, ownerState, hasShortcuts } =
-    usePickerLayout(props);
+  const { toolbar, content, tabs, actionBar, shortcuts, ownerState } = usePickerLayout(props);
   const { orientation, variant } = usePickerContext();
   const { sx, className, classes: classesProp } = props;
 
@@ -116,7 +115,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<TValue extends Pic
       ref={ref}
       sx={sx}
       className={clsx(classes.root, className)}
-      ownerState={{ ...ownerState, hasShortcuts }}
+      ownerState={ownerState}
     >
       {orientation === 'landscape' ? shortcuts : toolbar}
       {orientation === 'landscape' ? toolbar : shortcuts}
