@@ -3,55 +3,68 @@ title: Charts - Animation
 productId: x-charts
 ---
 
-# Charts - Animation
+<p class="description">Learn how to customize both CSS and JS-based Chart animations.</p>
 
-<p class="description">Animate charts for a better look and feel.</p>
+Some elements of the MUI X Charts are animated by default—for example, the bars in a Bar Chart rise from the axis, and the slices in a Pie Chart expand to fill the circle.
+These animations are primarily built with CSS, but some use JavaScript-based React hooks as well.
 
-Some elements of charts are animated, such as the bars in a bar chart or the slices in a pie chart.
+## Customizing animations
 
-Charts use CSS animations when possible, but some animations can't be done using CSS only. In those cases, JavaScript is used to animate elements.
+To customize Chart animations, you may need to override CSS classes or implement the custom hooks provided, depending on your specific use case.
 
-The animations of elements that are animated using CSS can be customized by overriding the CSS classes:
+### Overriding CSS animations
+
+You can override the default CSS classes to customize CSS-based animations, as shown in the demo below:
 
 {{"demo": "CSSAnimationCustomization.js"}}
 
-When it isn't possible to leverage CSS animations, the default components are animated using custom hooks.
+### Overriding JS animations
 
-If you want to use the default animations in custom components, you can use these hooks.
-They are available for each element that is animated using JavaScript and are prefixed with `useAnimate`.
-The following hooks are available:
+To override JS-based animations—or to use the Chart animations in custom components—you can use the custom animation hooks.
 
-- `useAnimateArea`;
-- `useAnimateBar`;
-- `useAnimateBarLabel`;
-- `useAnimateLine`;
-- `useAnimatePieArc`;
-- `useAnimatePieArcLabel`.
+The Charts package provides the following animation hooks:
+
+- `useAnimateArea()`
+- `useAnimateBar()`
+- `useAnimateBarLabel()`
+- `useAnimateLine()`
+- `useAnimatePieArc()`
+- `useAnimatePieArcLabel()`
+
+The demo below illustrates how to use these hooks:
 
 {{"demo": "JSDefaultAnimation.js"}}
 
-To customize the animation, you can also use the `useAnimate(props, params)` hook.
-It returns a ref and props to pass to the animated element.
-Each time the `props` params get updated, the hook creates an interpolation from the previous value to the next one.
-On each animation frame, it calls this interpolator to get the intermediate state and applies the result to the animated element.
-The attribute update is imperative to bypass the React lifecycle, thus improving performance.
-To customize the animation, the `params` allows you to define the following properties:
+#### The useAnimate hook
 
-- `skip`: If `true`, apply the new value immediately;
-- `ref`: A ref to merge with the ref returned from this hook;
-- `initialProps`: The props used to generate the animation of component creation; if not provided, there will be no initial animation;
-- `createInterpolator`: Create an interpolation function from the last to the next props;
-- `transformProps`: Optionally transform interpolated props to another format;
-- `applyProps`: Apply transformed props to the element.
+For more fine-grained animation customization, you can use the `useAnimate(props, params)` hook.
+This hook returns a ref as well as props to pass to the animated element.
+Each time the `props` params are updated, the hook creates an interpolation from the previous value to the next one.
+As each animation frame loads, it calls this interpolator to get the intermediate state and applies the result to the animated element.
+The attribute update is imperative to bypass the React lifecycle for improved performance.
 
-A more detailed explanation is available in the hook's JSDoc.
+With `params` you can define the following properties:
 
-In the example below, labels are positioned above the bars they refer to and are animated using the `useAnimation` hook:
+- `skip`: If `true`, apply the new value immediately
+- `ref`: A ref to merge with the ref returned from this hook
+- `initialProps`: The props used to generate the animation of component creation; if none are provided, there is no initial animation
+- `createInterpolator`: Create an interpolation function from the last to the next props
+- `transformProps`: Optionally transform interpolated props to another format
+- `applyProps`: Apply transformed props to the element
+
+You can find more detailed explanations in the hook's JSDoc.
+
+In the example below, labels are positioned above the bars they refer to and are animated with the `useAnimate()` hook:
 
 {{"demo": "JSAnimationCustomization.js"}}
 
-Alternatively, you can use your own animation library to create custom animations, such as React Spring:
+### Using third-party animation libraries
+
+You can fully override the default Chart animations with your own (third-party) animation library.
+The demo below shows how to do so with React Spring:
 
 {{"demo": "ReactSpringAnimationCustomization.js"}}
 
-Note that sometimes JavaScript animation libraries cause performance issues, especially when rendering many data points or when interactions are enabled (for example: zoom, highlight).
+:::warning
+Third-party JavaScript animation libraries can cause performance issues, especially when rendering many data points or using interactions such as zooming and highlighting.
+:::
