@@ -29,10 +29,13 @@ This package is not published yet.
 
 - Add the `isDraggable` props to the `TimeGrid.Event` part to enable the re-scheduler of the events
 - Render a `TimeGrid.EventResizeHandler` inside the `TimeGrid.Event` part to enable the resizing of the events
+- Use the `TimeGrid.useColumnPlaceholder()` to render a placeholder of the event being dragged
 
 {{"demo": "TimeGridPrimitiveDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Drag and drop to update resource
+
+- Add a `columnId` to the `TimeGrid.Column` part to identify which columns the event is being dropped in
 
 {{"demo": "TimeGridPrimitiveDragAndDropResource.js", "bg": "inline", "defaultCodeOpen": false}}
 
