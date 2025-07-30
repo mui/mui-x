@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 // @ts-check
 /**
  * Script to generate deep exports for pro and premium package versions.
@@ -9,8 +10,8 @@
  * import { DataGrid } from '@mui/x-data-grid-premium/DataGrid'
  */
 
-import fs from 'fs/promises';
 import { existsSync } from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 // Define package mappings (base -> pro)
@@ -51,15 +52,15 @@ const BLOCK_IDENTIFIER_LINE_END = '// End of re-export-block';
 async function isUtilityAlreadyExported(targetPackagePath, utilityName, sourcePackageName) {
   const utilityIndexPath = path.join(targetPackagePath, 'src', utilityName, 'index.ts');
 
-  if (!existsSync(utilityIndexPath)) {
+  try {
+    const content = await fs.readFile(utilityIndexPath, 'utf8');
+    const contentWithoutBlocks = removeExistingBlock(content);
+    const exportLine = `export * from '@mui/${sourcePackageName}/${utilityName}';`;
+
+    return contentWithoutBlocks.includes(exportLine);
+  } catch (_) {
     return false;
   }
-
-  const content = await fs.readFile(utilityIndexPath, 'utf8');
-  const contentWithoutBlocks = removeExistingBlock(content);
-  const exportLine = `export * from '@mui/${sourcePackageName}/${utilityName}';`;
-
-  return contentWithoutBlocks.includes(exportLine);
 }
 
 /**
@@ -98,20 +99,20 @@ function removeExistingBlock(content) {
 async function hasExtraExports(targetPackagePath, utilityName) {
   const utilityIndexPath = path.join(targetPackagePath, 'src', utilityName, 'index.ts');
 
-  if (!existsSync(utilityIndexPath)) {
+  try {
+    const content = await fs.readFile(utilityIndexPath, 'utf8');
+    const contentWithoutBlock = removeExistingBlock(content);
+
+    // Check if there's any meaningful content left (not just empty lines or comments)
+    const meaningfulLines = contentWithoutBlock.split('\n').filter((line) => {
+      const trimmed = line.trim();
+      return trimmed && !trimmed.startsWith('//') && !trimmed.startsWith('/*');
+    });
+
+    return meaningfulLines.length > 0;
+  } catch (_) {
     return false;
   }
-
-  const content = await fs.readFile(utilityIndexPath, 'utf8');
-  const contentWithoutBlock = removeExistingBlock(content);
-
-  // Check if there's any meaningful content left (not just empty lines or comments)
-  const meaningfulLines = contentWithoutBlock.split('\n').filter((line) => {
-    const trimmed = line.trim();
-    return trimmed && !trimmed.startsWith('//') && !trimmed.startsWith('/*');
-  });
-
-  return meaningfulLines.length > 0;
 }
 
 /**
@@ -173,10 +174,6 @@ function addReExportBlock(content, sourcePackageName, utilityName) {
 async function getComponentDirectories(packagePath, ignoreList) {
   const srcPath = path.join(packagePath, 'src');
 
-  if (!existsSync(srcPath)) {
-    return [];
-  }
-
   const dirents = await fs.readdir(srcPath, { withFileTypes: true });
   const directories = dirents
     .filter((dirent) => dirent.isDirectory())
@@ -186,11 +183,12 @@ async function getComponentDirectories(packagePath, ignoreList) {
   const validityChecks = await Promise.all(
     directories.map(async (name) => {
       const indexFile = path.join(srcPath, name, 'index.ts');
-      if (!existsSync(indexFile)) {
+      try {
+        const content = await fs.readFile(indexFile, 'utf8');
+        return { name, isValid: !content.startsWith(IDENTIFIER_LINE) };
+      } catch (_) {
         return { name, isValid: false };
       }
-      const content = await fs.readFile(indexFile, 'utf8');
-      return { name, isValid: !content.startsWith(IDENTIFIER_LINE) };
     }),
   );
 
@@ -216,15 +214,15 @@ async function createDeepExportFile(
   const exportFile = path.join(exportDir, 'index.ts');
 
   // Create directory if it doesn't exist
-  if (!existsSync(exportDir)) {
-    await fs.mkdir(exportDir, { recursive: true });
-  }
+  await fs.mkdir(exportDir, { recursive: true });
 
   if (utilities.includes(componentName)) {
     // Handle utility with re-export blocks
     let existingContent = '';
-    if (existsSync(exportFile)) {
+    try {
       existingContent = await fs.readFile(exportFile, 'utf8');
+    } catch (_) {
+      // Ignore errors
     }
 
     const bestSourcePackage = await getBestSourcePackage(
@@ -245,7 +243,7 @@ async function createDeepExportFile(
     // Only write if content changed
     if (updatedContent !== existingContent) {
       await fs.writeFile(exportFile, updatedContent);
-      console.warn(
+      console.log(
         `  ✓ Added re-export block for utility ${componentName} from @mui/${bestSourcePackage} in ${path.relative(process.cwd(), targetPackagePath)}`,
       );
     }
@@ -257,7 +255,7 @@ async function createDeepExportFile(
 export * from '@mui/${sourcePackageName}/${componentName}';
 `;
   await fs.writeFile(exportFile, exportContent);
-  console.warn(
+  console.log(
     `✓ Created deep export for ${componentName} in ${path.relative(process.cwd(), targetPackagePath)}`,
   );
 }
@@ -271,12 +269,7 @@ async function processPackage(basePackageName) {
   /** @type {{targets: string[]; ignore: string[]; utilities: string[];}} */
   const targetPackages = PACKAGE_MAPPINGS[basePackageName] || {};
 
-  if (!existsSync(basePackagePath)) {
-    console.warn(`Base package not found: ${basePackagePath}`);
-    return;
-  }
-
-  console.warn(`\n📦 Processing ${basePackageName} -> ${targetPackages.targets.join(' -> ')}...`);
+  console.log(`\n📦 Processing ${basePackageName} -> ${targetPackages.targets.join(' -> ')}...`);
 
   // Get component directories from the base package
   const componentDirectories = [
@@ -286,11 +279,6 @@ async function processPackage(basePackageName) {
 
   for (const targetPackage of targetPackages.targets) {
     const targetPackagePath = path.join(process.cwd(), 'packages', targetPackage);
-
-    if (!existsSync(targetPackagePath)) {
-      console.warn(`Target package not found: ${targetPackagePath}`);
-      return;
-    }
 
     // Get additional components specific to pro/premium
     // eslint-disable-next-line no-await-in-loop
@@ -302,7 +290,7 @@ async function processPackage(basePackageName) {
       dirs.filter((name) => !targetComponentDirs.includes(name)),
     );
 
-    console.warn(`\nCreating deep exports for ${targetDirectories.flat().length} components`);
+    console.log(`\nCreating deep exports for ${targetDirectories.flat().length} components`);
 
     const componentTasks = targetDirectories.flatMap((componentNames, i) =>
       componentNames.map((componentName) =>
@@ -342,7 +330,7 @@ async function processPackage(basePackageName) {
 
 // Main execution
 async function main() {
-  console.warn('🚀 Generating deep exports for pro and premium packages...\n');
+  console.log('🚀 Generating deep exports for pro and premium packages...\n');
 
   // Process packages sequentially to maintain dependency order
   for (const basePackageName of Object.keys(PACKAGE_MAPPINGS)) {
@@ -355,7 +343,7 @@ async function main() {
     }
   }
 
-  console.warn('\n✅ Deep exports generation completed!');
+  console.log('\n✅ Deep exports generation completed!');
 }
 
 // Run the script
