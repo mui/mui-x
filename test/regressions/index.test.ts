@@ -114,6 +114,11 @@ async function main() {
           timeout: getTimeout(route),
         },
         async () => {
+          if (/^\/docs-charts-tooltip\/Interaction/.test(route)) {
+            // Ignore tooltip interaction demo, there is a dedicated test for it.
+            return;
+          }
+
           // Move cursor offscreen to not trigger unwanted hover effects.
           // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
           await page.mouse.move(0, 0);

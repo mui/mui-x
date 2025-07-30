@@ -24,7 +24,11 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
     '!docsx/data/charts/tooltip/Custom*', // Composition example
     '!docsx/data/charts/tooltip/Item*', // Composition example
-    '!docsx/data/charts/tooltip/*', // Ignore tooltip demos. Since they require some interaction they get tested in dedicated tests.
+    '!docsx/data/charts/tooltip/AxisFormatter',
+    '!docsx/data/charts/tooltip/Formatting',
+    '!docsx/data/charts/tooltip/SeriesFormatter',
+    '!docsx/data/charts/tooltip/TooltipStyle',
+    'docsx/data/charts/tooltip/Interaction',
     '!docsx/data/data-grid/server-side-data/useNestedPagination',
     '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
