@@ -30,10 +30,8 @@
   height: fit-content;
   cursor: pointer;
   z-index: 1;
-  grid-column-start: var(--grid-column-start);
-  grid-column-end: span var(--grid-column-span);
+  grid-row: var(--grid-row);
   padding: 0 var(--space-1);
-  margin: 0 var(--space-1);
 }
 
 .EventCard--compact .DayGridEventCardContent {

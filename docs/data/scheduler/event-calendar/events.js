@@ -1,6 +1,46 @@
 import { DateTime } from 'luxon';
 
 export const events = [
+  {
+    id: 'allday-0',
+    start: DateTime.fromISO('2025-07-10'),
+    end: DateTime.fromISO('2025-07-18'),
+    title: 'Conference Day',
+    allDay: true,
+    resource: 'planning',
+  },
+  {
+    id: 'allday-1',
+    start: DateTime.fromISO('2025-07-14'),
+    end: DateTime.fromISO('2025-07-18'),
+    title: 'Conference Day',
+    allDay: true,
+    resource: 'work',
+  },
+  {
+    id: 'allday-2',
+    start: DateTime.fromISO('2025-07-16'),
+    end: DateTime.fromISO('2025-07-17'),
+    title: 'National Holiday',
+    allDay: true,
+    resource: 'misc',
+  },
+  {
+    id: 'allday-3',
+    start: DateTime.fromISO('2025-07-18'),
+    end: DateTime.fromISO('2025-07-20'),
+    title: 'Weekend Retreat',
+    allDay: true,
+    resource: 'vacation',
+  },
+  {
+    id: 'allday-4',
+    start: DateTime.fromISO('2025-07-19'),
+    end: DateTime.fromISO('2025-07-20'),
+    title: 'Family Visit',
+    allDay: true,
+    resource: 'personal',
+  },
   // Work events
   {
     id: '1',

@@ -39,16 +39,22 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const hasDayView = useSelector(store, selectors.hasDayView);
   const daysWithEvents = useSelector(store, selectors.eventsToRenderGroupedByDay, {
     days,
-    shouldOnlyRenderEventInOneCell: true,
+    shouldOnlyRenderEventInOneCell: false,
   });
 
+  interface EventsWithPosition extends CalendarEvent {
+    eventRowIndex: number;
+  }
+
   const dayWithEventsGroupedByCategory = React.useMemo(() => {
-    return daysWithEvents.map(({ day, events }) => {
+    return daysWithEvents.map(({ day, rowStartsAt, events }) => {
+      let eventRowIndex = rowStartsAt;
       const regularEvents: CalendarEvent[] = [];
-      const allDayEvents: CalendarEvent[] = [];
+      const allDayEvents: EventsWithPosition[] = [];
       for (const event of events) {
         if (event.allDay) {
-          allDayEvents.push(event);
+          allDayEvents.push({ ...event, eventRowIndex });
+          eventRowIndex += 1;
         } else {
           regularEvents.push(event);
         }
@@ -149,48 +155,49 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
-            {dayWithEventsGroupedByCategory.map(({ day, allDayEvents }, dayIndex) =>
-              allDayEvents.map((event) => {
-                // Calculate the duration of the event in days
-                const durationInDays = adapter.startOfDay(event.end).diff(day, 'days').days + 1;
+            {dayWithEventsGroupedByCategory.map(({ day, allDayEvents }, dayIndex) => (
+              <DayGrid.Cell
+                key={day.toString()}
+                className="DayTimeGridAllDayEventsCell"
+                style={
+                  {
+                    '--row-count': allDayEvents[allDayEvents.length - 1]?.eventRowIndex || 1,
+                  } as React.CSSProperties
+                }
+                aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
+                role="gridcell"
+                data-weekend={isWeekend(adapter, day) ? '' : undefined}
+              >
+                {allDayEvents.map((event) => {
+                  // Calculate the duration of the event in days
+                  const durationInDays = adapter.startOfDay(event.end).diff(day, 'days').days + 1;
 
-                // Calculate grid column start (1-based) and span
-                const gridColumnStart = dayIndex + 1;
-                const gridColumnSpan = Math.min(durationInDays, days.length - dayIndex); // Don't exceed available columns
+                  // Calculate grid column start (1-based) and span
+                  const gridColumnSpan = Math.min(durationInDays, days.length - dayIndex); // Don't exceed available columns
 
-                return (
-                  <EventPopoverTrigger
-                    key={event.id}
-                    event={event}
-                    render={
-                      <DayGridEvent
-                        event={event}
-                        eventResource={resourcesByIdMap.get(event.resource)}
-                        variant="allDay"
-                        ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-                        style={
-                          {
-                            '--grid-column-start': gridColumnStart,
-                            '--grid-column-span': gridColumnSpan,
-                          } as React.CSSProperties
-                        }
-                      />
-                    }
-                  />
-                );
-              }),
-            )}
-            <div className="AllDayGridCells">
-              {days.map((day) => (
-                <div
-                  key={day.toString()}
-                  className="DayTimeGridAllDayEventsCell"
-                  aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
-                  role="gridcell"
-                  data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                />
-              ))}
-            </div>
+                  return (
+                    <EventPopoverTrigger
+                      key={event.id}
+                      event={event}
+                      render={
+                        <DayGridEvent
+                          event={event}
+                          eventResource={resourcesByIdMap.get(event.resource)}
+                          variant="allDay"
+                          ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+                          style={
+                            {
+                              '--grid-row': event.eventRowIndex,
+                              '--grid-column-span': gridColumnSpan,
+                            } as React.CSSProperties
+                          }
+                        />
+                      }
+                    />
+                  );
+                })}
+              </DayGrid.Cell>
+            ))}
           </DayGrid.Row>
         </DayGrid.Root>
         <TimeGrid.Root className="DayTimeGridRoot" onEventChange={handleEventChangeFromPrimitive}>

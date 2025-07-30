@@ -65,13 +65,14 @@ export const selectors = {
       parameters: { days: SchedulerValidDate[]; shouldOnlyRenderEventInOneCell: boolean },
     ) => parameters,
     (events, visibleResources, { days, shouldOnlyRenderEventInOneCell }) => {
-      const daysMap = new Map<string, CalendarEvent[]>();
+      const daysMap = new Map<string, { rowStartsAt: number; events: CalendarEvent[] }>();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
-        daysMap.set(dayKey, []);
+        daysMap.set(dayKey, { rowStartsAt: 1, events: [] });
       }
-
       for (const event of events) {
+        let rowStartsAt = 1;
+
         if (event.resource && visibleResources.get(event.resource) === false) {
           continue; // Skip events for hidden resources
         }
@@ -104,9 +105,26 @@ export const selectors = {
         for (const day of eventDays) {
           const dayKey = adapter.format(day, 'keyboardDate');
           if (!daysMap.has(dayKey)) {
-            daysMap.set(dayKey, []);
+            daysMap.set(dayKey, { rowStartsAt: 1, events: [] });
           }
-          daysMap.get(dayKey)!.push(event);
+
+          const isFirstEvent = !daysMap.get(dayKey)!.events.length;
+          if (isFirstEvent && adapter.isBefore(eventFirstDay, day)) {
+            const eventFirstDayKey = adapter.format(eventFirstDay, 'keyboardDate');
+            const eventStartPositionInArray =
+              daysMap
+                .get(eventFirstDayKey)
+                ?.events?.findIndex((eventInMap) => eventInMap.id === event.id) || 0;
+            rowStartsAt = eventStartPositionInArray + 1;
+          } else {
+            rowStartsAt = 1;
+          }
+
+          daysMap.get(dayKey)!.rowStartsAt = Math.max(
+            rowStartsAt,
+            daysMap.get(dayKey)!.rowStartsAt,
+          );
+          daysMap.get(dayKey)!.events.push(event);
         }
       }
 
@@ -114,7 +132,8 @@ export const selectors = {
         const dayKey = adapter.format(day, 'keyboardDate');
         return {
           day,
-          events: daysMap.get(dayKey) || [],
+          rowStartsAt: daysMap.get(dayKey)?.rowStartsAt || 1,
+          events: daysMap.get(dayKey)?.events || [],
         };
       });
     },

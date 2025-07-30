@@ -46,12 +46,14 @@
   background-color: transparent;
   display: grid;
   grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
-  gap: var(--space-1);
+  height: fit-content;
   grid-template-rows: 1fr auto;
   width: 100%;
+  height: 100%;
   scrollbar-gutter: stable;
-  gap: var(--space-1) 0;
-  padding: var(--space-1) 0;
+  > *:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
 }
 
 .DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow {
@@ -62,23 +64,12 @@
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
 
-.AllDayGridCells {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  > *:not(:last-child) {
-    border-right: 1px solid var(--border-color);
-  }
-}
 .DayTimeGridAllDayEventsCell {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(var(--row-count), minmax(auto, 18px));
   gap: var(--space-1);
   padding: var(--space-1);
-  overflow-y: auto;
   scrollbar-color: initial initial;
 }
 
