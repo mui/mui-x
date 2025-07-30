@@ -39,10 +39,10 @@ export const resources = [
     title: 'Room 2',
     events: [
       {
-        id: '2',
+        id: '5',
         start: DateTime.fromISO('2027-02-01T00:00:00'),
         end: DateTime.fromISO('2027-02-19T00:00:00'),
-        title: 'Event 4',
+        title: 'Event 5',
       },
     ],
   },
