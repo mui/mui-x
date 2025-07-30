@@ -1239,6 +1239,9 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
+      '@mui/x-virtualizer':
+        specifier: workspace:*
+        version: link:../x-virtualizer/build
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -1648,6 +1651,9 @@ importers:
       reselect:
         specifier: 'catalog:'
         version: 5.1.1
+      use-sync-external-store:
+        specifier: 'catalog:'
+        version: 1.5.0(react@19.1.0)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1655,6 +1661,9 @@ importers:
       '@mui/system':
         specifier: 'catalog:'
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.5.0
       react:
         specifier: 'catalog:'
         version: 19.1.0
@@ -1919,6 +1928,32 @@ importers:
         version: 19.1.0(react@19.1.0)
       rimraf:
         specifier: 'catalog:'
+        version: 6.0.1
+    publishDirectory: build
+
+  packages/x-virtualizer:
+    dependencies:
+      '@babel/runtime':
+        specifier: ^7.27.4
+        version: 7.28.2
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: ^2.0.9
+        version: 2.0.10(@babel/core@7.28.0)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(chai@5.2.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@mui/types':
+        specifier: ^7.4.3
+        version: 7.4.4(@types/react@19.1.8)
+      react:
+        specifier: 'catalog:'
+        version: 19.1.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.1.0(react@19.1.0)
+      rimraf:
+        specifier: ^6.0.1
         version: 6.0.1
     publishDirectory: build
 
