@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jul 30, 2025_
 
-We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 22 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve French (fr-FR), Hebrew (he-IL) and Polish (pl-PL) locales on the Data Grid
 - 🌎 Improve Korean (ko-KR) locale on the Date and Time Pickers
