@@ -71,11 +71,10 @@ export const selectors = {
         daysMap.set(dayKey, { rowStartsAt: 1, events: [] });
       }
       for (const event of events) {
-        let rowStartsAt = 1;
-
         if (event.resource && visibleResources.get(event.resource) === false) {
           continue; // Skip events for hidden resources
         }
+        let rowStartsAt = 1;
 
         const eventFirstDay = adapter.startOfDay(event.start);
         const eventLastDay = adapter.endOfDay(event.end);

@@ -169,13 +169,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 data-weekend={isWeekend(adapter, day) ? '' : undefined}
               >
                 {allDayEvents.map((event) => {
-                  // Calculate the duration of the event in days
                   const durationInDays = adapter.startOfDay(event.end).diff(day, 'days').days + 1;
-
-                  // Calculate grid column start (1-based) and span
                   const gridColumnSpan = Math.min(durationInDays, days.length - dayIndex); // Don't exceed available columns
+                  const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIndex === 0;
 
-                  return (
+                  return shouldRenderEvent ? (
                     <EventPopoverTrigger
                       key={event.id}
                       event={event}
@@ -193,6 +191,14 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                           }
                         />
                       }
+                    />
+                  ) : (
+                    <DayGridEvent
+                      event={event}
+                      eventResource={resourcesByIdMap.get(event.resource)}
+                      variant="invisible"
+                      ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+                      aria-hidden="true"
                     />
                   );
                 })}

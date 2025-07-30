@@ -5,5 +5,5 @@ export interface DayGridEventProps extends EventProps {
   /**
    * The variant of the event, which determines its styling.
    */
-  variant: Extract<EventVariant, 'compact' | 'allDay'>;
+  variant: Extract<EventVariant, 'compact' | 'allDay' | 'invisible'>;
 }

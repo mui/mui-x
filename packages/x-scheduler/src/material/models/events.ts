@@ -1,7 +1,7 @@
 import { SchedulerValidDate } from '../../primitives/models';
 import { CalendarResourceId } from './resource';
 
-export type EventVariant = 'regular' | 'compact' | 'allDay';
+export type EventVariant = 'regular' | 'compact' | 'allDay' | 'invisible';
 
 export interface CalendarEvent {
   /**
