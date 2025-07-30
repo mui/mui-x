@@ -19,10 +19,10 @@ describe('createDiscreteScaleGetAxisFilter', () => {
     const axisData = ['I0', 'I1', 'I2', 'I3'];
     const filter = createDiscreteScaleGetAxisFilter(axisData, 24, 76, 'y');
 
-    expect(filter({ x: null, y: 'I0' }, 0)).toBe(false);
+    expect(filter({ x: null, y: 'I0' }, 0)).toBe(true);
     expect(filter({ x: null, y: 'I1' }, 1)).toBe(true);
     expect(filter({ x: null, y: 'I2' }, 2)).toBe(true);
-    expect(filter({ x: null, y: 'I3' }, 3)).toBe(false);
+    expect(filter({ x: null, y: 'I3' }, 3)).toBe(true);
   });
 
   it('should include elements if they are partially visible (another case)', () => {
@@ -32,7 +32,17 @@ describe('createDiscreteScaleGetAxisFilter', () => {
     expect(filter({ x: null, y: 'I0' }, 0)).toBe(false);
     expect(filter({ x: null, y: 'I1' }, 1)).toBe(false);
     expect(filter({ x: null, y: 'I2' }, 2)).toBe(true);
-    expect(filter({ x: null, y: 'I3' }, 3)).toBe(false);
+    expect(filter({ x: null, y: 'I3' }, 3)).toBe(true);
+  });
+
+  it('should include elements if they are partially visible (another case)', () => {
+    const axisData = ['I0', 'I1', 'I2', 'I3'];
+    const filter = createDiscreteScaleGetAxisFilter(axisData, 51, 76, 'y');
+
+    expect(filter({ x: null, y: 'I0' }, 0)).toBe(false);
+    expect(filter({ x: null, y: 'I1' }, 1)).toBe(false);
+    expect(filter({ x: null, y: 'I2' }, 2)).toBe(true);
+    expect(filter({ x: null, y: 'I3' }, 3)).toBe(true);
   });
 
   it('should include all elements when there is no zoom', () => {
