@@ -28,6 +28,7 @@ The following are all team members who have contributed to this release:
 
 - [DataGrid] Add debounce for columns panel search (#18719) @noherczeg
 - [DataGrid] Extract virtualization engine (#18275) @romgrk
+- [DataGrid] Improve types in `<GridEditSingleSelect />` (#18184) @sai6855
 - [l10n] Improve French (fr-FR) locale (#18905) @ddolcimascolo
 - [l10n] Improve Hebrew (he-IL) locale (#18665) @atlanteh
 - [l10n] Improve Polish (pl-PL) locale (#18068) @leonaha5
@@ -64,7 +65,7 @@ Same changes as in `@mui/x-date-pickers@8.9.2`.
 - [charts] Fix bar border radius on Firefox (#18824) @bernardobelchior
 - [charts] Fix crash when rendering large scatter dataset (#18845) @bernardobelchior
 - [charts] Remove unnecessary type assertion in tooltip valueFormatter (#18877) @sai6855
-- [charts] Export `ChartsWrapper` from `'./ChartsWrapper'` rather than `'./internals'` (#18966) @JCQuintas 
+- [charts] Export `ChartsWrapper` from `'./ChartsWrapper'` rather than `'./internals'` (#18966) @JCQuintas
 
 #### `@mui/x-charts-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -72,7 +73,6 @@ Same changes as in `@mui/x-charts@8.9.2`, plus:
 
 - [charts-pro] Fix voronoi interaction with zoom (#18950) @alexfauquette
 - [charts-pro] Hide toolbar by default when exporting (#18764) @bernardobelchior
-
 
 ### Codemod
 
