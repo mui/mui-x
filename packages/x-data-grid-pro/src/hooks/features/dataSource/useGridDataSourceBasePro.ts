@@ -279,47 +279,28 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
   const removeChildrenRows = React.useCallback<GridDataSourcePrivateApiPro['removeChildrenRows']>(
     (parentId) => {
-      const tree = { ...gridRowTreeSelector(apiRef) };
-      const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
       const rowNode = gridRowNodeSelector(apiRef, parentId);
       if (!rowNode || rowNode.type !== 'group' || rowNode.children.length === 0) {
         return;
       }
 
-      const removedRows = new Set<GridRowId>();
+      const removedRows: { id: GridRowId; _action: 'delete' }[] = [];
       const traverse = (nodeId: GridRowId) => {
-        const node = tree[nodeId];
+        const node = gridRowNodeSelector(apiRef, nodeId);
         if (!node) {
           return;
         }
 
-        if (node.type === 'group' && node.children?.length > 0) {
+        if (node.type === 'group' && node.children.length > 0) {
           node.children.forEach(traverse);
         }
-        delete tree[nodeId];
-        delete dataRowIdToModelLookup[nodeId];
-        removedRows.add(nodeId);
+        removedRows.push({ id: nodeId, _action: 'delete' });
       };
 
       rowNode.children.forEach(traverse);
 
-      tree[parentId] = { ...rowNode, children: [] };
-
-      const dataRowIds = gridDataRowIdsSelector(apiRef).filter((id) => !removedRows.has(id));
-
-      if (removedRows.size > 0) {
-        apiRef.current.setState((state) => {
-          return {
-            ...state,
-            rows: {
-              ...state.rows,
-              tree,
-              dataRowIds,
-              dataRowIdToModelLookup,
-            },
-          };
-        });
-        apiRef.current.publishEvent('rowsSet');
+      if (removedRows.length > 0) {
+        apiRef.current.updateNestedRows(removedRows, (rowNode as GridDataSourceGroupNode).path);
       }
     },
     [apiRef],
