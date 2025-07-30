@@ -14,8 +14,6 @@ import {
   gridRowTreeSelector,
   GridUpdateRowParams,
   GridRowId,
-  gridDataRowIdsSelector,
-  gridRowsLookupSelector,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
