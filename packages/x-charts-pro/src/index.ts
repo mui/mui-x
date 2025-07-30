@@ -32,6 +32,8 @@ export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
 export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
+export * from '@mui/x-charts/ChartsOverlay';
+export * from '@mui/x-charts/ChartsWrapper';
 
 // Pro components
 export * from './context';

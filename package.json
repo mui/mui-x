@@ -67,6 +67,7 @@
     "execa": "^9.6.0",
     "@babel/cli": "^7.28.0",
     "@babel/core": "catalog:",
+    "@babel/plugin-syntax-typescript": "^7.27.1",
     "@babel/plugin-transform-class-properties": "^7.27.1",
     "@babel/plugin-transform-object-rest-spread": "^7.28.0",
     "@babel/plugin-transform-private-methods": "^7.27.1",
