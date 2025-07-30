@@ -13,6 +13,8 @@ We'd like to extend a big thank you to the 21 contributors who made this release
 
 - 🌎 Improve French (fr-FR), Hebrew (he-IL) and Polish (pl-PL) locales on the Data Grid
 - 🌎 Improve Korean (ko-KR) locale on the Date and Time Pickers
+- 📈 Add symlog scale to charts
+- 📊 Fix bar border radius on Firefox
 
 Special thanks go out to the community members for their valuable contributions:
 @AmrElnaggar99, @arminmeh, @atlanteh, @brijeshb42, @ddolcimascolo, @Jiseoup, @leonaha5, @mapache-salvaje, @noherczeg, @romgrk, @sai6855
