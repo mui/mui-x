@@ -12,7 +12,7 @@ import {
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartsWrapper, ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { ChartsWrapper, ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlotProps } from './RadarSeriesPlot';
