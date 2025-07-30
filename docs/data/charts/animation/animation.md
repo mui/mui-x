@@ -3,6 +3,8 @@ title: Charts - Animation
 productId: x-charts
 ---
 
+# Charts - Animation
+
 <p class="description">Learn how to customize both CSS and JavaScript-based Chart animations.</p>
 
 Some elements of the MUI X Charts are animated by default—for example, the bars in a Bar Chart rise from the axis, and the slices in a Pie Chart expand to fill the circle.
