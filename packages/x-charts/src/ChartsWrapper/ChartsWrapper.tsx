@@ -1,16 +1,25 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { useChartRootRef } from '../../../hooks/useChartRootRef';
-import { Direction } from '../../../ChartsLegend';
-import { Position } from '../../../models';
-import { useStore } from '../../store/useStore';
-import { useSelector } from '../../store/useSelector';
-import { selectorChartPropsSize } from '../../plugins/corePlugins/useChartDimensions';
+import { useChartRootRef } from '../hooks/useChartRootRef';
+import { Direction } from '../ChartsLegend';
+import { Position } from '../models';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
 
 export interface ChartsWrapperProps {
+  /**
+   * The position of the legend.
+   * @default { horizontal: 'center', vertical: 'bottom' }
+   */
   // eslint-disable-next-line react/no-unused-prop-types
   legendPosition?: Position;
+  /**
+   * The direction of the legend.
+   * @default 'horizontal'
+   */
   // eslint-disable-next-line react/no-unused-prop-types
   legendDirection?: Direction;
   /**
@@ -83,8 +92,6 @@ const Root = styled('div', {
 }));
 
 /**
- * @ignore - internal component.
- *
  * Wrapper for the charts components.
  * Its main purpose is to position the HTML legend in the correct place.
  */
@@ -106,5 +113,36 @@ function ChartsWrapper(props: ChartsWrapperProps) {
     </Root>
   );
 }
+
+ChartsWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * If `true`, the chart wrapper set `height: 100%`.
+   * @default `false` if the `height` prop is set. And `true` otherwise.
+   */
+  extendVertically: PropTypes.bool,
+  /**
+   * The direction of the legend.
+   * @default 'horizontal'
+   */
+  legendDirection: PropTypes.oneOf(['horizontal', 'vertical']),
+  /**
+   * The position of the legend.
+   * @default { horizontal: 'center', vertical: 'bottom' }
+   */
+  legendPosition: PropTypes.shape({
+    horizontal: PropTypes.oneOf(['center', 'end', 'start']),
+    vertical: PropTypes.oneOf(['bottom', 'middle', 'top']),
+  }),
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
 
 export { ChartsWrapper };
