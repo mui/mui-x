@@ -1,5 +1,6 @@
 ---
 title: Charts - Styling
+components: ChartsCartesianDrawingArea
 productId: x-charts
 ---
 
@@ -169,6 +170,12 @@ Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.
 
 {{"demo": "SxStyling.js"}}
+
+### Drawing area background
+
+Bar, line and scatter charts render a drawing area `<rect />` that can be used to set a background color for the chart.
+
+{{"demo": "BackgroundStyling.js"}}
 
 ### Gradients and patterns
 

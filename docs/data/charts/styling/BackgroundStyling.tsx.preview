@@ -1,0 +1,8 @@
+<BarChart
+  {...settings}
+  sx={(theme) => ({
+    [`.${cartesianDrawingAreaClasses.root}`]: {
+      fill: theme.palette.mode === 'dark' ? '#294036' : '#D0F0C0',
+    },
+  })}
+/>
