@@ -5,7 +5,7 @@
   "properties": {
     "apply": {
       "type": {
-        "description": "(params: GridAggregationParams&lt;V&gt;, api: GridApiPremium) =&gt; AV | null | undefined"
+        "description": "(params: GridAggregationParams&lt;V&gt;, api?: GridApiPremium) =&gt; AV | null | undefined"
       },
       "required": true,
       "isPremiumPlan": true

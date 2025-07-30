@@ -57,6 +57,7 @@
     "release:publish:dry-run": "pnpm publish --recursive --tag latest --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
     "release:prepare": "node scripts/createReleasePR.mjs",
+    "generate:exports": "node scripts/generateDeepExports.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\"",
     "clean": "pnpm -r exec rm -rf build tsconfig.build.tsbuildinfo"
@@ -67,6 +68,7 @@
     "execa": "^9.6.0",
     "@babel/cli": "^7.28.0",
     "@babel/core": "catalog:",
+    "@babel/plugin-syntax-typescript": "^7.27.1",
     "@babel/plugin-transform-class-properties": "^7.27.1",
     "@babel/plugin-transform-object-rest-spread": "^7.28.0",
     "@babel/plugin-transform-private-methods": "^7.27.1",

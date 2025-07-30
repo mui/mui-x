@@ -67,6 +67,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       };
     });
   }, [daysWithEvents]);
+  const ampm = useSelector(store, selectors.ampm);
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
@@ -220,7 +221,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     <time className="DayTimeGridTimeAxisText">
                       {hour === 0
                         ? null
-                        : adapter.formatByString(adapter.setHours(visibleDate, hour), 'h:mm a')}
+                        : adapter.format(
+                            adapter.setHours(visibleDate, hour),
+                            ampm ? 'hoursMinutes12h' : 'hoursMinutes24h',
+                          )}
                     </time>
                   </div>
                 ))}

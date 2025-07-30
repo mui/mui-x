@@ -5,14 +5,14 @@ import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
-import { HeaderToolbar } from '../header-toolbar';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from './store';
 import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { MonthView } from '../month-view';
-import { DateNavigator } from '../date-navigator/DateNavigator';
-import { ResourceLegend } from '../internals/components/resource-legend/ResourceLegend';
+import { HeaderToolbar } from '../internals/components/header-toolbar';
+import { DateNavigator } from '../internals/components/date-navigator';
+import { ResourceLegend } from '../internals/components/resource-legend';
 import { useEventCalendar } from './useEventCalendar';
 import '../index.css';
 import './EventCalendar.css';
@@ -27,11 +27,13 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     resources: resourcesProp,
     view: viewProp,
     defaultView,
+    views,
     visibleDate: visibleDateProp,
     defaultVisibleDate,
     onVisibleDateChange,
     areEventsDraggable,
     areEventsResizable,
+    ampm,
     translations,
     className,
     ...other
@@ -43,11 +45,13 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     resources: resourcesProp,
     view: viewProp,
     defaultView,
+    views,
     visibleDate: visibleDateProp,
     defaultVisibleDate,
     onVisibleDateChange,
     areEventsDraggable,
     areEventsResizable,
+    ampm,
   });
 
   const view = useSelector(store, selectors.view);

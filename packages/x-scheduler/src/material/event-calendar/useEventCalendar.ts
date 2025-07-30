@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { EventCalendarInstance, UseEventCalendarParameters } from './EventCalendar.types';
+import {
+  EventCalendarInstance,
+  EventCalendarView,
+  UseEventCalendarParameters,
+} from './EventCalendar.types';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
 import { Store } from '../../base-ui-copy/utils/store';
 import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
@@ -11,6 +15,9 @@ import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { Adapter } from '../../primitives/utils/adapter/types';
 import { SchedulerValidDate } from '../../primitives/models';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '../agenda-view';
+import { useAssertStateValidity } from '../internals/hooks/useAssertStateValidity';
+
+const DEFAULT_VIEWS: EventCalendarView[] = ['week', 'day', 'month', 'agenda'];
 
 export function useEventCalendar(parameters: UseEventCalendarParameters) {
   const adapter = useAdapter();
@@ -23,13 +30,30 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     resources: resourcesProp,
     view: viewProp,
     defaultView = 'week',
+    views = DEFAULT_VIEWS,
     onViewChange,
     visibleDate: visibleDateProp,
     defaultVisibleDate = defaultVisibleDateFallback,
     onVisibleDateChange,
     areEventsDraggable = false,
     areEventsResizable = false,
+    ampm = true,
   } = parameters;
+
+  const store = useLazyRef(
+    () =>
+      new Store<State>({
+        events: eventsProp,
+        resources: resourcesProp || [],
+        visibleResources: new Map(),
+        visibleDate: visibleDateProp ?? defaultVisibleDate,
+        view: viewProp ?? defaultView,
+        views,
+        areEventsDraggable,
+        areEventsResizable,
+        ampm,
+      }),
+  ).current;
 
   useAssertModelConsistency({
     componentName: 'Event Calendar',
@@ -45,25 +69,16 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     defaultValue: defaultVisibleDate,
   });
 
-  const store = useLazyRef(
-    () =>
-      new Store<State>({
-        events: eventsProp,
-        resources: resourcesProp || [],
-        visibleResources: new Map(),
-        visibleDate: visibleDateProp ?? defaultVisibleDate,
-        view: viewProp ?? defaultView,
-        views: ['week', 'day', 'month', 'agenda'],
-        areEventsDraggable,
-        areEventsResizable,
-      }),
-  ).current;
+  useAssertStateValidity(store);
 
   useModernLayoutEffect(() => {
     const partialState: Partial<State> = {
       events: eventsProp,
       resources: resourcesProp || [],
+      views,
       areEventsDraggable,
+      areEventsResizable,
+      ampm,
     };
     if (viewProp !== undefined) {
       partialState.view = viewProp;
@@ -73,7 +88,17 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     }
 
     store.apply(partialState);
-  }, [store, eventsProp, resourcesProp, viewProp, visibleDateProp]);
+  }, [
+    store,
+    eventsProp,
+    resourcesProp,
+    viewProp,
+    visibleDateProp,
+    areEventsDraggable,
+    areEventsResizable,
+    views,
+    ampm,
+  ]);
 
   const setVisibleDate = useEventCallback(
     (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
@@ -86,6 +111,15 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
   );
 
   const setView: EventCalendarInstance['setView'] = useEventCallback((view, event) => {
+    if (!store.state.views.includes(view)) {
+      throw new Error(
+        [
+          `Event Calendar: The view "${view}" provided to the setView method is not compatible with the available views: ${views.join(', ')}.`,
+          'Please ensure that the requested view is included in the views array.',
+        ].join('\n'),
+      );
+    }
+
     if (viewProp === undefined) {
       store.set('view', view);
     }

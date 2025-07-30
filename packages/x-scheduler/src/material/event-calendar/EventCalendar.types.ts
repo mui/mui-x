@@ -36,6 +36,11 @@ export interface UseEventCalendarParameters {
    */
   defaultView?: EventCalendarView;
   /**
+   * The views available in the calendar.
+   * @default ["week", "day", "month", "agenda"]
+   */
+  views?: EventCalendarView[];
+  /**
    * Event handler called when the view changes.
    */
   onViewChange?: (view: EventCalendarView, event: React.UIEvent | Event) => void;
@@ -63,6 +68,11 @@ export interface UseEventCalendarParameters {
    * @default false
    */
   areEventsResizable?: boolean;
+  /**
+   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
+   * @default true
+   */
+  ampm?: boolean;
 }
 
 export interface EventCalendarInstance {

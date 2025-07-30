@@ -26,12 +26,17 @@ export type State = {
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    */
   areEventsResizable: boolean;
+  /**
+   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
+   */
+  ampm: boolean;
 };
 
 export type EventCalendarStore = Store<State>;
 
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
+  ampm: createSelector((state: State) => state.ampm),
   view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
