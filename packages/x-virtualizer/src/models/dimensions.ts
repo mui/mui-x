@@ -66,26 +66,6 @@ export interface DimensionsState {
    * Size of the bottom container.
    */
   bottomContainerHeight: number;
-  /**
-   * Height of one column header.
-   * XXX: remove?
-   */
-  headerHeight: number;
-  /**
-   * Height of one column group header.
-   * XXX: remove?
-   */
-  groupHeaderHeight: number;
-  /**
-   * Height of header filters.
-   * XXX: remove?
-   */
-  headerFilterHeight: number;
-  /**
-   * Height of all the column headers.
-   * XXX: remove?
-   */
-  headersTotalHeight: number;
 }
 
 /**

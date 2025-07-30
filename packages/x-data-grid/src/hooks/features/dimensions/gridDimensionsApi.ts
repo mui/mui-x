@@ -1,63 +1,6 @@
-import type { ElementSize } from '../../../models/elementSize';
+import type { DimensionsState } from '@mui/x-virtualizer/models/dimensions';
 
-export interface GridDimensions {
-  /**
-   * Indicates that the dimensions have been initialized.
-   */
-  isReady: boolean;
-  /**
-   * The root container size.
-   */
-  root: ElementSize;
-  /**
-   * The viewport size including scrollbars.
-   */
-  viewportOuterSize: ElementSize;
-  /**
-   * The viewport size not including scrollbars.
-   */
-  viewportInnerSize: ElementSize;
-  /**
-   * The size of the main content (unpinned rows & columns).
-   */
-  contentSize: ElementSize;
-  /**
-   * The minimum size to display the grid, including all pinned sections and headers.
-   */
-  minimumSize: ElementSize;
-  /**
-   * Indicates if a scroll is currently needed to go from the beginning of the first column to the end of the last column.
-   */
-  hasScrollX: boolean;
-  /**
-   * Indicates if a scroll is currently needed to go from the beginning of the first row to the end of the last row.
-   */
-  hasScrollY: boolean;
-  /**
-   * Size of the scrollbar used to scroll the rows in pixel.
-   * It is defined even when the scrollbar is currently not needed.
-   */
-  scrollbarSize: number;
-  /**
-   * Width of a row.
-   */
-  rowWidth: number;
-  /**
-   * Height of a row.
-   */
-  rowHeight: number;
-  /**
-   * Size of all the visible columns.
-   */
-  columnsTotalWidth: number;
-  /**
-   * Size of left pinned columns.
-   */
-  leftPinnedWidth: number;
-  /**
-   * Size of right pinned columns.
-   */
-  rightPinnedWidth: number;
+export interface GridDimensions extends DimensionsState {
   /**
    * Height of one column header.
    */
@@ -74,14 +17,6 @@ export interface GridDimensions {
    * Height of all the column headers.
    */
   headersTotalHeight: number;
-  /**
-   * Size of the top container.
-   */
-  topContainerHeight: number;
-  /**
-   * Size of the bottom container.
-   */
-  bottomContainerHeight: number;
 }
 
 export interface GridDimensionsApi {
