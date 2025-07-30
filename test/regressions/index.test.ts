@@ -21,8 +21,6 @@ const timeSensitiveSuites = [
   'RowSpanningCalendar',
 ];
 
-const codesandboxIframeDemos = ['MobileKeyboardView', 'CoreV5WithCoreV4'];
-
 await main();
 
 async function main() {
@@ -116,16 +114,6 @@ async function main() {
           timeout: getTimeout(route),
         },
         async () => {
-          if (/^\/docs-charts-tooltip.*/.test(route)) {
-            // Ignore tooltip demo. Since they require some interaction they get tested in dedicated tests.
-            return;
-          }
-
-          if (codesandboxIframeDemos.some((demo) => route.includes(demo))) {
-            // Ignore codesandbox embedded demos since they're not using packages built from the branch anyway.
-            return;
-          }
-
           // Move cursor offscreen to not trigger unwanted hover effects.
           // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
           await page.mouse.move(0, 0);
