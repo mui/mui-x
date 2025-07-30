@@ -9,7 +9,7 @@ import { useEventCalendar } from '../../primitives/use-event-calendar';
 export function StandaloneView(props: StandaloneViewProps) {
   const { children, ...other } = props;
 
-  const { contextValue } = useEventCalendar(other);
+  const contextValue = useEventCalendar(other);
 
   return (
     <EventCalendarContext.Provider value={contextValue}>{children}</EventCalendarContext.Provider>

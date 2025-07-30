@@ -1,5 +1,5 @@
 import { getAdapter } from '../utils/adapter/getAdapter';
-import { createSelector, createSelectorMemoized, Store } from '../../base-ui-copy/utils/store';
+import { createSelector, createSelectorMemoized } from '../../base-ui-copy/utils/store';
 import {
   SchedulerValidDate,
   CalendarEvent,
@@ -35,8 +35,6 @@ export type State = {
    */
   ampm: boolean;
 };
-
-export type EventCalendarStore = Store<State>;
 
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),

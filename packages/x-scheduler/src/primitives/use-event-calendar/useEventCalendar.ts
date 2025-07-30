@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
-import { Store } from '../../base-ui-copy/utils/store';
+import { Store as BaseStore } from '../../base-ui-copy/utils/store';
 import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
 import { State } from './store';
 import { useAssertModelConsistency } from '../utils/useAssertModelConsistency';
@@ -23,7 +23,9 @@ const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 // TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
-export function useEventCalendar(parameters: useEventCalendar.Parameters) {
+export function useEventCalendar(
+  parameters: useEventCalendar.Parameters,
+): useEventCalendar.ReturnValue {
   const adapter = useAdapter();
 
   const defaultVisibleDateFallback = useLazyRef(() => adapter.startOfDay(adapter.date())).current;
@@ -46,7 +48,7 @@ export function useEventCalendar(parameters: useEventCalendar.Parameters) {
 
   const store = useLazyRef(
     () =>
-      new Store<State>({
+      new BaseStore<State>({
         events: eventsProp,
         resources: resourcesProp || [],
         visibleResources: new Map(),
@@ -190,9 +192,7 @@ export function useEventCalendar(parameters: useEventCalendar.Parameters) {
   });
   const instance = instanceRef.current;
 
-  const contextValue = React.useMemo(() => ({ store, instance }), [store, instance]);
-
-  return { store, instance, contextValue };
+  return React.useMemo(() => ({ store, instance }), [store, instance]);
 }
 
 function getNavigationDate({
@@ -201,7 +201,7 @@ function getNavigationDate({
   delta,
 }: {
   adapter: Adapter;
-  store: Store<State>;
+  store: useEventCalendar.Store;
   delta: number;
 }) {
   const { view, visibleDate } = store.state;
@@ -283,6 +283,17 @@ export namespace useEventCalendar {
     ampm?: boolean;
   }
 
+  export interface ReturnValue {
+    /**
+     * The store that holds the state of the calendar.
+     */
+    store: Store;
+    /**
+     * The instance methods to interact with the calendar.
+     */
+    instance: Instance;
+  }
+
   export interface Instance {
     /**
      * Sets the view of the calendar.
@@ -317,4 +328,6 @@ export namespace useEventCalendar {
      */
     setVisibleResources: (visibleResources: Map<CalendarResourceId, boolean>) => void;
   }
+
+  export type Store = BaseStore<State>;
 }

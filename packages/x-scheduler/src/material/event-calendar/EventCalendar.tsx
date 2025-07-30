@@ -38,7 +38,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     ...other
   } = props;
 
-  const { store, contextValue } = useEventCalendar({
+  const contextValue = useEventCalendar({
     events: eventsProp,
     onEventsChange,
     resources: resourcesProp,
@@ -53,7 +53,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     ampm,
   });
 
-  const view = useSelector(store, selectors.view);
+  const view = useSelector(contextValue.store, selectors.view);
 
   let content: React.ReactNode;
   switch (view) {
