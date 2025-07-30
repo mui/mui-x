@@ -7,6 +7,7 @@ import MuiTextField, { TextFieldProps } from '@mui/material/TextField';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
+import { major as materialMajor } from '@mui/material/version';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { FieldOwnerState } from '../../models';
@@ -78,8 +79,29 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     textFieldProps: {
       ...other,
-      InputProps: { ...(InputProps ?? {}), readOnly },
-      inputProps: { ...(inputProps ?? {}), inputMode, onPaste, onKeyDown, ref: inputRef },
+      ...(materialMajor >= 6
+        ? {
+            slotProps: {
+              ...other?.slotProps,
+              input: {
+                ...other?.slotProps?.input,
+                ...(InputProps ?? {}),
+                readOnly,
+              },
+              htmlInput: {
+                ...other?.slotProps?.htmlInput,
+                ...(inputProps ?? {}),
+                inputMode,
+                onPaste,
+                onKeyDown,
+                ref: inputRef,
+              },
+            },
+          }
+        : {
+            InputProps: { ...(InputProps ?? {}), readOnly },
+            inputProps: { ...(inputProps ?? {}), inputMode, onPaste, onKeyDown, ref: inputRef },
+          }),
     },
   };
 };
