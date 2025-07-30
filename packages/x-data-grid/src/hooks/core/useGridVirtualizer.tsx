@@ -80,7 +80,6 @@ export function useGridVirtualizer(
 
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
-  /* TODO: extract dimensions code */
   const contentHeight = useGridSelector(apiRef, gridContentHeightSelector);
   const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
@@ -166,7 +165,6 @@ export function useGridVirtualizer(
 
     initialState: {
       scroll: rootProps.initialState?.scroll,
-      dimensions: apiRef.current.state.dimensions,
       rowSpanning: apiRef.current.state.rowSpanning,
       virtualization: apiRef.current.state.virtualization,
     },

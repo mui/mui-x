@@ -37,7 +37,6 @@ export type VirtualizerParams = {
 
   initialState?: {
     scroll?: { top: number; left: number };
-    dimensions?: Partial<Dimensions.State['dimensions']>;
     rowSpanning?: Rowspan.State['rowSpanning'];
     virtualization?: Partial<Virtualization.State['virtualization']>;
   };
