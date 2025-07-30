@@ -46,6 +46,7 @@ Same changes as in `@mui/x-data-grid-pro@8.9.2`, plus:
 - [DataGridPremium] Add `privateMode` to AI assistant prompt resolver (#18759) @bharatkashyap
 - [DataGridPremium] Fix empty nested group values caused by main criterial valueFormatter (#18916) @cherniavskii
 - [DataGridPremium] Sidebar content and state is managed the same way as for preference panel (#18741) @arminmeh
+- [DataGridPremium] Make `api` param for the aggregation function optional (#18984) @arminmeh
 
 ### Date and Time Pickers
 
