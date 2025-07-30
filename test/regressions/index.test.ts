@@ -191,6 +191,7 @@ async function main() {
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
       );
 
+      await sleep(100);
       await page.evaluate(() => {
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
 
@@ -201,6 +202,7 @@ async function main() {
         virtualScroller.scrollLeft = 400;
         virtualScroller.dispatchEvent(new Event('scroll'));
       });
+      await sleep(100);
 
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });

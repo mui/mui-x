@@ -1,0 +1,11 @@
+{
+  "componentDescription": "Wrapper for the charts components.\nIts main purpose is to position the HTML legend in the correct place.",
+  "propDescriptions": {
+    "extendVertically": {
+      "description": "If <code>true</code>, the chart wrapper set <code>height: 100%</code>."
+    },
+    "legendDirection": { "description": "The direction of the legend." },
+    "legendPosition": { "description": "The position of the legend." }
+  },
+  "classDescriptions": {}
+}
