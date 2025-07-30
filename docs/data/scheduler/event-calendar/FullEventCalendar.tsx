@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { CalendarEvent } from '@mui/x-scheduler/joy';
-import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
+import { CalendarEvent } from '@mui/x-scheduler/material';
+import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import { events as initialEvents, resources } from './events';
 import classes from './FullEventCalendar.module.css';
 

@@ -13,7 +13,7 @@ import {
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 
-export const useGridRowAriaAttributes = (addTreeDataAttributes?: boolean) => {
+export const useGridRowAriaAttributesPro = (addTreeDataAttributes?: boolean) => {
   const apiRef = useGridPrivateApiContext();
   const props = useGridRootProps();
   const getRowAriaAttributesCommunity = useGridRowAriaAttributesCommunity();
@@ -32,7 +32,7 @@ export const useGridRowAriaAttributes = (addTreeDataAttributes?: boolean) => {
     (rowNode: GridTreeNode, index: number) => {
       const ariaAttributes = getRowAriaAttributesCommunity(rowNode, index);
 
-      if (rowNode === null || !(props.treeData || addTreeDataAttributes)) {
+      if (!rowNode || !(props.treeData || addTreeDataAttributes)) {
         return ariaAttributes;
       }
 

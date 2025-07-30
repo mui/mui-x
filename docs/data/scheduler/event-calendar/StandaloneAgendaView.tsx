@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/joy';
-import { AgendaView } from '@mui/x-scheduler/joy/agenda-view';
-import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
+import { CalendarEvent } from '@mui/x-scheduler/material';
+import { AgendaView } from '@mui/x-scheduler/material/agenda-view';
+import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { events as initialEvents, resources } from './events';
 
 import classes from './StandaloneWeekView.module.css';

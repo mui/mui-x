@@ -1,5 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import { SxProps, SystemStyleObject } from '@mui/system';
+import ownerDocument from '@mui/utils/ownerDocument';
 import * as React from 'react';
 
 /* Use it instead of .includes method for IE support */
@@ -35,7 +36,7 @@ export const executeInTheNextEventLoopTick = (fn: () => void) => {
 };
 
 // https://www.abeautifulsite.net/posts/finding-the-active-element-in-a-shadow-root/
-export const getActiveElement = (root: Document | ShadowRoot = document): Element | null => {
+const getActiveElementInternal = (root: Document | ShadowRoot = document): Element | null => {
   const activeEl = root.activeElement;
 
   if (!activeEl) {
@@ -43,10 +44,20 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
   }
 
   if (activeEl.shadowRoot) {
-    return getActiveElement(activeEl.shadowRoot);
+    return getActiveElementInternal(activeEl.shadowRoot);
   }
 
   return activeEl;
+};
+
+/**
+ * Gets the currently active element within a given node's document.
+ * This function traverses shadow DOM if necessary.
+ * @param node - The node from which to get the active element.
+ * @returns The currently active element, or null if none is found.
+ */
+export const getActiveElement = (node: Node | null | undefined): Element | null => {
+  return getActiveElementInternal(ownerDocument(node));
 };
 
 /**
@@ -57,7 +68,7 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
  */
 export const getFocusedListItemIndex = (listElement: HTMLUListElement): number => {
   const children = Array.from(listElement.children);
-  return children.indexOf(getActiveElement(document)!);
+  return children.indexOf(getActiveElement(listElement)!);
 };
 
 export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';

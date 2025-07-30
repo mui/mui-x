@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
-import { MonthView } from '@mui/x-scheduler/joy/month-view';
+import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { MonthView } from '@mui/x-scheduler/material/month-view';
 import { events as initialEvents, resources } from './events';
 import classes from './StandaloneMonthView.module.css';
 

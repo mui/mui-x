@@ -22,8 +22,10 @@ export function useMultiInputRangeFieldRootProps<TForwardedProps extends { [key:
 
     executeInTheNextEventLoopTick(() => {
       if (
-        privatePickerContext.rootRefObject.current?.contains(getActiveElement(document)) ||
-        pickerContext.popupRef.current?.contains(getActiveElement(document))
+        privatePickerContext.rootRefObject.current?.contains(
+          getActiveElement(privatePickerContext.rootRefObject.current),
+        ) ||
+        pickerContext.popupRef.current?.contains(getActiveElement(pickerContext.popupRef.current))
       ) {
         return;
       }

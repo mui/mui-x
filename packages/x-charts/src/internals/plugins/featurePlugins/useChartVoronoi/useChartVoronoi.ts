@@ -18,7 +18,25 @@ import {
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 
-type VoronoiSeries = { seriesId: SeriesId; startIndex: number; endIndex: number };
+type VoronoiSeries = {
+  /**
+   * The series id
+   */
+  seriesId: SeriesId;
+  /**
+   * The first index in the voronoi data that is about this series.
+   */
+  startIndex: number;
+  /**
+   * The first index in the voronoi data that is outside this series.
+   */
+  endIndex: number;
+  /**
+   * The mapping from voronoi point index to the series dataIndex.
+   * This takes into account removed points.
+   */
+  seriesIndexes: number[];
+};
 
 export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   svgRef,
@@ -73,22 +91,23 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       const getXPosition = getValueToPositionMapper(xScale);
       const getYPosition = getValueToPositionMapper(yScale);
 
-      const seriesPoints = data.flatMap(({ x, y }) => {
+      const seriesPoints: number[] = [];
+      const seriesIndexes: number[] = [];
+      for (let dataIndex = 0; dataIndex < data.length; dataIndex += 1) {
+        const { x, y } = data[dataIndex];
         const pointX = getXPosition(x);
         const pointY = getYPosition(y);
 
-        if (!instance.isPointInside(pointX, pointY)) {
-          // If the point is not displayed we move them to a trash coordinate.
-          // This avoids managing index mapping before/after filtering.
-          // The trash point is far enough such that any point in the drawing area will be closer to the mouse than the trash coordinate.
-          return [-drawingArea.width, -drawingArea.height];
+        if (instance.isPointInside(pointX, pointY)) {
+          seriesPoints.push(pointX);
+          seriesPoints.push(pointY);
+          seriesIndexes.push(dataIndex);
         }
-
-        return [pointX, pointY];
-      });
+      }
 
       voronoiRef.current[seriesId] = {
         seriesId,
+        seriesIndexes,
         startIndex: points.length,
         endIndex: points.length + seriesPoints.length,
       };
@@ -149,8 +168,10 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         return 'no-point-found';
       }
 
-      const dataIndex =
+      // The point index in the series with id=closestSeries.seriesId.
+      const seriesPointIndex =
         (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
+      const dataIndex = voronoiRef.current[closestSeries.seriesId].seriesIndexes[seriesPointIndex];
 
       if (voronoiMaxRadius !== undefined) {
         const pointX = delauneyRef.current.points[2 * closestPointIndex];
