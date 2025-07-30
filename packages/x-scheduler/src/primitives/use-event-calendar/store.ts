@@ -1,4 +1,3 @@
-import { getAdapter } from '../utils/adapter/getAdapter';
 import { createSelector, createSelectorMemoized } from '../../base-ui-copy/utils/store';
 import {
   SchedulerValidDate,
@@ -8,10 +7,14 @@ import {
   CalendarResourceId,
   CalendarView,
 } from '../models';
-
-const adapter = getAdapter();
+import { Adapter } from '../utils/adapter/types';
 
 export type State = {
+  /**
+   * The adapter of the date library.
+   * Not publicly exposed, is only set in state to avoid passing it to the selectors.
+   */
+  adapter: Adapter;
   visibleDate: SchedulerValidDate;
   view: CalendarView;
   views: CalendarView[];
@@ -19,7 +22,7 @@ export type State = {
   resources: CalendarResource[];
   /**
    * Visibility status for each resource.
-   * A resource is visible if it is registered in this looFkup with `true` value or if it is not registered at all.
+   * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
   visibleResources: Map<CalendarResourceId, boolean>;
   /**
@@ -65,9 +68,10 @@ export const selectors = {
     },
   ),
   getEventsStartingInDay: createSelectorMemoized(
+    (state: State) => state.adapter,
     (state: State) => state.events,
     (state: State) => state.visibleResources,
-    (events, visibleResources) => {
+    (adapter, events, visibleResources) => {
       const map = new Map<string, CalendarEvent[]>();
       for (const event of events) {
         if (event.resource && visibleResources.get(event.resource) === false) {

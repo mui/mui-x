@@ -18,22 +18,22 @@ import {
 } from '../models';
 import { useAssertStateValidity } from '../utils/useAssertStateValidity';
 
-const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
-
 // TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
+
+const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+const EMPTY_ARRAY: any[] = [];
 
 export function useEventCalendar(
   parameters: useEventCalendar.Parameters,
 ): useEventCalendar.ReturnValue {
   const adapter = useAdapter();
-
   const defaultVisibleDateFallback = useLazyRef(() => adapter.startOfDay(adapter.date())).current;
 
   const {
     events: eventsProp,
     onEventsChange,
-    resources: resourcesProp,
+    resources: resourcesProp = EMPTY_ARRAY,
     view: viewProp,
     defaultView = 'week',
     views = DEFAULT_VIEWS,
@@ -49,8 +49,9 @@ export function useEventCalendar(
   const store = useLazyRef(
     () =>
       new BaseStore<State>({
+        adapter,
         events: eventsProp,
-        resources: resourcesProp || [],
+        resources: resourcesProp,
         visibleResources: new Map(),
         visibleDate: visibleDateProp ?? defaultVisibleDate,
         view: viewProp ?? defaultView,
@@ -79,8 +80,9 @@ export function useEventCalendar(
 
   useModernLayoutEffect(() => {
     const partialState: Partial<State> = {
+      adapter,
       events: eventsProp,
-      resources: resourcesProp || [],
+      resources: resourcesProp,
       views,
       areEventsDraggable,
       areEventsResizable,
@@ -96,6 +98,7 @@ export function useEventCalendar(
     store.apply(partialState);
   }, [
     store,
+    adapter,
     eventsProp,
     resourcesProp,
     viewProp,
