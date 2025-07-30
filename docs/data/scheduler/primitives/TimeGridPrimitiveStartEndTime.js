@@ -2,7 +2,9 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
 import classes from './TimeGridPrimitive.module.css';
-import { days } from './time-grid-events';
+import { initialEvents, groupEventsByDay } from './time-grid-events';
+
+const days = groupEventsByDay(initialEvents);
 
 const startTime = DateTime.fromObject({ hour: 6 });
 const endTime = DateTime.fromObject({ hour: 23 });
@@ -23,12 +25,13 @@ export default function TimeGridPrimitiveStartEndTime() {
           ))}
         </div>
         <div className={classes.Body} ref={scrollerRef}>
-          <div className={classes.ScrollableContent} ref={scrollableRef} role="row">
-            <div
-              className={classes.TimeAxis}
-              aria-hidden="true"
-              style={{ '--duration': duration }}
-            >
+          <div
+            className={classes.ScrollableContent}
+            ref={scrollableRef}
+            style={{ '--duration': duration }}
+            role="row"
+          >
+            <div className={classes.TimeAxis} aria-hidden="true">
               {Array.from({ length: duration }, (_, index) => {
                 const hour = index + startTime.get('hour');
                 return (
@@ -47,9 +50,8 @@ export default function TimeGridPrimitiveStartEndTime() {
             {days.map((day) => (
               <TimeGrid.Column
                 key={day.date.toString()}
-                value={day.date}
-                startTime={startTime}
-                endTime={endTime}
+                start={day.date.startOf('day').set({ hour: startTime.get('hour') })}
+                end={day.date.startOf('day').set({ hour: endTime.get('hour') })}
                 className={classes.Column}
               >
                 {day.events.map((event) => (

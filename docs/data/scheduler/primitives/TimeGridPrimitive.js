@@ -2,7 +2,9 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
 import classes from './TimeGridPrimitive.module.css';
-import { days } from './time-grid-events';
+import { initialEvents, groupEventsByDay } from './time-grid-events';
+
+const days = groupEventsByDay(initialEvents);
 
 export default function TimeGridPrimitive() {
   const { scrollableRef, scrollerRef } = useInitialScrollPosition();
@@ -19,12 +21,13 @@ export default function TimeGridPrimitive() {
           ))}
         </div>
         <div className={classes.Body} ref={scrollerRef}>
-          <div className={classes.ScrollableContent} ref={scrollableRef} role="row">
-            <div
-              className={classes.TimeAxis}
-              aria-hidden="true"
-              style={{ '--duration': 24 }}
-            >
+          <div
+            className={classes.ScrollableContent}
+            ref={scrollableRef}
+            style={{ '--duration': 24 }}
+            role="row"
+          >
+            <div className={classes.TimeAxis} aria-hidden="true">
               {Array.from({ length: 24 }, (_, hour) => (
                 <div
                   key={hour}
@@ -40,7 +43,8 @@ export default function TimeGridPrimitive() {
             {days.map((day) => (
               <TimeGrid.Column
                 key={day.date.toString()}
-                value={day.date}
+                start={day.date.startOf('day')}
+                end={day.date.endOf('day')}
                 className={classes.Column}
               >
                 {day.events.map((event) => (

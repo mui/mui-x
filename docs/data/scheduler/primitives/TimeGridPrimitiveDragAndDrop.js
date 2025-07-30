@@ -4,14 +4,27 @@ import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
 import classes from './TimeGridPrimitive.module.css';
 import { initialEvents, groupEventsByDay } from './time-grid-events';
 
-const days = groupEventsByDay(initialEvents);
-
-export default function TimeGridPrimitive() {
+export default function TimeGridPrimitiveDragAndDrop() {
+  const [events, setEvents] = React.useState(initialEvents);
   const { scrollableRef, scrollerRef } = useInitialScrollPosition();
+
+  const days = React.useMemo(() => {
+    return groupEventsByDay(events);
+  }, [events]);
+
+  const handleEventChange = React.useCallback((eventData) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === eventData.eventId
+          ? { ...event, start: eventData.start, end: eventData.end }
+          : event,
+      ),
+    );
+  }, []);
 
   return (
     <div className={classes.Container}>
-      <TimeGrid.Root className={classes.Root}>
+      <TimeGrid.Root className={classes.Root} onEventChange={handleEventChange}>
         <div className={classes.Header}>
           <div className={classes.TimeAxisHeaderCell} aria-hidden="true" />
           {days.map((day) => (
@@ -24,7 +37,7 @@ export default function TimeGridPrimitive() {
           <div
             className={classes.ScrollableContent}
             ref={scrollableRef}
-            style={{ '--duration': 24 } as React.CSSProperties}
+            style={{ '--duration': 24 }}
             role="row"
           >
             <div className={classes.TimeAxis} aria-hidden="true">
@@ -32,7 +45,7 @@ export default function TimeGridPrimitive() {
                 <div
                   key={hour}
                   className={classes.TimeAxisCell}
-                  style={{ '--hour-index': hour } as React.CSSProperties}
+                  style={{ '--hour-index': hour }}
                 >
                   {hour === 0
                     ? null
@@ -55,15 +68,25 @@ export default function TimeGridPrimitive() {
                     eventId={event.id}
                     data-resource={event.resource}
                     className={classes.Event}
+                    isDraggable
                   >
+                    <TimeGrid.EventResizeHandler
+                      side="start"
+                      className={classes.EventResizeHandler}
+                    />
                     <div className={classes.EventInformation}>
                       <div className={classes.EventStartTime}>
                         {event.start.toFormat('hh a')}
                       </div>
                       <div className={classes.EventTitle}>{event.title}</div>
                     </div>
+                    <TimeGrid.EventResizeHandler
+                      side="end"
+                      className={classes.EventResizeHandler}
+                    />
                   </TimeGrid.Event>
                 ))}
+                <TimeGridColumnPlaceholder events={events} />
               </TimeGrid.Column>
             ))}
           </div>
@@ -73,18 +96,48 @@ export default function TimeGridPrimitive() {
   );
 }
 
+function TimeGridColumnPlaceholder({ events }) {
+  const placeholder = TimeGrid.useColumnPlaceholder();
+
+  if (!placeholder) {
+    return null;
+  }
+
+  const event = events.find(
+    (calendarEvent) => calendarEvent.id === placeholder.eventId,
+  );
+  if (!event) {
+    return null;
+  }
+
+  return (
+    <TimeGrid.Event
+      start={placeholder.start}
+      end={placeholder.end}
+      eventId={event.id}
+      data-resource={event.resource}
+      className={classes.Event}
+    >
+      <div className={classes.EventInformation}>
+        <div className={classes.EventStartTime}>{event.start.toFormat('hh a')}</div>
+        <div className={classes.EventTitle}>{event.title}</div>
+      </div>
+    </TimeGrid.Event>
+  );
+}
+
 function useInitialScrollPosition() {
   // TODO: Should the automatic scrolling be built-in?
-  const scrollableRef = React.useRef<HTMLDivElement>(null);
-  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const scrollableRef = React.useRef(null);
+  const scrollerRef = React.useRef(null);
 
   React.useLayoutEffect(() => {
     if (!scrollableRef.current || !scrollerRef.current) {
       return;
     }
 
-    let earliestStart: number | null = null;
-    for (const day of days) {
+    let earliestStart = null;
+    for (const day of groupEventsByDay(initialEvents)) {
       for (const event of day.events) {
         const startMinute = event.start.hour * 60 + event.start.minute;
 

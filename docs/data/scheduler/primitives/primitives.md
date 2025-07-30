@@ -25,6 +25,17 @@ This package is not published yet.
 
 {{"demo": "TimeGridPrimitiveStartEndTime.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Drag and drop
+
+- Add the `isDraggable` props to the `TimeGrid.Event` part to enable the re-scheduler of the events
+- Render a `TimeGrid.EventResizeHandler` inside the `TimeGrid.Event` part to enable the resizing of the events
+
+{{"demo": "TimeGridPrimitiveDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Drag and drop to update resource
+
+{{"demo": "TimeGridPrimitiveDragAndDropResource.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Day Grid
 
 ### Basic example

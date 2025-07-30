@@ -32,7 +32,8 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
         placeholder != null &&
         adapter.isEqual(newPlaceholder.start, placeholder.start) &&
         adapter.isEqual(newPlaceholder.end, placeholder.end) &&
-        placeholder.id === newPlaceholder.id
+        placeholder.eventId === newPlaceholder.eventId &&
+        placeholder.columnId === newPlaceholder.columnId
       ) {
         return;
       }
@@ -71,7 +72,8 @@ export namespace TimeGridRoot {
   }
 
   export interface EventData {
-    id: string | number;
+    eventId: string | number;
+    columnId: string | null;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }
