@@ -30,6 +30,7 @@ export default function TimelinePrimitive() {
           <Timeline.SubGrid className={clsx(classes.SubGrid, classes.EventSubGrid)}>
             {(item) => (
               <Timeline.EventRow
+                key={item.title}
                 className={classes.Row}
                 start={boundaries.start}
                 end={boundaries.end}
