@@ -3,7 +3,7 @@ title: Charts - Animation
 productId: x-charts
 ---
 
-<p class="description">Learn how to customize both CSS and JS-based Chart animations.</p>
+<p class="description">Learn how to customize both CSS and JavaScript-based Chart animations.</p>
 
 Some elements of the MUI X Charts are animated by default—for example, the bars in a Bar Chart rise from the axis, and the slices in a Pie Chart expand to fill the circle.
 These animations are primarily built with CSS, but some use JavaScript-based React hooks as well.
@@ -18,9 +18,9 @@ You can override the default CSS classes to customize CSS-based animations, as s
 
 {{"demo": "CSSAnimationCustomization.js"}}
 
-### Overriding JS animations
+### Overriding JavaScript animations
 
-To override JS-based animations—or to use the Chart animations in custom components—you can use the custom animation hooks.
+To override JavaScript-based animations—or to use the Chart animations in custom components—you can use the custom animation hooks.
 
 The Charts package provides the following animation hooks:
 
