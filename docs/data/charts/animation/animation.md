@@ -56,14 +56,14 @@ Alternatively, you can use your own animation library to create custom animation
 
 ### Using React Spring
 
-One of the most popular libraries for animations in React is React Spring.
+One of the most popular libraries for animations in React is [React Spring](https://www.react-spring.dev/docs/getting-started).
 It provides a powerful and flexible API for creating animations, and it works well with the MUI X Charts.
 
 {{"demo": "ReactSpringAnimationCustomization.js"}}
 
 ### Using Motion
 
-Another option is the Motion library, which provides a declarative API for complex animations with excellent performance.
+Another option is the [Motion library](https://motion.dev/docs/react), which provides a declarative API for complex animations with excellent performance.
 
 {{"demo": "MotionAnimationCustomization.js"}}
 
