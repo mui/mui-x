@@ -213,6 +213,9 @@ export const getPivotedData = ({
           colValue = String(colValue);
         }
 
+        const getFormattedColValue = () =>
+          apiRef.current.getRowFormattedValue(row, column) ?? colValue;
+
         columnGroupPath.push(colValue);
         const groupId = columnGroupPath.join(columnGroupIdSeparator);
 
@@ -220,6 +223,7 @@ export const getPivotedData = ({
           const columnGroup: GridColumnGroupingModel[number] = {
             groupId,
             headerName: colValue,
+            renderHeaderGroup: getFormattedColValue,
             children: [],
           };
           columnGroupingModelLookup.set(groupId, columnGroup);
