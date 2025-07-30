@@ -235,19 +235,22 @@ export function PickerFieldUI<
 
   textFieldProps.ref = useForkRef(textFieldProps.ref, pickerContext?.rootRef);
 
-  if (!textFieldProps.InputProps) {
-    textFieldProps.InputProps = {};
+  let textFieldInputProps = (textFieldProps?.slotProps?.input ?? textFieldProps.InputProps) as
+    | PickersTextFieldProps['InputProps']
+    | undefined;
+  if (!textFieldInputProps) {
+    textFieldInputProps = {};
   }
 
   if (pickerContext) {
-    textFieldProps.InputProps.ref = pickerContext.triggerRef;
+    textFieldInputProps.ref = pickerContext.triggerRef;
   }
 
   if (
-    !textFieldProps.InputProps?.startAdornment &&
+    !textFieldInputProps?.startAdornment &&
     (clearButtonPosition === 'start' || openPickerButtonPosition === 'start')
   ) {
-    textFieldProps.InputProps.startAdornment = (
+    textFieldInputProps.startAdornment = (
       <InputAdornment {...startInputAdornmentProps}>
         {openPickerButtonPosition === 'start' && (
           <OpenPickerButton {...openPickerButtonProps}>
@@ -264,10 +267,10 @@ export function PickerFieldUI<
   }
 
   if (
-    !textFieldProps.InputProps?.endAdornment &&
+    !textFieldInputProps?.endAdornment &&
     (clearButtonPosition === 'end' || openPickerButtonPosition === 'end')
   ) {
-    textFieldProps.InputProps.endAdornment = (
+    textFieldInputProps.endAdornment = (
       <InputAdornment {...endInputAdornmentProps}>
         {clearButtonPosition === 'end' && (
           <ClearButton {...clearButtonProps}>
