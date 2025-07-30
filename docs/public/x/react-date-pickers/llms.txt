@@ -1,0 +1,139 @@
+# Date and Time Pickers
+
+This is the documentation for the Date and Time Pickers package.
+It contains comprehensive guides, components, and utilities for building user interfaces.
+
+- [Quickstart](/x/react-date-pickers/quickstart.md): Install the MUI X Date and Time Pickers package and set up your date library to start building.
+- [Base concepts](/x/react-date-pickers/base-concepts.md): The Date and Time Pickers expose a lot of components to fit your every need.
+## Components
+
+### Date components
+
+- [Date Picker](/x/react-date-pickers/date-picker.md): The Date Picker component lets users select a date.
+- [Date Field](/x/react-date-pickers/date-field.md): The Date Field component lets users select a date with the keyboard.
+- [Date Calendar](/x/react-date-pickers/date-calendar.md): The Date Calendar component lets users select a date without any input or popper / modal.
+
+
+### Time components
+
+- [Time Picker](/x/react-date-pickers/time-picker.md): The Time Picker component lets the user select a time.
+- [Time Field](/x/react-date-pickers/time-field.md): The Time Field component lets the user select a time with the keyboard.
+- [Time Clock](/x/react-date-pickers/time-clock.md): The Time Clock component lets the user select a time without any input or popper / modal.
+- [Digital Clock](/x/react-date-pickers/digital-clock.md): The Digital Clock lets the user select a time without any input or popper / modal.
+
+
+### Date Time components
+
+- [Date Time Picker](/x/react-date-pickers/date-time-picker.md): The Date Time Picker component lets users select a date and time.
+- [Date Time Field](/x/react-date-pickers/date-time-field.md): The Date Time Field component lets users select a date and a time with the keyboard.
+
+
+### Date Range components
+
+- [Date Range Picker](/x/react-date-pickers/date-range-picker.md): The Date Range Picker lets the user select a range of dates.
+- [Date Range Field](/x/react-date-pickers/date-range-field.md): The Date Range Field lets the user select a date range with the keyboard.
+- [Date Range Calendar](/x/react-date-pickers/date-range-calendar.md): The Date Range Calendar lets the user select a range of dates without any input or popper / modal.
+
+
+### Time Range components
+
+- [Time Range Picker](/x/react-date-pickers/time-range-picker.md): The Time Range Picker lets users select a range of time values. 🆕
+- [Time Range Field](/x/react-date-pickers/time-range-field.md): The Time Range Field lets the user select a range of time with the keyboard.
+
+
+### Date Time Range components
+
+- [Date Time Range Picker](/x/react-date-pickers/date-time-range-picker.md): The Date Time Range Picker lets the user select a range of dates with an explicit starting and ending time.
+- [Date Time Range Field](/x/react-date-pickers/date-time-range-field.md): The Date Time Range Field lets the user select a range of dates with an explicit starting and ending time with the keyboard.
+
+
+- [Field components](/x/react-date-pickers/fields.md): The field components let the user input date and time values with a keyboard and refined keyboard navigation.
+
+
+## Main features
+
+- [Validation](/x/react-date-pickers/validation.md): Add custom validation to user inputs.
+- [Components lifecycle](/x/react-date-pickers/lifecycle.md): This page explains when the onChange, onAccept, and onClose callbacks are called.
+- [Shortcuts](/x/react-date-pickers/shortcuts.md): The date picker lets you add custom shortcuts.
+- [Accessibility](/x/react-date-pickers/accessibility.md): Learn how the Date and Time Pickers implement accessibility features and guidelines, including keyboard navigation that follows international standards.
+
+
+## Localization
+
+- [Translated components](/x/react-date-pickers/localization.md): Date and Time Pickers support translations between languages.
+- [Date format and localization](/x/react-date-pickers/adapters-locale.md): Date and Time Pickers support formats from different locales.
+- [UTC and timezones](/x/react-date-pickers/timezone.md): Date and Time Pickers support UTC and timezones.
+- [Calendar systems](/x/react-date-pickers/calendar-systems.md): Use the Date and Time Pickers with non-Gregorian calendars.
+
+
+## Customization
+
+- [Custom subcomponents](/x/react-date-pickers/custom-components.md): Learn how to override parts of the Date and Time Pickers.
+- [Custom layout](/x/react-date-pickers/custom-layout.md): The Date and Time Pickers let you reorganize the layout.
+- [Custom field](/x/react-date-pickers/custom-field.md): The Date and Time Pickers let you customize the field by passing props or custom components.
+- [Custom opening button](/x/react-date-pickers/custom-opening-button.md): The date picker lets you customize the button to open the views.
+- [Customization playground](/x/react-date-pickers/playground.md): Use this playground to experiment with the props that affect the layout of the Date and Time Picker components.
+
+
+## Resources
+
+- [DateCalendar](/x/api/date-pickers/date-calendar.md): API documentation for DateCalendar
+- [DateField](/x/api/date-pickers/date-field.md): API documentation for DateField
+- [DatePicker](/x/api/date-pickers/date-picker.md): API documentation for DatePicker
+- [DatePickerToolbar](/x/api/date-pickers/date-picker-toolbar.md): API documentation for DatePickerToolbar
+- [DateRangeCalendar](/x/api/date-pickers/date-range-calendar.md): API documentation for DateRangeCalendar (pro)
+- [DateRangePicker](/x/api/date-pickers/date-range-picker.md): API documentation for DateRangePicker (pro)
+- [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day.md): API documentation for DateRangePickerDay (pro)
+- [DateRangePickerDay2](/x/api/date-pickers/date-range-picker-day-2.md): API documentation for DateRangePickerDay2 (pro)
+- [DateRangePickerToolbar](/x/api/date-pickers/date-range-picker-toolbar.md): API documentation for DateRangePickerToolbar (pro)
+- [DateTimeField](/x/api/date-pickers/date-time-field.md): API documentation for DateTimeField
+- [DateTimePicker](/x/api/date-pickers/date-time-picker.md): API documentation for DateTimePicker
+- [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs.md): API documentation for DateTimePickerTabs
+- [DateTimePickerToolbar](/x/api/date-pickers/date-time-picker-toolbar.md): API documentation for DateTimePickerToolbar
+- [DateTimeRangePicker](/x/api/date-pickers/date-time-range-picker.md): API documentation for DateTimeRangePicker (pro)
+- [DateTimeRangePickerTabs](/x/api/date-pickers/date-time-range-picker-tabs.md): API documentation for DateTimeRangePickerTabs (pro)
+- [DateTimeRangePickerToolbar](/x/api/date-pickers/date-time-range-picker-toolbar.md): API documentation for DateTimeRangePickerToolbar (pro)
+- [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton.md): API documentation for DayCalendarSkeleton
+- [DesktopDatePicker](/x/api/date-pickers/desktop-date-picker.md): API documentation for DesktopDatePicker
+- [DesktopDateRangePicker](/x/api/date-pickers/desktop-date-range-picker.md): API documentation for DesktopDateRangePicker (pro)
+- [DesktopDateTimePicker](/x/api/date-pickers/desktop-date-time-picker.md): API documentation for DesktopDateTimePicker
+- [DesktopDateTimeRangePicker](/x/api/date-pickers/desktop-date-time-range-picker.md): API documentation for DesktopDateTimeRangePicker (pro)
+- [DesktopTimePicker](/x/api/date-pickers/desktop-time-picker.md): API documentation for DesktopTimePicker
+- [DesktopTimeRangePicker](/x/api/date-pickers/desktop-time-range-picker.md): API documentation for DesktopTimeRangePicker (pro)
+- [DigitalClock](/x/api/date-pickers/digital-clock.md): API documentation for DigitalClock
+- [LocalizationProvider](/x/api/date-pickers/localization-provider.md): API documentation for LocalizationProvider
+- [MobileDatePicker](/x/api/date-pickers/mobile-date-picker.md): API documentation for MobileDatePicker
+- [MobileDateRangePicker](/x/api/date-pickers/mobile-date-range-picker.md): API documentation for MobileDateRangePicker (pro)
+- [MobileDateTimePicker](/x/api/date-pickers/mobile-date-time-picker.md): API documentation for MobileDateTimePicker
+- [MobileDateTimeRangePicker](/x/api/date-pickers/mobile-date-time-range-picker.md): API documentation for MobileDateTimeRangePicker (pro)
+- [MobileTimePicker](/x/api/date-pickers/mobile-time-picker.md): API documentation for MobileTimePicker
+- [MobileTimeRangePicker](/x/api/date-pickers/mobile-time-range-picker.md): API documentation for MobileTimeRangePicker (pro)
+- [MonthCalendar](/x/api/date-pickers/month-calendar.md): API documentation for MonthCalendar
+- [MultiInputDateRangeField](/x/api/date-pickers/multi-input-date-range-field.md): API documentation for MultiInputDateRangeField (pro)
+- [MultiInputDateTimeRangeField](/x/api/date-pickers/multi-input-date-time-range-field.md): API documentation for MultiInputDateTimeRangeField (pro)
+- [MultiInputTimeRangeField](/x/api/date-pickers/multi-input-time-range-field.md): API documentation for MultiInputTimeRangeField (pro)
+- [MultiSectionDigitalClock](/x/api/date-pickers/multi-section-digital-clock.md): API documentation for MultiSectionDigitalClock
+- [PickerDay2](/x/api/date-pickers/picker-day-2.md): API documentation for PickerDay2
+- [PickersActionBar](/x/api/date-pickers/pickers-action-bar.md): API documentation for PickersActionBar
+- [PickersCalendarHeader](/x/api/date-pickers/pickers-calendar-header.md): API documentation for PickersCalendarHeader
+- [PickersDay](/x/api/date-pickers/pickers-day.md): API documentation for PickersDay
+- [PickersLayout](/x/api/date-pickers/pickers-layout.md): API documentation for PickersLayout
+- [PickersRangeCalendarHeader](/x/api/date-pickers/pickers-range-calendar-header.md): API documentation for PickersRangeCalendarHeader (pro)
+- [PickersSectionList](/x/api/date-pickers/pickers-section-list.md): API documentation for PickersSectionList
+- [PickersShortcuts](/x/api/date-pickers/pickers-shortcuts.md): API documentation for PickersShortcuts
+- [PickersTextField](/x/api/date-pickers/pickers-text-field.md): API documentation for PickersTextField
+- [SingleInputDateRangeField](/x/api/date-pickers/single-input-date-range-field.md): API documentation for SingleInputDateRangeField (pro)
+- [SingleInputDateTimeRangeField](/x/api/date-pickers/single-input-date-time-range-field.md): API documentation for SingleInputDateTimeRangeField (pro)
+- [SingleInputTimeRangeField](/x/api/date-pickers/single-input-time-range-field.md): API documentation for SingleInputTimeRangeField (pro)
+- [StaticDatePicker](/x/api/date-pickers/static-date-picker.md): API documentation for StaticDatePicker
+- [StaticDateRangePicker](/x/api/date-pickers/static-date-range-picker.md): API documentation for StaticDateRangePicker (pro)
+- [StaticDateTimePicker](/x/api/date-pickers/static-date-time-picker.md): API documentation for StaticDateTimePicker
+- [StaticTimePicker](/x/api/date-pickers/static-time-picker.md): API documentation for StaticTimePicker
+- [TimeClock](/x/api/date-pickers/time-clock.md): API documentation for TimeClock
+- [TimeField](/x/api/date-pickers/time-field.md): API documentation for TimeField
+- [TimePicker](/x/api/date-pickers/time-picker.md): API documentation for TimePicker
+- [TimePickerToolbar](/x/api/date-pickers/time-picker-toolbar.md): API documentation for TimePickerToolbar
+- [TimeRangePicker](/x/api/date-pickers/time-range-picker.md): API documentation for TimeRangePicker (pro)
+- [TimeRangePickerTabs](/x/api/date-pickers/time-range-picker-tabs.md): API documentation for TimeRangePickerTabs (pro)
+- [TimeRangePickerToolbar](/x/api/date-pickers/time-range-picker-toolbar.md): API documentation for TimeRangePickerToolbar (pro)
+- [YearCalendar](/x/api/date-pickers/year-calendar.md): API documentation for YearCalendar

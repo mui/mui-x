@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.9
+<!-- generated comparing v7.29.8..v7.x -->
+_Jul 30, 2025_
+
+We'd like to extend a big thank you to the 1 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+The following are all team members who have contributed to this release:
+@rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.8`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@7.29.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.8`.
+
+#### `@mui/x-data-grid-premium@7.29.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.8`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.4`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@7.29.4`.
+
+### Charts
+
+#### `@mui/x-charts@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@7.29.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@7.29.1`.
+
+### Codemod
+
+#### `@mui/x-codemod@7.23.6`
+
+Internal changes.
+
+### Docs
+
+- [docs] Audit and revise the Data Grid Pro row docs (#18629) @mapache-salvaje
+
+### Miscellaneous
+
+- [read me] Update readme publish release command V7 (#18684) @rita-codes
+
 ## v7.29.8
 
 _Jul 4, 2025_
@@ -76,71 +145,6 @@ Same changes as in `@mui/x-data-grid-pro@7.29.7`.
 ### Miscellaneous
 
 - [infra] Add automated release PR creation script (#18450) @michelengelen
-
-## 7.29.9
-<!-- generated comparing v7.29.8..v7.x -->
-_Jul 30, 2025_
-
-We'd like to extend a big thank you to the 1 contributors who made this release possible. Here are some highlights ✨:
-
-TODO INSERT HIGHLIGHTS
-
-The following are all team members who have contributed to this release:
-@rita-codes
-
-### Data Grid
-
-#### `@mui/x-data-grid@7.29.8`
-
-- [data grid][docs] Audit and revise the Pro row docs (@mapache-salvaje) (#18629) @github-actions[bot]
-
-#### `@mui/x-data-grid-pro@7.29.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
-
-Same changes as in `@mui/x-data-grid@7.29.8`.
-
-#### `@mui/x-data-grid-premium@7.29.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
-
-Same changes as in `@mui/x-data-grid-pro@7.29.8`.
-
-### Date and Time Pickers
-
-#### `@mui/x-date-pickers@7.29.4`
-
-Internal changes.
-
-#### `@mui/x-date-pickers-pro@7.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
-
-Same changes as in `@mui/x-date-pickers@7.29.4`.
-
-### Charts
-
-#### `@mui/x-charts@7.29.1`
-
-Internal changes.
-
-#### `@mui/x-charts-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
-
-Same changes as in `@mui/x-charts@7.29.1`.
-
-### Tree View
-
-#### `@mui/x-tree-view@7.29.1`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
-
-Same changes as in `@mui/x-tree-view@7.29.1`.
-
-### Codemod
-
-#### `@mui/x-codemod@7.23.6`
-
-Internal changes.
-
-### Miscellaneous
-
-- [read me] Update readme publish release command V7 (#18684) @rita-codes
 
 ## 7.29.6
 
