@@ -20,7 +20,7 @@ Special thanks go out to the community members for their valuable contributions:
 @AmrElnaggar99, @atlanteh, @ddolcimascolo, @Jiseoup, @leonaha5, @noherczeg, @sai6855
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @bharatkashyap, @cherniavskii, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @rita-codes, @siriwatknp, @arminmeh, @brijeshb42, @mapache-salvaje, @romgrk
+@alexfauquette, @arminmeh, @bernardobelchior, @bharatkashyap, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @mapache-salvaje, @MBilalShafi, @rita-codes, @romgrk, @siriwatknp
 
 ### Data Grid
 
