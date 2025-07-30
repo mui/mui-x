@@ -26,7 +26,7 @@ import { useBarChartProps } from './useBarChartProps';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
-import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { ChartsWrapper } from '../ChartsWrapper';
 import { BarChartPluginsSignatures } from './BarChart.plugins';
 
 export interface BarChartSlots
