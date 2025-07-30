@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useGridAriaAttributes as useGridAriaAttributesCommunity } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from './useGridRootProps';
 
-export const useGridAriaAttributes = (): React.HTMLAttributes<HTMLElement> => {
+export const useGridAriaAttributesPro = (): React.HTMLAttributes<HTMLElement> => {
   const ariaAttributesCommunity = useGridAriaAttributesCommunity();
   const rootProps = useGridRootProps();
 
