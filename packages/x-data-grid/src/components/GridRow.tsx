@@ -294,6 +294,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     rowClassNames.push(rootProps.getRowClassName(rowParams));
   }
 
+  // XXX: fix this properly
+  if (!rowNode) {
+    return null;
+  }
+
   const getCell = (
     column: GridStateColDef,
     indexInSection: number,

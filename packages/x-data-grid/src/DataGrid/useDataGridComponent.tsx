@@ -4,6 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
+import { useGridVirtualizer } from '../hooks/core/useGridVirtualizer';
 import { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 import { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 import {
@@ -104,6 +105,7 @@ export const useDataGridComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
+  useGridVirtualizer(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
