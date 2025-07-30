@@ -1,0 +1,31 @@
+{
+  "props": {
+    "extendVertically": {
+      "type": { "name": "bool" },
+      "default": "`false` if the `height` prop is set. And `true` otherwise."
+    },
+    "legendDirection": {
+      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
+      "default": "'horizontal'"
+    },
+    "legendPosition": {
+      "type": {
+        "name": "shape",
+        "description": "{ horizontal?: 'center'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'start', vertical?: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
+      },
+      "default": "{ horizontal: 'center', vertical: 'bottom' }"
+    }
+  },
+  "name": "ChartsWrapper",
+  "imports": [
+    "import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';",
+    "import { ChartsWrapper } from '@mui/x-charts';",
+    "import { ChartsWrapper } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsWrapper",
+  "filename": "/packages/x-charts/src/ChartsWrapper/ChartsWrapper.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/radar/\">Charts - Radar</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
+  "cssComponent": false
+}
