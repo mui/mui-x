@@ -64,7 +64,7 @@ Same changes as in `@mui/x-date-pickers@8.9.2`.
 - [charts] Fix bar border radius on Firefox (#18824) @bernardobelchior
 - [charts] Fix crash when rendering large scatter dataset (#18845) @bernardobelchior
 - [charts] Remove unnecessary type assertion in tooltip valueFormatter (#18877) @sai6855
-[charts] Export `ChartsWrapper` from `'./ChartsWrapper'` rather than `'./internals'` (#18966) @JCQuintas 
+- [charts] Export `ChartsWrapper` from `'./ChartsWrapper'` rather than `'./internals'` (#18966) @JCQuintas 
 
 #### `@mui/x-charts-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
