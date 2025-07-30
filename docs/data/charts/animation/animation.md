@@ -16,7 +16,8 @@ To customize Chart animations, you may need to override CSS classes or implement
 
 ### Overriding CSS animations
 
-You can override the default CSS classes to customize CSS-based animations, as shown in the demo below:
+You can override the default CSS classes to customize CSS-based animations.
+The demo below shows how to do this by adding an animated color gradient to the label text:
 
 {{"demo": "CSSAnimationCustomization.js"}}
 
@@ -33,7 +34,7 @@ The Charts package provides the following animation hooks:
 - `useAnimatePieArc()`
 - `useAnimatePieArcLabel()`
 
-The demo below illustrates how to use these hooks:
+The demo below illustrates how to use these hooks by animating the bar labels to match the bar animation—click **Run Animation** to see it in action:
 
 {{"demo": "JSDefaultAnimation.js"}}
 
@@ -43,7 +44,7 @@ For more fine-grained animation customization, you can use the `useAnimate(props
 This hook returns a ref as well as props to pass to the animated element.
 Each time the `props` params are updated, the hook creates an interpolation from the previous value to the next one.
 As each animation frame loads, it calls this interpolator to get the intermediate state and applies the result to the animated element.
-The attribute update is imperative to bypass the React lifecycle for improved performance.
+(The attribute update is imperative to bypass the React lifecycle for improved performance.)
 
 With `params` you can define the following properties:
 
@@ -63,7 +64,7 @@ In the example below, labels are positioned above the bars they refer to and are
 ### Using third-party animation libraries
 
 You can fully override the default Chart animations with your own (third-party) animation library.
-The demo below shows how to do so with React Spring:
+The demo below shows how to integrate React Spring to add a bounce effect to the bar label animation:
 
 {{"demo": "ReactSpringAnimationCustomization.js"}}
 
