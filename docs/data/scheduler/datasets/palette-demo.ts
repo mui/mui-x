@@ -1,6 +1,6 @@
 // Fake data of an agenda with lots of different resources
 import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/material';
+import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 
