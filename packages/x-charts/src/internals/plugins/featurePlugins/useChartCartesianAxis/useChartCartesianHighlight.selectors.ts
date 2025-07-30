@@ -79,8 +79,7 @@ export const selectorChartsHighlightYAxisValue = createSelector(
     selectorChartsInteractionYAxisValue,
     selectorChartYAxis,
     selectorChartControlledCartesianAxisHighlight,
-  ],
-  selectAxisHighlightWithValue,
+  ], selectAxisHighlightWithValue
 );
 
 /**

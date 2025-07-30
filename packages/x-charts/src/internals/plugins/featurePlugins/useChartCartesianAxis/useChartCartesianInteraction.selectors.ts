@@ -75,26 +75,26 @@ type Value = number | Date | null;
 function valueGetter(
   value: number,
   axes: ComputeResult<ChartsAxisProps>,
-  indexes: number,
+  indexes: number | null,
   ids?: AxisId,
 ): Value;
 function valueGetter(
   value: number,
   axes: ComputeResult<ChartsAxisProps>,
-  indexes: number[],
+  indexes: (number | null)[],
   ids: AxisId[],
 ): Value[];
 function valueGetter(
   value: number,
   axes: ComputeResult<ChartsAxisProps>,
-  indexes: number | number[],
+  indexes: number | null | (number | null)[],
   ids: AxisId | AxisId[] = axes.axisIds[0],
 ): Value | Value[] {
   return Array.isArray(ids)
     ? ids.map((id, axisIndex) =>
-        getAxisValue(axes.axis[id], value, (indexes as number[])[axisIndex]),
-      )
-    : getAxisValue(axes.axis[ids], value, indexes as number);
+      getAxisValue(axes.axis[id], value, (indexes as (number | null)[])[axisIndex]),
+    )
+    : getAxisValue(axes.axis[ids], value, indexes as number | null);
 }
 
 export const selectorChartsInteractionXAxisValue = createSelector(
@@ -105,7 +105,7 @@ export const selectorChartsInteractionXAxisValue = createSelector(
     optionalGetAxisId,
   ],
   (x, xAxes, xIndex, id) => {
-    if (x === null || xIndex === null || xAxes.axisIds.length === 0) {
+    if (x === null || xAxes.axisIds.length === 0) {
       return null;
     }
     return valueGetter(x, xAxes, xIndex, id);
@@ -120,7 +120,7 @@ export const selectorChartsInteractionYAxisValue = createSelector(
     optionalGetAxisId,
   ],
   (y, yAxes, yIndex, id) => {
-    if (y === null || yIndex === null || yAxes.axisIds.length === 0) {
+    if (y === null || yAxes.axisIds.length === 0) {
       return null;
     }
     return valueGetter(y, yAxes, yIndex, id);
