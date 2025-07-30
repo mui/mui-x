@@ -30,3 +30,9 @@ This package is not published yet.
 ### Basic example
 
 {{"demo": "DayGridPrimitive.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Timeline
+
+### Basic example
+
+{{"demo": "TimelinePrimitive.js", "bg": "inline", "defaultCodeOpen": false}}

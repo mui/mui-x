@@ -2,9 +2,12 @@ import * as React from 'react';
 import { CalendarEvent } from '@mui/x-scheduler/material';
 import { DayView } from '@mui/x-scheduler/material/day-view';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
-import { events as initialEvents, resources } from './events';
-
-import classes from './StandaloneWeekView.module.css';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../datasets/personal-agenda';
+import classes from './FullEventCalendar.module.css';
 
 export default function StandaloneDayView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
@@ -13,7 +16,7 @@ export default function StandaloneDayView() {
     <StandaloneView
       events={events}
       resources={resources}
-      defaultVisibleDate={events[0].start}
+      defaultVisibleDate={defaultVisibleDate}
       onEventsChange={setEvents}
     >
       <DayView className={classes.Container} />

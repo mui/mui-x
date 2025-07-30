@@ -2,7 +2,11 @@ import * as React from 'react';
 
 import { CalendarEvent } from '@mui/x-scheduler/material';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
-import { events as initialEvents, resources } from './events';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../datasets/personal-agenda';
 import classes from './FullEventCalendar.module.css';
 
 export default function RemoveViews() {
@@ -12,7 +16,7 @@ export default function RemoveViews() {
     <EventCalendar
       events={events}
       resources={resources}
-      defaultVisibleDate={events[0].start}
+      defaultVisibleDate={defaultVisibleDate}
       onEventsChange={setEvents}
       className={classes.Container}
       views={['week', 'month']}

@@ -43,4 +43,10 @@ All the views of the Event Calendar can be used as standalone components:
 
 ### Change the available views
 
-{{"demo": "RemoveViews.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RemoveViews.js", "bg": "inline"}}
+
+### Color palettes
+
+The Event Calendar supports several color palettes:
+
+{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
