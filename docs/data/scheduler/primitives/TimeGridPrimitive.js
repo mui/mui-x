@@ -21,7 +21,7 @@ export default function TimeGridPrimitive() {
           ))}
         </div>
         <div className={classes.Body} ref={scrollerRef}>
-          <div
+          <TimeGrid.ScrollableContent
             className={classes.ScrollableContent}
             ref={scrollableRef}
             style={{ '--duration': 24 }}
@@ -66,7 +66,7 @@ export default function TimeGridPrimitive() {
                 ))}
               </TimeGrid.Column>
             ))}
-          </div>
+          </TimeGrid.ScrollableContent>
         </div>
       </TimeGrid.Root>
     </div>

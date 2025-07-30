@@ -34,7 +34,7 @@ export default function TimeGridPrimitiveDragAndDrop() {
           ))}
         </div>
         <div className={classes.Body} ref={scrollerRef}>
-          <div
+          <TimeGrid.ScrollableContent
             className={classes.ScrollableContent}
             ref={scrollableRef}
             style={{ '--duration': 24 }}
@@ -89,7 +89,7 @@ export default function TimeGridPrimitiveDragAndDrop() {
                 <TimeGridColumnPlaceholder events={events} />
               </TimeGrid.Column>
             ))}
-          </div>
+          </TimeGrid.ScrollableContent>
         </div>
       </TimeGrid.Root>
     </div>

@@ -44,7 +44,7 @@ export default function TimeGridPrimitiveDragAndDropResource() {
           ))}
         </div>
         <div className={classes.Body}>
-          <div
+          <TimeGrid.ScrollableContent
             className={classes.ScrollableContent}
             role="row"
             style={{ '--duration': duration }}
@@ -102,7 +102,7 @@ export default function TimeGridPrimitiveDragAndDropResource() {
                 />
               </TimeGrid.Column>
             ))}
-          </div>
+          </TimeGrid.ScrollableContent>
         </div>
       </TimeGrid.Root>
     </div>
