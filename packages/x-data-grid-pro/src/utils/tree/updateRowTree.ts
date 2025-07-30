@@ -61,7 +61,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
       treeDepths,
       updatedGroupsManager,
       id: nodeId,
-      shouldCleanParent: !params.groupingName.includes('data-source'),
+      groupingName: params.groupingName,
     });
   }
 
@@ -76,7 +76,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
         treeDepths,
         updatedGroupsManager,
         id,
-        shouldCleanParent: !params.groupingName.includes('data-source'),
+        groupingName: params.groupingName,
       });
 
       insertDataRowInTree({
