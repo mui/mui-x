@@ -1,4 +1,4 @@
-import type { DimensionsState } from '@mui/x-virtualizer/models/dimensions';
+import type { DimensionsState } from '@mui/x-virtualizer/models';
 
 export interface GridDimensions extends DimensionsState {
   /**

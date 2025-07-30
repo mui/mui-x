@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { Dimensions } from '@mui/x-virtualizer';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';

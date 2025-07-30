@@ -123,6 +123,7 @@ export function useGridVirtualizer(
   /** Translate virtualizer state to grid state */
   const addGridDimensions = React.useMemo(
     () =>
+      /* eslint-disable @typescript-eslint/no-shadow */
       lruMemoize(
         (
           dimensions: Dimensions.State['dimensions'],
@@ -141,6 +142,7 @@ export function useGridVirtualizer(
         },
         { maxSize: 1 },
       ),
+    /* eslint-enable @typescript-eslint/no-shadow */
     [],
   );
 
