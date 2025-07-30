@@ -8,20 +8,20 @@ productId: x-charts
 <p class="description">Learn how to customize both CSS and JavaScript-based Chart animations.</p>
 
 Some elements of the MUI X Charts are animated by default—for example, the bars in a Bar Chart rise from the axis, and the slices in a Pie Chart expand to fill the circle.
-These animations are primarily built with CSS, but some use JavaScript-based React hooks as well.
 
-## Customizing animations
+These animations are primarily built with CSS, but some use JavaScript-based React hooks as well.
+You can use these hooks to animate other elements of the Charts that aren't animated by default, or to add animations to your own custom components.
 
 To customize Chart animations, you may need to override CSS classes or implement the custom hooks provided, depending on your specific use case.
 
-### Overriding CSS animations
+## Customizing CSS animations
 
 You can override the default CSS classes to customize CSS-based animations.
 The demo below shows how to do this by adding an animated color gradient to the label text:
 
 {{"demo": "CSSAnimationCustomization.js"}}
 
-### Overriding JavaScript animations
+## Customizing JavaScript animations
 
 To override JavaScript-based animations—or to use the Chart animations in custom components—you can use the custom animation hooks.
 
@@ -38,7 +38,7 @@ The demo below illustrates how to use these hooks by animating the bar labels to
 
 {{"demo": "JSDefaultAnimation.js"}}
 
-#### The useAnimate hook
+### The useAnimate() hook
 
 For more fine-grained animation customization, you can use the `useAnimate(props, params)` hook.
 This hook returns a ref as well as props to pass to the animated element.
@@ -61,7 +61,7 @@ In the example below, labels are positioned above the bars they refer to and are
 
 {{"demo": "JSAnimationCustomization.js"}}
 
-### Using third-party animation libraries
+## Using third-party animation libraries
 
 You can fully override the default Chart animations with your own (third-party) animation library.
 The demo below shows how to integrate React Spring to add a bounce effect to the bar label animation:
