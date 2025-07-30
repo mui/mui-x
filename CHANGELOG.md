@@ -15,6 +15,8 @@ We'd like to extend a big thank you to the 22 contributors who made this release
 - 🌎 Improve Korean (ko-KR) locale on the Date and Time Pickers
 - 📈 Add symlog scale to charts
 - 📊 Fix bar border radius on Firefox
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
 @AmrElnaggar99, @atlanteh, @ddolcimascolo, @Jiseoup, @leonaha5, @noherczeg, @sai6855
