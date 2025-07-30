@@ -27,3 +27,4 @@ export { ChartContainer } from './ChartContainer';
 export type { ChartContainerProps } from './ChartContainer';
 export * from './ChartDataProvider';
 export * from './Toolbar';
+export * from './ChartsWrapper';
