@@ -54,10 +54,10 @@ export const resources: Resource[] = [
     title: 'Room 4',
     events: [
       {
-        id: '2',
+        id: '6',
         start: DateTime.fromISO('2027-02-01T00:00:00'),
         end: DateTime.fromISO('2027-02-02T00:00:00'),
-        title: 'Event 4',
+        title: 'Event 6',
       },
     ],
   },
