@@ -106,7 +106,7 @@ function StockDetailsPanel({ apiRef }: { apiRef: React.RefObject<GridApiPremium>
   );
 }
 
-function StockDashboard() {
+function StockDashboard(props: { disableCustomTheme?: boolean }) {
   const apiRef = useGridApiRef();
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -291,7 +291,7 @@ function StockDashboard() {
   );
 
   return (
-    <DemoContainer theme={stockDashboardTheme}>
+    <DemoContainer theme={props.disableCustomTheme ? undefined : stockDashboardTheme}>
       <Box
         sx={{
           display: 'flex',
@@ -327,3 +327,10 @@ function StockDashboard() {
 }
 
 export default StockDashboard;
+
+export const demoMetadata = {
+  title: 'Data Grid - Real-time data demo',
+  description:
+    'Real-time data updates in the Data Grid, using simulated market data to showcase live changes.',
+  label: 'Real-time data',
+};
