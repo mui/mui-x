@@ -39,7 +39,7 @@ The following are all team members who have contributed to this release:
 
 Same changes as in `@mui/x-data-grid@8.9.2`, plus:
 
-- [DataGridPro] Fix duplicate nested rows for dynamically updated row IDs (#18526) @MBilalShafi 
+- [DataGridPro] Fix duplicate nested rows for dynamically updated row IDs (#18526) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@8.9.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
