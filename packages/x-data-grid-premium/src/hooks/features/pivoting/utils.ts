@@ -213,9 +213,11 @@ export const getPivotedData = ({
           colValue = String(colValue);
         }
 
-        const groupHeaderRenderer = column.valueFormatter
-          ? () => apiRef.current.getRowFormattedValue(row, column) ?? colValue
-          : undefined;
+        const formattedHeaderName = column.valueFormatter
+          ? (apiRef.current.getRowFormattedValue(row, column) ?? colValue)
+          : colValue;
+        const groupHeaderRenderer =
+          formattedHeaderName === colValue ? undefined : () => formattedHeaderName;
 
         columnGroupPath.push(colValue);
         const groupId = columnGroupPath.join(columnGroupIdSeparator);
