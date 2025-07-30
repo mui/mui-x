@@ -135,10 +135,6 @@ export const gridExpandedSortedRowTreeLevelPositionLookupSelector = createSelect
     return visibleSortedRowIds.reduce((acc: Record<GridRowId, number>, rowId) => {
       const rowNode = rowTree[rowId];
 
-      if (!rowNode) {
-        return acc;
-      }
-
       if (!depthPositionCounter[rowNode.depth]) {
         depthPositionCounter[rowNode.depth] = 0;
       }

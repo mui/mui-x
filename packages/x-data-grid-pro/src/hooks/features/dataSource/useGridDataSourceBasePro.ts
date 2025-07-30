@@ -14,6 +14,8 @@ import {
   gridRowTreeSelector,
   GridUpdateRowParams,
   GridRowId,
+  gridDataRowIdsSelector,
+  gridRowsLookupSelector,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -277,15 +279,16 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
 
   const removeChildrenRows = React.useCallback<GridDataSourcePrivateApiPro['removeChildrenRows']>(
     (parentId) => {
-      const updatedTree = { ...gridRowTreeSelector(apiRef) };
+      const tree = { ...gridRowTreeSelector(apiRef) };
+      const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
       const rowNode = gridRowNodeSelector(apiRef, parentId);
       if (!rowNode || rowNode.type !== 'group' || rowNode.children.length === 0) {
         return;
       }
 
-      let areRowsRemoved = false;
+      const removedRows = new Set<GridRowId>();
       const traverse = (nodeId: GridRowId) => {
-        const node = updatedTree[nodeId];
+        const node = tree[nodeId];
         if (!node) {
           return;
         }
@@ -293,21 +296,26 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         if (node.type === 'group' && node.children?.length > 0) {
           node.children.forEach(traverse);
         }
-        delete updatedTree[nodeId];
-        areRowsRemoved = true;
+        delete tree[nodeId];
+        delete dataRowIdToModelLookup[nodeId];
+        removedRows.add(nodeId);
       };
 
       rowNode.children.forEach(traverse);
 
-      updatedTree[parentId] = { ...rowNode, children: [] };
+      tree[parentId] = { ...rowNode, children: [] };
 
-      if (areRowsRemoved) {
+      const dataRowIds = gridDataRowIdsSelector(apiRef).filter((id) => !removedRows.has(id));
+
+      if (removedRows.size > 0) {
         apiRef.current.setState((state) => {
           return {
             ...state,
             rows: {
               ...state.rows,
-              tree: updatedTree,
+              tree,
+              dataRowIds,
+              dataRowIdToModelLookup,
             },
           };
         });
