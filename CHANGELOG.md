@@ -13,12 +13,14 @@ We'd like to extend a big thank you to the 21 contributors who made this release
 
 - 🌎 Improve French (fr-FR), Hebrew (he-IL) and Polish (pl-PL) locales on the Data Grid
 - 🌎 Improve Korean (ko-KR) locale on the Date and Time Pickers
+- 📈 Add symlog scale to charts
+- 📊 Fix bar border radius on Firefox
 
 Special thanks go out to the community members for their valuable contributions:
-@AmrElnaggar99, @arminmeh, @atlanteh, @brijeshb42, @ddolcimascolo, @Jiseoup, @leonaha5, @mapache-salvaje, @noherczeg, @romgrk, @sai6855
+@AmrElnaggar99, @atlanteh, @ddolcimascolo, @Jiseoup, @leonaha5, @noherczeg, @sai6855
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @bharatkashyap, @cherniavskii, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @rita-codes, @siriwatknp
+@alexfauquette, @bernardobelchior, @bharatkashyap, @cherniavskii, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @rita-codes, @siriwatknp, @arminmeh, @brijeshb42, @mapache-salvaje, @romgrk
 
 ### Data Grid
 
@@ -62,6 +64,7 @@ Same changes as in `@mui/x-date-pickers@8.9.2`.
 - [charts] Fix bar border radius on Firefox (#18824) @bernardobelchior
 - [charts] Fix crash when rendering large scatter dataset (#18845) @bernardobelchior
 - [charts] Remove unnecessary type assertion in tooltip valueFormatter (#18877) @sai6855
+- [charts] Export `ChartsWrapper` from `'./ChartsWrapper'` rather than `'./internals'` (#18966) @JCQuintas 
 
 #### `@mui/x-charts-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -70,15 +73,6 @@ Same changes as in `@mui/x-charts@8.9.2`, plus:
 - [charts-pro] Fix voronoi interaction with zoom (#18950) @alexfauquette
 - [charts-pro] Hide toolbar by default when exporting (#18764) @bernardobelchior
 
-### Tree View
-
-#### `@mui/x-tree-view@8.9.2`
-
-Internal changes.
-
-#### `@mui/x-tree-view-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@8.9.2`.
 
 ### Codemod
 
@@ -88,7 +82,7 @@ Internal changes.
 
 ### Docs
 
-- [docs] Add Data Grid demo pages (DX-5) (#18180) @KenanYusuf
+- [docs] Add Data Grid demo pages (#18180) @KenanYusuf
 - [docs] Copyedit the Charts Overview page (#18840) @mapache-salvaje
 - [docs] Fix incorrect parameter name in pickers "Custom components" page from `variant` to `pickerVariant` (#18919) @AmrElnaggar99
 
