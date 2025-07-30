@@ -25,6 +25,16 @@ describe('createDiscreteScaleGetAxisFilter', () => {
     expect(filter({ x: null, y: 'I3' }, 3)).toBe(false);
   });
 
+  it('should include elements if they are partially visible (another case)', () => {
+    const axisData = ['I0', 'I1', 'I2', 'I3'];
+    const filter = createDiscreteScaleGetAxisFilter(axisData, 51, 76, 'y');
+
+    expect(filter({ x: null, y: 'I0' }, 0)).toBe(false);
+    expect(filter({ x: null, y: 'I1' }, 1)).toBe(false);
+    expect(filter({ x: null, y: 'I2' }, 2)).toBe(true);
+    expect(filter({ x: null, y: 'I3' }, 3)).toBe(false);
+  });
+
   it('should include all elements when there is no zoom', () => {
     const axisData = ['I0', 'I1', 'I2', 'I3', 'I4', 'I5'];
     const filter = createDiscreteScaleGetAxisFilter(axisData, 0, 100, 'y');
