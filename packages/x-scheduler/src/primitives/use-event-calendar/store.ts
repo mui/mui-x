@@ -1,21 +1,25 @@
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { getAdapter } from '../utils/adapter/getAdapter';
 import { createSelector, createSelectorMemoized, Store } from '../../base-ui-copy/utils/store';
-import { SchedulerValidDate } from '../../primitives/models';
-import { CalendarEvent, CalendarEventId } from '../models/events';
-import { CalendarResource, CalendarResourceId } from '../models/resource';
-import { EventCalendarView } from './EventCalendar.types';
+import {
+  SchedulerValidDate,
+  CalendarEvent,
+  CalendarEventId,
+  CalendarResource,
+  CalendarResourceId,
+  CalendarView,
+} from '../models';
 
 const adapter = getAdapter();
 
 export type State = {
   visibleDate: SchedulerValidDate;
-  view: EventCalendarView;
-  views: EventCalendarView[];
+  view: CalendarView;
+  views: CalendarView[];
   events: CalendarEvent[];
   resources: CalendarResource[];
   /**
    * Visibility status for each resource.
-   * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
+   * A resource is visible if it is registered in this looFkup with `true` value or if it is not registered at all.
    */
   visibleResources: Map<CalendarResourceId, boolean>;
   /**

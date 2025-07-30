@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { SchedulerValidDate } from '../../../../primitives/models';
+import { SchedulerValidDate, CalendarEvent } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
@@ -11,8 +11,7 @@ import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { selectors } from '../../../event-calendar/store';
-import { CalendarEvent } from '../../../models/events';
+import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 

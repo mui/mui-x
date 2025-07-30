@@ -8,7 +8,7 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { useSelector } from '../../base-ui-copy/utils/store';
-import { selectors } from '../event-calendar/store';
+import { selectors } from '../../primitives/use-event-calendar';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';

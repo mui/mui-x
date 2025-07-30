@@ -7,7 +7,7 @@ import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store';
-import { selectors } from '../../../event-calendar/store';
+import { selectors } from '../../../../primitives/use-event-calendar';
 import './DateNavigator.css';
 
 const adapter = getAdapter();

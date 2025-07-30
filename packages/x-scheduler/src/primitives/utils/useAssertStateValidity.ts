@@ -1,7 +1,7 @@
 'use client';
-import { warn } from '../../../base-ui-copy/utils/warn';
-import { useSelector } from '../../../base-ui-copy/utils/store';
-import { EventCalendarStore, selectors } from '../../event-calendar/store';
+import { warn } from '../../base-ui-copy/utils/warn';
+import { useSelector } from '../../base-ui-copy/utils/store';
+import { EventCalendarStore, selectors } from '../use-event-calendar/store';
 
 /**
  * Make sure the state current value doesn't contain incompatible values.

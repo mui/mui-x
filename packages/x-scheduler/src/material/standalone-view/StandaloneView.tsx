@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { UseEventCalendarParameters } from '../event-calendar/EventCalendar.types';
-import { useEventCalendar } from '../event-calendar/useEventCalendar';
+import { useEventCalendar } from '../../primitives/use-event-calendar';
 
 /**
  * Temporary component to help rendering standalone views in the doc.
@@ -17,6 +16,6 @@ export function StandaloneView(props: StandaloneViewProps) {
   );
 }
 
-export interface StandaloneViewProps extends UseEventCalendarParameters {
+export interface StandaloneViewProps extends useEventCalendar.Parameters {
   children?: React.ReactNode;
 }

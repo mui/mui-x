@@ -4,7 +4,7 @@ import { DayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import { useSelector } from '../../base-ui-copy/utils/store';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { selectors } from '../event-calendar/store';
+import { selectors } from '../../primitives/use-event-calendar';
 
 export const DayView = React.memo(
   React.forwardRef(function DayView(

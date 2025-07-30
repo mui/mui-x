@@ -7,13 +7,12 @@ import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { useSelector } from '../../base-ui-copy/utils/store';
-import { selectors } from './store';
 import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { DateNavigator } from '../internals/components/date-navigator';
 import { ResourceLegend } from '../internals/components/resource-legend';
-import { useEventCalendar } from './useEventCalendar';
+import { useEventCalendar, selectors } from '../../primitives/use-event-calendar';
 import '../index.css';
 import './EventCalendar.css';
 

@@ -9,9 +9,9 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { useSelector } from '../../../../base-ui-copy/utils/store/useSelector';
-import { selectors } from '../../../event-calendar/store';
+import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCallback } from '../../../../base-ui-copy/utils/useEventCallback';
-import { CalendarResource } from '../../../models/resource';
+import { CalendarResource } from '../../../../primitives/models';
 import './ResourceLegend.css';
 
 function ResourceLegendItem(props: { resource: CalendarResource }) {

@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
-import { Store } from '../../../base-ui-copy/utils/store';
-import { State } from '../../event-calendar/store';
-import { EventCalendarInstance } from '../../event-calendar/EventCalendar.types';
+import type { useEventCalendar, EventCalendarStore } from '../../../primitives/use-event-calendar';
 
 export const EventCalendarContext = React.createContext<{
-  store: Store<State>;
-  instance: EventCalendarInstance;
+  store: EventCalendarStore;
+  instance: useEventCalendar.Instance;
 } | null>(null);
 
 export function useEventCalendarContext() {
