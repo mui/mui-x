@@ -28,7 +28,8 @@ export * from './constants';
 export * from './hooks';
 export * from './context';
 export * from './models';
-export * from './locales';
+// Locales should be imported from `@mui/x-charts-pro/locales`
+// export * from './locales';
 export * from './colorPalettes';
 
 // Pro components

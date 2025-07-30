@@ -27,3 +27,6 @@ export { ChartContainer } from './ChartContainer';
 export type { ChartContainerProps } from './ChartContainer';
 export * from './ChartDataProvider';
 export * from './Toolbar';
+
+// Locales should be imported from `@mui/x-charts/locales`
+// export * from './locales';
