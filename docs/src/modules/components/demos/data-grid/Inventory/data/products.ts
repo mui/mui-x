@@ -130,7 +130,7 @@ export const products: Product[] = [
     totalSold: 423,
     incoming: 32,
     colors: ['Black'],
-    image: 'https://m.media-amazon.com/images/I/81xN-mI5KBL.jpg@._V1_QL80_UY500_CR0,,120,120.jpg',
+    image: 'https://m.media-amazon.com/images/I/81xN-mI5KBL.jpg@._V1_QL80_UY120_CR0,,120,120.jpg',
   },
   {
     id: 8,
