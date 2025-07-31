@@ -24,6 +24,7 @@ export default function MotionAnimationCustomization() {
         ]}
         width={500}
         height={300}
+        skipAnimation
         slots={{
           line: AnimatedLine,
           mark: AnimatedMark,
@@ -35,48 +36,44 @@ export default function MotionAnimationCustomization() {
 }
 
 function AnimatedLine({ d, ownerState, skipAnimation }) {
-  const pathRef = React.useRef(null);
+  const animationProps = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: {
+      duration: skipAnimation ? 0 : 1.5,
+      ease: 'easeInOut',
+    },
+  };
 
   return (
     <motion.path
-      ref={pathRef}
       d={d}
       fill="transparent"
       stroke={ownerState.color}
-      initial={{
-        opacity: skipAnimation ? 1 : 0,
-      }}
-      animate={{
-        opacity: 1,
-      }}
-      transition={{
-        duration: 1.5,
-        ease: 'easeInOut',
-      }}
+      {...(skipAnimation ? {} : animationProps)}
     />
   );
 }
 
 function AnimatedMark({ x, y, color, skipAnimation }) {
+  const animationProps = {
+    initial: { scale: 0, opacity: 0 },
+    animate: { scale: 1, opacity: 1 },
+    transition: {
+      duration: 1,
+      delay: 0.5,
+      ease: 'backOut',
+    },
+  };
+
   return (
     <motion.circle
       cx={x}
       cy={y}
       r={5}
       fill={color}
-      initial={{
-        scale: skipAnimation ? 1 : 0,
-        opacity: skipAnimation ? 1 : 0,
-      }}
-      animate={{
-        scale: 1,
-        opacity: 1,
-      }}
-      transition={{
-        duration: 1,
-        delay: 0.5,
-        ease: 'backOut',
-      }}
+      {...(skipAnimation ? {} : animationProps)}
+      onAnimationStart={() => console.log('Animation started')}
     />
   );
 }
