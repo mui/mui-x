@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
-import { MotionConfig } from 'motion/react';
 import { setupFakeClock, restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
@@ -55,7 +54,7 @@ function Root() {
   }, [navigate]);
 
   return (
-    <MotionConfig reducedMotion="always">
+    <React.Fragment>
       <Outlet />
       {isDev ? (
         <div>
@@ -85,7 +84,7 @@ function Root() {
           </details>
         </div>
       ) : null}
-    </MotionConfig>
+    </React.Fragment>
   );
 }
 
