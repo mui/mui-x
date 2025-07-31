@@ -180,6 +180,9 @@ catalogs:
     moment-timezone:
       specifier: ^0.6.0
       version: 0.6.0
+    motion:
+      specifier: ^12.23.12
+      version: 12.23.12
     prop-types:
       specifier: ^15.8.1
       version: 15.8.1
@@ -768,7 +771,7 @@ importers:
         specifier: 'catalog:'
         version: 0.6.0
       motion:
-        specifier: ^12.23.12
+        specifier: 'catalog:'
         version: 12.23.12(@emotion/is-prop-valid@1.3.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next:
         specifier: ^15.4.4
@@ -2037,6 +2040,9 @@ importers:
       moment-jalaali:
         specifier: 'catalog:'
         version: 0.10.4
+      motion:
+        specifier: 'catalog:'
+        version: 12.23.12(@emotion/is-prop-valid@1.3.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1

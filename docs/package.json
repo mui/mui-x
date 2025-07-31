@@ -77,7 +77,7 @@
     "moment-hijri": "catalog:",
     "moment-jalaali": "catalog:",
     "moment-timezone": "catalog:",
-    "motion": "^12.23.12",
+    "motion": "catalog:",
     "next": "^15.4.4",
     "nprogress": "^0.2.0",
     "postcss": "^8.5.6",

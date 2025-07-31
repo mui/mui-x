@@ -30,6 +30,7 @@
     "dayjs": "catalog:",
     "moment": "catalog:",
     "moment-jalaali": "catalog:",
+    "motion": "catalog:",
     "prop-types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
