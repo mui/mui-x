@@ -174,7 +174,7 @@
     "typescript": "^5.8.3",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
-    "vite": "^7.0.6",
+    "vite": "catalog:",
     "vitest": "catalog:",
     "vitest-fail-on-console": "^0.8.0",
     "webpack": "^5.100.2",
