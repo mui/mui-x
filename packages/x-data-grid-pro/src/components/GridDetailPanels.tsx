@@ -2,7 +2,7 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, useGridSelector, GridRowId } from '@mui/x-data-grid';
-import { GridDetailPanelsProps, EMPTY_DETAIL_PANELS } from '@mui/x-data-grid/internals';
+import { GridDetailPanelsProps } from '@mui/x-data-grid/internals';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -69,15 +69,11 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
   );
 
   React.useEffect(() => {
-    if (expandedRowIds.size === 0) {
-      setPanels(EMPTY_DETAIL_PANELS);
-    } else {
-      const map = new Map<GridRowId, React.ReactNode>();
-      for (const rowId of expandedRowIds) {
-        map.set(rowId, getDetailPanel(rowId));
-      }
-      setPanels(map);
+    const map = new Map<GridRowId, React.ReactNode>();
+    for (const rowId of expandedRowIds) {
+      map.set(rowId, getDetailPanel(rowId));
     }
+    setPanels(map);
   }, [expandedRowIds, setPanels, getDetailPanel]);
 
   return null;

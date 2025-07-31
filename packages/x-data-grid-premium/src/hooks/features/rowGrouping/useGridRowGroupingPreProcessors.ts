@@ -19,6 +19,7 @@ import {
   updateRowTree,
   RowTreeBuilderGroupingCriterion,
   getVisibleRowsLookup,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -32,7 +33,6 @@ import {
 import {
   filterRowTreeFromGroupingColumns,
   getColDefOverrides,
-  RowGroupingStrategy,
   isGroupingColumn,
   setStrategyAvailability,
   getCellGroupingCriteria,

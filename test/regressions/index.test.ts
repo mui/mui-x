@@ -114,8 +114,9 @@ async function main() {
           timeout: getTimeout(route),
         },
         async () => {
-          if (/^\/docs-charts-tooltip.*/.test(route)) {
-            // Ignore tooltip demo. Since they require some interaction they get tested in dedicated tests.
+          if (/^\/docs-charts-tooltip\/Interaction/.test(route)) {
+            // Ignore tooltip interaction demo screenshot.
+            // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
             return;
           }
 
@@ -196,6 +197,7 @@ async function main() {
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
       );
 
+      await sleep(100);
       await page.evaluate(() => {
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
 
@@ -206,6 +208,7 @@ async function main() {
         virtualScroller.scrollLeft = 400;
         virtualScroller.dispatchEvent(new Event('scroll'));
       });
+      await sleep(100);
 
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
