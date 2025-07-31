@@ -56,6 +56,10 @@
   }
 }
 
+.DayTimeGridAllDayEventsGrid {
+  border-bottom: 1px solid var(--border-color);
+}
+
 .DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -143,7 +147,6 @@
 
 .DayTimeGridBody {
   flex: 1;
-  border-top: 1px solid var(--border-color);
   height: 100%;
 }
 
