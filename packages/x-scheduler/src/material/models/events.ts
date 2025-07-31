@@ -1,7 +1,7 @@
 import { SchedulerValidDate } from '../../primitives/models';
 import { CalendarResourceId } from './resource';
 
-export type EventVariant = 'regular' | 'compact' | 'allDay';
+export type EventVariant = 'regular' | 'compact' | 'allDay' | 'invisible';
 
 export interface CalendarEvent {
   /**
@@ -28,6 +28,15 @@ export interface CalendarEvent {
    * The id of the resource this event is associated with.
    */
   resource?: CalendarResourceId;
+
+  /**
+   * `true` if the event is an all-day event.
+   */
+  allDay?: boolean;
+}
+
+export interface CalendarEventWithPosition extends CalendarEvent {
+  eventRowIndex: number;
 }
 
 export type CalendarEventId = string | number;

@@ -165,7 +165,6 @@ export const initialEvents = [
     end: DateTime.fromISO('2025-07-14T04:00:00'),
     title: "Alice's Birthday",
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
   },
   {
@@ -174,7 +173,6 @@ export const initialEvents = [
     end: DateTime.fromISO('2025-07-18T04:00:00'),
     title: `Bob's Birthday`,
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
   },
   {
@@ -183,7 +181,6 @@ export const initialEvents = [
     end: DateTime.fromISO('2025-07-25T04:00:00'),
     title: `Richard's Birthday`,
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
   },
   // Personal events
