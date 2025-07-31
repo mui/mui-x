@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Menu } from '@base-ui-components/react/menu';
-import { useForkRef } from '@base-ui-components/react/utils';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
@@ -23,7 +23,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const view = useStore(store, selectors.view);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
-  const handleRef = useForkRef(forwardedRef, containerRef);
+  const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
 
   const handleClick = React.useCallback(

@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
@@ -29,7 +30,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const headerWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
-  const handleRef = useForkRef(forwardedRef, containerRef);
+  const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   const { store, instance } = useEventCalendarContext();
   const getEventsStartingInDay = useStore(store, selectors.getEventsStartingInDay);
@@ -51,7 +52,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     [instance, store],
   );
 
-  useModernLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const body = bodyRef.current;
     const header = headerWrapperRef.current;
     if (!body || !header) {

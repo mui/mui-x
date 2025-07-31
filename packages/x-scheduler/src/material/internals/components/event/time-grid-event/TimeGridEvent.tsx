@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useId } from '@base-ui-components/react/utils';
+import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';

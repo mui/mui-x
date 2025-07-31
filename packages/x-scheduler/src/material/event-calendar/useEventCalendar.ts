@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { Store } from '@base-ui-components/utils/store';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
@@ -71,7 +71,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
 
   useAssertStateValidity(store);
 
-  useModernLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const partialState: Partial<State> = {
       events: eventsProp,
       resources: resourcesProp || [],

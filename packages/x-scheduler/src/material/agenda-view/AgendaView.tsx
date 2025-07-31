@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef } from '@base-ui-components/react/utils';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
@@ -22,7 +22,7 @@ export const AgendaView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useForkRef(forwardedRef, containerRef);
+    const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     const { className, ...other } = props;
     const { store } = useEventCalendarContext();
