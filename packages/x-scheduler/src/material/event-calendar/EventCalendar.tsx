@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useStore } from '@base-ui-components/utils/store';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from './store';
 import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { MonthView } from '../month-view';
@@ -54,7 +54,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     ampm,
   });
 
-  const view = useSelector(store, selectors.view);
+  const view = useStore(store, selectors.view);
 
   let content: React.ReactNode;
   switch (view) {
