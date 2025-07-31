@@ -27,7 +27,7 @@
 
 .DayTimeGridGridRow {
   display: grid;
-  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
+  grid-template-columns: minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr));
   width: 100%;
 }
 
@@ -71,6 +71,7 @@
 .DayTimeGridAllDayEventsCell {
   display: grid;
   grid-template-columns: 1fr;
+  /* Setting the row heights to 18px here to make sure that even empty rows have the exact height of an all day event */
   grid-template-rows: repeat(var(--row-count), minmax(auto, 18px));
   gap: var(--space-1);
   padding: var(--space-1);
@@ -123,7 +124,6 @@
   padding: var(--space-2);
   text-align: end;
   color: var(--secondary-text-color);
-  min-width: var(--fixed-cell-width);
   border-right: 1px solid var(--border-color);
 }
 

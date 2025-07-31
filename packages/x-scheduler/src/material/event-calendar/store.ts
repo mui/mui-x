@@ -34,7 +34,11 @@ export type State = {
 
 export type EventCalendarStore = Store<State>;
 
-const isDayWithinRange = (day, eventFirstDay, eventLastDay) => {
+const isDayWithinRange = (
+  day: SchedulerValidDate,
+  eventFirstDay: SchedulerValidDate,
+  eventLastDay: SchedulerValidDate,
+) => {
   return (
     adapter.isSameDay(day, eventFirstDay) ||
     adapter.isSameDay(day, eventLastDay) ||
