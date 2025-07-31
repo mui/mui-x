@@ -5,10 +5,8 @@ import Stack from '@mui/material/Stack';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { ScatterValueType } from '@mui/x-charts/models';
-import {
-  continents,
-  populationGdpPerCapitaData,
-} from './populationGdpPerCapitaData';
+import { continents, countryData } from '../dataset/countryData';
+import { populationGdpPerCapitaData } from './populationGdpPerCapitaData';
 import ExportOptionSelector from './ExportOptionSelector';
 
 const populationFormatter = new Intl.NumberFormat('en-US', {
@@ -27,7 +25,7 @@ const series = continents.map(
       data: populationGdpPerCapitaData[continent].map((p) => ({
         x: p.population,
         y: p.gdpPerCapita,
-        id: p.country,
+        id: countryData[p.code].country,
       })),
       valueFormatter: (value: ScatterValueType | null) =>
         `${value!.id}: ${populationFormatter.format(value!.x)} people, ${gdpPerCapitaFormatter.format(value!.y)} GDP per capita`,
@@ -72,7 +70,13 @@ export default function ExportChartToolbarCustomization() {
         xAxis={[
           {
             scaleType: 'log',
-            valueFormatter: (value: number) => populationFormatter.format(value),
+            valueFormatter: (value: number, context) => {
+              if (context.location === 'tick' && context.defaultTickLabel === '') {
+                return '';
+              }
+
+              return populationFormatter.format(value);
+            },
             zoom: true,
             label: 'Population',
           },

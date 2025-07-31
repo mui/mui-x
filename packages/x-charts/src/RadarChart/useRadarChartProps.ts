@@ -2,11 +2,12 @@
 import type { RadarChartProps } from './RadarChart';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid';
 import { RadarChartPluginsSignatures } from './RadarChart.plugins';
+import { RadarSeriesAreaProps, RadarSeriesMarksProps } from './RadarSeriesPlot';
 
 /**
  * A helper function that extracts RadarChartProps from the input props
@@ -38,6 +39,9 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     stripeColor,
     highlight = 'axis',
     showToolbar,
+    onAxisClick,
+    onAreaClick,
+    onMarkClick,
     ...other
   } = props;
 
@@ -53,6 +57,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     highlightedItem,
     onHighlightChange,
     skipAnimation,
+    onAxisClick,
   };
 
   const overlayProps: ChartsOverlayProps = {
@@ -72,6 +77,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
 
   const radarGrid: RadarGridProps = { divisions, shape, stripeColor };
 
+  const radarSeriesAreaProps: RadarSeriesAreaProps = { onItemClick: onAreaClick };
+  const radarSeriesMarksProps: RadarSeriesMarksProps = { onItemClick: onMarkClick };
   const chartsSurfaceProps: ChartsSurfaceProps = other;
 
   return {
@@ -80,6 +87,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
+    radarSeriesAreaProps,
+    radarSeriesMarksProps,
     overlayProps,
     legendProps,
     children,

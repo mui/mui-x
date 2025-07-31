@@ -62,6 +62,7 @@ try {
 }
 
 export default withDocsInfra({
+  reactStrictMode: true,
   typescript: {
     // The tsconfig also contains path aliases that are used by next.js.
     tsconfigPath: IS_PRODUCTION ? '../tsconfig.prod.json' : '../tsconfig.dev.json',
@@ -89,6 +90,8 @@ export default withDocsInfra({
     CHARTS_VERSION: chartsPkg.version,
     TREE_VIEW_VERSION: treeViewPkg.version,
     PICKERS_ADAPTERS_DEPS: JSON.stringify(pickersAdaptersDeps),
+    MUI_CHAT_API_BASE_URL: 'https://chat-backend.mui.com',
+    MUI_CHAT_SCOPES: 'x-data-grid,x-date-pickers,x-charts,x-tree-view',
   },
   // @ts-ignore
   webpack: (config, options) => {

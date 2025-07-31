@@ -10,9 +10,11 @@ import {
   skipSorting,
   skipFiltering,
   GridRowsPartialUpdates,
+  getParentPath,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { getGroupingRules, RowGroupingStrategy } from './gridRowGroupingUtils';
+import { getGroupingRules } from './gridRowGroupingUtils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
@@ -48,7 +50,8 @@ export const useGridDataSourceRowGroupingPreProcessors = (
       apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
-        const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
+        const parentPath =
+          (params.updates as GridRowsPartialUpdates).groupKeys ?? getParentPath(rowId, params);
         const leafKey = getGroupKey(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,

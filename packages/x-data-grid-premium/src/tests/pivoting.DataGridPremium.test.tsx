@@ -280,7 +280,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
+    });
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);
@@ -319,7 +321,6 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await waitFor(() => {
       expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
     });
-
     expect(getRowValues(1)).to.deep.equal(['GOOGL (2)', '$126.06', '6,800', '', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (2)', '$346.56', '8,600', '', '']);
     expect(getRowValues(3)).to.deep.equal(['AMZN (2)', '$145.78', '6,000', '', '']);
@@ -504,7 +505,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1,058,475', '1,293,770']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1,058,475', '1,293,770']);
+    });
     expect(getRowValues(1)).to.deep.equal(['GOOGL (1)', '402,144', '']);
     expect(getRowValues(2)).to.deep.equal(['MSFT (1)', '1,415,402', '']);
   });
@@ -680,7 +683,9 @@ describe('<DataGridPremium /> - Pivoting', () => {
       />,
     );
 
-    expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1', '1']);
+    await waitFor(() => {
+      expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '1', '1']);
+    });
   });
 
   it('should not revert prior edits when pivot mode is disabled', async () => {
@@ -820,6 +825,66 @@ describe('<DataGridPremium /> - Pivoting', () => {
         '$125.67',
         '3,200',
         'stock',
+      ]);
+    });
+  });
+
+  it('should work with complex singleSelect values as pivot columns', async () => {
+    const apiRef = { current: null } as React.RefObject<GridApi | null>;
+
+    const columns: GridColDef[] = [
+      { field: 'id', headerName: 'ID' },
+      { field: 'ticker' },
+      {
+        field: 'country',
+        type: 'singleSelect',
+        valueOptions: [
+          { countryName: 'France', value: 'FR' },
+          { countryName: 'Germany', value: 'DE' },
+          { countryName: 'Italy', value: 'IT' },
+        ],
+        getOptionLabel: (option: { countryName: string }) => option.countryName,
+      } as GridColDef<{ countryName: string }>,
+    ];
+
+    const rows = [
+      { id: 1, ticker: 'FR1', country: { countryName: 'France', value: 'FR' } },
+      { id: 2, ticker: 'DE2', country: { countryName: 'Germany', value: 'DE' } },
+      { id: 3, ticker: 'IT3', country: { countryName: 'Italy', value: 'IT' } },
+    ];
+
+    render(
+      <div style={{ height: 600, width: 600 }}>
+        <DataGridPremium
+          rows={rows}
+          columns={columns}
+          showToolbar
+          cellSelection
+          apiRef={apiRef}
+          initialState={{
+            pivoting: {
+              enabled: true,
+              model: {
+                rows: [{ field: 'ticker' }],
+                columns: [{ field: 'country' }],
+                values: [{ field: 'id', aggFunc: 'size' }],
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+
+    await waitFor(() => {
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        'France',
+        'Germany',
+        'Italy',
+        'ticker',
+        'IDsize',
+        'IDsize',
+        'IDsize',
       ]);
     });
   });

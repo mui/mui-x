@@ -50,6 +50,7 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
+    "columnFilterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
@@ -518,6 +519,8 @@
     },
     "onPivotPanelOpenChange": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>sidebarOpen</code> and <code>sidebarClose</code> events or corresponding event handlers <code>onSidebarOpen()</code> and <code>onSidebarClose()</code> instead.",
       "signature": {
         "type": "function(pivotPanelOpen: boolean) => void",
         "describedArgs": ["pivotPanelOpen"]
@@ -625,6 +628,20 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onSidebarClose": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridSidebarParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onSidebarOpen": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridSidebarParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
     "onSortModelChange": {
       "type": { "name": "func" },
       "signature": {
@@ -669,7 +686,12 @@
         "description": "{ columns: Array&lt;object&gt;, rows: Array&lt;{ field: string, hidden?: bool }&gt;, values: Array&lt;{ aggFunc: string, field: string, hidden?: bool }&gt; }"
       }
     },
-    "pivotPanelOpen": { "type": { "name": "bool" }, "default": "false" },
+    "pivotPanelOpen": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use <code>initialState.sidebar.open</code> instead."
+    },
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {
@@ -2382,6 +2404,12 @@
       "isGlobal": false
     },
     {
+      "key": "row--beingDragged",
+      "className": "MuiDataGridPremium-row--beingDragged",
+      "description": "Styles applied to the row element when it is being dragged (entire row).",
+      "isGlobal": false
+    },
+    {
       "key": "row--detailPanelExpanded",
       "className": "MuiDataGridPremium-row--detailPanelExpanded",
       "description": "Styles applied to the row if its detail panel is open.",
@@ -2391,6 +2419,18 @@
       "key": "row--dragging",
       "className": "MuiDataGridPremium-row--dragging",
       "description": "Styles applied to the floating special row reorder cell element when it is dragged.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropAbove",
+      "className": "MuiDataGridPremium-row--dropAbove",
+      "description": "Styles applied to the row element when it is a drop target above.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropBelow",
+      "className": "MuiDataGridPremium-row--dropBelow",
+      "description": "Styles applied to the row element when it is a drop target below.",
       "isGlobal": false
     },
     {
@@ -2466,6 +2506,12 @@
       "isGlobal": false
     },
     {
+      "key": "scrollArea--down",
+      "className": "MuiDataGridPremium-scrollArea--down",
+      "description": "Styles applied to the bottom scroll area element.",
+      "isGlobal": false
+    },
+    {
       "key": "scrollArea--left",
       "className": "MuiDataGridPremium-scrollArea--left",
       "description": "Styles applied to the left scroll area element.",
@@ -2475,6 +2521,12 @@
       "key": "scrollArea--right",
       "className": "MuiDataGridPremium-scrollArea--right",
       "description": "Styles applied to the right scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollArea--up",
+      "className": "MuiDataGridPremium-scrollArea--up",
+      "description": "Styles applied to the top scroll area element.",
       "isGlobal": false
     },
     {

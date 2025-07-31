@@ -1,5 +1,6 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
 import { Gesture } from './Gesture';
+import { KeyboardManager } from './KeyboardManager';
 import { PointerManager, PointerManagerOptions } from './PointerManager';
 import { GestureElement } from './types/GestureElement';
 import { MergeUnions } from './types/MergeUnions';
@@ -144,6 +145,8 @@ export class GestureManager<
 
   private pointerManager: PointerManager;
 
+  private keyboardManager: KeyboardManager = new KeyboardManager();
+
   /**
    * Create a new GestureManager instance to coordinate gesture recognition
    *
@@ -211,6 +214,7 @@ export class GestureManager<
       detail: options,
       bubbles: false,
       cancelable: false,
+      composed: false,
     });
 
     element.dispatchEvent(event);
@@ -247,6 +251,7 @@ export class GestureManager<
       detail: state,
       bubbles: false,
       cancelable: false,
+      composed: false,
     });
 
     element.dispatchEvent(event);
@@ -295,17 +300,13 @@ export class GestureManager<
     options?: Partial<Pick<GestureNameToOptionsMap, GN>>,
   ): GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T> {
     // Handle array of gesture names
-    if (Array.isArray(gestureNames)) {
-      gestureNames.forEach((name) => {
-        const gestureOptions = options?.[name];
-        this.registerSingleGesture(name, element, gestureOptions!);
-      });
-      return element as GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T>;
+    if (!Array.isArray(gestureNames)) {
+      gestureNames = [gestureNames as GN];
     }
-
-    // Handle single gesture name
-    const gestureOptions = options?.[gestureNames];
-    this.registerSingleGesture(gestureNames, element, gestureOptions!);
+    gestureNames.forEach((name) => {
+      const gestureOptions = options?.[name];
+      this.registerSingleGesture(name, element, gestureOptions!);
+    });
     return element as GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T>;
   }
 
@@ -345,7 +346,12 @@ export class GestureManager<
     // Clone the gesture template and create a new instance with optional overrides
     // This allows each element to have its own state, event listeners, and configuration
     const gestureInstance = gestureTemplate.clone(options);
-    gestureInstance.init(element, this.pointerManager, this.activeGesturesRegistry);
+    gestureInstance.init(
+      element,
+      this.pointerManager,
+      this.activeGesturesRegistry,
+      this.keyboardManager,
+    );
 
     // Store the gesture in the element's gesture map
     elementGestures.set(gestureName, gestureInstance);
@@ -417,5 +423,7 @@ export class GestureManager<
     this.gestureTemplates.clear();
     this.elementGestureMap.clear();
     this.activeGesturesRegistry.destroy();
+    this.keyboardManager.destroy();
+    this.pointerManager.destroy();
   }
 }

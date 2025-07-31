@@ -1,4 +1,4 @@
-import { ChartsWrapper, DEFAULT_PIE_CHART_MARGIN, defaultizeMargin } from '@mui/x-charts/internals';
+import { DEFAULT_PIE_CHART_MARGIN, defaultizeMargin } from '@mui/x-charts/internals';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -7,6 +7,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { PieChartProps, PieChartSlotProps, PieChartSlots, PiePlot } from '@mui/x-charts/PieChart';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartsSlotsPro, ChartsSlotPropsPro } from '../internals/material';
@@ -31,7 +32,7 @@ export interface PieChartProProps
   extends Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'pie', PieChartProPluginSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -200,7 +201,7 @@ PieChartPro.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the pie chart.
-   * An array of [[PieSeriesType]] objects.
+   * An array of [[PieSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

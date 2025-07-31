@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "8.6.0",
+  "version": "8.9.2",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
   "main": "src/index.ts",
@@ -20,8 +20,8 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:node": "node ../../scripts/build.mjs node --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
+    "build:stable": "node ../../scripts/build.mjs stable --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
     "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"

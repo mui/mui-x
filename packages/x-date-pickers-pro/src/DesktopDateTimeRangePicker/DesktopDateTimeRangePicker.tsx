@@ -38,6 +38,7 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
 import { PickerRangeStep } from '../internals/utils/createRangePickerStepNavigation';
+import { resolveReferenceDate } from '../internals/utils/date-range-manager';
 
 const STEPS: PickerRangeStep[] = [
   { views: null, rangePosition: 'start' },
@@ -66,10 +67,13 @@ const rendererInterceptor = function RendererInterceptor(
     ],
   };
   const isTimeViewActive = isInternalTimeView(popperView);
+  const referenceDate = resolveReferenceDate(rendererProps.referenceDate, rangePosition);
   return (
     <React.Fragment>
       {viewRenderers.day?.({
         ...rendererProps,
+        referenceDate,
+        rangePosition,
         availableRangePositions: [rangePosition],
         view: !isTimeViewActive ? popperView : 'day',
         views: rendererProps.views.filter(isDatePickerView),
@@ -78,6 +82,7 @@ const rendererInterceptor = function RendererInterceptor(
       <Divider orientation="vertical" sx={{ gridColumn: 2 }} />
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
+        referenceDate={referenceDate}
         view={isTimeViewActive ? popperView : 'hours'}
         views={finalProps.views.filter(isInternalTimeView)}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
@@ -413,7 +418,7 @@ DesktopDateTimeRangePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
@@ -448,7 +453,7 @@ DesktopDateTimeRangePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.object,
+  referenceDate: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
@@ -537,8 +542,8 @@ DesktopDateTimeRangePicker.propTypes = {
   thresholdToRenderTimeInASingleColumn: PropTypes.number,
   /**
    * The time steps between two time unit options.
-   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * For example, if `timeSteps.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeSteps.minutes` will be used.
    * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
   timeSteps: PropTypes.shape({

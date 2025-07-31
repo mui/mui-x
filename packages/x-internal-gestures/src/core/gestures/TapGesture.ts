@@ -114,6 +114,8 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       maxPointers: this.maxPointers,
       maxDistance: this.maxDistance,
       taps: this.taps,
+      requiredKeys: [...this.requiredKeys],
+      pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,
@@ -288,6 +290,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
     const domEvent = new CustomEvent(this.name, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 
@@ -334,6 +337,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       const domEvent = new CustomEvent(eventName, {
         bubbles: true,
         cancelable: true,
+        composed: true,
         detail: customEventData,
       });
 

@@ -1,38 +1,25 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/joy';
-import { DayView } from '@mui/x-scheduler/joy/day-view';
-import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
-import classes from './StandaloneWeekView.module.css';
-
-const initialEvents: CalendarEvent[] = [
-  {
-    id: '1',
-    start: DateTime.fromISO('2025-05-26T07:30:00'),
-    end: DateTime.fromISO('2025-05-26T08:15:00'),
-    title: 'Footing',
-    resource: 'workout',
-  },
-  {
-    id: '2',
-    start: DateTime.fromISO('2025-05-26T16:00:00'),
-    end: DateTime.fromISO('2025-05-26T17:00:00'),
-    title: 'Weekly',
-    resource: 'work',
-  },
-];
-
-const resources: CalendarResource[] = [
-  { name: 'Work', id: 'work', color: 'red' },
-  { name: 'Workout', id: 'workout', color: 'jade' },
-];
+import { CalendarEvent } from '@mui/x-scheduler/material';
+import { DayView } from '@mui/x-scheduler/material/day-view';
+import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../datasets/personal-agenda';
+import classes from './FullEventCalendar.module.css';
 
 export default function StandaloneDayView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
-    <StandaloneView events={events} resources={resources}>
-      <DayView className={classes.Container} onEventsChange={setEvents} />
+    <StandaloneView
+      events={events}
+      resources={resources}
+      defaultVisibleDate={defaultVisibleDate}
+      onEventsChange={setEvents}
+    >
+      <DayView className={classes.Container} />
     </StandaloneView>
   );
 }

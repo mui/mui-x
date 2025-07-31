@@ -7,11 +7,12 @@ import {
   scaleLinear,
 } from '@mui/x-charts-vendor/d3-scale';
 import { ContinuousScaleName, D3ContinuousScale } from '../models/axis';
+import { scaleSymlog } from './symlogScale';
 
 export function getScale(
   scaleType: ContinuousScaleName,
-  domain: any[],
-  range: any[],
+  domain: readonly any[],
+  range: readonly any[],
 ): D3ContinuousScale {
   switch (scaleType) {
     case 'log':
@@ -24,6 +25,8 @@ export function getScale(
       return scaleTime(domain, range);
     case 'utc':
       return scaleUtc(domain, range);
+    case 'symlog':
+      return scaleSymlog(domain, range);
     default:
       return scaleLinear(domain, range);
   }

@@ -1,8 +1,10 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
+  useGridVirtualizer,
   useGridClipboard,
   useGridColumnMenu,
   useGridColumns,
@@ -101,12 +103,14 @@ import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipb
 import {
   pivotingStateInitializer,
   useGridPivoting,
+  useGridPivotingExportState,
 } from '../hooks/features/pivoting/useGridPivoting';
 import { gridPivotPropsOverridesSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 import {
   useGridAiAssistant,
   aiAssistantStateInitializer,
 } from '../hooks/features/aiAssistant/useGridAiAssistant';
+import { useGridSidebar, sidebarStateInitializer } from '../hooks/features/sidebar/useGridSidebar';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -119,12 +123,18 @@ export const useDataGridPremiumComponent = (
       return {
         ...inProps,
         ...pivotPropsOverrides,
+        initialState: {
+          ...inProps.initialState,
+          columns: undefined,
+        },
       };
     }
     return inProps;
   }, [inProps, pivotPropsOverrides]);
 
   useGridInitialization<GridPrivateApiPremium>(apiRef, props);
+
+  const key = pivotPropsOverrides ? 'pivoting' : undefined;
 
   /**
    * Register all pre-processors called during state initialization here.
@@ -152,14 +162,15 @@ export const useDataGridPremiumComponent = (
    * Register all state initializers here.
    */
   useGridInitializeState(propsStateInitializer, apiRef, props);
-  useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
-  useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
-  useGridInitializeState(aggregationStateInitializer, apiRef, props);
+  useGridInitializeState(headerFilteringStateInitializer, apiRef, props, key);
+  useGridInitializeState(rowGroupingStateInitializer, apiRef, props, key);
+  useGridInitializeState(aggregationStateInitializer, apiRef, props, key);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(cellSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
-  useGridInitializeState(columnPinningStateInitializer, apiRef, props);
-  useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(columnPinningStateInitializer, apiRef, props, key);
+  useGridInitializeState(columnsStateInitializer, apiRef, props, key);
+  useGridInitializeState(sidebarStateInitializer, apiRef, props);
   useGridInitializeState(pivotingStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
@@ -174,7 +185,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
-  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, apiRef, props, key);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
@@ -182,6 +193,8 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
 
+  useGridVirtualizer(apiRef, props);
+  useGridSidebar(apiRef, props);
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
@@ -228,6 +241,12 @@ export const useDataGridPremiumComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
   useGridAiAssistant(apiRef, props);
+  useGridPivotingExportState(apiRef);
+
+  // Should be the last thing to run, because all pre-processors should have been registered by now.
+  React.useEffect(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
 
   return props;
 };
