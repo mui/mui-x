@@ -69,4 +69,9 @@ export {
   getParentPath,
 } from '../hooks/features/serverSideTreeData/utils';
 
+export enum RowGroupingStrategy {
+  Default = 'grouping-columns',
+  DataSource = 'grouping-columns-data-source',
+}
+
 export * from './propValidation';

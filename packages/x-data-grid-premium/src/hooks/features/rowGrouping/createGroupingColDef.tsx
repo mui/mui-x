@@ -12,7 +12,11 @@ import {
   gridRowIdSelector,
   gridRowNodeSelector,
 } from '@mui/x-data-grid-pro';
-import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
+import {
+  GridColumnRawLookup,
+  isSingleSelectColDef,
+  RowGroupingStrategy,
+} from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
@@ -21,7 +25,6 @@ import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColu
 import {
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  RowGroupingStrategy,
 } from './gridRowGroupingUtils';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
