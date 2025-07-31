@@ -28,6 +28,7 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
     const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(apiRef as RefObject<GridApiPro>);
     return expandedRowIds.has(rowId);
   },
+  rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
   renderHeader: ({ colDef }) => <div aria-label={colDef.headerName} />,
 };

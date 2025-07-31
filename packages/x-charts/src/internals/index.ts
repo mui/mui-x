@@ -1,6 +1,5 @@
 // Components
 export * from './components/ChartsAxesGradients';
-export * from './components/ChartsWrapper';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 
@@ -65,6 +64,7 @@ export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';
 export * from './isBandScale';
+export * from './findMinMax';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
