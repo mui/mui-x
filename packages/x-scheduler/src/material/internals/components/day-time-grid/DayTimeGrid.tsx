@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useStore } from '@base-ui-components/utils/store';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
@@ -10,7 +12,6 @@ import { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../event-calendar/store';
 import { CalendarEvent } from '../../../models/events';
@@ -31,13 +32,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
-  const handleRef = useForkRef(forwardedRef, containerRef);
+  const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   const { store, instance } = useEventCalendarContext();
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
-  const visibleDate = useSelector(store, selectors.visibleDate);
-  const hasDayView = useSelector(store, selectors.hasDayView);
-  const daysWithEvents = useSelector(store, selectors.eventsToRenderGroupedByDay, {
+  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+  const visibleDate = useStore(store, selectors.visibleDate);
+  const hasDayView = useStore(store, selectors.hasDayView);
+  const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
     days,
     shouldOnlyRenderEventInOneCell: false,
   });
@@ -67,7 +68,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       };
     });
   }, [daysWithEvents]);
-  const ampm = useSelector(store, selectors.ampm);
+  const ampm = useStore(store, selectors.ampm);
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
@@ -82,7 +83,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     [instance, store],
   );
 
-  useModernLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const body = bodyRef.current;
     const allDayHeader = allDayHeaderWrapperRef.current;
     if (!body || !allDayHeader) {
@@ -241,6 +242,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                       <EventPopoverTrigger
                         key={event.id}
                         event={event}
+                        nativeButton={false}
                         render={
                           <TimeGridEvent
                             event={event}
@@ -266,8 +268,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
   const placeholder = TimeGrid.useColumnPlaceholder();
   const { store } = useEventCalendarContext();
-  const event = useSelector(store, selectors.getEventById, placeholder?.id ?? null);
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+  const event = useStore(store, selectors.getEventById, placeholder?.id ?? null);
+  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const updatedEvent = React.useMemo(() => {
     if (!event || !placeholder) {

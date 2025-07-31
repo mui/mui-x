@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef } from '@base-ui-components/react/utils';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
@@ -22,14 +22,14 @@ export const AgendaView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useForkRef(forwardedRef, containerRef);
+    const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     const { className, ...other } = props;
     const { store } = useEventCalendarContext();
 
     const today = adapter.date();
 
-    const visibleDate = useSelector(store, selectors.visibleDate);
+    const visibleDate = useStore(store, selectors.visibleDate);
 
     const getDayList = useDayList();
 
@@ -37,11 +37,11 @@ export const AgendaView = React.memo(
       () => getDayList({ date: visibleDate, amount: AGENDA_VIEW_DAYS_AMOUNT }),
       [getDayList, visibleDate],
     );
-    const daysWithEvents = useSelector(store, selectors.eventsToRenderGroupedByDay, {
+    const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
       days,
       shouldOnlyRenderEventInOneCell: false,
     });
-    const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+    const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
     return (
       <div
@@ -76,6 +76,7 @@ export const AgendaView = React.memo(
                   <EventPopoverTrigger
                     key={event.id}
                     event={event}
+                    nativeButton={false}
                     render={
                       <DayGridEvent
                         event={event}

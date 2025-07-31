@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef } from '@base-ui-components/react/utils';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
@@ -31,12 +31,12 @@ export const MonthView = React.memo(
   ) {
     const { className, ...other } = props;
     const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useForkRef(forwardedRef, containerRef);
+    const handleRef = useMergedRefs(forwardedRef, containerRef);
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const { store } = useEventCalendarContext();
-    const visibleDate = useSelector(store, selectors.visibleDate);
+    const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
 
     const getDayList = useDayList();
@@ -105,16 +105,16 @@ function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, week, firstDayRef } = props;
 
   const { store, instance } = useEventCalendarContext();
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
-  const hasDayView = useSelector(store, selectors.hasDayView);
-  const visibleDate = useSelector(store, selectors.visibleDate);
+  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+  const hasDayView = useStore(store, selectors.hasDayView);
+  const visibleDate = useStore(store, selectors.visibleDate);
   const today = adapter.date();
   const translations = useTranslations();
 
   const getDayList = useDayList();
   const days = React.useMemo(() => getDayList({ date: week, amount: 7 }), [getDayList, week]);
 
-  const daysWithEvents = useSelector(store, selectors.eventsToRenderGroupedByDay, {
+  const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
     days,
     shouldOnlyRenderEventInOneCell: false,
   });

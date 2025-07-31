@@ -8,6 +8,8 @@ import { Form } from '@base-ui-components/react/form';
 import { Checkbox } from '@base-ui-components/react/checkbox';
 import { X, CheckIcon } from 'lucide-react';
 import { Input } from '@base-ui-components/react/input';
+import { useStore } from '@base-ui-components/utils/store';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   EventPopoverContextValue,
   EventPopoverProps,
@@ -20,8 +22,6 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEvent } from '../../../models/events';
 import { selectors } from '../../../event-calendar/store';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { useSelector } from '../../../../base-ui-copy/utils/store';
-import { useEventCallback } from '../../../../base-ui-copy/utils/useEventCallback';
 import './EventPopover.css';
 
 export const EventPopover = React.forwardRef(function EventPopover(
@@ -267,7 +267,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
   const { store } = useEventCalendarContext();
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const startEditing = useEventCallback((event: React.MouseEvent, calendarEvent: CalendarEvent) => {
     setAnchor(event.currentTarget as HTMLElement);
