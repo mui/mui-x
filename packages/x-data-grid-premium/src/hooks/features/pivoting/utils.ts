@@ -202,15 +202,17 @@ export const getPivotedData = ({
           continue;
         }
         let colValue = apiRef.current.getRowValue(row, column) ?? '(No value)';
-        if (column.type !== 'number') {
-          colValue = String(colValue);
-        }
+
         if (column.type === 'singleSelect') {
           const singleSelectColumn = column as GridSingleSelectColDef;
           if (singleSelectColumn.getOptionLabel) {
             colValue = singleSelectColumn.getOptionLabel(colValue);
           }
         }
+        if (column.type !== 'number') {
+          colValue = String(colValue);
+        }
+
         columnGroupPath.push(colValue);
         const groupId = columnGroupPath.join(columnGroupIdSeparator);
 
