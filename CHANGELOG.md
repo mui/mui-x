@@ -7,9 +7,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.9.2
 
-_Jul 30, 2025_
+_Jul 31, 2025_
 
-We'd like to extend a big thank you to the 22 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 23 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve French (fr-FR), Hebrew (he-IL) and Polish (pl-PL) locales on the Data Grid
 - 🌎 Improve Korean (ko-KR) locale on the Date and Time Pickers
@@ -22,7 +22,7 @@ Special thanks go out to the community members for their valuable contributions:
 @AmrElnaggar99, @atlanteh, @ddolcimascolo, @Jiseoup, @leonaha5, @noherczeg, @sai6855
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @bharatkashyap, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @KenanYusuf, @LukasTy, @mapache-salvaje, @MBilalShafi, @rita-codes, @romgrk, @siriwatknp
+@alexfauquette, @arminmeh, @bernardobelchior, @bharatkashyap, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @mapache-salvaje, @MBilalShafi, @rita-codes, @romgrk, @siriwatknp
 
 ### Data Grid
 
@@ -93,6 +93,7 @@ Internal changes.
 
 ### Miscellaneous
 
+- [code-infra] Auto-generate deep exports to prevent asymmetric exports (#18917) @JCQuintas
 - [docs-infra] Turn on "Edit in Chat" for X docs (#18869) @siriwatknp
 - [infra] Add specific bundle size tracking (#18884) @Janpot
 - [infra] Fix markdown formatting in llms generation (#18914) @Janpot
