@@ -72,6 +72,14 @@ export const PickersLayoutRoot = styled('div', {
         },
       },
     },
+    {
+      props: { hasShortcuts: true, layoutDirection: 'rtl' },
+      style: {
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
+          gridColumn: 4,
+        },
+      },
+    },
   ],
 });
 
