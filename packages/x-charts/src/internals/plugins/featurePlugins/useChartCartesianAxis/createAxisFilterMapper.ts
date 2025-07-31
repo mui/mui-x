@@ -132,10 +132,6 @@ export function createContinuousScaleGetAxisFilter(
       return true;
     }
 
-    if (typeof val === 'string') {
-      return dataIndex >= minVal && dataIndex <= maxVal;
-    }
-
     return val >= minVal && val <= maxVal;
   };
 }
