@@ -34,7 +34,7 @@ export default function MotionAnimationCustomization() {
   );
 }
 
-function AnimatedLine({ d, ownerState }) {
+function AnimatedLine({ d, ownerState, skipAnimation }) {
   const pathRef = React.useRef(null);
 
   return (
@@ -44,7 +44,7 @@ function AnimatedLine({ d, ownerState }) {
       fill="transparent"
       stroke={ownerState.color}
       initial={{
-        opacity: 0,
+        opacity: skipAnimation ? 1 : 0,
       }}
       animate={{
         opacity: 1,
@@ -57,9 +57,7 @@ function AnimatedLine({ d, ownerState }) {
   );
 }
 
-function AnimatedMark(props) {
-  const { x, y, color } = props;
-
+function AnimatedMark({ x, y, color, skipAnimation }) {
   return (
     <motion.circle
       cx={x}
@@ -67,8 +65,8 @@ function AnimatedMark(props) {
       r={5}
       fill={color}
       initial={{
-        scale: 0,
-        opacity: 0,
+        scale: skipAnimation ? 1 : 0,
+        opacity: skipAnimation ? 1 : 0,
       }}
       animate={{
         scale: 1,
