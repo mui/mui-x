@@ -1719,8 +1719,8 @@ importers:
         specifier: 1.0.0-beta.1
         version: 1.0.0-beta.1(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@base-ui-components/utils':
-        specifier: https://pkg.pr.new/@base-ui-components/utils@5dce78b
-        version: https://pkg.pr.new/@base-ui-components/utils@5dce78b(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 0.1.0
+        version: 0.1.0(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@floating-ui/react':
         specifier: ^0.27.14
         version: 0.27.14(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -3214,9 +3214,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@base-ui-components/utils@https://pkg.pr.new/@base-ui-components/utils@5dce78b':
-    resolution: {tarball: https://pkg.pr.new/@base-ui-components/utils@5dce78b}
-    version: 0.0.1
+  '@base-ui-components/utils@0.1.0':
+    resolution: {integrity: sha512-9+uaWyF1o/PgXqHLJnC81IIG0HlV3o9eFCQ5hWZDMx5NHrFk0rrwqEFGQOB8lti/rnbxNPi+kYYw1D4e8xSn/Q==}
     peerDependencies:
       '@types/react': ^17 || ^18 || ^19
       react: ^17 || ^18 || ^19
@@ -14221,7 +14220,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.8
 
-  '@base-ui-components/utils@https://pkg.pr.new/@base-ui-components/utils@5dce78b(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@base-ui-components/utils@0.1.0(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@babel/runtime': 7.28.2
       '@floating-ui/utils': 0.2.10
