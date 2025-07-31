@@ -39,44 +39,33 @@ export default function MotionAnimationCustomization() {
 }
 
 function AnimatedLine({ d, ownerState, skipAnimation }: AnimatedLineProps) {
-  const animationProps = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    transition: {
-      duration: skipAnimation ? 0 : 1.5,
-      ease: 'easeInOut',
-    },
-  } as const;
-
   return (
     <motion.path
       d={d}
       fill="transparent"
       stroke={ownerState.color}
-      {...(skipAnimation ? {} : animationProps)}
+      initial={{
+        opacity: skipAnimation ? 1 : 0,
+      }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.5, ease: 'easeInOut' }}
     />
   );
 }
 
 function AnimatedMark({ x, y, color, skipAnimation }: MarkElementProps) {
-  const animationProps = {
-    initial: { scale: 0, opacity: 0 },
-    animate: { scale: 1, opacity: 1 },
-    transition: {
-      duration: 1,
-      delay: 0.5,
-      ease: 'backOut',
-    },
-  } as const;
-
   return (
     <motion.circle
       cx={x}
       cy={y}
       r={5}
       fill={color}
-      {...(skipAnimation ? {} : animationProps)}
-      onAnimationStart={() => console.log('Animation started')}
+      initial={{
+        scale: skipAnimation ? 1 : 0,
+        opacity: skipAnimation ? 1 : 0,
+      }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 1, delay: 0.5, ease: 'backOut' }}
     />
   );
 }
