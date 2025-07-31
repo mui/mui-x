@@ -142,20 +142,22 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         />
                       </Field.Label>
                     </Field.Root>
-
-                    <Field.Root name="startTime">
-                      <Field.Label className="EventPopoverFormLabel">
-                        {translations.startTimeLabel}
-                        <Input
-                          className="EventPopoverInput"
-                          type="time"
-                          defaultValue={adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''}
-                          disabled={isAllDay}
-                          aria-describedby="startTime-error"
-                          required
-                        />
-                      </Field.Label>
-                    </Field.Root>
+                    {!isAllDay && (
+                      <Field.Root name="startTime">
+                        <Field.Label className="EventPopoverFormLabel">
+                          {translations.startTimeLabel}
+                          <Input
+                            className="EventPopoverInput"
+                            type="time"
+                            defaultValue={
+                              adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''
+                            }
+                            aria-describedby="startTime-error"
+                            required
+                          />
+                        </Field.Label>
+                      </Field.Root>
+                    )}
                   </div>
                   <div className="EventPopoverDateTimeFieldsEndRow">
                     <Field.Root name="endDate">
@@ -171,19 +173,19 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         />
                       </Field.Label>
                     </Field.Root>
-
-                    <Field.Root name="endTime">
-                      <Field.Label className="EventPopoverFormLabel">
-                        {translations.endTimeLabel}
-                        <Input
-                          className="EventPopoverInput"
-                          type="time"
-                          defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
-                          required
-                          disabled={isAllDay}
-                        />
-                      </Field.Label>
-                    </Field.Root>
+                    {!isAllDay && (
+                      <Field.Root name="endTime">
+                        <Field.Label className="EventPopoverFormLabel">
+                          {translations.endTimeLabel}
+                          <Input
+                            className="EventPopoverInput"
+                            type="time"
+                            defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
+                            required
+                          />
+                        </Field.Label>
+                      </Field.Root>
+                    )}
                   </div>
                   <Field.Root
                     name="startDate"
