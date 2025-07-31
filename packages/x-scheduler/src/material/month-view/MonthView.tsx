@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef } from '@base-ui-components/react/utils';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { useSelector } from '../../base-ui-copy/utils/store';
 import { selectors } from '../event-calendar/store';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
@@ -31,20 +31,20 @@ export const MonthView = React.memo(
   ) {
     const { className, ...other } = props;
     const containerRef = React.useRef<HTMLElement | null>(null);
-    const handleRef = useForkRef(forwardedRef, containerRef);
+    const handleRef = useMergedRefs(forwardedRef, containerRef);
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const { store, instance } = useEventCalendarContext();
-    const visibleDate = useSelector(store, selectors.visibleDate);
-    const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
-    const hasDayView = useSelector(store, selectors.hasDayView);
+    const visibleDate = useStore(store, selectors.visibleDate);
+    const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+    const hasDayView = useStore(store, selectors.hasDayView);
     const today = adapter.date();
     const translations = useTranslations();
 
     const getWeekList = useWeekList();
     const getDayList = useDayList();
-    const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
+    const getEventsStartingInDay = useStore(store, selectors.getEventsStartingInDay);
 
     const weeks = React.useMemo(() => {
       const weeksFirstDays = getWeekList({
@@ -151,6 +151,7 @@ export const MonthView = React.memo(
                             <EventPopoverTrigger
                               key={event.id}
                               event={event}
+                              nativeButton={false}
                               render={
                                 <DayGridEvent
                                   event={event}

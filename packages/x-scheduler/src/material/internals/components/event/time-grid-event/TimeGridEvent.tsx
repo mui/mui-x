@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useId } from '@base-ui-components/react/utils';
+import { useId } from '@base-ui-components/utils/useId';
+import { useStore } from '@base-ui-components/utils/store';
 import { TimeGridEventProps } from './TimeGridEvent.types';
-import { useSelector } from '../../../../../base-ui-copy/utils/store';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../../primitives/time-grid';
 import { getColorClassName } from '../../../utils/color-utils';
@@ -31,9 +31,9 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const id = useId(idProp);
   const { store } = useEventCalendarContext();
-  const isDraggable = useSelector(store, selectors.isEventDraggable, { readOnly });
-  const isResizable = useSelector(store, selectors.isEventResizable, { readOnly });
-  const ampm = useSelector(store, selectors.ampm);
+  const isDraggable = useStore(store, selectors.isEventDraggable, { readOnly });
+  const isResizable = useStore(store, selectors.isEventResizable, { readOnly });
+  const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const durationMs =
