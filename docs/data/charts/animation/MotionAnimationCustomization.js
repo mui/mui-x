@@ -24,7 +24,6 @@ export default function MotionAnimationCustomization() {
         ]}
         width={500}
         height={300}
-        skipAnimation
         slots={{
           line: AnimatedLine,
           mark: AnimatedMark,
