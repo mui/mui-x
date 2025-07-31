@@ -34,6 +34,14 @@ export type State = {
 
 export type EventCalendarStore = Store<State>;
 
+const isDayWithinRange = (day, eventFirstDay, eventLastDay) => {
+  return (
+    adapter.isSameDay(day, eventFirstDay) ||
+    adapter.isSameDay(day, eventLastDay) ||
+    (adapter.isAfter(day, eventFirstDay) && adapter.isBefore(day, eventLastDay))
+  );
+};
+
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   ampm: createSelector((state: State) => state.ampm),
@@ -70,16 +78,16 @@ export const selectors = {
       parameters: { days: SchedulerValidDate[]; shouldOnlyRenderEventInOneCell: boolean },
     ) => parameters,
     (events, visibleResources, { days, shouldOnlyRenderEventInOneCell }) => {
-      const daysMap = new Map<string, { rowStartsAt: number; events: CalendarEvent[] }>();
+      const daysMap = new Map<string, { rowsStartIndex: number; events: CalendarEvent[] }>();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
-        daysMap.set(dayKey, { rowStartsAt: 1, events: [] });
+        daysMap.set(dayKey, { rowsStartIndex: 1, events: [] });
       }
       for (const event of events) {
         if (event.resource && visibleResources.get(event.resource) === false) {
           continue; // Skip events for hidden resources
         }
-        let rowStartsAt = 1;
+        let rowsStartIndex = 1;
 
         const eventFirstDay = adapter.startOfDay(event.start);
         const eventLastDay = adapter.endOfDay(event.end);
@@ -98,18 +106,13 @@ export const selectors = {
             eventDays = [eventFirstDay];
           }
         } else {
-          eventDays = days.filter(
-            (day) =>
-              adapter.isSameDay(day, eventFirstDay) ||
-              adapter.isSameDay(day, eventLastDay) ||
-              (adapter.isAfter(day, eventFirstDay) && adapter.isBefore(day, eventLastDay)),
-          );
+          eventDays = days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay));
         }
 
         for (const day of eventDays) {
           const dayKey = adapter.format(day, 'keyboardDate');
           if (!daysMap.has(dayKey)) {
-            daysMap.set(dayKey, { rowStartsAt: 1, events: [] });
+            daysMap.set(dayKey, { rowsStartIndex: 1, events: [] });
           }
 
           const isFirstEvent = !daysMap.get(dayKey)!.events.length;
@@ -119,14 +122,14 @@ export const selectors = {
               daysMap
                 .get(eventFirstDayKey)
                 ?.events?.findIndex((eventInMap) => eventInMap.id === event.id) || 0;
-            rowStartsAt = eventStartPositionInArray + 1;
+            rowsStartIndex = eventStartPositionInArray + 1;
           } else {
-            rowStartsAt = 1;
+            rowsStartIndex = 1;
           }
 
-          daysMap.get(dayKey)!.rowStartsAt = Math.max(
-            rowStartsAt,
-            daysMap.get(dayKey)!.rowStartsAt,
+          daysMap.get(dayKey)!.rowsStartIndex = Math.max(
+            rowsStartIndex,
+            daysMap.get(dayKey)!.rowsStartIndex,
           );
           daysMap.get(dayKey)!.events.push(event);
         }
@@ -136,7 +139,7 @@ export const selectors = {
         const dayKey = adapter.format(day, 'keyboardDate');
         return {
           day,
-          rowStartsAt: daysMap.get(dayKey)?.rowStartsAt || 1,
+          rowsStartIndex: daysMap.get(dayKey)?.rowsStartIndex || 1,
           events: daysMap.get(dayKey)?.events || [],
         };
       });

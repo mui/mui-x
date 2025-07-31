@@ -14,7 +14,7 @@ import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../event-calendar/store';
-import { CalendarEvent } from '../../../models/events';
+import { CalendarEvent, CalendarEventWithPosition } from '../../../models/events';
 import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 import { DayGridEvent } from '../event';
@@ -43,15 +43,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     shouldOnlyRenderEventInOneCell: false,
   });
 
-  interface EventsWithPosition extends CalendarEvent {
-    eventRowIndex: number;
-  }
-
   const dayWithEventsGroupedByCategory = React.useMemo(() => {
-    return daysWithEvents.map(({ day, rowStartsAt, events }) => {
-      let eventRowIndex = rowStartsAt;
+    return daysWithEvents.map(({ day, rowsStartIndex, events }) => {
+      let eventRowIndex = rowsStartIndex;
       const regularEvents: CalendarEvent[] = [];
-      const allDayEvents: EventsWithPosition[] = [];
+      const allDayEvents: CalendarEventWithPosition[] = [];
       for (const event of events) {
         if (event.allDay) {
           allDayEvents.push({ ...event, eventRowIndex });

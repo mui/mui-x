@@ -80,7 +80,7 @@ export const AgendaView = React.memo(
                     render={
                       <DayGridEvent
                         event={event}
-                        variant="compact"
+                        variant={event.allDay ? 'allDay' : 'compact'}
                         eventResource={resourcesByIdMap.get(event.resource)}
                         ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                       />

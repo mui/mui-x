@@ -35,6 +35,10 @@ export interface CalendarEvent {
   allDay?: boolean;
 }
 
+export interface CalendarEventWithPosition extends CalendarEvent {
+  eventRowIndex: number;
+}
+
 export type CalendarEventId = string | number;
 
 export type CalendarEventColor =
