@@ -28,7 +28,6 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/charts/tooltip/Formatting',
     '!docsx/data/charts/tooltip/SeriesFormatter',
     '!docsx/data/charts/tooltip/TooltipStyle',
-    'docsx/data/charts/tooltip/Interaction',
     '!docsx/data/data-grid/server-side-data/useNestedPagination',
     '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
