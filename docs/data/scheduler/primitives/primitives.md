@@ -35,7 +35,7 @@ This package is not published yet.
 
 ### Drag and drop to update resource
 
-- Add a `columnId` to the `TimeGrid.Column` part to identify which columns the event is being dropped in
+- Add a `columnId` to the `TimeGrid.Column` part to identify which column the event is being dropped inside of
 
 {{"demo": "TimeGridPrimitiveDragAndDropResource.js", "bg": "inline", "defaultCodeOpen": false}}
 
