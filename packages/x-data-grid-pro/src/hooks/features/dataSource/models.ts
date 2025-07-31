@@ -87,4 +87,10 @@ export interface GridDataSourcePrivateApiPro {
    * Resets the data source state.
    */
   resetDataSourceState: () => void;
+  /**
+   * Removes the children rows of a parent from the grid.
+   * This is used when collapsing a parent row to ensure dynamic data updates work properly.
+   * @param {GridRowId} parentId The id of the parent node.
+   */
+  removeChildrenRows: (parentId: GridRowId) => void;
 }

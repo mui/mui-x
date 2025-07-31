@@ -7,7 +7,6 @@ import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { TimeGridColumnPlaceholderContext } from './TimeGridColumnPlaceholderContext';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../models';
-import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import type { TimeGridRoot } from '../root';
 import {
@@ -29,9 +28,9 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     className,
     render,
     // Internal props
-    value,
-    startTime,
-    endTime,
+    start,
+    end,
+    columnId = null,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -39,38 +38,24 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   const ref = React.useRef<HTMLDivElement>(null);
   const { onEventChange, setPlaceholder, placeholder } = useTimeGridRootContext();
 
-  const columnStart = React.useMemo(
-    () =>
-      startTime == null ? adapter.startOfDay(value) : mergeDateAndTime(adapter, value, startTime),
-    [adapter, value, startTime],
-  );
-
-  const columnEnd = React.useMemo(
-    () => (endTime == null ? adapter.endOfDay(value) : mergeDateAndTime(adapter, value, endTime)),
-    [adapter, value, endTime],
-  );
-
   const columnPlaceholder = React.useMemo(() => {
     if (placeholder == null) {
       return null;
     }
 
-    if (
-      adapter.isBefore(placeholder.start, columnStart) ||
-      adapter.isAfter(placeholder.end, columnEnd)
-    ) {
+    if (adapter.isBefore(placeholder.start, start) || adapter.isAfter(placeholder.end, end)) {
       return null;
     }
 
     return placeholder;
-  }, [adapter, columnStart, columnEnd, placeholder]);
+  }, [adapter, start, end, placeholder]);
 
   const contextValue: TimeGridColumnContext = React.useMemo(
     () => ({
-      start: columnStart,
-      end: columnEnd,
+      start,
+      end,
     }),
-    [columnStart, columnEnd],
+    [start, end],
   );
 
   const placeholderContextValue: TimeGridColumnPlaceholderContext = React.useMemo(
@@ -113,14 +98,14 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
         const newStartDate = createDateFromPositionInCollection({
           adapter,
-          collectionStart: columnStart,
-          collectionEnd: columnEnd,
+          collectionStart: start,
+          collectionEnd: end,
           position: cursorPositionPx / domElement!.offsetHeight,
         });
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
 
-        return { start: newStartDate, end: newEndDate, id: data.id };
+        return { start: newStartDate, end: newEndDate, eventId: data.id, columnId };
       }
 
       // Resize event
@@ -128,8 +113,8 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         const cursorPositionPx = position.y - data.position.y;
         const cursorDate = createDateFromPositionInCollection({
           adapter,
-          collectionStart: columnStart,
-          collectionEnd: columnEnd,
+          collectionStart: start,
+          collectionEnd: end,
           position: cursorPositionPx / domElement!.offsetHeight,
         });
 
@@ -144,7 +129,8 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
           return {
             start: newStartDate,
             end: data.end,
-            id: data.id,
+            eventId: data.id,
+            columnId,
           };
         }
 
@@ -156,7 +142,8 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         return {
           start: data.start,
           end: newEndDate,
-          id: data.id,
+          eventId: data.id,
+          columnId,
         };
       }
 
@@ -180,7 +167,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       },
       onDragStart: ({ source: { data } }) => {
         if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
-          setPlaceholder({ id: data.id, start: data.start, end: data.end });
+          setPlaceholder({ eventId: data.id, start: data.start, end: data.end, columnId });
         }
       },
       onDrop: ({ source: { data }, location }) => {
@@ -195,7 +182,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
         }
       },
     });
-  }, [adapter, onEventChange, setPlaceholder, columnStart, columnEnd]);
+  }, [adapter, onEventChange, setPlaceholder, start, end, columnId]);
 
   return (
     <TimeGridColumnContext.Provider value={contextValue}>
@@ -211,20 +198,18 @@ export namespace TimeGridColumn {
 
   export interface Props extends BaseUIComponentProps<'div', State> {
     /**
-     * The value of the column.
+     * The data and time at which the column starts.
      */
-    value: SchedulerValidDate;
+    start: SchedulerValidDate;
     /**
-     * The start time of the column.
-     * The date part is ignored, only the time part is used.
-     * @defaultValue 00:00:00
+     * The data and time at which the column ends.
      */
-    startTime?: SchedulerValidDate;
+    end: SchedulerValidDate;
     /**
-     * The end time of the column.
-     * The date part is ignored, only the time part is used.
-     * @defaultValue 23:59:59
+     * A unique identifier for the column.
+     * This is used to identify the column when dragging events if several columns represent the same time range.
+     * @default null
      */
-    endTime?: SchedulerValidDate;
+    columnId?: string;
   }
 }

@@ -114,8 +114,9 @@ async function main() {
           timeout: getTimeout(route),
         },
         async () => {
-          if (/^\/docs-charts-tooltip.*/.test(route)) {
-            // Ignore tooltip demo. Since they require some interaction they get tested in dedicated tests.
+          if (/^\/docs-charts-tooltip\/Interaction/.test(route)) {
+            // Ignore tooltip interaction demo screenshot.
+            // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
             return;
           }
 

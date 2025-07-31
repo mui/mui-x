@@ -20,6 +20,7 @@ import {
   GridStateInitializer,
   GridStrategyGroup,
   gridExpandedSortedRowIndexLookupSelector,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -29,7 +30,6 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   getRowGroupingFieldFromGroupingCriteria,
-  RowGroupingStrategy,
   isGroupingColumn,
   mergeStateWithRowGroupingModel,
   setStrategyAvailability,

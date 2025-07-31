@@ -828,4 +828,64 @@ describe('<DataGridPremium /> - Pivoting', () => {
       ]);
     });
   });
+
+  it('should work with complex singleSelect values as pivot columns', async () => {
+    const apiRef = { current: null } as React.RefObject<GridApi | null>;
+
+    const columns: GridColDef[] = [
+      { field: 'id', headerName: 'ID' },
+      { field: 'ticker' },
+      {
+        field: 'country',
+        type: 'singleSelect',
+        valueOptions: [
+          { countryName: 'France', value: 'FR' },
+          { countryName: 'Germany', value: 'DE' },
+          { countryName: 'Italy', value: 'IT' },
+        ],
+        getOptionLabel: (option: { countryName: string }) => option.countryName,
+      } as GridColDef<{ countryName: string }>,
+    ];
+
+    const rows = [
+      { id: 1, ticker: 'FR1', country: { countryName: 'France', value: 'FR' } },
+      { id: 2, ticker: 'DE2', country: { countryName: 'Germany', value: 'DE' } },
+      { id: 3, ticker: 'IT3', country: { countryName: 'Italy', value: 'IT' } },
+    ];
+
+    render(
+      <div style={{ height: 600, width: 600 }}>
+        <DataGridPremium
+          rows={rows}
+          columns={columns}
+          showToolbar
+          cellSelection
+          apiRef={apiRef}
+          initialState={{
+            pivoting: {
+              enabled: true,
+              model: {
+                rows: [{ field: 'ticker' }],
+                columns: [{ field: 'country' }],
+                values: [{ field: 'id', aggFunc: 'size' }],
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+
+    await waitFor(() => {
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        'France',
+        'Germany',
+        'Italy',
+        'ticker',
+        'IDsize',
+        'IDsize',
+        'IDsize',
+      ]);
+    });
+  });
 });
