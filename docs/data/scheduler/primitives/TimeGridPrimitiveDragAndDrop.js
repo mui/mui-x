@@ -4,18 +4,27 @@ import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
 import classes from './TimeGridPrimitive.module.css';
 import { initialEvents, groupEventsByDay } from './time-grid-events';
 
-const days = groupEventsByDay(initialEvents);
-
-const startTime = DateTime.fromObject({ hour: 6 });
-const endTime = DateTime.fromObject({ hour: 23 });
-const duration = endTime.diff(startTime, 'hours').hours;
-
-export default function TimeGridPrimitiveStartEndTime() {
+export default function TimeGridPrimitiveDragAndDrop() {
+  const [events, setEvents] = React.useState(initialEvents);
   const { scrollableRef, scrollerRef } = useInitialScrollPosition();
+
+  const days = React.useMemo(() => {
+    return groupEventsByDay(events);
+  }, [events]);
+
+  const handleEventChange = React.useCallback((eventData) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === eventData.eventId
+          ? { ...event, start: eventData.start, end: eventData.end }
+          : event,
+      ),
+    );
+  }, []);
 
   return (
     <div className={classes.Container}>
-      <TimeGrid.Root className={classes.Root}>
+      <TimeGrid.Root className={classes.Root} onEventChange={handleEventChange}>
         <div className={classes.Header}>
           <div className={classes.TimeAxisHeaderCell} aria-hidden="true" />
           {days.map((day) => (
@@ -28,30 +37,27 @@ export default function TimeGridPrimitiveStartEndTime() {
           <TimeGrid.ScrollableContent
             className={classes.ScrollableContent}
             ref={scrollableRef}
-            style={{ '--duration': duration } as React.CSSProperties}
+            style={{ '--duration': 24 }}
             role="row"
           >
             <div className={classes.TimeAxis} aria-hidden="true">
-              {Array.from({ length: duration }, (_, index) => {
-                const hour = index + startTime.get('hour');
-                return (
-                  <div
-                    key={index}
-                    className={classes.TimeAxisCell}
-                    style={{ '--hour-index': index } as React.CSSProperties}
-                  >
-                    {index === 0
-                      ? null
-                      : `${DateTime.now().set({ hour }).toFormat('hh a')}`}
-                  </div>
-                );
-              })}
+              {Array.from({ length: 24 }, (_, hour) => (
+                <div
+                  key={hour}
+                  className={classes.TimeAxisCell}
+                  style={{ '--hour-index': hour }}
+                >
+                  {hour === 0
+                    ? null
+                    : `${DateTime.now().set({ hour }).toFormat('hh a')}`}
+                </div>
+              ))}
             </div>
             {days.map((day) => (
               <TimeGrid.Column
                 key={day.date.toString()}
-                start={day.date.startOf('day').set({ hour: startTime.get('hour') })}
-                end={day.date.startOf('day').set({ hour: endTime.get('hour') })}
+                start={day.date.startOf('day')}
+                end={day.date.endOf('day')}
                 className={classes.Column}
               >
                 {day.events.map((event) => (
@@ -62,15 +68,25 @@ export default function TimeGridPrimitiveStartEndTime() {
                     eventId={event.id}
                     data-resource={event.resource}
                     className={classes.Event}
+                    isDraggable
                   >
+                    <TimeGrid.EventResizeHandler
+                      side="start"
+                      className={classes.EventResizeHandler}
+                    />
                     <div className={classes.EventInformation}>
                       <div className={classes.EventStartTime}>
                         {event.start.toFormat('hh a')}
                       </div>
                       <div className={classes.EventTitle}>{event.title}</div>
                     </div>
+                    <TimeGrid.EventResizeHandler
+                      side="end"
+                      className={classes.EventResizeHandler}
+                    />
                   </TimeGrid.Event>
                 ))}
+                <TimeGridColumnPlaceholder events={events} />
               </TimeGrid.Column>
             ))}
           </TimeGrid.ScrollableContent>
@@ -80,18 +96,48 @@ export default function TimeGridPrimitiveStartEndTime() {
   );
 }
 
+function TimeGridColumnPlaceholder({ events }) {
+  const placeholder = TimeGrid.useColumnPlaceholder();
+
+  if (!placeholder) {
+    return null;
+  }
+
+  const event = events.find(
+    (calendarEvent) => calendarEvent.id === placeholder.eventId,
+  );
+  if (!event) {
+    return null;
+  }
+
+  return (
+    <TimeGrid.Event
+      start={placeholder.start}
+      end={placeholder.end}
+      eventId={event.id}
+      data-resource={event.resource}
+      className={classes.Event}
+    >
+      <div className={classes.EventInformation}>
+        <div className={classes.EventStartTime}>{event.start.toFormat('hh a')}</div>
+        <div className={classes.EventTitle}>{event.title}</div>
+      </div>
+    </TimeGrid.Event>
+  );
+}
+
 function useInitialScrollPosition() {
   // TODO: Should the automatic scrolling be built-in?
-  const scrollableRef = React.useRef<HTMLDivElement>(null);
-  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const scrollableRef = React.useRef(null);
+  const scrollerRef = React.useRef(null);
 
   React.useLayoutEffect(() => {
     if (!scrollableRef.current || !scrollerRef.current) {
       return;
     }
 
-    let earliestStart: number | null = null;
-    for (const day of days) {
+    let earliestStart = null;
+    for (const day of groupEventsByDay(initialEvents)) {
       for (const event of day.events) {
         const startMinute = event.start.hour * 60 + event.start.minute;
 
