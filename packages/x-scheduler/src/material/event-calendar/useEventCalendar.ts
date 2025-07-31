@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { Store } from '@base-ui-components/utils/store';
+import { useLazyRef } from '@base-ui-components/utils/useLazyRef';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   EventCalendarInstance,
   EventCalendarView,
   UseEventCalendarParameters,
 } from './EventCalendar.types';
-import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
-import { Store } from '../../base-ui-copy/utils/store';
-import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
 import { State } from './store';
 import { useAssertModelConsistency } from '../internals/hooks/useAssertModelConsistency';
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';

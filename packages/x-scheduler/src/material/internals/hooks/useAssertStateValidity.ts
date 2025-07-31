@@ -1,6 +1,6 @@
 'use client';
+import { useSelector } from '@base-ui-components/utils/store';
 import { warn } from '../../../base-ui-copy/utils/warn';
-import { useSelector } from '../../../base-ui-copy/utils/store';
 import { EventCalendarStore, selectors } from '../../event-calendar/store';
 
 /**

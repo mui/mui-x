@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useSelector } from '@base-ui-components/utils/store';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { useSelector } from '../../../../base-ui-copy/utils/store';
 import { selectors } from '../../../event-calendar/store';
 import './HeaderToolbar.css';
 

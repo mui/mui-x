@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
+import { useSelector } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { useSelector } from '../../../base-ui-copy/utils/store';
 import { useTimelineRootContext } from '../root/TimelineRootContext';
 import { selectors } from '../root/store';
 

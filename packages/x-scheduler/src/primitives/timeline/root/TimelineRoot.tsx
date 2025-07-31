@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
+import { Store } from '@base-ui-components/utils/store';
+import { useLazyRef } from '@base-ui-components/utils/useLazyRef';
+import { useModernLayoutEffect } from '@base-ui-components/utils/useModernLayoutEffect';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { useLazyRef } from '../../../base-ui-copy/utils/useLazyRef';
-import { Store } from '../../../base-ui-copy/utils/store';
-import { useModernLayoutEffect } from '../../../base-ui-copy/utils/useModernLayoutEffect';
 import { State } from './store';
 import { TimelineRootContext } from './TimelineRootContext';
 

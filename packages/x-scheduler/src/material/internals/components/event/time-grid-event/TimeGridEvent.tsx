@@ -2,8 +2,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useId } from '@base-ui-components/react/utils';
+import { useSelector } from '@base-ui-components/utils/store';
 import { TimeGridEventProps } from './TimeGridEvent.types';
-import { useSelector } from '../../../../../base-ui-copy/utils/store';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../../primitives/time-grid';
 import { getColorClassName } from '../../../utils/color-utils';

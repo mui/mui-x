@@ -1,5 +1,5 @@
+import { createSelector, createSelectorMemoized, Store } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { createSelector, createSelectorMemoized, Store } from '../../base-ui-copy/utils/store';
 import { SchedulerValidDate } from '../../primitives/models';
 import { CalendarEvent, CalendarEventId } from '../models/events';
 import { CalendarResource, CalendarResourceId } from '../models/resource';

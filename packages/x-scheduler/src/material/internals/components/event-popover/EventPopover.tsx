@@ -7,6 +7,8 @@ import { Field } from '@base-ui-components/react/field';
 import { Form } from '@base-ui-components/react/form';
 import { X } from 'lucide-react';
 import { Input } from '@base-ui-components/react/input';
+import { useSelector } from '@base-ui-components/utils/store';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   EventPopoverContextValue,
   EventPopoverProps,
@@ -19,8 +21,6 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEvent } from '../../../models/events';
 import { selectors } from '../../../event-calendar/store';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { useSelector } from '../../../../base-ui-copy/utils/store';
-import { useEventCallback } from '../../../../base-ui-copy/utils/useEventCallback';
 import './EventPopover.css';
 
 export const EventPopover = React.forwardRef(function EventPopover(
