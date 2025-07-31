@@ -74,6 +74,7 @@ export const AgendaView = React.memo(
                   <EventPopoverTrigger
                     key={event.id}
                     event={event}
+                    nativeButton={false}
                     render={
                       <DayGridEvent
                         event={event}
