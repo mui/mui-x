@@ -37,20 +37,28 @@ export const PickersLayoutRoot = styled('div', {
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
   variants: [
     {
-      props: { pickerOrientation: 'landscape' },
+      props: { pickerOrientation: 'landscape', hasShortcuts: false },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: {
           gridColumn: 1,
-          gridRow: '2 / 3',
+          gridRow: '1 / 3',
         },
-        [`.${pickersLayoutClasses.shortcuts}`]: { gridColumn: '2 / 4', gridRow: 1 },
       },
     },
     {
-      props: { pickerOrientation: 'landscape', layoutDirection: 'rtl' },
+      props: {
+        pickerOrientation: 'landscape',
+        hasShortcuts: true,
+      },
       style: {
         [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: 3,
+          gridColumn: '2 / 4',
+          gridRow: 1,
+          maxWidth: 'max-content',
+        },
+        [`& .${pickersLayoutClasses.shortcuts}`]: {
+          gridColumn: 1,
+          gridRow: 2,
         },
       },
     },
@@ -65,7 +73,7 @@ export const PickersLayoutRoot = styled('div', {
       },
     },
     {
-      props: { pickerOrientation: 'portrait', layoutDirection: 'rtl' },
+      props: { hasShortcuts: true, layoutDirection: 'rtl' },
       style: {
         [`& .${pickersLayoutClasses.shortcuts}`]: {
           gridColumn: 4,
