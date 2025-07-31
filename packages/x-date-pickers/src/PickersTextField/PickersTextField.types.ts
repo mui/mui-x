@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FormControlProps } from '@mui/material/FormControl';
 import { FormHelperTextProps } from '@mui/material/FormHelperText';
 import { InputLabelProps } from '@mui/material/InputLabel';
-import { TextFieldVariants, TextFieldSlotsAndSlotProps } from '@mui/material/TextField';
+import { TextFieldVariants } from '@mui/material/TextField';
 import { PickersInputPropsUsedByField } from './PickersInputBase/PickersInputBase.types';
 import type { PickersInputProps } from './PickersInput';
 import type { PickersOutlinedInputProps } from './PickersOutlinedInput';
@@ -28,7 +28,6 @@ export interface PickersBaseTextFieldProps
    * The helper text content.
    */
   helperText?: React.ReactNode;
-  slotProps?: TextFieldSlotsAndSlotProps<any>['slotProps'];
 }
 
 export interface PickersStandardTextFieldProps extends PickersBaseTextFieldProps {

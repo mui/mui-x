@@ -235,9 +235,8 @@ export function PickerFieldUI<
 
   textFieldProps.ref = useForkRef(textFieldProps.ref, pickerContext?.rootRef);
 
-  let textFieldInputProps = (textFieldProps?.slotProps?.input ?? textFieldProps.InputProps) as
-    | PickersTextFieldProps['InputProps']
-    | undefined;
+  let textFieldInputProps = ((textFieldProps as TextFieldProps)?.slotProps?.input ??
+    textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined;
   if (!textFieldInputProps) {
     textFieldInputProps = {};
   }
