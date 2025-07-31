@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
-import { Store as BaseStore } from '../../base-ui-copy/utils/store';
-import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { Store as BaseStore } from '@base-ui-components/utils/store';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { State } from './store';
 import { useAssertModelConsistency } from '../utils/useAssertModelConsistency';
 import { useAdapter } from '../utils/adapter/useAdapter';
@@ -28,7 +28,9 @@ export function useEventCalendar(
   parameters: useEventCalendar.Parameters,
 ): useEventCalendar.ReturnValue {
   const adapter = useAdapter();
-  const defaultVisibleDateFallback = useLazyRef(() => adapter.startOfDay(adapter.date())).current;
+  const defaultVisibleDateFallback = useRefWithInit(() =>
+    adapter.startOfDay(adapter.date()),
+  ).current;
 
   const {
     events: eventsProp,
@@ -46,7 +48,7 @@ export function useEventCalendar(
     ampm = true,
   } = parameters;
 
-  const store = useLazyRef(
+  const store = useRefWithInit(
     () =>
       new BaseStore<State>({
         adapter,
@@ -78,7 +80,7 @@ export function useEventCalendar(
 
   useAssertStateValidity(store);
 
-  useModernLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const partialState: Partial<State> = {
       adapter,
       events: eventsProp,

@@ -4,13 +4,13 @@ import clsx from 'clsx';
 import { Eye, EyeClosed } from 'lucide-react';
 import { Checkbox } from '@base-ui-components/react/checkbox';
 import { CheckboxGroup } from '@base-ui-components/react/checkbox-group';
+import { useStore } from '@base-ui-components/utils/store';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { ResourceLegendProps } from './ResourceLegend.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { useSelector } from '../../../../base-ui-copy/utils/store/useSelector';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCallback } from '../../../../base-ui-copy/utils/useEventCallback';
 import { CalendarResource } from '../../../../primitives/models';
 import './ResourceLegend.css';
 
@@ -59,8 +59,8 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const { className, ...other } = props;
   const translations = useTranslations();
   const { store, instance } = useEventCalendarContext();
-  const resources = useSelector(store, selectors.resources);
-  const visibleResourcesList = useSelector(store, selectors.visibleResourcesList);
+  const resources = useStore(store, selectors.resources);
+  const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
 
   const handleVisibleResourcesChange = useEventCallback((value: string[]) => {
     const valueSet = new Set(value);
