@@ -86,10 +86,10 @@ export function createDiscreteScaleGetAxisFilter(
   zoomEnd: number,
   direction: 'x' | 'y',
 ): ExtremumFilter {
-  const max = (axisData?.length ?? 1) - 1;
+  const maxIndex = (axisData?.length ?? 1) - 1;
 
-  const minVal = (zoomStart * max) / 100;
-  const maxVal = (zoomEnd * max) / 100;
+  const minVal = (zoomStart * maxIndex) / 100;
+  const maxVal = (zoomEnd * maxIndex) / 100;
 
   return function filterAxis(value, dataIndex) {
     const val = value[direction] ?? axisData?.[dataIndex];
