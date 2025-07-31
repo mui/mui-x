@@ -25,6 +25,7 @@
     "./primitives": "./src/primitives/index.ts",
     "./primitives/day-grid": "./src/primitives/day-grid/index.ts",
     "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
+    "./primitives/timeline": "./src/primitives/timeline/index.ts",
     "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
     "./primitives/use-week-list": "./src/primitives/use-week-list/index.ts"
   },
@@ -47,8 +48,8 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:node": "node ../../scripts/build.mjs node --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
+    "build:stable": "node ../../scripts/build.mjs stable --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
     "build:types": "tsx ../../scripts/buildTypes.mts",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
@@ -59,13 +60,15 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.7.4",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.1",
     "@babel/runtime": "catalog:",
-    "@base-ui-components/react": "^1.0.0-beta.1",
+    "@base-ui-components/react": "1.0.0-beta.1",
     "@base-ui-components/utils": "https://pkg.pr.new/@base-ui-components/utils@5dce78b",
-    "@floating-ui/react": "^0.27.13",
+    "@floating-ui/react": "^0.27.14",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
-    "lucide-react": "^0.525.0",
+    "lucide-react": "^0.526.0",
     "reselect": "catalog:",
     "prop-types": "catalog:",
     "use-sync-external-store": "catalog:"

@@ -7,9 +7,9 @@ import type { BaseUIComponentProps, ComponentRenderFn, HTMLProps } from './types
 import { CustomStyleHookMapping, getStyleHookProps } from './getStyleHookProps';
 import { resolveClassName } from './resolveClassName';
 
-type IntrinsicTagName = keyof React.JSX.IntrinsicElements;
-
 const EMPTY_OBJECT = {};
+
+type IntrinsicTagName = keyof React.JSX.IntrinsicElements;
 
 /**
  * Renders a Base UI element.

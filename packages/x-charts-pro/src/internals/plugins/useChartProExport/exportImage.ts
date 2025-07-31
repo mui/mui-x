@@ -2,6 +2,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { createExportIframe } from './common';
 import { ChartImageExportOptions } from './useChartProExport.types';
+import { defaultOnBeforeExport } from './defaults';
 
 export const getDrawDocument = async () => {
   try {
@@ -20,7 +21,13 @@ export async function exportImage(
   element: HTMLElement | SVGElement,
   params?: ChartImageExportOptions,
 ) {
-  const { fileName, type = 'image/png', quality = 0.9, onBeforeExport } = params ?? {};
+  const {
+    fileName,
+    type = 'image/png',
+    quality = 0.9,
+    onBeforeExport = defaultOnBeforeExport,
+    copyStyles = true,
+  } = params ?? {};
   const drawDocumentPromise = getDrawDocument();
   const { width, height } = element.getBoundingClientRect();
   const doc = ownerDocument(element);
@@ -50,7 +57,9 @@ export async function exportImage(
     const root =
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
-    await Promise.all(loadStyleSheets(exportDoc, root));
+    if (copyStyles) {
+      await Promise.all(loadStyleSheets(exportDoc, root));
+    }
 
     resolve();
   };
@@ -58,7 +67,7 @@ export async function exportImage(
   doc.body.appendChild(iframe);
 
   await iframeLoadPromise;
-  await onBeforeExport?.(iframe);
+  await onBeforeExport(iframe);
 
   const drawDocument = await drawDocumentPromise;
 

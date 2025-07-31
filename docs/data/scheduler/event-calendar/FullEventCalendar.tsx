@@ -1,8 +1,11 @@
 import * as React from 'react';
-
-import { CalendarEvent } from '@mui/x-scheduler/joy';
-import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
-import { events as initialEvents, resources } from './month-events';
+import { CalendarEvent } from '@mui/x-scheduler/material';
+import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../datasets/personal-agenda';
 import classes from './FullEventCalendar.module.css';
 
 export default function FullEventCalendar() {
@@ -11,8 +14,9 @@ export default function FullEventCalendar() {
   return (
     <EventCalendar
       events={events}
-      onEventsChange={setEvents}
       resources={resources}
+      defaultVisibleDate={defaultVisibleDate}
+      onEventsChange={setEvents}
       className={classes.Container}
     />
   );

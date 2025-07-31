@@ -71,7 +71,6 @@ commands:
         description: The version of React to use.
         type: string
         default: << pipeline.parameters.react-version >>
-
     steps:
       - when:
           condition: << parameters.playwright >>
@@ -87,7 +86,6 @@ commands:
                 name: Install pnpm package manager
                 # See https://stackoverflow.com/a/73411601
                 command: corepack enable --install-directory ~/bin
-
       - run:
           name: View install environment
           command: |
@@ -108,14 +106,12 @@ commands:
             - run:
                 name: Install js dependencies without frozen lockfile
                 command: pnpm install --no-frozen-lockfile
-
       - run:
           name: Resolve React version
           command: |
             pnpm use-react-version
             # log a patch for maintainers who want to check out this change
             git --no-pager diff HEAD
-
       - when:
           condition: << pipeline.parameters.with-material-ui-6 >>
           steps:
@@ -151,18 +147,16 @@ jobs:
       - run:
           name: Test JSDOM
           command: pnpm test:unit:jsdom
-
   test_browser:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.53.2-noble
+      - image: mcr.microsoft.com/playwright:v1.54.1-noble
     resource_class: medium+
     steps:
       - checkout
       - install_js:
           playwright: true
           react-version: << parameters.react-version >>
-
       - when:
           condition:
             not:
@@ -186,7 +180,6 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
                   node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
-
             - run:
                 name: Check coverage generated
                 command: |
@@ -200,7 +193,6 @@ jobs:
                   curl -Os https://uploader.codecov.io/latest/linux/codecov
                   chmod +x codecov
                   ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-browser"
-
   test_lint:
     <<: *default-job
     steps:
@@ -260,8 +252,8 @@ jobs:
       - run:
           name: '`pnpm @mui/x-charts-vendor build` was run?'
           command: |
-            # #target-branch-reference 
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]]; 
+            # #target-branch-reference
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
               echo "No changes to dependencies detected. Skipping..."
             else
@@ -278,6 +270,11 @@ jobs:
             else
                 exit 0
             fi
+      - run:
+          name: '`pnpm generate:exports` was run?'
+          command: |
+            pnpm generate:exports
+            git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
     steps:
@@ -297,7 +294,7 @@ jobs:
   test_e2e:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.53.2-noble
+      - image: mcr.microsoft.com/playwright:v1.54.1-noble
     steps:
       - checkout
       - install_js:
@@ -309,7 +306,7 @@ jobs:
   test_e2e_website:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.53.2-noble
+      - image: mcr.microsoft.com/playwright:v1.54.1-noble
     steps:
       - checkout
       - install_js:
@@ -319,24 +316,20 @@ jobs:
           command: pnpm test:e2e-website
           environment:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
-
   test_package:
     <<: *default-job
     steps:
       - checkout
       - install_js:
           react-version: << parameters.react-version >>
-
       - run:
           name: prepare danger on PRs
           command: pnpm danger ci
           environment:
             DANGER_COMMAND: prepareBundleSizeReport
-
       - run:
           name: Build packages
           command: pnpm release:build
-
       - run:
           name: create and upload a size snapshot
           command: |
@@ -344,17 +337,15 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_ARTIFACTS
             export AWS_REGION=$AWS_REGION_ARTIFACTS
             pnpm size:snapshot
-
       - run:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
           environment:
             DANGER_COMMAND: reportBundleSize
-
   test_regressions:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.53.2-noble
+      - image: mcr.microsoft.com/playwright:v1.54.1-noble
     steps:
       - checkout
       - install_js:

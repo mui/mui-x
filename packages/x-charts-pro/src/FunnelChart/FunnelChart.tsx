@@ -4,12 +4,13 @@ import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
@@ -21,6 +22,7 @@ import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
 import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 
+export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends Omit<
       ChartContainerProProps<'funnel', FunnelChartPluginsSignatures>,
@@ -36,15 +38,16 @@ export interface FunnelChartProps
       | 'radiusAxis'
       | 'slots'
       | 'slotProps'
+      | 'experimentalFeatures'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     FunnelChartSlotExtension {
   /**
    * The series to display in the funnel chart.
-   * An array of [[FunnelSeriesType]] objects.
+   * An array of [[FunnelSeries]] objects.
    */
-  series: Readonly<MakeOptional<FunnelSeriesType, 'type'>[]>;
+  series: Readonly<FunnelSeries[]>;
   /**
    * The configuration of the category axis.
    *
@@ -158,6 +161,17 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['log']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['symlog']),
       size: PropTypes.number,
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
@@ -303,7 +317,7 @@ FunnelChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the funnel chart.
-   * An array of [[FunnelSeriesType]] objects.
+   * An array of [[FunnelSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

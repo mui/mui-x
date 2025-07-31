@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "8.7.0",
+  "version": "8.8.0",
   "author": "MUI Team",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "license": "MIT",
@@ -42,7 +42,8 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "reselect": "catalog:"
+    "reselect": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
     "@mui/system": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
