@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
-import { useModernLayoutEffect } from '@base-ui-components/react/utils';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { Store } from '@base-ui-components/utils/store';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   EventCalendarInstance,
   EventCalendarView,
   UseEventCalendarParameters,
 } from './EventCalendar.types';
-import { useLazyRef } from '../../base-ui-copy/utils/useLazyRef';
-import { Store } from '../../base-ui-copy/utils/store';
-import { useEventCallback } from '../../base-ui-copy/utils/useEventCallback';
 import { State } from './store';
 import { useAssertModelConsistency } from '../internals/hooks/useAssertModelConsistency';
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
@@ -40,7 +40,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     ampm = true,
   } = parameters;
 
-  const store = useLazyRef(
+  const store = useRefWithInit(
     () =>
       new Store<State>({
         events: eventsProp,
@@ -71,7 +71,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
 
   useAssertStateValidity(store);
 
-  useModernLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const partialState: Partial<State> = {
       events: eventsProp,
       resources: resourcesProp || [],
