@@ -1,7 +1,6 @@
 // TODO: Add typeOverloads when available
 // import './typeOverloads/modules';
-// eslint-disable-next-line no-restricted-imports
-import '@mui/x-charts-pro/typeOverloads/modules';
+import '@mui/x-charts-pro/typeOverloads';
 
 // exports from MIT package
 export * from '@mui/x-charts/ChartsClipPath';
