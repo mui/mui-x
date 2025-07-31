@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useTimelineRootContext } from '../root/TimelineRootContext';
@@ -21,7 +21,7 @@ export const TimelineSubGrid = React.forwardRef(function TimelineSubGrid<Item = 
   } = componentProps;
 
   const { store } = useTimelineRootContext<Item>();
-  const items = useSelector(store, selectors.items);
+  const items = useStore(store, selectors.items);
 
   const children = React.useMemo(() => {
     if (!React.isValidElement(childrenProp) && typeof childrenProp === 'function') {

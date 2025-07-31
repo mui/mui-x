@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useId } from '@base-ui-components/react/utils';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../../../primitives/day-grid';
 import { DayGridEventProps } from './DayGridEvent.types';
@@ -33,7 +33,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const id = useId(idProp);
   const translations = useTranslations();
   const { store } = useEventCalendarContext();
-  const ampm = useSelector(store, selectors.ampm);
+  const ampm = useStore(store, selectors.ampm);
 
   const content = React.useMemo(() => {
     switch (variant) {

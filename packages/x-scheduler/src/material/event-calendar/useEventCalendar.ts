@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useModernLayoutEffect } from '@base-ui-components/react/utils';
 import { Store } from '@base-ui-components/utils/store';
-import { useLazyRef } from '@base-ui-components/utils/useLazyRef';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   EventCalendarInstance,
@@ -40,7 +40,7 @@ export function useEventCalendar(parameters: UseEventCalendarParameters) {
     ampm = true,
   } = parameters;
 
-  const store = useLazyRef(
+  const store = useRefWithInit(
     () =>
       new Store<State>({
         events: eventsProp,

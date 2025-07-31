@@ -1,5 +1,5 @@
 'use client';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { warn } from '@base-ui-components/utils/warn';
 import { EventCalendarStore, selectors } from '../../event-calendar/store';
 
@@ -7,7 +7,7 @@ import { EventCalendarStore, selectors } from '../../event-calendar/store';
  * Make sure the state current value doesn't contain incompatible values.
  */
 function useAssertStateValidityOutsideOfProduction(store: EventCalendarStore) {
-  useSelector(store, () => {
+  useStore(store, () => {
     const views = selectors.views(store.state);
     const view = selectors.view(store.state);
 

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@base-ui-components/react/utils';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
@@ -36,15 +36,15 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const { store, instance } = useEventCalendarContext();
-    const visibleDate = useSelector(store, selectors.visibleDate);
-    const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
-    const hasDayView = useSelector(store, selectors.hasDayView);
+    const visibleDate = useStore(store, selectors.visibleDate);
+    const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+    const hasDayView = useStore(store, selectors.hasDayView);
     const today = adapter.date();
     const translations = useTranslations();
 
     const getWeekList = useWeekList();
     const getDayList = useDayList();
-    const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
+    const getEventsStartingInDay = useStore(store, selectors.getEventsStartingInDay);
 
     const weeks = React.useMemo(() => {
       const weeksFirstDays = getWeekList({

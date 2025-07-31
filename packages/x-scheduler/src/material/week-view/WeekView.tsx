@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { WeekViewProps } from './WeekView.types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
@@ -16,7 +16,7 @@ export const WeekView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     const { store } = useEventCalendarContext();
-    const visibleDate = useSelector(store, selectors.visibleDate);
+    const visibleDate = useStore(store, selectors.visibleDate);
 
     const getDayList = useDayList();
 

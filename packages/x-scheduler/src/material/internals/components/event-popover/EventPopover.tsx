@@ -7,7 +7,7 @@ import { Field } from '@base-ui-components/react/field';
 import { Form } from '@base-ui-components/react/form';
 import { X } from 'lucide-react';
 import { Input } from '@base-ui-components/react/input';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   EventPopoverContextValue,
@@ -237,7 +237,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
   const { store } = useEventCalendarContext();
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const startEditing = useEventCallback((event: React.MouseEvent, calendarEvent: CalendarEvent) => {
     setAnchor(event.currentTarget as HTMLElement);

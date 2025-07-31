@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { EventCalendarProps } from './EventCalendar.types';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
@@ -54,7 +54,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     ampm,
   });
 
-  const view = useSelector(store, selectors.view);
+  const view = useStore(store, selectors.view);
 
   let content: React.ReactNode;
   switch (view) {

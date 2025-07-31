@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { mergeObjects } from '@base-ui-components/utils/mergeObjects';
 import { isReactVersionAtLeast } from '@base-ui-components/utils/reactVersion';
-import { useForkRef, useForkRefN } from '@base-ui-components/utils/useForkRef';
+import { useMergedRefs, useMergedRefsN } from '@base-ui-components/utils/useMergedRefs';
 import { mergeClassNames, mergeProps, mergePropsN } from '@base-ui-components/react/merge-props';
 import type { BaseUIComponentProps, ComponentRenderFn, HTMLProps } from './types';
 import { CustomStyleHookMapping, getStyleHookProps } from './getStyleHookProps';
@@ -88,11 +88,11 @@ function useRenderElementProps<
   /* eslint-disable react-hooks/rules-of-hooks */
   if (typeof document !== 'undefined') {
     if (!enabled) {
-      useForkRef(null, null);
+      useMergedRefs(null, null);
     } else if (Array.isArray(ref)) {
-      outProps.ref = useForkRefN([outProps.ref, getChildRef(renderProp), ...ref]);
+      outProps.ref = useMergedRefsN([outProps.ref, getChildRef(renderProp), ...ref]);
     } else {
-      outProps.ref = useForkRef(outProps.ref, getChildRef(renderProp), ref);
+      outProps.ref = useMergedRefs(outProps.ref, getChildRef(renderProp), ref);
     }
   }
 

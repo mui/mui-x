@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@base-ui-components/react/utils';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
@@ -29,7 +29,7 @@ export const AgendaView = React.memo(
 
     const today = adapter.date();
 
-    const visibleDate = useSelector(store, selectors.visibleDate);
+    const visibleDate = useStore(store, selectors.visibleDate);
 
     const getDayList = useDayList();
 
@@ -38,8 +38,8 @@ export const AgendaView = React.memo(
       [getDayList, visibleDate],
     );
 
-    const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
-    const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+    const getEventsStartingInDay = useStore(store, selectors.getEventsStartingInDay);
+    const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
     return (
       <div

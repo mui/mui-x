@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { useTranslations } from '../../utils/TranslationsContext';
@@ -19,8 +19,8 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const { className, ...other } = props;
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
-  const view = useSelector(store, selectors.view);
-  const visibleDate = useSelector(store, selectors.visibleDate);
+  const view = useStore(store, selectors.view);
+  const visibleDate = useStore(store, selectors.visibleDate);
 
   return (
     <header

@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Menu } from '@base-ui-components/react/menu';
 import { useForkRef } from '@base-ui-components/react/utils';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { EventCalendarView } from '../../../../event-calendar/EventCalendar.types';
@@ -19,8 +19,8 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const { className, ...other } = props;
 
   const { store, instance } = useEventCalendarContext();
-  const views = useSelector(store, selectors.views);
-  const view = useSelector(store, selectors.view);
+  const views = useStore(store, selectors.views);
+  const view = useStore(store, selectors.view);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useForkRef(forwardedRef, containerRef);

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef, useModernLayoutEffect } from '@base-ui-components/react/utils';
-import { useSelector } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui-components/utils/store';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
@@ -32,11 +32,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleRef = useForkRef(forwardedRef, containerRef);
 
   const { store, instance } = useEventCalendarContext();
-  const getEventsStartingInDay = useSelector(store, selectors.getEventsStartingInDay);
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
-  const visibleDate = useSelector(store, selectors.visibleDate);
-  const hasDayView = useSelector(store, selectors.hasDayView);
-  const ampm = useSelector(store, selectors.ampm);
+  const getEventsStartingInDay = useStore(store, selectors.getEventsStartingInDay);
+  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+  const visibleDate = useStore(store, selectors.visibleDate);
+  const hasDayView = useStore(store, selectors.hasDayView);
+  const ampm = useStore(store, selectors.ampm);
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
@@ -188,8 +188,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
   const placeholder = TimeGrid.useColumnPlaceholder();
   const { store } = useEventCalendarContext();
-  const event = useSelector(store, selectors.getEventById, placeholder?.id ?? null);
-  const resourcesByIdMap = useSelector(store, selectors.resourcesByIdMap);
+  const event = useStore(store, selectors.getEventById, placeholder?.id ?? null);
+  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const updatedEvent = React.useMemo(() => {
     if (!event || !placeholder) {
