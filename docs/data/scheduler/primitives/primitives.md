@@ -27,7 +27,7 @@ This package is not published yet.
 
 ### Drag and drop
 
-- Add the `isDraggable` props to the `TimeGrid.Event` part to enable the re-scheduler of the events
+- Add the `isDraggable` prop to the `TimeGrid.Event` part to enable the re-scheduling of the events
 - Render a `TimeGrid.EventResizeHandler` inside the `TimeGrid.Event` part to enable the resizing of the events
 - Use the `TimeGrid.useColumnPlaceholder()` to render a placeholder of the event being dragged
 
