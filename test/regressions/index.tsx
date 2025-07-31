@@ -99,11 +99,9 @@ function App() {
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
 
         const chartTestNeedsToAdvanceTime = (test: Test) =>
-          test.path.includes('charts') &&
-          (test.path.includes('Interaction') ||
-            test.path.includes('PrintChart') ||
-            test.path.includes('ExportChartAsImage') ||
-            test.path.includes('Animation'));
+          test.path.includes('Interaction') ||
+          test.path.includes('PrintChart') ||
+          test.path.includes('ExportChartAsImage');
 
         return {
           path: suite,
