@@ -161,22 +161,15 @@ const onRender = (type, props, Component) => {
 export default function GridChartsIntegrationCustomization() {
   const apiRef = useGridApiRef();
 
-  const hasInitializedPivotingSeries = React.useRef(false);
   React.useEffect(() => {
     const handleMount = () => {
-      if (hasInitializedPivotingSeries.current) {
-        return;
-      }
-
       const unwrappedGroupingModel = Object.keys(
         gridColumnGroupsUnwrappedModelSelector(apiRef),
       );
-      // wait until pivoting creates column grouping model
       if (unwrappedGroupingModel.length === 0) {
         return;
       }
 
-      hasInitializedPivotingSeries.current = true;
       // pick up the all major versions
       apiRef.current?.updateSeries(
         'main',
