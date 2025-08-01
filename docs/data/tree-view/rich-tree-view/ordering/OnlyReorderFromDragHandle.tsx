@@ -68,8 +68,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     status,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const { draggable, onDragStart, onDragOver, onDragEnd, ...otherRootProps } =
-    getRootProps(other);
+  const { draggable, onDragStart, ...otherRootProps } = getRootProps(other);
 
   const handleDragStart = (event: React.DragEvent) => {
     if (!onDragStart) {
@@ -91,12 +90,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <TreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
           </TreeItemIconContainer>
-          <TreeItemIconContainer
-            draggable={draggable}
-            onDragStart={handleDragStart}
-            onDragOver={onDragOver}
-            onDragEnd={onDragEnd}
-          >
+          <TreeItemIconContainer draggable={draggable} onDragStart={handleDragStart}>
             <DragIndicatorIcon />
           </TreeItemIconContainer>
           <TreeItemCheckbox {...getCheckboxProps()} />
