@@ -1,7 +1,6 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import clsx from 'clsx';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useEventCallback as useEventCallback,
@@ -25,7 +24,7 @@ import { GridScrollParams } from '../models/params/gridScrollParams';
 import { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
-import { createSelector } from '../utils/createSelector';
+import { createSelectorV8 } from '../utils/createSelector';
 import { gridRowsMetaSelector } from '../hooks/features/rows/gridRowsMetaSelector';
 
 const CLIFF = 1;
@@ -110,10 +109,10 @@ function GridScrollAreaWrapper(props: ScrollAreaProps) {
   );
 
   // Listen for both column and row drag events
-  useGridEvent(apiRef, 'columnHeaderDragStart', () => setDragDirection('horizontal'));
-  useGridEvent(apiRef, 'columnHeaderDragEnd', () => setDragDirection('none'));
-  useGridEvent(apiRef, 'rowDragStart', () => setDragDirection('vertical'));
-  useGridEvent(apiRef, 'rowDragEnd', () => setDragDirection('none'));
+  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', () => setDragDirection('horizontal'));
+  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', () => setDragDirection('none'));
+  useGridApiEventHandler(apiRef, 'rowDragStart', () => setDragDirection('vertical'));
+  useGridApiEventHandler(apiRef, 'rowDragEnd', () => setDragDirection('none'));
 
   if (dragDirection === 'none') {
     return null;
@@ -158,8 +157,8 @@ function GridHorizontalScrollAreaContent(props: ScrollAreaProps) {
   const style: React.CSSProperties = {
     height: headerHeight,
     top: totalHeaderHeight - headerHeight,
-    ...(scrollDirection === 'left' ? { left: sideOffset } : {}),
-    ...(scrollDirection === 'right' ? { right: sideOffset } : {}),
+    ...(scrollDirection === 'left' ? { left: sideOffset as number } : {}),
+    ...(scrollDirection === 'right' ? { right: sideOffset as number } : {}),
   };
 
   const handleDragOver = useEventCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -206,7 +205,7 @@ function GridVerticalScrollAreaContent(props: ScrollAreaProps) {
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
 
   const getCanScrollMore = () => {
-    const dimensions = gridDimensionsSelector(apiRef);
+    const dimensions = gridDimensionsSelector(apiRef.current.state);
     if (scrollDirection === 'up') {
       // Only render if the user has not reached yet the top of the list
       return scrollPosition.current.top > 0;
@@ -290,7 +289,7 @@ const GridScrollAreaContent = forwardRef(function GridScrollAreaContent(
     setCanScrollMore(getCanScrollMore);
   };
 
-  useGridEvent(apiRef, 'scrollPositionChange', handleScrolling);
+  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScrolling);
 
   if (!canScrollMore) {
     return null;
