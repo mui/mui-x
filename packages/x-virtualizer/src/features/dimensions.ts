@@ -14,6 +14,15 @@ import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
+export type DimensionsParams = {
+  rowHeight: number;
+  columnsTotalWidth: number;
+  leftPinnedWidth: number;
+  rightPinnedWidth: number;
+  topPinnedHeight: number;
+  bottomPinnedHeight: number;
+};
+
 const EMPTY_DIMENSIONS: DimensionsState = {
   isReady: false,
   root: Size.EMPTY,
@@ -24,15 +33,11 @@ const EMPTY_DIMENSIONS: DimensionsState = {
   hasScrollX: false,
   hasScrollY: false,
   scrollbarSize: 0,
-  headerHeight: 0,
-  groupHeaderHeight: 0,
-  headerFilterHeight: 0,
   rowWidth: 0,
   rowHeight: 0,
   columnsTotalWidth: 0,
   leftPinnedWidth: 0,
   rightPinnedWidth: 0,
-  headersTotalHeight: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
 };
@@ -106,13 +111,11 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     refs,
     dimensions: {
       rowHeight,
-      headerHeight,
       columnsTotalWidth,
-      groupHeaderHeight,
-      headerFilterHeight,
-      headersTotalHeight,
       leftPinnedWidth,
       rightPinnedWidth,
+      topPinnedHeight,
+      bottomPinnedHeight,
     },
   } = params;
 
@@ -129,8 +132,8 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     // https://github.com/mui/mui-x/issues/15721
     const scrollbarSize = measureScrollbarSize(params.refs.container.current, params.scrollbarSize);
 
-    const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
-    const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight;
+    const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
+    const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
 
     const contentSize = {
       width: columnsTotalWidth,
@@ -208,15 +211,11 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       hasScrollX,
       hasScrollY,
       scrollbarSize,
-      headerHeight,
-      groupHeaderHeight,
-      headerFilterHeight,
       rowWidth,
       rowHeight,
       columnsTotalWidth,
       leftPinnedWidth,
       rightPinnedWidth,
-      headersTotalHeight,
       topContainerHeight,
       bottomContainerHeight,
     };
@@ -234,13 +233,11 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     params.scrollbarSize,
     params.autoHeight,
     rowHeight,
-    headerHeight,
-    groupHeaderHeight,
-    headerFilterHeight,
     columnsTotalWidth,
-    headersTotalHeight,
     leftPinnedWidth,
     rightPinnedWidth,
+    topPinnedHeight,
+    bottomPinnedHeight,
   ]);
 
   const { resizeThrottleMs, onResize } = params;

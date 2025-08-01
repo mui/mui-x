@@ -3,8 +3,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
+import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { useVirtualizer } from '@mui/x-virtualizer';
+import { useVirtualizer, Dimensions } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
@@ -79,7 +80,6 @@ export function useGridVirtualizer(
 
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
-  /* TODO: extract dimensions code */
   const contentHeight = useGridSelector(apiRef, gridContentHeightSelector);
   const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
@@ -109,16 +109,41 @@ export function useGridVirtualizer(
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
-  const dimensions = {
+  const dimensionsParams = {
     rowHeight,
     headerHeight,
-    groupHeaderHeight,
-    headerFilterHeight,
     columnsTotalWidth,
-    headersTotalHeight,
     leftPinnedWidth,
     rightPinnedWidth,
+    topPinnedHeight: headersTotalHeight,
+    bottomPinnedHeight: 0,
   };
+
+  /** Translate virtualizer state to grid state */
+  const addGridDimensions = React.useMemo(
+    () =>
+      /* eslint-disable @typescript-eslint/no-shadow */
+      lruMemoize(
+        (
+          dimensions: Dimensions.State['dimensions'],
+          headerHeight: number,
+          groupHeaderHeight: number,
+          headerFilterHeight: number,
+          headersTotalHeight: number,
+        ) => {
+          return {
+            ...dimensions,
+            headerHeight,
+            groupHeaderHeight,
+            headerFilterHeight,
+            headersTotalHeight,
+          };
+        },
+        { maxSize: 1 },
+      ),
+    /* eslint-enable @typescript-eslint/no-shadow */
+    [],
+  );
 
   // </DIMENSIONS>
 
@@ -136,11 +161,10 @@ export function useGridVirtualizer(
 
   const virtualizer = useVirtualizer({
     scrollbarSize: rootProps.scrollbarSize,
-    dimensions,
+    dimensions: dimensionsParams,
 
     initialState: {
       scroll: rootProps.initialState?.scroll,
-      dimensions: apiRef.current.state.dimensions,
       rowSpanning: apiRef.current.state.rowSpanning,
       virtualization: apiRef.current.state.virtualization,
     },
@@ -264,17 +288,31 @@ export function useGridVirtualizer(
   //
   // TODO(v9): Remove this
   useFirstRender(() => {
-    apiRef.current.store.state.dimensions = virtualizer.store.state.dimensions;
+    apiRef.current.store.state.dimensions = addGridDimensions(
+      virtualizer.store.state.dimensions,
+      headerHeight,
+      groupHeaderHeight,
+      headerFilterHeight,
+      headersTotalHeight,
+    );
     apiRef.current.store.state.rowsMeta = virtualizer.store.state.rowsMeta;
     apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
   });
+
+  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {
+    apiRef.current.setState((gridState) => ({
+      ...gridState,
+      dimensions: addGridDimensions(
+        dimensions,
+        headerHeight,
+        groupHeaderHeight,
+        headerFilterHeight,
+        headersTotalHeight,
+      ),
+    }));
+  });
+
   useStoreEffect(virtualizer.store, identity, (_, state) => {
-    if (state.dimensions !== apiRef.current.state.dimensions) {
-      apiRef.current.setState((gridState) => ({
-        ...gridState,
-        dimensions: state.dimensions,
-      }));
-    }
     if (state.rowsMeta !== apiRef.current.state.rowsMeta) {
       apiRef.current.setState((gridState) => ({
         ...gridState,

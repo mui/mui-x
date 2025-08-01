@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { Dimensions } from '@mui/x-virtualizer';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -162,17 +161,22 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   useGridEventPriority(apiRef, 'resize', handleResize);
   useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
 
-  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (previous, next) => {
-    if (apiRef.current.rootElementRef.current) {
-      setCSSVariables(apiRef.current.rootElementRef.current, next);
-    }
+  // XXX: typings
+  useStoreEffect(
+    apiRef.current.store,
+    (s) => s.dimensions,
+    (previous, next) => {
+      if (apiRef.current.rootElementRef.current) {
+        setCSSVariables(apiRef.current.rootElementRef.current, next);
+      }
 
-    if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
-      apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
-    }
+      if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
+        apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
+      }
 
-    apiRef.current.publishEvent('debouncedResize', next.root);
-  });
+      apiRef.current.publishEvent('debouncedResize', next.root);
+    },
+  );
 }
 
 function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {

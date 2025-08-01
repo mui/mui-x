@@ -39,7 +39,7 @@ export interface DimensionsState {
    */
   scrollbarSize: number;
   /**
-   * Width of a row.
+   * Width of a row. At least as wide as `viewportOuterSize.width`.
    */
   rowWidth: number;
   /**
@@ -47,7 +47,7 @@ export interface DimensionsState {
    */
   rowHeight: number;
   /**
-   * Size of all the visible columns.
+   * Size of all the columns.
    */
   columnsTotalWidth: number;
   /**
@@ -58,22 +58,6 @@ export interface DimensionsState {
    * Size of right pinned columns.
    */
   rightPinnedWidth: number;
-  /**
-   * Height of one column header.
-   */
-  headerHeight: number;
-  /**
-   * Height of one column group header.
-   */
-  groupHeaderHeight: number;
-  /**
-   * Height of header filters.
-   */
-  headerFilterHeight: number;
-  /**
-   * Height of all the column headers.
-   */
-  headersTotalHeight: number;
   /**
    * Size of the top container.
    */

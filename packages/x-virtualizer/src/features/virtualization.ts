@@ -638,7 +638,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     };
   });
   React.useEffect(() => {
-    store.update({ ...store.state, getters });
+    store.update({ getters });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, Object.values(getters));
 

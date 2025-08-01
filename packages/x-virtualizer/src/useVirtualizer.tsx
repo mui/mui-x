@@ -9,6 +9,8 @@ import { Rowspan } from './features/rowspan';
 import { Virtualization } from './features/virtualization';
 import type { RowId } from './models/core';
 import type { HeightEntry, RowSpacing, RowVisibilityParams } from './models/dimensions';
+import type { DimensionsParams } from './features/dimensions';
+
 import {
   ColumnWithWidth,
   FocusedCell,
@@ -31,20 +33,10 @@ export type BaseState = Virtualization.State & Dimensions.State;
 
 export type VirtualizerParams = {
   scrollbarSize?: number;
-  dimensions: {
-    rowHeight: number;
-    headerHeight: number;
-    groupHeaderHeight: number;
-    headerFilterHeight: number;
-    columnsTotalWidth: number;
-    headersTotalHeight: number;
-    leftPinnedWidth: number;
-    rightPinnedWidth: number;
-  };
+  dimensions: DimensionsParams;
 
   initialState?: {
     scroll?: { top: number; left: number };
-    dimensions?: Partial<Dimensions.State['dimensions']>;
     rowSpanning?: Rowspan.State['rowSpanning'];
     virtualization?: Partial<Virtualization.State['virtualization']>;
   };
