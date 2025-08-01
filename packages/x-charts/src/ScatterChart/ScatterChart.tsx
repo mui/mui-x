@@ -30,7 +30,7 @@ import { useScatterChartProps } from './useScatterChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
-import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { ChartsWrapper } from '../ChartsWrapper';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 

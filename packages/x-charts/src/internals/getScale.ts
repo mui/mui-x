@@ -11,8 +11,8 @@ import { scaleSymlog } from './symlogScale';
 
 export function getScale(
   scaleType: ContinuousScaleName,
-  domain: any[],
-  range: any[],
+  domain: readonly any[],
+  range: readonly any[],
 ): D3ContinuousScale {
   switch (scaleType) {
     case 'log':

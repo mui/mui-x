@@ -270,6 +270,11 @@ jobs:
             else
                 exit 0
             fi
+      - run:
+          name: '`pnpm generate:exports` was run?'
+          command: |
+            pnpm generate:exports
+            git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
     steps:

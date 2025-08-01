@@ -14,9 +14,8 @@ import {
   ChartSeriesConfig,
   XAxis,
   YAxis,
-  ChartsWrapper,
-  ChartsWrapperProps,
 } from '@mui/x-charts/internals';
+import { ChartsWrapper, type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
   ChartsOverlay,

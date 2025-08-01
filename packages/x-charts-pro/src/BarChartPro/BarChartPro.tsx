@@ -10,8 +10,9 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { useBarChartProps } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,

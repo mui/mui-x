@@ -19,7 +19,8 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { useLineChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { useLineChartProps } from '@mui/x-charts/internals';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import {
   ChartsToolbarProSlotProps,
   ChartsToolbarProSlots,
