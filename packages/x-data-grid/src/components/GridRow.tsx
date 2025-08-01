@@ -353,7 +353,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     const canReorderColumn = !(disableColumnReorder || column.disableReorder);
     const canReorderRow = isRowReorderingEnabled && !sortModel.length && treeDepth <= 1;
 
-    const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow) || isRowDragActive);
+    const disableDragEvents = !(
+      canReorderColumn ||
+      (isReorderCell && canReorderRow) ||
+      isRowDragActive
+    );
 
     const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
