@@ -35,11 +35,8 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
-    "build:stable": "node ../../scripts/build.mjs stable --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts --removeCss",
+    "build": "code-infra build && pnpm build:copy-files",
+    "build:copy-files": "code-infra copy-files --glob \"src/**/*.css\" --glob \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -85,5 +82,9 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
   }
 }
