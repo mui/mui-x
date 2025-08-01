@@ -75,7 +75,7 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   } else if (typeof formattedValue !== 'undefined') {
     cellContent = <span>{formattedValue}</span>;
   } else {
-    cellContent = <span>{rowNode.groupingKey}</span>;
+    cellContent = <span>{rowNode.groupingValue}</span>;
   }
 
   return (

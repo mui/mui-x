@@ -61,6 +61,10 @@ export interface GridBasicGroupNode extends GridTreeBasicNode {
    */
   groupingKey: GridKeyValue | null;
   /**
+   * The value of the group field.
+   */
+  groupingValue?: string | null;
+  /**
    * The field used to group the children of this row.
    * Is `null` if no field has been used to group the children of this row.
    */

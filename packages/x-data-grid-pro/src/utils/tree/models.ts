@@ -3,6 +3,7 @@ import { GridKeyValue, GridRowId } from '@mui/x-data-grid';
 export interface RowTreeBuilderGroupingCriterion {
   field: string | null;
   key: GridKeyValue | null;
+  value?: string | null;
 }
 
 export interface RowTreeBuilderNode {

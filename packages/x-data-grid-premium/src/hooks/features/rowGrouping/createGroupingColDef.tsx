@@ -236,7 +236,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
       }
 
       if (rowNode.groupingField === groupingCriteria) {
-        return rowNode.groupingKey;
+        return rowNode.groupingValue;
       }
 
       return undefined;
@@ -365,7 +365,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
         return undefined;
       }
 
-      return rowNode.groupingKey;
+      return rowNode.groupingValue;
     },
   };
 
