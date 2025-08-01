@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function GroupedAxesStyling() {
   return (
-    <BarChart
+    <LineChart
       sx={{
         [`& [data-group-index="1"] .${axisClasses.tick}`]: {
           stroke: 'rgb(255, 180, 34)',
@@ -16,6 +16,7 @@ export default function GroupedAxesStyling() {
       xAxis={[
         {
           data,
+          scaleType: 'point',
           grouping: { getGrouping },
           valueFormatter,
         },

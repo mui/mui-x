@@ -1,4 +1,4 @@
-<BarChart
+<LineChart
   sx={{
     [`& [data-group-index="1"] .${axisClasses.tick}`]: {
       stroke: 'rgb(255, 180, 34)',
@@ -10,6 +10,7 @@
   xAxis={[
     {
       data,
+      scaleType: 'point',
       grouping: { getGrouping },
       valueFormatter,
     },

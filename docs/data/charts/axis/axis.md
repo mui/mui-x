@@ -242,11 +242,12 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 ## Grouped Axes
 
-In order to group axes together, a user can provide a `grouping` property in the axis definition.
+In order to group `band` or `point` axes together, a user can provide a `grouping` property in the axis definition.
 This property expects an object with a `getGrouping` function.
 
 The `getGrouping` function receives the axis data value and should return an array of values.
-Each value is a group name. Groups are displayed in the order they are defined in the `getGrouping` function.
+Each value is a group name and will be used as-is, overriding any `valueFormatter` for the axis.
+Groups are displayed in the order they are defined in the `getGrouping` function.
 
 In the next demo, the x-axis is grouped by month, quarter, and year.
 
