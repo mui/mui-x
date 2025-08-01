@@ -50,21 +50,25 @@ export function useTicksGrouped(
 
   return React.useMemo(() => {
     const domain = scale.domain();
+    const filteredDomain =
+      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
+      (typeof tickInterval === 'object' && tickInterval) ||
+      domain;
 
     if (scale.bandwidth() > 0) {
       // scale type = 'band'
-      const filteredDomain =
-        (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-        (typeof tickInterval === 'object' && tickInterval) ||
-        domain;
-      const entries = mapToGrouping(filteredDomain, getGrouping, scale);
+      const { entries, maxGroupIndex } = mapToGrouping(filteredDomain, getGrouping, scale);
 
-      if (entries.find((v) => v.offset === scale.range()[1])) {
-        // If the last tick is already at the end of the scale, we don't need to add a new one
-        return entries;
-      }
+      entries[0].ignoreTick = true;
 
       return [
+        {
+          formattedValue: undefined,
+          offset: scale.range()[0],
+          labelOffset: 0,
+          groupIndex: maxGroupIndex,
+        },
+
         ...entries,
 
         // Last tick
@@ -72,17 +76,14 @@ export function useTicksGrouped(
           formattedValue: undefined,
           offset: scale.range()[1],
           labelOffset: 0,
+          groupIndex: maxGroupIndex,
         },
       ];
     }
 
     // scale type = 'point'
-    const filteredDomain =
-      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-      (typeof tickInterval === 'object' && tickInterval) ||
-      domain;
-
-    return mapToGrouping(filteredDomain, getGrouping, scale);
+    const { entries } = mapToGrouping(filteredDomain, getGrouping, scale);
+    return entries;
   }, [scale, tickInterval, getGrouping]);
 }
 
@@ -92,7 +93,8 @@ function mapToGrouping(
   scale: D3Scale,
 ) {
   let syncIndex = -1;
-  return tickValues
+  let maxGroupIndex = 0;
+  const entries = tickValues
     .flatMap((value, i) => {
       return getGrouping(value, i).map((groupValue, groupIndex) => ({
         value: groupValue,
@@ -116,6 +118,10 @@ function mapToGrouping(
       ) {
         syncIndex += 1;
       }
+      if (item.groupIndex > maxGroupIndex) {
+        maxGroupIndex = item.groupIndex;
+      }
+
       return {
         ...item,
         syncIndex,
@@ -141,4 +147,9 @@ function mapToGrouping(
       }
       return acc;
     }, [] as GroupedTickItemType[]);
+
+  return {
+    entries,
+    maxGroupIndex,
+  };
 }
