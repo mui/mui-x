@@ -41,7 +41,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
       const updatedEvent: CalendarEvent = {
-        ...selectors.getEventById(store.state, data.id)!,
+        ...selectors.getEventById(store.state, data.eventId)!,
         start: data.start,
         end: data.end,
       };
@@ -155,7 +155,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 {days.map((day) => (
                   <TimeGrid.Column
                     key={day.day.toString()}
-                    value={day}
+                    start={adapter.startOfDay(day)}
+                    end={adapter.endOfDay(day)}
                     className="DayTimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
@@ -189,7 +190,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
   const placeholder = TimeGrid.useColumnPlaceholder();
   const { store } = useEventCalendarContext();
-  const event = useStore(store, selectors.getEventById, placeholder?.id ?? null);
+  const event = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const updatedEvent = React.useMemo(() => {

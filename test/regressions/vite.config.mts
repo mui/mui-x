@@ -26,9 +26,13 @@ export default defineConfig({
       name: 'replace-code',
       enforce: 'post',
       async transform(code) {
-        return code
-          .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
-          .replaceAll('LICENSE_DISABLE_CHECK', 'true');
+        return (
+          code
+            .replaceAll('DISABLE_CHANCE_RANDOM', 'true')
+            .replaceAll('LICENSE_DISABLE_CHECK', 'true')
+            // Always disable animations in tests
+            .replaceAll('disableAnimations ? 1 : 0', '1')
+        );
       },
     },
     {
