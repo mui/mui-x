@@ -206,6 +206,11 @@ export const findRowsToSelect = (
         }
       }
     };
+    // For root level rows, we don't need to traverse parents
+    const rowNode = tree[selectedRow];
+    if (!rowNode || rowNode.parent === GRID_ROOT_GROUP_ID) {
+      return;
+    }
     traverseParents(selectedRow);
   }
 };
