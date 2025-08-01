@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, useTheme, ThemeProvider } from '@mui/material/styles';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import {
   DataGridPremium,
@@ -19,10 +19,6 @@ import {
 } from '@mui/x-charts-premium/ChartsRenderer';
 import { frFR as frFRCharts, frFRLocalText } from '@mui/x-charts-premium/locales';
 
-const theme = createTheme(
-  frFRGrid, // x-data-grid translations
-  frFRCharts, // x-charts translations
-);
 const configurationOptions = getLocalizedConfigurationOptions(frFRLocalText); // localized chart configuration options
 
 const frColumnHeaderNames = {
@@ -39,6 +35,13 @@ export default function GridChartsIntegrationLocalization() {
     editable: true,
   });
   const apiRef = useGridApiRef();
+
+  // Inherit the theme from the docs site (dark/light mode)
+  const existingTheme = useTheme();
+  const theme = React.useMemo(
+    () => createTheme(frFRGrid, frFRCharts, existingTheme),
+    [existingTheme],
+  );
 
   const columns = React.useMemo(
     () =>
