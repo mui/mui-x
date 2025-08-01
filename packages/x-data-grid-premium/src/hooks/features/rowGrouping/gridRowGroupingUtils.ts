@@ -228,14 +228,16 @@ export const getCellGroupingCriteria = ({
   apiRef: RefObject<GridPrivateApiPremium>;
 }) => {
   let key: GridKeyValue | null | undefined;
+  const value = getRowValue(row, colDef, apiRef);
   if (groupingRule.groupingValueGetter) {
     key = groupingRule.groupingValueGetter(row[groupingRule.field] as never, row, colDef, apiRef);
   } else {
-    key = getRowValue(row, colDef, apiRef) as GridKeyValue | null | undefined;
+    key = value;
   }
 
   return {
     key,
+    value,
     field: groupingRule.field,
   };
 };
