@@ -120,18 +120,31 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
           return fx * fx * dx * dx + fy * fy * dy * dy;
         }
 
+        const maxDistSqFn =
+          voronoiMaxRadius === undefined
+            ? () => Infinity
+            : function maxDistSqFn(dx: number, dy: number) {
+                if (dx === 0 && dy === 0) {
+                  return Infinity;
+                }
+
+                const vmrx = voronoiMaxRadius * Math.cos(Math.atan(dy / dx));
+                const vmry = voronoiMaxRadius * Math.sin(Math.atan(dy / dx));
+
+                return vmrx * vmrx + vmry * vmry;
+              };
+
         const pointX =
           xZoomStart +
           ((svgPoint.x - drawingArea.left) / drawingArea.width) * (xZoomEnd - xZoomStart);
         const pointY =
           yZoomStart +
           (1 - (svgPoint.y - drawingArea.top) / drawingArea.height) * (yZoomEnd - yZoomStart);
-        const closestPointIndex = (flatbush as any).neighbors(
+        const closestPointIndex = flatbush.neighbors(
           pointX,
           pointY,
           1,
-          // FIXME: Re-introduce the `voronoiMaxRadius` parameter.
-          Infinity,
+          maxDistSqFn,
           excludeIfOutsideDrawingArea,
           sqDistFn,
         )[0];
