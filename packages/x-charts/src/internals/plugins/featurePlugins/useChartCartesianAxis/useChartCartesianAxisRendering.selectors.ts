@@ -5,7 +5,7 @@ import {
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
 import { createSelector } from '../../utils/selectors';
-import { computeAxisOriginalScale, computeAxisValue } from './computeAxisValue';
+import { computeAxesScales, computeAxisValue } from './computeAxisValue';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
@@ -241,7 +241,7 @@ export const selectorChartXAxesScale = createSelector(
     selectorPreferStrictDomainInLineCharts,
   ],
   (axis, drawingArea, formattedSeries, seriesConfig, preferStrictDomainInLineCharts) =>
-    computeAxisOriginalScale({
+    computeAxesScales({
       drawingArea,
       formattedSeries,
       axis,
@@ -260,7 +260,7 @@ export const selectorChartYAxesScale = createSelector(
     selectorPreferStrictDomainInLineCharts,
   ],
   (axis, drawingArea, formattedSeries, seriesConfig, preferStrictDomainInLineCharts) =>
-    computeAxisOriginalScale({
+    computeAxesScales({
       drawingArea,
       formattedSeries,
       axis,

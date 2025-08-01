@@ -261,7 +261,8 @@ type ComputeOriginalScale<T extends ChartSeriesType = ChartSeriesType> = {
 };
 
 const DEFAULT_RANGE = [0, 1];
-export function computeAxisOriginalScale<T extends ChartSeriesType>({
+export function computeAxesScales<T extends ChartSeriesType>({
+  drawingArea,
   formattedSeries,
   axis: allAxis,
   seriesConfig,
@@ -278,6 +279,7 @@ export function computeAxisOriginalScale<T extends ChartSeriesType>({
   const axesWithScales: Record<AxisId, D3Scale> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const range = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(
       axis,
@@ -323,9 +325,7 @@ export function computeAxisOriginalScale<T extends ChartSeriesType>({
     const rawTickNumber = getTickNumber({
       ...axis,
       domain: axisExtremums,
-      // FIXME: Setting this value to a different value than `calculateDefaultTickNumber` might cause the domain to be different than the one used in the chart.
-      // This needs to be fixed before merging.
-      defaultTickNumber: 5,
+      defaultTickNumber: calculateDefaultTickNumber(range),
     });
 
     const scale = getScale(scaleType, axisExtremums, DEFAULT_RANGE);
