@@ -217,7 +217,7 @@ const profitAggregation: GridAggregationFunction<
   },
 };
 
-function InventoryDashboard() {
+function InventoryDashboard(props: { disableCustomTheme?: boolean }) {
   const apiRef = useGridApiRef();
 
   const onRowClick = React.useCallback<GridEventListener<'rowClick'>>(
@@ -233,8 +233,8 @@ function InventoryDashboard() {
   );
 
   return (
-    <DemoContainer theme={inventoryTheme}>
-      <ThemeProvider theme={inventoryTheme}>
+    <DemoContainer theme={props.disableCustomTheme ? undefined : inventoryTheme}>
+      <ThemeProvider theme={props.disableCustomTheme ? {} : inventoryTheme}>
         <Box
           sx={{
             display: 'flex',
@@ -294,3 +294,9 @@ function InventoryDashboard() {
 }
 
 export default InventoryDashboard;
+
+export const demoMetadata = {
+  title: 'Data Grid - Inventory Dashboard',
+  description: 'An inventory dashboard for vendors showcasing product availability.',
+  label: 'Inventory',
+};

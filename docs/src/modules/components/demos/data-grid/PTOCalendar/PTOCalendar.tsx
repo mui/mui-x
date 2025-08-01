@@ -277,7 +277,7 @@ function getCellType(
   return '';
 }
 
-function PTOCalendar() {
+function PTOCalendar(props: { disableCustomTheme?: boolean }) {
   const calendarState = useCalendarState();
   const { currentDate, activeFilters, density, showPresentToday } = calendarState;
 
@@ -742,16 +742,17 @@ function PTOCalendar() {
   const todayStr = format(new Date(), 'yyyy-MM-dd');
 
   return (
-    <DemoContainer theme={ptoCalendarTheme}>
+    <DemoContainer theme={props.disableCustomTheme ? undefined : ptoCalendarTheme}>
       <CalendarContext.Provider value={calendarState}>
         <Box
           sx={(theme) => ({
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            ...theme.applyStyles('dark', {
-              backgroundColor: '#141A1F',
-            }),
+            ...(!props.disableCustomTheme &&
+              theme.applyStyles('dark', {
+                backgroundColor: '#141A1F',
+              })),
           })}
         >
           <DataGridPremium
@@ -780,3 +781,10 @@ function PTOCalendar() {
 }
 
 export default PTOCalendar;
+
+export const demoMetadata = {
+  title: 'Data Grid - Time off calendar demo',
+  description:
+    'Date range visualization in the Data Grid, using a calendar UI to display and manage time periods.',
+  label: 'Time off calendar',
+};

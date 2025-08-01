@@ -2,16 +2,17 @@ import * as React from 'react';
 import { Theme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
-function DemoContainer({ theme, children }: { theme: Theme; children: React.ReactNode }) {
+function DemoContainer({ theme, children }: { theme?: Theme; children: React.ReactNode }) {
   const docsTheme = useTheme();
   const docsMode = docsTheme?.palette?.mode;
 
   const modifiedTheme = React.useMemo(() => {
-    if (docsMode) {
-      Object.assign(theme, theme.colorSchemes[docsMode]);
+    const targetTheme = theme || docsTheme;
+    if (docsMode && targetTheme.colorSchemes) {
+      Object.assign(targetTheme, targetTheme.colorSchemes[docsMode]);
     }
-    return theme;
-  }, [docsMode, theme]);
+    return targetTheme;
+  }, [docsMode, theme, docsTheme]);
 
   return (
     <ThemeProvider theme={modifiedTheme}>
