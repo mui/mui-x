@@ -8,7 +8,7 @@ title: Charts and Data Grid integration
 
 MUI X Charts seamlessly integrate with the Data Grid for data visualization with dynamic Chart updates based on Grid state changes (whether through the Grid API or user interactions).
 
-This integration is possible via the `<GridChartsIntegrationContextProvider />` and `<GridChartsRendererProxy />` components from the `@mui/x-data-grid-premium` package, and the `<ChartRenderer />` component from the `@mui/x-charts-premium` package.
+This integration is possible via the `<GridChartsIntegrationContextProvider />` and `<GridChartsRendererProxy />` components from the `@mui/x-data-grid-premium` package, and the `<ChartRenderer />` component from the `@mui/x-charts-premium` package.
 
 Check [Data Grid - Charts integration](/x/react-data-grid/charts-integration/) for more information and examples.
 
