@@ -171,7 +171,7 @@
     "string-replace-loader": "^3.2.0",
     "terser-webpack-plugin": "^5.3.14",
     "tsx": "catalog:",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
     "vite": "catalog:",
