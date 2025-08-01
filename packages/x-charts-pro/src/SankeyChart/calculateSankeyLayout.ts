@@ -1,5 +1,10 @@
 'use client';
-import { sankey, sankeyLinkHorizontal, sankeyJustify } from '@mui/x-charts-vendor/d3-sankey';
+import {
+  sankey,
+  sankeyLinkHorizontal,
+  sankeyJustify,
+  type SankeyGraph,
+} from '@mui/x-charts-vendor/d3-sankey';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
   SankeyLayout,
@@ -10,7 +15,6 @@ import {
   type SankeyNode,
   type SankeyValueType,
 } from './sankey.types';
-import { findCycles } from './findCycles';
 
 /**
  * Calculates the layout for a Sankey diagram using d3-sankey
@@ -58,10 +62,6 @@ export function calculateSankeyLayout(
 
   const computedNodes = nodeMap.values().toArray();
 
-  // TODO: Should we check only in prod? We could also throw or provide an "onCycleError" callback
-  // to handle cycles differently.
-  const circularLinks = findCycles(data.links, computedNodes);
-
   // Create the sankey layout generator
   const sankeyGenerator = sankey<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>()
     .nodeWidth(nodeWidth)
@@ -78,11 +78,20 @@ export function calculateSankeyLayout(
   // Prepare the data structure expected by d3-sankey
   const graph = {
     nodes: computedNodes.map((v) => ({ ...v })),
-    links: data.links.filter((link) => !circularLinks.includes(link)).map((v) => ({ ...v })),
+    links: data.links.map((v) => ({ ...v })),
   };
 
   // Generate the layout
-  const result = sankeyGenerator(graph);
+  let result: SankeyGraph<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>;
+  try {
+    result = sankeyGenerator(graph);
+  } catch (_) {
+    // There are two errors that can occur:
+    // 1. If the data contains circular references, d3-sankey will throw an error.
+    // 2. If there are missing source/target nodes, d3-sankey will throw an error.
+    // We handle the second case by building a map of nodes ourselves, so they are always present.
+    throw new Error('MUI X Charts: Sankey diagram contains circular references.');
+  }
   const { nodes, links } = result;
 
   // Link path generator
