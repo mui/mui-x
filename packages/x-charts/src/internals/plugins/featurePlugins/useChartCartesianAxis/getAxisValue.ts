@@ -63,20 +63,20 @@ export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): nu
 export function getAxisValue(
   axisConfig: ComputedAxis,
   pointerValue: number,
-  dataIndex: number,
+  dataIndex: number | null,
 ): number | Date | null {
   const { scale, data: axisData } = axisConfig;
 
   if (!isBandScale(scale)) {
     const value = scale.invert(pointerValue);
 
-    if (dataIndex < 0) {
+    if (dataIndex === null) {
       return value;
     }
     return axisData![dataIndex];
   }
 
-  if (dataIndex < 0 || dataIndex >= axisData!.length) {
+  if (dataIndex === null || dataIndex < 0 || dataIndex >= axisData!.length) {
     return null;
   }
 

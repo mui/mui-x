@@ -4,6 +4,7 @@ import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsAxisHighlight, chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import { useChartCartesianAxis } from './useChartCartesianAxis';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { useChartInteraction, UseChartInteractionSignature } from '../useChartInteraction';
@@ -181,4 +182,29 @@ describe('useChartCartesianAxis - axis highlight', () => {
       ]);
     },
   );
+
+  it.skipIf(isJSDOM)('should allow to highlight axes without data', async () => {
+    const { user } = render(
+      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
+        plugins={[useChartCartesianAxis, useChartInteraction]}
+        xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
+        yAxis={[{ position: 'none', min: 0, max: 100 }]}
+        width={100}
+        height={100}
+        margin={0}
+      >
+        <ChartsSurface>
+          <ChartsAxisHighlight y="line" />
+        </ChartsSurface>
+      </ChartDataProvider>,
+    );
+
+    const svg = document.querySelector<HTMLElement>('svg')!;
+
+    await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
+    await waitFor(() => {
+      const highlight = svg.getElementsByClassName(chartsAxisHighlightClasses.root);
+      expect(highlight.length).to.equal(1);
+    });
+  });
 });
