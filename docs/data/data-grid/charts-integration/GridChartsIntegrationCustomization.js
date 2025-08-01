@@ -5,6 +5,8 @@ import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   GridSidebarValue,
+  useGridApiRef,
+  gridColumnGroupsUnwrappedModelSelector,
 } from '@mui/x-data-grid-premium';
 import {
   ChartsRenderer,
@@ -15,38 +17,25 @@ import {
 import { downloads } from '../../../data/data-grid/charts-integration/dataset';
 
 const columns = [
+  { field: 'id', chartable: false },
   { field: 'timestamp', headerName: 'Timestamp', type: 'date' },
-  { field: 'v4', headerName: 'v4', type: 'number' },
-  { field: 'v5', headerName: 'v5', type: 'number' },
-  { field: 'v6', headerName: 'v6', type: 'number' },
-  { field: 'v7', headerName: 'v7', type: 'number' },
-  { field: 'v8', headerName: 'v8', type: 'number' },
+  { field: 'version', headerName: 'Version', width: 100 },
+  { field: 'downloads', headerName: 'Downloads', type: 'number' },
 ];
 
 const versions = Object.keys(downloads.versionDownloads);
 
-const rows = downloads.timestamps.map((timestamp, index) => {
-  const versionDownloads = versions.reduce(
-    (acc, version) => {
-      const fieldName = `v${version.split('.')[0]}`;
-      acc[fieldName] += downloads.versionDownloads[version][index];
-      return acc;
-    },
-    {
-      v4: 0,
-      v5: 0,
-      v6: 0,
-      v7: 0,
-      v8: 0,
-    },
-  );
-
-  return {
-    id: timestamp,
-    timestamp: new Date(timestamp),
-    ...versionDownloads,
-  };
-});
+const rows = [];
+for (let i = 0; i < downloads.timestamps.length; i += 1) {
+  for (let j = 0; j < versions.length; j += 1) {
+    rows.push({
+      id: `${i}-${j}`,
+      timestamp: new Date(downloads.timestamps[i]),
+      version: versions[j],
+      downloads: downloads.versionDownloads[versions[j]][i],
+    });
+  }
+}
 
 const hideColorsControl = (sections) =>
   sections.map((section) => ({
@@ -83,16 +72,41 @@ const customConfiguration = {
   },
 };
 
+const gridPivotModel = {
+  rows: [{ field: 'timestamp' }],
+  columns: [{ field: 'majorVersion', sort: 'asc' }],
+  values: [{ field: 'downloads', aggFunc: 'sum' }],
+};
+
+const getPivotDerivedColumns = (column) => {
+  if (column.field === 'version') {
+    return [
+      {
+        field: 'majorVersion',
+        headerName: `Major version`,
+        type: 'number',
+        valueGetter: (_, row) => Number(row.version.split('.')[0]),
+        valueFormatter: (value) => `v${value}`,
+      },
+    ];
+  }
+  return undefined;
+};
+
 const initialState = {
   sidebar: {
     open: true,
     value: GridSidebarValue.Charts,
   },
+  pivoting: {
+    enabled: true,
+    model: gridPivotModel,
+  },
   chartsIntegration: {
     charts: {
       main: {
         categories: ['timestamp'],
-        series: ['v4', 'v5', 'v6', 'v7', 'v8'],
+        series: [],
         chartType: 'line',
         configuration: {
           showMark: false,
@@ -101,6 +115,13 @@ const initialState = {
       },
     },
   },
+};
+
+const getColumnName = (field) => {
+  if (!field.endsWith('downloads')) {
+    return undefined;
+  }
+  return `v${field[0]}`;
 };
 
 const onRender = (type, props, Component) => {
@@ -138,11 +159,40 @@ const onRender = (type, props, Component) => {
 };
 
 export default function GridChartsIntegrationCustomization() {
+  const apiRef = useGridApiRef();
+
+  const hasInitializedPivotingSeries = React.useRef(false);
+  React.useEffect(() => {
+    const handleMount = () => {
+      if (hasInitializedPivotingSeries.current) {
+        return;
+      }
+
+      const unwrappedGroupingModel = Object.keys(
+        gridColumnGroupsUnwrappedModelSelector(apiRef),
+      );
+      // wait until pivoting creates column grouping model
+      if (unwrappedGroupingModel.length === 0) {
+        return;
+      }
+
+      hasInitializedPivotingSeries.current = true;
+      // pick up the all major versions
+      apiRef.current?.updateSeries(
+        'main',
+        unwrappedGroupingModel.map((field) => ({ field })),
+      );
+    };
+
+    return apiRef.current?.subscribeEvent('rootMount', handleMount);
+  }, [apiRef]);
+
   return (
     <GridChartsIntegrationContextProvider>
       <div style={{ gap: 32, width: '100%' }}>
         <div style={{ height: 575 }}>
           <DataGridPremium
+            apiRef={apiRef}
             columns={columns}
             rows={rows}
             showToolbar
@@ -153,8 +203,10 @@ export default function GridChartsIntegrationCustomization() {
             slotProps={{
               chartsPanel: {
                 schema: customConfiguration,
+                getColumnName,
               },
             }}
+            getPivotDerivedColumns={getPivotDerivedColumns}
             initialState={initialState}
           />
         </div>
