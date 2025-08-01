@@ -22,15 +22,16 @@ import { useSvgRef } from '../hooks';
 
 const noAxis = () => false;
 
-export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
+export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
+  extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
    * @default 'axis'
    */
-  trigger?: TriggerOptions;
+  trigger?: T;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -411,9 +412,9 @@ ChartsTooltipContainer.propTypes = {
   transition: PropTypes.bool,
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
    * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),
