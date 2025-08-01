@@ -1,0 +1,152 @@
+# Charts
+
+This is the documentation for the Charts package.
+It contains comprehensive guides, components, and utilities for building user interfaces.
+
+- [Quickstart](/x/react-charts/quickstart.md): Install the MUI X Charts package to start building React data visualization components.
+## Components
+
+### Bars
+
+- [Bars overview](/x/react-charts/bars.md): Bar charts express quantities through a bar's length, using a common baseline.
+- [Demos](/x/react-charts/bar-demo.md): This page groups demonstration using bar charts.
+
+
+### Lines
+
+- [Lines overview](/x/react-charts/lines.md): Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.
+- [Lines demo](/x/react-charts/line-demo.md): This page groups demonstration using line charts.
+- [Area demo](/x/react-charts/areas-demo.md): This page groups demonstration using area charts.
+
+
+### Pie
+
+- [Pie overview](/x/react-charts/pie.md): Pie charts express portions of a whole, using arcs or angles within a circle.
+- [Demo](/x/react-charts/pie-demo.md): This page groups demonstration using pie charts.
+
+
+### Scatter
+
+- [Scatter overview](/x/react-charts/scatter.md): Scatter charts express the relation between two variables, using points in a surface.
+- [Demo](/x/react-charts/scatter-demo.md): This page groups demonstration using scatter charts.
+
+
+- [Sparkline](/x/react-charts/sparkline.md): Sparkline chart can provide an overview of data trends.
+- [Gauge](/x/react-charts/gauge.md): Gauge let the user evaluate metrics.
+- [Radar](/x/react-charts/radar.md): Radar allows to compare multivariate data in a 2D chart.
+- [Heatmap](/x/react-charts/heatmap.md): Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions. (pro)
+### Funnel
+
+- [Funnel overview](/x/react-charts/funnel.md): Funnel charts allow to express quantity evolution along a process, such as audience engagement, population education levels or yields of multiple processes.
+
+
+### Main features
+
+- [Animation](/x/react-charts/animation.md): Animate charts for a better look and feel.
+- [Axis](/x/react-charts/axis.md): Axis provides associate values to element positions.
+- [Custom components](/x/react-charts/components.md): Creating custom chart components is made easier by hooks.
+- [Composition](/x/react-charts/composition.md): Creating advanced custom charts.
+- [Label](/x/react-charts/label.md): Label is the text reference of a series or data.
+- [Legend](/x/react-charts/legend.md): Legend is the UI element mapping symbols and colors to the series' label.
+- [Localization](/x/react-charts/localization.md): Localization (also referred to as "l10n") is the process of adapting a product or content to a specific locale or market.
+- [Stacking](/x/react-charts/stacking.md): Stacking allows displaying the decomposition of values.
+- [Styling](/x/react-charts/styling.md): This page groups topics about charts customization.
+- [Tooltip](/x/react-charts/tooltip.md): Tooltip provides extra data on charts item.
+- [Highlighting](/x/react-charts/highlighting.md): Highlighting data offers quick visual feedback for chart users.
+- [Zoom and pan](/x/react-charts/zoom-and-pan.md): Enables zooming and panning on specific charts or axis. (pro)
+- [Export](/x/react-charts/export.md): Export charts as a PDF from the print dialog, or as an image. (pro)
+- [Toolbar](/x/react-charts/toolbar.md): Charts can display a toolbar for easier access to certain functionality.
+
+
+### Resources
+
+- [AnimatedArea](/x/api/charts/animated-area.md): API documentation for AnimatedArea
+- [AnimatedLine](/x/api/charts/animated-line.md): API documentation for AnimatedLine
+- [AreaElement](/x/api/charts/area-element.md): API documentation for AreaElement
+- [AreaPlot](/x/api/charts/area-plot.md): API documentation for AreaPlot
+- [BarChart](/x/api/charts/bar-chart.md): API documentation for BarChart
+- [BarChartPro](/x/api/charts/bar-chart-pro.md): API documentation for BarChartPro (pro)
+- [BarElement](/x/api/charts/bar-element.md): API documentation for BarElement
+- [BarLabel](/x/api/charts/bar-label.md): API documentation for BarLabel
+- [BarPlot](/x/api/charts/bar-plot.md): API documentation for BarPlot
+- [ChartContainer](/x/api/charts/chart-container.md): API documentation for ChartContainer
+- [ChartContainerPro](/x/api/charts/chart-container-pro.md): API documentation for ChartContainerPro (pro)
+- [ChartDataProvider](/x/api/charts/chart-data-provider.md): API documentation for ChartDataProvider
+- [ChartDataProviderPro](/x/api/charts/chart-data-provider-pro.md): API documentation for ChartDataProviderPro (pro)
+- [ChartsAxis](/x/api/charts/charts-axis.md): API documentation for ChartsAxis
+- [ChartsAxisHighlight](/x/api/charts/charts-axis-highlight.md): API documentation for ChartsAxisHighlight
+- [ChartsAxisTooltipContent](/x/api/charts/charts-axis-tooltip-content.md): API documentation for ChartsAxisTooltipContent
+- [ChartsClipPath](/x/api/charts/charts-clip-path.md): API documentation for ChartsClipPath
+- [ChartsGrid](/x/api/charts/charts-grid.md): API documentation for ChartsGrid
+- [ChartsItemTooltipContent](/x/api/charts/charts-item-tooltip-content.md): API documentation for ChartsItemTooltipContent
+- [ChartsLegend](/x/api/charts/charts-legend.md): API documentation for ChartsLegend
+- [ChartsLocalizationProvider](/x/api/charts/charts-localization-provider.md): API documentation for ChartsLocalizationProvider
+- [ChartsReferenceLine](/x/api/charts/charts-reference-line.md): API documentation for ChartsReferenceLine
+- [ChartsSurface](/x/api/charts/charts-surface.md): API documentation for ChartsSurface
+- [ChartsText](/x/api/charts/charts-text.md): API documentation for ChartsText
+- [ChartsToolbarImageExportTrigger](/x/api/charts/charts-toolbar-image-export-trigger.md): API documentation for ChartsToolbarImageExportTrigger (pro)
+- [ChartsToolbarPrintExportTrigger](/x/api/charts/charts-toolbar-print-export-trigger.md): API documentation for ChartsToolbarPrintExportTrigger (pro)
+- [ChartsToolbarPro](/x/api/charts/charts-toolbar-pro.md): API documentation for ChartsToolbarPro (pro)
+- [ChartsToolbarZoomInTrigger](/x/api/charts/charts-toolbar-zoom-in-trigger.md): API documentation for ChartsToolbarZoomInTrigger (pro)
+- [ChartsToolbarZoomOutTrigger](/x/api/charts/charts-toolbar-zoom-out-trigger.md): API documentation for ChartsToolbarZoomOutTrigger (pro)
+- [ChartsTooltip](/x/api/charts/charts-tooltip.md): API documentation for ChartsTooltip
+- [ChartsTooltipContainer](/x/api/charts/charts-tooltip-container.md): API documentation for ChartsTooltipContainer
+- [ChartsXAxis](/x/api/charts/charts-x-axis.md): API documentation for ChartsXAxis
+- [ChartsYAxis](/x/api/charts/charts-y-axis.md): API documentation for ChartsYAxis
+- [ChartZoomSlider](/x/api/charts/chart-zoom-slider.md): API documentation for ChartZoomSlider (pro)
+- [ContinuousColorLegend](/x/api/charts/continuous-color-legend.md): API documentation for ContinuousColorLegend
+- [FunnelChart](/x/api/charts/funnel-chart.md): API documentation for FunnelChart (pro)
+- [FunnelPlot](/x/api/charts/funnel-plot.md): API documentation for FunnelPlot (pro)
+- [Gauge](/x/api/charts/gauge.md): API documentation for Gauge
+- [GaugeContainer](/x/api/charts/gauge-container.md): API documentation for GaugeContainer
+- [Heatmap](/x/api/charts/heatmap.md): API documentation for Heatmap (pro)
+- [HeatmapPlot](/x/api/charts/heatmap-plot.md): API documentation for HeatmapPlot (pro)
+- [HeatmapTooltip](/x/api/charts/heatmap-tooltip.md): API documentation for HeatmapTooltip (pro)
+- [HeatmapTooltipContent](/x/api/charts/heatmap-tooltip-content.md): API documentation for HeatmapTooltipContent (pro)
+- [LineChart](/x/api/charts/line-chart.md): API documentation for LineChart
+- [LineChartPro](/x/api/charts/line-chart-pro.md): API documentation for LineChartPro (pro)
+- [LineElement](/x/api/charts/line-element.md): API documentation for LineElement
+- [LineHighlightElement](/x/api/charts/line-highlight-element.md): API documentation for LineHighlightElement
+- [LineHighlightPlot](/x/api/charts/line-highlight-plot.md): API documentation for LineHighlightPlot
+- [LinePlot](/x/api/charts/line-plot.md): API documentation for LinePlot
+- [MarkElement](/x/api/charts/mark-element.md): API documentation for MarkElement
+- [MarkPlot](/x/api/charts/mark-plot.md): API documentation for MarkPlot
+- [PieArc](/x/api/charts/pie-arc.md): API documentation for PieArc
+- [PieArcLabel](/x/api/charts/pie-arc-label.md): API documentation for PieArcLabel
+- [PieArcLabelPlot](/x/api/charts/pie-arc-label-plot.md): API documentation for PieArcLabelPlot
+- [PieArcPlot](/x/api/charts/pie-arc-plot.md): API documentation for PieArcPlot
+- [PiecewiseColorLegend](/x/api/charts/piecewise-color-legend.md): API documentation for PiecewiseColorLegend
+- [PieChart](/x/api/charts/pie-chart.md): API documentation for PieChart
+- [PieChartPro](/x/api/charts/pie-chart-pro.md): API documentation for PieChartPro (pro)
+- [PiePlot](/x/api/charts/pie-plot.md): API documentation for PiePlot
+- [RadarAxisHighlight](/x/api/charts/radar-axis-highlight.md): API documentation for RadarAxisHighlight
+- [RadarChart](/x/api/charts/radar-chart.md): API documentation for RadarChart
+- [RadarChartPro](/x/api/charts/radar-chart-pro.md): API documentation for RadarChartPro (pro)
+- [RadarGrid](/x/api/charts/radar-grid.md): API documentation for RadarGrid
+- [RadarMetricLabels](/x/api/charts/radar-metric-labels.md): API documentation for RadarMetricLabels
+- [RadarSeriesArea](/x/api/charts/radar-series-area.md): API documentation for RadarSeriesArea
+- [RadarSeriesMarks](/x/api/charts/radar-series-marks.md): API documentation for RadarSeriesMarks
+- [RadarSeriesPlot](/x/api/charts/radar-series-plot.md): API documentation for RadarSeriesPlot
+- [Scatter](/x/api/charts/scatter.md): API documentation for Scatter
+- [ScatterChart](/x/api/charts/scatter-chart.md): API documentation for ScatterChart
+- [ScatterChartPro](/x/api/charts/scatter-chart-pro.md): API documentation for ScatterChartPro (pro)
+- [ScatterPlot](/x/api/charts/scatter-plot.md): API documentation for ScatterPlot
+- [SparkLineChart](/x/api/charts/spark-line-chart.md): API documentation for SparkLineChart
+- [Toolbar](/x/api/charts/toolbar.md): API documentation for Toolbar
+- [ToolbarButton](/x/api/charts/toolbar-button.md): API documentation for ToolbarButton
+- [AxisConfig](/x/api/charts/axis-config.md): API documentation for AxisConfig
+- [BarSeries](/x/api/charts/bar-series.md): API documentation for BarSeries
+- [FunnelSeries](/x/api/charts/funnel-series.md): API documentation for FunnelSeries
+- [HeatmapSeries](/x/api/charts/heatmap-series.md): API documentation for HeatmapSeries
+- [LineSeries](/x/api/charts/line-series.md): API documentation for LineSeries
+- [PieSeries](/x/api/charts/pie-series.md): API documentation for PieSeries
+- [RadarSeries](/x/api/charts/radar-series.md): API documentation for RadarSeries
+- [ScatterSeries](/x/api/charts/scatter-series.md): API documentation for ScatterSeries
+- [ChartImageExportOptions](/x/api/charts/chart-image-export-options.md): API documentation for ChartImageExportOptions
+- [ChartPrintExportOptions](/x/api/charts/chart-print-export-options.md): API documentation for ChartPrintExportOptions
+
+### Future components
+
+- [Treemap](/x/react-charts/treemap.md): Treemap allows to display data with a hierarchical structure. (planned)
+- [Sankey](/x/react-charts/sankey.md): Sankey charts are great for visualizing flows between different elements. (pro) (planned)
+- [Gantt](/x/react-charts/gantt.md): Gantt charts can illustrate a schedule and the relationships between its various activities. (pro) (planned)

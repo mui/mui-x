@@ -1,0 +1,522 @@
+# MUI X Documentation
+
+This documentation covers all MUI X packages including Data Grid, Date Pickers, Charts, Tree View, and other components.
+
+---
+
+## Date and Time Pickers
+
+This is the documentation for the Date and Time Pickers package.
+It contains comprehensive guides, components, and utilities for building user interfaces.
+
+- [Quickstart](/x/react-date-pickers/quickstart.md): Install the MUI X Date and Time Pickers package and set up your date library to start building.
+- [Base concepts](/x/react-date-pickers/base-concepts.md): The Date and Time Pickers expose a lot of components to fit your every need.
+### Components
+
+#### Date components
+
+- [Date Picker](/x/react-date-pickers/date-picker.md): The Date Picker component lets users select a date.
+- [Date Field](/x/react-date-pickers/date-field.md): The Date Field component lets users select a date with the keyboard.
+- [Date Calendar](/x/react-date-pickers/date-calendar.md): The Date Calendar component lets users select a date without any input or popper / modal.
+
+
+#### Time components
+
+- [Time Picker](/x/react-date-pickers/time-picker.md): The Time Picker component lets the user select a time.
+- [Time Field](/x/react-date-pickers/time-field.md): The Time Field component lets the user select a time with the keyboard.
+- [Time Clock](/x/react-date-pickers/time-clock.md): The Time Clock component lets the user select a time without any input or popper / modal.
+- [Digital Clock](/x/react-date-pickers/digital-clock.md): The Digital Clock lets the user select a time without any input or popper / modal.
+
+
+#### Date Time components
+
+- [Date Time Picker](/x/react-date-pickers/date-time-picker.md): The Date Time Picker component lets users select a date and time.
+- [Date Time Field](/x/react-date-pickers/date-time-field.md): The Date Time Field component lets users select a date and a time with the keyboard.
+
+
+#### Date Range components
+
+- [Date Range Picker](/x/react-date-pickers/date-range-picker.md): The Date Range Picker lets the user select a range of dates.
+- [Date Range Field](/x/react-date-pickers/date-range-field.md): The Date Range Field lets the user select a date range with the keyboard.
+- [Date Range Calendar](/x/react-date-pickers/date-range-calendar.md): The Date Range Calendar lets the user select a range of dates without any input or popper / modal.
+
+
+#### Time Range components
+
+- [Time Range Picker](/x/react-date-pickers/time-range-picker.md): The Time Range Picker lets users select a range of time values. 🆕
+- [Time Range Field](/x/react-date-pickers/time-range-field.md): The Time Range Field lets the user select a range of time with the keyboard.
+
+
+#### Date Time Range components
+
+- [Date Time Range Picker](/x/react-date-pickers/date-time-range-picker.md): The Date Time Range Picker lets the user select a range of dates with an explicit starting and ending time.
+- [Date Time Range Field](/x/react-date-pickers/date-time-range-field.md): The Date Time Range Field lets the user select a range of dates with an explicit starting and ending time with the keyboard.
+
+
+- [Field components](/x/react-date-pickers/fields.md): The field components let the user input date and time values with a keyboard and refined keyboard navigation.
+
+
+### Main features
+
+- [Validation](/x/react-date-pickers/validation.md): Add custom validation to user inputs.
+- [Components lifecycle](/x/react-date-pickers/lifecycle.md): This page explains when the onChange, onAccept, and onClose callbacks are called.
+- [Shortcuts](/x/react-date-pickers/shortcuts.md): The date picker lets you add custom shortcuts.
+- [Accessibility](/x/react-date-pickers/accessibility.md): Learn how the Date and Time Pickers implement accessibility features and guidelines, including keyboard navigation that follows international standards.
+
+
+### Localization
+
+- [Translated components](/x/react-date-pickers/localization.md): Date and Time Pickers support translations between languages.
+- [Date format and localization](/x/react-date-pickers/adapters-locale.md): Date and Time Pickers support formats from different locales.
+- [UTC and timezones](/x/react-date-pickers/timezone.md): Date and Time Pickers support UTC and timezones.
+- [Calendar systems](/x/react-date-pickers/calendar-systems.md): Use the Date and Time Pickers with non-Gregorian calendars.
+
+
+### Customization
+
+- [Custom subcomponents](/x/react-date-pickers/custom-components.md): Learn how to override parts of the Date and Time Pickers.
+- [Custom layout](/x/react-date-pickers/custom-layout.md): The Date and Time Pickers let you reorganize the layout.
+- [Custom field](/x/react-date-pickers/custom-field.md): The Date and Time Pickers let you customize the field by passing props or custom components.
+- [Custom opening button](/x/react-date-pickers/custom-opening-button.md): The date picker lets you customize the button to open the views.
+- [Customization playground](/x/react-date-pickers/playground.md): Use this playground to experiment with the props that affect the layout of the Date and Time Picker components.
+
+
+### Resources
+
+- [DateCalendar](/x/api/date-pickers/date-calendar.md): API documentation for DateCalendar
+- [DateField](/x/api/date-pickers/date-field.md): API documentation for DateField
+- [DatePicker](/x/api/date-pickers/date-picker.md): API documentation for DatePicker
+- [DatePickerToolbar](/x/api/date-pickers/date-picker-toolbar.md): API documentation for DatePickerToolbar
+- [DateRangeCalendar](/x/api/date-pickers/date-range-calendar.md): API documentation for DateRangeCalendar (pro)
+- [DateRangePicker](/x/api/date-pickers/date-range-picker.md): API documentation for DateRangePicker (pro)
+- [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day.md): API documentation for DateRangePickerDay (pro)
+- [DateRangePickerDay2](/x/api/date-pickers/date-range-picker-day-2.md): API documentation for DateRangePickerDay2 (pro)
+- [DateRangePickerToolbar](/x/api/date-pickers/date-range-picker-toolbar.md): API documentation for DateRangePickerToolbar (pro)
+- [DateTimeField](/x/api/date-pickers/date-time-field.md): API documentation for DateTimeField
+- [DateTimePicker](/x/api/date-pickers/date-time-picker.md): API documentation for DateTimePicker
+- [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs.md): API documentation for DateTimePickerTabs
+- [DateTimePickerToolbar](/x/api/date-pickers/date-time-picker-toolbar.md): API documentation for DateTimePickerToolbar
+- [DateTimeRangePicker](/x/api/date-pickers/date-time-range-picker.md): API documentation for DateTimeRangePicker (pro)
+- [DateTimeRangePickerTabs](/x/api/date-pickers/date-time-range-picker-tabs.md): API documentation for DateTimeRangePickerTabs (pro)
+- [DateTimeRangePickerToolbar](/x/api/date-pickers/date-time-range-picker-toolbar.md): API documentation for DateTimeRangePickerToolbar (pro)
+- [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton.md): API documentation for DayCalendarSkeleton
+- [DesktopDatePicker](/x/api/date-pickers/desktop-date-picker.md): API documentation for DesktopDatePicker
+- [DesktopDateRangePicker](/x/api/date-pickers/desktop-date-range-picker.md): API documentation for DesktopDateRangePicker (pro)
+- [DesktopDateTimePicker](/x/api/date-pickers/desktop-date-time-picker.md): API documentation for DesktopDateTimePicker
+- [DesktopDateTimeRangePicker](/x/api/date-pickers/desktop-date-time-range-picker.md): API documentation for DesktopDateTimeRangePicker (pro)
+- [DesktopTimePicker](/x/api/date-pickers/desktop-time-picker.md): API documentation for DesktopTimePicker
+- [DesktopTimeRangePicker](/x/api/date-pickers/desktop-time-range-picker.md): API documentation for DesktopTimeRangePicker (pro)
+- [DigitalClock](/x/api/date-pickers/digital-clock.md): API documentation for DigitalClock
+- [LocalizationProvider](/x/api/date-pickers/localization-provider.md): API documentation for LocalizationProvider
+- [MobileDatePicker](/x/api/date-pickers/mobile-date-picker.md): API documentation for MobileDatePicker
+- [MobileDateRangePicker](/x/api/date-pickers/mobile-date-range-picker.md): API documentation for MobileDateRangePicker (pro)
+- [MobileDateTimePicker](/x/api/date-pickers/mobile-date-time-picker.md): API documentation for MobileDateTimePicker
+- [MobileDateTimeRangePicker](/x/api/date-pickers/mobile-date-time-range-picker.md): API documentation for MobileDateTimeRangePicker (pro)
+- [MobileTimePicker](/x/api/date-pickers/mobile-time-picker.md): API documentation for MobileTimePicker
+- [MobileTimeRangePicker](/x/api/date-pickers/mobile-time-range-picker.md): API documentation for MobileTimeRangePicker (pro)
+- [MonthCalendar](/x/api/date-pickers/month-calendar.md): API documentation for MonthCalendar
+- [MultiInputDateRangeField](/x/api/date-pickers/multi-input-date-range-field.md): API documentation for MultiInputDateRangeField (pro)
+- [MultiInputDateTimeRangeField](/x/api/date-pickers/multi-input-date-time-range-field.md): API documentation for MultiInputDateTimeRangeField (pro)
+- [MultiInputTimeRangeField](/x/api/date-pickers/multi-input-time-range-field.md): API documentation for MultiInputTimeRangeField (pro)
+- [MultiSectionDigitalClock](/x/api/date-pickers/multi-section-digital-clock.md): API documentation for MultiSectionDigitalClock
+- [PickerDay2](/x/api/date-pickers/picker-day-2.md): API documentation for PickerDay2
+- [PickersActionBar](/x/api/date-pickers/pickers-action-bar.md): API documentation for PickersActionBar
+- [PickersCalendarHeader](/x/api/date-pickers/pickers-calendar-header.md): API documentation for PickersCalendarHeader
+- [PickersDay](/x/api/date-pickers/pickers-day.md): API documentation for PickersDay
+- [PickersLayout](/x/api/date-pickers/pickers-layout.md): API documentation for PickersLayout
+- [PickersRangeCalendarHeader](/x/api/date-pickers/pickers-range-calendar-header.md): API documentation for PickersRangeCalendarHeader (pro)
+- [PickersSectionList](/x/api/date-pickers/pickers-section-list.md): API documentation for PickersSectionList
+- [PickersShortcuts](/x/api/date-pickers/pickers-shortcuts.md): API documentation for PickersShortcuts
+- [PickersTextField](/x/api/date-pickers/pickers-text-field.md): API documentation for PickersTextField
+- [SingleInputDateRangeField](/x/api/date-pickers/single-input-date-range-field.md): API documentation for SingleInputDateRangeField (pro)
+- [SingleInputDateTimeRangeField](/x/api/date-pickers/single-input-date-time-range-field.md): API documentation for SingleInputDateTimeRangeField (pro)
+- [SingleInputTimeRangeField](/x/api/date-pickers/single-input-time-range-field.md): API documentation for SingleInputTimeRangeField (pro)
+- [StaticDatePicker](/x/api/date-pickers/static-date-picker.md): API documentation for StaticDatePicker
+- [StaticDateRangePicker](/x/api/date-pickers/static-date-range-picker.md): API documentation for StaticDateRangePicker (pro)
+- [StaticDateTimePicker](/x/api/date-pickers/static-date-time-picker.md): API documentation for StaticDateTimePicker
+- [StaticTimePicker](/x/api/date-pickers/static-time-picker.md): API documentation for StaticTimePicker
+- [TimeClock](/x/api/date-pickers/time-clock.md): API documentation for TimeClock
+- [TimeField](/x/api/date-pickers/time-field.md): API documentation for TimeField
+- [TimePicker](/x/api/date-pickers/time-picker.md): API documentation for TimePicker
+- [TimePickerToolbar](/x/api/date-pickers/time-picker-toolbar.md): API documentation for TimePickerToolbar
+- [TimeRangePicker](/x/api/date-pickers/time-range-picker.md): API documentation for TimeRangePicker (pro)
+- [TimeRangePickerTabs](/x/api/date-pickers/time-range-picker-tabs.md): API documentation for TimeRangePickerTabs (pro)
+- [TimeRangePickerToolbar](/x/api/date-pickers/time-range-picker-toolbar.md): API documentation for TimeRangePickerToolbar (pro)
+- [YearCalendar](/x/api/date-pickers/year-calendar.md): API documentation for YearCalendar
+
+---
+
+## Charts
+
+This is the documentation for the Charts package.
+It contains comprehensive guides, components, and utilities for building user interfaces.
+
+- [Quickstart](/x/react-charts/quickstart.md): Install the MUI X Charts package to start building React data visualization components.
+### Components
+
+#### Bars
+
+- [Bars overview](/x/react-charts/bars.md): Bar charts express quantities through a bar's length, using a common baseline.
+- [Demos](/x/react-charts/bar-demo.md): This page groups demonstration using bar charts.
+
+
+#### Lines
+
+- [Lines overview](/x/react-charts/lines.md): Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.
+- [Lines demo](/x/react-charts/line-demo.md): This page groups demonstration using line charts.
+- [Area demo](/x/react-charts/areas-demo.md): This page groups demonstration using area charts.
+
+
+#### Pie
+
+- [Pie overview](/x/react-charts/pie.md): Pie charts express portions of a whole, using arcs or angles within a circle.
+- [Demo](/x/react-charts/pie-demo.md): This page groups demonstration using pie charts.
+
+
+#### Scatter
+
+- [Scatter overview](/x/react-charts/scatter.md): Scatter charts express the relation between two variables, using points in a surface.
+- [Demo](/x/react-charts/scatter-demo.md): This page groups demonstration using scatter charts.
+
+
+- [Sparkline](/x/react-charts/sparkline.md): Sparkline chart can provide an overview of data trends.
+- [Gauge](/x/react-charts/gauge.md): Gauge let the user evaluate metrics.
+- [Radar](/x/react-charts/radar.md): Radar allows to compare multivariate data in a 2D chart.
+- [Heatmap](/x/react-charts/heatmap.md): Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions. (pro)
+#### Funnel
+
+- [Funnel overview](/x/react-charts/funnel.md): Funnel charts allow to express quantity evolution along a process, such as audience engagement, population education levels or yields of multiple processes.
+
+
+#### Main features
+
+- [Animation](/x/react-charts/animation.md): Animate charts for a better look and feel.
+- [Axis](/x/react-charts/axis.md): Axis provides associate values to element positions.
+- [Custom components](/x/react-charts/components.md): Creating custom chart components is made easier by hooks.
+- [Composition](/x/react-charts/composition.md): Creating advanced custom charts.
+- [Label](/x/react-charts/label.md): Label is the text reference of a series or data.
+- [Legend](/x/react-charts/legend.md): Legend is the UI element mapping symbols and colors to the series' label.
+- [Localization](/x/react-charts/localization.md): Localization (also referred to as "l10n") is the process of adapting a product or content to a specific locale or market.
+- [Stacking](/x/react-charts/stacking.md): Stacking allows displaying the decomposition of values.
+- [Styling](/x/react-charts/styling.md): This page groups topics about charts customization.
+- [Tooltip](/x/react-charts/tooltip.md): Tooltip provides extra data on charts item.
+- [Highlighting](/x/react-charts/highlighting.md): Highlighting data offers quick visual feedback for chart users.
+- [Zoom and pan](/x/react-charts/zoom-and-pan.md): Enables zooming and panning on specific charts or axis. (pro)
+- [Export](/x/react-charts/export.md): Export charts as a PDF from the print dialog, or as an image. (pro)
+- [Toolbar](/x/react-charts/toolbar.md): Charts can display a toolbar for easier access to certain functionality.
+
+
+#### Resources
+
+- [AnimatedArea](/x/api/charts/animated-area.md): API documentation for AnimatedArea
+- [AnimatedLine](/x/api/charts/animated-line.md): API documentation for AnimatedLine
+- [AreaElement](/x/api/charts/area-element.md): API documentation for AreaElement
+- [AreaPlot](/x/api/charts/area-plot.md): API documentation for AreaPlot
+- [BarChart](/x/api/charts/bar-chart.md): API documentation for BarChart
+- [BarChartPro](/x/api/charts/bar-chart-pro.md): API documentation for BarChartPro (pro)
+- [BarElement](/x/api/charts/bar-element.md): API documentation for BarElement
+- [BarLabel](/x/api/charts/bar-label.md): API documentation for BarLabel
+- [BarPlot](/x/api/charts/bar-plot.md): API documentation for BarPlot
+- [ChartContainer](/x/api/charts/chart-container.md): API documentation for ChartContainer
+- [ChartContainerPro](/x/api/charts/chart-container-pro.md): API documentation for ChartContainerPro (pro)
+- [ChartDataProvider](/x/api/charts/chart-data-provider.md): API documentation for ChartDataProvider
+- [ChartDataProviderPro](/x/api/charts/chart-data-provider-pro.md): API documentation for ChartDataProviderPro (pro)
+- [ChartsAxis](/x/api/charts/charts-axis.md): API documentation for ChartsAxis
+- [ChartsAxisHighlight](/x/api/charts/charts-axis-highlight.md): API documentation for ChartsAxisHighlight
+- [ChartsAxisTooltipContent](/x/api/charts/charts-axis-tooltip-content.md): API documentation for ChartsAxisTooltipContent
+- [ChartsClipPath](/x/api/charts/charts-clip-path.md): API documentation for ChartsClipPath
+- [ChartsGrid](/x/api/charts/charts-grid.md): API documentation for ChartsGrid
+- [ChartsItemTooltipContent](/x/api/charts/charts-item-tooltip-content.md): API documentation for ChartsItemTooltipContent
+- [ChartsLegend](/x/api/charts/charts-legend.md): API documentation for ChartsLegend
+- [ChartsLocalizationProvider](/x/api/charts/charts-localization-provider.md): API documentation for ChartsLocalizationProvider
+- [ChartsReferenceLine](/x/api/charts/charts-reference-line.md): API documentation for ChartsReferenceLine
+- [ChartsSurface](/x/api/charts/charts-surface.md): API documentation for ChartsSurface
+- [ChartsText](/x/api/charts/charts-text.md): API documentation for ChartsText
+- [ChartsToolbarImageExportTrigger](/x/api/charts/charts-toolbar-image-export-trigger.md): API documentation for ChartsToolbarImageExportTrigger (pro)
+- [ChartsToolbarPrintExportTrigger](/x/api/charts/charts-toolbar-print-export-trigger.md): API documentation for ChartsToolbarPrintExportTrigger (pro)
+- [ChartsToolbarPro](/x/api/charts/charts-toolbar-pro.md): API documentation for ChartsToolbarPro (pro)
+- [ChartsToolbarZoomInTrigger](/x/api/charts/charts-toolbar-zoom-in-trigger.md): API documentation for ChartsToolbarZoomInTrigger (pro)
+- [ChartsToolbarZoomOutTrigger](/x/api/charts/charts-toolbar-zoom-out-trigger.md): API documentation for ChartsToolbarZoomOutTrigger (pro)
+- [ChartsTooltip](/x/api/charts/charts-tooltip.md): API documentation for ChartsTooltip
+- [ChartsTooltipContainer](/x/api/charts/charts-tooltip-container.md): API documentation for ChartsTooltipContainer
+- [ChartsXAxis](/x/api/charts/charts-x-axis.md): API documentation for ChartsXAxis
+- [ChartsYAxis](/x/api/charts/charts-y-axis.md): API documentation for ChartsYAxis
+- [ChartZoomSlider](/x/api/charts/chart-zoom-slider.md): API documentation for ChartZoomSlider (pro)
+- [ContinuousColorLegend](/x/api/charts/continuous-color-legend.md): API documentation for ContinuousColorLegend
+- [FunnelChart](/x/api/charts/funnel-chart.md): API documentation for FunnelChart (pro)
+- [FunnelPlot](/x/api/charts/funnel-plot.md): API documentation for FunnelPlot (pro)
+- [Gauge](/x/api/charts/gauge.md): API documentation for Gauge
+- [GaugeContainer](/x/api/charts/gauge-container.md): API documentation for GaugeContainer
+- [Heatmap](/x/api/charts/heatmap.md): API documentation for Heatmap (pro)
+- [HeatmapPlot](/x/api/charts/heatmap-plot.md): API documentation for HeatmapPlot (pro)
+- [HeatmapTooltip](/x/api/charts/heatmap-tooltip.md): API documentation for HeatmapTooltip (pro)
+- [HeatmapTooltipContent](/x/api/charts/heatmap-tooltip-content.md): API documentation for HeatmapTooltipContent (pro)
+- [LineChart](/x/api/charts/line-chart.md): API documentation for LineChart
+- [LineChartPro](/x/api/charts/line-chart-pro.md): API documentation for LineChartPro (pro)
+- [LineElement](/x/api/charts/line-element.md): API documentation for LineElement
+- [LineHighlightElement](/x/api/charts/line-highlight-element.md): API documentation for LineHighlightElement
+- [LineHighlightPlot](/x/api/charts/line-highlight-plot.md): API documentation for LineHighlightPlot
+- [LinePlot](/x/api/charts/line-plot.md): API documentation for LinePlot
+- [MarkElement](/x/api/charts/mark-element.md): API documentation for MarkElement
+- [MarkPlot](/x/api/charts/mark-plot.md): API documentation for MarkPlot
+- [PieArc](/x/api/charts/pie-arc.md): API documentation for PieArc
+- [PieArcLabel](/x/api/charts/pie-arc-label.md): API documentation for PieArcLabel
+- [PieArcLabelPlot](/x/api/charts/pie-arc-label-plot.md): API documentation for PieArcLabelPlot
+- [PieArcPlot](/x/api/charts/pie-arc-plot.md): API documentation for PieArcPlot
+- [PiecewiseColorLegend](/x/api/charts/piecewise-color-legend.md): API documentation for PiecewiseColorLegend
+- [PieChart](/x/api/charts/pie-chart.md): API documentation for PieChart
+- [PieChartPro](/x/api/charts/pie-chart-pro.md): API documentation for PieChartPro (pro)
+- [PiePlot](/x/api/charts/pie-plot.md): API documentation for PiePlot
+- [RadarAxisHighlight](/x/api/charts/radar-axis-highlight.md): API documentation for RadarAxisHighlight
+- [RadarChart](/x/api/charts/radar-chart.md): API documentation for RadarChart
+- [RadarChartPro](/x/api/charts/radar-chart-pro.md): API documentation for RadarChartPro (pro)
+- [RadarGrid](/x/api/charts/radar-grid.md): API documentation for RadarGrid
+- [RadarMetricLabels](/x/api/charts/radar-metric-labels.md): API documentation for RadarMetricLabels
+- [RadarSeriesArea](/x/api/charts/radar-series-area.md): API documentation for RadarSeriesArea
+- [RadarSeriesMarks](/x/api/charts/radar-series-marks.md): API documentation for RadarSeriesMarks
+- [RadarSeriesPlot](/x/api/charts/radar-series-plot.md): API documentation for RadarSeriesPlot
+- [Scatter](/x/api/charts/scatter.md): API documentation for Scatter
+- [ScatterChart](/x/api/charts/scatter-chart.md): API documentation for ScatterChart
+- [ScatterChartPro](/x/api/charts/scatter-chart-pro.md): API documentation for ScatterChartPro (pro)
+- [ScatterPlot](/x/api/charts/scatter-plot.md): API documentation for ScatterPlot
+- [SparkLineChart](/x/api/charts/spark-line-chart.md): API documentation for SparkLineChart
+- [Toolbar](/x/api/charts/toolbar.md): API documentation for Toolbar
+- [ToolbarButton](/x/api/charts/toolbar-button.md): API documentation for ToolbarButton
+- [AxisConfig](/x/api/charts/axis-config.md): API documentation for AxisConfig
+- [BarSeries](/x/api/charts/bar-series.md): API documentation for BarSeries
+- [FunnelSeries](/x/api/charts/funnel-series.md): API documentation for FunnelSeries
+- [HeatmapSeries](/x/api/charts/heatmap-series.md): API documentation for HeatmapSeries
+- [LineSeries](/x/api/charts/line-series.md): API documentation for LineSeries
+- [PieSeries](/x/api/charts/pie-series.md): API documentation for PieSeries
+- [RadarSeries](/x/api/charts/radar-series.md): API documentation for RadarSeries
+- [ScatterSeries](/x/api/charts/scatter-series.md): API documentation for ScatterSeries
+- [ChartImageExportOptions](/x/api/charts/chart-image-export-options.md): API documentation for ChartImageExportOptions
+- [ChartPrintExportOptions](/x/api/charts/chart-print-export-options.md): API documentation for ChartPrintExportOptions
+
+#### Future components
+
+- [Treemap](/x/react-charts/treemap.md): Treemap allows to display data with a hierarchical structure. (planned)
+- [Sankey](/x/react-charts/sankey.md): Sankey charts are great for visualizing flows between different elements. (pro) (planned)
+- [Gantt](/x/react-charts/gantt.md): Gantt charts can illustrate a schedule and the relationships between its various activities. (pro) (planned)
+
+---
+
+## Tree View
+
+This is the documentation for the Tree View package.
+It contains comprehensive guides, components, and utilities for building user interfaces.
+
+- [Quickstart](/x/react-tree-view/quickstart.md): Install the MUI X Tree View package and start building.
+### Simple Tree View
+
+- [Items](/x/react-tree-view/simple-tree-view/items.md): Learn how to add simple data to the Tree View component.
+- [Selection](/x/react-tree-view/simple-tree-view/selection.md): Learn how to enable item selection for the Tree View component.
+- [Expansion](/x/react-tree-view/simple-tree-view/expansion.md): Learn how to handle expanding and collapsing Tree View items.
+- [Customization](/x/react-tree-view/simple-tree-view/customization.md): Learn how to customize the Simple Tree View component.
+- [Focus](/x/react-tree-view/simple-tree-view/focus.md): Learn how to focus Tree View items.
+
+
+### Rich Tree View
+
+- [Items](/x/react-tree-view/rich-tree-view/items.md): Pass data to your Tree View.
+- [Selection](/x/react-tree-view/rich-tree-view/selection.md): Handle how users can select items.
+- [Expansion](/x/react-tree-view/rich-tree-view/expansion.md): Handle how users can expand items.
+- [Customization](/x/react-tree-view/rich-tree-view/customization.md): Learn how to customize the Rich Tree View component.
+- [Focus](/x/react-tree-view/rich-tree-view/focus.md): Learn how to focus Tree View items.
+- [Label editing](/x/react-tree-view/rich-tree-view/editing.md): Learn how to edit the label of Tree View items. 🆕
+- [Lazy loading](/x/react-tree-view/rich-tree-view/lazy-loading.md): Lazy load the data from your Tree View. (pro) 🆕
+- [Ordering](/x/react-tree-view/rich-tree-view/ordering.md): Drag and drop your items to reorder them. (pro) 🆕
+
+
+### Main features
+
+- [Accessibility](/x/react-tree-view/accessibility.md): Learn how the Tree View implements accessibility features and guidelines, including keyboard navigation that follows international standards.
+- [Item customization](/x/react-tree-view/tree-item-customization.md): Learn how to customize the Tree Item component.
+
+
+### Resources
+
+- [RichTreeView](/x/api/tree-view/rich-tree-view.md): API documentation for RichTreeView
+- [RichTreeViewPro](/x/api/tree-view/rich-tree-view-pro.md): API documentation for RichTreeViewPro (pro)
+- [SimpleTreeView](/x/api/tree-view/simple-tree-view.md): API documentation for SimpleTreeView
+- [TreeItem](/x/api/tree-view/tree-item.md): API documentation for TreeItem
+- [TreeItemDragAndDropOverlay](/x/api/tree-view/tree-item-drag-and-drop-overlay.md): API documentation for TreeItemDragAndDropOverlay
+- [TreeItemIcon](/x/api/tree-view/tree-item-icon.md): API documentation for TreeItemIcon
+- [TreeItemProvider](/x/api/tree-view/tree-item-provider.md): API documentation for TreeItemProvider
+
+---
+
+## Data Grid
+
+This is the documentation for the Data Grid package.
+It contains comprehensive guides, components, and utilities for building user interfaces.
+
+- [Quickstart](/x/react-data-grid/quickstart.md): Install the MUI X Data Grid package and start building your React data table.
+- [Features](/x/react-data-grid/features.md): Explore all of the available features in each of the Data Grid packages.
+### Main features
+
+- [Layout](/x/react-data-grid/layout.md): The Data Grid offers multiple layout modes.
+#### Columns
+
+- [Column definition](/x/react-data-grid/column-definition.md): Define your columns.
+- [Column dimensions](/x/react-data-grid/column-dimensions.md): Customize the dimensions and resizing behavior of your columns.
+- [Column visibility](/x/react-data-grid/column-visibility.md): Define which columns are visible.
+- [Custom columns](/x/react-data-grid/custom-columns.md): Create custom column types.
+- [Column header](/x/react-data-grid/column-header.md): Customize your columns header.
+- [Column menu](/x/react-data-grid/column-menu.md): Customize your columns menu.
+- [Column spanning](/x/react-data-grid/column-spanning.md): Span cells across several columns.
+- [Column groups](/x/react-data-grid/column-groups.md): Group your columns.
+- [Column reordering](/x/react-data-grid/column-ordering.md): The Data Grid Pro lets users drag and drop columns to reorder them. (pro)
+- [Column pinning](/x/react-data-grid/column-pinning.md): Implement pinning to keep columns in the Data Grid visible at all times. (pro)
+- [Recipes](/x/react-data-grid/column-recipes.md): Advanced column customization recipes.
+
+
+#### Rows
+
+- [Row definition](/x/react-data-grid/row-definition.md): Define your rows.
+- [Row updates](/x/react-data-grid/row-updates.md): Always keep your rows up to date.
+- [Row height](/x/react-data-grid/row-height.md): Customize the height of your rows.
+- [Row spanning](/x/react-data-grid/row-spanning.md): Span cells across several rows. 🆕
+- [Master-detail row panels](/x/react-data-grid/master-detail.md): Implement master-detail row panels to let users view extended information without leaving the Data Grid. (pro)
+- [Row reordering](/x/react-data-grid/row-ordering.md): The Data Grid Pro lets users drag and drop rows to reorder them. (pro)
+- [Row pinning](/x/react-data-grid/row-pinning.md): Implement pinning to keep rows in the Data Grid visible at all times. (pro)
+- [Recipes](/x/react-data-grid/row-recipes.md): Advanced row customization recipes.
+
+
+- [Cells](/x/react-data-grid/cells.md): Learn how to customize the rendered elements and values of a cell.
+#### Editing
+
+- [Overview](/x/react-data-grid/editing.md): The Data Grid has built-in support for cell and row editing.
+- [Persistence](/x/react-data-grid/editing/persistence.md): Persisting edited rows.
+- [Custom edit component](/x/react-data-grid/editing/custom-edit-component.md): Creating custom edit component.
+- [Editing events](/x/react-data-grid/editing/editing-events.md): Using editing events.
+- [Recipes editing](/x/react-data-grid/recipes-editing.md): Advanced grid customization recipes.
+
+
+- [Sorting](/x/react-data-grid/sorting.md): Easily sort your rows based on one or several criteria.
+#### Filtering
+
+- [Overview](/x/react-data-grid/filtering.md): Easily filter your rows based on one or several criteria.
+- [Customization](/x/react-data-grid/filtering/customization.md): Ways to customize your filters.
+- [Quick filter](/x/react-data-grid/filtering/quick-filter.md): One filter field to quickly filter grid.
+- [Server-side filtering](/x/react-data-grid/filtering/server-side.md): Filter rows on the server.
+- [Multi-filters](/x/react-data-grid/filtering/multi-filters.md): Let end users apply multiple filters to the Data Grid simultaneously. (pro)
+- [Header filters](/x/react-data-grid/filtering/header-filters.md): Give users quick-access column filters in the Data Grid header. (pro)
+- [Recipes](/x/react-data-grid/filtering-recipes.md): Advanced filtering customization recipes.
+
+
+- [Pagination](/x/react-data-grid/pagination.md): Easily paginate your rows and only fetch what you need.
+#### Selection
+
+- [Row selection](/x/react-data-grid/row-selection.md): Row selection allows the user to select and highlight a single or multiple rows that they can then take action on.
+- [Cell selection](/x/react-data-grid/cell-selection.md): Let users select individual cells or a range of cells. (premium)
+
+
+- [Virtualization](/x/react-data-grid/virtualization.md): The grid is high performing thanks to its rows and columns virtualization engine.
+- [Accessibility](/x/react-data-grid/accessibility.md): Learn how the Data Grid implements accessibility features and guidelines, including keyboard navigation that follows international standards.
+- [Localization](/x/react-data-grid/localization.md): The Data Grid's localization features provide the appropriate translations and formatting for users around the world.
+
+
+### Advanced features
+
+- [Tree data](/x/react-data-grid/tree-data.md): Use tree data to render rows with parent-child relationships in the Data Grid. (pro)
+#### Row grouping
+
+- [Overview](/x/react-data-grid/row-grouping.md): Group rows together based on column values in the Data Grid.
+- [Recipes](/x/react-data-grid/recipes-row-grouping.md): Advanced grid customization recipes.
+
+
+- [Aggregation](/x/react-data-grid/aggregation.md): Add aggregation functions to the Data Grid to let users combine row values. (premium)
+#### Pivoting
+
+- [Overview](/x/react-data-grid/pivoting.md): Rearrange rows and columns to view data from multiple perspectives.
+
+
+- [Export](/x/react-data-grid/export.md): Export the rows in CSV or Excel formats, or use the browser's print dialog to print or save as PDF.
+- [Copy and paste](/x/react-data-grid/clipboard.md): Copy and paste data using clipboard.
+- [Scrolling](/x/react-data-grid/scrolling.md): This section presents how to programmatically control the scroll.
+- [List view](/x/react-data-grid/list-view.md): Display data in a single-column list view for a more compact Data Grid on smaller screens and mobile devices. (pro)
+#### Server-side data
+
+- [Overview](/x/react-data-grid/server-side-data.md): Learn how to work with server-side data in the Data Grid using the Data Source layer.
+- [Tree data](/x/react-data-grid/server-side-data/tree-data.md): Implement lazy-loading server-side tree data in the Data Grid using the Data Source layer. (pro)
+- [Lazy loading](/x/react-data-grid/server-side-data/lazy-loading.md): Implement lazy-loading rows with server-side data in the Data Grid using the Data Source layer. (pro)
+- [Row grouping](/x/react-data-grid/server-side-data/row-grouping.md): Implement row grouping with server-side data in the Data Grid using the Data Source layer. (premium)
+- [Aggregation](/x/react-data-grid/server-side-data/aggregation.md): Implement aggregation with server-side data in the Data Grid using the Data Source layer. (premium)
+- [Recipes](/x/react-data-grid/server-side-data/recipes.md): Recipes for advanced data source use-cases.
+
+
+- [AI Assistant](/x/react-data-grid/ai-assistant.md): Translate natural language into Data Grid views. (premium) 🆕
+
+
+### Components
+
+- [Toolbar](/x/react-data-grid/components/toolbar.md): Add custom actions and controls to the Data Grid.
+- [Export](/x/react-data-grid/components/export.md): Let users export the Data Grid for Excel, CSV, or printing.
+- [Quick Filter](/x/react-data-grid/components/quick-filter.md): Provide users with an expandable search field to filter data in the Data Grid.
+- [Columns Panel](/x/react-data-grid/components/columns-panel.md): Customize the Data Grid's columns panel. (planned)
+- [Filter Panel](/x/react-data-grid/components/filter-panel.md): Customize the Data Grid's filter panel. (planned)
+- [Prompt Field](/x/react-data-grid/components/prompt-field.md): Provide users with a prompt field to interact with the AI assistant. (premium)
+- [Pivot Panel](/x/react-data-grid/components/pivot-panel.md): Customize the Data Grid's pivot panel. (premium) (planned)
+- [AI Assistant Panel](/x/react-data-grid/components/ai-assistant-panel.md): Customize the Data Grid's AI assistant panel. (premium) (planned)
+
+
+### Customization
+
+- [Styling basics](/x/react-data-grid/style.md): The grid CSS can be easily overwritten.
+- [Styling recipes](/x/react-data-grid/style-recipes.md): Advanced grid styling recipes.
+- [Overlays](/x/react-data-grid/overlays.md): The various Data Grid overlays.
+
+
+### Resources
+
+- [API object](/x/react-data-grid/api-object.md): Interact with the Data Grid using its API.
+- [Data Grid - Events](/x/react-data-grid/events.md): Subscribe to the events emitted by the Data Grid to trigger custom behavior.
+- [Data Grid - State](/x/react-data-grid/state.md): Initialize and read the state of the Data Grid.
+- [Data Grid - Performance](/x/react-data-grid/performance.md): Follow these recommendations to improve your Data Grid's performance.
+
+### API reference
+
+- [Index](/x/api/data-grid.md): API documentation for Index
+- [AiAssistantPanelTrigger](/x/api/data-grid/ai-assistant-panel-trigger.md): API documentation for AiAssistantPanelTrigger (premium)
+- [ColumnsPanelTrigger](/x/api/data-grid/columns-panel-trigger.md): API documentation for ColumnsPanelTrigger
+- [DataGrid](/x/api/data-grid/data-grid.md): API documentation for DataGrid
+- [DataGridPremium](/x/api/data-grid/data-grid-premium.md): API documentation for DataGridPremium (premium)
+- [DataGridPro](/x/api/data-grid/data-grid-pro.md): API documentation for DataGridPro (pro)
+- [ExportCsv](/x/api/data-grid/export-csv.md): API documentation for ExportCsv
+- [ExportExcel](/x/api/data-grid/export-excel.md): API documentation for ExportExcel (premium)
+- [ExportPrint](/x/api/data-grid/export-print.md): API documentation for ExportPrint
+- [FilterPanelTrigger](/x/api/data-grid/filter-panel-trigger.md): API documentation for FilterPanelTrigger
+- [GridFilterForm](/x/api/data-grid/grid-filter-form.md): API documentation for GridFilterForm
+- [GridFilterPanel](/x/api/data-grid/grid-filter-panel.md): API documentation for GridFilterPanel
+- [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter.md): API documentation for GridToolbarQuickFilter
+- [PivotPanelTrigger](/x/api/data-grid/pivot-panel-trigger.md): API documentation for PivotPanelTrigger (premium)
+- [PromptField](/x/api/data-grid/prompt-field.md): API documentation for PromptField (premium)
+- [PromptFieldControl](/x/api/data-grid/prompt-field-control.md): API documentation for PromptFieldControl (premium)
+- [PromptFieldRecord](/x/api/data-grid/prompt-field-record.md): API documentation for PromptFieldRecord (premium)
+- [PromptFieldSend](/x/api/data-grid/prompt-field-send.md): API documentation for PromptFieldSend (premium)
+- [QuickFilter](/x/api/data-grid/quick-filter.md): API documentation for QuickFilter
+- [QuickFilterClear](/x/api/data-grid/quick-filter-clear.md): API documentation for QuickFilterClear
+- [QuickFilterControl](/x/api/data-grid/quick-filter-control.md): API documentation for QuickFilterControl
+- [QuickFilterTrigger](/x/api/data-grid/quick-filter-trigger.md): API documentation for QuickFilterTrigger
+- [Toolbar](/x/api/data-grid/toolbar.md): API documentation for Toolbar
+- [ToolbarButton](/x/api/data-grid/toolbar-button.md): API documentation for ToolbarButton
+- [GridApi](/x/api/data-grid/grid-api.md): API documentation for GridApi
+- [GridCellParams](/x/api/data-grid/grid-cell-params.md): API documentation for GridCellParams
+- [GridColDef](/x/api/data-grid/grid-col-def.md): API documentation for GridColDef
+- [GridSingleSelectColDef](/x/api/data-grid/grid-single-select-col-def.md): API documentation for GridSingleSelectColDef
+- [GridActionsColDef](/x/api/data-grid/grid-actions-col-def.md): API documentation for GridActionsColDef
+- [GridListViewColDef](/x/api/data-grid/grid-list-view-col-def.md): API documentation for GridListViewColDef
+- [GridExportStateParams](/x/api/data-grid/grid-export-state-params.md): API documentation for GridExportStateParams
+- [GridFilterItem](/x/api/data-grid/grid-filter-item.md): API documentation for GridFilterItem
+- [GridFilterModel](/x/api/data-grid/grid-filter-model.md): API documentation for GridFilterModel
+- [GridFilterOperator](/x/api/data-grid/grid-filter-operator.md): API documentation for GridFilterOperator
+- [GridRenderContext](/x/api/data-grid/grid-render-context.md): API documentation for GridRenderContext
+- [GridRowClassNameParams](/x/api/data-grid/grid-row-class-name-params.md): API documentation for GridRowClassNameParams
+- [GridRowParams](/x/api/data-grid/grid-row-params.md): API documentation for GridRowParams
+- [GridRowSpacingParams](/x/api/data-grid/grid-row-spacing-params.md): API documentation for GridRowSpacingParams
+- [GridAggregationFunction](/x/api/data-grid/grid-aggregation-function.md): API documentation for GridAggregationFunction
+- [GridAggregationFunctionDataSource](/x/api/data-grid/grid-aggregation-function-data-source.md): API documentation for GridAggregationFunctionDataSource
+- [GridCsvExportOptions](/x/api/data-grid/grid-csv-export-options.md): API documentation for GridCsvExportOptions
+- [GridPrintExportOptions](/x/api/data-grid/grid-print-export-options.md): API documentation for GridPrintExportOptions
+- [GridExcelExportOptions](/x/api/data-grid/grid-excel-export-options.md): API documentation for GridExcelExportOptions
