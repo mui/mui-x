@@ -3,24 +3,9 @@ import type {
   GridChartsConfigurationOptions,
   GridChartsConfigurationSection,
 } from '@mui/x-internals/types';
-import {
-  bluePalette,
-  cheerfulFiestaPalette,
-  cyanPalette,
-  greenPalette,
-  mangoFusionPalette,
-  orangePalette,
-  pinkPalette,
-  purplePalette,
-  rainbowSurgePalette,
-  redPalette,
-  strawberrySkyPalette,
-  yellowPalette,
-  blueberryTwilightPalette,
-} from '@mui/x-charts/colorPalettes';
 import { DEFAULT_LOCALE, ChartsLocaleText } from '@mui/x-charts/locales';
 import { PaletteOption } from './components/PaletteOption';
-
+import { colorPaletteLookup } from './colors';
 import {
   GridBarChartIcon,
   GridColumnChartIcon,
@@ -29,98 +14,30 @@ import {
   GridAreaChartIcon,
 } from './icons';
 
+const getColors = (localeText: ChartsLocaleText) => [
+  { key: 'rainbowSurgePalette', name: localeText.chartPaletteNameRainbowSurge },
+  { key: 'blueberryTwilightPalette', name: localeText.chartPaletteNameBlueberryTwilight },
+  { key: 'mangoFusionPalette', name: localeText.chartPaletteNameMangoFusion },
+  { key: 'cheerfulFiestaPalette', name: localeText.chartPaletteNameCheerfulFiesta },
+  { key: 'strawberrySkyPalette', name: localeText.chartPaletteNameStrawberrySky },
+  { key: 'bluePalette', name: localeText.chartPaletteNameBlue },
+  { key: 'greenPalette', name: localeText.chartPaletteNameGreen },
+  { key: 'purplePalette', name: localeText.chartPaletteNamePurple },
+  { key: 'redPalette', name: localeText.chartPaletteNameRed },
+  { key: 'orangePalette', name: localeText.chartPaletteNameOrange },
+  { key: 'yellowPalette', name: localeText.chartPaletteNameYellow },
+  { key: 'cyanPalette', name: localeText.chartPaletteNameCyan },
+  { key: 'pinkPalette', name: localeText.chartPaletteNamePink },
+];
+
 const getColorOptions = (localeText: ChartsLocaleText) => ({
   label: localeText.chartPaletteLabel,
   type: 'select' as const,
   default: 'rainbowSurgePalette',
-  options: [
-    {
-      content: (
-        <PaletteOption palette={rainbowSurgePalette}>
-          {localeText.chartPaletteNameRainbowSurge}
-        </PaletteOption>
-      ),
-      value: 'rainbowSurgePalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={blueberryTwilightPalette}>
-          {localeText.chartPaletteNameBlueberryTwilight}
-        </PaletteOption>
-      ),
-      value: 'blueberryTwilightPalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={mangoFusionPalette}>
-          {localeText.chartPaletteNameMangoFusion}
-        </PaletteOption>
-      ),
-      value: 'mangoFusionPalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={cheerfulFiestaPalette}>
-          {localeText.chartPaletteNameCheerfulFiesta}
-        </PaletteOption>
-      ),
-      value: 'cheerfulFiestaPalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={strawberrySkyPalette}>
-          {localeText.chartPaletteNameStrawberrySky}
-        </PaletteOption>
-      ),
-      value: 'strawberrySkyPalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={bluePalette}>{localeText.chartPaletteNameBlue}</PaletteOption>
-      ),
-      value: 'bluePalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={greenPalette}>{localeText.chartPaletteNameGreen}</PaletteOption>
-      ),
-      value: 'greenPalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={purplePalette}>{localeText.chartPaletteNamePurple}</PaletteOption>
-      ),
-      value: 'purplePalette',
-    },
-    {
-      content: <PaletteOption palette={redPalette}>{localeText.chartPaletteNameRed}</PaletteOption>,
-      value: 'redPalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={orangePalette}>{localeText.chartPaletteNameOrange}</PaletteOption>
-      ),
-      value: 'orangePalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={yellowPalette}>{localeText.chartPaletteNameYellow}</PaletteOption>
-      ),
-      value: 'yellowPalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={cyanPalette}>{localeText.chartPaletteNameCyan}</PaletteOption>
-      ),
-      value: 'cyanPalette',
-    },
-    {
-      content: (
-        <PaletteOption palette={pinkPalette}>{localeText.chartPaletteNamePink}</PaletteOption>
-      ),
-      value: 'pinkPalette',
-    },
-  ],
+  options: getColors(localeText).map(({ key, name }) => ({
+    value: key,
+    content: <PaletteOption palette={colorPaletteLookup.get(key)!}>{name}</PaletteOption>,
+  })),
 });
 
 const getBarColumnCustomization = (

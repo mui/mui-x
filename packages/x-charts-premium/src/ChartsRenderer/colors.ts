@@ -15,35 +15,18 @@ import {
   ChartsColorPaletteCallback,
 } from '@mui/x-charts/colorPalettes';
 
-export const getColorPalette = (palette: string): ChartsColorPaletteCallback | undefined => {
-  switch (palette) {
-    case 'blueberryTwilightPalette':
-      return blueberryTwilightPalette;
-    case 'mangoFusionPalette':
-      return mangoFusionPalette;
-    case 'cheerfulFiestaPalette':
-      return cheerfulFiestaPalette;
-    case 'strawberrySkyPalette':
-      return strawberrySkyPalette;
-    case 'rainbowSurgePalette':
-      return rainbowSurgePalette;
-    case 'bluePalette':
-      return bluePalette;
-    case 'greenPalette':
-      return greenPalette;
-    case 'purplePalette':
-      return purplePalette;
-    case 'redPalette':
-      return redPalette;
-    case 'orangePalette':
-      return orangePalette;
-    case 'yellowPalette':
-      return yellowPalette;
-    case 'cyanPalette':
-      return cyanPalette;
-    case 'pinkPalette':
-      return pinkPalette;
-    default:
-      return undefined;
-  }
-};
+export const colorPaletteLookup: Map<string, ChartsColorPaletteCallback> = new Map([
+  ['blueberryTwilightPalette', blueberryTwilightPalette],
+  ['mangoFusionPalette', mangoFusionPalette],
+  ['cheerfulFiestaPalette', cheerfulFiestaPalette],
+  ['strawberrySkyPalette', strawberrySkyPalette],
+  ['rainbowSurgePalette', rainbowSurgePalette],
+  ['bluePalette', bluePalette],
+  ['greenPalette', greenPalette],
+  ['purplePalette', purplePalette],
+  ['redPalette', redPalette],
+  ['orangePalette', orangePalette],
+  ['yellowPalette', yellowPalette],
+  ['cyanPalette', cyanPalette],
+  ['pinkPalette', pinkPalette],
+]);
