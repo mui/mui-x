@@ -2,20 +2,20 @@ import { Annotation } from 'doctrine';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
-import * as ts from 'typescript';
+import { Symbol, isPropertySignature, isExportSpecifier, TypeFormatFlags } from 'typescript';
 import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from '../utils';
 
 export type DocumentedInterfaces = Map<string, XProjectNames[]>;
 
-export const getSymbolDescription = (symbol: ts.Symbol, project: XTypeScriptProject) =>
+export const getSymbolDescription = (symbol: Symbol, project: XTypeScriptProject) =>
   symbol
     .getDocumentationComment(project.checker)
     .flatMap((comment) => comment.text.split('\n'))
     .filter((line) => !line.startsWith('TODO'))
     .join('\n');
 
-export const getSymbolJSDocTags = (symbol: ts.Symbol) =>
+export const getSymbolJSDocTags = (symbol: Symbol) =>
   Object.fromEntries(symbol.getJsDocTags().map((tag) => [tag.name, tag]));
 
 export function getJsdocDefaultValue(jsdoc: Annotation) {
@@ -49,17 +49,17 @@ export const formatType = async (rawType: string) => {
   return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
 };
 
-export const stringifySymbol = async (symbol: ts.Symbol, project: XTypeScriptProject) => {
+export const stringifySymbol = async (symbol: Symbol, project: XTypeScriptProject) => {
   let rawType: string;
 
   const declaration = symbol.declarations?.[0];
-  if (declaration && ts.isPropertySignature(declaration)) {
+  if (declaration && isPropertySignature(declaration)) {
     rawType = declaration.type?.getText() ?? '';
   } else {
     rawType = project.checker.typeToString(
       project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
       symbol.valueDeclaration,
-      ts.TypeFormatFlags.NoTruncation,
+      TypeFormatFlags.NoTruncation,
     );
   }
 
@@ -115,10 +115,10 @@ export async function writePrettifiedFile(filename: string, data: string) {
  * Do not go to the root definition for TypeAlias (ie: `export type XXX = YYY`)
  * Because we usually want to keep the description and tags of the aliased symbol.
  */
-export const resolveExportSpecifier = (symbol: ts.Symbol, project: XTypeScriptProject) => {
+export const resolveExportSpecifier = (symbol: Symbol, project: XTypeScriptProject) => {
   let resolvedSymbol = symbol;
 
-  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
+  while (resolvedSymbol.declarations && isExportSpecifier(resolvedSymbol.declarations[0])) {
     const newResolvedSymbol = project.checker.getImmediateAliasedSymbol(resolvedSymbol);
 
     if (!newResolvedSymbol) {
