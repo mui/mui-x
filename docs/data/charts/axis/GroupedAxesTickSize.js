@@ -12,6 +12,7 @@ export default function GroupedAxesTickSize() {
             getGrouping,
             config: [{ tickSize: 0 }, { tickSize: 32 }],
           },
+          valueFormatter,
         },
       ]}
       {...chartConfig}
@@ -29,6 +30,12 @@ const formatQuarterYear = (date) => {
   const year = date.getFullYear().toString().slice(-2);
   return `Q${quarter} '${year}`;
 };
+
+const valueFormatter = (v) =>
+  v.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
 
 const data = [
   new Date(2015, 0, 1),

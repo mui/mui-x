@@ -7,6 +7,7 @@
         getGrouping,
         config: [{ tickSize: 0 }, { tickSize: 32 }],
       },
+      valueFormatter,
     },
   ]}
   {...chartConfig}

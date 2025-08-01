@@ -17,6 +17,7 @@ export default function GroupedAxesStyling() {
         {
           data,
           grouping: { getGrouping },
+          valueFormatter,
         },
       ]}
       {...chartConfig}
@@ -34,6 +35,12 @@ const formatQuarterYear = (date: Date) => {
   const year = date.getFullYear().toString().slice(-2);
   return `Q${quarter} '${year}`;
 };
+
+const valueFormatter = (v: Date) =>
+  v.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
 
 const data = [
   new Date(2015, 0, 1),
