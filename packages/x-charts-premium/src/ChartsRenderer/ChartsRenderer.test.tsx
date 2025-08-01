@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
 import { screen } from '@mui/internal-test-utils';
-import { getColorPalette } from './colors';
+import { colorPaletteLookup } from './colors';
 
 describe('<ChartsRenderer />', () => {
   const { render } = createRenderer();
@@ -60,7 +60,7 @@ describe('<ChartsRenderer />', () => {
     );
 
     const props = onRenderSpy.lastCall.args[1];
-    expect(props.colors).to.equal(getColorPalette('rainbowSurgePalette'));
+    expect(props.colors).to.equal(colorPaletteLookup.get('rainbowSurgePalette'));
   });
 
   it('should override the props if the configuration has an updated value', () => {
@@ -80,7 +80,7 @@ describe('<ChartsRenderer />', () => {
     );
 
     const props = onRenderSpy.lastCall.args[1];
-    expect(props.colors).to.equal(getColorPalette('mangoFusionPalette'));
+    expect(props.colors).to.equal(colorPaletteLookup.get('mangoFusionPalette'));
   });
 
   it('should place categories and series to the correct place in the props', () => {
