@@ -364,6 +364,14 @@ ScatterChart.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        grouping: PropTypes.shape({
+          config: PropTypes.arrayOf(
+            PropTypes.shape({
+              tickSize: PropTypes.number,
+            }),
+          ),
+          getGrouping: PropTypes.func.isRequired,
+        }),
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -438,6 +446,14 @@ ScatterChart.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        grouping: PropTypes.shape({
+          config: PropTypes.arrayOf(
+            PropTypes.shape({
+              tickSize: PropTypes.number,
+            }),
+          ),
+          getGrouping: PropTypes.func.isRequired,
+        }),
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -979,6 +995,14 @@ ScatterChart.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        grouping: PropTypes.shape({
+          config: PropTypes.arrayOf(
+            PropTypes.shape({
+              tickSize: PropTypes.number,
+            }),
+          ),
+          getGrouping: PropTypes.func.isRequired,
+        }),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1052,6 +1076,14 @@ ScatterChart.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        grouping: PropTypes.shape({
+          config: PropTypes.arrayOf(
+            PropTypes.shape({
+              tickSize: PropTypes.number,
+            }),
+          ),
+          getGrouping: PropTypes.func.isRequired,
+        }),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,

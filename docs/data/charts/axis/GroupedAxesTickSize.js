@@ -1,21 +1,16 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-export default function GroupedAxes() {
+export default function GroupedAxesTickSize() {
   return (
     <BarChart
       xAxis={[
         {
           data,
-          scaleType: 'band',
-          tickSize: 8,
           height: 32,
           grouping: {
-            getGrouping: (value) => [
-              value.toLocaleDateString('en-US', { month: 'short' }),
-              `Q${Math.floor(value.getMonth() / 3) + 1}`,
-              value.toLocaleDateString('en-US', { year: 'numeric' }),
-            ],
+            getGrouping,
+            config: [{ tickSize: 0 }, { tickSize: 32 }],
           },
           valueFormatter,
         },
@@ -25,6 +20,17 @@ export default function GroupedAxes() {
   );
 }
 
+const getGrouping = (value) => [
+  value.toLocaleDateString('en-US', { month: 'short' }),
+  formatQuarterYear(value),
+];
+
+const formatQuarterYear = (date) => {
+  const quarter = Math.floor(date.getMonth() / 3) + 1;
+  const year = date.getFullYear().toString().slice(-2);
+  return `Q${quarter} '${year}`;
+};
+
 const valueFormatter = (v) =>
   v.toLocaleDateString('en-US', {
     month: 'short',
@@ -32,7 +38,6 @@ const valueFormatter = (v) =>
   });
 
 const data = [
-  new Date(2014, 11, 1),
   new Date(2015, 0, 1),
   new Date(2015, 1, 1),
   new Date(2015, 2, 1),
@@ -45,16 +50,10 @@ const data = [
   new Date(2015, 9, 1),
   new Date(2015, 10, 1),
   new Date(2015, 11, 1),
-  new Date(2016, 0, 1),
 ];
 
-const a = [
-  3190, 4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2040,
-];
-
-const b = [
-  1200, 2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000, 2040,
-];
+const a = [4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800];
+const b = [2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000];
 
 const getPercents = (array) =>
   array.map((v, index) => (100 * v) / (a[index] + b[index]));
