@@ -1,5 +1,11 @@
 import { isDefined } from '../../../isDefined';
-import { AxisId, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../../../models/axis';
+import {
+  AxisId,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ContinuousScaleName,
+  ScaleName,
+} from '../../../../models/axis';
 import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { AxisConfig } from '../../../../models';
@@ -57,43 +63,80 @@ export function createAxisFilterMapper({
       return null;
     }
 
-    let extremums: number[] = [];
     const scaleType = axis.scaleType;
 
     if (scaleType === 'point' || scaleType === 'band') {
-      extremums = [0, (axis.data?.length ?? 1) - 1];
-    } else {
-      extremums = getAxisExtremum(axis, direction, seriesConfig, axisIndex, formattedSeries);
+      return createDiscreteScaleGetAxisFilter(axis.data, zoom.start, zoom.end, direction);
     }
 
-    let min: number | Date;
-    let max: number | Date;
+    return createContinuousScaleGetAxisFilter(
+      scaleType,
+      getAxisExtremum(axis, direction, seriesConfig, axisIndex, formattedSeries),
+      zoom.start,
+      zoom.end,
+      direction,
+      axis.data,
+    );
+  };
+}
 
-    const continuousScaleType =
-      !scaleType || scaleType === 'band' || scaleType === 'point' ? 'linear' : scaleType;
+export function createDiscreteScaleGetAxisFilter(
+  axisData: AxisConfig['data'],
+  zoomStart: number,
+  zoomEnd: number,
+  direction: 'x' | 'y',
+): ExtremumFilter {
+  const maxIndex = (axisData?.length ?? 1) - 1;
 
-    [min, max] = getScale(continuousScaleType, extremums, [0, 100]).nice().domain();
+  const minVal = (zoomStart * maxIndex) / 100;
+  const maxVal = (zoomEnd * maxIndex) / 100;
 
-    min = min instanceof Date ? min.getTime() : min;
-    max = max instanceof Date ? max.getTime() : max;
+  return function filterAxis(value, dataIndex) {
+    const val = value[direction] ?? axisData?.[dataIndex];
 
-    const minVal = min + (zoom.start * (max - min)) / 100;
-    const maxVal = min + (zoom.end * (max - min)) / 100;
+    if (val == null) {
+      // If the value does not exist because of missing data point, or out of range index, we just ignore.
+      return true;
+    }
 
-    return (value, dataIndex) => {
-      const val = value[direction] ?? axis.data?.[dataIndex];
+    return dataIndex >= minVal && dataIndex <= maxVal;
+  };
+}
 
-      if (val == null) {
-        // If the value does not exist because of missing data point, or out of range index, we just ignore.
-        return true;
-      }
+export function createContinuousScaleGetAxisFilter(
+  scaleType: ContinuousScaleName | undefined,
+  extrema: readonly [number, number],
+  zoomStart: number,
+  zoomEnd: number,
+  direction: 'x' | 'y',
+  axisData: AxisConfig['data'],
+): ExtremumFilter {
+  let min: number | Date;
+  let max: number | Date;
 
-      if (axis.scaleType === 'point' || axis.scaleType === 'band' || typeof val === 'string') {
-        return dataIndex >= minVal && dataIndex <= maxVal;
-      }
+  [min, max] = getScale(scaleType ?? 'linear', extrema, [0, 100])
+    .nice()
+    .domain();
 
-      return val >= minVal && val <= maxVal;
-    };
+  min = min instanceof Date ? min.getTime() : min;
+  max = max instanceof Date ? max.getTime() : max;
+
+  const minVal = min + (zoomStart * (max - min)) / 100;
+  const maxVal = min + (zoomEnd * (max - min)) / 100;
+
+  return function filterAxis(value, dataIndex) {
+    const val = value[direction] ?? axisData?.[dataIndex];
+
+    if (val == null) {
+      // If the value does not exist because of missing data point, or out of range index, we just ignore.
+      return true;
+    }
+
+    if (typeof val === 'string') {
+      return dataIndex >= minVal && dataIndex <= maxVal;
+    }
+
+    return val >= minVal && val <= maxVal;
   };
 }
 
