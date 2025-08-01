@@ -121,13 +121,13 @@ export default function GridChartsIntegrationLiveData() {
             id="left"
             label="CPU"
             renderer={ChartsRenderer}
-            onRender={getOnRender(100)}
+            onRender={getOnRender(100, '%')}
           />
           <GridChartsRendererProxy
             id="right"
             label="Memory"
             renderer={ChartsRenderer}
-            onRender={getOnRender(4096)}
+            onRender={getOnRender(4096, 'MB')}
           />
         </div>
       </div>
@@ -144,12 +144,26 @@ function generateRows() {
   }));
 }
 
-function getOnRender(max) {
+function getOnRender(max, unit) {
   return function onRender(type, props, Component) {
     if (type !== 'column') {
       return <Component {...props} />;
     }
 
-    return <BarChart {...props} yAxis={[{ min: 0, max }]} />;
+    const series = props.series.map((seriesItem) => ({
+      ...seriesItem,
+      label: `${seriesItem.label} (${unit})`,
+    }));
+
+    const yAxis = [
+      {
+        min: 0,
+        max,
+        valueFormatter: (value) => `${value} ${unit}`,
+        width: 60,
+      },
+    ];
+
+    return <BarChart {...props} series={series} yAxis={yAxis} />;
   };
 }
