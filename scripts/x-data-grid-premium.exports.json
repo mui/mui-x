@@ -414,6 +414,7 @@
   { "name": "GridGroupingRule", "kind": "Interface" },
   { "name": "GridGroupingRules", "kind": "TypeAlias" },
   { "name": "GridGroupingValueGetter", "kind": "TypeAlias" },
+  { "name": "GridGroupingValueSetter", "kind": "TypeAlias" },
   { "name": "GridGroupNode", "kind": "TypeAlias" },
   { "name": "GridGroupWorkIcon", "kind": "Variable" },
   { "name": "gridHasColSpanSelector", "kind": "Variable" },

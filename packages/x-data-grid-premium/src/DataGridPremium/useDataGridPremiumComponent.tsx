@@ -77,6 +77,7 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
+  GridConfiguration,
 } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -115,6 +116,7 @@ import { useGridSidebar, sidebarStateInitializer } from '../hooks/features/sideb
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
   inProps: DataGridPremiumProcessedProps,
+  configuration: GridConfiguration<GridPrivateApiPremium>,
 ) => {
   const pivotPropsOverrides = useGridSelector(apiRef, gridPivotPropsOverridesSelector);
 
@@ -206,7 +208,7 @@ export const useDataGridPremiumComponent = (
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
+  useGridRows(apiRef, props, configuration as GridConfiguration);
   useGridRowSpanning(apiRef, props);
   useGridParamsApi(apiRef, props);
   useGridDetailPanel(apiRef, props);
