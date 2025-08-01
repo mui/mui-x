@@ -44,6 +44,7 @@ const ChartsTooltipRoot = styled(Popper, {
 })(({ theme }) => ({
   pointerEvents: 'none',
   zIndex: theme.zIndex.modal,
+  willChange: 'transform',
 }));
 
 /**
