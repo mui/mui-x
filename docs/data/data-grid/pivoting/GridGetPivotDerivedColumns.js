@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 
 const getPivotDerivedColumns = (column) => {
   if (column.type === 'date') {
@@ -8,13 +8,15 @@ const getPivotDerivedColumns = (column) => {
       {
         field: `${field}-year`,
         headerName: `${column.headerName} (Year)`,
-        valueGetter: (value, row) => new Date(row[field]).getFullYear(),
+        valueGetter: (_, row) => new Date(row[field]).getFullYear(),
       },
       {
         field: `${field}-month`,
         headerName: `${column.headerName} (Month)`,
-        valueGetter: (value, row) =>
-          `M${`${new Date(row[field]).getMonth() + 1}`.padStart(2, '0')}`,
+        type: 'number',
+        valueGetter: (_, row) => new Date(row[field]).getMonth(),
+        valueFormatter: (month) =>
+          new Date(0, month).toLocaleString(undefined, { month: 'long' }),
       },
     ];
   }
@@ -71,9 +73,12 @@ export default function GridGetPivotDerivedColumns() {
           getPivotDerivedColumns={getPivotDerivedColumns}
           initialState={{
             pivoting: {
-              enabled: false,
-              panelOpen: true,
+              enabled: true,
               model: pivotModel,
+            },
+            sidebar: {
+              open: true,
+              value: GridSidebarValue.Pivot,
             },
           }}
           showToolbar

@@ -4,12 +4,13 @@ import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
@@ -160,6 +161,17 @@ FunnelChart.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
       scaleType: PropTypes.oneOf(['log']),
+      size: PropTypes.number,
+      tickLabelStyle: PropTypes.object,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.shape({
+      categories: PropTypes.arrayOf(PropTypes.string),
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['symlog']),
       size: PropTypes.number,
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,

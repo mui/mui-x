@@ -7,14 +7,14 @@ import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { TimeGridColumnPlaceholderContext } from './TimeGridColumnPlaceholderContext';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { SchedulerValidDate } from '../../models';
-import { mergeDateAndTime } from '../../utils/date-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
-import type { TimeGridEvent } from '../event';
 import type { TimeGridRoot } from '../root';
 import {
+  createDateFromPositionInCollection,
   EVENT_DRAG_PRECISION_MINUTE,
   getCursorPositionRelativeToElement,
   isDraggingTimeGridEvent,
+  isDraggingTimeGridEventResizeHandler,
 } from '../../utils/drag-utils';
 
 export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
@@ -28,9 +28,9 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     className,
     render,
     // Internal props
-    value,
-    startTime,
-    endTime,
+    start,
+    end,
+    columnId = null,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -38,38 +38,24 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   const ref = React.useRef<HTMLDivElement>(null);
   const { onEventChange, setPlaceholder, placeholder } = useTimeGridRootContext();
 
-  const columnStart = React.useMemo(
-    () =>
-      startTime == null ? adapter.startOfDay(value) : mergeDateAndTime(adapter, value, startTime),
-    [adapter, value, startTime],
-  );
-
-  const columnEnd = React.useMemo(
-    () => (endTime == null ? adapter.endOfDay(value) : mergeDateAndTime(adapter, value, endTime)),
-    [adapter, value, endTime],
-  );
-
   const columnPlaceholder = React.useMemo(() => {
     if (placeholder == null) {
       return null;
     }
 
-    if (
-      adapter.isBefore(placeholder.start, columnStart) ||
-      adapter.isAfter(placeholder.end, columnEnd)
-    ) {
+    if (adapter.isBefore(placeholder.start, start) || adapter.isAfter(placeholder.end, end)) {
       return null;
     }
 
     return placeholder;
-  }, [adapter, columnStart, columnEnd, placeholder]);
+  }, [adapter, start, end, placeholder]);
 
   const contextValue: TimeGridColumnContext = React.useMemo(
     () => ({
-      start: columnStart,
-      end: columnEnd,
+      start,
+      end,
     }),
-    [columnStart, columnEnd],
+    [start, end],
   );
 
   const placeholderContextValue: TimeGridColumnPlaceholderContext = React.useMemo(
@@ -81,10 +67,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
 
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
-  const state: TimeGridColumn.State = React.useMemo(() => ({}), []);
-
   const element = useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef, ref],
     props: [props, elementProps],
   });
@@ -99,63 +82,107 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       data,
       input,
     }: {
-      data: TimeGridEvent.EventDragData;
+      data: Record<string, unknown>;
       input: { clientY: number };
-    }): TimeGridRoot.EventData {
+    }): TimeGridRoot.EventData | undefined {
       const position = getCursorPositionRelativeToElement({ ref, input });
-      const eventTopPosition = position.y - data.position.y;
 
-      const newStartMinuteInDay =
-        Math.round(
-          ((eventTopPosition / domElement!.offsetHeight) * 1440) / EVENT_DRAG_PRECISION_MINUTE,
-        ) * EVENT_DRAG_PRECISION_MINUTE;
+      // Move event
+      if (isDraggingTimeGridEvent(data)) {
+        const cursorPositionPx = position.y - data.position.y;
 
-      // TODO: Avoid JS Date conversion
-      const eventDuration =
-        (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
-        (60 * 1000);
+        // TODO: Avoid JS Date conversion
+        const eventDuration =
+          (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
+          (60 * 1000);
 
-      const newStartDate = adapter.setMinutes(
-        adapter.setHours(value, Math.floor(newStartMinuteInDay / 60)),
-        newStartMinuteInDay % 60,
-      );
+        const newStartDate = createDateFromPositionInCollection({
+          adapter,
+          collectionStart: start,
+          collectionEnd: end,
+          position: cursorPositionPx / domElement!.offsetHeight,
+        });
 
-      const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
+        const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
 
-      return { start: newStartDate, end: newEndDate, id: data.id };
+        return { start: newStartDate, end: newEndDate, eventId: data.id, columnId };
+      }
+
+      // Resize event
+      if (isDraggingTimeGridEventResizeHandler(data)) {
+        const cursorPositionPx = position.y - data.position.y;
+        const cursorDate = createDateFromPositionInCollection({
+          adapter,
+          collectionStart: start,
+          collectionEnd: end,
+          position: cursorPositionPx / domElement!.offsetHeight,
+        });
+
+        if (data.side === 'start') {
+          const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
+
+          // Ensure the new start date is not after or too close to the end date.
+          const newStartDate = adapter.isBefore(cursorDate, maxStartDate)
+            ? cursorDate
+            : maxStartDate;
+
+          return {
+            start: newStartDate,
+            end: data.end,
+            eventId: data.id,
+            columnId,
+          };
+        }
+
+        const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
+
+        // Ensure the new end date is not before or too close to the start date.
+        const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
+
+        return {
+          start: data.start,
+          end: newEndDate,
+          eventId: data.id,
+          columnId,
+        };
+      }
+
+      return undefined;
     }
 
     return dropTargetForElements({
       element: domElement,
-      canDrop: (arg) => isDraggingTimeGridEvent(arg.source.data),
-      getData: () => ({ type: 'column' }),
+      canDrop: (arg) =>
+        isDraggingTimeGridEvent(arg.source.data) ||
+        isDraggingTimeGridEventResizeHandler(arg.source.data),
       onDrag: ({ source: { data }, location }) => {
-        if (!isDraggingTimeGridEvent(data)) {
-          return;
-        }
-
         const newPlaceholder = getEventDropData({
           data,
           input: location.current.input,
         });
 
-        setPlaceholder(newPlaceholder);
+        if (newPlaceholder) {
+          setPlaceholder(newPlaceholder);
+        }
+      },
+      onDragStart: ({ source: { data } }) => {
+        if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
+          setPlaceholder({ eventId: data.id, start: data.start, end: data.end, columnId });
+        }
       },
       onDrop: ({ source: { data }, location }) => {
-        if (!isDraggingTimeGridEvent(data)) {
-          return;
-        }
-
         const newEvent = getEventDropData({
           data,
           input: location.current.input,
         });
 
-        onEventChange(newEvent);
-        setPlaceholder(null);
+        if (newEvent) {
+          onEventChange(newEvent);
+          setPlaceholder(null);
+        }
       },
     });
-  }, [adapter, onEventChange, setPlaceholder, value]);
+  }, [adapter, onEventChange, setPlaceholder, start, end, columnId]);
 
   return (
     <TimeGridColumnContext.Provider value={contextValue}>
@@ -171,20 +198,18 @@ export namespace TimeGridColumn {
 
   export interface Props extends BaseUIComponentProps<'div', State> {
     /**
-     * The value of the column.
+     * The data and time at which the column starts.
      */
-    value: SchedulerValidDate;
+    start: SchedulerValidDate;
     /**
-     * The start time of the column.
-     * The date part is ignored, only the time part is used.
-     * @defaultValue 00:00:00
+     * The data and time at which the column ends.
      */
-    startTime?: SchedulerValidDate;
+    end: SchedulerValidDate;
     /**
-     * The end time of the column.
-     * The date part is ignored, only the time part is used.
-     * @defaultValue 23:59:59
+     * A unique identifier for the column.
+     * This is used to identify the column when dragging events if several columns represent the same time range.
+     * @default null
      */
-    endTime?: SchedulerValidDate;
+    columnId?: string;
   }
 }

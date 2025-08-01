@@ -12,7 +12,11 @@ import {
   gridRowIdSelector,
   gridRowNodeSelector,
 } from '@mui/x-data-grid-pro';
-import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
+import {
+  GridColumnRawLookup,
+  isSingleSelectColDef,
+  RowGroupingStrategy,
+} from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
@@ -21,7 +25,6 @@ import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColu
 import {
   getRowGroupingFieldFromGroupingCriteria,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  RowGroupingStrategy,
 } from './gridRowGroupingUtils';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
@@ -98,8 +101,14 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
 const groupedByColValueFormatter: (
   groupedByColDef: GridColDef,
 ) => GridValueFormatter<any, any, any, never> =
-  (groupedByColDef: GridColDef) => (value, row, _, apiRef) =>
-    groupedByColDef.valueFormatter!(value, row, groupedByColDef, apiRef);
+  (groupedByColDef: GridColDef) => (value, row, _, apiRef) => {
+    const rowId = gridRowIdSelector(apiRef, row);
+    const rowNode = gridRowNodeSelector(apiRef, rowId);
+    if (rowNode.type === 'group' && rowNode.groupingField === groupedByColDef.field) {
+      return groupedByColDef.valueFormatter!(value, row, groupedByColDef, apiRef);
+    }
+    return value;
+  };
 
 const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderName: boolean) => {
   const properties: Partial<GridColDef> = {
