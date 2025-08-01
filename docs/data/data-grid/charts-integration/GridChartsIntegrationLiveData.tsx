@@ -14,6 +14,7 @@ import {
   configurationOptions,
 } from '@mui/x-charts-premium/ChartsRenderer';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
+import { AxisConfig } from '@mui/x-charts/models';
 
 const columns: GridColDef[] = [
   { field: 'id' },
@@ -122,13 +123,13 @@ export default function GridChartsIntegrationLiveData() {
             id="left"
             label="CPU"
             renderer={ChartsRenderer}
-            onRender={getOnRender(100)}
+            onRender={getOnRender(100, '%')}
           />
           <GridChartsRendererProxy
             id="right"
             label="Memory"
             renderer={ChartsRenderer}
-            onRender={getOnRender(4096)}
+            onRender={getOnRender(4096, 'MB')}
           />
         </div>
       </div>
@@ -145,7 +146,7 @@ function generateRows() {
   }));
 }
 
-function getOnRender(max: number) {
+function getOnRender(max: number, unit: string) {
   return function onRender(
     type: string,
     props: Record<string, any>,
@@ -155,6 +156,20 @@ function getOnRender(max: number) {
       return <Component {...props} />;
     }
 
-    return <BarChart {...(props as BarChartProps)} yAxis={[{ min: 0, max }]} />;
+    const series = props.series.map((seriesItem: AxisConfig) => ({
+      ...seriesItem,
+      label: `${seriesItem.label} (${unit})`,
+    }));
+
+    const yAxis = [
+      {
+        min: 0,
+        max,
+        valueFormatter: (value: number) => `${value} ${unit}`,
+        width: 60,
+      },
+    ];
+
+    return <BarChart {...(props as BarChartProps)} series={series} yAxis={yAxis} />;
   };
 }
