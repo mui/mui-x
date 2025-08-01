@@ -186,17 +186,18 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       const activeItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][tabindex="0"], [role="option"][aria-selected="true"]',
       );
-      if (activeItem && active && autoFocus && activeItem !== previousActive.current) {
-        activeItem.focus();
-      }
       if (!activeItem || previousActive.current === activeItem) {
         return;
       }
-      previousActive.current = activeItem;
       const offsetTop = activeItem.offsetTop;
 
       // Subtracting the 4px of extra margin intended for the first visible section item
       containerRef.current.scrollTop = offsetTop - 4;
+
+      if (activeItem && active && autoFocus && activeItem !== previousActive.current) {
+        previousActive.current = activeItem;
+        activeItem.focus();
+      }
     });
 
     const handleBlur = useEventCallback((event: React.FocusEvent<HTMLElement>) => {
@@ -214,7 +215,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
 
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
+    const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
       switch (event.key) {
         case 'PageUp': {
           const newIndex = getFocusedListItemIndex(containerRef.current!) - 5;
@@ -241,15 +242,15 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
           break;
         }
         default:
+          break;
       }
-    };
+    });
 
     return (
       <MultiSectionDigitalClockSectionRoot
         ref={handleRef}
         className={clsx(classes.root, className)}
         ownerState={ownerState}
-        autoFocusItem={autoFocus && active}
         role="listbox"
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
