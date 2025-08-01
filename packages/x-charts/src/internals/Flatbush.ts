@@ -1,7 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
 import FlatQueue from 'flatqueue';
-import { TypedArrayConstructor } from 'flatbush';
 
 const ARRAY_TYPES = [
   Int8Array,
@@ -16,7 +15,16 @@ const ARRAY_TYPES = [
 ];
 const VERSION = 3; // serialized format version
 
-/** @typedef {Int8ArrayConstructor | Uint8ArrayConstructor | Uint8ClampedArrayConstructor | Int16ArrayConstructor | Uint16ArrayConstructor | Int32ArrayConstructor | Uint32ArrayConstructor | Float32ArrayConstructor | Float64ArrayConstructor} TypedArrayConstructor */
+type TypedArrayConstructor =
+  | Int8ArrayConstructor
+  | Uint8ArrayConstructor
+  | Uint8ClampedArrayConstructor
+  | Int16ArrayConstructor
+  | Uint16ArrayConstructor
+  | Int32ArrayConstructor
+  | Uint32ArrayConstructor
+  | Float32ArrayConstructor
+  | Float64ArrayConstructor;
 
 export class Flatbush {
   /**
