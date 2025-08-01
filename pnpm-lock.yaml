@@ -232,11 +232,6 @@ catalogs:
 overrides:
   ast-types: ^0.14.2
 
-patchedDependencies:
-  flatbush:
-    hash: 8acce5e8279055b3ac0534169bade2a3a7b5dbdb2d264ba775746a77d78ff41b
-    path: patches/flatbush.patch
-
 importers:
 
   .:
@@ -945,9 +940,6 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
-      flatbush:
-        specifier: ^4.4.1
-        version: 4.4.1(patch_hash=8acce5e8279055b3ac0534169bade2a3a7b5dbdb2d264ba775746a77d78ff41b)
       flatqueue:
         specifier: ^2.0.3
         version: 2.0.3
@@ -8224,9 +8216,6 @@ packages:
   flat@5.0.2:
     resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
     hasBin: true
-
-  flatbush@4.4.1:
-    resolution: {integrity: sha512-g3eA6ZF0viCV0UslH/mdUzCLcT7aGj0Fjk9MBxxNkbADSXqSHDZhthFBDFgo2umc6SVmSItNefTjWnfyo7DunA==}
 
   flatqueue@2.0.3:
     resolution: {integrity: sha512-RZCWZNkmxzUOh8jqEcEGZCycb3B8KAfpPwg3H//cURasunYxsg1eIvE+QDSjX+ZPHTIVfINfK1aLTrVKKO0i4g==}
@@ -19804,10 +19793,6 @@ snapshots:
       keyv: 4.5.4
 
   flat@5.0.2: {}
-
-  flatbush@4.4.1(patch_hash=8acce5e8279055b3ac0534169bade2a3a7b5dbdb2d264ba775746a77d78ff41b):
-    dependencies:
-      flatqueue: 2.0.3
 
   flatqueue@2.0.3: {}
 
