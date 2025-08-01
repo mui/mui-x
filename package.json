@@ -86,10 +86,10 @@
     "@emotion/styled": "catalog:",
     "@inquirer/prompts": "^7.7.1",
     "@mui/icons-material": "catalog:",
-    "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.2",
-    "@mui/internal-babel-plugin-resolve-imports": "^2.0.7-canary.11",
+    "@mui/internal-babel-plugin-display-name": "https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-display-name@b6770dd",
+    "@mui/internal-babel-plugin-resolve-imports": "https://pkg.pr.new/mui/mui-public/@mui/internal-babel-plugin-resolve-imports@b6770dd",
     "@mui/internal-bundle-size-checker": "^1.0.9-canary.10",
-    "@mui/internal-code-infra": "^0.0.2-canary.22",
+    "@mui/internal-code-infra": "https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@b6770dd",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
@@ -188,5 +188,10 @@
   "packageManager": "pnpm@10.13.1",
   "engines": {
     "pnpm": "10.13.1"
+  },
+  "code-infra": {
+    "build": {
+      "searchAndReplaceModule": "searchAndReplace.cjs"
+    }
   }
 }
