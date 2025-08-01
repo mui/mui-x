@@ -5,6 +5,5 @@ export * from './event-calendar';
 export * from './day-view';
 export * from './week-view';
 export * from './models/events';
-export * from './models/resource';
 export * from './translations/enUS';
 export * from './translations/frFR';

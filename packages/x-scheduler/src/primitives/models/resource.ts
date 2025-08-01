@@ -1,4 +1,4 @@
-import type { CalendarEventColor } from './events';
+import type { CalendarEventColor } from './event';
 
 export type CalendarResourceId = string;
 

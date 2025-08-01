@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import { CalendarEvent } from '@mui/x-scheduler/material';
+import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import {
   initialEvents,
