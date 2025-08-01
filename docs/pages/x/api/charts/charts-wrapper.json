@@ -20,7 +20,8 @@
   "imports": [
     "import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';",
     "import { ChartsWrapper } from '@mui/x-charts';",
-    "import { ChartsWrapper } from '@mui/x-charts-pro';"
+    "import { ChartsWrapper } from '@mui/x-charts-pro';",
+    "import { ChartsWrapper } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "muiName": "MuiChartsWrapper",
