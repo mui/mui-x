@@ -25,9 +25,9 @@ export interface GridChartsPanelProps {
   /**
    * Override the default column name generation logic. Use field in combination with the grid state to determine the name of the column that will be shown to the user.
    * @param {string} field The field name
-   * @returns {string} The name of the column
+   * @returns {string | undefined} The name of the column or undefined if the column name should be determined by the grid
    */
-  getColumnName?: (field: string) => string;
+  getColumnName?: (field: string) => string | undefined;
 }
 
 type OwnerState = DataGridPremiumProcessedProps;

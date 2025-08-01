@@ -145,8 +145,9 @@ export const useGridChartsIntegration = (
 
   const getColumnName = React.useCallback(
     (field: string) => {
-      if (props.slotProps?.chartsPanel?.getColumnName) {
-        return props.slotProps.chartsPanel.getColumnName(field);
+      const customFieldName = props.slotProps?.chartsPanel?.getColumnName?.(field);
+      if (customFieldName) {
+        return customFieldName;
       }
 
       const columns = gridColumnLookupSelector(apiRef);
