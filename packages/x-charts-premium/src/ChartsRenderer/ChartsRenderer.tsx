@@ -4,7 +4,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { configurationOptions } from './configuration';
-import { getColorPalette } from './colors';
+import { colorPaletteLookup } from './colors';
 
 export interface ChartsRendererProps {
   categories: { id: string; label: string; data: (string | number | null)[] }[];
@@ -77,7 +77,7 @@ function ChartsRenderer({
       height: chartConfiguration.height,
       layout: layout as 'horizontal' | 'vertical',
       borderRadius: chartConfiguration.borderRadius,
-      colors: getColorPalette(chartConfiguration.colors),
+      colors: colorPaletteLookup.get(chartConfiguration.colors),
       grid: {
         vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
         horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
@@ -102,7 +102,7 @@ function ChartsRenderer({
       series: seriesProp,
       hideLegend: chartConfiguration.hideLegend,
       height: chartConfiguration.height,
-      colors: getColorPalette(chartConfiguration.colors),
+      colors: colorPaletteLookup.get(chartConfiguration.colors),
       skipAnimation: chartConfiguration.skipAnimation,
     };
 
@@ -148,7 +148,7 @@ function ChartsRenderer({
       height: chartConfiguration.height,
       width: chartConfiguration.width,
       hideLegend: chartConfiguration.hideLegend,
-      colors: getColorPalette(chartConfiguration.colors),
+      colors: colorPaletteLookup.get(chartConfiguration.colors),
       slotProps: {
         legend: {
           sx: {
