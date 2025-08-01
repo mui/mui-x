@@ -77,6 +77,8 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
+  rowReorderStateInitializer,
+  useGridRowReorderApi,
 } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -166,6 +168,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(rowGroupingStateInitializer, apiRef, props, key);
   useGridInitializeState(aggregationStateInitializer, apiRef, props, key);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
+  useGridInitializeState(rowReorderStateInitializer, apiRef, props);
   useGridInitializeState(cellSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props, key);
@@ -194,6 +197,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
 
   useGridVirtualizer(apiRef, props);
+  useGridRowReorderApi(apiRef);
   useGridSidebar(apiRef, props);
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
   useGridRowGrouping(apiRef, props);

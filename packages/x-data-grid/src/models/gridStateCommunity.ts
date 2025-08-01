@@ -28,6 +28,7 @@ import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFi
 import type { GridColumnResizeState } from '../hooks/features/columnResize';
 import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
 import type { GridListViewState } from '../hooks/features/listView/useGridListView';
+import type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 
 /**
  * Some props are passed on the state to enable grid selectors to select
@@ -63,6 +64,7 @@ export interface GridStateCommunity {
   columnResize: GridColumnResizeState;
   rowSpanning: GridRowSpanningState;
   listViewColumn: GridListViewState;
+  rowReorder: GridRowReorderState;
 }
 
 /**
