@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { CalendarEvent } from '@mui/x-scheduler/material';
+import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { MonthView } from '@mui/x-scheduler/material/month-view';
 import {

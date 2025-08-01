@@ -2,7 +2,7 @@ import { renderHook, act } from '@mui/internal-test-utils';
 import { DateTime } from 'luxon';
 import { spy } from 'sinon';
 import { useEventCalendar } from './useEventCalendar';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { getAdapter } from '../utils/adapter/getAdapter';
 
 const DEFAULT_PARAMS = { events: [] };
 

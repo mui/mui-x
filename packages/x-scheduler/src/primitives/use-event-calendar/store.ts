@@ -1,16 +1,23 @@
-import { createSelector, createSelectorMemoized, Store } from '@base-ui-components/utils/store';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { SchedulerValidDate } from '../../primitives/models';
-import { CalendarEvent, CalendarEventId } from '../models/events';
-import { CalendarResource, CalendarResourceId } from '../models/resource';
-import { EventCalendarView } from './EventCalendar.types';
-
-const adapter = getAdapter();
+import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import {
+  SchedulerValidDate,
+  CalendarEvent,
+  CalendarEventId,
+  CalendarResource,
+  CalendarResourceId,
+  CalendarView,
+} from '../models';
+import { Adapter } from '../utils/adapter/types';
 
 export type State = {
+  /**
+   * The adapter of the date library.
+   * Not publicly exposed, is only set in state to avoid passing it to the selectors.
+   */
+  adapter: Adapter;
   visibleDate: SchedulerValidDate;
-  view: EventCalendarView;
-  views: EventCalendarView[];
+  view: CalendarView;
+  views: CalendarView[];
   events: CalendarEvent[];
   resources: CalendarResource[];
   /**
@@ -31,8 +38,6 @@ export type State = {
    */
   ampm: boolean;
 };
-
-export type EventCalendarStore = Store<State>;
 
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
@@ -63,9 +68,10 @@ export const selectors = {
     },
   ),
   getEventsStartingInDay: createSelectorMemoized(
+    (state: State) => state.adapter,
     (state: State) => state.events,
     (state: State) => state.visibleResources,
-    (events, visibleResources) => {
+    (adapter, events, visibleResources) => {
       const map = new Map<string, CalendarEvent[]>();
       for (const event of events) {
         if (event.resource && visibleResources.get(event.resource) === false) {
