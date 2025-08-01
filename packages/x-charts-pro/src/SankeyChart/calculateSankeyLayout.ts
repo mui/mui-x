@@ -42,22 +42,21 @@ export function calculateSankeyLayout(
   const nodeMap = new Map<NodeId, SankeyNode>();
 
   data.links.forEach((v) => {
-    if (nodeMap.has(v.source) && nodeMap.has(v.target)) {
-      return;
+    if (!nodeMap.has(v.source)) {
+      const sourceNode = data.nodes?.[v.source];
+      const source = sourceNode
+        ? { label: `${v.source}`, ...sourceNode, id: v.source }
+        : { id: v.source, label: `${v.source}` };
+      nodeMap.set(source.id, source);
     }
 
-    const sourceNode = data.nodes?.[v.source];
-    const targetNode = data.nodes?.[v.target];
-
-    const source = sourceNode
-      ? { label: `${v.source}`, ...sourceNode, id: v.source }
-      : { id: v.source, label: `${v.source}` };
-    const target = targetNode
-      ? { label: `${v.target}`, ...targetNode, id: v.target }
-      : { id: v.target, label: `${v.target}` };
-
-    nodeMap.set(source.id, source);
-    nodeMap.set(target.id, target);
+    if (!nodeMap.has(v.target)) {
+      const targetNode = data.nodes?.[v.target];
+      const target = targetNode
+        ? { label: `${v.target}`, ...targetNode, id: v.target }
+        : { id: v.target, label: `${v.target}` };
+      nodeMap.set(target.id, target);
+    }
   });
 
   const computedNodes = nodeMap.values().toArray();
