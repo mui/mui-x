@@ -314,4 +314,55 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     // Scroll areas should be hidden again
     expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
   });
+
+  it('should allow row reordering when dragging from any cell during active reorder', () => {
+    const rows = [
+      { id: 0, brand: 'Nike', category: 'Sportswear' },
+      { id: 1, brand: 'Adidas', category: 'Sportswear' },
+      { id: 2, brand: 'Puma', category: 'Sportswear' },
+    ];
+    const columns = [
+      { field: 'brand', width: 150 },
+      { field: 'category', width: 150 },
+    ];
+
+    function Test() {
+      return (
+        <div style={{ width: 400, height: 300 }}>
+          <DataGridPro rows={rows} columns={columns} rowReordering />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    // Verify initial row order
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+    // Start drag from the reorder cell (column 0, row 0)
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    fireEvent.dragStart(rowReorderCell);
+
+    // Verify that the reorder cell has the dragging class (this happens immediately)
+    expect(rowReorderCell).to.have.class(gridClasses['row--dragging']);
+
+    // Now drag over a non-reorder cell (brand cell of row 2)
+    const targetNonReorderCell = getCell(2, 1); // brand cell of the third row
+    fireEvent.dragEnter(targetNonReorderCell);
+
+    // Hover over the target cell to render a drop indicator
+    const dragOverEvent = createDragOverEvent(targetNonReorderCell);
+    fireEvent(targetNonReorderCell, dragOverEvent);
+
+    // Verify that the target row shows the drop indicator
+    const targetRow = targetNonReorderCell.closest('[data-id]');
+    expect(targetRow).to.have.class(gridClasses['row--dropAbove']);
+
+    // End the drag to complete the row reorder
+    const dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
+
+    // Verify that the row order has changed (Nike should now be between Adidas and Puma)
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+  });
 });

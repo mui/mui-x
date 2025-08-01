@@ -55,6 +55,8 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
+  rowReorderStateInitializer,
+  useGridRowReorderApi,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -124,6 +126,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
+  useGridInitializeState(rowReorderStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
@@ -148,6 +151,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridVirtualizer(apiRef, props);
+  useGridRowReorderApi(apiRef);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);

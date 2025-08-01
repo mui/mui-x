@@ -223,6 +223,8 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
+      apiRef.current.setRowDragActive(true);
+
       dragRowNode.current = event.currentTarget;
       // Apply cell-level dragging class to the drag handle
       dragRowNode.current.classList.add(classes.rowDragging);
@@ -353,6 +355,7 @@ export const useGridRowReorder = (
       // Clear visual indicators and dragged state
       applyDropIndicator(null, null);
       applyDraggedState(dragRowId, false);
+      apiRef.current.setRowDragActive(false);
 
       // Check if the row was dropped outside the grid.
       if (!event.dataTransfer || event.dataTransfer.dropEffect === 'none') {
