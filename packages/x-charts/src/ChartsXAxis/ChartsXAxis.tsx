@@ -95,6 +95,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     sx,
     offset,
     height: axisHeight,
+    disableTruncation,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -199,15 +200,16 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     axisHeight - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
   );
 
-  const tickLabels = isHydrated
-    ? shortenLabels(
-        visibleLabels,
-        drawingArea,
-        tickLabelsMaxHeight,
-        isRtl,
-        axisTickLabelProps.style,
-      )
-    : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
+  const tickLabels =
+    !disableTruncation && isHydrated
+      ? shortenLabels(
+          visibleLabels,
+          drawingArea,
+          tickLabelsMaxHeight,
+          isRtl,
+          axisTickLabelProps.style,
+        )
+      : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 
   return (
     <XAxisRoot
