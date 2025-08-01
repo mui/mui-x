@@ -36,7 +36,7 @@ export interface CalendarEvent {
 }
 
 export interface CalendarEventWithPosition extends CalendarEvent {
-  eventRowIndex: number;
+  eventRowIndex?: number;
 }
 
 export type CalendarEventId = string | number;

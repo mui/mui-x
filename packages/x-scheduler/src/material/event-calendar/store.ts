@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized, Store } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { SchedulerValidDate } from '../../primitives/models';
-import { CalendarEvent, CalendarEventId } from '../models/events';
+import { CalendarEvent, CalendarEventId, CalendarEventWithPosition } from '../models/events';
 import { CalendarResource, CalendarResourceId } from '../models/resource';
 import { EventCalendarView } from './EventCalendar.types';
 
@@ -82,16 +82,15 @@ export const selectors = {
       parameters: { days: SchedulerValidDate[]; shouldOnlyRenderEventInOneCell: boolean },
     ) => parameters,
     (events, visibleResources, { days, shouldOnlyRenderEventInOneCell }) => {
-      const daysMap = new Map<string, { rowsStartIndex: number; events: CalendarEvent[] }>();
+      const daysMap = new Map<string, { events: CalendarEventWithPosition[] }>();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
-        daysMap.set(dayKey, { rowsStartIndex: 1, events: [] });
+        daysMap.set(dayKey, { events: [] });
       }
       for (const event of events) {
         if (event.resource && visibleResources.get(event.resource) === false) {
           continue; // Skip events for hidden resources
         }
-        let rowsStartIndex = 1;
 
         const eventFirstDay = adapter.startOfDay(event.start);
         const eventLastDay = adapter.endOfDay(event.end);
@@ -116,26 +115,31 @@ export const selectors = {
         for (const day of eventDays) {
           const dayKey = adapter.format(day, 'keyboardDate');
           if (!daysMap.has(dayKey)) {
-            daysMap.set(dayKey, { rowsStartIndex: 1, events: [] });
+            daysMap.set(dayKey, { events: [] });
           }
 
-          const isFirstEvent = !daysMap.get(dayKey)!.events.length;
-          if (isFirstEvent && adapter.isBefore(eventFirstDay, day)) {
+          const eventIndex = daysMap.get(dayKey)!.events.length;
+          let eventRowIndex;
+          // If the event starts before the current day, we need to find the row index of the first day of the event
+          if (adapter.isBefore(eventFirstDay, day)) {
             const eventFirstDayKey = adapter.format(eventFirstDay, 'keyboardDate');
             const eventStartPositionInArray =
               daysMap
                 .get(eventFirstDayKey)
-                ?.events?.findIndex((eventInMap) => eventInMap.id === event.id) || 0;
-            rowsStartIndex = eventStartPositionInArray + 1;
+                ?.events?.find((eventInMap) => eventInMap.id === event.id)?.eventRowIndex || 1;
+            eventRowIndex = eventStartPositionInArray;
+            // Otherwise, we just render the event on the row after the previous events rendered in the same column
           } else {
-            rowsStartIndex = 1;
+            // we need to know the row index of the previous events rendered in a column
+            const previousEventIndex =
+              daysMap.get(dayKey)!.events[eventIndex - 1]?.eventRowIndex || 0;
+            eventRowIndex = previousEventIndex + 1;
           }
 
-          daysMap.get(dayKey)!.rowsStartIndex = Math.max(
-            rowsStartIndex,
-            daysMap.get(dayKey)!.rowsStartIndex,
-          );
-          daysMap.get(dayKey)!.events.push(event);
+          daysMap.get(dayKey)!.events.push({
+            ...event,
+            eventRowIndex,
+          });
         }
       }
 
@@ -143,7 +147,6 @@ export const selectors = {
         const dayKey = adapter.format(day, 'keyboardDate');
         return {
           day,
-          rowsStartIndex: daysMap.get(dayKey)?.rowsStartIndex || 1,
           events: daysMap.get(dayKey)?.events || [],
         };
       });

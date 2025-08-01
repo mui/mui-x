@@ -44,14 +44,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   });
 
   const dayWithEventsGroupedByCategory = React.useMemo(() => {
-    return daysWithEvents.map(({ day, rowsStartIndex, events }) => {
-      let eventRowIndex = rowsStartIndex;
+    return daysWithEvents.map(({ day, events }) => {
       const regularEvents: CalendarEvent[] = [];
       const allDayEvents: CalendarEventWithPosition[] = [];
       for (const event of events) {
         if (event.allDay) {
-          allDayEvents.push({ ...event, eventRowIndex });
-          eventRowIndex += 1;
+          allDayEvents.push(event);
         } else {
           regularEvents.push(event);
         }
