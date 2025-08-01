@@ -1,10 +1,10 @@
 ---
-title: Data Grid & Charts integration
+title: Data Grid and Charts integration
 ---
 
 # Charts integration [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Visualize grid data with charts.</p>
+<p class="description">Use the MUI X Charts to visualize data from the Data Grid.</p>
 
 Data Grid integrates seamlessly with MUI X Charts, allowing data visualization and enabling dynamic chart updates based on Grid state changes, either through the Grid API or user interaction.
 
@@ -13,10 +13,10 @@ This integration is possible via the `<GridChartsIntegrationContextProvider />`
 Based on its internal models, the Grid calculates and stores the data in a format that is easy to use for chart rendering.
 `<ChartRenderer />` reads that data and renders an appropriate chart component with props that depend on the configuration stored in the context.
 
-## Setup
+## Implementing Charts and Data Grid integration
 
 To enable chart integration, pass the `chartsIntegration` prop to the Grid and `<GridChartsPanel />` to the `chartsPanel` slot.
-This will enable the charts panel and allow updates to the charts integration context provider state.
+This enables the charts panel and makes it possible for the charts integration context provider state to receive updates.
 
 ```tsx
 <DataGridPremium
@@ -41,7 +41,7 @@ Use `<GridChartsRendererProxy />` to connect the chart renderer to the Grid's st
 </GridChartsIntegrationContextProvider>
 ```
 
-## Basic integration
+### Basic integration
 
 The demo below shows all the basic elements needed to get the charts integration working.
 Use `initialState` to set the initial configuration for the chart renderer.
@@ -51,7 +51,7 @@ Use `initialState` to set the initial configuration for the chart renderer.
 ## Row grouping
 
 You can integrate charts with grouped and aggregated data.
-The Grid's grouping and aggregation state will be reflected in the chart.
+The Grid's grouping and aggregation states are reflected in the chart.
 
 {{"demo": "GridChartsIntegrationRowGrouping.js", "bg": "inline"}}
 
@@ -96,7 +96,7 @@ The following demo shows charts integration with the grid using [Server-side dat
 
 ## Multiple charts
 
-Control multiple charts with one grid by adding more `<GridChartsRendererProxy />` components with unique `id`s.
+Control multiple charts with one grid by adding more `<GridChartsRendererProxy />` components with unique IDs.
 Each chart can have its own configuration and state.
 
 ```tsx
@@ -112,29 +112,29 @@ Customize the chart configuration and rendering by:
 
 - Overriding configuration options to force certain values.
   Use it to hide or lock configuration controls in the panel.
-- Use `onRender()` prop on `<GridChartsRendererProxy />` to customize chart rendering for a single or all chart types.
+- Using the `onRender()` prop on `<GridChartsRendererProxy />` to customize chart rendering for one or all chart types.
 
 The demo below overrides the configuration and removes the option to change the color palette.
 Additionally, it adds axes formatting for line and area chart that cannot be controlled via the default customization panel.
 
-If needed, configuration can be extended to render the UI elements for the additional axes customization.
+If needed, you can extend the configuration to render the UI elements for the additional customized axes.
 
 {{"demo": "GridChartsIntegrationCustomization.js", "bg": "inline"}}
 
 ## Live data
 
-The demo below shows charts' responsiveness to live data updates in the Grid.
+The demo below shows how the Charts react to live data updates in the Grid.
 
 {{"demo": "GridChartsIntegrationLiveData.js", "bg": "inline"}}
 
 ## Localization
 
-To localize all components included in the charts integration, choose one of the ways to localize [Grid](/x/react-data-grid/localization/) and [Charts](/x/react-charts/localization/).
-Easiest way is to use `createTheme()` and `ThemeProvider`.
+To localize all components included in the Charts integration, choose one method for both the [Grid](/x/react-data-grid/localization/) and [Charts](/x/react-charts/localization/).
+We recommend using `createTheme()` and `ThemeProvider`.
 
-In addition to this, use `getLocalizedConfigurationOptions()` instead of `configurationOptions` to get localized configuration options.
+To get localized configuration options, use `getLocalizedConfigurationOptions()` instead of `configurationOptions`.
 
-The demo below shows the integration using `frFr` locale.
+The demo below shows how to incorporate localization into the integration using the `frFr` locale.
 
 {{"demo": "GridChartsIntegrationLocalization.js", "bg": "inline"}}
 
