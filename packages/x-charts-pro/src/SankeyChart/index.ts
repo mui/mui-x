@@ -12,3 +12,4 @@ export type {
   SankeyLink as SankeyLinkType,
   SankeySeriesType,
 } from './sankey.types';
+export { type SankeyPlotClasses, sankeyPlotClasses } from './sankeyClasses';

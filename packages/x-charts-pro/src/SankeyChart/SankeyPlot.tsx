@@ -1,8 +1,5 @@
 'use client';
 import * as React from 'react';
-import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useTheme } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { SankeyLayout, type SankeyItemIdentifier } from './sankey.types';
@@ -10,17 +7,7 @@ import { calculateSankeyLayout } from './calculateSankeyLayout';
 import { SankeyNode } from './SankeyNode';
 import { SankeyLink } from './SankeyLink';
 import { useSankeySeriesContext } from '../hooks/useSankeySeries';
-
-export interface SankeyPlotClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the nodes container. */
-  nodes: string;
-  /** Styles applied to the links container. */
-  links: string;
-}
-
-export type SankeyPlotClassKey = keyof SankeyPlotClasses;
+import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
 
 export interface SankeyPlotProps {
   /**
@@ -38,28 +25,6 @@ export interface SankeyPlotProps {
     sankeyItemIdentifier: SankeyItemIdentifier,
   ) => void;
 }
-
-export function getSankeyPlotUtilityClass(slot: string) {
-  return generateUtilityClass('MuiSankeyPlot', slot);
-}
-
-export const sankeyPlotClasses: SankeyPlotClasses = generateUtilityClasses('MuiSankeyPlot', [
-  'root',
-  'nodes',
-  'links',
-]);
-
-const useUtilityClasses = (ownerState: { classes?: Partial<SankeyPlotClasses> }) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['root'],
-    nodes: ['nodes'],
-    links: ['links'],
-  };
-
-  return composeClasses(slots, getSankeyPlotUtilityClass, classes);
-};
 
 /**
  * Renders a Sankey diagram plot.
