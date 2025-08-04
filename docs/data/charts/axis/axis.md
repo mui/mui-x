@@ -6,57 +6,53 @@ components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxi
 
 # Charts - Axis
 
-<p class="description">Axes provide associated values to element positions.</p>
+<p class="description">Define, format, and customize Chart axes.</p>
 
-Axes are used in the following charts: `<LineChart />`, `<BarChart />`, `<ScatterChart />`.
+An axis is a reference line that data points are measured against in a chart.
+The MUI X Line Chart, Bar Chart, and Scatter Chart let you define x-axes and y-axes, both of which can be formatted and customized to suit a wide range of use cases.
 
-## Defining axis
+## Customizing axes
 
-Like your data, axis definition plays a central role in the chart rendering.
-It's responsible for the mapping between your data and element positions.
+Use the `xAxis` and `yAxis` props to define custom axes.
+These props expect an array of objects.
 
-You can define custom axes by using `xAxis` and `yAxis` props.
-Those props expect an array of objects.
-
-Here is a demonstration with two lines with the same data.
-But one uses a linear, and the other a log axis.
+In the demo below, two lines are rendered using the same data points.
+One uses linear axes and the other is logarithmic.
 Each axis definition is identified by its property `id`.
-Then each series specifies the axis they use with the `xAxisId` and `yAxisId` properties.
+Then each series specifies the axis it uses with the `xAxisId` and `yAxisId` properties.
 
 {{"demo": "ScaleExample.js"}}
 
 :::info
-The management of those ids is for advanced use cases, such as charts with multiple axes.
-Or customized axes.
+ID management, as shown in the example above, is not necessary for most common use cases.
 
-If you do not provide a `xAxisId` or `yAxisId`, the series will use the first axis defined.
-
-That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
-Those demonstrations use the defaultized values.
+If you don't provide `xAxisId` or `yAxisId` then the series uses the first axis defined.
+This is why you won't see definitions of `id`, `xAxisId`, or `yAxisId` in most demos in the Charts docs—they rely on the default values.
 :::
 
 ### Axis type
 
-The axis type is specified by its property `scaleType` which expect one of the following values:
+Use the `scaleType` property to specify the axis type.
+This property expects one of the following values:
 
-- `'band'`: Split the axis in equal band. Mostly used for bar charts.
-- `'point'`: Split the axis in equally spaced points. Mostly used for line charts on categories.
+- `'band'`: Split the axis into equal bands. Mostly used for bar charts.
+- `'point'`: Split the axis into equally spaced points. Mostly used for line charts with categories.
 - `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
-- `'time'`, `'utc'`: Map JavaScript `Date()` object to the space available for the chart.
+- `'time'`, `'utc'`: Map JavaScript `Date()` objects to the space available for the chart.
 
 ### Axis data
 
-The axis definition object also includes a `data` property.
-Which expects an array of value coherent with the `scaleType`:
+Use the `data` property to define the scale of the axis.
+This property expects an array of values that correspond to the chosen `scaleType`:
 
 - For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
 - For `'time'` or `'utc'` it should contain `Date()` objects
-- For `'band'` or `'point'` it can contain `string`, or numerical values
+- For `'band'` or `'point'` it can contain strings or numerical values
 
 Some series types also require specific axis attributes:
 
-- line plots require an `xAxis` to have `data` provided
-- bar plots require an `xAxis` with `scaleType="band"` and some `data` provided.
+- line plots require the `data` property for the `xAxis`
+- bar plots require the `data` property for the `xAxis` when `scaleType="band"`
 
 ### Axis formatter
 
