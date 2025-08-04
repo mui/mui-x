@@ -330,7 +330,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       position?: PinnedRowPosition;
       renderContext?: RenderContext;
     } = {},
-    unstable_rowTree: Record<RowId, any>,
+    unstable_rowTree?: Record<RowId, any>,
   ) => {
     if (!rowParams.rows && !range) {
       return [];
@@ -397,7 +397,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       // See:
       // - https://github.com/mui/mui-x/issues/16638
       // - https://github.com/mui/mui-x/issues/17022
-      if (!unstable_rowTree[id]) {
+      if (unstable_rowTree && !unstable_rowTree[id]) {
         return;
       }
 

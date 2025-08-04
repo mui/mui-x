@@ -59,7 +59,7 @@ export type VirtualizerParams = {
   pinnedColumns?: PinnedColumns;
 
   autoHeight: boolean;
-  minimalContentHeight: number | string;
+  minimalContentHeight?: number | string;
   getRowHeight?: (row: RowEntry) => number | null | undefined | 'auto';
   /**
    * Function that returns the estimated height for a row.
