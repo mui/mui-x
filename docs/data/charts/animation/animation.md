@@ -61,37 +61,23 @@ In the example below, labels are positioned above the bars they refer to and are
 
 {{"demo": "JSAnimationCustomization.js"}}
 
-## Using third-party animation libraries
+## Third-party animation libraries
 
 You can fully override the default Chart animations with your own (third-party) animation library.
-The demo below shows how to integrate React Spring to add a bounce effect to the bar label animation:
-
-{{"demo": "ReactSpringAnimationCustomization.js"}}
 
 :::warning
-Third-party JavaScript animation libraries can cause performance issues, especially when rendering many data points or using interactions such as zooming and highlighting.
+Third-party JavaScript animation libraries can cause performance issues, especially if you're rendering many data points or enabling interactions like zooming or highlighting.
+It's essential to test the performance of your charts with your chosen animation library.
 :::
 
-## Using Animation Libraries
+### React Spring
 
-Alternatively, you can use your own animation library to create custom animations, such as React Spring or Motion (Framer Motion).
-
-### Using React Spring
-
-One of the most popular libraries for animations in React is [React Spring](https://www.react-spring.dev/docs/getting-started).
-It provides a powerful and flexible API for creating animations, and it works well with the Charts library.
+The demo below shows how to integrate [React Spring](https://www.react-spring.dev/docs/getting-started) to add a bounce effect to the bar label animation:
 
 {{"demo": "ReactSpringAnimationCustomization.js"}}
 
-### Using Motion
+### Motion
 
-Another option is the [Motion library](https://motion.dev/docs/react), which provides a declarative API for complex animations with excellent performance.
+The following demo uses the [Motion library](https://motion.dev/docs/react) for a fade-in effect on the points and lines in the chart:
 
 {{"demo": "MotionAnimationCustomization.js"}}
-
-### Caveats
-
-When using custom animation libraries, you should be aware of the performance implications.
-While these libraries can create smooth animations, they may not be optimized for large datasets or complex interactions.
-
-It's essential to test the performance of your charts with the chosen animation library, especially if you are rendering many data points or enabling interactions like zooming or highlighting.
