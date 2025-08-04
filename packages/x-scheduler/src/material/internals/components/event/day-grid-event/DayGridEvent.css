@@ -32,6 +32,7 @@
   cursor: pointer;
   z-index: 1;
   grid-row: var(--grid-row);
+  grid-column: 1;
   padding: 0 var(--space-1);
   /* calculate the column spanning accounting for the spaces between columns and the borders */
   width: calc(
@@ -43,8 +44,6 @@
 .EventCard--invisible {
   width: 100%;
   visibility: hidden;
-  grid-row: var(--grid-row);
-  grid-column: 1;
   height: 18px;
 }
 
