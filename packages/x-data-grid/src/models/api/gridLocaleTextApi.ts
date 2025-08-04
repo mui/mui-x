@@ -188,6 +188,7 @@ export interface GridLocaleText {
 
   // Aggregation
   aggregationMenuItemHeader: string;
+  aggregationFunctionLabelNone: string;
   aggregationFunctionLabelSum: string;
   aggregationFunctionLabelAvg: string;
   aggregationFunctionLabelMin: string;
@@ -245,6 +246,7 @@ export interface GridLocaleText {
   chartsSearchLabel: string;
   chartsSearchClear: string;
   chartsNoFields: string;
+  chartsFieldBlocked: string;
   chartsCategories: string;
   chartsSeries: string;
   chartsMenuAddToCategories: string;
