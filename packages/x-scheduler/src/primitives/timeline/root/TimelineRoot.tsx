@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
+import { Store } from '@base-ui-components/utils/store';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { useLazyRef } from '../../../base-ui-copy/utils/useLazyRef';
-import { Store } from '../../../base-ui-copy/utils/store';
-import { useModernLayoutEffect } from '../../../base-ui-copy/utils/useModernLayoutEffect';
 import { State } from './store';
 import { TimelineRootContext } from './TimelineRootContext';
 
@@ -26,11 +26,11 @@ export const TimelineRoot = React.forwardRef(function TimelineRoot(
 
   const state: TimelineRoot.State = React.useMemo(() => ({}), []);
 
-  const store = useLazyRef(() => new Store<State>({ items: itemsProp })).current;
+  const store = useRefWithInit(() => new Store<State>({ items: itemsProp })).current;
 
   const contextValue = React.useMemo(() => ({ store }), [store]);
 
-  useModernLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     store.apply({ items: itemsProp });
   }, [store, itemsProp]);
 

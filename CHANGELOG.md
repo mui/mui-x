@@ -5,6 +5,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.9.2
+
+_Jul 31, 2025_
+
+We'd like to extend a big thank you to the 23 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌎 Improve French (fr-FR), Hebrew (he-IL) and Polish (pl-PL) locales on the Data Grid
+- 🌎 Improve Korean (ko-KR) locale on the Date and Time Pickers
+- 📈 Add symlog scale to charts
+- 📊 Fix bar border radius on Firefox
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to the community members for their valuable contributions:
+@AmrElnaggar99, @atlanteh, @ddolcimascolo, @Jiseoup, @leonaha5, @noherczeg, @sai6855
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @bharatkashyap, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @KenanYusuf, @LukasTy, @mapache-salvaje, @MBilalShafi, @rita-codes, @romgrk, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.9.2`
+
+- [DataGrid] Add debounce for columns panel search (#18719) @noherczeg
+- [DataGrid] Extract virtualization engine (#18275) @romgrk
+- [DataGrid] Improve types in `<GridEditSingleSelect />` (#18184) @sai6855
+- [l10n] Improve French (fr-FR) locale (#18905) @ddolcimascolo
+- [l10n] Improve Hebrew (he-IL) locale (#18665) @atlanteh
+- [l10n] Improve Polish (pl-PL) locale (#18068) @leonaha5
+
+#### `@mui/x-data-grid-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.9.2`, plus:
+
+- [DataGridPro] Fix duplicate nested rows for dynamically updated row IDs (#18526) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.9.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.9.2`, plus:
+
+- [DataGridPremium] Add `privateMode` to AI assistant prompt resolver (#18759) @bharatkashyap
+- [DataGridPremium] Fix empty nested group values caused by main criterial `valueFormatter()` (#18916) @cherniavskii
+- [DataGridPremium] Sidebar content and state is managed the same way as for preference panel (#18741) @arminmeh
+- [DataGridPremium] Make `api` param for the aggregation function optional (#18984) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.9.2`
+
+- [l10n] Improve Korean (ko-KR) locale (#18664) @Jiseoup
+- [pickers] Fix popper click-away behavior (#18804) @LukasTy
+- [pickers] Fix usage not in main document (#18944) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.9.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.9.2`
+
+- [charts] Add symlog scale to charts (#18729) @bernardobelchior
+- [charts] Fix bar border radius on Firefox (#18824) @bernardobelchior
+- [charts] Fix crash when rendering large scatter dataset (#18845) @bernardobelchior
+- [charts] Remove unnecessary type assertion in tooltip `valueFormatter()` (#18877) @sai6855
+- [charts] Export `ChartsWrapper` from `'./ChartsWrapper'` rather than `'./internals'` (#18966) @JCQuintas
+
+#### `@mui/x-charts-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.9.2`, plus:
+
+- [charts-pro] Fix voronoi interaction with zoom (#18950) @alexfauquette
+- [charts-pro] Hide toolbar by default when exporting (#18764) @bernardobelchior
+
+### Codemod
+
+#### `@mui/x-codemod@8.9.2`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add Data Grid demo pages (#18180) @KenanYusuf
+- [docs] Copyedit the Charts Overview page (#18840) @mapache-salvaje
+- [docs] Fix incorrect parameter name in pickers "Custom components" page from `variant` to `pickerVariant` (#18919) @AmrElnaggar99
+
+### Miscellaneous
+
+- [code-infra] Auto-generate deep exports to prevent asymmetric exports (#18917) @JCQuintas
+- [docs-infra] Turn on "Edit in Chat" for X docs (#18869) @siriwatknp
+- [infra] Add specific bundle size tracking (#18884) @Janpot
+- [infra] Fix markdown formatting in llms generation (#18914) @Janpot
+- [infra] Use CI action from mui-public (#18709) @brijeshb42
+
 ## 8.9.1
 
 _Jul 21, 2025_
@@ -23,11 +117,11 @@ The following are all team members who have contributed to this release:
 - [DataGrid] Move conditional list view column logic into `gridVisibleColumnDefinitionsSelector` (#18724) @KenanYusuf
 - [DataGrid] Fix row selection "exclude" model inconsistency (#18844) @MBilalShafi
 
-#### `@mui/x-data-grid-pro@8.9.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-data-grid-pro@8.9.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@8.9.1`.
 
-#### `@mui/x-data-grid-premium@8.9.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+#### `@mui/x-data-grid-premium@8.9.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@8.9.1`.
 
