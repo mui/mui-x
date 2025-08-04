@@ -32,6 +32,15 @@ const initialState: GridInitialState = {
   },
 };
 
+const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
+  originalColumnField,
+) => {
+  if (originalColumnField === 'quantity') {
+    return { width: 80 };
+  }
+  return undefined;
+};
+
 export default function GridPivotingCommodities() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
@@ -40,17 +49,6 @@ export default function GridPivotingCommodities() {
   });
 
   const [pivotActive, setPivotActive] = React.useState(false);
-
-  const pivotingColDef = React.useMemo<
-    DataGridPremiumProps['pivotingColDef']
-  >(() => {
-    return (originalColumnField) => {
-      if (originalColumnField === 'quantity') {
-        return { width: 80 };
-      }
-      return undefined;
-    };
-  }, []);
 
   return (
     <div style={{ width: '100%' }}>

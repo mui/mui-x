@@ -1,13 +1,14 @@
 'use client';
-import { warn } from '../../../base-ui-copy/utils/warn';
-import { useSelector } from '../../../base-ui-copy/utils/store';
-import { EventCalendarStore, selectors } from '../../event-calendar/store';
+import { useStore } from '@base-ui-components/utils/store';
+import { warn } from '@base-ui-components/utils/warn';
+import { selectors } from '../use-event-calendar/store';
+import type { useEventCalendar } from '../use-event-calendar';
 
 /**
  * Make sure the state current value doesn't contain incompatible values.
  */
-function useAssertStateValidityOutsideOfProduction(store: EventCalendarStore) {
-  useSelector(store, () => {
+function useAssertStateValidityOutsideOfProduction(store: useEventCalendar.Store) {
+  useStore(store, () => {
     const views = selectors.views(store.state);
     const view = selectors.view(store.state);
 

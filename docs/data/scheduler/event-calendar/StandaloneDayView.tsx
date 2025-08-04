@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/material';
+import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { DayView } from '@mui/x-scheduler/material/day-view';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import {
