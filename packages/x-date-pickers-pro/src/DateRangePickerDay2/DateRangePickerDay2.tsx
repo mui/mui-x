@@ -6,7 +6,8 @@ import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { usePickerDayOwnerState, useUtils } from '@mui/x-date-pickers/internals';
+import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import {
   DateRangePickerDay2OwnerState,
   DateRangePickerDay2Props,
@@ -365,7 +366,7 @@ const DateRangePickerDay2Raw = React.forwardRef(function DateRangePickerDay2(
     name: 'MuiDateRangePickerDay2',
   });
 
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const {
     autoFocus = false,
@@ -424,8 +425,8 @@ const DateRangePickerDay2Raw = React.forwardRef(function DateRangePickerDay2(
     isDayPreviewEnd: isEndOfPreviewing,
     isDayInsidePreview: isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
     // Properties specific to the MUI implementation (some might be removed in the next major)
-    isDayStartOfMonth: utils.isSameDay(day, utils.startOfMonth(day)),
-    isDayEndOfMonth: utils.isSameDay(day, utils.endOfMonth(day)),
+    isDayStartOfMonth: adapter.isSameDay(day, adapter.startOfMonth(day)),
+    isDayEndOfMonth: adapter.isSameDay(day, adapter.endOfMonth(day)),
     isDayFirstVisibleCell: isFirstVisibleCell,
     isDayLastVisibleCell: isLastVisibleCell,
     isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,
@@ -489,7 +490,7 @@ const DateRangePickerDay2Raw = React.forwardRef(function DateRangePickerDay2(
       className={clsx(classes.root, className)}
     >
       {/* `ownerState.isDayFillerCell` is used for compat with `PickersDay` for tests */}
-      {children ?? (ownerState.isDayFillerCell ? null : utils.format(day, 'dayOfMonth'))}
+      {children ?? (ownerState.isDayFillerCell ? null : adapter.format(day, 'dayOfMonth'))}
     </DateRangePickerDay2Root>
   );
 });

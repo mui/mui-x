@@ -4,7 +4,7 @@ import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types
 interface GetHoursSectionOptionsParameters {
   now: PickerValidDate;
   value: PickerValidDate | null;
-  utils: MuiPickersAdapter;
+  adapter: MuiPickersAdapter;
   ampm: boolean;
   isDisabled: (value: number) => boolean;
   timeStep: number;
@@ -15,14 +15,14 @@ interface GetHoursSectionOptionsParameters {
 export const getHourSectionOptions = ({
   now,
   value,
-  utils,
+  adapter,
   ampm,
   isDisabled,
   resolveAriaLabel,
   timeStep,
   valueOrReferenceDate,
 }: GetHoursSectionOptionsParameters): MultiSectionDigitalClockOption<number>[] => {
-  const currentHours = value ? utils.getHours(value) : null;
+  const currentHours = value ? adapter.getHours(value) : null;
 
   const result: MultiSectionDigitalClockOption<number>[] = [];
 
@@ -44,15 +44,15 @@ export const getHourSectionOptions = ({
   };
 
   const isFocused = (hour: number) => {
-    return isSelected(hour, utils.getHours(valueOrReferenceDate));
+    return isSelected(hour, adapter.getHours(valueOrReferenceDate));
   };
 
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
-    let label = utils.format(utils.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
+    let label = adapter.format(adapter.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
     const ariaLabel = resolveAriaLabel(parseInt(label, 10).toString());
 
-    label = utils.formatNumber(label);
+    label = adapter.formatNumber(label);
 
     result.push({
       value: hour,
@@ -68,7 +68,7 @@ export const getHourSectionOptions = ({
 
 interface GetTimeSectionOptionsParameters {
   value: number | null;
-  utils: MuiPickersAdapter;
+  adapter: MuiPickersAdapter;
   isDisabled: (value: number) => boolean;
   timeStep: number;
   resolveLabel: (value: number) => string;
@@ -78,7 +78,7 @@ interface GetTimeSectionOptionsParameters {
 
 export const getTimeSectionOptions = ({
   value,
-  utils,
+  adapter,
   isDisabled,
   timeStep,
   resolveLabel,
@@ -102,7 +102,7 @@ export const getTimeSectionOptions = ({
       const timeValue = timeStep * index;
       return {
         value: timeValue,
-        label: utils.formatNumber(resolveLabel(timeValue)),
+        label: adapter.formatNumber(resolveLabel(timeValue)),
         isDisabled,
         isSelected,
         isFocused,

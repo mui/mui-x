@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -18,6 +19,7 @@ import {
   updateRowTree,
   RowTreeBuilderGroupingCriterion,
   getVisibleRowsLookup,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -31,7 +33,6 @@ import {
 import {
   filterRowTreeFromGroupingColumns,
   getColDefOverrides,
-  RowGroupingStrategy,
   isGroupingColumn,
   setStrategyAvailability,
   getCellGroupingCriteria,

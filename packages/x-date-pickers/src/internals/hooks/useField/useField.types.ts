@@ -15,7 +15,12 @@ import {
 } from '../../../models';
 import { InternalPropNames } from '../../../hooks/useSplitFieldProps';
 import type { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
+import {
+  FormProps,
+  InferNonNullablePickerValue,
+  PickerRangeValue,
+  PickerValidValue,
+} from '../../models';
 
 export interface UseFieldParameters<
   TValue extends PickerValidValue,
@@ -50,7 +55,7 @@ export interface UseFieldInternalProps<
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
-  referenceDate?: PickerValidDate;
+  referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
@@ -270,13 +275,13 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
    * Update the reference value with the new value.
    * This method must make sure that no date inside the returned `referenceValue` is invalid.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {MuiPickersAdapter} utils The utils to manipulate the date.
+   * @param {MuiPickersAdapter} adapter The adapter to manipulate the date.
    * @param {TValue} value The new value from which we want to take all valid dates in the `referenceValue` state.
    * @param {TValue} prevReferenceValue The previous reference value. It is used as a fallback for invalid dates in the new value.
    * @returns {TValue} The new reference value with no invalid date.
    */
   updateReferenceValue: (
-    utils: MuiPickersAdapter,
+    adapter: MuiPickersAdapter,
     value: TValue,
     prevReferenceValue: InferNonNullablePickerValue<TValue>,
   ) => InferNonNullablePickerValue<TValue>;

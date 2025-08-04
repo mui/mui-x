@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { SinonSpy, spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';

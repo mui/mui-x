@@ -1,5 +1,4 @@
 import { RefObject } from '@mui/x-internals/types';
-import { expect } from 'chai';
 import { createSelectorMemoized, OutputSelector } from './createSelector';
 import { GridStateCommunity } from '../models/gridStateCommunity';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';

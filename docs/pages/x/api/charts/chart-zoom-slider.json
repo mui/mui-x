@@ -6,6 +6,8 @@
     "import { ChartZoomSlider } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartZoomSlider",
   "filename": "/packages/x-charts-pro/src/ChartZoomSlider/ChartZoomSlider.tsx",
   "inheritance": null,

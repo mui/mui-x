@@ -1,5 +1,4 @@
 import * as fse from 'fs-extra';
-import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium } from '@playwright/test';
@@ -81,8 +80,6 @@ async function main() {
   }
 
   describe('visual regressions', () => {
-    // TODO: remove once mocha types are removed
-    // @ts-expect-error, will be set by the test
     afterAll(async () => {
       await browser.close();
     });
@@ -116,10 +113,10 @@ async function main() {
         {
           timeout: getTimeout(route),
         },
-        // @ts-expect-error, mocha types are still used
         async () => {
-          if (/^\/docs-charts-tooltip.*/.test(route)) {
-            // Ignore tooltip demo. Since they require some interaction they get tested in dedicated tests.
+          if (/^\/docs-charts-tooltip\/Interaction/.test(route)) {
+            // Ignore tooltip interaction demo screenshot.
+            // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
             return;
           }
 
@@ -200,6 +197,7 @@ async function main() {
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
       );
 
+      await sleep(100);
       await page.evaluate(() => {
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
 
@@ -210,6 +208,7 @@ async function main() {
         virtualScroller.scrollLeft = 400;
         virtualScroller.dispatchEvent(new Event('scroll'));
       });
+      await sleep(100);
 
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });

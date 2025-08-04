@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { CurveOptions, Point } from './curve.types';
+import { FunnelCurveGenerator, CurveOptions, Point } from './curve.types';
 
 /**
  * This is a custom "bump" curve generator.
@@ -10,7 +9,7 @@ import { CurveOptions, Point } from './curve.types';
  * The implementation is based on the d3-shape bump curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/bump.js
  */
-export class Bump implements CurveGenerator {
+export class Bump implements FunnelCurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private isHorizontal: boolean = false;
@@ -45,6 +44,10 @@ export class Bump implements CurveGenerator {
   lineStart(): void {}
 
   lineEnd(): void {}
+
+  processPoints(points: Point[]): Point[] {
+    return points;
+  }
 
   point(x: number, y: number): void {
     this.points.push({ x, y });

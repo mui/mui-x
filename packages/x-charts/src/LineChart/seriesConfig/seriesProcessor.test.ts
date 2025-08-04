@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import lineProcessor from './seriesProcessor';
 import { SeriesProcessorParams } from '../../internals/plugins/models';
 

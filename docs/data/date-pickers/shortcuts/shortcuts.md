@@ -80,7 +80,13 @@ You can change the behavior when selecting a shortcut using the `changeImportanc
 
 ## Customization
 
-Like other [layout's subcomponent](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.
+Like other [layout subcomponents](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.
 Here is an example with horizontal shortcuts.
 
 {{"demo": "CustomizedRangeShortcuts.js", "bg": "inline"}}
+
+## RTL example
+
+Like other customizations, shortcuts also respect the RTL direction setting.
+
+{{"demo": "RTLShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}

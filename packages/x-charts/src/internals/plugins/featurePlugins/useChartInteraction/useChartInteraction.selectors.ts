@@ -5,31 +5,31 @@ const selectInteraction: ChartOptionalRootSelector<UseChartInteractionSignature>
   state.interaction;
 
 export const selectorChartsInteractionIsInitialized = createSelector(
-  selectInteraction,
+  [selectInteraction],
   (interaction) => interaction !== undefined,
 );
 
 export const selectorChartsInteractionItem = createSelector(
-  selectInteraction,
+  [selectInteraction],
   (interaction) => interaction?.item ?? null,
 );
 
 export const selectorChartsInteractionPointer = createSelector(
-  selectInteraction,
+  [selectInteraction],
   (interaction) => interaction?.pointer ?? null,
 );
 
 export const selectorChartsInteractionPointerX = createSelector(
-  selectorChartsInteractionPointer,
+  [selectorChartsInteractionPointer],
   (pointer) => pointer && pointer.x,
 );
 
 export const selectorChartsInteractionPointerY = createSelector(
-  selectorChartsInteractionPointer,
+  [selectorChartsInteractionPointer],
   (pointer) => pointer && pointer.y,
 );
 
 export const selectorChartsInteractionItemIsDefined = createSelector(
-  selectorChartsInteractionItem,
+  [selectorChartsInteractionItem],
   (item) => item !== null,
 );

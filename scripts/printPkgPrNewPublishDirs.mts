@@ -1,6 +1,8 @@
 const publishDirs = {
   '@mui/x-charts': 'packages/x-charts',
   '@mui/x-charts-pro': 'packages/x-charts-pro',
+  // TODO: CHARTS-PREMIUM: Uncomment when ready
+  // '@mui/x-charts-premium': 'packages/x-charts-premium',
   '@mui/x-charts-vendor': 'packages/x-charts-vendor',
   '@mui/x-codemod': 'packages/x-codemod',
   '@mui/x-data-grid': 'packages/x-data-grid',
@@ -10,6 +12,7 @@ const publishDirs = {
   '@mui/x-date-pickers': 'packages/x-date-pickers',
   '@mui/x-date-pickers-pro': 'packages/x-date-pickers-pro',
   '@mui/x-internals': 'packages/x-internals',
+  '@mui/x-internal-gestures': 'packages/x-internal-gestures',
   '@mui/x-license': 'packages/x-license',
   // private packages can not be published
   // '@mui/x-scheduler': 'packages/x-scheduler',

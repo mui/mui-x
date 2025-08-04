@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { UnregisterToken, CleanupTracking } from '../utils/cleanupTracking/CleanupTracking';
 import { TimerBasedCleanupTracking } from '../utils/cleanupTracking/TimerBasedCleanupTracking';

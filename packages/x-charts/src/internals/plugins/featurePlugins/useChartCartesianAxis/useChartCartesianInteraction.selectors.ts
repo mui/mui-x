@@ -1,6 +1,6 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector } from '../../utils/selectors';
-import { AxisId, ChartsAxisProps } from '../../../../models/axis';
+import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
@@ -26,15 +26,44 @@ function indexGetter(
     ? ids.map((id) => getAxisIndex(axes.axis[id], value))
     : getAxisIndex(axes.axis[ids], value);
 }
+export const selectChartsInteractionAxisIndex = (
+  value: number | null,
+  axes: ComputeResult<ChartsAxisProps>,
+  id?: AxisId,
+) => {
+  if (value === null) {
+    return null;
+  }
+  const index = indexGetter(value, axes, id);
+  return index === -1 ? null : index;
+};
 
 export const selectorChartsInteractionXAxisIndex = createSelector(
   [selectorChartsInteractionPointerX, selectorChartXAxis, optionalGetAxisId],
-  (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
+  selectChartsInteractionAxisIndex,
 );
 
 export const selectorChartsInteractionYAxisIndex = createSelector(
   [selectorChartsInteractionPointerY, selectorChartYAxis, optionalGetAxisId],
-  (value, axes, id) => (value === null ? null : indexGetter(value, axes, id)),
+  selectChartsInteractionAxisIndex,
+);
+
+export const selectorChartAxisInteraction = createSelector(
+  [
+    selectorChartsInteractionPointerX,
+    selectorChartsInteractionPointerY,
+    selectorChartXAxis,
+    selectorChartYAxis,
+  ],
+  (x, y, xAxis, yAxis) =>
+    [
+      ...(x === null
+        ? []
+        : xAxis.axisIds.map((axisId) => ({ axisId, dataIndex: indexGetter(x, xAxis, axisId) }))),
+      ...(y === null
+        ? []
+        : yAxis.axisIds.map((axisId) => ({ axisId, dataIndex: indexGetter(y, yAxis, axisId) }))),
+    ].filter((item) => item.dataIndex !== null && item.dataIndex >= 0),
 );
 
 /**
@@ -165,5 +194,3 @@ export const selectorChartsInteractionAxisTooltip = createSelector(
   [selectorChartsInteractionTooltipXAxes, selectorChartsInteractionTooltipYAxes],
   (xTooltip, yTooltip) => xTooltip.length > 0 || yTooltip.length > 0,
 );
-
-export type AxisItemIdentifier = { axisId: string; dataIndex: number };

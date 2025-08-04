@@ -12,8 +12,11 @@
     "labelFormatter": {
       "description": "Format the legend labels.",
       "typeDescriptions": {
-        "params": "The bound of the piece to format.",
-        "string | null": "The displayed label, <code>&#39;&#39;</code> to skip the label but show the color mark, or <code>null</code> to skip it entirely."
+        "params": { "name": "params", "description": "The bound of the piece to format." },
+        "string | null": {
+          "name": "string | null",
+          "description": "The displayed label, <code>&#39;&#39;</code> to skip the label but show the color mark, or <code>null</code> to skip it entirely."
+        }
       }
     },
     "labelPosition": { "description": "Where to position the labels relative to the gradient." },
@@ -21,9 +24,9 @@
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",
       "typeDescriptions": {
-        "event": "The click event.",
-        "legendItem": "The legend item data.",
-        "index": "The index of the clicked legend item."
+        "event": { "name": "event", "description": "The click event." },
+        "legendItem": { "name": "legendItem", "description": "The legend item data." },
+        "index": { "name": "index", "description": "The index of the clicked legend item." }
       }
     }
   },

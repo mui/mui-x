@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import {
   DataGridPro,
   GridColumnHeaderParams,
@@ -18,7 +17,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Events params', () => {
   const { render } = createRenderer();
@@ -331,12 +330,9 @@ describe('<DataGridPro /> - Events params', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled',
-    function test() {
-      if (isJSDOM) {
-        this.skip(); // Needs layout
-      }
+    () => {
       const handleFetchRows = spy();
       render(
         <TestEvents

@@ -1,6 +1,13 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
+        "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
     "seriesId": { "type": { "name": "string" } }
   },
   "name": "RadarSeriesMarks",

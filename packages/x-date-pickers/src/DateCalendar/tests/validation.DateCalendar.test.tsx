@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar, DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import { PickerValidDate } from '@mui/x-date-pickers/models';

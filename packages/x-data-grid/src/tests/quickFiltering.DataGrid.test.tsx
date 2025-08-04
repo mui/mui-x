@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, screen, reactMajor, waitFor, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   DataGrid,

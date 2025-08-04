@@ -7,7 +7,7 @@ githubLabel: 'scope: scheduler'
 
 # Scheduler - Overview
 
-<p class="description">A collection of React UI components to schedule your events. </p>
+<p class="description">A collection of React UI components to schedule your events.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
@@ -33,8 +33,20 @@ All the views of the Event Calendar can be used as standalone components:
 
 ### Month
 
-TODO: Add a demo of a standalone `<MonthView />` when available.
+{{"demo": "StandaloneMonthView.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Agenda
 
-TODO: Add a demo of a standalone `<AgendaView />` when available.
+{{"demo": "StandaloneAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Customization
+
+### Change the available views
+
+{{"demo": "RemoveViews.js", "bg": "inline"}}
+
+### Color palettes
+
+The Event Calendar supports several color palettes:
+
+{{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}

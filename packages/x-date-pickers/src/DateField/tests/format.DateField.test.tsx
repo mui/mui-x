@@ -6,7 +6,6 @@ import {
   describeAdapters,
 } from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { testSkipIf } from 'test/utils/skipIf';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {
   const { start: startChar, end: endChar } = adapter.escapedCharacters;
@@ -72,7 +71,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
   // If your start character and end character are equal
   // Then you can't have nested escaped characters
-  testSkipIf(startChar === endChar)('should support nested escaped characters', () => {
+  it.skipIf(startChar === endChar)('should support nested escaped characters', () => {
     // Test with accessible DOM structure
     let view = renderWithProps({
       enableAccessibleFieldDOMStructure: true,

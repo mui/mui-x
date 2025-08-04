@@ -108,7 +108,7 @@ export interface DateRangeCalendarProps
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate?: PickerValidDate;
+  referenceDate?: PickerValidDate | [PickerValidDate, PickerValidDate];
   /**
    * The number of calendars to render.
    * @default 2

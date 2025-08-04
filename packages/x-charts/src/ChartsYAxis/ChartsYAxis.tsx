@@ -7,10 +7,9 @@ import { useThemeProps, styled, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
-import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
-import { TickItemType, useTicks } from '../hooks/useTicks';
-import { ChartDrawingArea, useDrawingArea } from '../hooks/useDrawingArea';
+import { useTicks } from '../hooks/useTicks';
+import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AxisConfig, ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -19,8 +18,8 @@ import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider';
 import { useYAxes } from '../hooks';
-import { clampAngle } from '../internals/clampAngle';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
+import { shortenLabels } from './shortenLabels';
 
 const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) => {
   const { classes, position, id } = ownerState;
@@ -40,66 +39,6 @@ const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsYAxisProps>) =
 const TICK_LABEL_GAP = 2;
 /* Gap between the axis label and tick labels. */
 const AXIS_LABEL_TICK_LABEL_GAP = 2;
-
-function shortenLabels(
-  visibleLabels: TickItemType[],
-  drawingArea: Pick<ChartDrawingArea, 'top' | 'height' | 'bottom'>,
-  maxWidth: number,
-  isRtl: boolean,
-  tickLabelStyle: ChartsYAxisProps['tickLabelStyle'],
-) {
-  const shortenedLabels = new Map<TickItemType, string>();
-  const angle = clampAngle(tickLabelStyle?.angle ?? 0);
-
-  let topBoundFactor = 1;
-  let bottomBoundFactor = 1;
-
-  if (tickLabelStyle?.textAnchor === 'start') {
-    topBoundFactor = Infinity;
-    bottomBoundFactor = 1;
-  } else if (tickLabelStyle?.textAnchor === 'end') {
-    topBoundFactor = 1;
-    bottomBoundFactor = Infinity;
-  } else {
-    topBoundFactor = 2;
-    bottomBoundFactor = 2;
-  }
-
-  if (angle > 180) {
-    [topBoundFactor, bottomBoundFactor] = [bottomBoundFactor, topBoundFactor];
-  }
-
-  if (isRtl) {
-    [topBoundFactor, bottomBoundFactor] = [bottomBoundFactor, topBoundFactor];
-  }
-
-  for (const item of visibleLabels) {
-    if (item.formattedValue) {
-      // That maximum height of the tick depends on its proximity to the axis bounds.
-      const height = Math.min(
-        (item.offset + item.labelOffset) * topBoundFactor,
-        (drawingArea.top +
-          drawingArea.height +
-          drawingArea.bottom -
-          item.offset -
-          item.labelOffset) *
-          bottomBoundFactor,
-      );
-
-      const doesTextFit = (text: string) =>
-        doesTextFitInRect(text, {
-          width: maxWidth,
-          height,
-          angle,
-          measureText: (string: string) => getStringSize(string, tickLabelStyle),
-        });
-
-      shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));
-    }
-  }
-
-  return shortenedLabels;
-}
 
 const YAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsYAxis',

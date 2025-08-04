@@ -1,30 +1,25 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 
-import { DayView } from '@mui/x-scheduler/joy/day-view';
-import classes from './StandaloneWeekView.module.css';
-
-const events = [
-  {
-    id: '1',
-    start: DateTime.fromISO('2025-05-26T07:30:00'),
-    end: DateTime.fromISO('2025-05-26T08:15:00'),
-    title: 'Footing',
-  },
-  {
-    id: '2',
-    start: DateTime.fromISO('2025-05-26T16:00:00'),
-    end: DateTime.fromISO('2025-05-26T17:00:00'),
-    title: 'Weekly',
-  },
-];
+import { DayView } from '@mui/x-scheduler/material/day-view';
+import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../datasets/personal-agenda';
+import classes from './FullEventCalendar.module.css';
 
 export default function StandaloneDayView() {
+  const [events, setEvents] = React.useState(initialEvents);
+
   return (
-    <DayView
+    <StandaloneView
       events={events}
-      className={classes.Container}
-      day={DateTime.fromISO('2025-05-26')}
-    />
+      resources={resources}
+      defaultVisibleDate={defaultVisibleDate}
+      onEventsChange={setEvents}
+    >
+      <DayView className={classes.Container} />
+    </StandaloneView>
   );
 }

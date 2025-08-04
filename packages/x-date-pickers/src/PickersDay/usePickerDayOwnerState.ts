@@ -2,7 +2,7 @@ import * as React from 'react';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { PickerDayOwnerState } from './PickersDay.types';
 import { PickerValidDate } from '../models/pickers';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 export function usePickerDayOwnerState(parameters: UsePickerDayOwnerStateParameters) {
   const {
@@ -15,7 +15,7 @@ export function usePickerDayOwnerState(parameters: UsePickerDayOwnerStateParamet
     disableHighlightToday,
     showDaysOutsideCurrentMonth,
   } = parameters;
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
 
   return React.useMemo<PickerDayOwnerState>(
@@ -26,14 +26,14 @@ export function usePickerDayOwnerState(parameters: UsePickerDayOwnerStateParamet
       isDayDisabled: disabled ?? false,
       isDayCurrent: today ?? false,
       isDayOutsideMonth: outsideCurrentMonth ?? false,
-      isDayStartOfWeek: utils.isSameDay(day, utils.startOfWeek(day)),
-      isDayEndOfWeek: utils.isSameDay(day, utils.endOfWeek(day)),
+      isDayStartOfWeek: adapter.isSameDay(day, adapter.startOfWeek(day)),
+      isDayEndOfWeek: adapter.isSameDay(day, adapter.endOfWeek(day)),
       disableMargin: disableMargin ?? false,
       disableHighlightToday: disableHighlightToday ?? false,
       showDaysOutsideCurrentMonth: showDaysOutsideCurrentMonth ?? false,
     }),
     [
-      utils,
+      adapter,
       pickerOwnerState,
       day,
       selected,

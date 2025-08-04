@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGrid,
@@ -13,40 +12,17 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
-
-class TestCache {
-  private cache: Map<string, GridGetRowsResponse>;
-
-  constructor() {
-    this.cache = new Map();
-  }
-
-  set(key: GridGetRowsParams, value: GridGetRowsResponse) {
-    this.cache.set(getKeyDefault(key), value);
-  }
-
-  get(key: GridGetRowsParams) {
-    return this.cache.get(getKeyDefault(key));
-  }
-
-  size() {
-    return this.cache.size;
-  }
-
-  clear() {
-    this.cache.clear();
-  }
-}
+import { TestCache } from '../internals/utils';
 
 const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };
 const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
+describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
   const editRowSpy = spy();
@@ -293,6 +269,38 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         expect(fetchRowsSpy.callCount).to.equal(3);
       });
       expect(pageChangeSpy.callCount).to.equal(2);
+    });
+
+    it('should bypass cache when "skipCache" is true', async () => {
+      const testCache = new TestCache();
+      render(<TestDataSource dataSourceCache={testCache} />);
+
+      // Wait for initial fetch
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(1);
+      });
+      expect(testCache.size()).to.equal(1);
+
+      // Fetch same data again with skipCache = true
+      act(() => {
+        apiRef.current?.dataSource.fetchRows(undefined, { skipCache: true });
+      });
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
+      // Cache should still be updated with new data
+      expect(testCache.size()).to.equal(1);
+
+      // Fetch same data again without skipCache (should use cache)
+      act(() => {
+        apiRef.current?.dataSource.fetchRows();
+      });
+
+      // Should not trigger another fetch since data is cached
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.equal(2);
+      });
     });
   });
 

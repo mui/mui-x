@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 
 describe('<LineChart />', () => {

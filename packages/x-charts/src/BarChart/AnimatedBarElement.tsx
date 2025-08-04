@@ -57,6 +57,8 @@ export function AnimatedBarElement(props: BarProps) {
       {...other}
       filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
       opacity={ownerState.isFaded ? 0.3 : 1}
+      data-highlighted={ownerState.isHighlighted || undefined}
+      data-faded={ownerState.isFaded || undefined}
       {...animatedProps}
     />
   );

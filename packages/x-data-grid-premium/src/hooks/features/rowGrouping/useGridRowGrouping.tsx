@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -12,6 +13,7 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
   GridStrategyGroup,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -21,7 +23,6 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   getRowGroupingFieldFromGroupingCriteria,
-  RowGroupingStrategy,
   isGroupingColumn,
   mergeStateWithRowGroupingModel,
   setStrategyAvailability,

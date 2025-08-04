@@ -89,7 +89,7 @@ export default function FunnelLabelPositioning() {
       )}
       getCode={({ props }) => {
         if (props.hide) {
-          return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+          return `import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
   series={[
@@ -101,7 +101,7 @@ export default function FunnelLabelPositioning() {
 `;
         }
 
-        return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+        return `import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
   // Space to display the labels

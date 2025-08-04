@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { fastArrayCompare } from './fastArrayCompare';
 
 describe('fastArrayCompare', () => {

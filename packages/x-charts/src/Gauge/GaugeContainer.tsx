@@ -13,7 +13,7 @@ export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
-      'series' | 'dataset' | 'colors' | 'theme'
+      'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures'
     >,
     Omit<GaugeProviderProps, 'children'>,
     Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {

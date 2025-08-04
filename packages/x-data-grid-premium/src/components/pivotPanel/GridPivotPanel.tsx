@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { GridPivotPanelHeader } from './GridPivotPanelHeader';
 import { GridPivotPanelBody } from './GridPivotPanelBody';

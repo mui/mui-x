@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { calculateZoom } from './calculateZoom';
 
 describe('calculateZoom', () => {

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { alias } from '../../vitest.shared.mjs';
+import { alias } from '../../vitest.shared.mts';
 
 export default defineConfig({
   build: {

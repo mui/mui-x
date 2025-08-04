@@ -50,10 +50,10 @@ export const validateDate: Validator<PickerValue, DateValidationError, ValidateD
     maxDate,
   } = props;
 
-  const now = adapter.utils.date(undefined, timezone);
+  const now = adapter.date(undefined, timezone);
 
   switch (true) {
-    case !adapter.utils.isValid(value):
+    case !adapter.isValid(value):
       return 'invalidDate';
 
     case Boolean(shouldDisableDate && shouldDisableDate(value)):
@@ -65,16 +65,16 @@ export const validateDate: Validator<PickerValue, DateValidationError, ValidateD
     case Boolean(shouldDisableYear && shouldDisableYear(value)):
       return 'shouldDisableYear';
 
-    case Boolean(disableFuture && adapter.utils.isAfterDay(value, now)):
+    case Boolean(disableFuture && adapter.isAfterDay(value, now)):
       return 'disableFuture';
 
-    case Boolean(disablePast && adapter.utils.isBeforeDay(value, now)):
+    case Boolean(disablePast && adapter.isBeforeDay(value, now)):
       return 'disablePast';
 
-    case Boolean(minDate && adapter.utils.isBeforeDay(value, minDate)):
+    case Boolean(minDate && adapter.isBeforeDay(value, minDate)):
       return 'minDate';
 
-    case Boolean(maxDate && adapter.utils.isAfterDay(value, maxDate)):
+    case Boolean(maxDate && adapter.isAfterDay(value, maxDate)):
       return 'maxDate';
 
     default:

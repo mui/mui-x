@@ -14,9 +14,8 @@ import {
   ChartSeriesConfig,
   XAxis,
   YAxis,
-  ChartsWrapper,
-  ChartsWrapperProps,
 } from '@mui/x-charts/internals';
+import { ChartsWrapper, type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
   ChartsOverlay,
@@ -73,10 +72,20 @@ export interface HeatmapSlotProps
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 
+export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation' | 'slots' | 'slotProps'
+      | 'series'
+      | 'plugins'
+      | 'xAxis'
+      | 'yAxis'
+      | 'skipAnimation'
+      | 'slots'
+      | 'slotProps'
+      | 'experimentalFeatures'
+      | 'highlightedAxis'
+      | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -94,9 +103,9 @@ export interface HeatmapProps
   yAxis: Readonly<Omit<MakeOptional<YAxis<'band'>, 'scaleType'>, 'zoom'>[]>;
   /**
    * The series to display in the bar chart.
-   * An array of [[HeatmapSeriesType]] objects.
+   * An array of [[HeatmapSeries]] objects.
    */
-  series: Readonly<MakeOptional<HeatmapSeriesType, 'type'>[]>;
+  series: Readonly<HeatmapSeries[]>;
   /**
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
@@ -363,7 +372,7 @@ Heatmap.propTypes = {
   onHighlightChange: PropTypes.func,
   /**
    * The series to display in the bar chart.
-   * An array of [[HeatmapSeriesType]] objects.
+   * An array of [[HeatmapSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

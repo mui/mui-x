@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -21,7 +22,7 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from '../treeData/gridTreeDataGroupColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { skipFiltering, skipSorting } from './utils';
+import { getParentPath, skipFiltering, skipSorting } from './utils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -137,9 +138,9 @@ export const useGridDataSourceTreeDataPreProcessors = (
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
 
-      const parentPath = (params.updates as GridRowsPartialUpdates).groupKeys ?? [];
-
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
+        const parentPath =
+          (params.updates as GridRowsPartialUpdates).groupKeys ?? getParentPath(rowId, params);
         const count = getChildrenCount(params.dataRowIdToModelLookup[rowId]);
         return {
           id: rowId,

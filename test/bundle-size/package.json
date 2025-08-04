@@ -14,6 +14,7 @@
     "@mui/x-data-grid-premium": "workspace:*",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
+    "@mui/x-charts-premium": "workspace:*",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-tree-view": "workspace:*",

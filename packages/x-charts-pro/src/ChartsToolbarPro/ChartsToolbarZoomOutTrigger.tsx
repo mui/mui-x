@@ -7,6 +7,7 @@ import {
   ChartsSlotProps,
   useSelector,
   useChartsSlots,
+  UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import {
@@ -30,7 +31,8 @@ const ChartsToolbarZoomOutTrigger = React.forwardRef<
   React.PropsWithChildren<ChartsToolbarZoomOutTriggerProps>
 >(function ChartsToolbarZoomOutTrigger({ render, ...other }, ref) {
   const { slots, slotProps } = useChartsSlots();
-  const { instance, store } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance, store } =
+    useChartContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
   const disabled = useSelector(store, selectorChartCanZoomOut);
 
   const element = useComponentRenderer(slots.baseButton, render, {

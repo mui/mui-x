@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen, createRenderer } from '@mui/internal-test-utils';
 import { DateCalendar, dayCalendarClasses } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

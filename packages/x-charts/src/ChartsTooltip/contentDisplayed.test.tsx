@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
@@ -39,7 +38,7 @@ const cellSelector =
   '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th, .MuiChartsTooltip-root caption';
 
 // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-describeSkipIf(isJSDOM)('ChartsTooltip', () => {
+describe.skipIf(isJSDOM)('ChartsTooltip', () => {
   const { render } = createRenderer();
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
     <div style={{ width: 400, height: 400 }}>{children}</div>

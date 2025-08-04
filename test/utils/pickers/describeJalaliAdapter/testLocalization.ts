@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { DescribeJalaliAdapterTestSuite } from './describeJalaliAdapter.types';
 
 export const testLocalization: DescribeJalaliAdapterTestSuite = ({ adapter }) => {

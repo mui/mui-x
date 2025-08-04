@@ -8,6 +8,8 @@ export default function BarLabel() {
       series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
       height={300}
       barLabel="value"
+      margin={{ left: 0 }}
+      yAxis={[{ width: 30 }]}
     />
   );
 }

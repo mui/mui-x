@@ -1,4 +1,4 @@
 'use client';
-import { useLocalizationContext } from '../internals/hooks/useUtils';
+import { useLocalizationContext } from './usePickerAdapter';
 
 export const usePickerTranslations = () => useLocalizationContext().localeText;

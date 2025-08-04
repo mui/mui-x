@@ -6,6 +6,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { MuiEvent } from '@mui/x-internals/types';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import {
   pickerDay2Classes,
@@ -13,7 +14,7 @@ import {
   getPickerDay2UtilityClass,
   PickerDay2Classes,
 } from './pickerDay2Classes';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { PickerDay2OwnerState, PickerDay2Props } from './PickerDay2.types';
 import { usePickerDayOwnerState } from '../PickersDay/usePickerDayOwnerState';
 
@@ -152,7 +153,7 @@ const PickerDay2Raw = React.forwardRef(function PickerDay2(
     name: 'MuiPickerDay2',
   });
 
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const {
     autoFocus = false,
@@ -222,7 +223,8 @@ const PickerDay2Raw = React.forwardRef(function PickerDay2(
     }
   };
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => {
+    event.defaultMuiPrevented = true;
     if (!disabled) {
       onDaySelect(day);
     }
@@ -255,7 +257,7 @@ const PickerDay2Raw = React.forwardRef(function PickerDay2(
       className={clsx(classes.root, className)}
     >
       {/* `ownerState.isDayFillerCell` is used for compat with `PickersDay` for tests */}
-      {children ?? (ownerState.isDayFillerCell ? null : utils.format(day, 'dayOfMonth'))}
+      {children ?? (ownerState.isDayFillerCell ? null : adapter.format(day, 'dayOfMonth'))}
     </PickerDay2Root>
   );
 });

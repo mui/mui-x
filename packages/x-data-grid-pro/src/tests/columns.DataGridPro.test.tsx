@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -15,7 +14,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
-import { describeSkipIf, testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Columns', () => {
   const { render } = createRenderer();
@@ -78,7 +77,7 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   // Need layouting
-  describeSkipIf(isJSDOM)('resizing', () => {
+  describe.skipIf(isJSDOM)('resizing', () => {
     const columns = [{ field: 'brand', width: 100 }];
 
     it('should allow to resize columns with the mouse', () => {
@@ -92,25 +91,22 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     // Only run in supported browsers
-    testSkipIf(typeof Touch === 'undefined')(
-      'should allow to resize columns with the touch',
-      () => {
-        render(<Test columns={columns} />);
-        const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-        const now = Date.now();
-        fireEvent.touchStart(separator, {
-          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
-        });
-        fireEvent.touchMove(separator, {
-          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
-        });
-        fireEvent.touchEnd(separator, {
-          changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
-        });
-        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
-        expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
-      },
-    );
+    it.skipIf(typeof Touch === 'undefined')('should allow to resize columns with the touch', () => {
+      render(<Test columns={columns} />);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const now = Date.now();
+      fireEvent.touchStart(separator, {
+        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 100 })],
+      });
+      fireEvent.touchMove(separator, {
+        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
+      });
+      fireEvent.touchEnd(separator, {
+        changedTouches: [new Touch({ identifier: now, target: separator, clientX: 110 })],
+      });
+      expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '110px' });
+      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
+    });
 
     it('should call onColumnResize during resizing', async () => {
       const onColumnResize = spy();
@@ -366,7 +362,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     // Need layouting
-    describeSkipIf(isJSDOM)('flex resizing', () => {
+    describe.skipIf(isJSDOM)('flex resizing', () => {
       it('should resize the flex width after resizing another column with api', () => {
         const twoColumns = [
           { field: 'id', width: 100, flex: 1 },
@@ -557,7 +553,7 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   // Need layouting
-  describeSkipIf(isJSDOM)('autosizing', () => {
+  describe.skipIf(isJSDOM)('autosizing', () => {
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -714,7 +710,7 @@ describe('<DataGridPro /> - Columns', () => {
     });
   });
 
-  describeSkipIf(isJSDOM)('flex columns with pinned columns', () => {
+  describe.skipIf(isJSDOM)('flex columns with pinned columns', () => {
     it('should maintain correct widths and positions when flex columns are set', () => {
       render(
         <Test

@@ -52,6 +52,7 @@ export default function FunnelCurves() {
                 borderRadius: props.borderRadius,
                 layout: 'vertical',
                 variant: props.variant,
+                funnelDirection: 'increasing',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -66,6 +67,7 @@ export default function FunnelCurves() {
                 borderRadius: props.borderRadius,
                 layout: 'horizontal',
                 variant: props.variant,
+                funnelDirection: 'increasing',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -76,7 +78,7 @@ export default function FunnelCurves() {
         </Stack>
       )}
       getCode={({ props }) => {
-        return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+        return `import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
   series={[{ 

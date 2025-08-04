@@ -10,7 +10,6 @@ import {
   useGridApiRef,
   getGroupRowIdFromPath,
 } from '@mui/x-data-grid-premium';
-import { expect } from 'chai';
 import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {

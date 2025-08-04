@@ -42,7 +42,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const filterItemsCache: Record<GridStateColDef['field'], GridFilterItem> = Object.create(null);
 
-export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
+export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
   const { headerGroupingMaxDepth, hasOtherElementInTabSequence } = props;
   const columnHeaderFilterTabIndexState = useGridSelector(

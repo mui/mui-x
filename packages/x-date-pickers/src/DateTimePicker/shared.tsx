@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { DateOrTimeView, DateTimeValidationError } from '../models';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import {
   DateCalendarSlots,
   DateCalendarSlotProps,
@@ -124,14 +124,14 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
   props: Props,
   name: string,
 ): UseDateTimePickerDefaultizedProps<Props> {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
   const validationProps = useApplyDefaultValuesToDateTimeValidationProps(themeProps);
-  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const ampm = themeProps.ampm ?? adapter.is12HourCycleInCurrentLocale();
 
   const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {

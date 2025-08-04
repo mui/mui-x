@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireTouchChangedEvent, screen, within, fireEvent } from '@mui/internal-test-utils';
 import { adapterToUse, createPickerRenderer, describeValidation } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
-import { testSkipIf, hasTouchSupport } from 'test/utils/skipIf';
+import { hasTouchSupport } from 'test/utils/skipIf';
 
 describe('<StaticTimePicker />', () => {
   const { render } = createPickerRenderer({
@@ -34,7 +33,7 @@ describe('<StaticTimePicker />', () => {
     ],
   }));
 
-  testSkipIf(!hasTouchSupport)(
+  it.skipIf(!hasTouchSupport)(
     'should allow view modification, but not update value when `readOnly` prop is passed',
     () => {
       const selectEvent = {
@@ -83,7 +82,7 @@ describe('<StaticTimePicker />', () => {
     },
   );
 
-  testSkipIf(!hasTouchSupport)(
+  it.skipIf(!hasTouchSupport)(
     'should allow switching between views and display disabled options when `disabled` prop is passed',
     () => {
       const selectEvent = {

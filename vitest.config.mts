@@ -11,6 +11,8 @@ declare global {
     BROWSER?: string;
     PLAYWRIGHT_SERVER_WS?: string;
     CI?: string;
+    // Enable performance tracing in charts performance tests
+    TRACE?: string;
   }
 }
 

@@ -2,7 +2,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
-import { expect } from 'chai';
 import {
   expectFieldValueV7,
   createPickerRenderer,

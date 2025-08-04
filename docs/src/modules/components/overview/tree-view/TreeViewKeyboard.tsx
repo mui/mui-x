@@ -64,20 +64,12 @@ export default function TreeViewKeyboard() {
       <Divider />
       <Stack spacing={6} py={8} sx={{ width: '100%' }}>
         <Stack spacing={1} sx={{ width: '100%', maxWidth: { xs: '500px', md: '100%' } }}>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body2" color="primary" fontWeight="semiBold">
             Accessibility
           </Typography>
-          <Typography
-            variant="h4"
-            component="h2"
-            fontWeight="semiBold"
-            color="text.primary"
-            // eslint-disable-next-line material-ui/no-hardcoded-labels
-          >
+          <Typography variant="h4" component="h2" fontWeight="semiBold" color="text.primary">
             Inclusive by design
           </Typography>
-          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body1" color="text.secondary">
             The MUI X Tree View feature advanced keyboard support that&apos;s compliant with WCAG
             and WAI-ARIA standards, so users who require assistive technology can navigate your
@@ -88,7 +80,6 @@ export default function TreeViewKeyboard() {
             href="/x/react-tree-view/accessibility/"
             endIcon={<ArrowForwardIcon />}
             sx={{ width: 'fit-content' }}
-            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             More about accessibility
           </Button>

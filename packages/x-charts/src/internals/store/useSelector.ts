@@ -10,16 +10,16 @@ const defaultCompare = Object.is;
 export const useSelector = <
   TSignatures extends readonly ChartAnyPluginSignature[],
   TOptionalSignatures extends readonly ChartAnyPluginSignature[],
-  TArgs,
-  TValue,
+  TArgs extends readonly any[],
+  TResult = unknown,
 >(
   store: ChartStore<TSignatures, TOptionalSignatures>,
-  selector: ChartsSelector<ChartState<TSignatures, TOptionalSignatures>, TArgs, TValue>,
-  args: TArgs = undefined as TArgs,
-  equals: (a: TValue, b: TValue) => boolean = defaultCompare,
-): TValue => {
+  selector: ChartsSelector<TSignatures, TOptionalSignatures, TResult, TArgs>,
+  args = [] as [TArgs] extends [never] ? [] : TArgs,
+  equals: (a: TResult, b: TResult) => boolean = defaultCompare,
+): TResult => {
   const selectorWithArgs = (state: ChartState<TSignatures, TOptionalSignatures>) =>
-    selector(state, args);
+    selector(state, ...args);
 
   return useSyncExternalStoreWithSelector(
     store.subscribe,

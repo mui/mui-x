@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { CurveOptions, Point } from './curve.types';
+import { FunnelCurveGenerator, CurveOptions, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
 import { max, min } from './utils';
 
@@ -14,7 +13,7 @@ import { max, min } from './utils';
  * The implementation is based on the d3-shape step curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/step.js
  */
-export class Step implements CurveGenerator {
+export class Step implements FunnelCurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private isHorizontal: boolean = false;
@@ -72,16 +71,11 @@ export class Step implements CurveGenerator {
     return [this.borderRadius, this.borderRadius];
   }
 
-  point(xIn: number, yIn: number): void {
-    this.points.push({ x: xIn, y: yIn });
-    if (this.points.length < 4) {
-      return;
-    }
-
+  processPoints(points: Point[]): Point[] {
     // Ensure we have rectangles instead of trapezoids.
-    this.points = this.points.map((_, index) => {
-      const allX = this.points.map((p) => p.x);
-      const allY = this.points.map((p) => p.y);
+    const processedPoints = points.map((_, index) => {
+      const allX = points.map((p) => p.x);
+      const allY = points.map((p) => p.y);
       if (this.isHorizontal) {
         return {
           x: index === 1 || index === 2 ? max(allX) : min(allX),
@@ -93,6 +87,15 @@ export class Step implements CurveGenerator {
         y: index === 1 || index === 2 ? max(allY) : min(allY),
       };
     });
+
+    return processedPoints;
+  }
+
+  point(xIn: number, yIn: number): void {
+    this.points.push({ x: xIn, y: yIn });
+    if (this.points.length < 4) {
+      return;
+    }
 
     borderRadiusPolygon(this.context, this.points, this.getBorderRadius());
   }

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -28,7 +27,7 @@ import {
   grid,
   includeRowSelection,
 } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Filter', () => {
   const { render } = createRenderer();
@@ -666,7 +665,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)('should not scroll the page when a filter is removed from the panel', () => {
+  it.skipIf(isJSDOM)('should not scroll the page when a filter is removed from the panel', () => {
     render(
       <div>
         {/* To simulate a page that needs to be scrolled to reach the grid. */}
@@ -698,7 +697,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not scroll the page when opening the filter panel and the operator=isAnyOf',
     () => {
       render(
@@ -916,7 +915,7 @@ describe('<DataGridPro /> - Filter', () => {
   });
 
   // It's not re-rendering the filter panel correctly
-  testSkipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
+  it.skipIf(isJSDOM)('should give a stable ID to the filter item used as placeholder', () => {
     const { rerender } = render(<TestCase showToolbar />);
     const filtersButton = screen.getByRole('button', { name: /Filters/i });
     fireEvent.click(filtersButton);

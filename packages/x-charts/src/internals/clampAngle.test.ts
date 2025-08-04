@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { clampAngle } from './clampAngle';
 
 describe('clampAngle', () => {

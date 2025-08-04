@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { Toolbar, ToolbarButton } from '@mui/x-charts/Toolbar';
 

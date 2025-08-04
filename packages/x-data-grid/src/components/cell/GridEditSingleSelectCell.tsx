@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -30,8 +31,8 @@ export interface GridEditSingleSelectCellProps extends GridRenderEditCellParams 
   initialOpen?: boolean;
 }
 
-function isKeyboardEvent(event: any): event is React.KeyboardEvent {
-  return !!event.key;
+function isKeyboardEvent(event: React.SyntheticEvent): event is React.KeyboardEvent {
+  return 'key' in event && !!event.key;
 }
 
 function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
@@ -60,8 +61,8 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   } = props;
 
   const apiRef = useGridApiContext();
-  const ref = React.useRef<any>(null);
-  const inputRef = React.useRef<any>(null);
+  const ref = React.useRef<HTMLElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(initialOpen);
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
@@ -91,7 +92,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
 
     setOpen(false);
-    const target = event.target as HTMLInputElement;
+    const target = event.target;
     // NativeSelect casts the value to a string.
     const formattedTargetValue = getValueFromValueOptions(
       target.value,
@@ -138,7 +139,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     <rootProps.slots.baseSelect
       ref={ref}
       value={valueProp}
-      onChange={handleChange as any}
+      onChange={handleChange}
       open={open}
       onOpen={handleOpen}
       onClose={handleClose}

@@ -48,20 +48,40 @@
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": "The new value.",
-        "context": "The context containing the validation result of the current value."
+        "value": {
+          "name": "value",
+          "description": "The new value.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "context": {
+          "name": "context",
+          "description": "The context containing the validation result of the current value."
+        }
       }
     },
     "onError": {
       "description": "Callback fired when the error associated with the current value changes. When a validation error is detected, the <code>error</code> parameter contains a non-null value. This can be used to render an appropriate form error.",
       "typeDescriptions": {
-        "error": "The reason why the current value is not valid.",
-        "value": "The value associated with the error."
+        "error": {
+          "name": "error",
+          "description": "The reason why the current value is not valid.",
+          "argType": "TError",
+          "argTypeDescription": "The validation error type. It will be either <code>string</code> or a <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "value": {
+          "name": "value",
+          "description": "The value associated with the error.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        }
       }
     },
     "onSelectedSectionsChange": {
       "description": "Callback fired when the selected sections change.",
-      "typeDescriptions": { "newValue": "The new selected sections." }
+      "typeDescriptions": {
+        "newValue": { "name": "newValue", "description": "The new selected sections." }
+      }
     },
     "readOnly": {
       "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
@@ -75,17 +95,26 @@
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
-        "day": "The date to test.",
-        "position": "The date to test, &#39;start&#39; or &#39;end&#39;.",
-        "boolean": "Returns <code>true</code> if the date should be disabled."
+        "day": { "name": "day", "description": "The date to test." },
+        "position": {
+          "name": "position",
+          "description": "The date to test, &#39;start&#39; or &#39;end&#39;."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "Returns <code>true</code> if the date should be disabled."
+        }
       }
     },
     "shouldDisableTime": {
       "description": "Disable specific time.",
       "typeDescriptions": {
-        "value": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
+        "value": { "name": "value", "description": "The value to check." },
+        "view": { "name": "view", "description": "The clock type of the timeValue." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code> the time will be disabled."
+        }
       }
     },
     "shouldRespectLeadingZeros": {

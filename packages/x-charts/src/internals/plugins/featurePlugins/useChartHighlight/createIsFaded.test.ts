@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { createIsFaded } from './createIsFaded';
 
 const seriesId = 'id1';

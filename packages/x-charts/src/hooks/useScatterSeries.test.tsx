@@ -1,5 +1,4 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { useScatterSeries, useScatterSeriesContext } from './useScatterSeries';
 import { DefaultizedScatterSeriesType, ScatterSeriesType } from '../models';
@@ -44,7 +43,6 @@ describe('useScatterSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useScatterSeries', () => {
   it('should return the specific scatter series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useScatterSeries('1'), options);

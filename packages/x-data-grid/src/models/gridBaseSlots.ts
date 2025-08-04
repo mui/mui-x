@@ -320,6 +320,7 @@ export type TooltipProps = CommonProps & {
   children: React.ReactElement<any, any>;
   enterDelay?: number;
   title: React.ReactNode;
+  disableInteractive?: boolean;
 };
 
 export type IconProps = CommonProps<SVGSVGElement> & {

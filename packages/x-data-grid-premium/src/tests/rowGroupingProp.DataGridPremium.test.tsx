@@ -8,7 +8,6 @@ import {
   getCell,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,

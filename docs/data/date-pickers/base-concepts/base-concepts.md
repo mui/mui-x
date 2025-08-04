@@ -147,6 +147,16 @@ For example, in a Time Picker, it allows you to choose the date of your value:
 
 {{"demo": "ReferenceDateExplicitTimePicker.js"}}
 
+Reference date can be unique for each range component position.
+You can pass an array of dates to the `referenceDate` prop to set the reference date for each position in the range.
+This might be useful when you want different time values for start and end positions in a Date Time Range Picker.
+
+:::info
+Try selecting a date the demo below, then move to next position to observe the end reference date usage.
+:::
+
+{{"demo": "ReferenceDateRange.js"}}
+
 ## Testing caveats
 
 ### Responsive components

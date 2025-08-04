@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import axe from 'axe-core';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer } from '@mui/internal-test-utils';
-import { describeSkipIf } from 'test/utils/skipIf';
 
 function logViolations(violations: any) {
   if (violations.length !== 0) {
@@ -16,7 +14,7 @@ function logViolations(violations: any) {
 }
 
 // Only run accessibility tests in Chrome, since it should behave the same in all browsers
-describeSkipIf(!/chrome/i.test(window.navigator.userAgent))(
+describe.skipIf(!/chrome/i.test(window.navigator.userAgent))(
   '<DataGridPro /> - Accessibility',
   () => {
     const { render } = createRenderer();

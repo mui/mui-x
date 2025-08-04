@@ -1,6 +1,6 @@
 {
   "props": {
-    "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
+    "ampm": { "type": { "name": "bool" }, "default": "adapter.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" } },
     "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "defaultRangePosition": {
@@ -87,7 +87,7 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "object" },
+      "type": { "name": "union", "description": "Array&lt;object&gt;<br>&#124;&nbsp;object" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "selectedSections": {

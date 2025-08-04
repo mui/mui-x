@@ -13,7 +13,9 @@
     "filterFormProps": { "description": "Props passed to each filter form." },
     "getColumnForNewFilter": {
       "description": "Function that returns the next filter item to be picked as default filter.",
-      "typeDescriptions": { "args": "Currently configured filters and columns." }
+      "typeDescriptions": {
+        "args": { "name": "args", "description": "Currently configured filters and columns." }
+      }
     },
     "logicOperators": { "description": "Sets the available logic operators." },
     "sx": {

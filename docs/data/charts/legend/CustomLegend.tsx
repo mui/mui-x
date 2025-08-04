@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import { useLegend } from '@mui/x-charts/hooks';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
 import {
   ChartsLabelCustomMarkProps,
   ChartsLabelMark,
@@ -110,7 +110,7 @@ export default function CustomLegend() {
         ]}
         xAxis={[{ dataKey: 'month', scaleType: 'band', id: 'x-axis' }]}
         sx={{
-          [`& .MuiLineElement-series-avg`]: {
+          [`& .${lineElementClasses.root}[data-series="avg"]`]: {
             strokeDasharray: '10 5',
           },
         }}

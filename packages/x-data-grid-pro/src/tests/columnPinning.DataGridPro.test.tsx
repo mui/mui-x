@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -31,7 +30,7 @@ import {
   grid,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 // TODO Move to utils
 // Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
@@ -96,7 +95,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     window.ResizeObserver = originalResizeObserver;
   });
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should scroll when the next cell to focus is covered by the left pinned columns',
     () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
@@ -110,7 +109,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     },
   );
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should scroll when the next cell to focus is covered by the right pinned columns',
     () => {
       render(<TestCase initialState={{ pinnedColumns: { right: ['price16M'] } }} />);
@@ -123,7 +122,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     },
   );
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should increase the width of right pinned columns by resizing to the left',
     () => {
       render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
@@ -142,7 +141,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     },
   );
 
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should reduce the width of right pinned columns by resizing to the right',
     () => {
       render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
@@ -212,7 +211,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   // Doesn't work with mocked window.getComputedStyle
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should add border to right pinned columns section when `showCellVerticalBorder={true}`',
     () => {
       render(
@@ -233,7 +232,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   );
 
   // https://github.com/mui/mui-x/issues/12431
-  testSkipIf(isJSDOM)('should not render unnecessary filler after the last row', () => {
+  it.skipIf(isJSDOM)('should not render unnecessary filler after the last row', () => {
     const rowHeight = 50;
     const columns: GridColDef[] = [
       { field: 'id', headerName: 'ID', width: 120 },

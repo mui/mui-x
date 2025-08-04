@@ -27,7 +27,23 @@ async function reportBundleSize() {
 
   const circleciBuildNumber = process.env.CIRCLE_BUILD_NUM;
 
-  markdownContent += await renderMarkdownReport(danger.github.pr, circleciBuildNumber);
+  markdownContent += await renderMarkdownReport(danger.github.pr, circleciBuildNumber, {
+    track: [
+      '@mui/x-data-grid',
+      '@mui/x-data-grid/DataGrid',
+      '@mui/x-data-grid-pro',
+      '@mui/x-data-grid-pro/DataGridPro',
+      '@mui/x-data-grid-premium',
+      '@mui/x-data-grid-premium/DataGridPremium',
+      '@mui/x-charts',
+      '@mui/x-charts-pro',
+      // '@mui/x-charts-premium',
+      '@mui/x-date-pickers',
+      '@mui/x-date-pickers-pro',
+      '@mui/x-tree-view',
+      '@mui/x-tree-view-pro',
+    ],
+  });
 
   // Use the markdown function to publish the report
   markdown(markdownContent);

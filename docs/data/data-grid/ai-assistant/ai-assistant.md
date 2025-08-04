@@ -74,7 +74,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    fastify.register(proxy, {
      upstream: 'https://backend.mui.com',
      prefix: '/api/my-custom-path',
-     rewritePrefix: '/v1/datagrid/prompt',
+     rewritePrefix: '/api/v1/datagrid/prompt',
      replyOptions: {
        rewriteRequestHeaders: (_, headers) => ({
          ...headers,
@@ -113,7 +113,22 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        query,
        context,
        conversationId,
-       additionalContext,
+       { additionalContext },
+     );
+   }
+   ```
+
+   By default, MUI's prompt resolver service stores the queries made to the service to analyze potential errors and improve the service (data is never stored).
+   Enable `privateMode` to make the service only keep track of the data needed for billing, without any query related data.
+
+   ```ts
+   function processPrompt(query: string, context: string, conversationId?: string) {
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       conversationId,
+       { privateMode: true },
      );
    }
    ```
@@ -138,7 +153,7 @@ You can use a fully custom solution and apply the processing result using other 
 To replace `unstable_gridDefaultPromptResolver()` with your own solution, send a POST request to MUI's API.
 
 The body of the request requires `query` and `context` parameters.
-`conversationId` and `additionalContext` are optional.
+`conversationId` and `options` are optional.
 To keep the previous messages in the context you should pass the `conversationId` from the previous response.
 
 The API response type is `Result<PromptResponse>`.

@@ -88,7 +88,7 @@ export interface ZoomSliderOptions {
    * increasing this value effectively increases the margin around the slider.
    * This means the height for the x-axis and the width for the y-axis.
    *
-   * @default 28
+   * @default 48 if preview is enabled, 28 otherwise.
    */
   size?: number;
   /**
@@ -99,9 +99,15 @@ export interface ZoomSliderOptions {
    * @default 'hover'
    */
   showTooltip?: ZoomSliderShowTooltip;
+  /**
+   * If `true`, a preview of the chart will be shown in the slider.
+   */
+  preview?: boolean;
 }
 
 export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;
+
+export type ZoomMap = Map<AxisId, ZoomData>;
 
 export type GetZoomAxisFilters = (params: {
   currentAxisId: AxisId | undefined;

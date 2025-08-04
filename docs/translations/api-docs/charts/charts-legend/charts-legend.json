@@ -8,9 +8,9 @@
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",
       "typeDescriptions": {
-        "event": "The click event.",
-        "legendItem": "The legend item data.",
-        "index": "The index of the clicked legend item."
+        "event": { "name": "event", "description": "The click event." },
+        "legendItem": { "name": "legendItem", "description": "The legend item data." },
+        "index": { "name": "index", "description": "The index of the clicked legend item." }
       }
     },
     "slotProps": { "description": "The props used for each component slot." },
@@ -20,6 +20,10 @@
     "horizontal": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend in row layout"
+    },
+    "item": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item around each series in the legend"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },

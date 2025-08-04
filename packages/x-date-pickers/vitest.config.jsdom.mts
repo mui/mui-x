@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { mergeConfig } from 'vitest/config';
 // eslint-disable-next-line import/no-relative-packages
 import { redirectImports } from '../../test/vite-plugin-filter-replace.mts';
@@ -24,6 +25,6 @@ export default mergeConfig(sharedConfig, {
   test: {
     name: getTestName(import.meta.url),
     environment: 'jsdom',
-    setupFiles: [new URL('../../test/utils/setupPickers.js', import.meta.url).pathname],
+    setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
   },
 });

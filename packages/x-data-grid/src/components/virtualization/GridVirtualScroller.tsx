@@ -7,13 +7,13 @@ import {
   gridHasScrollXSelector,
   gridHasScrollYSelector,
 } from '../../hooks/features/dimensions/gridDimensionsSelectors';
+import { gridRowTreeSelector } from '../../hooks/features/rows';
 import { GridScrollArea } from '../GridScrollArea';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
 import { GridHeaders } from '../GridHeaders';
 import { GridMainContainer as Container } from './GridMainContainer';
@@ -79,7 +79,7 @@ export interface GridVirtualScrollerProps {
 }
 
 function GridVirtualScroller(props: GridVirtualScrollerProps) {
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
@@ -94,7 +94,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const virtualScroller = useGridVirtualScroller();
+  const virtualScroller = apiRef.current.virtualizer.api.useVirtualization().getters;
+
   const {
     getContainerProps,
     getScrollerProps,
@@ -106,12 +107,14 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getScrollAreaProps,
   } = virtualScroller;
 
-  const rows = getRows();
+  const rows = getRows(undefined, gridRowTreeSelector(apiRef));
 
   return (
     <Container className={classes.root} {...getContainerProps()} ownerState={ownerState}>
       <GridScrollArea scrollDirection="left" {...getScrollAreaProps()} />
       <GridScrollArea scrollDirection="right" {...getScrollAreaProps()} />
+      <GridScrollArea scrollDirection="up" {...getScrollAreaProps()} />
+      <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
         <TopContainer>
           {!rootProps.listView && <GridHeaders />}

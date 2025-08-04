@@ -6,11 +6,12 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
+import { ChartProApi } from '@mui/x-charts-pro/context';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { data } from './randomData';
@@ -35,7 +36,7 @@ type ChartType = 'scatter' | 'line' | 'bar' | 'pie' | 'heatmap' | 'funnel' | 'ra
 
 export default function PrintChart() {
   const [chartType, setChartType] = React.useState<ChartType>('scatter');
-  const apiRef = React.useRef<ChartProApi>(undefined);
+  const apiRef = useChartProApiRef<ChartType>();
 
   const handleChange = (event: SelectChangeEvent) =>
     setChartType(event.target.value as ChartType);

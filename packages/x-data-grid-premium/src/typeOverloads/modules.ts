@@ -1,5 +1,6 @@
 import { GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type {
+  GridPipeProcessingLookupPro,
   GridControlledStateEventLookupPro,
   GridApiCachesPro,
   GridEventLookupPro,
@@ -16,7 +17,11 @@ import type {
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
 import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
-import type { GridPivotModel } from '../hooks/features/pivoting/gridPivotingInterfaces';
+import type {
+  GridPivotingInternalCache,
+  GridPivotModel,
+} from '../hooks/features/pivoting/gridPivotingInterfaces';
+import { GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -40,6 +45,9 @@ export interface GridControlledStateEventLookupPremium {
    */
   pivotModelChange: { params: GridPivotModel };
   pivotModeChange: { params: boolean };
+  /**
+   * @deprecated Use the `sidebarOpen` and `sidebarClose` events instead.
+   */
   pivotPanelOpenChange: { params: boolean };
   /**
    * Fired when the AI Assistant conversation state changes.
@@ -60,6 +68,14 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when the clipboard paste operation ends.
    */
   clipboardPasteEnd: {};
+  /**
+   * Fired when the sidebar is opened.
+   */
+  sidebarOpen: { params: { value: GridSidebarValue } };
+  /**
+   * Fired when the sidebar is closed.
+   */
+  sidebarClose: { params: { value: GridSidebarValue } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {
@@ -102,12 +118,24 @@ export interface GridColumnHeaderParamsPremium<R extends GridValidRowModel = any
 }
 
 export interface GridApiCachesPremium extends GridApiCachesPro {
+  pivoting: GridPivotingInternalCache;
   rowGrouping: GridRowGroupingInternalCache;
   aggregation: GridAggregationInternalCache;
 }
 
+export interface GridPipeProcessingLookupPremium {
+  sidebar: {
+    value: React.ReactNode;
+    context: GridSidebarValue;
+  };
+}
+
 declare module '@mui/x-data-grid-pro' {
   interface GridEventLookup extends GridEventLookupPremium {}
+
+  interface GridPipeProcessingLookup
+    extends GridPipeProcessingLookupPro,
+      GridPipeProcessingLookupPremium {}
 
   interface GridControlledStateEventLookup
     extends GridControlledStateEventLookupPro,

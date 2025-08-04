@@ -1,5 +1,5 @@
 export { FunnelChart as Unstable_FunnelChart } from './FunnelChart';
-export type { FunnelChartProps } from './FunnelChart';
+export type { FunnelChartProps, FunnelSeries } from './FunnelChart';
 export * from './FunnelPlot';
 export * from './funnel.types';
 export * from './categoryAxis.types';

@@ -41,6 +41,7 @@ const barChartsParams = {
   ],
   xAxis: [{ data: ['0', '3', '6', '9', '12'], id: 'axis1' }],
   height: 400,
+  margin: { left: 0 },
 } as const;
 
 export default function BarClick() {

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { DescribeJalaliAdapterTestSuite } from './describeJalaliAdapter.types';
 import { TEST_DATE_ISO_STRING } from '../describeGregorianAdapter';
 

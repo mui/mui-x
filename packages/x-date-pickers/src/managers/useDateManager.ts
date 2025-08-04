@@ -11,8 +11,8 @@ import { validateDate } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { ExportedValidateDateProps, ValidateDateProps } from '../validation/validateDate';
 import { PickerManagerFieldInternalPropsWithDefaults, PickerValue } from '../internals/models';
-import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
+import { useDefaultDates } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
 
 export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -36,13 +36,13 @@ export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolea
 }
 
 function useOpenPickerButtonAriaLabel(value: PickerValue) {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
 
   return React.useMemo(() => {
-    const formattedValue = utils.isValid(value) ? utils.format(value, 'fullDate') : null;
+    const formattedValue = adapter.isValid(value) ? adapter.format(value, 'fullDate') : null;
     return translations.openDatePickerDialogue(formattedValue);
-  }, [value, translations, utils]);
+  }, [value, translations, adapter]);
 }
 
 function useApplyDefaultValuesToDateFieldInternalProps<
@@ -52,16 +52,16 @@ function useApplyDefaultValuesToDateFieldInternalProps<
 ): PickerManagerFieldInternalPropsWithDefaults<
   UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure>
 > {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const validationProps = useApplyDefaultValuesToDateValidationProps(internalProps);
 
   return React.useMemo(
     () => ({
       ...internalProps,
       ...validationProps,
-      format: internalProps.format ?? utils.formats.keyboardDate,
+      format: internalProps.format ?? adapter.formats.keyboardDate,
     }),
-    [internalProps, validationProps, utils],
+    [internalProps, validationProps, adapter],
   );
 }
 
@@ -74,17 +74,17 @@ type SharedDateAndDateRangeValidationProps =
 export function useApplyDefaultValuesToDateValidationProps(
   props: Pick<ExportedValidateDateProps, SharedDateAndDateRangeValidationProps>,
 ): Pick<ValidateDateProps, SharedDateAndDateRangeValidationProps> {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const defaultDates = useDefaultDates();
 
   return React.useMemo(
     () => ({
       disablePast: props.disablePast ?? false,
       disableFuture: props.disableFuture ?? false,
-      minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-      maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
+      minDate: applyDefaultDate(adapter, props.minDate, defaultDates.minDate),
+      maxDate: applyDefaultDate(adapter, props.maxDate, defaultDates.maxDate),
     }),
-    [props.minDate, props.maxDate, props.disableFuture, props.disablePast, utils, defaultDates],
+    [props.minDate, props.maxDate, props.disableFuture, props.disablePast, adapter, defaultDates],
   );
 }
 

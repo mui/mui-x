@@ -7,8 +7,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import IconButton from '@mui/material/IconButton';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
 import { ArrowDropDownIcon } from '../icons';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
@@ -129,7 +128,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const translations = usePickerTranslations();
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
 
@@ -151,7 +150,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
     className,
     classes: classesProp,
     timezone,
-    format = `${utils.formats.month} ${utils.formats.year}`,
+    format = `${adapter.formats.month} ${adapter.formats.year}`,
     ...other
   } = props;
 
@@ -179,8 +178,8 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
     className: classes.switchViewIcon,
   });
 
-  const selectNextMonth = () => onMonthChange(utils.addMonths(month, 1));
-  const selectPreviousMonth = () => onMonthChange(utils.addMonths(month, -1));
+  const selectNextMonth = () => onMonthChange(adapter.addMonths(month, 1));
+  const selectPreviousMonth = () => onMonthChange(adapter.addMonths(month, -1));
 
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,
@@ -212,7 +211,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
     return null;
   }
 
-  const label = utils.formatByString(month, format);
+  const label = adapter.formatByString(month, format);
 
   return (
     <PickersCalendarHeaderRoot

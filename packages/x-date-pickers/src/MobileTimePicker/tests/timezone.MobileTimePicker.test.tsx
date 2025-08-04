@@ -2,12 +2,10 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { expect } from 'chai';
-import { describeSkipIf } from 'test/utils/skipIf';
 
 describe('<MobileTimePicker /> - Timezone', () => {
   describeAdapters('Timezone prop', MobileTimePicker, ({ adapter, render }) => {
-    describeSkipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
+    describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       it('should use the timezone prop for the value displayed in the toolbar', () => {
         render(
           <MobileTimePicker

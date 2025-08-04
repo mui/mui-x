@@ -1,7 +1,10 @@
+'use client';
+import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
+  useGridVirtualizer,
   useGridClipboard,
   useGridColumnMenu,
   useGridColumns,
@@ -144,6 +147,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
+  useGridVirtualizer(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
@@ -183,4 +187,9 @@ export const useDataGridProComponent = (
   useGridVirtualization(apiRef, props);
   useGridDataSource(apiRef, props);
   useGridListView(apiRef, props);
+
+  // Should be the last thing to run, because all pre-processors should have been registered by now.
+  React.useEffect(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
 };

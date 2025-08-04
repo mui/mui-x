@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -167,7 +168,7 @@ export const useFieldV6TextField = <
   }
 
   function focusField(newSelectedSection: number | FieldSectionType = 0) {
-    if (getActiveElement(document) === inputRef.current) {
+    if (getActiveElement(inputRef.current) === inputRef.current) {
       return;
     }
     inputRef.current?.focus();
@@ -399,7 +400,7 @@ export const useFieldV6TextField = <
 
   React.useEffect(() => {
     // Select all the sections when focused on mount (`autoFocus = true` on the input)
-    if (inputRef.current && inputRef.current === getActiveElement(document)) {
+    if (inputRef.current && inputRef.current === getActiveElement(inputRef.current)) {
       setSelectedSections('all');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -423,7 +424,7 @@ export const useFieldV6TextField = <
       // On multi input range pickers we want to update selection range only for the active input
       // This helps to avoid the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
       // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
-      if (inputRef.current !== getActiveElement(document)) {
+      if (inputRef.current !== getActiveElement(inputRef.current)) {
         return;
       }
 
@@ -447,7 +448,7 @@ export const useFieldV6TextField = <
           selectionStart !== inputRef.current.selectionStart ||
           selectionEnd !== inputRef.current.selectionEnd
         ) {
-          if (inputRef.current === getActiveElement(document)) {
+          if (inputRef.current === getActiveElement(inputRef.current)) {
             inputRef.current.setSelectionRange(selectionStart, selectionEnd);
           }
         }
@@ -456,7 +457,7 @@ export const useFieldV6TextField = <
           // could happen on Android
           if (
             inputRef.current &&
-            inputRef.current === getActiveElement(document) &&
+            inputRef.current === getActiveElement(inputRef.current) &&
             // The section might loose all selection, where `selectionStart === selectionEnd`
             // https://github.com/mui/mui-x/pull/13652
             inputRef.current.selectionStart === inputRef.current.selectionEnd &&
@@ -487,7 +488,7 @@ export const useFieldV6TextField = <
     return 'numeric';
   }, [activeSectionIndex, state.sections]);
 
-  const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
+  const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(inputRef.current);
   const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
 
   React.useImperativeHandle(unstableFieldRef, () => ({
@@ -541,7 +542,7 @@ export const useFieldV6TextField = <
 };
 
 function isFieldFocused(inputRef: React.RefObject<HTMLInputElement | null>) {
-  return inputRef.current === getActiveElement(document);
+  return inputRef.current === getActiveElement(inputRef.current);
 }
 
 type FieldSectionWithPositions<TValue extends PickerValidValue> = InferFieldSection<TValue> & {

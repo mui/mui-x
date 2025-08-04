@@ -1,5 +1,4 @@
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, createEvent } from '@mui/internal-test-utils';
 import { UseTreeViewItemsReorderingSignature } from '@mui/x-tree-view-pro/internals';
@@ -8,7 +7,6 @@ import {
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
 } from '@mui/x-tree-view/internals';
-import { describeSkipIf } from 'test/utils/skipIf';
 import { chooseActionToApply } from './useTreeViewItemsReordering.utils';
 import { TreeViewItemItemReorderingValidActions } from './useTreeViewItemsReordering.types';
 
@@ -67,18 +65,16 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
 describeTreeView<
   [UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature, UseTreeViewExpansionSignature]
 >('useTreeViewItemsReordering', ({ render, treeViewComponentName }) => {
-  describeSkipIf(
+  describe.skipIf(
     treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView',
   )('reordering', () => {
     let dragEvents: ReturnType<typeof buildTreeViewDragInteractions>;
-    // eslint-disable-next-line mocha/no-top-level-hooks
     beforeEach(() => {
       const dataTransfer = new MockedDataTransfer();
       dataTransfer.dropEffect = 'move';
       dragEvents = buildTreeViewDragInteractions(dataTransfer);
     });
 
-    // eslint-disable-next-line mocha/no-top-level-hooks
     afterEach(() => {
       dragEvents = {} as typeof dragEvents;
     });

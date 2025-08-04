@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import { LANGUAGES } from 'docs/config';
 import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
 import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
@@ -6,6 +7,20 @@ import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityC
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
+
+function getNonComponentFolders(): string[] {
+  try {
+    return fs
+      .readdirSync(path.join(process.cwd(), 'docs/data/date-pickers'), { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory() && dirent.name !== 'components')
+      .map((dirent) => `date-pickers/${dirent.name}`)
+      .sort();
+  } catch (error) {
+    // Fallback to empty array if directory doesn't exist
+    console.warn('Could not read the directories:', error);
+    return [];
+  }
+}
 
 export const projectPickersSettings: ProjectSettings = {
   output: {
@@ -76,4 +91,11 @@ export default datePickersApiPages;
   },
   generateClassName: generateUtilityClass,
   isGlobalClassName: isGlobalState,
+  nonComponentFolders: [
+    ...getNonComponentFolders(),
+    'migration/migration-date-pickers-v7',
+    'migration/migration-date-pickers-v6',
+    'migration/migration-date-pickers-v5',
+    'migration/migration-date-pickers-lab',
+  ],
 };

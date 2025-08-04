@@ -7,14 +7,17 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   BaseToolbarProps,
   ExportedBaseToolbarProps,
-  useUtils,
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
   useToolbarOwnerState,
   PickerToolbarOwnerState,
   DateTimePickerToolbarOverrideContext,
 } from '@mui/x-date-pickers/internals';
-import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import {
+  usePickerAdapter,
+  usePickerContext,
+  usePickerTranslations,
+} from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';
 import {
@@ -79,7 +82,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerToolbar' });
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const {
     className,
@@ -114,7 +117,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     (newDate: PickerValidDate | null) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
-        utils,
+        adapter,
         range: value,
         rangePosition,
         allowRangeFlip: true,
@@ -122,7 +125,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       setRangePosition(nextSelection);
       setValue(newRange, { changeImportance: 'set' });
     },
-    [setValue, setRangePosition, value, rangePosition, utils],
+    [setValue, setRangePosition, value, rangePosition, adapter],
   );
 
   const startOverrides = React.useMemo(() => {

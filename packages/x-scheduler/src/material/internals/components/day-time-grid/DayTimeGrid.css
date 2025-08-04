@@ -1,0 +1,185 @@
+.DayTimeGridContainer {
+  --fixed-cell-width: 68px;
+  --hour-height: 46px;
+  --has-scroll: 1;
+}
+
+.DayTimeGridContainer {
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-4);
+}
+
+.DayTimeGridRoot {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.DayTimeGridHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.DayTimeGridGridRow {
+  display: grid;
+  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
+  width: 100%;
+}
+
+.DayTimeGridHeaderRow {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridHeaderRow {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-color: transparent transparent;
+}
+
+.DayTimeGridAllDayEventsRow {
+  max-height: 84px;
+
+  > *:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+}
+
+.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-color: transparent transparent;
+}
+
+.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow[data-weekend] {
+  scrollbar-color: var(--weekend-background) var(--weekend-background);
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridHeaderRow::-webkit-scrollbar {
+  background: transparent;
+}
+
+.DayTimeGridHeader[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow::-webkit-scrollbar {
+  background: transparent;
+}
+
+.DayTimeGridHeader[style*='--has-scroll: 1']
+  .DayTimeGridAllDayEventsRow[data-weekend]::-webkit-scrollbar {
+  background: var(--weekend-background);
+}
+
+.DayTimeGridHeaderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 10px;
+}
+
+.DayTimeGridHeaderButton {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.DayTimeGridHeaderButton:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: -2px;
+  border-radius: var(--radius-3);
+}
+
+.DayTimeGridAllDayEventsHeaderCell {
+  font-size: var(--font-size-1);
+  font-style: var(--em-font-style);
+  padding: var(--space-2);
+  text-align: end;
+  color: var(--secondary-text-color);
+}
+
+.DayTimeGridHeaderDayName {
+  font-size: var(--font-size-2);
+  color: var(--secondary-text-color);
+  line-height: 1;
+}
+
+.DayTimeGridHeaderDayNumber {
+  font-size: var(--font-size-5);
+  font-weight: var(--font-weight-3);
+  line-height: 1;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-3);
+}
+
+.DayTimeGridHeaderDayNumber.Today {
+  background-color: var(--primary-3);
+}
+
+.DayTimeGridBody {
+  flex: 1;
+  border-top: 1px solid var(--border-color);
+  overflow-y: auto;
+}
+
+.DayTimeGridScrollableContent {
+  display: flex;
+  height: calc(var(--hour-height) * 24);
+  position: relative;
+}
+
+.DayTimeGridTimeAxis {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: var(--fixed-cell-width);
+}
+
+.DayTimeGridTimeAxisCell {
+  height: calc(100% / 24);
+  line-height: calc(100% / 24);
+  border-right: 1px solid var(--border-color);
+  padding-inline: var(--space-2);
+  text-align: end;
+}
+
+.DayTimeGridTimeAxisText:not(:empty) {
+  font-size: var(--font-size-1);
+  line-height: calc(100% / 24);
+  color: var(--secondary-text-color);
+  white-space: nowrap;
+}
+
+.DayTimeGridTimeAxisCell:not(:first-child)::after {
+  content: '';
+  position: absolute;
+  left: var(--fixed-cell-width);
+  right: 0;
+  border-bottom: 1px solid var(--border-color);
+  top: calc(var(--hour) * var(--hour-height));
+  z-index: 1;
+}
+
+.DayTimeGridGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  width: 100%;
+
+  > *:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+  }
+}
+
+.DayTimeGridColumn {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex: 1;
+}
+
+.DayTimeGridColumn[data-weekend],
+.DayTimeGridAllDayEventsCell[data-weekend] {
+  background: var(--weekend-background);
+}

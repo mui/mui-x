@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
-import { CurveOptions, FunnelPointShape, Point } from './curve.types';
+import { FunnelCurveGenerator, CurveOptions, FunnelPointShape, Point } from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
 import { lerpX, lerpY } from './utils';
 
@@ -12,7 +11,7 @@ import { lerpX, lerpY } from './utils';
  * The implementation is based on the d3-shape linear curve generator.
  * https://github.com/d3/d3-shape/blob/a82254af78f08799c71d7ab25df557c4872a3c51/src/curve/linear.js
  */
-export class Linear implements CurveGenerator {
+export class Linear implements FunnelCurveGenerator {
   private context: CanvasRenderingContext2D;
 
   private position: number = 0;
@@ -103,7 +102,7 @@ export class Linear implements CurveGenerator {
       }
       // Is smallest section and shaped like a triangle
       if (this.position === this.sections - 1 && this.pointShape === 'sharp') {
-        return [this.borderRadius];
+        return [0, 0, this.borderRadius];
       }
 
       // Is smallest section
@@ -115,16 +114,11 @@ export class Linear implements CurveGenerator {
     return 0;
   }
 
-  point(xIn: number, yIn: number): void {
-    this.points.push({ x: xIn, y: yIn });
-    if (this.points.length < 4) {
-      return;
-    }
-
+  processPoints(points: Point[]): Point[] {
     // Add gaps where they are needed.
-    this.points = this.points.map((point, index) => {
-      const slopeStart = this.points.at(index <= 1 ? 0 : 3)!;
-      const slopeEnd = this.points.at(index <= 1 ? 1 : 2)!;
+    const processedPoints = points.map((point, index) => {
+      const slopeStart = points.at(index <= 1 ? 0 : 3)!;
+      const slopeEnd = points.at(index <= 1 ? 1 : 2)!;
 
       if (this.isHorizontal) {
         const yGetter = lerpY(slopeStart.x - this.gap, slopeStart.y, slopeEnd.x, slopeEnd.y);
@@ -153,17 +147,17 @@ export class Linear implements CurveGenerator {
       let secondPoint: Point | null = null;
 
       if (isFirstSection && this.isIncreasing) {
-        firstPoint = this.points[1];
-        secondPoint = this.points[2];
+        firstPoint = processedPoints[1];
+        secondPoint = processedPoints[2];
       }
 
       if (isLastSection && !this.isIncreasing) {
-        firstPoint = this.points[3];
-        secondPoint = this.points[0];
+        firstPoint = processedPoints[3];
+        secondPoint = processedPoints[0];
       }
 
       if (firstPoint && secondPoint) {
-        this.points = [
+        return [
           // Sharp point at the start
           this.isHorizontal
             ? { x: this.max.x, y: (this.max.y + this.min.y) / 2 }
@@ -173,6 +167,19 @@ export class Linear implements CurveGenerator {
           secondPoint,
         ];
       }
+    }
+    return processedPoints;
+  }
+
+  point(xIn: number, yIn: number): void {
+    this.points.push({ x: xIn, y: yIn });
+    const isLastSection = this.position === this.sections - 1;
+    const isFirstSection = this.position === 0;
+    const isSharpPoint =
+      this.pointShape === 'sharp' &&
+      ((isLastSection && !this.isIncreasing) || (isFirstSection && this.isIncreasing));
+    if (this.points.length < (isSharpPoint ? 3 : 4)) {
+      return;
     }
 
     borderRadiusPolygon(this.context, this.points, this.getBorderRadius());

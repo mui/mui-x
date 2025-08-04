@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -9,7 +8,7 @@ import {
   GridColDef,
   GridColumnVisibilityModel,
 } from '@mui/x-data-grid';
-import { getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent, grid } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -472,12 +471,22 @@ describe('<DataGrid /> - Columns visibility', () => {
         </div>,
       );
 
+      function getColumnsCheckboxesNames() {
+        return within(grid('columnsManagement')!)
+          .getAllByRole('checkbox')
+          .map((item) => item.getAttribute('name'));
+      }
+
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'lastName', 'age']);
       const button = screen.getByRole('button', { name: 'Columns' });
       await user.click(button);
 
       const input = screen.getByPlaceholderText('Search');
       await user.type(input, 'name');
+      await waitFor(() => {
+        expect(getColumnsCheckboxesNames()).to.deep.equal(['firstName', 'lastName']);
+      });
+
       const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
       await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'age']);
@@ -485,6 +494,10 @@ describe('<DataGrid /> - Columns visibility', () => {
       // clear the search before the new search
       await user.clear(input);
       await user.type(input, 'firstName');
+      await waitFor(() => {
+        expect(getColumnsCheckboxesNames()).to.deep.equal(['firstName']);
+      });
+
       await user.click(showHideAllCheckbox);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'firstName', 'age']);
     });

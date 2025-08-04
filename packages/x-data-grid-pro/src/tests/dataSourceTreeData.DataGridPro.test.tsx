@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -15,7 +14,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const dataSetOptions = {
   dataSet: 'Employee' as const,
@@ -28,7 +27,7 @@ const pageSizeOptions = [5, 10, 50];
 const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
+describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
   const fetchRowsSpy = spy();
 

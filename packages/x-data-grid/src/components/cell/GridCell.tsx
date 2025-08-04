@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -8,6 +9,8 @@ import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useStore } from '@mui/x-internals/store';
+import { Rowspan } from '@mui/x-virtualizer';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -34,10 +37,6 @@ import {
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { PinnedColumnPosition } from '../../internals/constants';
-import {
-  gridRowSpanningHiddenCellsSelector,
-  gridRowSpanningSpannedCellsSelector,
-} from '../../hooks/features/rows/gridRowSpanningSelectors';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import { attachPinnedStyle } from '../../internals/utils';
@@ -209,8 +208,9 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     }),
   );
 
-  const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
-  const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
+  const store = apiRef.current.virtualizer.store;
+  const hiddenCells = useStore(store, Rowspan.selectors.hiddenCells);
+  const spannedCells = useStore(store, Rowspan.selectors.spannedCells);
 
   const { hasFocus, isEditable = false, value } = cellParams;
 
@@ -313,8 +313,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     [apiRef, field, rowId],
   );
 
-  const isCellRowSpanned = hiddenCells[rowId]?.[field] ?? false;
-  const rowSpan = spannedCells[rowId]?.[field] ?? 1;
+  const isCellRowSpanned = hiddenCells[rowId]?.[colIndex] ?? false;
+  const rowSpan = spannedCells[rowId]?.[colIndex] ?? 1;
 
   const style = React.useMemo(() => {
     if (isNotVisible) {

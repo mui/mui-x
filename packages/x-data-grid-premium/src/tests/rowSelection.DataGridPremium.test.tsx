@@ -3,7 +3,6 @@ import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -213,7 +212,6 @@ describe('<DataGridPremium /> - Row selection', () => {
     });
 
     // Use case yet to be supported
-    // eslint-disable-next-line mocha/no-skipped-tests
     describe.skip('prop: keepNonExistentRowsSelected', () => {
       it('should auto select the parent of a previously selected non existent rows when it is added back', () => {
         const onRowSelectionModelChange = spy();

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { getDataGridUtilityClass, GridShadowScrollArea } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';

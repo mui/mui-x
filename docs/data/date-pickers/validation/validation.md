@@ -20,7 +20,6 @@ But the same props are available on:
 - all the other variants of this picker;
 
   For example, the validation props showcased with `DatePicker` are also available on:
-
   - `DesktopDatePicker`
   - `MobileDatePicker`
   - `StaticDatePicker`

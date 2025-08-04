@@ -1,5 +1,5 @@
 'use client';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { ChartProviderProps } from '../context/ChartProvider';
 import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';
@@ -12,8 +12,11 @@ export const useChartDataProviderProps = <
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 >(
-  props: ChartDataProviderProps<TSeries, TSignatures> & ChartsLocalizationProviderProps,
+  inProps: ChartDataProviderProps<TSeries, TSignatures> & ChartsLocalizationProviderProps,
 ) => {
+  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiChartDataProvider' });
+
   const {
     children,
     localeText,

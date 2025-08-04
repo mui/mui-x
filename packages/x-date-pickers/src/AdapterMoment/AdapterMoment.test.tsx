@@ -3,7 +3,6 @@ import momentTZ from 'moment-timezone';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   createPickerRenderer,

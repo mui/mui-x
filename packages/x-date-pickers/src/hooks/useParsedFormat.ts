@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter } from './usePickerAdapter';
 import { buildSectionsFromFormat } from '../internals/hooks/useField/buildSectionsFromFormat';
 import { getLocalizedDigits } from '../internals/hooks/useField/useField.utils';
 import { usePickerTranslations } from './usePickerTranslations';
@@ -24,15 +24,15 @@ interface UseParsedFormatParameters {
  */
 export const useParsedFormat = (parameters: UseParsedFormatParameters = {}) => {
   const pickerContext = useNullablePickerContext();
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const isRtl = useRtl();
   const translations = usePickerTranslations();
-  const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
-  const { format = pickerContext?.fieldFormat ?? utils.formats.fullDate } = parameters;
+  const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
+  const { format = pickerContext?.fieldFormat ?? adapter.formats.fullDate } = parameters;
 
   return React.useMemo(() => {
     const sections = buildSectionsFromFormat({
-      utils,
+      adapter,
       format,
       formatDensity: 'dense',
       isRtl,
@@ -47,5 +47,5 @@ export const useParsedFormat = (parameters: UseParsedFormatParameters = {}) => {
     return sections
       .map((section) => `${section.startSeparator}${section.placeholder}${section.endSeparator}`)
       .join('');
-  }, [utils, isRtl, translations, localizedDigits, format]);
+  }, [adapter, isRtl, translations, localizedDigits, format]);
 };

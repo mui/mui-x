@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { TreeViewAnyPluginSignature } from '../models';
 import { TreeViewContextValue } from './TreeViewProvider.types';

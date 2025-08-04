@@ -14,8 +14,8 @@ import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
-import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
-import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
+import { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
@@ -23,8 +23,8 @@ export type { GridProSlotsComponent as GridSlots } from '../models';
 const configuration: GridConfiguration = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
-    useGridAriaAttributes,
-    useGridRowAriaAttributes,
+    useGridAriaAttributes: useGridAriaAttributesPro,
+    useGridRowAriaAttributes: useGridRowAriaAttributesPro,
     useCellAggregationResult: () => null,
   },
 };
@@ -158,6 +158,11 @@ DataGridProRaw.propTypes = {
    * @default 150
    */
   columnBufferPx: PropTypes.number,
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  columnFilterDebounceMs: PropTypes.number,
   /**
    * Sets the height in pixels of the column group headers in the Data Grid.
    * Inherits the `columnHeaderHeight` value if not set.

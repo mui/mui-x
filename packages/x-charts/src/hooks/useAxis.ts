@@ -1,4 +1,5 @@
 'use client';
+import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -29,7 +30,7 @@ import {
  * @returns `{ xAxis, xAxisIds }` - The x-axes and their IDs.
  */
 export function useXAxes() {
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
 
   return { xAxis, xAxisIds };
@@ -46,7 +47,7 @@ export function useXAxes() {
  * @returns `{ yAxis, yAxisIds }` - The y-axes and their IDs.
  */
 export function useYAxes() {
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
   return { yAxis, yAxisIds };
@@ -58,7 +59,7 @@ export function useYAxes() {
  * @returns The X axis.
  */
 export function useXAxis(axisId?: AxisId) {
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
 
   const id = axisId ?? xAxisIds[0];
@@ -72,7 +73,7 @@ export function useXAxis(axisId?: AxisId) {
  * @returns The Y axis.
  */
 export function useYAxis(axisId?: AxisId) {
-  const store = useStore();
+  const store = useStore<[UseChartCartesianAxisSignature]>();
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
   const id = axisId ?? yAxisIds[0];

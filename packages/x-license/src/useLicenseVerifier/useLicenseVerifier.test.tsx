@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import {
   useLicenseVerifier,
@@ -8,8 +7,8 @@ import {
   Unstable_LicenseInfoProvider as LicenseInfoProvider,
   MuiCommercialPackageName,
 } from '@mui/x-license';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
-import { sharedLicenseStatuses } from './useLicenseVerifier';
+import { isJSDOM } from 'test/utils/skipIf';
+import { clearLicenseStatusCache } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 
 const oneDayInMS = 1000 * 60 * 60 * 24;
@@ -22,12 +21,11 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
 }
 
 // Can't change the process.env.NODE_ENV in Browser
-describeSkipIf(!isJSDOM)('useLicenseVerifier', () => {
+describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
   let env: any;
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     env = process.env.NODE_ENV;
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
@@ -35,7 +33,6 @@ describeSkipIf(!isJSDOM)('useLicenseVerifier', () => {
     process.env['NODE_' + 'ENV'] = 'test';
   });
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
     // eslint-disable-next-line no-useless-concat
@@ -44,10 +41,7 @@ describeSkipIf(!isJSDOM)('useLicenseVerifier', () => {
 
   describe('error', () => {
     beforeEach(() => {
-      Object.keys(sharedLicenseStatuses).forEach((key) => {
-        // @ts-ignore
-        delete sharedLicenseStatuses[key];
-      });
+      clearLicenseStatusCache();
     });
 
     it('should log the missing license key error only once', () => {
@@ -127,6 +121,8 @@ describeSkipIf(!isJSDOM)('useLicenseVerifier', () => {
       expect(() => {
         render(<TestComponent packageName={'x-charts-pro'} />);
       }).to.toErrorDev(['MUI X: Component not included in your license.']);
+
+      // TODO: CHARTS-PREMIUM: Define how license will work for x-charts-premium
 
       expect(() => {
         render(<TestComponent packageName={'x-tree-view-pro'} />);

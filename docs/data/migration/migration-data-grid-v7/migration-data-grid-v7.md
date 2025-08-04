@@ -129,13 +129,13 @@ You have to import it from `@mui/x-license` instead:
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
 - ✅ The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
+  This is the reverse of the previous **Unselect all** behavior, where clicking on an indeterminate checkbox would deselect the selected descendants.
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 - ✅ The row selection model has been changed from `GridRowId[]` to `{ type: 'include' | 'exclude'; ids: Set<GridRowId> }`.
   Using `Set` allows for a more efficient row selection management.
   The `exclude` selection type allows to select all rows except the ones in the `ids` set.
 
   This change impacts the following props:
-
   - `rowSelectionModel`
   - `onRowSelectionModelChange`
 
@@ -252,7 +252,6 @@ You have to import it from `@mui/x-license` instead:
   Only the initial value and the type are updated. Logic that initializes the API and its availability remained the same, which means that if you could access API in a particular line of your code before, you are able to access it as well after this change.
 
   Depending on the context in which the API is being used, you can decide what is the best way to deal with `null` value. Some options are:
-
   - Use optional chaining
   - Use non-null assertion operator if you are sure your code is always executed when the `apiRef` is not `null`
   - Return early if `apiRef` is `null`
@@ -298,7 +297,6 @@ You have to import it from `@mui/x-license` instead:
 ### Behavioral changes
 
 - The "Reset" button in the column visibility panel now resets to the initial column visibility model instead of the model when the panel was opened. The reset behavior follows these rules:
-
   1. If an initial `columnVisibilityModel` is provided, it resets to that model.
   2. If a controlled `columnVisibilityModel` is provided, it resets to the first model value.
   3. When the columns are updated (via the `columns` prop or `updateColumns()` API method), the reset reference point updates to the current `columnVisibilityModel`.
@@ -370,7 +368,6 @@ You have to import it from `@mui/x-license` instead:
 ### CSS classes and styling
 
 - The Data Grid now has a default background color, and its customization has moved from `theme.mixins.MuiDataGrid` to `theme.palette.DataGrid` with the following properties:
-
   - `bg`: Sets the background color of the entire grid (new property)
   - `headerBg`: Sets the background color of the header (previously named `containerBackground`)
   - `pinnedBg`: Sets the background color of pinned rows and columns (previously named `pinnedBackground`)
@@ -407,3 +404,94 @@ You have to import it from `@mui/x-license` instead:
 - The `columnUnsortedIcon` slot was removed.
 - The icon slots now require material icons to be passed like `Icon as any`.
   Note: This is due to typing issues that might be resolved later.
+
+### Bundling
+
+The Data Grid now requires a bundler that can handle CSS imports.
+
+#### Webpack
+
+Update your config to add the `style-loader` and `css-loader`.
+
+```ts title="webpack.config.js"
+export default {
+  // other webpack config
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+};
+```
+
+#### Vite
+
+Nothing to do, CSS imports should work out of the box.
+
+#### Vitest
+
+Add the Data Grid packages to `test.deps.inline`.
+
+```ts title="vitest.config.ts"
+export default defineConfig({
+  test: {
+    deps: {
+      inline: [
+        '@mui/x-data-grid',
+        '@mui/x-data-grid-pro',
+        '@mui/x-data-grid-premium',
+      ],
+    },
+  },
+});
+```
+
+#### Next.js
+
+If you're using the App Router, CSS imports should work out of the box.
+
+If you're using the Pages Router, you need to add the Data Grid packages to [`transpilePackages`](https://nextjs.org/docs/app/api-reference/config/next-config-js/transpilePackages).
+
+```ts title="next.config.ts"
+export default {
+  transpilePackages: [
+    '@mui/x-data-grid',
+    '@mui/x-data-grid-pro',
+    '@mui/x-data-grid-premium',
+  ],
+};
+```
+
+#### Node.js
+
+If you're importing the packages inside Node.js, you can make CSS imports a no-op like this:
+
+**Using `require()`**:
+
+```js
+require.extensions['.css'] = () => null;
+```
+
+**Using `import`**:
+
+```js
+// node-ignore-css.js
+// Needs to be loaded before your code runs:
+//   node --import ./node-ignore-css.js ./index.js
+import { registerHooks } from 'node:module';
+registerHooks({
+  load(url, context, nextLoad) {
+    if (url.endsWith('.css')) {
+      return { url, format: 'module', source: '', shortCircuit: true };
+    }
+    return nextLoad(url, context);
+  },
+});
+```
+
+<!-- ### Editing
+
+TBD

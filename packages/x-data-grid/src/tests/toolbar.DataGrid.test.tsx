@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
-import { expect } from 'chai';
 import { DataGrid, GridColumnsManagementProps, Toolbar, ToolbarButton } from '@mui/x-data-grid';
 import { isJSDOM } from 'test/utils/skipIf';
 
