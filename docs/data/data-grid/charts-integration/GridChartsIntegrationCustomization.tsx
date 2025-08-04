@@ -75,10 +75,6 @@ const customConfiguration = {
     ...configurationOptions.area,
     customization: hideColorsControl(configurationOptions.area.customization),
   },
-  pie: {
-    ...configurationOptions.pie,
-    customization: hideColorsControl(configurationOptions.pie.customization),
-  },
 };
 
 const gridPivotModel: GridPivotModel = {
@@ -135,41 +131,73 @@ const getColumnName: GridChartsPanelProps['getColumnName'] = (field) => {
   return `v${field[0]}`;
 };
 
+const dateFormatter = (value: Date) =>
+  value.toLocaleDateString('en-US', {
+    month: '2-digit',
+    year: '2-digit',
+  });
+const downloadsFormatter = (value: number) =>
+  value === 0 ? '0' : `${Math.round(value / 1000)}k`;
+
 const onRender = (
   type: string,
   props: Record<string, any>,
   Component: React.ComponentType<any>,
 ) => {
-  const adjustedProps =
-    type === 'line' || type === 'area'
-      ? {
-          ...props,
-          grid: {
-            vertical: true,
-            horizontal: true,
-          },
-          xAxis: props.xAxis.map((axis: any) => ({
-            ...axis,
-            scaleType: 'time',
-            domainLimit: 'strict',
-            valueFormatter: (value: Date) =>
-              value.toLocaleDateString('en-US', {
-                day: '2-digit',
-                month: '2-digit',
-                year: '2-digit',
-              }),
-            tickLabelStyle: {
-              angle: 90,
-            },
-            height: 75,
-          })),
-          yAxis: [
-            {
-              valueFormatter: (value: number) => `${Math.round(value / 1000)}k`,
-            },
-          ],
-        }
-      : props;
+  let adjustedProps = props;
+
+  if (type === 'line' || type === 'area') {
+    adjustedProps = {
+      ...adjustedProps,
+      grid: {
+        vertical: true,
+        horizontal: true,
+      },
+      xAxis: props.xAxis.map((axis: any) => ({
+        ...axis,
+        scaleType: 'time',
+        domainLimit: 'strict',
+        valueFormatter: dateFormatter,
+      })),
+      yAxis: [
+        {
+          valueFormatter: downloadsFormatter,
+        },
+      ],
+    };
+  }
+
+  if (type === 'bar') {
+    adjustedProps = {
+      ...adjustedProps,
+      xAxis: [
+        {
+          valueFormatter: downloadsFormatter,
+        },
+      ],
+      yAxis: adjustedProps.yAxis.map((axis: any) => ({
+        ...axis,
+        valueFormatter: dateFormatter,
+        tickInterval: (_: any, index: number) => index % 10 === 0,
+      })),
+    };
+  }
+
+  if (type === 'column') {
+    adjustedProps = {
+      ...adjustedProps,
+      xAxis: adjustedProps.xAxis.map((axis: any) => ({
+        ...axis,
+        valueFormatter: dateFormatter,
+      })),
+      yAxis: [
+        {
+          valueFormatter: downloadsFormatter,
+        },
+      ],
+    };
+  }
+
   return <Component {...adjustedProps} />;
 };
 
