@@ -27,7 +27,7 @@
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "markdownlint": "markdownlint-cli2 \"**/*.md\"",
     "valelint": "pnpm vale sync && git ls-files | grep -h \".md$\" | xargs pnpm vale --filter='.Level==\"error\"'",
-    "prettier": "pretty-quick --branch master --ignore-path .lintignore",
+    "prettier": "pretty-quick --ignore-path .lintignore --branch master",
     "prettier:all": "prettier --write . --ignore-path .lintignore",
     "prettier:check": "prettier --check . --ignore-path .lintignore",
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
@@ -84,23 +84,23 @@
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@emotion/styled": "catalog:",
-    "@inquirer/prompts": "^7.7.1",
+    "@inquirer/prompts": "^7.8.0",
     "@mui/icons-material": "catalog:",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.2",
-    "@mui/internal-babel-plugin-resolve-imports": "^2.0.7-canary.11",
+    "@mui/internal-babel-plugin-resolve-imports": "^2.0.7-canary.12",
     "@mui/internal-bundle-size-checker": "^1.0.9-canary.10",
-    "@mui/internal-code-infra": "^0.0.2-canary.23",
+    "@mui/internal-code-infra": "^0.0.2-canary.25",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#318f6ffee1bb664f7171ca9293d3548dbafe5913",
+    "@mui/monorepo": "github:mui/material-ui#4cb8dc21c9f2686707416627c1e1d13b996c9933",
     "@mui/utils": "catalog:",
-    "@next/eslint-plugin-next": "15.4.4",
+    "@next/eslint-plugin-next": "15.4.5",
     "@octokit/plugin-retry": "^8.0.1",
     "@octokit/rest": "^22.0.0",
     "@playwright/test": "catalog:",
     "@types/babel__core": "^7.20.5",
-    "@types/babel__traverse": "^7.20.7",
+    "@types/babel__traverse": "^7.28.0",
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "catalog:",
@@ -138,7 +138,7 @@
     "eslint": "^9.32.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
-    "eslint-plugin-jsdoc": "^52.0.0",
+    "eslint-plugin-jsdoc": "^52.0.2",
     "eslint-plugin-mui-x": "workspace:^",
     "fast-glob": "catalog:",
     "format-util": "^1.0.5",
@@ -177,7 +177,7 @@
     "vite": "catalog:",
     "vitest": "catalog:",
     "vitest-fail-on-console": "^0.8.0",
-    "webpack": "^5.100.2",
+    "webpack": "^5.101.0",
     "webpack-bundle-analyzer": "catalog:",
     "webpack-cli": "^6.0.1",
     "yargs": "catalog:"
@@ -185,8 +185,8 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.14.0",
   "engines": {
-    "pnpm": "10.13.1"
+    "pnpm": "10.14.0"
   }
 }

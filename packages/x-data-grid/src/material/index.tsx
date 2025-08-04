@@ -159,8 +159,8 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
         label={label}
         displayEmpty
         onChange={onChange as any}
-        {...rest}
         variant="outlined"
+        {...rest}
         notched
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
