@@ -86,10 +86,10 @@ export function createDiscreteScaleGetAxisFilter(
   zoomEnd: number,
   direction: 'x' | 'y',
 ): ExtremumFilter {
-  const maxIndex = (axisData?.length ?? 1) - 1;
+  const maxIndex = axisData?.length ?? 0;
 
-  const minVal = (zoomStart * maxIndex) / 100;
-  const maxVal = (zoomEnd * maxIndex) / 100;
+  const minVal = Math.floor((zoomStart * maxIndex) / 100);
+  const maxVal = Math.ceil((zoomEnd * maxIndex) / 100);
 
   return function filterAxis(value, dataIndex) {
     const val = value[direction] ?? axisData?.[dataIndex];
@@ -99,7 +99,7 @@ export function createDiscreteScaleGetAxisFilter(
       return true;
     }
 
-    return dataIndex >= minVal && dataIndex <= maxVal;
+    return dataIndex >= minVal && dataIndex < maxVal;
   };
 }
 
@@ -130,10 +130,6 @@ export function createContinuousScaleGetAxisFilter(
     if (val == null) {
       // If the value does not exist because of missing data point, or out of range index, we just ignore.
       return true;
-    }
-
-    if (typeof val === 'string') {
-      return dataIndex >= minVal && dataIndex <= maxVal;
     }
 
     return val >= minVal && val <= maxVal;
