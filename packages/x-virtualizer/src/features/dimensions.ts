@@ -354,14 +354,7 @@ function useRowsMeta(
       }
 
       if (getRowSpacing) {
-        const indexRelativeToCurrentPage = rowIdToIndexMap.get(row.id) ?? -1;
-
-        const spacing = getRowSpacing(row, {
-          isFirstVisible: indexRelativeToCurrentPage === 0,
-          isLastVisible: indexRelativeToCurrentPage === rows.length - 1,
-          indexRelativeToCurrentPage,
-        });
-
+        const spacing = getRowSpacing(row);
         entry.spacingTop = spacing.top ?? 0;
         entry.spacingBottom = spacing.bottom ?? 0;
       } else {

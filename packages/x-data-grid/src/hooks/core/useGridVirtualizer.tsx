@@ -178,7 +178,6 @@ export function useGridVirtualizer(
     },
     rows: currentPage.rows,
     range: currentPage.range,
-    rowIdToIndexMap: currentPage.rowIdToIndexMap,
     rowCount,
     columns: visibleColumns,
     pinnedRows,
@@ -203,16 +202,25 @@ export function useGridVirtualizer(
     getRowSpacing: React.useMemo(
       () =>
         getRowSpacing
-          ? (rowEntry, visibility) =>
-              getRowSpacing({
+          ? (rowEntry) => {
+              const indexRelativeToCurrentPage = currentPage.rowIdToIndexMap.get(rowEntry.id) ?? -1;
+
+              const visibility = {
+                isFirstVisible: indexRelativeToCurrentPage === 0,
+                isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+                indexRelativeToCurrentPage,
+              };
+
+              return getRowSpacing({
                 ...rowEntry,
                 ...visibility,
                 indexRelativeToCurrentPage: apiRef.current.getRowIndexRelativeToVisibleRows(
                   rowEntry.id,
                 ),
-              })
+              });
+            }
           : undefined,
-      [apiRef, getRowSpacing],
+      [apiRef, getRowSpacing, currentPage.rows, currentPage.rowIdToIndexMap],
     ),
     applyRowHeight: useEventCallback((entry, row) =>
       apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
