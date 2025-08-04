@@ -2,14 +2,14 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Menu } from '@base-ui-components/react/menu';
-import { useForkRef } from '@base-ui-components/react/utils';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useStore } from '@base-ui-components/utils/store';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
-import { EventCalendarView } from '../../../../event-calendar/EventCalendar.types';
+import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
-import { useSelector } from '../../../../../base-ui-copy/utils/store';
-import { selectors } from '../../../../event-calendar/store';
+import { selectors } from '../../../../../primitives/use-event-calendar';
 import './ViewSwitcher.css';
 
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
@@ -19,18 +19,18 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const { className, ...other } = props;
 
   const { store, instance } = useEventCalendarContext();
-  const views = useSelector(store, selectors.views);
-  const view = useSelector(store, selectors.view);
+  const views = useStore(store, selectors.views);
+  const view = useStore(store, selectors.view);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
-  const handleRef = useForkRef(forwardedRef, containerRef);
+  const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       const newView = event.currentTarget.getAttribute('data-view');
       if (newView) {
-        instance.setView(newView as EventCalendarView, event);
+        instance.setView(newView as CalendarView, event);
       }
     },
     [instance],

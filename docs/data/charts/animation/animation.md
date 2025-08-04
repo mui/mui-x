@@ -50,8 +50,26 @@ In the example below, labels are positioned above the bars they refer to and are
 
 {{"demo": "JSAnimationCustomization.js"}}
 
-Alternatively, you can use your own animation library to create custom animations, such as React Spring:
+## Using Animation Libraries
+
+Alternatively, you can use your own animation library to create custom animations, such as React Spring or Motion (Framer Motion).
+
+### Using React Spring
+
+One of the most popular libraries for animations in React is [React Spring](https://www.react-spring.dev/docs/getting-started).
+It provides a powerful and flexible API for creating animations, and it works well with the Charts library.
 
 {{"demo": "ReactSpringAnimationCustomization.js"}}
 
-Note that sometimes JavaScript animation libraries cause performance issues, especially when rendering many data points or when interactions are enabled (for example: zoom, highlight).
+### Using Motion
+
+Another option is the [Motion library](https://motion.dev/docs/react), which provides a declarative API for complex animations with excellent performance.
+
+{{"demo": "MotionAnimationCustomization.js"}}
+
+### Caveats
+
+When using custom animation libraries, you should be aware of the performance implications.
+While these libraries can create smooth animations, they may not be optimized for large datasets or complex interactions.
+
+It's essential to test the performance of your charts with the chosen animation library, especially if you are rendering many data points or enabling interactions like zooming or highlighting.

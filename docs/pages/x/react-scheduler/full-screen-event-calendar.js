@@ -5,7 +5,7 @@ import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../../../data/scheduler/datasets/palette-demo';
+} from '../../../data/scheduler/datasets/personal-agenda';
 
 export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/material';
+import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
