@@ -70,8 +70,8 @@ catalogs:
       specifier: ^4.17.20
       version: 4.17.20
     '@types/luxon':
-      specifier: ^3.6.2
-      version: 3.6.2
+      specifier: ^3.7.1
+      version: 3.7.1
     '@types/moment-hijri':
       specifier: ^2.1.4
       version: 2.1.4
@@ -866,7 +866,7 @@ importers:
         version: 4.17.20
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.6.2
+        version: 3.7.1
       '@types/moment-hijri':
         specifier: 'catalog:'
         version: 2.1.4
@@ -1517,7 +1517,7 @@ importers:
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.6.2
+        version: 3.7.1
       '@types/moment-hijri':
         specifier: 'catalog:'
         version: 2.1.4
@@ -1612,7 +1612,7 @@ importers:
         version: 7.2.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0)
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.6.2
+        version: 3.7.1
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1757,7 +1757,7 @@ importers:
         version: 2.0.10(@babel/core@7.28.0)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(chai@5.2.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@types/luxon':
         specifier: 'catalog:'
-        version: 3.6.2
+        version: 3.7.1
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -5718,8 +5718,8 @@ packages:
   '@types/lodash@4.17.20':
     resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
-  '@types/luxon@3.6.2':
-    resolution: {integrity: sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw==}
+  '@types/luxon@3.7.1':
+    resolution: {integrity: sha512-H3iskjFIAn5SlJU7OuxUmTEpebK6TKB8rxZShDslBMZJ5u9S//KM1sbdAisiSrqwLQncVjnpi2OK2J51h+4lsg==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -16801,7 +16801,7 @@ snapshots:
 
   '@types/lodash@4.17.20': {}
 
-  '@types/luxon@3.6.2': {}
+  '@types/luxon@3.7.1': {}
 
   '@types/mdast@4.0.4':
     dependencies:
