@@ -17,6 +17,8 @@ import {
   gridPivotActiveSelector,
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
+  gridColumnFieldsSelector,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -25,6 +27,7 @@ import {
   ChartState,
   GridChartsIntegrationContextValue,
 } from '../../../models/gridChartsIntegration';
+import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 import {
   GridChartsIntegrationApi,
   GridChartsIntegrationItem,
@@ -42,15 +45,18 @@ import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 import { isBlockedForSection } from './utils';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
-import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 import { GridSidebarValue } from '../sidebar';
 import { getAvailableAggregationFunctions } from '../aggregation/gridAggregationUtils';
+import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
+import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
+import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
-    'chartsIntegration' | 'initialState' | 'activeChartId' | 'rowGroupingModel'
-  >
+    'chartsIntegration' | 'initialState' | 'activeChartId' | 'rowGroupingModel' | 'pivotModel'
+  >,
+  GridPrivateApiPremium
 > = (state, props) => {
   if (!props.chartsIntegration) {
     return {
@@ -62,7 +68,8 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
     };
   }
 
-  const rowGroupingModel = props.rowGroupingModel ?? props.initialState?.rowGrouping?.model ?? [];
+  const rowGroupingModel = (state.rowGrouping?.model ?? []).filter((item) => item !== undefined);
+  const pivotModel = state.pivoting?.active ? (state.pivoting?.model as GridPivotModel) : undefined;
   const columnsLookup = state.columns?.lookup ?? {};
   const charts = Object.fromEntries(
     Object.entries(props.initialState?.chartsIntegration?.charts || {}).map(([chartId, chart]) => [
@@ -79,6 +86,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
                 columnsLookup[category.field] as GridColDef,
                 'categories',
                 rowGroupingModel,
+                pivotModel,
               ),
           ),
         series: (chart.series || [])
@@ -92,6 +100,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
                 columnsLookup[seriesItem.field] as GridColDef,
                 'series',
                 rowGroupingModel,
+                pivotModel,
               ),
           ),
       },
@@ -141,8 +150,10 @@ export const useGridChartsIntegration = (
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
-  const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+  const orderedFields = gridColumnFieldsSelector(apiRef);
   const aggregationModel = gridAggregationModelSelector(apiRef);
+  const pivotActive = gridPivotActiveSelector(apiRef);
+  const pivotModel = gridPivotModelSelector(apiRef);
 
   const { chartStateLookup, setChartState } = context || EMPTY_CHART_INTEGRATION_CONTEXT;
   const availableChartIds = React.useMemo(() => {
@@ -170,7 +181,6 @@ export const useGridChartsIntegration = (
       }
 
       const columns = gridColumnLookupSelector(apiRef);
-      const pivotActive = gridPivotActiveSelector(apiRef);
       const unwrappedColumnGroupingModel = gridColumnGroupsUnwrappedModelSelector(apiRef);
 
       const column = columns[field];
@@ -183,7 +193,7 @@ export const useGridChartsIntegration = (
       const groupPath = unwrappedColumnGroupingModel[field].slice(-1)[0];
       return [columnName, ...groupPath.split(COLUMN_GROUP_ID_SEPARATOR)].join(' - ');
     },
-    [apiRef, props.slotProps?.chartsPanel],
+    [apiRef, pivotActive, props.slotProps?.chartsPanel],
   );
 
   apiRef.current.registerControlState({
@@ -193,6 +203,66 @@ export const useGridChartsIntegration = (
     stateSelector: gridChartsIntegrationActiveChartIdSelector,
     changeEvent: 'activeChartIdChange',
   });
+
+  // sometimes, updates made to the chart categories and series require updating other models
+  // for example, if we are adding more than one category, we need to set the new grouping model
+  // if we are adding new series to the grouped data, we need to set the aggregation model, otherwise the values will be undefined
+  const updateOtherModels = React.useCallback(() => {
+    const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+
+    if (
+      visibleCategories.current[activeChartId]?.length > 0 &&
+      // if there was row grouping or if we are adding more than one category, set the new grouping model
+      (rowGroupingModel.length > 0 || visibleCategories.current[activeChartId].length > 1) &&
+      // if row grouping model starts with categories in the same order, we don't have to do anything
+      visibleCategories.current[activeChartId].some(
+        (item, index) => item.field !== rowGroupingModel[index],
+      )
+    ) {
+      // if pivoting is enabled, then the row grouping model is driven by the pivoting rows
+      const newGroupingModel = visibleCategories.current[activeChartId].map((item) => item.field);
+      if (pivotActive) {
+        apiRef.current.setPivotModel((prev) => ({
+          ...prev,
+          rows: newGroupingModel.map((item) => ({ field: item, hidden: false })),
+        }));
+      } else {
+        apiRef.current.setRowGroupingModel(newGroupingModel);
+        apiRef.current.setColumnVisibilityModel({
+          ...apiRef.current.state.columns.columnVisibilityModel,
+          ...Object.fromEntries(rowGroupingModel.map((item) => [item, true])),
+          ...Object.fromEntries(newGroupingModel.map((item) => [item, false])),
+        });
+      }
+    }
+
+    if (!pivotActive && visibleSeries.current[activeChartId] && rowGroupingModel.length > 0) {
+      // with row grouping add the aggregation model to the newly added series
+      const aggregatedFields = Object.keys(aggregationModel);
+
+      visibleSeries.current[activeChartId].forEach((item) => {
+        const hasAggregation = aggregatedFields.includes(item.field);
+        if (!hasAggregation) {
+          apiRef.current.setAggregationModel({
+            ...aggregationModel,
+            // use the first available aggregation function
+            [item.field]: getAvailableAggregationFunctions({
+              aggregationFunctions: props.aggregationFunctions,
+              colDef: item,
+              isDataSource: !!props.dataSource,
+            })[0],
+          });
+        }
+      });
+    }
+  }, [
+    apiRef,
+    props.aggregationFunctions,
+    props.dataSource,
+    activeChartId,
+    pivotActive,
+    aggregationModel,
+  ]);
 
   const handleRowDataUpdate = React.useCallback(
     (chartIds: string[]) => {
@@ -204,19 +274,46 @@ export const useGridChartsIntegration = (
       ) {
         return;
       }
+
+      const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
 
-      // keep only unique columns
+      // keep only unique columns and transform the grouped column to carry the correct field name to get the grouped value
       const dataColumns = [
-        ...new Set([
-          ...Object.values(visibleCategories.current).flat(),
-          ...Object.values(visibleSeries.current).flat(),
-        ]),
+        ...new Set(
+          [
+            ...Object.values(visibleCategories.current).flat(),
+            ...Object.values(visibleSeries.current).flat(),
+          ].map((column) => {
+            const isColumnGrouped = rowGroupingModel.includes(column.field);
+
+            if (isColumnGrouped) {
+              const groupedFieldName = isColumnGrouped
+                ? getRowGroupingFieldFromGroupingCriteria(
+                    orderedFields.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD)
+                      ? null
+                      : column.field,
+                  )
+                : column.field;
+              const columnDefinition = apiRef.current.getColumn(groupedFieldName);
+
+              return {
+                ...columnDefinition,
+                dataFieldName: column.field,
+              };
+            }
+
+            return {
+              ...column,
+              dataFieldName: column.field,
+            };
+          }),
+        ),
       ];
 
-      // go through data only once and collect everything that will be needed
+      // go through the data only once and collect everything that will be needed
       const data: Record<any, (string | number | null)[]> = Object.fromEntries(
-        dataColumns.map((column) => [column.field, []]),
+        dataColumns.map((column) => [column.dataFieldName, []]),
       );
       for (let i = 0; i < rows.length; i += 1) {
         for (let j = 0; j < dataColumns.length; j += 1) {
@@ -226,7 +323,7 @@ export const useGridChartsIntegration = (
             apiRef,
           );
           if (value !== null) {
-            data[dataColumns[j].field].push(
+            data[dataColumns[j].dataFieldName].push(
               typeof value === 'object' && 'label' in value ? value.label : value,
             );
           }
@@ -248,7 +345,7 @@ export const useGridChartsIntegration = (
         });
       });
     },
-    [apiRef, getColumnName, setChartState],
+    [apiRef, orderedFields, getColumnName, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(
@@ -263,6 +360,7 @@ export const useGridChartsIntegration = (
         return;
       }
 
+      const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const chartableColumns = gridChartableColumnsSelector(apiRef);
       const selectedFields = chartIds.reduce(
         (acc, chartId) => {
@@ -290,7 +388,7 @@ export const useGridChartsIntegration = (
         series[chartId] = [];
 
         // loop through categories and series either through their length or to the max limit
-        // if the selection is greater than the max limit, the state will be updated
+        // if the current selection is greater than the max limit, the state will be updated
         const categoriesSize = chartStateLookup[chartId]?.maxCategories
           ? Math.min(
               chartStateLookup[chartId].maxCategories,
@@ -309,6 +407,7 @@ export const useGridChartsIntegration = (
               chartableColumns[selectedFields[chartId].series[i].field],
               'series',
               rowGroupingModel,
+              pivotModel,
             )
           ) {
             if (!series[chartId]) {
@@ -324,7 +423,12 @@ export const useGridChartsIntegration = (
           if (
             !selectedFields[chartId].series.some((seriesItem) => seriesItem.field === item.field) &&
             chartableColumns[item.field] &&
-            !isBlockedForSection(chartableColumns[item.field], 'categories', rowGroupingModel)
+            !isBlockedForSection(
+              chartableColumns[item.field],
+              'categories',
+              rowGroupingModel,
+              pivotModel,
+            )
           ) {
             if (!categories[chartId]) {
               categories[chartId] = [];
@@ -333,6 +437,8 @@ export const useGridChartsIntegration = (
           }
         }
 
+        // we can compare the lengths, because this function is called after the state was updated.
+        // different lengths will occur only if some items were removed during the checks above
         if (
           categories[chartId] &&
           selectedFields[chartId].categories.length !== categories[chartId].length
@@ -351,6 +457,7 @@ export const useGridChartsIntegration = (
           .filter((seriesItem) => seriesItem.hidden !== true)
           .map((seriesItem) => chartableColumns[seriesItem.field]);
 
+        // we need to have both categories and series to be able to display the chart
         if (
           visibleCategories.current[chartId].length === 0 ||
           visibleSeries.current[chartId].length === 0
@@ -360,9 +467,10 @@ export const useGridChartsIntegration = (
         }
       });
 
+      updateOtherModels();
       debouncedHandleRowDataUpdate(chartIds);
     },
-    [apiRef, chartStateLookup, rowGroupingModel, debouncedHandleRowDataUpdate],
+    [apiRef, chartStateLookup, pivotModel, debouncedHandleRowDataUpdate, updateOtherModels],
   );
 
   const debouncedHandleColumnDataUpdate = React.useMemo(
@@ -483,6 +591,7 @@ export const useGridChartsIntegration = (
     [apiRef, chartStateLookup, setChartState, debouncedHandleColumnDataUpdate],
   );
 
+  // called when a column is dragged and dropped to a different section
   const updateDataReference = React.useCallback<
     GridChartsIntegrationPrivateApi['chartsIntegration']['updateDataReference']
   >(
@@ -490,9 +599,10 @@ export const useGridChartsIntegration = (
       const columns = gridColumnLookupSelector(apiRef);
       const categories = gridChartsCategoriesSelector(apiRef, activeChartId);
       const series = gridChartsSeriesSelector(apiRef, activeChartId);
+      const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
       if (targetSection) {
-        if (isBlockedForSection(columns[field], targetSection, rowGroupingModel)) {
+        if (isBlockedForSection(columns[field], targetSection, rowGroupingModel, pivotModel)) {
           return;
         }
 
@@ -560,14 +670,14 @@ export const useGridChartsIntegration = (
     },
     [
       apiRef,
-      activeChartId,
-      chartStateLookup,
-      rowGroupingModel,
-      aggregationModel,
-      updateCategories,
-      updateSeries,
       props.aggregationFunctions,
       props.dataSource,
+      activeChartId,
+      chartStateLookup,
+      updateCategories,
+      updateSeries,
+      aggregationModel,
+      pivotModel,
     ],
   );
 

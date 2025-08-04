@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { vars } from '@mui/x-data-grid-pro/internals';
+import { gridPivotActiveSelector, vars } from '@mui/x-data-grid-pro/internals';
 import {
   getDataGridUtilityClass,
   GridShadowScrollArea,
@@ -24,6 +24,7 @@ import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridCha
 import { getBlockedSections } from '../../../hooks/features/chartsIntegration/utils';
 import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
+import { gridPivotModelSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -166,6 +167,8 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
   const { chartStateLookup } = useGridChartsIntegrationContext();
   const categories = useGridSelector(apiRef, gridChartsCategoriesSelector, activeChartId);
@@ -198,10 +201,15 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
       new Map<string, string[]>(
         Object.values(chartableColumns).map((column) => [
           column.field,
-          Array.from(new Set([...getBlockedSections(column, rowGroupingModel), ...fullSections])),
+          Array.from(
+            new Set([
+              ...getBlockedSections(column, rowGroupingModel, pivotActive ? pivotModel : undefined),
+              ...fullSections,
+            ]),
+          ),
         ]),
       ),
-    [rowGroupingModel, chartableColumns, fullSections],
+    [rowGroupingModel, chartableColumns, pivotActive, pivotModel, fullSections],
   );
 
   const availableFields = React.useMemo(() => {

@@ -3,15 +3,12 @@ import {
   createRootSelector,
   createSelector,
   createSelectorMemoized,
-  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  gridColumnFieldsSelector,
   gridColumnLookupSelector,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
-import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
-import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
-import { gridPivotActiveSelector, gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import { gridSidebarStateSelector, GridSidebarValue } from '../sidebar';
+import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 
 const gridChartsIntegrationStateSelector = createRootSelector(
   (state: GridStatePremium) => state.chartsIntegration,
@@ -29,49 +26,39 @@ export const gridChartsPanelOpenSelector = createSelector(
 
 export const gridChartableColumnsSelector = createSelectorMemoized(
   gridColumnLookupSelector,
-  gridRowGroupingSanitizedModelSelector,
   gridPivotActiveSelector,
   gridPivotModelSelector,
-  (columns, rowGroupingModel, pivotActive, pivotModel) =>
-    Object.values(columns)
-      .filter(
-        (column) =>
-          column.chartable &&
-          !rowGroupingModel.includes(column.field) &&
-          (!pivotActive || !pivotModel.values.map((value) => value.field).includes(column.field)),
-      )
-      .reduce((acc, column) => {
-        acc[column.field] = column;
-        return acc;
-      }, {} as GridColumnLookup),
+  (columns, pivotActive, pivotModel) => {
+    let chartableColumns = Object.values(columns).filter((column) => column.chartable);
+    if (pivotActive) {
+      const pivotColumns = pivotModel.columns
+        .filter((column) => column.hidden !== true)
+        .map((column) => column.field);
+      const pivotValues = pivotModel.values
+        .filter((value) => value.hidden !== true)
+        .map((value) => value.field);
+      // pivot columns are not visualized
+      // once the columns are set, value fields are created dynamically. those fields remain chartable, but we remove the initial value columns
+      if (pivotColumns.length > 0) {
+        chartableColumns = chartableColumns.filter(
+          (column) => !pivotColumns.includes(column.field) && !pivotValues.includes(column.field),
+        );
+      }
+    }
+
+    return chartableColumns.reduce((acc, column) => {
+      acc[column.field] = column;
+      return acc;
+    }, {} as GridColumnLookup);
+  },
 );
 
-export const gridChartsCategoriesSelector = createSelectorMemoized(
+export const gridChartsCategoriesSelector = createSelector(
   gridChartsIntegrationStateSelector,
-  gridColumnFieldsSelector,
-  gridRowGroupingSanitizedModelSelector,
-  (chartsIntegration, columns, rowGroupingModel, chartId) =>
-    (chartsIntegration.charts[chartId]?.categories || []).map((category) => ({
-      ...category,
-      field: rowGroupingModel.includes(category.field)
-        ? getRowGroupingFieldFromGroupingCriteria(
-            columns.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : category.field,
-          )
-        : category.field,
-    })),
+  (chartsIntegration, chartId) => chartsIntegration.charts[chartId]?.categories || [],
 );
 
-export const gridChartsSeriesSelector = createSelectorMemoized(
+export const gridChartsSeriesSelector = createSelector(
   gridChartsIntegrationStateSelector,
-  gridColumnFieldsSelector,
-  gridRowGroupingSanitizedModelSelector,
-  (chartsIntegration, columns, rowGroupingModel, chartId) =>
-    (chartsIntegration.charts[chartId]?.series || []).map((seriesItem) => ({
-      ...seriesItem,
-      field: rowGroupingModel.includes(seriesItem.field)
-        ? getRowGroupingFieldFromGroupingCriteria(
-            columns.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) ? null : seriesItem.field,
-          )
-        : seriesItem.field,
-    })),
+  (chartsIntegration, chartId) => chartsIntegration.charts[chartId]?.series || [],
 );
