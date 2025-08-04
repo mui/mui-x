@@ -348,7 +348,6 @@ export class Flatbush {
         dArray[index + 1] = dy;
         const dist = sqDistFn(dx, dy);
         const maxDistSquared = maxDistSqFn(dx, dy);
-        console.log(`distSq: ${dist}, maxDistSq: ${maxDistSquared}, index: ${index}`);
         if (dist > maxDistSquared) {
           continue;
         }
