@@ -13,7 +13,6 @@ import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
 import {
-  gridContentHeightSelector,
   gridHasFillerSelector,
   gridVerticalScrollbarWidthSelector,
 } from '../features/dimensions/gridDimensionsSelectors';
@@ -102,7 +101,6 @@ export function useGridVirtualizer(
 
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
-  const contentHeight = useGridSelector(apiRef, gridContentHeightSelector);
   const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
   const { autoHeight } = rootProps;
@@ -159,14 +157,25 @@ export function useGridVirtualizer(
   const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
 
   const virtualizer = useVirtualizer({
+    refs: {
+      container: apiRef.current.mainElementRef,
+      scroller: apiRef.current.virtualScrollerRef,
+      scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
+      scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
+    },
+
     dimensions: dimensionsParams,
+    virtualization: {
+      isRtl,
+      rowBufferPx: rootProps.rowBufferPx,
+      columnBufferPx: rootProps.columnBufferPx,
+    },
 
     initialState: {
       scroll: rootProps.initialState?.scroll,
       rowSpanning: apiRef.current.state.rowSpanning,
       virtualization: apiRef.current.state.virtualization,
     },
-    isRtl,
     rows: currentPage.rows,
     range: currentPage.range,
     rowIdToIndexMap: currentPage.rowIdToIndexMap,
@@ -174,17 +183,10 @@ export function useGridVirtualizer(
     columns: visibleColumns,
     pinnedRows,
     pinnedColumns,
-    refs: {
-      container: apiRef.current.mainElementRef,
-      scroller: apiRef.current.virtualScrollerRef,
-      scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
-      scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
-    },
     hasColSpan,
 
-    contentHeight,
-    minimalContentHeight,
     autoHeight,
+    minimalContentHeight,
     getRowHeight: React.useMemo(() => {
       if (!getRowHeight) {
         return undefined;

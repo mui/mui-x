@@ -47,6 +47,7 @@ const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
+  contentHeight: (state: BaseState) => state.dimensions.contentSize.height,
   rowsMeta: (state: BaseState) => state.rowsMeta,
   columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
     const positions: number[] = [];

@@ -10,6 +10,7 @@ import { Virtualization } from './features/virtualization';
 import type { RowId } from './models/core';
 import type { HeightEntry, RowSpacing, RowVisibilityParams } from './models/dimensions';
 import type { DimensionsParams } from './features/dimensions';
+import type { VirtualizationParams } from './features/virtualization';
 
 import {
   ColumnWithWidth,
@@ -32,14 +33,21 @@ export type VirtualScrollerCompat = Virtualization.State['getters'];
 export type BaseState = Virtualization.State & Dimensions.State;
 
 export type VirtualizerParams = {
+  refs: {
+    container: RefObject<HTMLDivElement | null>;
+    scroller: RefObject<HTMLDivElement | null>;
+    scrollbarVertical: RefObject<HTMLDivElement | null>;
+    scrollbarHorizontal: RefObject<HTMLDivElement | null>;
+  };
+
   dimensions: DimensionsParams;
+  virtualization: VirtualizationParams;
 
   initialState?: {
     scroll?: { top: number; left: number };
     rowSpanning?: Rowspan.State['rowSpanning'];
     virtualization?: Partial<Virtualization.State['virtualization']>;
   };
-  isRtl: boolean;
   /** current page rows */
   rows: RowEntry[];
   /** current page range */
@@ -49,17 +57,10 @@ export type VirtualizerParams = {
   columns: ColumnWithWidth[];
   pinnedRows: PinnedRows;
   pinnedColumns: PinnedColumns;
-  refs: {
-    container: RefObject<HTMLDivElement | null>;
-    scroller: RefObject<HTMLDivElement | null>;
-    scrollbarVertical: RefObject<HTMLDivElement | null>;
-    scrollbarHorizontal: RefObject<HTMLDivElement | null>;
-  };
   hasColSpan: boolean;
 
-  contentHeight: number;
-  minimalContentHeight: number | string;
   autoHeight: boolean;
+  minimalContentHeight: number | string;
   getRowHeight?: (row: RowEntry) => number | null | undefined | 'auto';
   /**
    * Function that returns the estimated height for a row.

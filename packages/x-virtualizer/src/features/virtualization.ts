@@ -30,6 +30,17 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
+export type VirtualizationParams = {
+  /** @default false */
+  isRtl?: boolean;
+  /** The row buffer in pixels to render before and after the viewport.
+   * @default 150 */
+  rowBufferPx?: number;
+  /** The column buffer in pixels to render before and after the viewport.
+   * @default 150 */
+  columnBufferPx?: number;
+};
+
 export type VirtualizationState = {
   enabled: boolean;
   enabledForRows: boolean;
@@ -98,19 +109,17 @@ type RequiredAPI = Dimensions.API & AbstractAPI;
 
 function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: RequiredAPI) {
   const {
+    refs,
+    dimensions: { rowHeight, columnsTotalWidth },
+    virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
     initialState,
-    isRtl,
     rows,
     range,
     columns,
     pinnedRows,
     pinnedColumns,
-    refs,
     hasColSpan,
 
-    dimensions: { rowHeight, columnsTotalWidth },
-
-    contentHeight,
     minimalContentHeight,
     autoHeight,
 
@@ -118,9 +127,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     onTouchMove,
     onRenderContextChange,
     onScrollChange,
-
-    rowBufferPx,
-    columnBufferPx,
 
     scrollReset,
 
@@ -138,6 +144,8 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
+
+  const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
   /*
    * Scroll context logic
