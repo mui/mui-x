@@ -247,6 +247,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Объединение данных',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'сумм',
   aggregationFunctionLabelAvg: 'срзнач',
   aggregationFunctionLabelMin: 'мин',
@@ -294,6 +295,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

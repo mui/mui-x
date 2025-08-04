@@ -215,6 +215,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Агрегиране',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'сума',
   aggregationFunctionLabelAvg: 'срст',
   aggregationFunctionLabelMin: 'мин',
@@ -262,6 +263,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',
