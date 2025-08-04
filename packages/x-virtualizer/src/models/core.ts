@@ -26,11 +26,17 @@ export type PinnedRows = {
   top: RowEntry[];
   bottom: RowEntry[];
 };
+export namespace PinnedRows {
+  export const EMPTY = { top: [], bottom: [] } as PinnedRows;
+}
 
 export type PinnedColumns = {
   left: Column[];
   right: Column[];
 };
+export namespace PinnedColumns {
+  export const EMPTY = { left: [], right: [] } as PinnedColumns;
+}
 
 export type FocusedCell = {
   rowIndex: number;

@@ -381,15 +381,17 @@ function useRowsMeta(
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    const pinnedTopRowsTotalHeight = pinnedRows.top.reduce((acc, row) => {
-      const entry = processHeightEntry(row);
-      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-    }, 0);
+    const pinnedTopRowsTotalHeight =
+      pinnedRows?.top.reduce((acc, row) => {
+        const entry = processHeightEntry(row);
+        return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+      }, 0) ?? 0;
 
-    const pinnedBottomRowsTotalHeight = pinnedRows.bottom.reduce((acc, row) => {
-      const entry = processHeightEntry(row);
-      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
-    }, 0);
+    const pinnedBottomRowsTotalHeight =
+      pinnedRows?.bottom.reduce((acc, row) => {
+        const entry = processHeightEntry(row);
+        return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+      }, 0) ?? 0;
 
     const positions: number[] = [];
     const currentPageTotalHeight = rows.reduce((acc, row) => {

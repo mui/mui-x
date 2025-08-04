@@ -54,8 +54,8 @@ export type VirtualizerParams = {
   range: { firstRowIndex: integer; lastRowIndex: integer } | null;
   rowCount: integer;
   columns: ColumnWithWidth[];
-  pinnedRows: PinnedRows;
-  pinnedColumns: PinnedColumns;
+  pinnedRows?: PinnedRows;
+  pinnedColumns?: PinnedColumns;
   hasColSpan: boolean;
 
   autoHeight: boolean;

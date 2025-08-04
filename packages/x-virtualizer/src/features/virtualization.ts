@@ -10,6 +10,7 @@ import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
+import { PinnedRows, PinnedColumns } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions } from './dimensions';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
@@ -116,8 +117,8 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     rows,
     range,
     columns,
-    pinnedRows,
-    pinnedColumns,
+    pinnedRows = PinnedRows.EMPTY,
+    pinnedColumns = PinnedColumns.EMPTY,
     hasColSpan,
 
     minimalContentHeight,
