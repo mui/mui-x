@@ -28,7 +28,7 @@ catalog:
   '@types/format-util': ^1.0.4
   '@types/karma': ^6.3.9
   '@types/lodash': ^4.17.20
-  '@types/luxon': ^3.6.2
+  '@types/luxon': ^3.7.1
   '@types/moment-hijri': ^2.1.4
   '@types/moment-jalaali': ^0.7.9
   '@types/prop-types': ^15.7.15
