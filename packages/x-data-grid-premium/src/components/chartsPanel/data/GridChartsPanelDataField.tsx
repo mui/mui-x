@@ -16,7 +16,11 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import type { FieldTransferObject, DropPosition } from './GridChartsPanelDataBody';
 import { GridChartsPanelDataFieldMenu } from './GridChartsPanelDataFieldMenu';
 import { gridAggregationModelSelector } from '../../../hooks/features/aggregation';
-import { getAvailableAggregationFunctions } from '../../../hooks/features/aggregation/gridAggregationUtils';
+import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
+import {
+  getAggregationFunctionLabel,
+  getAvailableAggregationFunctions,
+} from '../../../hooks/features/aggregation/gridAggregationUtils';
 import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 
@@ -191,10 +195,16 @@ export function AggregationSelect({
     [apiRef, field, getActualFieldName, pivotActive, aggregationModel, setAggregationMenuOpen],
   );
 
-  return (
+  return availableAggregationFunctions.length > 0 ? (
     <React.Fragment>
       <rootProps.slots.baseChip
-        label={rootProps.aggregationFunctions[aggFunc]?.label ?? aggFunc}
+        label={getAggregationFunctionLabel({
+          apiRef,
+          aggregationRule: {
+            aggregationFunctionName: aggFunc,
+            aggregationFunction: rootProps.aggregationFunctions[aggFunc] || {},
+          },
+        })}
         size="small"
         variant="outlined"
         ref={aggregationMenuTriggerRef}
@@ -223,13 +233,19 @@ export function AggregationSelect({
               onClick={() => handleClick(func)}
               {...rootProps.slotProps?.baseMenuItem}
             >
-              {rootProps.aggregationFunctions[func]?.label ?? func}
+              {getAggregationFunctionLabel({
+                apiRef,
+                aggregationRule: {
+                  aggregationFunctionName: func,
+                  aggregationFunction: rootProps.aggregationFunctions[func] || {},
+                },
+              })}
             </rootProps.slots.baseMenuItem>
           ))}
         </rootProps.slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
-  );
+  ) : null;
 }
 
 function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
@@ -250,6 +266,8 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
+  const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
+  const isRowGroupingEnabled = React.useMemo(() => rowGroupingModel.length > 0, [rowGroupingModel]);
 
   const handleDragStart = React.useCallback(
     (event: React.DragEvent) => {
@@ -317,53 +335,59 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
   const hideable = section !== null;
 
   return (
-    <GridChartsPanelDataFieldRoot
-      ownerState={ownerState}
-      className={classes.root}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      onDragStart={handleDragStart}
-      onDragEnd={onDragEnd}
-      draggable={!disabled}
-      disabled={!!disabled}
+    <rootProps.slots.baseTooltip
+      title={disabled ? apiRef.current.getLocaleText('chartsFieldBlocked') : undefined}
+      enterDelay={1000}
+      {...rootProps.slotProps?.baseTooltip}
     >
-      <GridChartsPanelDataFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
-        <rootProps.slots.columnReorderIcon fontSize="small" />
-      </GridChartsPanelDataFieldDragIcon>
-
-      {hideable ? (
-        <GridChartsPanelDataFieldCheckbox
-          ownerState={ownerState}
-          className={classes.checkbox}
-          as={rootProps.slots.baseCheckbox}
-          size="small"
-          density="compact"
-          {...rootProps.slotProps?.baseCheckbox}
-          checked={selected || false}
-          onChange={() => onChange && onChange(field, section)}
-          label={children}
-        />
-      ) : (
-        <GridChartsPanelDataFieldName ownerState={ownerState} className={classes.name}>
-          {children}
-        </GridChartsPanelDataFieldName>
-      )}
-
-      <GridChartsPanelDataFieldActionContainer
+      <GridChartsPanelDataFieldRoot
         ownerState={ownerState}
-        className={classes.actionContainer}
+        className={classes.root}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onDragStart={handleDragStart}
+        onDragEnd={onDragEnd}
+        draggable={!disabled}
+        disabled={!!disabled}
       >
-        {section === 'series' && (
-          <AggregationSelect aggFunc={aggregationModel[field] ?? 'none'} field={field} />
+        <GridChartsPanelDataFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
+          <rootProps.slots.columnReorderIcon fontSize="small" />
+        </GridChartsPanelDataFieldDragIcon>
+
+        {hideable ? (
+          <GridChartsPanelDataFieldCheckbox
+            ownerState={ownerState}
+            className={classes.checkbox}
+            as={rootProps.slots.baseCheckbox}
+            size="small"
+            density="compact"
+            {...rootProps.slotProps?.baseCheckbox}
+            checked={selected || false}
+            onChange={() => onChange && onChange(field, section)}
+            label={children}
+          />
+        ) : (
+          <GridChartsPanelDataFieldName ownerState={ownerState} className={classes.name}>
+            {children}
+          </GridChartsPanelDataFieldName>
         )}
-        <GridChartsPanelDataFieldMenu
-          field={field}
-          section={section}
-          blockedSections={blockedSections}
-        />
-      </GridChartsPanelDataFieldActionContainer>
-    </GridChartsPanelDataFieldRoot>
+
+        <GridChartsPanelDataFieldActionContainer
+          ownerState={ownerState}
+          className={classes.actionContainer}
+        >
+          {isRowGroupingEnabled && section === 'series' && (
+            <AggregationSelect aggFunc={aggregationModel[field] ?? 'none'} field={field} />
+          )}
+          <GridChartsPanelDataFieldMenu
+            field={field}
+            section={section}
+            blockedSections={blockedSections}
+          />
+        </GridChartsPanelDataFieldActionContainer>
+      </GridChartsPanelDataFieldRoot>
+    </rootProps.slots.baseTooltip>
   );
 }
 

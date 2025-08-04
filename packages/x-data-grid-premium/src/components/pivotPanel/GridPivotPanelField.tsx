@@ -16,7 +16,10 @@ import useId from '@mui/utils/useId';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridPivotModel } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getAvailableAggregationFunctions } from '../../hooks/features/aggregation/gridAggregationUtils';
+import {
+  getAggregationFunctionLabel,
+  getAvailableAggregationFunctions,
+} from '../../hooks/features/aggregation/gridAggregationUtils';
 import { GridPivotPanelFieldMenu } from './GridPivotPanelFieldMenu';
 import type { FieldTransferObject } from './GridPivotPanelBody';
 import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
@@ -183,7 +186,13 @@ function AggregationSelect({
   return (
     <React.Fragment>
       <rootProps.slots.baseChip
-        label={rootProps.aggregationFunctions[aggFunc]?.label ?? aggFunc}
+        label={getAggregationFunctionLabel({
+          apiRef,
+          aggregationRule: {
+            aggregationFunctionName: aggFunc,
+            aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+          },
+        })}
         size="small"
         variant="outlined"
         ref={aggregationMenuTriggerRef}
@@ -212,7 +221,13 @@ function AggregationSelect({
               onClick={() => handleClick(func)}
               {...rootProps.slotProps?.baseMenuItem}
             >
-              {rootProps.aggregationFunctions[func]?.label ?? func}
+              {getAggregationFunctionLabel({
+                apiRef,
+                aggregationRule: {
+                  aggregationFunctionName: func,
+                  aggregationFunction: rootProps.aggregationFunctions[func],
+                },
+              })}
             </rootProps.slots.baseMenuItem>
           ))}
         </rootProps.slots.baseMenuList>

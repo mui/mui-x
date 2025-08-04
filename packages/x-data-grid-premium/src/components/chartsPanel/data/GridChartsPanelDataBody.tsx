@@ -23,6 +23,7 @@ import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApi
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
 import { getBlockedSections } from '../../../hooks/features/chartsIntegration/utils';
 import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -164,6 +165,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const { searchValue } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
   const { chartStateLookup } = useGridChartsIntegrationContext();
   const categories = useGridSelector(apiRef, gridChartsCategoriesSelector, activeChartId);
@@ -196,10 +198,10 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
       new Map<string, string[]>(
         Object.values(chartableColumns).map((column) => [
           column.field,
-          Array.from(new Set([...getBlockedSections(column), ...fullSections])),
+          Array.from(new Set([...getBlockedSections(column, rowGroupingModel), ...fullSections])),
         ]),
       ),
-    [chartableColumns, fullSections],
+    [rowGroupingModel, chartableColumns, fullSections],
   );
 
   const availableFields = React.useMemo(() => {
