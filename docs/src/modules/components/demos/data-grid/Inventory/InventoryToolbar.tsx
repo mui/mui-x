@@ -24,11 +24,16 @@ type OwnerState = {
   expanded: boolean;
 };
 
-const StyledQuickFilter = styled(QuickFilter)({
+const StyledQuickFilter = styled(QuickFilter)(({ theme }) => ({
   display: 'grid',
   alignItems: 'center',
   marginLeft: 'auto',
-});
+  [theme.breakpoints.down('md')]: {
+    marginLeft: 0,
+    width: '100%',
+    marginTop: theme.spacing(1),
+  },
+}));
 
 const StyledToolbarButton = styled(ToolbarButton)<{ ownerState: OwnerState }>(
   ({ theme, ownerState }) => ({
@@ -50,6 +55,9 @@ const StyledTextField = styled(TextField)<{
   width: ownerState.expanded ? 260 : 'var(--trigger-width)',
   opacity: ownerState.expanded ? 1 : 0,
   transition: theme.transitions.create(['width', 'opacity']),
+  [theme.breakpoints.down('sm')]: {
+    width: ownerState.expanded ? '100%' : 'var(--trigger-width)',
+  },
 }));
 
 const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
@@ -98,6 +106,7 @@ export function InventoryToolbar() {
             gap: 2,
             alignItems: 'center',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
           }}
         />
       }

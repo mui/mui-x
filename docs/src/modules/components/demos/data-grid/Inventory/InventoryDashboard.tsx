@@ -91,8 +91,8 @@ const columns: GridColDef<Product>[] = [
     groupable: false,
     aggregable: false,
     headerName: 'Product',
-    flex: 1,
-    minWidth: 250,
+    flex: 2,
+    minWidth: 280,
     renderCell: (params: GridRenderCellParams<Product, string>) => {
       if (
         params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID ||
@@ -109,7 +109,15 @@ const columns: GridColDef<Product>[] = [
       );
     },
   },
-  { field: 'sku', groupable: false, aggregable: false, headerName: 'SKU', width: 120, flex: 1 },
+  {
+    field: 'sku',
+    groupable: false,
+    aggregable: false,
+    headerName: 'SKU',
+    width: 120,
+    minWidth: 100,
+    flex: 0.8,
+  },
   {
     field: 'status',
     type: 'singleSelect',
@@ -117,8 +125,8 @@ const columns: GridColDef<Product>[] = [
     valueOptions: Object.keys(productStatusMap),
     getOptionLabel: (value) => productStatusMap[value as keyof typeof productStatusMap],
     headerName: 'Status',
-    minWidth: 150,
-    flex: 1,
+    minWidth: 180,
+    flex: 1.2,
     renderCell: (params: GridRenderCellParams<Product, string>) => {
       if (params.aggregation) {
         return params.value;
@@ -153,7 +161,8 @@ const columns: GridColDef<Product>[] = [
     aggregable: false,
     headerName: 'Stock',
     width: 100,
-    flex: 1,
+    minWidth: 100,
+    flex: 0.7,
   },
   {
     field: 'price',
@@ -162,8 +171,9 @@ const columns: GridColDef<Product>[] = [
     // editable: true,
     headerName: 'Price',
     width: 150,
+    minWidth: 100,
     type: 'number',
-    flex: 1,
+    flex: 0.9,
     valueFormatter: (value: number) => (value != null ? `$${value}` : 'Profit:'),
   },
   {
@@ -172,8 +182,9 @@ const columns: GridColDef<Product>[] = [
     aggregable: false,
     headerName: 'Cost',
     width: 120,
+    minWidth: 90,
     type: 'number',
-    flex: 1,
+    flex: 0.8,
     valueFormatter: (value: number) => (value != null ? `$${value}` : ''),
   },
   {
@@ -181,6 +192,7 @@ const columns: GridColDef<Product>[] = [
     headerName: 'Rating',
     aggregable: false,
     width: 150,
+    minWidth: 120,
     flex: 1,
     renderCell: (params: GridRenderCellParams<Product, number>) =>
       params.id === GRID_AGGREGATION_ROOT_FOOTER_ROW_ID ? (
@@ -194,7 +206,8 @@ const columns: GridColDef<Product>[] = [
     type: 'number',
     headerName: 'Sales',
     width: 100,
-    flex: 1,
+    minWidth: 100,
+    flex: 0.7,
     availableAggregationFunctions: ['sum'],
   },
 ];
