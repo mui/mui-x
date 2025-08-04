@@ -97,9 +97,6 @@ export type VirtualizerParams = {
 
   focusedVirtualCell: () => FocusedCell | null;
 
-  rowBufferPx: number;
-  columnBufferPx: number;
-
   scrollReset?: any;
 
   getColspan: (rowId: RowId, column: ColumnWithWidth, columnIndex: integer) => number;
