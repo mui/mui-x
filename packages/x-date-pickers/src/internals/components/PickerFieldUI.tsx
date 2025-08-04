@@ -18,6 +18,8 @@ import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
 import type { UseFieldReturnValue, UseFieldProps } from '../hooks/useField';
 import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
 
+const noop = () => {};
+
 export const cleanFieldResponse = <
   TFieldResponse extends MakeOptional<
     UseFieldReturnValue<any, ExportedPickerFieldUIProps & { [key: string]: any }>,
@@ -41,6 +43,10 @@ export const cleanFieldResponse = <
       openPickerAriaLabel,
       ...other
     } = fieldResponse;
+    const mergedInputProps =
+      materialMajor >= 6 && other?.slotProps?.input
+        ? mergeSlotProps(other?.slotProps?.input, InputProps)
+        : noop;
 
     return {
       clearable,
@@ -50,7 +56,21 @@ export const cleanFieldResponse = <
       openPickerAriaLabel,
       textFieldProps: {
         ...other,
-        InputProps: { ...(InputProps ?? {}), readOnly },
+        ...(materialMajor >= 6 && other?.slotProps?.input
+          ? {
+              slotProps: {
+                ...other?.slotProps,
+                input: (ownerState: FieldOwnerState) => ({
+                  ...(typeof mergedInputProps === 'function'
+                    ? mergedInputProps(ownerState)
+                    : mergedInputProps),
+                  readOnly,
+                }),
+              },
+            }
+          : {
+              InputProps: { ...(InputProps ?? {}), readOnly },
+            }),
       },
     };
   }
@@ -71,6 +91,14 @@ export const cleanFieldResponse = <
     ...other
   } = fieldResponse;
 
+  const mergedInputProps =
+    materialMajor >= 6 && other?.slotProps?.input
+      ? mergeSlotProps(other?.slotProps?.input, InputProps)
+      : noop;
+  const mergedHtmlInputProps =
+    materialMajor >= 6 && other?.slotProps?.htmlInput
+      ? mergeSlotProps(other?.slotProps?.htmlInput, inputProps)
+      : noop;
   return {
     clearable,
     onClear,
@@ -79,23 +107,25 @@ export const cleanFieldResponse = <
     openPickerAriaLabel,
     textFieldProps: {
       ...other,
-      ...(materialMajor >= 6
+      ...(materialMajor >= 6 && (other?.slotProps?.input || other?.slotProps?.htmlInput)
         ? {
             slotProps: {
               ...other?.slotProps,
-              input: {
-                ...other?.slotProps?.input,
-                ...(InputProps ?? {}),
+              input: (ownerState: FieldOwnerState) => ({
+                ...(typeof mergedInputProps === 'function'
+                  ? mergedInputProps(ownerState)
+                  : mergedInputProps),
                 readOnly,
-              },
-              htmlInput: {
-                ...other?.slotProps?.htmlInput,
-                ...(inputProps ?? {}),
+              }),
+              htmlInput: (ownerState: FieldOwnerState) => ({
+                ...(typeof mergedHtmlInputProps === 'function'
+                  ? mergedHtmlInputProps(ownerState)
+                  : mergedHtmlInputProps),
                 inputMode,
                 onPaste,
                 onKeyDown,
                 ref: inputRef,
-              },
+              }),
             },
           }
         : {
@@ -235,21 +265,20 @@ export function PickerFieldUI<
 
   textFieldProps.ref = useForkRef(textFieldProps.ref, pickerContext?.rootRef);
 
-  let textFieldInputProps = ((textFieldProps as TextFieldProps)?.slotProps?.input ??
+  const additionalTextFieldInputProps: PickersTextFieldProps['InputProps'] = {};
+  const textFieldInputProps = ((materialMajor >= 6 &&
+    (textFieldProps as TextFieldProps)?.slotProps?.input) ??
     textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined;
-  if (!textFieldInputProps) {
-    textFieldInputProps = {};
-  }
 
   if (pickerContext) {
-    textFieldInputProps.ref = pickerContext.triggerRef;
+    additionalTextFieldInputProps.ref = pickerContext.triggerRef;
   }
 
   if (
     !textFieldInputProps?.startAdornment &&
     (clearButtonPosition === 'start' || openPickerButtonPosition === 'start')
   ) {
-    textFieldInputProps.startAdornment = (
+    additionalTextFieldInputProps.startAdornment = (
       <InputAdornment {...startInputAdornmentProps}>
         {openPickerButtonPosition === 'start' && (
           <OpenPickerButton {...openPickerButtonProps}>
@@ -269,7 +298,7 @@ export function PickerFieldUI<
     !textFieldInputProps?.endAdornment &&
     (clearButtonPosition === 'end' || openPickerButtonPosition === 'end')
   ) {
-    textFieldInputProps.endAdornment = (
+    additionalTextFieldInputProps.endAdornment = (
       <InputAdornment {...endInputAdornmentProps}>
         {clearButtonPosition === 'end' && (
           <ClearButton {...clearButtonProps}>
@@ -306,7 +335,27 @@ export function PickerFieldUI<
     ];
   }
 
-  return <TextField {...textFieldProps} />;
+  const resolvedTextFieldInputProps =
+    materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input
+      ? mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps)
+      : {
+          ...textFieldInputProps,
+          ...additionalTextFieldInputProps,
+        };
+
+  return (
+    <TextField
+      {...textFieldProps}
+      {...(materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input
+        ? {
+            slotProps: {
+              ...(textFieldProps as TextFieldProps)?.slotProps,
+              input: resolvedTextFieldInputProps,
+            },
+          }
+        : { InputProps: resolvedTextFieldInputProps })}
+    />
+  );
 }
 
 export interface ExportedPickerFieldUIProps {
