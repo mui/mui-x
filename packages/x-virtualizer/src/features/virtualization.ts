@@ -113,13 +113,13 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     refs,
     dimensions: { rowHeight, columnsTotalWidth },
     virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
+    colspan,
     initialState,
     rows,
     range,
     columns,
     pinnedRows = PinnedRows.EMPTY,
     pinnedColumns = PinnedColumns.EMPTY,
-    hasColSpan,
 
     minimalContentHeight,
     autoHeight,
@@ -404,7 +404,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       const rowIndex = (range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
 
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
-      if (hasColSpan) {
+      if (colspan?.enabled) {
         const minFirstColumn = pinnedColumns.left.length;
         const maxLastColumn = columns.length - pinnedColumns.right.length;
 
@@ -873,8 +873,8 @@ function deriveRenderContext(
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
     firstIndex: nextRenderContext.firstColumnIndex,
     lastIndex: nextRenderContext.lastColumnIndex,
-    minFirstIndex: inputs.pinnedColumns.left.length,
-    maxLastIndex: inputs.columns.length - inputs.pinnedColumns.right.length,
+    minFirstIndex: inputs.pinnedColumns?.left.length ?? 0,
+    maxLastIndex: inputs.columns.length - (inputs.pinnedColumns?.right.length ?? 0),
     bufferBefore: scrollCache.buffer.columnBefore,
     bufferAfter: scrollCache.buffer.columnAfter,
     positions: inputs.columnPositions,

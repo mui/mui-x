@@ -7,8 +7,8 @@ import { Dimensions } from './features/dimensions';
 import { Keyboard } from './features/keyboard';
 import { Rowspan } from './features/rowspan';
 import { Virtualization } from './features/virtualization';
-import type { RowId } from './models/core';
 import type { HeightEntry, RowSpacing } from './models/dimensions';
+import type { ColspanParams } from './features/colspan';
 import type { DimensionsParams } from './features/dimensions';
 import type { VirtualizationParams } from './features/virtualization';
 
@@ -42,6 +42,7 @@ export type VirtualizerParams = {
 
   dimensions: DimensionsParams;
   virtualization: VirtualizationParams;
+  colspan?: ColspanParams;
 
   initialState?: {
     scroll?: { top: number; left: number };
@@ -56,7 +57,6 @@ export type VirtualizerParams = {
   columns: ColumnWithWidth[];
   pinnedRows?: PinnedRows;
   pinnedColumns?: PinnedColumns;
-  hasColSpan: boolean;
 
   autoHeight: boolean;
   minimalContentHeight: number | string;
@@ -96,8 +96,6 @@ export type VirtualizerParams = {
   focusedVirtualCell: () => FocusedCell | null;
 
   scrollReset?: any;
-
-  getColspan: (rowId: RowId, column: ColumnWithWidth, columnIndex: integer) => number;
 
   renderRow: (params: {
     id: any;

@@ -368,7 +368,6 @@ function useRowsMeta(
     },
     [
       store,
-      rows,
       getRowHeightProp,
       getRowHeightEntry,
       getEstimatedRowHeight,

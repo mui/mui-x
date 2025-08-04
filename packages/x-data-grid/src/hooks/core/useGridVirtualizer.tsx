@@ -170,6 +170,17 @@ export function useGridVirtualizer(
       rowBufferPx: rootProps.rowBufferPx,
       columnBufferPx: rootProps.columnBufferPx,
     },
+    colspan: {
+      enabled: hasColSpan,
+      getColspan: (rowId, column) => {
+        if (typeof column.colSpan === 'function') {
+          const row = apiRef.current.getRow(rowId);
+          const value = apiRef.current.getRowValue(row, column as GridStateColDef);
+          return column.colSpan(value, row, column, apiRef) ?? 0;
+        }
+        return column.colSpan ?? 1;
+      },
+    },
 
     initialState: {
       scroll: rootProps.initialState?.scroll,
@@ -182,7 +193,6 @@ export function useGridVirtualizer(
     columns: visibleColumns,
     pinnedRows,
     pinnedColumns,
-    hasColSpan,
 
     autoHeight,
     minimalContentHeight,
@@ -249,15 +259,6 @@ export function useGridVirtualizer(
     },
 
     scrollReset,
-
-    getColspan: (rowId, column) => {
-      if (typeof column.colSpan === 'function') {
-        const row = apiRef.current.getRow(rowId);
-        const value = apiRef.current.getRowValue(row, column as GridStateColDef);
-        return column.colSpan(value, row, column, apiRef) ?? 0;
-      }
-      return column.colSpan ?? 0;
-    },
 
     renderRow: (params) => (
       <rootProps.slots.row
