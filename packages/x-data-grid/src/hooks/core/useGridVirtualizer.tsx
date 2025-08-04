@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
@@ -57,6 +58,27 @@ const columnsTotalWidthSelector = createSelector(
     );
   },
 );
+
+/** Translates virtualizer state to grid state */
+const addGridDimensionsCombiner = () =>
+  lruMemoize(
+    (
+      dimensions: Dimensions.State['dimensions'],
+      headerHeight: number,
+      groupHeaderHeight: number,
+      headerFilterHeight: number,
+      headersTotalHeight: number,
+    ) => {
+      return {
+        ...dimensions,
+        headerHeight,
+        groupHeaderHeight,
+        headerFilterHeight,
+        headersTotalHeight,
+      };
+    },
+    { maxSize: 1 },
+  );
 
 /**
  * Virtualizer setup
@@ -119,31 +141,7 @@ export function useGridVirtualizer(
     bottomPinnedHeight: 0,
   };
 
-  /** Translate virtualizer state to grid state */
-  const addGridDimensions = React.useMemo(
-    () =>
-      /* eslint-disable @typescript-eslint/no-shadow */
-      lruMemoize(
-        (
-          dimensions: Dimensions.State['dimensions'],
-          headerHeight: number,
-          groupHeaderHeight: number,
-          headerFilterHeight: number,
-          headersTotalHeight: number,
-        ) => {
-          return {
-            ...dimensions,
-            headerHeight,
-            groupHeaderHeight,
-            headerFilterHeight,
-            headersTotalHeight,
-          };
-        },
-        { maxSize: 1 },
-      ),
-    /* eslint-enable @typescript-eslint/no-shadow */
-    [],
-  );
+  const addGridDimensions = useLazyRef(addGridDimensionsCombiner);
 
   // </DIMENSIONS>
 
