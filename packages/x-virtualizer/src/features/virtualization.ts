@@ -607,7 +607,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     setPanels,
     getRows,
     getContainerProps: () => ({
-      ref: params.refs.container,
+      ref: refs.container,
     }),
     getScrollerProps: () => ({
       ref: refs.scroller,
@@ -621,11 +621,10 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       tabIndex: platform.isFirefox ? -1 : undefined,
     }),
     getContentProps: () => ({
+      ref: onContentSizeApplied,
       style: contentSize,
       role: 'presentation',
-      ref: onContentSizeApplied,
     }),
-    getRenderZoneProps: () => ({ role: 'rowgroup' }),
     getScrollbarVerticalProps: () => ({
       ref: refs.scrollbarVertical,
       scrollPosition,
