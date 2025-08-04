@@ -4,7 +4,9 @@ export function getEventWithLargestRowIndex(events: CalendarEventWithPosition[])
   return (
     events.reduce(
       (maxEvent, event) =>
-        (event?.eventRowIndex ?? 0) > (maxEvent.eventRowIndex ?? 0) ? event : maxEvent,
+        event?.allDay && (event?.eventRowIndex ?? 0) > (maxEvent.eventRowIndex ?? 0)
+          ? event
+          : maxEvent,
       { eventRowIndex: 0 } as CalendarEventWithPosition,
     ).eventRowIndex || 0
   );

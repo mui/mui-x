@@ -132,8 +132,11 @@ export const selectors = {
           const eventIndex = daysMap.get(dayKey)!.events.length;
           let eventRowIndex;
           // If the event starts before the current day, we need to find the row index of the first day of the event
-          if (adapter.isBefore(eventFirstDay, day)) {
-            const eventFirstDayKey = adapter.format(eventFirstDay, 'keyboardDate');
+          if (adapter.isBefore(eventFirstDay, day) && !adapter.isSameDay(days[0], day)) {
+            let eventFirstDayKey = adapter.format(eventFirstDay, 'keyboardDate');
+            if (adapter.isBefore(eventFirstDay, days[0])) {
+              eventFirstDayKey = adapter.format(days[0], 'keyboardDate');
+            }
             const eventStartRowPosition =
               daysMap
                 .get(eventFirstDayKey)

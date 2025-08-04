@@ -11,8 +11,8 @@ import { DayGridEvent } from '../../internals/components/event/day-grid-event/Da
 import { isWeekend } from '../../internals/utils/date-utils';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { selectors } from '../../event-calendar/store';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
+import { selectors } from '../../../primitives/use-event-calendar';
 import './MonthViewWeekRow.css';
 
 const adapter = getAdapter();

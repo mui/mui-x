@@ -200,6 +200,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                       variant="invisible"
                       ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                       aria-hidden="true"
+                      style={
+                        {
+                          '--grid-row': event.eventRowIndex,
+                        } as React.CSSProperties
+                      }
                     />
                   );
                 })}
