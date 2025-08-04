@@ -235,6 +235,7 @@ const hyAMGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Ագրեգացում',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'գումար',
   aggregationFunctionLabelAvg: 'միջին',
   aggregationFunctionLabelMin: 'մինիմում',
@@ -282,6 +283,7 @@ const hyAMGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

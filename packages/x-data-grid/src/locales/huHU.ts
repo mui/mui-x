@@ -212,6 +212,7 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Összesítés',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'Összeg',
   aggregationFunctionLabelAvg: 'Átlag',
   aggregationFunctionLabelMin: 'Minimum',
@@ -259,6 +260,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

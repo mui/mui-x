@@ -217,6 +217,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agrupar',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'soma',
   aggregationFunctionLabelAvg: 'média',
   aggregationFunctionLabelMin: 'mín',
@@ -264,6 +265,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',
