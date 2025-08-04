@@ -324,7 +324,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
    * solution to decouple the code.
    */
   const getRows = (
-    // eslint-disable-next-line @typescript-eslint/default-param-last
     rowParams: {
       rows?: RowEntry[];
       position?: PinnedRowPosition;
