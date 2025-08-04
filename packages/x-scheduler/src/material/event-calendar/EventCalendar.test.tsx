@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import { openSettingsMenu, toggleHideWeekends } from './test-utils';
 
 describe('EventCalendar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });
@@ -91,42 +92,69 @@ describe('EventCalendar', () => {
     expect(screen.getByRole('button', { name: /Weekly/i })).not.to.equal(null);
   });
 
-  it('should allow to show / hide the weekends using the UI', async () => {
+  it('should allow to show / hide the weekends using the UI in the week view', async () => {
     const { user } = render(<EventCalendar events={[]} />);
 
     // Weekends should be visible by default
     expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
 
-    const settingsMenuButton1 = await screen.findByRole('button', { name: /settings/i });
-
-    // Open the settings menu
-    await user.click(settingsMenuButton1);
-    await screen.findByRole('menu');
-    expect(settingsMenuButton1).to.have.attribute('aria-expanded', 'true');
     // Hide the weekends
-    await user.click(
-      await screen.findByRole('menuitemcheckbox', {
-        name: /hide weekends/i,
-      }),
-    );
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
 
     expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
     expect(screen.queryByRole('columnheader', { name: /Saturday 31/i })).to.equal(null);
 
-    // Open the settings menu again
-    const settingsMenuButton2 = await screen.findByRole('button', { name: /settings/i });
-    await user.click(settingsMenuButton2);
-    await screen.findByRole('menu');
-    expect(settingsMenuButton2).to.have.attribute('aria-expanded', 'true');
     // Show the weekends again
-    await user.click(
-      await screen.findByRole('menuitemcheckbox', {
-        name: /hide weekends/i,
-      }),
-    );
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
 
     expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
+  });
+
+  it('should allow to show / hide the weekends using the UI in the month view', async () => {
+    const { user } = render(<EventCalendar events={[]} defaultView="month" />);
+
+    // Weekends should be visible by default
+    expect(screen.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
+
+    // Hide the weekends
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.queryByRole('columnheader', { name: /Sunday/i })).to.equal(null);
+    expect(screen.queryByRole('columnheader', { name: /Saturday/i })).to.equal(null);
+
+    // Show the weekends again
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
+  });
+
+  it('should allow to show / hide the weekends using the UI in the agenda view', async () => {
+    const { user } = render(<EventCalendar events={[]} defaultView="agenda" />);
+
+    // Weekends should be visible by default
+    expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);
+    expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+
+    // Hide the weekends
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.queryByLabelText(/Saturday 31/i)).to.equal(null);
+    expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
+
+    // Show the weekends again
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);
+    expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
   });
 });

@@ -52,12 +52,13 @@ export const AgendaView = React.memo(
       >
         <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => (
-            <div
+            <section
               className="AgendaViewRow"
               key={day.day.toString()}
               id={`AgendaViewRow-${day.day.toString()}`}
+              aria-labelledby={`DayHeaderCell-${day.day.toString()}`}
             >
-              <div
+              <header
                 id={`DayHeaderCell-${day.day.toString()}`}
                 className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
@@ -71,25 +72,27 @@ export const AgendaView = React.memo(
                     {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
                   </span>
                 </div>
-              </div>
-              <div className="EventsList">
+              </header>
+              <ul className="EventsList">
                 {getEventsStartingInDay(day).map((event) => (
-                  <EventPopoverTrigger
-                    key={event.id}
-                    event={event}
-                    nativeButton={false}
-                    render={
-                      <DayGridEvent
-                        event={event}
-                        variant="compact"
-                        eventResource={resourcesByIdMap.get(event.resource)}
-                        ariaLabelledBy={`DayHeaderCell-${day.day.toString()}`}
-                      />
-                    }
-                  />
+                  <li>
+                    <EventPopoverTrigger
+                      key={event.id}
+                      event={event}
+                      nativeButton={false}
+                      render={
+                        <DayGridEvent
+                          event={event}
+                          variant="compact"
+                          eventResource={resourcesByIdMap.get(event.resource)}
+                          ariaLabelledBy={`DayHeaderCell-${day.day.toString()}`}
+                        />
+                      }
+                    />
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
+            </section>
           ))}
         </EventPopoverProvider>
       </div>
