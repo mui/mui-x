@@ -478,7 +478,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
           offsetLeft,
           columnsTotalWidth,
           baseRowHeight,
-          columns,
           firstColumnIndex,
           lastColumnIndex,
           focusedColumnIndex: isVirtualFocusColumn ? focusedVirtualCell!.columnIndex : undefined,

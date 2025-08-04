@@ -271,7 +271,7 @@ export function useGridVirtualizer(
         columnsTotalWidth={columnsTotalWidth}
         rowHeight={params.baseRowHeight}
         pinnedColumns={pinnedColumns}
-        visibleColumns={params.columns as any}
+        visibleColumns={visibleColumns}
         firstColumnIndex={params.firstColumnIndex}
         lastColumnIndex={params.lastColumnIndex}
         focusedColumnIndex={params.focusedColumnIndex}

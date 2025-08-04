@@ -104,7 +104,6 @@ export type VirtualizerParams = {
     offsetLeft: number;
     columnsTotalWidth: number;
     baseRowHeight: number | 'auto';
-    columns: ColumnWithWidth[];
     firstColumnIndex: number;
     lastColumnIndex: number;
     focusedColumnIndex: number | undefined;
