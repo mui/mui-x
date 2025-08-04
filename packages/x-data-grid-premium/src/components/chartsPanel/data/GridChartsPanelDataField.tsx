@@ -24,6 +24,8 @@ import {
 import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 
+const AGGREGATION_FUNCTION_NONE = 'none';
+
 type GridChartsPanelDataFieldProps = {
   children: React.ReactNode;
   field: string;
@@ -164,7 +166,7 @@ export function AggregationSelect({
 
   const availableAggregationFunctions = React.useMemo(
     () => [
-      ...(pivotActive ? [] : ['none']),
+      ...(pivotActive ? [] : [AGGREGATION_FUNCTION_NONE]),
       ...getAvailableAggregationFunctions({
         aggregationFunctions: rootProps.aggregationFunctions,
         colDef: colDef(field),
@@ -187,9 +189,14 @@ export function AggregationSelect({
             return col;
           }),
         }));
+      } else if (func === AGGREGATION_FUNCTION_NONE) {
+        const updatedAggregationModel = { ...aggregationModel };
+        delete updatedAggregationModel[field];
+        apiRef.current.setAggregationModel(updatedAggregationModel);
       } else {
         apiRef.current.setAggregationModel({ ...aggregationModel, [field]: func });
       }
+
       setAggregationMenuOpen(false);
     },
     [apiRef, field, getActualFieldName, pivotActive, aggregationModel, setAggregationMenuOpen],
@@ -378,7 +385,10 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
           className={classes.actionContainer}
         >
           {isRowGroupingEnabled && section === 'series' && (
-            <AggregationSelect aggFunc={aggregationModel[field] ?? 'none'} field={field} />
+            <AggregationSelect
+              aggFunc={aggregationModel[field] ?? AGGREGATION_FUNCTION_NONE}
+              field={field}
+            />
           )}
           <GridChartsPanelDataFieldMenu
             field={field}

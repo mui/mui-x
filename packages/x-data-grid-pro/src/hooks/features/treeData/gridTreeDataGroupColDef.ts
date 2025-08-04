@@ -14,6 +14,7 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   type: 'custom',
   sortable: false,
   filterable: false,
+  chartable: false,
   disableColumnMenu: true,
   disableReorder: true,
   align: 'left',
