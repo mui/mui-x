@@ -239,6 +239,7 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregácia',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'suma',
   aggregationFunctionLabelAvg: 'priemer',
   aggregationFunctionLabelMin: 'min',
@@ -286,6 +287,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',
