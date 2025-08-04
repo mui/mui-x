@@ -6,7 +6,7 @@ components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxi
 
 # Charts - Axis
 
-<p class="description">Axis provides associate values to element positions.</p>
+<p class="description">Axes provide associated values to element positions.</p>
 
 Axes are used in the following charts: `<LineChart />`, `<BarChart />`, `<ScatterChart />`.
 
