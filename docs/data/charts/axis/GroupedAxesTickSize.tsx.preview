@@ -3,10 +3,16 @@
     {
       data,
       height: 32,
-      grouping: {
-        getGrouping,
-        config: [{ tickSize: 0 }, { tickSize: 32 }],
-      },
+      groups: [
+        {
+          getValue: getMonth,
+          tickSize: 0,
+        },
+        {
+          getValue: formatQuarterYear,
+          tickSize: 32,
+        },
+      ],
       valueFormatter,
     },
   ]}

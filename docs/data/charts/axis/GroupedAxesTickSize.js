@@ -8,10 +8,16 @@ export default function GroupedAxesTickSize() {
         {
           data,
           height: 32,
-          grouping: {
-            getGrouping,
-            config: [{ tickSize: 0 }, { tickSize: 32 }],
-          },
+          groups: [
+            {
+              getValue: getMonth,
+              tickSize: 0,
+            },
+            {
+              getValue: formatQuarterYear,
+              tickSize: 32,
+            },
+          ],
           valueFormatter,
         },
       ]}
@@ -20,10 +26,7 @@ export default function GroupedAxesTickSize() {
   );
 }
 
-const getGrouping = (value) => [
-  value.toLocaleDateString('en-US', { month: 'short' }),
-  formatQuarterYear(value),
-];
+const getMonth = (date) => date.toLocaleDateString('en-US', { month: 'short' });
 
 const formatQuarterYear = (date) => {
   const quarter = Math.floor(date.getMonth() / 3) + 1;

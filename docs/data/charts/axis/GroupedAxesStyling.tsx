@@ -17,7 +17,7 @@ export default function GroupedAxesStyling() {
         {
           data,
           scaleType: 'point',
-          grouping: { getGrouping },
+          groups: [{ getValue: getMonth }, { getValue: formatQuarterYear }],
           valueFormatter,
         },
       ]}
@@ -25,12 +25,8 @@ export default function GroupedAxesStyling() {
     />
   );
 }
-
-const getGrouping = (value: Date) => [
-  value.toLocaleDateString('en-US', { month: 'short' }),
-  formatQuarterYear(value),
-];
-
+const getMonth = (date: Date) =>
+  date.toLocaleDateString('en-US', { month: 'short' });
 const formatQuarterYear = (date: Date) => {
   const quarter = Math.floor(date.getMonth() / 3) + 1;
   const year = date.getFullYear().toString().slice(-2);

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
-import { AxisConfig, D3Scale, type AxisGrouping } from '../models/axis';
+import { AxisConfig, D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 import type { TickParams } from './useTicks';
 
@@ -44,7 +44,7 @@ export function useTicksGrouped(
     scale: ScaleBand<any> | ScalePoint<any>;
     valueFormatter?: AxisConfig['valueFormatter'];
     direction: 'x' | 'y';
-    getGrouping: AxisGrouping['getGrouping'];
+    getGrouping: (value: any, dataIndex: number) => any[];
   } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
 ): GroupedTickItemType[] {
   const { scale, tickInterval, tickLabelPlacement, tickPlacement, getGrouping } = options;
@@ -102,7 +102,7 @@ export function useTicksGrouped(
 
 function mapToGrouping(
   tickValues: any[],
-  getGrouping: AxisGrouping['getGrouping'],
+  getGrouping: (value: any, dataIndex: number) => any[],
   tickPlacement: Exclude<TickParams['tickPlacement'], undefined>,
   tickLabelPlacement: Exclude<TickParams['tickLabelPlacement'], undefined>,
   scale: D3Scale,

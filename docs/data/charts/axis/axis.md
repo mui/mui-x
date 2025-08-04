@@ -242,12 +242,12 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 ## Grouped Axes
 
-In order to group `band` or `point` axes together, a user can provide a `grouping` property in the axis definition.
-This property expects an object with a `getGrouping` function.
+In order to group `band` or `point` axes together, a user can provide a `groups` property in the axis definition.
+This property expects an array of objects with a `getValue` function.
 
-The `getGrouping` function receives the axis data value and should return an array of values.
-Each value is a group name and will be used as-is, overriding any `valueFormatter` for the axis.
-Groups are displayed in the order they are defined in the `getGrouping` function.
+The `getValue` function receives the axis data value and should return a group name.
+Each group name will be used as-is, overriding any `valueFormatter` for the axis.
+Groups are displayed in the order they are defined in the `groups` array.
 
 In the next demo, the x-axis is grouped by month, quarter, and year.
 
@@ -256,8 +256,8 @@ In the next demo, the x-axis is grouped by month, quarter, and year.
 ### Tick size
 
 The tick size can be customized for each group.
-To do so, you can provide a `tickSize` property in the `grouping.config` array.
-Each item in the array corresponds to a group defined in the `getGrouping` function.
+To do so, you can provide a `tickSize` property in the `groups` array.
+Each item in the array corresponds to a group defined in the `getValue` function.
 
 {{"demo": "GroupedAxesTickSize.js"}}
 

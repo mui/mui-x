@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { ChartsXAxisProps, type AxisGrouping } from '../models/axis';
+import { ChartsXAxisProps, type AxisGroup } from '../models/axis';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
@@ -12,39 +12,20 @@ const DEFAULT_GROUPING_CONFIG = {
   tickSize: 6,
 };
 
-const calculateTickSize = (
-  groupIndex: number,
-  tickSize: number,
-  isConfigArray: boolean = false,
-): number => {
-  // If the groupingConfig is an array we expect the user to provide a `tickSize` for each group.
-  if (isConfigArray) {
-    return tickSize;
-  }
-
-  // Else if it is an object, the provided `tickSize` applies to all groups incrementally.
-  // The first tick will be at `tickSize`, while every subsequent group will be
-  // multiplied by the group index times two and summed to the first tick size.
-  // This allows for a consistent spacing between groups.
-  return tickSize * groupIndex * 2 + tickSize;
-};
-
 const getGroupingConfig = (
-  groupingConfig: AxisGrouping,
+  groupingConfig: { config?: Omit<AxisGroup, 'getValue'>[] },
   groupIndex: number,
   tickSize: number | undefined,
 ) => {
-  const config = groupingConfig?.config?.[groupIndex] ?? {};
+  const config = groupingConfig?.config?.[groupIndex] ?? ({} as AxisGroup);
+
+  const defaultTickSize = tickSize ?? DEFAULT_GROUPING_CONFIG.tickSize;
+  const calculatedTickSize = defaultTickSize * groupIndex * 2 + defaultTickSize;
 
   return {
     ...DEFAULT_GROUPING_CONFIG,
-    ...groupingConfig,
     ...config,
-    tickSize: calculateTickSize(
-      groupIndex,
-      config?.tickSize ?? tickSize ?? DEFAULT_GROUPING_CONFIG.tickSize,
-      Array.isArray(groupingConfig.config),
-    ),
+    tickSize: config.tickSize ?? calculatedTickSize,
   };
 };
 
@@ -89,7 +70,17 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     height: axisHeight,
   } = defaultizedProps;
 
-  const groupingConfig = (defaultizedProps as { grouping: AxisGrouping }).grouping;
+  const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
+
+  const groupingConfig = React.useMemo(() => {
+    return {
+      getGrouping: (value: any, dataIndex: number) =>
+        groups?.map((group) => group.getValue(value, dataIndex)),
+      config: groups?.map((group) => ({
+        tickSize: group.tickSize,
+      })),
+    };
+  }, [groups]);
 
   const drawingArea = useDrawingArea();
   const { left, top, width, height } = drawingArea;

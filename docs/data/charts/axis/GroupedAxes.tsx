@@ -10,13 +10,13 @@ export default function GroupedAxes() {
           scaleType: 'band',
           tickSize: 8,
           height: 32,
-          grouping: {
-            getGrouping: (value: Date) => [
-              value.toLocaleDateString('en-US', { month: 'short' }),
-              `Q${Math.floor(value.getMonth() / 3) + 1}`,
-              value.toLocaleDateString('en-US', { year: 'numeric' }),
-            ],
-          },
+          groups: [
+            {
+              getValue: (v) => v.toLocaleDateString('en-US', { month: 'short' }),
+            },
+            { getValue: getQuarter },
+            { getValue: getYear },
+          ],
           valueFormatter,
         },
       ]}
@@ -24,6 +24,11 @@ export default function GroupedAxes() {
     />
   );
 }
+
+const getQuarter = (date: Date) => `Q${Math.floor(date.getMonth() / 3) + 1}`;
+
+const getYear = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric' });
 
 const valueFormatter = (v: Date) =>
   v.toLocaleDateString('en-US', {

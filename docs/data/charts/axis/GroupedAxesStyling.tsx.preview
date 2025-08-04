@@ -11,7 +11,7 @@
     {
       data,
       scaleType: 'point',
-      grouping: { getGrouping },
+      groups: [{ getValue: getMonth }, { getValue: formatQuarterYear }],
       valueFormatter,
     },
   ]}
