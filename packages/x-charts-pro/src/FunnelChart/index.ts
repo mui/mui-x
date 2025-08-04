@@ -1,4 +1,4 @@
-export { FunnelChart as Unstable_FunnelChart } from './FunnelChart';
+export { FunnelChart } from './FunnelChart';
 export type { FunnelChartProps, FunnelSeries } from './FunnelChart';
 export * from './FunnelPlot';
 export * from './funnel.types';
