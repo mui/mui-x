@@ -61,7 +61,7 @@
 }
 
 .DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow {
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   scrollbar-color: transparent transparent;
   scrollbar-gutter: stable;
@@ -76,6 +76,7 @@
   gap: var(--space-1);
   padding: var(--space-1);
   scrollbar-color: initial initial;
+  background-color: var(--surface);
 }
 
 .DayTimeGridAllDayEventsGrid[data-weekend][style*='--has-scroll: 1'] .DayTimeGridAllDayEventsRow {

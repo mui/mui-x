@@ -4,6 +4,7 @@ import { SchedulerValidDate } from '../../primitives/models';
 import { CalendarEvent, CalendarEventId, CalendarEventWithPosition } from '../models/events';
 import { CalendarResource, CalendarResourceId } from '../models/resource';
 import { EventCalendarView } from './EventCalendar.types';
+import { getEventWithLargestRowIndexForDay } from '../internals/utils/event-utils';
 
 const adapter = getAdapter();
 
@@ -123,17 +124,30 @@ export const selectors = {
           // If the event starts before the current day, we need to find the row index of the first day of the event
           if (adapter.isBefore(eventFirstDay, day)) {
             const eventFirstDayKey = adapter.format(eventFirstDay, 'keyboardDate');
-            const eventStartPositionInArray =
+            const eventStartRowPosition =
               daysMap
                 .get(eventFirstDayKey)
                 ?.events?.find((eventInMap) => eventInMap.id === event.id)?.eventRowIndex || 1;
-            eventRowIndex = eventStartPositionInArray;
-            // Otherwise, we just render the event on the row after the previous events rendered in the same column
+            eventRowIndex = eventStartRowPosition;
+            // Otherwise, we just render the event on the first available row in the column
           } else {
             // we need to know the row index of the previous events rendered in a column
-            const previousEventIndex =
-              daysMap.get(dayKey)!.events[eventIndex - 1]?.eventRowIndex || 0;
-            eventRowIndex = previousEventIndex + 1;
+            const previousEventRowPosition = getEventWithLargestRowIndexForDay(dayKey, daysMap);
+
+            if (previousEventRowPosition + 1 > eventIndex + 1) {
+              for (let i = 1; i < previousEventRowPosition + 1; i += 1) {
+                if (
+                  daysMap
+                    .get(dayKey)!
+                    .events?.findIndex((eventInMap) => eventInMap.eventRowIndex === i) === -1
+                ) {
+                  eventRowIndex = i;
+                  break;
+                }
+              }
+            } else {
+              eventRowIndex = previousEventRowPosition + 1;
+            }
           }
 
           daysMap.get(dayKey)!.events.push({

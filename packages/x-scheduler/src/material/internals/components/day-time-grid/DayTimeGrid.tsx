@@ -18,6 +18,7 @@ import { CalendarEvent, CalendarEventWithPosition } from '../../../models/events
 import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 import { DayGridEvent } from '../event';
+import { getEventWithLargestRowIndex } from '../../utils/event-utils';
 
 const adapter = getAdapter();
 
@@ -157,7 +158,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 className="DayTimeGridAllDayEventsCell"
                 style={
                   {
-                    '--row-count': allDayEvents[allDayEvents.length - 1]?.eventRowIndex || 1,
+                    '--row-count': getEventWithLargestRowIndex(allDayEvents),
                   } as React.CSSProperties
                 }
                 aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
