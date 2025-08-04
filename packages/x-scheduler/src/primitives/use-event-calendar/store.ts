@@ -129,7 +129,11 @@ export const selectors = {
             daysMap.set(dayKey, { events: [] });
           }
 
-          const eventIndex = daysMap.get(dayKey)!.events.length;
+          const allDayEvents = daysMap
+            .get(dayKey)!
+            .events.filter((allDayEvent) => allDayEvent.allDay);
+
+          const eventIndex = allDayEvents.length;
           let eventRowIndex;
           // If the event starts before the current day, we need to find the row index of the first day of the event
           if (adapter.isBefore(eventFirstDay, day) && !adapter.isSameDay(days[0], day)) {
