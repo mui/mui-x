@@ -4,11 +4,7 @@ import {
   GridRowMultiSelectionApi,
   GridRowProApi,
 } from '@mui/x-data-grid';
-import {
-  GridPrivateOnlyApiCommon,
-  GridInfiniteLoaderPrivateApi,
-  GridRowReorderApi,
-} from '@mui/x-data-grid/internals';
+import { GridPrivateOnlyApiCommon, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import { GridInitialStatePro, GridStatePro } from './gridStatePro';
 import type {
   GridColumnPinningApi,
@@ -16,6 +12,7 @@ import type {
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
 } from '../hooks';
+import type { GridRowReorderApi } from './gridRowReorderApi';
 import type {
   GridDataSourceApiPro,
   GridDataSourcePrivateApiPro,
@@ -32,10 +29,10 @@ export interface GridApiPro
     GridDetailPanelApi,
     GridRowPinningApi,
     GridDataSourceApiPro,
+    GridRowReorderApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
-    GridColumnReorderApi,
-    GridRowReorderApi {}
+    GridColumnReorderApi {}
 
 export interface GridPrivateApiPro
   extends GridApiPro,

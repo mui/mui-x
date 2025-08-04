@@ -34,7 +34,6 @@ import {
   rowSelectionStateInitializer,
   useGridRowSelection,
 } from '../hooks/features/rowSelection/useGridRowSelection';
-import { rowReorderStateInitializer } from '../hooks/features/rowReorder/useGridRowReorderApi';
 import { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 import { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 import { useGridScroll } from '../hooks/features/scroll/useGridScroll';
@@ -86,7 +85,6 @@ export const useDataGridComponent = (
    */
   useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
-  useGridInitializeState(rowReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(paginationStateInitializer, apiRef, props);

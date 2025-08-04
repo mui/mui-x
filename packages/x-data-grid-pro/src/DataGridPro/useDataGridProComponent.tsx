@@ -55,8 +55,6 @@ import {
   useGridListView,
   listViewStateInitializer,
   propsStateInitializer,
-  rowReorderStateInitializer,
-  useGridRowReorderApi,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -79,7 +77,10 @@ import {
   detailPanelStateInitializer,
 } from '../hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
-import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
+import {
+  useGridRowReorder,
+  rowReorderStateInitializer,
+} from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
@@ -151,7 +152,6 @@ export const useDataGridProComponent = (
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridVirtualizer(apiRef, props);
-  useGridRowReorderApi(apiRef);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);

@@ -5,7 +5,6 @@ import type { GridApiCommon, GridPrivateOnlyApiCommon } from './gridApiCommon';
 import type { GridColumnReorderApi } from './gridColumnApi';
 import type { GridRowProApi } from './gridRowApi';
 import type { GridRowMultiSelectionApi } from './gridRowSelectionApi';
-import type { GridRowReorderApi } from './gridRowReorderApi';
 
 /**
  * The API of the community version of the Data Grid.
@@ -21,5 +20,4 @@ export interface GridPrivateApiCommunity
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi,
-    GridRowProApi,
-    GridRowReorderApi {}
+    GridRowProApi {}
