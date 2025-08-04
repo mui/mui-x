@@ -14,7 +14,7 @@ export default function ColorScale() {
   const [colorY, setColorY] = React.useState<'None' | 'piecewise' | 'continuous'>(
     'piecewise',
   );
-  const [colorArea, setColorArea] = React.useState(false);
+  const [colorArea, setColorArea] = React.useState(true);
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
