@@ -329,7 +329,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     function Test() {
       return (
         <div style={{ width: 400, height: 300 }}>
-          <DataGridPro rows={rows} columns={columns} rowReordering />
+          <DataGridPro rows={rows} columns={columns} rowReordering disableColumnReorder />
         </div>
       );
     }
