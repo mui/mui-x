@@ -317,6 +317,8 @@ export class Flatbush {
     y,
     maxResults = Infinity,
     maxDistSqFn: (dx: number, dy: number) => number = () => Infinity,
+    maxDistSqX: number = Infinity,
+    maxDistSqY: number = Infinity,
     filterFn,
     sqDistFn = sqDist,
   ) {
@@ -347,7 +349,13 @@ export class Flatbush {
         dArray[index] = dx;
         dArray[index + 1] = dy;
         const dist = sqDistFn(dx, dy);
+
+        if (dist > maxDistSqX || dist > maxDistSqY) {
+          continue;
+        }
+
         const maxDistSquared = maxDistSqFn(dx, dy);
+
         if (dist > maxDistSquared) {
           continue;
         }
@@ -367,6 +375,11 @@ export class Flatbush {
 
         const dx = dArray[index];
         const dy = dArray[index + 1];
+
+        if (dist > maxDistSqX || dist > maxDistSqY) {
+          continue;
+        }
+
         const maxDistSquared = maxDistSqFn(dx, dy);
 
         // @ts-expect-error
