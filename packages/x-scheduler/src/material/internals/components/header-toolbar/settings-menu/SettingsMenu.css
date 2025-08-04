@@ -7,6 +7,10 @@
   padding: var(--space-2);
 }
 
+.SettingsMenuPositioner {
+  z-index: 3;
+}
+
 .SettingsMenuPopup {
   min-width: 170px;
   padding: var(--space-2);

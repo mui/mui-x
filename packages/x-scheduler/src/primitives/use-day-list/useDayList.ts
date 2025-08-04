@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isWeekend } from '../utils/date-utils';
 import { SchedulerValidDate } from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
 
@@ -6,7 +7,7 @@ export function useDayList(): useDayList.ReturnValue {
   const adapter = useAdapter();
 
   return React.useCallback(
-    ({ date, amount }) => {
+    ({ date, amount, excludeWeekends }) => {
       if (process.env.NODE_ENV !== 'production') {
         if (amount <= 0) {
           throw new Error(
@@ -23,7 +24,9 @@ export function useDayList(): useDayList.ReturnValue {
       const days: SchedulerValidDate[] = [];
 
       while (adapter.isBefore(current, end)) {
-        days.push(current);
+        if (!excludeWeekends || !isWeekend(adapter, current)) {
+          days.push(current);
+        }
 
         const prevDayNumber = currentDayNumber;
         current = adapter.addDays(current, 1);
@@ -55,5 +58,10 @@ export namespace useDayList {
      * The amount of days to return.
      */
     amount: number;
+    /**
+     * Whether to exclude weekends (Saturday and Sunday) from the returned days.
+     * @default false
+     */
+    excludeWeekends?: boolean;
   }
 }

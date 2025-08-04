@@ -14,7 +14,7 @@ import { DayGrid } from '../../primitives/day-grid';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { SchedulerValidDate } from '../../primitives/models';
-import { isWeekend } from '../internals/utils/date-utils';
+import { isWeekend } from '../../primitives/utils/date-utils';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import './MonthView.css';
 
@@ -39,6 +39,7 @@ export const MonthView = React.memo(
     const visibleDate = useStore(store, selectors.visibleDate);
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
     const hasDayView = useStore(store, selectors.hasDayView);
+    const settings = useStore(store, selectors.settings);
     const today = adapter.date();
     const translations = useTranslations();
 
@@ -53,13 +54,17 @@ export const MonthView = React.memo(
       });
 
       return weeksFirstDays.map((weekStart) => {
-        const weekDays = getDayList({ date: weekStart, amount: 7 });
+        const weekDays = getDayList({
+          date: weekStart,
+          amount: 7,
+          excludeWeekends: settings.hideWeekends,
+        });
         return weekDays.map((date) => ({
           date,
           events: getEventsStartingInDay(date),
         }));
       });
-    }, [getWeekList, visibleDate, getDayList, getEventsStartingInDay]);
+    }, [getWeekList, visibleDate, getDayList, settings.hideWeekends, getEventsStartingInDay]);
 
     const renderCellNumberContent = (day: SchedulerValidDate) => {
       const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));

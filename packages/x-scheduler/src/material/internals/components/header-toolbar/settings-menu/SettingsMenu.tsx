@@ -37,7 +37,7 @@ export const SettingsMenu = React.forwardRef(function SettingsMenu(
           <Settings size={24} strokeWidth={2} />
         </Menu.Trigger>
         <Menu.Portal container={containerRef}>
-          <Menu.Positioner sideOffset={4} align="end">
+          <Menu.Positioner className="SettingsMenuPositioner" sideOffset={4} align="end">
             <Menu.Popup className="SettingsMenuPopup">
               <Menu.CheckboxItem
                 checked={settings.hideWeekends}
