@@ -1,4 +1,4 @@
-import { CalendarEventWithPosition } from '../../models/events';
+import { CalendarEventWithPosition } from '../models';
 
 export function getEventWithLargestRowIndex(events: CalendarEventWithPosition[]) {
   return (

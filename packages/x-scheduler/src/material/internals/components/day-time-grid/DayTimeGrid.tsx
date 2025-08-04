@@ -4,7 +4,12 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerValidDate } from '../../../../primitives/models';
+import {
+  SchedulerValidDate,
+  CalendarEvent,
+  CalendarEventWithPosition,
+} from '../../../../primitives/models';
+import { getEventWithLargestRowIndex } from '../../../../primitives/utils/event-utils';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayGrid } from '../../../../primitives/day-grid';
@@ -13,12 +18,10 @@ import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { selectors } from '../../../event-calendar/store';
-import { CalendarEvent, CalendarEventWithPosition } from '../../../models/events';
+import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 import { DayGridEvent } from '../event';
-import { getEventWithLargestRowIndex } from '../../utils/event-utils';
 
 const adapter = getAdapter();
 
@@ -68,7 +71,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
       const updatedEvent: CalendarEvent = {
-        ...selectors.getEventById(store.state, data.id)!,
+        ...selectors.getEventById(store.state, data.eventId)!,
         start: data.start,
         end: data.end,
       };
@@ -229,8 +232,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               <div className="DayTimeGridGrid">
                 {dayWithEventsGroupedByCategory.map(({ day, regularEvents }) => (
                   <TimeGrid.Column
-                    key={day.toString()}
-                    value={day}
+                    key={day.day.toString()}
+                    start={adapter.startOfDay(day)}
+                    end={adapter.endOfDay(day)}
                     className="DayTimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
                   >
@@ -264,7 +268,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
   const placeholder = TimeGrid.useColumnPlaceholder();
   const { store } = useEventCalendarContext();
-  const event = useStore(store, selectors.getEventById, placeholder?.id ?? null);
+  const event = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const updatedEvent = React.useMemo(() => {

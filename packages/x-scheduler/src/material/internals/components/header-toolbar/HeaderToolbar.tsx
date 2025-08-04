@@ -6,7 +6,7 @@ import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { selectors } from '../../../event-calendar/store';
+import { selectors } from '../../../../primitives/use-event-calendar';
 import './HeaderToolbar.css';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(

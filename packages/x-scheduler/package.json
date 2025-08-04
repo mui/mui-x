@@ -27,6 +27,7 @@
     "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
     "./primitives/timeline": "./src/primitives/timeline/index.ts",
     "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
+    "./primitives/use-event-calendar": "./src/primitives/use-event-calendar/index.ts",
     "./primitives/use-week-list": "./src/primitives/use-week-list/index.ts"
   },
   "sideEffects": false,
@@ -68,7 +69,7 @@
     "@floating-ui/react": "^0.27.15",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
-    "lucide-react": "^0.526.0",
+    "lucide-react": "^0.536.0",
     "reselect": "catalog:",
     "prop-types": "catalog:",
     "use-sync-external-store": "catalog:"

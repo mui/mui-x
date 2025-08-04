@@ -1,17 +1,25 @@
-import { createSelector, createSelectorMemoized, Store } from '@base-ui-components/utils/store';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { SchedulerValidDate } from '../../primitives/models';
-import { CalendarEvent, CalendarEventId, CalendarEventWithPosition } from '../models/events';
-import { CalendarResource, CalendarResourceId } from '../models/resource';
-import { EventCalendarView } from './EventCalendar.types';
-import { getEventWithLargestRowIndexForDay } from '../internals/utils/event-utils';
-
-const adapter = getAdapter();
+import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import {
+  SchedulerValidDate,
+  CalendarEvent,
+  CalendarEventId,
+  CalendarResource,
+  CalendarResourceId,
+  CalendarView,
+  CalendarEventWithPosition,
+} from '../models';
+import { Adapter } from '../utils/adapter/types';
+import { getEventWithLargestRowIndexForDay } from '../utils/event-utils';
 
 export type State = {
+  /**
+   * The adapter of the date library.
+   * Not publicly exposed, is only set in state to avoid passing it to the selectors.
+   */
+  adapter: Adapter;
   visibleDate: SchedulerValidDate;
-  view: EventCalendarView;
-  views: EventCalendarView[];
+  view: CalendarView;
+  views: CalendarView[];
   events: CalendarEvent[];
   resources: CalendarResource[];
   /**
@@ -33,12 +41,11 @@ export type State = {
   ampm: boolean;
 };
 
-export type EventCalendarStore = Store<State>;
-
 const isDayWithinRange = (
   day: SchedulerValidDate,
   eventFirstDay: SchedulerValidDate,
   eventLastDay: SchedulerValidDate,
+  adapter: Adapter,
 ) => {
   return (
     adapter.isSameDay(day, eventFirstDay) ||
@@ -78,11 +85,12 @@ export const selectors = {
   eventsToRenderGroupedByDay: createSelector(
     (state: State) => state.events,
     (state: State) => state.visibleResources,
+    (state: State) => state.adapter,
     (
       _state: State,
       parameters: { days: SchedulerValidDate[]; shouldOnlyRenderEventInOneCell: boolean },
     ) => parameters,
-    (events, visibleResources, { days, shouldOnlyRenderEventInOneCell }) => {
+    (events, visibleResources, adapter, { days, shouldOnlyRenderEventInOneCell }) => {
       const daysMap = new Map<string, { events: CalendarEventWithPosition[] }>();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
@@ -110,7 +118,9 @@ export const selectors = {
             eventDays = [eventFirstDay];
           }
         } else {
-          eventDays = days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay));
+          eventDays = days.filter((day) =>
+            isDayWithinRange(day, eventFirstDay, eventLastDay, adapter),
+          );
         }
 
         for (const day of eventDays) {
