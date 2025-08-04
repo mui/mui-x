@@ -215,6 +215,7 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'ایگریگیشن',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'کل',
   aggregationFunctionLabelAvg: 'اوسط',
   aggregationFunctionLabelMin: 'کم از کم',
@@ -262,6 +263,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

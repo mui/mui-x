@@ -212,6 +212,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agrégation',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'Somme',
   aggregationFunctionLabelAvg: 'Moyenne',
   aggregationFunctionLabelMin: 'Minimum',
@@ -259,6 +260,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   chartsSearchLabel: 'Rechercher des champs',
   chartsSearchClear: 'Effacer la recherche',
   chartsNoFields: 'Aucun champ',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   chartsCategories: 'Catégories',
   chartsSeries: 'Séries',
   chartsMenuAddToCategories: 'Ajouter aux catégories',

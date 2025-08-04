@@ -212,6 +212,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Toplama',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'top',
   aggregationFunctionLabelAvg: 'ort',
   aggregationFunctionLabelMin: 'min',
@@ -259,6 +260,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

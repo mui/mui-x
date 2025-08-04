@@ -218,6 +218,7 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Συσσωμάτωση',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'άθροισμα',
   aggregationFunctionLabelAvg: 'μέση τιμή',
   aggregationFunctionLabelMin: 'ελάχιστο',
@@ -265,6 +266,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

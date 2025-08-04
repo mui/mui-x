@@ -215,6 +215,7 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregering',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'sum',
   aggregationFunctionLabelAvg: 'gns',
   aggregationFunctionLabelMin: 'min',
@@ -262,6 +263,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

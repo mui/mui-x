@@ -209,6 +209,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: '聚合',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: '和',
   aggregationFunctionLabelAvg: '平均',
   aggregationFunctionLabelMin: '分分鐘',
@@ -256,6 +257,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

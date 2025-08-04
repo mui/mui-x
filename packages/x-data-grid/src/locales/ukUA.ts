@@ -247,6 +247,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Агрегація',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'сума',
   aggregationFunctionLabelAvg: 'сер',
   aggregationFunctionLabelMin: 'мін',
@@ -294,6 +295,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

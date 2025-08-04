@@ -208,6 +208,7 @@ export const idIDGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregasi',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'jumlah',
   aggregationFunctionLabelAvg: 'rata-rata',
   aggregationFunctionLabelMin: 'min',
@@ -255,6 +256,7 @@ export const idIDGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

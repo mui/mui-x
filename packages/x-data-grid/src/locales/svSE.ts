@@ -217,6 +217,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregering',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'summa',
   aggregationFunctionLabelAvg: 'medel',
   aggregationFunctionLabelMin: 'min',
@@ -264,6 +265,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

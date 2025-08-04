@@ -231,6 +231,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregacija',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'iznos',
   aggregationFunctionLabelAvg: 'prosj',
   aggregationFunctionLabelMin: 'min',
@@ -278,6 +279,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

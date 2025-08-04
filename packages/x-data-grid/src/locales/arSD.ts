@@ -215,6 +215,7 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'الدلالات الحسابية',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'مجموع',
   aggregationFunctionLabelAvg: 'معدل',
   aggregationFunctionLabelMin: 'الحد الادنى',
@@ -262,6 +263,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

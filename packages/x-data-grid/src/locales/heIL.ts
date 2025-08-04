@@ -210,6 +210,7 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'צבירה',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'סכום',
   aggregationFunctionLabelAvg: 'ממוצע',
   aggregationFunctionLabelMin: 'מינימום',
@@ -257,6 +258,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

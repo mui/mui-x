@@ -207,6 +207,7 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: '집계',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: '합',
   aggregationFunctionLabelAvg: '평균',
   aggregationFunctionLabelMin: '최소값',
@@ -254,6 +255,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

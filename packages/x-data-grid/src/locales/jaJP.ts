@@ -212,6 +212,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: '合計',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: '和',
   aggregationFunctionLabelAvg: '平均',
   aggregationFunctionLabelMin: '最小値',
@@ -259,6 +260,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',
