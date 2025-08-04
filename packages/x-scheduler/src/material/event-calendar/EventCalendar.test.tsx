@@ -90,4 +90,43 @@ describe('EventCalendar', () => {
     expect(workResourceToggleButton).to.have.attribute('data-checked');
     expect(screen.getByRole('button', { name: /Weekly/i })).not.to.equal(null);
   });
+
+  it('should allow to show / hide the weekends using the UI', async () => {
+    const { user } = render(<EventCalendar events={[]} />);
+
+    // Weekends should be visible by default
+    expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
+
+    const settingsMenuButton1 = await screen.findByRole('button', { name: /settings/i });
+
+    // Open the settings menu
+    await user.click(settingsMenuButton1);
+    await screen.findByRole('menu');
+    expect(settingsMenuButton1).to.have.attribute('aria-expanded', 'true');
+    // Hide the weekends
+    await user.click(
+      await screen.findByRole('menuitemcheckbox', {
+        name: /hide weekends/i,
+      }),
+    );
+
+    expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
+    expect(screen.queryByRole('columnheader', { name: /Saturday 31/i })).to.equal(null);
+
+    // Open the settings menu again
+    const settingsMenuButton2 = await screen.findByRole('button', { name: /settings/i });
+    await user.click(settingsMenuButton2);
+    await screen.findByRole('menu');
+    expect(settingsMenuButton2).to.have.attribute('aria-expanded', 'true');
+    // Show the weekends again
+    await user.click(
+      await screen.findByRole('menuitemcheckbox', {
+        name: /hide weekends/i,
+      }),
+    );
+
+    expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
+  });
 });
