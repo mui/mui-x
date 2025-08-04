@@ -139,6 +139,7 @@ export function useGridVirtualizer(
     rightPinnedWidth,
     topPinnedHeight: headersTotalHeight,
     bottomPinnedHeight: 0,
+    scrollbarSize: rootProps.scrollbarSize,
   };
 
   const addGridDimensions = useLazyRef(addGridDimensionsCombiner).current;
@@ -158,7 +159,6 @@ export function useGridVirtualizer(
   const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
 
   const virtualizer = useVirtualizer({
-    scrollbarSize: rootProps.scrollbarSize,
     dimensions: dimensionsParams,
 
     initialState: {

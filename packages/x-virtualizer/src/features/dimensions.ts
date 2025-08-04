@@ -21,6 +21,7 @@ export type DimensionsParams = {
   rightPinnedWidth: number;
   topPinnedHeight: number;
   bottomPinnedHeight: number;
+  scrollbarSize?: number;
 };
 
 const EMPTY_DIMENSIONS: DimensionsState = {
@@ -130,7 +131,10 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
-    const scrollbarSize = measureScrollbarSize(params.refs.container.current, params.scrollbarSize);
+    const scrollbarSize = measureScrollbarSize(
+      params.refs.container.current,
+      params.dimensions.scrollbarSize,
+    );
 
     const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
     const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;

@@ -32,7 +32,6 @@ export type VirtualScrollerCompat = Virtualization.State['getters'];
 export type BaseState = Virtualization.State & Dimensions.State;
 
 export type VirtualizerParams = {
-  scrollbarSize?: number;
   dimensions: DimensionsParams;
 
   initialState?: {
