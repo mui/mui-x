@@ -380,17 +380,36 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
     });
 
-    it('should not allow setting string columns as series', () => {
+    it('should not allow setting string columns as series without row grouping', async () => {
       render(<Test />);
 
       expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
       expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
 
       act(() => {
-        apiRef!.current?.updateSeries('test', [{ field: 'category1' }]);
+        apiRef!.current?.updateCategories('test', [{ field: 'category1' }]);
+        apiRef!.current?.updateSeries('test', [{ field: 'amount' }, { field: 'category2' }]);
       });
 
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+      });
+    });
+
+    it('should allow setting string columns as series with row grouping', async () => {
+      render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
+
+      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
       expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+
+      act(() => {
+        apiRef!.current?.updateCategories('test', [{ field: 'category1' }]);
+        apiRef!.current?.updateSeries('test', [{ field: 'amount' }, { field: 'category2' }]);
+      });
+
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(2);
+      });
     });
 
     it('should not allow adding more categories or series than the max limit', async () => {

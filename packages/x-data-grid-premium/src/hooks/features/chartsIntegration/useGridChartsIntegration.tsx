@@ -41,10 +41,16 @@ import {
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 import { isBlockedForSection } from './utils';
+import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
+import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 import { GridSidebarValue } from '../sidebar';
+import { getAvailableAggregationFunctions } from '../aggregation/gridAggregationUtils';
 
 export const chartsIntegrationStateInitializer: GridStateInitializer<
-  Pick<DataGridPremiumProcessedProps, 'chartsIntegration' | 'initialState' | 'activeChartId'>
+  Pick<
+    DataGridPremiumProcessedProps,
+    'chartsIntegration' | 'initialState' | 'activeChartId' | 'rowGroupingModel'
+  >
 > = (state, props) => {
   if (!props.chartsIntegration) {
     return {
@@ -56,6 +62,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
     };
   }
 
+  const rowGroupingModel = props.rowGroupingModel ?? props.initialState?.rowGrouping?.model ?? [];
   const columnsLookup = state.columns?.lookup ?? {};
   const charts = Object.fromEntries(
     Object.entries(props.initialState?.chartsIntegration?.charts || {}).map(([chartId, chart]) => [
@@ -68,7 +75,11 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
           .filter(
             (category) =>
               columnsLookup[category.field]?.chartable === true &&
-              !isBlockedForSection(columnsLookup[category.field] as GridColDef, 'categories'),
+              !isBlockedForSection(
+                columnsLookup[category.field] as GridColDef,
+                'categories',
+                rowGroupingModel,
+              ),
           ),
         series: (chart.series || [])
           .map((seriesItem) =>
@@ -77,7 +88,11 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
           .filter(
             (seriesItem) =>
               columnsLookup[seriesItem.field]?.chartable === true &&
-              !isBlockedForSection(columnsLookup[seriesItem.field] as GridColDef, 'series'),
+              !isBlockedForSection(
+                columnsLookup[seriesItem.field] as GridColDef,
+                'series',
+                rowGroupingModel,
+              ),
           ),
       },
     ]),
@@ -116,6 +131,8 @@ export const useGridChartsIntegration = (
     | 'initialState'
     | 'slots'
     | 'slotProps'
+    | 'aggregationFunctions'
+    | 'dataSource'
   >,
 ) => {
   const visibleCategories = React.useRef<Record<string, GridColDef[]>>({});
@@ -124,6 +141,8 @@ export const useGridChartsIntegration = (
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
+  const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+  const aggregationModel = gridAggregationModelSelector(apiRef);
 
   const { chartStateLookup, setChartState } = context || EMPTY_CHART_INTEGRATION_CONTEXT;
   const availableChartIds = React.useMemo(() => {
@@ -284,7 +303,14 @@ export const useGridChartsIntegration = (
 
         // sanitize selectedSeries and selectedCategories while maintaining their order
         for (let i = 0; i < seriesSize; i += 1) {
-          if (chartableColumns[selectedFields[chartId].series[i].field]) {
+          if (
+            chartableColumns[selectedFields[chartId].series[i].field] &&
+            !isBlockedForSection(
+              chartableColumns[selectedFields[chartId].series[i].field],
+              'series',
+              rowGroupingModel,
+            )
+          ) {
             if (!series[chartId]) {
               series[chartId] = [];
             }
@@ -297,7 +323,8 @@ export const useGridChartsIntegration = (
           const item = selectedFields[chartId].categories[i];
           if (
             !selectedFields[chartId].series.some((seriesItem) => seriesItem.field === item.field) &&
-            chartableColumns[item.field]
+            chartableColumns[item.field] &&
+            !isBlockedForSection(chartableColumns[item.field], 'categories', rowGroupingModel)
           ) {
             if (!categories[chartId]) {
               categories[chartId] = [];
@@ -335,7 +362,7 @@ export const useGridChartsIntegration = (
 
       debouncedHandleRowDataUpdate(chartIds);
     },
-    [apiRef, chartStateLookup, debouncedHandleRowDataUpdate],
+    [apiRef, chartStateLookup, rowGroupingModel, debouncedHandleRowDataUpdate],
   );
 
   const debouncedHandleColumnDataUpdate = React.useMemo(
@@ -465,7 +492,7 @@ export const useGridChartsIntegration = (
       const series = gridChartsSeriesSelector(apiRef, activeChartId);
 
       if (targetSection) {
-        if (isBlockedForSection(columns[field], targetSection)) {
+        if (isBlockedForSection(columns[field], targetSection, rowGroupingModel)) {
           return;
         }
 
@@ -505,6 +532,21 @@ export const useGridChartsIntegration = (
             ? currentItems.filter((item) => item.field !== field)
             : [...currentItems];
 
+        // with row grouping add the aggregation model to the newly added series
+        if (rowGroupingModel.length > 0 && targetSection === 'series') {
+          const hasAggregation = Object.keys(aggregationModel).includes(field);
+          if (!hasAggregation) {
+            apiRef.current.setAggregationModel({
+              ...aggregationModel,
+              [field]: getAvailableAggregationFunctions({
+                aggregationFunctions: props.aggregationFunctions,
+                colDef: columns[field],
+                isDataSource: !!props.dataSource,
+              })[0],
+            });
+          }
+        }
+
         if (targetField) {
           const targetFieldIndex = remainingItems.findIndex((item) => item.field === targetField);
           const targetIndex =
@@ -516,7 +558,17 @@ export const useGridChartsIntegration = (
         }
       }
     },
-    [apiRef, activeChartId, chartStateLookup, updateCategories, updateSeries],
+    [
+      apiRef,
+      activeChartId,
+      chartStateLookup,
+      rowGroupingModel,
+      aggregationModel,
+      updateCategories,
+      updateSeries,
+      props.aggregationFunctions,
+      props.dataSource,
+    ],
   );
 
   const addColumnMenuButton = React.useCallback<GridPipeProcessor<'columnMenu'>>(

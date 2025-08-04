@@ -213,6 +213,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'sum',
   aggregationFunctionLabelAvg: 'avg',
   aggregationFunctionLabelMin: 'min',
@@ -260,6 +261,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   chartsSearchLabel: 'Search fields',
   chartsSearchClear: 'Clear search',
   chartsNoFields: 'No fields',
+  chartsFieldBlocked: 'This field cannot be added to any section',
   chartsCategories: 'Categories',
   chartsSeries: 'Series',
   chartsMenuAddToCategories: 'Add to Categories',
