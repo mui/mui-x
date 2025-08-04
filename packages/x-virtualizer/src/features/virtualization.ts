@@ -373,7 +373,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       : createRange(firstRowToRender, lastRowToRender);
 
     let virtualRowIndex = -1;
-    const focusedVirtualCell = params.focusedVirtualCell();
+    const focusedVirtualCell = params.focusedVirtualCell?.();
     if (!isPinnedSection && focusedVirtualCell) {
       if (focusedVirtualCell.rowIndex < firstRowToRender) {
         rowIndexes.unshift(focusedVirtualCell.rowIndex);
