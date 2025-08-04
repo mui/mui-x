@@ -141,7 +141,7 @@ export function useGridVirtualizer(
     bottomPinnedHeight: 0,
   };
 
-  const addGridDimensions = useLazyRef(addGridDimensionsCombiner);
+  const addGridDimensions = useLazyRef(addGridDimensionsCombiner).current;
 
   // </DIMENSIONS>
 
