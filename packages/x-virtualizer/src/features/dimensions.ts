@@ -316,7 +316,7 @@ function useRowsMeta(
     return entry;
   });
 
-  const { rowIdToIndexMap, applyRowHeight } = params;
+  const { applyRowHeight } = params;
   const processHeightEntry = React.useCallback(
     (row: RowEntry) => {
       // HACK: rowHeight trails behind the most up-to-date value just enough to
@@ -374,7 +374,6 @@ function useRowsMeta(
       getEstimatedRowHeight,
       rowHeight,
       getRowSpacing,
-      rowIdToIndexMap,
       applyRowHeight,
     ],
   );
