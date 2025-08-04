@@ -44,10 +44,10 @@ export interface GridApiPremium
     GridPivotingApi,
     GridAiAssistantApi,
     GridSidebarApi,
+    GridRowReorderApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
-    GridColumnReorderApi,
-    GridRowReorderApi {}
+    GridColumnReorderApi {}
 
 export interface GridPrivateApiPremium
   extends GridApiPremium,
