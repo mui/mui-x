@@ -121,7 +121,7 @@ export const initialEvents = [
       id: `workout-run-${i + 1}-monday`,
       start: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ hour: 7 }),
       end: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ hour: 7, minute: 45 }),
-      title: 'Footing',
+      title: 'Running',
       resource: 'workout',
     },
     {
@@ -132,7 +132,7 @@ export const initialEvents = [
         hour: 7,
         minute: 45,
       }),
-      title: 'Footing',
+      title: 'Running',
       resource: 'workout',
     },
     {

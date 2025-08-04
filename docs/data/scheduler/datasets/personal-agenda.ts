@@ -102,14 +102,14 @@ export const initialEvents: CalendarEvent[] = [
       id: `workout-run-${i + 1}-monday`,
       start: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ hour: 7 }),
       end: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ hour: 7, minute: 45 }),
-      title: 'Footing',
+      title: 'Running',
       resource: 'workout',
     },
     {
       id: `workout-run-${i + 1}-wednesday`,
       start: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ weekday: 3, hour: 7 }),
       end: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ weekday: 3, hour: 7, minute: 45 }),
-      title: 'Footing',
+      title: 'Running',
       resource: 'workout',
     },
     {
