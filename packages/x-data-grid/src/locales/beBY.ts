@@ -246,6 +246,7 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: "Аб'яднанне дадзеных",
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'сума',
   aggregationFunctionLabelAvg: 'сярэдняе',
   aggregationFunctionLabelMin: 'мінімум',
@@ -293,6 +294,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

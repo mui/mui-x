@@ -217,6 +217,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregatie',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'som',
   aggregationFunctionLabelAvg: 'gem',
   aggregationFunctionLabelMin: 'min',
@@ -264,6 +265,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',

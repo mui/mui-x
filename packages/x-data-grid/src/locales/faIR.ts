@@ -217,6 +217,7 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'تجمیع',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'جمع',
   aggregationFunctionLabelAvg: 'میانگین',
   aggregationFunctionLabelMin: 'حداقل',
@@ -264,6 +265,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   // chartsSearchLabel: 'Search fields',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
   // chartsCategories: 'Categories',
   // chartsSeries: 'Series',
   // chartsMenuAddToCategories: 'Add to Categories',
