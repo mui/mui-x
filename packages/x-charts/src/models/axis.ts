@@ -256,7 +256,26 @@ export interface AxisScaleConfig {
     barGapRatio: number;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
     /**
-     * The configuration for the axis grouping.
+     * Each group will have a label that is the stringified value of the group.
+     *
+     * @example
+     * If the axis is grouped by day, month and year.
+     *
+     * ```tsx
+     * [
+     *   { getValue: getDate },
+     *   { getValue: getMonth },
+     *   { getValue: getFullYear }
+     * ]
+     * ```
+     *
+     * Then the axis will have three rows, one for each group.
+     *
+     * ```bash
+     * | 31   | 1    | 2    |
+     * | Jan  | Feb         |
+     * | 2021               |
+     * ```
      */
     groups?: AxisGroup[];
   } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
