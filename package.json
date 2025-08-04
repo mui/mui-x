@@ -177,7 +177,7 @@
     "vite": "catalog:",
     "vitest": "catalog:",
     "vitest-fail-on-console": "^0.8.0",
-    "webpack": "^5.100.2",
+    "webpack": "^5.101.0",
     "webpack-bundle-analyzer": "catalog:",
     "webpack-cli": "^6.0.1",
     "yargs": "catalog:"
