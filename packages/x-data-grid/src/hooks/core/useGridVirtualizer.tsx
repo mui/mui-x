@@ -60,7 +60,7 @@ const columnsTotalWidthSelector = createSelector(
 );
 
 /** Translates virtualizer state to grid state */
-const addGridDimensionsCombiner = () =>
+const addGridDimensionsCreator = () =>
   lruMemoize(
     (
       dimensions: Dimensions.State['dimensions'],
@@ -142,7 +142,7 @@ export function useGridVirtualizer(
     scrollbarSize: rootProps.scrollbarSize,
   };
 
-  const addGridDimensions = useLazyRef(addGridDimensionsCombiner).current;
+  const addGridDimensions = useLazyRef(addGridDimensionsCreator).current;
 
   // </DIMENSIONS>
 
