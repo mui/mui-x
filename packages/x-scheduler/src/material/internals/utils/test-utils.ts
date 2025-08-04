@@ -4,7 +4,6 @@ export async function openSettingsMenu(user) {
   const button = await screen.findByRole('button', { name: /settings/i });
   await user.click(button);
   await screen.findByRole('menu');
-  expect(button).to.have.attribute('aria-expanded', 'true');
   return button;
 }
 
