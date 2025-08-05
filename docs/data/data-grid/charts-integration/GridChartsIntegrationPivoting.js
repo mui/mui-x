@@ -101,6 +101,9 @@ export default function GridChartsIntegrationPivoting() {
             initialState={initialState}
             checkboxSelection
             columnGroupHeaderHeight={35}
+            experimentalFeatures={{
+              chartsIntegration: true,
+            }}
           />
         </div>
         <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />

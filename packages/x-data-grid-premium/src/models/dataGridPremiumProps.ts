@@ -43,7 +43,9 @@ import {
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
+  chartsIntegration?: boolean;
+}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {

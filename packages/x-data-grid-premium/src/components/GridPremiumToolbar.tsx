@@ -27,7 +27,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
           )}
         />
       )}
-      {rootProps.chartsIntegration && (
+      {rootProps.experimentalFeatures?.chartsIntegration && rootProps.chartsIntegration && (
         <ChartsPanelTrigger
           render={(triggerProps) => (
             <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarCharts')}>

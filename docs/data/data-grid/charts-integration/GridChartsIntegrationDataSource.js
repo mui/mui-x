@@ -101,6 +101,9 @@ export default function GridChartsIntegrationDataSource() {
             }}
             initialState={initialStateUpdated}
             aggregationFunctions={aggregationFunctions}
+            experimentalFeatures={{
+              chartsIntegration: true,
+            }}
           />
         </div>
         <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />
