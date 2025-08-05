@@ -91,12 +91,26 @@ export const selectors = {
       parameters: { days: SchedulerValidDate[]; shouldOnlyRenderEventInOneCell: boolean },
     ) => parameters,
     (events, visibleResources, adapter, { days, shouldOnlyRenderEventInOneCell }) => {
-      const daysMap = new Map<string, { events: CalendarEventWithPosition[] }>();
+      const daysMap = new Map<
+        string,
+        { events: CalendarEvent[]; allDayEvents: CalendarEventWithPosition[] }
+      >();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
-        daysMap.set(dayKey, { events: [] });
+        daysMap.set(dayKey, { events: [], allDayEvents: [] });
       }
-      for (const event of events) {
+
+      // We need to sort the events by start date to ensure they are processed in the correct order and the row indexes for the all day events are set in the correct order
+      const sortedEvents = events.slice().sort((a, b) => {
+        if (adapter.isBefore(a.start, b.start)) {
+          return -1;
+        }
+        if (adapter.isAfter(a.start, b.start)) {
+          return 1;
+        }
+        return 0;
+      });
+      for (const event of sortedEvents) {
         if (event.resource && visibleResources.get(event.resource) === false) {
           continue; // Skip events for hidden resources
         }
@@ -126,51 +140,56 @@ export const selectors = {
         for (const day of eventDays) {
           const dayKey = adapter.format(day, 'keyboardDate');
           if (!daysMap.has(dayKey)) {
-            daysMap.set(dayKey, { events: [] });
+            daysMap.set(dayKey, { events: [], allDayEvents: [] });
           }
 
-          const allDayEvents = daysMap
-            .get(dayKey)!
-            .events.filter((allDayEvent) => allDayEvent.allDay);
-
-          const eventIndex = allDayEvents.length;
-          let eventRowIndex;
-          // If the event starts before the current day, we need to find the row index of the first day of the event
-          if (adapter.isBefore(eventFirstDay, day) && !adapter.isSameDay(days[0], day)) {
-            let eventFirstDayKey = adapter.format(eventFirstDay, 'keyboardDate');
-            if (adapter.isBefore(eventFirstDay, days[0])) {
-              eventFirstDayKey = adapter.format(days[0], 'keyboardDate');
-            }
-            const eventStartRowPosition =
-              daysMap
-                .get(eventFirstDayKey)
-                ?.events?.find((eventInMap) => eventInMap.id === event.id)?.eventRowIndex || 1;
-            eventRowIndex = eventStartRowPosition;
-            // Otherwise, we just render the event on the first available row in the column
-          } else {
-            // we need to know the row index of the previous events rendered in a column
-            const previousEventRowPosition = getEventWithLargestRowIndexForDay(dayKey, daysMap);
-
-            if (previousEventRowPosition + 1 > eventIndex + 1) {
-              for (let i = 1; i < previousEventRowPosition + 1; i += 1) {
-                if (
-                  daysMap
-                    .get(dayKey)!
-                    .events?.findIndex((eventInMap) => eventInMap.eventRowIndex === i) === -1
-                ) {
-                  eventRowIndex = i;
-                  break;
-                }
+          if (event.allDay) {
+            const eventIndex = daysMap.get(dayKey)!.allDayEvents.length;
+            let eventRowIndex;
+            // If the event starts before the current day, we need to find the row index of the first day of the event
+            if (adapter.isBefore(eventFirstDay, day) && !adapter.isSameDay(days[0], day)) {
+              let eventFirstDayKey;
+              if (adapter.isBefore(eventFirstDay, days[0])) {
+                eventFirstDayKey = adapter.format(days[0], 'keyboardDate');
+              } else {
+                eventFirstDayKey = adapter.format(eventFirstDay, 'keyboardDate');
               }
-            } else {
-              eventRowIndex = previousEventRowPosition + 1;
-            }
-          }
+              const eventStartRowPosition =
+                daysMap
+                  .get(eventFirstDayKey)
+                  ?.allDayEvents?.find((eventInMap) => eventInMap.id === event.id)?.eventRowIndex ||
+                1;
 
-          daysMap.get(dayKey)!.events.push({
-            ...event,
-            eventRowIndex,
-          });
+              eventRowIndex = eventStartRowPosition;
+              // Otherwise, we just render the event on the first available row in the column
+            } else {
+              // we need to know the row index of the previous events rendered in a column
+              const previousEventRowPosition = getEventWithLargestRowIndexForDay(dayKey, daysMap);
+
+              if (previousEventRowPosition + 1 > eventIndex + 1) {
+                for (let i = 1; i < previousEventRowPosition + 1; i += 1) {
+                  if (
+                    daysMap
+                      .get(dayKey)!
+                      .allDayEvents?.findIndex((eventInMap) => eventInMap.eventRowIndex === i) ===
+                    -1
+                  ) {
+                    eventRowIndex = i;
+                    break;
+                  }
+                }
+              } else {
+                eventRowIndex = previousEventRowPosition + 1;
+              }
+            }
+
+            daysMap.get(dayKey)!.allDayEvents.push({
+              ...event,
+              eventRowIndex,
+            });
+          } else {
+            daysMap.get(dayKey)!.events.push(event);
+          }
         }
       }
 
@@ -179,6 +198,7 @@ export const selectors = {
         return {
           day,
           events: daysMap.get(dayKey)?.events || [],
+          allDayEvents: daysMap.get(dayKey)?.allDayEvents || [],
         };
       });
     },

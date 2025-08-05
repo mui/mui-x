@@ -4,11 +4,7 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
-import {
-  SchedulerValidDate,
-  CalendarEvent,
-  CalendarEventWithPosition,
-} from '../../../../primitives/models';
+import { SchedulerValidDate, CalendarEvent } from '../../../../primitives/models';
 import { getEventWithLargestRowIndex } from '../../../../primitives/utils/event-utils';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
@@ -47,25 +43,25 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     shouldOnlyRenderEventInOneCell: false,
   });
 
-  const dayWithEventsGroupedByCategory = React.useMemo(() => {
-    return daysWithEvents.map(({ day, events }) => {
-      const regularEvents: CalendarEvent[] = [];
-      const allDayEvents: CalendarEventWithPosition[] = [];
-      for (const event of events) {
-        if (event.allDay) {
-          allDayEvents.push(event);
-        } else {
-          regularEvents.push(event);
-        }
-      }
+  // const dayWithEventsGroupedByCategory = React.useMemo(() => {
+  //   return daysWithEvents.map(({ day, events }) => {
+  //     const regularEvents: CalendarEvent[] = [];
+  //     const allDayEvents: CalendarEventWithPosition[] = [];
+  //     for (const event of events) {
+  //       if (event.allDay) {
+  //         allDayEvents.push(event);
+  //       } else {
+  //         regularEvents.push(event);
+  //       }
+  //     }
 
-      return {
-        day,
-        allDayEvents,
-        regularEvents,
-      };
-    });
-  }, [daysWithEvents]);
+  //     return {
+  //       day,
+  //       allDayEvents,
+  //       regularEvents,
+  //     };
+  //   });
+  // }, [daysWithEvents]);
   const ampm = useStore(store, selectors.ampm);
 
   const handleEventChangeFromPrimitive = React.useCallback(
@@ -115,7 +111,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <div className="DayTimeGridHeader">
           <div className="DayTimeGridGridRow DayTimeGridHeaderRow" role="row">
             <div className="DayTimeGridAllDayEventsCell" />
-            {dayWithEventsGroupedByCategory.map(({ day }) => (
+            {daysWithEvents.map(({ day }) => (
               <div
                 key={day.toString()}
                 id={`DayTimeGridHeaderCell-${day.toString()}`}
@@ -155,7 +151,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
-            {dayWithEventsGroupedByCategory.map(({ day, allDayEvents }, dayIndex) => (
+            {daysWithEvents.map(({ day, allDayEvents }, dayIndex) => (
               <DayGrid.Cell
                 key={day.toString()}
                 className="DayTimeGridAllDayEventsCell"
@@ -235,7 +231,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {dayWithEventsGroupedByCategory.map(({ day, regularEvents }) => (
+                {daysWithEvents.map(({ day, events: regularEvents }) => (
                   <TimeGrid.Column
                     key={day.day.toString()}
                     start={adapter.startOfDay(day)}
