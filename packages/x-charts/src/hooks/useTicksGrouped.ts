@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
-import { AxisConfig, D3Scale } from '../models/axis';
+import { AxisConfig, D3Scale, type AxisGroup } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 import type { TickParams } from './useTicks';
 
@@ -44,7 +44,7 @@ export function useTicksGrouped(
     scale: ScaleBand<any> | ScalePoint<any>;
     valueFormatter?: AxisConfig['valueFormatter'];
     direction: 'x' | 'y';
-    getGrouping: (value: any, dataIndex: number) => any[];
+    groups: AxisGroup[];
   } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
 ): GroupedTickItemType[] {
   const {
@@ -52,7 +52,7 @@ export function useTicksGrouped(
     tickInterval,
     tickLabelPlacement = 'middle',
     tickPlacement = 'extremities',
-    getGrouping,
+    groups,
   } = options;
 
   return React.useMemo(() => {
@@ -64,9 +64,9 @@ export function useTicksGrouped(
 
     if (scale.bandwidth() > 0) {
       // scale type = 'band'
-      const { entries, maxGroupIndex } = mapToGrouping(
+      const entries = mapToGrouping(
         filteredDomain,
-        getGrouping,
+        groups,
         tickPlacement,
         tickLabelPlacement,
         scale,
@@ -81,7 +81,7 @@ export function useTicksGrouped(
           formattedValue: undefined,
           offset: scale.range()[0],
           labelOffset: 0,
-          groupIndex: maxGroupIndex,
+          groupIndex: groups.length - 1,
         },
 
         ...entries,
@@ -91,26 +91,19 @@ export function useTicksGrouped(
           formattedValue: undefined,
           offset: scale.range()[1],
           labelOffset: 0,
-          groupIndex: maxGroupIndex,
+          groupIndex: groups.length - 1,
         },
       ];
     }
 
     // scale type = 'point'
-    const { entries } = mapToGrouping(
-      filteredDomain,
-      getGrouping,
-      tickPlacement ?? 'extremities',
-      tickLabelPlacement ?? 'middle',
-      scale,
-    );
-    return entries;
-  }, [scale, tickInterval, getGrouping, tickPlacement, tickLabelPlacement]);
+    return mapToGrouping(filteredDomain, groups, tickPlacement, tickLabelPlacement, scale);
+  }, [scale, tickInterval, groups, tickPlacement, tickLabelPlacement]);
 }
 
 function mapToGrouping(
   tickValues: any[],
-  getGrouping: (value: any, dataIndex: number) => any[],
+  groups: AxisGroup[],
   tickPlacement: Exclude<TickParams['tickPlacement'], undefined>,
   tickLabelPlacement: Exclude<TickParams['tickLabelPlacement'], undefined>,
   scale: D3Scale,
@@ -118,15 +111,14 @@ function mapToGrouping(
   // Step 1: Create all tick items with their group information
   const allTickItems: Omit<Required<GroupedTickItemType>, 'syncIndex'>[] = [];
 
-  let maxGroupIndex = 0;
+  const getGrouping = (value: any, dataIndex: number) =>
+    groups.length > 0 ? groups.map((group) => group.getValue(value, dataIndex)) : [];
 
   // Build all tick items from the input data
   tickValues.forEach((tickValue, dataIndex) => {
     const groupValues = getGrouping(tickValue, dataIndex);
 
     groupValues.forEach((groupValue, groupIndex) => {
-      maxGroupIndex = Math.max(maxGroupIndex, groupIndex);
-
       allTickItems.push({
         value: groupValue,
         formattedValue: `${groupValue}`,
@@ -208,8 +200,5 @@ function mapToGrouping(
     }
   });
 
-  return {
-    entries,
-    maxGroupIndex,
-  };
+  return entries;
 }
