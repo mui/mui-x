@@ -75,8 +75,8 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
   const groupingConfig = React.useMemo(() => {
     return {
       getGrouping: (value: any, dataIndex: number) =>
-        groups?.map((group) => group.getValue(value, dataIndex)),
-      config: groups?.map((group) => ({
+        groups.length > 0 ? groups.map((group) => group.getValue(value, dataIndex)) : [''],
+      config: groups.map((group) => ({
         tickSize: group.tickSize,
       })),
     };

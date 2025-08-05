@@ -18,7 +18,8 @@ import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
 
-  if ('groups' in xAxis[inProps.axisId ?? xAxisIds[0]]) {
+  const axis = xAxis[inProps.axisId ?? xAxisIds[0]];
+  if ('groups' in axis && Array.isArray(axis.groups)) {
     return <ChartsGroupedXAxis {...inProps} />;
   }
 
