@@ -377,7 +377,7 @@ Row selection propagation has some limitations:
 
 :::
 
-## Reorder grouped rows
+## Reorder groups with drag and drop
 
 Row reordering allows the users to reorder row groups, or move rows from one group to another.
 To enable this feature with the row grouping, pass the `rowReordering` prop to the Data Grid Premium component:

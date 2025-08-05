@@ -98,7 +98,7 @@ With this feature, users would be able to reorder rows in use cases that also in
 
 This feature allows users to reorder rows within grouped data, making it easy to adjust the order of groups and their contents directly in the grid.
 
-For more details, see the documentation section [Row grouping—Reorder grouped rows](/x/react-data-grid/row-grouping/#reorder-grouped-rows).
+For more details, see the documentation section [Row grouping—Reorder groups with drag and drop](/x/react-data-grid/row-grouping/#reorder-groups-with-drag-and-drop).
 
 ## API
 
