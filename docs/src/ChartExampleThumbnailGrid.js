@@ -272,6 +272,11 @@ function ChartThumbnailCard({ title, link, ChartComponent }) {
             boxShadow: `0px 2px 30px 0px ${alpha(theme.palette.primary[50], 0.3)} inset, 0px 1px 6px 0px ${theme.palette.primary[100]}`,
             borderColor: 'primary.100',
           },
+          ...theme.applyDarkStyles({
+            '&:hover': {
+              boxShadow: `0px 2px 30px 0px ${alpha(theme.palette.primary[800], 0.1)} inset, 0px 1px 6px 0px ${theme.palette.primary[900]}`,
+            },
+          }),
         })}
       >
         <Box
