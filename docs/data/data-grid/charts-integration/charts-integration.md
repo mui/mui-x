@@ -2,11 +2,27 @@
 title: Data Grid and Charts integration
 ---
 
-# Charts integration [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+# Charts integration [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
 
 <p class="description">Use the MUI X Charts to visualize data from the Data Grid.</p>
 
 Data Grid seamlessly integrate with MUI X Charts for data visualization with dynamic Chart updates based on Grid state changes (whether through the Grid API or user interactions).
+
+:::warning
+This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+
+To use the feature, add `chartsIntegration` experimental flag on top of other props described below.
+
+```tsx
+<DataGridPremium
+  // ...other props
+  experimentalFeatures={{
+    chartsIntegration: true,
+  }}
+/>
+```
+
+:::
 
 This integration is possible via the `<GridChartsIntegrationContextProvider />` and `<GridChartsRendererProxy />` components from `@mui/x-data-grid-premium` and the `<ChartRenderer />` component from the `@mui/x-charts-premium` package.
 

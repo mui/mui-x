@@ -54,11 +54,16 @@ import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
     DataGridPremiumProcessedProps,
-    'chartsIntegration' | 'initialState' | 'activeChartId' | 'rowGroupingModel' | 'pivotModel'
+    | 'chartsIntegration'
+    | 'initialState'
+    | 'activeChartId'
+    | 'rowGroupingModel'
+    | 'pivotModel'
+    | 'experimentalFeatures'
   >,
   GridPrivateApiPremium
 > = (state, props) => {
-  if (!props.chartsIntegration) {
+  if (!props.chartsIntegration || !props.experimentalFeatures?.chartsIntegration) {
     return {
       ...state,
       chartsIntegration: {
@@ -142,13 +147,15 @@ export const useGridChartsIntegration = (
     | 'slotProps'
     | 'aggregationFunctions'
     | 'dataSource'
+    | 'experimentalFeatures'
   >,
 ) => {
   const visibleCategories = React.useRef<Record<string, GridColDef[]>>({});
   const visibleSeries = React.useRef<Record<string, GridColDef[]>>({});
 
   const context = useGridChartsIntegrationContext(true);
-  const isChartsIntegrationAvailable = !!props.chartsIntegration && !!context;
+  const isChartsIntegrationAvailable =
+    !!props.chartsIntegration && !!props.experimentalFeatures?.chartsIntegration && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const orderedFields = gridColumnFieldsSelector(apiRef);
   const aggregationModel = gridAggregationModelSelector(apiRef);
@@ -507,6 +514,10 @@ export const useGridChartsIntegration = (
         | GridChartsIntegrationItem[]
         | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
     ) => {
+      if (!isChartsIntegrationAvailable) {
+        return;
+      }
+
       apiRef.current.setState((state) => {
         const newCategories =
           typeof categories === 'function'
@@ -528,7 +539,7 @@ export const useGridChartsIntegration = (
       });
       debouncedHandleColumnDataUpdate(syncedChartIds);
     },
-    [apiRef, syncedChartIds, debouncedHandleColumnDataUpdate],
+    [apiRef, isChartsIntegrationAvailable, syncedChartIds, debouncedHandleColumnDataUpdate],
   );
 
   const updateSeries = React.useCallback(
@@ -538,6 +549,10 @@ export const useGridChartsIntegration = (
         | GridChartsIntegrationItem[]
         | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
     ) => {
+      if (!isChartsIntegrationAvailable) {
+        return;
+      }
+
       apiRef.current.setState((state) => {
         const newSeries =
           typeof series === 'function'
@@ -560,11 +575,15 @@ export const useGridChartsIntegration = (
       });
       debouncedHandleColumnDataUpdate(syncedChartIds);
     },
-    [apiRef, syncedChartIds, debouncedHandleColumnDataUpdate],
+    [apiRef, isChartsIntegrationAvailable, syncedChartIds, debouncedHandleColumnDataUpdate],
   );
 
   const setActiveChartId = React.useCallback<GridChartsIntegrationApi['setActiveChartId']>(
     (chartId) => {
+      if (!isChartsIntegrationAvailable) {
+        return;
+      }
+
       apiRef.current.setState((state) => ({
         ...state,
         chartsIntegration: {
@@ -573,13 +592,17 @@ export const useGridChartsIntegration = (
         },
       }));
     },
-    [apiRef],
+    [apiRef, isChartsIntegrationAvailable],
   );
 
   const setChartSynchronizationState = React.useCallback<
     GridChartsIntegrationApi['setChartSynchronizationState']
   >(
     (chartId, synced) => {
+      if (!isChartsIntegrationAvailable) {
+        return;
+      }
+
       setChartState(chartId, {
         synced,
       });
@@ -588,7 +611,13 @@ export const useGridChartsIntegration = (
         debouncedHandleColumnDataUpdate([chartId]);
       }
     },
-    [apiRef, chartStateLookup, setChartState, debouncedHandleColumnDataUpdate],
+    [
+      apiRef,
+      isChartsIntegrationAvailable,
+      chartStateLookup,
+      setChartState,
+      debouncedHandleColumnDataUpdate,
+    ],
   );
 
   // called when a column is dragged and dropped to a different section
@@ -717,13 +746,15 @@ export const useGridChartsIntegration = (
   );
   useGridApiMethod(
     apiRef,
-    {
-      setChartsPanelOpen,
-      setActiveChartId,
-      setChartSynchronizationState,
-      updateSeries,
-      updateCategories,
-    },
+    props.experimentalFeatures?.chartsIntegration
+      ? {
+          setChartsPanelOpen,
+          setActiveChartId,
+          setChartSynchronizationState,
+          updateSeries,
+          updateCategories,
+        }
+      : {},
     'public',
   );
 

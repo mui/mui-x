@@ -139,6 +139,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
                 schema: configurationOptions,
               },
             }}
+            experimentalFeatures={{
+              chartsIntegration: true,
+            }}
             {...props}
           />
         </div>
