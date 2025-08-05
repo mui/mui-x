@@ -9,7 +9,7 @@ import {
   GridColumnReorderApi,
   GridRowProApi,
 } from '@mui/x-data-grid-pro';
-import { GridRowReorderApi } from '@mui/x-data-grid-pro/internals';
+import { GridRowReorderPrivateApi } from '@mui/x-data-grid-pro/internals';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
 import { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSelectionInterfaces';
@@ -44,7 +44,6 @@ export interface GridApiPremium
     GridPivotingApi,
     GridAiAssistantApi,
     GridSidebarApi,
-    GridRowReorderApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
@@ -55,4 +54,5 @@ export interface GridPrivateApiPremium
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
     GridDetailPanelPrivateApi,
+    GridRowReorderPrivateApi,
     GridPivotingPrivateApi {}

@@ -456,6 +456,6 @@ export const useGridRowReorder = (
     {
       setRowDragActive,
     },
-    'public',
+    'private',
   );
 };

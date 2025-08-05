@@ -411,11 +411,6 @@
       "isProPlan": true
     },
     "setRowCount": { "type": { "description": "(rowCount: number) =&gt; void" }, "required": true },
-    "setRowDragActive": {
-      "type": { "description": "(isActive: boolean) =&gt; void" },
-      "required": true,
-      "isProPlan": true
-    },
     "setRowGroupingCriteriaIndex": {
       "type": {
         "description": "(groupingCriteriaField: string, groupingIndex: number) =&gt; void"

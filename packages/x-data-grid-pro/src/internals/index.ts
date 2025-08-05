@@ -32,7 +32,7 @@ export {
   rowReorderStateInitializer,
 } from '../hooks/features/rowReorder/useGridRowReorder';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
-export type { GridRowReorderApi } from '../models/gridRowReorderApi';
+export type { GridRowReorderPrivateApi } from '../models/gridRowReorderApi';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 export {

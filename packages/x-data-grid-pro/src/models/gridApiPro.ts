@@ -12,7 +12,7 @@ import type {
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
 } from '../hooks';
-import type { GridRowReorderApi } from './gridRowReorderApi';
+import type { GridRowReorderPrivateApi } from './gridRowReorderApi';
 import type {
   GridDataSourceApiPro,
   GridDataSourcePrivateApiPro,
@@ -29,7 +29,6 @@ export interface GridApiPro
     GridDetailPanelApi,
     GridRowPinningApi,
     GridDataSourceApiPro,
-    GridRowReorderApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
@@ -39,4 +38,5 @@ export interface GridPrivateApiPro
     GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps>,
     GridDetailPanelPrivateApi,
     GridInfiniteLoaderPrivateApi,
+    GridRowReorderPrivateApi,
     GridDataSourcePrivateApiPro {}

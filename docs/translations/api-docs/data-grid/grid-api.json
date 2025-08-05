@@ -201,7 +201,6 @@
     },
     "setRowChildrenExpansion": { "description": "Expand or collapse a row children." },
     "setRowCount": { "description": "Sets the <code>rowCount</code> to a new value." },
-    "setRowDragActive": { "description": "Sets the row drag active state." },
     "setRowGroupingCriteriaIndex": {
       "description": "Sets the grouping index of a grouping criteria."
     },
