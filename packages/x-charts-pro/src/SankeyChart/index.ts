@@ -6,6 +6,8 @@ export { SankeyNode } from './SankeyNode';
 export type { SankeyNodeProps } from './SankeyNode';
 export { SankeyLink } from './SankeyLink';
 export type { SankeyLinkProps } from './SankeyLink';
+export { SankeyLinkLabel } from './SankeyLinkLabel';
+export type { SankeyLinkLabelProps } from './SankeyLinkLabel';
 export type {
   SankeyValueType,
   SankeyNode as SankeyNodeType,

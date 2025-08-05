@@ -6,6 +6,7 @@ import { SankeyLayout, type SankeyItemIdentifier } from './sankey.types';
 import { calculateSankeyLayout } from './calculateSankeyLayout';
 import { SankeyNode } from './SankeyNode';
 import { SankeyLink } from './SankeyLink';
+import { SankeyLinkLabel } from './SankeyLinkLabel';
 import { useSankeySeriesContext } from '../hooks/useSankeySeries';
 import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
 
@@ -36,7 +37,7 @@ export function SankeyPlot(props: SankeyPlotProps) {
   const series = seriesContext?.series[seriesContext?.seriesOrder?.[0]]!;
   const classes = useUtilityClasses({ classes: inputClasses });
   const drawingArea = useDrawingArea();
-  const { data, linkColor, linkOpacity, showNodeLabels, nodeColor } = series;
+  const { data, linkColor, linkOpacity, showNodeLabels, showLinkValues, nodeColor } = series;
   const theme = useTheme();
 
   // Calculate layout based on data and dimensions
@@ -77,6 +78,14 @@ export function SankeyPlot(props: SankeyPlotProps) {
           />
         ))}
       </g>
+
+      {showLinkValues && (
+        <g className={classes.linkLabels}>
+          {layout.links.map((link) => (
+            <SankeyLinkLabel key={`label-${link.source.id}-${link.target.id}`} link={link} />
+          ))}
+        </g>
+      )}
     </g>
   );
 }
