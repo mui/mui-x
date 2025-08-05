@@ -47,7 +47,7 @@ export const SettingsMenu = React.forwardRef(function SettingsMenu(
               >
                 <span>{translations.hideWeekends}</span>
                 <Menu.CheckboxItemIndicator className="SettingsMenuCheckboxIndicator">
-                  <CheckIcon size={16} strokeWidth={2} />
+                  <CheckIcon size={16} strokeWidth={1.5} />
                 </Menu.CheckboxItemIndicator>
               </Menu.CheckboxItem>
             </Menu.Popup>
