@@ -16,6 +16,7 @@ import {
   GridChartsIcon,
   GridSidebarValue,
 } from '@mui/x-data-grid-premium';
+import { COLUMN_GROUP_ID_SEPARATOR } from '../constants/columnGroups';
 import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
 const rows: GridValidRowModel[] = [
@@ -335,6 +336,67 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
         });
       });
+
+      it('should remove values from chartable columns when pivoting has columns', async () => {
+        const initialState = {
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'category1' }],
+              columns: [{ field: 'category2' }],
+              values: [{ field: 'amount', aggFunc: 'sum' }],
+            },
+          },
+        };
+        render(<Test initialState={initialState} />);
+
+        act(() => {
+          apiRef!.current?.updateCategories('test', [{ field: 'category1' }]);
+        });
+
+        act(() => {
+          apiRef!.current?.updateSeries('test', [{ field: 'amount' }]);
+        });
+
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+        });
+
+        // dynamically created values columns are chartable
+        act(() => {
+          apiRef!.current?.updateSeries('test', [
+            { field: `${rows[0].category2}${COLUMN_GROUP_ID_SEPARATOR}amount` },
+          ]);
+        });
+
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+        });
+
+        // remove column from pivoting
+        // this will make the values reappear as regular column (not dynamically created)
+        // and the charts hook will allow that column to be used as series
+        act(() => {
+          apiRef!.current?.setPivotModel({
+            rows: [{ field: 'category1' }],
+            columns: [],
+            values: [{ field: 'amount', aggFunc: 'sum' }],
+          });
+        });
+
+        // this clears series as well, because the column does not exist anymore
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+        });
+
+        act(() => {
+          apiRef!.current?.updateSeries('test', [{ field: 'amount' }]);
+        });
+
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+        });
+      });
     });
 
     describe('API', () => {
@@ -444,6 +506,85 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
       });
       expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+    });
+
+    describe('Other model updates', () => {
+      it('should update grouping model and column visibility model if grouped category is replaced with another field', async () => {
+        const initialState = {
+          ...baseInitialState,
+          rowGrouping: {
+            model: ['category1'],
+          },
+          columnVisibility: {
+            category1: false,
+          },
+        };
+        render(<Test initialState={initialState} />);
+
+        act(() => {
+          apiRef!.current?.updateCategories('test', [{ field: 'category2' }]);
+        });
+
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category2');
+        });
+
+        expect(apiRef!.current?.state.rowGrouping.model).to.deep.equal(['category2']);
+        expect(apiRef!.current?.state.columns.columnVisibilityModel.category1).to.equal(true);
+        expect(apiRef!.current?.state.columns.columnVisibilityModel.category2).to.equal(false);
+      });
+
+      it('should update pivoting rows if chart category is replaced with active pivoting', async () => {
+        const initialState = {
+          ...baseInitialState,
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'category1' }],
+              columns: [],
+              values: [{ field: 'amount', aggFunc: 'sum' }],
+            },
+          },
+        };
+        render(<Test initialState={initialState} />);
+
+        act(() => {
+          apiRef!.current?.updateCategories('test', [{ field: 'category2' }]);
+        });
+
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category2');
+        });
+
+        expect(apiRef!.current?.state.pivoting.model).to.deep.equal({
+          rows: [{ field: 'category2', hidden: false }],
+          columns: [],
+          values: [{ field: 'amount', aggFunc: 'sum' }],
+        });
+      });
+
+      it('should aggregate newly added series if row grouping is enabled', async () => {
+        const initialState = {
+          ...baseInitialState,
+          rowGrouping: {
+            model: ['category1'],
+          },
+          columnVisibility: {
+            category1: false,
+          },
+        };
+        render(<Test initialState={initialState} />);
+
+        act(() => {
+          apiRef!.current?.updateSeries('test', (prev) => [...prev, { field: 'category2' }]);
+        });
+
+        await waitFor(() => {
+          expect(integrationContext!.chartStateLookup.test.series[1].id).to.equal('category2');
+        });
+
+        expect(apiRef!.current?.state.aggregation.model.category2).to.equal('size');
+      });
     });
   });
 
