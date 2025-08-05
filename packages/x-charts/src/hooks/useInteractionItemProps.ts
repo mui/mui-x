@@ -6,18 +6,6 @@ import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
 import { ChartInstance } from '../internals/plugins/models';
-import { getSVGPoint } from '../internals/getSVGPoint';
-import { SeriesId } from '../models/seriesType/common';
-import {
-  selectorChartAxisZoomData,
-  selectorChartDrawingArea,
-  selectorChartSeriesFlatbush,
-  selectorChartSeriesProcessed,
-  selectorChartXAxis,
-  selectorChartYAxis,
-  useSelector,
-} from '../internals';
-import { findNearestNeighbor } from './findNearestNeighbor';
 
 function onPointerDown(event: React.PointerEvent) {
   if (
@@ -128,84 +116,4 @@ export function getInteractionItemProps(
     onPointerLeave,
     onPointerDown,
   };
-}
-
-export function useInteractionGroupProps(
-  seriesId: SeriesId,
-  seriesData: readonly { x: number; y: number }[],
-  markerSize: number,
-) {
-  const { svgRef, instance, store } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-
-  const flatbush = useSelector(store, selectorChartSeriesFlatbush, [seriesId]);
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const defaultXAxisId = xAxisIds[0];
-  const defaultYAxisId = yAxisIds[0];
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const { series } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
-  const aSeries = series?.[seriesId];
-  const xAxisId = aSeries?.xAxisId ?? defaultXAxisId;
-  const yAxisId = aSeries?.yAxisId ?? defaultYAxisId;
-
-  return React.useMemo(() => {
-    function onPointerLeave() {
-      instance.removeItemInteraction();
-      instance.clearHighlight();
-    }
-
-    function onPointerMove(event: React.PointerEvent<SVGGElement>) {
-      const element = svgRef.current;
-      console.log('onPointerMove', seriesId);
-
-      if (!element || !flatbush) {
-        instance.removeItemInteraction();
-        instance.clearHighlight();
-        return;
-      }
-
-      const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
-      const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
-
-      const svgPoint = getSVGPoint(element, event);
-
-      const dataIndex = findNearestNeighbor(
-        seriesData,
-        flatbush,
-        drawingArea,
-        xAxis[xAxisId].scale,
-        yAxis[yAxisId].scale,
-        xAxisZoom,
-        yAxisZoom,
-        svgPoint.x,
-        svgPoint.y,
-        markerSize,
-      );
-
-      if (dataIndex === undefined) {
-        instance.removeItemInteraction();
-        instance.clearHighlight();
-      } else {
-        const item = { type: 'scatter' as const, seriesId, dataIndex };
-        instance.setItemInteraction(item);
-        instance.setHighlight(item);
-      }
-    }
-
-    return { onPointerMove, onPointerLeave };
-  }, [
-    drawingArea,
-    flatbush,
-    instance,
-    markerSize,
-    seriesData,
-    seriesId,
-    store,
-    svgRef,
-    xAxis,
-    xAxisId,
-    yAxis,
-    yAxisId,
-  ]);
 }

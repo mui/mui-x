@@ -18,7 +18,6 @@ import {
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
-import { findNearestNeighbor } from '../../../../hooks/findNearestNeighbor';
 
 export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   svgRef,
@@ -263,6 +262,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
     defaultYAxisId,
     store,
     flatbushMap,
+    disableClosestPoint,
   ]);
 
   // Instance implementation

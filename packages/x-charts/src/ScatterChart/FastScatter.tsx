@@ -2,23 +2,16 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
-import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
-import {
-  selectorChartsVoronoiIsVoronoiEnabled,
-  UseChartVoronoiSignature,
-} from '../internals/plugins/featurePlugins/useChartVoronoi';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { useInteractionGroupProps } from '../hooks/useInteractionItemProps';
 import {
   selectorChartAxisZoomData,
   selectorChartSeriesFlatbush,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
-import { useDrawingArea } from '../hooks/useDrawingArea';
 
 export interface FastScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -109,11 +102,6 @@ const Group = styled('g')({
 function FastScatter(props: FastScatterProps) {
   const { series, xScale, yScale, color, classes: inClasses } = props;
 
-  const groupRef = React.useRef<SVGGElement>(null);
-  const store = useStore<[UseChartVoronoiSignature]>();
-  const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
-  const skipInteractionHandlers = Boolean(isVoronoiEnabled || series.disableHover);
-
   const paths = useCreatePaths(series, xScale, yScale);
   const classes = useUtilityClasses(inClasses);
 
@@ -123,31 +111,9 @@ function FastScatter(props: FastScatterProps) {
   performance.measure('FastScatter paths.map', { start, end });
 
   return (
-    <Group ref={groupRef} data-series={series.id} className={classes.root}>
+    <Group data-series={series.id} className={classes.root}>
       {children}
     </Group>
-  );
-}
-
-interface GroupInteractionRectProps {
-  series: DefaultizedScatterSeriesType;
-}
-
-function GroupInteractionRect(props: GroupInteractionRectProps) {
-  const { series } = props;
-  const drawingArea = useDrawingArea();
-  const eventHandlers = useInteractionGroupProps(series.id, series.data, series.markerSize);
-
-  return (
-    <rect
-      x={drawingArea.left}
-      y={drawingArea.top}
-      width={drawingArea.width}
-      height={drawingArea.height}
-      onPointerMove={eventHandlers?.onPointerMove}
-      onPointerLeave={eventHandlers?.onPointerLeave}
-      fill="transparent"
-    />
   );
 }
 
