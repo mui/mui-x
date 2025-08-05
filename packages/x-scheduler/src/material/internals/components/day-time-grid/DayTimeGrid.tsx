@@ -43,25 +43,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     shouldOnlyRenderEventInOneCell: false,
   });
 
-  // const dayWithEventsGroupedByCategory = React.useMemo(() => {
-  //   return daysWithEvents.map(({ day, events }) => {
-  //     const regularEvents: CalendarEvent[] = [];
-  //     const allDayEvents: CalendarEventWithPosition[] = [];
-  //     for (const event of events) {
-  //       if (event.allDay) {
-  //         allDayEvents.push(event);
-  //       } else {
-  //         regularEvents.push(event);
-  //       }
-  //     }
-
-  //     return {
-  //       day,
-  //       allDayEvents,
-  //       regularEvents,
-  //     };
-  //   });
-  // }, [daysWithEvents]);
   const ampm = useStore(store, selectors.ampm);
 
   const handleEventChangeFromPrimitive = React.useCallback(
@@ -207,6 +188,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               </DayGrid.Cell>
             ))}
           </DayGrid.Row>
+          <div className="ScrollablePlaceholder" />
         </DayGrid.Root>
         <TimeGrid.Root className="DayTimeGridRoot" onEventChange={handleEventChangeFromPrimitive}>
           <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
