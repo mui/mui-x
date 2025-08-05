@@ -24,16 +24,19 @@ export function ChartThumbnailCard({ title, link, ChartComponent }) {
           display: 'flex',
           flexDirection: 'column',
           paddingTop: '10px',
-          border: 1,
+          border: 2,
           borderColor: 'secondary.main',
           borderRadius: 1,
           overflow: 'hidden',
+          opacity: 0.7,
           backgroundColor: 'background.paper',
           transition: 'all 0.2s ease-in-out',
+          filter: 'grayscale(100%)',
           '&:hover': {
             opacity: 1,
             boxShadow: `0px 2px 30px 0px ${alpha(theme.palette.primary[50], 0.3)} inset, 0px 1px 6px 0px ${theme.palette.primary[100]}`,
             borderColor: 'primary.100',
+            filter: 'grayscale(0%)',
           },
           ...theme.applyDarkStyles({
             '&:hover': {
@@ -81,9 +84,9 @@ export function ChartThumbnailCard({ title, link, ChartComponent }) {
         <Box sx={{ p: 2, textAlign: 'center' }}>
           <Typography
             fontFamily={'IBM Plex Sans'}
-            fontWeight="medium"
-            variant="body2"
-            color="text.main"
+            fontWeight="bold"
+            variant="body1"
+            color="text.primary"
           >
             {title}
           </Typography>
