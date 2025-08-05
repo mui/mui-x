@@ -144,7 +144,7 @@ function ChartBox({ title, children, linkToCode }) {
 export default function BarChartsOverviewDemo() {
   return (
     <Box sx={{ width: '100%' }}>
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         {featuresSet.map((feature) => (
           <Grid item xs={12} sm={6} md={6} lg={6} key={feature.id}>
             <ChartBox title={feature.name} linkToCode={feature.linkToCode}>

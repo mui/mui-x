@@ -5,34 +5,53 @@ githubLabel: 'scope: charts'
 packageName: '@mui/x-charts'
 ---
 
-# MUI X Charts
+# MUI X Charts
 
-<p class="description">A collection of MUI X chart demos.</p>
+<p class="description">Browse through our collection of MUI X Chart demos.</p>
 
-## Cartesian charts
+## Bar Charts
 
-### Bar Charts
+Vertical and horizontal bars, stacked and grouped variations.
 
-{{"demo": "BarChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+{{"component": "BarChartsGrid.js"}}
 
-### Line Charts
+## Line Charts
 
-{{"demo": "LineChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+Connected data points showing trends over time.
 
-### Area Charts
+{{"component": "LineChartsGrid.js"}}
 
-{{"demo": "AreaChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+## Area Charts
 
-### Scatter Charts
+Filled areas below lines for cumulative data.
 
-{{"demo": "ScatterChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+{{"component": "AreaChartsGrid.js"}}
 
-## Non-Cartesian Charts
+## Scatter Charts
 
-### Pie Charts
+Plot points to show relationships between variables.
 
-{{"demo": "PieChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+{{"component": "ScatterChartsGrid.js"}}
 
-### Other Charts
+## Pie Charts
 
-{{"demo": "OtherChartsOverviewDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
+Circular slices showing proportional data.
+
+{{"component": "PieChartsGrid.js"}}
+
+## Other Charts
+
+Gauge, sparkline, and specialized chart types.
+
+{{"component": "OtherChartsGrid.js"}}
+
+## More demos
+
+Browse individual chart categories for more detailed examples:
+
+- **[Bar Charts](/x/react-charts/bar-demo/)**
+- **[Line Charts](/x/react-charts/line-demo/)**
+- **[Area Charts](/x/react-charts/areas-demo/)**
+- **[Scatter Charts](/x/react-charts/scatter-demo/)**
+- **[Pie Charts](/x/react-charts/pie-demo/)**
+- **[Other Charts](/x/react-charts/gauge/)**
