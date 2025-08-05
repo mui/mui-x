@@ -54,7 +54,6 @@ export default function ChartsYHighlight(props: {
       }
     }
 
-
     return (
       <React.Fragment key={`${axisId}-${value}`}>
         {isBandScaleY && yScale(value) !== undefined && (
