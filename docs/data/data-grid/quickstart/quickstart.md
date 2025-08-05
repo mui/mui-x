@@ -179,7 +179,7 @@ export default {
 
 #### Vite
 
-Nothing to do, CSS imports should work out of the box.
+CSS imports should work with no additional configuration when using Vite.
 
 #### Vitest
 
