@@ -18,7 +18,7 @@ export default function SankeyChartExample() {
           ],
         },
         nodeWidth: 20,
-        nodeGap: 15,
+        nodePadding: 15,
         showNodeLabels: true,
         linkColor: 'gray',
       }}

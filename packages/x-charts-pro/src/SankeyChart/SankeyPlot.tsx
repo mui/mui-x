@@ -39,7 +39,7 @@ export function SankeyPlot(props: SankeyPlotProps) {
   const {
     data,
     nodeWidth,
-    nodeGap,
+    nodePadding,
     iterations,
     linkColor,
     linkOpacity,
@@ -50,8 +50,8 @@ export function SankeyPlot(props: SankeyPlotProps) {
 
   // Calculate layout based on data and dimensions
   const layout: SankeyLayout = React.useMemo(
-    () => calculateSankeyLayout(data, drawingArea, nodeWidth, nodeGap, iterations),
-    [drawingArea, data, nodeWidth, nodeGap, iterations],
+    () => calculateSankeyLayout(data, drawingArea, nodeWidth, nodePadding, iterations),
+    [drawingArea, data, nodeWidth, nodePadding, iterations],
   );
 
   // Early return if no data or dimensions

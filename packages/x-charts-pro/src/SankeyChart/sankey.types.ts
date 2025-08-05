@@ -114,7 +114,7 @@ export interface SankeySeriesType {
   /**
    * Gap between nodes
    */
-  nodeGap?: number;
+  nodePadding?: number;
 
   /**
    * Width of nodes

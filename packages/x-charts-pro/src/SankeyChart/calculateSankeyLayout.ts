@@ -23,7 +23,7 @@ import {
  * @param width The width of the chart area
  * @param height The height of the chart area
  * @param nodeWidth The width of each node
- * @param nodeGap The gap between nodes in the same column
+ * @param nodePadding The gap between nodes in the same column
  * @param iterations The number of iterations for the layout algorithm
  * @returns The calculated layout
  */
@@ -31,7 +31,7 @@ export function calculateSankeyLayout(
   data: SankeyValueType,
   drawingArea: ChartDrawingArea,
   nodeWidth: number = 15,
-  nodeGap: number = 10,
+  nodePadding: number = 10,
   iterations: number = 32,
 ): SankeyLayout {
   const { width, height, left, top, bottom, right } = drawingArea;
@@ -64,9 +64,13 @@ export function calculateSankeyLayout(
   // Create the sankey layout generator
   const sankeyGenerator = sankey<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>()
     .nodeWidth(nodeWidth)
-    .nodePadding(nodeGap)
+    .nodePadding(nodePadding)
     // TODO: make this configurable
     .nodeAlign(sankeyJustify)
+    // TODO: make this configurable
+    .nodeSort(() => undefined)
+    // TODO: make this configurable
+    .linkSort(() => undefined)
     .extent([
       [left, top],
       [width + right, height + bottom],
