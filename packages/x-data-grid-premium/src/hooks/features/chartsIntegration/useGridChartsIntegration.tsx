@@ -287,36 +287,34 @@ export const useGridChartsIntegration = (
 
       // keep only unique columns and transform the grouped column to carry the correct field name to get the grouped value
       const dataColumns = [
-        ...new Set(
-          [
-            ...Object.values(visibleCategories.current).flat(),
-            ...Object.values(visibleSeries.current).flat(),
-          ].map((column) => {
-            const isColumnGrouped = rowGroupingModel.includes(column.field);
+        ...new Set([
+          ...Object.values(visibleCategories.current).flat(),
+          ...Object.values(visibleSeries.current).flat(),
+        ]),
+      ].map((column) => {
+        const isColumnGrouped = rowGroupingModel.includes(column.field);
 
-            if (isColumnGrouped) {
-              const groupedFieldName = isColumnGrouped
-                ? getRowGroupingFieldFromGroupingCriteria(
-                    orderedFields.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD)
-                      ? null
-                      : column.field,
-                  )
-                : column.field;
-              const columnDefinition = apiRef.current.getColumn(groupedFieldName);
+        if (isColumnGrouped) {
+          const groupedFieldName = isColumnGrouped
+            ? getRowGroupingFieldFromGroupingCriteria(
+                orderedFields.includes(GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD)
+                  ? null
+                  : column.field,
+              )
+            : column.field;
+          const columnDefinition = apiRef.current.getColumn(groupedFieldName);
 
-              return {
-                ...columnDefinition,
-                dataFieldName: column.field,
-              };
-            }
+          return {
+            ...columnDefinition,
+            dataFieldName: column.field,
+          };
+        }
 
-            return {
-              ...column,
-              dataFieldName: column.field,
-            };
-          }),
-        ),
-      ];
+        return {
+          ...column,
+          dataFieldName: column.field,
+        };
+      });
 
       // go through the data only once and collect everything that will be needed
       const data: Record<any, (string | number | null)[]> = Object.fromEntries(
@@ -414,7 +412,7 @@ export const useGridChartsIntegration = (
               chartableColumns[selectedFields[chartId].series[i].field],
               'series',
               rowGroupingModel,
-              pivotModel,
+              pivotActive ? pivotModel : undefined,
             )
           ) {
             if (!series[chartId]) {
@@ -434,7 +432,7 @@ export const useGridChartsIntegration = (
               chartableColumns[item.field],
               'categories',
               rowGroupingModel,
-              pivotModel,
+              pivotActive ? pivotModel : undefined,
             )
           ) {
             if (!categories[chartId]) {
@@ -477,7 +475,14 @@ export const useGridChartsIntegration = (
       updateOtherModels();
       debouncedHandleRowDataUpdate(chartIds);
     },
-    [apiRef, chartStateLookup, pivotModel, debouncedHandleRowDataUpdate, updateOtherModels],
+    [
+      apiRef,
+      chartStateLookup,
+      pivotActive,
+      pivotModel,
+      debouncedHandleRowDataUpdate,
+      updateOtherModels,
+    ],
   );
 
   const debouncedHandleColumnDataUpdate = React.useMemo(
@@ -631,7 +636,14 @@ export const useGridChartsIntegration = (
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
       if (targetSection) {
-        if (isBlockedForSection(columns[field], targetSection, rowGroupingModel, pivotModel)) {
+        if (
+          isBlockedForSection(
+            columns[field],
+            targetSection,
+            rowGroupingModel,
+            pivotActive ? pivotModel : undefined,
+          )
+        ) {
           return;
         }
 
@@ -706,6 +718,7 @@ export const useGridChartsIntegration = (
       updateCategories,
       updateSeries,
       aggregationModel,
+      pivotActive,
       pivotModel,
     ],
   );
