@@ -96,6 +96,17 @@ import { nlNL } from '@mui/x-data-grid/locales';
 <DataGrid localeText={nlNL.components.MuiDataGrid.defaultProps.localeText} />;
 ```
 
+### Serbian scripts
+
+Serbian translations are provided in both Latin (`srLatn`) and Cyrillic (`srRS`) scripts. Choose the desired locale when creating the theme or pass the locale text directly.
+
+```jsx
+import { srLatn, srRS } from '@mui/x-data-grid/locales';
+const theme = createTheme({}, useCyrillic ? srRS : srLatn);
+```
+
+To add another language or script, create a new locale file in the `locales` directory and export it from `index.ts`.
+
 ### Supported locales
 
 {{"demo": "DataGridLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
