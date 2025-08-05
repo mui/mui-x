@@ -10,7 +10,6 @@ import {
   useGridApiRef,
   useGridChartsIntegrationContext,
   GridChartsPanel,
-  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridInitialState,
   GridApiPremium,
   GridValidRowModel,
@@ -300,7 +299,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         });
       });
 
-      it('should switch to the grouped column if the active category becomes grouped', async () => {
+      it('should read to the grouped value if the active category becomes grouped', async () => {
         render(<Test initialState={baseInitialState} />);
         await waitFor(() => {
           expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
@@ -311,8 +310,8 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal(
-            GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+          expect(integrationContext!.chartStateLookup.test.categories[0].data[0]).to.equal(
+            rows[0].category1,
           );
         });
       });
