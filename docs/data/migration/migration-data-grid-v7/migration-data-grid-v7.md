@@ -404,3 +404,94 @@ You have to import it from `@mui/x-license` instead:
 - The `columnUnsortedIcon` slot was removed.
 - The icon slots now require material icons to be passed like `Icon as any`.
   Note: This is due to typing issues that might be resolved later.
+
+### Bundling
+
+The Data Grid now requires a bundler that can handle CSS imports.
+
+#### Webpack
+
+Update your config to add the `style-loader` and `css-loader`.
+
+```ts title="webpack.config.js"
+export default {
+  // other webpack config
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+};
+```
+
+#### Vite
+
+Nothing to do, CSS imports should work out of the box.
+
+#### Vitest
+
+Add the Data Grid packages to `test.deps.inline`.
+
+```ts title="vitest.config.ts"
+export default defineConfig({
+  test: {
+    deps: {
+      inline: [
+        '@mui/x-data-grid',
+        '@mui/x-data-grid-pro',
+        '@mui/x-data-grid-premium',
+      ],
+    },
+  },
+});
+```
+
+#### Next.js
+
+If you're using the App Router, CSS imports should work out of the box.
+
+If you're using the Pages Router, you need to add the Data Grid packages to [`transpilePackages`](https://nextjs.org/docs/app/api-reference/config/next-config-js/transpilePackages).
+
+```ts title="next.config.ts"
+export default {
+  transpilePackages: [
+    '@mui/x-data-grid',
+    '@mui/x-data-grid-pro',
+    '@mui/x-data-grid-premium',
+  ],
+};
+```
+
+#### Node.js
+
+If you're importing the packages inside Node.js, you can make CSS imports a no-op like this:
+
+**Using `require()`**:
+
+```js
+require.extensions['.css'] = () => null;
+```
+
+**Using `import`**:
+
+```js
+// node-ignore-css.js
+// Needs to be loaded before your code runs:
+//   node --import ./node-ignore-css.js ./index.js
+import { registerHooks } from 'node:module';
+registerHooks({
+  load(url, context, nextLoad) {
+    if (url.endsWith('.css')) {
+      return { url, format: 'module', source: '', shortCircuit: true };
+    }
+    return nextLoad(url, context);
+  },
+});
+```
+
+<!-- ### Editing
+
+TBD

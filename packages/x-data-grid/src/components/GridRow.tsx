@@ -29,6 +29,7 @@ import {
   gridEditRowsStateSelector,
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
+import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
@@ -123,6 +124,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     rowReordering,
     treeData,
   });
+  const isRowDragActive = useGridSelector(apiRef, gridIsRowDragActiveSelector);
   const handleRef = useForkRef(ref, refProp);
   const rowNode = gridRowNodeSelector(apiRef, rowId);
   const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
@@ -347,7 +349,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     const canReorderColumn = !(disableColumnReorder || column.disableReorder);
     const canReorderRow = isRowReorderingEnabled && !sortModel.length;
 
-    const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
+    const disableDragEvents = !(
+      canReorderColumn ||
+      (isReorderCell && canReorderRow) ||
+      isRowDragActive
+    );
 
     const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
