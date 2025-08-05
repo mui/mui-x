@@ -377,10 +377,10 @@ Row selection propagation has some limitations:
 
 :::
 
-## Reorder groups with drag and drop
+## Drag-and-drop group reordering
 
-Row reordering allows the users to reorder row groups, or move rows from one group to another.
-To enable this feature with the row grouping, pass the `rowReordering` prop to the Data Grid Premium component:
+With row reordering, users can reorder row groups or move rows from one group to another.
+To enable this feature with row grouping, pass the `rowReordering` prop to the Data Grid Premium component:
 
 ```tsx
 <DataGridPremium rowGroupingModel={['category']} rowReordering />
@@ -390,9 +390,9 @@ To enable this feature with the row grouping, pass the `rowReordering` prop to t
 
 ### Reacting to group updates
 
-Whenever a row is moved from one group to another, it warrants a row update, the row data value that was used to group this row must now be updated to maintain the row grouping data integrity.
+When a row is moved from one group to another, it warrants a row update, and the row data value that was used to group this row must be updated to maintain the row grouping data integrity.
 
-For example, on a Data Grid having movies grouped by companies, if a row "Avatar" is moved from "20th Century Fox" to "Disney Studios" group, apart from the row being updated in the row tree, the row data must be updated to reflect this change.
+For example, in a Data Grid displaying movies grouped by companies, if the **Avatar** row is moved from **20th Century Fox** to the **Disney Studios** group, along with the row being updated in the row tree, the row data must be updated to reflect this change.
 
 ```diff
  // "Avatar" row
@@ -404,13 +404,13 @@ For example, on a Data Grid having movies grouped by companies, if a row "Avatar
  }
 ```
 
-The Data Grid updates the internal row data, but to persist the change on the server, the [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) callback must be used.
+The Data Grid updates the internal row data, but for the change to persist on the server, you must use the [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) callback.
 
 ### Usage with groupingValueSetter()
 
-If you use [`colDef.groupingValueGetter()`](#using-groupingvaluegetter-for-complex-grouping-value) to handle complex grouping values, in order for grouping across rows to work, you must use the `colDef.groupingValueSetter()` to properly convert back the simple value to the complex one.
+If you use [`colDef.groupingValueGetter()`](#using-groupingvaluegetter-for-complex-grouping-value) to handle complex grouping values and you want to group across rows, you must use the `colDef.groupingValueSetter()` to properly convert back the simple value to the complex one.
 
-It should return the updated row based on the groupKey (`value`) corresponding to the target group.
+This method should return the updated row based on the groupKey (`value`) that corresponds to the target group.
 
 ```ts
 const columns: GridColDef[] = [
@@ -439,9 +439,9 @@ There are some limitations when reordering grouped rows:
 
 **For multi-level grouping**: Top-level groups can be reordered freely, but lower-level parents can only be reordered within their own parent group.
 
-For example, in movies grouped by "Company" and "Director":
+For example, in movies grouped by **Company** and **Director**:
 
-⛔️ You can not move a director parent row from one company to another, because it would mean multiple rows being updated i.e. multiple `processRowUpdate()` calls.
+⛔️ You can't move a director parent row from one company to another, because this would lead to multiple rows being updated (via multiple `processRowUpdate()` calls).
 
 ✅ You can reorder leaf rows from one director to another or move directors around within same company.
 

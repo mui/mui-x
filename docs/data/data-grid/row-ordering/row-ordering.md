@@ -96,9 +96,9 @@ With this feature, users would be able to reorder rows in use cases that also in
 
 ## Row reordering with row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-This feature allows users to reorder rows within grouped data, making it easy to adjust the order of groups and their contents directly in the grid.
+This feature allows users to reorder rows within grouped data to adjust the order of groups and their contents directly in the grid.
 
-For more details, see the documentation section [Row grouping—Reorder groups with drag and drop](/x/react-data-grid/row-grouping/#reorder-groups-with-drag-and-drop).
+For more details, see [Row grouping—Drag-and-drop group reordering](/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering).
 
 ## API
 
