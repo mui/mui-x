@@ -1,20 +1,23 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
-export default function GroupedAxes() {
+export default function GroupedAxesStyling() {
   return (
-    <BarChart
+    <LineChart
+      sx={{
+        [`& [data-group-index="1"] .${axisClasses.tick}`]: {
+          stroke: 'rgb(255, 180, 34)',
+        },
+        [`& [data-group-index="0"] .${axisClasses.tickLabel}`]: {
+          fill: 'rgb(66, 84, 251)',
+        },
+      }}
       xAxis={[
         {
           data,
-          scaleType: 'band',
-          tickSize: 8,
-          height: 32,
-          groups: [
-            { getValue: getMonth },
-            { getValue: getQuarter },
-            { getValue: getYear },
-          ],
+          scaleType: 'point',
+          groups: [{ getValue: getMonth }, { getValue: formatQuarterYear }],
           valueFormatter,
         },
       ]}
@@ -22,13 +25,13 @@ export default function GroupedAxes() {
     />
   );
 }
-
 const getMonth = (date: Date) =>
   date.toLocaleDateString('en-US', { month: 'short' });
-const getQuarter = (date: Date) => `Q${Math.floor(date.getMonth() / 3) + 1}`;
-
-const getYear = (date: Date) =>
-  date.toLocaleDateString('en-US', { year: 'numeric' });
+const formatQuarterYear = (date: Date) => {
+  const quarter = Math.floor(date.getMonth() / 3) + 1;
+  const year = date.getFullYear().toString().slice(-2);
+  return `Q${quarter} '${year}`;
+};
 
 const valueFormatter = (v: Date) =>
   v.toLocaleDateString('en-US', {
@@ -37,7 +40,6 @@ const valueFormatter = (v: Date) =>
   });
 
 const data = [
-  new Date(2014, 11, 1),
   new Date(2015, 0, 1),
   new Date(2015, 1, 1),
   new Date(2015, 2, 1),
@@ -53,10 +55,10 @@ const data = [
   new Date(2016, 0, 1),
 ];
 const a = [
-  3190, 4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2040,
+  4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2040,
 ];
 const b = [
-  1200, 2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000, 2040,
+  2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000, 2040,
 ];
 
 const getPercents = (array: number[]) =>
