@@ -380,7 +380,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     // Start drag from the reorder cell (column 0, row 0)
     const rowReorderCell = getCell(0, 0).firstChild! as Element;
-    fireEvent.dragStart(rowReorderCell);
+    fireDragStart(rowReorderCell);
 
     // Verify that the reorder cell has the dragging class (this happens immediately)
     expect(rowReorderCell).to.have.class(gridClasses['row--dragging']);
