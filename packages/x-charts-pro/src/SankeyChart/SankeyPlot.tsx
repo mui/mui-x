@@ -36,22 +36,13 @@ export function SankeyPlot(props: SankeyPlotProps) {
   const series = seriesContext?.series[seriesContext?.seriesOrder?.[0]]!;
   const classes = useUtilityClasses({ classes: inputClasses });
   const drawingArea = useDrawingArea();
-  const {
-    data,
-    nodeWidth,
-    nodePadding,
-    iterations,
-    linkColor,
-    linkOpacity,
-    showNodeLabels,
-    nodeColor,
-  } = series;
+  const { data, linkColor, linkOpacity, showNodeLabels, nodeColor } = series;
   const theme = useTheme();
 
   // Calculate layout based on data and dimensions
   const layout: SankeyLayout = React.useMemo(
-    () => calculateSankeyLayout(data, drawingArea, nodeWidth, nodePadding, iterations),
-    [drawingArea, data, nodeWidth, nodePadding, iterations],
+    () => calculateSankeyLayout(data, drawingArea, series),
+    [drawingArea, data, series],
   );
 
   // Early return if no data or dimensions

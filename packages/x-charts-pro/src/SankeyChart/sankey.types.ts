@@ -140,6 +140,37 @@ export interface SankeySeriesType {
    * Layout direction of the Sankey diagram
    */
   layout?: 'horizontal' | 'vertical';
+
+  /**
+   * Node alignment strategy
+   *
+   * - 'justify': Nodes are evenly distributed across the width.
+   * - 'left': Nodes are aligned to the left.
+   * - 'right': Nodes are aligned to the right.
+   * - 'center': Nodes are centered.
+   *
+   * @default 'justify'
+   */
+  nodeAlign?: 'justify' | 'left' | 'right' | 'center';
+
+  /**
+   * Custom sort function for nodes
+   * @param {SankeyLayoutNode} a - First node to compare
+   * @param {SankeyLayoutNode} b - Second node to compare
+   * @returns {number} Comparison result
+   */
+  nodeSort?: (a: SankeyLayoutNode, b: SankeyLayoutNode) => number | null;
+
+  /**
+   * Custom sort function for links
+   * @param {SankeyLayoutLink} a - First link to compare
+   * @param {SankeyLayoutLink} b - Second link to compare
+   * @returns {number} Comparison result
+   */
+  linkSort?: (
+    a: D3SankeyLink<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>,
+    b: D3SankeyLink<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>,
+  ) => number | null;
 }
 
 /**

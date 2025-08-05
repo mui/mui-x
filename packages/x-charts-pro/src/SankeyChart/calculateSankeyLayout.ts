@@ -1,39 +1,43 @@
 'use client';
-import {
-  sankey,
-  sankeyLinkHorizontal,
-  sankeyJustify,
-  type SankeyGraph,
-} from '@mui/x-charts-vendor/d3-sankey';
+import { sankey, type SankeyGraph, sankeyLinkHorizontal } from '@mui/x-charts-vendor/d3-sankey';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
-import {
+import type {
+  SankeyValueType,
+  SankeySeriesType,
   SankeyLayout,
+  NodeId,
+  SankeyNode,
+  SankeyLink,
   SankeyLayoutLink,
   SankeyLayoutNode,
-  type NodeId,
-  type SankeyLink,
-  type SankeyNode,
-  type SankeyValueType,
 } from './sankey.types';
+import { getNodeAlignFunction } from './utils';
 
 /**
  * Calculates the layout for a Sankey diagram using d3-sankey
  *
  * @param data The Sankey data (nodes and links)
- * @param width The width of the chart area
- * @param height The height of the chart area
- * @param nodeWidth The width of each node
- * @param nodePadding The gap between nodes in the same column
- * @param iterations The number of iterations for the layout algorithm
+ * @param drawingArea The drawing area dimensions
+ * @param options Layout configuration options
  * @returns The calculated layout
  */
+
 export function calculateSankeyLayout(
   data: SankeyValueType,
   drawingArea: ChartDrawingArea,
-  nodeWidth: number = 15,
-  nodePadding: number = 10,
-  iterations: number = 32,
+  options: Pick<
+    SankeySeriesType,
+    'nodeWidth' | 'nodePadding' | 'iterations' | 'nodeAlign' | 'nodeSort' | 'linkSort'
+  > = {},
 ): SankeyLayout {
+  const {
+    nodeWidth = 15,
+    nodePadding = 10,
+    iterations = 32,
+    nodeAlign = 'justify',
+    nodeSort = null,
+    linkSort = null,
+  } = options;
   const { width, height, left, top, bottom, right } = drawingArea;
   if (!data || !data.links) {
     return { nodes: [], links: [] };
@@ -62,21 +66,23 @@ export function calculateSankeyLayout(
   const computedNodes = nodeMap.values().toArray();
 
   // Create the sankey layout generator
-  const sankeyGenerator = sankey<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>()
+  let sankeyGenerator = sankey<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>()
     .nodeWidth(nodeWidth)
     .nodePadding(nodePadding)
-    // TODO: make this configurable
-    .nodeAlign(sankeyJustify)
-    // TODO: make this configurable
-    .nodeSort(() => undefined)
-    // TODO: make this configurable
-    .linkSort(() => undefined)
+    .nodeAlign(getNodeAlignFunction(nodeAlign))
     .extent([
       [left, top],
       [width + right, height + bottom],
     ])
     .nodeId((d) => d.id)
     .iterations(iterations);
+
+  if (nodeSort) {
+    sankeyGenerator = sankeyGenerator.nodeSort(nodeSort);
+  }
+  if (linkSort) {
+    sankeyGenerator = sankeyGenerator.linkSort(linkSort);
+  }
 
   // Prepare the data structure expected by d3-sankey
   const graph = {
