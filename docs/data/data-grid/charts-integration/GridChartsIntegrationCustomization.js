@@ -114,6 +114,9 @@ const initialState = {
 };
 
 const getColumnName = (field) => {
+  if (field === 'downloads') {
+    return field;
+  }
   if (!field.endsWith('downloads')) {
     return undefined;
   }
@@ -121,7 +124,7 @@ const getColumnName = (field) => {
 };
 
 const dateFormatter = (value) =>
-  value.toLocaleDateString('en-US', {
+  new Date(value).toLocaleDateString('en-US', {
     month: '2-digit',
     year: '2-digit',
   });
