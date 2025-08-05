@@ -29,7 +29,6 @@ export default function ChartsYHighlight(props: {
   const axisYValues = useSelector(store, selectorChartsHighlightYAxisValue);
   const yAxes = useSelector(store, selectorChartYAxis);
 
-
   if (axisYValues.length === 0) {
     return null;
   }
