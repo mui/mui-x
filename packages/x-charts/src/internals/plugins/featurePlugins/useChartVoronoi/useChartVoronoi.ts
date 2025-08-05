@@ -18,6 +18,7 @@ import {
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
+import { findNearestNeighbor } from '../../../../hooks/findNearestNeighbor';
 
 export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   svgRef,
@@ -25,7 +26,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   store,
   instance,
 }) => {
-  const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
+  const { disableVoronoi, disableClosestPoint, voronoiMaxRadius, onItemClick } = params;
   const drawingArea = useSelector(store, selectorChartDrawingArea);
 
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
@@ -36,7 +37,6 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
   const flatbushMap = useSelector(
     store,
-    // @ts-expect-error
     isZoomInteracting ? selectorChartSeriesEmptyFlatbushMap : selectorChartSeriesFlatbushMap,
   );
 
@@ -82,6 +82,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         const aSeries = (series ?? {})[seriesId];
         const flatbush = flatbushMap.get(seriesId);
 
+        // TODO: Handle aSeries.disableHover
         if (!flatbush) {
           continue;
         }
@@ -93,6 +94,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
         const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
         const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
+        const maxRadius = disableClosestPoint ? aSeries.markerSize : voronoiMaxRadius;
 
         const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
         const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
@@ -123,15 +125,15 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         }
 
         const maxDistSqFn =
-          voronoiMaxRadius === undefined
+          maxRadius === undefined
             ? () => Infinity
             : function maxDistSqFn(dx: number, dy: number) {
                 if (dx === 0 && dy === 0) {
                   return Infinity;
                 }
 
-                const vmrx = voronoiMaxRadius * Math.cos(Math.atan(dy / dx));
-                const vmry = voronoiMaxRadius * Math.sin(Math.atan(dy / dx));
+                const vmrx = maxRadius * Math.cos(Math.atan(dy / dx));
+                const vmry = maxRadius * Math.sin(Math.atan(dy / dx));
 
                 return vmrx * vmrx + vmry * vmry;
               };
@@ -147,8 +149,8 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
           pointY,
           1,
           maxDistSqFn,
-          voronoiMaxRadius != null ? fx * fx * voronoiMaxRadius * voronoiMaxRadius : Infinity,
-          voronoiMaxRadius != null ? fy * fy * voronoiMaxRadius * voronoiMaxRadius : Infinity,
+          maxRadius != null ? fx * fx * maxRadius * maxRadius : Infinity,
+          maxRadius != null ? fy * fy * maxRadius * maxRadius : Infinity,
           excludeIfOutsideDrawingArea,
           sqDistFn,
         )[0];
@@ -294,7 +296,8 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
 useChartVoronoi.getDefaultizedParams = ({ params }) => ({
   ...params,
-  disableVoronoi: params.disableVoronoi ?? !params.series.some((item) => item.type === 'scatter'),
+  disableVoronoi: !params.series.some((item) => item.type === 'scatter'),
+  disableClosestPoint: params.disableVoronoi ?? false,
 });
 
 useChartVoronoi.getInitialState = (params) => ({

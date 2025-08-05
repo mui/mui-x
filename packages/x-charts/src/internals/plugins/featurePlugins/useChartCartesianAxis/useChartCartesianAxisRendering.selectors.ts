@@ -271,7 +271,9 @@ export const selectorChartYAxesScale = createSelector(
 );
 
 const EMPTY_MAP = new Map<SeriesId, Flatbush>();
-export const selectorChartSeriesEmptyFlatbushMap = createSelector([], () => EMPTY_MAP);
+export const selectorChartSeriesEmptyFlatbushMap = (
+  _: ChartState<[], [UseChartCartesianAxisSignature]>,
+) => EMPTY_MAP;
 
 export const selectorChartSeriesFlatbushMap = createSelector(
   [

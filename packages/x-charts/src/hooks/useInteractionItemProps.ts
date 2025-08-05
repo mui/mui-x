@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { quadtree } from '@mui/x-charts-vendor/d3-quadtree';
 import { SeriesItemIdentifier } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
@@ -9,6 +8,16 @@ import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/confi
 import { ChartInstance } from '../internals/plugins/models';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { SeriesId } from '../models/seriesType/common';
+import {
+  selectorChartAxisZoomData,
+  selectorChartDrawingArea,
+  selectorChartSeriesFlatbush,
+  selectorChartSeriesProcessed,
+  selectorChartXAxis,
+  selectorChartYAxis,
+  useSelector,
+} from '../internals';
+import { findNearestNeighbor } from './findNearestNeighbor';
 
 function onPointerDown(event: React.PointerEvent) {
   if (
@@ -124,34 +133,23 @@ export function getInteractionItemProps(
 export function useInteractionGroupProps(
   seriesId: SeriesId,
   seriesData: readonly { x: number; y: number }[],
-  getXPosition: (x: number) => number,
-  getYPosition: (y: number) => number,
   markerSize: number,
-  skip: boolean,
 ) {
-  const { svgRef, instance } =
+  const { svgRef, instance, store } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
 
-  const qt = React.useMemo(
-    () =>
-      skip
-        ? null
-        : quadtree(
-            seriesData as { x: number; y: number }[],
-            (d) => getXPosition(d.x),
-            (d) => getYPosition(d.y),
-          ),
-    [getXPosition, getYPosition, seriesData, skip],
-  );
+  const flatbush = useSelector(store, selectorChartSeriesFlatbush, [seriesId]);
+  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
+  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const { series } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
+  const aSeries = series?.[seriesId];
+  const xAxisId = aSeries?.xAxisId ?? defaultXAxisId;
+  const yAxisId = aSeries?.yAxisId ?? defaultYAxisId;
 
   return React.useMemo(() => {
-    if (skip) {
-      return undefined;
-    }
-
-    const map = new Map();
-    seriesData.forEach((item, i) => map.set(item, i));
-
     function onPointerLeave() {
       instance.removeItemInteraction();
       instance.clearHighlight();
@@ -159,16 +157,31 @@ export function useInteractionGroupProps(
 
     function onPointerMove(event: React.PointerEvent<SVGGElement>) {
       const element = svgRef.current;
+      console.log('onPointerMove', seriesId);
 
-      if (!element) {
+      if (!element || !flatbush) {
         instance.removeItemInteraction();
         instance.clearHighlight();
         return;
       }
 
+      const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
+      const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
+
       const svgPoint = getSVGPoint(element, event);
-      const point = qt!.find(svgPoint.x, svgPoint.y, markerSize);
-      const dataIndex = point === undefined ? undefined : map.get(point);
+
+      const dataIndex = findNearestNeighbor(
+        seriesData,
+        flatbush,
+        drawingArea,
+        xAxis[xAxisId].scale,
+        yAxis[yAxisId].scale,
+        xAxisZoom,
+        yAxisZoom,
+        svgPoint.x,
+        svgPoint.y,
+        markerSize,
+      );
 
       if (dataIndex === undefined) {
         instance.removeItemInteraction();
@@ -181,5 +194,18 @@ export function useInteractionGroupProps(
     }
 
     return { onPointerMove, onPointerLeave };
-  }, [instance, markerSize, qt, seriesData, seriesId, skip, svgRef]);
+  }, [
+    drawingArea,
+    flatbush,
+    instance,
+    markerSize,
+    seriesData,
+    seriesId,
+    store,
+    svgRef,
+    xAxis,
+    xAxisId,
+    yAxis,
+    yAxisId,
+  ]);
 }
