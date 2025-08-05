@@ -156,7 +156,8 @@ You can customize the data generation by passing the custom options of type [`Us
 
 ### Bundling
 
-The Data Grid requires a bundler that can handle CSS imports, if you're using a setup that doesn't support CSS imports out of the box, follow the instructions below for your specific environment.
+The Data Grid requires a bundler that can handle CSS imports. 
+If you're using a setup that doesn't support CSS imports out of the box, follow the instructions below for your specific environment.
 
 #### Webpack
 
