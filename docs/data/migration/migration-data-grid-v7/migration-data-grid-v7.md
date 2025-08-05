@@ -407,4 +407,4 @@ You have to import it from `@mui/x-license` instead:
 
 ### Bundling
 
-The Data Grid now requires a bundler that can handle CSS imports. See `[Quickstart#Bundling](/x/react-data-grid/quickstart/#bundling)` for more details.
+The Data Grid now requires a bundler that can handle CSS imports. See [Quickstart-Bundling](/x/react-data-grid/quickstart/#bundling) for more details.
