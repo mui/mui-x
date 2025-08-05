@@ -377,10 +377,10 @@ Row selection propagation has some limitations:
 
 :::
 
-## Reorder row grouping rows
+## Reorder grouped rows
 
-Row reordering allows the users to drag and drop the rows to update their order.
-To enable this feature with the row grouping, pass the `rowReordering` prop on the Data Grid Premium component:
+Row reordering allows the users to reorder row groups, or move rows from one group to another.
+To enable this feature with the row grouping, pass the `rowReordering` prop to the Data Grid Premium component:
 
 ```tsx
 <DataGridPremium rowGroupingModel={['category']} rowReordering />
@@ -390,9 +390,9 @@ To enable this feature with the row grouping, pass the `rowReordering` prop on t
 
 ### Reacting to group updates
 
-Wheneven a row is moved from one group to another, it warrants a row update, the row data value that was used to group this row must now be updated to maintain the row grouping data integrity.
+Whenever a row is moved from one group to another, it warrants a row update, the row data value that was used to group this row must now be updated to maintain the row grouping data integrity.
 
-For example, on a Data Grid having movies grouped by companies, if a row "Avatar" is moved from "20th Century Fox" to "Disney Studios", apart from the row being updated in the row tree, the row data must be updated to reflect this change.
+For example, on a Data Grid having movies grouped by companies, if a row "Avatar" is moved from "20th Century Fox" to "Disney Studios" group, apart from the row being updated in the row tree, the row data must be updated to reflect this change.
 
 ```diff
  // "Avatar" row
@@ -404,7 +404,7 @@ For example, on a Data Grid having movies grouped by companies, if a row "Avatar
  }
 ```
 
-The Data Grid updates the row internally, to persist the change on the server [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) callback must be used.
+The Data Grid updates the internal row data, but to persist the change on the server, the [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) callback must be used.
 
 ### Usage with groupingValueSetter()
 

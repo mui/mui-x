@@ -19,7 +19,7 @@ export interface GridRowAriaAttributesInternalHook {
 }
 
 /**
- * Overridable row methods interface, these methods could be overriden in a higher package.
+ * Overridable row methods interface, these methods could be overriden in a higher plan package.
  */
 export interface GridRowsOverridableMethodsInternalHook<Api> {
   useGridRowsOverridableMethods: (
