@@ -50,6 +50,9 @@ export default function GridChartsIntegrationBasic() {
                 },
               },
             }}
+            experimentalFeatures={{
+              chartsIntegration: true,
+            }}
           />
         </div>
         <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />

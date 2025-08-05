@@ -209,7 +209,7 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/charts-integration',
             plan: 'premium',
-            newFeature: true,
+            unstable: true,
             title: 'Charts integration',
           },
           {
@@ -601,7 +601,7 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-charts/data-grid-integration',
                 title: 'Data Grid integration',
                 plan: 'premium',
-                newFeature: true,
+                unstable: true,
               },
             ],
           },
