@@ -125,14 +125,17 @@ const initialState = {
 };
 
 const getColumnName: GridChartsPanelProps['getColumnName'] = (field) => {
+  if (field === 'downloads') {
+    return field;
+  }
   if (!field.endsWith('downloads')) {
     return undefined;
   }
   return `v${field[0]}`;
 };
 
-const dateFormatter = (value: Date) =>
-  value.toLocaleDateString('en-US', {
+const dateFormatter = (value: string | Date) =>
+  new Date(value).toLocaleDateString('en-US', {
     month: '2-digit',
     year: '2-digit',
   });
