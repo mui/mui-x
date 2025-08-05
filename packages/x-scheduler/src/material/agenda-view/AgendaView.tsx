@@ -48,7 +48,7 @@ export const AgendaView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {daysWithEvents.map(({ day, events }) => (
+          {daysWithEvents.map(({ day, events, allDayEvents }) => (
             <div
               className="AgendaViewRow"
               key={day.toString()}
@@ -70,6 +70,21 @@ export const AgendaView = React.memo(
                 </div>
               </div>
               <div className="EventsList">
+                {allDayEvents.map((event) => (
+                  <EventPopoverTrigger
+                    key={event.id}
+                    event={event}
+                    nativeButton={false}
+                    render={
+                      <DayGridEvent
+                        event={event}
+                        variant="compact"
+                        eventResource={resourcesByIdMap.get(event.resource)}
+                        ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
+                      />
+                    }
+                  />
+                ))}
                 {events.map((event) => (
                   <EventPopoverTrigger
                     key={event.id}
