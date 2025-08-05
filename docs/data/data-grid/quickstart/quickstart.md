@@ -154,12 +154,12 @@ export default function Demo() {
 It comes with two datasets: `Commodity` and `Employee`.
 You can customize the data generation by passing the custom options of type [`UseDemoDataOptions`](https://github.com/mui/mui-x/blob/6aad22644ee710690b90dc2ac6bbafceb91fecf0/packages/x-data-grid-generator/src/hooks/useDemoData.ts#L29-L36).
 
-### Bundling
+## Bundling
 
-The Data Grid requires a bundler that can handle CSS imports. 
+The Data Grid requires a bundler that can handle CSS imports.
 If you're using a setup that doesn't support CSS imports out of the box, follow the instructions below for your specific environment.
 
-#### Webpack
+### Webpack
 
 Update your config to add the `style-loader` and `css-loader`.
 
@@ -177,11 +177,11 @@ export default {
 };
 ```
 
-#### Vite
+### Vite
 
 CSS imports should work with no additional configuration when using Vite.
 
-#### Vitest
+### Vitest
 
 Add the Data Grid packages to `test.deps.inline`.
 
@@ -199,7 +199,7 @@ export default defineConfig({
 });
 ```
 
-#### Next.js
+### Next.js
 
 If you're using the App Router, CSS imports should work out of the box.
 
@@ -215,7 +215,7 @@ export default {
 };
 ```
 
-#### Node.js
+### Node.js
 
 If you're importing the packages inside Node.js, you can make CSS imports a no-op like this:
 
@@ -242,7 +242,7 @@ registerHooks({
 });
 ```
 
-#### Jest
+### Jest
 
 If you're using Jest, add the [`identity-obj-proxy`](https://www.npmjs.com/package/identity-obj-proxy) package to mock CSS imports.
 
