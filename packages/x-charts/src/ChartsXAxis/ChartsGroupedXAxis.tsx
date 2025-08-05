@@ -148,7 +148,6 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
               <TickLabel
                 x={xTickLabel}
                 y={labelPositionY}
-                data-testid="ChartsXAxisTickLabel"
                 {...axisTickLabelProps}
                 text={tickLabel}
               />
