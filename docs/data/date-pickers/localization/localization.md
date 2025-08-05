@@ -123,6 +123,18 @@ This will produce the following result:
 
 :::
 
+### Serbian scripts
+
+Date and Time Pickers also include Serbian translations in both Latin (`srLatn`) and Cyrillic (`srRS`) scripts.
+Toggle between them based on user preference:
+
+```jsx
+import { srLatn, srRS } from '@mui/x-date-pickers/locales';
+const theme = createTheme({}, useCyrillic ? srRS : srLatn);
+```
+
+You can create additional locales or script variations by adding new files under `packages/x-date-pickers/src/locales` and exporting them in `index.ts`.
+
 ## Supported locales
 
 {{"demo": "PickersLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
