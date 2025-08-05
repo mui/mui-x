@@ -242,16 +242,26 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 ## Grouped Axes
 
-In order to group `band` or `point` axes together, a user can provide a `groups` property in the x-axis definition.
+In order to group `band` or `point` axes together, a user can provide a `groups` property in the axis definition.
 This property expects an array of objects with a `getValue` function.
+This feature is available for both X-axis and Y-axis.
 
 The `getValue` function receives the axis data value and should return a group name.
 Each group name will be used as is, overriding any `valueFormatter` for the axis.
 Groups are displayed in the order they are defined in the `groups` array.
 
+### X-axis grouping
+
 In the next demo, the x-axis is grouped by month, quarter, and year.
 
 {{"demo": "GroupedAxes.js"}}
+
+### Y-axis grouping
+
+Similar to X-axis grouping, Y-axis can also be grouped.
+In the following demo, the y-axis is grouped by category and subcategory.
+
+{{"demo": "GroupedYAxes.js"}}
 
 ### Tick size
 
