@@ -29,6 +29,7 @@ export default function ChartsYHighlight(props: {
   const axisYValues = useSelector(store, selectorChartsHighlightYAxisValue);
   const yAxes = useSelector(store, selectorChartYAxis);
 
+
   if (axisYValues.length === 0) {
     return null;
   }
@@ -54,13 +55,13 @@ export default function ChartsYHighlight(props: {
       }
     }
 
+
     return (
       <React.Fragment key={`${axisId}-${value}`}>
         {isBandScaleY && yScale(value) !== undefined && (
           <ChartsAxisHighlightPath
             d={`M ${left} ${
-              // @ts-expect-error, yScale value is checked in the statement above
-              yScale(value) - (yScale.step() - yScale.bandwidth()) / 2
+              yScale(value)! - (yScale.step() - yScale.bandwidth()) / 2
             } l 0 ${yScale.step()} l ${width} 0 l 0 ${-yScale.step()} Z`}
             className={classes.root}
             ownerState={{ axisHighlight: 'band' }}
