@@ -248,6 +248,22 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/ruRU.ts"
   },
   {
+    "languageTag": "sr-RS",
+    "importName": "srRS",
+    "localeName": "Serbian (Cyrillic)",
+    "missingKeysCount": 49,
+    "totalKeysCount": 191,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/srRS.ts"
+  },
+  {
+    "languageTag": "sr-Latn",
+    "importName": "srLatn",
+    "localeName": "Serbian (Latin)",
+    "missingKeysCount": 49,
+    "totalKeysCount": 191,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/srLatn.ts"
+  },
+  {
     "languageTag": "sk-SK",
     "importName": "skSK",
     "localeName": "Slovak",
