@@ -12,7 +12,7 @@ import PieChartWithCustomLegendAndTooltip from '../data/charts/pie-demo/PieChart
 const chartData = [
   {
     title: 'Two Level Pie Chart',
-    link: '/x/react-charts/pie-demo/#two-level-pie-chart',
+    link: '/x/react-charts/examples/twolevelpiechart',
     ChartComponent: TwoLevelPieChart,
   },
   {

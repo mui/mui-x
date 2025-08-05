@@ -28,7 +28,7 @@ const chartData = [
   },
   {
     title: 'Positive and Negative Bar Chart',
-    link: '/x/react-charts/bar-demo/#positive-and-negative-bar-chart',
+    link: '/x/react-charts/examples/positive-and-negative-bar-chart/',
     ChartComponent: PositiveAndNegativeBarChart,
   },
   {
