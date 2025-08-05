@@ -47,7 +47,13 @@ export function useTicksGrouped(
     getGrouping: (value: any, dataIndex: number) => any[];
   } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
 ): GroupedTickItemType[] {
-  const { scale, tickInterval, tickLabelPlacement, tickPlacement, getGrouping } = options;
+  const {
+    scale,
+    tickInterval,
+    tickLabelPlacement = 'middle',
+    tickPlacement = 'extremities',
+    getGrouping,
+  } = options;
 
   return React.useMemo(() => {
     const domain = scale.domain();
@@ -61,12 +67,14 @@ export function useTicksGrouped(
       const { entries, maxGroupIndex } = mapToGrouping(
         filteredDomain,
         getGrouping,
-        tickPlacement ?? 'extremities',
-        tickLabelPlacement ?? 'middle',
+        tickPlacement,
+        tickLabelPlacement,
         scale,
       );
 
-      entries[0].ignoreTick = true;
+      if (entries[0]) {
+        entries[0].ignoreTick = true;
+      }
 
       return [
         {
