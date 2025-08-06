@@ -182,25 +182,21 @@ export const getLocalizedConfigurationOptions = (
     column: {
       label: localeText.chartTypeColumn,
       icon: GridColumnChartIcon,
-      maxCategories: 1, // TODO: remove this when https://github.com/mui/mui-x/pull/18766 is merged
       customization: getBarColumnCustomization('column', localeText),
     },
     bar: {
       label: localeText.chartTypeBar,
       icon: GridBarChartIcon,
-      maxCategories: 1, // TODO: remove this when https://github.com/mui/mui-x/pull/18766 is merged
       customization: getBarColumnCustomization('bar', localeText),
     },
     line: {
       label: localeText.chartTypeLine,
       icon: GridLineChartIcon,
-      maxCategories: 1, // TODO: remove this when https://github.com/mui/mui-x/pull/18766 is merged
       customization: getLineAreaCustomization('line', localeText),
     },
     area: {
       label: localeText.chartTypeArea,
       icon: GridAreaChartIcon,
-      maxCategories: 1, // TODO: remove this when https://github.com/mui/mui-x/pull/18766 is merged
       customization: getLineAreaCustomization('area', localeText),
     },
     pie: {
