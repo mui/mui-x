@@ -18,6 +18,8 @@ export interface ChartsRendererProps {
   ) => React.ReactNode;
 }
 
+const CATEGORY_TICK_SIZE = 20;
+
 function ChartsRenderer({
   categories,
   series,
@@ -25,17 +27,30 @@ function ChartsRenderer({
   configuration,
   onRender,
 }: ChartsRendererProps) {
-  // TODO: support multiple categories
-  const categoryDataRaw = categories[0]?.data || [];
+  const hasMultipleCategories = categories.length > 1;
+  const categoryDataRaw = categories.length > 0 ? categories[categories.length - 1].data : [];
 
-  // make sure that the category items are unique
-  // for repeated values add the count to the value
+  // for single category: make sure that the category items are unique. for repeated values add the count to the value
+  // for multiple categories: create an array of indexes. these will be used in the group value getters to get the correct value from the categories
   const itemCount = new Map<string, number>();
-  const categoryData = categoryDataRaw.map((item) => {
-    const currentCount = itemCount.get(String(item)) || 1;
-    itemCount.set(String(item), currentCount + 1);
-    return currentCount > 1 ? `${item} (${currentCount})` : item;
-  });
+  const categoryData = hasMultipleCategories
+    ? Array.from({ length: categoryDataRaw.length }, (_, i) => i)
+    : categoryDataRaw.map((item) => {
+        const currentCount = itemCount.get(String(item)) || 1;
+        itemCount.set(String(item), currentCount + 1);
+        return currentCount > 1 ? `${item} (${currentCount})` : item;
+      });
+
+  // for multiple categories, create groups and height props for the axis
+  const groups = hasMultipleCategories
+    ? categories
+        .map((category, categoryIndex) => ({
+          getValue: (index: number) => category.data[index] || '',
+          tickSize: CATEGORY_TICK_SIZE * (categories.length - 1 - categoryIndex),
+        }))
+        .reverse()
+    : undefined;
+  const height = hasMultipleCategories ? CATEGORY_TICK_SIZE * (categories.length - 1) : undefined;
 
   const sections = (configurationOptions as any)[chartType]?.customization || [];
   const defaultOptions = Object.fromEntries(
@@ -63,6 +78,8 @@ function ChartsRenderer({
           barGapRatio: chartConfiguration.barGapRatio,
           tickPlacement: chartConfiguration.tickPlacement,
           tickLabelPlacement: chartConfiguration.tickLabelPlacement,
+          groups,
+          height,
         },
       ],
     };
@@ -98,7 +115,7 @@ function ChartsRenderer({
     }));
 
     const props = {
-      xAxis: [{ data: categoryData, scaleType: 'point' as const }],
+      xAxis: [{ data: categoryData, scaleType: 'point' as const, groups, height }],
       series: seriesProp,
       hideLegend: chartConfiguration.hideLegend,
       height: chartConfiguration.height,
