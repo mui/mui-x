@@ -27,28 +27,20 @@ export function calculateSankeyLayout(
   data: SankeyData,
   drawingArea: ChartDrawingArea,
   theme: Theme,
-  options: Pick<
-    SankeySeriesType,
-    | 'nodeWidth'
-    | 'nodePadding'
-    | 'iterations'
-    | 'nodeAlign'
-    | 'nodeSort'
-    | 'linkSort'
-    | 'linkColor'
-    | 'nodeColor'
-  > = {},
+  options: Pick<SankeySeriesType, 'nodeOptions' | 'linkOptions' | 'iterations'> = {},
 ): SankeyLayout {
+  const { iterations = 32, nodeOptions, linkOptions } = options;
   const {
-    nodeWidth = 15,
-    nodePadding = 10,
-    iterations = 32,
-    nodeAlign = 'justify',
-    nodeSort = null,
-    linkSort = null,
-    linkColor = theme.palette.primary.light,
-    nodeColor = theme.palette.primary.main,
-  } = options;
+    width: nodeWidth = 15,
+    padding: nodePadding = 10,
+    align: nodeAlign = 'justify',
+    sort: nodeSort = null,
+    color: nodeColor = theme.palette.primary.main,
+  } = nodeOptions ?? {};
+
+  const { color: linkColor = theme.palette.primary.light, sort: linkSort = null } =
+    linkOptions ?? {};
+
   const { width, height, left, top, bottom, right } = drawingArea;
   if (!data || !data.links) {
     return { nodes: [], links: [] };
@@ -74,10 +66,17 @@ export function calculateSankeyLayout(
     }
   });
 
-  const computedNodes = nodeMap.values().toArray();
+  // Prepare the data structure expected by d3-sankey
+  const graph = {
+    nodes: nodeMap
+      .values()
+      .toArray()
+      .map((v) => ({ ...v })),
+    links: data.links.map((v) => ({ ...v })),
+  };
 
   // Create the sankey layout generator
-  let sankeyGenerator = sankey<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>()
+  let sankeyGenerator = sankey<typeof graph, SankeyLayoutNode, SankeyLayoutLink>()
     .nodeWidth(nodeWidth)
     .nodePadding(nodePadding)
     .nodeAlign(getNodeAlignFunction(nodeAlign))
@@ -94,12 +93,6 @@ export function calculateSankeyLayout(
   if (linkSort) {
     sankeyGenerator = sankeyGenerator.linkSort(linkSort);
   }
-
-  // Prepare the data structure expected by d3-sankey
-  const graph = {
-    nodes: computedNodes.map((v) => ({ ...v })),
-    links: data.links.map((v) => ({ ...v })),
-  };
 
   // Generate the layout
   let result: SankeyGraph<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>;

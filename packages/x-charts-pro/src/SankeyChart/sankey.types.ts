@@ -62,6 +62,63 @@ export interface SankeyLink {
 
 export type SankeyNodeConfigs = Record<NodeId, SankeyNodeConfig>;
 
+export type SankeyNodeOptions = {
+  /**
+   * Default color for nodes without specified colors
+   */
+  color?: string;
+  /**
+   * Width of the nodes in pixels
+   */
+  width?: number;
+  /**
+   * Padding between nodes in pixels
+   */
+  padding?: number;
+  /**
+   * Node alignment strategy
+   * - 'justify': Nodes are evenly distributed across the width.
+   * - 'left': Nodes are  aligned to the left.
+   * - 'right': Nodes are aligned to the right.
+   * - 'center': Nodes are centered.
+   * @default 'justify'
+   */
+  align?: 'justify' | 'left' | 'right' | 'center';
+  /**
+   * Whether to show node labels
+   */
+  showLabels?: boolean;
+  /**
+   * Custom sort function for nodes
+   * @param {SankeyLayoutNode} a - First node to compare
+   * @param {SankeyLayoutNode} b - Second node to compare
+   * @returns {number} Comparison result
+   */
+  sort?: (a: SankeyLayoutNode, b: SankeyLayoutNode) => number | null;
+};
+
+export type SankeyLinkOptions = {
+  /**
+   * Default color for links without specified colors
+   */
+  color?: string;
+  /**
+   * Opacity of the links (0-1)
+   */
+  opacity?: number;
+  /**
+   * Whether to show link values
+   */
+  showValues?: boolean;
+  /**
+   * Custom sort function for links
+   * @param {SankeyLayoutLink} a - First link to compare
+   * @param {SankeyLayoutLink} b - Second link to compare
+   * @returns {number} Comparison result
+   */
+  sort?: (a: SankeyLayoutLink, b: SankeyLayoutLink) => number | null;
+};
+
 export interface SankeyData {
   /**
    * Map of node configs for the Sankey diagram
@@ -97,80 +154,19 @@ export interface SankeySeriesType {
   data: SankeyData;
 
   /**
-   * Optional color for nodes without specified colors
+   * Optional configuration for the nodes style, layout, and behavior
    */
-  nodeColor?: string;
+  nodeOptions?: SankeyNodeOptions;
 
   /**
-   * Optional color for links without specified colors
+   * Optional configuration for the links style, layout, and behavior
    */
-  linkColor?: string;
-
-  /**
-   * Opacity for the links (0-1)
-   */
-  linkOpacity?: number;
-
-  /**
-   * Gap between nodes
-   */
-  nodePadding?: number;
-
-  /**
-   * Width of nodes
-   */
-  nodeWidth?: number;
-
-  /**
-   * Whether to show node labels
-   */
-  showNodeLabels?: boolean;
-
-  /**
-   * Whether to show link values
-   */
-  showLinkValues?: boolean;
+  linkOptions?: SankeyLinkOptions;
 
   /**
    * Number of iterations for the layout algorithm
    */
   iterations?: number;
-
-  /**
-   * Layout direction of the Sankey diagram
-   */
-  layout?: 'horizontal' | 'vertical';
-
-  /**
-   * Node alignment strategy
-   *
-   * - 'justify': Nodes are evenly distributed across the width.
-   * - 'left': Nodes are aligned to the left.
-   * - 'right': Nodes are aligned to the right.
-   * - 'center': Nodes are centered.
-   *
-   * @default 'justify'
-   */
-  nodeAlign?: 'justify' | 'left' | 'right' | 'center';
-
-  /**
-   * Custom sort function for nodes
-   * @param {SankeyLayoutNode} a - First node to compare
-   * @param {SankeyLayoutNode} b - Second node to compare
-   * @returns {number} Comparison result
-   */
-  nodeSort?: (a: SankeyLayoutNode, b: SankeyLayoutNode) => number | null;
-
-  /**
-   * Custom sort function for links
-   * @param {SankeyLayoutLink} a - First link to compare
-   * @param {SankeyLayoutLink} b - Second link to compare
-   * @returns {number} Comparison result
-   */
-  linkSort?: (
-    a: D3SankeyLink<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>,
-    b: D3SankeyLink<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>,
-  ) => number | null;
 }
 
 /**
@@ -184,7 +180,7 @@ export interface SankeyLayoutNode
  */
 export interface SankeyLayoutLink
   extends D3SankeyLink<SankeyNode, Omit<SankeyLink, 'source' | 'target'>> {
-  path: string | null;
+  path?: string | null;
   source: SankeyLayoutNode;
   target: SankeyLayoutNode;
 }

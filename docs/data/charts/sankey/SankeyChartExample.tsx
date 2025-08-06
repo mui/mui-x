@@ -17,10 +17,6 @@ export default function SankeyChartExample() {
             { source: 'C', target: 'D', value: 1 },
           ],
         },
-        nodeWidth: 20,
-        nodePadding: 15,
-        showNodeLabels: true,
-        linkColor: 'gray',
       }}
     />
   );

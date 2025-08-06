@@ -38,9 +38,6 @@ export default function ComplexSankeyChart() {
       height={500}
       series={{
         data,
-        nodeWidth: 20,
-        nodePadding: 15,
-        linkOpacity: 0.6,
       }}
     />
   );

@@ -1,8 +1,9 @@
 import { DEFAULT_MARGINS } from '@mui/x-charts/constants';
-import { defaultizeMargin, type ChartsWrapperProps } from '@mui/x-charts/internals';
+import { defaultizeMargin } from '@mui/x-charts/internals';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import type { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import type { SankeyChartProps } from './SankeyChart';
 import type { ChartContainerProProps } from '../ChartContainerPro';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginsSignatures } from './SankeyChart.plugins';
@@ -38,14 +39,11 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
 
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
-  const isHorizontal = series.layout === 'horizontal';
-
   const chartContainerProps: ChartContainerProProps<'sankey', SankeyChartPluginsSignatures> = {
     ...rest,
     series: [
       {
         type: 'sankey' as const,
-        layout: isHorizontal ? 'horizontal' : 'vertical',
         ...series,
       },
     ],

@@ -37,7 +37,7 @@ export function SankeyPlot(props: SankeyPlotProps) {
   const series = seriesContext?.series[seriesContext?.seriesOrder?.[0]]!;
   const classes = useUtilityClasses({ classes: inputClasses });
   const drawingArea = useDrawingArea();
-  const { data, linkOpacity, showNodeLabels, showLinkValues } = series;
+  const { data, linkOptions, nodeOptions } = series;
   const theme = useTheme();
 
   // Calculate layout based on data and dimensions
@@ -59,7 +59,7 @@ export function SankeyPlot(props: SankeyPlotProps) {
             seriesId={series.id}
             key={`${link.source.id}-${link.target.id}`}
             link={link}
-            opacity={linkOpacity}
+            opacity={linkOptions?.opacity}
             onClick={onItemClick}
           />
         ))}
@@ -71,13 +71,13 @@ export function SankeyPlot(props: SankeyPlotProps) {
             seriesId={series.id}
             key={node.id}
             node={node}
-            showLabel={showNodeLabels}
+            showLabel={nodeOptions?.showLabels}
             onClick={onItemClick}
           />
         ))}
       </g>
 
-      {showLinkValues && (
+      {linkOptions?.showValues && (
         <g className={classes.linkLabels}>
           {layout.links.map((link) => (
             <SankeyLinkLabel key={`label-${link.source.id}-${link.target.id}`} link={link} />

@@ -4,9 +4,9 @@ import {
   sankeyCenter,
   sankeyJustify,
 } from '@mui/x-charts-vendor/d3-sankey';
-import type { SankeySeriesType } from './sankey.types';
+import type { SankeyNodeOptions } from './sankey.types';
 
-export const getNodeAlignFunction = (align: SankeySeriesType['nodeAlign']) => {
+export const getNodeAlignFunction = (align: SankeyNodeOptions['align']) => {
   switch (align) {
     case 'left':
       return sankeyLeft;
