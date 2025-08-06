@@ -46,12 +46,10 @@
     "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
-    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
-    "@mui/system": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
