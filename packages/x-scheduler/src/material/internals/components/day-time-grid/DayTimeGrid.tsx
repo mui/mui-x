@@ -118,11 +118,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <DayGrid.Root
           ref={allDayHeaderWrapperRef}
           className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
-          role="row"
           data-weekend={lastIsWeekend ? '' : undefined}
         >
           <div
             className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
+            id="DayTimeGridAllDayEventsHeaderCell"
             role="columnheader"
           >
             {translations.allDay}
@@ -141,7 +141,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     '--row-count': getEventWithLargestRowIndex(allDayEvents),
                   } as React.CSSProperties
                 }
-                aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
+                aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day)} DayTimeGridAllDayEventsHeaderCell`}
                 role="gridcell"
                 data-weekend={isWeekend(adapter, day) ? '' : undefined}
               >

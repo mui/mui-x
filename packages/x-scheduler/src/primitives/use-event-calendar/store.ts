@@ -9,7 +9,7 @@ import {
   CalendarEventWithPosition,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
-import { getEventWithLargestRowIndexForDay } from '../utils/event-utils';
+import { getEventDays, getEventRowIndex } from '../utils/event-utils';
 
 export type State = {
   /**
@@ -39,19 +39,6 @@ export type State = {
    * Whether the component should display the time in 12-hour format with AM/PM meridiem.
    */
   ampm: boolean;
-};
-
-const isDayWithinRange = (
-  day: SchedulerValidDate,
-  eventFirstDay: SchedulerValidDate,
-  eventLastDay: SchedulerValidDate,
-  adapter: Adapter,
-) => {
-  return (
-    adapter.isSameDay(day, eventFirstDay) ||
-    adapter.isSameDay(day, eventLastDay) ||
-    (adapter.isAfter(day, eventFirstDay) && adapter.isBefore(day, eventLastDay))
-  );
 };
 
 export const selectors = {
@@ -99,7 +86,7 @@ export const selectors = {
         const dayKey = adapter.format(day, 'keyboardDate');
         daysMap.set(dayKey, { events: [], allDayEvents: [] });
       }
-
+      // STEP 1: Sort events by start date
       // We need to sort the events by start date to ensure they are processed in the correct order and the row indexes for the all day events are set in the correct order
       const sortedEvents = events.slice().sort((a, b) => {
         if (adapter.isBefore(a.start, b.start)) {
@@ -110,11 +97,13 @@ export const selectors = {
         }
         return 0;
       });
+      // STEP 2: Skip events from resources that are not visible
       for (const event of sortedEvents) {
         if (event.resource && visibleResources.get(event.resource) === false) {
           continue; // Skip events for hidden resources
         }
 
+        // STEP 3: Check if the event is within the visible days
         const eventFirstDay = adapter.startOfDay(event.start);
         const eventLastDay = adapter.endOfDay(event.end);
         if (
@@ -124,64 +113,23 @@ export const selectors = {
           continue; // Skip events that are not in the visible days
         }
 
-        let eventDays: SchedulerValidDate[];
-        if (shouldOnlyRenderEventInOneCell) {
-          if (adapter.isBefore(eventFirstDay, days[0])) {
-            eventDays = [days[0]];
-          } else {
-            eventDays = [eventFirstDay];
-          }
-        } else {
-          eventDays = days.filter((day) =>
-            isDayWithinRange(day, eventFirstDay, eventLastDay, adapter),
-          );
-        }
+        const eventDays: SchedulerValidDate[] = getEventDays(
+          event,
+          days,
+          adapter,
+          shouldOnlyRenderEventInOneCell,
+        );
 
+        // STEP 4: Add the event to the days map
         for (const day of eventDays) {
           const dayKey = adapter.format(day, 'keyboardDate');
           if (!daysMap.has(dayKey)) {
             daysMap.set(dayKey, { events: [], allDayEvents: [] });
           }
 
+          // STEP 4.1: Process all-day events and get their position in the row
           if (event.allDay) {
-            const eventIndex = daysMap.get(dayKey)!.allDayEvents.length;
-            let eventRowIndex;
-            // If the event starts before the current day, we need to find the row index of the first day of the event
-            if (adapter.isBefore(eventFirstDay, day) && !adapter.isSameDay(days[0], day)) {
-              let eventFirstDayKey;
-              if (adapter.isBefore(eventFirstDay, days[0])) {
-                eventFirstDayKey = adapter.format(days[0], 'keyboardDate');
-              } else {
-                eventFirstDayKey = adapter.format(eventFirstDay, 'keyboardDate');
-              }
-              const eventStartRowPosition =
-                daysMap
-                  .get(eventFirstDayKey)
-                  ?.allDayEvents?.find((eventInMap) => eventInMap.id === event.id)?.eventRowIndex ||
-                1;
-
-              eventRowIndex = eventStartRowPosition;
-              // Otherwise, we just render the event on the first available row in the column
-            } else {
-              // we need to know the row index of the previous events rendered in a column
-              const previousEventRowPosition = getEventWithLargestRowIndexForDay(dayKey, daysMap);
-
-              if (previousEventRowPosition + 1 > eventIndex + 1) {
-                for (let i = 1; i < previousEventRowPosition + 1; i += 1) {
-                  if (
-                    daysMap
-                      .get(dayKey)!
-                      .allDayEvents?.findIndex((eventInMap) => eventInMap.eventRowIndex === i) ===
-                    -1
-                  ) {
-                    eventRowIndex = i;
-                    break;
-                  }
-                }
-              } else {
-                eventRowIndex = previousEventRowPosition + 1;
-              }
-            }
+            const eventRowIndex = getEventRowIndex(event, day, days, daysMap, adapter);
 
             daysMap.get(dayKey)!.allDayEvents.push({
               ...event,
