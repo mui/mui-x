@@ -14,6 +14,38 @@ import {
 } from '@mui/x-charts-premium/ChartsRenderer';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
+// make sure that the commodity labels are not overlapping on the initial load
+// this is just for the demo
+// the logic needs an update to cover other possible configurations
+const onRender = (
+  type: string,
+  props: Record<string, any>,
+  Component: React.ComponentType<any>,
+) => {
+  const axisProp = type === 'bar' ? 'yAxis' : 'xAxis';
+  const adjustedProps = {
+    ...props,
+    [axisProp]: props[axisProp].map((axisProps: Record<string, any>) => ({
+      ...axisProps,
+      groups: axisProps.groups?.map(
+        (axisGroup: { getValue: (value: any) => string }, index: number) => ({
+          ...axisGroup,
+          getValue: (value: string[]) => {
+            const targetIndex = axisProps.groups.length - 1 - index;
+            if (targetIndex === 0) {
+              return value[0];
+            }
+
+            return value[targetIndex][0];
+          },
+        }),
+      ),
+    })),
+  };
+
+  return <Component {...adjustedProps} />;
+};
+
 export default function GridChartsIntegrationRowGrouping() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -76,7 +108,11 @@ export default function GridChartsIntegrationRowGrouping() {
             }}
           />
         </div>
-        <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />
+        <GridChartsRendererProxy
+          id="main"
+          renderer={ChartsRenderer}
+          onRender={onRender}
+        />
       </div>
     </GridChartsIntegrationContextProvider>
   );
