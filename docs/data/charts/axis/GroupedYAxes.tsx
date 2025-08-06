@@ -9,17 +9,20 @@ export default function GroupedYAxes() {
         {
           data: categoryData,
           scaleType: 'band',
-          width: 130,
+          width: 20,
           groups: [
             // Extract main category
             { getValue: (category) => category.split(' - ')[1] },
             // Extract subcategory
             {
               getValue: (category) => category.split(' - ')[0],
-              tickSize: 130,
+              tickSize: 120,
+              tickLabelStyle: {
+                angle: -90,
+                textAnchor: 'middle',
+              },
             },
           ],
-          valueFormatter: (value: string) => value.split(' - ')[1] || value,
         },
       ]}
       {...chartConfig}
