@@ -103,7 +103,9 @@ function mapToGrouping(
   scale: D3Scale,
 ) {
   const allTickItems: GroupedTickItemType[] = [];
-  const storedOffsets = new Map<number, Set<number>>();
+  // Map to keep track of offsets and their corresponding tick indexes
+  // Used to remove redundant ticks when they are in the same position
+  const offsetToTickIndex = new Map<number, Set<number>>();
 
   let currentValueCount = 0;
 
@@ -111,9 +113,10 @@ function mapToGrouping(
     for (let dataIndex = 0; dataIndex < tickValues.length; dataIndex += 1) {
       const tickValue = tickValues[dataIndex];
       const groupValue = groups[groupIndex].getValue(tickValue, dataIndex);
+      const lastItem = allTickItems[allTickItems.length - 1];
 
       // Check if this is a new unique value for this group
-      const isNew = allTickItems[allTickItems.length - 1]?.value !== groupValue;
+      const isNew = lastItem?.value !== groupValue || lastItem?.groupIndex !== groupIndex;
 
       if (isNew) {
         currentValueCount = 1;
@@ -141,20 +144,17 @@ function mapToGrouping(
           labelOffset,
         });
 
-        if (!storedOffsets.has(tickOffset)) {
-          storedOffsets.set(tickOffset, new Set());
+        if (!offsetToTickIndex.has(tickOffset)) {
+          offsetToTickIndex.set(tickOffset, new Set());
         }
 
-        const currentOffsetSet = storedOffsets.get(tickOffset)!;
+        const tickIndexes = offsetToTickIndex.get(tickOffset)!;
 
-        for (let i = 0; i < currentOffsetSet.size; i += 1) {
-          const previousIndex = currentOffsetSet.values().next().value;
-          if (previousIndex !== undefined) {
-            allTickItems[previousIndex].ignoreTick = true;
-          }
+        for (const previousIndex of tickIndexes.values()) {
+          allTickItems[previousIndex].ignoreTick = true;
         }
 
-        currentOffsetSet.add(allTickItems.length - 1);
+        tickIndexes.add(allTickItems.length - 1);
       } else {
         currentValueCount += 1;
 
@@ -164,7 +164,6 @@ function mapToGrouping(
           currentValueCount *
           (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]);
 
-        const lastItem = allTickItems[allTickItems.length - 1];
         lastItem.labelOffset = labelOffset;
       }
     }
