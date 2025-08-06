@@ -85,6 +85,12 @@ function useCreatePaths(series: DefaultizedScatterSeriesType, xScale: D3Scale, y
 
 const Group = styled('g')({
   '& path': {
+    /* The browser must do hit testing to know which element a pointer is interacting with.
+     * With many data points, we create many paths causing significant time to be spent in the hit test phase.
+     * To fix this issue, we disable pointer events for the descendant paths.
+     *
+     * Ideally, users should be able to override this in case they need pointer events to be enabled,
+     * but it can affect performance negatively, especially with many data points. */
     pointerEvents: 'none',
   },
 });
