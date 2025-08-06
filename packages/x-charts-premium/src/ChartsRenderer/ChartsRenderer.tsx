@@ -78,6 +78,20 @@ function ChartsRenderer({
           barGapRatio: chartConfiguration.barGapRatio,
           tickPlacement: chartConfiguration.tickPlacement,
           tickLabelPlacement: chartConfiguration.tickLabelPlacement,
+          valueFormatter: (value: number) => {
+            if (hasMultipleCategories) {
+              let formattedValue = '';
+              categories.forEach((category, index) => {
+                if (index > 0) {
+                  formattedValue += ' - ';
+                }
+                formattedValue += category.data[value];
+              });
+              return formattedValue;
+            }
+
+            return value;
+          },
           groups,
           height,
         },
