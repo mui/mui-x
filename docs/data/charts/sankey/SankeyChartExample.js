@@ -7,9 +7,7 @@ export default function SankeyChartExample() {
       height={300}
       series={{
         data: {
-          nodes: {
-            B: { color: 'red' },
-          },
+          nodes: [{ id: 'B', color: 'red' }],
           links: [
             { source: 'A', target: 'B', value: 5, color: 'red' },
             { source: 'A', target: 'C', value: 3 },

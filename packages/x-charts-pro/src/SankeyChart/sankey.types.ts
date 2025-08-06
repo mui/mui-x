@@ -9,7 +9,12 @@ import type {
 
 export type NodeId = string | number;
 
-export interface SankeyNodeConfig {
+export interface SankeyNode {
+  /**
+   * Unique identifier for the node
+   */
+  id: NodeId;
+
   /**
    * The node label to display
    */
@@ -24,13 +29,6 @@ export interface SankeyNodeConfig {
    * Optional color override for the node
    */
   color?: string;
-}
-
-export interface SankeyNode extends SankeyNodeConfig {
-  /**
-   * Unique identifier for the node
-   */
-  id: NodeId;
 }
 
 export interface SankeyLink {
@@ -59,8 +57,6 @@ export interface SankeyLink {
    */
   color?: string;
 }
-
-export type SankeyNodeConfigs = Record<NodeId, SankeyNodeConfig>;
 
 export type SankeyNodeOptions = {
   /**
@@ -121,11 +117,11 @@ export type SankeyLinkOptions = {
 
 export interface SankeyData {
   /**
-   * Map of node configs for the Sankey diagram
+   * An array of node configs for the Sankey diagram
    *
    * This is optional, but can be used to provide custom labels or styles for nodes.
    */
-  nodes?: SankeyNodeConfigs;
+  nodes?: readonly SankeyNode[];
 
   /**
    * Array of links between nodes.

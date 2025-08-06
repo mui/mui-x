@@ -48,6 +48,14 @@ export function calculateSankeyLayout(
 
   const nodeMap = new Map<NodeId, SankeyNode>();
 
+  if (data.nodes) {
+    data.nodes.forEach((node) => {
+      const id = node.id || node.label || '';
+      const label = node.label || `${id}`;
+      nodeMap.set(id, { ...node, id, label, color: node.color ?? nodeColor });
+    });
+  }
+
   data.links.forEach((v) => {
     if (!nodeMap.has(v.source)) {
       const sourceNode = data.nodes?.[v.source];

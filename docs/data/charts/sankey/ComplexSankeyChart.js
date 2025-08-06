@@ -3,17 +3,17 @@ import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyCha
 
 export default function ComplexSankeyChart() {
   const data = {
-    nodes: {
-      Energy: { color: '#e57373' },
-      Oil: { color: '#f06292' },
-      Gas: { label: 'Natural Gas', color: '#ba68c8' },
-      Coal: { color: '#9575cd' },
-      Electricity: { color: '#7986cb' },
-      Residential: { color: '#64b5f6' },
-      Transport: { color: '#4fc3f7' },
-      Industry: { color: '#4dd0e1' },
-      Commercial: { color: '#4db6ac' },
-    },
+    nodes: [
+      { id: 'Energy', color: '#e57373' },
+      { id: 'Oil', color: '#f06292' },
+      { id: 'Gas', label: 'Natural Gas', color: '#ba68c8' },
+      { id: 'Coal', color: '#9575cd' },
+      { id: 'Electricity', color: '#7986cb' },
+      { id: 'Residential', color: '#64b5f6' },
+      { id: 'Transport', color: '#4fc3f7' },
+      { id: 'Industry', color: '#4dd0e1' },
+      { id: 'Commercial', color: '#4db6ac' },
+    ],
     links: [
       { source: 'Energy', target: 'Oil', value: 15, color: '#ffcdd2' },
       { source: 'Energy', target: 'Gas', value: 20, color: '#f8bbd0' },
