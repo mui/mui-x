@@ -100,11 +100,6 @@ function getComponents() {
       planned: true,
     },
     {
-      title: 'Waterfall Chart',
-      href: 'https://github.com/mui/mui-x/issues/11318',
-      planned: true,
-    },
-    {
       title: 'Maps',
       href: 'https://github.com/mui/mui-x/issues/12690',
       pro: true,
@@ -121,6 +116,12 @@ function getComponents() {
       href: 'https://github.com/mui/mui-x/issues/19070',
       pro: true,
       planned: true,
+    },
+    {
+      title: 'Waterfall Chart',
+      href: 'https://github.com/mui/mui-x/issues/11318',
+      planned: true,
+      premium: true,
     },
     {
       title: 'Candlestick Chart',
