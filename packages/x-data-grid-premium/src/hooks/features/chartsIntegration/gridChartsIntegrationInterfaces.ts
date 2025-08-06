@@ -44,6 +44,12 @@ export interface GridChartsIntegrationApi {
    */
   setActiveChartId: (chartId: string) => void;
   /**
+   * Sets the chart type for the active chart.
+   * @param {string} chartId - The id of the chart to set the type for.
+   * @param {string} type - The new type of the chart.
+   */
+  setChartType: (chartId: string, type: string) => void;
+  /**
    * Sets the synchronization state for a chart.
    * @param {string} chartId - The id of the chart to set the synchronization state for.
    * @param {boolean} synced - The new synchronization state.
