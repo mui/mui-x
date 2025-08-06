@@ -40,8 +40,10 @@ export const AgendaView = React.memo(
         }),
       [getDayList, settings.hideWeekends, visibleDate],
     );
-
-    const getEventsStartingInDay = useStore(store, selectors.getEventsStartingInDay);
+    const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
+      days,
+      shouldOnlyRenderEventInOneCell: false,
+    });
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
     return (
@@ -51,15 +53,15 @@ export const AgendaView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {days.map((day) => (
+          {daysWithEvents.map(({ day, events, allDayEvents }) => (
             <section
               className="AgendaViewRow"
-              key={day.day.toString()}
-              id={`AgendaViewRow-${day.day.toString()}`}
+              key={day.toString()}
+              id={`AgendaViewRow-${day.toString()}`}
               aria-labelledby={`DayHeaderCell-${day.day.toString()}`}
             >
               <header
-                id={`DayHeaderCell-${day.day.toString()}`}
+                id={`DayHeaderCell-${day.toString()}`}
                 className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
               >
@@ -74,7 +76,7 @@ export const AgendaView = React.memo(
                 </div>
               </header>
               <ul className="EventsList">
-                {getEventsStartingInDay(day).map((event) => (
+                {allDayEvents.map((event) => (
                   <li>
                     <EventPopoverTrigger
                       key={event.id}
@@ -85,7 +87,24 @@ export const AgendaView = React.memo(
                           event={event}
                           variant="compact"
                           eventResource={resourcesByIdMap.get(event.resource)}
-                          ariaLabelledBy={`DayHeaderCell-${day.day.toString()}`}
+                          ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
+                        />
+                      }
+                    />
+                  </li>
+                ))}
+                {events.map((event) => (
+                  <li>
+                    <EventPopoverTrigger
+                      key={event.id}
+                      event={event}
+                      nativeButton={false}
+                      render={
+                        <DayGridEvent
+                          event={event}
+                          variant="compact"
+                          eventResource={resourcesByIdMap.get(event.resource)}
+                          ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />
                       }
                     />

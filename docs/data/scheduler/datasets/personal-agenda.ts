@@ -135,7 +135,6 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-14T04:00:00'),
     title: "Alice's Birthday",
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
   },
   {
@@ -144,7 +143,6 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-18T04:00:00'),
     title: `Bob's Birthday`,
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
   },
   {
@@ -153,7 +151,6 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-25T04:00:00'),
     title: `Richard's Birthday`,
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
   },
 
@@ -214,6 +211,71 @@ export const initialEvents: CalendarEvent[] = [
     start: DateTime.fromISO('2025-07-19T09:00:00'),
     end: DateTime.fromISO('2025-07-19T09:15:00'),
     title: 'Prescription Pickup',
+    resource: 'medical',
+  },
+  // all day events
+  {
+    id: 'allday-work-1',
+    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
+    title: 'All day Work Event 1',
+    allDay: true,
+    resource: 'work',
+  },
+  {
+    id: 'allday-work-2',
+    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 9 }),
+    title: 'All day Work Event 2',
+    allDay: true,
+    resource: 'work',
+  },
+  {
+    id: 'allday-workout-1',
+    start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
+    title: 'All day Workout Event 1',
+    allDay: true,
+    resource: 'workout',
+  },
+  {
+    id: 'allday-birthday-1',
+    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
+    title: 'All day Birthday Event 1',
+    allDay: true,
+    resource: 'birthdays',
+  },
+  {
+    id: 'allday-personal-1',
+    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
+    title: 'All day Personal Event 1',
+    allDay: true,
+    resource: 'personal',
+  },
+  {
+    id: 'allday-personal-2',
+    start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
+    title: 'All day Personal Event 2',
+    allDay: true,
+    resource: 'personal',
+  },
+  {
+    id: 'allday-personal-3',
+    start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
+    title: 'All day Personal Event 3',
+    allDay: true,
+    resource: 'personal',
+  },
+  {
+    id: 'allday-medical-1',
+    start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 7, hour: 9 }),
+    title: 'All day Medical Event 1',
+    allDay: true,
     resource: 'medical',
   },
 ];

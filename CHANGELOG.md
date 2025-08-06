@@ -418,8 +418,8 @@ Same changes as in `@mui/x-tree-view@8.7.0`, plus:
 
 - [code-infra] Bump code-infra version and fix breaking changes (#18653) @brijeshb42
 - [code-infra] Ensure `material-ui/disallow-react-api-in-server-components` ESLint rule is applied (#18570) @LukasTy
-- [code-infra] Migrate to flat eslint config (#18562) @brijeshb42
-- [code-infra] Refactor eslint config (#18643) @LukasTy
+- [code-infra] Migrate to flat ESLint config (#18562) @brijeshb42
+- [code-infra] Refactor ESLint config (#18643) @LukasTy
 - [infra] Add renovatebot rule for latest infra packages (#18609) @Janpot
 - [infra] Move pushArgos script to code-infra (#18667) @Janpot
 - [infra] Updates release script to fetch latest major version from upstream (#18552) @michelengelen
@@ -1333,7 +1333,7 @@ Same changes as in `@mui/x-tree-view@8.2.0`.
 - [core] Fix all Vale errors @oliviertassinari
 - [core] Move `loadStyleSheets` to internals and use it in data grid and charts (#17548) @bernardobelchior
 - [core] Remove empty version (#17582) @oliviertassinari
-- [core] Remove eslint from codemod spec files (#17443) @alexfauquette
+- [core] Remove ESLint from codemod spec files (#17443) @alexfauquette
 - [core] Remove unnecessary versions (#17597) @oliviertassinari
 - [code-infra] Allow postinstall scripts for packages requesting it (#17635) @LukasTy
 - [code-infra] Data Grid `vitest` changes (#17619) @JCQuintas
@@ -6827,7 +6827,7 @@ Same changes as in `@mui/x-date-pickers@7.8.0`.
 
 ### Core
 
-- [core] Add eslint rule to restrict import from `../internals` root (#13633) @JCQuintas
+- [core] Add ESLint rule to restrict import from `../internals` root (#13633) @JCQuintas
 - [docs-infra] Sync `\_app` folder with monorepo (#13582) @Janpot
 - [license] Allow usage of Charts and Tree View Pro package for old premium licenses (#13619) @flaviendelangle
 
@@ -6965,7 +6965,7 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 
 - [charts] Add watermark on the pro `ResponsiveChartContainer` (#13398) @alexfauquette
 - [charts] Allow to specify y-axis configuration (#13438) @alexfauquette
-- [charts] Fix eslint for react compiler (#13444) @alexfauquette
+- [charts] Fix ESLint for react compiler (#13444) @alexfauquette
 - [charts] Improve themeAugmentation typing (#13433) @noraleonte
 - [charts] Move the `ZAxisContextProvider` by default in the `ChartContainer` (#13465) @alexfauquette
 - [charts] Use plugins to define series extremum and colors (#13397) @alexfauquette
@@ -7512,7 +7512,7 @@ Same changes as in `@mui/x-date-pickers@7.3.1`.
 - [core] Use `describeTreeView` for focus tests (#12698) @flaviendelangle
 - [core] Use `describeTreeView` for type-ahead tests (#12811) @flaviendelangle
 - [code-infra] Change package manager to `pnpm` (#11875) @LukasTy
-- [code-infra] Closer sync with eslint config of codebase (#12864) @oliviertassinari
+- [code-infra] Closer sync with ESLint config of codebase (#12864) @oliviertassinari
 - [support-infra] Add release announcement to GitHub workflows (#11867) (#12843) @michelengelen
 
 ## 7.3.0
