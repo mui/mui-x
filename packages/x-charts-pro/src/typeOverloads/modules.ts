@@ -16,7 +16,6 @@ import {
   SankeySeriesType,
   type DefaultizedSankeySeriesType,
   type SankeyItemIdentifier,
-  type SankeyValueType,
 } from '../SankeyChart/sankey.types';
 
 declare module '@mui/x-charts/internals' {
@@ -44,7 +43,7 @@ declare module '@mui/x-charts/internals' {
       series: DefaultizedSankeySeriesType;
       seriesProp: SankeySeriesType;
       itemIdentifier: SankeyItemIdentifier;
-      valueType: SankeyValueType;
+      valueType: number;
     };
   }
 

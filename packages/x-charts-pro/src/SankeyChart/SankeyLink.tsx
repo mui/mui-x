@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
+import { useInteractionItemProps } from '@mui/x-charts/internals';
 import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
 
 const SankeyLinkRoot = styled('path')(({ onClick }) => ({
@@ -44,14 +45,19 @@ export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
   function SankeyLink(props, ref) {
     const { link, color, opacity = 0.4, onClick, seriesId } = props;
 
+    const identifier: SankeyItemIdentifier = {
+      type: 'sankey',
+      seriesId,
+      subType: 'link',
+      link,
+    };
+
+    // Add interaction props for tooltips
+    const interactionProps = useInteractionItemProps(identifier);
+
     const handleClick = useEventCallback((event: React.MouseEvent<SVGPathElement>) => {
       if (onClick) {
-        onClick(event, {
-          type: 'sankey',
-          subType: 'link',
-          id: `${link.source}-${link.target}`,
-          seriesId,
-        });
+        onClick(event, identifier);
       }
     });
 
@@ -67,6 +73,7 @@ export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
         strokeWidth={link.width}
         strokeOpacity={opacity}
         onClick={onClick ? handleClick : undefined}
+        {...interactionProps}
       />
     );
   },

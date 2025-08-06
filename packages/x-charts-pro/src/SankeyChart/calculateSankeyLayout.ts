@@ -1,8 +1,9 @@
 'use client';
 import { sankey, type SankeyGraph, sankeyLinkHorizontal } from '@mui/x-charts-vendor/d3-sankey';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
+import type { Theme } from '@mui/material/styles';
 import type {
-  SankeyValueType,
+  SankeyData,
   SankeySeriesType,
   SankeyLayout,
   NodeId,
@@ -23,11 +24,19 @@ import { getNodeAlignFunction } from './utils';
  */
 
 export function calculateSankeyLayout(
-  data: SankeyValueType,
+  data: SankeyData,
   drawingArea: ChartDrawingArea,
+  theme: Theme,
   options: Pick<
     SankeySeriesType,
-    'nodeWidth' | 'nodePadding' | 'iterations' | 'nodeAlign' | 'nodeSort' | 'linkSort'
+    | 'nodeWidth'
+    | 'nodePadding'
+    | 'iterations'
+    | 'nodeAlign'
+    | 'nodeSort'
+    | 'linkSort'
+    | 'linkColor'
+    | 'nodeColor'
   > = {},
 ): SankeyLayout {
   const {
@@ -37,6 +46,8 @@ export function calculateSankeyLayout(
     nodeAlign = 'justify',
     nodeSort = null,
     linkSort = null,
+    linkColor = theme.palette.primary.light,
+    nodeColor = theme.palette.primary.main,
   } = options;
   const { width, height, left, top, bottom, right } = drawingArea;
   if (!data || !data.links) {
@@ -115,6 +126,7 @@ export function calculateSankeyLayout(
     });
 
     return {
+      color: linkColor,
       ...originalLink,
       ...link,
       path: linkGenerator(link),
@@ -124,6 +136,7 @@ export function calculateSankeyLayout(
   const layoutNodes: SankeyLayoutNode[] = nodes.map((node) => {
     const originalNode = nodeMap.get(node.id) || {};
     return {
+      color: nodeColor,
       ...originalNode,
       ...node,
     };

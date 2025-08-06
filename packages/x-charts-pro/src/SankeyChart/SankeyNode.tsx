@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
+import { useInteractionItemProps } from '@mui/x-charts/internals';
 import { SankeyLayoutNode, type SankeyItemIdentifier } from './sankey.types';
 
 const SankeyNodeRoot = styled('rect')(({ onClick }) => ({
@@ -66,14 +67,19 @@ export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
 
     const labelAnchor = node.depth === 0 ? 'start' : 'end';
 
+    const identifier: SankeyItemIdentifier = {
+      type: 'sankey',
+      seriesId,
+      subType: 'node',
+      node,
+    };
+
+    // Add interaction props for tooltips
+    const interactionProps = useInteractionItemProps(identifier);
+
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
       if (onClick) {
-        onClick(event, {
-          type: 'sankey',
-          subType: 'link',
-          id: node.id,
-          seriesId,
-        });
+        onClick(event, identifier);
       }
     });
 
@@ -86,6 +92,7 @@ export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
           height={nodeHeight}
           fill={color || node.color}
           onClick={onClick ? handleClick : undefined}
+          {...interactionProps}
         />
 
         {showLabel && node.label && (

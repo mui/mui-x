@@ -37,13 +37,13 @@ export function SankeyPlot(props: SankeyPlotProps) {
   const series = seriesContext?.series[seriesContext?.seriesOrder?.[0]]!;
   const classes = useUtilityClasses({ classes: inputClasses });
   const drawingArea = useDrawingArea();
-  const { data, linkColor, linkOpacity, showNodeLabels, showLinkValues, nodeColor } = series;
+  const { data, linkOpacity, showNodeLabels, showLinkValues } = series;
   const theme = useTheme();
 
   // Calculate layout based on data and dimensions
   const layout: SankeyLayout = React.useMemo(
-    () => calculateSankeyLayout(data, drawingArea, series),
-    [drawingArea, data, series],
+    () => calculateSankeyLayout(data, drawingArea, theme, series),
+    [drawingArea, data, series, theme],
   );
 
   // Early return if no data or dimensions
@@ -59,7 +59,6 @@ export function SankeyPlot(props: SankeyPlotProps) {
             seriesId={series.id}
             key={`${link.source.id}-${link.target.id}`}
             link={link}
-            color={link.color || linkColor || theme.palette.primary.light}
             opacity={linkOpacity}
             onClick={onItemClick}
           />
@@ -72,7 +71,6 @@ export function SankeyPlot(props: SankeyPlotProps) {
             seriesId={series.id}
             key={node.id}
             node={node}
-            color={node.color || nodeColor || theme.palette.primary.main}
             showLabel={showNodeLabels}
             onClick={onItemClick}
           />

@@ -62,7 +62,7 @@ export interface SankeyLink {
 
 export type SankeyNodeConfigs = Record<NodeId, SankeyNodeConfig>;
 
-export interface SankeyValueType {
+export interface SankeyData {
   /**
    * Map of node configs for the Sankey diagram
    *
@@ -94,7 +94,7 @@ export interface SankeySeriesType {
   /**
    * The data for the Sankey diagram
    */
-  data: SankeyValueType;
+  data: SankeyData;
 
   /**
    * Optional color for nodes without specified colors
@@ -201,20 +201,31 @@ export interface DefaultizedSankeySeriesType
   extends DefaultizedProps<SankeySeriesType, Exclude<CommonDefaultizedProps, 'valueFormatter'>> {}
 
 // Define SankeyItemIdentifier type
-export interface SankeyItemIdentifier {
+export type SankeyItemIdentifier = {
   type: 'sankey';
   /**
    * Unique identifier for the series
    */
   seriesId: SeriesId;
-  /**
-   * Subtype to differentiate between node and link
-   */
-  subType: 'node' | 'link';
-  /**
-   * Unique identifier for the node or link.
-   * If subType is 'node', this is the node ID.
-   * If subType is 'link', this is a `{$sourceId}-${targetId}` string.
-   */
-  id: NodeId;
-}
+} & (
+  | {
+      /**
+       * Subtype to differentiate between node and link
+       */
+      subType: 'node';
+      /**
+       * The node object with all the calculated properties
+       */
+      node: SankeyLayoutNode;
+    }
+  | {
+      /**
+       * Subtype to differentiate between node and link
+       */
+      subType: 'link';
+      /**
+       * The link object with all the calculated properties
+       */
+      link: SankeyLayoutLink;
+    }
+);

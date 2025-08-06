@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
@@ -17,6 +16,7 @@ import { useSankeyChartProps } from './useSankeyChartProps';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginsSignatures } from './SankeyChart.plugins';
 import type { SankeySeriesType } from './sankey.types';
 import { seriesConfig as sankeySeriesConfig } from './seriesConfig';
+import { SankeyTooltip } from './SankeyTooltip';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 
@@ -75,7 +75,7 @@ const SankeyChart = React.forwardRef(function SankeyChart(
   );
 
   // const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
-  const Tooltip = ChartsTooltip;
+  const Tooltip = SankeyTooltip;
 
   return (
     <ChartDataProviderPro<'sankey', SankeyChartPluginsSignatures>
@@ -90,7 +90,6 @@ const SankeyChart = React.forwardRef(function SankeyChart(
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
-        {/* {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />} */}
         <Tooltip trigger="item" />
       </ChartsWrapper>
     </ChartDataProviderPro>

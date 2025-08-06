@@ -9,9 +9,11 @@ export type { SankeyLinkProps } from './SankeyLink';
 export { SankeyLinkLabel } from './SankeyLinkLabel';
 export type { SankeyLinkLabelProps } from './SankeyLinkLabel';
 export type {
-  SankeyValueType,
+  SankeyData as SankeyValueType,
   SankeyNode as SankeyNodeType,
   SankeyLink as SankeyLinkType,
   SankeySeriesType,
 } from './sankey.types';
 export { type SankeyPlotClasses, sankeyPlotClasses } from './sankeyClasses';
+export { SankeyTooltip, SankeyTooltipContent } from './SankeyTooltip';
+export type { SankeyTooltipProps } from './SankeyTooltip';
