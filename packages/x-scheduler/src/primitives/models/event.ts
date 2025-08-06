@@ -30,6 +30,10 @@ export interface CalendarEvent {
    * The recurrence rule for the event, if it is a recurring event.
    */
   recurrenceRule?: RecurrenceRule;
+  /**
+   * `true` if the event is an all-day event.
+   */
+  allDay?: boolean;
 }
 
 export interface RecurrenceRule {
@@ -99,9 +103,12 @@ export interface RecurrenceRule {
       };
 }
 
+export interface CalendarEventWithPosition extends CalendarEvent {
+  eventRowIndex?: number;
+}
+
 export type CalendarEventId = string | number;
 
-// TODO: Try to keep this property on the Material UI side
 export type CalendarEventColor =
   | 'primary'
   | 'mauve'

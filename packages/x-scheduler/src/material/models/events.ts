@@ -1,1 +1,1 @@
-export type EventVariant = 'regular' | 'compact' | 'allDay';
+export type EventVariant = 'regular' | 'compact' | 'allDay' | 'invisible';

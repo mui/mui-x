@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from '../funnel/populationByEducationLevel';
@@ -60,7 +60,7 @@ export default function PyramidPlayground() {
         </Stack>
       )}
       getCode={({ props }) => {
-        return `import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+        return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
   series={[{ 
