@@ -58,7 +58,7 @@ function ChartsRenderer({
         if (index > 0) {
           formattedValue += ' - ';
         }
-        formattedValue += category.data[value];
+        formattedValue += category.data[value as number];
       });
       return formattedValue;
     }
