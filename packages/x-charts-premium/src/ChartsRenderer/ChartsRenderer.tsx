@@ -51,6 +51,20 @@ function ChartsRenderer({
         .reverse()
     : undefined;
   const height = hasMultipleCategories ? CATEGORY_TICK_SIZE * (categories.length - 1) : undefined;
+  const valueFormatter = (value: string | number): string => {
+    if (hasMultipleCategories) {
+      let formattedValue = '';
+      categories.forEach((category, index) => {
+        if (index > 0) {
+          formattedValue += ' - ';
+        }
+        formattedValue += category.data[value];
+      });
+      return formattedValue;
+    }
+
+    return String(value);
+  };
 
   const sections = (configurationOptions as any)[chartType]?.customization || [];
   const defaultOptions = Object.fromEntries(
@@ -78,20 +92,7 @@ function ChartsRenderer({
           barGapRatio: chartConfiguration.barGapRatio,
           tickPlacement: chartConfiguration.tickPlacement,
           tickLabelPlacement: chartConfiguration.tickLabelPlacement,
-          valueFormatter: (value: number) => {
-            if (hasMultipleCategories) {
-              let formattedValue = '';
-              categories.forEach((category, index) => {
-                if (index > 0) {
-                  formattedValue += ' - ';
-                }
-                formattedValue += category.data[value];
-              });
-              return formattedValue;
-            }
-
-            return value;
-          },
+          valueFormatter,
           groups,
           height,
         },
@@ -129,7 +130,7 @@ function ChartsRenderer({
     }));
 
     const props = {
-      xAxis: [{ data: categoryData, scaleType: 'point' as const, groups, height }],
+      xAxis: [{ data: categoryData, scaleType: 'point' as const, valueFormatter, groups, height }],
       series: seriesProp,
       hideLegend: chartConfiguration.hideLegend,
       height: chartConfiguration.height,
