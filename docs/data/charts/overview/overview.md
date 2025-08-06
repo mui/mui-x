@@ -27,4 +27,6 @@ Features such as axes and legends are shared across Chart components and are des
 
 ## All MUI X Charts
 
+A list of all MUI X chart components. Some of the components are not yet available and are planned for future. Your upvotes help us prioritize the development of these components.
+
 {{"component": "modules/components/ChartComponentsGrid.js"}}

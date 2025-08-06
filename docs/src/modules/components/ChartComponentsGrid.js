@@ -52,13 +52,6 @@ function getComponents() {
       href: '/x/react-charts/radar/',
     },
     {
-      title: 'Treemap',
-      srcLight: '/static/x/component-illustrations/treemap-light.png',
-      srcDark: '/static/x/component-illustrations/treemap-dark.png',
-      href: '/x/react-charts/treemap/',
-      planned: true,
-    },
-    {
       title: 'Heatmap',
       srcLight: '/static/x/component-illustrations/heatmap-light.png',
       srcDark: '/static/x/component-illustrations/heatmap-dark.png',
@@ -81,12 +74,83 @@ function getComponents() {
       pro: true,
     },
     {
+      title: 'Treemap',
+      srcLight: '/static/x/component-illustrations/treemap-light.png',
+      srcDark: '/static/x/component-illustrations/treemap-dark.png',
+      href: '/x/react-charts/treemap/',
+      planned: true,
+      pro: true,
+    },
+    {
       title: 'Gantt Chart',
       srcLight: '/static/x/component-illustrations/gantt-light.png',
       srcDark: '/static/x/component-illustrations/gantt-dark.png',
       href: '/x/react-charts/gantt/',
       planned: true,
       pro: true,
+    },
+    {
+      title: 'Linear Gauge',
+      href: 'https://github.com/mui/mui-x/issues/13084',
+      planned: true,
+    },
+    {
+      title: 'Bubble Chart',
+      href: 'https://github.com/mui/mui-x/issues/17275',
+      planned: true,
+    },
+    {
+      title: 'Waterfall Chart',
+      href: 'https://github.com/mui/mui-x/issues/11318',
+      planned: true,
+    },
+    {
+      title: 'Maps',
+      href: 'https://github.com/mui/mui-x/issues/12690',
+      pro: true,
+      planned: true,
+    },
+    {
+      title: 'Polar Line Chart',
+      href: 'https://github.com/mui/mui-x/issues/17305',
+      planned: true,
+      pro: true,
+    },
+    {
+      title: 'Chord Chart',
+      href: 'https://github.com/mui/mui-x/issues/19070',
+      pro: true,
+      planned: true,
+    },
+    {
+      title: 'Candlestick Chart',
+      href: 'https://github.com/mui/mui-x/issues/13044',
+      premium: true,
+      planned: true,
+    },
+    {
+      title: 'Boxplot Chart',
+      href: 'https://github.com/mui/mui-x/issues/15025',
+      premium: true,
+      planned: true,
+    },
+    {
+      title: 'OHLC Chart',
+      href: 'https://github.com/mui/mui-x/issues/13045',
+      premium: true,
+      planned: true,
+    },
+    {
+      title: 'Sunburst Chart',
+      href: 'https://github.com/mui/mui-x/issues/11319',
+      premium: true,
+      planned: true,
+    },
+    {
+      title: '3D Chart',
+      href: 'https://github.com/mui/mui-x/issues/18825',
+      premium: true,
+      planned: true,
     },
   ];
 }
@@ -109,6 +173,7 @@ export default function ChartComponentsGrid() {
                   {component.title}
                 </Link>
                 {component.pro && <span className="plan-pro" />}
+                {component.premium && <span className="plan-premium" />}
                 {component.planned && (
                   <Chip
                     label="Planned"
