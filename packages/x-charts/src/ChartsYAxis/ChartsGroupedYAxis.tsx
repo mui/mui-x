@@ -13,11 +13,11 @@ const DEFAULT_GROUPING_CONFIG = {
 };
 
 const getGroupingConfig = (
-  groupingConfig: { config?: Omit<AxisGroup, 'getValue'>[] },
+  groups: AxisGroup[],
   groupIndex: number,
   tickSize: number | undefined,
 ) => {
-  const config = groupingConfig?.config?.[groupIndex] ?? ({} as AxisGroup);
+  const config = groups[groupIndex] ?? ({} as AxisGroup);
 
   const defaultTickSize = tickSize ?? DEFAULT_GROUPING_CONFIG.tickSize;
   const calculatedTickSize = defaultTickSize * groupIndex * 2 + defaultTickSize;
@@ -72,16 +72,6 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
 
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
 
-  const groupingConfig = React.useMemo(() => {
-    return {
-      getGrouping: (value: any, dataIndex: number) =>
-        groups.length > 0 ? groups.map((group) => group.getValue(value, dataIndex)) : [''],
-      config: groups.map((group) => ({
-        tickSize: group.tickSize,
-      })),
-    };
-  }, [groups]);
-
   const drawingArea = useDrawingArea();
   const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
@@ -99,7 +89,7 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     direction: 'y',
-    getGrouping: groupingConfig.getGrouping,
+    groups,
   });
 
   // Skip axis rendering if no data is available
@@ -128,7 +118,7 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
         const tickLabel = item.formattedValue;
         const ignoreTick = item.ignoreTick ?? false;
         const groupIndex = item.groupIndex ?? 0;
-        const groupConfig = getGroupingConfig(groupingConfig, groupIndex, tickSize);
+        const groupConfig = getGroupingConfig(groups, groupIndex, tickSize);
 
         const tickXSize = positionSign * groupConfig.tickSize;
         const labelPositionX = positionSign * (groupConfig.tickSize + TICK_LABEL_GAP);
@@ -148,7 +138,10 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
               <TickLabel
                 x={labelPositionX}
                 y={yTickLabel}
-                {...axisTickLabelProps}
+                style={{
+                  ...axisTickLabelProps.style,
+                  ...groupConfig.tickLabelStyle,
+                }}
                 text={tickLabel}
               />
             )}
