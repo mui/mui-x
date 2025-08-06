@@ -62,18 +62,22 @@ const customConfiguration = {
   bar: {
     ...configurationOptions.bar,
     customization: hideColorsControl(configurationOptions.bar.customization),
+    maxCategories: 1,
   },
   column: {
     ...configurationOptions.column,
     customization: hideColorsControl(configurationOptions.column.customization),
+    maxCategories: 1,
   },
   line: {
     ...configurationOptions.line,
     customization: hideColorsControl(configurationOptions.line.customization),
+    maxCategories: 1,
   },
   area: {
     ...configurationOptions.area,
     customization: hideColorsControl(configurationOptions.area.customization),
+    maxCategories: 1,
   },
 };
 
