@@ -5,7 +5,9 @@ import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   gridColumnGroupsUnwrappedModelSelector,
-  gridFilteredSortedTopLevelRowEntriesSelector,
+  gridRowIdSelector,
+  gridRowNodeSelector,
+  gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
 import {
   GridStateInitializer,
@@ -13,11 +15,11 @@ import {
   useGridEvent,
   gridColumnLookupSelector,
   runIf,
-  getRowValue,
   gridPivotActiveSelector,
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridColumnFieldsSelector,
+  gridFilteredSortedDepthRowEntriesSelector,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
 } from '@mui/x-data-grid-pro/internals';
 
@@ -152,6 +154,10 @@ export const useGridChartsIntegration = (
 ) => {
   const visibleCategories = React.useRef<Record<string, GridColDef[]>>({});
   const visibleSeries = React.useRef<Record<string, GridColDef[]>>({});
+  const schema = React.useMemo(
+    () => props.slotProps?.chartsPanel?.schema || {},
+    [props.slotProps?.chartsPanel?.schema],
+  );
 
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable =
@@ -283,7 +289,10 @@ export const useGridChartsIntegration = (
       }
 
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-      const rows = Object.values(gridFilteredSortedTopLevelRowEntriesSelector(apiRef));
+      const rowTree = gridRowTreeSelector(apiRef);
+      const rowsPerDepth = gridFilteredSortedDepthRowEntriesSelector(apiRef);
+      const defaultDepth = Math.max(0, (visibleCategories.current[activeChartId]?.length ?? 0) - 1);
+      const rowsAtDefaultDepth = (rowsPerDepth[defaultDepth] ?? []).length;
 
       // keep only unique columns and transform the grouped column to carry the correct field name to get the grouped value
       const dataColumns = [
@@ -307,12 +316,14 @@ export const useGridChartsIntegration = (
           return {
             ...columnDefinition,
             dataFieldName: column.field,
+            depth: rowGroupingModel.indexOf(column.field),
           };
         }
 
         return {
           ...column,
           dataFieldName: column.field,
+          depth: defaultDepth,
         };
       });
 
@@ -320,12 +331,21 @@ export const useGridChartsIntegration = (
       const data: Record<any, (string | number | null)[]> = Object.fromEntries(
         dataColumns.map((column) => [column.dataFieldName, []]),
       );
-      for (let i = 0; i < rows.length; i += 1) {
-        for (let j = 0; j < dataColumns.length; j += 1) {
-          const value: string | { label: string } | null = getRowValue(
-            rows[i].model,
+      const dataColumnsCount = dataColumns.length;
+
+      for (let i = 0; i < rowsAtDefaultDepth; i += 1) {
+        for (let j = 0; j < dataColumnsCount; j += 1) {
+          // if multiple columns are grouped, we need to get the value from the parent to properly create category groups
+          let targetRow = rowsPerDepth[defaultDepth][i].model;
+          // if we are not at the same depth as the column we are currently processing change the target to the parent at the correct depth
+          for (let d = defaultDepth; d > dataColumns[j].depth; d -= 1) {
+            const rowId = gridRowIdSelector(apiRef, targetRow);
+            targetRow = gridRowNodeSelector(apiRef, rowTree[rowId]!.parent!);
+          }
+
+          const value: string | { label: string } | null = apiRef.current.getRowValue(
+            targetRow,
             dataColumns[j],
-            apiRef,
           );
           if (value !== null) {
             data[dataColumns[j].dataFieldName].push(
@@ -350,7 +370,7 @@ export const useGridChartsIntegration = (
         });
       });
     },
-    [apiRef, orderedFields, getColumnName, setChartState],
+    [apiRef, activeChartId, orderedFields, getColumnName, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(
@@ -359,7 +379,7 @@ export const useGridChartsIntegration = (
   );
 
   const handleColumnDataUpdate = React.useCallback(
-    (chartIds: string[]) => {
+    (chartIds: string[], updatedChartStateLookup?: Record<string, ChartState>) => {
       // if there are no charts, skip the data processing
       if (chartIds.length === 0) {
         return;
@@ -394,14 +414,12 @@ export const useGridChartsIntegration = (
 
         // loop through categories and series either through their length or to the max limit
         // if the current selection is greater than the max limit, the state will be updated
-        const categoriesSize = chartStateLookup[chartId]?.maxCategories
-          ? Math.min(
-              chartStateLookup[chartId].maxCategories,
-              selectedFields[chartId].categories.length,
-            )
+        const chartState = updatedChartStateLookup?.[chartId] || chartStateLookup[chartId];
+        const categoriesSize = chartState?.maxCategories
+          ? Math.min(chartState.maxCategories, selectedFields[chartId].categories.length)
           : selectedFields[chartId].categories.length;
-        const seriesSize = chartStateLookup[chartId]?.maxSeries
-          ? Math.min(chartStateLookup[chartId].maxSeries, selectedFields[chartId].series.length)
+        const seriesSize = chartState?.maxSeries
+          ? Math.min(chartState.maxSeries, selectedFields[chartId].series.length)
           : selectedFields[chartId].series.length;
 
         // sanitize selectedSeries and selectedCategories while maintaining their order
@@ -600,20 +618,62 @@ export const useGridChartsIntegration = (
     [apiRef, isChartsIntegrationAvailable],
   );
 
+  const setChartType = React.useCallback<GridChartsIntegrationApi['setChartType']>(
+    (chartId, type) => {
+      if (!isChartsIntegrationAvailable || !chartStateLookup[chartId]) {
+        return;
+      }
+
+      const stateUpdate = {
+        type,
+        maxCategories: schema[type]?.maxCategories,
+        maxSeries: schema[type]?.maxSeries,
+      };
+
+      const updatedChartStateLookup = {
+        ...chartStateLookup,
+        [chartId]: {
+          ...chartStateLookup[chartId],
+          ...stateUpdate,
+        },
+      };
+
+      setChartState(chartId, stateUpdate);
+      debouncedHandleColumnDataUpdate([chartId], updatedChartStateLookup);
+    },
+    [
+      isChartsIntegrationAvailable,
+      chartStateLookup,
+      schema,
+      setChartState,
+      debouncedHandleColumnDataUpdate,
+    ],
+  );
+
   const setChartSynchronizationState = React.useCallback<
     GridChartsIntegrationApi['setChartSynchronizationState']
   >(
     (chartId, synced) => {
-      if (!isChartsIntegrationAvailable) {
+      if (!isChartsIntegrationAvailable || !chartStateLookup[chartId]) {
         return;
       }
 
-      setChartState(chartId, {
+      const stateUpdate = {
         synced,
-      });
+      };
+
+      const updatedChartStateLookup = {
+        ...chartStateLookup,
+        [chartId]: {
+          ...chartStateLookup[chartId],
+          ...stateUpdate,
+        },
+      };
+
+      setChartState(chartId, stateUpdate);
       apiRef.current.publishEvent('chartSynchronizationStateChange', { chartId, synced });
-      if (synced && chartStateLookup[chartId]) {
-        debouncedHandleColumnDataUpdate([chartId]);
+      if (synced) {
+        debouncedHandleColumnDataUpdate([chartId], updatedChartStateLookup);
       }
     },
     [
@@ -763,6 +823,7 @@ export const useGridChartsIntegration = (
       ? {
           setChartsPanelOpen,
           setActiveChartId,
+          setChartType,
           setChartSynchronizationState,
           updateSeries,
           updateCategories,
@@ -809,7 +870,6 @@ export const useGridChartsIntegration = (
     }
 
     isInitialized.current = true;
-    const schema = props.slotProps?.chartsPanel?.schema || {};
 
     availableChartIds.forEach((chartId) => {
       const chartType = props.initialState?.chartsIntegration?.charts?.[chartId]?.chartType || '';
@@ -824,10 +884,10 @@ export const useGridChartsIntegration = (
 
     debouncedHandleColumnDataUpdate(syncedChartIds);
   }, [
+    schema,
     availableChartIds,
     syncedChartIds,
     props.initialState?.chartsIntegration?.charts,
-    props.slotProps?.chartsPanel?.schema,
     setChartState,
     debouncedHandleColumnDataUpdate,
   ]);
