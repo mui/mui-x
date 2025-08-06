@@ -8,19 +8,39 @@ import { useChartContext } from '../context/ChartProvider';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { getValueToPositionMapper } from '../hooks/useScale';
+import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 
 export interface FastScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
   color: string;
+  colorGetter?: ColorGetter<'scatter'>;
   classes?: Partial<ScatterClasses>;
 }
 
 const MAX_POINTS_PER_PATH = 1000;
 const ALMOST_ZERO = 0.01;
 
-function useCreatePaths(series: DefaultizedScatterSeriesType, xScale: D3Scale, yScale: D3Scale) {
+function appendAtKey(map: Map<string, string[]>, key: string, value: string) {
+  const existing = map.get(key);
+  if (existing) {
+    existing.push(value);
+    return existing;
+  }
+
+  const array = [value];
+  map.set(key, array);
+  return array;
+}
+
+function useCreatePaths(
+  series: DefaultizedScatterSeriesType,
+  xScale: D3Scale,
+  yScale: D3Scale,
+  color: string,
+  colorGetter?: ColorGetter<'scatter'>,
+) {
   const start = performance.now();
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
@@ -28,8 +48,8 @@ function useCreatePaths(series: DefaultizedScatterSeriesType, xScale: D3Scale, y
   const getYPosition = getValueToPositionMapper(yScale);
   const radius = series.markerSize;
 
-  const paths: string[] = [];
-  let temporaryPaths: string[] = [];
+  const paths = new Map<string, string[]>();
+  const temporaryPaths = new Map<string, string[]>();
 
   for (let i = 0; i < series.data.length; i += 1) {
     const scatterPoint = series.data[i];
@@ -41,17 +61,23 @@ function useCreatePaths(series: DefaultizedScatterSeriesType, xScale: D3Scale, y
       continue;
     }
 
-    temporaryPaths.push(`M${x - radius} ${y} a${radius} ${radius} 0 1 1 0 ${ALMOST_ZERO}`);
+    const path = `M${x - radius} ${y} a${radius} ${radius} 0 1 1 0 ${ALMOST_ZERO}`;
+    const fill = colorGetter ? colorGetter(i) : color;
 
-    if (temporaryPaths.length >= MAX_POINTS_PER_PATH) {
-      paths.push(temporaryPaths.join(''));
-      temporaryPaths = [];
+    const tempPath = appendAtKey(temporaryPaths, fill, path);
+
+    if (tempPath != null && tempPath.length >= MAX_POINTS_PER_PATH) {
+      appendAtKey(paths, fill, tempPath.join(''));
+      temporaryPaths.delete(fill);
     }
   }
 
-  if (temporaryPaths.length > 0) {
-    paths.push(temporaryPaths.join(''));
+  for (const [fill, tempPath] of temporaryPaths.entries()) {
+    if (tempPath.length > 0) {
+      appendAtKey(paths, fill, tempPath.join(''));
+    }
   }
+
   performance.measure('useCreatePathsIteratively', { start });
 
   return paths;
@@ -75,15 +101,22 @@ const Group = styled('g')({
  * - TODO: Explain limitations
  */
 function FastScatter(props: FastScatterProps) {
-  const { series, xScale, yScale, color, classes: inClasses } = props;
+  const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
 
-  const paths = useCreatePaths(series, xScale, yScale);
+  const paths = useCreatePaths(series, xScale, yScale, color, colorGetter);
   const classes = useUtilityClasses(inClasses);
 
   const start = performance.now();
-  const children = paths.map((d, i) => <path key={i} fill={color} d={d} />);
-  const end = performance.now();
-  performance.measure('FastScatter paths.map', { start, end });
+  const children = [];
+
+  let i = 0;
+  for (const [fill, dArray] of paths.entries()) {
+    for (const d of dArray) {
+      children.push(<path key={i} fill={fill} d={d} />);
+      i += 1;
+    }
+  }
+  performance.measure('FastScatter paths.map', { start });
 
   return (
     <Group data-series={series.id} className={classes.root}>
