@@ -56,7 +56,7 @@ export const MonthView = React.memo(
       return weeksFirstDays.map((weekStart) => {
         const weekDays = getDayList({
           date: weekStart,
-          amount: 7,
+          amount: 'week',
           excludeWeekends: settings.hideWeekends,
         });
         return weekDays.map((date) => ({
