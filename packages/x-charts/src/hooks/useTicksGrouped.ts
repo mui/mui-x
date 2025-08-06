@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
-import { AxisConfig, D3Scale } from '../models/axis';
+import { AxisConfig, D3Scale, type AxisGroup } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 import type { TickParams } from './useTicks';
 
@@ -31,12 +31,6 @@ export type GroupedTickItemType = {
    * both ticks with value `0` and `2` will have `groupIndex: 0`, and both ticks with value `1` and `3` will have `groupIndex: 1`.
    */
   groupIndex?: number;
-  /**
-   * The index of the tick group inside the group. This is useful if you have multiple ticks with the same value,
-   * but they are divided by other values. Eg: `'Jan', ..., 'Dec', 'Jan'`
-   * We would have the first `'Jan'` with `syncIndex: 0` and `syncIndex: 12` for the second `'Jan'`.
-   */
-  syncIndex?: number;
 };
 
 export function useTicksGrouped(
@@ -44,7 +38,7 @@ export function useTicksGrouped(
     scale: ScaleBand<any> | ScalePoint<any>;
     valueFormatter?: AxisConfig['valueFormatter'];
     direction: 'x' | 'y';
-    getGrouping: (value: any, dataIndex: number) => any[];
+    groups: AxisGroup[];
   } & Pick<TickParams, 'tickNumber' | 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'>,
 ): GroupedTickItemType[] {
   const {
@@ -52,7 +46,7 @@ export function useTicksGrouped(
     tickInterval,
     tickLabelPlacement = 'middle',
     tickPlacement = 'extremities',
-    getGrouping,
+    groups,
   } = options;
 
   return React.useMemo(() => {
@@ -64,9 +58,9 @@ export function useTicksGrouped(
 
     if (scale.bandwidth() > 0) {
       // scale type = 'band'
-      const { entries, maxGroupIndex } = mapToGrouping(
+      const entries = mapToGrouping(
         filteredDomain,
-        getGrouping,
+        groups,
         tickPlacement,
         tickLabelPlacement,
         scale,
@@ -81,7 +75,7 @@ export function useTicksGrouped(
           formattedValue: undefined,
           offset: scale.range()[0],
           labelOffset: 0,
-          groupIndex: maxGroupIndex,
+          groupIndex: groups.length - 1,
         },
 
         ...entries,
@@ -91,125 +85,89 @@ export function useTicksGrouped(
           formattedValue: undefined,
           offset: scale.range()[1],
           labelOffset: 0,
-          groupIndex: maxGroupIndex,
+          groupIndex: groups.length - 1,
         },
       ];
     }
 
     // scale type = 'point'
-    const { entries } = mapToGrouping(
-      filteredDomain,
-      getGrouping,
-      tickPlacement ?? 'extremities',
-      tickLabelPlacement ?? 'middle',
-      scale,
-    );
-    return entries;
-  }, [scale, tickInterval, getGrouping, tickPlacement, tickLabelPlacement]);
+    return mapToGrouping(filteredDomain, groups, tickPlacement, tickLabelPlacement, scale);
+  }, [scale, tickInterval, groups, tickPlacement, tickLabelPlacement]);
 }
 
 function mapToGrouping(
   tickValues: any[],
-  getGrouping: (value: any, dataIndex: number) => any[],
+  groups: AxisGroup[],
   tickPlacement: Exclude<TickParams['tickPlacement'], undefined>,
   tickLabelPlacement: Exclude<TickParams['tickLabelPlacement'], undefined>,
   scale: D3Scale,
 ) {
-  // Step 1: Create all tick items with their group information
-  const allTickItems: Omit<Required<GroupedTickItemType>, 'syncIndex'>[] = [];
+  const allTickItems: GroupedTickItemType[] = [];
+  // Map to keep track of offsets and their corresponding tick indexes
+  // Used to remove redundant ticks when they are in the same position
+  const offsetToTickIndex = new Map<number, Set<number>>();
 
-  let maxGroupIndex = 0;
+  let currentValueCount = 0;
 
-  // Build all tick items from the input data
-  tickValues.forEach((tickValue, dataIndex) => {
-    const groupValues = getGrouping(tickValue, dataIndex);
+  for (let groupIndex = 0; groupIndex < groups.length; groupIndex += 1) {
+    for (let dataIndex = 0; dataIndex < tickValues.length; dataIndex += 1) {
+      const tickValue = tickValues[dataIndex];
+      const groupValue = groups[groupIndex].getValue(tickValue, dataIndex);
+      const lastItem = allTickItems[allTickItems.length - 1];
 
-    groupValues.forEach((groupValue, groupIndex) => {
-      maxGroupIndex = Math.max(maxGroupIndex, groupIndex);
+      // Check if this is a new unique value for this group
+      const isNew = lastItem?.value !== groupValue || lastItem?.groupIndex !== groupIndex;
 
-      allTickItems.push({
-        value: groupValue,
-        formattedValue: `${groupValue}`,
-        offset: isBandScale(scale)
+      if (isNew) {
+        currentValueCount = 1;
+        // Calculate tick offset
+        const tickOffset = isBandScale(scale)
           ? scale(tickValue)! -
             (scale.step() - scale.bandwidth()) / 2 +
             offsetRatio[tickPlacement] * scale.step()
-          : scale(tickValue),
-        groupIndex,
-        dataIndex,
-        ignoreTick: false,
-        labelOffset: 0,
-      });
-    });
-  });
+          : scale(tickValue);
 
-  // Step 2: Sort by group index to ensure proper ordering
-  allTickItems.sort((a, b) => a.groupIndex - b.groupIndex);
+        // Calculate the label offset
+        const labelOffset =
+          (scale as { step: () => number }).step() *
+          currentValueCount *
+          (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]);
 
-  // Step 3: Process items to create final entries with sync indices and deduplication
-  const entries: GroupedTickItemType[] = [];
-  const dataIndexToLastEntryMap = new Map<number, number>();
-  let currentSyncIndex = -1;
+        // Add a new item
+        allTickItems.push({
+          value: groupValue,
+          formattedValue: `${groupValue}`,
+          offset: tickOffset,
+          groupIndex,
+          dataIndex,
+          ignoreTick: false,
+          labelOffset,
+        });
 
-  allTickItems.forEach((item, index) => {
-    const previousItem = allTickItems[index - 1];
-
-    // Check if this starts a new sync group
-    const isNewSyncGroup =
-      index === 0 ||
-      item.value !== previousItem.value ||
-      item.groupIndex !== previousItem.groupIndex;
-
-    if (isNewSyncGroup) {
-      currentSyncIndex += 1;
-
-      // Calculate how many items share this sync index
-      const itemsWithSameSyncIndex = allTickItems.filter((otherItem, otherIndex) => {
-        // Determine the sync index for this other item
-        let otherSyncIndex = -1;
-
-        for (let i = 0; i <= otherIndex; i += 1) {
-          const current = allTickItems[i];
-          const previous = allTickItems[i - 1];
-
-          if (
-            i === 0 ||
-            current.value !== previous.value ||
-            current.groupIndex !== previous.groupIndex
-          ) {
-            otherSyncIndex += 1;
-          }
+        if (!offsetToTickIndex.has(tickOffset)) {
+          offsetToTickIndex.set(tickOffset, new Set());
         }
 
-        return otherSyncIndex === currentSyncIndex;
-      });
+        const tickIndexes = offsetToTickIndex.get(tickOffset)!;
 
-      // Calculate the label offset based on the count
-      const labelOffset =
-        (scale as { step: () => number }).step() *
-        itemsWithSameSyncIndex.length *
-        (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]);
+        for (const previousIndex of tickIndexes.values()) {
+          allTickItems[previousIndex].ignoreTick = true;
+        }
 
-      // Mark the previous entry from the same data index as ignoreTick
-      const previousEntryIndex = dataIndexToLastEntryMap.get(item.dataIndex);
-      if (previousEntryIndex !== undefined) {
-        entries[previousEntryIndex].ignoreTick = true;
+        tickIndexes.add(allTickItems.length - 1);
+      } else {
+        currentValueCount += 1;
+
+        // Calculate the label offset
+        const labelOffset =
+          (scale as { step: () => number }).step() *
+          currentValueCount *
+          (offsetRatio[tickLabelPlacement] - offsetRatio[tickPlacement]);
+
+        lastItem.labelOffset = labelOffset;
       }
-
-      // Add the new entry
-      entries.push({
-        ...item,
-        syncIndex: currentSyncIndex,
-        labelOffset,
-      });
-
-      // Track this entry for the data index
-      dataIndexToLastEntryMap.set(item.dataIndex, entries.length - 1);
     }
-  });
+  }
 
-  return {
-    entries,
-    maxGroupIndex,
-  };
+  return allTickItems;
 }

@@ -6,9 +6,7 @@
       tickSize: 8,
       height: 32,
       groups: [
-        {
-          getValue: (v) => v.toLocaleDateString('en-US', { month: 'short' }),
-        },
+        { getValue: getMonth },
         { getValue: getQuarter },
         { getValue: getYear },
       ],

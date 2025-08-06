@@ -13,11 +13,11 @@ const DEFAULT_GROUPING_CONFIG = {
 };
 
 const getGroupingConfig = (
-  groupingConfig: { config?: Omit<AxisGroup, 'getValue'>[] },
+  groups: AxisGroup[],
   groupIndex: number,
   tickSize: number | undefined,
 ) => {
-  const config = groupingConfig?.config?.[groupIndex] ?? ({} as AxisGroup);
+  const config = groups[groupIndex] ?? ({} as AxisGroup);
 
   const defaultTickSize = tickSize ?? DEFAULT_GROUPING_CONFIG.tickSize;
   const calculatedTickSize = defaultTickSize * groupIndex * 2 + defaultTickSize;
@@ -72,16 +72,6 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
 
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
 
-  const groupingConfig = React.useMemo(() => {
-    return {
-      getGrouping: (value: any, dataIndex: number) =>
-        groups.length > 0 ? groups.map((group) => group.getValue(value, dataIndex)) : [''],
-      config: groups.map((group) => ({
-        tickSize: group.tickSize,
-      })),
-    };
-  }, [groups]);
-
   const drawingArea = useDrawingArea();
   const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
@@ -99,7 +89,7 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     direction: 'x',
-    getGrouping: groupingConfig.getGrouping,
+    groups,
   });
 
   // Skip axis rendering if no data is available
@@ -128,7 +118,7 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
         const tickLabel = item.formattedValue;
         const ignoreTick = item.ignoreTick ?? false;
         const groupIndex = item.groupIndex ?? 0;
-        const groupConfig = getGroupingConfig(groupingConfig, groupIndex, tickSize);
+        const groupConfig = getGroupingConfig(groups, groupIndex, tickSize);
 
         const tickYSize = positionSign * groupConfig.tickSize;
         const labelPositionY = positionSign * (groupConfig.tickSize + TICK_LABEL_GAP);
@@ -164,7 +154,5 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     </XAxisRoot>
   );
 }
-
-ChartsGroupedXAxis.propTypes = {} as any;
 
 export { ChartsGroupedXAxis };
