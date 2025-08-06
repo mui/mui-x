@@ -34,7 +34,7 @@ export const SettingsMenu = React.forwardRef(function SettingsMenu(
           aria-label={translations.settingsMenu}
           className={clsx('NeutralTextButton', 'Button', 'SettingsMenuButton')}
         >
-          <Settings size={24} strokeWidth={2} />
+          <Settings size={20} strokeWidth={1.5} />
         </Menu.Trigger>
         <Menu.Portal container={containerRef}>
           <Menu.Positioner className="SettingsMenuPositioner" sideOffset={4} align="end">
