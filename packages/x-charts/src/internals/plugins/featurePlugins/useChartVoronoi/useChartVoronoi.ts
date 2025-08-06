@@ -18,6 +18,7 @@ import {
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
+import { findClosestPoints } from './findClosestPoints';
 
 export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   svgRef,
@@ -102,56 +103,20 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
         const xScale = xAxis[xAxisId].scale;
         const yScale = yAxis[yAxisId].scale;
-        const originalXScale = xScale.copy();
-        const originalYScale = yScale.copy();
-        originalXScale.range([0, 1]);
-        originalYScale.range([0, 1]);
 
-        const excludeIfOutsideDrawingArea = function excludeIfOutsideDrawingArea(index: number) {
-          const x = originalXScale(aSeries.data[index].x)!;
-          const y = originalYScale(aSeries.data[index].y)!;
-
-          return x >= xZoomStart && x <= xZoomEnd && y >= yZoomStart && y <= yZoomEnd;
-        };
-
-        // We need to convert the distance from the original range [0, 1] to the current drawing area
-        // so the comparison is done on pixels instead of normalized values.
-        // fx and fy are the factors to convert the distance from [0, 1] to the current drawing area.
-        const fx = xScale.range()[1] - xScale.range()[0];
-        const fy = yScale.range()[1] - yScale.range()[0];
-        function sqDistFn(dx: number, dy: number) {
-          return fx * fx * dx * dx + fy * fy * dy * dy;
-        }
-
-        const maxDistSqFn =
-          maxRadius === undefined
-            ? () => Infinity
-            : function maxDistSqFn(dx: number, dy: number) {
-                if (dx === 0 && dy === 0) {
-                  return Infinity;
-                }
-
-                const vmrx = maxRadius * Math.cos(Math.atan(dy / dx));
-                const vmry = maxRadius * Math.sin(Math.atan(dy / dx));
-
-                return vmrx * vmrx + vmry * vmry;
-              };
-
-        const pointX =
-          xZoomStart +
-          ((svgPoint.x - drawingArea.left) / drawingArea.width) * (xZoomEnd - xZoomStart);
-        const pointY =
-          yZoomStart +
-          (1 - (svgPoint.y - drawingArea.top) / drawingArea.height) * (yZoomEnd - yZoomStart);
-        const closestPointIndex = flatbush.neighbors(
-          pointX,
-          pointY,
-          1,
-          maxDistSqFn,
-          maxRadius != null ? fx * fx * maxRadius * maxRadius : Infinity,
-          maxRadius != null ? fy * fy * maxRadius * maxRadius : Infinity,
-          excludeIfOutsideDrawingArea,
-          sqDistFn,
+        const closestPointIndex = findClosestPoints(
+          flatbush,
+          drawingArea,
+          aSeries.data,
+          xScale,
+          yScale,
+          xZoomStart,
+          xZoomEnd,
+          yZoomStart,
+          yZoomEnd,
+          svgPoint.x,
+          svgPoint.y,
+          maxRadius,
         )[0];
 
         performance.measure('useChartVoronoi-getClosestPoint', { start });
