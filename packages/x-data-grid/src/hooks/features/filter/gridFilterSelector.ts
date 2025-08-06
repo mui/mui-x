@@ -160,7 +160,7 @@ export const gridExpandedSortedRowTreeLevelPositionLookupSelector = createSelect
  * @category Filtering
  */
 export const gridFilteredSortedDepthRowEntriesSelector = createSelectorMemoized(
-  gridSortedRowEntriesSelector,
+  gridFilteredSortedRowEntriesSelector,
   gridRowTreeSelector,
   gridRowMaximumTreeDepthSelector,
   (sortedRows, rowTree, rowTreeDepth) => {
