@@ -94,6 +94,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
   const {
     autoFocus,
     className,
+    currentMonth,
     classes: classesProp,
     value: valueProp,
     defaultValue,
@@ -210,12 +211,12 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       return;
     }
 
-    const newDate = adapter.setMonth(value ?? referenceDate, month);
+    const newDate = adapter.setMonth(currentMonth ?? referenceDate, month);
     handleValueChange(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(adapter.setMonth(value ?? referenceDate, month))) {
+    if (!isMonthDisabled(adapter.setMonth(currentMonth ?? referenceDate, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -280,7 +281,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       monthsPerRow={monthsPerRow}
       {...other}
     >
-      {getMonthsInYear(adapter, value ?? referenceDate).map((month) => {
+      {getMonthsInYear(adapter, currentMonth ?? referenceDate).map((month) => {
         const monthNumber = adapter.getMonth(month);
         const monthText = adapter.format(month, 'monthShort');
         const monthLabel = adapter.format(month, 'month');
