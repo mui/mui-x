@@ -350,6 +350,10 @@ export class Flatbush {
         dArray[index + 1] = dy;
         const dist = sqDistFn(dx, dy);
 
+        if (dist > maxDistSqX || dist > maxDistSqY) {
+          continue;
+        }
+
         const maxDistSquared = maxDistSqFn(dx, dy);
 
         if (dist > maxDistSquared) {
