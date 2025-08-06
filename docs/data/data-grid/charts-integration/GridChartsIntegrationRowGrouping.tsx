@@ -17,7 +17,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 export default function GridChartsIntegrationRowGrouping() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 20,
+    rowLength: 100,
     editable: true,
   });
 
@@ -29,7 +29,7 @@ export default function GridChartsIntegrationRowGrouping() {
       ...data.initialState,
       rowGrouping: {
         ...data.initialState?.rowGrouping,
-        model: ['commodity'],
+        model: ['status', 'commodity'],
       },
       aggregation: {
         ...data.initialState?.aggregation,
@@ -45,7 +45,7 @@ export default function GridChartsIntegrationRowGrouping() {
       chartsIntegration: {
         charts: {
           main: {
-            categories: ['commodity'],
+            categories: ['status', 'commodity'],
             series: ['filledQuantity', 'feeRate'],
             chartType: 'column',
           },

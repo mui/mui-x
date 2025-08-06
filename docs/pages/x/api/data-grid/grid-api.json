@@ -331,6 +331,11 @@
       "required": true,
       "isPremiumPlan": true
     },
+    "setChartType": {
+      "type": { "description": "(chartId: string, type: string) =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "setColumnHeaderFilterFocus": {
       "type": { "description": "(field: string, event?: MuiBaseEvent) =&gt; void" },
       "required": true

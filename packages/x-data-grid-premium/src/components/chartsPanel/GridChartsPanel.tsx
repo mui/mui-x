@@ -170,7 +170,7 @@ function GridChartsPanel(props: GridChartsPanelProps) {
   const rootProps = useGridRootProps();
   const { schema = {} } = props;
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
-  const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
+  const { chartStateLookup } = useGridChartsIntegrationContext();
   const [activeTab, setActiveTab] = React.useState('chart');
 
   const chartEntries = React.useMemo(() => Object.entries(chartStateLookup), [chartStateLookup]);
@@ -191,13 +191,9 @@ function GridChartsPanel(props: GridChartsPanelProps) {
 
   const handleChartTypeChange = React.useCallback(
     (type: string) => {
-      setChartState(activeChartId, {
-        type,
-        maxCategories: schema[type]?.maxCategories,
-        maxSeries: schema[type]?.maxSeries,
-      });
+      apiRef.current.setChartType(activeChartId, type);
     },
-    [activeChartId, setChartState, schema],
+    [apiRef, activeChartId],
   );
 
   const tabItems = React.useMemo(

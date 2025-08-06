@@ -159,6 +159,7 @@
     "setChartSynchronizationState": {
       "description": "Sets the synchronization state for a chart."
     },
+    "setChartType": { "description": "Sets the chart type for the active chart." },
     "setColumnHeaderFilterFocus": {
       "description": "Sets the focus to the column header filter at the given <code>field</code>."
     },
