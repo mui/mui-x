@@ -325,6 +325,7 @@ MonthCalendar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  currentMonth: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.
