@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import { openSettingsMenu, toggleHideWeekends } from '../internals/utils/test-utils';
 
 describe('EventCalendar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });
@@ -89,5 +90,71 @@ describe('EventCalendar', () => {
     await user.click(workResourceToggleButton);
     expect(workResourceToggleButton).to.have.attribute('data-checked');
     expect(screen.getByRole('button', { name: /Weekly/i })).not.to.equal(null);
+  });
+
+  it('should allow to show / hide the weekends using the UI in the week view', async () => {
+    const { user } = render(<EventCalendar events={[]} />);
+
+    // Weekends should be visible by default
+    expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
+
+    // Hide the weekends
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
+    expect(screen.queryByRole('columnheader', { name: /Saturday 31/i })).to.equal(null);
+
+    // Show the weekends again
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
+  });
+
+  it('should allow to show / hide the weekends using the UI in the month view', async () => {
+    const { user } = render(<EventCalendar events={[]} defaultView="month" />);
+
+    // Weekends should be visible by default
+    expect(screen.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
+
+    // Hide the weekends
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.queryByRole('columnheader', { name: /Sunday/i })).to.equal(null);
+    expect(screen.queryByRole('columnheader', { name: /Saturday/i })).to.equal(null);
+
+    // Show the weekends again
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
+    expect(screen.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
+  });
+
+  it('should allow to show / hide the weekends using the UI in the agenda view', async () => {
+    const { user } = render(<EventCalendar events={[]} defaultView="agenda" />);
+
+    // Weekends should be visible by default
+    expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);
+    expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+
+    // Hide the weekends
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.queryByLabelText(/Saturday 31/i)).to.equal(null);
+    expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
+
+    // Show the weekends again
+    await openSettingsMenu(user);
+    await toggleHideWeekends(user);
+
+    expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);
+    expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
   });
 });

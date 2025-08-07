@@ -28,12 +28,17 @@ export const AgendaView = React.memo(
     const today = adapter.date();
 
     const visibleDate = useStore(store, selectors.visibleDate);
-
+    const settings = useStore(store, selectors.settings);
     const getDayList = useDayList();
 
     const days = React.useMemo(
-      () => getDayList({ date: visibleDate, amount: AGENDA_VIEW_DAYS_AMOUNT }),
-      [getDayList, visibleDate],
+      () =>
+        getDayList({
+          date: visibleDate,
+          amount: AGENDA_VIEW_DAYS_AMOUNT,
+          excludeWeekends: settings.hideWeekends,
+        }),
+      [getDayList, settings.hideWeekends, visibleDate],
     );
     const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
       days,
@@ -49,12 +54,13 @@ export const AgendaView = React.memo(
       >
         <EventPopoverProvider containerRef={containerRef}>
           {daysWithEvents.map(({ day, events, allDayEvents }) => (
-            <div
+            <section
               className="AgendaViewRow"
               key={day.toString()}
               id={`AgendaViewRow-${day.toString()}`}
+              aria-labelledby={`DayHeaderCell-${day.day.toString()}`}
             >
-              <div
+              <header
                 id={`DayHeaderCell-${day.toString()}`}
                 className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
@@ -68,40 +74,44 @@ export const AgendaView = React.memo(
                     {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
                   </span>
                 </div>
-              </div>
-              <div className="EventsList">
+              </header>
+              <ul className="EventsList">
                 {allDayEvents.map((event) => (
-                  <EventPopoverTrigger
-                    key={event.id}
-                    event={event}
-                    nativeButton={false}
-                    render={
-                      <DayGridEvent
-                        event={event}
-                        variant="compact"
-                        eventResource={resourcesByIdMap.get(event.resource)}
-                        ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
-                      />
-                    }
-                  />
+                  <li>
+                    <EventPopoverTrigger
+                      key={event.id}
+                      event={event}
+                      nativeButton={false}
+                      render={
+                        <DayGridEvent
+                          event={event}
+                          variant="compact"
+                          eventResource={resourcesByIdMap.get(event.resource)}
+                          ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
+                        />
+                      }
+                    />
+                  </li>
                 ))}
                 {events.map((event) => (
-                  <EventPopoverTrigger
-                    key={event.id}
-                    event={event}
-                    nativeButton={false}
-                    render={
-                      <DayGridEvent
-                        event={event}
-                        variant="compact"
-                        eventResource={resourcesByIdMap.get(event.resource)}
-                        ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
-                      />
-                    }
-                  />
+                  <li>
+                    <EventPopoverTrigger
+                      key={event.id}
+                      event={event}
+                      nativeButton={false}
+                      render={
+                        <DayGridEvent
+                          event={event}
+                          variant="compact"
+                          eventResource={resourcesByIdMap.get(event.resource)}
+                          ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
+                        />
+                      }
+                    />
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
+            </section>
           ))}
         </EventPopoverProvider>
       </div>
