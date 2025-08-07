@@ -131,6 +131,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
 
   if (process.env.NODE_ENV !== 'production') {
+    /* eslint-disable react-hooks/rules-of-hooks */
     const logger = useGridLogger(apiRef, 'useResizeContainer');
     const errorShown = React.useRef(false);
 
@@ -163,6 +164,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
         errorShown.current = true;
       }
     });
+    /* eslint-enable react-hooks/rules-of-hooks */
   }
 
   useStoreEffect(
