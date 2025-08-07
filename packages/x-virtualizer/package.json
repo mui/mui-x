@@ -37,7 +37,7 @@
     "directory": "packages/x-virtualizer"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.4",
+    "@babel/runtime": "^7.28.2",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*"
   },
