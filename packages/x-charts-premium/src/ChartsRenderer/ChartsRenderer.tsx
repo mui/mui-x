@@ -52,12 +52,12 @@ function ChartsRenderer({
       })).reverse()
     : undefined;
   const height = hasMultipleCategories ? CATEGORY_TICK_SIZE * (categories.length - 1) : undefined;
-  const valueFormatter = (value: string | string[]): string => {
-    if (typeof value === 'string') {
-      return value;
+  const valueFormatter = (value: string | string[] | number): string => {
+    if (Array.isArray(value)) {
+      return value.join(' - ');
     }
 
-    return value.join(' - ');
+    return String(value);
   };
 
   const sections = (configurationOptions as any)[chartType]?.customization || [];
