@@ -8,7 +8,7 @@ import { DayGrid } from '../../../primitives/day-grid';
 import { useDayList } from '../../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { isWeekend } from '../../internals/utils/date-utils';
+import { isWeekend } from '../../../primitives/utils/date-utils';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
@@ -24,11 +24,16 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
+  const settings = useStore(store, selectors.settings);
+
   const today = adapter.date();
   const translations = useTranslations();
 
   const getDayList = useDayList();
-  const days = React.useMemo(() => getDayList({ date: week, amount: 7 }), [getDayList, week]);
+  const days = React.useMemo(
+    () => getDayList({ date: week, amount: 'week', excludeWeekends: settings.hideWeekends }),
+    [getDayList, week, settings.hideWeekends],
+  );
 
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
     days,

@@ -6,6 +6,7 @@ import {
   CalendarResource,
   CalendarResourceId,
   CalendarView,
+  CalendarSettings,
   CalendarEventWithPosition,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
@@ -39,6 +40,10 @@ export type State = {
    * Whether the component should display the time in 12-hour format with AM/PM meridiem.
    */
   ampm: boolean;
+  /**
+   * Settings for the calendar.
+   */
+  settings: CalendarSettings;
 };
 
 export const selectors = {
@@ -46,6 +51,7 @@ export const selectors = {
   ampm: createSelector((state: State) => state.ampm),
   view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
+  settings: createSelector((state: State) => state.settings),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
   visibleResourcesList: createSelectorMemoized(

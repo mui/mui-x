@@ -34,6 +34,7 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const { store } = useEventCalendarContext();
+    const settings = useStore(store, selectors.settings);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
 
@@ -70,7 +71,11 @@ export const MonthView = React.memo(
           <DayGrid.Root className="MonthViewRoot">
             <div className="MonthViewHeader">
               <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
-              {getDayList({ date: weeks[0], amount: 7 }).map((day) => (
+              {getDayList({
+                date: weeks[0],
+                amount: 'week',
+                excludeWeekends: settings.hideWeekends,
+              }).map((day) => (
                 <div
                   key={day.toString()}
                   id={`MonthViewHeaderCell-${day.toString()}`}
