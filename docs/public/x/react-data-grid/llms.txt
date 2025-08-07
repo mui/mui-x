@@ -1,0 +1,174 @@
+# Data Grid
+
+This is the documentation for the Data Grid package.
+It contains comprehensive guides, components, and utilities for building user interfaces.
+
+- [Quickstart](/x/react-data-grid/quickstart.md): Install the MUI X Data Grid package and start building your React data table.
+- [Features](/x/react-data-grid/features.md): Explore all of the available features in each of the Data Grid packages.
+## Main features
+
+- [Layout](/x/react-data-grid/layout.md): The Data Grid offers multiple layout modes.
+### Columns
+
+- [Column definition](/x/react-data-grid/column-definition.md): Define your columns.
+- [Column dimensions](/x/react-data-grid/column-dimensions.md): Customize the dimensions and resizing behavior of your columns.
+- [Column visibility](/x/react-data-grid/column-visibility.md): Define which columns are visible.
+- [Custom columns](/x/react-data-grid/custom-columns.md): Create custom column types.
+- [Column header](/x/react-data-grid/column-header.md): Customize your columns header.
+- [Column menu](/x/react-data-grid/column-menu.md): Customize your columns menu.
+- [Column spanning](/x/react-data-grid/column-spanning.md): Span cells across several columns.
+- [Column groups](/x/react-data-grid/column-groups.md): Group your columns.
+- [Column reordering](/x/react-data-grid/column-ordering.md): The Data Grid Pro lets users drag and drop columns to reorder them. (pro)
+- [Column pinning](/x/react-data-grid/column-pinning.md): Implement pinning to keep columns in the Data Grid visible at all times. (pro)
+- [Recipes](/x/react-data-grid/column-recipes.md): Advanced column customization recipes.
+
+
+### Rows
+
+- [Row definition](/x/react-data-grid/row-definition.md): Define your rows.
+- [Row updates](/x/react-data-grid/row-updates.md): Always keep your rows up to date.
+- [Row height](/x/react-data-grid/row-height.md): Customize the height of your rows.
+- [Row spanning](/x/react-data-grid/row-spanning.md): Span cells across several rows. 🆕
+- [Master-detail row panels](/x/react-data-grid/master-detail.md): Implement master-detail row panels to let users view extended information without leaving the Data Grid. (pro)
+- [Row reordering](/x/react-data-grid/row-ordering.md): The Data Grid Pro lets users drag and drop rows to reorder them. (pro)
+- [Row pinning](/x/react-data-grid/row-pinning.md): Implement pinning to keep rows in the Data Grid visible at all times. (pro)
+- [Recipes](/x/react-data-grid/row-recipes.md): Advanced row customization recipes.
+
+
+- [Cells](/x/react-data-grid/cells.md): Learn how to customize the rendered elements and values of a cell.
+### Editing
+
+- [Overview](/x/react-data-grid/editing.md): The Data Grid has built-in support for cell and row editing.
+- [Persistence](/x/react-data-grid/editing/persistence.md): Persisting edited rows.
+- [Custom edit component](/x/react-data-grid/editing/custom-edit-component.md): Creating custom edit component.
+- [Editing events](/x/react-data-grid/editing/editing-events.md): Using editing events.
+- [Recipes editing](/x/react-data-grid/recipes-editing.md): Advanced grid customization recipes.
+
+
+- [Sorting](/x/react-data-grid/sorting.md): Easily sort your rows based on one or several criteria.
+### Filtering
+
+- [Overview](/x/react-data-grid/filtering.md): Easily filter your rows based on one or several criteria.
+- [Customization](/x/react-data-grid/filtering/customization.md): Ways to customize your filters.
+- [Quick filter](/x/react-data-grid/filtering/quick-filter.md): One filter field to quickly filter grid.
+- [Server-side filtering](/x/react-data-grid/filtering/server-side.md): Filter rows on the server.
+- [Multi-filters](/x/react-data-grid/filtering/multi-filters.md): Let end users apply multiple filters to the Data Grid simultaneously. (pro)
+- [Header filters](/x/react-data-grid/filtering/header-filters.md): Give users quick-access column filters in the Data Grid header. (pro)
+- [Recipes](/x/react-data-grid/filtering-recipes.md): Advanced filtering customization recipes.
+
+
+- [Pagination](/x/react-data-grid/pagination.md): Easily paginate your rows and only fetch what you need.
+### Selection
+
+- [Row selection](/x/react-data-grid/row-selection.md): Row selection allows the user to select and highlight a single or multiple rows that they can then take action on.
+- [Cell selection](/x/react-data-grid/cell-selection.md): Let users select individual cells or a range of cells. (premium)
+
+
+- [Virtualization](/x/react-data-grid/virtualization.md): The grid is high performing thanks to its rows and columns virtualization engine.
+- [Accessibility](/x/react-data-grid/accessibility.md): Learn how the Data Grid implements accessibility features and guidelines, including keyboard navigation that follows international standards.
+- [Localization](/x/react-data-grid/localization.md): The Data Grid's localization features provide the appropriate translations and formatting for users around the world.
+
+
+## Advanced features
+
+- [Tree data](/x/react-data-grid/tree-data.md): Use tree data to render rows with parent-child relationships in the Data Grid. (pro)
+### Row grouping
+
+- [Overview](/x/react-data-grid/row-grouping.md): Group rows together based on column values in the Data Grid.
+- [Recipes](/x/react-data-grid/recipes-row-grouping.md): Advanced grid customization recipes.
+
+
+- [Aggregation](/x/react-data-grid/aggregation.md): Add aggregation functions to the Data Grid to let users combine row values. (premium)
+### Pivoting
+
+- [Overview](/x/react-data-grid/pivoting.md): Rearrange rows and columns to view data from multiple perspectives.
+
+
+- [Export](/x/react-data-grid/export.md): Export the rows in CSV or Excel formats, or use the browser's print dialog to print or save as PDF.
+- [Copy and paste](/x/react-data-grid/clipboard.md): Copy and paste data using clipboard.
+- [Scrolling](/x/react-data-grid/scrolling.md): This section presents how to programmatically control the scroll.
+- [List view](/x/react-data-grid/list-view.md): Display data in a single-column list view for a more compact Data Grid on smaller screens and mobile devices. (pro)
+### Server-side data
+
+- [Overview](/x/react-data-grid/server-side-data.md): Learn how to work with server-side data in the Data Grid using the Data Source layer.
+- [Tree data](/x/react-data-grid/server-side-data/tree-data.md): Implement lazy-loading server-side tree data in the Data Grid using the Data Source layer. (pro)
+- [Lazy loading](/x/react-data-grid/server-side-data/lazy-loading.md): Implement lazy-loading rows with server-side data in the Data Grid using the Data Source layer. (pro)
+- [Row grouping](/x/react-data-grid/server-side-data/row-grouping.md): Implement row grouping with server-side data in the Data Grid using the Data Source layer. (premium)
+- [Aggregation](/x/react-data-grid/server-side-data/aggregation.md): Implement aggregation with server-side data in the Data Grid using the Data Source layer. (premium)
+- [Recipes](/x/react-data-grid/server-side-data/recipes.md): Recipes for advanced data source use-cases.
+
+
+- [AI Assistant](/x/react-data-grid/ai-assistant.md): Translate natural language into Data Grid views. (premium) 🆕
+
+
+## Components
+
+- [Toolbar](/x/react-data-grid/components/toolbar.md): Add custom actions and controls to the Data Grid.
+- [Export](/x/react-data-grid/components/export.md): Let users export the Data Grid for Excel, CSV, or printing.
+- [Quick Filter](/x/react-data-grid/components/quick-filter.md): Provide users with an expandable search field to filter data in the Data Grid.
+- [Columns Panel](/x/react-data-grid/components/columns-panel.md): Customize the Data Grid's columns panel. (planned)
+- [Filter Panel](/x/react-data-grid/components/filter-panel.md): Customize the Data Grid's filter panel. (planned)
+- [Prompt Field](/x/react-data-grid/components/prompt-field.md): Provide users with a prompt field to interact with the AI assistant. (premium)
+- [Pivot Panel](/x/react-data-grid/components/pivot-panel.md): Customize the Data Grid's pivot panel. (premium) (planned)
+- [AI Assistant Panel](/x/react-data-grid/components/ai-assistant-panel.md): Customize the Data Grid's AI assistant panel. (premium) (planned)
+
+
+## Customization
+
+- [Styling basics](/x/react-data-grid/style.md): The grid CSS can be easily overwritten.
+- [Styling recipes](/x/react-data-grid/style-recipes.md): Advanced grid styling recipes.
+- [Overlays](/x/react-data-grid/overlays.md): The various Data Grid overlays.
+
+
+## Resources
+
+- [API object](/x/react-data-grid/api-object.md): Interact with the Data Grid using its API.
+- [Data Grid - Events](/x/react-data-grid/events.md): Subscribe to the events emitted by the Data Grid to trigger custom behavior.
+- [Data Grid - State](/x/react-data-grid/state.md): Initialize and read the state of the Data Grid.
+- [Data Grid - Performance](/x/react-data-grid/performance.md): Follow these recommendations to improve your Data Grid's performance.
+
+## API reference
+
+- [Index](/x/api/data-grid.md): API documentation for Index
+- [AiAssistantPanelTrigger](/x/api/data-grid/ai-assistant-panel-trigger.md): API documentation for AiAssistantPanelTrigger (premium)
+- [ColumnsPanelTrigger](/x/api/data-grid/columns-panel-trigger.md): API documentation for ColumnsPanelTrigger
+- [DataGrid](/x/api/data-grid/data-grid.md): API documentation for DataGrid
+- [DataGridPremium](/x/api/data-grid/data-grid-premium.md): API documentation for DataGridPremium (premium)
+- [DataGridPro](/x/api/data-grid/data-grid-pro.md): API documentation for DataGridPro (pro)
+- [ExportCsv](/x/api/data-grid/export-csv.md): API documentation for ExportCsv
+- [ExportExcel](/x/api/data-grid/export-excel.md): API documentation for ExportExcel (premium)
+- [ExportPrint](/x/api/data-grid/export-print.md): API documentation for ExportPrint
+- [FilterPanelTrigger](/x/api/data-grid/filter-panel-trigger.md): API documentation for FilterPanelTrigger
+- [GridFilterForm](/x/api/data-grid/grid-filter-form.md): API documentation for GridFilterForm
+- [GridFilterPanel](/x/api/data-grid/grid-filter-panel.md): API documentation for GridFilterPanel
+- [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter.md): API documentation for GridToolbarQuickFilter
+- [PivotPanelTrigger](/x/api/data-grid/pivot-panel-trigger.md): API documentation for PivotPanelTrigger (premium)
+- [PromptField](/x/api/data-grid/prompt-field.md): API documentation for PromptField (premium)
+- [PromptFieldControl](/x/api/data-grid/prompt-field-control.md): API documentation for PromptFieldControl (premium)
+- [PromptFieldRecord](/x/api/data-grid/prompt-field-record.md): API documentation for PromptFieldRecord (premium)
+- [PromptFieldSend](/x/api/data-grid/prompt-field-send.md): API documentation for PromptFieldSend (premium)
+- [QuickFilter](/x/api/data-grid/quick-filter.md): API documentation for QuickFilter
+- [QuickFilterClear](/x/api/data-grid/quick-filter-clear.md): API documentation for QuickFilterClear
+- [QuickFilterControl](/x/api/data-grid/quick-filter-control.md): API documentation for QuickFilterControl
+- [QuickFilterTrigger](/x/api/data-grid/quick-filter-trigger.md): API documentation for QuickFilterTrigger
+- [Toolbar](/x/api/data-grid/toolbar.md): API documentation for Toolbar
+- [ToolbarButton](/x/api/data-grid/toolbar-button.md): API documentation for ToolbarButton
+- [GridApi](/x/api/data-grid/grid-api.md): API documentation for GridApi
+- [GridCellParams](/x/api/data-grid/grid-cell-params.md): API documentation for GridCellParams
+- [GridColDef](/x/api/data-grid/grid-col-def.md): API documentation for GridColDef
+- [GridSingleSelectColDef](/x/api/data-grid/grid-single-select-col-def.md): API documentation for GridSingleSelectColDef
+- [GridActionsColDef](/x/api/data-grid/grid-actions-col-def.md): API documentation for GridActionsColDef
+- [GridListViewColDef](/x/api/data-grid/grid-list-view-col-def.md): API documentation for GridListViewColDef
+- [GridExportStateParams](/x/api/data-grid/grid-export-state-params.md): API documentation for GridExportStateParams
+- [GridFilterItem](/x/api/data-grid/grid-filter-item.md): API documentation for GridFilterItem
+- [GridFilterModel](/x/api/data-grid/grid-filter-model.md): API documentation for GridFilterModel
+- [GridFilterOperator](/x/api/data-grid/grid-filter-operator.md): API documentation for GridFilterOperator
+- [GridRenderContext](/x/api/data-grid/grid-render-context.md): API documentation for GridRenderContext
+- [GridRowClassNameParams](/x/api/data-grid/grid-row-class-name-params.md): API documentation for GridRowClassNameParams
+- [GridRowParams](/x/api/data-grid/grid-row-params.md): API documentation for GridRowParams
+- [GridRowSpacingParams](/x/api/data-grid/grid-row-spacing-params.md): API documentation for GridRowSpacingParams
+- [GridAggregationFunction](/x/api/data-grid/grid-aggregation-function.md): API documentation for GridAggregationFunction
+- [GridAggregationFunctionDataSource](/x/api/data-grid/grid-aggregation-function-data-source.md): API documentation for GridAggregationFunctionDataSource
+- [GridCsvExportOptions](/x/api/data-grid/grid-csv-export-options.md): API documentation for GridCsvExportOptions
+- [GridPrintExportOptions](/x/api/data-grid/grid-print-export-options.md): API documentation for GridPrintExportOptions
+- [GridExcelExportOptions](/x/api/data-grid/grid-excel-export-options.md): API documentation for GridExcelExportOptions
