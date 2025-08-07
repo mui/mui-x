@@ -72,7 +72,10 @@ export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
 } from './plugins/useTreeViewLabel';
-export { selectorIsItemExpanded } from './plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+export {
+  selectorIsItemExpanded,
+  selectorExpandedItems,
+} from './plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 export { selectorIsItemSelected } from './plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 export {
   selectorDataSourceState,
