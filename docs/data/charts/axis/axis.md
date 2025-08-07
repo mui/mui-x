@@ -244,7 +244,7 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 In order to group `band` or `point` axes together, a user can provide a `groups` property in the axis definition.
 This property expects an array of objects with a `getValue` function.
-This feature is available for both X-axis and Y-axis.
+This feature is available for both x and y axes.
 
 The `getValue` function receives the axis data value and should return a group name.
 Each group name will be used as is, overriding any `valueFormatter` for the axis.
