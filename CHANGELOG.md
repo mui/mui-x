@@ -5,6 +5,113 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.10.0
+
+_Aug 7, 2025_
+
+We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 `FunnelChart` marked as stable
+- 📈 Supporting label groups in band and point axis
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to the community members for their valuable contributions:
+@aqeelat, @dwrth, @noobyogi0010, @nusr, @sai6855
+
+The following are all team members who have contributed to this release:
+@arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @oliviertassinari, @rita-codes, @romgrk
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.9.2`
+
+- [DataGrid] Move spread operator in `BaseSelect` to allow `variant` change (#19026) @dwrth
+- [Datagrid] Use `use-sync-external-store` shim (#19063) @romgrk
+- [DataGrid] Allow skipping cache in `fetchRows()` API method (#18904) @MBilalShafi
+- [DataGrid] Do not call `preProcessEditCellProps()` if cell is not editable based on `isCellEditable()` (#18405) @nusr
+- [DataGrid] Fix `renderCountry` throwing an error when used in tree data (#19068) @cherniavskii
+- [DataGrid] Fix performance issue for root level "select all" (#19015) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.9.2`, plus:
+
+- [DataGridPro] Fix row reorder not working with column reorder disabled (#19016) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.9.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.9.2`, plus:
+
+- [DataGridPremium] Allow additional derived columns customization via `valueFormatter` (#18982) @arminmeh
+- [DataGridPremium] Fix complex `singleSelect` columns not working in pivot model (#18971) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.9.2`
+
+- [pickers] `MuiPickersLayout-toolbar` is overlapping the Calendar in RTL `MobileDatePicker` variant (#18981) @rita-codes
+
+#### `@mui/x-date-pickers-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.9.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.9.2`
+
+- [charts] Add `groups` to `band` and `point` axis config (#18766) @JCQuintas
+- [charts] Animation example using `motion` library (#18993) @JCQuintas
+- [charts] Fix type assertion in axis highlight components (#19060) @sai6855
+- [charts] Remove unnecessary type assertion in tooltip `valueFormatter` in heatmap (#19047) @sai6855
+
+#### `@mui/x-charts-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.9.2`, plus:
+
+- [charts-pro] Fix `slotProps.tooltip.trigger` not respected in `ScatterChartPro` and `FunnelChart` (#18902) @bernardobelchior
+- [charts-pro] Fix zoom filtering adjusting axis too soon (#18992) @bernardobelchior
+- [charts-pro] Mark `FunnelChart` as stable (#19048) @JCQuintas
+- [charts-pro] Mark zoom slider and preview as stable (#19049) @JCQuintas
+- [charts-pro] Refactor `createAxisFilterMapper` (#18998) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.9.2`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.9.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.9.2`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add CSS bundler breaking change to migration guide (#17436) @romgrk
+- [docs] `RichTreeViewPro` demo for dragging via custom drag-handle is not working properly (#19008) @rita-codes
+- [docs] Fix broken link to D3 in Charts (#19020) @oliviertassinari
+- [docs] Revise the Charts Animation doc (#18990) @mapache-salvaje
+- [docs] Fix incorrect code in line chart preview (#19023) @noobyogi0010
+- [docs] Improve bundling instructions for the DataGrid (#19065) @romgrk
+
+### Core
+
+- [core] Fix ESLint reference name @oliviertassinari
+
+### Miscellaneous
+
+- [bundles] Remove tracking from some modules (#19072) @Janpot
+- [code-infra] Accept `PORT` env on `docs:dev` script (#19014) @JCQuintas
+- [code-infra] Skip codesandbox iframe demos in regressions tests (#18970) @cherniavskii
+- [infra] Remove package.json `module` field (#18961) @Janpot
+- [internal] Remove peer dependency on `@mui/system` (#19062) @aqeelat
+
 ## 8.9.2
 
 _Jul 31, 2025_
