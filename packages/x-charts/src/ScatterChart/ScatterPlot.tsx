@@ -6,6 +6,7 @@ import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { seriesConfig as scatterSeriesConfig } from './seriesConfig';
+import { FastScatter } from './FastScatter';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -26,6 +27,13 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
    * @default {}
    */
   slotProps?: ScatterPlotSlotProps;
+  /**
+   * Use fast renderer for the scatter chart.
+   * It has better performance for large datasets, but does not support all features.
+   * TODO: Link to limitations
+   * @default false
+   */
+  useFastRenderer?: boolean;
 }
 
 /**
@@ -39,7 +47,7 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
  * - [ScatterPlot API](https://mui.com/x/api/charts/scatter-plot/)
  */
 function ScatterPlot(props: ScatterPlotProps) {
-  const { slots, slotProps, onItemClick } = props;
+  const { slots, slotProps, onItemClick, useFastRenderer } = props;
   const seriesData = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
@@ -54,7 +62,8 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  const ScatterItems = slots?.scatter ?? Scatter;
+  const DefaultScatterItems = useFastRenderer ? FastScatter : Scatter;
+  const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
   return (
     <React.Fragment>
