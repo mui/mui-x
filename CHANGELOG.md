@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.9
+
+_Aug 7, 2025_
+
+We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@nusr
+
+The following are all team members who have contributed to this release:
+@cherniavskii, @mapache-salvaje, @MBilalShafi, @rita-codes
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.9`
+
+- [DataGrid] Do not call `preProcessEditCellProps()` if cell is not editable based on `isCellEditable()` (#19082) @nusr
+
+#### `@mui/x-data-grid-pro@7.29.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.9`, plus:
+
+- [DataGridPro] Fix row ordering not auto-scrolling when moving beyond viewport (#18718) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@7.29.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.9`.
+
+### Docs
+
+- [docs] Audit and revise the Data Grid Pro row docs (#18629) @mapache-salvaje
+- [docs] Fix `size` column filtering in files tree demo (#18728) @cherniavskii
+
+### Miscellaneous
+
+- Update readme publish release command V7 (#18684) @rita-codes
+
 ## v7.29.8
 
 _Jul 4, 2025_
