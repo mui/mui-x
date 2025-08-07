@@ -9,7 +9,7 @@ export default function GroupedYAxes() {
         {
           data: categoryData,
           scaleType: 'band',
-          width: 20,
+          width: 120,
           groups: [
             // Extract main category
             { getValue: (category) => category[1] },
@@ -49,7 +49,6 @@ const profitData = [45, 35, 80, 65, 25, 55, 50, 40, 30];
 const chartConfig = {
   width: 600,
   height: 400,
-  margin: { left: 120, right: 20, top: 20, bottom: 40 },
   xAxis: [{ valueFormatter: (value: number) => `${value}K` }],
   series: [
     {

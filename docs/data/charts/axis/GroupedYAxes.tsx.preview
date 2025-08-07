@@ -4,7 +4,7 @@
     {
       data: categoryData,
       scaleType: 'band',
-      width: 20,
+      width: 120,
       groups: [
         // Extract main category
         { getValue: (category) => category[1] },
