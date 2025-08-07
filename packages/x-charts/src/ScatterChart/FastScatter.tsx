@@ -145,8 +145,9 @@ export function FastScatter(props: FastScatterProps) {
 
     siblings.push(
       <path
-        key={i}
+        key={`highlighted-${series.id}`}
         fill={colorGetter ? colorGetter(i) : color}
+        data-highlighted
         d={createPath(
           getXPosition(datum.x),
           getYPosition(datum.y),
@@ -156,6 +157,7 @@ export function FastScatter(props: FastScatterProps) {
     );
   }
 
+  console.log({ seriesHighlightedItem, seriesUnfadedItem });
   if (seriesUnfadedItem != null) {
     const datum = series.data[seriesUnfadedItem];
     const getXPosition = getValueToPositionMapper(xScale);
@@ -163,7 +165,7 @@ export function FastScatter(props: FastScatterProps) {
 
     siblings.push(
       <path
-        key={i}
+        key={`unfaded-${series.id}`}
         fill={colorGetter ? colorGetter(i) : color}
         d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
       />,
@@ -172,7 +174,12 @@ export function FastScatter(props: FastScatterProps) {
 
   return (
     <React.Fragment>
-      <Group data-series={series.id} data-faded={isSeriesFaded} className={classes.root}>
+      <Group
+        className={classes.root}
+        data-series={series.id}
+        data-faded={isSeriesFaded || undefined}
+        data-highlighted={isSeriesHighlighted || undefined}
+      >
         {children}
       </Group>
       {siblings}

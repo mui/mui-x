@@ -47,6 +47,14 @@ export function getSeriesUnfadedItem(
   item: HighlightItemData | null,
   seriesId: SeriesId,
 ) {
+  if (isSeriesHighlighted(scope, item, seriesId)) {
+    return null;
+  }
+
+  if (getSeriesHighlightedItem(scope, item, seriesId) === item?.dataIndex) {
+    return null;
+  }
+
   return (scope?.fade === 'series' || scope?.fade === 'global') && item?.seriesId === seriesId
     ? item.dataIndex
     : null;

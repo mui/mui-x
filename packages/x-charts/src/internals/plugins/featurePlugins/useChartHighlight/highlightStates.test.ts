@@ -188,6 +188,14 @@ describe('highlightStates', () => {
       expect(getSeriesUnfadedItem(scope, itemData1, s1)).to.equal(null);
     });
 
+    it('should return null when scope.fade is "series", but an item is highlighted', () => {
+      const highlightSeriesScope: Partial<HighlightScope> = { highlight: 'series', fade: 'series' };
+      expect(getSeriesUnfadedItem(highlightSeriesScope, itemData1, s1)).to.equal(null);
+
+      const highlightItemScope: Partial<HighlightScope> = { highlight: 'item', fade: 'series' };
+      expect(getSeriesUnfadedItem(highlightItemScope, itemData1, s1)).to.equal(null);
+    });
+
     it('should return null when scope or item are null', () => {
       expect(getSeriesUnfadedItem(null, itemData1, s1)).to.equal(null);
       expect(getSeriesUnfadedItem(null, itemData1, s2)).to.equal(null);
