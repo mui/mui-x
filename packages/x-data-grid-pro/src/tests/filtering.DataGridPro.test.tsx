@@ -1295,6 +1295,69 @@ describe('<DataGridPro /> - Filter', () => {
       await user.keyboard('{ArrowDown}');
       expect(filterCell).toHaveFocus();
     });
+
+    // https://github.com/mui/mui-x/issues/18949
+    it('should not persist header filter operators across different DataGrid instances', () => {
+      const customOperator = {
+        value: 'customIn',
+        label: 'Custom In',
+        headerLabel: 'In',
+        getApplyFilterFn: () => () => true,
+      };
+
+      // First grid with custom operator
+      const { unmount } = render(
+        <DataGridPro
+          rows={[
+            { id: 1, name: 'Alice' },
+            { id: 2, name: 'Bob' },
+          ]}
+          columns={[
+            {
+              field: 'name',
+              filterOperators: [customOperator, ...getGridStringOperators()],
+            },
+          ]}
+          headerFilters
+        />,
+      );
+
+      // Click on the header filter menu to select custom operator
+      const filterCell1 = getColumnHeaderCell(0, 1);
+      fireEvent.click(within(filterCell1).getByLabelText('Operator'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'In' }));
+
+      // Verify custom operator is selected
+      expect(within(filterCell1).getByLabelText('In')).not.to.equal(null);
+
+      // Unmount first grid
+      unmount();
+
+      // Mount second grid without custom operator
+      render(
+        <DataGridPro
+          rows={[
+            { id: 1, name: 'Charlie' },
+            { id: 2, name: 'David' },
+          ]}
+          columns={[
+            {
+              field: 'name',
+              // Only default string operators, no custom operator
+              filterOperators: getGridStringOperators(),
+            },
+          ]}
+          headerFilters
+        />,
+      );
+
+      // Check that the second grid uses the default operator, not the custom one
+      const filterCell2 = getColumnHeaderCell(0, 1);
+
+      // The second grid should have "Contains" as the default operator, not "In"
+      expect(within(filterCell2).queryByLabelText('In')).to.equal(null);
+      expect(within(filterCell2).getByLabelText('Contains')).not.to.equal(null);
+    });
   });
 
   describe('Read-only filters', () => {

@@ -40,8 +40,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   }, [classes]);
 };
 
-const filterItemsCache: Record<GridStateColDef['field'], GridFilterItem> = Object.create(null);
-
 export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
   const { headerGroupingMaxDepth, hasOtherElementInTabSequence } = props;
@@ -80,6 +78,10 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
 
   const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
+  const filterItemsCacheRef = React.useRef<Record<GridStateColDef['field'], GridFilterItem>>(
+    Object.create(null),
+  );
+
   const getFilterItem = React.useCallback(
     (colDef: GridStateColDef) => {
       const filterModelItem = filterModel?.items.find(
@@ -89,14 +91,14 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
         // there's a valid `filterModelItem` for this column
         return filterModelItem;
       }
-      const defaultCachedItem = filterItemsCache[colDef.field];
+      const defaultCachedItem = filterItemsCacheRef.current[colDef.field];
       if (defaultCachedItem != null) {
         // there's a cached `defaultItem` for this column
         return defaultCachedItem;
       }
       // there's no cached `defaultItem` for this column, let's generate one and cache it
       const defaultItem = getGridFilter(colDef);
-      filterItemsCache[colDef.field] = defaultItem;
+      filterItemsCacheRef.current[colDef.field] = defaultItem;
       return defaultItem;
     },
     [filterModel],
