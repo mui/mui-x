@@ -66,10 +66,12 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onHighlightChange,
     disableVoronoi,
     voronoiMaxRadius,
-    onItemClick: disableVoronoi
-      ? undefined
-      : (onItemClick as UseChartVoronoiSignature['params']['onItemClick']),
+    onItemClick:
+      disableVoronoi && !useFastRenderer
+        ? undefined
+        : (onItemClick as UseChartVoronoiSignature['params']['onItemClick']),
     className,
+    useFastRenderer,
     plugins: SCATTER_CHART_PLUGINS,
     slots,
     slotProps,
@@ -86,7 +88,10 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   };
 
   const scatterPlotProps: ScatterPlotProps = {
-    onItemClick: disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined,
+    onItemClick:
+      disableVoronoi && !useFastRenderer
+        ? (onItemClick as ScatterPlotProps['onItemClick'])
+        : undefined,
     slots,
     slotProps,
     useFastRenderer,
