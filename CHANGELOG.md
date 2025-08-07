@@ -9,15 +9,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 7, 2025_
 
-We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 `FunnelChart` marked as stable
 - 📈 Supporting label groups in band and point axis
+- 🌎 Improve Norwegian Nynorsk (nn-NO) locale on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@aqeelat, @dwrth, @noobyogi0010, @nusr, @sai6855
+@AnderzL7, @aqeelat, @dwrth, @noobyogi0010, @nusr, @sai6855
 
 The following are all team members who have contributed to this release:
 @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @oliviertassinari, @rita-codes, @romgrk
@@ -32,6 +33,7 @@ The following are all team members who have contributed to this release:
 - [DataGrid] Do not call `preProcessEditCellProps()` if cell is not editable based on `isCellEditable()` (#18405) @nusr
 - [DataGrid] Fix `renderCountry` throwing an error when used in tree data (#19068) @cherniavskii
 - [DataGrid] Fix performance issue for root level "select all" (#19015) @MBilalShafi
+- [l10n] Improve Norwegian Nynorsk (nn-NO) locale (#19076) @AnderzL7
 
 #### `@mui/x-data-grid-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
