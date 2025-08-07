@@ -150,9 +150,7 @@ export const useCalendarState = (
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
     focusedDay: referenceDate,
-    // The initial month is set to the first day of the reference date's month.
-    // This is to ensure that the time applied on the reference date is not lost.
-    currentMonth: adapter.setDate(referenceDate, 1),
+    currentMonth: adapter.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
 
