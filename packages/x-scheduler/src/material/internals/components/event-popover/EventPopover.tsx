@@ -6,10 +6,11 @@ import { Separator } from '@base-ui-components/react/separator';
 import { Field } from '@base-ui-components/react/field';
 import { Form } from '@base-ui-components/react/form';
 import { Checkbox } from '@base-ui-components/react/checkbox';
-import { X, CheckIcon } from 'lucide-react';
+import { X, CheckIcon, ChevronDown } from 'lucide-react';
 import { Input } from '@base-ui-components/react/input';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { Select } from '@base-ui-components/react/select';
 import {
   EventPopoverContextValue,
   EventPopoverProps,
@@ -22,6 +23,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEvent } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { getOrdinal, getWeekInfoInMonth } from '../../utils/date-utils';
 import './EventPopover.css';
 
 export const EventPopover = React.forwardRef(function EventPopover(
@@ -46,6 +48,55 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(calendarEvent.allDay));
 
+  const recurrencePresets = {
+    daily: {
+      frequency: 'daily',
+      interval: 1,
+      end: { type: 'never' },
+    },
+    weekly: {
+      frequency: 'weekly',
+      interval: 1,
+      daysOfWeek: [adapter.getDayOfWeek(calendarEvent.start)],
+      end: { type: 'never' },
+    },
+    monthly: {
+      frequency: 'monthly',
+      interval: 1,
+      monthly: {
+        mode: 'onWeekday',
+        weekIndex: getWeekInfoInMonth(adapter, calendarEvent.start).weekNumber,
+        weekday: adapter.getDayOfWeek(calendarEvent.start),
+      },
+      end: { type: 'never' },
+    },
+    annually: {
+      frequency: 'yearly',
+      interval: 1,
+      end: { type: 'never' },
+    },
+  };
+  const weekday = adapter.format(calendarEvent.start, 'weekday');
+  const normalDate = adapter.format(calendarEvent.start, 'normalDate');
+  const weekInMonth = getWeekInfoInMonth(adapter, calendarEvent.start);
+
+  const recurrenceOptions = [
+    { label: "Don't repeat", value: null },
+    { label: 'Repeats daily', value: 'daily' },
+    {
+      label: `Repeats weekly on ${weekday}`,
+      value: 'weekly',
+    },
+    {
+      label: `Repeats monthly on the ${getOrdinal(weekInMonth.weekNumber)} ${weekday}`,
+      value: 'monthly',
+    },
+    {
+      label: `Repeats annually on ${normalDate}`,
+      value: 'annually',
+    },
+  ];
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -54,6 +105,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const startTimeValue = form.get('startTime');
     const endDateValue = form.get('endDate');
     const endTimeValue = form.get('endTime');
+    const recurrenceKey = form.get('recurrence') as string;
+
+    const recurrenceRule = recurrenceKey ? recurrencePresets[recurrenceKey] : undefined;
+    // eslint-disable-next-line no-console
+    console.log('Submitted Recurrence Rule:', recurrenceRule);
 
     const startISO = startTimeValue
       ? `${startDateValue}T${startTimeValue}`
@@ -219,7 +275,39 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     </Field.Label>
                   </Field.Root>
                 </div>
-
+                <Field.Root name="recurrence">
+                  <Select.Root items={recurrenceOptions}>
+                    <Select.Trigger className="EventPopoverSelectTrigger">
+                      <Select.Value />
+                      <Select.Icon className="EventPopoverSelectIcon">
+                        <ChevronDown size={14} />
+                      </Select.Icon>
+                    </Select.Trigger>
+                    <Select.Portal>
+                      <Select.Positioner className="EventPopoverSelectPositioner">
+                        <Select.Popup className="EventPopoverSelectPopup">
+                          {recurrenceOptions.map(({ label, value }) => (
+                            <Select.Item
+                              key={label}
+                              value={value}
+                              className="EventPopoverSelectItem"
+                            >
+                              <Select.ItemIndicator className="EventPopoverSelectItemIndicator">
+                                <CheckIcon
+                                  size={14}
+                                  className="EventPopoverSelectItemIndicatorIcon"
+                                />
+                              </Select.ItemIndicator>
+                              <Select.ItemText className="EventPopoverSelectItemText">
+                                {label}
+                              </Select.ItemText>
+                            </Select.Item>
+                          ))}
+                        </Select.Popup>
+                      </Select.Positioner>
+                    </Select.Portal>
+                  </Select.Root>
+                </Field.Root>
                 <Separator className="EventPopoverSeparator" />
                 <div>
                   <Field.Root name="description">
@@ -313,5 +401,11 @@ export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   const { event: calendarEvent, ...other } = props;
   const { startEditing } = React.useContext(EventPopoverContext);
 
-  return <Popover.Trigger onClick={(event) => startEditing(event, calendarEvent)} {...other} />;
+  return (
+    <Popover.Trigger
+      nativeButton={false}
+      onClick={(event) => startEditing(event, calendarEvent)}
+      {...other}
+    />
+  );
 }
