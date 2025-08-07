@@ -131,6 +131,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   };
 
   const handleResize: GridEventListener<'resize'> = (size) => {
+    if (!getRootDimensions().isReady) {
+      return;
+    }
     if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
       logger.error(
         [
