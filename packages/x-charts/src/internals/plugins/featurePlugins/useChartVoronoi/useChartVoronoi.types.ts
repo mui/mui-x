@@ -43,11 +43,6 @@ export interface UseChartVoronoiParameters {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick?: (event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
-  /**
-   * If true, the chart will use a fast renderer.
-   * This affects the voronoi because it will be used to handle `onItemClick` events.
-   */
-  useFastRenderer?: boolean;
 }
 
 export type UseChartVoronoiDefaultizedParameters = Pick<
@@ -58,10 +53,6 @@ export type UseChartVoronoiDefaultizedParameters = Pick<
    * If true, a point is only returned if the pointer is within the radius of the point.
    */
   disableClosestPoint: boolean;
-  /**
-   * If true, onItemClick won't be called when clicking.
-   */
-  disableOnItemClick: boolean;
 };
 
 export type UseChartVoronoiSignature = ChartPluginSignature<{
