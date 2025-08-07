@@ -65,7 +65,7 @@ Same changes as in `@mui/x-date-pickers@8.10.0`.
 
 - [charts] Add `groups` to `band` and `point` axis config (#18766) @JCQuintas
 - [charts] Animation example using `motion` library (#18993) @JCQuintas
-- [charts] Deprecate `Unstable_ radar` exports (#19079) @JCQuintas
+- [charts] Deprecate `Unstable_` radar exports (#19079) @JCQuintas
 - [charts] Improve grouped axis logic (#19069) @JCQuintas
 - [charts] Fix type assertion in axis highlight components (#19060) @sai6855
 - [charts] Remove unnecessary type assertion in tooltip `valueFormatter` in heatmap (#19047) @sai6855
