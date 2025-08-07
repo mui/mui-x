@@ -12,6 +12,7 @@ _Aug 7, 2025_
 We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 `FunnelChart` marked as stable
+- 📈 Zoom slider and preview marked as stable
 - 📈 Supporting label groups in band and point axis
 - 🌎 Improve Norwegian Nynorsk (nn-NO) locale on the Data Grid
 - 🐞 Bugfixes
@@ -28,8 +29,8 @@ The following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@8.10.0`
 
 - [DataGrid] Move spread operator in `BaseSelect` to allow `variant` change (#19026) @dwrth
-- [Datagrid] Use `use-sync-external-store` shim (#19063) @romgrk
-- [DataGrid] Allow skipping cache in `fetchRows()` API method (#18904) @MBilalShafi
+- [DataGrid] Use `use-sync-external-store` shim (#19063) @romgrk
+- [DataGrid] Allow skipping cache in `dataSource.fetchRows()` API method (#18904) @MBilalShafi
 - [DataGrid] Do not call `preProcessEditCellProps()` if cell is not editable based on `isCellEditable()` (#18405) @nusr
 - [DataGrid] Fix `renderCountry` throwing an error when used in tree data (#19068) @cherniavskii
 - [DataGrid] Fix performance issue for root level "select all" (#19015) @MBilalShafi
@@ -100,7 +101,7 @@ Internal changes.
 - [docs] Fix broken link to D3 in Charts (#19020) @oliviertassinari
 - [docs] Revise the Charts Animation doc (#18990) @mapache-salvaje
 - [docs] Fix incorrect code in line chart preview (#19023) @noobyogi0010
-- [docs] Improve bundling instructions for the DataGrid (#19065) @romgrk
+- [docs] Improve bundling instructions for the Data Grid (#19065) @romgrk
 
 ### Core
 
