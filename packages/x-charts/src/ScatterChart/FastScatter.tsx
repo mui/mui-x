@@ -7,6 +7,12 @@ import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
+import { useSelector } from '../internals/store/useSelector';
+import {
+  selectorChartIsSeriesHighlighted,
+  selectorChartSeriesHighlightedItem,
+  UseChartHighlightSignature,
+} from '../internals/plugins/featurePlugins/useChartHighlight';
 
 export interface FastScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -31,8 +37,13 @@ function appendAtKey(map: Map<string, string[]>, key: string, value: string) {
   return bucket;
 }
 
+function createPath(x: number, y: number, markerSize: number) {
+  return `M${x - markerSize} ${y} a${markerSize} ${markerSize} 0 1 1 0 ${ALMOST_ZERO}`;
+}
+
 function useCreatePaths(
-  series: DefaultizedScatterSeriesType,
+  seriesData: DefaultizedScatterSeriesType['data'],
+  markerSize: number,
   xScale: D3Scale,
   yScale: D3Scale,
   color: string,
@@ -42,13 +53,12 @@ function useCreatePaths(
   const { instance } = useChartContext();
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
-  const radius = series.markerSize;
 
   const paths = new Map<string, string[]>();
   const temporaryPaths = new Map<string, string[]>();
 
-  for (let i = 0; i < series.data.length; i += 1) {
-    const scatterPoint = series.data[i];
+  for (let i = 0; i < seriesData.length; i += 1) {
+    const scatterPoint = seriesData[i];
 
     const x = getXPosition(scatterPoint.x);
     const y = getYPosition(scatterPoint.y);
@@ -57,7 +67,7 @@ function useCreatePaths(
       continue;
     }
 
-    const path = `M${x - radius} ${y} a${radius} ${radius} 0 1 1 0 ${ALMOST_ZERO}`;
+    const path = createPath(x, y, markerSize);
     const fill = colorGetter ? colorGetter(i) : color;
 
     const tempPath = appendAtKey(temporaryPaths, fill, path);
@@ -96,10 +106,16 @@ const Group = styled('g')({
  * This component is optimized for performance and is suitable for rendering large datasets, but has limitations:
  * - TODO: Explain limitations
  */
-function FastScatter(props: FastScatterProps) {
+export function FastScatter(props: FastScatterProps) {
   const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
 
-  const paths = useCreatePaths(series, xScale, yScale, color, colorGetter);
+  const { store } = useChartContext<[UseChartHighlightSignature]>();
+  const isSeriesHighlighted = useSelector(store, selectorChartIsSeriesHighlighted, [series.id]);
+  const seriesHighlightedItem = useSelector(store, selectorChartSeriesHighlightedItem, [series.id]);
+  const highlightedModifier = 1.2;
+  const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
+
+  const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
   const classes = useUtilityClasses(inClasses);
 
   const start = performance.now();
@@ -114,11 +130,27 @@ function FastScatter(props: FastScatterProps) {
   }
   performance.measure('FastScatter paths.map', { start });
 
+  if (seriesHighlightedItem != null) {
+    const datum = series.data[seriesHighlightedItem];
+    const getXPosition = getValueToPositionMapper(xScale);
+    const getYPosition = getValueToPositionMapper(yScale);
+
+    children.push(
+      <path
+        key={i}
+        fill={colorGetter ? colorGetter(i) : color}
+        d={createPath(
+          getXPosition(datum.x),
+          getYPosition(datum.y),
+          markerSize * highlightedModifier,
+        )}
+      />,
+    );
+  }
+
   return (
     <Group data-series={series.id} className={classes.root}>
       {children}
     </Group>
   );
 }
-
-export { FastScatter };
