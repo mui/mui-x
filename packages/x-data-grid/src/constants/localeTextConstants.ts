@@ -42,7 +42,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Toolbar pivot button
   toolbarPivot: 'Pivot',
 
-  // Toolbar pivot button
+  // Toolbar charts button
   toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button

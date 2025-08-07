@@ -41,6 +41,8 @@ export const idIDGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
   // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
