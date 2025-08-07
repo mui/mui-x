@@ -214,6 +214,7 @@
   { "name": "defaultOnBeforeExport", "kind": "Function" },
   { "name": "Direction", "kind": "TypeAlias" },
   { "name": "FadeOptions", "kind": "TypeAlias" },
+  { "name": "FunnelChart", "kind": "Variable" },
   { "name": "FunnelChartProps", "kind": "Interface" },
   { "name": "FunnelChartSlotExtension", "kind": "Interface" },
   { "name": "FunnelChartSlotProps", "kind": "Interface" },

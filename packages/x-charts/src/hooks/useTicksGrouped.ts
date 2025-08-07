@@ -105,7 +105,7 @@ function mapToGrouping(
   const allTickItems: GroupedTickItemType[] = [];
   // Map to keep track of offsets and their corresponding tick indexes
   // Used to remove redundant ticks when they are in the same position
-  const offsetToTickIndex = new Map<number, Set<number>>();
+  const dataIndexToTickIndex = new Map<number, Set<number>>();
 
   let currentValueCount = 0;
 
@@ -144,11 +144,11 @@ function mapToGrouping(
           labelOffset,
         });
 
-        if (!offsetToTickIndex.has(tickOffset)) {
-          offsetToTickIndex.set(tickOffset, new Set());
+        if (!dataIndexToTickIndex.has(dataIndex)) {
+          dataIndexToTickIndex.set(dataIndex, new Set());
         }
 
-        const tickIndexes = offsetToTickIndex.get(tickOffset)!;
+        const tickIndexes = dataIndexToTickIndex.get(dataIndex)!;
 
         for (const previousIndex of tickIndexes.values()) {
           allTickItems[previousIndex].ignoreTick = true;

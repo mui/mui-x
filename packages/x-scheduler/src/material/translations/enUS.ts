@@ -14,6 +14,10 @@ export const enUS: SchedulerTranslations = {
   today: 'Today',
   week: 'Week',
 
+  // SettingsMenu
+  hideWeekends: 'Hide weekends',
+  settingsMenu: 'Settings',
+
   // WeekView
   allDay: 'All day',
 
