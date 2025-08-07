@@ -94,7 +94,7 @@ describe('ScatterChartPro', () => {
             series={[{ data }]}
             width={500}
             height={300}
-            slots={{ scatter: FastScatter }}
+            useFastRenderer
           />,
         );
 
@@ -126,7 +126,7 @@ describe('ScatterChartPro', () => {
               { axisId: 'x', start: 50, end: 50.1 },
               { axisId: 'y', start: 50, end: 50.1 },
             ]}
-            slots={{ scatter: FastScatter }}
+            useFastRenderer
           />,
         );
 

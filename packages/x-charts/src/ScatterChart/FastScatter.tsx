@@ -42,8 +42,7 @@ function useCreatePaths(
   colorGetter?: ColorGetter<'scatter'>,
 ) {
   const start = performance.now();
-  const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+  const { instance } = useChartContext();
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
   const radius = series.markerSize;
