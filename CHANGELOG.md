@@ -11,9 +11,9 @@ _Aug 7, 2025_
 
 We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 `FunnelChart` marked as stable
-- 📈 Zoom slider and preview marked as stable
-- 📈 Supporting label groups in band and point axis
+- 📊 [`FunnelChart`](https://mui.com/x/react-charts/funnel/) marked as stable
+- 📈 [Zoom slider](https://mui.com/x/react-charts/zoom-and-pan/#zoom-slider) and [Preview](https://mui.com/x/react-charts/zoom-and-pan/#preview) marked as stable
+- 📈 Supporting [label groups](https://mui.com/x/react-charts/axis/#grouped-axes) in band and point axis
 - 🌎 Improve Norwegian Nynorsk (nn-NO) locale on the Data Grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -65,6 +65,8 @@ Same changes as in `@mui/x-date-pickers@8.10.0`.
 
 - [charts] Add `groups` to `band` and `point` axis config (#18766) @JCQuintas
 - [charts] Animation example using `motion` library (#18993) @JCQuintas
+- [charts] Deprecate `Unstable_ radar` exports (#19079) @JCQuintas
+- [charts] Improve grouped axis logic (#19069) @JCQuintas
 - [charts] Fix type assertion in axis highlight components (#19060) @sai6855
 - [charts] Remove unnecessary type assertion in tooltip `valueFormatter` in heatmap (#19047) @sai6855
 
@@ -109,9 +111,9 @@ Internal changes.
 
 ### Miscellaneous
 
-- [bundles] Remove tracking from some modules (#19072) @Janpot
-- [code-infra] Accept `PORT` env on `docs:dev` script (#19014) @JCQuintas
-- [code-infra] Skip codesandbox iframe demos in regressions tests (#18970) @cherniavskii
+- [infra] Remove bundle size tracking for subpaths (#19072) @Janpot
+- [infra] Accept `PORT` env on `docs:dev` script (#19014) @JCQuintas
+- [infra] Skip codesandbox iframe demos in regressions tests (#18970) @cherniavskii
 - [infra] Remove package.json `module` field (#18961) @Janpot
 - [internal] Remove peer dependency on `@mui/system` (#19062) @aqeelat
 
