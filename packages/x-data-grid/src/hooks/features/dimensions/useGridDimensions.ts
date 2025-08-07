@@ -161,7 +161,6 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   useGridEventPriority(apiRef, 'resize', handleResize);
   useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
 
-  // XXX: typings
   useStoreEffect(
     apiRef.current.store,
     (s) => s.dimensions,
