@@ -473,7 +473,7 @@
   { "name": "strawberrySkyPaletteLight", "kind": "Variable" },
   { "name": "Unstable_FunnelChart", "kind": "Variable" },
   { "name": "Unstable_RadarChart", "kind": "Variable" },
-  { "name": "Unstable_RadarDataProvider", "kind": "Function" },
+  { "name": "Unstable_RadarDataProvider", "kind": "Variable" },
   { "name": "useAnimate", "kind": "Function" },
   { "name": "useAnimateArea", "kind": "Function" },
   { "name": "useAnimateBar", "kind": "Function" },
