@@ -157,7 +157,6 @@ export function FastScatter(props: FastScatterProps) {
     );
   }
 
-  console.log({ seriesHighlightedItem, seriesUnfadedItem });
   if (seriesUnfadedItem != null) {
     const datum = series.data[seriesUnfadedItem];
     const getXPosition = getValueToPositionMapper(xScale);
