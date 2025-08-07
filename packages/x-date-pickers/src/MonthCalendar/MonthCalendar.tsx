@@ -285,7 +285,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       monthsPerRow={monthsPerRow}
       {...other}
     >
-      {getMonthsInYear(adapter, value ?? currentMonth ?? referenceDate).map((month) => {
+      {getMonthsInYear(adapter, currentMonth ?? value ?? referenceDate).map((month) => {
         const monthNumber = adapter.getMonth(month);
         const monthText = adapter.format(month, 'monthShort');
         const monthLabel = adapter.format(month, 'month');
