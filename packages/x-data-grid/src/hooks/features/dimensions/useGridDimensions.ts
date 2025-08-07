@@ -130,39 +130,40 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     setCSSVariables(root, gridDimensionsSelector(apiRef));
   };
 
-  const handleResize: GridEventListener<'resize'> = (size) => {
-    if (!getRootDimensions().isReady) {
-      return;
-    }
-    if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
-      logger.error(
-        [
-          'The parent DOM element of the Data Grid has an empty height.',
-          'Please make sure that this element has an intrinsic height.',
-          'The grid displays with a height of 0px.',
-          '',
-          'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-        ].join('\n'),
-      );
-      errorShown.current = true;
-    }
-    if (size.width === 0 && !errorShown.current && !isJSDOM) {
-      logger.error(
-        [
-          'The parent DOM element of the Data Grid has an empty width.',
-          'Please make sure that this element has an intrinsic width.',
-          'The grid displays with a width of 0px.',
-          '',
-          'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-        ].join('\n'),
-      );
-      errorShown.current = true;
-    }
-  };
-
   useGridEventPriority(apiRef, 'rootMount', handleRootMount);
-  useGridEventPriority(apiRef, 'resize', handleResize);
   useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
+
+  if (process.env.NODE_ENV !== 'production') {
+    useGridEventPriority(apiRef, 'resize', (size) => {
+      if (!getRootDimensions().isReady) {
+        return;
+      }
+      if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
+        logger.error(
+          [
+            'The parent DOM element of the Data Grid has an empty height.',
+            'Please make sure that this element has an intrinsic height.',
+            'The grid displays with a height of 0px.',
+            '',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
+          ].join('\n'),
+        );
+        errorShown.current = true;
+      }
+      if (size.width === 0 && !errorShown.current && !isJSDOM) {
+        logger.error(
+          [
+            'The parent DOM element of the Data Grid has an empty width.',
+            'Please make sure that this element has an intrinsic width.',
+            'The grid displays with a width of 0px.',
+            '',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
+          ].join('\n'),
+        );
+        errorShown.current = true;
+      }
+    });
+  }
 
   useStoreEffect(
     apiRef.current.store,
