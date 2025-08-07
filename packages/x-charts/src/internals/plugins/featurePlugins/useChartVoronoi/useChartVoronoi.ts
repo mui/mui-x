@@ -48,7 +48,8 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   store,
   instance,
 }) => {
-  const { disableClosestPoint, disableOnItemClick, voronoiMaxRadius, onItemClick } = params;
+  const { disableClosestPoint, voronoiMaxRadius, onItemClick } = params;
+  const disableOnItemClick = onItemClick == null;
   const disableVoronoi = disableClosestPoint && disableOnItemClick;
   const drawingArea = useSelector(store, selectorChartDrawingArea);
 
@@ -301,14 +302,13 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
 useChartVoronoi.getDefaultizedParams = ({ params }) => ({
   ...params,
-  disableOnItemClick: params.useFastRenderer !== true,
   disableClosestPoint:
     params.disableVoronoi ?? !params.series.some((item) => item.type === 'scatter'),
 });
 
 useChartVoronoi.getInitialState = (params) => ({
   voronoi: {
-    isVoronoiEnabled: !params.disableClosestPoint && !params.disableOnItemClick,
+    isVoronoiEnabled: !params.disableClosestPoint,
   },
 });
 
@@ -316,5 +316,4 @@ useChartVoronoi.params = {
   disableVoronoi: true,
   voronoiMaxRadius: true,
   onItemClick: true,
-  useFastRenderer: true,
 };
