@@ -12,10 +12,10 @@ export default function GroupedYAxes() {
           width: 20,
           groups: [
             // Extract main category
-            { getValue: (category) => category.split(' - ')[1] },
+            { getValue: (category) => category[1] },
             // Extract subcategory
             {
-              getValue: (category) => category.split(' - ')[0],
+              getValue: (category) => category[0],
               tickSize: 120,
               tickLabelStyle: {
                 angle: -90,
@@ -23,6 +23,7 @@ export default function GroupedYAxes() {
               },
             },
           ],
+          valueFormatter: (value) => value.join(' - '),
         },
       ]}
       {...chartConfig}
@@ -31,15 +32,15 @@ export default function GroupedYAxes() {
 }
 
 const categoryData = [
-  'Technology - Software',
-  'Technology - Hardware',
-  'Technology - AI/ML',
-  'Finance - Banking',
-  'Finance - Insurance',
-  'Finance - Investment',
-  'Healthcare - Pharmaceuticals',
-  'Healthcare - Medical Devices',
-  'Healthcare - Telemedicine',
+  ['Technology', 'Software'],
+  ['Technology', 'Hardware'],
+  ['Technology', 'AI/ML'],
+  ['Finance', 'Banking'],
+  ['Finance', 'Insurance'],
+  ['Finance', 'Investment'],
+  ['Healthcare', 'Pharmaceuticals'],
+  ['Healthcare', 'Medical Devices'],
+  ['Healthcare', 'Telemedicine'],
 ];
 
 const salesData = [150, 120, 200, 180, 90, 160, 140, 110, 85];
