@@ -5,8 +5,6 @@ import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { D3Scale } from '../models/axis';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 

@@ -55,6 +55,7 @@ export const useChartContainerProps = <
     slots,
     slotProps,
     experimentalFeatures,
+    useFastRenderer,
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
@@ -94,6 +95,7 @@ export const useChartContainerProps = <
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,
+    useFastRenderer,
   } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
 
   return {
