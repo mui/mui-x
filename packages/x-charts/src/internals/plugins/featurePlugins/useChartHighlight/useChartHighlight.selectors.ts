@@ -71,6 +71,32 @@ export const selectorChartsIsHighlighted = createSelector(
   },
 );
 
+export const selectorChartIsSeriesHighlighted = createSelector(
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, seriesId: SeriesId) => seriesId,
+  ],
+  function selectorChartIsSeriesHighlighted(scope, item, seriesId) {
+    return scope?.highlight === 'series' && item?.seriesId === seriesId;
+  },
+);
+
+/**
+ * Returns the data index of the highlighted item for a specific series.
+ * If the item is not highlighted, it returns `null`.
+ */
+export const selectorChartSeriesHighlightedItem = createSelector(
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, seriesId: SeriesId) => seriesId,
+  ],
+  function selectorChartSeriesHighlightedItem(scope, item, seriesId) {
+    return scope?.highlight === 'item' && item?.seriesId === seriesId ? item.dataIndex : null;
+  },
+);
+
 export const selectorChartsIsFaded = createSelector(
   [
     selectorChartsHighlightScope,
