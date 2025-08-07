@@ -21,15 +21,14 @@ const MAX_POINTS_PER_PATH = 1000;
 const ALMOST_ZERO = 0.01;
 
 function appendAtKey(map: Map<string, string[]>, key: string, value: string) {
-  const existing = map.get(key);
-  if (existing) {
-    existing.push(value);
-    return existing;
+  let bucket = map.get(key);
+  if (!bucket) {
+    bucket = [value];
+    map.set(key, bucket);
+  } else {
+    bucket.push(value);
   }
-
-  const array = [value];
-  map.set(key, array);
-  return array;
+  return bucket;
 }
 
 function useCreatePaths(
