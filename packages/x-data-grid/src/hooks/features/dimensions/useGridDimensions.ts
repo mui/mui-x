@@ -105,9 +105,6 @@ const columnsTotalWidthSelector = createSelector(
 );
 
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
-  const logger = useGridLogger(apiRef, 'useResizeContainer');
-  const errorShown = React.useRef(false);
-
   const virtualizer = apiRef.current.virtualizer;
   const updateDimensions = virtualizer.api.updateDimensions;
   const getViewportPageSize = virtualizer.api.getViewportPageSize;
@@ -134,6 +131,9 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
 
   if (process.env.NODE_ENV !== 'production') {
+    const logger = useGridLogger(apiRef, 'useResizeContainer');
+    const errorShown = React.useRef(false);
+
     useGridEventPriority(apiRef, 'resize', (size) => {
       if (!getRootDimensions().isReady) {
         return;
