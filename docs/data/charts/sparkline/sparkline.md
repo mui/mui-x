@@ -90,3 +90,10 @@ You can disable clipping by setting `disableClipping` to `true`.
 The example below shows how the line's stroke width, `disableClipping` and `clipAreaOffset` affect the sparkline rendering.
 
 {{"demo": "SparklineLineWidth.js"}}
+
+## Demo
+
+As an example the sparkline from npm.
+Notice that the accessibility is not down in the chart itself but in a parent context.
+
+{{"demo": "NpmSparkLine.js"}}

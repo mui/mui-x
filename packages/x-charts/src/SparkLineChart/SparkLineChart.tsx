@@ -160,8 +160,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const {
-    xAxis,
-    yAxis,
+    xAxis: xAxisProps,
+    yAxis: yAxisProps,
     width,
     height,
     margin = SPARK_LINE_DEFAULT_MARGIN,
@@ -181,23 +181,35 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     className,
     disableClipping,
     clipAreaOffset,
+    onHighlightChange,
+    onHighlightedAxisChange,
+    highlightedAxis,
+    highlightedItem,
     ...other
   } = props;
   const id = useId();
   const clipPathId = `${id}-clip-path`;
-  const clipPathOffset = {
-    top: clipAreaOffset?.top ?? 1,
-    right: clipAreaOffset?.right ?? 1,
-    bottom: clipAreaOffset?.bottom ?? 1,
-    left: clipAreaOffset?.left ?? 1,
-  };
+  const clipPathOffset = React.useMemo(
+    () => ({
+      top: clipAreaOffset?.top ?? 1,
+      right: clipAreaOffset?.right ?? 1,
+      bottom: clipAreaOffset?.bottom ?? 1,
+      left: clipAreaOffset?.left ?? 1,
+    }),
+    [clipAreaOffset?.bottom, clipAreaOffset?.left, clipAreaOffset?.right, clipAreaOffset?.top],
+  );
 
-  const defaultXHighlight: { x: 'band' | 'none' } =
-    showHighlight && plotType === 'bar' ? { x: 'band' } : { x: 'none' };
-  const axisHighlight = {
-    ...defaultXHighlight,
-    ...inAxisHighlight,
-  };
+  const defaultXHighlight: { x: 'band' | 'none' } = React.useMemo(
+    () => (showHighlight && plotType === 'bar' ? { x: 'band' } : { x: 'none' }),
+    [plotType, showHighlight],
+  );
+  const axisHighlight = React.useMemo(
+    () => ({
+      ...defaultXHighlight,
+      ...inAxisHighlight,
+    }),
+    [defaultXHighlight, inAxisHighlight],
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
@@ -209,42 +221,60 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     return typeof color === 'function' ? (mode: 'light' | 'dark') => [color(mode)] : [color];
   }, [color]);
 
+  const series = React.useMemo(
+    () => [
+      {
+        type: plotType,
+        data,
+        valueFormatter,
+        ...(plotType === 'bar' ? {} : { area, curve, disableHighlight: !showHighlight }),
+      } as LineSeriesType | BarSeriesType,
+    ],
+    [area, curve, data, plotType, showHighlight, valueFormatter],
+  );
+
+  const xAxis: XAxis[] = React.useMemo(
+    () => [
+      {
+        id: DEFAULT_X_AXIS_KEY,
+        scaleType: plotType === 'bar' ? 'band' : 'point',
+        data: Array.from({ length: data.length }, (_, index) => index),
+        hideTooltip: xAxisProps === undefined,
+        ...xAxisProps,
+        position: 'none',
+      },
+    ],
+    [data.length, plotType, xAxisProps],
+  );
+  const yAxis: YAxis[] = React.useMemo(
+    () => [
+      {
+        id: DEFAULT_Y_AXIS_KEY,
+        ...yAxisProps,
+        position: 'none',
+      },
+    ],
+    [yAxisProps],
+  );
   return (
     <ChartDataProvider
-      series={[
-        {
-          type: plotType,
-          data,
-          valueFormatter,
-          ...(plotType === 'bar' ? {} : { area, curve, disableHighlight: !showHighlight }),
-        } as LineSeriesType | BarSeriesType,
-      ]}
+      series={series}
       width={width}
       height={height}
       margin={margin}
-      xAxis={[
-        {
-          id: DEFAULT_X_AXIS_KEY,
-          scaleType: plotType === 'bar' ? 'band' : 'point',
-          data: Array.from({ length: data.length }, (_, index) => index),
-          hideTooltip: xAxis === undefined,
-          ...xAxis,
-          position: 'none',
-        },
-      ]}
-      yAxis={[
-        {
-          id: DEFAULT_Y_AXIS_KEY,
-          ...yAxis,
-          position: 'none',
-        },
-      ]}
+      xAxis={xAxis}
+      yAxis={yAxis}
       colors={colors}
       disableAxisListener={
+        onHighlightedAxisChange === undefined &&
         (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
         axisHighlight?.x === 'none' &&
         axisHighlight?.y === 'none'
       }
+      onHighlightChange={onHighlightChange}
+      onHighlightedAxisChange={onHighlightedAxisChange}
+      highlightedAxis={highlightedAxis}
+      highlightedItem={highlightedItem}
     >
       <ChartsSurface className={className} ref={ref} sx={sx} {...other}>
         <g clipPath={`url(#${clipPathId})`}>
