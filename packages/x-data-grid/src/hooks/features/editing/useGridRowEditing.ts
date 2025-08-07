@@ -459,7 +459,12 @@ export const useGridRowEditing = (
       }
 
       columns
-        .filter((column) => column.editable && !!column.preProcessEditCellProps && deleteValue)
+        .filter((column) => {
+          const isCellEditable = apiRef.current.getCellParams(id, column.field).isEditable;
+          return (
+            isCellEditable && column.editable && !!column.preProcessEditCellProps && deleteValue
+          );
+        })
         .forEach((column) => {
           const field = column.field;
           const value = apiRef.current.getCellValue(id, field);
