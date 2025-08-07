@@ -25,7 +25,7 @@ The following are all team members who have contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.9.2`
+#### `@mui/x-data-grid@8.10.0`
 
 - [DataGrid] Move spread operator in `BaseSelect` to allow `variant` change (#19026) @dwrth
 - [Datagrid] Use `use-sync-external-store` shim (#19063) @romgrk
@@ -35,41 +35,41 @@ The following are all team members who have contributed to this release:
 - [DataGrid] Fix performance issue for root level "select all" (#19015) @MBilalShafi
 - [l10n] Improve Norwegian Nynorsk (nn-NO) locale (#19076) @AnderzL7
 
-#### `@mui/x-data-grid-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.9.2`, plus:
+Same changes as in `@mui/x-data-grid@8.10.0`, plus:
 
 - [DataGridPro] Fix row reorder not working with column reorder disabled (#19016) @MBilalShafi
 
-#### `@mui/x-data-grid-premium@8.9.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.10.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.9.2`, plus:
+Same changes as in `@mui/x-data-grid-pro@8.10.0`, plus:
 
 - [DataGridPremium] Allow additional derived columns customization via `valueFormatter` (#18982) @arminmeh
 - [DataGridPremium] Fix complex `singleSelect` columns not working in pivot model (#18971) @cherniavskii
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.9.2`
+#### `@mui/x-date-pickers@8.10.0`
 
 - [pickers] `MuiPickersLayout-toolbar` is overlapping the Calendar in RTL `MobileDatePicker` variant (#18981) @rita-codes
 
-#### `@mui/x-date-pickers-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.9.2`.
+Same changes as in `@mui/x-date-pickers@8.10.0`.
 
 ### Charts
 
-#### `@mui/x-charts@8.9.2`
+#### `@mui/x-charts@8.10.0`
 
 - [charts] Add `groups` to `band` and `point` axis config (#18766) @JCQuintas
 - [charts] Animation example using `motion` library (#18993) @JCQuintas
 - [charts] Fix type assertion in axis highlight components (#19060) @sai6855
 - [charts] Remove unnecessary type assertion in tooltip `valueFormatter` in heatmap (#19047) @sai6855
 
-#### `@mui/x-charts-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.9.2`, plus:
+Same changes as in `@mui/x-charts@8.10.0`, plus:
 
 - [charts-pro] Fix `slotProps.tooltip.trigger` not respected in `ScatterChartPro` and `FunnelChart` (#18902) @bernardobelchior
 - [charts-pro] Fix zoom filtering adjusting axis too soon (#18992) @bernardobelchior
@@ -79,17 +79,17 @@ Same changes as in `@mui/x-charts@8.9.2`, plus:
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.9.2`
+#### `@mui/x-tree-view@8.10.0`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@8.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.9.2`.
+Same changes as in `@mui/x-tree-view@8.10.0`.
 
 ### Codemod
 
-#### `@mui/x-codemod@8.9.2`
+#### `@mui/x-codemod@8.10.0`
 
 Internal changes.
 
