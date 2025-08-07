@@ -23,7 +23,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEvent } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { getOrdinal, getWeekInfoInMonth } from '../../utils/date-utils';
+import { getOrdinal, getWeekInfoInMonth } from '../../../../primitives/utils/date-utils';
 import './EventPopover.css';
 
 export const EventPopover = React.forwardRef(function EventPopover(
