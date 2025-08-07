@@ -6,6 +6,12 @@ import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlig
 import { HighlightScope } from './highlightConfig.types';
 import { createIsHighlighted } from './createIsHighlighted';
 import { createIsFaded } from './createIsFaded';
+import {
+  getSeriesHighlightedItem,
+  getSeriesUnfadedItem,
+  isSeriesFaded,
+  isSeriesHighlighted,
+} from './highlightStates';
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
 
@@ -77,9 +83,7 @@ export const selectorChartIsSeriesHighlighted = createSelector(
     selectorChartsHighlightedItem,
     (_, seriesId: SeriesId) => seriesId,
   ],
-  function selectorChartIsSeriesHighlighted(scope, item, seriesId) {
-    return scope?.highlight === 'series' && item?.seriesId === seriesId;
-  },
+  isSeriesHighlighted,
 );
 
 export const selectorChartIsSeriesFaded = createSelector(
@@ -88,12 +92,7 @@ export const selectorChartIsSeriesFaded = createSelector(
     selectorChartsHighlightedItem,
     (_, seriesId: SeriesId) => seriesId,
   ],
-  function selectorChartIsSeriesFaded(scope, item, seriesId) {
-    return (
-      (scope?.fade === 'global' && item != null) ||
-      (scope?.fade === 'series' && item?.seriesId === seriesId)
-    );
-  },
+  isSeriesFaded,
 );
 
 export const selectorChartSeriesUnfadedItem = createSelector(
@@ -102,24 +101,16 @@ export const selectorChartSeriesUnfadedItem = createSelector(
     selectorChartsHighlightedItem,
     (_, seriesId: SeriesId) => seriesId,
   ],
-  function selectorChartSeriesUnfadedItem(scope, item, seriesId) {
-    return scope?.fade !== 'none' && item?.seriesId === seriesId ? item.dataIndex : null;
-  },
+  getSeriesUnfadedItem,
 );
 
-/**
- * Returns the data index of the highlighted item for a specific series.
- * If the item is not highlighted, it returns `null`.
- */
 export const selectorChartSeriesHighlightedItem = createSelector(
   [
     selectorChartsHighlightScope,
     selectorChartsHighlightedItem,
     (_, seriesId: SeriesId) => seriesId,
   ],
-  function selectorChartSeriesHighlightedItem(scope, item, seriesId) {
-    return scope?.highlight === 'item' && item?.seriesId === seriesId ? item.dataIndex : null;
-  },
+  getSeriesHighlightedItem,
 );
 
 export const selectorChartsIsFaded = createSelector(
