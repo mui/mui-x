@@ -9,7 +9,9 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { useSelector } from '../internals/store/useSelector';
 import {
+  selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
+  selectorChartSeriesUnfadedItem,
   selectorChartSeriesHighlightedItem,
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
@@ -90,6 +92,9 @@ function useCreatePaths(
 }
 
 const Group = styled('g')({
+  '&[data-faded="true"]': {
+    opacity: 0.3,
+  },
   '& path': {
     /* The browser must do hit testing to know which element a pointer is interacting with.
      * With many data points, we create many paths causing significant time to be spent in the hit test phase.
@@ -111,7 +116,9 @@ export function FastScatter(props: FastScatterProps) {
 
   const { store } = useChartContext<[UseChartHighlightSignature]>();
   const isSeriesHighlighted = useSelector(store, selectorChartIsSeriesHighlighted, [series.id]);
+  const isSeriesFaded = useSelector(store, selectorChartIsSeriesFaded, [series.id]);
   const seriesHighlightedItem = useSelector(store, selectorChartSeriesHighlightedItem, [series.id]);
+  const seriesUnfadedItem = useSelector(store, selectorChartSeriesUnfadedItem, [series.id]);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
 
@@ -130,12 +137,13 @@ export function FastScatter(props: FastScatterProps) {
   }
   performance.measure('FastScatter paths.map', { start });
 
+  const siblings = [];
   if (seriesHighlightedItem != null) {
     const datum = series.data[seriesHighlightedItem];
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
 
-    children.push(
+    siblings.push(
       <path
         key={i}
         fill={colorGetter ? colorGetter(i) : color}
@@ -148,9 +156,26 @@ export function FastScatter(props: FastScatterProps) {
     );
   }
 
+  if (seriesUnfadedItem != null) {
+    const datum = series.data[seriesUnfadedItem];
+    const getXPosition = getValueToPositionMapper(xScale);
+    const getYPosition = getValueToPositionMapper(yScale);
+
+    siblings.push(
+      <path
+        key={i}
+        fill={colorGetter ? colorGetter(i) : color}
+        d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
+      />,
+    );
+  }
+
   return (
-    <Group data-series={series.id} className={classes.root}>
-      {children}
-    </Group>
+    <React.Fragment>
+      <Group data-series={series.id} data-faded={isSeriesFaded} className={classes.root}>
+        {children}
+      </Group>
+      {siblings}
+    </React.Fragment>
   );
 }

@@ -82,6 +82,31 @@ export const selectorChartIsSeriesHighlighted = createSelector(
   },
 );
 
+export const selectorChartIsSeriesFaded = createSelector(
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, seriesId: SeriesId) => seriesId,
+  ],
+  function selectorChartIsSeriesFaded(scope, item, seriesId) {
+    return (
+      (scope?.fade === 'global' && item != null) ||
+      (scope?.fade === 'series' && item?.seriesId === seriesId)
+    );
+  },
+);
+
+export const selectorChartSeriesUnfadedItem = createSelector(
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, seriesId: SeriesId) => seriesId,
+  ],
+  function selectorChartSeriesUnfadedItem(scope, item, seriesId) {
+    return scope?.fade !== 'none' && item?.seriesId === seriesId ? item.dataIndex : null;
+  },
+);
+
 /**
  * Returns the data index of the highlighted item for a specific series.
  * If the item is not highlighted, it returns `null`.
