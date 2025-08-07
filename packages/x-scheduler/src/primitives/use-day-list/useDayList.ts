@@ -21,12 +21,12 @@ export function useDayList(): useDayList.ReturnValue {
       let currentDayNumber = adapter.getDayOfWeek(current);
       const days: SchedulerValidDate[] = [];
 
-      const isDone =
+      const isDayCollectionComplete =
         typeof amount === 'number'
           ? () => days.length >= amount
           : () => adapter.isAfter(current, adapter.endOfDay(adapter.addDays(start, 6)));
 
-      while (!isDone()) {
+      while (!isDayCollectionComplete()) {
         if (!excludeWeekends || !isWeekend(adapter, current)) {
           days.push(current);
         }
