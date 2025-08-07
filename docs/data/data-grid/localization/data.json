@@ -195,7 +195,7 @@
     "languageTag": "nn-NO",
     "importName": "nnNO",
     "localeName": "Norwegian (Nynorsk)",
-    "missingKeysCount": 71,
+    "missingKeysCount": 0,
     "totalKeysCount": 191,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/nnNO.ts"
   },
