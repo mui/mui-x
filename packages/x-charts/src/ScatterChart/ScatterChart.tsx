@@ -69,7 +69,8 @@ export interface ScatterChartProps
       | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    Pick<ScatterPlotProps, 'useFastRenderer'> {
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.

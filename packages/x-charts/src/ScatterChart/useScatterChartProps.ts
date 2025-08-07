@@ -44,6 +44,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onHighlightChange,
     className,
     showToolbar,
+    useFastRenderer,
     ...other
   } = props;
 
@@ -88,6 +89,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onItemClick: disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined,
     slots,
     slotProps,
+    useFastRenderer,
   };
 
   const overlayProps: ChartsOverlayProps = {
