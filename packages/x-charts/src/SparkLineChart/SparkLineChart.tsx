@@ -37,7 +37,7 @@ export interface SparkLineChartSlotProps
     BarPlotSlotProps,
     ChartsTooltipSlotProps {}
 
-export interface SparkLineChartProps
+export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 'bar'>
   extends Omit<
     ChartContainerProps,
     | 'series'
@@ -68,7 +68,7 @@ export interface SparkLineChartProps
    * Type of plot used.
    * @default 'line'
    */
-  plotType?: 'line' | 'bar';
+  plotType?: PlotType;
   /**
    * Data to plot.
    */
@@ -97,11 +97,21 @@ export interface SparkLineChartProps
    * Has no effect if plotType='bar'.
    * @default false
    */
-  area?: LineSeriesType['area'];
+  area?: PlotType extends 'line' ? LineSeriesType['area'] : never;
   /**
    * @default 'linear'
    */
-  curve?: LineSeriesType['curve'];
+  curve?: PlotType extends 'line' ? LineSeriesType['curve'] : never;
+  /**
+   * The value of the line at the base of the series area.
+   *
+   * - `'min'` the area will fill the space **under** the line.
+   * - `'max'` the area will fill the space **above** the line.
+   * - `number` the area will fill the space between this value and the line
+   *
+   * @default 0
+   */
+  baseline?: PlotType extends 'line' ? LineSeriesType['baseline'] : never;
   /**
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
@@ -166,6 +176,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     height,
     margin = SPARK_LINE_DEFAULT_MARGIN,
     color,
+    baseline,
     sx,
     showTooltip,
     showHighlight,
@@ -227,10 +238,10 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         type: plotType,
         data,
         valueFormatter,
-        ...(plotType === 'bar' ? {} : { area, curve, disableHighlight: !showHighlight }),
+        ...(plotType === 'bar' ? {} : { area, curve, baseline, disableHighlight: !showHighlight }),
       } as LineSeriesType | BarSeriesType,
     ],
-    [area, curve, data, plotType, showHighlight, valueFormatter],
+    [area, baseline, curve, data, plotType, showHighlight, valueFormatter],
   );
 
   const xAxis: XAxis[] = React.useMemo(
@@ -238,9 +249,9 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       {
         id: DEFAULT_X_AXIS_KEY,
         scaleType: plotType === 'bar' ? 'band' : 'point',
-        data: Array.from({ length: data.length }, (_, index) => index),
         hideTooltip: xAxisProps === undefined,
         ...xAxisProps,
+        data: xAxisProps?.data ?? Array.from({ length: data.length }, (_, index) => index),
         position: 'none',
       },
     ],
@@ -315,6 +326,16 @@ SparkLineChart.propTypes = {
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
+  /**
+   * The value of the line at the base of the series area.
+   *
+   * - `'min'` the area will fill the space **under** the line.
+   * - `'max'` the area will fill the space **above** the line.
+   * - `number` the area will fill the space between this value and the line
+   *
+   * @default 0
+   */
+  baseline: PropTypes.oneOfType([PropTypes.oneOf(['max', 'min']), PropTypes.number]),
   children: PropTypes.node,
   className: PropTypes.string,
   /**

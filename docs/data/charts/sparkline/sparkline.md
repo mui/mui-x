@@ -8,9 +8,13 @@ components: SparkLineChart
 
 <p class="description">Sparkline chart can provide an overview of data trends.</p>
 
+A sparkline is a small chart drawn without visible axes or coordinates, that presents the general shape of a variation in a simplified way.
+For example NPM uses a sparline to display weekly downloads trend.
+
+{{"demo": "NpmSparkLine.js"}}
+
 ## Basics
 
-A sparkline is a small chart drawn without axes or coordinates, that presents the general shape of a variation in a simplified way.
 The `<SparkLineChart />` requires only the `data` props which is an array of numbers.
 You can also switch from line to a bar plot with `plotType="bar"`.
 
@@ -90,10 +94,3 @@ You can disable clipping by setting `disableClipping` to `true`.
 The example below shows how the line's stroke width, `disableClipping` and `clipAreaOffset` affect the sparkline rendering.
 
 {{"demo": "SparklineLineWidth.js"}}
-
-## Demo
-
-As an example the sparkline from npm.
-Notice that the accessibility is not down in the chart itself but in a parent context.
-
-{{"demo": "NpmSparkLine.js"}}
