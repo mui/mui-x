@@ -91,6 +91,37 @@ function useCreatePaths(
   return paths;
 }
 
+export interface FastScatterPathsProps {
+  series: DefaultizedScatterSeriesType;
+  xScale: D3Scale;
+  yScale: D3Scale;
+  color: string;
+  colorGetter?: ColorGetter<'scatter'>;
+  markerSize: number;
+}
+
+function FastScatterPaths(props: FastScatterPathsProps) {
+  const { series, xScale, yScale, color, colorGetter, markerSize } = props;
+  console.log('render fast scatter paths', series.id);
+  const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
+
+  const start = performance.now();
+  const children = [];
+
+  let i = 0;
+  for (const [fill, dArray] of paths.entries()) {
+    for (const d of dArray) {
+      children.push(<path key={i} fill={fill} d={d} />);
+      i += 1;
+    }
+  }
+  performance.measure('FastScatter paths.map', { start });
+
+  return <React.Fragment>{children}</React.Fragment>;
+}
+
+const MemoFastScatterPaths = React.memo(FastScatterPaths);
+
 const Group = styled('g')({
   '&[data-faded="true"]': {
     opacity: 0.3,
@@ -121,21 +152,7 @@ export function FastScatter(props: FastScatterProps) {
   const seriesUnfadedItem = useSelector(store, selectorChartSeriesUnfadedItem, [series.id]);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
-
-  const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
   const classes = useUtilityClasses(inClasses);
-
-  const start = performance.now();
-  const children = [];
-
-  let i = 0;
-  for (const [fill, dArray] of paths.entries()) {
-    for (const d of dArray) {
-      children.push(<path key={i} fill={fill} d={d} />);
-      i += 1;
-    }
-  }
-  performance.measure('FastScatter paths.map', { start });
 
   const siblings = [];
   if (seriesHighlightedItem != null) {
@@ -146,7 +163,7 @@ export function FastScatter(props: FastScatterProps) {
     siblings.push(
       <path
         key={`highlighted-${series.id}`}
-        fill={colorGetter ? colorGetter(i) : color}
+        fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
         data-highlighted
         d={createPath(
           getXPosition(datum.x),
@@ -165,7 +182,7 @@ export function FastScatter(props: FastScatterProps) {
     siblings.push(
       <path
         key={`unfaded-${series.id}`}
-        fill={colorGetter ? colorGetter(i) : color}
+        fill={colorGetter ? colorGetter(seriesUnfadedItem) : color}
         d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
       />,
     );
@@ -179,7 +196,14 @@ export function FastScatter(props: FastScatterProps) {
         data-faded={isSeriesFaded || undefined}
         data-highlighted={isSeriesHighlighted || undefined}
       >
-        {children}
+        <MemoFastScatterPaths
+          series={series}
+          xScale={xScale}
+          yScale={yScale}
+          color={color}
+          colorGetter={colorGetter}
+          markerSize={markerSize}
+        />
       </Group>
       {siblings}
     </React.Fragment>
