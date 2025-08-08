@@ -2,10 +2,7 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
 import { describe } from 'vitest';
-import {
-  ScatterChartPro,
-  Unstable_FastScatter as FastScatter,
-} from '@mui/x-charts-pro/ScatterChartPro';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
