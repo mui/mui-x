@@ -372,6 +372,7 @@ BarChartPro.propTypes = {
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
             tickSize: PropTypes.number,
           }),
         ),
@@ -470,6 +471,7 @@ BarChartPro.propTypes = {
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
             tickSize: PropTypes.number,
           }),
         ),
@@ -1161,6 +1163,7 @@ BarChartPro.propTypes = {
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
             tickSize: PropTypes.number,
           }),
         ),
@@ -1258,6 +1261,7 @@ BarChartPro.propTypes = {
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
             tickSize: PropTypes.number,
           }),
         ),

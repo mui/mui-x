@@ -85,6 +85,7 @@ const previewOverride = {
   'docs/data/charts/axis/GroupedAxes.tsx': { maxLines: 30 },
   'docs/data/charts/axis/GroupedAxesStyling.tsx': { maxLines: 30 },
   'docs/data/charts/axis/GroupedAxesTickSize.tsx': { maxLines: 30 },
+  'docs/data/charts/axis/GroupedYAxes.tsx': { maxLines: 30 },
 };
 
 async function transpileFile(tsxPath, program, ignoreCache = false) {
