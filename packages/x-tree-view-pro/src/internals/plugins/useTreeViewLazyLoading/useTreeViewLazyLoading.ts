@@ -9,6 +9,7 @@ import {
   useInstanceEventHandler,
   selectorDataSourceState,
   selectorGetTreeItemError,
+  selectorExpandedItems,
 } from '@mui/x-tree-view/internals';
 import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
@@ -122,12 +123,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
     if (parentIds) {
       await nestedDataManager.queue(parentIds);
-
       return;
     }
 
     nestedDataManager.clear();
-
+    // handle loading here
+    instance.setTreeViewLoading(true);
     // reset the state if we are refetching the first visible items
     if (selectorDataSourceState(store.value) !== INITIAL_STATE) {
       resetDataSourceState();
@@ -135,12 +136,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     // handle caching here
     const cachedData = cacheRef.current.get('root');
 
-    if (cachedData !== undefined) {
+    if (cachedData !== undefined && cachedData !== -1) {
+      instance.addItems({ items: cachedData, depth: 0, getChildrenCount });
+      instance.setTreeViewLoading(false);
+
       return;
     }
-
-    // handle loading here
-    instance.setTreeViewLoading(true);
 
     try {
       const getTreeItemsResponse = await getTreeItems();
@@ -228,6 +229,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     if (!isLazyLoadingEnabled || !eventParameters.shouldBeExpanded) {
       return;
     }
+    // prevent the default expansion behavior
 
     eventParameters.isExpansionPrevented = true;
     await instance.fetchItems([eventParameters.itemId]);
@@ -263,6 +265,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
         instance.addItems({ items: params.items, depth: 0, getChildrenCount });
       } else {
+        const expandedItems = selectorExpandedItems(store.value);
+        if (expandedItems.length > 0) {
+          instance.resetItemExpansion();
+        }
         instance.fetchItems();
       }
       firstRenderRef.current = false;
