@@ -94,6 +94,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
   const {
     autoFocus,
     className,
+    currentMonth,
     classes: classesProp,
     value: valueProp,
     defaultValue,
@@ -210,12 +211,16 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       return;
     }
 
-    const newDate = adapter.setMonth(value ?? referenceDate, month);
+    const currentValue =
+      value && currentMonth && !adapter.isSameYear(value, currentMonth)
+        ? adapter.setYear(value, adapter.getYear(currentMonth))
+        : value;
+    const newDate = adapter.setMonth(currentValue ?? referenceDate, month);
     handleValueChange(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(adapter.setMonth(value ?? referenceDate, month))) {
+    if (!isMonthDisabled(adapter.setMonth(value ?? currentMonth ?? referenceDate, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -280,11 +285,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       monthsPerRow={monthsPerRow}
       {...other}
     >
-      {getMonthsInYear(adapter, value ?? referenceDate).map((month) => {
+      {getMonthsInYear(adapter, currentMonth ?? value ?? referenceDate).map((month) => {
         const monthNumber = adapter.getMonth(month);
         const monthText = adapter.format(month, 'monthShort');
         const monthLabel = adapter.format(month, 'month');
-        const isSelected = monthNumber === selectedMonth;
+        const isSelected = monthNumber === selectedMonth && adapter.isSameYear(month, value!);
         const isDisabled = disabled || isMonthDisabled(month);
 
         return (
@@ -299,7 +304,9 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
-            aria-current={todayMonth === monthNumber ? 'date' : undefined}
+            aria-current={
+              todayMonth === monthNumber && adapter.isSameYear(now, month) ? 'date' : undefined
+            }
             aria-label={monthLabel}
             slots={slots}
             slotProps={slotProps}
@@ -324,6 +331,7 @@ MonthCalendar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  currentMonth: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.
