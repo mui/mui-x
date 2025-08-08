@@ -346,14 +346,6 @@ export const initialEvents = [
     },
   },
   {
-    id: 'allday-work-recurrent-3',
-    start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
-    end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 9 }),
-    title: 'On-Call R2adsga',
-    allDay: true,
-    resource: 'work',
-  },
-  {
     id: 'allday-work-recurrent-4',
     start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
     end: START_OF_FIRST_WEEK.plus({ days: 2 }).set({ weekday: 7, hour: 9 }),
@@ -423,7 +415,7 @@ export const initialEvents = [
   {
     id: 'allday-personal-recurrent-1',
     start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 9 }).set({ day: 28 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 18 }).set({ day: 30 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }).set({ day: 30 }),
     title: 'Month-End Close',
     allDay: true,
     resource: 'personal',
