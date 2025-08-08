@@ -1,3 +1,4 @@
+import type { Virtualizer } from '@mui/x-virtualizer';
 import type { GridColumnApi } from './gridColumnApi';
 import type { GridColumnMenuApi } from './gridColumnMenuApi';
 import type { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
@@ -89,7 +90,9 @@ export interface GridPrivateOnlyApiCommon<
     GridVirtualizationPrivateApi,
     GridRowProPrivateApi,
     GridParamsPrivateApi,
-    GridPivotingPrivateApiCommunity {}
+    GridPivotingPrivateApiCommunity {
+  virtualizer: Virtualizer;
+}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

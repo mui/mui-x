@@ -25,11 +25,10 @@ export default function FeaturesHighlight() {
         Using MUI X Charts
       </Typography>
       <Typography variant="h4" sx={{ textAlign: 'center', fontWeight: 600 }}>
-        Visualize your data with effortless elegance
+        Elegant, effortless data visualization
       </Typography>
       <Typography sx={{ textAlign: 'center' }}>
-        High-performance and SVG-rendered customizable React charts with d3.js based data
-        manipulation.
+        Highly customizable, SVG-rendered React charts with D3-based data manipulation.
       </Typography>
       <Paper
         component="div"
@@ -87,7 +86,7 @@ export default function FeaturesHighlight() {
               >
                 <Typography variant="subtitle2">Data labeling</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Deliver insights effectively through clear labels, interactive tooltips, and
+                  Deliver insights with precision using clear labels, interactive tooltips, and
                   informative legends.
                 </Typography>
                 <Legends />

@@ -11,9 +11,10 @@ import {
   skipFiltering,
   GridRowsPartialUpdates,
   getParentPath,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { getGroupingRules, RowGroupingStrategy } from './gridRowGroupingUtils';
+import { getGroupingRules } from './gridRowGroupingUtils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 

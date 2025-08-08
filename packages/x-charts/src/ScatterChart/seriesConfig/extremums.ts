@@ -1,78 +1,93 @@
-import {
-  CartesianExtremumGetter,
-  CartesianExtremumGetterResult,
-} from '../../internals/plugins/models/seriesConfig';
-
-const mergeMinMax = (
-  acc: CartesianExtremumGetterResult,
-  val: CartesianExtremumGetterResult,
-): CartesianExtremumGetterResult => {
-  return [
-    val[0] === null ? acc[0] : Math.min(acc[0], val[0]),
-    val[1] === null ? acc[1] : Math.max(acc[1], val[1]),
-  ];
-};
+import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
 
 export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
 
-  return Object.keys(series)
-    .filter((seriesId) => {
-      const axisId = series[seriesId].xAxisId;
-      return axisId === axis.id || (axisId === undefined && isDefaultAxis);
-    })
-    .reduce(
-      (acc, seriesId) => {
-        const filter = getFilters?.({
-          currentAxisId: axis.id,
-          isDefaultAxis,
-          seriesXAxisId: series[seriesId].xAxisId,
-          seriesYAxisId: series[seriesId].yAxisId,
-        });
+  let min = Infinity;
+  let max = -Infinity;
 
-        const seriesMinMax = series[seriesId].data?.reduce<CartesianExtremumGetterResult>(
-          (accSeries, d, dataIndex) => {
-            if (filter && !filter(d, dataIndex)) {
-              return accSeries;
-            }
-            return mergeMinMax(accSeries, [d.x, d.x]);
-          },
-          [Infinity, -Infinity],
-        );
-        return mergeMinMax(acc, seriesMinMax ?? [Infinity, -Infinity]);
-      },
-      [Infinity, -Infinity],
-    );
+  for (const seriesId in series) {
+    if (!Object.hasOwn(series, seriesId)) {
+      continue;
+    }
+
+    const axisId = series[seriesId].xAxisId;
+    if (!(axisId === axis.id || (axisId === undefined && isDefaultAxis))) {
+      continue;
+    }
+
+    const filter = getFilters?.({
+      currentAxisId: axis.id,
+      isDefaultAxis,
+      seriesXAxisId: series[seriesId].xAxisId,
+      seriesYAxisId: series[seriesId].yAxisId,
+    });
+
+    const seriesData = series[seriesId].data ?? [];
+
+    for (let i = 0; i < seriesData.length; i += 1) {
+      const d = seriesData[i];
+
+      if (filter && !filter(d, i)) {
+        continue;
+      }
+
+      if (d.x !== null) {
+        if (d.x < min) {
+          min = d.x;
+        }
+        if (d.x > max) {
+          max = d.x;
+        }
+      }
+    }
+  }
+
+  return [min, max];
 };
 
 export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
 
-  return Object.keys(series)
-    .filter((seriesId) => {
-      const axisId = series[seriesId].yAxisId;
-      return axisId === axis.id || (axisId === undefined && isDefaultAxis);
-    })
-    .reduce(
-      (acc, seriesId) => {
-        const filter = getFilters?.({
-          currentAxisId: axis.id,
-          isDefaultAxis,
-          seriesXAxisId: series[seriesId].xAxisId,
-          seriesYAxisId: series[seriesId].yAxisId,
-        });
+  let min = Infinity;
+  let max = -Infinity;
 
-        const seriesMinMax = series[seriesId].data?.reduce<CartesianExtremumGetterResult>(
-          (accSeries, d, dataIndex) => {
-            if (filter && !filter(d, dataIndex)) {
-              return accSeries;
-            }
-            return mergeMinMax(accSeries, [d.y, d.y]);
-          },
-          [Infinity, -Infinity],
-        );
-        return mergeMinMax(acc, seriesMinMax ?? [Infinity, -Infinity]);
-      },
-      [Infinity, -Infinity],
-    );
+  for (const seriesId in series) {
+    if (!Object.hasOwn(series, seriesId)) {
+      continue;
+    }
+
+    const axisId = series[seriesId].yAxisId;
+    if (!(axisId === axis.id || (axisId === undefined && isDefaultAxis))) {
+      continue;
+    }
+
+    const filter = getFilters?.({
+      currentAxisId: axis.id,
+      isDefaultAxis,
+      seriesXAxisId: series[seriesId].xAxisId,
+      seriesYAxisId: series[seriesId].yAxisId,
+    });
+
+    const seriesData = series[seriesId].data ?? [];
+
+    for (let i = 0; i < seriesData.length; i += 1) {
+      const d = seriesData[i];
+
+      if (filter && !filter(d, i)) {
+        continue;
+      }
+
+      if (d.y !== null) {
+        if (d.y < min) {
+          min = d.y;
+        }
+        if (d.y > max) {
+          max = d.y;
+        }
+      }
+    }
+  }
+
+  return [min, max];
 };

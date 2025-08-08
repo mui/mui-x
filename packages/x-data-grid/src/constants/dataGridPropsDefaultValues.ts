@@ -12,6 +12,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   checkboxSelectionVisibleOnly: false,
   clipboardCopyCellDelimiter: '\t',
   columnBufferPx: 150,
+  columnFilterDebounceMs: 150,
   columnHeaderHeight: 56,
   disableAutosize: false,
   disableColumnFilter: false,

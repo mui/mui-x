@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scalePoint, ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { AxisConfig, ScaleName } from '../../../../models';
 import {
@@ -12,6 +12,7 @@ import {
   DefaultedYAxis,
   DefaultedAxis,
   AxisValueFormatterContext,
+  isSymlogScaleConfig,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -204,6 +205,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
     const scale = getScale(scaleType, axisExtremums, zoomedRange);
+
+    if (isSymlogScaleConfig(axis) && axis.constant != null) {
+      (scale as ScaleSymLog<number, number>).constant(axis.constant);
+    }
+
     const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
     const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];

@@ -1,7 +1,6 @@
 import {
   GridColDef,
   GridColumnGroup,
-  GridColumnGroupingModel,
   GridColumnNode,
   GridRowModel,
   isLeaf,
@@ -18,6 +17,11 @@ import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
 import { defaultGetAggregationPosition } from '../aggregation/gridAggregationUtils';
+
+interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
+  rawHeaderName: string;
+  children: GridColumnGroupPivoting[];
+}
 
 const columnGroupIdSeparator = '>->';
 
@@ -74,7 +78,7 @@ export const getInitialColumns = (
 };
 
 function sortColumnGroups(
-  columnGroups: GridColumnNode[],
+  columnGroups: GridColumnGroupPivoting[],
   pivotModelColumns: GridPivotModel['columns'],
   depth = 0,
 ) {
@@ -97,7 +101,7 @@ function sortColumnGroups(
     }
     return (
       (sort === 'asc' ? 1 : -1) *
-      gridStringOrNumberComparator(a.headerName, b.headerName, {} as any, {} as any)
+      gridStringOrNumberComparator(a.rawHeaderName, b.rawHeaderName, {} as any, {} as any)
     );
   });
 }
@@ -176,8 +180,8 @@ export const getPivotedData = ({
 
   const aggregationModel: GridAggregationModel = {};
 
-  const columnGroupingModel: GridColumnGroupingModel = [];
-  const columnGroupingModelLookup = new Map<string, GridColumnGroup>();
+  const columnGroupingModel: GridColumnGroupPivoting[] = [];
+  const columnGroupingModelLookup = new Map<string, GridColumnGroupPivoting>();
 
   let newRows: GridRowModel[] = [];
 
@@ -202,22 +206,26 @@ export const getPivotedData = ({
           continue;
         }
         let colValue = apiRef.current.getRowValue(row, column) ?? '(No value)';
-        if (column.type !== 'number') {
-          colValue = String(colValue);
-        }
+
         if (column.type === 'singleSelect') {
           const singleSelectColumn = column as GridSingleSelectColDef;
           if (singleSelectColumn.getOptionLabel) {
             colValue = singleSelectColumn.getOptionLabel(colValue);
           }
         }
+        if (column.type !== 'number') {
+          colValue = String(colValue);
+        }
+
+        const formattedHeaderName = apiRef.current.getRowFormattedValue(row, column) || colValue;
         columnGroupPath.push(colValue);
         const groupId = columnGroupPath.join(columnGroupIdSeparator);
 
         if (!columnGroupingModelLookup.has(groupId)) {
-          const columnGroup: GridColumnGroupingModel[number] = {
+          const columnGroup: GridColumnGroupPivoting = {
             groupId,
-            headerName: colValue,
+            headerName: formattedHeaderName,
+            rawHeaderName: colValue,
             children: [],
           };
           columnGroupingModelLookup.set(groupId, columnGroup);

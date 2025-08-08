@@ -1,3 +1,8 @@
-<StandaloneView events={events} resources={resources}>
-  <MonthView className={classes.Container} onEventsChange={setEvents} />
+<StandaloneView
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+>
+  <MonthView className={classes.Container} />
 </StandaloneView>

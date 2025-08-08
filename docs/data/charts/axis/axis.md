@@ -240,11 +240,33 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 {{"demo": "MultipleAxes.js"}}
 
-### Grouped Axes
+## Grouped Axes
 
-You can group axes together by rendering more than one axis on the same side.
+In order to group `band` or `point` axes together, a user can provide a `groups` property in the x-axis definition.
+This property expects an array of objects with a `getValue` function.
+
+The `getValue` function receives the axis data value and should return a group name.
+Each group name will be used as is, overriding any `valueFormatter` for the axis.
+Groups are displayed in the order they are defined in the `groups` array.
+
+In the next demo, the x-axis is grouped by month, quarter, and year.
 
 {{"demo": "GroupedAxes.js"}}
+
+### Tick size
+
+The tick size can be customized for each group.
+To do so, you can provide a `tickSize` property in the `groups` array, the `tickSize` also affects the tick label position.
+Each item in the array corresponds to a group defined in the `getValue` function.
+
+{{"demo": "GroupedAxesTickSize.js"}}
+
+### Grouped axes styling
+
+In order to target a specific group, the `data-group-index` attribute can be used as a selector.
+The example below has a yellow tick color for the last group and blue text for the first group.
+
+{{"demo": "GroupedAxesStyling.js"}}
 
 ## Axis customization
 
@@ -276,6 +298,16 @@ When not set, the default values for the properties `textAnchor` and `dominantBa
 You can test below how the value of `angle` influences them.
 
 {{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
+
+## Symlog scale
+
+A log scale cannot plot zero since the logarithm of zero is undefined.
+
+To overcome this, you can use a symlog scale, which uses a linear scale for values close to zero and a logarithmic scale for the remaining ones.
+
+You can also configure the values at which the scale switches from linear to logarithmic with the `constant` property, which defaults to 1.
+
+{{"demo": "SymlogScale.js"}}
 
 ## Composition
 

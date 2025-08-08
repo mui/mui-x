@@ -14,9 +14,8 @@ import {
   ChartSeriesConfig,
   XAxis,
   YAxis,
-  ChartsWrapper,
-  ChartsWrapperProps,
 } from '@mui/x-charts/internals';
+import { ChartsWrapper, type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
   ChartsOverlay,
@@ -456,6 +455,12 @@ Heatmap.propTypes = {
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
+      groups: PropTypes.arrayOf(
+        PropTypes.shape({
+          getValue: PropTypes.func.isRequired,
+          tickSize: PropTypes.number,
+        }),
+      ),
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -537,6 +542,12 @@ Heatmap.propTypes = {
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
+      groups: PropTypes.arrayOf(
+        PropTypes.shape({
+          getValue: PropTypes.func.isRequired,
+          tickSize: PropTypes.number,
+        }),
+      ),
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,

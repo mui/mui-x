@@ -8,6 +8,7 @@ import type {
   ScaleSequential,
   ScaleThreshold,
   ScaleTime,
+  ScaleSymLog,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
@@ -25,6 +26,7 @@ export type D3Scale<
   Output = number,
 > =
   | ScaleBand<Domain>
+  | ScaleSymLog<Range, Output>
   | ScaleLogarithmic<Range, Output>
   | ScalePoint<Domain>
   | ScalePower<Range, Output>
@@ -32,6 +34,7 @@ export type D3Scale<
   | ScaleLinear<Range, Output>;
 
 export type D3ContinuousScale<Range = number, Output = number> =
+  | ScaleSymLog<Range, Output>
   | ScaleLogarithmic<Range, Output>
   | ScalePower<Range, Output>
   | ScaleTime<Range, Output>
@@ -217,7 +220,23 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
 }
 
 export type ScaleName = keyof AxisScaleConfig;
-export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ContinuousScaleName = 'linear' | 'log' | 'symlog' | 'pow' | 'sqrt' | 'time' | 'utc';
+
+export type AxisGroup = {
+  /**
+   * The function used to return the value for this group.
+   *
+   * @param {any} value The value of the axis item.
+   * @param {number} dataIndex  The index of the data item.
+   * @returns {string | number | Date} The value that will be used to group the axis items.
+   */
+  getValue: (value: any, dataIndex: number) => string | number | Date;
+  /**
+   * The size of the tick in pixels.
+   * @default 6
+   */
+  tickSize?: number;
+};
 
 export interface AxisScaleConfig {
   band: {
@@ -236,16 +255,72 @@ export interface AxisScaleConfig {
      */
     barGapRatio: number;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
+    /**
+     * Each group will have a label that is the stringified value of the group.
+     *
+     * @example
+     * If the axis is grouped by day, month and year.
+     *
+     * ```tsx
+     * [
+     *   { getValue: getDate },
+     *   { getValue: getMonth },
+     *   { getValue: getFullYear }
+     * ]
+     * ```
+     *
+     * Then the axis will have three rows, one for each group.
+     *
+     * ```bash
+     * | 31   | 1    | 2    |
+     * | Jan  | Feb         |
+     * | 2021               |
+     * ```
+     */
+    groups?: AxisGroup[];
   } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
+    /**
+     * Each group will have a label that is the stringified value of the group.
+     *
+     * @example
+     * If the axis is grouped by day, month and year.
+     *
+     * ```tsx
+     * [
+     *   { getValue: getDate },
+     *   { getValue: getMonth },
+     *   { getValue: getFullYear }
+     * ]
+     * ```
+     *
+     * Then the axis will have three rows, one for each group.
+     *
+     * ```bash
+     * | 31   | 1    | 2    |
+     * | Jan  | Feb         |
+     * | 2021               |
+     * ```
+     */
+    groups?: AxisGroup[];
   };
   log: {
     scaleType: 'log';
     scale: ScaleLogarithmic<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+  };
+  symlog: {
+    scaleType: 'symlog';
+    scale: ScaleSymLog<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+    /**
+     * The constant used to define the zero point of the symlog scale.
+     * @default 1
+     */
+    constant?: number;
   };
   pow: {
     scaleType: 'pow';
@@ -294,6 +369,9 @@ export interface AxisScaleComputedConfig {
       | ScaleThreshold<number | Date, string | null>;
   };
   log: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
+  symlog: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
   pow: {
@@ -524,6 +602,12 @@ export function isPointScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
   return scaleConfig.scaleType === 'point';
+}
+
+export function isSymlogScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' } {
+  return scaleConfig.scaleType === 'symlog';
 }
 
 /**

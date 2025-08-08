@@ -1,17 +1,14 @@
-// eslint-disable-next-line import/export
 export * from '@mui/x-data-grid/internals';
 
 export { GridColumnHeaders } from '../components/GridColumnHeaders';
 export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
-/**
+/*
  * x-data-grid-pro internals that are overriding the x-data-grid internals
  */
-/* eslint-disable import/export */
-export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
-export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
-export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-/* eslint-enable import/export */
+export { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
+export { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export {
   useGridColumnPinning,
@@ -30,8 +27,12 @@ export {
 export { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 export { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
 
-export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
+export {
+  useGridRowReorder,
+  rowReorderStateInitializer,
+} from '../hooks/features/rowReorder/useGridRowReorder';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+export type { GridRowReorderPrivateApi } from '../models/gridRowReorderApi';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 export {
@@ -71,5 +72,10 @@ export {
   skipFiltering,
   getParentPath,
 } from '../hooks/features/serverSideTreeData/utils';
+
+export enum RowGroupingStrategy {
+  Default = 'grouping-columns',
+  DataSource = 'grouping-columns-data-source',
+}
 
 export * from './propValidation';
