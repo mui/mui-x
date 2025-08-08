@@ -43,8 +43,12 @@ export default function CustomPaginationGrid() {
       <DataGrid
         loading={loading}
         pagination
-        slots={{
-          basePagination: Pagination,
+        slotProps={{
+          basePagination: {
+            material: {
+              ActionsComponent: Pagination,
+            },
+          },
         }}
         {...data}
         initialState={{
