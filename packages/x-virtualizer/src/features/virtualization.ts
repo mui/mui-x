@@ -789,7 +789,10 @@ function computeRenderContext(
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,
       });
-      lastColumnIndex = binarySearch(realLeft + inputs.viewportInnerWidth, inputs.columnPositions);
+      lastColumnIndex = Math.min(
+        binarySearch(realLeft + inputs.viewportInnerWidth, inputs.columnPositions),
+        inputs.columns.length,
+      );
     }
 
     renderContext.firstColumnIndex = firstColumnIndex;
