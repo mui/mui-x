@@ -207,4 +207,29 @@ describe('useChartCartesianAxis - axis highlight', () => {
       expect(highlight.length).to.equal(1);
     });
   });
+
+  it.skipIf(isJSDOM)('should allow to highlight axes with data', async () => {
+    const { user } = render(
+      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
+        plugins={[useChartCartesianAxis, useChartInteraction]}
+        xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
+        yAxis={[{ position: 'none', min: 0, max: 100 }]}
+        width={100}
+        height={100}
+        margin={0}
+      >
+        <ChartsSurface>
+          <ChartsAxisHighlight x="line" />
+        </ChartsSurface>
+      </ChartDataProvider>,
+    );
+
+    const svg = document.querySelector<HTMLElement>('svg')!;
+
+    await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
+    await waitFor(() => {
+      const highlight = svg.getElementsByClassName(chartsAxisHighlightClasses.root);
+      expect(highlight.length).to.equal(1);
+    });
+  });
 });
