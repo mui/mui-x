@@ -145,6 +145,23 @@ See [Custom components](/x/react-charts/components/) to learn how to further cus
 
 {{"demo": "CustomScatter.js"}}
 
+## Performance
+
+Scatter charts can have a lot of data points, which can impact performance. The default rendering of scatter points uses SVG `circle` elements, which can be slow for a large number of points.
+
+To improve performance, you can use the `useFastRenderer` prop, which renders the circles more efficiently. However, this comes with the following limitations:
+
+- CSS styling of single `circle` elements is no longer possible;
+- Overriding the `marker` slot is not supported;
+- Highlighted style transparency: for performance reasons, the highlighted state creates another circle on top of the original circle. This allows us to skip re-rendering all paths when a data point is highlighted, but this also means that applying transparency to the highlighted circle will cause the original, not highlighted circle to become partially visible.
+
+On top of that, there's also some differences in behavior:
+
+- The rendering order might be different, which might cause overlapping circles to render at different depths when compared to the default rendering;
+- When `disableVoronoi` is true, the `onItemClick` event target will be the SVG root, instead of the circle the click targeted;
+
+{{"demo": "ScatterFastRenderer.js"}}
+
 ## Composition
 
 Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
