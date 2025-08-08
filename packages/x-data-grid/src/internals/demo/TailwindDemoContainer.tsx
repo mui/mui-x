@@ -12,46 +12,26 @@ interface TailwindDemoContainerProps {
  * WARNING: This is an internal component used in documentation to inject the Tailwind script.
  * Please do not use it in your application.
  */
+
 export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
   const { children, documentBody } = props;
   const [isLoaded, setIsLoaded] = React.useState(false);
 
+  const tailwindPromiseRef = React.useRef<Promise<void>>(null);
+
   React.useEffect(() => {
-    const body = documentBody ?? document.body;
+    if (!tailwindPromiseRef.current) {
+      tailwindPromiseRef.current = new Promise<void>((resolve) => {
+        const body = documentBody ?? document.body;
 
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/@tailwindcss/browser@4';
-
-    let mounted = true;
-    const cleanup = () => {
-      mounted = false;
-      script.remove();
-
-      const head = body?.ownerDocument?.head;
-      if (!head) {
-        return;
-      }
-
-      const styles = head.querySelectorAll('style:not([data-emotion])');
-      styles.forEach((style) => {
-        const styleText = style.textContent?.substring(0, 100);
-        const isTailwindStylesheet = styleText?.includes('tailwind');
-        if (isTailwindStylesheet) {
-          style.remove();
-        }
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/@tailwindcss/browser@4';
+        script.onload = () => resolve();
+        body.appendChild(script);
       });
-    };
+    }
 
-    script.onload = () => {
-      if (!mounted) {
-        cleanup();
-        return;
-      }
-      setIsLoaded(true);
-    };
-    body.appendChild(script);
-
-    return cleanup;
+    tailwindPromiseRef.current.then(() => setIsLoaded(true));
   }, [documentBody]);
 
   return isLoaded ? (
