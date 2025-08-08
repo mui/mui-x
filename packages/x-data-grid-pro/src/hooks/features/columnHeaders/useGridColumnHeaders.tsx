@@ -78,9 +78,9 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
 
   const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
-  const filterItemsCacheRef = React.useRef<Record<GridStateColDef['field'], GridFilterItem>>(
+  const filterItemsCache = React.useRef<Record<GridStateColDef['field'], GridFilterItem>>(
     Object.create(null),
-  );
+  ).current;
 
   const getFilterItem = React.useCallback(
     (colDef: GridStateColDef) => {
@@ -91,16 +91,17 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
         // there's a valid `filterModelItem` for this column
         return filterModelItem;
       }
-      const defaultCachedItem = filterItemsCacheRef.current[colDef.field];
+      const defaultCachedItem = filterItemsCache[colDef.field];
       if (defaultCachedItem != null) {
         // there's a cached `defaultItem` for this column
         return defaultCachedItem;
       }
       // there's no cached `defaultItem` for this column, let's generate one and cache it
       const defaultItem = getGridFilter(colDef);
-      filterItemsCacheRef.current[colDef.field] = defaultItem;
+      filterItemsCache[colDef.field] = defaultItem;
       return defaultItem;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [filterModel],
   );
 
