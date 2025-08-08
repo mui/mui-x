@@ -42,6 +42,7 @@ The following are all team members who have contributed to this release:
 Same changes as in `@mui/x-data-grid@8.10.0`, plus:
 
 - [DataGridPro] Fix row reorder not working with column reorder disabled (#19016) @MBilalShafi
+- [DataGridPro] Fix header filters cache sharing issue (#19090) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@8.10.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
