@@ -68,7 +68,7 @@
     },
     "radar": { "description": "The configuration of the radar scales." },
     "series": {
-      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/radar-series/'>RadarSeries</a> objects."
+      "description": "The series to display in the bar chart. An array of [[RadarSeries]] objects."
     },
     "shape": { "description": "The grid shape." },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
