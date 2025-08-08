@@ -68,10 +68,8 @@ export function getAxisValue(
   const { scale, data: axisData } = axisConfig;
 
   if (!isBandScale(scale)) {
-    const value = scale.invert(pointerValue);
-
     if (dataIndex === null) {
-      return value;
+      return scale.invert(pointerValue);
     }
     return axisData![dataIndex];
   }
