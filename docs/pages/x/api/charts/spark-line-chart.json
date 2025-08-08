@@ -5,6 +5,13 @@
       "required": true
     },
     "area": { "type": { "name": "bool" }, "default": "false" },
+    "baseline": {
+      "type": {
+        "name": "union",
+        "description": "'max'<br>&#124;&nbsp;'min'<br>&#124;&nbsp;number"
+      },
+      "default": "0"
+    },
     "clipAreaOffset": {
       "type": {
         "name": "shape",
