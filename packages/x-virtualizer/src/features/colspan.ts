@@ -11,6 +11,11 @@ import { Virtualization } from './virtualization';
 type ColumnIndex = number;
 type ColspanMap = Map<RowId, Record<ColumnIndex, CellColSpanInfo>>;
 
+export type ColspanParams = {
+  enabled: boolean;
+  getColspan: (rowId: RowId, column: ColumnWithWidth, columnIndex: integer) => integer;
+};
+
 const selectors = {};
 
 export const Colspan = {
@@ -36,6 +41,8 @@ function useColspan(
   params: VirtualizerParams,
   api: Virtualization.API,
 ) {
+  const getColspan = params.colspan?.getColspan;
+
   const resetColSpan = () => {
     store.state.colspanMap = new Map();
   };
@@ -46,22 +53,29 @@ function useColspan(
 
   // Calculate `colSpan` for each cell in the row
   const calculateColSpan = useEventCallback(
-    (rowId: RowId, minFirstColumn: integer, maxLastColumn: integer, columns: ColumnWithWidth[]) => {
-      for (let i = minFirstColumn; i < maxLastColumn; i += 1) {
-        const cellProps = calculateCellColSpan(
-          store.state.colspanMap,
-          i,
-          rowId,
-          minFirstColumn,
-          maxLastColumn,
-          columns,
-          params.getColspan,
-        );
-        if (cellProps.colSpan > 1) {
-          i += cellProps.colSpan - 1;
+    getColspan
+      ? (
+          rowId: RowId,
+          minFirstColumn: integer,
+          maxLastColumn: integer,
+          columns: ColumnWithWidth[],
+        ) => {
+          for (let i = minFirstColumn; i < maxLastColumn; i += 1) {
+            const cellProps = calculateCellColSpan(
+              store.state.colspanMap,
+              i,
+              rowId,
+              minFirstColumn,
+              maxLastColumn,
+              columns,
+              getColspan,
+            );
+            if (cellProps.colSpan > 1) {
+              i += cellProps.colSpan - 1;
+            }
+          }
         }
-      }
-    },
+      : () => {},
   );
 
   api.calculateColSpan = calculateColSpan;
@@ -80,7 +94,7 @@ function calculateCellColSpan(
   minFirstColumnIndex: number,
   maxLastColumnIndex: number,
   columns: ColumnWithWidth[],
-  getColspan: VirtualizerParams['getColspan'],
+  getColspan: ColspanParams['getColspan'],
 ) {
   const columnsLength = columns.length;
   const column = columns[columnIndex];

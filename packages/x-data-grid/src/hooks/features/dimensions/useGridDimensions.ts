@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { Dimensions } from '@mui/x-virtualizer';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -106,9 +105,6 @@ const columnsTotalWidthSelector = createSelector(
 );
 
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
-  const logger = useGridLogger(apiRef, 'useResizeContainer');
-  const errorShown = React.useRef(false);
-
   const virtualizer = apiRef.current.virtualizer;
   const updateDimensions = virtualizer.api.updateDimensions;
   const getViewportPageSize = virtualizer.api.getViewportPageSize;
@@ -131,48 +127,61 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     setCSSVariables(root, gridDimensionsSelector(apiRef));
   };
 
-  const handleResize: GridEventListener<'resize'> = (size) => {
-    if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
-      logger.error(
-        [
-          'The parent DOM element of the Data Grid has an empty height.',
-          'Please make sure that this element has an intrinsic height.',
-          'The grid displays with a height of 0px.',
-          '',
-          'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-        ].join('\n'),
-      );
-      errorShown.current = true;
-    }
-    if (size.width === 0 && !errorShown.current && !isJSDOM) {
-      logger.error(
-        [
-          'The parent DOM element of the Data Grid has an empty width.',
-          'Please make sure that this element has an intrinsic width.',
-          'The grid displays with a width of 0px.',
-          '',
-          'More details: https://mui.com/r/x-data-grid-no-dimensions.',
-        ].join('\n'),
-      );
-      errorShown.current = true;
-    }
-  };
-
   useGridEventPriority(apiRef, 'rootMount', handleRootMount);
-  useGridEventPriority(apiRef, 'resize', handleResize);
   useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
 
-  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (previous, next) => {
-    if (apiRef.current.rootElementRef.current) {
-      setCSSVariables(apiRef.current.rootElementRef.current, next);
-    }
+  if (process.env.NODE_ENV !== 'production') {
+    /* eslint-disable react-hooks/rules-of-hooks */
+    const logger = useGridLogger(apiRef, 'useResizeContainer');
+    const errorShown = React.useRef(false);
 
-    if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
-      apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
-    }
+    useGridEventPriority(apiRef, 'resize', (size) => {
+      if (!getRootDimensions().isReady) {
+        return;
+      }
+      if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
+        logger.error(
+          [
+            'The parent DOM element of the Data Grid has an empty height.',
+            'Please make sure that this element has an intrinsic height.',
+            'The grid displays with a height of 0px.',
+            '',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
+          ].join('\n'),
+        );
+        errorShown.current = true;
+      }
+      if (size.width === 0 && !errorShown.current && !isJSDOM) {
+        logger.error(
+          [
+            'The parent DOM element of the Data Grid has an empty width.',
+            'Please make sure that this element has an intrinsic width.',
+            'The grid displays with a width of 0px.',
+            '',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
+          ].join('\n'),
+        );
+        errorShown.current = true;
+      }
+    });
+    /* eslint-enable react-hooks/rules-of-hooks */
+  }
 
-    apiRef.current.publishEvent('debouncedResize', next.root);
-  });
+  useStoreEffect(
+    apiRef.current.store,
+    (s) => s.dimensions,
+    (previous, next) => {
+      if (apiRef.current.rootElementRef.current) {
+        setCSSVariables(apiRef.current.rootElementRef.current, next);
+      }
+
+      if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
+        apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);
+      }
+
+      apiRef.current.publishEvent('debouncedResize', next.root);
+    },
+  );
 }
 
 function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {

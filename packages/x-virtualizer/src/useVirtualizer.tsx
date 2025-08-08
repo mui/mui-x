@@ -7,8 +7,11 @@ import { Dimensions } from './features/dimensions';
 import { Keyboard } from './features/keyboard';
 import { Rowspan } from './features/rowspan';
 import { Virtualization } from './features/virtualization';
-import type { RowId } from './models/core';
-import type { HeightEntry, RowSpacing, RowVisibilityParams } from './models/dimensions';
+import type { HeightEntry, RowSpacing } from './models/dimensions';
+import type { ColspanParams } from './features/colspan';
+import type { DimensionsParams } from './features/dimensions';
+import type { VirtualizationParams } from './features/virtualization';
+
 import {
   ColumnWithWidth,
   FocusedCell,
@@ -30,45 +33,33 @@ export type VirtualScrollerCompat = Virtualization.State['getters'];
 export type BaseState = Virtualization.State & Dimensions.State;
 
 export type VirtualizerParams = {
-  scrollbarSize?: number;
-  dimensions: {
-    rowHeight: number;
-    headerHeight: number;
-    groupHeaderHeight: number;
-    headerFilterHeight: number;
-    columnsTotalWidth: number;
-    headersTotalHeight: number;
-    leftPinnedWidth: number;
-    rightPinnedWidth: number;
-  };
-
-  initialState?: {
-    scroll?: { top: number; left: number };
-    dimensions?: Partial<Dimensions.State['dimensions']>;
-    rowSpanning?: Rowspan.State['rowSpanning'];
-    virtualization?: Partial<Virtualization.State['virtualization']>;
-  };
-  isRtl: boolean;
-  /** current page rows */
-  rows: RowEntry[];
-  /** current page range */
-  range: { firstRowIndex: integer; lastRowIndex: integer } | null;
-  rowIdToIndexMap: Map<RowId, number>;
-  rowCount: integer;
-  columns: ColumnWithWidth[];
-  pinnedRows: PinnedRows;
-  pinnedColumns: PinnedColumns;
   refs: {
     container: RefObject<HTMLDivElement | null>;
     scroller: RefObject<HTMLDivElement | null>;
     scrollbarVertical: RefObject<HTMLDivElement | null>;
     scrollbarHorizontal: RefObject<HTMLDivElement | null>;
   };
-  hasColSpan: boolean;
 
-  contentHeight: number;
-  minimalContentHeight: number | string;
+  dimensions: DimensionsParams;
+  virtualization: VirtualizationParams;
+  colspan?: ColspanParams;
+
+  initialState?: {
+    scroll?: { top: number; left: number };
+    rowSpanning?: Rowspan.State['rowSpanning'];
+    virtualization?: Partial<Virtualization.State['virtualization']>;
+  };
+  /** current page rows */
+  rows: RowEntry[];
+  /** current page range */
+  range: { firstRowIndex: integer; lastRowIndex: integer } | null;
+  rowCount: integer;
+  columns: ColumnWithWidth[];
+  pinnedRows?: PinnedRows;
+  pinnedColumns?: PinnedColumns;
+
   autoHeight: boolean;
+  minimalContentHeight?: number | string;
   getRowHeight?: (row: RowEntry) => number | null | undefined | 'auto';
   /**
    * Function that returns the estimated height for a row.
@@ -81,10 +72,9 @@ export type VirtualizerParams = {
   /**
    * Function that allows to specify the spacing between rows.
    * @param rowEntry
-   * @param visibility With all properties from [[RowVisibilityParams]].
    * @returns The row spacing values.
    */
-  getRowSpacing?: (rowEntry: RowEntry, visibility: RowVisibilityParams) => RowSpacing;
+  getRowSpacing?: (rowEntry: RowEntry) => RowSpacing;
   /** Update the row height values before they're used.
    * Used to add detail panel heights.
    * @param entry
@@ -103,14 +93,9 @@ export type VirtualizerParams = {
     nextRenderContext: RenderContext,
   ) => void;
 
-  focusedVirtualCell: () => FocusedCell | null;
-
-  rowBufferPx: number;
-  columnBufferPx: number;
+  focusedVirtualCell?: () => FocusedCell | null;
 
   scrollReset?: any;
-
-  getColspan: (rowId: RowId, column: ColumnWithWidth, columnIndex: integer) => number;
 
   renderRow: (params: {
     id: any;
@@ -119,7 +104,6 @@ export type VirtualizerParams = {
     offsetLeft: number;
     columnsTotalWidth: number;
     baseRowHeight: number | 'auto';
-    columns: ColumnWithWidth[];
     firstColumnIndex: number;
     lastColumnIndex: number;
     focusedColumnIndex: number | undefined;

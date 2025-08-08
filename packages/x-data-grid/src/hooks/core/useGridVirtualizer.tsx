@@ -1,17 +1,18 @@
 import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
+import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { useVirtualizer } from '@mui/x-virtualizer';
+import { useVirtualizer, Dimensions } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
 import {
-  gridContentHeightSelector,
   gridHasFillerSelector,
   gridVerticalScrollbarWidthSelector,
 } from '../features/dimensions/gridDimensionsSelectors';
@@ -57,6 +58,27 @@ const columnsTotalWidthSelector = createSelector(
   },
 );
 
+/** Translates virtualizer state to grid state */
+const addGridDimensionsCreator = () =>
+  lruMemoize(
+    (
+      dimensions: Dimensions.State['dimensions'],
+      headerHeight: number,
+      groupHeaderHeight: number,
+      headerFilterHeight: number,
+      headersTotalHeight: number,
+    ) => {
+      return {
+        ...dimensions,
+        headerHeight,
+        groupHeaderHeight,
+        headerFilterHeight,
+        headersTotalHeight,
+      };
+    },
+    { maxSize: 1 },
+  );
+
 /**
  * Virtualizer setup
  */
@@ -79,8 +101,6 @@ export function useGridVirtualizer(
 
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
-  /* TODO: extract dimensions code */
-  const contentHeight = useGridSelector(apiRef, gridContentHeightSelector);
   const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
   const { autoHeight } = rootProps;
@@ -109,16 +129,18 @@ export function useGridVirtualizer(
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
-  const dimensions = {
+  const dimensionsParams = {
     rowHeight,
     headerHeight,
-    groupHeaderHeight,
-    headerFilterHeight,
     columnsTotalWidth,
-    headersTotalHeight,
     leftPinnedWidth,
     rightPinnedWidth,
+    topPinnedHeight: headersTotalHeight,
+    bottomPinnedHeight: 0,
+    scrollbarSize: rootProps.scrollbarSize,
   };
+
+  const addGridDimensions = useLazyRef(addGridDimensionsCreator).current;
 
   // </DIMENSIONS>
 
@@ -135,34 +157,45 @@ export function useGridVirtualizer(
   const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
 
   const virtualizer = useVirtualizer({
-    scrollbarSize: rootProps.scrollbarSize,
-    dimensions,
-
-    initialState: {
-      scroll: rootProps.initialState?.scroll,
-      dimensions: apiRef.current.state.dimensions,
-      rowSpanning: apiRef.current.state.rowSpanning,
-      virtualization: apiRef.current.state.virtualization,
-    },
-    isRtl,
-    rows: currentPage.rows,
-    range: currentPage.range,
-    rowIdToIndexMap: currentPage.rowIdToIndexMap,
-    rowCount,
-    columns: visibleColumns,
-    pinnedRows,
-    pinnedColumns,
     refs: {
       container: apiRef.current.mainElementRef,
       scroller: apiRef.current.virtualScrollerRef,
       scrollbarVertical: apiRef.current.virtualScrollbarVerticalRef,
       scrollbarHorizontal: apiRef.current.virtualScrollbarHorizontalRef,
     },
-    hasColSpan,
 
-    contentHeight,
-    minimalContentHeight,
+    dimensions: dimensionsParams,
+    virtualization: {
+      isRtl,
+      rowBufferPx: rootProps.rowBufferPx,
+      columnBufferPx: rootProps.columnBufferPx,
+    },
+    colspan: {
+      enabled: hasColSpan,
+      getColspan: (rowId, column) => {
+        if (typeof column.colSpan === 'function') {
+          const row = apiRef.current.getRow(rowId);
+          const value = apiRef.current.getRowValue(row, column as GridStateColDef);
+          return column.colSpan(value, row, column, apiRef) ?? 0;
+        }
+        return column.colSpan ?? 1;
+      },
+    },
+
+    initialState: {
+      scroll: rootProps.initialState?.scroll,
+      rowSpanning: apiRef.current.state.rowSpanning,
+      virtualization: apiRef.current.state.virtualization,
+    },
+    rows: currentPage.rows,
+    range: currentPage.range,
+    rowCount,
+    columns: visibleColumns,
+    pinnedRows,
+    pinnedColumns,
+
     autoHeight,
+    minimalContentHeight,
     getRowHeight: React.useMemo(() => {
       if (!getRowHeight) {
         return undefined;
@@ -179,16 +212,25 @@ export function useGridVirtualizer(
     getRowSpacing: React.useMemo(
       () =>
         getRowSpacing
-          ? (rowEntry, visibility) =>
-              getRowSpacing({
+          ? (rowEntry) => {
+              const indexRelativeToCurrentPage = currentPage.rowIdToIndexMap.get(rowEntry.id) ?? -1;
+
+              const visibility = {
+                isFirstVisible: indexRelativeToCurrentPage === 0,
+                isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+                indexRelativeToCurrentPage,
+              };
+
+              return getRowSpacing({
                 ...rowEntry,
                 ...visibility,
                 indexRelativeToCurrentPage: apiRef.current.getRowIndexRelativeToVisibleRows(
                   rowEntry.id,
                 ),
-              })
+              });
+            }
           : undefined,
-      [apiRef, getRowSpacing],
+      [apiRef, getRowSpacing, currentPage.rows, currentPage.rowIdToIndexMap],
     ),
     applyRowHeight: useEventCallback((entry, row) =>
       apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
@@ -196,8 +238,6 @@ export function useGridVirtualizer(
     virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
 
     focusedVirtualCell: useEventCallback(() => focusedVirtualCell),
-    rowBufferPx: rootProps.rowBufferPx,
-    columnBufferPx: rootProps.columnBufferPx,
 
     resizeThrottleMs: rootProps.resizeThrottleMs,
     onResize: useEventCallback((size) => apiRef.current.publishEvent('resize', size)),
@@ -220,15 +260,6 @@ export function useGridVirtualizer(
 
     scrollReset,
 
-    getColspan: (rowId, column) => {
-      if (typeof column.colSpan === 'function') {
-        const row = apiRef.current.getRow(rowId);
-        const value = apiRef.current.getRowValue(row, column as GridStateColDef);
-        return column.colSpan(value, row, column, apiRef) ?? 0;
-      }
-      return column.colSpan ?? 0;
-    },
-
     renderRow: (params) => (
       <rootProps.slots.row
         key={params.id}
@@ -240,7 +271,7 @@ export function useGridVirtualizer(
         columnsTotalWidth={columnsTotalWidth}
         rowHeight={params.baseRowHeight}
         pinnedColumns={pinnedColumns}
-        visibleColumns={params.columns as any}
+        visibleColumns={visibleColumns}
         firstColumnIndex={params.firstColumnIndex}
         lastColumnIndex={params.lastColumnIndex}
         focusedColumnIndex={params.focusedColumnIndex}
@@ -264,17 +295,31 @@ export function useGridVirtualizer(
   //
   // TODO(v9): Remove this
   useFirstRender(() => {
-    apiRef.current.store.state.dimensions = virtualizer.store.state.dimensions;
+    apiRef.current.store.state.dimensions = addGridDimensions(
+      virtualizer.store.state.dimensions,
+      headerHeight,
+      groupHeaderHeight,
+      headerFilterHeight,
+      headersTotalHeight,
+    );
     apiRef.current.store.state.rowsMeta = virtualizer.store.state.rowsMeta;
     apiRef.current.store.state.virtualization = virtualizer.store.state.virtualization;
   });
+
+  useStoreEffect(virtualizer.store, Dimensions.selectors.dimensions, (_, dimensions) => {
+    apiRef.current.setState((gridState) => ({
+      ...gridState,
+      dimensions: addGridDimensions(
+        dimensions,
+        headerHeight,
+        groupHeaderHeight,
+        headerFilterHeight,
+        headersTotalHeight,
+      ),
+    }));
+  });
+
   useStoreEffect(virtualizer.store, identity, (_, state) => {
-    if (state.dimensions !== apiRef.current.state.dimensions) {
-      apiRef.current.setState((gridState) => ({
-        ...gridState,
-        dimensions: state.dimensions,
-      }));
-    }
     if (state.rowsMeta !== apiRef.current.state.rowsMeta) {
       apiRef.current.setState((gridState) => ({
         ...gridState,

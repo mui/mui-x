@@ -42,8 +42,8 @@ import type { GridColumnResizeApi } from '../../hooks/features/columnResize';
 import type { GridPivotingPrivateApiCommunity } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 
 export interface GridApiCommon<
-  GridState extends GridStateCommunity = any,
-  GridInitialState extends GridInitialStateCommunity = any,
+  GridState extends GridStateCommunity = GridStateCommunity,
+  GridInitialState extends GridInitialStateCommunity = GridInitialStateCommunity,
 > extends GridCoreApi,
     GridPipeProcessingApi,
     GridDensityApi,
