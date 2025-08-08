@@ -178,25 +178,27 @@ describe('<DataGridPro /> - Sorting', () => {
 
       // Click brand column menu and sort by ASC (should preserve existing year sort)
       const brandColumnCell = getColumnHeaderCell(0);
-      const menuIconButton = brandColumnCell.querySelector('button[aria-label="brand column menu"]')!;
+      const menuIconButton = brandColumnCell.querySelector(
+        'button[aria-label="brand column menu"]',
+      )!;
       fireEvent.click(menuIconButton);
-      
+
       // Wait for menu to appear
       await act(() => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      
+
       // Click Sort by ASC
       fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
-      
+
       // Should have both year (desc) and brand (asc) in sort model
       // Expected order: first by year desc (1950 before 1940), then by brand asc within same year
       expect(getColumnValues(0)).to.deep.equal(['Puma', 'Adidas', 'Nike']);
-      
+
       // Verify the sort model has both columns
       const sortModel = apiRef.current?.getSortModel();
       expect(sortModel).to.deep.equal([
         { field: 'year', sort: 'desc' },
-        { field: 'brand', sort: 'asc' }
+        { field: 'brand', sort: 'asc' },
       ]);
       vi.useRealTimers();
     });
