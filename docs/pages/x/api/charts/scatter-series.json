@@ -1,6 +1,7 @@
 {
   "name": "ScatterSeries",
   "imports": [
+    "import { ScatterSeries } from '@mui/x-charts-premium'",
     "import { ScatterSeries } from '@mui/x-charts-pro'",
     "import { ScatterSeries } from '@mui/x-charts'"
   ],
