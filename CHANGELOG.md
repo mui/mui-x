@@ -34,6 +34,7 @@ The following are all team members who have contributed to this release:
 - [DataGrid] Do not call `preProcessEditCellProps()` if cell is not editable based on `isCellEditable()` (#18405) @nusr
 - [DataGrid] Fix `renderCountry` throwing an error when used in tree data (#19068) @cherniavskii
 - [DataGrid] Fix performance issue for root level "select all" (#19015) @MBilalShafi
+- [DataGrid] Fix pagination `slotProps` being ignored by the grid (#19095) @romgrk
 - [l10n] Improve Norwegian Nynorsk (nn-NO) locale (#19076) @AnderzL7
 
 #### `@mui/x-data-grid-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -104,6 +105,7 @@ Internal changes.
 - [docs] Revise the Charts Animation doc (#18990) @mapache-salvaje
 - [docs] Fix incorrect code in line chart preview (#19023) @noobyogi0010
 - [docs] Improve bundling instructions for the Data Grid (#19065) @romgrk
+- [docs] Reduce image size in the inventory grid demo (#19004) @arminmeh
 
 ### Core
 
