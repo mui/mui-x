@@ -30,26 +30,15 @@ export const useInteractionItemProps = (
 
   const onPointerEnter = React.useCallback(() => {
     interactionActive.current = true;
-    instance.setItemInteraction({
-      type: data.type,
-      seriesId: data.seriesId,
-      dataIndex: data.dataIndex,
-    } as SeriesItemIdentifier);
-    instance.setHighlight({
-      seriesId: data.seriesId,
-      dataIndex: data.dataIndex,
-    });
-  }, [instance, data.type, data.seriesId, data.dataIndex]);
+    instance.setItemInteraction(data);
+    instance.setHighlight(data);
+  }, [instance, data]);
 
   const onPointerLeave = React.useCallback(() => {
     interactionActive.current = false;
-    instance.removeItemInteraction({
-      type: data.type,
-      seriesId: data.seriesId,
-      dataIndex: data.dataIndex,
-    } as SeriesItemIdentifier);
+    instance.removeItemInteraction(data);
     instance.clearHighlight();
-  }, [instance, data.type, data.seriesId, data.dataIndex]);
+  }, [instance, data]);
 
   React.useEffect(() => {
     return () => {
@@ -97,10 +86,7 @@ export function getInteractionItemProps(
       return;
     }
     instance.setItemInteraction(item);
-    instance.setHighlight({
-      seriesId: item.seriesId,
-      dataIndex: item.dataIndex,
-    });
+    instance.setHighlight(item);
   }
 
   function onPointerLeave() {

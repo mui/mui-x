@@ -1,0 +1,106 @@
+'use client';
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import useEventCallback from '@mui/utils/useEventCallback';
+import type { SeriesId } from '@mui/x-charts/internals';
+import { useInteractionItemProps } from '@mui/x-charts/internals';
+import { SankeyLayoutNode, type SankeyItemIdentifier } from './sankey.types';
+
+const SankeyNodeRoot = styled('rect')(({ onClick }) => ({
+  stroke: 'none',
+  cursor: onClick ? 'pointer' : 'default',
+  '&:hover': {
+    opacity: 0.8,
+  },
+}));
+
+const SankeyNodeLabel = styled('text')(({ theme }) => ({
+  fill: theme.palette.text.primary,
+  fontSize: '0.75rem',
+  fontWeight: 'normal',
+  dominantBaseline: 'middle',
+  pointerEvents: 'none',
+}));
+
+export interface SankeyNodeProps {
+  /**
+   * The series ID to which the node belongs
+   */
+  seriesId: SeriesId;
+  /**
+   * The node data
+   */
+  node: SankeyLayoutNode;
+  /**
+   * Color to apply to the node
+   */
+  color?: string;
+  /**
+   * Whether to show the node label
+   */
+  showLabel?: boolean;
+  /**
+   * Handler for click events
+   * @param {React.MouseEvent<SVGRectElement>} event - The click event
+   * @param {SankeyLayoutNode} node - The node data
+   */
+  onClick?: (event: React.MouseEvent<SVGRectElement>, node: SankeyItemIdentifier) => void;
+}
+
+export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
+  function SankeyNode(props, ref) {
+    const { node, color, showLabel = true, onClick, seriesId } = props;
+
+    const x0 = node.x0 ?? 0;
+    const y0 = node.y0 ?? 0;
+    const x1 = node.x1 ?? 0;
+    const y1 = node.y1 ?? 0;
+
+    const nodeWidth = x1 - x0;
+    const nodeHeight = y1 - y0;
+
+    // Determine label position
+    const labelX =
+      node.depth === 0
+        ? x1 + 6 // Right side for first column
+        : x0 - 6; // Left side for other columns
+
+    const labelAnchor = node.depth === 0 ? 'start' : 'end';
+
+    const identifier: SankeyItemIdentifier = {
+      type: 'sankey',
+      seriesId,
+      subType: 'node',
+      node,
+    };
+
+    // Add interaction props for tooltips
+    const interactionProps = useInteractionItemProps(identifier);
+
+    const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
+      if (onClick) {
+        onClick(event, identifier);
+      }
+    });
+
+    return (
+      <g ref={ref}>
+        <SankeyNodeRoot
+          x={node.x0}
+          y={node.y0}
+          width={nodeWidth}
+          height={nodeHeight}
+          fill={color || node.color}
+          onClick={onClick ? handleClick : undefined}
+          {...interactionProps}
+        />
+
+        {showLabel && node.label && (
+          <SankeyNodeLabel x={labelX} y={(y0 + y1) / 2} textAnchor={labelAnchor}>
+            {node.label}
+          </SankeyNodeLabel>
+        )}
+      </g>
+    );
+  },
+);
