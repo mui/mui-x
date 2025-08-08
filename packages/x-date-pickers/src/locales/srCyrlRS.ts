@@ -1,5 +1,6 @@
-import { Localization } from '../utils/getGridLocalization';
-import { srLatn } from './srLatn';
+import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import { getPickersLocalization } from './utils/getPickersLocalization';
+import { srLatnRSPickers } from './srLatnRS';
 
 function toCyrillic(value: string): string {
   const map: Record<string, string> = {
@@ -107,4 +108,6 @@ function convert(obj: any): any {
   return obj;
 }
 
-export const srRS: Localization = convert(srLatn);
+const srCyrlRSPickers: Partial<PickersLocaleText> = convert(srLatnRSPickers);
+
+export const srCyrlRS = getPickersLocalization(srCyrlRSPickers);

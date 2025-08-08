@@ -1,7 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-const srLatnGrid: Partial<GridLocaleText> = {
+export const srLatnRSGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nema redova',
   noResultsOverlayLabel: 'Nema rezultata.',
@@ -313,4 +313,4 @@ const srLatnGrid: Partial<GridLocaleText> = {
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
 };
 
-export const srLatn = getGridLocalization(srLatnGrid);
+export const srLatnRS: Localization = getGridLocalization(srLatnRSGrid);

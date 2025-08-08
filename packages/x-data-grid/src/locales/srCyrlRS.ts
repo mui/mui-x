@@ -1,5 +1,6 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
-import { srLatn } from './srLatn';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { srLatnRSGrid } from './srLatnRS';
 
 function toCyrillic(value: string): string {
   const map: Record<string, string> = {
@@ -84,7 +85,7 @@ function toCyrillic(value: string): string {
     .join('');
 }
 
-function convert(obj: any): any {
+export function convert(obj: any): any {
   if (typeof obj === 'string') {
     return toCyrillic(obj);
   }
@@ -107,4 +108,6 @@ function convert(obj: any): any {
   return obj;
 }
 
-export const srRS: PickersLocaleText = convert(srLatn) as PickersLocaleText;
+const srCyrlRSGrid: Partial<GridLocaleText> = convert(srLatnRSGrid);
+
+export const srCyrlRS: Localization = getGridLocalization(srCyrlRSGrid);

@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridiem',
 };
 
-const srLatnPickers: Partial<PickersLocaleText> = {
+export const srLatnRSPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Prethodni mesec',
   nextMonth: 'Sledeći mesec',
@@ -114,4 +114,4 @@ const srLatnPickers: Partial<PickersLocaleText> = {
   empty: 'Isprazni',
 };
 
-export const srLatn = getPickersLocalization(srLatnPickers);
+export const srLatnRS = getPickersLocalization(srLatnRSPickers);

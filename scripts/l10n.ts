@@ -80,7 +80,11 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
           }
 
           // Test if the variable name follows the pattern xxXXGrid or xxXXPickers
-          if (!/[a-z]{2}[A-Z]{2}|[a-z]{2}(Grid|Pickers|LocalText)/.test(node.id.name)) {
+          if (
+            !/[a-z]{2}[A-Z]{2}|[a-z]{2}[A-Z]{1}[a-z]{3}[A-Z]{2}|[a-z]{2}(Grid|Pickers|LocalText)/.test(
+              node.id.name,
+            )
+          ) {
             visitorPath.skip();
             return;
           }
@@ -177,7 +181,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
 function findLocales(localesDirectory: string, constantsPath: string) {
   const items = fse.readdirSync(localesDirectory);
   const locales: any[] = [];
-  const localeRegex = /^[a-z]{2}[A-Z]{2}|^[a-z]{2}(?=.ts)/;
+  const localeRegex = /^[a-z]{2}[A-Z]{2}|^[a-z]{2}[A-Z]{1}[a-z]{3}[A-Z]{2}|^[a-z]{2}(?=.ts)/;
 
   items.forEach((item) => {
     const match = item.match(localeRegex);
@@ -338,10 +342,12 @@ const generateDocReport = async (
         return;
       }
 
-      const languageTag =
-        importName.length > 2
-          ? `${importName.slice(0, 2).toLowerCase()}-${importName.slice(2).toUpperCase()}`
-          : importName;
+      let languageTag = importName;
+      if (importName.length > 4) {
+        languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName.slice(2, 3).toUpperCase()}${importName.slice(3, 6).toLowerCase()}-${importName.slice(6).toUpperCase()}`;
+      } else if (importName.length > 2) {
+        languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName.slice(2).toUpperCase()}`;
+      }
       const localeName = localeNames[languageTag as keyof typeof localeNames];
 
       if (localeName === undefined) {
