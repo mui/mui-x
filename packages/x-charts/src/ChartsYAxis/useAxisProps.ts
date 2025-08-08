@@ -78,6 +78,15 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
     ownerState: {},
   });
 
+  const lineProps = useSlotProps({
+    elementType: Line,
+    externalSlotProps: slotProps?.axisLine,
+    additionalProps: {
+      strokeLinecap: 'square' as const,
+    },
+    ownerState: {},
+  });
+
   const domain = yScale.domain();
   const isScaleBand = isBandScale(yScale);
 
@@ -99,6 +108,7 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
     Label,
     axisTickLabelProps,
     axisLabelProps,
+    lineProps,
     reverse,
     isRtl,
   };
