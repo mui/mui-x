@@ -82,6 +82,7 @@ export function CalendarFilters({
           textDecoration: 'none',
           paddingTop: '2px',
           fontWeight: 'medium',
+          textAlign: 'left',
           '&:hover': {
             textDecoration: 'underline',
           },
@@ -90,7 +91,7 @@ export function CalendarFilters({
           }),
         })}
       >
-        {showPresentToday ? '(Show all employees)' : '(Hide out today)'}
+        {showPresentToday ? '(Show all)' : '(In today)'}
       </Link>
     </Stack>
   );
