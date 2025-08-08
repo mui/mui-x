@@ -20,6 +20,7 @@ import {
   getCartesianAxisTriggerTooltip,
   isDateData,
   createDateFormatter,
+  calculateDefaultTickNumber,
 } from '@mui/x-charts/internals';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
 
@@ -190,7 +191,11 @@ export function computeAxisValue({
       axisExtremums[1] = max;
     }
 
-    const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
+    const rawTickNumber = getTickNumber({
+      ...axis,
+      domain: axisExtremums,
+      defaultTickNumber: calculateDefaultTickNumber(range),
+    });
     const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
     const scale = getScale(scaleType, axisExtremums, range);

@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Scatter, ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
+import { ScatterProps, ScatterSlotProps, ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { seriesConfig as scatterSeriesConfig } from './seriesConfig';
+import { FastScatter } from './FastScatter';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -54,7 +55,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  const ScatterItems = slots?.scatter ?? Scatter;
+  const ScatterItems = slots?.scatter ?? FastScatter;
 
   return (
     <React.Fragment>
