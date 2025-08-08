@@ -51,7 +51,6 @@ function useCreatePaths(
   color: string,
   colorGetter?: ColorGetter<'scatter'>,
 ) {
-  const start = performance.now();
   const { instance } = useChartContext();
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
@@ -86,8 +85,6 @@ function useCreatePaths(
     }
   }
 
-  performance.measure('useCreatePathsIteratively', { start });
-
   return paths;
 }
 
@@ -102,10 +99,8 @@ export interface FastScatterPathsProps {
 
 function FastScatterPaths(props: FastScatterPathsProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize } = props;
-  console.log('render fast scatter paths', series.id);
   const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
 
-  const start = performance.now();
   const children = [];
 
   let i = 0;
@@ -115,7 +110,6 @@ function FastScatterPaths(props: FastScatterPathsProps) {
       i += 1;
     }
   }
-  performance.measure('FastScatter paths.map', { start });
 
   return <React.Fragment>{children}</React.Fragment>;
 }
