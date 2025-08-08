@@ -1943,7 +1943,7 @@ importers:
   packages/x-virtualizer:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.27.4
+        specifier: ^7.28.2
         version: 7.28.2
       '@mui/utils':
         specifier: 'catalog:'
