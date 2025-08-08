@@ -409,4 +409,12 @@ export default defineConfig(
       'react-compiler/react-compiler': 'off',
     },
   },
+
+  {
+    // TODO: typescript namespaces found to be harmful. Refactor to different patterns.
+    ignores: ['packages/x-scheduler/**/*', 'packages/x-virtualizer/**/*'],
+    rules: {
+      '@typescript-eslint/no-namespace': 'error',
+    },
+  },
 );

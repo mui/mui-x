@@ -4,9 +4,9 @@ interface TelemetryEnvConfig {
   DEBUG: boolean;
 }
 
-declare namespace globalThis {
-  // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
-  let __MUI_X_TELEMETRY_DISABLED__: boolean | undefined;
+declare global {
+  // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention, vars-on-top
+  var __MUI_X_TELEMETRY_DISABLED__: boolean | undefined;
 }
 
 const envEnabledValues = ['1', 'true', 'yes', 'y'];
