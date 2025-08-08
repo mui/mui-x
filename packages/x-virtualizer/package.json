@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.4",
+    "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*"
   },
   "peerDependencies": {
