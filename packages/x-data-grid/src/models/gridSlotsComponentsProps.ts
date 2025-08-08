@@ -40,6 +40,8 @@ import type {
   TooltipProps,
   TextFieldProps,
   IconProps,
+  TabsProps,
+  ToggleButtonProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -55,6 +57,7 @@ export interface BaseDividerPropsOverrides {}
 export interface BaseLinearProgressPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
+export interface BaseTabsPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
 export interface BaseSwitchPropsOverrides {}
@@ -68,6 +71,7 @@ export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseSkeletonPropsOverrides {}
 export interface BaseIconPropsOverrides {}
+export interface BaseToggleButtonPropsOverrides {}
 
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
@@ -101,10 +105,12 @@ interface BaseSlotProps {
   baseLinearProgress: LinearProgressProps & BaseLinearProgressPropsOverrides;
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
+  baseTabs: TabsProps & BaseTabsPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
+  baseToggleButton: ToggleButtonProps & BaseToggleButtonPropsOverrides;
   basePagination: PaginationProps & BasePaginationPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;

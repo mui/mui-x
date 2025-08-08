@@ -17,6 +17,7 @@ export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   filterable: false,
   // @ts-ignore
   aggregable: false,
+  chartable: false,
   disableColumnMenu: true,
   disableReorder: true,
   disableExport: true,
