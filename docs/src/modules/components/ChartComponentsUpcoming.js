@@ -10,51 +10,72 @@ import CircleIcon from '@mui/icons-material/Circle';
 function getComponents() {
   return [
     {
-      title: 'Bar Chart',
-      href: '/x/react-charts/bars/',
+      title: 'Linear Gauge',
+      href: 'https://github.com/mui/mui-x/issues/13084',
     },
     {
-      title: 'Line Chart',
-      href: '/x/react-charts/lines/',
+      title: 'Bubble Chart',
+      href: 'https://github.com/mui/mui-x/issues/17275',
     },
     {
-      title: 'Area Chart',
-      href: '/x/react-charts/areas-demo/',
-    },
-    {
-      title: 'Pie (Donut) Chart',
-      href: '/x/react-charts/pie/',
-    },
-    {
-      title: 'Scatter Chart',
-      href: '/x/react-charts/scatter/',
-    },
-    {
-      title: 'Sparkline',
-      href: '/x/react-charts/sparkline/',
-    },
-    {
-      title: 'Gauge',
-      href: '/x/react-charts/gauge/',
-    },
-    {
-      title: 'Radar Chart',
-      href: '/x/react-charts/radar/',
-    },
-    {
-      title: 'Heatmap',
-      href: '/x/react-charts/heatmap/',
+      title: 'Sankey Chart',
+      href: '/x/react-charts/sankey/',
       pro: true,
     },
     {
-      title: 'Funnel Chart',
-      href: '/x/react-charts/funnel/',
+      title: 'Treemap',
+      href: '/x/react-charts/treemap/',
       pro: true,
     },
     {
-      title: 'Pyramid Chart',
-      href: '/x/react-charts/pyramid/',
+      title: 'Maps',
+      href: 'https://github.com/mui/mui-x/issues/12690',
       pro: true,
+    },
+    {
+      title: 'Polar Line Chart',
+      href: 'https://github.com/mui/mui-x/issues/17305',
+      pro: true,
+    },
+    {
+      title: 'Chord Chart',
+      href: 'https://github.com/mui/mui-x/issues/19070',
+      pro: true,
+    },
+    {
+      title: 'Gantt Chart',
+      href: '/x/react-charts/gantt/',
+      premium: true,
+    },
+    {
+      title: 'Waterfall Chart',
+      href: 'https://github.com/mui/mui-x/issues/11318',
+      premium: true,
+    },
+    {
+      title: 'Candlestick Chart',
+      href: 'https://github.com/mui/mui-x/issues/13044',
+      premium: true,
+    },
+    {
+      title: 'Boxplot Chart',
+      href: 'https://github.com/mui/mui-x/issues/15025',
+      premium: true,
+    },
+    {
+      title: 'OHLC Chart',
+      href: 'https://github.com/mui/mui-x/issues/13045',
+      premium: true,
+    },
+    {
+      title: 'Sunburst Chart',
+      href: 'https://github.com/mui/mui-x/issues/11319',
+      premium: true,
+    },
+    {
+      title: '3D Chart',
+      href: 'https://github.com/mui/mui-x/issues/18825',
+      premium: true,
     },
   ];
 }
