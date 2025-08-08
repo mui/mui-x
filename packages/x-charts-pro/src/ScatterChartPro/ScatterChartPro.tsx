@@ -307,6 +307,13 @@ ScatterChartPro.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
+   * Use fast renderer for the scatter chart.
+   * It has better performance for large datasets, but does not support all features.
+   * TODO: Link to limitations
+   * @default false
+   */
+  useFastRenderer: PropTypes.bool,
+  /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
    */

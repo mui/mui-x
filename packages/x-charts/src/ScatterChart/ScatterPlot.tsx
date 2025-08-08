@@ -118,6 +118,13 @@ ScatterPlot.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Use fast renderer for the scatter chart.
+   * It has better performance for large datasets, but does not support all features.
+   * TODO: Link to limitations
+   * @default false
+   */
+  useFastRenderer: PropTypes.bool,
 } as any;
 
 export { ScatterPlot };

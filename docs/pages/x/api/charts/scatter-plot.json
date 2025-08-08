@@ -12,7 +12,8 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    }
+    },
+    "useFastRenderer": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "ScatterPlot",
   "imports": [

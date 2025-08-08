@@ -15,7 +15,10 @@
       }
     },
     "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." }
+    "slots": { "description": "Overridable component slots." },
+    "useFastRenderer": {
+      "description": "Use fast renderer for the scatter chart. It has better performance for large datasets, but does not support all features. TODO: Link to limitations"
+    }
   },
   "classDescriptions": {},
   "slotDescriptions": {

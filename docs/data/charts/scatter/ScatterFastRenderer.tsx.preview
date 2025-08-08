@@ -1,0 +1,4 @@
+<ProfiledScatterChart onRender={onRender} />
+<Typography sx={{ alignSelf: 'center' }}>
+  Render time: {data?.toFixed(0)}ms
+</Typography>

@@ -84,6 +84,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "useFastRenderer": { "type": { "name": "bool" }, "default": "false" },
     "voronoiMaxRadius": { "type": { "name": "number" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {

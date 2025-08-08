@@ -101,7 +101,7 @@ function FastScatterPaths(props: FastScatterPathsProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize } = props;
   const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
 
-  const children = [];
+  const children: React.ReactNode[] = [];
 
   let i = 0;
   for (const [fill, dArray] of paths.entries()) {
@@ -132,9 +132,14 @@ const Group = styled('g')({
 });
 
 /**
+ * @internal
  * A faster version of the Scatter component that uses SVG paths to render points.
- * This component is optimized for performance and is suitable for rendering large datasets, but has limitations:
- * - TODO: Explain limitations
+ * This component is optimized for performance and is suitable for rendering large datasets, but has limitations. Some of the limitations include:
+ * - Limited CSS styling;
+ * - Overriding the `marker` slot is not supported;
+ * - Highlight style must not contain opacity.
+ *
+ * You can read about all the limitations [here](https://mui.com/x/react-charts/fast-scatter/).
  */
 export function FastScatter(props: FastScatterProps) {
   const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
@@ -148,7 +153,7 @@ export function FastScatter(props: FastScatterProps) {
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
   const classes = useUtilityClasses(inClasses);
 
-  const siblings = [];
+  const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
     const datum = series.data[seriesHighlightedItem];
     const getXPosition = getValueToPositionMapper(xScale);
