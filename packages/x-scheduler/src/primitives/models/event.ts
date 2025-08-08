@@ -46,7 +46,7 @@ export interface RecurrenceRule {
    */
   interval: number;
   /**
-   * Days of the week (0 = Sunday, 6 = Saturday).
+   * Days of the week (1 = Monday, 7 = Sunday).
    * Only used when frequency is 'weekly'.
    */
   daysOfWeek?: number[];
