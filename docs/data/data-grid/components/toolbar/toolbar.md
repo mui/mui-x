@@ -75,7 +75,7 @@ Use the `render` prop to replace default elements. See [Components usage—Custo
 
 The demo below shows how to replace the default elements with custom ones, styled with Tailwind CSS.
 
-{{"demo": "GridToolbarCustom.js", "bg": "inline", "defaultCodeOpen": false, "iframe": true}}
+{{"demo": "GridToolbarCustom.js", "bg": "inline", "defaultCodeOpen": false, "iframe": true, "disableLiveEdit": true}}
 
 ## Accessibility
 
