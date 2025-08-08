@@ -13,50 +13,25 @@ interface TailwindDemoContainerProps {
  * Please do not use it in your application.
  */
 
-let tailwindLoaded = false;
-let tailwindLoading = false;
-let tailwindPromise: Promise<void> | null = null;
-
 export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
   const { children, documentBody } = props;
-  const [isLoaded, setIsLoaded] = React.useState(tailwindLoaded);
+  const [isLoaded, setIsLoaded] = React.useState(false);
+
+  const tailwindPromiseRef = React.useRef<Promise<void>>(null);
 
   React.useEffect(() => {
-    if (tailwindLoaded) {
-      setIsLoaded(true);
-      return;
+    if (!tailwindPromiseRef.current) {
+      tailwindPromiseRef.current = new Promise<void>((resolve) => {
+        const body = documentBody ?? document.body;
+
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/@tailwindcss/browser@4';
+        script.onload = () => resolve();
+        body.appendChild(script);
+      });
     }
 
-    if (tailwindLoading && tailwindPromise) {
-      tailwindPromise.then(() => setIsLoaded(true));
-      return;
-    }
-
-    tailwindLoading = true;
-    tailwindPromise = new Promise<void>((resolve) => {
-      const body = documentBody ?? document.body;
-
-      const existingScript = body.querySelector(
-        'script[src="https://unpkg.com/@tailwindcss/browser@4"]',
-      );
-      if (existingScript) {
-        tailwindLoaded = true;
-        tailwindLoading = false;
-        setIsLoaded(true);
-        resolve();
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://unpkg.com/@tailwindcss/browser@4';
-      script.onload = () => {
-        tailwindLoaded = true;
-        tailwindLoading = false;
-        setIsLoaded(true);
-        resolve();
-      };
-      body.appendChild(script);
-    });
+    tailwindPromiseRef.current.then(() => setIsLoaded(true));
   }, [documentBody]);
 
   return isLoaded ? (
