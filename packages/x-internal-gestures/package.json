@@ -43,7 +43,7 @@
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "dependencies": {
-    "@babel/runtime": "^7.28.2"
+    "@babel/runtime": "catalog:"
   },
   "sideEffects": false
 }
