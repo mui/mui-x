@@ -1947,7 +1947,7 @@ importers:
         version: 7.28.2
       '@mui/utils':
         specifier: 'catalog:'
-        version: 7.2.0(@types/react@19.1.9)(react@19.1.1)
+        version: 7.3.1(@types/react@19.1.9)(react@19.1.1)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
