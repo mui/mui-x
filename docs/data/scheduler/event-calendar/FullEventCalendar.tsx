@@ -5,7 +5,7 @@ import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
+} from '../datasets/palette-demo';
 import classes from './FullEventCalendar.module.css';
 
 export default function FullEventCalendar() {

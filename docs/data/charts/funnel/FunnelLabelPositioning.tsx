@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 
@@ -89,7 +89,7 @@ export default function FunnelLabelPositioning() {
       )}
       getCode={({ props }) => {
         if (props.hide) {
-          return `import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+          return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
   series={[
@@ -101,7 +101,7 @@ export default function FunnelLabelPositioning() {
 `;
         }
 
-        return `import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+        return `import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 
 <FunnelChart
   // Space to display the labels

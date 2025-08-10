@@ -63,15 +63,20 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               className={clsx('DayGridEventCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              <time className="DayGridEventTime">
-                <span className="DayGridEventTimeStart">
-                  {adapter.format(eventProp.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-                </span>
-                <span className="DayGridEventTimeEnd">
-                  {' '}
-                  - {adapter.format(eventProp.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
-                </span>
-              </time>
+              {eventProp?.allDay ? (
+                <span className="DayGridEventTime">{translations.allDay}</span>
+              ) : (
+                <time className="DayGridEventTime">
+                  <span className="DayGridEventTimeStart">
+                    {adapter.format(eventProp.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                  </span>
+                  <span className="DayGridEventTimeEnd">
+                    {' '}
+                    - {adapter.format(eventProp.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                  </span>
+                </time>
+              )}
+
               <span className="DayGridEventTitle">{eventProp.title}</span>
             </p>
           </div>
@@ -82,6 +87,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     eventProp.title,
     eventProp.start,
     eventProp.end,
+    eventProp.allDay,
     eventResource?.name,
     translations,
     ampm,

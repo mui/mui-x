@@ -110,7 +110,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
           <ChartsAxis {...chartsAxisProps} />
           {children}
         </ChartsSurface>
-        {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
+        {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );

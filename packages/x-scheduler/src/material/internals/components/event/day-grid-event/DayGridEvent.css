@@ -23,6 +23,30 @@
   cursor: pointer;
 }
 
+.EventCard--allDay,
+.EventCard--invisible {
+  container-type: inline-size;
+  border-radius: var(--radius-3);
+  background-color: var(--event-background);
+  height: fit-content;
+  cursor: pointer;
+  z-index: 1;
+  grid-row: var(--grid-row);
+  grid-column: 1;
+  padding: 0 var(--space-1);
+  /* calculate the column spanning accounting for the spaces between columns and the borders */
+  width: calc(
+    var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * var(--space-1) +
+      (var(--grid-column-span) - 1) * 1px
+  );
+}
+
+.EventCard--invisible {
+  width: 100%;
+  visibility: hidden;
+  height: 18px;
+}
+
 .EventCard--compact .DayGridEventCardContent {
   margin: 0;
 }

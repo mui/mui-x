@@ -19,7 +19,7 @@ export default function DayGridPrimitive() {
     const tempWeeks: { date: DateTime; events: Event[] }[][] = [];
     for (let i = 0; i < weeksFirstDays.length; i += 1) {
       const weekStart = weeksFirstDays[i];
-      const weekDays = getDayList({ date: weekStart, amount: 7 });
+      const weekDays = getDayList({ date: weekStart, amount: 'week' });
       const weekDaysWithEvents = weekDays.map((date) => ({
         date,
         events: events.filter((event) => event.start.hasSame(date, 'day')),

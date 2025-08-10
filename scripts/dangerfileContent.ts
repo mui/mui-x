@@ -30,11 +30,8 @@ async function reportBundleSize() {
   markdownContent += await renderMarkdownReport(danger.github.pr, circleciBuildNumber, {
     track: [
       '@mui/x-data-grid',
-      '@mui/x-data-grid/DataGrid',
       '@mui/x-data-grid-pro',
-      '@mui/x-data-grid-pro/DataGridPro',
       '@mui/x-data-grid-premium',
-      '@mui/x-data-grid-premium/DataGridPremium',
       '@mui/x-charts',
       '@mui/x-charts-pro',
       // '@mui/x-charts-premium',

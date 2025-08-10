@@ -7,7 +7,7 @@
 
   /* Compact */
   --compact-accepted-bg: transparent;
-  --compact-circle-bg: var(--event-color-10);
+  --compact-circle-bg: var(--event-color-9);
 
   /* All Day */
   --allDay-accepted-bg: var(--event-color-5);

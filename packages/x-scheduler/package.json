@@ -69,7 +69,7 @@
     "@floating-ui/react": "^0.27.15",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
-    "lucide-react": "^0.526.0",
+    "lucide-react": "^0.536.0",
     "reselect": "catalog:",
     "prop-types": "catalog:",
     "use-sync-external-store": "catalog:"

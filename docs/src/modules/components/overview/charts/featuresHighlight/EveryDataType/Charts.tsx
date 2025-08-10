@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { RadarChart } from '@mui/x-charts/RadarChart';
-import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';

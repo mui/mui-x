@@ -13,10 +13,12 @@ import {
   useGridEventPriority,
   gridRowNodeSelector,
   GridRowId,
+  useGridApiMethod,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
   gridSortedRowIndexLookupSelector,
+  GridStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -60,6 +62,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+
+export const rowReorderStateInitializer: GridStateInitializer = (state) => ({
+  ...state,
+  rowReorder: {
+    isActive: false,
+  },
+});
 
 /**
  * Only available in DataGridPro
@@ -223,6 +232,8 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
+      apiRef.current.setRowDragActive(true);
+
       dragRowNode.current = event.currentTarget;
       // Apply cell-level dragging class to the drag handle
       dragRowNode.current.classList.add(classes.rowDragging);
@@ -353,6 +364,7 @@ export const useGridRowReorder = (
       // Clear visual indicators and dragged state
       applyDropIndicator(null, null);
       applyDraggedState(dragRowId, false);
+      apiRef.current.setRowDragActive(false);
 
       // Check if the row was dropped outside the grid.
       if (!event.dataTransfer || event.dataTransfer.dropEffect === 'none') {
@@ -425,4 +437,25 @@ export const useGridRowReorder = (
   useGridEvent(apiRef, 'rowDragEnd', handleDragEnd);
   useGridEvent(apiRef, 'cellDragOver', handleDragOver);
   useGridEventPriority(apiRef, 'rowOrderChange', props.onRowOrderChange);
+
+  const setRowDragActive = React.useCallback(
+    (isActive: boolean) => {
+      apiRef.current.setState((state) => ({
+        ...state,
+        rowReorder: {
+          ...state.rowReorder,
+          isActive,
+        },
+      }));
+    },
+    [apiRef],
+  );
+
+  useGridApiMethod(
+    apiRef,
+    {
+      setRowDragActive,
+    },
+    'private',
+  );
 };

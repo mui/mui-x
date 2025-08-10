@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import { Symbol, JSDocTagInfo, Type, InterfaceDeclaration, isPropertySignature } from 'typescript';
 import { EOL } from 'os';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
@@ -24,13 +24,13 @@ interface ParsedObject {
   projects: XProjectNames[];
   description?: string;
   properties: ParsedProperty[];
-  tags: { [tagName: string]: ts.JSDocTagInfo };
+  tags: { [tagName: string]: JSDocTagInfo };
 }
 
 interface ParsedProperty {
   name: string;
   description: string;
-  tags: { [tagName: string]: ts.JSDocTagInfo };
+  tags: { [tagName: string]: JSDocTagInfo };
   required: boolean;
   typeStr: string;
   /**
@@ -40,22 +40,22 @@ interface ParsedProperty {
 }
 
 const parseProperty = async (
-  propertySymbol: ts.Symbol,
+  propertySymbol: Symbol,
   project: XTypeScriptProject,
 ): Promise<ParsedProperty> => ({
   name: propertySymbol.name,
   description: getSymbolDescription(propertySymbol, project),
   tags: getSymbolJSDocTags(propertySymbol),
-  required: !propertySymbol.declarations?.find(ts.isPropertySignature)?.questionToken,
+  required: !propertySymbol.declarations?.find(isPropertySignature)?.questionToken,
   typeStr: await stringifySymbol(propertySymbol, project),
   projects: [project.name],
 });
 
 interface ProjectInterface {
   project: XTypeScriptProject;
-  symbol: ts.Symbol;
-  type: ts.Type;
-  declaration: ts.InterfaceDeclaration;
+  symbol: Symbol;
+  type: Type;
+  declaration: InterfaceDeclaration;
 }
 
 const parseInterfaceSymbol = async (
@@ -162,7 +162,7 @@ function generateImportStatement(object: ParsedObject, projects: XTypeScriptProj
   return projectImports;
 }
 
-function extractDemos(tagInfo: ts.JSDocTagInfo): { demos?: string } {
+function extractDemos(tagInfo: JSDocTagInfo): { demos?: string } {
   if (!tagInfo || !tagInfo.text) {
     return {};
   }

@@ -41,3 +41,9 @@ body {
   appearance: none;
   resize: none;
 }
+
+.mui-x-scheduler ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

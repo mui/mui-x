@@ -6,15 +6,25 @@ import type {
 import type { GridRowId, GridRowModel } from '../../../models/gridRows';
 import type { GridDataSourceCacheDefaultConfig } from './cache';
 
+/**
+ * The parameters for the `fetchRows` method.
+ */
+export interface GridDataSourceFetchRowsParams extends Partial<GridGetRowsParams> {
+  /**
+   * If `true`, bypasses the cache and forces a refetch of the rows from the server.
+   */
+  skipCache?: boolean;
+}
+
 export interface GridDataSourceApiBase {
   /**
    * Fetches the rows from the server.
    * If no `parentId` option is provided, it fetches the root rows.
    * Any missing parameter from `params` will be filled from the state (sorting, filtering, etc.).
    * @param {GridRowId} parentId The id of the parent node (default: `GRID_ROOT_GROUP_ID`).
-   * @param {Partial<GridGetRowsParams>} params Request parameters override.
+   * @param {GridDataSourceFetchRowsParams} params Request parameters override.
    */
-  fetchRows: (parentId?: GridRowId, params?: Partial<GridGetRowsParams>) => void;
+  fetchRows: (parentId?: GridRowId, params?: GridDataSourceFetchRowsParams) => void;
   /**
    * The data source cache object.
    */

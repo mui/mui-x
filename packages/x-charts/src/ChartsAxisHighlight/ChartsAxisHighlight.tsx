@@ -30,8 +30,12 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
   const classes = useUtilityClasses();
   return (
     <React.Fragment>
-      {xAxisHighlight && <ChartsXHighlight type={xAxisHighlight} classes={classes} />}
-      {yAxisHighlight && <ChartsYHighlight type={yAxisHighlight} classes={classes} />}
+      {xAxisHighlight && xAxisHighlight !== 'none' && (
+        <ChartsXHighlight type={xAxisHighlight} classes={classes} />
+      )}
+      {yAxisHighlight && yAxisHighlight !== 'none' && (
+        <ChartsYHighlight type={yAxisHighlight} classes={classes} />
+      )}
     </React.Fragment>
   );
 }

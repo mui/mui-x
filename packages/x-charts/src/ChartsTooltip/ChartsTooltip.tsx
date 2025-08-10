@@ -6,8 +6,10 @@ import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
+import { TriggerOptions } from './utils';
 
-export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'children'> {}
+export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions>
+  extends Omit<ChartsTooltipContainerProps<T>, 'children'> {}
 
 /**
  * Demos:
@@ -264,9 +266,9 @@ ChartsTooltip.propTypes = {
   transition: PropTypes.bool,
   /**
    * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
+   * - 'item': Shows data about the item below the mouse;
+   * - 'axis': Shows values associated with the hovered x value;
+   * - 'none': Does not display tooltip.
    * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),

@@ -26,11 +26,19 @@ export interface CalendarEvent {
    * The id of the resource this event is associated with.
    */
   resource?: CalendarResourceId;
+
+  /**
+   * `true` if the event is an all-day event.
+   */
+  allDay?: boolean;
+}
+
+export interface CalendarEventWithPosition extends CalendarEvent {
+  eventRowIndex?: number;
 }
 
 export type CalendarEventId = string | number;
 
-// TODO: Try to keep this property on the Material UI side
 export type CalendarEventColor =
   | 'primary'
   | 'mauve'

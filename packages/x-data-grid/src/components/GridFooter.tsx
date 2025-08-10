@@ -36,7 +36,9 @@ const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
 
     const paginationElement = rootProps.pagination &&
       !rootProps.hideFooterPagination &&
-      rootProps.slots.pagination && <rootProps.slots.pagination />;
+      rootProps.slots.pagination && (
+        <rootProps.slots.pagination {...rootProps.slotProps?.pagination} />
+      );
 
     return (
       <GridFooterContainer {...props} ref={ref}>

@@ -59,8 +59,7 @@ export default function ChartsYHighlight(props: {
         {isBandScaleY && yScale(value) !== undefined && (
           <ChartsAxisHighlightPath
             d={`M ${left} ${
-              // @ts-expect-error, yScale value is checked in the statement above
-              yScale(value) - (yScale.step() - yScale.bandwidth()) / 2
+              yScale(value)! - (yScale.step() - yScale.bandwidth()) / 2
             } l 0 ${yScale.step()} l ${width} 0 l 0 ${-yScale.step()} Z`}
             className={classes.root}
             ownerState={{ axisHighlight: 'band' }}

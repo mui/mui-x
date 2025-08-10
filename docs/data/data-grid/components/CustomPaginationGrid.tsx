@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import {
   DataGrid,
   gridPageCountSelector,
-  GridPagination,
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid';
@@ -32,10 +31,6 @@ function Pagination({
   );
 }
 
-function CustomPagination(props: any) {
-  return <GridPagination ActionsComponent={Pagination} {...props} />;
-}
-
 export default function CustomPaginationGrid() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
@@ -48,8 +43,12 @@ export default function CustomPaginationGrid() {
       <DataGrid
         loading={loading}
         pagination
-        slots={{
-          pagination: CustomPagination,
+        slotProps={{
+          basePagination: {
+            material: {
+              ActionsComponent: Pagination,
+            },
+          },
         }}
         {...data}
         initialState={{

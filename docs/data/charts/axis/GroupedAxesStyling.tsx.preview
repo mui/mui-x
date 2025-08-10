@@ -1,0 +1,19 @@
+<LineChart
+  sx={{
+    [`& [data-group-index="1"] .${axisClasses.tick}`]: {
+      stroke: 'rgb(255, 180, 34)',
+    },
+    [`& [data-group-index="0"] .${axisClasses.tickLabel}`]: {
+      fill: 'rgb(66, 84, 251)',
+    },
+  }}
+  xAxis={[
+    {
+      data,
+      scaleType: 'point',
+      groups: [{ getValue: getMonth }, { getValue: formatQuarterYear }],
+      valueFormatter,
+    },
+  ]}
+  {...chartConfig}
+/>

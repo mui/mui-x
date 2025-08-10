@@ -17,12 +17,17 @@ export const WeekView = React.memo(
   ) {
     const { store } = useEventCalendarContext();
     const visibleDate = useStore(store, selectors.visibleDate);
-
+    const settings = useStore(store, selectors.settings);
     const getDayList = useDayList();
 
     const days = React.useMemo(
-      () => getDayList({ date: adapter.startOfWeek(visibleDate), amount: 7 }),
-      [getDayList, visibleDate],
+      () =>
+        getDayList({
+          date: adapter.startOfWeek(visibleDate),
+          amount: 'week',
+          excludeWeekends: settings.hideWeekends,
+        }),
+      [getDayList, visibleDate, settings.hideWeekends],
     );
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;

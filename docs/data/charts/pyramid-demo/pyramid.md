@@ -4,13 +4,9 @@ productId: x-charts
 components: FunnelChart, FunnelPlot
 ---
 
-# Charts - Pyramid [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
+# Charts - Pyramid [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">The pyramid chart is a variation of the funnel chart.</p>
-
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
 
 ## Pyramid Chart
 

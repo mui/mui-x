@@ -12,6 +12,7 @@ import type {
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
 } from '../hooks';
+import type { GridRowReorderPrivateApi } from './gridRowReorderApi';
 import type {
   GridDataSourceApiPro,
   GridDataSourcePrivateApiPro,
@@ -37,4 +38,5 @@ export interface GridPrivateApiPro
     GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps>,
     GridDetailPanelPrivateApi,
     GridInfiniteLoaderPrivateApi,
+    GridRowReorderPrivateApi,
     GridDataSourcePrivateApiPro {}
