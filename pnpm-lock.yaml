@@ -1645,7 +1645,7 @@ importers:
   packages/x-internal-gestures:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.28.2
+        specifier: 'catalog:'
         version: 7.28.2
     publishDirectory: build
 
@@ -1943,7 +1943,7 @@ importers:
   packages/x-virtualizer:
     dependencies:
       '@babel/runtime':
-        specifier: ^7.27.4
+        specifier: 'catalog:'
         version: 7.28.2
       '@mui/utils':
         specifier: 'catalog:'
