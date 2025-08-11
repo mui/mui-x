@@ -6,7 +6,6 @@ export default function SankeyDetailedDataStructure() {
     <SankeyChart
       height={250}
       series={{
-        // TODO: show preview
         data: {
           nodes: [
             { id: 'source', label: 'Energy Source', color: '#e57373' },

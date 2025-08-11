@@ -38,7 +38,7 @@ export default function SankeyIterations() {
       data={{
         iterations: {
           knob: 'slider',
-          defaultValue: 6,
+          defaultValue: 32,
           min: 1,
           max: 100,
         },
@@ -63,11 +63,7 @@ export default function SankeyIterations() {
     },
     iterations: ${props.iterations},
   }}
-/>
-// More iterations = better layout optimization but slower rendering
-// - 1 iteration: Fast but may have overlapping nodes
-// - 6 iterations: Good balance (default)
-// - 20 iterations: Maximum optimization but slower`;
+/>`;
       }}
     />
   );

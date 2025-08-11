@@ -14,10 +14,10 @@ export default function SankeyDetailedDataStructure() {
             { id: 'usage', label: 'Energy Usage', color: '#64b5f6' },
           ],
           links: [
-            { source: 'source', target: 'oil', value: 30, color: '#ffcdd2' },
-            { source: 'source', target: 'gas', value: 20, color: '#f8bbd0' },
-            { source: 'oil', target: 'usage', value: 25 },
-            { source: 'gas', target: 'usage', value: 15 },
+            { source: 'source', target: 'oil', value: 30, color: '#e57373' },
+            { source: 'source', target: 'gas', value: 20, color: '#e57373' },
+            { source: 'oil', target: 'usage', value: 25, color: '#f06292' },
+            { source: 'gas', target: 'usage', value: 15, color: '#ba68c8' },
           ],
         },
       }}
