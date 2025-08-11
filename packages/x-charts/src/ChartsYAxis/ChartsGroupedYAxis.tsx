@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { ChartsXAxisProps, type AxisGroup } from '../models/axis';
+import { ChartsYAxisProps, type AxisGroup } from '../models/axis';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
-import { TICK_LABEL_GAP, XAxisRoot } from './utilities';
+import { TICK_LABEL_GAP, YAxisRoot } from './utilities';
 import { useTicksGrouped } from '../hooks/useTicksGrouped';
 import { useAxisProps } from './useAxisProps';
 
@@ -32,9 +32,9 @@ const getGroupingConfig = (
 /**
  * @ignore - internal component.
  */
-function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
+function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
   const {
-    xScale,
+    yScale,
     defaultizedProps,
     tickNumber,
     positionSign,
@@ -46,11 +46,12 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     Label,
     axisTickLabelProps,
     axisLabelProps,
+    lineProps,
   } = useAxisProps(inProps);
 
-  if (!isBandScale(xScale)) {
+  if (!isBandScale(yScale)) {
     throw new Error(
-      'MUI X Charts: ChartsGroupedXAxis only supports the `band` and `point` scale types.',
+      'MUI X Charts: ChartsGroupedYAxis only supports the `band` and `point` scale types.',
     );
   }
 
@@ -67,7 +68,7 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     tickLabelPlacement,
     sx,
     offset,
-    height: axisHeight,
+    width: axisWidth,
   } = defaultizedProps;
 
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
@@ -77,18 +78,18 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
   const { instance } = useChartContext();
 
   const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * axisHeight,
+    x: positionSign * axisWidth,
+    y: top + height / 2,
   };
 
-  const xTicks = useTicksGrouped({
-    scale: xScale,
+  const yTicks = useTicksGrouped({
+    scale: yScale,
     tickNumber,
     valueFormatter,
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
-    direction: 'x',
+    direction: 'y',
     groups,
   });
 
@@ -101,43 +102,41 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
   }
 
   return (
-    <XAxisRoot
-      transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
+    <YAxisRoot
+      transform={`translate(${position === 'right' ? left + width + offset : left - offset}, 0)`}
       className={classes.root}
       sx={sx}
     >
-      {!disableLine && (
-        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
-      )}
+      {!disableLine && <Line y1={top} y2={top + height} className={classes.line} {...lineProps} />}
 
-      {xTicks.map((item, index) => {
+      {yTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
-        const xTickLabel = labelOffset ?? 0;
+        const yTickLabel = labelOffset ?? 0;
 
-        const showTick = instance.isXInside(tickOffset);
+        const showTick = instance.isYInside(tickOffset);
         const tickLabel = item.formattedValue;
         const ignoreTick = item.ignoreTick ?? false;
         const groupIndex = item.groupIndex ?? 0;
         const groupConfig = getGroupingConfig(groups, groupIndex, tickSize);
 
-        const tickYSize = positionSign * groupConfig.tickSize;
-        const labelPositionY = positionSign * (groupConfig.tickSize + TICK_LABEL_GAP);
+        const tickXSize = positionSign * groupConfig.tickSize;
+        const labelPositionX = positionSign * (groupConfig.tickSize + TICK_LABEL_GAP);
 
         return (
           <g
             key={index}
-            transform={`translate(${tickOffset}, 0)`}
+            transform={`translate(0, ${tickOffset})`}
             className={classes.tickContainer}
             data-group-index={groupIndex}
           >
             {!disableTicks && !ignoreTick && showTick && (
-              <Tick y2={tickYSize} className={classes.tick} {...slotProps?.axisTick} />
+              <Tick x2={tickXSize} className={classes.tick} {...slotProps?.axisTick} />
             )}
 
             {tickLabel !== undefined && (
               <TickLabel
-                x={xTickLabel}
-                y={labelPositionY}
+                x={labelPositionX}
+                y={yTickLabel}
                 {...axisTickLabelProps}
                 style={{
                   ...axisTickLabelProps.style,
@@ -155,8 +154,8 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
-    </XAxisRoot>
+    </YAxisRoot>
   );
 }
 
-export { ChartsGroupedXAxis };
+export { ChartsGroupedYAxis };
