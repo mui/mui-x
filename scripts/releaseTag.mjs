@@ -50,8 +50,11 @@ async function main(argv) {
   const exec = dryRun ? execDry : execActual;
 
   const rootWorkspace = getWorkspaceRoot();
-  const rootWorkspacePackageJson = await fs.readFile(path.join(rootWorkspace, 'package.json'));
-  const rootWorkspaceManifest = JSON.parse(rootWorkspacePackageJson.toString('utf8'), null);
+  const rootWorkspacePackageJson = await fs.readFile(
+    path.join(rootWorkspace, 'package.json'),
+    'utf-8',
+  );
+  const rootWorkspaceManifest = JSON.parse(rootWorkspacePackageJson, null);
 
   const tag = `v${rootWorkspaceManifest.version}`;
   const message = `Version ${rootWorkspaceManifest.version}`;
