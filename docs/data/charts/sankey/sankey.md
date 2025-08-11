@@ -18,4 +18,21 @@ Each node can have an optional configuration object, and links must specify `sou
 
 {{"demo": "SankeyChartExample.js"}}
 
-{{"demo": "ComplexSankeyChart.js"}}
+## Data structure
+
+The Sankey chart requires a specific data structure with two main parts: `nodes` and `links`.
+
+- The `nodes` array is optional but allows you to customize individual nodes.
+- The `links` array defines the connections between nodes.
+
+### Automatic nodes
+
+If a node is referenced in links but not defined in the `nodes` array, it will be automatically created with the ID as the label.
+
+{{"demo": "SankeyBasicDataStructure.js"}}
+
+### Explicit nodes
+
+When you provide explicit node definitions, you can customize labels and colors for each node.
+
+{{"demo": "SankeyDetailedDataStructure.js"}}
