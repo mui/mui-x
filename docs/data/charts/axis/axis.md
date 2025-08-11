@@ -9,7 +9,7 @@ components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxi
 <p class="description">Define, format, and customize Chart axes.</p>
 
 An axis is a reference line that data points are measured against in a chart.
-The MUI X Line Chart, Bar Chart, and Scatter Chart let you define x-axes and y-axes, both of which can be formatted and customized to suit a wide range of use cases.
+The MUI X Line Chart, Bar Chart, and Scatter Chart give you customization options for both x-axes and y-axes to suit a wide range of use cases.
 
 ## Creating custom axes
 
@@ -56,9 +56,9 @@ Some series types also require specific axis attributes:
 
 ## Axis formatter
 
-Axis data can be displayed in the axes ticks, the tooltip, and in other locations.
+Axis data can be displayed in ticks, tooltips, and other locations.
 You can use the `valueFormatter` property to change how the data is displayed.
-The formatter's second argument of provides rendering context for advanced use cases.
+The formatter's second argument provides rendering context for advanced use cases.
 
 In the demo below, `valueFormatter` is used to shorten months and introduce a new line for ticks.
 It uses the `context.location` to determine where the value is rendered.
@@ -68,7 +68,7 @@ It uses the `context.location` to determine where the value is rendered.
 ### Ticks without labels
 
 Some use cases may call for displaying ticks with no labels.
-For example, it's common to omit labels from logarithmic axes when they'd be too numerous or complex to display, but keep the ticks to indicate the log scale.
+For example, it's common to use ticks to indicate a logarithmic scale but omit the labels from the axis when they'd be too numerous or complex to display.
 
 The default tick formatter achieves this by rendering an empty string for ticks that should not show labels.
 If you want to customize the formatting, but want to keep the default behavior for ticks without labels, you can check that the `context.defaultTickLabel` property is different from the empty string:
