@@ -74,3 +74,14 @@ The `linkOptions.sort` function allows control of the order of links emanating f
 The `iterations` prop controls how many times the layout algorithm runs to optimize node positioning. More iterations generally result in better layouts but take longer to compute.
 
 {{"demo": "SankeyIterations.js"}}
+
+## Tooltip
+
+The Sankey chart has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
+
+The only difference of the Sankey Tooltip is its default content.
+You can import the default tooltip, or only its content as follows:
+
+```js
+import { SankeyTooltip, SankeyTooltipContent } from '@mui/x-charts/SankeyChart',
+```
