@@ -7,13 +7,13 @@ import type {
   SankeyNode as D3SankeyNode,
 } from '@mui/x-charts-vendor/d3-sankey';
 
-export type NodeId = string | number;
+export type SankeyNodeId = string | number;
 
 export interface SankeyNode {
   /**
    * Unique identifier for the node
    */
-  id: NodeId;
+  id: SankeyNodeId;
 
   /**
    * The node label to display
@@ -35,12 +35,12 @@ export interface SankeyLink {
   /**
    * Source node ID
    */
-  source: NodeId;
+  source: SankeyNodeId;
 
   /**
    * Target node ID
    */
-  target: NodeId;
+  target: SankeyNodeId;
 
   /**
    * The value/weight of the link (affects width)
@@ -192,7 +192,7 @@ export interface SankeyLayout {
 export interface DefaultizedSankeySeriesType
   extends DefaultizedProps<Omit<SankeySeriesType, 'data'>, 'id'> {
   data: {
-    nodes: Map<NodeId, SankeyNode>;
+    nodes: Map<SankeyNodeId, SankeyNode>;
     links: readonly SankeyLink[];
   };
 }

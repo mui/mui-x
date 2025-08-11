@@ -1,12 +1,12 @@
 import type { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
-import type { NodeId, SankeyNode } from '../sankey.types';
+import type { SankeyNodeId, SankeyNode } from '../sankey.types';
 
 export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'sankey'> = (
   seriesData,
   seriesIndex,
   colors,
 ) => {
-  const nodeMap = new Map<NodeId, SankeyNode>();
+  const nodeMap = new Map<SankeyNodeId, SankeyNode>();
   const nodeColor = seriesData.nodeOptions?.color;
   const data = seriesData.data;
 
