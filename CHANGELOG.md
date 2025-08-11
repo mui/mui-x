@@ -5,6 +5,121 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.10.0
+
+_Aug 8, 2025_
+
+We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 [`FunnelChart`](https://mui.com/x/react-charts/funnel/) marked as stable
+- 📈 [Zoom slider](https://mui.com/x/react-charts/zoom-and-pan/#zoom-slider) and [Preview](https://mui.com/x/react-charts/zoom-and-pan/#preview) marked as stable
+- 📈 Supporting [label groups](https://mui.com/x/react-charts/axis/#grouped-axes) in band and point axis
+- 🌎 Improve Norwegian Nynorsk (nn-NO) locale on the Data Grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to the community members for their valuable contributions:
+@AnderzL7, @aqeelat, @dwrth, @noobyogi0010, @nusr, @sai6855
+
+The following are all team members who have contributed to this release:
+@arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @oliviertassinari, @rita-codes, @romgrk
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.10.0`
+
+- [DataGrid] Move spread operator in `BaseSelect` to allow `variant` change (#19026) @dwrth
+- [DataGrid] Use `use-sync-external-store` shim (#19063) @romgrk
+- [DataGrid] Allow skipping cache in `dataSource.fetchRows()` API method (#18904) @MBilalShafi
+- [DataGrid] Do not call `preProcessEditCellProps()` if cell is not editable based on `isCellEditable()` (#18405) @nusr
+- [DataGrid] Fix `renderCountry` throwing an error when used in tree data (#19068) @cherniavskii
+- [DataGrid] Fix performance issue for root level "select all" (#19015) @MBilalShafi
+- [DataGrid] Fix pagination `slotProps` being ignored by the grid (#19095) @romgrk
+- [l10n] Improve Norwegian Nynorsk (nn-NO) locale (#19076) @AnderzL7
+
+#### `@mui/x-data-grid-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.10.0`, plus:
+
+- [DataGridPro] Fix row reorder not working with column reorder disabled (#19016) @MBilalShafi
+- [DataGridPro] Fix header filters cache sharing issue (#19090) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.10.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.10.0`, plus:
+
+- [DataGridPremium] Allow additional derived columns customization via `valueFormatter` (#18982) @arminmeh
+- [DataGridPremium] Fix complex `singleSelect` columns not working in pivot model (#18971) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.10.0`
+
+- [pickers] `MuiPickersLayout-toolbar` is overlapping the Calendar in RTL `MobileDatePicker` variant (#18981) @rita-codes
+
+#### `@mui/x-date-pickers-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.10.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.10.0`
+
+- [charts] Add `groups` to `band` and `point` axis config (#18766) @JCQuintas
+- [charts] Animation example using `motion` library (#18993) @JCQuintas
+- [charts] Deprecate `Unstable_` radar exports (#19079) @JCQuintas
+- [charts] Improve grouped axis logic (#19069) @JCQuintas
+- [charts] Fix type assertion in axis highlight components (#19060) @sai6855
+- [charts] Remove unnecessary type assertion in tooltip `valueFormatter` in heatmap (#19047) @sai6855
+
+#### `@mui/x-charts-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.10.0`, plus:
+
+- [charts-pro] Fix `slotProps.tooltip.trigger` not respected in `ScatterChartPro` and `FunnelChart` (#18902) @bernardobelchior
+- [charts-pro] Fix zoom filtering adjusting axis too soon (#18992) @bernardobelchior
+- [charts-pro] Mark `FunnelChart` as stable (#19048) @JCQuintas
+- [charts-pro] Mark zoom slider and preview as stable (#19049) @JCQuintas
+- [charts-pro] Refactor `createAxisFilterMapper` (#18998) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.10.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.10.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.10.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add CSS bundler breaking change to migration guide (#17436) @romgrk
+- [docs] `RichTreeViewPro` demo for dragging via custom drag-handle is not working properly (#19008) @rita-codes
+- [docs] Fix broken link to D3 in Charts (#19020) @oliviertassinari
+- [docs] Revise the Charts Animation doc (#18990) @mapache-salvaje
+- [docs] Fix incorrect code in line chart preview (#19023) @noobyogi0010
+- [docs] Improve bundling instructions for the Data Grid (#19065) @romgrk
+- [docs] Reduce image size in the inventory grid demo (#19004) @arminmeh
+
+### Core
+
+- [core] Fix ESLint reference name @oliviertassinari
+
+### Miscellaneous
+
+- [infra] Remove bundle size tracking for subpaths (#19072) @Janpot
+- [infra] Accept `PORT` env on `docs:dev` script (#19014) @JCQuintas
+- [infra] Skip codesandbox iframe demos in regressions tests (#18970) @cherniavskii
+- [infra] Remove package.json `module` field (#18961) @Janpot
+- [internal] Remove peer dependency on `@mui/system` (#19062) @aqeelat
+
 ## 8.9.2
 
 _Jul 31, 2025_
@@ -418,8 +533,8 @@ Same changes as in `@mui/x-tree-view@8.7.0`, plus:
 
 - [code-infra] Bump code-infra version and fix breaking changes (#18653) @brijeshb42
 - [code-infra] Ensure `material-ui/disallow-react-api-in-server-components` ESLint rule is applied (#18570) @LukasTy
-- [code-infra] Migrate to flat eslint config (#18562) @brijeshb42
-- [code-infra] Refactor eslint config (#18643) @LukasTy
+- [code-infra] Migrate to flat ESLint config (#18562) @brijeshb42
+- [code-infra] Refactor ESLint config (#18643) @LukasTy
 - [infra] Add renovatebot rule for latest infra packages (#18609) @Janpot
 - [infra] Move pushArgos script to code-infra (#18667) @Janpot
 - [infra] Updates release script to fetch latest major version from upstream (#18552) @michelengelen
@@ -1333,7 +1448,7 @@ Same changes as in `@mui/x-tree-view@8.2.0`.
 - [core] Fix all Vale errors @oliviertassinari
 - [core] Move `loadStyleSheets` to internals and use it in data grid and charts (#17548) @bernardobelchior
 - [core] Remove empty version (#17582) @oliviertassinari
-- [core] Remove eslint from codemod spec files (#17443) @alexfauquette
+- [core] Remove ESLint from codemod spec files (#17443) @alexfauquette
 - [core] Remove unnecessary versions (#17597) @oliviertassinari
 - [code-infra] Allow postinstall scripts for packages requesting it (#17635) @LukasTy
 - [code-infra] Data Grid `vitest` changes (#17619) @JCQuintas
@@ -6827,7 +6942,7 @@ Same changes as in `@mui/x-date-pickers@7.8.0`.
 
 ### Core
 
-- [core] Add eslint rule to restrict import from `../internals` root (#13633) @JCQuintas
+- [core] Add ESLint rule to restrict import from `../internals` root (#13633) @JCQuintas
 - [docs-infra] Sync `\_app` folder with monorepo (#13582) @Janpot
 - [license] Allow usage of Charts and Tree View Pro package for old premium licenses (#13619) @flaviendelangle
 
@@ -6965,7 +7080,7 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 
 - [charts] Add watermark on the pro `ResponsiveChartContainer` (#13398) @alexfauquette
 - [charts] Allow to specify y-axis configuration (#13438) @alexfauquette
-- [charts] Fix eslint for react compiler (#13444) @alexfauquette
+- [charts] Fix ESLint for react compiler (#13444) @alexfauquette
 - [charts] Improve themeAugmentation typing (#13433) @noraleonte
 - [charts] Move the `ZAxisContextProvider` by default in the `ChartContainer` (#13465) @alexfauquette
 - [charts] Use plugins to define series extremum and colors (#13397) @alexfauquette
@@ -7512,7 +7627,7 @@ Same changes as in `@mui/x-date-pickers@7.3.1`.
 - [core] Use `describeTreeView` for focus tests (#12698) @flaviendelangle
 - [core] Use `describeTreeView` for type-ahead tests (#12811) @flaviendelangle
 - [code-infra] Change package manager to `pnpm` (#11875) @LukasTy
-- [code-infra] Closer sync with eslint config of codebase (#12864) @oliviertassinari
+- [code-infra] Closer sync with ESLint config of codebase (#12864) @oliviertassinari
 - [support-infra] Add release announcement to GitHub workflows (#11867) (#12843) @michelengelen
 
 ## 7.3.0

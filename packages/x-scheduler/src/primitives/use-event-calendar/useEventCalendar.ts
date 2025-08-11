@@ -13,6 +13,7 @@ import {
   CalendarEventId,
   CalendarResource,
   CalendarResourceId,
+  CalendarSettings,
   CalendarView,
   SchedulerValidDate,
 } from '../models';
@@ -46,6 +47,7 @@ export function useEventCalendar(
     areEventsDraggable = false,
     areEventsResizable = false,
     ampm = true,
+    settings: settingsProp = { hideWeekends: false },
   } = parameters;
 
   const store = useRefWithInit(
@@ -61,6 +63,7 @@ export function useEventCalendar(
         areEventsDraggable,
         areEventsResizable,
         ampm,
+        settings: settingsProp,
       }),
   ).current;
 
@@ -185,6 +188,10 @@ export function useEventCalendar(
     },
   );
 
+  const setSettings: useEventCalendar.Instance['setSettings'] = useEventCallback((settings, _) => {
+    store.set('settings', settings);
+  });
+
   const instanceRef = React.useRef<useEventCalendar.Instance>({
     setView,
     updateEvent,
@@ -194,6 +201,7 @@ export function useEventCalendar(
     goToNextVisibleDate,
     switchToDay,
     setVisibleResources,
+    setSettings,
   });
   const instance = instanceRef.current;
 
@@ -286,6 +294,11 @@ export namespace useEventCalendar {
      * @default true
      */
     ampm?: boolean;
+    /**
+     * Settings for the calendar.
+     * @default { hideWeekends: false }
+     */
+    settings?: CalendarSettings;
   }
 
   export interface ReturnValue {
@@ -332,6 +345,10 @@ export namespace useEventCalendar {
      * Updates the visible resources.
      */
     setVisibleResources: (visibleResources: Map<CalendarResourceId, boolean>) => void;
+    /**
+     * Set the settings of the calendar.
+     */
+    setSettings: (settings: CalendarSettings, event: React.UIEvent | Event) => void;
   }
 
   export type Store = BaseStore<State>;

@@ -14,3 +14,9 @@ export function mergeDateAndTime(
 
   return mergedDate;
 }
+
+export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean {
+  const dayOfWeek = adapter.getDayOfWeek(value);
+
+  return dayOfWeek === 6 || dayOfWeek === 7;
+}
