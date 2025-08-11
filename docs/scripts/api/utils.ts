@@ -2,7 +2,7 @@ import { Annotation } from 'doctrine';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import { Symbol, isPropertySignature, isExportSpecifier, TypeFormatFlags } from 'typescript';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from '../utils';
 
@@ -97,7 +97,7 @@ export async function writePrettifiedFile(filename: string, data: string) {
     );
   }
 
-  fs.writeFileSync(
+  await fs.writeFile(
     filename,
     await prettier.format(data, { ...prettierConfig, filepath: filename }),
     {
