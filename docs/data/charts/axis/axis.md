@@ -258,7 +258,6 @@ In the next demo, the x-axis is grouped by month, quarter, and year.
 
 ### Y-axis grouping
 
-Similarly to the x-axis, the y-axis can also be grouped.
 In the following demo, the y-axis is grouped by category and subcategory.
 
 {{"demo": "GroupedYAxes.js"}}
