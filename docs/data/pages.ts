@@ -558,7 +558,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
             ],
           },
-          { pathname: '/x/react-charts/#planned-charts', title: 'Future Components' },
+          { pathname: '/x/react-charts/#planned-charts', title: 'Future Components', planned: true },
           {
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
