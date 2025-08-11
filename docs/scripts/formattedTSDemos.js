@@ -12,7 +12,6 @@
 const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx', 'types.ts'];
 
 const fs = require('fs');
-const fse = require('fs-extra');
 const path = require('path');
 const babel = require('@babel/core');
 const prettier = require('prettier');
@@ -48,9 +47,9 @@ async function getFiles(root, excludeRoot = false) {
 
   try {
     await Promise.all(
-      (await fse.readdir(root)).map(async (name) => {
+      (await fs.promises.readdir(root)).map(async (name) => {
         const filePath = path.join(root, name);
-        const stat = await fse.stat(filePath);
+        const stat = await fs.promises.stat(filePath);
 
         if (stat.isDirectory()) {
           files.push(...(await getFiles(filePath)));
@@ -91,15 +90,18 @@ const previewOverride = {
 async function transpileFile(tsxPath, program, ignoreCache = false) {
   const jsPath = tsxPath.replace(/\.tsx?$/, '.js');
   try {
-    if (!ignoreCache && (await fse.exists(jsPath))) {
-      const [jsStat, tsxStat] = await Promise.all([fse.stat(jsPath), fse.stat(tsxPath)]);
+    if (!ignoreCache && (await fs.promises.exists(jsPath))) {
+      const [jsStat, tsxStat] = await Promise.all([
+        fs.promises.stat(jsPath),
+        fs.promises.stat(tsxPath),
+      ]);
       if (jsStat.mtimeMs > tsxStat.mtimeMs) {
         // JavaScript version is newer, skip transpiling
         return TranspileResult.Skipped;
       }
     }
 
-    const source = await fse.readFile(tsxPath, 'utf8');
+    const source = await fs.promises.readFile(tsxPath, 'utf8');
     const overrides = previewOverride[path.join('docs/', tsxPath.split('docs/')[1])];
 
     const transformOptions = { ...babelConfig, filename: tsxPath };
@@ -133,7 +135,7 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     const correctedLineEndings = fixLineEndings(source, formatted);
 
     // removed blank lines change potential formatting
-    await fse.writeFile(jsPath, await prettierFormat(correctedLineEndings));
+    await fs.promises.writeFile(jsPath, await prettierFormat(correctedLineEndings));
     return TranspileResult.Success;
   } catch (err) {
     console.error('Something went wrong transpiling %s\n%s\n', tsxPath, err);
@@ -199,7 +201,7 @@ async function main(argv) {
   }
 
   tsxFiles.forEach((filePath) => {
-    fse.watchFile(filePath, { interval: 500 }, async () => {
+    fs.promises.watchFile(filePath, { interval: 500 }, async () => {
       if ((await transpileFile(filePath, program, true)) === 0) {
         console.log('Success - %s', filePath);
       }

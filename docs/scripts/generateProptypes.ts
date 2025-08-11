@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import * as fse from 'fs-extra';
+import * as fs from 'node:fs/promises';
 import * as prettier from 'prettier';
 import {
   getPropTypesFromFile,
@@ -101,7 +101,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     return;
   }
 
-  const sourceContent = await fse.readFile(sourceFile, 'utf8');
+  const sourceContent = await fs.readFile(sourceFile, 'utf8');
 
   const result = injectPropTypesInFile({
     components,
@@ -178,7 +178,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
   const formatted = fixBabelGeneratorIssues(prettified);
   const correctedLineEndings = fixLineEndings(sourceContent, formatted);
 
-  await fse.writeFile(sourceFile, correctedLineEndings);
+  await fs.writeFile(sourceFile, correctedLineEndings);
 }
 
 async function run() {
