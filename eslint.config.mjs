@@ -411,7 +411,7 @@ export default defineConfig(
   },
 
   {
-    // TODO: typescript namespaces found to be harmful. Refactor to different patterns.
+    // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071
     ignores: ['packages/x-scheduler/**/*', 'packages/x-virtualizer/**/*'],
     rules: {
       '@typescript-eslint/no-namespace': 'error',
