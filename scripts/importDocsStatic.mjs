@@ -17,7 +17,7 @@ async function run() {
   }, []);
 
   const copyPromises = files.map(async (file) => {
-    await fs.copy(file, file.replace('node_modules/@mui/monorepo/docs/', 'docs/'));
+    await fs.copyFile(file, file.replace('node_modules/@mui/monorepo/docs/', 'docs/'));
     // eslint-disable-next-line no-console
     console.log(`copy ${file}`);
   });
