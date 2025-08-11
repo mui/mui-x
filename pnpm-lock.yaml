@@ -849,6 +849,9 @@ importers:
       '@types/d3-scale-chromatic':
         specifier: ^3.1.0
         version: 3.1.0
+      '@types/doctrine':
+        specifier: ^0.0.9
+        version: 0.0.9
       '@types/fg-loadcss':
         specifier: ^3.1.3
         version: 3.1.3
@@ -5647,6 +5650,9 @@ packages:
 
   '@types/device-uuid@1.0.3':
     resolution: {integrity: sha512-z1FXOPDVE85XSjOFtTYXPm4Hyvi1ByjkndfdwU3cBNYGKfYhL4WN6qwYfvMSUNz8j7QGeO+mLJYMfgiyRywzhg==}
+
+  '@types/doctrine@0.0.9':
+    resolution: {integrity: sha512-eOIHzCUSH7SMfonMG1LsC2f8vxBFtho6NGBznK41R84YzPuvSBzrhEps33IsQiOW9+VL6NQ9DbjQJznk/S4uRA==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -16628,6 +16634,8 @@ snapshots:
   '@types/deep-eql@4.0.2': {}
 
   '@types/device-uuid@1.0.3': {}
+
+  '@types/doctrine@0.0.9': {}
 
   '@types/eslint-scope@3.7.7':
     dependencies:
