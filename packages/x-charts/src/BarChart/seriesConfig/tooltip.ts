@@ -15,7 +15,7 @@ const tooltipGetter: TooltipGetter<'bar'> = (params) => {
     return null;
   }
 
-  const formattedValue = series.valueFormatter(value as any, { dataIndex: identifier.dataIndex });
+  const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
 
   return {
     identifier,

@@ -66,7 +66,7 @@ export const usePanOnDrag = (
       ) {
         return;
       }
-      if (event.detail.target === element || instance.isElementInside(event.detail.target)) {
+      if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
         startRef.current = store.value.zoom.zoomData;
       }
     };

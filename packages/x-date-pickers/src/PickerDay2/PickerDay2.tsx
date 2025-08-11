@@ -6,6 +6,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { MuiEvent } from '@mui/x-internals/types';
 import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
 import {
   pickerDay2Classes,
@@ -222,7 +223,8 @@ const PickerDay2Raw = React.forwardRef(function PickerDay2(
     }
   };
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MuiEvent<React.MouseEvent<HTMLButtonElement>>) => {
+    event.defaultMuiPrevented = true;
     if (!disabled) {
       onDaySelect(day);
     }

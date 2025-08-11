@@ -6,7 +6,7 @@ const sumAgg: GridAggregationFunction<unknown, number> = {
     let sum = 0;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
-      if (isNumber(value)) {
+      if (typeof value === 'number' && !Number.isNaN(value)) {
         sum += value;
       }
     }
@@ -26,7 +26,7 @@ const avgAgg: GridAggregationFunction<unknown, number> = {
     let valuesCount = 0;
     for (let i = 0; i < values.length; i += 1) {
       const value = values[i];
-      if (isNumber(value)) {
+      if (typeof value === 'number' && !Number.isNaN(value)) {
         valuesCount += 1;
         sum += value;
       }

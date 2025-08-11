@@ -145,6 +145,8 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
       threshold: this.threshold,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
+      requiredKeys: [...this.requiredKeys],
+      pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,
@@ -342,6 +344,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
     const domEvent = new CustomEvent(eventName, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 

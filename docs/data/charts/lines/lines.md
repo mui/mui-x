@@ -41,20 +41,50 @@ You can fill the area of the line by setting the series' `area` property to `tru
 
 {{"demo": "BasicArea.js"}}
 
-## Stacking
+### Log scale
+
+A y-axis with a log scale cannot plot a line that crosses zero nor an area chart because the logarithm of zero is undefined.
+
+You can work around this limitation by using a [symlog scale](/x/react-charts/axis/#symlog-scale).
+
+### Stacking
 
 Each line series can get a `stack` property which expects a string value.
 Series with the same `stack` will be stacked on top of each other.
 
-{{"demo": "StackedAreas.js"}}
-
-### Stacking strategy
-
 You can use the `stackOffset` and `stackOrder` properties to define how the series will be stacked.
-
 By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
+
+{{"demo": "StackedAreas.js"}}
+
+### Axis domain
+
+By default axes round their limits to match human readable values.
+For example, if your data ranges from 2 to 195, the axis displays values from 0 to 200.
+This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
+
+:::info
+The current default behavior can lead to empty space on left/right of the line chart.
+To fix that issue, future major version will default the x-axis domain limit to `'strict'`.
+
+To test this behavior, add the `experimentalFeatures` prop to your chart with `preferStrictDomainInLineCharts: true` value.
+You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
+
+```js
+components: {
+  MuiChartDataProvider: {
+    defaultProps: {
+       experimentalFeatures: { preferStrictDomainInLineCharts: true }
+    },
+  },
+}
+```
+
+:::
+
+{{"demo": "LineDefaultDomainLimit.js"}}
 
 ## Partial data
 

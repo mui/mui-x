@@ -1,16 +1,6 @@
 import './typeOverloads/modules';
 
 // exports from MIT package
-export * from '@mui/x-charts/constants';
-export type {
-  FadeOptions,
-  HighlightItemData,
-  HighlightOptions,
-  HighlightScope,
-} from '@mui/x-charts/context';
-export * from '@mui/x-charts/hooks';
-export * from '@mui/x-charts/colorPalettes';
-export * from '@mui/x-charts/models';
 export * from '@mui/x-charts/ChartsClipPath';
 export * from '@mui/x-charts/ChartsReferenceLine';
 export * from '@mui/x-charts/ChartsAxis';
@@ -32,17 +22,19 @@ export * from '@mui/x-charts/RadarChart';
 export * from '@mui/x-charts/ChartsSurface';
 export * from '@mui/x-charts/ChartDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
-export type {
-  ZoomData,
-  ZoomFilterMode,
-  ZoomSliderShowTooltip,
-  ZoomOptions,
-  ZoomSliderOptions,
-} from '@mui/x-charts/internals';
+export * from '@mui/x-charts/ChartsOverlay';
+export * from '@mui/x-charts/ChartsWrapper';
+
+// Pro utilities
+export * from './constants';
+export * from './hooks';
+export * from './context';
+export * from './models';
+// Locales should be imported from `@mui/x-charts-pro/locales`
+// export * from './locales';
+export * from './colorPalettes';
 
 // Pro components
-export * from './context';
-export * from './hooks';
 export * from './Heatmap';
 export { ChartContainerPro } from './ChartContainerPro';
 export type { ChartContainerProProps } from './ChartContainerPro';

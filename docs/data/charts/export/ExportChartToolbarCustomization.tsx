@@ -70,7 +70,13 @@ export default function ExportChartToolbarCustomization() {
         xAxis={[
           {
             scaleType: 'log',
-            valueFormatter: (value: number) => populationFormatter.format(value),
+            valueFormatter: (value: number, context) => {
+              if (context.location === 'tick' && context.defaultTickLabel === '') {
+                return '';
+              }
+
+              return populationFormatter.format(value);
+            },
             zoom: true,
             label: 'Population',
           },

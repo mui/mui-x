@@ -29,12 +29,14 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
 
 export const selectorChartsHighlightedItem = createSelector(
   [selectHighlight],
-  (highlight) => highlight.item,
+  function selectorChartsHighlightedItem(highlight) {
+    return highlight.item;
+  },
 );
 
 export const selectorChartsHighlightScope = createSelector(
   [selectorChartsHighlightScopePerSeriesId, selectorChartsHighlightedItem],
-  (seriesIdToHighlightScope, highlightedItem) => {
+  function selectorChartsHighlightScope(seriesIdToHighlightScope, highlightedItem) {
     if (!highlightedItem) {
       return null;
     }
@@ -64,8 +66,9 @@ export const selectorChartsIsHighlighted = createSelector(
     selectorChartsHighlightedItem,
     (_, item: HighlightItemData | null) => item,
   ],
-  (highlightScope, highlightedItem, item) =>
-    createIsHighlighted(highlightScope, highlightedItem)(item),
+  function selectorChartsIsHighlighted(highlightScope, highlightedItem, item) {
+    return createIsHighlighted(highlightScope, highlightedItem)(item);
+  },
 );
 
 export const selectorChartsIsFaded = createSelector(
@@ -74,5 +77,7 @@ export const selectorChartsIsFaded = createSelector(
     selectorChartsHighlightedItem,
     (_, item: HighlightItemData | null) => item,
   ],
-  (highlightScope, highlightedItem, item) => createIsFaded(highlightScope, highlightedItem)(item),
+  function selectorChartsIsFaded(highlightScope, highlightedItem, item) {
+    return createIsFaded(highlightScope, highlightedItem)(item);
+  },
 );

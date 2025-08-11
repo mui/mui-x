@@ -1,5 +1,9 @@
 import { type UseChartAnimationSignature, useChartAnimation } from './useChartAnimation';
 import { type UseChartDimensionsSignature, useChartDimensions } from './useChartDimensions';
+import {
+  type UseChartExperimentalFeaturesSignature,
+  useChartExperimentalFeatures,
+} from './useChartExperimentalFeature';
 import { type UseChartIdSignature, useChartId, UseChartIdParameters } from './useChartId';
 import { type UseChartSeriesSignature, useChartSeries } from './useChartSeries';
 import {
@@ -13,6 +17,7 @@ import {
  */
 export const CHART_CORE_PLUGINS = [
   useChartId,
+  useChartExperimentalFeatures,
   useChartDimensions,
   useChartSeries,
   useChartInteractionListener,
@@ -21,6 +26,7 @@ export const CHART_CORE_PLUGINS = [
 
 export type ChartCorePluginSignatures = [
   UseChartIdSignature,
+  UseChartExperimentalFeaturesSignature,
   UseChartDimensionsSignature,
   UseChartSeriesSignature,
   UseChartAnimationSignature,

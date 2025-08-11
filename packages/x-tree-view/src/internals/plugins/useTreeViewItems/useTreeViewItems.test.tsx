@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { act, fireEvent, reactMajor } from '@mui/internal-test-utils';
+import { act, fireEvent, reactMajor, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import {
   UseTreeViewExpansionSignature,
@@ -532,6 +532,61 @@ describeTreeView<
           expect(view.getItemRoot('1')).not.to.have.attribute('aria-disabled');
         });
       });
+    });
+
+    describe('lazy loading (dataSource)', () => {
+      it.skipIf(treeViewComponentName !== 'RichTreeViewPro')(
+        'should not reset focus after lazy loading children when checkboxSelection is enabled',
+        async () => {
+          function MyComponent() {
+            const items = [
+              { id: '1', label: 'Node 1' },
+              { id: '2', label: 'Node with children' },
+            ];
+
+            const getChildrenCount = (item) => {
+              if (item.subField === 'child') {
+                return 0;
+              }
+              return 1;
+            };
+
+            const getTreeItems = () => {
+              return [{ id: '2.1', label: 'Child', subField: 'child' }];
+            };
+
+            return (
+              <TreeViewComponent
+                items={items}
+                checkboxSelection
+                getItemChildren={(item) => item.children || []}
+                getItemId={(item) => item.id}
+                getItemLabel={(item) => item.label}
+                dataSource={{ getChildrenCount, getTreeItems }}
+                slotProps={{
+                  item: (ownerState) => ({ 'data-testid': ownerState.itemId }),
+                }}
+              />
+            );
+          }
+
+          const view = renderFromJSX(<MyComponent />);
+
+          fireEvent.focus(view.getItemRoot('2'));
+          expect(view.getFocusedItemId()).to.equal('2');
+
+          const expandIcon = view
+            .getItemRoot('2')
+            .querySelector('[data-testid="TreeViewExpandIconIcon"]')!;
+          fireEvent.click(expandIcon);
+          await waitFor(() => {
+            expect(view.isItemExpanded('2')).to.equal(true);
+          });
+
+          expect(!!view.getItemRoot('2.1')).to.equal(true);
+          expect(view.getFocusedItemId()).to.equal('2');
+        },
+      );
     });
   },
 );

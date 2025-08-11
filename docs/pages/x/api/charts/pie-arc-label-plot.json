@@ -1,5 +1,9 @@
 {
   "props": {
+    "id": {
+      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
+      "required": true
+    },
     "outerRadius": { "type": { "name": "number" }, "required": true },
     "arcLabel": {
       "type": {

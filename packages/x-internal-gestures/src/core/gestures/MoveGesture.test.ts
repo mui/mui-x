@@ -159,6 +159,7 @@ describe('Move Gesture', () => {
       target,
       Reflect.get(gestureManager, 'pointerManager'),
       Reflect.get(gestureManager, 'activeGesturesRegistry'),
+      Reflect.get(gestureManager, 'keyboardManager'),
     );
 
     // Create a pointer move event with touch type

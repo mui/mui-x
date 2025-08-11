@@ -1,7 +1,7 @@
 ---
 title: React Pie chart
 productId: x-charts
-components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot, PieChartPro
+components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot, PieChartPro, ChartsWrapper
 ---
 
 # Charts - Pie
@@ -17,6 +17,14 @@ It must contain a property `value` and can have other optional properties like `
 If you plan to update/reorder those data, you should add an `id` property which is used for `key` props.
 
 {{"demo": "BasicPie.js"}}
+
+## Donut chart
+
+A donut chart (or doughnut chart) is essentially a pie chart with a hollow center.
+
+You can transform any pie chart into a donut chart by setting the `innerRadius` property to a value greater than 0.
+
+{{"demo": "DonutChart.js"}}
 
 ## Colors
 

@@ -1,12 +1,9 @@
 import * as React from 'react';
-import {
-  useGridAriaAttributes as useGridAriaAttributesPro,
-  useGridSelector,
-} from '@mui/x-data-grid-pro/internals';
+import { useGridAriaAttributesPro, useGridSelector } from '@mui/x-data-grid-pro/internals';
 import { gridRowGroupingSanitizedModelSelector } from '../features/rowGrouping/gridRowGroupingSelector';
 import { useGridPrivateApiContext } from './useGridPrivateApiContext';
 
-export const useGridAriaAttributes = (): React.HTMLAttributes<HTMLElement> => {
+export const useGridAriaAttributesPremium = (): React.HTMLAttributes<HTMLElement> => {
   const ariaAttributesPro = useGridAriaAttributesPro();
   const apiRef = useGridPrivateApiContext();
   const gridRowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);

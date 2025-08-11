@@ -14,8 +14,9 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { useScatterChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsTooltip, ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { useScatterChartProps } from '@mui/x-charts/internals';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
@@ -36,15 +37,29 @@ export interface ScatterChartProSlots
     ChartsToolbarProSlots,
     Partial<ChartsSlotsPro> {}
 export interface ScatterChartProSlotProps
-  extends Omit<ScatterChartSlotProps, 'toolbar'>,
+  extends Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
     ChartsToolbarProSlotProps,
-    Partial<ChartsSlotPropsPro> {}
+    Partial<ChartsSlotPropsPro> {
+  /**
+   * Slot props for the tooltip component.
+   * @default {}
+   */
+  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
+}
 
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'onItemClick' | 'slots' | 'slotProps'
+      | 'series'
+      | 'plugins'
+      | 'seriesConfig'
+      | 'onItemClick'
+      | 'slots'
+      | 'slotProps'
+      | 'experimentalFeatures'
+      | 'highlightedAxis'
+      | 'onHighlightedAxisChange'
     > {
   /**
    * Overridable component slots.
@@ -120,7 +135,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           <ChartsAxisHighlight {...axisHighlightProps} />
           {children}
         </ChartsSurface>
-        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} trigger="item" />}
+        {!props.loading && <Tooltip trigger="item" {...props?.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -261,7 +276,7 @@ ScatterChartPro.propTypes = {
   onZoomChange: PropTypes.func,
   /**
    * The series to display in the scatter chart.
-   * An array of [[ScatterSeriesType]] objects.
+   * An array of [[ScatterSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -345,6 +360,13 @@ ScatterChartPro.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        groups: PropTypes.arrayOf(
+          PropTypes.shape({
+            getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
+            tickSize: PropTypes.number,
+          }),
+        ),
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -392,6 +414,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -436,6 +459,13 @@ ScatterChartPro.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        groups: PropTypes.arrayOf(
+          PropTypes.shape({
+            getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
+            tickSize: PropTypes.number,
+          }),
+        ),
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -483,6 +513,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -565,6 +596,91 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
+            step: PropTypes.number,
+          }),
+          PropTypes.bool,
+        ]),
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['x']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        constant: PropTypes.number,
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        height: PropTypes.number,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['bottom', 'none', 'top']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['symlog']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelMinGap: PropTypes.number,
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        zoom: PropTypes.oneOfType([
+          PropTypes.shape({
+            filterMode: PropTypes.oneOf(['discard', 'keep']),
+            maxEnd: PropTypes.number,
+            maxSpan: PropTypes.number,
+            minSpan: PropTypes.number,
+            minStart: PropTypes.number,
+            panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -647,6 +763,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -729,6 +846,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -811,6 +929,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -893,6 +1012,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -975,6 +1095,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1030,6 +1151,13 @@ ScatterChartPro.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        groups: PropTypes.arrayOf(
+          PropTypes.shape({
+            getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
+            tickSize: PropTypes.number,
+          }),
+        ),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1076,6 +1204,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1120,6 +1249,13 @@ ScatterChartPro.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        groups: PropTypes.arrayOf(
+          PropTypes.shape({
+            getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
+            tickSize: PropTypes.number,
+          }),
+        ),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1166,6 +1302,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1247,6 +1384,90 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
+              showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+              size: PropTypes.number,
+            }),
+            step: PropTypes.number,
+          }),
+          PropTypes.bool,
+        ]),
+      }),
+      PropTypes.shape({
+        axis: PropTypes.oneOf(['y']),
+        classes: PropTypes.object,
+        colorMap: PropTypes.oneOfType([
+          PropTypes.shape({
+            color: PropTypes.oneOfType([
+              PropTypes.arrayOf(PropTypes.string.isRequired),
+              PropTypes.func,
+            ]).isRequired,
+            max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+            type: PropTypes.oneOf(['continuous']).isRequired,
+          }),
+          PropTypes.shape({
+            colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+            thresholds: PropTypes.arrayOf(
+              PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+            ).isRequired,
+            type: PropTypes.oneOf(['piecewise']).isRequired,
+          }),
+        ]),
+        constant: PropTypes.number,
+        data: PropTypes.array,
+        dataKey: PropTypes.string,
+        disableLine: PropTypes.bool,
+        disableTicks: PropTypes.bool,
+        domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
+        fill: PropTypes.string,
+        hideTooltip: PropTypes.bool,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        ignoreTooltip: PropTypes.bool,
+        label: PropTypes.string,
+        labelStyle: PropTypes.object,
+        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        offset: PropTypes.number,
+        position: PropTypes.oneOf(['left', 'none', 'right']),
+        reverse: PropTypes.bool,
+        scaleType: PropTypes.oneOf(['symlog']),
+        slotProps: PropTypes.object,
+        slots: PropTypes.object,
+        stroke: PropTypes.string,
+        sx: PropTypes.oneOfType([
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
+          ),
+          PropTypes.func,
+          PropTypes.object,
+        ]),
+        tickInterval: PropTypes.oneOfType([
+          PropTypes.oneOf(['auto']),
+          PropTypes.array,
+          PropTypes.func,
+        ]),
+        tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
+        tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
+        tickLabelStyle: PropTypes.object,
+        tickMaxStep: PropTypes.number,
+        tickMinStep: PropTypes.number,
+        tickNumber: PropTypes.number,
+        tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
+        tickSize: PropTypes.number,
+        valueFormatter: PropTypes.func,
+        width: PropTypes.number,
+        zoom: PropTypes.oneOfType([
+          PropTypes.shape({
+            filterMode: PropTypes.oneOf(['discard', 'keep']),
+            maxEnd: PropTypes.number,
+            maxSpan: PropTypes.number,
+            minSpan: PropTypes.number,
+            minStart: PropTypes.number,
+            panning: PropTypes.bool,
+            slider: PropTypes.shape({
+              enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1328,6 +1549,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1409,6 +1631,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1490,6 +1713,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1571,6 +1795,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),
@@ -1652,6 +1877,7 @@ ScatterChartPro.propTypes = {
             panning: PropTypes.bool,
             slider: PropTypes.shape({
               enabled: PropTypes.bool,
+              preview: PropTypes.bool,
               showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
               size: PropTypes.number,
             }),

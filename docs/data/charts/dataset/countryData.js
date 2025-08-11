@@ -222,3 +222,11 @@ export const countryData = {
   ZMB: { country: 'Zambia', continent: 'Africa' },
   ZWE: { country: 'Zimbabwe', continent: 'Africa' },
 };
+
+export const countriesInContinent = Object.entries(countryData).reduce(
+  (acc, [code, { continent }]) => ({
+    ...acc,
+    [continent]: [...(acc[continent] ?? []), code],
+  }),
+  {},
+);

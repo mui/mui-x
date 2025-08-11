@@ -69,12 +69,6 @@ export interface UseChartDimensionsState {
 
 export interface UseChartDimensionsInstance {
   /**
-   * Checks if an element is inside the drawing area.
-   * @param {Element | EventTarget | null} element The element to check.
-   * @returns {boolean} `true` if the element is inside the drawing area, `false` otherwise.
-   */
-  isElementInside: (element: Element | EventTarget | null | undefined) => boolean;
-  /**
    * Checks if a point is inside the drawing area.
    * @param {number} x The x coordinate of the point.
    * @param {number} y The y coordinate of the point.

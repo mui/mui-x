@@ -5,7 +5,7 @@ import { Coordinate, UseChartInteractionSignature } from './useChartInteraction.
 import { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
 
 export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({ store }) => {
-  const cleanInteraction = useEventCallback(() => {
+  const cleanInteraction = useEventCallback(function cleanInteraction() {
     store.update((prev) => {
       return {
         ...prev,
@@ -14,48 +14,50 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     });
   });
 
-  const removeItemInteraction = useEventCallback(
-    (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => {
-      store.update((prev) => {
-        const prevItem = prev.interaction.item;
+  const removeItemInteraction = useEventCallback(function removeItemInteraction(
+    itemToRemove?: ChartItemIdentifier<ChartSeriesType>,
+  ) {
+    store.update((prev) => {
+      const prevItem = prev.interaction.item;
 
-        if (!itemToRemove) {
-          // Remove without taking care of the current item
-          return prevItem === null
-            ? prev
-            : {
-                ...prev,
-                interaction: {
-                  ...prev.interaction,
-                  item: null,
-                },
-              };
-        }
+      if (!itemToRemove) {
+        // Remove without taking care of the current item
+        return prevItem === null
+          ? prev
+          : {
+              ...prev,
+              interaction: {
+                ...prev.interaction,
+                item: null,
+              },
+            };
+      }
 
-        if (
-          prevItem === null ||
-          Object.keys(itemToRemove).some(
-            (key) =>
-              itemToRemove[key as keyof typeof itemToRemove] !==
-              prevItem[key as keyof typeof prevItem],
-          )
-        ) {
-          // The current item is already different from the one to remove. No need to clean it.
-          return prev;
-        }
+      if (
+        prevItem === null ||
+        Object.keys(itemToRemove).some(
+          (key) =>
+            itemToRemove[key as keyof typeof itemToRemove] !==
+            prevItem[key as keyof typeof prevItem],
+        )
+      ) {
+        // The current item is already different from the one to remove. No need to clean it.
+        return prev;
+      }
 
-        return {
-          ...prev,
-          interaction: {
-            ...prev.interaction,
-            item: null,
-          },
-        };
-      });
-    },
-  );
+      return {
+        ...prev,
+        interaction: {
+          ...prev.interaction,
+          item: null,
+        },
+      };
+    });
+  });
 
-  const setItemInteraction = useEventCallback((newItem: ChartItemIdentifier<ChartSeriesType>) => {
+  const setItemInteraction = useEventCallback(function setItemInteraction(
+    newItem: ChartItemIdentifier<ChartSeriesType>,
+  ) {
     store.update((prev) => {
       if (fastObjectShallowCompare(prev.interaction.item, newItem)) {
         return prev;
@@ -71,7 +73,9 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     });
   });
 
-  const setPointerCoordinate = useEventCallback((coordinate: Coordinate | null) => {
+  const setPointerCoordinate = useEventCallback(function setPointerCoordinate(
+    coordinate: Coordinate | null,
+  ) {
     store.update((prev) => ({
       ...prev,
       interaction: {

@@ -57,13 +57,11 @@ const commonSettings = {
   },
 };
 const lisaGrades = {
-  type: 'radar',
   label: 'Lisa',
   data: [120, 98, 86, 99, 85, 65],
   hideMark: false,
 };
 const bartGrades = {
-  type: 'radar',
   label: 'Bart',
   data: [25, 34, 51, 16, 90, 20],
   hideMark: false,

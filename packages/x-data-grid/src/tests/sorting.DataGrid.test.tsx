@@ -713,7 +713,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     setProps({ columns: [{ field: 'id' }] });
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    expect(onSortModelChange.callCount).to.equal(1);
+    expect(onSortModelChange.callCount).to.equal(2);
     expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
   });
 

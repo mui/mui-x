@@ -208,6 +208,7 @@ export class PointerManager {
     const over = new PointerEvent('pointerover', {
       bubbles: true,
       cancelable: true,
+      composed: true,
       clientX: pointer.x,
       clientY: pointer.y,
       pointerId: pointer.id,
@@ -216,6 +217,7 @@ export class PointerManager {
     const enter = new PointerEvent('pointerenter', {
       bubbles: false,
       cancelable: false,
+      composed: true,
       clientX: pointer.x,
       clientY: pointer.y,
       pointerId: pointer.id,
@@ -229,6 +231,7 @@ export class PointerManager {
     const out = new PointerEvent('pointerout', {
       bubbles: true,
       cancelable: true,
+      composed: true,
       clientX: pointer.x,
       clientY: pointer.y,
       pointerId: pointer.id,
@@ -237,6 +240,7 @@ export class PointerManager {
     const leave = new PointerEvent('pointerleave', {
       bubbles: false,
       cancelable: false,
+      composed: true,
       clientX: pointer.x,
       clientY: pointer.y,
       pointerId: pointer.id,
@@ -265,6 +269,7 @@ export class PointerManager {
     const event = new PointerEvent('pointerdown', {
       bubbles: true,
       cancelable: true,
+      composed: true,
       clientX: pointer.x,
       clientY: pointer.y,
       pointerId: pointer.id,
@@ -286,6 +291,7 @@ export class PointerManager {
     const event = new PointerEvent('pointermove', {
       bubbles: true,
       cancelable: true,
+      composed: true,
       clientX: pointer.x,
       clientY: pointer.y,
       pointerId: pointer.id,
@@ -300,6 +306,7 @@ export class PointerManager {
     const event = new PointerEvent('pointerup', {
       bubbles: true,
       cancelable: true,
+      composed: true,
       clientX: pointer.x,
       clientY: pointer.y,
       pointerId: pointer.id,

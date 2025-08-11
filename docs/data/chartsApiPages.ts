@@ -134,6 +134,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsTooltipContainer',
   },
   {
+    pathname: '/x/api/charts/charts-wrapper',
+    title: 'ChartsWrapper',
+  },
+  {
     pathname: '/x/api/charts/charts-x-axis',
     title: 'ChartsXAxis',
   },

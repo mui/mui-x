@@ -1,16 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { RadarChart } from '@mui/x-charts/RadarChart';
+import { RadarChart, RadarSeries } from '@mui/x-charts/RadarChart';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { RadarSeriesType } from '@mui/x-charts/models';
 
 export default function DemoRadarVisualisation() {
   const [hideMark, setHideMark] = React.useState(false);
   const [fillArea, setFillArea] = React.useState(false);
 
-  const withOptions = (series: RadarSeriesType[]) =>
+  const withOptions = (series: RadarSeries[]) =>
     series.map((item) => ({ ...item, hideMark, fillArea }));
 
   return (
@@ -57,15 +56,13 @@ const commonSettings = {
     metrics: ['Math', 'Chinese', 'English', 'Geography', 'Physics', 'History'],
   },
 };
-const lisaGrades: RadarSeriesType = {
-  type: 'radar',
+const lisaGrades = {
   label: 'Lisa',
   data: [120, 98, 86, 99, 85, 65],
   hideMark: false,
-};
-const bartGrades: RadarSeriesType = {
-  type: 'radar',
+} satisfies RadarSeries;
+const bartGrades = {
   label: 'Bart',
   data: [25, 34, 51, 16, 90, 20],
   hideMark: false,
-};
+} satisfies RadarSeries;

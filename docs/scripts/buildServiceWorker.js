@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
 const path = require('path');
+const fs = require('fs/promises');
 const fse = require('fs-extra');
 
 async function prepend(file, string) {
-  const data = await fse.readFile(file, 'utf8');
-  await fse.writeFile(file, string + data, 'utf8');
+  const data = await fs.readFile(file, 'utf8');
+  await fs.writeFile(file, string + data, 'utf8');
 }
 
 async function run() {

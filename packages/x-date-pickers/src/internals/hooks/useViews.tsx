@@ -31,7 +31,7 @@ export interface UseViewsOptions<
   onChange: (value: TValue, selectionState?: PickerSelectionState, selectedView?: TView) => void;
   /**
    * Callback fired on view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view.
    */
   onViewChange?: (view: TView) => void;
@@ -64,7 +64,7 @@ export interface UseViewsOptions<
   focusedView?: TView | null;
   /**
    * Callback fired on focused view change.
-   * @template TView
+   * @template TView Type of the view. It will vary based on the Picker type and the `views` it uses.
    * @param {TView} view The new view to focus or not.
    * @param {boolean} hasFocus `true` if the view should be focused.
    */

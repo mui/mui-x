@@ -6,7 +6,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { PickersActionBar } from '../PickersActionBar';
 import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
-import { PickersShortcuts } from '../PickersShortcuts';
+import { PickersShortcuts, PickersShortcutsProps } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { PickerValidValue } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
@@ -48,7 +48,7 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const { children, slots, slotProps, classes: classesProp } = props;
 
   const ownerState = React.useMemo<PickerLayoutOwnerState>(
-    () => ({ ...pickerOwnerState, layoutDirection: isRtl ? 'rtl' : 'ltr' }),
+    () => ({ ...pickerOwnerState, layoutDirection: isRtl ? 'rtl' : 'ltr', hasShortcuts: false }),
     [pickerOwnerState, isRtl],
   );
   const classes = useUtilityClasses(classesProp, ownerState);
@@ -94,7 +94,10 @@ const usePickerLayout = <TValue extends PickerValidValue>(
     externalSlotProps: slotProps?.shortcuts,
     className: classes.shortcuts,
     ownerState,
-  });
+  }) as PickersShortcutsProps<TValue>;
+
+  const hasShortcuts = Array.isArray(shortcutsProps?.items) && shortcutsProps.items.length > 0;
+
   const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
 
   return {
@@ -103,7 +106,7 @@ const usePickerLayout = <TValue extends PickerValidValue>(
     tabs,
     actionBar,
     shortcuts,
-    ownerState,
+    ownerState: { ...ownerState, hasShortcuts },
   };
 };
 

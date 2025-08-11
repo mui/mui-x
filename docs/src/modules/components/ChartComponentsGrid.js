@@ -1,92 +1,59 @@
 import * as React from 'react';
-import { alpha } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { Link } from '@mui/docs/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import CircleIcon from '@mui/icons-material/Circle';
 
 function getComponents() {
   return [
     {
       title: 'Bar Chart',
-      srcLight: '/static/x/component-illustrations/bar-light.png',
-      srcDark: '/static/x/component-illustrations/bar-dark.png',
       href: '/x/react-charts/bars/',
     },
     {
       title: 'Line Chart',
-      srcLight: '/static/x/component-illustrations/lines-light.png',
-      srcDark: '/static/x/component-illustrations/lines-dark.png',
       href: '/x/react-charts/lines/',
     },
     {
-      title: 'Pie Chart',
-      srcLight: '/static/x/component-illustrations/pie-light.png',
-      srcDark: '/static/x/component-illustrations/pie-dark.png',
+      title: 'Area Chart',
+      href: '/x/react-charts/areas-demo/',
+    },
+    {
+      title: 'Pie (Donut) Chart',
       href: '/x/react-charts/pie/',
     },
     {
       title: 'Scatter Chart',
-      srcLight: '/static/x/component-illustrations/scatter-light.png',
-      srcDark: '/static/x/component-illustrations/scatter-dark.png',
       href: '/x/react-charts/scatter/',
     },
     {
       title: 'Sparkline',
-      srcLight: '/static/x/component-illustrations/sparkline-light.png',
-      srcDark: '/static/x/component-illustrations/sparkline-dark.png',
       href: '/x/react-charts/sparkline/',
     },
     {
       title: 'Gauge',
-      srcLight: '/static/x/component-illustrations/gauge-light.png',
-      srcDark: '/static/x/component-illustrations/gauge-dark.png',
       href: '/x/react-charts/gauge/',
     },
     {
       title: 'Radar Chart',
-      srcLight: '/static/x/component-illustrations/radar-light.png',
-      srcDark: '/static/x/component-illustrations/radar-dark.png',
       href: '/x/react-charts/radar/',
     },
     {
-      title: 'Treemap',
-      srcLight: '/static/x/component-illustrations/treemap-light.png',
-      srcDark: '/static/x/component-illustrations/treemap-dark.png',
-      href: '/x/react-charts/treemap/',
-      planned: true,
-    },
-    {
       title: 'Heatmap',
-      srcLight: '/static/x/component-illustrations/heatmap-light.png',
-      srcDark: '/static/x/component-illustrations/heatmap-dark.png',
       href: '/x/react-charts/heatmap/',
       pro: true,
     },
     {
       title: 'Funnel Chart',
-      srcLight: '/static/x/component-illustrations/funnel-light.png',
-      srcDark: '/static/x/component-illustrations/funnel-dark.png',
       href: '/x/react-charts/funnel/',
       pro: true,
     },
     {
-      title: 'Sankey Chart',
-      srcLight: '/static/x/component-illustrations/sankey-light.png',
-      srcDark: '/static/x/component-illustrations/sankey-dark.png',
-      href: '/x/react-charts/sankey/',
-      planned: true,
-      pro: true,
-    },
-    {
-      title: 'Gantt Chart',
-      srcLight: '/static/x/component-illustrations/gantt-light.png',
-      srcDark: '/static/x/component-illustrations/gantt-dark.png',
-      href: '/x/react-charts/gantt/',
-      planned: true,
+      title: 'Pyramid Chart',
+      href: '/x/react-charts/pyramid/',
       pro: true,
     },
   ];
@@ -94,82 +61,52 @@ function getComponents() {
 
 export default function ChartComponentsGrid() {
   return (
-    <Grid container spacing={2} sx={{ pt: 2, pb: 4 }}>
+    <List dense>
       {getComponents().map((component) => (
-        <Grid size={{ xs: 12, sm: 4 }} sx={{ flexGrow: 1 }} key={component.title}>
-          <Card
-            component={Link}
-            noLinkStyle
-            prefetch={false}
-            variant="outlined"
-            href={component.href}
-            sx={(theme) => ({
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              borderRadius: 1,
-              borderColor: 'divider',
-              ...theme.applyDarkStyles({
-                backgroundColor: `${alpha(theme.palette.primaryDark[700], 0.3)}`,
-                borderColor: 'divider',
-              }),
-            })}
-          >
-            <CardMedia
-              component="img"
-              alt=""
-              image={component.srcLight}
-              loading="lazy"
-              sx={(theme) => ({
-                aspectRatio: '16 / 9',
-                background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
-                opacity: component.planned ? 0.4 : 1,
-                filter: component.planned ? 'grayscale(100%)' : undefined,
-                ...theme.applyDarkStyles({
-                  opacity: component.planned ? 0.4 : 1,
-                  content: `url(${component.srcDark})`,
-                  background: `${(theme.vars || theme).palette.gradients.linearSubtle}`,
-                }),
-              })}
-            />
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ p: 1.5, borderTop: '1px solid', borderColor: 'divider' }}
-            >
-              <Typography component="h3" variant="body2" fontWeight="semiBold" mr={0.5}>
-                {component.title}
-              </Typography>
-              {component.pro && <span className="plan-pro" />}
-              {component.planned && (
-                <Chip
-                  label="Planned"
-                  size="small"
-                  variant="outlined"
-                  color="grey"
-                  sx={(theme) => ({
-                    ml: 'auto',
-                    height: 20,
-                    backgroundColor: 'grey.50',
-                    borderColor: 'grey.200',
-                    '.MuiChip-label': {
-                      px: '6px',
-                      fontSize: '0.65rem',
-                      letterSpacing: '.04rem',
-                      textTransform: 'uppercase',
-                      color: 'text.primary',
-                    },
-                    ...theme.applyDarkStyles({
-                      backgroundColor: 'divider',
-                      borderColor: 'divider',
-                    }),
-                  })}
-                />
-              )}
-            </Stack>
-          </Card>
-        </Grid>
+        <ListItem key={component.title}>
+          <ListItemText
+            primary={
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <CircleIcon sx={{ fontSize: 10 }} />
+                <Link
+                  href={component.href}
+                  underline="hover"
+                  sx={{ fontWeight: 500, fontSize: 16 }}
+                  pl={0.5}
+                >
+                  {component.title}
+                </Link>
+                {component.pro && <span className="plan-pro" />}
+                {component.premium && <span className="plan-premium" />}
+                {component.planned && (
+                  <Chip
+                    label="Planned"
+                    size="small"
+                    variant="outlined"
+                    color="grey"
+                    sx={(theme) => ({
+                      height: 20,
+                      backgroundColor: 'grey.50',
+                      borderColor: 'grey.200',
+                      '.MuiChip-label': {
+                        px: '6px',
+                        fontSize: '0.65rem',
+                        letterSpacing: '.04rem',
+                        textTransform: 'uppercase',
+                        color: 'text.primary',
+                      },
+                      ...theme.applyDarkStyles({
+                        backgroundColor: 'divider',
+                        borderColor: 'divider',
+                      }),
+                    })}
+                  />
+                )}
+              </Stack>
+            }
+          />
+        </ListItem>
       ))}
-    </Grid>
+    </List>
   );
 }

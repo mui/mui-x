@@ -49,9 +49,10 @@ export function useAreaPlotData(
           baseline,
           curve,
           strictStepCurve,
+          area,
         } = series[seriesId];
 
-        if (!(xAxisId in xAxes) || !(yAxisId in yAxes)) {
+        if (!area || !(xAxisId in xAxes) || !(yAxisId in yAxes)) {
           continue;
         }
 

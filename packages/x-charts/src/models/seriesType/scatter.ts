@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
 export type ScatterValueType = {
@@ -16,6 +16,9 @@ export interface ScatterSeriesType
     CartesianSeriesType {
   type: 'scatter';
   data?: readonly ScatterValueType[];
+  /**
+   * Size of the markers in the scatter plot, in pixels.
+   */
   markerSize?: number;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
@@ -55,6 +58,13 @@ export interface ScatterSeriesType
      */
     id?: string;
   };
+  preview?: {
+    /**
+     * The size of the preview marker in pixels.
+     * @default 1
+     */
+    markerSize?: number;
+  };
 }
 
 /**
@@ -68,4 +78,6 @@ export type ScatterItemIdentifier = {
 };
 
 export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color' | 'markerSize'> {}
+  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color' | 'markerSize'> {
+  preview: MakeRequired<NonNullable<ScatterSeriesType['preview']>, 'markerSize'>;
+}

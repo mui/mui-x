@@ -15,6 +15,7 @@ const settings = {
   ],
   height: 300,
   barLabel: 'value',
+  margin: { left: 0 },
 };
 
 export default function BarGradient() {

@@ -2,10 +2,15 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { createExportIframe } from './common';
 import { ChartPrintExportOptions } from './useChartProExport.types';
+import { defaultOnBeforeExport } from './defaults';
 
 export function printChart(
   element: HTMLElement | SVGElement,
-  { fileName }: ChartPrintExportOptions = {},
+  {
+    fileName,
+    onBeforeExport = defaultOnBeforeExport,
+    copyStyles = true,
+  }: ChartPrintExportOptions = {},
 ) {
   const printWindow = createExportIframe(fileName);
   const doc = ownerDocument(element);
@@ -21,7 +26,9 @@ export function printChart(
     const root =
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
-    await Promise.all(loadStyleSheets(printDoc, root));
+    if (copyStyles) {
+      await Promise.all(loadStyleSheets(printDoc, root));
+    }
 
     const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
     mediaQueryList.addEventListener('change', (mql) => {
@@ -30,6 +37,8 @@ export function printChart(
         doc.body.removeChild(printWindow);
       }
     });
+
+    await onBeforeExport(printWindow);
 
     printWindow.contentWindow!.print();
   };

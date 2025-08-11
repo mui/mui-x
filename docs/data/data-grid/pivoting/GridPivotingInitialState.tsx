@@ -5,6 +5,7 @@ import {
   GridRowModel,
   GridPivotModel,
   GridInitialState,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 
 const rows: GridRowModel[] = [
@@ -52,7 +53,10 @@ const initialState: GridInitialState = {
   pivoting: {
     model: pivotModel,
     enabled: true,
-    panelOpen: true,
+  },
+  sidebar: {
+    open: true,
+    value: GridSidebarValue.Pivot,
   },
 };
 

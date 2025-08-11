@@ -26,15 +26,24 @@
     },
     "getItemChildren": {
       "description": "Used to determine the children of a given item.",
-      "typeDescriptions": { "item": "The item to check.", "Array<R>": "The children of the item." }
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "Array<R>": { "name": "Array<R>", "description": "The children of the item." }
+      }
     },
     "getItemId": {
       "description": "Used to determine the id of a given item.",
-      "typeDescriptions": { "item": "The item to check.", "string": "The id of the item." }
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "string": { "name": "string", "description": "The id of the item." }
+      }
     },
     "getItemLabel": {
       "description": "Used to determine the string label for a given item.",
-      "typeDescriptions": { "item": "The item to check.", "string": "The label of the item." }
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "string": { "name": "string", "description": "The label of the item." }
+      }
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
@@ -42,8 +51,11 @@
     "isItemDisabled": {
       "description": "Used to determine if a given item should be disabled.",
       "typeDescriptions": {
-        "item": "The item to check.",
-        "boolean": "<code>true</code> if the item should be disabled."
+        "item": { "name": "item", "description": "The item to check." },
+        "boolean": {
+          "name": "boolean",
+          "description": "<code>true</code> if the item should be disabled."
+        }
       }
     },
     "isItemEditable": { "description": "Determine if a given item can be edited." },
@@ -56,52 +68,76 @@
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
-        "itemIds": "The ids of the expanded items."
+        "event": {
+          "name": "event",
+          "description": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method."
+        },
+        "itemIds": { "name": "itemIds", "description": "The ids of the expanded items." }
       }
     },
     "onItemClick": {
       "description": "Callback fired when the <code>content</code> slot of a given Tree Item is clicked.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change.",
-        "itemId": "The id of the focused item."
+        "event": { "name": "event", "description": "The DOM event that triggered the change." },
+        "itemId": { "name": "itemId", "description": "The id of the focused item." }
       }
     },
     "onItemExpansionToggle": {
       "description": "Callback fired when a Tree Item is expanded or collapsed.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method.",
-        "itemId": "The itemId of the modified item.",
-        "isExpanded": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
+        "event": {
+          "name": "event",
+          "description": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemExpansion()</code> method."
+        },
+        "itemId": { "name": "itemId", "description": "The itemId of the modified item." },
+        "isExpanded": {
+          "name": "isExpanded",
+          "description": "<code>true</code> if the item has just been expanded, <code>false</code> if it has just been collapsed."
+        }
       }
     },
     "onItemFocus": {
       "description": "Callback fired when a given Tree Item is focused.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event.",
-        "itemId": "The id of the focused item."
+        "event": {
+          "name": "event",
+          "description": "The DOM event that triggered the change. <strong>Warning</strong>: This is a generic event not a focus event."
+        },
+        "itemId": { "name": "itemId", "description": "The id of the focused item." }
       }
     },
     "onItemLabelChange": {
       "description": "Callback fired when the label of an item changes.",
       "typeDescriptions": {
-        "itemId": "The id of the item that was edited.",
-        "newLabel": "The new label of the items."
+        "itemId": { "name": "itemId", "description": "The id of the item that was edited." },
+        "newLabel": { "name": "newLabel", "description": "The new label of the items." }
       }
     },
     "onItemSelectionToggle": {
       "description": "Callback fired when a Tree Item is selected or deselected.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
-        "itemId": "The itemId of the modified item.",
-        "isSelected": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
+        "event": {
+          "name": "event",
+          "description": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method."
+        },
+        "itemId": { "name": "itemId", "description": "The itemId of the modified item." },
+        "isSelected": {
+          "name": "isSelected",
+          "description": "<code>true</code> if the item has just been selected, <code>false</code> if it has just been deselected."
+        }
       }
     },
     "onSelectedItemsChange": {
       "description": "Callback fired when Tree Items are selected/deselected.",
       "typeDescriptions": {
-        "event": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method.",
-        "itemIds": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+        "event": {
+          "name": "event",
+          "description": "The DOM event that triggered the change. Can be null when the change is caused by the <code>publicAPI.setItemSelection()</code> method."
+        },
+        "itemIds": {
+          "name": "itemIds",
+          "description": "The ids of the selected items. When <code>multiSelect</code> is <code>true</code>, this is an array of strings; when false (default) a string."
+        }
       }
     },
     "selectedItems": {

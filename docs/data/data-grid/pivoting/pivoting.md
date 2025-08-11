@@ -123,6 +123,10 @@ The **Transaction Date** column is represented by additional columns in pivot mo
 Use the `getPivotDerivedColumns` prop to customize derived columns.
 This prop is called for each original column and returns an array of derived columns, or `undefined` if no derived columns are needed.
 
+:::success
+To sort the derived columns by a value different than the column header name—to display months of the year, define both `valueGetter` and `valueFormatter` for the derived column.
+:::
+
 {{"demo": "GridGetPivotDerivedColumns.js", "bg": "inline", "defaultCodeOpen": true}}
 
 ## Sticky column groups

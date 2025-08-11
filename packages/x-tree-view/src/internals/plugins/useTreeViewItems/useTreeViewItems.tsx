@@ -282,7 +282,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
           };
         }
         Object.values(prevState.items.itemMetaLookup).forEach((item) => {
-          if (!newState.itemMetaLookup[item.id]) {
+          if (!newItems.itemMetaLookup[item.id]) {
             publishTreeViewEvent(instance, 'removeItem', { id: item.id });
           }
         });

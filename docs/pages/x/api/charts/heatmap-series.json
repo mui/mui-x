@@ -1,0 +1,22 @@
+{
+  "name": "HeatmapSeries",
+  "imports": ["import { HeatmapSeries } from '@mui/x-charts-pro'"],
+  "properties": {
+    "type": { "type": { "description": "'heatmap'" }, "required": true, "isProPlan": true },
+    "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
+    "dataKey": { "type": { "description": "string" }, "isProPlan": true },
+    "highlightScope": { "type": { "description": "HighlightScope" }, "isProPlan": true },
+    "id": { "type": { "description": "SeriesId" }, "isProPlan": true },
+    "label": {
+      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" },
+      "isProPlan": true
+    },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkType" }, "isProPlan": true },
+    "valueFormatter": {
+      "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
+      "isProPlan": true
+    },
+    "xAxisId": { "type": { "description": "string" }, "isProPlan": true },
+    "yAxisId": { "type": { "description": "string" }, "isProPlan": true }
+  }
+}
