@@ -36,11 +36,13 @@ export interface CalendarEvent {
   allDay?: boolean;
 }
 
+export type RecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
 export interface RecurrenceRule {
   /**
    * The unit of recurrence.
    */
-  frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  frequency: RecurrenceFrequency;
   /**
    * Repeat every X units.
    */

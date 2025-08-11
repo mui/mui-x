@@ -354,7 +354,7 @@ export const initialEvents = [
     resource: 'work',
     recurrenceRule: {
       frequency: 'monthly',
-      interval: 1,
+      interval: 2,
       monthly: { mode: 'onDate', day: 5 },
       end: { type: 'never' },
     },

@@ -20,11 +20,12 @@ import {
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { CalendarEvent } from '../../../../primitives/models';
+import { CalendarEvent, RecurrenceFrequency } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { getOrdinal, getWeekInfoInMonth } from '../../../../primitives/utils/date-utils';
+import { getOrdinal } from '../../../../primitives/utils/date-utils';
 import './EventPopover.css';
+import { buildRecurrencePresets, detectRecurrenceKeyFromRule } from './recurrence-utils';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -48,39 +49,18 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(calendarEvent.allDay));
 
-  const recurrencePresets = {
-    daily: {
-      frequency: 'daily',
-      interval: 1,
-      end: { type: 'never' },
-    },
-    weekly: {
-      frequency: 'weekly',
-      interval: 1,
-      daysOfWeek: [adapter.getDayOfWeek(calendarEvent.start)],
-      end: { type: 'never' },
-    },
-    monthly: {
-      frequency: 'monthly',
-      interval: 1,
-      monthly: {
-        mode: 'onWeekday',
-        weekIndex: getWeekInfoInMonth(adapter, calendarEvent.start).weekNumber,
-        weekday: adapter.getDayOfWeek(calendarEvent.start),
-      },
-      end: { type: 'never' },
-    },
-    annually: {
-      frequency: 'yearly',
-      interval: 1,
-      end: { type: 'never' },
-    },
-  };
+  const recurrencePresets = React.useMemo(
+    () => buildRecurrencePresets(adapter, calendarEvent.start),
+    [adapter, calendarEvent.start],
+  );
   const weekday = adapter.format(calendarEvent.start, 'weekday');
   const normalDate = adapter.format(calendarEvent.start, 'normalDate');
-  const weekInMonth = getWeekInfoInMonth(adapter, calendarEvent.start);
 
-  const recurrenceOptions = [
+  // TODO: Translate these strings
+  const recurrenceOptions: {
+    label: string;
+    value: RecurrenceFrequency | null;
+  }[] = [
     { label: "Don't repeat", value: null },
     { label: 'Repeats daily', value: 'daily' },
     {
@@ -88,14 +68,19 @@ export const EventPopover = React.forwardRef(function EventPopover(
       value: 'weekly',
     },
     {
-      label: `Repeats monthly on the ${getOrdinal(weekInMonth.weekNumber)} ${weekday}`,
+      label: `Repeats monthly on the ${getOrdinal(adapter.getDate(calendarEvent.start))}`,
       value: 'monthly',
     },
     {
       label: `Repeats annually on ${normalDate}`,
-      value: 'annually',
+      value: 'yearly',
     },
   ];
+
+  const defaultRecurrenceKey = React.useMemo<RecurrenceFrequency | 'custom' | null>(
+    () => detectRecurrenceKeyFromRule(adapter, calendarEvent.recurrenceRule, calendarEvent.start),
+    [adapter, calendarEvent.recurrenceRule, calendarEvent.start],
+  );
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -276,37 +261,42 @@ export const EventPopover = React.forwardRef(function EventPopover(
                   </Field.Root>
                 </div>
                 <Field.Root name="recurrence">
-                  <Select.Root items={recurrenceOptions}>
-                    <Select.Trigger className="EventPopoverSelectTrigger">
-                      <Select.Value />
-                      <Select.Icon className="EventPopoverSelectIcon">
-                        <ChevronDown size={14} />
-                      </Select.Icon>
-                    </Select.Trigger>
-                    <Select.Portal>
-                      <Select.Positioner className="EventPopoverSelectPositioner">
-                        <Select.Popup className="EventPopoverSelectPopup">
-                          {recurrenceOptions.map(({ label, value }) => (
-                            <Select.Item
-                              key={label}
-                              value={value}
-                              className="EventPopoverSelectItem"
-                            >
-                              <Select.ItemIndicator className="EventPopoverSelectItemIndicator">
-                                <CheckIcon
-                                  size={14}
-                                  className="EventPopoverSelectItemIndicatorIcon"
-                                />
-                              </Select.ItemIndicator>
-                              <Select.ItemText className="EventPopoverSelectItemText">
-                                {label}
-                              </Select.ItemText>
-                            </Select.Item>
-                          ))}
-                        </Select.Popup>
-                      </Select.Positioner>
-                    </Select.Portal>
-                  </Select.Root>
+                  {defaultRecurrenceKey === 'custom' ? (
+                    // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
+                    <p className="EventPopoverFormLabel">{`Custom ${calendarEvent.recurrenceRule?.frequency} recurrence`}</p>
+                  ) : (
+                    <Select.Root items={recurrenceOptions} defaultValue={defaultRecurrenceKey}>
+                      <Select.Trigger className="EventPopoverSelectTrigger">
+                        <Select.Value />
+                        <Select.Icon className="EventPopoverSelectIcon">
+                          <ChevronDown size={14} />
+                        </Select.Icon>
+                      </Select.Trigger>
+                      <Select.Portal>
+                        <Select.Positioner className="EventPopoverSelectPositioner">
+                          <Select.Popup className="EventPopoverSelectPopup">
+                            {recurrenceOptions.map(({ label, value }) => (
+                              <Select.Item
+                                key={label}
+                                value={value}
+                                className="EventPopoverSelectItem"
+                              >
+                                <Select.ItemIndicator className="EventPopoverSelectItemIndicator">
+                                  <CheckIcon
+                                    size={14}
+                                    className="EventPopoverSelectItemIndicatorIcon"
+                                  />
+                                </Select.ItemIndicator>
+                                <Select.ItemText className="EventPopoverSelectItemText">
+                                  {label}
+                                </Select.ItemText>
+                              </Select.Item>
+                            ))}
+                          </Select.Popup>
+                        </Select.Positioner>
+                      </Select.Portal>
+                    </Select.Root>
+                  )}
                 </Field.Root>
                 <Separator className="EventPopoverSeparator" />
                 <div>

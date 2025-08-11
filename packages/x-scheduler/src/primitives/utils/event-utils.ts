@@ -86,6 +86,17 @@ export function getEventDays(
   return days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay, adapter));
 }
 
+export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): number {
+  if (!event.allDay) {
+    return 1;
+  }
+  // +1 so start/end same day = 1 day, spans include last day
+  return Math.max(
+    1,
+    diffIn(adapter, adapter.startOfDay(event.end), adapter.startOfDay(event.start), 'days') + 1,
+  );
+}
+
 export function expandRecurringEventForVisibleDays(
   event: CalendarEvent,
   days: SchedulerValidDate[],
@@ -100,13 +111,7 @@ export function expandRecurringEventForVisibleDays(
   const rangeStart = days[0];
   const rangeEnd = days[days.length - 1];
 
-  // All-day span in natural days (+1 so start/end same day = 1 day, spans include last day)
-  const allDaySpanDays = event.allDay
-    ? Math.max(
-        1,
-        diffIn(adapter, adapter.startOfDay(event.end), adapter.startOfDay(event.start), 'days') + 1,
-      )
-    : 1;
+  const allDaySpanDays = getAllDaySpanDays(adapter, event);
 
   const scanStart = adapter.addDays(rangeStart, -(allDaySpanDays - 1));
 
@@ -124,17 +129,12 @@ export function expandRecurringEventForVisibleDays(
       continue;
     }
 
-    const originalAllDaySpanDays = Math.max(
-      1,
-      diffIn(adapter, adapter.startOfDay(event.end), adapter.startOfDay(event.start), 'days') + 1,
-    );
-
     const occurrenceStart = event.allDay
       ? adapter.startOfDay(day)
       : mergeDateAndTime(adapter, day, event.start);
 
     const occurrenceEnd = event.allDay
-      ? adapter.endOfDay(adapter.addDays(occurrenceStart, originalAllDaySpanDays - 1))
+      ? adapter.endOfDay(adapter.addDays(occurrenceStart, allDaySpanDays - 1))
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
     const occurrenceId = `${event.id}::${adapter.format(occurrenceStart, 'keyboardDate')}`;
@@ -176,8 +176,12 @@ function buildEndGuard(
       };
     }
     default: {
-      const exhaustive: never = rule.end;
-      throw new Error(`Unhandled end type: ${JSON.stringify(exhaustive)}`);
+      throw new Error(
+        [
+          `Unhandled end type: ${JSON.stringify(rule.end)}`,
+          'Please ensure the recurrence "end" matches the documented variants: "never", "until", or "after".',
+        ].join('\n'),
+      );
     }
   }
 }
@@ -226,22 +230,53 @@ function matchesRecurrence(
     }
 
     case 'monthly': {
+      if (!rule.monthly) {
+        return false;
+      }
+
+      if (!rule.monthly.mode) {
+        return false;
+      }
+
       if (adapter.isBefore(adapter.startOfMonth(date), adapter.startOfMonth(event.start))) {
         return false;
       }
-      if (rule.monthly?.mode === 'onDate') {
-        if (adapter.getDate(date) !== rule.monthly.day) {
+
+      const interval = Math.max(1, rule.interval || 1);
+      const monthsDiff = diffIn(
+        adapter,
+        adapter.startOfMonth(date),
+        adapter.startOfMonth(event.start),
+        'months',
+      );
+      if (monthsDiff % interval !== 0) {
+        return false;
+      }
+
+      switch (rule.monthly.mode) {
+        case 'onDate': {
+          if (adapter.getDate(date) !== rule.monthly.day) {
+            return false;
+          }
+          return true;
+        }
+        case 'onWeekday': {
+          // TODO: Issue #19128 - Implement support for 'onWeekday' mode.
           return false;
         }
-        const monthsDiff = diffIn(
-          adapter,
-          adapter.startOfMonth(date),
-          adapter.startOfMonth(event.start),
-          'months',
-        );
-        return monthsDiff % Math.max(1, rule.interval || 1) === 0;
+        case 'onLastWeekday': {
+          // TODO: Issue #19128 - Implement support for 'onLastWeekday' mode.
+          return false;
+        }
+        default: {
+          throw new Error(
+            [
+              `Unknown monthly mode: ${(rule.monthly as any).mode}`,
+              'Expected: "onDate" | "onWeekday" | "onLastWeekday".',
+            ].join('\n'),
+          );
+        }
       }
-      return false;
     }
 
     case 'yearly': {

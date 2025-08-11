@@ -21,21 +21,23 @@ export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean 
   return dayOfWeek === 6 || dayOfWeek === 7;
 }
 
-export function getWeekInfoInMonth(adapter: Adapter, date: SchedulerValidDate) {
-  const startOfMonth = adapter.startOfMonth(date);
-  const endOfMonth = adapter.endOfMonth(date);
+// TODO: Issue #19128 - This function will be used to support 'onWeekday' and 'onLastWeekday' modes.
 
-  const startOfFirstWeek = adapter.startOfWeek(startOfMonth);
-  const startOfTargetDay = adapter.startOfDay(date);
+// export function getWeekInfoInMonth(adapter: Adapter, date: SchedulerValidDate) {
+//   const startOfMonth = adapter.startOfMonth(date);
+//   const endOfMonth = adapter.endOfMonth(date);
 
-  const daysDiff = diffIn(adapter, startOfTargetDay, startOfFirstWeek, 'days');
-  const weekNumber = Math.floor(daysDiff / 7) + 1;
+//   const startOfFirstWeek = adapter.startOfWeek(startOfMonth);
+//   const startOfTargetDay = adapter.startOfDay(date);
 
-  const endOfTargetWeek = adapter.endOfWeek(date);
-  const isLastWeek = adapter.isSameDay(adapter.endOfWeek(endOfMonth), endOfTargetWeek);
+//   const daysDiff = diffIn(adapter, startOfTargetDay, startOfFirstWeek, 'days');
+//   const weekNumber = Math.floor(daysDiff / 7) + 1;
 
-  return { weekNumber, isLastWeek };
-}
+//   const endOfTargetWeek = adapter.endOfWeek(date);
+//   const isLastWeek = adapter.isSameDay(adapter.endOfWeek(endOfMonth), endOfTargetWeek);
+
+//   return { weekNumber, isLastWeek };
+// }
 
 // TODO: Temporay function, move this to localization layer
 export function getOrdinal(n: number) {
