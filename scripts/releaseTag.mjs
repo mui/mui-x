@@ -1,5 +1,5 @@
 import childProcess from 'child_process';
-import fse from 'fs-extra';
+import fs from 'node:fs/promises';
 import path from 'path';
 import { promisify } from 'util';
 import yargs from 'yargs';
@@ -50,7 +50,8 @@ async function main(argv) {
   const exec = dryRun ? execDry : execActual;
 
   const rootWorkspace = getWorkspaceRoot();
-  const rootWorkspaceManifest = await fse.readJSON(path.join(rootWorkspace, 'package.json'));
+  const rootWorkspacePackageJson = await fs.readFile(path.join(rootWorkspace, 'package.json'));
+  const rootWorkspaceManifest = JSON.parse(rootWorkspacePackageJson.toString('utf8'), null);
 
   const tag = `v${rootWorkspaceManifest.version}`;
   const message = `Version ${rootWorkspaceManifest.version}`;
