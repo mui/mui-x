@@ -212,11 +212,11 @@ function matchesRecurrence(
         return false;
       }
 
-      const dow = adapter.getDayOfWeek(date);
+      const dayOfWeek = adapter.getDayOfWeek(date);
       const defaultSeriesDow = adapter.getDayOfWeek(event.start);
       const days = rule.daysOfWeek?.length ? rule.daysOfWeek : [defaultSeriesDow];
 
-      if (!days.includes(dow)) {
+      if (!days.includes(dayOfWeek)) {
         return false;
       }
 
@@ -283,10 +283,10 @@ function matchesRecurrence(
       if (adapter.isBefore(adapter.startOfYear(date), adapter.startOfYear(event.start))) {
         return false;
       }
-      const sameMD =
+      const sameMonthAndDay =
         adapter.getDate(date) === adapter.getDate(event.start) &&
         adapter.getMonth(date) === adapter.getMonth(event.start);
-      if (!sameMD) {
+      if (!sameMonthAndDay) {
         return false;
       }
       const yearsDiff = diffIn(
@@ -335,49 +335,56 @@ function estimateOccurrencesUpTo(
       return countYearlyOccurrencesUpToExact(adapter, rule, seriesStart, date);
     }
     default:
-      return 0;
+      throw new Error(
+        [
+          `Unknown frequency: ${rule.frequency}`,
+          'Expected: "daily" | "weekly" | "monthly" | "yearly".',
+        ].join('\n'),
+      );
   }
 }
 
 // Counts exact WEEKLY occurrences up to `date` (inclusive) respecting interval and daysOfWeek
 export function countWeeklyOccurrencesUpToExact(
   adapter: Adapter,
-  rule: { interval: number; daysOfWeek?: number[] },
+  rule: RecurrenceRule,
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  const startDay = adapter.startOfDay(seriesStart);
+  const seriesStartDay = adapter.startOfDay(seriesStart);
   const targetDay = adapter.startOfDay(date);
-  if (adapter.isBefore(targetDay, startDay)) {
+  if (adapter.isBefore(targetDay, seriesStartDay)) {
     return 0;
   }
 
-  const defaultSeriesDow = adapter.getDayOfWeek(seriesStart);
-  const days = rule.daysOfWeek?.length ? rule.daysOfWeek : [defaultSeriesDow];
+  // Resolve which weekdays the rule applies to.
+  const seriesStartDayOfWeek = adapter.getDayOfWeek(seriesStart);
+  const daysOfWeek = rule.daysOfWeek?.length ? rule.daysOfWeek : [seriesStartDayOfWeek];
 
   const interval = Math.max(1, rule.interval);
-  const w0 = adapter.startOfWeek(seriesStart);
-  const wD = adapter.startOfWeek(targetDay);
+  const seriesStartWeek = adapter.startOfWeek(seriesStart);
+  const targetWeekStart = adapter.startOfWeek(targetDay);
 
   let count = 0;
 
-  // Iterate only through valid weeks: w = w0 + k * interval
-  for (let k = 0; ; k += interval) {
-    const weekStart = adapter.addWeeks(w0, k);
-    if (adapter.isAfter(weekStart, wD)) {
-      break;
-    }
+  // Iterate weeks from the series start (inclusive) to the target week (inclusive),
+  // stepping by `interval`.
+  for (
+    let currentWeekStart = seriesStartWeek;
+    !adapter.isAfter(currentWeekStart, targetWeekStart);
+    currentWeekStart = adapter.addWeeks(currentWeekStart, interval)
+  ) {
+    const currentWeekStartDow = adapter.getDayOfWeek(currentWeekStart);
 
-    const weekStartDow = adapter.getDayOfWeek(weekStart);
+    // Project each rule weekday into a concrete date within this week.
+    for (const ruleDow of daysOfWeek) {
+      const deltaDays = (((ruleDow - currentWeekStartDow) % 7) + 7) % 7;
+      const occurrenceDay = adapter.startOfDay(adapter.addDays(currentWeekStart, deltaDays));
 
-    for (const dowRule of days) {
-      const delta = (((dowRule - weekStartDow) % 7) + 7) % 7;
-      const occDay = adapter.startOfDay(adapter.addDays(weekStart, delta));
-
-      if (adapter.isBefore(occDay, startDay)) {
+      if (adapter.isBefore(occurrenceDay, seriesStartDay)) {
         continue;
       }
-      if (adapter.isAfter(occDay, targetDay)) {
+      if (adapter.isAfter(occurrenceDay, targetDay)) {
         continue;
       }
 
@@ -395,47 +402,64 @@ function countMonthlyOccurrencesUpToExact(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  const startMonth = adapter.startOfMonth(seriesStart);
+  const seriesStartMonth = adapter.startOfMonth(seriesStart);
   const targetMonth = adapter.startOfMonth(date);
-  if (adapter.isBefore(targetMonth, startMonth)) {
+  if (adapter.isBefore(targetMonth, seriesStartMonth)) {
     return 0;
   }
 
-  // TODO: Issue #19128 - Implement support for 'onWeekday' and 'onLastWeekday' modes.
-  if (!rule.monthly || rule.monthly.mode !== 'onDate') {
-    return 0;
+  const interval = Math.max(1, rule.interval || 1);
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+  const targetDay = adapter.startOfDay(date);
+
+  switch (rule.monthly?.mode) {
+    case 'onDate': {
+      let count = 0;
+      const dayOfMonth = rule.monthly.day;
+
+      // Iterate months: current = startMonth + N * interval, stop after target month
+      for (
+        let currentMonthStart = seriesStartMonth;
+        !adapter.isAfter(currentMonthStart, targetMonth);
+        currentMonthStart = adapter.addMonths(currentMonthStart, interval)
+      ) {
+        // Skip months that don't have the requested day (e.g. Feb 30/31)
+        const daysInCurrentMonth = adapter.getDaysInMonth(currentMonthStart);
+        if (dayOfMonth > daysInCurrentMonth) {
+          continue;
+        }
+
+        const candidateDate = adapter.startOfDay(adapter.setDate(currentMonthStart, dayOfMonth));
+        if (adapter.isBefore(candidateDate, seriesStartDay)) {
+          continue;
+        }
+        if (adapter.isAfter(candidateDate, targetDay)) {
+          continue;
+        }
+
+        count += 1;
+      }
+      return count;
+    }
+    case 'onWeekday': {
+      // TODO: Issue #19128 - Implement support for 'onWeekday' and 'onLastWeekday'
+      return 0;
+    }
+
+    case 'onLastWeekday': {
+      // TODO: Issue #19128 - Implement support for 'onWeekday' and 'onLastWeekday'
+      return 0;
+    }
+
+    default: {
+      throw new Error(
+        [
+          `Unknown monthly mode: ${(rule.monthly as any).mode}`,
+          'Expected: "onDate" | "onWeekday" | "onLastWeekday".',
+        ].join('\n'),
+      );
+    }
   }
-
-  const interval = Math.max(1, rule.interval);
-  let count = 0;
-
-  // Iterate only through valid months: w = w0 + k * interval
-  for (let k = 0; ; k += interval) {
-    const monthStart = adapter.addMonths(startMonth, k);
-    if (adapter.isAfter(monthStart, targetMonth)) {
-      break;
-    }
-
-    const day = rule.monthly.day;
-    // Build the candidate date for the occurrence
-    const candidate = adapter.startOfDay(adapter.setDate(monthStart, day));
-    // Check if the candidate is still in the same month
-    if (
-      adapter.getMonth(candidate) !== adapter.getMonth(monthStart) ||
-      adapter.getYear(candidate) !== adapter.getYear(monthStart)
-    ) {
-      continue; // this month doesn't have the day so skip it
-    }
-    if (adapter.isBefore(candidate, adapter.startOfDay(seriesStart))) {
-      continue;
-    }
-    if (adapter.isAfter(candidate, adapter.startOfDay(date))) {
-      continue;
-    }
-
-    count += 1;
-  }
-  return count;
 }
 
 // Counts exact YEARLY occurrences up to `date` (inclusive) respecting leap years and intervals
@@ -445,39 +469,48 @@ function countYearlyOccurrencesUpToExact(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  const startYear = adapter.startOfYear(seriesStart);
-  const targetYear = adapter.startOfYear(date);
-  if (adapter.isBefore(targetYear, startYear)) {
+  const seriesStartYear = adapter.startOfYear(seriesStart);
+  const targetYearStart = adapter.startOfYear(date);
+  if (adapter.isBefore(targetYearStart, seriesStartYear)) {
     return 0;
   }
 
   const interval = Math.max(1, rule.interval || 1);
-  const m = adapter.getMonth(seriesStart);
-  const d = adapter.getDate(seriesStart);
+  const seriesStartDay = adapter.startOfDay(seriesStart);
+  const targetDay = adapter.startOfDay(date);
+
+  // We repeat every N years on the same month/day as the series start.
+  const seriesMonthIndex = adapter.getMonth(seriesStart);
+  const seriesDayOfMonth = adapter.getDate(seriesStart);
 
   let count = 0;
-  for (let k = 0; ; k += interval) {
-    const yearStart = adapter.addYears(startYear, k);
-    if (adapter.isAfter(yearStart, targetYear)) {
-      break;
-    }
 
-    // Build the candidate date for the occurrence
-    let candidate = adapter.startOfDay(adapter.setMonth(yearStart, m));
-    candidate = adapter.startOfDay(adapter.setDate(candidate, d));
+  // Iterate years from the series start (inclusive) to the target year (inclusive),
+  // stepping by `interval`.
+  for (
+    let currentYearStart = seriesStartYear;
+    !adapter.isAfter(currentYearStart, targetYearStart);
+    currentYearStart = adapter.addYears(currentYearStart, interval)
+  ) {
+    // Anchor to the correct month for this year
+    const monthAnchor = adapter.setMonth(currentYearStart, seriesMonthIndex);
 
-    // Validate that it doesn't overflow (29/02 in non-leap years)
-    if (adapter.getMonth(candidate) !== m || adapter.getDate(candidate) !== d) {
-      continue; // this year doesn't have 29/02 so skip it
-    }
-    if (adapter.isBefore(candidate, adapter.startOfDay(seriesStart))) {
+    // Skip years where the requested day doesn't exist (e.g., Feb 29 on non-leap years)
+    const daysInMonth = adapter.getDaysInMonth(monthAnchor);
+    if (seriesDayOfMonth > daysInMonth) {
       continue;
     }
-    if (adapter.isAfter(candidate, adapter.startOfDay(date))) {
+
+    const candidateDate = adapter.startOfDay(adapter.setDate(monthAnchor, seriesDayOfMonth));
+    if (adapter.isBefore(candidateDate, seriesStartDay)) {
+      continue;
+    }
+    if (adapter.isAfter(candidateDate, targetDay)) {
       continue;
     }
 
     count += 1;
   }
+
   return count;
 }
