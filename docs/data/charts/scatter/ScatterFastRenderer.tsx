@@ -40,7 +40,7 @@ const scatterChartsParams = {
         fade: 'global',
       },
       valueFormatter: (value, { dataIndex }) =>
-        `generated ${value.x.toFixed(2)} GWh emitting ${value.y.toFixed(2)} gCO₂eq/kWh on ${formatAsDateRange(dataIndex)}`,
+        `generated ${value!.x.toFixed(2)} GWh emitting ${value!.y.toFixed(2)} gCO₂eq/kWh on ${formatAsDateRange(dataIndex)}`,
     }),
   ),
   xAxis: [{ min: 0, label: 'Electricity Generation (GWh)' }],
