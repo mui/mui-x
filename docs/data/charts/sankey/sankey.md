@@ -56,3 +56,8 @@ You can apply default styles to all links using the `linkOptions` prop:
 Control how nodes are positioned within the chart:
 
 {{"demo": "SankeyNodeAlignment.js"}}
+## Layout iterations
+
+The `iterations` prop controls how many times the layout algorithm runs to optimize node positioning. More iterations generally result in better layouts but take longer to compute.
+
+{{"demo": "SankeyIterations.js"}}
