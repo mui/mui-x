@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { SankeyLayout, type SankeyItemIdentifier } from './sankey.types';
@@ -30,7 +31,7 @@ export interface SankeyPlotProps {
 /**
  * Renders a Sankey diagram plot.
  */
-export function SankeyPlot(props: SankeyPlotProps) {
+function SankeyPlot(props: SankeyPlotProps) {
   const { classes: inputClasses, onItemClick } = props;
 
   const seriesContext = useSankeySeriesContext();
@@ -87,3 +88,22 @@ export function SankeyPlot(props: SankeyPlotProps) {
     </g>
   );
 }
+
+SankeyPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Classes applied to the various elements.
+   */
+  classes: PropTypes.object,
+  /**
+   * Callback fired when a sankey item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {SankeyItemIdentifier} sankeyItemIdentifier The sankey item identifier.
+   */
+  onItemClick: PropTypes.func,
+} as any;
+
+export { SankeyPlot };
