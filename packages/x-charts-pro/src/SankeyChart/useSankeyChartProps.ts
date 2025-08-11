@@ -1,6 +1,5 @@
 import { DEFAULT_MARGINS } from '@mui/x-charts/constants';
 import { defaultizeMargin } from '@mui/x-charts/internals';
-import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import type { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
@@ -50,7 +49,7 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
     width,
     height,
     margin,
-    colors: colors ?? strawberrySkyPalette,
+    colors,
     sx,
     highlightedItem,
     onHighlightChange,

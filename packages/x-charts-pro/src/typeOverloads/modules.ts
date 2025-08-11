@@ -39,7 +39,7 @@ declare module '@mui/x-charts/internals' {
       axisType: 'cartesian';
     };
     sankey: {
-      seriesInput: DefaultizedProps<SankeySeriesType, 'id'>;
+      seriesInput: DefaultizedSankeySeriesType;
       series: DefaultizedSankeySeriesType;
       seriesProp: SankeySeriesType;
       itemIdentifier: SankeyItemIdentifier;

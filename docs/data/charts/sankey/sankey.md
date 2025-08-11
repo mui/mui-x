@@ -13,17 +13,10 @@ This feature is in preview. It is ready for production use, but its API, visuals
 
 ## Basics
 
-The Sankey chart series must contain a `data` property containing an object with `nodes` and `links`.
-Each node can have an optional configuration object, and links must specify `source`, `target`, and `value`.
-
-{{"demo": "SankeyChartExample.js"}}
-
-## Data structure
-
 The Sankey chart requires a specific data structure with two main parts: `nodes` and `links`.
 
 - The `nodes` array is optional but allows the customization of individual nodes.
-- The `links` array defines the connections between nodes.
+- The `links` array defines the connections between nodes and must specify `source`, `target`, and `value`.
 
 ### Automatic nodes
 

@@ -1,6 +1,6 @@
 'use client';
 
-import type { CommonDefaultizedProps, SeriesId } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps } from '@mui/x-internals/types';
 import type {
   SankeyLink as D3SankeyLink,
@@ -190,7 +190,12 @@ export interface SankeyLayout {
 }
 
 export interface DefaultizedSankeySeriesType
-  extends DefaultizedProps<SankeySeriesType, Exclude<CommonDefaultizedProps, 'valueFormatter'>> {}
+  extends DefaultizedProps<Omit<SankeySeriesType, 'data'>, 'id'> {
+  data: {
+    nodes: Map<NodeId, SankeyNode>;
+    links: readonly SankeyLink[];
+  };
+}
 
 // Define SankeyItemIdentifier type
 export type SankeyItemIdentifier = {

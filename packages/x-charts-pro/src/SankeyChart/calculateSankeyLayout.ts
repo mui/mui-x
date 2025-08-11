@@ -3,14 +3,13 @@ import { sankey, type SankeyGraph, sankeyLinkHorizontal } from '@mui/x-charts-ve
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import type { Theme } from '@mui/material/styles';
 import type {
-  SankeyData,
   SankeySeriesType,
   SankeyLayout,
-  NodeId,
   SankeyNode,
   SankeyLink,
   SankeyLayoutLink,
   SankeyLayoutNode,
+  DefaultizedSankeySeriesType,
 } from './sankey.types';
 import { getNodeAlignFunction } from './utils';
 
@@ -24,18 +23,17 @@ import { getNodeAlignFunction } from './utils';
  */
 
 export function calculateSankeyLayout(
-  data: SankeyData,
+  data: DefaultizedSankeySeriesType['data'],
   drawingArea: ChartDrawingArea,
   theme: Theme,
-  options: Pick<SankeySeriesType, 'nodeOptions' | 'linkOptions' | 'iterations'> = {},
+  series: Pick<SankeySeriesType, 'nodeOptions' | 'linkOptions' | 'iterations'> = {},
 ): SankeyLayout {
-  const { iterations = 32, nodeOptions, linkOptions } = options;
+  const { iterations = 32, nodeOptions, linkOptions } = series;
   const {
     width: nodeWidth = 15,
     padding: nodePadding = 10,
     align: nodeAlign = 'justify',
     sort: nodeSort = null,
-    color: nodeColor = theme.palette.primary.main,
   } = nodeOptions ?? {};
 
   const { color: linkColor = theme.palette.primary.light, sort: linkSort = null } =
@@ -46,37 +44,9 @@ export function calculateSankeyLayout(
     return { nodes: [], links: [] };
   }
 
-  const nodeMap = new Map<NodeId, SankeyNode>();
-
-  if (data.nodes) {
-    data.nodes.forEach((node) => {
-      const id = node.id || node.label || '';
-      const label = node.label || `${id}`;
-      nodeMap.set(id, { ...node, id, label, color: node.color ?? nodeColor });
-    });
-  }
-
-  data.links.forEach((v) => {
-    if (!nodeMap.has(v.source)) {
-      const sourceNode = data.nodes?.[v.source];
-      const source = sourceNode
-        ? { label: `${v.source}`, ...sourceNode, id: v.source }
-        : { id: v.source, label: `${v.source}` };
-      nodeMap.set(source.id, source);
-    }
-
-    if (!nodeMap.has(v.target)) {
-      const targetNode = data.nodes?.[v.target];
-      const target = targetNode
-        ? { label: `${v.target}`, ...targetNode, id: v.target }
-        : { id: v.target, label: `${v.target}` };
-      nodeMap.set(target.id, target);
-    }
-  });
-
   // Prepare the data structure expected by d3-sankey
   const graph = {
-    nodes: nodeMap
+    nodes: data.nodes
       .values()
       .toArray()
       .map((v) => ({ ...v })),
@@ -135,9 +105,8 @@ export function calculateSankeyLayout(
   });
 
   const layoutNodes: SankeyLayoutNode[] = nodes.map((node) => {
-    const originalNode = nodeMap.get(node.id) || {};
+    const originalNode = data.nodes.get(node.id) || {};
     return {
-      color: nodeColor,
       ...originalNode,
       ...node,
     };
