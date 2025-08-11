@@ -160,6 +160,8 @@ On top of that, there's also some differences in behavior:
 - The rendering order might be different, which might cause overlapping circles to render at different depths when compared to the default rendering;
 - When `disableVoronoi` is true, the `onItemClick` event target will be the SVG root, instead of the circle the click targeted;
 
+The example below uses the `useFastRenderer` prop to improve performance when rendering a dataset with 95 000 data points.
+
 {{"demo": "ScatterFastRenderer.js"}}
 
 ## Composition
