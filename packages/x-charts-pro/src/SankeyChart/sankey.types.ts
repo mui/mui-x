@@ -1,6 +1,6 @@
 'use client';
 
-import type { SeriesId } from '@mui/x-charts/internals';
+import type { HighlightScope, SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps } from '@mui/x-internals/types';
 import type {
   SankeyLink as D3SankeyLink,
@@ -195,6 +195,8 @@ export interface DefaultizedSankeySeriesType
     nodes: Map<SankeyNodeId, SankeyNode>;
     links: readonly SankeyLink[];
   };
+  // TODO: Implement, currently here so types don't break.
+  highlightScope?: HighlightScope;
 }
 
 // Define SankeyItemIdentifier type

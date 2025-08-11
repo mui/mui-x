@@ -16,7 +16,15 @@ export function useNoData() {
     }
     const { series, seriesOrder } = seriesOfGivenType;
 
-    return seriesOrder.every((seriesId: SeriesId) => series[seriesId].data.length === 0);
+    return seriesOrder.every((seriesId: SeriesId) => {
+      const seriesItem = series[seriesId];
+
+      if (seriesItem.type === 'sankey') {
+        return seriesItem.data.links.length === 0;
+      }
+
+      return seriesItem.data.length === 0;
+    });
   });
 }
 
