@@ -1,4 +1,5 @@
-<ProfiledScatterChart onRender={onRender} />
-<Typography sx={{ alignSelf: 'center' }}>
-  Render time: {data?.toFixed(0)}ms
+<Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
+  Life-cycle Carbon Intensity of Electricity Generation - Hourly, 2024
 </Typography>
+<ScatterChart {...scatterChartsParams} useFastRenderer colors={colors} />
+<Typography variant="caption">Source: ENTSO-E, EletricityMaps.com</Typography>
