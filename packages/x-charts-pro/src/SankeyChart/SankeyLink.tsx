@@ -8,12 +8,8 @@ import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
 
 const SankeyLinkRoot = styled('path')(({ onClick }) => ({
   fill: 'none',
-  strokeOpacity: 0.4,
   transition: 'stroke-opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
   cursor: onClick ? 'pointer' : 'default',
-  '&:hover': {
-    strokeOpacity: 0.7,
-  },
 }));
 
 export interface SankeyLinkProps {

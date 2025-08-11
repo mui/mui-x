@@ -9,9 +9,6 @@ import { SankeyLayoutNode, type SankeyItemIdentifier } from './sankey.types';
 const SankeyNodeRoot = styled('rect')(({ onClick }) => ({
   stroke: 'none',
   cursor: onClick ? 'pointer' : 'default',
-  '&:hover': {
-    opacity: 0.8,
-  },
 }));
 
 const SankeyNodeLabel = styled('text')(({ theme }) => ({

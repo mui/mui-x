@@ -36,3 +36,18 @@ If a node is referenced in links but not defined in the `nodes` array, it will b
 When you provide explicit node definitions, you can customize labels and colors for each node.
 
 {{"demo": "SankeyDetailedDataStructure.js"}}
+
+## Styling
+
+### Default node styles
+
+You can apply default styles to all nodes using the `nodeOptions` prop:
+
+{{"demo": "SankeyNodeStyling.js"}}
+
+### Default link styles
+
+You can apply default styles to all links using the `linkOptions` prop:
+
+{{"demo": "SankeyLinkStyling.js"}}
+
