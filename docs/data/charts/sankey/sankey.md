@@ -22,7 +22,7 @@ Each node can have an optional configuration object, and links must specify `sou
 
 The Sankey chart requires a specific data structure with two main parts: `nodes` and `links`.
 
-- The `nodes` array is optional but allows you to customize individual nodes.
+- The `nodes` array is optional but allows the customization of individual nodes.
 - The `links` array defines the connections between nodes.
 
 ### Automatic nodes
@@ -33,7 +33,7 @@ If a node is referenced in links but not defined in the `nodes` array, it will b
 
 ### Explicit nodes
 
-When you provide explicit node definitions, you can customize labels and colors for each node.
+When an explicit node definition is provided, it allows customizing labels and colors for each node.
 
 {{"demo": "SankeyDetailedDataStructure.js"}}
 
@@ -41,13 +41,13 @@ When you provide explicit node definitions, you can customize labels and colors 
 
 ### Default node styles
 
-You can apply default styles to all nodes using the `nodeOptions` prop:
+Default styles can be applied to all nodes using the `nodeOptions` prop:
 
 {{"demo": "SankeyNodeStyling.js"}}
 
 ### Default link styles
 
-You can apply default styles to all links using the `linkOptions` prop:
+Default styles can be applied to all links using the `linkOptions` prop:
 
 {{"demo": "SankeyLinkStyling.js"}}
 
@@ -59,17 +59,20 @@ Control how nodes are positioned within the chart:
 
 ## Sorting
 
-You can customize the order of nodes and links using sort functions.
+By default, the nodes are sorted by their appearance in the `links` array.
+If a `nodes` array is provided, the nodes are sorted by their order in that array.
+
+To dynamically customize the order, use the sorting functions for the element that needs sorting.
 
 ### Node sorting
 
-The `nodeOptions.sort` function allows you to control the vertical order of nodes within each column. It receives two `SankeyLayoutNode` objects and should return a number (similar to `Array.sort`).
+The `nodeOptions.sort` function allows control of the vertical order of nodes within each column. It receives two `SankeyLayoutNode` objects and should return a number (similar to `Array.sort`).
 
 {{"demo": "SankeyNodeSorting.js"}}
 
 ### Link sorting
 
-The `linkOptions.sort` function allows you to control the order of links emanating from each node. It receives two `SankeyLayoutLink` objects and should return a number.
+The `linkOptions.sort` function allows control of the order of links emanating from each node. It receives two `SankeyLayoutLink` objects and should return a number.
 
 {{"demo": "SankeyLinkSorting.js"}}
 
