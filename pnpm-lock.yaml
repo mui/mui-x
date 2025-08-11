@@ -297,8 +297,8 @@ importers:
         specifier: 'catalog:'
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1)
       '@inquirer/prompts':
-        specifier: ^7.8.0
-        version: 7.8.0(@types/node@24.2.0)
+        specifier: ^7.8.1
+        version: 7.8.1(@types/node@24.2.0)
       '@mui/icons-material':
         specifier: 'catalog:'
         version: 7.3.1(@mui/material@7.3.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@19.1.9)(react@19.1.1)
@@ -4093,8 +4093,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/editor@4.2.15':
-    resolution: {integrity: sha512-wst31XT8DnGOSS4nNJDIklGKnf+8shuauVrWzgKegWUe28zfCftcWZ2vktGdzJgcylWSS2SrDnYUb6alZcwnCQ==}
+  '@inquirer/editor@4.2.16':
+    resolution: {integrity: sha512-iSzLjT4C6YKp2DU0fr8T7a97FnRRxMO6CushJnW5ktxLNM2iNeuyUuUA5255eOLPORoGYCrVnuDOEBdGkHGkpw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -4110,6 +4110,12 @@ packages:
     peerDependenciesMeta:
       '@types/node':
         optional: true
+
+  '@inquirer/external-editor@1.0.0':
+    resolution: {integrity: sha512-5v3YXc5ZMfL6OJqXPrX9csb4l7NlQA2doO1yynUjpUChT9hg4JcuBVP0RbsEJ/3SL/sxWEyFjT2W69ZhtoBWqg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
 
   '@inquirer/figures@1.0.13':
     resolution: {integrity: sha512-lGPVU3yO9ZNqA7vTYz26jny41lE7yoQansmqdMLBEfqaGsmdg7V3W9mK9Pvb5IL4EVZ9GnSDGMO/cJXud5dMaw==}
@@ -4142,8 +4148,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/prompts@7.8.0':
-    resolution: {integrity: sha512-JHwGbQ6wjf1dxxnalDYpZwZxUEosT+6CPGD9Zh4sm9WXdtUp9XODCQD3NjSTmu+0OAyxWXNOqf0spjIymJa2Tw==}
+  '@inquirer/prompts@7.8.1':
+    resolution: {integrity: sha512-LpBPeIpyCF1H3C7SK/QxJQG4iV1/SRmJdymfcul8PuwtVhD0JI1CSwqmd83VgRgt1QEsDojQYFSXJSgo81PVMw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -6823,6 +6829,9 @@ packages:
 
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
+
+  chardet@2.1.0:
+    resolution: {integrity: sha512-bNFETTG/pM5ryzQ9Ad0lJOTa6HWD/YsScAR3EnCPZRPlQh77JocYktSHOUHelyhm8IARL+o4c4F1bP5KVOjiRA==}
 
   check-error@2.1.1:
     resolution: {integrity: sha512-OAlb+T7V4Op9OwdkjmguYRqncdlx5JiofwOAUkmTF+jNdHwzTaTs4sRAGpzLF3oOz5xAyDGrPgeIDFQmDOTiJw==}
@@ -14690,11 +14699,11 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.2.0
 
-  '@inquirer/editor@4.2.15(@types/node@24.2.0)':
+  '@inquirer/editor@4.2.16(@types/node@24.2.0)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@24.2.0)
+      '@inquirer/external-editor': 1.0.0(@types/node@24.2.0)
       '@inquirer/type': 3.0.8(@types/node@24.2.0)
-      external-editor: 3.1.0
     optionalDependencies:
       '@types/node': 24.2.0
 
@@ -14705,6 +14714,12 @@ snapshots:
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/external-editor@1.0.0(@types/node@24.2.0)':
+    dependencies:
+      '@types/node': 24.2.0
+      chardet: 2.1.0
+      iconv-lite: 0.6.3
 
   '@inquirer/figures@1.0.13': {}
 
@@ -14730,11 +14745,11 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.2.0
 
-  '@inquirer/prompts@7.8.0(@types/node@24.2.0)':
+  '@inquirer/prompts@7.8.1(@types/node@24.2.0)':
     dependencies:
       '@inquirer/checkbox': 4.2.0(@types/node@24.2.0)
       '@inquirer/confirm': 5.1.14(@types/node@24.2.0)
-      '@inquirer/editor': 4.2.15(@types/node@24.2.0)
+      '@inquirer/editor': 4.2.16(@types/node@24.2.0)
       '@inquirer/expand': 4.0.17(@types/node@24.2.0)
       '@inquirer/input': 4.2.1(@types/node@24.2.0)
       '@inquirer/number': 3.0.17(@types/node@24.2.0)
@@ -18008,6 +18023,8 @@ snapshots:
   character-reference-invalid@2.0.1: {}
 
   chardet@0.7.0: {}
+
+  chardet@2.1.0: {}
 
   check-error@2.1.1: {}
 
