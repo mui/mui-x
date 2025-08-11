@@ -412,6 +412,13 @@ LineChart.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        groups: PropTypes.arrayOf(
+          PropTypes.shape({
+            getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
+            tickSize: PropTypes.number,
+          }),
+        ),
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -486,6 +493,13 @@ LineChart.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        groups: PropTypes.arrayOf(
+          PropTypes.shape({
+            getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
+            tickSize: PropTypes.number,
+          }),
+        ),
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -1027,6 +1041,13 @@ LineChart.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        groups: PropTypes.arrayOf(
+          PropTypes.shape({
+            getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
+            tickSize: PropTypes.number,
+          }),
+        ),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1100,6 +1121,13 @@ LineChart.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         fill: PropTypes.string,
+        groups: PropTypes.arrayOf(
+          PropTypes.shape({
+            getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
+            tickSize: PropTypes.number,
+          }),
+        ),
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,

@@ -553,7 +553,6 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-funnel',
             title: 'Funnel',
             plan: 'pro',
-            unstable: true,
             children: [
               { pathname: '/x/react-charts/funnel', title: 'Funnel overview' },
               { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
@@ -584,7 +583,7 @@ const pages: MuiPage[] = [
                 title: 'Export',
                 plan: 'pro',
               },
-              { pathname: '/x/react-charts/toolbar', title: 'Toolbar', unstable: true },
+              { pathname: '/x/react-charts/toolbar', title: 'Toolbar' },
             ],
           },
           {
