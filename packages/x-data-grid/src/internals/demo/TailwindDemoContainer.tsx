@@ -17,21 +17,40 @@ export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
   const { children, documentBody } = props;
   const [isLoaded, setIsLoaded] = React.useState(false);
 
-  const tailwindPromiseRef = React.useRef<Promise<void>>(null);
+  const tailwindPromiseRef = React.useRef<Promise<HTMLScriptElement>>(null);
 
   React.useEffect(() => {
+    const body = documentBody ?? document.body;
     if (!tailwindPromiseRef.current) {
-      tailwindPromiseRef.current = new Promise<void>((resolve) => {
-        const body = documentBody ?? document.body;
-
+      tailwindPromiseRef.current = new Promise<HTMLScriptElement>((resolve) => {
         const script = document.createElement('script');
+        script.onload = () => resolve(script);
         script.src = 'https://unpkg.com/@tailwindcss/browser@4';
-        script.onload = () => resolve();
         body.appendChild(script);
       });
     }
 
     tailwindPromiseRef.current.then(() => setIsLoaded(true));
+
+    const cleanup = () => {
+      tailwindPromiseRef.current?.then((el) => el.remove());
+
+      const head = body?.ownerDocument.head;
+      if (!head) {
+        return;
+      }
+
+      const styles = head.querySelectorAll('style:not([data-emotion])');
+      styles.forEach((style) => {
+        const styleText = style.textContent?.substring(0, 100);
+        const isTailwindStylesheet = styleText?.includes('tailwind');
+        if (isTailwindStylesheet) {
+          style.remove();
+        }
+      });
+    };
+
+    return cleanup;
   }, [documentBody]);
 
   return isLoaded ? (
