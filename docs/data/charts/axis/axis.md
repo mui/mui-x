@@ -242,7 +242,7 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 ## Grouped Axes
 
-In order to group `band` or `point` axes together, a user can provide a `groups` property in the axis definition.
+To group `band` or `point` axes together, provide a `groups` property in the axis definition.
 This property expects an array of objects with a `getValue` function.
 This feature is available for both x- and y-axes.
 
