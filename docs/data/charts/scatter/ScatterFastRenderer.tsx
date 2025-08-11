@@ -7,6 +7,7 @@ import {
   mangoFusionPalette,
   rainbowSurgePalette,
 } from '@mui/x-charts/colorPalettes';
+import Button from '@mui/material/Button';
 import { electricityGeneration2024 } from '../dataset/electricityGeneration2024';
 import { carbonEmissions2024 } from '../dataset/carbonEmissions2024';
 import { countryData } from '../dataset/countryData';
@@ -56,6 +57,7 @@ const scatterChartsParams = {
 
 export default function ScatterFastRenderer() {
   const { palette } = useTheme();
+  const [render, setRender] = React.useState(false);
 
   const colors = React.useMemo(
     () => rainbowSurgePalette(palette.mode).concat(mangoFusionPalette(palette.mode)),
@@ -67,7 +69,17 @@ export default function ScatterFastRenderer() {
       <Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
         Life-cycle Carbon Intensity of Electricity Generation - Hourly, 2024
       </Typography>
-      <ScatterChart {...scatterChartsParams} useFastRenderer colors={colors} />
+      {render ? (
+        <ScatterChart {...scatterChartsParams} useFastRenderer colors={colors} />
+      ) : (
+        <Stack
+          alignItems="center"
+          justifyContent="center"
+          sx={{ height: scatterChartsParams.height }}
+        >
+          <Button onClick={() => setRender(true)}>Render Chart</Button>
+        </Stack>
+      )}
       <Typography variant="caption">Source: ENTSO-E, EletricityMaps.com</Typography>
     </Stack>
   );
