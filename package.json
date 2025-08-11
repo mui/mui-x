@@ -104,7 +104,7 @@
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "catalog:",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.2.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/requestidlecallback": "^0.3.7",
