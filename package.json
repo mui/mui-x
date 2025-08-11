@@ -15,7 +15,6 @@
     "docs:build": "pnpm run release:build && pnpm docs:llms:build && pnpm --filter docs build",
     "docs:typescript:formatted": "pnpm --filter docs typescript:transpile",
     "docs:populate:demos": "pnpm --filter docs populate:demos",
-    "docs:importDocsStatic": "node scripts/importDocsStatic.mjs",
     "docs:size-why": "cross-env DOCS_STATS_ENABLED=true pnpm docs:build",
     "docs:deploy": "pnpm --filter docs run deploy",
     "deduplicate": "pnpm dedupe",
