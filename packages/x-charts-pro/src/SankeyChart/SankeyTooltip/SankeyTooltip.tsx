@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
 import { SankeyTooltipContent } from './SankeyTooltipContent';
 import { SankeyTooltipProps } from './SankeyTooltip.types';
