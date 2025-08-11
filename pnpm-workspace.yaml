@@ -15,12 +15,12 @@ catalog:
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
-  '@mui/icons-material': ^7.2.0
+  '@mui/icons-material': ^7.3.1
   '@mui/internal-test-utils': ^2.0.9
-  '@mui/material': ^7.2.0
-  '@mui/stylis-plugin-rtl': ^7.2.0
-  '@mui/system': ^7.2.0
-  '@mui/utils': ^7.2.0
+  '@mui/material': ^7.3.1
+  '@mui/stylis-plugin-rtl': ^7.3.1
+  '@mui/system': ^7.3.1
+  '@mui/utils': ^7.3.1
   '@playwright/test': ^1.54.2
   '@react-spring/web': ^10.0.1
   '@types/chance': ^1.1.7
