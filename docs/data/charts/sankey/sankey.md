@@ -56,6 +56,23 @@ You can apply default styles to all links using the `linkOptions` prop:
 Control how nodes are positioned within the chart:
 
 {{"demo": "SankeyNodeAlignment.js"}}
+
+## Sorting
+
+You can customize the order of nodes and links using sort functions.
+
+### Node sorting
+
+The `nodeOptions.sort` function allows you to control the vertical order of nodes within each column. It receives two `SankeyLayoutNode` objects and should return a number (similar to `Array.sort`).
+
+{{"demo": "SankeyNodeSorting.js"}}
+
+### Link sorting
+
+The `linkOptions.sort` function allows you to control the order of links emanating from each node. It receives two `SankeyLayoutLink` objects and should return a number.
+
+{{"demo": "SankeyLinkSorting.js"}}
+
 ## Layout iterations
 
 The `iterations` prop controls how many times the layout algorithm runs to optimize node positioning. More iterations generally result in better layouts but take longer to compute.
