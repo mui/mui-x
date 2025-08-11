@@ -51,3 +51,8 @@ You can apply default styles to all links using the `linkOptions` prop:
 
 {{"demo": "SankeyLinkStyling.js"}}
 
+### Node alignment
+
+Control how nodes are positioned within the chart:
+
+{{"demo": "SankeyNodeAlignment.js"}}
