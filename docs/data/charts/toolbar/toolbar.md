@@ -4,7 +4,7 @@ productId: x-charts
 components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
 ---
 
-# Charts - Toolbar 🧪
+# Charts - Toolbar
 
 <p class="description">Charts can display a toolbar for easier access to certain functionality.</p>
 
