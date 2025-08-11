@@ -36,7 +36,7 @@ export function calculateSankeyLayout(
     sort: nodeSort = null,
   } = nodeOptions ?? {};
 
-  const { color: linkColor = theme.palette.primary.light, sort: linkSort = null } =
+  const { color: linkColor = theme.palette.text.primary, sort: linkSort = null } =
     linkOptions ?? {};
 
   const { width, height, left, top, bottom, right } = drawingArea;
