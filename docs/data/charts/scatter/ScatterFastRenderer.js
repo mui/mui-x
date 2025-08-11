@@ -1,79 +1,71 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-
-import { Chance } from 'chance';
-import { Profiler } from 'react';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import {
+  mangoFusionPalette,
+  rainbowSurgePalette,
+} from '@mui/x-charts/colorPalettes';
+import { electricityGeneration2024 } from '../dataset/electricityGeneration2024';
+import { carbonEmissions2024 } from '../dataset/carbonEmissions2024';
+import { countryData } from '../dataset/countryData';
 
-const chance = new Chance(8);
-
-function generateGaussianPoints(meanX, meanY, stdDev, count) {
-  const points = [];
-
-  // Box-Muller transform for Gaussian random numbers
-  function gaussianRandom() {
-    let u = 0;
-    let v = 0;
-    while (u === 0) {
-      u = chance.floating({ min: 0, max: 1 });
-    } // Converting [0,1) to (0,1)
-    while (v === 0) {
-      v = chance.floating({ min: 0, max: 1 });
-    }
-    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-  }
-
-  for (let i = 0; i < count; i += 1) {
-    const x = meanX + gaussianRandom() * stdDev;
-    const y = meanY + gaussianRandom() * stdDev;
-    points.push({ x, y });
-  }
-
-  return points;
+const dateTimeFormat = new Intl.DateTimeFormat(undefined, {
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
+function formatAsDateRange(index) {
+  const from = new Date(2024, 0, 1, index);
+  const to = new Date(2024, 0, 1, index + 1);
+  return dateTimeFormat.formatRange(from, to);
 }
 
-const dataPoints = 10_000;
 const scatterChartsParams = {
-  series: [
-    {
-      data: generateGaussianPoints(0, 0, 1, dataPoints / 2),
-      label: 'A',
+  series: Object.entries(electricityGeneration2024).map(
+    ([countryCode, electricity]) => ({
+      data: electricity.map((value, index) => ({
+        x: value / 1000,
+        y: carbonEmissions2024[countryCode][index],
+      })),
       markerSize: 1,
-    },
-    {
-      data: generateGaussianPoints(5, 5, 1, dataPoints / 2),
-      label: 'B',
-      markerSize: 1,
-    },
-  ],
-  yAxis: [{ width: 24 }],
+      label: countryData[countryCode].country,
+      highlightScope: {
+        highlight: 'series',
+        fade: 'global',
+      },
+      valueFormatter: (value, { dataIndex }) =>
+        `generated ${value.x.toFixed(2)} GWh emitting ${value.y.toFixed(2)} gCO₂eq/kWh on ${formatAsDateRange(dataIndex)}`,
+    }),
+  ),
+  xAxis: [{ min: 0, label: 'Electricity Generation (GWh)' }],
+  yAxis: [{ min: 0, width: 60, label: 'Life-cycle Carbon Intensity (gCO₂eq/kWh)' }],
   height: 400,
+  slotProps: {
+    legend: {
+      position: { vertical: 'bottom' },
+      sx: { justifyContent: 'center' },
+    },
+  },
 };
 
-const MemoScatterChart = React.memo(ScatterChart);
-
-const ProfiledScatterChart = React.memo(function ProfiledScatterChart(props) {
-  return (
-    <Profiler id="ScatterFastRenderer" onRender={props.onRender}>
-      <MemoScatterChart {...scatterChartsParams} useFastRenderer />
-    </Profiler>
-  );
-});
-
 export default function ScatterFastRenderer() {
-  const [data, setData] = React.useState(null);
+  const { palette } = useTheme();
 
-  const onRender = React.useCallback((id, phase, actualDuration) => {
-    setData(actualDuration);
-  }, []);
+  const colors = React.useMemo(
+    () => rainbowSurgePalette(palette.mode).concat(mangoFusionPalette(palette.mode)),
+    [palette.mode],
+  );
 
   return (
-    <Stack spacing={{ xs: 0, md: 4 }} sx={{ width: '100%' }}>
-      <ProfiledScatterChart onRender={onRender} />
-      <Typography sx={{ alignSelf: 'center' }}>
-        Render time: {data?.toFixed(0)}ms
+    <Stack spacing={{ xs: 0, md: 2 }} sx={{ width: '100%' }}>
+      <Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
+        Life-cycle Carbon Intensity of Electricity Generation - Hourly, 2024
       </Typography>
+      <ScatterChart {...scatterChartsParams} useFastRenderer colors={colors} />
+      <Typography variant="caption">Source: ENTSO-E, EletricityMaps.com</Typography>
     </Stack>
   );
 }
