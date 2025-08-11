@@ -17,6 +17,8 @@ import type { TooltipProps } from '@mui/material/Tooltip';
 import type { InputProps } from '@mui/material/Input';
 import type { SelectProps } from '@mui/material/Select';
 import type { SkeletonProps } from '@mui/material/Skeleton';
+import type { ToggleButtonProps } from '@mui/material/ToggleButton';
+import type { TabsProps } from '@mui/material/Tabs';
 
 declare module '@mui/x-data-grid' {
   interface BaseAutocompletePropsOverrides {
@@ -54,6 +56,12 @@ declare module '@mui/x-data-grid' {
   }
   interface BaseButtonPropsOverrides {
     material?: Partial<ButtonProps>;
+  }
+  interface BaseToggleButtonPropsOverrides {
+    material?: Partial<ToggleButtonProps>;
+  }
+  interface BaseTabsPropsOverrides {
+    material?: Partial<TabsProps>;
   }
   interface BaseIconButtonPropsOverrides {
     material?: Partial<IconButtonProps>;

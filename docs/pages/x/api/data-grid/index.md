@@ -21,6 +21,8 @@
 - [QuickFilterTrigger](/x/api/data-grid/quick-filter-trigger/)
 - [ColumnsPanelTrigger](/x/api/data-grid/columns-panel-trigger/)
 - [FilterPanelTrigger](/x/api/data-grid/filter-panel-trigger/)
+- [PivotPanelTrigger](/x/api/data-grid/pivot-panel-trigger/)
+- [ChartsPanelTrigger](/x/api/data-grid/charts-panel-trigger/)
 - [AiAssistantPanelTrigger](/x/api/data-grid/ai-assistant-panel-trigger/)
 - [PromptField](/x/api/data-grid/prompt-field/)
 - [PromptFieldRecord](/x/api/data-grid/prompt-field-record/)
