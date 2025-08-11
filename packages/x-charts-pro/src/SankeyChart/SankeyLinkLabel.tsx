@@ -35,6 +35,9 @@ const getLinkMidpoint = (link: SankeyLayoutLink) => {
   };
 };
 
+/**
+ * @ignore - internal component.
+ */
 export const SankeyLinkLabel = React.forwardRef<SVGTextElement, SankeyLinkLabelProps>(
   function SankeyLinkLabel(props, ref) {
     const { link, color, fontSize } = props;

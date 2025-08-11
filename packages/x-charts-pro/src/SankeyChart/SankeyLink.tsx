@@ -37,6 +37,9 @@ export interface SankeyLinkProps {
   onClick?: (event: React.MouseEvent<SVGPathElement>, link: SankeyItemIdentifier) => void;
 }
 
+/**
+ * @ignore - internal component.
+ */
 export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
   function SankeyLink(props, ref) {
     const { link, color, opacity = 0.4, onClick, seriesId } = props;

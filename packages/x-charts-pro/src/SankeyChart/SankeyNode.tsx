@@ -44,6 +44,9 @@ export interface SankeyNodeProps {
   onClick?: (event: React.MouseEvent<SVGRectElement>, node: SankeyItemIdentifier) => void;
 }
 
+/**
+ * @ignore - internal component.
+ */
 export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
   function SankeyNode(props, ref) {
     const { node, color, showLabel = true, onClick, seriesId } = props;
