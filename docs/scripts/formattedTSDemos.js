@@ -11,6 +11,7 @@
  */
 const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx', 'types.ts'];
 
+const fse = require('fs-extra');
 const fs = require('fs');
 const path = require('path');
 const babel = require('@babel/core');
@@ -90,7 +91,7 @@ const previewOverride = {
 async function transpileFile(tsxPath, program, ignoreCache = false) {
   const jsPath = tsxPath.replace(/\.tsx?$/, '.js');
   try {
-    if (!ignoreCache && (await fs.promises.exists(jsPath))) {
+    if (!ignoreCache && (await fse.exists(jsPath))) {
       const [jsStat, tsxStat] = await Promise.all([
         fs.promises.stat(jsPath),
         fs.promises.stat(tsxPath),
