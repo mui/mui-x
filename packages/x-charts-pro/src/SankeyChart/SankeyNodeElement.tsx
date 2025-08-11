@@ -6,12 +6,12 @@ import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
 import { SankeyLayoutNode, type SankeyItemIdentifier } from './sankey.types';
 
-const SankeyNodeRoot = styled('rect')(({ onClick }) => ({
+const SankeyNodeElementRoot = styled('rect')(({ onClick }) => ({
   stroke: 'none',
   cursor: onClick ? 'pointer' : 'default',
 }));
 
-const SankeyNodeLabel = styled('text')(({ theme }) => ({
+const SankeyNodeElementLabel = styled('text')(({ theme }) => ({
   fill: theme.palette.text.primary,
   fontSize: '0.75rem',
   fontWeight: 'normal',
@@ -19,7 +19,7 @@ const SankeyNodeLabel = styled('text')(({ theme }) => ({
   pointerEvents: 'none',
 }));
 
-export interface SankeyNodeProps {
+export interface SankeyNodeElementProps {
   /**
    * The series ID to which the node belongs
    */
@@ -47,8 +47,8 @@ export interface SankeyNodeProps {
 /**
  * @ignore - internal component.
  */
-export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
-  function SankeyNode(props, ref) {
+export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
+  function SankeyNodeElement(props, ref) {
     const { node, color, showLabel = true, onClick, seriesId } = props;
 
     const x0 = node.x0 ?? 0;
@@ -85,7 +85,7 @@ export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
 
     return (
       <g ref={ref}>
-        <SankeyNodeRoot
+        <SankeyNodeElementRoot
           x={node.x0}
           y={node.y0}
           width={nodeWidth}
@@ -96,9 +96,9 @@ export const SankeyNode = React.forwardRef<SVGGElement, SankeyNodeProps>(
         />
 
         {showLabel && node.label && (
-          <SankeyNodeLabel x={labelX} y={(y0 + y1) / 2} textAnchor={labelAnchor}>
+          <SankeyNodeElementLabel x={labelX} y={(y0 + y1) / 2} textAnchor={labelAnchor}>
             {node.label}
-          </SankeyNodeLabel>
+          </SankeyNodeElementLabel>
         )}
       </g>
     );

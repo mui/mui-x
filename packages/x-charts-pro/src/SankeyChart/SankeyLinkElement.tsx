@@ -6,13 +6,13 @@ import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
 import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
 
-const SankeyLinkRoot = styled('path')(({ onClick }) => ({
+const SankeyLinkElementRoot = styled('path')(({ onClick }) => ({
   fill: 'none',
   transition: 'stroke-opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
   cursor: onClick ? 'pointer' : 'default',
 }));
 
-export interface SankeyLinkProps {
+export interface SankeyLinkElementProps {
   /**
    * The series ID to which the link belongs
    */
@@ -40,8 +40,8 @@ export interface SankeyLinkProps {
 /**
  * @ignore - internal component.
  */
-export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
-  function SankeyLink(props, ref) {
+export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElementProps>(
+  function SankeyLinkElement(props, ref) {
     const { link, color, opacity = 0.4, onClick, seriesId } = props;
 
     const identifier: SankeyItemIdentifier = {
@@ -65,7 +65,7 @@ export const SankeyLink = React.forwardRef<SVGPathElement, SankeyLinkProps>(
     }
 
     return (
-      <SankeyLinkRoot
+      <SankeyLinkElementRoot
         ref={ref}
         d={link.path}
         stroke={color || link.color}

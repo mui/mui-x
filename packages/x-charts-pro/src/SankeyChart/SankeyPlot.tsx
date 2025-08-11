@@ -4,8 +4,8 @@ import { useTheme } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { SankeyLayout, type SankeyItemIdentifier } from './sankey.types';
 import { calculateSankeyLayout } from './calculateSankeyLayout';
-import { SankeyNode } from './SankeyNode';
-import { SankeyLink } from './SankeyLink';
+import { SankeyNodeElement } from './SankeyNodeElement';
+import { SankeyLinkElement } from './SankeyLinkElement';
 import { SankeyLinkLabel } from './SankeyLinkLabel';
 import { useSankeySeriesContext } from '../hooks/useSankeySeries';
 import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
@@ -55,7 +55,7 @@ export function SankeyPlot(props: SankeyPlotProps) {
     <g className={classes.root}>
       <g className={classes.links}>
         {layout.links.map((link) => (
-          <SankeyLink
+          <SankeyLinkElement
             seriesId={series.id}
             key={`${link.source.id}-${link.target.id}`}
             link={link}
@@ -67,7 +67,7 @@ export function SankeyPlot(props: SankeyPlotProps) {
 
       <g className={classes.nodes}>
         {layout.nodes.map((node) => (
-          <SankeyNode
+          <SankeyNodeElement
             seriesId={series.id}
             key={node.id}
             node={node}
