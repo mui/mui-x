@@ -152,7 +152,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
                   return shouldRenderEvent ? (
                     <EventPopoverTrigger
-                      key={`${event.id}-${day.toString()}`}
+                      key={`${event.id}-${event.occurrenceId}-${day.toString()}`}
                       event={event}
                       render={
                         <DayGridEvent
@@ -171,7 +171,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     />
                   ) : (
                     <DayGridEvent
-                      key={`invisible-${event.id}-${day.toString()}`}
+                      key={`invisible-${event.id}-${event.occurrenceId}-${day.toString()}`}
                       event={event}
                       eventResource={resourcesByIdMap.get(event.resource)}
                       variant="invisible"
@@ -223,7 +223,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   >
                     {regularEvents.map((event) => (
                       <EventPopoverTrigger
-                        key={event.id}
+                        key={`${event.id}-${event.occurrenceId}`}
                         event={event}
                         nativeButton={false}
                         render={

@@ -70,5 +70,6 @@ export interface Resource {
     start: DateTime;
     end: DateTime;
     title: string;
+    occurrenceId?: string;
   }[];
 }

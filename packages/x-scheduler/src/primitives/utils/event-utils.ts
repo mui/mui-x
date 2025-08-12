@@ -52,7 +52,10 @@ export function getEventRowIndex(
     // Try to find the row index from the original event placement on the first visible day
     const existingRowIndex = daysMap
       .get(firstDayKey)
-      ?.allDayEvents.find((currentEvent) => currentEvent.id === event.id)?.eventRowIndex;
+      ?.allDayEvents.find(
+        (currentEvent) =>
+          currentEvent.id === event.id && currentEvent.occurrenceId === event.occurrenceId,
+      )?.eventRowIndex;
 
     return existingRowIndex ?? 1;
   }
@@ -141,7 +144,7 @@ export function expandRecurringEventForVisibleDays(
 
     instances.push({
       ...event,
-      id: occurrenceId,
+      occurrenceId,
       start: occurrenceStart,
       end: occurrenceEnd,
     });

@@ -40,7 +40,7 @@ export default function DayGridPrimitive() {
                 <span className={classes.CellLabel}>{day.date.toFormat('dd')}</span>
                 {day.events.map((event) => (
                   <DayGrid.Event
-                    key={event.id}
+                    key={`${event.id}-${event.occurrenceId}`}
                     start={event.start}
                     end={event.end}
                     className={classes.Event}

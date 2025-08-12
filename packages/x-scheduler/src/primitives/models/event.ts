@@ -7,6 +7,10 @@ export interface CalendarEvent {
    */
   id: CalendarEventId;
   /**
+   * The unique identifier of the event's occurrence if it is part of a recurring series.
+   */
+  occurrenceId?: CalendarEventId;
+  /**
    * The title of the event.
    */
   title: string;

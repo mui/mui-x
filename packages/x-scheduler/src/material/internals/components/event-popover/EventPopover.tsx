@@ -122,6 +122,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       start,
       end,
       allDay: isAllDay,
+      recurrenceRule,
     });
     onClose();
   };
