@@ -1,6 +1,6 @@
 /* Average electricity generation in MW across each hour of 2024.
  * Source: entsoe.eu */
-export const hourlyElectricityGeneration2024 = {
+export const electricityGeneration2024Hourly = {
   BEL: [
     9768.23, 9712.78, 9681.669999999998, 9708.52, 9680.04, 9753.039999999999,
     9822.72, 9752.29, 9764.699999999999, 10083.63, 10593.630000000001, 10631.16,
@@ -15163,19 +15163,3 @@ export const hourlyElectricityGeneration2024 = {
     23032.76, 22093.72, 20051.2, 18742.260000000002,
   ],
 };
-
-export const electricityGeneration2024Every6Hours = Object.entries(
-  hourlyElectricityGeneration2024,
-).reduce((acc, [country, generated]) => {
-  const newGenerated = [];
-
-  let i = 0;
-  for (const energy of generated) {
-    newGenerated[Math.floor(i / 6)] =
-      (newGenerated[Math.floor(i / 6)] ?? 0) + energy;
-    i += 1;
-  }
-
-  acc[country] = newGenerated;
-  return acc;
-}, {});

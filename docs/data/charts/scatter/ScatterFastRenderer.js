@@ -8,8 +8,8 @@ import {
   rainbowSurgePalette,
 } from '@mui/x-charts/colorPalettes';
 import Button from '@mui/material/Button';
-import { electricityGeneration2024Every6Hours } from '../dataset/electricityGeneration2024';
-import { carbonEmissions2024Every6Hours } from '../dataset/carbonEmissions2024';
+import { electricityGeneration2024Every6Hours } from '../dataset/electricityGeneration2024Every6Hours';
+import { carbonEmissions2024Every6Hours } from '../dataset/carbonEmissions2024Every6Hours';
 import { countryData } from '../dataset/countryData';
 
 const dateTimeFormat = new Intl.DateTimeFormat(undefined, {
@@ -19,8 +19,8 @@ const dateTimeFormat = new Intl.DateTimeFormat(undefined, {
   minute: '2-digit',
 });
 function formatAsDateRange(index) {
-  const from = new Date(2024, 0, 1, index);
-  const to = new Date(2024, 0, 1, index + 1);
+  const from = new Date(2024, 0, 1, index * 6);
+  const to = new Date(2024, 0, 1, index * 6 + 6);
   return dateTimeFormat.formatRange(from, to);
 }
 
