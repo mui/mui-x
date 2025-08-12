@@ -8,9 +8,11 @@ async function prepend(file, string) {
 }
 
 async function run() {
-  const swDest = path.join(__dirname, '../export/x/sw.js');
+  const swDestDir = path.join(__dirname, '../export/x');
+  const swDest = path.join(swDestDir, 'sw.js');
   const swSrc = path.join(__dirname, '../src/sw.js');
 
+  await fs.mkdir(swDestDir, { recursive: true });
   await fs.copyFile(swSrc, swDest);
   await prepend(
     swDest,
