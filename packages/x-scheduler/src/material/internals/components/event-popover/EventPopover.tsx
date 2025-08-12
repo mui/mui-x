@@ -91,10 +91,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const endDateValue = form.get('endDate');
     const endTimeValue = form.get('endTime');
     const recurrenceKey = form.get('recurrence') as string;
-
     const recurrenceRule = recurrenceKey ? recurrencePresets[recurrenceKey] : undefined;
-    // eslint-disable-next-line no-console
-    console.log('Submitted Recurrence Rule:', recurrenceRule);
 
     const startISO = startTimeValue
       ? `${startDateValue}T${startTimeValue}`
