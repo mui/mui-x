@@ -7,9 +7,8 @@ import {
   mangoFusionPalette,
   rainbowSurgePalette,
 } from '@mui/x-charts/colorPalettes';
-import Button from '@mui/material/Button';
-import { electricityGeneration2024Every6Hours } from '../dataset/electricityGeneration2024';
-import { carbonEmissions2024Every6Hours } from '../dataset/carbonEmissions2024';
+import { electricityGeneration2024Every6Hours } from '../dataset/electricityGeneration2024Every6Hours';
+import { carbonEmissions2024Every6Hours } from '../dataset/carbonEmissions2024Every6Hours';
 import { countryData } from '../dataset/countryData';
 
 const dateTimeFormat = new Intl.DateTimeFormat(undefined, {
@@ -19,8 +18,8 @@ const dateTimeFormat = new Intl.DateTimeFormat(undefined, {
   minute: '2-digit',
 });
 function formatAsDateRange(index: number): string {
-  const from = new Date(2024, 0, 1, index);
-  const to = new Date(2024, 0, 1, index + 1);
+  const from = new Date(2024, 0, 1, index * 6);
+  const to = new Date(2024, 0, 1, index * 6 + 6);
   return dateTimeFormat.formatRange(from, to);
 }
 
@@ -58,7 +57,6 @@ const scatterChartsParams = {
 
 export default function ScatterFastRenderer() {
   const { palette } = useTheme();
-  const [render, setRender] = React.useState(false);
 
   const colors = React.useMemo(
     () => rainbowSurgePalette(palette.mode).concat(mangoFusionPalette(palette.mode)),
@@ -70,17 +68,7 @@ export default function ScatterFastRenderer() {
       <Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
         Life-cycle Carbon Intensity of Electricity Generation - Hourly, 2024
       </Typography>
-      {render ? (
-        <ScatterChart {...scatterChartsParams} useFastRenderer colors={colors} />
-      ) : (
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          sx={{ height: scatterChartsParams.height }}
-        >
-          <Button onClick={() => setRender(true)}>Render Chart</Button>
-        </Stack>
-      )}
+      <ScatterChart {...scatterChartsParams} useFastRenderer colors={colors} />
       <Typography variant="caption">Source: ENTSO-E, EletricityMaps.com</Typography>
     </Stack>
   );

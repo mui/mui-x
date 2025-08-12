@@ -1,6 +1,6 @@
 /* Hourly Carbon intensity gCO₂eq/kWh (Life cycle) for 2024
  * Source: https://portal.electricitymaps.com/datasets */
-export const hourlyCarbonEmissions2024 = {
+export const carbonEmissions2024Hourly = {
   BEL: [
     94.01, 96.43, 97.57, 95.23, 95.28, 101.26, 104.19, 106.1, 100.85, 98.19, 97.84,
     100.07, 102.61, 102.24, 92.5, 90.89, 99.72, 81.76, 84.21, 99.1, 82.91, 75.69,
@@ -9104,21 +9104,3 @@ export const hourlyCarbonEmissions2024 = {
     20.49, 19.98, 19.31, 17.11, 16.5, 15.22, 15.01, 19.24, 26.02, 21.99,
   ],
 };
-
-export const carbonEmissions2024Every6Hours = Object.entries(
-  hourlyCarbonEmissions2024,
-).reduce((acc, [country, emissions]) => {
-  const newEmissions = [];
-
-  let i = 0;
-  for (const emission of emissions) {
-    newEmissions[Math.floor(i / 6)] =
-      (newEmissions[Math.floor(i / 6)] ?? 0) + emission;
-    i += 1;
-  }
-
-  acc[country] = newEmissions;
-  return acc;
-}, {});
-
-console.log(carbonEmissions2024Every6Hours);
