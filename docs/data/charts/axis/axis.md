@@ -94,6 +94,8 @@ If you want to customize the formatting, but want to keep the default behavior f
 />
 ```
 
+{{"demo": "TickWithoutLabels.js"}}
+
 #### Using the D3 formatter
 
 The context gives you access to the axis scale, number of ticks (if applicable) and the default formatted value.
