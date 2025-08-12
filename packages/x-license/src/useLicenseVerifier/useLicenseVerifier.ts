@@ -81,7 +81,7 @@ export function useLicenseVerifier(
     } else if (licenseStatus.status === LICENSE_STATUS.NotAvailableInInitialProPlan) {
       showNotAvailableInInitialProPlanError();
     } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
-      showLicenseKeyPlanMismatchError();
+      showLicenseKeyPlanMismatchError({ packageName: fullPackageName });
     } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {
       showMissingLicenseKeyError({ plan, packageName: fullPackageName });
     } else if (licenseStatus.status === LICENSE_STATUS.ExpiredAnnualGrace) {

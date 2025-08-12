@@ -10,7 +10,6 @@
   },
   "homepage": "https://mui.com/x/react-charts/",
   "sideEffects": false,
-  "private": true,
   "publishConfig": {
     "access": "public",
     "directory": "build"

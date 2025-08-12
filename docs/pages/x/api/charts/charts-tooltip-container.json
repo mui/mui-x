@@ -82,7 +82,8 @@
   "imports": [
     "import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';",
     "import { ChartsTooltipContainer } from '@mui/x-charts';",
-    "import { ChartsTooltipContainer } from '@mui/x-charts-pro';"
+    "import { ChartsTooltipContainer } from '@mui/x-charts-pro';",
+    "import { ChartsTooltipContainer } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {
