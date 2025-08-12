@@ -260,11 +260,13 @@ export const EventPopover = React.forwardRef(function EventPopover(
                 </div>
                 <Field.Root name="recurrence">
                   {defaultRecurrenceKey === 'custom' ? (
+                    // TODO: Translations
                     // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
                     <p className="EventPopoverFormLabel">{`Custom ${calendarEvent.recurrenceRule?.frequency} recurrence`}</p>
                   ) : (
                     <Select.Root items={recurrenceOptions} defaultValue={defaultRecurrenceKey}>
-                      <Select.Trigger className="EventPopoverSelectTrigger">
+                      {/* TODO: Translations */}
+                      <Select.Trigger className="EventPopoverSelectTrigger" aria-label="Recurrence">
                         <Select.Value />
                         <Select.Icon className="EventPopoverSelectIcon">
                           <ChevronDown size={14} />
