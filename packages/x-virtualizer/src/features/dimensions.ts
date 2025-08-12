@@ -121,6 +121,8 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     },
   } = params;
 
+  const containerNode = refs.container.current;
+
   const updateDimensions = React.useCallback(() => {
     if (isFirstSizing.current) {
       return;
@@ -132,10 +134,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
     // https://github.com/mui/mui-x/issues/15721
-    const scrollbarSize = measureScrollbarSize(
-      params.refs.container.current,
-      params.dimensions.scrollbarSize,
-    );
+    const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
 
     const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
     const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
@@ -234,7 +233,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     store.update({ dimensions: newDimensions });
   }, [
     store,
-    params.refs.container,
+    containerNode,
     params.dimensions.scrollbarSize,
     params.autoHeight,
     rowHeight,
@@ -259,7 +258,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(() => observeRootNode(refs.container.current, store), [refs, store]);
+  useLayoutEffect(() => observeRootNode(containerNode, store), [containerNode, store]);
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
