@@ -259,7 +259,10 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(() => observeRootNode(refs.container.current, store), [refs, store]);
+  useLayoutEffect(
+    () => observeRootNode(refs.container.current, store),
+    [refs.container.current, store],
+  );
 
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
