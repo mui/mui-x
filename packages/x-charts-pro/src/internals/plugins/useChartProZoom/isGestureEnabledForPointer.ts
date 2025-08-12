@@ -4,7 +4,7 @@ export const isGestureEnabledForPointer = (
   event: PointerEvent,
   mode?: InteractionMode,
 ): boolean => {
-  if (!mode || mode === 'all') {
+  if (!mode) {
     return true;
   }
 

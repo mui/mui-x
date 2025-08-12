@@ -1,10 +1,13 @@
 import {
   MoveEvent,
   PanEvent,
+  PanGestureOptions,
   PinchEvent,
+  PinchGestureOptions,
   PressEvent,
   TapEvent,
   TurnWheelEvent,
+  TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
 import { ChartPluginSignature } from '../../models';
 
@@ -61,6 +64,15 @@ export type AddInteractionListener = {
   ): InteractionListenerResult;
 };
 
+export type UpdateZoomInteractionListeners = {
+  (interaction: 'zoomPan', options?: Omit<PanGestureOptions<'zoomPan'>, 'name'>): void;
+  (interaction: 'zoomPinch', options?: Omit<PinchGestureOptions<'zoomPinch'>, 'name'>): void;
+  (
+    interaction: 'zoomTurnWheel',
+    options?: Omit<TurnWheelGestureOptions<'zoomTurnWheel'>, 'name'>,
+  ): void;
+};
+
 export interface UseChartInteractionListenerParameters {}
 
 export interface UseChartInteractionListenerState {}
@@ -73,6 +85,13 @@ export interface UseChartInteractionListenerInstance {
    * @param callback The callback to call when the interaction occurs.
    */
   addInteractionListener: AddInteractionListener;
+  /**
+   * Updates the zoom interaction listeners with the provided options.
+   *
+   * @param interaction The interaction to update.
+   * @param options The options to apply to the interaction.
+   */
+  updateZoomInteractionListeners: UpdateZoomInteractionListeners;
 }
 
 export type UseChartInteractionListenerSignature = ChartPluginSignature<{

@@ -154,15 +154,15 @@ The `zoomConfig` prop allows you to specify which interactions are enabled for z
 ### Key modifiers
 
 Some interactions allow setting up required keys to be pressed to enable the interaction.
-This can be set up using the `keys` property in the interaction configuration.
+This can be set up using the `requiredKeys` property in the interaction configuration.
 
 ```jsx
 <BarChartPro
   zoomConfig={{
     // Only zoom when Control key is pressed
-    zoom: [{ type: 'onWheel', keys: ['Control'] }],
+    zoom: [{ type: 'onWheel', requiredKeys: ['Control'] }],
     // Only pan when Shift key is pressed
-    pan: [{ type: 'onDrag', keys: ['Shift'] }],
+    pan: [{ type: 'onDrag', requiredKeys: ['Shift'] }],
   }}
 />
 ```
@@ -171,7 +171,7 @@ Available keys include:
 
 - Modifier keys: `'Shift'`, `'Control'`, `'Alt'`, `'Meta'`
 - Special combinations: `'ControlOrMeta'` (useful for cross-platform support)
-- Letter keys: `'a'` through `'z'`
+- Any other key can be used as well, such as `'Space'` and `'Enter'` based on `event.key` values.
 
 It is also possible to require multiple keys to be pressed simultaneously:
 
@@ -179,12 +179,12 @@ It is also possible to require multiple keys to be pressed simultaneously:
 <BarChartPro
   zoomConfig={{
     // Only pan when both Shift and Control are pressed
-    pan: [{ type: 'onDrag', keys: ['Shift', 'Control'] }],
+    pan: [{ type: 'onDrag', requiredKeys: ['Shift', 'Control'] }],
   }}
 />
 ```
 
-### Modes
+### Pointer Modes
 
 Interactions can also be restricted to specific pointer types by using the `mode` property:
 
@@ -192,14 +192,14 @@ Interactions can also be restricted to specific pointer types by using the `mode
 <BarChartPro
   zoomConfig={{
     // Only pan with touch, not mouse
-    pan: [{ type: 'onDrag', mode: 'touch' }],
+    pan: [{ type: 'onDrag', pointerMode: 'touch' }],
   }}
   // other props
 />
 ```
 
-Available modes:
+Available pointer modes:
 
-- `'all'`: Allow both mouse and touch interactions (default)
+- `undefined`: Allow both mouse and touch interactions (default)
 - `'mouse'`: Only allow mouse interactions
 - `'touch'`: Only allow touch interactions

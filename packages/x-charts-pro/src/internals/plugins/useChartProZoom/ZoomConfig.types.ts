@@ -1,3 +1,5 @@
+import type { KeyboardKey, PointerMode } from '@mui/x-internal-gestures/core';
+
 export type ZoomConfig = {
   /**
    * Defines the interactions that trigger zooming.
@@ -17,7 +19,7 @@ export type ZoomConfig = {
 };
 
 type Entry<T extends AnyInteraction> = {
-  [K in T['type']]?: Required<T>;
+  [K in T['type']]?: Omit<T, 'pointerMode'> & Pick<T, 'pointerMode'>;
 };
 export type DefaultizedZoomConfig = {
   zoom: Entry<ZoomInteraction>;
@@ -29,63 +31,67 @@ export type PanInteraction = OnDragInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
 export type PanInteractionName = PanInteraction['type'];
-export type InteractionMode = 'touch' | 'mouse' | 'all';
+export type InteractionMode = Exclude<PointerMode, 'pen'>;
 
-export type OnWheelInteraction = {
-  type: 'onWheel';
-  mode?: 'all';
+type AllKeysProp = {
   /**
    * The keys that must be pressed to trigger the interaction.
+   * This has no effect on touch devices.
    */
-  keys?: AllKeys[];
-};
-export type OnPinchInteraction = {
-  type: 'onPinch';
-  mode?: 'all';
-  keys?: never[];
+  requiredKeys?: KeyboardKey[];
 };
 
-export type OnDragInteraction = {
-  type: 'onDrag';
-  mode?: InteractionMode;
+type AllModeProp = {
   /**
-   * The keys that must be pressed to trigger the interaction.
+   * Defines which type of pointer can trigger the interaction.
+   * - `mouse`: Only mouse interactions will trigger the interaction.
+   * - `touch`: Only touch interactions will trigger the interaction.
+   * - undefined: All interactions will trigger the interaction.
    */
-  keys?: AllKeys[];
+  pointerMode?: InteractionMode;
 };
 
-type AllLetters =
-  | 'a'
-  | 'b'
-  | 'c'
-  | 'd'
-  | 'e'
-  | 'f'
-  | 'g'
-  | 'h'
-  | 'i'
-  | 'j'
-  | 'k'
-  | 'l'
-  | 'm'
-  | 'n'
-  | 'o'
-  | 'p'
-  | 'q'
-  | 'r'
-  | 's'
-  | 't'
-  | 'u'
-  | 'v'
-  | 'w'
-  | 'x'
-  | 'y'
-  | 'z';
-type AllMeta = 'Shift' | 'Control' | 'Alt' | 'Meta' | 'ControlOrMeta';
-type AllKeys = AllLetters | AllMeta;
+type NoKeysProp = {
+  /**
+   * This interaction does not support key combinations.
+   */
+  requiredKeys?: never[];
+};
+
+type NoModeProp = {
+  /**
+   * This gesture only works on touch devices. Mode has no effect.
+   */
+  pointerMode?: undefined;
+};
+
+type Unpack<T> = {
+  [K in keyof T]: T[K] extends object ? Unpack<T[K]> : T[K];
+};
+
+export type OnWheelInteraction = Unpack<
+  {
+    type: 'onWheel';
+  } & NoModeProp &
+    AllKeysProp
+>;
+
+export type OnPinchInteraction = Unpack<
+  {
+    type: 'onPinch';
+  } & NoModeProp &
+    NoKeysProp
+>;
+
+export type OnDragInteraction = Unpack<
+  {
+    type: 'onDrag';
+  } & AllModeProp &
+    AllKeysProp
+>;
 
 export type AnyInteraction = {
   type: string;
-  mode?: InteractionMode;
-  keys?: AllKeys[];
+  pointerMode?: InteractionMode;
+  requiredKeys?: KeyboardKey[];
 };

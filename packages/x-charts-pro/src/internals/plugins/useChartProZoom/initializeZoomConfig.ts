@@ -12,19 +12,19 @@ export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
 
   if (!zoomConfig?.zoom) {
     defaultizedConfig.zoom = {
-      onWheel: { type: 'onWheel', mode: 'all', keys: [] },
-      onPinch: { type: 'onPinch', mode: 'all', keys: [] },
+      onWheel: { type: 'onWheel', requiredKeys: [] },
+      onPinch: { type: 'onPinch', requiredKeys: [] },
     };
   } else {
     zoomConfig.zoom.forEach((interaction) => {
       if (typeof interaction === 'string') {
-        defaultizedConfig.zoom[interaction] = { type: interaction, mode: 'all', keys: [] };
+        defaultizedConfig.zoom[interaction] = { type: interaction, requiredKeys: [] };
       } else {
         const type = interaction.type;
         defaultizedConfig.zoom[type] = {
           type,
-          mode: interaction.mode ?? 'all',
-          keys: interaction.keys ?? [],
+          pointerMode: interaction.pointerMode,
+          requiredKeys: interaction.requiredKeys ?? [],
         } as Required<ZoomInteraction>;
       }
     });
@@ -32,18 +32,18 @@ export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
 
   if (!zoomConfig?.pan) {
     defaultizedConfig.pan = {
-      onDrag: { type: 'onDrag', mode: 'all', keys: [] },
+      onDrag: { type: 'onDrag', requiredKeys: [] },
     };
   } else {
     zoomConfig.pan.forEach((interaction) => {
       if (typeof interaction === 'string') {
-        defaultizedConfig.pan[interaction] = { type: interaction, mode: 'all', keys: [] };
+        defaultizedConfig.pan[interaction] = { type: interaction, requiredKeys: [] };
       } else {
         const type = interaction.type;
         defaultizedConfig.pan[type] = {
           type,
-          mode: interaction.mode ?? 'all',
-          keys: interaction.keys ?? [],
+          pointerMode: interaction.pointerMode,
+          requiredKeys: interaction.requiredKeys ?? [],
         } as Required<PanInteraction>;
       }
     });

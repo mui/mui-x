@@ -12,7 +12,6 @@ import { PanEvent } from '@mui/x-internal-gestures/core';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
-import { isKeyPressed } from '../isKeyPressed';
 import { selectorPanConfig } from '../ZoomConfig.selectors';
 
 export const usePanOnDrag = (
@@ -26,7 +25,6 @@ export const usePanOnDrag = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
-  const pressedKeysRef = React.useRef<Set<string>>(new Set());
   const config = useSelector(store, selectorPanConfig, ['onDrag' as const]);
 
   // Add event for chart panning
@@ -36,21 +34,15 @@ export const usePanOnDrag = (
   );
 
   React.useEffect(() => {
-    const pressedKeysSet = pressedKeysRef.current;
     if (!isPanEnabled || !config) {
-      return () => {};
+      return;
     }
 
-    const handleKeyDown = (event: KeyboardEvent) => pressedKeysRef.current.add(event.key);
-    const handleKeyUp = (event: KeyboardEvent) => pressedKeysRef.current.delete(event.key);
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-      pressedKeysSet.clear();
-    };
-  }, [isPanEnabled, config]);
+    instance.updateZoomInteractionListeners('zoomPan', {
+      requiredKeys: config.requiredKeys,
+      pointerMode: config.pointerMode ? [config.pointerMode] : undefined,
+    });
+  }, [isPanEnabled, config, instance]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -60,10 +52,7 @@ export const usePanOnDrag = (
     }
 
     const handlePanStart = (event: PanEvent) => {
-      if (
-        !isKeyPressed(pressedKeysRef.current, config!.keys) ||
-        !isGestureEnabledForPointer(event.detail.srcEvent, config!.mode)
-      ) {
+      if (!isGestureEnabledForPointer(event.detail.srcEvent, config!.pointerMode)) {
         return;
       }
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {

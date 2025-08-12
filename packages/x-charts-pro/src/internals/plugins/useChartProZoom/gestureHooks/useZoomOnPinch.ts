@@ -17,7 +17,6 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
-import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
 import { selectorZoomConfig } from '../ZoomConfig.selectors';
 
 export const useZoomOnPinch = (
@@ -41,10 +40,6 @@ export const useZoomOnPinch = (
     }
 
     const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
-      if (!isGestureEnabledForPointer(event.detail.srcEvent, config!.mode)) {
-        return;
-      }
-
       setZoomDataCallback((prev) => {
         return prev.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
