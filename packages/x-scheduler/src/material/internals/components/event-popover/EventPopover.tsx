@@ -23,7 +23,6 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEvent, RecurrenceFrequency } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { getOrdinal } from '../../../../primitives/utils/date-utils';
 import './EventPopover.css';
 import { buildRecurrencePresets, detectRecurrenceKeyFromRule } from './recurrence-utils';
 
@@ -56,23 +55,22 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const weekday = adapter.format(calendarEvent.start, 'weekday');
   const normalDate = adapter.format(calendarEvent.start, 'normalDate');
 
-  // TODO: Translate these strings
   const recurrenceOptions: {
     label: string;
     value: RecurrenceFrequency | null;
   }[] = [
-    { label: "Don't repeat", value: null },
-    { label: 'Repeats daily', value: 'daily' },
+    { label: `${translations.recurrenceNoRepeat}`, value: null },
+    { label: `${translations.recurrenceDailyPresetLabel}`, value: 'daily' },
     {
-      label: `Repeats weekly on ${weekday}`,
+      label: `${translations.recurrenceWeeklyPresetLabel(weekday)}`,
       value: 'weekly',
     },
     {
-      label: `Repeats monthly on the ${getOrdinal(adapter.getDate(calendarEvent.start))}`,
+      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(calendarEvent.start))}`,
       value: 'monthly',
     },
     {
-      label: `Repeats annually on ${normalDate}`,
+      label: `${translations.recurrenceYearlyPresetLabel(normalDate)}`,
       value: 'yearly',
     },
   ];
@@ -254,19 +252,20 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           <CheckIcon className="AllDayCheckboxIcon" />
                         </Checkbox.Indicator>
                       </Checkbox.Root>
-                      All Day
+                      {translations.allDayLabel}
                     </Field.Label>
                   </Field.Root>
                 </div>
                 <Field.Root name="recurrence">
                   {defaultRecurrenceKey === 'custom' ? (
-                    // TODO: Translations
                     // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
                     <p className="EventPopoverFormLabel">{`Custom ${calendarEvent.recurrenceRule?.frequency} recurrence`}</p>
                   ) : (
                     <Select.Root items={recurrenceOptions} defaultValue={defaultRecurrenceKey}>
-                      {/* TODO: Translations */}
-                      <Select.Trigger className="EventPopoverSelectTrigger" aria-label="Recurrence">
+                      <Select.Trigger
+                        className="EventPopoverSelectTrigger"
+                        aria-label={translations.recurrenceLabel}
+                      >
                         <Select.Value />
                         <Select.Icon className="EventPopoverSelectIcon">
                           <ChevronDown size={14} />

@@ -22,7 +22,6 @@ export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean 
 }
 
 // TODO: Issue #19128 - This function will be used to support 'onWeekday' and 'onLastWeekday' modes.
-
 // export function getWeekInfoInMonth(adapter: Adapter, date: SchedulerValidDate) {
 //   const startOfMonth = adapter.startOfMonth(date);
 //   const endOfMonth = adapter.endOfMonth(date);
@@ -38,13 +37,6 @@ export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean 
 
 //   return { weekNumber, isLastWeek };
 // }
-
-// TODO: Temporay function, move this to localization layer
-export function getOrdinal(n: number) {
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
-  return `${n}${s[(v - 20) % 10] || s[v] || s[0]}`;
-}
 
 /**
  * Differences in units using the adapter.
