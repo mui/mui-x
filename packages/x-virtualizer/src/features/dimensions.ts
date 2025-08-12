@@ -11,7 +11,7 @@ import { Store, useStore, useStoreEffect, createSelectorMemoized } from '@mui/x-
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 
-/* eslint-disable import/export, @typescript-eslint/no-redeclare */
+/* eslint-disable import-x/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
 export type DimensionsParams = {
