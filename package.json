@@ -135,7 +135,7 @@
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "esbuild": "^0.25.8",
-    "eslint": "^9.32.0",
+    "eslint": "^9.33.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
     "eslint-plugin-jsdoc": "^52.0.2",
