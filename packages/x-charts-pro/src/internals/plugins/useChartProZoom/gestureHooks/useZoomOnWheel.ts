@@ -62,7 +62,7 @@ export const useZoomOnWheel = (
 
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
-    const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
+    const zoomOnWheelHandler = instance.addInteractionListener('zoomTurnWheel', (event) => {
       if (!isKeyPressed(pressedKeysRef.current, config?.keys)) {
         return;
       }

@@ -80,7 +80,7 @@ export const useZoomOnPinch = (
       });
     });
 
-    const zoomHandler = instance.addInteractionListener('pinch', rafThrottledCallback);
+    const zoomHandler = instance.addInteractionListener('zoomPinch', rafThrottledCallback);
 
     return () => {
       zoomHandler.cleanup();

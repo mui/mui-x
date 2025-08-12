@@ -29,29 +29,36 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
 
     const gestureManager = new GestureManager({
       gestures: [
+        // We separate the zoom gestures from the gestures that are not zoom related
+        // This allows us to configure the zoom gestures based on the zoom configuration.
         new PanGesture({
           name: 'pan',
           threshold: 0,
           maxPointers: 1,
         }),
+        new PanGesture({
+          name: 'zoomPan',
+          threshold: 0,
+          maxPointers: 1,
+        }),
         new MoveGesture({
           name: 'move',
-          preventIf: ['pan', 'pinch'], // Prevent move gesture when pan is active
+          preventIf: ['pan', 'zoomPinch', 'zoomPan'], // Prevent move gesture when pan is active
         }),
         new PinchGesture({
-          name: 'pinch',
+          name: 'zoomPinch',
           threshold: 5,
-          preventIf: ['pan'],
+          preventIf: ['pan', 'zoomPan'],
         }),
         new TurnWheelGesture({
-          name: 'turnWheel',
+          name: 'zoomTurnWheel',
           sensitivity: 0.01,
           initialDelta: 1,
         }),
         new TapGesture({
           name: 'tap',
           maxDistance: 10,
-          preventIf: ['pan', 'pinch'],
+          preventIf: ['pan', 'zoomPan', 'zoomPinch'],
         }),
         new PressGesture({
           name: 'quickPress',
@@ -61,7 +68,10 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       ],
     });
 
-    gestureManager.registerElement(['pan', 'move', 'pinch', 'turnWheel', 'tap', 'quickPress'], svg);
+    gestureManager.registerElement(
+      ['pan', 'move', 'zoomPinch', 'zoomPan', 'zoomTurnWheel', 'tap', 'quickPress'],
+      svg,
+    );
 
     return () => {
       // Cleanup gesture manager

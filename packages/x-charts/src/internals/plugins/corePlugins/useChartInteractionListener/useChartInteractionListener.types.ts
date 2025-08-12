@@ -12,32 +12,35 @@ export type ChartInteraction =
   | 'pan'
   | 'panStart'
   | 'panEnd'
-  | 'pinch'
-  | 'pinchStart'
-  | 'pinchEnd'
+  | 'zoomPan'
+  | 'zoomPanStart'
+  | 'zoomPanEnd'
+  | 'zoomPinch'
+  | 'zoomPinchStart'
+  | 'zoomPinchEnd'
   | 'move'
   | 'moveStart'
   | 'moveEnd'
   | 'quickPress'
   | 'quickPressEnd'
-  | 'turnWheel'
+  | 'zoomTurnWheel'
   | 'tap';
 
 export type InteractionListenerResult = { cleanup: () => void };
 
 export type AddInteractionListener = {
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'pan' | 'panStart' | 'panEnd',
+    interaction: 'pan' | 'panStart' | 'panEnd' | 'zoomPan' | 'zoomPanStart' | 'zoomPanEnd',
     callback: (event: PanEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'pinch' | 'pinchStart' | 'pinchEnd',
+    interaction: 'zoomPinch' | 'zoomPinchStart' | 'zoomPinchEnd',
     callback: (event: PinchEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'turnWheel',
+    interaction: 'zoomTurnWheel',
     callback: (event: TurnWheelEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;

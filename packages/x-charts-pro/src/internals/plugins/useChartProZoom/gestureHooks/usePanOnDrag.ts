@@ -96,9 +96,9 @@ export const usePanOnDrag = (
       throttledCallback(event, zoomData);
     };
 
-    const panHandler = instance.addInteractionListener('pan', handlePan);
-    const panStartHandler = instance.addInteractionListener('panStart', handlePanStart);
-    const panEndHandler = instance.addInteractionListener('panEnd', handlePanEnd);
+    const panHandler = instance.addInteractionListener('zoomPan', handlePan);
+    const panStartHandler = instance.addInteractionListener('zoomPanStart', handlePanStart);
+    const panEndHandler = instance.addInteractionListener('zoomPanEnd', handlePanEnd);
 
     return () => {
       panStartHandler.cleanup();
