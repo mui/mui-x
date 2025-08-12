@@ -103,11 +103,11 @@ catalogs:
       specifier: ^8.39.1
       version: 8.39.1
     '@vitejs/plugin-react':
-      specifier: ^4.7.0
-      version: 4.7.0
+      specifier: ^5.0.0
+      version: 5.0.0
     '@vitejs/plugin-react-swc':
-      specifier: ^3.11.0
-      version: 3.11.0
+      specifier: ^4.0.0
+      version: 4.0.0
     '@vitest/browser':
       specifier: ^3.2.4
       version: 3.2.4
@@ -379,7 +379,7 @@ importers:
         version: 8.39.1(eslint@9.33.0)(typescript@5.9.2)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.7.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
+        version: 5.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
       '@vitest/browser':
         specifier: 'catalog:'
         version: 3.2.4(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
@@ -2166,7 +2166,7 @@ importers:
         version: 7.7.0
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.7.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
+        version: 5.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -2208,10 +2208,10 @@ importers:
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.7.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
+        version: 5.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
       '@vitejs/plugin-react-swc':
         specifier: 'catalog:'
-        version: 3.11.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
+        version: 4.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
       '@vitest/browser':
         specifier: 'catalog:'
         version: 3.2.4(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
@@ -2298,7 +2298,7 @@ importers:
         version: 7.7.0
       '@vitejs/plugin-react':
         specifier: 'catalog:'
-        version: 4.7.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
+        version: 5.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -5047,8 +5047,8 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@rolldown/pluginutils@1.0.0-beta.27':
-    resolution: {integrity: sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==}
+  '@rolldown/pluginutils@1.0.0-beta.30':
+    resolution: {integrity: sha512-whXaSoNUFiyDAjkUF8OBpOm77Szdbk5lGNqFe6CbVbJFrhCCPinCbRA3NjawwlNHla1No7xvXXh+CpSxnPfUEw==}
 
   '@rollup/pluginutils@5.2.0':
     resolution: {integrity: sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==}
@@ -6048,14 +6048,15 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@vitejs/plugin-react-swc@3.11.0':
-    resolution: {integrity: sha512-YTJCGFdNMHCMfjODYtxRNVAYmTWQ1Lb8PulP/2/f/oEEtglw8oKxKIZmmRkyXrVrHfsKOaVkAc3NT9/dMutO5w==}
+  '@vitejs/plugin-react-swc@4.0.0':
+    resolution: {integrity: sha512-4A1dThI578v07mpG4M+ziNn6lmlMlhtVCheL+2WLvClnLvEULi8rpAZThn2oEKn3GtFXFTOeko6eLRhx2V2kgA==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^4 || ^5 || ^6 || ^7
 
-  '@vitejs/plugin-react@4.7.0':
-    resolution: {integrity: sha512-gUu9hwfWvvEDBBmgtAowQCojwZmJ5mcLn3aufeCsitijs3+f2NsrPtlAWIR6OPiqljl96GVCUbLe0HyqIpVaoA==}
-    engines: {node: ^14.18.0 || >=16.0.0}
+  '@vitejs/plugin-react@5.0.0':
+    resolution: {integrity: sha512-Jx9JfsTa05bYkS9xo0hkofp2dCmp1blrKjw9JONs5BTHOvJCgLbaPSuZLGSVJW6u2qe0tc4eevY0+gSNNi0YCw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
@@ -15969,7 +15970,7 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@rolldown/pluginutils@1.0.0-beta.27': {}
+  '@rolldown/pluginutils@1.0.0-beta.30': {}
 
   '@rollup/pluginutils@5.2.0(rollup@4.46.2)':
     dependencies:
@@ -17120,20 +17121,20 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vitejs/plugin-react-swc@3.11.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))':
+  '@vitejs/plugin-react-swc@4.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))':
     dependencies:
-      '@rolldown/pluginutils': 1.0.0-beta.27
+      '@rolldown/pluginutils': 1.0.0-beta.30
       '@swc/core': 1.13.3
       vite: 7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
     transitivePeerDependencies:
       - '@swc/helpers'
 
-  '@vitejs/plugin-react@4.7.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))':
+  '@vitejs/plugin-react@5.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.0)
       '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.28.0)
-      '@rolldown/pluginutils': 1.0.0-beta.27
+      '@rolldown/pluginutils': 1.0.0-beta.30
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
       vite: 7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
