@@ -65,7 +65,6 @@
     "date-fns": "catalog:",
     "date-fns-jalali": "catalog:",
     "dayjs": "catalog:",
-    "doctrine": "^3.0.0",
     "exceljs": "catalog:",
     "fg-loadcss": "^3.1.0",
     "jscodeshift": "catalog:",
