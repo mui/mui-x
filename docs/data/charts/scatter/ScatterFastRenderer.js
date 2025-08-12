@@ -8,8 +8,8 @@ import {
   rainbowSurgePalette,
 } from '@mui/x-charts/colorPalettes';
 import Button from '@mui/material/Button';
-import { electricityGeneration2024 } from '../dataset/electricityGeneration2024';
-import { carbonEmissions2024 } from '../dataset/carbonEmissions2024';
+import { electricityGeneration2024Every6Hours } from '../dataset/electricityGeneration2024';
+import { carbonEmissions2024Every6Hours } from '../dataset/carbonEmissions2024';
 import { countryData } from '../dataset/countryData';
 
 const dateTimeFormat = new Intl.DateTimeFormat(undefined, {
@@ -25,11 +25,11 @@ function formatAsDateRange(index) {
 }
 
 const scatterChartsParams = {
-  series: Object.entries(electricityGeneration2024).map(
+  series: Object.entries(electricityGeneration2024Every6Hours).map(
     ([countryCode, electricity]) => ({
       data: electricity.map((value, index) => ({
         x: value / 1000,
-        y: carbonEmissions2024[countryCode][index],
+        y: carbonEmissions2024Every6Hours[countryCode][index],
       })),
       markerSize: 1,
       label: countryData[countryCode].country,
