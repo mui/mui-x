@@ -34,22 +34,22 @@ catalogs:
       specifier: ^11.14.1
       version: 11.14.1
     '@mui/icons-material':
-      specifier: ^7.2.0
+      specifier: ^7.3.1
       version: 7.3.1
     '@mui/internal-test-utils':
       specifier: ^2.0.9
       version: 2.0.12
     '@mui/material':
-      specifier: ^7.2.0
+      specifier: ^7.3.1
       version: 7.3.1
     '@mui/stylis-plugin-rtl':
-      specifier: ^7.2.0
+      specifier: ^7.3.1
       version: 7.3.1
     '@mui/system':
-      specifier: ^7.2.0
+      specifier: ^7.3.1
       version: 7.3.1
     '@mui/utils':
-      specifier: ^7.2.0
+      specifier: ^7.3.1
       version: 7.3.1
     '@playwright/test':
       specifier: ^1.54.2
@@ -309,11 +309,11 @@ importers:
         specifier: ^2.0.7-canary.12
         version: 2.0.7-canary.12(@babel/core@7.28.0)
       '@mui/internal-bundle-size-checker':
-        specifier: ^1.0.9-canary.10
-        version: 1.0.9-canary.11(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)
+        specifier: ^1.0.9-canary.16
+        version: 1.0.9-canary.16(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.2-canary.25
-        version: 0.0.2-canary.26(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.32.0)(prettier@3.6.2)(typescript@5.9.2)
+        specifier: ^0.0.2-canary.29
+        version: 0.0.2-canary.29(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.32.0)(prettier@3.6.2)(typescript@5.9.2)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.9
@@ -624,13 +624,13 @@ importers:
         specifier: ^5.0.0-beta.52
         version: 5.0.0-beta.52(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@mui/lab':
-        specifier: ^7.0.0-beta.14
+        specifier: ^7.0.0-beta.16
         version: 7.0.0-beta.16(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@mui/material@7.3.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@mui/material-nextjs':
-        specifier: ^7.2.0
+        specifier: ^7.3.0
         version: 7.3.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/server@11.11.0)(@types/react@19.1.9)(next@15.4.6(@babel/core@7.28.0)(@playwright/test@1.54.2)(babel-plugin-macros@3.1.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
@@ -1268,7 +1268,7 @@ importers:
         specifier: 'catalog:'
         version: 7.3.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1)
       '@mui/types':
-        specifier: ^7.4.4
+        specifier: ^7.4.5
         version: 7.4.5(@types/react@19.1.9)
       '@types/prop-types':
         specifier: 'catalog:'
@@ -1953,7 +1953,7 @@ importers:
         specifier: ^2.0.9
         version: 2.0.12(@babel/core@7.28.0)(@playwright/test@1.54.2)(@types/react-dom@19.1.7(@types/react@19.1.9))(@types/react@19.1.9)(chai@5.2.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@mui/types':
-        specifier: ^7.4.4
+        specifier: ^7.4.5
         version: 7.4.5(@types/react@19.1.9)
       react:
         specifier: 'catalog:'
@@ -3726,8 +3726,8 @@ packages:
     resolution: {integrity: sha512-CCZCDJuduB9OUkFkY2IgppNZMi2lBQgD2qzwXkEia16cge2pijY/aXi96CJMquDMn3nJdlPV1A5KrJEXwfLNzQ==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
 
-  '@eslint/compat@1.3.1':
-    resolution: {integrity: sha512-k8MHony59I5EPic6EQTCNOuPoVBnoYXkP+20xvwFjN7t0qI3ImyvyBgg+hIVPwC8JaxVjjUZld+cLfBLFDLucg==}
+  '@eslint/compat@1.3.2':
+    resolution: {integrity: sha512-jRNwzTbd6p2Rw4sZ1CgWRS8YMtqG15YyZf7zvb6gY2rB2u6n+2Z+ELW0GtL0fQgyl0pr4Y/BzBfng/BdsereRA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.40 || 9
@@ -4303,12 +4303,12 @@ packages:
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.11':
-    resolution: {integrity: sha512-EQLmf1w0Is12DM6AhrqDOdkQF0zlDXbcZibT9ptE2YcngLNvwPHHkXrQ2D9rgZ/HJmSP87kn2g9eeOgOyljI+A==}
+  '@mui/internal-bundle-size-checker@1.0.9-canary.16':
+    resolution: {integrity: sha512-znpLLWLccnggfE7fgn+ALv/bh3pQBpSGCv3T88LptQkb6RrT2tidh2KllIevWCNpaR8vDsbjw2pN3DF8RQs0YQ==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.2-canary.26':
-    resolution: {integrity: sha512-6nntDkppu+Z6qF3k963HfGCHcAoSfQP8l2o+Gt8/CIQOfoJjom8lXwlwbRt3oxA1tgZ31H5U74EwZ28N/pEFvA==}
+  '@mui/internal-code-infra@0.0.2-canary.29':
+    resolution: {integrity: sha512-ss8bVYzUO05t67CBxWG53tu0tlO5bG797dbALFOY504fb42DoYW8firll6XNMkEUfmCvR6aezW3/vwtBDirvtQ==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -14381,7 +14381,7 @@ snapshots:
 
   '@eslint-community/regexpp@4.12.1': {}
 
-  '@eslint/compat@1.3.1(eslint@9.32.0)':
+  '@eslint/compat@1.3.2(eslint@9.32.0)':
     optionalDependencies:
       eslint: 9.32.0
 
@@ -14996,7 +14996,7 @@ snapshots:
       '@babel/core': 7.28.0
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.11(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)':
+  '@mui/internal-bundle-size-checker@1.0.9-canary.16(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)':
     dependencies:
       '@aws-sdk/client-s3': 3.859.0
       '@aws-sdk/credential-providers': 3.859.0
@@ -15046,10 +15046,10 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@mui/internal-code-infra@0.0.2-canary.26(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.32.0)(prettier@3.6.2)(typescript@5.9.2)':
+  '@mui/internal-code-infra@0.0.2-canary.29(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.32.0)(prettier@3.6.2)(typescript@5.9.2)':
     dependencies:
       '@argos-ci/core': 3.2.3
-      '@eslint/compat': 1.3.1(eslint@9.32.0)
+      '@eslint/compat': 1.3.2(eslint@9.32.0)
       '@next/eslint-plugin-next': 15.4.6
       '@octokit/rest': 22.0.0
       chalk: 5.5.0
