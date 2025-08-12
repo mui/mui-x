@@ -426,7 +426,7 @@ async function emptyDir(dir: string) {
   try {
     items = await fs.readdir(dir);
   } catch {
-    return fs.mkdir(dir);
+    return fs.mkdir(dir, { recursive: true });
   }
 
   return Promise.all(items.map((item) => fs.rm(path.join(dir, item), { recursive: true })));
