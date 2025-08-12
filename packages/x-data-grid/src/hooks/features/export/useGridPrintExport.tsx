@@ -297,14 +297,7 @@ export const useGridPrintExport = (
         }));
       }
       previousVirtualizationState.current = apiRef.current.state.virtualization;
-      apiRef.current.setState((state) => ({
-        ...state,
-        virtualization: {
-          ...state.virtualization,
-          enabled: false,
-          enabledForColumns: false,
-        },
-      }));
+      apiRef.current.unstable_setVirtualization(false);
 
       await updateGridColumnsForPrint(
         options?.fields,
