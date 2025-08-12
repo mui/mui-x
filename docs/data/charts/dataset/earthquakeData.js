@@ -1,3 +1,4 @@
+/* Source: https://earthquake.usgs.gov/earthquakes/search/ */
 export const earthquakeData = {
   5: 2134,
   6: 130,
