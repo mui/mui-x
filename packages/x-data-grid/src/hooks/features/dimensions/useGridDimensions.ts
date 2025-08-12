@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useStoreEffect } from '@mui/x-internals/store';
+import { Size } from '@mui/x-virtualizer/models';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -136,7 +137,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     const errorShown = React.useRef(false);
 
     useGridEventPriority(apiRef, 'resize', (size) => {
-      if (!getRootDimensions().isReady) {
+      if (!getRootDimensions().isReady || size === Size.EMPTY) {
         return;
       }
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
