@@ -202,7 +202,7 @@ async function main(argv) {
   }
 
   tsxFiles.forEach((filePath) => {
-    fs.promises.watchFile(filePath, { interval: 500 }, async () => {
+    fs.watchFile(filePath, { interval: 500 }, async () => {
       if ((await transpileFile(filePath, program, true)) === 0) {
         console.log('Success - %s', filePath);
       }
