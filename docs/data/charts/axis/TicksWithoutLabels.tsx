@@ -7,25 +7,28 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-
+import { AxisValueFormatterContext, ScatterValueType } from '@mui/x-charts/models';
 import { earthquakeData } from '../dataset/earthquakeData';
 
 const settings = {
   height: 400,
   grid: { horizontal: true },
 };
-const data = Object.entries(earthquakeData).reduce((acc, [magnitude, events]) => {
-  acc.push({ x: magnitude, y: events });
+const data = Object.entries(earthquakeData).reduce<ScatterValueType[]>(
+  (acc, [magnitude, events]) => {
+    acc.push({ x: Number.parseFloat(magnitude), y: events });
 
-  return acc;
-}, []);
+    return acc;
+  },
+  [],
+);
 
 const formatter = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   maximumFractionDigits: 1,
 });
 
-function valueFormatterIgnoreEmpty(value, context) {
+function valueFormatterIgnoreEmpty(value: any, context: AxisValueFormatterContext) {
   if (context.location === 'tick' && context.defaultTickLabel === '') {
     return '';
   }
@@ -33,11 +36,11 @@ function valueFormatterIgnoreEmpty(value, context) {
   return formatter.format(value);
 }
 
-function valueFormatterShowAll(value) {
+function valueFormatterShowAll(value: any) {
   return formatter.format(value);
 }
 
-export default function TickWithoutLabels() {
+export default function TicksWithoutLabels() {
   const [tickFormatter, setTickFormatter] = React.useState(
     () => valueFormatterIgnoreEmpty,
   );
