@@ -66,7 +66,7 @@ export default function ScatterFastRenderer() {
   return (
     <Stack spacing={{ xs: 0, md: 2 }} sx={{ width: '100%' }}>
       <Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
-        Life-cycle Carbon Intensity of Electricity Generation - Hourly, 2024
+        Life-cycle Carbon Intensity of Electricity Generation - 2024
       </Typography>
       <ScatterChart {...scatterChartsParams} useFastRenderer colors={colors} />
       <Typography variant="caption">Source: ENTSO-E, EletricityMaps.com</Typography>
