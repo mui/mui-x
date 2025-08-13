@@ -53,7 +53,7 @@ export default function TicksWithoutLabels() {
         </Typography>
         <ScatterChart
           {...settings}
-          xAxis={[{ height: 40, label: 'Magnitude' }]}
+          xAxis={[{ height: 48, label: 'Magnitude' }]}
           yAxis={[
             {
               scaleType: 'log',
