@@ -45,12 +45,11 @@ Same changes as in `@mui/x-date-pickers@8.10.0`.
 
 - Axes can now be grouped by category when using `band` and `point` scales
 
-  <img width="643" height="455" alt="Screenshot 2025-08-11 at 11 56 57" src="https://github.com/user-attachments/assets/59044afe-bcc5-4152-8bf1-225db0635025" />
+  <img width="643" height="455" alt="Bar chart with y-axis grouped per categories" src="https://github.com/user-attachments/assets/59044afe-bcc5-4152-8bf1-225db0635025" />
 
 #### `@mui/x-charts@8.10.1`
 
-- [charts] Add all planned charts on the overview page (#19077) @prakhargupta1
-- [charts] Allow Y axis to be grouped (#19081) @JCQuintas
+- [charts] Allow y-axis to be grouped (#19081) @JCQuintas
 - [charts] Fix default axis highlight for axes without data attribute (#18985) @alexfauquette
 - [charts] Fix tooltip mark unexpected wrapping in mobile (#19122) @bernardobelchior
 - [charts] Prevent overflow on charts tooltip (#19123) @bernardobelchior
@@ -77,6 +76,7 @@ Internal changes.
 
 ### Docs
 
+- [docs] Add all planned charts on the overview page (#19077) @prakhargupta1
 - [docs] Add future charts components link in the sidebar (#19140) @prakhargupta1
 - [docs] Fix Heatmap docs duplicate text (#19138) @JCQuintas
 - [docs] Remove preview from Toolbar & Funnel (#19131) @mnajdova
