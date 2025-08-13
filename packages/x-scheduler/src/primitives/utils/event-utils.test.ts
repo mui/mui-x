@@ -139,7 +139,7 @@ describe('event-utils', () => {
         expect(guard(after)).to.equal(false);
       });
 
-      it('returns false immediately after first occurrence', () => {
+      it('returns false after first occurrence', () => {
         const rule = createDailyRule({ type: 'after', count: 1 });
         const guard = buildEndGuard(rule, baseStart, adapter);
         expect(guard(baseStart)).to.equal(true); // first occurrence allowed
