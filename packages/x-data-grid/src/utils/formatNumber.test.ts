@@ -35,6 +35,20 @@ describe('formatNumber', () => {
     expect(formatNumber(999999999999999)).to.equal('1,000,000,000,000,000'); // Note: JS precision limit
   });
 
+  it('should format numbers according to locale', () => {
+    // French locale uses space as thousands separator
+    expect(formatNumber(1000, 'fr-FR')).to.equal('1 000');
+    expect(formatNumber(1000000, 'fr-FR')).to.equal('1 000 000');
+
+    // German locale uses dot as thousands separator
+    expect(formatNumber(1000, 'de-DE')).to.equal('1.000');
+    expect(formatNumber(1000000, 'de-DE')).to.equal('1.000.000');
+
+    // US English locale uses comma
+    expect(formatNumber(1000, 'en-US')).to.equal('1,000');
+    expect(formatNumber(1000000, 'en-US')).to.equal('1,000,000');
+  });
+
   describe('when Intl is not available', () => {
     let originalIntl: typeof Intl;
 

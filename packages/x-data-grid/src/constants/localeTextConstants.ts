@@ -1,5 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { formatNumber } from '../utils/getGridLocalization';
+import { buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('en-US');
 
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
