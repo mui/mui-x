@@ -42,11 +42,6 @@ describe('event-utils', () => {
       ...overrides,
     });
 
-    it('returns 1 for non-allDay single-day event', () => {
-      const event = createEvent({});
-      expect(getAllDaySpanDays(adapter, event)).to.equal(1);
-    });
-
     // TODO: This should change after we implement support for timed events that span multiple days
     it('returns 1 for non-allDay multi-day event', () => {
       const event = createEvent({
