@@ -303,17 +303,17 @@ importers:
         specifier: 'catalog:'
         version: 7.3.1(@mui/material@7.3.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@19.1.9)(react@19.1.1)
       '@mui/internal-babel-plugin-display-name':
-        specifier: ^1.0.4-canary.2
-        version: 1.0.4-canary.2(@babel/core@7.28.0)(@babel/preset-react@7.27.1(@babel/core@7.28.0))
+        specifier: ^1.0.4-canary.3
+        version: 1.0.4-canary.3(@babel/core@7.28.0)(@babel/preset-react@7.27.1(@babel/core@7.28.0))
       '@mui/internal-babel-plugin-resolve-imports':
-        specifier: ^2.0.7-canary.12
-        version: 2.0.7-canary.12(@babel/core@7.28.0)
+        specifier: ^2.0.7-canary.13
+        version: 2.0.7-canary.13(@babel/core@7.28.0)
       '@mui/internal-bundle-size-checker':
         specifier: ^1.0.9-canary.18
         version: 1.0.9-canary.18(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.2-canary.29
-        version: 0.0.2-canary.29(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)
+        specifier: ^0.0.2-canary.31
+        version: 0.0.2-canary.31(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.9
@@ -4292,14 +4292,20 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/internal-babel-plugin-display-name@1.0.4-canary.2':
-    resolution: {integrity: sha512-0n7ampSn7qkZJPOwoLSr/rQe3/b4VfwjfkG2pzdX9Bcg0TFKfQuYd+UoGpFgUp/kQ2M6WQHx0S1M4YlyQAEJWw==}
+  '@mui/internal-babel-plugin-display-name@1.0.4-canary.3':
+    resolution: {integrity: sha512-F73XfY0XFhcvzS9ceWFcdwogL7yehvsGMN9qbmLXpk28xmT0drUX4QHJ5PuOR6mDfoPf2rKl5j8TXVOzki0O0Q==}
     peerDependencies:
       '@babel/core': '7'
       '@babel/preset-react': '7'
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.12':
-    resolution: {integrity: sha512-HxaHbVBZNjzRmZ3DEr1jh8u9Bu3cVtX0MD94LFD5+DrF19OnhZVv39MUopXQZ2l0vN2YcZkJlXBWFbgDdJD/Yw==}
+  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.4':
+    resolution: {integrity: sha512-N5CHQFn8jTeI/zpOlCnzQKIZKrHYZKXhsfko7ZELTTU8SGEDqq/rWNM1XD0UJSBZdR55bKehK6vshTcCIw8bxQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@babel/core': '7'
+
+  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.13':
+    resolution: {integrity: sha512-dZKWRWhzWSkxVIiefHe/RjYr2IdIrBSThbTe+dawtdG/rtevtGPbGX7lfR8xi5KtRJHSOSQm5yUDPboLnXWY+w==}
     peerDependencies:
       '@babel/core': '7'
 
@@ -4307,8 +4313,8 @@ packages:
     resolution: {integrity: sha512-F0hBCE/7ICw7slXGUCoifIye+EIgy6xEcLf2balGBgOfcalF06bKlvtQ8ZaqHtwdZIk+kCRfAg7C4tN6W5066w==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.2-canary.29':
-    resolution: {integrity: sha512-ss8bVYzUO05t67CBxWG53tu0tlO5bG797dbALFOY504fb42DoYW8firll6XNMkEUfmCvR6aezW3/vwtBDirvtQ==}
+  '@mui/internal-code-infra@0.0.2-canary.31':
+    resolution: {integrity: sha512-O8AD2a/890k6BiOAg7PkQoOTv/d/+Z53AzZv80Ucs2yj6f/IQM+PqlUMew9nbZhwIE4KAhS/el5B/3v6fUtdgg==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -5013,6 +5019,18 @@ packages:
     resolution: {integrity: sha512-A+znathYxPf+72riFd1r1ovOLqsIIB0jKIoPjyK2kqEIe30/6jF6BC7QNluHuwUmsD2tv1XZVugN8GqfTMOxsA==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@pnpm/constants@1001.3.0':
+    resolution: {integrity: sha512-ZFRekNHbDlu//67Byg+mG8zmtmCsfBhNsg1wKBLRtF7VjH+Q5TDGMX0+8aJYSikQDuzM2FOhvQcDwyjILKshJQ==}
+    engines: {node: '>=18.12'}
+
+  '@pnpm/error@1000.0.4':
+    resolution: {integrity: sha512-22mG/Mq4u2r7gr2+XY5j4GlN7J4Mg4WiCfT9flvsUc1uZecShocv6WkyoA20qs14M64f6I+aaWB6b6xsDiITlg==}
+    engines: {node: '>=18.12'}
+
+  '@pnpm/find-workspace-dir@1000.1.2':
+    resolution: {integrity: sha512-QU7LqV0T5lCuHwNoNT5YeArsrIYo4qcCEHz4F21tu42n6d1km3CGnpL6/7LMT0fgHL6cN55YyRU14imN/5b7vg==}
+    engines: {node: '>=18.12'}
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
@@ -8187,6 +8205,9 @@ packages:
   find-cache-dir@3.3.2:
     resolution: {integrity: sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==}
     engines: {node: '>=8'}
+
+  find-package-json@1.2.0:
+    resolution: {integrity: sha512-+SOGcLGYDJHtyqHd87ysBhmaeQ95oWspDKnMXBrnQ9Eq4OkLNqejgoaD8xVWu6GPa0B6roa6KinCMEMcVeqONw==}
 
   find-root@1.1.0:
     resolution: {integrity: sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==}
@@ -15027,7 +15048,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.9
 
-  '@mui/internal-babel-plugin-display-name@1.0.4-canary.2(@babel/core@7.28.0)(@babel/preset-react@7.27.1(@babel/core@7.28.0))':
+  '@mui/internal-babel-plugin-display-name@1.0.4-canary.3(@babel/core@7.28.0)(@babel/preset-react@7.27.1(@babel/core@7.28.0))':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/helper-module-imports': 7.27.1
@@ -15036,7 +15057,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.12(@babel/core@7.28.0)':
+  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.4(@babel/core@7.28.0)':
+    dependencies:
+      '@babel/core': 7.28.0
+      '@babel/helper-module-imports': 7.27.1
+      find-package-json: 1.2.0
+    transitivePeerDependencies:
+      - supports-color
+
+  '@mui/internal-babel-plugin-resolve-imports@2.0.7-canary.13(@babel/core@7.28.0)':
     dependencies:
       '@babel/core': 7.28.0
       resolve: 1.22.10
@@ -15091,12 +15120,26 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@mui/internal-code-infra@0.0.2-canary.29(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)':
+  '@mui/internal-code-infra@0.0.2-canary.31(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)':
     dependencies:
       '@argos-ci/core': 3.2.3
+      '@babel/core': 7.28.0
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.0)
+      '@babel/plugin-transform-runtime': 7.28.0(@babel/core@7.28.0)
+      '@babel/preset-env': 7.28.0(@babel/core@7.28.0)
+      '@babel/preset-react': 7.27.1(@babel/core@7.28.0)
+      '@babel/preset-typescript': 7.27.1(@babel/core@7.28.0)
       '@eslint/compat': 1.3.2(eslint@9.33.0)
+      '@mui/internal-babel-plugin-display-name': 1.0.4-canary.3(@babel/core@7.28.0)(@babel/preset-react@7.27.1(@babel/core@7.28.0))
+      '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.4(@babel/core@7.28.0)
+      '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.13(@babel/core@7.28.0)
       '@next/eslint-plugin-next': 15.4.6
       '@octokit/rest': 22.0.0
+      '@pnpm/find-workspace-dir': 1000.1.2
+      babel-plugin-optimize-clsx: 2.6.2
+      babel-plugin-transform-inline-environment-variables: 0.4.4
+      babel-plugin-transform-react-remove-prop-types: 0.4.24
+      babel-plugin-transform-remove-imports: 1.8.0(@babel/core@7.28.0)
       chalk: 5.5.0
       eslint: 9.33.0
       eslint-config-airbnb: 19.0.4(eslint-plugin-import@2.32.0)(eslint-plugin-jsx-a11y@6.10.2(eslint@9.33.0))(eslint-plugin-react-hooks@6.0.0-rc1(eslint@9.33.0))(eslint-plugin-react@7.37.5(eslint@9.33.0))(eslint@9.33.0)
@@ -15115,6 +15158,7 @@ snapshots:
       git-url-parse: 16.1.0
       globals: 16.3.0
       globby: 14.1.0
+      lodash-es: 4.17.21
       minimatch: 10.0.3
       prettier: 3.6.2
       semver: 7.7.2
@@ -15933,6 +15977,17 @@ snapshots:
   '@playwright/test@1.54.2':
     dependencies:
       playwright: 1.54.2
+
+  '@pnpm/constants@1001.3.0': {}
+
+  '@pnpm/error@1000.0.4':
+    dependencies:
+      '@pnpm/constants': 1001.3.0
+
+  '@pnpm/find-workspace-dir@1000.1.2':
+    dependencies:
+      '@pnpm/error': 1000.0.4
+      find-up: 5.0.0
 
   '@polka/url@1.0.0-next.29': {}
 
@@ -19764,6 +19819,8 @@ snapshots:
       commondir: 1.0.1
       make-dir: 3.1.0
       pkg-dir: 4.2.0
+
+  find-package-json@1.2.0: {}
 
   find-root@1.1.0: {}
 
