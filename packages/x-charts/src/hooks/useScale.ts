@@ -13,6 +13,13 @@ export function getValueToPositionMapper(scale: D3Scale): (value: any) => number
   if (isOrdinalScale(scale)) {
     return (value: any) => (scale(value) ?? 0) + scale.bandwidth() / 2;
   }
+
+  const domain = scale.domain();
+
+  if (domain[0] === domain[1]) {
+    return () => NaN;
+  }
+
   return (value: any) => scale(value) as number;
 }
 
