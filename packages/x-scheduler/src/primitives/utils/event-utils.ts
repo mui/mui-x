@@ -90,6 +90,7 @@ export function getEventDays(
 }
 
 export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): number {
+  // TODO: Now only all-day events are implemented, we should add support for timed events that span multiple days later
   if (!event.allDay) {
     return 1;
   }
@@ -153,7 +154,7 @@ export function expandRecurringEventForVisibleDays(
   return instances;
 }
 
-function buildEndGuard(
+export function buildEndGuard(
   rule: RecurrenceRule,
   seriesStart: SchedulerValidDate,
   adapter: Adapter,
@@ -190,7 +191,7 @@ function buildEndGuard(
 }
 
 // Checks if the date matches the recurrence pattern, only looking forward (not before seriesStart)
-function matchesRecurrence(
+export function matchesRecurrence(
   rule: RecurrenceRule,
   date: SchedulerValidDate,
   adapter: Adapter,
@@ -306,7 +307,7 @@ function matchesRecurrence(
   }
 }
 
-function estimateOccurrencesUpTo(
+export function estimateOccurrencesUpTo(
   adapter: Adapter,
   rule: RecurrenceRule,
   seriesStart: SchedulerValidDate,
@@ -399,7 +400,7 @@ export function countWeeklyOccurrencesUpToExact(
 }
 
 // Counts exact MONTHLY occurrences up to `date` (inclusive) respecting interval and monthly rules
-function countMonthlyOccurrencesUpToExact(
+export function countMonthlyOccurrencesUpToExact(
   adapter: Adapter,
   rule: RecurrenceRule,
   seriesStart: SchedulerValidDate,
@@ -466,7 +467,7 @@ function countMonthlyOccurrencesUpToExact(
 }
 
 // Counts exact YEARLY occurrences up to `date` (inclusive) respecting leap years and intervals
-function countYearlyOccurrencesUpToExact(
+export function countYearlyOccurrencesUpToExact(
   adapter: Adapter,
   rule: RecurrenceRule,
   seriesStart: SchedulerValidDate,
