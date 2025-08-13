@@ -33,7 +33,7 @@ export const products: Product[] = [
     incoming: 30,
     colors: ['Black', 'Silver'],
     image:
-      'https://images.pexels.com/photos/1983037/pexels-photo-1983037.jpeg?_gl=1*bf4yfr*_ga*OTUxMzk3MTE0LjE3NTAxOTYyMTM.*_ga_8JE65Q40S6*czE3NTAxOTYyMTMkbzEkZzEkdDE3NTAxOTYyMjgkajQ1JGwwJGgw',
+      'https://images.pexels.com/photos/1983037/pexels-photo-1983037.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 2,
@@ -49,7 +49,8 @@ export const products: Product[] = [
     totalSold: 180,
     incoming: 25,
     colors: ['Platinum Silver', 'Frost White'],
-    image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500&h=500&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 3,
@@ -65,7 +66,8 @@ export const products: Product[] = [
     totalSold: 120,
     incoming: 15,
     colors: ['Black'],
-    image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 4,
@@ -81,7 +83,8 @@ export const products: Product[] = [
     totalSold: 300,
     incoming: 40,
     colors: ['Black', 'White', 'Blue'],
-    image: 'https://images.pexels.com/photos/1054713/pexels-photo-1054713.jpeg',
+    image:
+      'https://images.pexels.com/photos/1054713/pexels-photo-1054713.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 5,
@@ -97,7 +100,8 @@ export const products: Product[] = [
     totalSold: 400,
     incoming: 50,
     colors: ['Black', 'Silver'],
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 6,
@@ -113,7 +117,8 @@ export const products: Product[] = [
     totalSold: 474,
     incoming: 24,
     colors: ['Space Gray', 'Silver'],
-    image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500&h=500&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 7,
@@ -129,7 +134,7 @@ export const products: Product[] = [
     totalSold: 423,
     incoming: 32,
     colors: ['Black'],
-    image: 'https://m.media-amazon.com/images/I/81xN-mI5KBL.jpg',
+    image: 'https://m.media-amazon.com/images/I/81xN-mI5KBL.jpg@._V1_QL100_UY120_CR0,,120,120.jpg',
   },
   {
     id: 8,
@@ -145,7 +150,8 @@ export const products: Product[] = [
     totalSold: 320,
     incoming: 20,
     colors: ['Graphite', 'Pale Gray'],
-    image: 'https://images.pexels.com/photos/392018/pexels-photo-392018.jpeg',
+    image:
+      'https://images.pexels.com/photos/392018/pexels-photo-392018.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 9,
@@ -162,7 +168,7 @@ export const products: Product[] = [
     incoming: 12,
     colors: ['Black'],
     image:
-      'https://images.pexels.com/photos/1983037/pexels-photo-1983037.jpeg?_gl=1*bf4yfr*_ga*OTUxMzk3MTE0LjE3NTAxOTYyMTM.*_ga_8JE65Q40S6*czE3NTAxOTYyMTMkbzEkZzEkdDE3NTAxOTYyMjgkajQ1JGwwJGgw',
+      'https://images.pexels.com/photos/1983037/pexels-photo-1983037.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 10,
@@ -178,7 +184,8 @@ export const products: Product[] = [
     totalSold: 174,
     incoming: 54,
     colors: ['Black', 'White', 'Pink'],
-    image: 'https://images.pexels.com/photos/1054713/pexels-photo-1054713.jpeg',
+    image:
+      'https://images.pexels.com/photos/1054713/pexels-photo-1054713.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 11,
@@ -194,7 +201,8 @@ export const products: Product[] = [
     totalSold: 305,
     incoming: 18,
     colors: ['Gray'],
-    image: 'https://media.startech.com/cms/products/gallery_large/5g4ab-usb-c-hub._main.jpg',
+    image:
+      'https://images.pexels.com/photos/30708285/pexels-photo-30708285.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 12,
@@ -210,7 +218,8 @@ export const products: Product[] = [
     totalSold: 195,
     incoming: 10,
     colors: ['Black'],
-    image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 13,
@@ -226,7 +235,8 @@ export const products: Product[] = [
     totalSold: 412,
     incoming: 30,
     colors: ['Black'],
-    image: 'https://images.pexels.com/photos/1054713/pexels-photo-1054713.jpeg',
+    image:
+      'https://images.pexels.com/photos/1054713/pexels-photo-1054713.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 14,
@@ -243,7 +253,7 @@ export const products: Product[] = [
     incoming: 16,
     colors: ['Black'],
     image:
-      'https://images.pexels.com/photos/1983037/pexels-photo-1983037.jpeg?_gl=1*bf4yfr*_ga*OTUxMzk3MTE0LjE3NTAxOTYyMTM.*_ga_8JE65Q40S6*czE3NTAxOTYyMTMkbzEkZzEkdDE3NTAxOTYyMjgkajQ1JGwwJGgw',
+      'https://images.pexels.com/photos/1983037/pexels-photo-1983037.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 15,
@@ -260,7 +270,7 @@ export const products: Product[] = [
     incoming: 22,
     colors: ['Black'],
     image:
-      'https://images.unsplash.com/photo-1614588876378-b2ffa4520c22?q=80&w=1720&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://images.unsplash.com/photo-1614588876378-b2ffa4520c22??w=120&h=120&fit=crop&q=100',
   },
   {
     id: 16,
@@ -276,7 +286,8 @@ export const products: Product[] = [
     totalSold: 310,
     incoming: 20,
     colors: ['Black'],
-    image: 'https://images.pexels.com/photos/1054713/pexels-photo-1054713.jpeg',
+    image:
+      'https://images.pexels.com/photos/1054713/pexels-photo-1054713.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 17,
@@ -292,7 +303,8 @@ export const products: Product[] = [
     totalSold: 165,
     incoming: 8,
     colors: ['Black'],
-    image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=500&h=500&fit=crop',
+    image:
+      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 18,
@@ -309,7 +321,7 @@ export const products: Product[] = [
     incoming: 12,
     colors: ['White', 'Fog', 'Linen'],
     image:
-      'https://georgiapowermarketplace.com/dw/image/v2/BDDP_PRD/on/demandware.static/-/Sites-masterCatalog/default/dw4a7b3d7f/Products/I-GOOWIFPRO-01-SNOW-XXXX-V1.jpg?sw=800&sh=800',
+      'https://georgiapowermarketplace.com/dw/image/v2/BDDP_PRD/on/demandware.static/-/Sites-masterCatalog/default/dw4a7b3d7f/Products/I-GOOWIFPRO-01-SNOW-XXXX-V1.jpg?sw=120&sh=120',
   },
   {
     id: 19,
@@ -325,7 +337,8 @@ export const products: Product[] = [
     totalSold: 282,
     incoming: 18,
     colors: ['Space Gray', 'Silver'],
-    image: 'https://images.pexels.com/photos/2351844/pexels-photo-2351844.jpeg',
+    image:
+      'https://images.pexels.com/photos/2351844/pexels-photo-2351844.jpeg?w=120&h=120&fit=crop&q=100',
   },
   {
     id: 20,
@@ -341,6 +354,6 @@ export const products: Product[] = [
     totalSold: 140,
     incoming: 10,
     colors: ['Black'],
-    image: 'https://m.media-amazon.com/images/I/6120ERqr3xL._UF894,1000_QL80_.jpg',
+    image: 'https://m.media-amazon.com/images/I/6120ERqr3xL._UF120,120_QL100_.jpg',
   },
 ];

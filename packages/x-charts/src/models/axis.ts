@@ -236,6 +236,36 @@ export type AxisGroup = {
    * @default 6
    */
   tickSize?: number;
+  /**
+   * The style applied to ticks text.
+   */
+  tickLabelStyle?: ChartsTextProps['style'];
+};
+
+export type AxisGroups = {
+  /**
+   * Each group will have a label that is the stringified value of the group.
+   *
+   * @example
+   * If the axis is grouped by day, month and year.
+   *
+   * ```tsx
+   * [
+   *   { getValue: getDate },
+   *   { getValue: getMonth },
+   *   { getValue: getFullYear }
+   * ]
+   * ```
+   *
+   * Then the axis will have three rows, one for each group.
+   *
+   * ```bash
+   * | 31   | 1    | 2    |
+   * | Jan  | Feb         |
+   * | 2021               |
+   * ```
+   */
+  groups?: AxisGroup[];
 };
 
 export interface AxisScaleConfig {
@@ -255,58 +285,13 @@ export interface AxisScaleConfig {
      */
     barGapRatio: number;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
-    /**
-     * Each group will have a label that is the stringified value of the group.
-     *
-     * @example
-     * If the axis is grouped by day, month and year.
-     *
-     * ```tsx
-     * [
-     *   { getValue: getDate },
-     *   { getValue: getMonth },
-     *   { getValue: getFullYear }
-     * ]
-     * ```
-     *
-     * Then the axis will have three rows, one for each group.
-     *
-     * ```bash
-     * | 31   | 1    | 2    |
-     * | Jan  | Feb         |
-     * | 2021               |
-     * ```
-     */
-    groups?: AxisGroup[];
-  } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
+  } & AxisGroups &
+    Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
-    /**
-     * Each group will have a label that is the stringified value of the group.
-     *
-     * @example
-     * If the axis is grouped by day, month and year.
-     *
-     * ```tsx
-     * [
-     *   { getValue: getDate },
-     *   { getValue: getMonth },
-     *   { getValue: getFullYear }
-     * ]
-     * ```
-     *
-     * Then the axis will have three rows, one for each group.
-     *
-     * ```bash
-     * | 31   | 1    | 2    |
-     * | Jan  | Feb         |
-     * | 2021               |
-     * ```
-     */
-    groups?: AxisGroup[];
-  };
+  } & AxisGroups;
   log: {
     scaleType: 'log';
     scale: ScaleLogarithmic<number, number>;
