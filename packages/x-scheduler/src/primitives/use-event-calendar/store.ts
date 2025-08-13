@@ -103,7 +103,7 @@ export const selectors = {
       for (const event of events) {
         // STEP 1: Skip events from resources that are not visible
         if (event.resource && visibleResources.get(event.resource) === false) {
-          continue; // Skip events for hidden resources
+          continue;
         }
 
         // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
