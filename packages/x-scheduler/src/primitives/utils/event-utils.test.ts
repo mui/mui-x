@@ -347,7 +347,7 @@ describe('event-utils', () => {
     });
 
     it('returns 0 when target date is before series start', () => {
-      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tue
+      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
       const target = DateTime.fromISO('2025-06-09T23:59:59Z'); // Mon before start
       expect(
         countWeeklyOccurrencesUpToExact(
@@ -360,7 +360,7 @@ describe('event-utils', () => {
     });
 
     it('counts first occurrence when target is same day', () => {
-      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tue
+      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
       const target = DateTime.fromISO('2025-06-10T23:59:59Z');
       expect(
         countWeeklyOccurrencesUpToExact(
@@ -373,7 +373,7 @@ describe('event-utils', () => {
     });
 
     it('counts occurrences for a single weekday across several weeks (interval=1)', () => {
-      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tue
+      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
       const target = DateTime.fromISO('2025-07-08T12:00:00Z'); // 5 Tuesdays inclusive (Jun 10,17,24, Jul 1,8)
       expect(
         countWeeklyOccurrencesUpToExact(
@@ -396,7 +396,7 @@ describe('event-utils', () => {
     });
 
     it('respects interval > 1 (every 2 weeks)', () => {
-      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tue
+      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
       const target = DateTime.fromISO('2025-07-22T12:00:00Z'); // Tuesdays: Jun 10,17,24, Jul1,8,15,22
       // Every 2 weeks from Jun 10: Jun 10, Jun 24, Jul 8, Jul 22 => 4
       expect(
@@ -410,7 +410,7 @@ describe('event-utils', () => {
     });
 
     it('does not count weekday in target week occurring after target day', () => {
-      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tue
+      const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
       const target = DateTime.fromISO('2025-06-23T12:00:00Z'); // Monday of week containing Tue 24
       // Occurrences counted: Jun 10, Jun 17 => 2 (Jun 24 excluded)
       expect(
