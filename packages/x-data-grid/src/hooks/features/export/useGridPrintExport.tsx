@@ -152,8 +152,7 @@ export const useGridPrintExport = (
       gridClone!.style.contain = 'size';
 
       let gridToolbarElementHeight =
-        gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.toolbarContainer}`)
-          ?.offsetHeight || 0;
+        gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.toolbar}`)?.offsetHeight || 0;
       let gridFooterElementHeight =
         gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.footerContainer}`)
           ?.offsetHeight || 0;
@@ -162,7 +161,7 @@ export const useGridPrintExport = (
       );
 
       if (normalizeOptions.hideToolbar) {
-        gridClone.querySelector(`.${gridClasses.toolbarContainer}`)?.remove();
+        gridClone.querySelector(`.${gridClasses.toolbar}`)?.remove();
         gridToolbarElementHeight = 0;
       }
 
