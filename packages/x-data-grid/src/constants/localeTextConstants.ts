@@ -1,4 +1,5 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { formatNumber } from '../utils/getGridLocalization';
 
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
@@ -185,10 +186,13 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   paginationRowsPerPage: 'Rows per page:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-    return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `around ${formatNumber(estimated)}`
+        : `more than ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

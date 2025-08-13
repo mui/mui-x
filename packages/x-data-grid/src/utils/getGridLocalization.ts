@@ -19,3 +19,21 @@ export const getGridLocalization = (gridTranslations: Partial<GridLocaleText>): 
     },
   },
 });
+
+export const formatNumber = (value: number | string): string => {
+  const numValue = typeof value === 'string' ? Number(value) : value;
+
+  if (!Number.isFinite(numValue)) {
+    return String(value);
+  }
+
+  if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
+    try {
+      return new Intl.NumberFormat().format(numValue);
+    } catch {
+      return String(numValue);
+    }
+  }
+
+  return String(numValue);
+};
