@@ -201,6 +201,8 @@ jobs:
       - run:
           name: ESLint
           command: pnpm eslint:ci
+          environment:
+            NODE_OPTIONS: --max-old-space-size=8192
       - run:
           name: Lint JSON
           command: pnpm jsonlint
