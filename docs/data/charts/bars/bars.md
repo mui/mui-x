@@ -141,7 +141,7 @@ By default, a gradient's units are set to `objectBoundingBox`.
 When applied to a bar, the gradient stretches to fill the entire size of the bar, regardless of the bar's value.
 
 Alternatively, you can set `gradientUnits` to `userSpaceOnUse`, which stretches the gradient to fill the entire size of the chart.
-This effectively reveals the gradient depending on the bar's value, as the gradient will be clipped to the bar's size.
+This effectively reveals the gradient depending on the bar's value, as the gradient is clipped to the bar's size.
 
 {{"demo": "BarOECDHouseholdSavings.js"}}
 
