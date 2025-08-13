@@ -110,7 +110,7 @@ export default defineConfig(
       'consistent-default-export-name': eslintPluginConsistentName,
     },
     settings: {
-      'import/resolver': {
+      'import-x/resolver': {
         webpack: {
           config: path.join(dirname, './webpackBaseConfig.js'),
         },
@@ -121,8 +121,8 @@ export default defineConfig(
       'material-ui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
-      'import/no-relative-packages': 'error',
-      'import/no-restricted-paths': [
+      'import-x/no-relative-packages': 'error',
+      'import-x/no-restricted-paths': [
         'error',
         {
           zones: [
@@ -253,6 +253,12 @@ export default defineConfig(
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
+      'import-x/no-unresolved': [
+        'error',
+        {
+          ignore: ['\\?muiMarkdown$'],
+        },
+      ],
     },
   },
 
@@ -344,7 +350,7 @@ export default defineConfig(
     rules: {
       // Base UI lint rules
       '@typescript-eslint/no-redeclare': 'off',
-      'import/export': 'off',
+      'import-x/export': 'off',
       'material-ui/straight-quotes': 'off',
       'jsdoc/require-param': 'off',
       'jsdoc/require-returns': 'off',

@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { mergeConfig } from 'vitest/config';
-// eslint-disable-next-line import/no-relative-packages
+// eslint-disable-next-line import-x/no-relative-packages
 import { redirectImports } from '../../test/vite-plugin-filter-replace.mts';
 import sharedConfig from '../../vitest.shared.mts';
 import { getTestName } from '../../scripts/getTestName.mts';

@@ -25,7 +25,7 @@ import {
   ScrollDirection,
 } from '../models';
 
-/* eslint-disable import/export, @typescript-eslint/no-redeclare */
+/* eslint-disable import-x/export, @typescript-eslint/no-redeclare */
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 

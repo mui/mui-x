@@ -55,7 +55,7 @@ const pickersAdaptersDeps = getPickerAdapterDeps();
 
 let localSettings = {};
 try {
-  // eslint-disable-next-line import/extensions
+  // eslint-disable-next-line import-x/extensions
   localSettings = require('./next.config.local.js');
 } catch (_) {
   // Ignore

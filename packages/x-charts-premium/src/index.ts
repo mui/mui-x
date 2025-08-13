@@ -41,6 +41,7 @@ export * from '@mui/x-charts-pro/ChartZoomSlider';
 export * from '@mui/x-charts-pro/ChartsToolbarPro';
 
 // Premium utilities
+/* eslint-disable import-x/export */
 export * from './constants';
 export * from './hooks';
 export * from './context';
@@ -48,3 +49,4 @@ export * from './models';
 // Locales should be imported from `@mui/x-charts-premium/locales`
 // export * from './locales';
 export * from './colorPalettes';
+/* eslint-enable import-x/export */
