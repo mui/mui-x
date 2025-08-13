@@ -43,6 +43,113 @@ function createPath(x: number, y: number, markerSize: number) {
   return `M${x - markerSize} ${y} a${markerSize} ${markerSize} 0 1 1 0 ${ALMOST_ZERO}`;
 }
 
+function createPathV2(buffer: Uint8Array, index: number, x: number, y: number, markerSize: number) {
+  /* eslint-disable no-plusplus */
+  buffer[index++] = 77; // 'M'
+  const startX = (x - markerSize).toString();
+
+  for (const char of startX) {
+    buffer[index++] = char.charCodeAt(0);
+  }
+
+  buffer[index++] = 32; // ' '
+
+  for (const char of y.toString()) {
+    buffer[index++] = char.charCodeAt(0);
+  }
+
+  buffer[index++] = 97; // 'a'
+
+  for (const char of markerSize.toString()) {
+    buffer[index++] = char.charCodeAt(0);
+  }
+
+  buffer[index++] = 32; // ' '
+
+  for (const char of markerSize.toString()) {
+    buffer[index++] = char.charCodeAt(0);
+  }
+
+  buffer[index++] = 32; // ' '
+  buffer[index++] = 48; // '0'
+  buffer[index++] = 32; // ' '
+  buffer[index++] = 49; // '1'
+  buffer[index++] = 32; // ' '
+  buffer[index++] = 49; // '1'
+  buffer[index++] = 32; // ' '
+  buffer[index++] = 48; // '0'
+  buffer[index++] = 32; // ' '
+  buffer[index++] = 48; // '0'
+  buffer[index++] = 46; // '.'
+  buffer[index++] = 48; // '0'
+  buffer[index++] = 49; // '1'
+
+  return index++; // Return the new index after writing the path
+}
+
+function useCreatePathsV2(
+  seriesData: DefaultizedScatterSeriesType['data'],
+  markerSize: number,
+  xScale: D3Scale,
+  yScale: D3Scale,
+  color: string,
+  colorGetter?: ColorGetter<'scatter'>,
+) {
+  const { instance } = useChartContext();
+  const getXPosition = getValueToPositionMapper(xScale);
+  const getYPosition = getValueToPositionMapper(yScale);
+
+  const start = performance.now();
+  const bufferPaths = new Map<string, string[]>();
+  const temporaryBuffers = new Map<string, Uint8Array>();
+  const temporaryBufferIndices = new Map<string, number>();
+  const textDecoder = new TextDecoder();
+
+  for (let i = 0; i < seriesData.length; i += 1) {
+    const scatterPoint = seriesData[i];
+
+    const x = getXPosition(scatterPoint.x);
+    const y = getYPosition(scatterPoint.y);
+
+    if (!instance.isPointInside(x, y)) {
+      continue;
+    }
+
+    const fill = colorGetter ? colorGetter(i) : color;
+
+    let buffer = temporaryBuffers.get(fill);
+
+    if (!buffer) {
+      buffer = new Uint8Array(70_000); // Initial buffer size, can be adjusted
+      temporaryBuffers.set(fill, buffer);
+    }
+
+    const bufferIndex = temporaryBufferIndices.get(fill) ?? 0;
+
+    const newBufferIndex = createPathV2(buffer, bufferIndex, x, y, markerSize);
+
+    temporaryBufferIndices.set(fill, newBufferIndex);
+
+    if (newBufferIndex > 60_000) {
+      appendAtKey(bufferPaths, fill, textDecoder.decode(buffer.slice(0, newBufferIndex)));
+      temporaryBuffers.delete(fill);
+      temporaryBufferIndices.delete(fill);
+    }
+  }
+
+  for (const [fill, tempBuffer] of temporaryBuffers.entries()) {
+    appendAtKey(
+      bufferPaths,
+      fill,
+      textDecoder.decode(tempBuffer.slice(0, temporaryBufferIndices.get(fill))),
+    );
+  }
+
+  performance.measure('useCreatePaths-buffer', { start });
+
+  return bufferPaths;
+}
+
 function useCreatePaths(
   seriesData: DefaultizedScatterSeriesType['data'],
   markerSize: number,
@@ -55,6 +162,7 @@ function useCreatePaths(
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
 
+  const start = performance.now();
   const paths = new Map<string, string[]>();
   const temporaryPaths = new Map<string, string[]>();
 
@@ -73,7 +181,7 @@ function useCreatePaths(
 
     const tempPath = appendAtKey(temporaryPaths, fill, path);
 
-    if (tempPath != null && tempPath.length >= MAX_POINTS_PER_PATH) {
+    if (tempPath.length >= MAX_POINTS_PER_PATH) {
       appendAtKey(paths, fill, tempPath.join(''));
       temporaryPaths.delete(fill);
     }
@@ -85,6 +193,7 @@ function useCreatePaths(
     }
   }
 
+  performance.measure('useCreatePaths-string', { start });
   return paths;
 }
 
@@ -99,7 +208,7 @@ export interface FastScatterPathsProps {
 
 function FastScatterPaths(props: FastScatterPathsProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize } = props;
-  const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
+  const paths = useCreatePathsV2(series.data, markerSize, xScale, yScale, color, colorGetter);
 
   const children: React.ReactNode[] = [];
 
