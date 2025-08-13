@@ -50,7 +50,7 @@ describe('recurrence-utils', () => {
       expect(detectRecurrenceKeyFromRule(adapter, presets.yearly, start)).to.equal('yearly');
     });
 
-    it('classifies daily interval>1 or with finite end as custom as custom', () => {
+    it('classifies daily interval>1 or with finite end as custom', () => {
       const ruleInterval2: RecurrenceRule = { ...presets.daily, interval: 2 };
       expect(detectRecurrenceKeyFromRule(adapter, ruleInterval2, start)).to.equal('custom');
 
