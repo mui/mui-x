@@ -137,7 +137,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     const errorShown = React.useRef(false);
 
     useGridEventPriority(apiRef, 'resize', (size) => {
-      if (!getRootDimensions().isReady || size === Size.EMPTY) {
+      if (!getRootDimensions().isReady) {
         return;
       }
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {

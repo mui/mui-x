@@ -231,6 +231,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     }
 
     store.update({ dimensions: newDimensions });
+    onResize?.(newDimensions.root);
   }, [
     store,
     containerNode,
@@ -247,21 +248,13 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
   const { resizeThrottleMs, onResize } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
-    () =>
-      resizeThrottleMs > 0
-        ? throttle(() => {
-            updateDimensionCallback();
-            onResize?.(store.state.rootSize);
-          }, resizeThrottleMs)
-        : undefined,
+    () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
     [resizeThrottleMs, onResize, store, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
   const setRootSize = useEventCallback((rootSize: Size) => {
     store.state.rootSize = rootSize;
-
-    params.onResize?.(rootSize);
 
     if (isFirstSizing.current || !debouncedUpdateDimensions) {
       // We want to initialize the grid dimensions as soon as possible to avoid flickering
