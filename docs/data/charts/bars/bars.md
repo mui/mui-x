@@ -137,7 +137,7 @@ You can use this attribute to target elements based on their series.
 
 ### Gradient
 
-{{"demo": "BarGradientUserSpace.js"}}
+{{"demo": "BarWorldBMI.js"}}
 
 ## Labels
 
