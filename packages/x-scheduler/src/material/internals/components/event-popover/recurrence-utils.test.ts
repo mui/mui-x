@@ -16,10 +16,17 @@ describe('recurrence-utils', () => {
         interval: 1,
         end: { type: 'never' },
       });
-      expect(presets.weekly.daysOfWeek).to.deep.equal([2]);
-      expect(presets.monthly.monthly).to.deep.equal({
-        mode: 'onDate',
-        day: 5,
+      expect(presets.weekly).to.deep.equal({
+        frequency: 'weekly',
+        interval: 1,
+        daysOfWeek: [2],
+        end: { type: 'never' },
+      });
+      expect(presets.monthly).to.deep.equal({
+        frequency: 'monthly',
+        interval: 1,
+        monthly: { mode: 'onDate', day: 5 },
+        end: { type: 'never' },
       });
       expect(presets.yearly).to.deep.equal({
         frequency: 'yearly',
