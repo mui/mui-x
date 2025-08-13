@@ -135,11 +135,15 @@ You can use this attribute to target elements based on their series.
 
 {{"demo": "BarGradient.js"}}
 
-### Gradient
+### Gradients
 
-By default, a gradient
+By default, a gradient's units are set to `objectBoundingBox`.
+When applied to a bar, the gradient will stretch to fill the entire size of the bar, regardless of the bar's value.
 
-{{"demo": "BarWorldBMI.js"}}
+Alternatively, you can set `gradientUnits` to `userSpaceOnUse`, which stretches the gradient to fill the entire size of the chart.
+This effectively reveals the gradient depending on the bar's value, as the gradient will be clipped to the bar's size.
+
+{{"demo": "BarOECDHouseholdSavings.js"}}
 
 ## Labels
 
