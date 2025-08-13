@@ -85,7 +85,6 @@ export const initialEvents = [
       end: { type: 'never' },
     },
   },
-
   // Non-recurring work events
   {
     id: 'client-call-1',
@@ -129,7 +128,6 @@ export const initialEvents = [
     title: 'Design review Scheduler',
     resource: 'work',
   },
-
   // Workout recurring events
   {
     id: 'workout-running',
@@ -171,7 +169,6 @@ export const initialEvents = [
       end: { type: 'never' },
     },
   },
-
   // Birthday events
   {
     id: 'birthdays-alice',
@@ -212,7 +209,6 @@ export const initialEvents = [
       end: { type: 'never' },
     },
   },
-
   // Personal events
   {
     id: 'dinner-with-friends-1',
@@ -271,7 +267,6 @@ export const initialEvents = [
     title: 'Prescription Pickup',
     resource: 'medical',
   },
-
   // All day events
   {
     id: 'allday-work-1',
