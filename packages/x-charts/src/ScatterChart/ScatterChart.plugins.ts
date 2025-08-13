@@ -19,6 +19,10 @@ import {
   useChartVoronoi,
   UseChartVoronoiSignature,
 } from '../internals/plugins/featurePlugins/useChartVoronoi';
+import {
+  useChartKeyboardNavigation,
+  UseChartKeyboardNavigationSignature,
+} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 export type ScatterChartPluginsSignatures = [
   UseChartZAxisSignature,
@@ -26,6 +30,7 @@ export type ScatterChartPluginsSignatures = [
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartVoronoiSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
 export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginsSignatures> = [
@@ -34,4 +39,5 @@ export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPlu
   useChartInteraction,
   useChartHighlight,
   useChartVoronoi,
+  useChartKeyboardNavigation,
 ];

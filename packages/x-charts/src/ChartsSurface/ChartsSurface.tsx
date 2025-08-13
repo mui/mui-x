@@ -78,6 +78,14 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       className={className}
       {...other}
       ref={handleRef}
+      tabIndex={0}
+      sx={{
+        outline: 'none',
+        '& [data-focused=true]': {
+          outline: 'auto',
+          //  outlineOffset: 1
+        },
+      }}
     >
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}
