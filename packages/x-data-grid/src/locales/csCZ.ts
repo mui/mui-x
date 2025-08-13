@@ -1,5 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('cs-CZ');
 
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
@@ -212,11 +214,13 @@ const csCZGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Řádků na stránce:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} z ${count !== -1 ? count : `více než ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : `více než ${formatNumber(to)}`}`;
     }
     const estimatedLabel =
-      estimated && estimated > to ? `přibližně ${estimated}` : `více než ${to}`;
-    return `${from}–${to} z ${count !== -1 ? count : estimatedLabel}`;
+      estimated && estimated > to
+        ? `přibližně ${formatNumber(estimated)}`
+        : `více než ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} z ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
