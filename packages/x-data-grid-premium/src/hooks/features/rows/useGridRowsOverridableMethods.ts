@@ -29,7 +29,7 @@ export const useGridRowsOverridableMethods = (
     (sourceRowId: GridRowId, targetOriginalIndex: number) => {
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
-      const targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[targetOriginalIndex]);
+      let targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[targetOriginalIndex]);
 
       if (!sourceNode) {
         throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
@@ -55,8 +55,18 @@ export const useGridRowsOverridableMethods = (
        * | D ✅ | Leaf        | Group       | Different parents         | Make source a child of target, only allowed at same depth as source.parent  |
        * | E ❌ | Leaf        | Group       | Target is source's parent | Not allowed, will have no difference                                        |
        * | F ❌ | Group       | Leaf        | Any                       | Not allowed, will break the row grouping criteria                           |
-       * | G ❌ | Group       | Group       | Different parents         | Not allowed, will break the row grouping criteria                           |
+       * | G ✅ | Group       | Group       | Different parents         | Only allowed at same depth to preserve grouping criteria                    |
        */
+
+      console.log('sourceNode', sourceNode, 'targetNode', targetNode);
+
+      if (sourceNode.type === 'group' && targetNode.type === 'leaf') {
+        // Case B but not properly detected due to the nature of the drop
+        const targetNodeParent = gridRowNodeSelector(apiRef, targetNode.parent);
+        if (targetNodeParent.parent === sourceNode.parent) {
+          targetNode = targetNodeParent;
+        }
+      }
 
       if (
         ((sourceNode.type === 'leaf' && targetNode.type === 'leaf') ||
@@ -64,6 +74,7 @@ export const useGridRowsOverridableMethods = (
         sourceNode.parent === targetNode.parent
       ) {
         // Cases A and B
+        console.log('A & B');
         apiRef.current.setState((state) => {
           const group = gridRowTreeSelector(apiRef)[sourceNode.parent!] as GridGroupNode;
           const currentChildren = group.children;
@@ -99,6 +110,7 @@ export const useGridRowsOverridableMethods = (
           targetNode.type === 'group' &&
           targetNode.depth < sourceNode.depth)
       ) {
+        console.log('C & D');
         // Case C & D
         const source = sourceNode as GridLeafNode;
         let target = targetNode;
@@ -266,6 +278,23 @@ export const useGridRowsOverridableMethods = (
         } else {
           commitStateUpdate(updatedSourceRow);
         }
+      } else if (
+        sourceNode.type === 'group' &&
+        targetNode.type === 'group' &&
+        sourceNode.parent !== targetNode.parent &&
+        sourceNode.depth === targetNode.depth
+      ) {
+        // Case G
+        console.log(
+          'I hit a case G, a reorder requested from ',
+          `${sourceNode.parent!.split('/').pop()} > ${sourceNode.id!.split('/').pop()} to ${targetNode.parent!.split('/').pop()} > ${targetNode.id!.split('/').pop()}`,
+        );
+
+        // Since this is a cross-parent reorder, we need to do the following:
+        // 1. Remove the source node from the source node parent
+        // 2. Add the source node to target parent at requested position
+        // 3. For each individual child of source node, update all the respective data keys in row data and call `processRowUpdate()` with batching of state updates
+        // 4. Update the partial state in case of some requests failing (`processRowUpdate()` throws an error)
       } else {
         warnOnce(
           [

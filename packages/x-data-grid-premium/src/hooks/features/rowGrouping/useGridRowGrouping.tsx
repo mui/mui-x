@@ -391,6 +391,18 @@ interface ReorderParams {
   expandedSortedRowIndexLookup: Record<GridRowId, number>;
 }
 
+// Helper function to calculate target index based on drag direction
+function calculateTargetIndex(
+  dragDirection: 'up' | 'down',
+  dropPosition: 'above' | 'below',
+  targetRowIndex: number,
+): number {
+  if (dragDirection === 'up') {
+    return dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
+  }
+  return dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
+}
+
 function handleGroupToGroupReorder({
   sourceNode,
   targetNode,
@@ -399,34 +411,67 @@ function handleGroupToGroupReorder({
   dragDirection,
   targetRowIndex,
   expandedSortedRowIndexLookup,
+  rowTree,
 }: ReorderParams): number {
-  // Special case: dropping above a group with a leaf before it
-  if (dropPosition === 'above' && prevNode?.type === 'leaf') {
-    // If the leaf belongs to the source group, no movement
-    if (prevNode.parent === sourceNode.id) {
-      return -1;
+  const targetGroup = targetNode as GridGroupNode;
+
+  // Handle "above" drop position
+  if (dropPosition === 'above') {
+    // Case 1: Source and target have same depth and same parent - always valid (existing behavior)
+    if (sourceNode.depth === targetNode.depth) {
+      return calculateTargetIndex(dragDirection, dropPosition, targetRowIndex);
     }
-    // Return appropriate index based on drag direction
-    return dragDirection === 'up'
-      ? targetRowIndex
-      : (expandedSortedRowIndexLookup[prevNode.parent] ?? -1);
-  }
 
-  // Groups must be at the same level (same parent)
-  if (sourceNode.parent !== targetNode.parent) {
+    if (
+      targetNode.depth < sourceNode.depth &&
+      (prevNode?.type === 'leaf' ||
+        (prevNode?.type === 'group' && prevNode.depth === sourceNode.depth))
+    ) {
+      return calculateTargetIndex(dragDirection, dropPosition, targetRowIndex);
+    }
+    // Case 2: Special handling for leaf before target
+    if (prevNode?.type === 'leaf') {
+      // If the leaf belongs to the source group, no movement
+      if (prevNode.parent === sourceNode.id) {
+        return -1;
+      }
+      // Return appropriate index based on drag direction
+      return dragDirection === 'up'
+        ? targetRowIndex
+        : (expandedSortedRowIndexLookup[prevNode.parent] ?? -1);
+    }
+
+    // Case 3: Previous node is a group with same depth as source
+    // This handles moving a child group to be the last in its parent
+    if (
+      prevNode?.type === 'group' &&
+      prevNode.depth === sourceNode.depth &&
+      (targetNode as GridGroupNode).childrenExpanded
+    ) {
+      // Only allow if they share the same parent (reordering within parent)
+      if (prevNode.parent === sourceNode.parent) {
+        return calculateTargetIndex(dragDirection, dropPosition, targetRowIndex);
+      }
+    }
     return -1;
   }
 
-  // Cannot drop below an expanded group
-  if (dropPosition === 'below' && (targetNode as GridGroupNode).childrenExpanded) {
-    return -1;
+  // Handle "below" drop position
+  // Case 1: Source and target have same depth, and target is not expanded
+  if (sourceNode.depth === targetNode.depth && !targetGroup.childrenExpanded) {
+    return calculateTargetIndex(dragDirection, dropPosition, targetRowIndex);
   }
 
-  // Same-parent groups: calculate index based on drag direction
-  if (dragDirection === 'up') {
-    return dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
+  // Case 2: Target depth is source.depth - 1, target is expanded, and has compatible first child
+  // This allows dropping just below an expanded parent group
+  if (targetNode.depth === sourceNode.depth - 1 && targetGroup.childrenExpanded) {
+    const firstChild = targetGroup.children?.[0] ? rowTree[targetGroup.children[0]] : null;
+    if (firstChild?.type === 'group' && firstChild.depth === sourceNode.depth) {
+      return targetRowIndex + 1;
+    }
   }
-  return dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
+
+  return -1;
 }
 
 function handleLeafToLeafReorder({
