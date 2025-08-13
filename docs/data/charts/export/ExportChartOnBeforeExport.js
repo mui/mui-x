@@ -58,23 +58,58 @@ const settings = {
   grid: { horizontal: true },
 };
 
-function onBeforeExport(iframe) {
-  // Apply default modification (removing the toolbar)
-  defaultOnBeforeExport(iframe);
-  const document = iframe.contentDocument;
+function createOnBeforeExport(titleRef, captionRef) {
+  return function onBeforeExport(iframe) {
+    // Apply default modification (removing the toolbar)
+    defaultOnBeforeExport(iframe);
+    const document = iframe.contentDocument;
 
-  // Show legend
-  const legend = document.querySelector(`.${legendClasses.root}`);
+    // Show legend
+    const legend = document.querySelector(`.${legendClasses.root}`);
 
-  if (legend) {
-    legend.style.display = 'flex';
-  }
+    if (legend) {
+      legend.style.display = 'flex';
+    }
+
+    const stack = document.createElement('div');
+    const chart = document.body.firstElementChild;
+
+    stack.style.margin = 'auto';
+    stack.style.display = 'flex';
+    stack.style.flexDirection = 'column';
+    stack.style.alignItems = 'center';
+
+    document.body.appendChild(stack);
+
+    const title = titleRef.current;
+    if (title) {
+      const titleClone = title.cloneNode(true);
+      stack.appendChild(titleClone);
+    }
+
+    document.body.removeChild(chart);
+    stack.appendChild(chart);
+
+    const caption = captionRef.current;
+    if (caption) {
+      const captionClone = caption.cloneNode(true);
+      captionClone.style.alignSelf = 'start';
+      stack.appendChild(captionClone);
+    }
+  };
 }
 
 export default function ExportChartOnBeforeExport() {
+  const titleRef = React.useRef(null);
+  const captionRef = React.useRef(null);
+  const onBeforeExport = React.useMemo(
+    () => createOnBeforeExport(titleRef, captionRef),
+    [],
+  );
+
   return (
     <Stack width="100%">
-      <Typography sx={{ alignSelf: 'center', my: 1 }}>
+      <Typography ref={titleRef} sx={{ alignSelf: 'center', my: 1 }}>
         Inflation rate in France, Germany and the UK, 1960-2024
       </Typography>
       <LineChartPro
@@ -88,7 +123,9 @@ export default function ExportChartOnBeforeExport() {
         }}
         sx={{ [`& .${legendClasses.root}`]: { display: 'none' } }}
       />
-      <Typography variant="caption">Source: World Bank</Typography>
+      <Typography ref={captionRef} variant="caption">
+        Source: World Bank
+      </Typography>
     </Stack>
   );
 }
