@@ -1,5 +1,5 @@
 import glob from 'fast-glob';
-import fse from 'fs-extra';
+import fs from 'node:fs/promises';
 
 async function run() {
   const importFiles = [
@@ -15,11 +15,14 @@ async function run() {
     const newFiles = glob.sync(`node_modules/@mui/monorepo/${pattern}`);
     return acc.concat(newFiles);
   }, []);
-  files.forEach((file) => {
-    fse.copySync(file, file.replace('node_modules/@mui/monorepo/docs/', 'docs/'));
+
+  const copyPromises = files.map(async (file) => {
+    await fs.copyFile(file, file.replace('node_modules/@mui/monorepo/docs/', 'docs/'));
     // eslint-disable-next-line no-console
     console.log(`copy ${file}`);
   });
+
+  await Promise.all(copyPromises);
 }
 
 run();
