@@ -90,10 +90,11 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
   const domain = yScale.domain();
   const isScaleBand = isBandScale(yScale);
 
-  const skipAxisRendering =
-    (isScaleBand && domain.length === 0) ||
-    (!isScaleBand && domain.some(isInfinity)) ||
-    position === 'none';
+  console.log(domain);
+  const skipAxisRendering = position === 'none';
+
+  const skipTickRendering =
+    (isScaleBand && domain.length === 0) || (!isScaleBand && domain.some(isInfinity));
 
   return {
     yScale,
@@ -101,6 +102,7 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
     tickNumber,
     positionSign,
     skipAxisRendering,
+    skipTickRendering,
     classes,
     Line,
     Tick,
