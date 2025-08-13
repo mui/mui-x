@@ -176,23 +176,21 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: RenderContext) => {
-      if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
-        return;
+      if (!areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
+        store.set('virtualization', {
+          ...store.state.virtualization,
+          renderContext: nextRenderContext,
+        });
       }
-
-      const didRowsIntervalChange =
-        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
-        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
-
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        renderContext: nextRenderContext,
-      });
 
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if we already have a render context, because
       // otherwise we would call an update directly on mount
       const isReady = Dimensions.selectors.dimensions(store.state).isReady;
+      const didRowsIntervalChange =
+        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
+        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
+
       if (isReady && didRowsIntervalChange) {
         previousRowContext.current = nextRenderContext;
         onRenderContextChange?.(nextRenderContext);
