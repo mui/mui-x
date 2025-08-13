@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  BarChart,
-  BarChartProps,
-  barClasses,
-  barElementClasses,
-} from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps, barElementClasses } from '@mui/x-charts/BarChart';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
@@ -73,23 +68,27 @@ export default function BarGradientUserSpace() {
           },
         ]}
         sx={{
-          [`.${barElementClasses.root}[data-series="subscriber-growth"]`]: {
-            gradientUnits: 'userSpaceOnUse',
+          [`[data-series="subscriber-growth"] .${barElementClasses.root}`]: {
+            fill: 'url(#subscriber-growth-gradient-user-space)',
           },
         }}
       >
-        <linearGradient
-          id="subscriber-growth-gradient"
-          x1="0%"
-          y1="100%"
-          x2="0%"
-          y2="0%"
-        >
-          <stop offset="0" stopColor="white" />
-          <stop offset="1" stopColor="green" />
-        </linearGradient>
+        <Gradient id="subscriber-growth-gradient" />
+        <Gradient
+          id="subscriber-growth-gradient-user-space"
+          gradientUnits="userSpaceOnUse"
+        />
       </BarChart>
       <Typography variant="caption">Source: businessofapps.com</Typography>
     </Stack>
+  );
+}
+
+function Gradient(props: React.SVGProps<SVGLinearGradientElement>) {
+  return (
+    <linearGradient {...props} x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0" stopColor="white" />
+      <stop offset="1" stopColor="green" />
+    </linearGradient>
   );
 }
