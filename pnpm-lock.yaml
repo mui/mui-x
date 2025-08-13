@@ -309,8 +309,8 @@ importers:
         specifier: ^2.0.7-canary.12
         version: 2.0.7-canary.12(@babel/core@7.28.0)
       '@mui/internal-bundle-size-checker':
-        specifier: ^1.0.9-canary.16
-        version: 1.0.9-canary.16(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)
+        specifier: ^1.0.9-canary.17
+        version: 1.0.9-canary.17(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)
       '@mui/internal-code-infra':
         specifier: ^0.0.2-canary.29
         version: 0.0.2-canary.29(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)
@@ -4303,8 +4303,8 @@ packages:
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.16':
-    resolution: {integrity: sha512-znpLLWLccnggfE7fgn+ALv/bh3pQBpSGCv3T88LptQkb6RrT2tidh2KllIevWCNpaR8vDsbjw2pN3DF8RQs0YQ==}
+  '@mui/internal-bundle-size-checker@1.0.9-canary.17':
+    resolution: {integrity: sha512-K1SbQmFGObE7bAqfTcRDxODLSZgWxqhPNpXtTQaqQmUCqOGDIWpNIhPEtxzotZa41C+1UVQ0/hXDo6MT/55xXA==}
     hasBin: true
 
   '@mui/internal-code-infra@0.0.2-canary.29':
@@ -15041,7 +15041,7 @@ snapshots:
       '@babel/core': 7.28.0
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.16(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)':
+  '@mui/internal-bundle-size-checker@1.0.9-canary.17(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)':
     dependencies:
       '@aws-sdk/client-s3': 3.859.0
       '@aws-sdk/credential-providers': 3.859.0
