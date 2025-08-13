@@ -7,7 +7,6 @@ import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
-import { type } from 'doctrine';
 import { countryData, oecdCountries } from '../dataset/countryData';
 import worldBmi from '../dataset/worldBmi.json';
 
@@ -28,10 +27,6 @@ const womenSortedBmi = Object.entries(oecdBmi)
     bmi: value.female,
   }))
   .sort((a, b) => a.bmi - b.bmi);
-const menCountries = Object.keys(oecdBmi);
-const womenCountries = Object.keys(oecdBmi);
-const menData = Object.values(oecdBmi).map((value) => value.male);
-const womenData = Object.values(oecdBmi).map((value) => value.female);
 
 const bmiFormatter = (value: number | null) => value!.toFixed(2);
 
@@ -39,11 +34,7 @@ const settings = {
   height: 600,
   xAxis: [{ label: 'Body Mass Index', min: 0, max: 30 }],
   layout: 'horizontal',
-  slotProps: {
-    legend: {
-      position: { vertical: 'bottom' },
-    },
-  },
+  hideLegend: true,
 } satisfies Partial<BarChartProps>;
 
 const menSeries = [
@@ -67,6 +58,9 @@ const womenSeries = [
 
 export default function BarGradientUserSpace() {
   const [gender, setGender] = React.useState('male');
+  const [gradientUnits, setGradientUnits] = React.useState<
+    'objectBoundingBox' | 'userSpaceOnUse'
+  >('objectBoundingBox');
 
   return (
     <Stack width="100%">
@@ -87,6 +81,31 @@ export default function BarGradientUserSpace() {
           <FormControlLabel value="female" control={<Radio />} label="Women" />
         </RadioGroup>
       </FormControl>
+      <FormControl fullWidth>
+        <FormLabel id="gradient-units-label">Gradient Units</FormLabel>
+        <RadioGroup
+          row
+          aria-labelledby="gradient-units-label"
+          name="gradient-units"
+          value={gradientUnits}
+          onChange={(event) =>
+            setGradientUnits(
+              event.target.value as 'objectBoundingBox' | 'userSpaceOnUse',
+            )
+          }
+        >
+          <FormControlLabel
+            value="objectBoundingBox"
+            control={<Radio />}
+            label="objectBoundingBox (default)"
+          />
+          <FormControlLabel
+            value="userSpaceOnUse"
+            control={<Radio />}
+            label="userSpaceOnUse"
+          />
+        </RadioGroup>
+      </FormControl>
 
       <BarChart
         {...settings}
@@ -101,14 +120,23 @@ export default function BarGradientUserSpace() {
           },
         ]}
         series={gender === 'male' ? menSeries : womenSeries}
-        sx={{
-          [`.${barElementClasses.root}`]: {
-            fill: 'url(#bmi-gradient-user-space)',
-          },
-        }}
+        sx={
+          gradientUnits === 'userSpaceOnUse'
+            ? {
+                [`.${barElementClasses.root}`]: {
+                  fill: 'url(#bmi-gradient-user-space)',
+                },
+              }
+            : undefined
+        }
       >
-        <Gradient id="bmi-gradient" />
-        <Gradient id="bmi-gradient-user-space" gradientUnits="userSpaceOnUse" />
+        <Gradient id="bmi-gradient" x1="0" x2="100%" />
+        <Gradient
+          id="bmi-gradient-user-space"
+          gradientUnits="userSpaceOnUse"
+          x1="200"
+          x2="600"
+        />
       </BarChart>
       <Typography variant="caption">Source: Our World in Data</Typography>
     </Stack>
@@ -117,13 +145,9 @@ export default function BarGradientUserSpace() {
 
 function Gradient(props: React.SVGProps<SVGLinearGradientElement>) {
   return (
-    <linearGradient {...props} x1="220" y1="0%" x2="600" y2="0%">
-      <stop offset="0" stopColor="green" />
-      <stop offset="0.61666" stopColor="green" />
-      <stop offset="0.61667" stopColor="blue" />
-      <stop offset="0.83333" stopColor="blue" />
-      <stop offset="0.83334" stopColor="red" />
-      <stop offset="1" stopColor="red" />
+    <linearGradient x1="0" y1="0%" x2="100%" y2="0%" {...props}>
+      <stop offset="0" stopColor="#00f260" />
+      <stop offset="1" stopColor="#0575e6" />
     </linearGradient>
   );
 }
