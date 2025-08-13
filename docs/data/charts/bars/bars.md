@@ -135,6 +135,10 @@ You can use this attribute to target elements based on their series.
 
 {{"demo": "BarGradient.js"}}
 
+### Gradient
+
+{{"demo": "BarGradientUserSpace.js"}}
+
 ## Labels
 
 You can display labels on the bars.
