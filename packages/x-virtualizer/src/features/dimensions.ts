@@ -258,12 +258,10 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(() => observeRootNode(containerNode, store), [containerNode, store]);
+  const setRootSize = useEventCallback((rootSize: Size) => {
+    store.state.rootSize = rootSize;
 
-  useLayoutEffect(updateDimensions, [updateDimensions]);
-
-  useStoreEffect(store, selectors.rootSize, (_, size) => {
-    params.onResize?.(size);
+    params.onResize?.(rootSize);
 
     if (isFirstSizing.current || !debouncedUpdateDimensions) {
       // We want to initialize the grid dimensions as soon as possible to avoid flickering
@@ -273,6 +271,13 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       debouncedUpdateDimensions();
     }
   });
+
+  useLayoutEffect(
+    () => observeRootNode(containerNode, store, setRootSize),
+    [containerNode, store, setRootSize],
+  );
+
+  useLayoutEffect(updateDimensions, [updateDimensions]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 
@@ -518,7 +523,11 @@ function useRowsMeta(
   };
 }
 
-function observeRootNode(node: Element | null, store: Store<BaseState>) {
+function observeRootNode(
+  node: Element | null,
+  store: Store<BaseState>,
+  setRootSize: (size: Size) => void,
+) {
   if (!node) {
     return undefined;
   }
@@ -528,7 +537,7 @@ function observeRootNode(node: Element | null, store: Store<BaseState>) {
     height: roundToDecimalPlaces(bounds.height, 1),
   };
   if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
-    store.update({ rootSize: initialSize });
+    setRootSize(initialSize);
   }
 
   if (typeof ResizeObserver === 'undefined') {
@@ -543,7 +552,7 @@ function observeRootNode(node: Element | null, store: Store<BaseState>) {
       height: roundToDecimalPlaces(entry.contentRect.height, 1),
     };
     if (!Size.equals(rootSize, store.state.rootSize)) {
-      store.update({ rootSize });
+      setRootSize(rootSize);
     }
   });
 
