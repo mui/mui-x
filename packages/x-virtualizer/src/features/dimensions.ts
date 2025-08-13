@@ -231,12 +231,13 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     }
 
     store.update({ dimensions: newDimensions });
-    onResize?.(newDimensions.root);
+    params.onResize?.(newDimensions.root);
   }, [
     store,
     containerNode,
     params.dimensions.scrollbarSize,
     params.autoHeight,
+    params.onResize,
     rowHeight,
     columnsTotalWidth,
     leftPinnedWidth,
@@ -245,11 +246,11 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     bottomPinnedHeight,
   ]);
 
-  const { resizeThrottleMs, onResize } = params;
+  const { resizeThrottleMs } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
     () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
-    [resizeThrottleMs, onResize, store, updateDimensionCallback],
+    [resizeThrottleMs, store, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
