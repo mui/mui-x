@@ -312,8 +312,8 @@ importers:
         specifier: ^1.0.9-canary.18
         version: 1.0.9-canary.18(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.2-canary.31
-        version: 0.0.2-canary.31(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)
+        specifier: ^0.0.2-canary.32
+        version: 0.0.2-canary.32(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.9
@@ -4313,8 +4313,8 @@ packages:
     resolution: {integrity: sha512-F0hBCE/7ICw7slXGUCoifIye+EIgy6xEcLf2balGBgOfcalF06bKlvtQ8ZaqHtwdZIk+kCRfAg7C4tN6W5066w==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.2-canary.31':
-    resolution: {integrity: sha512-O8AD2a/890k6BiOAg7PkQoOTv/d/+Z53AzZv80Ucs2yj6f/IQM+PqlUMew9nbZhwIE4KAhS/el5B/3v6fUtdgg==}
+  '@mui/internal-code-infra@0.0.2-canary.32':
+    resolution: {integrity: sha512-8TJ9q/B3SLumznDwTiAK1fDQYTlZ+won3HMmZCBIZ//afQ0cx15650tOOePxZsNTlo381pJXtXWm80DRGK3iOA==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -15120,7 +15120,7 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@mui/internal-code-infra@0.0.2-canary.31(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)':
+  '@mui/internal-code-infra@0.0.2-canary.32(@typescript-eslint/parser@8.39.1(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-webpack@0.13.10)(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)':
     dependencies:
       '@argos-ci/core': 3.2.3
       '@babel/core': 7.28.0
