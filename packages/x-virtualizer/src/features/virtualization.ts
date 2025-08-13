@@ -164,7 +164,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
    * that are part of this old context will keep their same render context as to avoid re-rendering.
    */
   const scrollPosition = React.useRef(initialState?.scroll ?? EMPTY_SCROLL_POSITION);
-  const ignoreNextScrollEvent = React.useRef(false);
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
 
@@ -307,11 +306,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   });
 
   const handleScroll = useEventCallback(() => {
-    if (ignoreNextScrollEvent.current) {
-      ignoreNextScrollEvent.current = false;
-      return;
-    }
-
     const nextRenderContext = triggerUpdateRenderContext();
     if (nextRenderContext) {
       onScrollChange?.(scrollPosition.current, nextRenderContext);
@@ -558,25 +552,24 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       const scroller = refs.scroller.current;
       const { top, left } = initialState.scroll;
 
-      // On initial mount, if we have columns available, we can restore the horizontal scroll immediately, but we need to skip the resulting scroll event, otherwise we would recalculate the render context at position top=0, left=restoredValue, but the initial render context is already calculated based on the initial value of scrollPosition ref.
       const isScrollRestored = {
         top: !(top > 0),
         left: !(left > 0),
       };
+
       if (!isScrollRestored.left && columnsTotalWidth) {
         scroller.scrollLeft = left;
-        ignoreNextScrollEvent.current = true;
         isScrollRestored.left = true;
       }
 
-      // For the sake of completeness, but I'm not sure if contentHeight is ever available at this point. Maybe when virtualisation is disabled?
+      // To restore the vertical scroll, we need to wait until the rows are available in the DOM (otherwise
+      // there's nowhere to scroll). We still set the scrollTop to the initial value at this point in case
+      // there already are rows rendered in the DOM, but we only confirm `isScrollRestored.top = true` in the
+      // asynchronous callback below.
       if (!isScrollRestored.top && contentHeight) {
         scroller.scrollTop = top;
-        ignoreNextScrollEvent.current = true;
-        isScrollRestored.top = true;
       }
 
-      // To restore the vertical scroll, we need to wait until the rows are available in the DOM (otherwise there's nowhere to scroll), but before paint to avoid reflows
       if (!isScrollRestored.top || !isScrollRestored.left) {
         verticalScrollRestoreCallback.current = (
           columnsTotalWidthCurrent: number,
@@ -584,12 +577,10 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
         ) => {
           if (!isScrollRestored.left && columnsTotalWidthCurrent) {
             scroller.scrollLeft = left;
-            ignoreNextScrollEvent.current = true;
             isScrollRestored.left = true;
           }
           if (!isScrollRestored.top && contentHeightCurrent) {
             scroller.scrollTop = top;
-            ignoreNextScrollEvent.current = true;
             isScrollRestored.top = true;
           }
           if (isScrollRestored.left && isScrollRestored.top) {
