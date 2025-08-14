@@ -76,12 +76,16 @@ export function calculateSankeyLayout(
   let result: SankeyGraph<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>;
   try {
     result = sankeyGenerator(graph);
-  } catch (_) {
+  } catch (error) {
     // There are two errors that can occur:
     // 1. If the data contains circular references, d3-sankey will throw an error.
     // 2. If there are missing source/target nodes, d3-sankey will throw an error.
     // We handle the second case by building a map of nodes ourselves, so they are always present.
-    throw new Error('MUI X Charts: Sankey diagram contains circular references.');
+    if (error instanceof Error && error.message === 'circular link') {
+      throw new Error('MUI X Charts: Sankey diagram contains circular references.');
+    }
+
+    throw error;
   }
   const { nodes, links } = result;
 
