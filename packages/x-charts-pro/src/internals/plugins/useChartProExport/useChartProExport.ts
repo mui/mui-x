@@ -23,17 +23,19 @@ function waitForAnimationFrame() {
 
 export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
   chartRootRef,
+  svgRef,
   instance,
 }) => {
   const exportAsPrint = async (options?: ChartPrintExportOptions) => {
     const chartRoot = chartRootRef.current;
+    const svg = svgRef.current;
 
-    if (chartRoot) {
+    if (chartRoot && svg) {
       const enableAnimation = instance.disableAnimation();
       try {
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
-        printChart(chartRoot, options);
+        printChart(chartRoot, svg, options);
       } catch (error) {
         console.error('MUI X Charts: Error exporting chart as print:', error);
       } finally {
@@ -44,14 +46,15 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
 
   const exportAsImage = async (options?: ChartImageExportOptions) => {
     const chartRoot = chartRootRef.current;
+    const svg = svgRef.current;
 
-    if (chartRoot) {
+    if (chartRoot && svg) {
       const enableAnimation = instance.disableAnimation();
 
       try {
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
-        await exportImage(chartRoot, options);
+        await exportImage(chartRoot, svg, options);
       } catch (error) {
         console.error('MUI X Charts: Error exporting chart as image:', error);
       } finally {

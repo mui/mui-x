@@ -82,10 +82,9 @@ function createOnBeforeExport(
     const stack = document.createElement('div');
     const chart = document.body.firstElementChild!;
 
-    stack.style.margin = 'auto';
     stack.style.display = 'flex';
     stack.style.flexDirection = 'column';
-    stack.style.alignItems = 'center';
+    stack.style.width = 'max-content';
 
     document.body.appendChild(stack);
 

@@ -1,11 +1,12 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
-import { createExportIframe } from './common';
+import { applyStyles, createExportIframe } from './common';
 import { ChartPrintExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export function printChart(
   element: HTMLElement | SVGElement,
+  svg: SVGElement,
   {
     fileName,
     onBeforeExport = defaultOnBeforeExport,
@@ -15,12 +16,25 @@ export function printChart(
   const printWindow = createExportIframe(fileName);
   const doc = ownerDocument(element);
 
+  const svgSize = svg.getBoundingClientRect();
+  /* We apply the min/max width and height to ensure the SVG doesn't resize in the export.
+   * We apply to the original SVG so that the cloned tree will contain the styles and revert these
+   * styles changes after the chart is cloned. */
+  const previousStyles = applyStyles(svg, {
+    'min-width': `${svgSize.width}px`,
+    'max-width': `${svgSize.width}px`,
+    height: `${svgSize.height}px`,
+  });
+
   printWindow.onload = async () => {
     const printDoc = printWindow.contentDocument!;
     const elementClone = element!.cloneNode(true) as HTMLElement | SVGElement;
-    const container = document.createElement('div');
-    container.appendChild(elementClone);
-    printDoc.body.innerHTML = container.innerHTML;
+    applyStyles(svg, previousStyles);
+    printDoc.body.replaceChildren(elementClone);
+    printDoc.body.style.margin = '0px';
+    /* The body's parent has a width of 0, so we use fit-content to ensure that the body adjusts its width to the width
+     * of its children. */
+    printDoc.body.style.width = 'fit-content';
 
     const rootCandidate = element.getRootNode();
     const root =
