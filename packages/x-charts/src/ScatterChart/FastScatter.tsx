@@ -26,6 +26,8 @@ export interface FastScatterProps {
 }
 
 const MAX_POINTS_PER_PATH = 1000;
+/* In an SVG arc, if the arc starts and ends at the same point, it is not rendered, so we add a tiny
+ * value to one of the coordinates to ensure that the arc is rendered. */
 const ALMOST_ZERO = 0.01;
 
 function appendAtKey(map: Map<string, string[]>, key: string, value: string) {
