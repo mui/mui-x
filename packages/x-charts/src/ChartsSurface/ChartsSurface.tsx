@@ -40,6 +40,11 @@ const ChartsSurfaceStyles = styled('svg', {
   // For example, prevent page scroll & zoom.
   touchAction: 'pan-y',
   userSelect: 'none',
+  // Move the focus outline responsability to children
+  outline: 'none',
+  '& [data-focused=true]': {
+    outline: 'auto',
+  },
 }));
 
 /**
@@ -79,13 +84,6 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       {...other}
       ref={handleRef}
       tabIndex={0}
-      sx={{
-        outline: 'none',
-        '& [data-focused=true]': {
-          outline: 'auto',
-          //  outlineOffset: 1
-        },
-      }}
     >
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}

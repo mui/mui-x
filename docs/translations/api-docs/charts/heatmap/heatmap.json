@@ -46,7 +46,7 @@
       }
     },
     "series": {
-      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/heatmap-series/'>HeatmapSeries</a> objects."
+      "description": "The series to display in the bar chart. An array of [[HeatmapSeries]] objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "slotProps": { "description": "The props used for each component slot." },
@@ -59,10 +59,10 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
     },
     "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
     },
     "zAxis": { "description": "The configuration of the z-axes." }
   },
