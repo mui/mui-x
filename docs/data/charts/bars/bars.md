@@ -141,6 +141,7 @@ By default, a gradient's units are set to `objectBoundingBox`.
 When applied to a bar, the gradient stretches to fill the entire size of the bar, regardless of the bar's value.
 
 Alternatively, you can set `gradientUnits` to `userSpaceOnUse`, which stretches the gradient to fill the entire size of the chart.
+`userSpaceOnUse` means that the gradient's coordinates are relative to the SVG, meaning that a gradient with `x1="0"` and `x2="100%"` stretches across the entire width of the SVG.
 This effectively reveals the gradient depending on the bar's value, as the gradient is clipped to the bar's size.
 
 {{"demo": "BarOECDHouseholdSavings.js"}}
