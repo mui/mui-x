@@ -27,12 +27,7 @@ export function ChartThumbnailCard({ title, link, ChartComponent }) {
           borderColor: 'secondary.main',
           borderRadius: 1,
           overflow: 'hidden',
-          opacity: 0.7,
           backgroundColor: 'background.paper',
-          transition: 'all 0.2s ease-in-out',
-          '&:hover': {
-            opacity: 1,
-          },
         }}
       >
         <Box
@@ -64,7 +59,6 @@ export function ChartThumbnailCard({ title, link, ChartComponent }) {
                 height: '100%',
                 objectFit: 'contain',
               },
-              pointerEvents: 'none',
             }}
           >
             <ChartComponent />
