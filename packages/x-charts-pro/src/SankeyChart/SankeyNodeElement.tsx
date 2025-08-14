@@ -5,19 +5,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
 import { SankeyLayoutNode, type SankeyItemIdentifier } from './sankey.types';
-
-const SankeyNodeElementRoot = styled('rect')(({ onClick }) => ({
-  stroke: 'none',
-  cursor: onClick ? 'pointer' : 'default',
-}));
-
-const SankeyNodeElementLabel = styled('text')(({ theme }) => ({
-  fill: theme.palette.text.primary,
-  fontSize: '0.75rem',
-  fontWeight: 'normal',
-  dominantBaseline: 'middle',
-  pointerEvents: 'none',
-}));
+import { useTheme } from '@mui/material/styles';
 
 export interface SankeyNodeElementProps {
   /**
@@ -28,10 +16,6 @@ export interface SankeyNodeElementProps {
    * The node data
    */
   node: SankeyLayoutNode;
-  /**
-   * Color to apply to the node
-   */
-  color?: string;
   /**
    * Whether to show the node label
    */
@@ -49,7 +33,8 @@ export interface SankeyNodeElementProps {
  */
 export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
   function SankeyNodeElement(props, ref) {
-    const { node, color, showLabel = true, onClick, seriesId } = props;
+    const { node, showLabel = true, onClick, seriesId } = props;
+    const theme = useTheme();
 
     const x0 = node.x0 ?? 0;
     const y0 = node.y0 ?? 0;
@@ -84,21 +69,31 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
     });
 
     return (
-      <g ref={ref}>
-        <SankeyNodeElementRoot
+      <g ref={ref} data-node={node.id}>
+        <rect
           x={node.x0}
           y={node.y0}
           width={nodeWidth}
           height={nodeHeight}
-          fill={color || node.color}
+          fill={node.color}
           onClick={onClick ? handleClick : undefined}
+          cursor={onClick ? 'pointer' : 'default'}
+          stroke="none"
           {...interactionProps}
         />
 
         {showLabel && node.label && (
-          <SankeyNodeElementLabel x={labelX} y={(y0 + y1) / 2} textAnchor={labelAnchor}>
+          <text
+            x={labelX}
+            y={(y0 + y1) / 2}
+            textAnchor={labelAnchor}
+            fill={theme.palette.text.primary}
+            fontSize={theme.typography.caption.fontSize}
+            fontFamily={theme.typography.fontFamily}
+            pointerEvents="none"
+          >
             {node.label}
-          </SankeyNodeElementLabel>
+          </text>
         )}
       </g>
     );

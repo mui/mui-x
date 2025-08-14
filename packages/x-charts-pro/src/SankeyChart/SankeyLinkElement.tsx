@@ -1,16 +1,9 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
 import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
-
-const SankeyLinkElementRoot = styled('path')(({ onClick }) => ({
-  fill: 'none',
-  transition: 'stroke-opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-  cursor: onClick ? 'pointer' : 'default',
-}));
 
 export interface SankeyLinkElementProps {
   /**
@@ -65,13 +58,17 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     }
 
     return (
-      <SankeyLinkElementRoot
+      <path
         ref={ref}
         d={link.path}
         stroke={color || link.color}
         strokeWidth={link.width}
         strokeOpacity={opacity}
+        data-link-source={link.source.id}
+        data-link-target={link.target.id}
         onClick={onClick ? handleClick : undefined}
+        cursor={onClick ? 'pointer' : 'default'}
+        fill="none"
         {...interactionProps}
       />
     );

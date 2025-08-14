@@ -8,14 +8,6 @@ export interface SankeyLinkLabelProps {
    * The link data
    */
   link: SankeyLayoutLink;
-  /**
-   * Optional color override for the label
-   */
-  color?: string;
-  /**
-   * Optional font size override for the label
-   */
-  fontSize?: string | number;
 }
 
 const getLinkMidpoint = (link: SankeyLayoutLink) => {
@@ -40,7 +32,7 @@ const getLinkMidpoint = (link: SankeyLayoutLink) => {
  */
 export const SankeyLinkLabel = React.forwardRef<SVGTextElement, SankeyLinkLabelProps>(
   function SankeyLinkLabel(props, ref) {
-    const { link, color, fontSize } = props;
+    const { link } = props;
     const theme = useTheme();
 
     if (!link.path || link.y0 === undefined || link.y1 === undefined) {
@@ -56,12 +48,12 @@ export const SankeyLinkLabel = React.forwardRef<SVGTextElement, SankeyLinkLabelP
         y={midpoint.y}
         textAnchor="middle"
         dominantBaseline="middle"
-        fontSize={fontSize || theme.typography.caption.fontSize}
-        fill={color || theme.palette.text.primary}
-        style={{
-          pointerEvents: 'none',
-          fontFamily: theme.typography.fontFamily,
-        }}
+        fontSize={theme.typography.caption.fontSize}
+        fill={theme.palette.text.primary}
+        data-link-source={link.source.id}
+        data-link-target={link.target.id}
+        fontFamily={theme.typography.fontFamily}
+        pointerEvents="none"
       >
         {link.value}
       </text>
