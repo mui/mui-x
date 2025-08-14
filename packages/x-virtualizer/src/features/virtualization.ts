@@ -231,7 +231,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
     scrollPosition.current = newScroll;
 
-    const direction = isScrolling ? directionForDelta(dx, dy) : ScrollDirection.NONE;
+    const direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE;
 
     // Since previous render, we have scrolled...
     const rowScroll = Math.abs(
@@ -1006,27 +1006,6 @@ export function computeOffsetLeft(
     (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
   return Math.abs(left);
-}
-
-function directionForDelta(dx: number, dy: number) {
-  if (dx === 0 && dy === 0) {
-    return ScrollDirection.NONE;
-  }
-  /* eslint-disable */
-  if (Math.abs(dy) >= Math.abs(dx)) {
-    if (dy > 0) {
-      return ScrollDirection.DOWN;
-    } else {
-      return ScrollDirection.UP;
-    }
-  } else {
-    if (dx > 0) {
-      return ScrollDirection.RIGHT;
-    } else {
-      return ScrollDirection.LEFT;
-    }
-  }
-  /* eslint-enable */
 }
 
 function bufferForDirection(
