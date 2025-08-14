@@ -299,13 +299,12 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
-      if (timeoutRowId.current !== params.id) {
+      if (timeoutRowId.current && timeoutRowId.current !== params.id) {
         timeout.clear();
         timeoutRowId.current = '';
       }
 
       if (
-        sourceNode.type === 'leaf' &&
         targetNode.type === 'group' &&
         targetNode.depth < sourceNode.depth &&
         !targetNode.childrenExpanded &&
@@ -313,10 +312,7 @@ export const useGridRowReorder = (
       ) {
         timeout.start(500, () => {
           const rowNode = gridRowNodeSelector(apiRef, params.id) as GridGroupNode;
-          if (!rowNode.childrenExpanded && props.dataSource) {
-            // always fetch/get from cache the children when the node is expanded
-            apiRef.current.dataSource.fetchRows(params.id);
-          }
+          // TODO: Handle `dataSource` case with https://github.com/mui/mui-x/issues/18947
           apiRef.current.setRowChildrenExpansion(params.id, !rowNode.childrenExpanded);
         });
         timeoutRowId.current = params.id;
