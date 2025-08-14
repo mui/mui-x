@@ -78,21 +78,7 @@ For example, it is common that an axis with a log scale has ticks that are not l
 The default tick formatter achieves this by rendering an empty string for ticks that should not show labels.
 If you want to customize the formatting, but want to keep the default behavior for ticks without labels, you can check that `context.defaultTickLabel` property is different from the empty string.
 
-```js
-<ScatterChart
-  xAxis={[
-    {
-      valueFormatter: (value, context) => {
-        if (context.location === 'tick' && context.defaultTickLabel === '') {
-          return '';
-        }
-
-        return `${value}€`;
-      },
-    },
-  ]}
-/>
-```
+{{"demo": "TicksWithoutLabels.js"}}
 
 #### Using the D3 formatter
 
