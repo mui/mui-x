@@ -164,6 +164,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
    * that are part of this old context will keep their same render context as to avoid re-rendering.
    */
   const scrollPosition = React.useRef(initialState?.scroll ?? EMPTY_SCROLL_POSITION);
+  const ignoreNextScrollEvent = React.useRef(false);
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
 
@@ -178,7 +179,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
         return;
       }
-
       const didRowsIntervalChange =
         nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
         nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
@@ -306,6 +306,10 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   });
 
   const handleScroll = useEventCallback(() => {
+    if (ignoreNextScrollEvent.current) {
+      ignoreNextScrollEvent.current = false;
+      return;
+    }
     const nextRenderContext = triggerUpdateRenderContext();
     if (nextRenderContext) {
       onScrollChange?.(scrollPosition.current, nextRenderContext);
@@ -519,13 +523,13 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     return size;
   }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
 
-  const verticalScrollRestoreCallback = React.useRef<Function | null>(null);
-  const onContentSizeApplied = React.useCallback(
+  const scrollRestoreCallback = React.useRef<Function | null>(null);
+  const contentNodeRef = React.useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) {
         return;
       }
-      verticalScrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
+      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
     },
     [columnsTotalWidth, contentHeight],
   );
@@ -560,6 +564,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       if (!isScrollRestored.left && columnsTotalWidth) {
         scroller.scrollLeft = left;
         isScrollRestored.left = true;
+        ignoreNextScrollEvent.current = true;
       }
 
       // To restore the vertical scroll, we need to wait until the rows are available in the DOM (otherwise
@@ -568,23 +573,26 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       // asynchronous callback below.
       if (!isScrollRestored.top && contentHeight) {
         scroller.scrollTop = top;
+        ignoreNextScrollEvent.current = true;
       }
 
       if (!isScrollRestored.top || !isScrollRestored.left) {
-        verticalScrollRestoreCallback.current = (
+        scrollRestoreCallback.current = (
           columnsTotalWidthCurrent: number,
           contentHeightCurrent: number,
         ) => {
           if (!isScrollRestored.left && columnsTotalWidthCurrent) {
             scroller.scrollLeft = left;
             isScrollRestored.left = true;
+            ignoreNextScrollEvent.current = true;
           }
           if (!isScrollRestored.top && contentHeightCurrent) {
             scroller.scrollTop = top;
             isScrollRestored.top = true;
+            ignoreNextScrollEvent.current = true;
           }
           if (isScrollRestored.left && isScrollRestored.top) {
-            verticalScrollRestoreCallback.current = null;
+            scrollRestoreCallback.current = null;
           }
         };
       }
@@ -611,7 +619,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       tabIndex: platform.isFirefox ? -1 : undefined,
     }),
     getContentProps: () => ({
-      ref: onContentSizeApplied,
+      ref: contentNodeRef,
       style: contentSize,
       role: 'presentation',
     }),
