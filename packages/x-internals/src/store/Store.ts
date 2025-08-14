@@ -1,7 +1,6 @@
 type Listener<T> = (value: T) => void;
 
 /* eslint-disable no-cond-assign */
-/* eslint-disable lines-between-class-members */
 
 export class Store<State> {
   public state: State;
@@ -39,7 +38,7 @@ export class Store<State> {
 
     const currentTick = this.updateTick;
 
-    let it = this.listeners.values();
+    const it = this.listeners.values();
     let result;
     while (((result = it.next()), !result.done)) {
       if (currentTick !== this.updateTick) {
