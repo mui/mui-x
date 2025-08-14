@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
-import { alpha } from '@mui/material/styles';
 
 export function ChartThumbnailCard({ title, link, ChartComponent }) {
   return (
@@ -19,7 +18,7 @@ export function ChartThumbnailCard({ title, link, ChartComponent }) {
     >
       <Paper
         variant="outlined"
-        sx={(theme) => ({
+        sx={{
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -31,19 +30,10 @@ export function ChartThumbnailCard({ title, link, ChartComponent }) {
           opacity: 0.7,
           backgroundColor: 'background.paper',
           transition: 'all 0.2s ease-in-out',
-          filter: 'grayscale(100%)',
           '&:hover': {
             opacity: 1,
-            boxShadow: `0px 2px 30px 0px ${alpha(theme.palette.primary[50], 0.3)} inset, 0px 1px 6px 0px ${theme.palette.primary[100]}`,
-            borderColor: 'primary.100',
-            filter: 'grayscale(0%)',
           },
-          ...theme.applyDarkStyles({
-            '&:hover': {
-              boxShadow: `0px 2px 30px 0px ${alpha(theme.palette.primary[800], 0.1)} inset, 0px 1px 6px 0px ${theme.palette.primary[900]}`,
-            },
-          }),
-        })}
+        }}
       >
         <Box
           sx={{
