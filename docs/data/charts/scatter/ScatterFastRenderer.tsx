@@ -2,11 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { ScatterChart, ScatterChartProps } from '@mui/x-charts/ScatterChart';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
-import {
-  mangoFusionPalette,
-  rainbowSurgePalette,
-} from '@mui/x-charts/colorPalettes';
+import { schemePaired } from 'd3-scale-chromatic';
 import { electricityGeneration2024Every6Hours } from '../dataset/electricityGeneration2024Every6Hours';
 import { carbonEmissions2024Every6Hours } from '../dataset/carbonEmissions2024Every6Hours';
 import { countryData } from '../dataset/countryData';
@@ -47,6 +43,7 @@ const scatterChartsParams = {
   xAxis: [{ min: 0, label: 'Electricity Generation (GWh)' }],
   yAxis: [{ min: 0, width: 60, label: 'Life-cycle Carbon Intensity (gCO₂eq/kWh)' }],
   height: 400,
+  colors: schemePaired,
   slotProps: {
     legend: {
       position: { vertical: 'bottom' },
@@ -56,19 +53,12 @@ const scatterChartsParams = {
 } satisfies ScatterChartProps;
 
 export default function ScatterFastRenderer() {
-  const { palette } = useTheme();
-
-  const colors = React.useMemo(
-    () => rainbowSurgePalette(palette.mode).concat(mangoFusionPalette(palette.mode)),
-    [palette.mode],
-  );
-
   return (
     <Stack spacing={{ xs: 0, md: 2 }} sx={{ width: '100%' }}>
       <Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
         Life-cycle Carbon Intensity of Electricity Generation - 2024
       </Typography>
-      <ScatterChart {...scatterChartsParams} useFastRenderer colors={colors} />
+      <ScatterChart {...scatterChartsParams} useFastRenderer />
       <Typography variant="caption">Source: ENTSO-E, EletricityMaps.com</Typography>
     </Stack>
   );
