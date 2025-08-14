@@ -8,12 +8,10 @@ import MultipleYAxesScatterChart from '../data/charts/scatter-demo/MultipleYAxes
 const chartData = [
   {
     title: 'Simple Scatter Chart',
-    link: '/x/react-charts/scatter-demo/#simple-scatter-chart',
     ChartComponent: SimpleScatterChart,
   },
   {
     title: 'Multiple Y Axes Scatter Chart',
-    link: '/x/react-charts/scatter-demo/#multiple-y-axes',
     ChartComponent: MultipleYAxesScatterChart,
   },
 ];
@@ -36,7 +34,7 @@ export default function ScatterChartsGrid() {
         <ChartThumbnailCard
           key={chart.title}
           title={chart.title}
-          link={chart.link}
+          // link={chart.link}
           ChartComponent={chart.ChartComponent}
         />
       ))}

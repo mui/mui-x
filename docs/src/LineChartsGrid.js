@@ -14,42 +14,34 @@ import CustomLineMarks from '../data/charts/line-demo/CustomLineMarks';
 const chartData = [
   {
     title: 'Simple Line Chart',
-    link: '/x/react-charts/examples/simplelinechart/',
     ChartComponent: SimpleLineChart,
   },
   {
     title: 'Dashed Line Chart',
-    link: '/x/react-charts/examples/dashedlinechart/',
     ChartComponent: DashedLineChart,
   },
   {
     title: 'Biaxial Line Chart',
-    link: '/x/react-charts/examples/biaxiallinechart/',
     ChartComponent: BiaxialLineChart,
   },
   {
     title: 'Line Chart with Reference Lines',
-    link: '/x/react-charts/line-demo/#line-chart-with-reference-lines',
     ChartComponent: LineChartWithReferenceLines,
   },
   {
     title: 'Line Chart Connect Nulls',
-    link: '/x/react-charts/line-demo/#line-chart-connect-nulls',
     ChartComponent: LineChartConnectNulls,
   },
   {
     title: 'Live Line Chart',
-    link: '/x/react-charts/line-demo/#line-chart-with-live-data',
     ChartComponent: LiveLineChartNoSnap,
   },
   {
     title: 'Line with Uncertainty Area',
-    link: '/x/react-charts/line-demo/#line-with-forecast',
     ChartComponent: LineWithUncertaintyArea,
   },
   {
     title: 'Custom Line Marks',
-    link: '/x/react-charts/line-demo/#custom-line-marks',
     ChartComponent: CustomLineMarks,
   },
 ];
@@ -72,7 +64,7 @@ export default function LineChartsGrid() {
         <ChartThumbnailCard
           key={chart.title}
           title={chart.title}
-          link={chart.link}
+          // link={chart.link}
           ChartComponent={chart.ChartComponent}
         />
       ))}

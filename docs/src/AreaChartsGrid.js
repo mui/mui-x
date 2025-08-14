@@ -10,22 +10,18 @@ import AreaChartConnectNulls from '../data/charts/areas-demo/AreaChartConnectNul
 const chartData = [
   {
     title: 'Simple Area Chart',
-    link: '/x/react-charts/areas-demo/#simple-area-chart',
     ChartComponent: SimpleAreaChart,
   },
   {
     title: 'Stacked Area Chart',
-    link: '/x/react-charts/areas-demo/#stacked-area-chart',
     ChartComponent: StackedAreaChart,
   },
   {
     title: 'Percent Area Chart',
-    link: '/x/react-charts/areas-demo/#percent-area-chart',
     ChartComponent: PercentAreaChart,
   },
   {
     title: 'Area Chart Connect Nulls',
-    link: '/x/react-charts/areas-demo/#area-chart-connect-nulls',
     ChartComponent: AreaChartConnectNulls,
   },
 ];
@@ -48,7 +44,7 @@ export default function AreaChartsGrid() {
         <ChartThumbnailCard
           key={chart.title}
           title={chart.title}
-          link={chart.link}
+          // link={chart.link} // TODO: replace with link to docs or even link to just the code? copy the code to clipboard like tremor?
           ChartComponent={chart.ChartComponent}
         />
       ))}

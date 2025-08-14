@@ -501,24 +501,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
       { pathname: '/x/react-charts/quickstart', title: 'Quickstart' },
-      {
-        pathname: '/x/react-charts/examples-group',
-        title: 'Examples',
-        children: [
-          { pathname: '/x/react-charts/examples', title: 'All' },
-          { pathname: '/x/react-charts/examples/simplebarchart', title: 'Simple Bar Chart' },
-          { pathname: '/x/react-charts/examples/stackedbarchart', title: 'Stacked Bar Chart' },
-          { pathname: '/x/react-charts/examples/mixedbarchart', title: 'Mixed Bar Chart' },
-          {
-            pathname: '/x/react-charts/examples/positive-and-negative-bar-chart',
-            title: 'Positive and Negative Bar Chart',
-          },
-          { pathname: '/x/react-charts/examples/simplelinechart', title: 'Simple Line Chart' },
-          { pathname: '/x/react-charts/examples/dashedlinechart', title: 'Dashed Line Chart' },
-          { pathname: '/x/react-charts/examples/biaxiallinechart', title: 'Biaxial Line Chart' },
-          { pathname: '/x/react-charts/examples/twolevelpiechart', title: 'Two Level Pie Chart' },
-        ],
-      },
+      { pathname: '/x/react-charts/examples-group', title: 'Examples' },
       {
         pathname: '/x/react-chart-components',
         subheader: 'Components',

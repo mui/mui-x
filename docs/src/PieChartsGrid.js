@@ -12,32 +12,26 @@ import PieChartWithCustomLegendAndTooltip from '../data/charts/pie-demo/PieChart
 const chartData = [
   {
     title: 'Two Level Pie Chart',
-    link: '/x/react-charts/examples/twolevelpiechart',
     ChartComponent: TwoLevelPieChart,
   },
   {
     title: 'Straight Angle Pie Chart',
-    link: '/x/react-charts/pie-demo/#straight-angle-pie-chart',
     ChartComponent: StraightAnglePieChart,
   },
   {
     title: 'Pie Chart with Customized Label',
-    link: '/x/react-charts/pie-demo/#pie-chart-with-customized-label',
     ChartComponent: PieChartWithCustomizedLabel,
   },
   {
     title: 'Pie Chart with Center Label',
-    link: '/x/react-charts/pie-demo/#pie-chart-with-center-label',
     ChartComponent: PieChartWithCenterLabel,
   },
   {
     title: 'Pie Chart with Padding Angle',
-    link: '/x/react-charts/pie-demo/#pie-chart-with-padding-angle',
     ChartComponent: PieChartWithPaddingAngle,
   },
   {
     title: 'Pie Chart with Custom Legend',
-    link: '/x/react-charts/pie-demo/#pie-chart-with-custom-legend-and-tooltip',
     ChartComponent: PieChartWithCustomLegendAndTooltip,
   },
 ];
@@ -60,7 +54,7 @@ export default function PieChartsGrid() {
         <ChartThumbnailCard
           key={chart.title}
           title={chart.title}
-          link={chart.link}
+          // link={chart.link}
           ChartComponent={chart.ChartComponent}
         />
       ))}

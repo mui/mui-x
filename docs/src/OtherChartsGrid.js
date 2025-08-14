@@ -11,27 +11,22 @@ import AreaSparkLine from '../data/charts/sparkline/AreaSparkLine';
 const chartData = [
   {
     title: 'Basic Gauges',
-    link: '/x/react-charts/gauge/#basics',
     ChartComponent: BasicGauges,
   },
   {
     title: 'Arc Design',
-    link: '/x/react-charts/gauge/#arc-design',
     ChartComponent: ArcDesign,
   },
   {
     title: 'Customized Gauge with Pointer',
-    link: '/x/react-charts/gauge/#composition',
     ChartComponent: CompositionExample,
   },
   {
     title: 'Basic Sparkline',
-    link: '/x/react-charts/sparkline/#basics',
     ChartComponent: BasicSparkLine,
   },
   {
     title: 'Area Sparkline',
-    link: '/x/react-charts/sparkline/#line-customization',
     ChartComponent: AreaSparkLine,
   },
 ];
@@ -54,7 +49,7 @@ export default function OtherChartsGrid() {
         <ChartThumbnailCard
           key={chart.title}
           title={chart.title}
-          link={chart.link}
+          // link={chart.link}
           ChartComponent={chart.ChartComponent}
         />
       ))}

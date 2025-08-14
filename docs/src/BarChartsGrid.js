@@ -13,37 +13,30 @@ import PopulationPyramidBarChart from '../data/charts/bar-demo/PopulationPyramid
 const chartData = [
   {
     title: 'Simple Bar Chart',
-    link: '/x/react-charts/examples/simplebarchart/',
     ChartComponent: SimpleBarChart,
   },
   {
     title: 'Stacked Bar Chart',
-    link: '/x/react-charts/examples/stackedbarchart/',
     ChartComponent: StackedBarChart,
   },
   {
     title: 'Mixed Bar Chart',
-    link: '/x/react-charts/examples/mixedbarchart/',
     ChartComponent: MixedBarChart,
   },
   {
     title: 'Positive and Negative Bar Chart',
-    link: '/x/react-charts/examples/positive-and-negative-bar-chart/',
     ChartComponent: PositiveAndNegativeBarChart,
   },
   {
     title: 'Bar Chart Stacked by Sign',
-    link: '/x/react-charts/bar-demo/#bar-chart-stacked-by-sign',
     ChartComponent: BarChartStackedBySign,
   },
   {
     title: 'Biaxial Bar Chart',
-    link: '/x/react-charts/bar-demo/#biaxial-bar-chart',
     ChartComponent: BiaxialBarChart,
   },
   {
     title: 'Population Pyramid Bar Chart',
-    link: '/x/react-charts/bar-demo/#population-pyramid',
     ChartComponent: PopulationPyramidBarChart,
   },
 ];
@@ -66,7 +59,7 @@ export default function BarChartsGrid() {
         <ChartThumbnailCard
           key={chart.title}
           title={chart.title}
-          link={chart.link}
+          // link={chart.link}
           ChartComponent={chart.ChartComponent}
         />
       ))}
