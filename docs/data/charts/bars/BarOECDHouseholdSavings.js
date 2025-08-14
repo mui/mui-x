@@ -31,7 +31,7 @@ const settings = {
 };
 
 export default function BarOECDHouseholdSavings() {
-  const [gradientUnits, setGradientUnits] = React.useState('objectBoundingBox');
+  const [gradientUnits, setGradientUnits] = React.useState('userSpaceOnUse');
 
   return (
     <Stack width="100%">
