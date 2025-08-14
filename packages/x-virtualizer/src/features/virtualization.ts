@@ -139,6 +139,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
+  const [, setRefTick] = React.useState(0);
 
   const isRenderContextReady = React.useRef(false);
 
@@ -176,23 +177,21 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: RenderContext) => {
-      if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
-        return;
+      if (!areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
+        store.set('virtualization', {
+          ...store.state.virtualization,
+          renderContext: nextRenderContext,
+        });
       }
-
-      const didRowsIntervalChange =
-        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
-        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
-
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        renderContext: nextRenderContext,
-      });
 
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if we already have a render context, because
       // otherwise we would call an update directly on mount
       const isReady = Dimensions.selectors.dimensions(store.state).isReady;
+      const didRowsIntervalChange =
+        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
+        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
+
       if (isReady && didRowsIntervalChange) {
         previousRowContext.current = nextRenderContext;
         onRenderContextChange?.(nextRenderContext);
@@ -602,14 +601,21 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
+  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
+    if (node && refs[name].current !== node) {
+      refs[name].current = node;
+      setRefTick((tick) => tick + 1);
+    }
+  };
+
   const getters = {
     setPanels,
     getRows,
     getContainerProps: () => ({
-      ref: refs.container,
+      ref: refSetter('container'),
     }),
     getScrollerProps: () => ({
-      ref: refs.scroller,
+      ref: refSetter('scroller'),
       onScroll: handleScroll,
       onWheel,
       onTouchMove,
@@ -625,11 +631,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       role: 'presentation',
     }),
     getScrollbarVerticalProps: () => ({
-      ref: refs.scrollbarVertical,
+      ref: refSetter('scrollbarVertical'),
       scrollPosition,
     }),
     getScrollbarHorizontalProps: () => ({
-      ref: refs.scrollbarHorizontal,
+      ref: refSetter('scrollbarHorizontal'),
       scrollPosition,
     }),
     getScrollAreaProps: () => ({
