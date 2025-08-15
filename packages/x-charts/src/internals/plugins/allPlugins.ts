@@ -9,6 +9,10 @@ import {
   useChartInteraction,
   UseChartInteractionSignature,
 } from './featurePlugins/useChartInteraction';
+import {
+  useChartKeyboardNavigation,
+  UseChartKeyboardNavigationSignature,
+} from './featurePlugins/useChartKeyboardNavigation';
 import { UseChartPolarAxisSignature } from './featurePlugins/useChartPolarAxis';
 import { useChartVoronoi, UseChartVoronoiSignature } from './featurePlugins/useChartVoronoi';
 import { useChartZAxis, UseChartZAxisSignature } from './featurePlugins/useChartZAxis';
@@ -28,6 +32,7 @@ export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSerie
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartVoronoiSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
 export const DEFAULT_PLUGINS = [
@@ -36,4 +41,5 @@ export const DEFAULT_PLUGINS = [
   useChartInteraction,
   useChartHighlight,
   useChartVoronoi,
+  useChartKeyboardNavigation,
 ] as const;
