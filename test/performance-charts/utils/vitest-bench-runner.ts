@@ -145,11 +145,11 @@ async function runBenchmarkSuite(suite: Suite, runner: NodeBenchmarkRunner) {
       await task.warmup();
       tasks.push([
         // eslint-disable-next-line no-await-in-loop
-        await new Promise<BenchTask>((resolve) =>
+        await new Promise<BenchTask>((resolve) => {
           setTimeout(async () => {
             resolve(await task.run());
-          }),
-        ),
+          });
+        }),
         benchmark,
       ]);
     }
