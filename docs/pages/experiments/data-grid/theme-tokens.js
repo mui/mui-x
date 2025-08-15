@@ -3,7 +3,6 @@ import Container from '@mui/material/Container';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { useUserLanguage } from '@mui/docs/i18n';
 import { DemoPageThemeProvider } from 'docs/src/theming';
 import RichMarkdownElement from 'docs/src/modules/components/RichMarkdownElement';
 import DataGridThemeVisualizer from 'docsx/src/modules/experiments/DataGridThemeVisualizer';
@@ -34,8 +33,7 @@ function a11yProps(index) {
 
 export default function Page() {
   const { demos = {}, docs, demoComponents, srcComponents } = pageProps;
-  const userLanguage = useUserLanguage();
-  const localizedDoc = docs[userLanguage] || docs.en;
+  const localizedDoc = docs.en;
   const [value, setValue] = React.useState(0);
 
   const handleChange = (_, newValue) => {
