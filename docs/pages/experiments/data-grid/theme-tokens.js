@@ -55,7 +55,12 @@ export default function Page() {
         }}
       >
         <Container maxWidth="lg">
-          <Tabs value={value} onChange={handleChange} aria-label="theme customization tabs">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="theme customization tabs"
+            sx={{ justifyContent: 'center' }}
+          >
             <Tab label="Docs" {...a11yProps(0)} />
             <Tab label="Visualizer" {...a11yProps(1)} />
           </Tabs>

@@ -11,7 +11,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import { alpha } from '@mui/material/styles';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import InventoryDashboard from 'docsx/src/modules/components/demos/data-grid/Inventory/InventoryDashboard';
+import PTOCalendar from 'docsx/src/modules/components/demos/data-grid/PTOCalendar/PTOCalendar';
+import StockDashboard from 'docsx/src/modules/components/demos/data-grid/StockDashboard/StockDashboard';
 
 interface CSSVariableUsage {
   variable: string;
@@ -19,11 +23,14 @@ interface CSSVariableUsage {
   properties: string[];
 }
 
+type DemoType = 'inventory' | 'pto' | 'stock';
+
 export default function DataGridThemeVisualizer() {
   const [cssVariables, setCssVariables] = React.useState<CSSVariableUsage[]>([]);
   const [selectedVariable, setSelectedVariable] = React.useState<string | null>(null);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [highlightedElements, setHighlightedElements] = React.useState<Element[]>([]);
+  const [currentDemo, setCurrentDemo] = React.useState<DemoType>('inventory');
   const gridContainerRef = React.useRef<HTMLDivElement>(null);
 
   const collectCSSVariables = React.useCallback(() => {
@@ -181,13 +188,51 @@ export default function DataGridThemeVisualizer() {
     setCssVariables(sortedVariables);
   }, []);
 
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      collectCSSVariables();
-    }, 500);
+  const clearHighlights = React.useCallback(() => {
+    setHighlightedElements((prevElements) => {
+      prevElements.forEach((el) => {
+        (el as HTMLElement).style.outline = '';
+        (el as HTMLElement).style.backgroundColor = '';
+      });
+      return [];
+    });
+    setSelectedVariable(null);
+  }, []);
 
-    return () => clearTimeout(timer);
-  }, [collectCSSVariables]);
+  React.useEffect(() => {
+    // Clear highlights and selection when switching demos
+    clearHighlights();
+
+    let checkTimer: NodeJS.Timeout;
+
+    // Function to check if DataGrid is still loading
+    const waitForDataLoad = () => {
+      if (!gridContainerRef.current) {
+        return;
+      }
+
+      const loadingOverlay = gridContainerRef.current.querySelector('.MuiDataGrid-overlay');
+
+      if (loadingOverlay) {
+        // If loading overlay is present, check again after a delay
+        checkTimer = setTimeout(waitForDataLoad, 100);
+        return;
+      }
+
+      // No loading overlay found, safe to collect CSS variables
+      collectCSSVariables();
+    };
+
+    // Initial delay to allow component to mount
+    const timer = setTimeout(waitForDataLoad, 500);
+
+    return () => {
+      clearTimeout(timer);
+      if (checkTimer) {
+        clearTimeout(checkTimer);
+      }
+    };
+  }, [collectCSSVariables, currentDemo, clearHighlights]);
 
   const handleVariableSelect = (variable: string) => {
     setSelectedVariable(variable);
@@ -211,13 +256,10 @@ export default function DataGridThemeVisualizer() {
     }
   };
 
-  const clearHighlights = () => {
-    highlightedElements.forEach((el) => {
-      (el as HTMLElement).style.outline = '';
-      (el as HTMLElement).style.backgroundColor = '';
-    });
-    setHighlightedElements([]);
-    setSelectedVariable(null);
+  const handleDemoChange = (_: React.MouseEvent<HTMLElement>, newDemo: DemoType | null) => {
+    if (newDemo !== null) {
+      setCurrentDemo(newDemo);
+    }
   };
 
   const filteredVariables = cssVariables.filter((v) =>
@@ -360,14 +402,37 @@ export default function DataGridThemeVisualizer() {
       </Box>
 
       <Paper sx={{ flex: 1, p: 3, overflow: 'auto' }}>
-        <Typography variant="h6" gutterBottom>
-          DataGrid Preview
-        </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
-          Click on a CSS variable to highlight elements using it
-        </Typography>
-        <Box ref={gridContainerRef} sx={{ height: 500, mt: 2 }}>
-          <InventoryDashboard />
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="h6" gutterBottom>
+              DataGrid Preview
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Click on a CSS variable to highlight elements using it
+            </Typography>
+          </Box>
+          <ToggleButtonGroup
+            value={currentDemo}
+            exclusive
+            onChange={handleDemoChange}
+            aria-label="demo selector"
+            size="small"
+          >
+            <ToggleButton value="inventory" aria-label="inventory dashboard">
+              Inventory
+            </ToggleButton>
+            <ToggleButton value="pto" aria-label="pto calendar">
+              PTO Calendar
+            </ToggleButton>
+            <ToggleButton value="stock" aria-label="stock dashboard">
+              Stock
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+        <Box ref={gridContainerRef} sx={{ mt: 2 }}>
+          {currentDemo === 'inventory' && <InventoryDashboard />}
+          {currentDemo === 'pto' && <PTOCalendar />}
+          {currentDemo === 'stock' && <StockDashboard />}
         </Box>
       </Paper>
     </Box>
