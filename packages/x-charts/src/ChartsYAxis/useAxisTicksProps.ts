@@ -8,10 +8,8 @@ import { useYAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
 import { defaultProps, useUtilityClasses } from './utilities';
-import { isBandScale } from '../internals/isBandScale';
-import { isInfinity } from '../internals/isInfinity';
 
-export const useAxisProps = (inProps: ChartsYAxisProps) => {
+export function useAxisTicksProps(inProps: ChartsYAxisProps) {
   const { yAxis, yAxisIds } = useYAxes();
   const { scale: yScale, tickNumber, reverse, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
@@ -23,7 +21,7 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
     ...themedProps,
   };
 
-  const { position, tickLabelStyle, labelStyle, slots, slotProps } = defaultizedProps;
+  const { position, tickLabelStyle, slots, slotProps } = defaultizedProps;
 
   const theme = useTheme();
   const isRtl = useRtl();
@@ -33,10 +31,8 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
 
   const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
 
-  const Line = slots?.axisLine ?? 'line';
   const Tick = slots?.axisTick ?? 'line';
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
-  const Label = slots?.axisLabel ?? ChartsText;
 
   const defaultTextAnchor = getDefaultTextAnchor(
     (position === 'right' ? -90 : 90) - (tickLabelStyle?.angle ?? 0),
@@ -61,55 +57,14 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
     ownerState: {},
   });
 
-  const axisLabelProps = useSlotProps({
-    elementType: Label,
-    externalSlotProps: slotProps?.axisLabel,
-    additionalProps: {
-      style: {
-        ...theme.typography.body1,
-        lineHeight: 1,
-        fontSize: 14,
-        angle: positionSign * 90,
-        textAnchor: 'middle',
-        dominantBaseline: 'text-before-edge',
-        ...labelStyle,
-      },
-    } as Partial<ChartsTextProps>,
-    ownerState: {},
-  });
-
-  const lineProps = useSlotProps({
-    elementType: Line,
-    externalSlotProps: slotProps?.axisLine,
-    additionalProps: {
-      strokeLinecap: 'square' as const,
-    },
-    ownerState: {},
-  });
-
-  const domain = yScale.domain();
-  const isScaleBand = isBandScale(yScale);
-
-  const skipAxisRendering =
-    (isScaleBand && domain.length === 0) ||
-    (!isScaleBand && domain.some(isInfinity)) ||
-    position === 'none';
-
   return {
     yScale,
     defaultizedProps,
     tickNumber,
     positionSign,
-    skipAxisRendering,
     classes,
-    Line,
     Tick,
     TickLabel,
-    Label,
     axisTickLabelProps,
-    axisLabelProps,
-    lineProps,
-    reverse,
-    isRtl,
   };
-};
+}
