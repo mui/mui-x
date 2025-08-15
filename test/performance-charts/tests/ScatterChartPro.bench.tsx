@@ -73,7 +73,7 @@ describe('ScatterChartPro', () => {
     options,
   );
 
-  describe('using FastScatter slot', () => {
+  describe('using renderer="svg-batch"', () => {
     bench(
       'ScatterChartPro with big data amount',
       async () => {
@@ -91,7 +91,7 @@ describe('ScatterChartPro', () => {
             series={[{ data }]}
             width={500}
             height={300}
-            useFastRenderer
+            renderer="svg-batch"
           />,
         );
 
@@ -123,7 +123,7 @@ describe('ScatterChartPro', () => {
               { axisId: 'x', start: 50, end: 50.1 },
               { axisId: 'y', start: 50, end: 50.1 },
             ]}
-            useFastRenderer
+            renderer="svg-batch"
           />,
         );
 

@@ -16,7 +16,7 @@ import {
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 
-export interface FastScatterProps {
+export interface BatchScatterProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
@@ -90,7 +90,7 @@ function useCreatePaths(
   return paths;
 }
 
-export interface FastScatterPathsProps {
+export interface BatchScatterPathsProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
@@ -99,7 +99,7 @@ export interface FastScatterPathsProps {
   markerSize: number;
 }
 
-function FastScatterPaths(props: FastScatterPathsProps) {
+function BatchScatterPaths(props: BatchScatterPathsProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize } = props;
   const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
 
@@ -116,7 +116,7 @@ function FastScatterPaths(props: FastScatterPathsProps) {
   return <React.Fragment>{children}</React.Fragment>;
 }
 
-const MemoFastScatterPaths = React.memo(FastScatterPaths);
+const MemoBatchScatterPaths = React.memo(BatchScatterPaths);
 
 const Group = styled('g')({
   '&[data-faded="true"]': {
@@ -135,15 +135,15 @@ const Group = styled('g')({
 
 /**
  * @internal
- * A faster version of the Scatter component that uses SVG paths to render points.
+ * A batch version of the Scatter component that uses SVG paths to render points.
  * This component is optimized for performance and is suitable for rendering large datasets, but has limitations. Some of the limitations include:
  * - Limited CSS styling;
  * - Overriding the `marker` slot is not supported;
  * - Highlight style must not contain opacity.
  *
- * You can read about all the limitations [here](https://mui.com/x/react-charts/fast-scatter/).
+ * You can read about all the limitations [here](https://mui.com/x/react-charts/scatter/#performance).
  */
-export function FastScatter(props: FastScatterProps) {
+export function BatchScatter(props: BatchScatterProps) {
   const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
 
   const { store } = useChartContext<[UseChartHighlightSignature]>();
@@ -197,7 +197,7 @@ export function FastScatter(props: FastScatterProps) {
         data-faded={isSeriesFaded || undefined}
         data-highlighted={isSeriesHighlighted || undefined}
       >
-        <MemoFastScatterPaths
+        <MemoBatchScatterPaths
           series={series}
           xScale={xScale}
           yScale={yScale}

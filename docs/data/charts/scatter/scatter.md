@@ -149,7 +149,7 @@ See [Custom components](/x/react-charts/components/) to learn how to further cus
 
 Scatter charts can have a lot of data points, which can impact performance. The default rendering of scatter points uses SVG `circle` elements, which can be slow for a large number of points.
 
-To improve performance, you can use the `useFastRenderer` prop, which renders the circles more efficiently.
+To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the circles more efficiently.
 However, this comes with the following limitations:
 
 - CSS styling of single `circle` elements is no longer possible;
@@ -162,9 +162,9 @@ On top of that, there's also some differences in behavior:
 - The rendering order might be different, which might cause overlapping circles to render at different depths when compared to the default rendering;
 - When `disableVoronoi` is true, the `onItemClick` event target will be the SVG root, instead of the circle the click targeted;
 
-The example below uses the `useFastRenderer` prop to improve performance when rendering a dataset with 24&nbsp;000 data points.
+The example below uses the `renderer` prop to improve performance when rendering a dataset with 24&nbsp;000 data points.
 
-{{"demo": "ScatterFastRenderer.js"}}
+{{"demo": "ScatterBatchRenderer.js"}}
 
 ## Composition
 

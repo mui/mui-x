@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChart, ScatterChartProps } from '@mui/x-charts/ScatterChart';
 import Typography from '@mui/material/Typography';
 import { schemePaired } from 'd3-scale-chromatic';
 import { electricityGeneration2024Every6Hours } from '../dataset/electricityGeneration2024Every6Hours';
@@ -13,7 +13,7 @@ const dateTimeFormat = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
   minute: '2-digit',
 });
-function formatAsDateRange(index) {
+function formatAsDateRange(index: number): string {
   const from = new Date(2024, 0, 1, index * 6);
   const to = new Date(2024, 0, 1, index * 6 + 6);
   return dateTimeFormat.formatRange(from, to);
@@ -24,16 +24,21 @@ const scatterChartsParams = {
     ([countryCode, electricity]) => ({
       data: electricity.map((value, index) => ({
         x: value / 1000,
-        y: carbonEmissions2024Every6Hours[countryCode][index],
+        y:
+          carbonEmissions2024Every6Hours[
+            countryCode as keyof typeof electricityGeneration2024Every6Hours
+          ][index],
       })),
       markerSize: 1,
-      label: countryData[countryCode].country,
+      label:
+        countryData[countryCode as keyof typeof electricityGeneration2024Every6Hours]
+          .country,
       highlightScope: {
         highlight: 'series',
         fade: 'global',
       },
       valueFormatter: (value, { dataIndex }) =>
-        `generated ${value.x.toFixed(2)} GWh emitting ${value.y.toFixed(2)} gCO₂eq/kWh on ${formatAsDateRange(dataIndex)}`,
+        `generated ${value!.x.toFixed(2)} GWh emitting ${value!.y.toFixed(2)} gCO₂eq/kWh on ${formatAsDateRange(dataIndex)}`,
     }),
   ),
   xAxis: [{ min: 0, label: 'Electricity Generation (GWh)' }],
@@ -46,15 +51,15 @@ const scatterChartsParams = {
       sx: { justifyContent: 'center' },
     },
   },
-};
+} satisfies ScatterChartProps;
 
-export default function ScatterFastRenderer() {
+export default function ScatterBatchRenderer() {
   return (
     <Stack spacing={{ xs: 0, md: 2 }} sx={{ width: '100%' }}>
       <Typography variant="h6" sx={{ alignSelf: 'center', textAlign: 'center' }}>
         Life-cycle Carbon Intensity of Electricity Generation - 2024
       </Typography>
-      <ScatterChart {...scatterChartsParams} useFastRenderer />
+      <ScatterChart {...scatterChartsParams} renderer="svg-batch" />
       <Typography variant="caption">Source: ENTSO-E, EletricityMaps.com</Typography>
     </Stack>
   );
