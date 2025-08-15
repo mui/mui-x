@@ -11,6 +11,8 @@ import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { PanEvent } from '@mui/x-internal-gestures/core';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
+import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
+import { selectorPanConfig } from '../ZoomConfig.selectors';
 
 export const usePanOnDrag = (
   {
@@ -23,21 +25,36 @@ export const usePanOnDrag = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
+  const config = useSelector(store, selectorPanConfig, ['onDrag' as const]);
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
-    () => Object.values(optionsLookup).some((v) => v.panning) || false,
-    [optionsLookup],
+    () => (Object.values(optionsLookup).some((v) => v.panning) && config) || false,
+    [optionsLookup, config],
   );
+
+  React.useEffect(() => {
+    if (!isPanEnabled || !config) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('zoomPan', {
+      requiredKeys: config.requiredKeys,
+      pointerMode: config.pointerMode ? [config.pointerMode] : undefined,
+    });
+  }, [isPanEnabled, config, instance]);
 
   React.useEffect(() => {
     const element = svgRef.current;
 
-    if (element === null || !isPanEnabled) {
+    if (element === null || !isPanEnabled || !config) {
       return () => {};
     }
 
     const handlePanStart = (event: PanEvent) => {
+      if (!isGestureEnabledForPointer(event.detail.srcEvent, config!.pointerMode)) {
+        return;
+      }
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
         startRef.current = store.value.zoom.zoomData;
       }
@@ -68,9 +85,9 @@ export const usePanOnDrag = (
       throttledCallback(event, zoomData);
     };
 
-    const panHandler = instance.addInteractionListener('pan', handlePan);
-    const panStartHandler = instance.addInteractionListener('panStart', handlePanStart);
-    const panEndHandler = instance.addInteractionListener('panEnd', handlePanEnd);
+    const panHandler = instance.addInteractionListener('zoomPan', handlePan);
+    const panStartHandler = instance.addInteractionListener('zoomPanStart', handlePanStart);
+    const panEndHandler = instance.addInteractionListener('zoomPanEnd', handlePanEnd);
 
     return () => {
       panStartHandler.cleanup();
@@ -88,5 +105,6 @@ export const usePanOnDrag = (
     setZoomDataCallback,
     store,
     startRef,
+    config,
   ]);
 };
