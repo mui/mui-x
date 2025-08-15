@@ -7,6 +7,7 @@ export interface Event {
   end: DateTime;
   title: string;
   resource: string;
+  occurrenceId?: string;
 }
 
 export const initialEvents = [

@@ -49,7 +49,7 @@ export default function TimeGridPrimitive() {
               >
                 {day.events.map((event) => (
                   <TimeGrid.Event
-                    key={event.id}
+                    key={`${event.id}-${event.occurrenceId}`}
                     start={event.start}
                     end={event.end}
                     eventId={event.id}
