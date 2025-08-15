@@ -5,9 +5,6 @@ import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import { alpha } from '@mui/material/styles';
@@ -28,9 +25,9 @@ type DemoType = 'inventory' | 'pto' | 'stock';
 export default function DataGridThemeVisualizer() {
   const [cssVariables, setCssVariables] = React.useState<CSSVariableUsage[]>([]);
   const [selectedVariable, setSelectedVariable] = React.useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = React.useState('');
   const [highlightedElements, setHighlightedElements] = React.useState<Element[]>([]);
   const [currentDemo, setCurrentDemo] = React.useState<DemoType>('inventory');
+  const [selectedVariableClasses, setSelectedVariableClasses] = React.useState<string[]>([]);
   const gridContainerRef = React.useRef<HTMLDivElement>(null);
 
   const collectCSSVariables = React.useCallback(() => {
@@ -197,6 +194,7 @@ export default function DataGridThemeVisualizer() {
       return [];
     });
     setSelectedVariable(null);
+    setSelectedVariableClasses([]);
   }, []);
 
   React.useEffect(() => {
@@ -244,11 +242,22 @@ export default function DataGridThemeVisualizer() {
 
     const usage = cssVariables.find((v) => v.variable === variable);
     if (usage) {
+      // Collect unique class names from elements using this variable
+      const classNames = new Set<string>();
       usage.elements.forEach((el) => {
         (el as HTMLElement).style.outline = '2px solid #1976d2';
         (el as HTMLElement).style.backgroundColor = alpha('#1976d2', 0.1);
+
+        // Get the first class name that starts with Mui
+        const classList = Array.from(el.classList);
+        const muiClass = classList.find((cls) => cls.startsWith('Mui'));
+        if (muiClass) {
+          classNames.add(`.${muiClass}`);
+        }
       });
+
       setHighlightedElements(usage.elements);
+      setSelectedVariableClasses(Array.from(classNames).sort());
 
       if (usage.elements[0]) {
         usage.elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -262,9 +271,7 @@ export default function DataGridThemeVisualizer() {
     }
   };
 
-  const filteredVariables = cssVariables.filter((v) =>
-    v.variable.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredVariables = cssVariables;
 
   const getCategoryFromVariable = (variable: string): string => {
     if (variable.includes('spacing')) {
@@ -334,33 +341,34 @@ export default function DataGridThemeVisualizer() {
           <Typography variant="h6" gutterBottom>
             CSS Variables
           </Typography>
-          <TextField
-            fullWidth
-            size="small"
-            placeholder="Search variables..."
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              },
-            }}
-            sx={{ mb: 1 }}
-          />
           {selectedVariable && (
-            <Box sx={{ mb: 1 }}>
+            <React.Fragment>
               <Chip
-                label={`Selected: ${selectedVariable}`}
+                label={selectedVariable}
                 color="primary"
                 onDelete={clearHighlights}
                 size="small"
-                sx={{ maxWidth: '100%' }}
+                sx={{ maxWidth: '100%', mb: 1 }}
               />
-            </Box>
+              {selectedVariableClasses.length > 0 && (
+                <Box sx={{ mt: 1 }}>
+                  <Typography variant="caption" color="text.secondary" display="block" gutterBottom>
+                    Used in classes:
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selectedVariableClasses.map((className) => (
+                      <Chip
+                        key={className}
+                        label={className}
+                        size="small"
+                        variant="outlined"
+                        sx={{ fontSize: '0.75rem', height: 24 }}
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              )}
+            </React.Fragment>
           )}
         </Box>
         <Divider />
