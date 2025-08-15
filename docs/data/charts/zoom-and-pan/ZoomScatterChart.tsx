@@ -5,7 +5,16 @@ export default function ZoomScatterChart() {
   return (
     <ScatterChartPro
       height={300}
-      xAxis={[{ zoom: { filterMode: 'discard' } }]}
+      xAxis={[
+        {
+          zoom: true,
+        },
+      ]}
+      yAxis={[
+        {
+          zoom: true,
+        },
+      ]}
       series={series}
     />
   );
@@ -182,6 +191,6 @@ const series = [
   },
   {
     label: 'Series B',
-    data: data.map((v) => ({ x: v.x2, y: v.y2, id: v.id })),
+    data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
   },
 ];
