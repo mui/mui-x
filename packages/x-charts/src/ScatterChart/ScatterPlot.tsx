@@ -6,7 +6,7 @@ import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { seriesConfig as scatterSeriesConfig } from './seriesConfig';
-import { FastScatter } from './FastScatter';
+import { BatchScatter } from './BatchScatter';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -15,6 +15,8 @@ export interface ScatterPlotSlots extends ScatterSlots {
 export interface ScatterPlotSlotProps extends ScatterSlotProps {
   scatter?: Partial<ScatterProps>;
 }
+
+export type RendererType = 'svg-single' | 'svg-batch';
 
 export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
   /**
@@ -28,12 +30,15 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
    */
   slotProps?: ScatterPlotSlotProps;
   /**
-   * Use fast renderer for the scatter chart.
-   * It has better performance for large datasets, but does not support all features.
-   * TODO: Link to limitations
-   * @default false
+   * The type of renderer to use for the scatter plot.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/scatter/#performance
+   *
+   *
+   * @default 'svg-single'
    */
-  useFastRenderer?: boolean;
+  renderer?: RendererType;
 }
 
 /**
@@ -47,7 +52,7 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
  * - [ScatterPlot API](https://mui.com/x/api/charts/scatter-plot/)
  */
 function ScatterPlot(props: ScatterPlotProps) {
-  const { slots, slotProps, onItemClick, useFastRenderer } = props;
+  const { slots, slotProps, onItemClick, renderer } = props;
   const seriesData = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
@@ -62,7 +67,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  const DefaultScatterItems = useFastRenderer ? FastScatter : Scatter;
+  const DefaultScatterItems = renderer === 'svg-batch' ? BatchScatter : Scatter;
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
   return (
@@ -109,6 +114,16 @@ ScatterPlot.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The type of renderer to use for the scatter plot.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/scatter/#performance
+   *
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -118,13 +133,6 @@ ScatterPlot.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * Use fast renderer for the scatter chart.
-   * It has better performance for large datasets, but does not support all features.
-   * TODO: Link to limitations
-   * @default false
-   */
-  useFastRenderer: PropTypes.bool,
 } as any;
 
 export { ScatterPlot };

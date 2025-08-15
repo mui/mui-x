@@ -44,7 +44,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onHighlightChange,
     className,
     showToolbar,
-    useFastRenderer,
+    renderer,
     ...other
   } = props;
 
@@ -52,7 +52,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     () => series.map((s) => ({ type: 'scatter' as const, ...s })),
     [series],
   );
-  const useVoronoiOnItemClick = disableVoronoi !== true || useFastRenderer;
+  const useVoronoiOnItemClick = disableVoronoi !== true || renderer === 'svg-batch';
   const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginsSignatures> = {
     ...other,
     series: seriesWithDefault,
@@ -92,7 +92,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
       : (onItemClick as ScatterPlotProps['onItemClick']),
     slots,
     slotProps,
-    useFastRenderer,
+    renderer,
   };
 
   const overlayProps: ChartsOverlayProps = {

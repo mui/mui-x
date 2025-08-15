@@ -70,7 +70,7 @@ export interface ScatterChartProps
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    Pick<ScatterPlotProps, 'useFastRenderer'> {
+    Pick<ScatterPlotProps, 'renderer'> {
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
@@ -286,6 +286,16 @@ ScatterChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The type of renderer to use for the scatter plot.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/scatter/#performance
+   *
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
    */
@@ -317,13 +327,6 @@ ScatterChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
-  /**
-   * Use fast renderer for the scatter chart.
-   * It has better performance for large datasets, but does not support all features.
-   * TODO: Link to limitations
-   * @default false
-   */
-  useFastRenderer: PropTypes.bool,
   /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
