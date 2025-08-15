@@ -78,21 +78,7 @@ For example, it is common that an axis with a log scale has ticks that are not l
 The default tick formatter achieves this by rendering an empty string for ticks that should not show labels.
 If you want to customize the formatting, but want to keep the default behavior for ticks without labels, you can check that `context.defaultTickLabel` property is different from the empty string.
 
-```js
-<ScatterChart
-  xAxis={[
-    {
-      valueFormatter: (value, context) => {
-        if (context.location === 'tick' && context.defaultTickLabel === '') {
-          return '';
-        }
-
-        return `${value}€`;
-      },
-    },
-  ]}
-/>
-```
+{{"demo": "TicksWithoutLabels.js"}}
 
 #### Using the D3 formatter
 
@@ -242,16 +228,25 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 ## Grouped Axes
 
-In order to group `band` or `point` axes together, a user can provide a `groups` property in the x-axis definition.
+To group `band` or `point` axes together, provide a `groups` property in the axis definition.
 This property expects an array of objects with a `getValue` function.
+This feature is available for both x- and y-axes.
 
 The `getValue` function receives the axis data value and should return a group name.
 Each group name will be used as is, overriding any `valueFormatter` for the axis.
 Groups are displayed in the order they are defined in the `groups` array.
 
+### X-axis grouping
+
 In the next demo, the x-axis is grouped by month, quarter, and year.
 
 {{"demo": "GroupedAxes.js"}}
+
+### Y-axis grouping
+
+In the following demo, the y-axis is grouped by category and subcategory.
+
+{{"demo": "GroupedYAxes.js"}}
 
 ### Tick size
 

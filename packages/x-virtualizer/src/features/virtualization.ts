@@ -10,6 +10,7 @@ import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { useFirstRender } from '@mui/x-internals/useFirstRender';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
+import { PinnedRows, PinnedColumns } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions } from './dimensions';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
@@ -29,6 +30,17 @@ import {
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
 const MINIMUM_COLUMN_WIDTH = 50;
+
+export type VirtualizationParams = {
+  /** @default false */
+  isRtl?: boolean;
+  /** The row buffer in pixels to render before and after the viewport.
+   * @default 150 */
+  rowBufferPx?: number;
+  /** The column buffer in pixels to render before and after the viewport.
+   * @default 150 */
+  columnBufferPx?: number;
+};
 
 export type VirtualizationState = {
   enabled: boolean;
@@ -98,19 +110,17 @@ type RequiredAPI = Dimensions.API & AbstractAPI;
 
 function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: RequiredAPI) {
   const {
+    refs,
+    dimensions: { rowHeight, columnsTotalWidth },
+    virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
+    colspan,
     initialState,
-    isRtl,
     rows,
     range,
     columns,
-    pinnedRows,
-    pinnedColumns,
-    refs,
-    hasColSpan,
+    pinnedRows = PinnedRows.EMPTY,
+    pinnedColumns = PinnedColumns.EMPTY,
 
-    dimensions: { rowHeight, columnsTotalWidth },
-
-    contentHeight,
     minimalContentHeight,
     autoHeight,
 
@@ -118,9 +128,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     onTouchMove,
     onRenderContextChange,
     onScrollChange,
-
-    rowBufferPx,
-    columnBufferPx,
 
     scrollReset,
 
@@ -132,12 +139,15 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
+  const [, setRefTick] = React.useState(0);
 
   const isRenderContextReady = React.useRef(false);
 
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
+
+  const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
   /*
    * Scroll context logic
@@ -167,23 +177,21 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: RenderContext) => {
-      if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
-        return;
+      if (!areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
+        store.set('virtualization', {
+          ...store.state.virtualization,
+          renderContext: nextRenderContext,
+        });
       }
-
-      const didRowsIntervalChange =
-        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
-        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
-
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        renderContext: nextRenderContext,
-      });
 
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if we already have a render context, because
       // otherwise we would call an update directly on mount
       const isReady = Dimensions.selectors.dimensions(store.state).isReady;
+      const didRowsIntervalChange =
+        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
+        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
+
       if (isReady && didRowsIntervalChange) {
         previousRowContext.current = nextRenderContext;
         onRenderContextChange?.(nextRenderContext);
@@ -315,13 +323,12 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
    * solution to decouple the code.
    */
   const getRows = (
-    // eslint-disable-next-line @typescript-eslint/default-param-last
     rowParams: {
       rows?: RowEntry[];
       position?: PinnedRowPosition;
       renderContext?: RenderContext;
     } = {},
-    unstable_rowTree: Record<RowId, any>,
+    unstable_rowTree?: Record<RowId, any>,
   ) => {
     if (!rowParams.rows && !range) {
       return [];
@@ -364,7 +371,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       : createRange(firstRowToRender, lastRowToRender);
 
     let virtualRowIndex = -1;
-    const focusedVirtualCell = params.focusedVirtualCell();
+    const focusedVirtualCell = params.focusedVirtualCell?.();
     if (!isPinnedSection && focusedVirtualCell) {
       if (focusedVirtualCell.rowIndex < firstRowToRender) {
         rowIndexes.unshift(focusedVirtualCell.rowIndex);
@@ -388,14 +395,14 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       // See:
       // - https://github.com/mui/mui-x/issues/16638
       // - https://github.com/mui/mui-x/issues/17022
-      if (!unstable_rowTree[id]) {
+      if (unstable_rowTree && !unstable_rowTree[id]) {
         return;
       }
 
       const rowIndex = (range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
 
       // NOTE: This is an expensive feature, the colSpan code could be optimized.
-      if (hasColSpan) {
+      if (colspan?.enabled) {
         const minFirstColumn = pinnedColumns.left.length;
         const maxLastColumn = columns.length - pinnedColumns.right.length;
 
@@ -469,7 +476,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
           offsetLeft,
           columnsTotalWidth,
           baseRowHeight,
-          columns,
           firstColumnIndex,
           lastColumnIndex,
           focusedColumnIndex: isVirtualFocusColumn ? focusedVirtualCell!.columnIndex : undefined,
@@ -595,14 +601,21 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
+  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
+    if (node && refs[name].current !== node) {
+      refs[name].current = node;
+      setRefTick((tick) => tick + 1);
+    }
+  };
+
   const getters = {
     setPanels,
     getRows,
     getContainerProps: () => ({
-      ref: params.refs.container,
+      ref: refSetter('container'),
     }),
     getScrollerProps: () => ({
-      ref: refs.scroller,
+      ref: refSetter('scroller'),
       onScroll: handleScroll,
       onWheel,
       onTouchMove,
@@ -613,17 +626,16 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       tabIndex: platform.isFirefox ? -1 : undefined,
     }),
     getContentProps: () => ({
+      ref: onContentSizeApplied,
       style: contentSize,
       role: 'presentation',
-      ref: onContentSizeApplied,
     }),
-    getRenderZoneProps: () => ({ role: 'rowgroup' }),
     getScrollbarVerticalProps: () => ({
-      ref: refs.scrollbarVertical,
+      ref: refSetter('scrollbarVertical'),
       scrollPosition,
     }),
     getScrollbarHorizontalProps: () => ({
-      ref: refs.scrollbarHorizontal,
+      ref: refSetter('scrollbarHorizontal'),
       scrollPosition,
     }),
     getScrollAreaProps: () => ({
@@ -638,7 +650,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     };
   });
   React.useEffect(() => {
-    store.update({ ...store.state, getters });
+    store.update({ getters });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, Object.values(getters));
 
@@ -690,8 +702,8 @@ function inputsSelector(
     enabledForRows,
     enabledForColumns,
     autoHeight: params.autoHeight,
-    rowBufferPx: params.rowBufferPx,
-    columnBufferPx: params.columnBufferPx,
+    rowBufferPx: params.virtualization.rowBufferPx,
+    columnBufferPx: params.virtualization.columnBufferPx,
     leftPinnedWidth: dimensions.leftPinnedWidth,
     columnsTotalWidth: dimensions.columnsTotalWidth,
     viewportInnerWidth: dimensions.viewportInnerSize.width,
@@ -864,8 +876,8 @@ function deriveRenderContext(
   const [initialFirstColumnToRender, lastColumnToRender] = getIndexesToRender({
     firstIndex: nextRenderContext.firstColumnIndex,
     lastIndex: nextRenderContext.lastColumnIndex,
-    minFirstIndex: inputs.pinnedColumns.left.length,
-    maxLastIndex: inputs.columns.length - inputs.pinnedColumns.right.length,
+    minFirstIndex: inputs.pinnedColumns?.left.length ?? 0,
+    maxLastIndex: inputs.columns.length - (inputs.pinnedColumns?.right.length ?? 0),
     bufferBefore: scrollCache.buffer.columnBefore,
     bufferAfter: scrollCache.buffer.columnAfter,
     positions: inputs.columnPositions,
