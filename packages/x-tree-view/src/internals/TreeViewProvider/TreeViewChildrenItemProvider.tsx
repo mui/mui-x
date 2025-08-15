@@ -30,6 +30,17 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
 
     const previousChildrenIds = selectorItemOrderedChildrenIds(store.value, itemId ?? null) ?? [];
     const escapedIdAttr = escapeOperandAttributeSelector(idAttribute ?? rootRef.current.id);
+
+    // If collapsed, skip childrenIds update prevents clearing the parent's indeterminate state after opening a sibling.
+    if (itemId != null) {
+      const itemRoot = rootRef.current.querySelector(
+        `*[id="${escapedIdAttr}"][role="treeitem"]`,
+      ) as HTMLElement | null;
+      if (itemRoot && itemRoot.getAttribute('aria-expanded') === 'false') {
+        return;
+      }
+    }
+
     const childrenElements = rootRef.current.querySelectorAll(
       `${itemId == null ? '' : `*[id="${escapedIdAttr}"] `}[role="treeitem"]:not(*[id="${escapedIdAttr}"] [role="treeitem"] [role="treeitem"])`,
     );
