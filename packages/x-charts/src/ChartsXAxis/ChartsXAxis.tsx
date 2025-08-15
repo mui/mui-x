@@ -1,11 +1,19 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useSlotProps from '@mui/utils/useSlotProps';
+import { useTheme, useThemeProps } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsXAxisProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
 import { ChartsSingleXAxis } from './ChartsSingleXAxis';
 import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
+import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { isBandScale } from '../internals/isBandScale';
+import { isInfinity } from '../internals/isInfinity';
+import { defaultProps, useUtilityClasses, XAxisRoot } from './utilities';
+import { useDrawingArea } from '../hooks';
+import { getStringSize } from '../internals/domUtils';
 
 /**
  * Demos:
@@ -18,19 +26,106 @@ import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
-
   const axis = xAxis[inProps.axisId ?? xAxisIds[0]];
+  const { scale: xScale, tickNumber, reverse, ...settings } = axis;
+
+  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
+
+  const defaultizedProps = {
+    ...defaultProps,
+    ...themedProps,
+  };
+
+  const {
+    position,
+    labelStyle,
+    offset,
+    slots,
+    slotProps,
+    sx,
+    disableLine,
+    label,
+    height: axisHeight,
+  } = defaultizedProps;
+
+  const theme = useTheme();
+  const classes = useUtilityClasses(defaultizedProps);
+  const drawingArea = useDrawingArea();
+  const { left, top, width, height } = drawingArea;
+
+  const positionSign = position === 'bottom' ? 1 : -1;
+
+  const Line = slots?.axisLine ?? 'line';
+  const Label = slots?.axisLabel ?? ChartsText;
+
+  const axisLabelProps = useSlotProps({
+    elementType: Label,
+    externalSlotProps: slotProps?.axisLabel,
+    additionalProps: {
+      style: {
+        ...theme.typography.body1,
+        lineHeight: 1,
+        fontSize: 14,
+        textAnchor: 'middle',
+        dominantBaseline: position === 'bottom' ? 'text-after-edge' : 'text-before-edge',
+        ...labelStyle,
+      },
+    } as Partial<ChartsTextProps>,
+    ownerState: {},
+  });
 
   if (!axis) {
     warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
     return null;
   }
 
-  if ('groups' in axis && Array.isArray(axis.groups)) {
-    return <ChartsGroupedXAxis {...inProps} />;
+  const domain = xScale.domain();
+  const isScaleBand = isBandScale(xScale);
+
+  // Skip axis rendering if no data is available
+  // - The domain is an empty array for band/point scales.
+  // - The domains contains Infinity for continuous scales.
+  // - The position is set to 'none'.
+  const skipAxisRendering =
+    (isScaleBand && domain.length === 0) ||
+    (!isScaleBand && domain.some(isInfinity)) ||
+    position === 'none';
+
+  if (skipAxisRendering) {
+    return null;
   }
 
-  return <ChartsSingleXAxis {...inProps} />;
+  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+
+  const children =
+    'groups' in axis && Array.isArray(axis.groups) ? (
+      <ChartsGroupedXAxis {...inProps} />
+    ) : (
+      <ChartsSingleXAxis {...inProps} axisLabelHeight={labelHeight} />
+    );
+
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSign * axisHeight,
+  };
+
+  return (
+    <XAxisRoot
+      transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
+      className={classes.root}
+      sx={sx}
+    >
+      {!disableLine && (
+        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
+      )}
+      {children}
+      {label && (
+        <g className={classes.label}>
+          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
+        </g>
+      )}
+    </XAxisRoot>
+  );
 }
 
 ChartsXAxis.propTypes = {

@@ -4,7 +4,9 @@ import { AxisConfig, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 
-export const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
+export const useUtilityClasses = (
+  ownerState: Pick<AxisConfig<any, any, ChartsXAxisProps>, 'id' | 'position' | 'classes'>,
+) => {
   const { classes, position, id } = ownerState;
   const slots = {
     root: ['root', 'directionX', position, `id-${id}`],
