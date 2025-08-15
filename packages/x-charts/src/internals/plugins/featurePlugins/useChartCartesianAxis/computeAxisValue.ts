@@ -191,7 +191,10 @@ export function computeAxisValue<T extends ChartSeriesType>({
       ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
       : (axis.domainLimit ?? 'nice');
 
-    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+    const axisExtremums = [
+      axis.min ?? Math.min(minData, axis.max ?? Infinity),
+      axis.max ?? Math.max(maxData, axis.min ?? -Infinity),
+    ];
 
     if (typeof domainLimit === 'function') {
       const { min, max } = domainLimit(minData, maxData);
