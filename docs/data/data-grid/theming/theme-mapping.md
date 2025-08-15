@@ -1,3 +1,7 @@
+---
+title: Data Grid - CSS Variables Customization
+---
+
 # Data Grid - CSS Variables Customization
 
 <p class="description">Customize the Data Grid appearance using CSS variables - the recommended approach for theming.</p>

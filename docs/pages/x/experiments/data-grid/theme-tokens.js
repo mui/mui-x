@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import { DemoPageThemeProvider } from 'docs/src/theming';
 import RichMarkdownElement from 'docs/src/modules/components/RichMarkdownElement';
 import DataGridThemeVisualizer from 'docsx/src/modules/experiments/DataGridThemeVisualizer';
-import * as pageProps from './theme-mapping.md?muiMarkdown';
+import * as pageProps from 'docsx/data/data-grid/theming/theme-mapping.md?muiMarkdown';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -32,7 +32,7 @@ function a11yProps(index) {
 }
 
 export default function Page() {
-  const { demos = {}, docs, demoComponents, srcComponents } = pageProps;
+  const { docs } = pageProps;
   const localizedDoc = docs.en;
   const [value, setValue] = React.useState(0);
 
@@ -69,12 +69,9 @@ export default function Page() {
           {localizedDoc.rendered.map((renderedMarkdownOrDemo, index) => (
             <RichMarkdownElement
               key={`demos-section-${index}`}
-              demoComponents={demoComponents}
-              demos={demos}
               disableAd
               localizedDoc={localizedDoc}
               renderedMarkdownOrDemo={renderedMarkdownOrDemo}
-              srcComponents={srcComponents}
             />
           ))}
         </TabPanel>
