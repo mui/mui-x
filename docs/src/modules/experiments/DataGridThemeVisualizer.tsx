@@ -7,7 +7,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import { alpha } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import InventoryDashboard from 'docsx/src/modules/components/demos/data-grid/Inventory/InventoryDashboard';
@@ -246,7 +245,7 @@ export default function DataGridThemeVisualizer() {
       const classNames = new Set<string>();
       usage.elements.forEach((el) => {
         (el as HTMLElement).style.outline = '2px solid #1976d2';
-        (el as HTMLElement).style.backgroundColor = alpha('#1976d2', 0.1);
+        (el as HTMLElement).style.backgroundColor = 'rgba(25, 118, 210, 0.1)';
 
         // Get the first class name that starts with Mui
         const classList = Array.from(el.classList);
