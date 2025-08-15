@@ -275,6 +275,16 @@ ScatterChartPro.propTypes = {
    */
   onZoomChange: PropTypes.func,
   /**
+   * The type of renderer to use for the scatter plot.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/scatter/#performance
+   *
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
    */
