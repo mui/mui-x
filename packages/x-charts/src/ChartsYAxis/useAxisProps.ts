@@ -90,9 +90,7 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
   const domain = yScale.domain();
   const isScaleBand = isBandScale(yScale);
 
-  console.log(domain);
   const skipAxisRendering = position === 'none';
-
   const skipTickRendering =
     (isScaleBand && domain.length === 0) || (!isScaleBand && domain.some(isInfinity));
 
