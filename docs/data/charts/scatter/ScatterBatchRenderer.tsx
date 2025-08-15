@@ -24,10 +24,9 @@ const scatterChartsParams = {
     ([countryCode, electricity]) => ({
       data: electricity.map((value, index) => ({
         x: value / 1000,
-        y:
-          carbonEmissions2024Every6Hours[
-            countryCode as keyof typeof electricityGeneration2024Every6Hours
-          ][index],
+        y: carbonEmissions2024Every6Hours[
+          countryCode as keyof typeof electricityGeneration2024Every6Hours
+        ][index],
       })),
       markerSize: 1,
       label:
