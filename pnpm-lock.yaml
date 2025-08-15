@@ -278,6 +278,9 @@ importers:
       '@mui/icons-material':
         specifier: 'catalog:'
         version: 7.3.1(@mui/material@7.3.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@19.1.9)(react@19.1.1)
+      '@mui/internal-babel-plugin-display-name':
+        specifier: ^1.0.4-canary.3
+        version: 1.0.4-canary.3(@babel/core@7.28.0)(@babel/preset-react@7.27.1(@babel/core@7.28.0))
       '@mui/internal-bundle-size-checker':
         specifier: ^1.0.9-canary.18
         version: 1.0.9-canary.18(@swc/core@1.13.3)(@types/node@24.2.1)(esbuild@0.25.8)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(webpack-cli@6.0.1(webpack-bundle-analyzer@4.10.2)(webpack@5.101.0))(yaml@2.8.1)
