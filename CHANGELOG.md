@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.10.1
 
-_Aug 13, 2025_
+_Aug 15, 2025_
 
 We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
 
@@ -22,6 +22,8 @@ The following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@8.10.1`
 
 - [DataGrid] Fix scroll jumping (#19156) @romgrk
+- [DataGrid] Fix scroll restoration (#19182) @romgrk
+- [DataGrid] Fix "no row with id" error (#19193) @romgrk
 
 #### `@mui/x-data-grid-pro@8.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
