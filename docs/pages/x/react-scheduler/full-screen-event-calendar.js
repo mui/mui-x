@@ -1,7 +1,11 @@
 import * as React from 'react';
 
-import { EventCalendar } from '@mui/x-scheduler/joy/event-calendar';
-import { events as initialEvents, resources } from '../../../data/scheduler/event-calendar/events';
+import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../../../data/scheduler/datasets/personal-agenda';
 
 export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);
@@ -10,7 +14,7 @@ export default function FullEventCalendar() {
     <EventCalendar
       events={events}
       resources={resources}
-      defaultVisibleDate={events[0].start}
+      defaultVisibleDate={defaultVisibleDate}
       onEventsChange={setEvents}
       areEventsDraggable
       areEventsResizable

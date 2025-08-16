@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/joy';
-import { AgendaView } from '@mui/x-scheduler/joy/agenda-view';
-import { StandaloneView } from '@mui/x-scheduler/joy/standalone-view';
-import { events as initialEvents, resources } from './events';
-
+import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
+import { AgendaView } from '@mui/x-scheduler/material/agenda-view';
+import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../datasets/personal-agenda';
 import classes from './StandaloneWeekView.module.css';
 
 export default function StandaloneAgendaView() {
@@ -13,7 +16,7 @@ export default function StandaloneAgendaView() {
     <StandaloneView
       events={events}
       resources={resources}
-      defaultVisibleDate={events[0].start}
+      defaultVisibleDate={defaultVisibleDate}
       onEventsChange={setEvents}
     >
       <AgendaView className={classes.Container} />

@@ -76,14 +76,14 @@ export const createSelector = ((
 }) as unknown as CreateSelectorFunction;
 /* eslint-enable id-denylist */
 
-export const createSelectorMemoized: CreateSelectorFunction = (...selectors: any[]) => {
+export const createSelectorMemoized: CreateSelectorFunction = (...inputs: any[]) => {
   type CacheKey = { id: number };
 
   const cache = new WeakMap<CacheKey, SelectorWithArgs>();
   let nextCacheId = 1;
 
-  const combiner = selectors[selectors.length - 1];
-  const nSelectors = selectors.length - 1 || 1;
+  const combiner = inputs[inputs.length - 1];
+  const nSelectors = inputs.length - 1 || 1;
   // (s1, s2, ..., sN, a1, a2, a3) => { ... }
   const argsLength = Math.max(combiner.length - nSelectors, 0);
 
@@ -102,7 +102,8 @@ export const createSelectorMemoized: CreateSelectorFunction = (...selectors: any
 
     let fn = cache.get(cacheKey);
     if (!fn) {
-      let reselectArgs = selectors;
+      const selectors = inputs.length === 1 ? [((x: any) => x), combiner] : inputs
+      let reselectArgs = inputs;
       const selectorArgs = [undefined, undefined, undefined];
       switch (argsLength) {
         case 0:

@@ -1,56 +1,41 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
-
 export default function GroupedAxes() {
   return (
     <BarChart
       xAxis={[
         {
-          id: 'months',
+          data,
           scaleType: 'band',
-          data: time,
-          valueFormatter: formatShortMonth,
-          height: 24,
-        },
-        {
-          scaleType: 'band',
-          data: time.filter((_, index) => index % 3 === 0),
-          valueFormatter: formatQuarterYear,
-          position: 'bottom',
-          tickLabelPlacement: 'middle',
-          height: 35,
-          disableLine: true,
-          disableTicks: true,
+          tickSize: 8,
+          height: 32,
+          groups: [
+            { getValue: getMonth },
+            { getValue: getQuarter },
+            { getValue: getYear },
+          ],
+          valueFormatter,
         },
       ]}
       {...chartConfig}
-      sx={{
-        [`& .${axisClasses.id}-months .${axisClasses.tickContainer}:nth-child(3n - 1) .${axisClasses.tick}`]:
-          { transform: 'scaleY(4)' },
-      }}
     />
   );
 }
 
-const formatQuarterYear = (date, context) => {
-  if (context.location === 'tick') {
-    const quarter = Math.floor(date.getMonth() / 3) + 1;
-    const year = date.getFullYear().toString().slice(-2);
-    return `Q${quarter} '${year}`;
-  }
-  return date.toLocaleDateString('en-US', { month: 'long' });
-};
+const getMonth = (date) => date.toLocaleDateString('en-US', { month: 'short' });
+const getQuarter = (date) => `Q${Math.floor(date.getMonth() / 3) + 1}`;
 
-const formatShortMonth = (date, context) => {
-  if (context.location === 'tick') {
-    return date.toLocaleDateString('en-US', { month: 'short' });
-  }
-  return date.toLocaleDateString('en-US', { month: 'long' });
-};
+const getYear = (date) => date.toLocaleDateString('en-US', { year: 'numeric' });
 
-const time = [
+const valueFormatter = (v) =>
+  v.toLocaleDateString('en-US', {
+    month: 'short',
+    year: 'numeric',
+  });
+
+const data = [
+  new Date(2014, 11, 1),
   new Date(2015, 0, 1),
   new Date(2015, 1, 1),
   new Date(2015, 2, 1),
@@ -63,21 +48,23 @@ const time = [
   new Date(2015, 9, 1),
   new Date(2015, 10, 1),
   new Date(2015, 11, 1),
+  new Date(2016, 0, 1),
 ];
 
 const a = [
-  4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2400,
+  3190, 4000, 3000, 2000, 2780, 1890, 2390, 3490, 2400, 1398, 9800, 3908, 4800, 2040,
 ];
 
 const b = [
-  2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000, 3908,
+  1200, 2400, 1398, 9800, 3908, 4800, 3800, 4300, 2181, 2500, 2100, 3000, 2000, 2040,
 ];
 
 const getPercents = (array) =>
   array.map((v, index) => (100 * v) / (a[index] + b[index]));
 
 const chartConfig = {
-  height: 300,
+  height: 200,
+  margin: { left: 0 },
   series: [
     {
       data: getPercents(a),

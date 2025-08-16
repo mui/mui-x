@@ -52,11 +52,7 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
-## Zoom slider 🧪
-
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
+## Zoom slider
 
 You can provide an overview and allow the manipulation of the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
 
@@ -98,11 +94,7 @@ When using composition, you can render the axes' sliders by rendering the `Chart
 
 {{"demo": "ZoomSliderComposition.js"}}
 
-## Preview 🧪
-
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
+## Preview
 
 When the zoom slider is enabled, you can preview the zoomed area by enabling the `zoom.slider.preview` property on the axis config.
 
