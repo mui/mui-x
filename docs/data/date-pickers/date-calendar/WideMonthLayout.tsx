@@ -13,9 +13,9 @@ function DayComponent(props: PickersDayProps) {
 
   let color = 'black';
   if (outsideCurrentMonth) {
-    color='gray'
-  } else if(today){
-    color='blue'
+    color = 'gray';
+  } else if (today) {
+    color = 'blue';
   }
 
   return (
@@ -31,7 +31,7 @@ function DayComponent(props: PickersDayProps) {
         flexDirection: 'column',
       }}
     >
-      <Typography 
+      <Typography
         sx={{
           color,
           alignItems: 'center',
@@ -40,7 +40,7 @@ function DayComponent(props: PickersDayProps) {
       >
         {format(day, 'd')}
       </Typography>
-      <Button >
+      <Button>
         <Box
           sx={{
             flexGrow: 1,
@@ -49,14 +49,15 @@ function DayComponent(props: PickersDayProps) {
             justifyContent: 'center',
           }}
         >
-          <Typography variant='body2'
+          <Typography
+            variant="body2"
             sx={{
               color,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            {outsideCurrentMonth?'':'Actions'}
+            {outsideCurrentMonth ? '' : 'Actions'}
           </Typography>
         </Box>
       </Button>
@@ -79,7 +80,7 @@ export default function WideMonthLayout() {
           maxHeight: 'none',
           overflow: 'visible',
           '& .MuiDayCalendar-weekDayLabel': {
-            width: "23%",
+            width: '23%',
           },
           '& .MuiPickersSlideTransition-root': {
             flexGrow: 1,
