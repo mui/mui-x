@@ -330,8 +330,11 @@ export const useGridRowGrouping = (
         expandedSortedRowIndexLookup,
       };
 
-      // Use validator to check and get target index
-      return rowGroupingReorderValidator.validateAndGetTargetIndex(context);
+      // Check if the reorder is valid
+      if (rowGroupingReorderValidator.validate(context)) {
+        return dropPosition === 'below' ? targetRowIndex + 1 : targetRowIndex;
+      }
+      return -1;
     },
     [apiRef, props.treeData],
   );

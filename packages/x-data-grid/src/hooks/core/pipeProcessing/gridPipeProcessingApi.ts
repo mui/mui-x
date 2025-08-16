@@ -73,6 +73,12 @@ export interface GridPipeProcessingLookup {
     // `true` if the row hydration should be re-applied
     context: boolean;
   };
+  /**
+   * Does validation of the current reorder operation.
+   * If the reorder is valid, it returns the position index of the drop indicator.
+   *   - For example before first row is `0` and after the last row is `rows.length`.
+   * If the reorder is invalid, it returns `-1`.
+   */
   getRowReorderTargetIndex: {
     value: number;
     context: {

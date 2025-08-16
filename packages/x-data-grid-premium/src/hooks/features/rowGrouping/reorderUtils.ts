@@ -273,90 +273,6 @@ const validationRules: ValidationRule[] = [
   },
 ];
 
-// ============================================================================
-// Target Index Calculators - Functions to calculate valid target indices
-// ============================================================================
-
-const targetIndexCalculators = {
-  calculateBasicIndex(
-    dragDirection: DragDirection,
-    dropPosition: DropPosition,
-    targetRowIndex: number,
-  ): number {
-    if (dragDirection === 'up') {
-      return dropPosition === 'above' ? targetRowIndex : targetRowIndex + 1;
-    }
-    return dropPosition === 'above' ? targetRowIndex - 1 : targetRowIndex;
-  },
-
-  groupToGroup(ctx: ReorderContext): number {
-    const { dropPosition, targetRowIndex, dragDirection } = ctx;
-
-    if (dropPosition === 'above') {
-      // Special case: leaf before target
-      if (conditions.prevIsLeaf(ctx) && !conditions.prevBelongsToSource(ctx)) {
-        return dragDirection === 'up'
-          ? targetRowIndex
-          : (ctx.expandedSortedRowIndexLookup[ctx.prevNode!.parent!] ?? -1);
-      }
-      return this.calculateBasicIndex(dragDirection, dropPosition, targetRowIndex);
-    }
-
-    // Below position
-    if (conditions.targetDepthIsSourceMinusOne(ctx) && conditions.targetGroupExpanded(ctx)) {
-      return targetRowIndex + 1;
-    }
-    return this.calculateBasicIndex(dragDirection, dropPosition, targetRowIndex);
-  },
-
-  leafToLeaf(ctx: ReorderContext): number {
-    const { dropPosition, targetRowIndex, dragDirection } = ctx;
-
-    if (conditions.sameParent(ctx)) {
-      return this.calculateBasicIndex(dragDirection, dropPosition, targetRowIndex);
-    }
-
-    // Different parents
-    if (
-      dropPosition === 'below' &&
-      conditions.nextIsGroup(ctx) &&
-      ctx.sourceNode.depth > ctx.nextNode!.depth
-    ) {
-      return targetRowIndex + 1;
-    }
-
-    if (dropPosition === 'above') {
-      return targetRowIndex;
-    }
-
-    if (dropPosition === 'below' && conditions.nextIsLeaf(ctx)) {
-      return targetRowIndex + 1;
-    }
-
-    return -1;
-  },
-
-  leafToGroup(ctx: ReorderContext): number {
-    const { dropPosition, targetRowIndex, sourceNode, targetNode, prevNode } = ctx;
-
-    if (dropPosition === 'above') {
-      if (sourceNode.depth > targetNode.depth && targetNode.depth === 0) {
-        const adjustment =
-          prevNode?.type === 'leaf' && prevNode.parent === sourceNode.parent ? 1 : 0;
-        return targetRowIndex - adjustment;
-      }
-      return targetRowIndex;
-    }
-
-    // Below position
-    return targetRowIndex + 1;
-  },
-};
-
-// ============================================================================
-// Main Validator Class
-// ============================================================================
-
 class RowReorderValidator {
   private rules: ValidationRule[];
 
@@ -375,7 +291,7 @@ class RowReorderValidator {
     this.rules = this.rules.filter((r) => r.name !== ruleName);
   }
 
-  validateAndGetTargetIndex(context: ReorderContext): number {
+  validate(context: ReorderContext): boolean {
     // Check all validation rules
     for (const rule of this.rules) {
       if (rule.applies(context)) {
@@ -384,28 +300,12 @@ class RowReorderValidator {
             // eslint-disable-next-line no-console
             console.log(`Validation failed - Rule: ${rule.name}`, rule.message);
           }
-          return -1;
+          return false;
         }
       }
     }
 
-    // All validations passed, calculate target index
-    let targetIndex = -1;
-
-    if (conditions.isGroupToGroup(context)) {
-      targetIndex = targetIndexCalculators.groupToGroup(context);
-    } else if (conditions.isLeafToLeaf(context)) {
-      targetIndex = targetIndexCalculators.leafToLeaf(context);
-    } else if (conditions.isLeafToGroup(context)) {
-      targetIndex = targetIndexCalculators.leafToGroup(context);
-    }
-
-    if (this.debugMode && targetIndex !== -1) {
-      // eslint-disable-next-line no-console
-      console.log('Validation passed, computed index:', targetIndex);
-    }
-
-    return targetIndex;
+    return true;
   }
 }
 
