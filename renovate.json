@@ -1,10 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>mui/mui-public//renovate/default"],
-  // 0-5am on Monday.
   "schedule": "* 0-4 * * 1",
   "lockFileMaintenance": {
-    // 0-5am on day-of-month 2.
     "schedule": "* 0-4 2 * *"
   },
   "packageRules": [
@@ -29,7 +27,6 @@
     {
       "groupName": "bundling fixtures",
       "matchFileNames": ["test/bundling/fixtures/**/package.json"],
-      // day-of-month 1 in January and July
       "schedule": "* * 1 1,7 *"
     },
     {
