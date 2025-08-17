@@ -1,0 +1,873 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import {
+  gridRowNodeSelector,
+  gridRowTreeSelector,
+  gridRowsLookupSelector,
+  gridColumnLookupSelector,
+  GRID_ROOT_GROUP_ID,
+} from '@mui/x-data-grid-pro';
+import type {
+  GridRowId,
+  GridTreeNode,
+  GridGroupNode,
+  GridLeafNode,
+  GridValidRowModel,
+  GridUpdateRowParams,
+  GridRowTreeConfig,
+} from '@mui/x-data-grid-pro';
+import { RowTreeBuilderGroupingCriterion } from '@mui/x-data-grid-pro/internals';
+import { warnOnce } from '@mui/x-internals/warning';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
+import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+
+export interface ReorderExecutionContext {
+  sourceRowId: GridRowId;
+  placeholderIndex: number;
+  sortedFilteredRowIds: GridRowId[];
+  sortedFilteredRowIndexLookup: Record<GridRowId, number>;
+  rowTree: GridRowTreeConfig;
+  apiRef: any; // TODO: Replace with proper type
+  processRowUpdate?: DataGridPremiumProcessedProps['processRowUpdate'];
+  onProcessRowUpdateError?: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
+}
+
+interface ReorderOperation {
+  sourceNode: GridTreeNode;
+  targetNode: GridTreeNode; // The adjusted target node for the operation
+  actualTargetIndex: number; // Where in the parent's children to insert
+  isLastChild: boolean; // Whether to append at the end
+  operationType: 'same-parent-swap' | 'cross-parent-leaf' | 'cross-parent-group';
+}
+
+interface ReorderScenario {
+  name: string;
+  detectOperation: (ctx: ReorderExecutionContext) => ReorderOperation | null;
+  execute: (operation: ReorderOperation, ctx: ReorderExecutionContext) => Promise<void> | void;
+}
+
+const reorderScenarios: ReorderScenario[] = [
+  // ===== Cases A & B: Same Parent Swap =====
+  {
+    name: 'same-parent-swap',
+    detectOperation: (ctx) => {
+      const {
+        sourceRowId,
+        placeholderIndex,
+        sortedFilteredRowIds,
+        sortedFilteredRowIndexLookup,
+        rowTree,
+        apiRef,
+      } = ctx;
+      const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
+
+      if (!sourceNode || sourceNode.type === 'footer') {
+        return null;
+      }
+
+      let targetIndex = placeholderIndex;
+
+      const sourceIndex = sortedFilteredRowIndexLookup[sourceRowId];
+
+      if (targetIndex === sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
+        targetIndex -= 1;
+      }
+
+      let targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[targetIndex]);
+
+      if (placeholderIndex > sourceIndex && sourceNode.parent === targetNode.parent) {
+        targetIndex = placeholderIndex - 1;
+        targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[targetIndex]);
+        if (targetNode && targetNode.depth !== sourceNode.depth) {
+          while (targetNode.depth > sourceNode.depth && targetIndex >= 0) {
+            targetIndex -= 1;
+            targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[targetIndex]);
+          }
+        }
+        if (targetIndex === -1) {
+          return null;
+        }
+      }
+
+      // Get initial target node at placeholder position (always the node next to the drop indicator)
+      let isLastChild = false;
+
+      if (!targetNode) {
+        // If placeholder is at the end, use the last node
+        if (placeholderIndex >= sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
+          targetNode = gridRowNodeSelector(
+            apiRef,
+            sortedFilteredRowIds[sortedFilteredRowIds.length - 1],
+          );
+          isLastChild = true;
+        } else {
+          return null;
+        }
+      }
+
+      // Apply some custom adjustments
+      let adjustedTargetNode: GridTreeNode = targetNode;
+
+      // Case A and B adjustment: Move to last child of parent where target should be the node above
+      if (
+        targetNode.type === 'group' &&
+        sourceNode.parent !== targetNode.parent &&
+        sourceNode.depth > targetNode.depth
+      ) {
+        // Find the first node with the same depth as source before target and quit early if a
+        // node with depth < source.depth is found
+        let i = targetIndex - 1;
+        while (i >= 0) {
+          const node = gridRowNodeSelector(apiRef, sortedFilteredRowIds[i]);
+          if (node && node.depth < sourceNode.depth) {
+            return null;
+          }
+          if (node && node.depth === sourceNode.depth) {
+            targetIndex = i;
+            adjustedTargetNode = node;
+            break;
+          }
+          i -= 1;
+        }
+      }
+
+      // Determine operation type
+      const operationType = determineOperationType(sourceNode, adjustedTargetNode);
+
+      if (operationType !== 'same-parent-swap') {
+        return null;
+      }
+
+      // Calculate actual insertion index
+      const actualTargetIndex = calculateTargetIndex(
+        sourceNode,
+        adjustedTargetNode,
+        isLastChild,
+        rowTree,
+      );
+
+      targetNode = adjustedTargetNode;
+
+      // Both must be same type (leaf-leaf or group-group)
+      if (sourceNode.type !== targetNode.type) {
+        return null;
+      }
+
+      return {
+        sourceNode,
+        targetNode,
+        actualTargetIndex,
+        isLastChild,
+        operationType,
+      };
+    },
+    execute: async (operation, ctx) => {
+      const { sourceNode, actualTargetIndex } = operation;
+      const { apiRef, sourceRowId } = ctx;
+
+      apiRef.current.setState((state: any) => {
+        const group = gridRowTreeSelector(apiRef)[sourceNode.parent!] as GridGroupNode;
+        const currentChildren = [...group.children];
+        const oldIndex = currentChildren.findIndex((row) => row === sourceRowId);
+
+        if (oldIndex === -1 || actualTargetIndex === -1 || oldIndex === actualTargetIndex) {
+          return state;
+        }
+
+        // Move item to new position
+        currentChildren.splice(actualTargetIndex, 0, currentChildren.splice(oldIndex, 1)[0]);
+
+        return {
+          ...state,
+          rows: {
+            ...state.rows,
+            tree: {
+              ...state.rows.tree,
+              [sourceNode.parent!]: {
+                ...group,
+                children: currentChildren,
+              },
+            },
+          },
+        };
+      });
+
+      apiRef.current.publishEvent('rowsSet');
+    },
+  },
+
+  // ===== Cases C & D: Cross-Parent Leaf Move =====
+  {
+    name: 'cross-parent-leaf',
+    detectOperation: (ctx) => {
+      const { sourceRowId, placeholderIndex, sortedFilteredRowIds, rowTree, apiRef } = ctx;
+
+      const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
+
+      if (!sourceNode || sourceNode.type === 'footer') {
+        return null;
+      }
+
+      let targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[placeholderIndex]);
+
+      // Get initial target node at placeholder position (always the node next to the drop indicator)
+      let isLastChild = false;
+
+      if (!targetNode) {
+        // If placeholder is at the end, use the last node
+        if (placeholderIndex >= sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
+          targetNode = gridRowNodeSelector(
+            apiRef,
+            sortedFilteredRowIds[sortedFilteredRowIds.length - 1],
+          );
+          isLastChild = true;
+        } else {
+          return null;
+        }
+      }
+
+      // Apply some custom adjustments
+      let adjustedTargetNode = targetNode;
+
+      // Case D adjustment: Leaf to group where we need previous leaf
+      if (
+        sourceNode.type === 'leaf' &&
+        targetNode.type === 'group' &&
+        targetNode.depth < sourceNode.depth
+      ) {
+        isLastChild = true;
+        const prevIndex = placeholderIndex - 1;
+        if (prevIndex >= 0) {
+          const prevRowId = sortedFilteredRowIds[prevIndex];
+          const leafTargetNode = gridRowNodeSelector(apiRef, prevRowId);
+          if (leafTargetNode && leafTargetNode.type === 'leaf') {
+            adjustedTargetNode = leafTargetNode as GridLeafNode;
+          }
+        }
+      }
+
+      // Determine operation type
+      const operationType = determineOperationType(sourceNode, adjustedTargetNode);
+
+      if (operationType !== 'cross-parent-leaf') {
+        return null;
+      }
+
+      // Calculate actual insertion index
+      const actualTargetIndex = calculateTargetIndex(
+        sourceNode,
+        adjustedTargetNode,
+        isLastChild,
+        rowTree,
+      );
+
+      targetNode = adjustedTargetNode;
+
+      // Validate depth constraints
+      if (sourceNode.type === 'leaf' && targetNode.type === 'leaf') {
+        // Case C: Leaves must be at same depth
+        if (sourceNode.depth !== targetNode.depth) {
+          return null;
+        }
+      } else if (sourceNode.type === 'leaf' && targetNode.type === 'group') {
+        // Case D: Special depth relationship required
+        if (targetNode.depth >= sourceNode.depth) {
+          return null;
+        }
+      }
+
+      return {
+        sourceNode,
+        targetNode: adjustedTargetNode,
+        actualTargetIndex,
+        isLastChild,
+        operationType,
+      };
+    },
+    execute: async (operation, ctx) => {
+      const { sourceNode, targetNode, isLastChild } = operation;
+      const { apiRef, sourceRowId, processRowUpdate, onProcessRowUpdateError } = ctx;
+
+      // Determine actual target for leaf operations
+      let target = targetNode;
+      if (targetNode.type === 'group') {
+        // Already adjusted in detector, but ensure it's a leaf
+        const prevIndex = ctx.placeholderIndex - 1;
+        if (prevIndex >= 0) {
+          const prevRowId = ctx.sortedFilteredRowIds[prevIndex];
+          const prevNode = gridRowNodeSelector(apiRef, prevRowId);
+          if (prevNode && prevNode.type === 'leaf') {
+            target = prevNode;
+          }
+        }
+      }
+
+      const rowTree = gridRowTreeSelector(apiRef);
+      const sourceGroup = rowTree[sourceNode.parent!] as GridGroupNode;
+      const targetGroup = rowTree[target.parent!] as GridGroupNode;
+
+      const sourceChildren = sourceGroup.children;
+      const targetChildren = targetGroup.children;
+
+      const sourceIndex = sourceChildren.findIndex((row) => row === sourceRowId);
+      const targetIndex = targetChildren.findIndex((row) => row === target.id);
+
+      if (sourceIndex === -1 || targetIndex === -1) {
+        return;
+      }
+
+      // Get necessary data for row updates
+      const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
+      const columnsLookup = gridColumnLookupSelector(apiRef);
+      const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+
+      // Calculate updated row
+      const originalSourceRow = dataRowIdToModelLookup[sourceRowId];
+      let updatedSourceRow = { ...originalSourceRow };
+      const targetRow = dataRowIdToModelLookup[target.id];
+
+      // Get grouping rules
+      const groupingRules = getGroupingRules({
+        sanitizedRowGroupingModel,
+        columnsLookup,
+      });
+
+      // Update grouping fields
+      for (const groupingRule of groupingRules) {
+        const colDef = columnsLookup[groupingRule.field];
+
+        if (groupingRule.groupingValueSetter && colDef) {
+          const targetGroupingValue = getCellGroupingCriteria({
+            row: targetRow,
+            colDef,
+            groupingRule,
+            apiRef,
+          }).key;
+
+          updatedSourceRow = groupingRule.groupingValueSetter(
+            targetGroupingValue,
+            updatedSourceRow,
+            colDef,
+            apiRef,
+          );
+        } else {
+          updatedSourceRow[groupingRule.field] = targetRow[groupingRule.field];
+        }
+      }
+
+      // Commit function
+      const commitStateUpdate = (finalSourceRow: GridValidRowModel) => {
+        apiRef.current.setState((state: any) => {
+          const updatedSourceChildren = sourceChildren.filter((rowId) => rowId !== sourceRowId);
+
+          let sourceGroupRemoved = false;
+          const updatedTree = { ...state.rows.tree };
+
+          if (updatedSourceChildren.length === 0) {
+            delete updatedTree[sourceGroup.id];
+            sourceGroupRemoved = true;
+          }
+
+          const updatedTargetChildren = isLastChild
+            ? [...targetChildren, sourceRowId]
+            : [
+                ...targetChildren.slice(0, targetIndex),
+                sourceRowId,
+                ...targetChildren.slice(targetIndex),
+              ];
+
+          const sourceGroupParent = sourceGroupRemoved
+            ? (gridRowTreeSelector(apiRef)[sourceGroup.parent!] as GridGroupNode)
+            : null;
+
+          return {
+            ...state,
+            rows: {
+              ...state.rows,
+              totalTopLevelRowCount:
+                state.rows.totalTopLevelRowCount - (sourceGroupRemoved ? 1 : 0),
+              tree: {
+                ...updatedTree,
+                ...(sourceGroupRemoved && sourceGroupParent
+                  ? {
+                      [sourceGroupParent.id]: {
+                        ...sourceGroupParent,
+                        children: sourceGroupParent.children.filter(
+                          (childId) => childId !== sourceGroup.id,
+                        ),
+                      },
+                    }
+                  : {
+                      [sourceNode.parent!]: {
+                        ...sourceGroup,
+                        children: updatedSourceChildren,
+                      },
+                    }),
+                [target.parent!]: {
+                  ...targetGroup,
+                  children: updatedTargetChildren,
+                },
+                [sourceNode.id]: {
+                  ...sourceNode,
+                  parent: target.parent,
+                },
+              },
+            },
+          };
+        });
+
+        apiRef.current.updateRows([finalSourceRow]);
+        apiRef.current.publishEvent('rowsSet');
+      };
+
+      // Handle async update if needed
+      if (processRowUpdate && !isDeepEqual(originalSourceRow, updatedSourceRow)) {
+        const params: GridUpdateRowParams = {
+          rowId: sourceRowId,
+          previousRow: originalSourceRow,
+          updatedRow: updatedSourceRow,
+        };
+        apiRef.current.setLoading(true);
+
+        try {
+          const processedRow = await processRowUpdate(updatedSourceRow, originalSourceRow, params);
+          const finalRow = processedRow || updatedSourceRow;
+          commitStateUpdate(finalRow);
+        } catch (error) {
+          apiRef.current.setLoading(false);
+          if (onProcessRowUpdateError) {
+            onProcessRowUpdateError(error);
+          } else {
+            throw error;
+          }
+        } finally {
+          apiRef.current.setLoading(false);
+        }
+      } else {
+        commitStateUpdate(updatedSourceRow);
+      }
+    },
+  },
+
+  // ===== Case G: Cross-Parent Group Move =====
+  {
+    name: 'cross-parent-group',
+    detectOperation: (ctx) => {
+      const { sourceRowId, placeholderIndex, sortedFilteredRowIds, rowTree, apiRef } = ctx;
+
+      const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
+
+      if (!sourceNode || sourceNode.type === 'footer') {
+        return null;
+      }
+
+      let targetIndex = placeholderIndex;
+      let targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[placeholderIndex]);
+
+      // Get initial target node at placeholder position (always the node next to the drop indicator)
+      let isLastChild = false;
+
+      if (!targetNode) {
+        // If placeholder is at the end, use the last node
+        if (placeholderIndex >= sortedFilteredRowIds.length && sortedFilteredRowIds.length > 0) {
+          targetNode = gridRowNodeSelector(
+            apiRef,
+            sortedFilteredRowIds[sortedFilteredRowIds.length - 1],
+          );
+          targetIndex = sortedFilteredRowIds.length - 1;
+          isLastChild = true;
+        } else {
+          return null;
+        }
+      }
+
+      let adjustedTargetNode = targetNode;
+
+      // Case G adjustment: Group to different parent at different depth
+      if (
+        sourceNode.type === 'group' &&
+        targetNode.type === 'group' &&
+        sourceNode.parent !== targetNode.parent &&
+        sourceNode.depth > targetNode.depth
+      ) {
+        let prevIndex = targetIndex - 1;
+        if (prevIndex < 0) {
+          return null;
+        }
+        let prevNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[prevIndex]);
+        if (prevNode && prevNode.depth !== sourceNode.depth) {
+          while (targetNode.depth > sourceNode.depth && prevIndex >= 0) {
+            prevIndex -= 1;
+            prevNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[prevIndex]);
+          }
+        }
+        if (!prevNode || prevNode.type !== 'group' || prevNode.depth !== sourceNode.depth) {
+          return null;
+        }
+        isLastChild = true;
+        adjustedTargetNode = prevNode as GridGroupNode;
+      }
+
+      // Determine operation type
+      const operationType = determineOperationType(sourceNode, adjustedTargetNode);
+
+      if (operationType !== 'cross-parent-group') {
+        return null;
+      }
+
+      // Calculate actual insertion index
+      const actualTargetIndex = calculateTargetIndex(
+        sourceNode,
+        adjustedTargetNode,
+        isLastChild,
+        rowTree,
+      );
+
+      const operation = {
+        sourceNode,
+        targetNode: adjustedTargetNode,
+        actualTargetIndex,
+        isLastChild,
+        operationType,
+      };
+
+      targetNode = adjustedTargetNode;
+
+      // Groups must maintain same depth
+      if (sourceNode.depth !== targetNode.depth) {
+        return null;
+      }
+
+      return operation;
+    },
+    execute: async (operation, ctx) => {
+      const { sourceNode, targetNode, isLastChild } = operation;
+      const { apiRef, processRowUpdate, onProcessRowUpdateError } = ctx;
+
+      const tree = gridRowTreeSelector(apiRef);
+      const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
+      const columnsLookup = gridColumnLookupSelector(apiRef);
+      const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+
+      // Collect all leaf descendants
+      const allLeafIds = collectAllLeafDescendants(sourceNode as GridGroupNode, tree);
+
+      if (allLeafIds.length === 0) {
+        return;
+      }
+
+      // Initialize batch updater
+      const updater = new GroupMoveRowUpdater(processRowUpdate, onProcessRowUpdateError);
+
+      // Prepare updated rows
+      const groupingRules = getGroupingRules({
+        sanitizedRowGroupingModel,
+        columnsLookup,
+      });
+
+      const targetParentPath = getNodePathInTree({ id: targetNode.parent!, tree });
+
+      for (const leafId of allLeafIds) {
+        const originalRow = dataRowIdToModelLookup[leafId];
+        let updatedRow = { ...originalRow };
+
+        for (let depth = 0; depth < targetParentPath.length; depth += 1) {
+          const pathItem = targetParentPath[depth];
+          if (pathItem.field) {
+            const groupingRule = groupingRules.find((rule) => rule.field === pathItem.field);
+            if (groupingRule) {
+              const colDef = columnsLookup[groupingRule.field];
+              if (groupingRule.groupingValueSetter && colDef) {
+                updatedRow = groupingRule.groupingValueSetter(
+                  pathItem.key,
+                  updatedRow,
+                  colDef,
+                  apiRef,
+                );
+              } else {
+                updatedRow[groupingRule.field] = pathItem.key;
+              }
+            }
+          }
+        }
+
+        updater.queueRowUpdate(leafId, originalRow, updatedRow);
+      }
+
+      // Execute updates
+      apiRef.current.setLoading(true);
+
+      try {
+        const { successful, failed, updates } = await updater.executeUpdates();
+
+        if (successful.length > 0) {
+          apiRef.current.setState((state: any) => {
+            const updatedTree = { ...state.rows.tree };
+            const treeDepths = { ...state.rows.treeDepths };
+
+            if (failed.length === 0) {
+              // Complete success: move entire group
+              const sourceParentNode = updatedTree[sourceNode.parent!] as GridGroupNode;
+              updatedTree[sourceNode.parent!] = {
+                ...sourceParentNode,
+                children: sourceParentNode.children.filter((id) => id !== sourceNode.id),
+              };
+
+              const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
+              const targetIndex = targetParentNode.children.indexOf(targetNode.id);
+              const newTargetChildren = [...targetParentNode.children];
+
+              if (isLastChild) {
+                newTargetChildren.push(sourceNode.id);
+              } else {
+                newTargetChildren.splice(targetIndex, 0, sourceNode.id);
+              }
+
+              updatedTree[targetNode.parent!] = {
+                ...targetParentNode,
+                children: newTargetChildren,
+              };
+
+              updatedTree[sourceNode.id] = {
+                ...sourceNode,
+                parent: targetNode.parent,
+              };
+            }
+            // Handle partial success case...
+
+            return {
+              ...state,
+              rows: {
+                ...state.rows,
+                tree: updatedTree,
+                treeDepths,
+              },
+            };
+          });
+
+          apiRef.current.updateRows(updates);
+          apiRef.current.publishEvent('rowsSet');
+        }
+      } finally {
+        apiRef.current.setLoading(false);
+      }
+    },
+  },
+];
+
+export class RowReorderExecutor {
+  private scenarios: ReorderScenario[];
+
+  private debugMode: boolean;
+
+  constructor(scenarios: ReorderScenario[] = reorderScenarios, debugMode = false) {
+    this.scenarios = scenarios;
+    this.debugMode = debugMode;
+  }
+
+  async execute(ctx: ReorderExecutionContext): Promise<void> {
+    // Try each scenario in order
+    for (const scenario of this.scenarios) {
+      const operation = scenario.detectOperation(ctx);
+
+      if (operation) {
+        if (this.debugMode) {
+          // eslint-disable-next-line no-console
+          console.log(`Executing scenario: ${scenario.name}`, {
+            sourceId: operation.sourceNode.id,
+            targetId: operation.targetNode.id,
+            operationType: operation.operationType,
+            isLastChild: operation.isLastChild,
+          });
+        }
+
+        // eslint-disable-next-line no-await-in-loop
+        await scenario.execute(operation, ctx);
+        break;
+      }
+    }
+
+    // No matching scenario
+    if (this.debugMode) {
+      console.warn('No matching reorder scenario found');
+    }
+
+    warnOnce(
+      [
+        'MUI X: The parameters provided to the `setRowIndex()` resulted in a no-op.',
+        'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-grouping/',
+      ],
+      'warning',
+    );
+  }
+}
+
+export const reorderExecutor = new RowReorderExecutor(
+  reorderScenarios,
+  process.env.NODE_ENV === 'development',
+);
+
+// Get the path from a node to the root in the tree
+const getNodePathInTree = ({
+  id,
+  tree,
+}: {
+  id: GridRowId;
+  tree: GridRowTreeConfig;
+}): RowTreeBuilderGroupingCriterion[] => {
+  const path: RowTreeBuilderGroupingCriterion[] = [];
+  let node = tree[id] as GridGroupNode | GridLeafNode;
+
+  while (node.id !== GRID_ROOT_GROUP_ID) {
+    path.push({
+      field: node.type === 'leaf' ? null : node.groupingField,
+      key: node.groupingKey,
+    });
+
+    node = tree[node.parent!] as GridGroupNode | GridLeafNode;
+  }
+
+  path.reverse();
+
+  return path;
+};
+
+// Recursively collect all leaf node IDs from a group
+const collectAllLeafDescendants = (
+  groupNode: GridGroupNode,
+  tree: GridRowTreeConfig,
+): GridRowId[] => {
+  const leafIds: GridRowId[] = [];
+
+  const collectFromNode = (nodeId: GridRowId) => {
+    const node = tree[nodeId];
+    if (node.type === 'leaf') {
+      leafIds.push(nodeId);
+    } else if (node.type === 'group') {
+      (node as GridGroupNode).children.forEach(collectFromNode);
+    }
+  };
+
+  groupNode.children.forEach(collectFromNode);
+  return leafIds;
+};
+
+// Class to handle updates with partial failure tracking
+class GroupMoveRowUpdater {
+  private rowsToUpdate = new Map<GridRowId, GridValidRowModel>();
+
+  private originalRows = new Map<GridRowId, GridValidRowModel>();
+
+  private successfulRowIds = new Set<GridRowId>();
+
+  private failedRowIds = new Set<GridRowId>();
+
+  private pendingRowUpdates: GridValidRowModel[] = [];
+
+  constructor(
+    private processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'] | undefined,
+    private onProcessRowUpdateError:
+      | DataGridPremiumProcessedProps['onProcessRowUpdateError']
+      | undefined,
+  ) {}
+
+  queueRowUpdate(rowId: GridRowId, originalRow: GridValidRowModel, updatedRow: GridValidRowModel) {
+    this.originalRows.set(rowId, originalRow);
+    this.rowsToUpdate.set(rowId, updatedRow);
+  }
+
+  async executeUpdates(): Promise<{
+    successful: GridRowId[];
+    failed: GridRowId[];
+    updates: GridValidRowModel[];
+  }> {
+    const rowIds = Array.from(this.rowsToUpdate.keys());
+
+    if (rowIds.length === 0) {
+      return { successful: [], failed: [], updates: [] };
+    }
+
+    // Handle each row update, tracking success/failure
+    const handleRowUpdate = async (rowId: GridRowId) => {
+      const newRow = this.rowsToUpdate.get(rowId)!;
+      const oldRow = this.originalRows.get(rowId)!;
+
+      try {
+        if (typeof this.processRowUpdate === 'function') {
+          const params: GridUpdateRowParams = {
+            rowId,
+            previousRow: oldRow,
+            updatedRow: newRow,
+          };
+          const finalRow = await this.processRowUpdate(newRow, oldRow, params);
+          this.pendingRowUpdates.push(finalRow || newRow);
+          this.successfulRowIds.add(rowId);
+        } else {
+          this.pendingRowUpdates.push(newRow);
+          this.successfulRowIds.add(rowId);
+        }
+      } catch (error) {
+        this.failedRowIds.add(rowId);
+        if (this.onProcessRowUpdateError) {
+          this.onProcessRowUpdateError(error);
+        } else if (process.env.NODE_ENV !== 'production') {
+          console.error('Row update failed:', error);
+        }
+      }
+    };
+
+    // Use Promise.all with wrapped promises to avoid Promise.allSettled (browser support)
+    // This pattern is taken from the clipboard import implementation
+    const promises = rowIds.map((rowId) => {
+      return new Promise<void>((resolve) => {
+        handleRowUpdate(rowId).then(resolve).catch(resolve);
+      });
+    });
+
+    await Promise.all(promises);
+
+    return {
+      successful: Array.from(this.successfulRowIds),
+      failed: Array.from(this.failedRowIds),
+      updates: this.pendingRowUpdates,
+    };
+  }
+}
+
+function determineOperationType(
+  sourceNode: GridTreeNode,
+  targetNode: GridTreeNode,
+): 'same-parent-swap' | 'cross-parent-leaf' | 'cross-parent-group' {
+  if (sourceNode.parent === targetNode.parent) {
+    return 'same-parent-swap';
+  }
+  if (sourceNode.type === 'leaf') {
+    return 'cross-parent-leaf';
+  }
+  return 'cross-parent-group';
+}
+
+function calculateTargetIndex(
+  sourceNode: GridTreeNode,
+  targetNode: GridTreeNode,
+  isLastChild: boolean,
+  rowTree: Record<GridRowId, GridTreeNode>,
+): number {
+  if (sourceNode.parent === targetNode.parent && !isLastChild) {
+    // Same parent: find target's position in parent's children
+    const parent = rowTree[sourceNode.parent!] as GridGroupNode;
+    return parent.children.findIndex((id) => id === targetNode.id);
+  }
+
+  if (isLastChild) {
+    // Append at the end
+    const targetParent = rowTree[targetNode.parent!] as GridGroupNode;
+    return targetParent.children.length;
+  }
+
+  // Find position in target parent
+  const targetParent = rowTree[targetNode.parent!] as GridGroupNode;
+  const targetIndex = targetParent.children.findIndex((id) => id === targetNode.id);
+  return targetIndex >= 0 ? targetIndex : 0;
+}
