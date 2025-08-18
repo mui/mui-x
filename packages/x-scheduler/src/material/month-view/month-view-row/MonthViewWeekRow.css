@@ -96,10 +96,24 @@
   background: var(--interactive-focused-hover-bg);
 }
 
+.MonthViewCellEvents {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
 .MonthViewMoreEvents {
   margin: 0;
   color: var(--secondary-text-color);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
   padding-inline-start: var(--space-1);
+}
+
+.MonthViewDraggedEventContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: red;
 }

@@ -25,35 +25,22 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const draggedEvent = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
+  const initialDraggedEvent = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
 
   const isCurrentMonth = adapter.isSameMonth(day, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));
   const isToday = React.useMemo(() => adapter.isSameDay(day, adapter.date()), [adapter, day]);
 
-  const eventsWithPlaceholder = React.useMemo(() => {
-    if (!draggedEvent || !placeholder) {
-      return events;
+  const draggedEvent = React.useMemo(() => {
+    if (!initialDraggedEvent || !placeholder) {
+      return null;
     }
 
-    const updatedDraggedEvent: CalendarEvent = {
-      ...draggedEvent,
-      start: placeholder.start,
-      end: placeholder.end,
-    };
+    return { ...initialDraggedEvent, start: placeholder.start, end: placeholder.end };
+  }, [initialDraggedEvent, placeholder]);
 
-    const draggedEventIndex = events.findIndex((event) => event.id === draggedEvent.id);
-    if (draggedEventIndex === -1) {
-      return [updatedDraggedEvent, ...events];
-    }
-
-    return events.map((event, index) =>
-      index === draggedEventIndex ? updatedDraggedEvent : event,
-    );
-  }, [draggedEvent, placeholder, events]);
-
-  const visibleEvents = eventsWithPlaceholder.slice(0, maxEvents);
-  const hiddenCount = eventsWithPlaceholder.length - maxEvents;
+  const visibleEvents = events.slice(0, maxEvents);
+  const hiddenCount = events.length - maxEvents;
 
   const cellNumberContent = (
     <span className="MonthViewCellNumber">
@@ -87,23 +74,35 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       ) : (
         cellNumberContent
       )}
-      {visibleEvents.map((event) => (
-        <EventPopoverTrigger
-          key={event.id}
-          event={event}
-          render={
+      <div className="MonthViewCellEvents">
+        {visibleEvents.map((event) => (
+          <EventPopoverTrigger
+            key={event.id}
+            event={event}
+            render={
+              <DayGridEvent
+                event={event}
+                eventResource={resourcesByIdMap.get(event.resource)}
+                variant="compact"
+                ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+              />
+            }
+          />
+        ))}
+        {hiddenCount > 0 && events.length > 0 && (
+          <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
+        )}
+        {draggedEvent != null && (
+          <div className="MonthViewDraggedEventContainer">
             <DayGridEvent
-              event={event}
-              eventResource={resourcesByIdMap.get(event.resource)}
+              event={draggedEvent}
+              eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="compact"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
             />
-          }
-        />
-      ))}
-      {hiddenCount > 0 && eventsWithPlaceholder.length > 0 && (
-        <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
-      )}
+          </div>
+        )}
+      </div>
     </DayGrid.Cell>
   );
 });
