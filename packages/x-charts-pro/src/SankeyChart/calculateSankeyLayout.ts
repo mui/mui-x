@@ -126,12 +126,20 @@ function sankeyLinkPath(link: SankeyLayoutLink): string {
    * Except any accessors/options.
    */
   // Min and max X of the link
-  const x0 = link.source.x1 ?? 0;
-  const x1 = link.target.x0 ?? 0;
+  const x0 = link.source.x1!;
+  const x1 = link.target.x0!;
   // Max and min Y of the link
-  const y0 = link.y0 ?? 0;
-  const y1 = link.y1 ?? 0;
-  const halfW = (link.width ?? 0) / 2;
+  const y0 = link.y0!;
+  const y1 = link.y1!;
+  const halfW = link.width! / 2;
+  const targetWidth = link.target.x1! - link.target.x0!;
+  const sourceWidth = link.source.x1! - link.source.x0!;
+  const limits = {
+    x: {
+      min: x0 - sourceWidth,
+      max: x1 + targetWidth,
+    },
+  };
 
   // Center (x) of the link
   const lcx = (x0 + x1) / 2;
@@ -162,12 +170,14 @@ function sankeyLinkPath(link: SankeyLayoutLink): string {
     i === 0 || i === pathPoints.length - 1 ? 0 : getLineAngleRadians(pathPoints[i - 1], v),
   );
 
-  const topPoints = pathPoints.map((v, i) => movePoint(v, angles[i], halfW, 90));
-  const bottomPoints = pathPoints.map((v, i) => movePoint(v, angles[i], halfW, -90)).reverse();
+  const topPoints = pathPoints.map((v, i) => movePoint(v, angles[i], halfW, 90, limits));
+  const bottomPoints = pathPoints
+    .map((v, i) => movePoint(v, angles[i], halfW, -90, limits))
+    .reverse();
 
   // We add the last point again to close the curve
-  topPoints.push(movePoint(pathPoints.at(-1)!, 0, halfW, 90));
-  bottomPoints.push(movePoint(pathPoints.at(0)!, 0, halfW, -90));
+  topPoints.push(movePoint(pathPoints.at(-1)!, 0, halfW, 90, limits));
+  bottomPoints.push(movePoint(pathPoints.at(0)!, 0, halfW, -90, limits));
 
   const topCurves = catmullRom2bezier(topPoints);
   const bottomCurves = catmullRom2bezier(bottomPoints);
@@ -224,6 +234,7 @@ function movePoint(
   angleRadians: number,
   distance: number,
   changeAngle: number,
+  limits: { x: { min: number; max: number } },
 ): Point {
   const radians = angleRadians + (changeAngle * Math.PI) / 180;
 
@@ -232,8 +243,15 @@ function movePoint(
   const deltaY = distance * Math.sin(radians);
 
   // Calculate the new coordinates
-  const newX = point.x + deltaX;
+  let newX = point.x + deltaX;
   const newY = point.y + deltaY;
+
+  // Apply limits
+  if (newX < limits.x.min) {
+    newX = limits.x.min;
+  } else if (newX > limits.x.max) {
+    newX = limits.x.max;
+  }
 
   return { x: newX, y: newY };
 }
