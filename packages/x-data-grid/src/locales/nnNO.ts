@@ -5,9 +5,10 @@ const nnNOGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rader',
   noResultsOverlayLabel: 'Fann ingen resultat.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
-  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  noColumnsOverlayLabel: 'Ingen kolonner',
+  noColumnsOverlayManageColumns: 'Vel kolonner',
+  emptyPivotOverlayLabel:
+    'Legg til felt i rader, kolonner og verdiar for å opprette ein pivot-tabell',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tettheit',
@@ -41,17 +42,17 @@ const nnNOGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Last ned som Excel',
 
   // Toolbar pivot button
-  // toolbarPivot: 'Pivot',
+  toolbarPivot: 'Pivot',
 
   // Toolbar AI Assistant button
-  // toolbarAssistant: 'AI Assistant',
+  toolbarAssistant: 'AI Assistent',
 
   // Columns management text
   columnsManagementSearchTitle: 'Søk',
   columnsManagementNoColumns: 'Ingen kolonner',
   columnsManagementShowHideAllText: 'Vis/skjul alle',
   columnsManagementReset: 'Nullstill',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Tøm',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
@@ -67,9 +68,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'inneheld',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'inneheld ikkje',
   filterOperatorEquals: 'er lik',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'er ikkje lik',
   filterOperatorStartsWith: 'startar med',
   filterOperatorEndsWith: 'sluttar med',
   filterOperatorIs: 'er',
@@ -90,9 +91,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Inneheld',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Inneheld ikkje',
   headerFilterOperatorEquals: 'Lik',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Er ikkje lik',
   headerFilterOperatorStartsWith: 'Startar på',
   headerFilterOperatorEndsWith: 'Sluttar på',
   headerFilterOperatorIs: 'Er',
@@ -110,7 +111,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større enn eller lik',
   'headerFilterOperator<': 'Mindre enn',
   'headerFilterOperator<=': 'Mindre enn eller lik',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Tøm filter',
 
   // Filter values text
   filterValueAny: 'nokon',
@@ -119,7 +120,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} kolonne meny`,
   columnMenuShowColumns: 'Vis kolonner',
   columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filter',
@@ -127,7 +128,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Usorter',
   columnMenuSortAsc: 'Sorter AUKANDE',
   columnMenuSortDesc: 'Sorter SYNKANDE',
-  // columnMenuManagePivot: 'Manage pivot',
+  columnMenuManagePivot: 'Behandle pivot',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -176,24 +177,19 @@ const nnNOGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Slutt å grupper på ${name}`,
 
   // Master/detail
-  detailPanelToggle: 'Utvid/kollaps detalj panel',
-  expandDetailPanel: 'Utvid',
-  collapseDetailPanel: 'Kolaps',
+  detailPanelToggle: 'Vis/gøym detaljpanel',
+  expandDetailPanel: 'Vis',
+  collapseDetailPanel: 'Gøym',
 
   // Pagination
   paginationRowsPerPage: 'Rader per side:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} av ${count !== -1 ? count : `flere enn ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `omtrent ${estimated}` : `flere enn ${to}`;
+    return `${from}–${to} av ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Gå til første side';
@@ -220,81 +216,86 @@ const nnNOGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'størrelse',
 
   // Pivot panel
-  // pivotToggleLabel: 'Pivot',
-  // pivotRows: 'Rows',
-  // pivotColumns: 'Columns',
-  // pivotValues: 'Values',
-  // pivotCloseButton: 'Close pivot settings',
-  // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search fields',
-  // pivotSearchControlLabel: 'Search fields',
-  // pivotSearchControlClear: 'Clear search',
-  // pivotNoFields: 'No fields',
-  // pivotMenuMoveUp: 'Move up',
-  // pivotMenuMoveDown: 'Move down',
-  // pivotMenuMoveToTop: 'Move to top',
-  // pivotMenuMoveToBottom: 'Move to bottom',
-  // pivotMenuRows: 'Rows',
-  // pivotMenuColumns: 'Columns',
-  // pivotMenuValues: 'Values',
-  // pivotMenuOptions: 'Field options',
-  // pivotMenuAddToRows: 'Add to Rows',
-  // pivotMenuAddToColumns: 'Add to Columns',
-  // pivotMenuAddToValues: 'Add to Values',
-  // pivotMenuRemove: 'Remove',
-  // pivotDragToRows: 'Drag here to create rows',
-  // pivotDragToColumns: 'Drag here to create columns',
-  // pivotDragToValues: 'Drag here to create values',
-  // pivotYearColumnHeaderName: '(Year)',
-  // pivotQuarterColumnHeaderName: '(Quarter)',
+  pivotToggleLabel: 'Pivot',
+  pivotRows: 'Rader',
+  pivotColumns: 'Kolonner',
+  pivotValues: 'Verdiar',
+  pivotCloseButton: 'Lukk pivotinnstillingar',
+  pivotSearchButton: 'Søk felt',
+  pivotSearchControlPlaceholder: 'Søk felt',
+  pivotSearchControlLabel: 'Søk felt',
+  pivotSearchControlClear: 'Tøm søk',
+  pivotNoFields: 'Ingen felt',
+  pivotMenuMoveUp: 'Flytt opp',
+  pivotMenuMoveDown: 'Flytt ned',
+  pivotMenuMoveToTop: 'Flytt til toppen',
+  pivotMenuMoveToBottom: 'Flytt til botnen',
+  pivotMenuRows: 'Rader',
+  pivotMenuColumns: 'Kolonner',
+  pivotMenuValues: 'Verdiar',
+  pivotMenuOptions: 'Feltalternativ',
+  pivotMenuAddToRows: 'Legg til i Rader',
+  pivotMenuAddToColumns: 'Legg til i Kolonner',
+  pivotMenuAddToValues: 'Legg til i Verdiar',
+  pivotMenuRemove: 'Fjern',
+  pivotDragToRows: 'Dra hit for å opprette rader',
+  pivotDragToColumns: 'Dra hit for å opprette kolonner',
+  pivotDragToValues: 'Dra hit for å opprette verdiar',
+  pivotYearColumnHeaderName: '(År)',
+  pivotQuarterColumnHeaderName: '(Kvartal)',
 
   // AI Assistant panel
-  // aiAssistantPanelTitle: 'AI Assistant',
-  // aiAssistantPanelClose: 'Close AI Assistant',
-  // aiAssistantPanelNewConversation: 'New conversation',
-  // aiAssistantPanelConversationHistory: 'Conversation history',
-  // aiAssistantPanelEmptyConversation: 'No prompt history',
-  // aiAssistantSuggestions: 'Suggestions',
+  aiAssistantPanelTitle: 'AI Assistent',
+  aiAssistantPanelClose: 'Lukk AI Assistent',
+  aiAssistantPanelNewConversation: 'Ny samtale',
+  aiAssistantPanelConversationHistory: 'Samtalehistorikk',
+  aiAssistantPanelEmptyConversation: 'Ingen prompt-historikk',
+  aiAssistantSuggestions: 'Forslag',
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
-  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldLabel: 'Prompt',
+  promptFieldPlaceholder: 'Skriv ein prompt…',
+  promptFieldPlaceholderWithRecording: 'Skriv eller spel inn ein prompt…',
+  promptFieldPlaceholderListening: 'Lyttar etter prompt…',
+  promptFieldSpeechRecognitionNotSupported: 'Talegjenkjenning er ikkje støtta i denne nettlesaren',
+  promptFieldSend: 'Send',
+  promptFieldRecord: 'Spel inn',
+  promptFieldStopRecording: 'Stopp opptak',
 
   // Prompt
-  // promptRerun: 'Run again',
-  // promptProcessing: 'Processing…',
-  // promptAppliedChanges: 'Applied changes',
+  promptRerun: 'Kjør på nytt',
+  promptProcessing: 'Behandlar…',
+  promptAppliedChanges: 'Brukte endringar',
 
   // Prompt changes
-  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
-  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `${column} is any of: ${value}`;
-  //   }
-  //   return `${column} ${operator} ${value}`;
-  // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `Filter where ${column} is any of: ${value}`;
-  //   }
-  //   return `Filter where ${column} ${operator} ${value}`;
-  // },
-  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
-  // promptChangePivotEnableLabel: 'Pivot',
-  // promptChangePivotEnableDescription: 'Enable pivot',
-  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
-  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
-  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
-  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
-  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  promptChangeGroupDescription: (column: string) => `Grupper etter ${column}`,
+  promptChangeAggregationLabel: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeAggregationDescription: (column: string, aggregation: string) =>
+    `Aggreger ${column} (${aggregation})`,
+  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+    if (operator === 'is any of') {
+      return `${column} er ein av: ${value}`;
+    }
+    return `${column} ${operator} ${value}`;
+  },
+  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+    if (operator === 'is any of') {
+      return `Filter der ${column} er ein av: ${value}`;
+    }
+    return `Filter der ${column} ${operator} ${value}`;
+  },
+  promptChangeSortDescription: (column: string, direction: string) =>
+    `Sorter etter ${column} (${direction})`,
+  promptChangePivotEnableLabel: 'Pivot',
+  promptChangePivotEnableDescription: 'Aktiver pivot',
+  promptChangePivotColumnsLabel: (count: number) => `Kolonner (${count})`,
+  promptChangePivotColumnsDescription: (column: string, direction: string) =>
+    `${column}${direction ? ` (${direction})` : ''}`,
+  promptChangePivotRowsLabel: (count: number) => `Rader (${count})`,
+  promptChangePivotValuesLabel: (count: number) => `Verdiar (${count})`,
+  promptChangePivotValuesDescription: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
 };
 
 export const nnNO: Localization = getGridLocalization(nnNOGrid);

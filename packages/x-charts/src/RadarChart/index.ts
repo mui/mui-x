@@ -1,7 +1,20 @@
-export { RadarChart as Unstable_RadarChart } from './RadarChart';
+import { RadarChart } from './RadarChart';
+import { RadarDataProvider } from './RadarDataProvider';
+
 export { RadarChart } from './RadarChart';
-export { RadarDataProvider as Unstable_RadarDataProvider } from './RadarDataProvider';
+/**
+ * @deprecated radar chart is now stable, import `RadarChart` instead
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const Unstable_RadarChart = RadarChart;
+
 export { RadarDataProvider } from './RadarDataProvider';
+/**
+ * @deprecated radar data provider is now stable, import `RadarDataProvider` instead
+ */
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const Unstable_RadarDataProvider = RadarDataProvider;
+
 export type { RadarChartProps, RadarChartSlots, RadarChartSlotProps } from './RadarChart';
 export type { RadarDataProviderProps, RadarSeries } from './RadarDataProvider';
 export * from './RadarGrid';

@@ -58,7 +58,7 @@
   color: var(--primary-12);
 }
 
-.EventsList {
+.mui-x-scheduler .EventsList {
   display: flex;
   flex-direction: column;
   padding: var(--space-2);

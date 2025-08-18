@@ -32,6 +32,7 @@ import {
   gridEditRowsStateSelector,
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
+import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
@@ -127,6 +128,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     isRowReorderingEnabledSelector,
     rowReordering,
   );
+  const isRowDragActive = useGridSelector(apiRef, gridIsRowDragActiveSelector);
   const handleRef = useForkRef(ref, refProp);
   const rowNode = gridRowNodeSelector(apiRef, rowId);
   const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
@@ -283,6 +285,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     return rowStyle;
   }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
 
+  // HACK: Sometimes, the rowNode has already been removed from the state but the row is still rendered.
+  if (!rowNode) {
+    return null;
+  }
+
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = getRowAriaAttributes(rowNode, index);
 
@@ -296,11 +303,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     };
 
     rowClassNames.push(rootProps.getRowClassName(rowParams));
-  }
-
-  // XXX: fix this properly
-  if (!rowNode) {
-    return null;
   }
 
   const getCell = (
@@ -351,7 +353,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     const canReorderColumn = !(disableColumnReorder || column.disableReorder);
     const canReorderRow = isRowReorderingEnabled && !sortModel.length && treeDepth <= 1;
 
-    const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
+    const disableDragEvents = !(
+      canReorderColumn ||
+      (isReorderCell && canReorderRow) ||
+      isRowDragActive
+    );
 
     const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
