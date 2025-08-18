@@ -24,8 +24,8 @@ export const SettingsMenu = React.forwardRef(function SettingsMenu(
   const settings = useStore(store, selectors.settings);
 
   const handleHideWeekend = useEventCallback((checked: boolean, event: Event) => {
-    instance.setSettings({ ...settings, hideWeekends: checked }, event);
-  });
+  instance.setSettings({ hideWeekends: checked }, event);
+});
 
   return (
     <div ref={handleRef} className={clsx('SettingsMenuContainer', className)} {...other}>

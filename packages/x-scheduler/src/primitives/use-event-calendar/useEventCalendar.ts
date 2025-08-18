@@ -189,9 +189,14 @@ export function useEventCalendar(
     },
   );
 
-  const setSettings: useEventCalendar.Instance['setSettings'] = useEventCallback((settings, _) => {
-    store.set('settings', settings);
-  });
+  const setSettings: useEventCalendar.Instance['setSettings'] = useEventCallback(
+    (partialSettings, _) => {
+      store.set('settings', {
+        ...store.state.settings,
+        ...partialSettings,
+      });
+    },
+  );
 
   const instanceRef = React.useRef<useEventCalendar.Instance>({
     setView,
@@ -349,7 +354,7 @@ export namespace useEventCalendar {
     /**
      * Set the settings of the calendar.
      */
-    setSettings: (settings: CalendarSettings, event: React.UIEvent | Event) => void;
+    setSettings: (settings: Partial<CalendarSettings>, event: React.UIEvent | Event) => void;
   }
 
   export type Store = BaseStore<State>;
