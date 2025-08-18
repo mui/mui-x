@@ -193,9 +193,13 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       }
       previousActive.current = activeItem;
       const offsetTop = activeItem.offsetTop;
+      const itemHeight = activeItem.offsetHeight;
+      const containerHeight = containerRef.current.clientHeight;
 
-      // Subtracting the 4px of extra margin intended for the first visible section item
-      containerRef.current.scrollTop = offsetTop - 4;
+      // Center the selected item in the container view
+      // This provides better UX by showing options both above and below the selected item
+      const scrollPosition = offsetTop - (containerHeight / 2) + (itemHeight / 2);
+      containerRef.current.scrollTop = Math.max(0, scrollPosition);
     });
 
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
