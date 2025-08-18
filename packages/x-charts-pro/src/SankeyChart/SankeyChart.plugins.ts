@@ -1,23 +1,22 @@
 import {
   ConvertSignaturesIntoPlugins,
-  useChartHighlight,
-  UseChartHighlightSignature,
+  // useChartHighlight,
+  // UseChartHighlightSignature,
   useChartInteraction,
   UseChartInteractionSignature,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
+import {} from // useChartProExport,
+// UseChartProExportSignature,
+'../internals/plugins/useChartProExport';
 
 export type SankeyChartPluginsSignatures = [
   UseChartInteractionSignature,
-  UseChartHighlightSignature,
-  UseChartProExportSignature,
+  // UseChartHighlightSignature,
+  // UseChartProExportSignature,
 ];
 
 export const SANKEY_CHART_PLUGINS: ConvertSignaturesIntoPlugins<SankeyChartPluginsSignatures> = [
   useChartInteraction,
-  useChartHighlight,
-  useChartProExport,
+  // useChartHighlight,
+  // useChartProExport,
 ];
