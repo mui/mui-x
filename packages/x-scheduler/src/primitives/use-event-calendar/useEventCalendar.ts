@@ -23,6 +23,7 @@ import { useAssertStateValidity } from '../utils/useAssertStateValidity';
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
 const EMPTY_ARRAY: any[] = [];
 
 export function useEventCalendar(
@@ -47,7 +48,7 @@ export function useEventCalendar(
     areEventsDraggable = false,
     areEventsResizable = false,
     ampm = true,
-    settings: settingsProp = { hideWeekends: false },
+    settings: settingsProp = DEFAULT_SETTINGS,
   } = parameters;
 
   const store = useRefWithInit(
