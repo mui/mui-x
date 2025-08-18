@@ -19,6 +19,7 @@ import {
 import { useAssertStateValidity } from '../utils/useAssertStateValidity';
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
 const EMPTY_ARRAY: any[] = [];
 
 export function useEventCalendar(
@@ -43,7 +44,7 @@ export function useEventCalendar(
     areEventsDraggable = false,
     areEventsResizable = false,
     ampm = true,
-    settings: settingsProp = { hideWeekends: false },
+    settings: settingsProp = DEFAULT_SETTINGS,
   } = parameters;
 
   const store = useRefWithInit(
@@ -185,9 +186,14 @@ export function useEventCalendar(
     },
   );
 
-  const setSettings: useEventCalendar.Instance['setSettings'] = useEventCallback((settings, _) => {
-    store.set('settings', settings);
-  });
+  const setSettings: useEventCalendar.Instance['setSettings'] = useEventCallback(
+    (partialSettings, _) => {
+      store.set('settings', {
+        ...store.state.settings,
+        ...partialSettings,
+      });
+    },
+  );
 
   const setSiblingVisibleDateSetter: useEventCalendar.Instance['setSiblingVisibleDateSetter'] =
     useEventCallback((setter) => {
@@ -329,7 +335,7 @@ export namespace useEventCalendar {
     /**
      * Set the settings of the calendar.
      */
-    setSettings: (settings: CalendarSettings, event: React.UIEvent | Event) => void;
+    setSettings: (settings: Partial<CalendarSettings>, event: React.UIEvent | Event) => void;
     /**
      * Sets the method used to determine the previous / next visible date.
      * Returns the cleanup function.
