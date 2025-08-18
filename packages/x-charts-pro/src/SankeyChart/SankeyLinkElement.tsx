@@ -61,14 +61,12 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
       <path
         ref={ref}
         d={link.path}
-        stroke={color || link.color}
-        strokeWidth={link.width}
-        strokeOpacity={opacity}
+        fill={color || link.color}
+        opacity={opacity}
         data-link-source={link.source.id}
         data-link-target={link.target.id}
         onClick={onClick ? handleClick : undefined}
         cursor={onClick ? 'pointer' : 'default'}
-        fill="none"
         {...interactionProps}
       />
     );
