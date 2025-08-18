@@ -14,6 +14,7 @@ import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { selectors } from '../../../primitives/use-event-calendar';
 import './MonthViewWeekRow.css';
+import { getEventWithLargestRowIndex } from '@mui/x-scheduler/primitives/utils/event-utils';
 
 const adapter = getAdapter();
 
@@ -62,12 +63,18 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       >
         {weekNumber}
       </div>
-      {daysWithEvents.map(({ day, events }, dayIdx) => {
+      {daysWithEvents.map(({ day, events, allDayEvents }, dayIdx) => {
         const isCurrentMonth = adapter.isSameMonth(day, visibleDate);
         const isToday = adapter.isSameDay(day, today);
 
-        const visibleEvents = events.slice(0, maxEvents);
-        const hiddenCount = events.length - maxEvents;
+        const visibleAllDayEvents = allDayEvents.slice(0, maxEvents);
+        const visibleEvents = events.slice(0, maxEvents - visibleAllDayEvents.length);
+        const hiddenCount = events.length + allDayEvents.length - maxEvents;
+        const rowCount =
+          1 +
+          getEventWithLargestRowIndex(allDayEvents) +
+          visibleEvents.length +
+          (hiddenCount > 0 ? 1 : 0);
         return (
           <DayGrid.Cell
             ref={dayIdx === 0 ? firstDayRef : undefined}
@@ -78,6 +85,11 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
               isToday && 'Today',
               isWeekend(adapter, day) && 'Weekend',
             )}
+            style={
+              {
+                '--row-count': rowCount,
+              } as React.CSSProperties
+            }
           >
             {hasDayView ? (
               <button
@@ -91,6 +103,47 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
             ) : (
               renderCellNumberContent(day)
             )}
+
+            {visibleAllDayEvents.map((event) => {
+              const durationInDays = adapter.startOfDay(event.end).diff(day, 'days').days + 1;
+              const gridColumnSpan = Math.min(durationInDays, days.length - dayIdx); // Don't exceed available columns
+              const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIdx === 0;
+
+              return shouldRenderEvent ? (
+                <EventPopoverTrigger
+                  key={`${event.id}-${day.toString()}`}
+                  event={event}
+                  render={
+                    <DayGridEvent
+                      event={event}
+                      eventResource={resourcesByIdMap.get(event.resource)}
+                      variant="allDay"
+                      ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+                      style={
+                        {
+                          '--grid-row': (event.eventRowIndex || 0) + 1,
+                          '--grid-column-span': gridColumnSpan,
+                        } as React.CSSProperties
+                      }
+                    />
+                  }
+                />
+              ) : (
+                <DayGridEvent
+                  key={`invisible-${event.id}-${day.toString()}`}
+                  event={event}
+                  eventResource={resourcesByIdMap.get(event.resource)}
+                  variant="invisible"
+                  ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+                  aria-hidden="true"
+                  style={
+                    {
+                      '--grid-row': (event.eventRowIndex || 0) + 1,
+                    } as React.CSSProperties
+                  }
+                />
+              );
+            })}
             {visibleEvents.map((event) => (
               <EventPopoverTrigger
                 key={event.id}
