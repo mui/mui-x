@@ -1,1 +1,1 @@
-export { throttle } from './throttle';
+export * from './throttle';

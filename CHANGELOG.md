@@ -5,6 +5,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.10.1
+
+_Aug 15, 2025_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Y-axes can now be grouped by category when using `band` and `point` scales.
+- 📚 Documentation improvements
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @bernardobelchior, @Janpot, @JCQuintas, @mnajdova, @oliviertassinari, @prakhargupta1, @romgrk
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.10.1`
+
+- [DataGrid] Fix scroll jumping (#19156) @romgrk
+- [DataGrid] Fix scroll restoration (#19182) @romgrk
+- [DataGrid] Fix "no row with id" error (#19193) @romgrk
+
+#### `@mui/x-data-grid-pro@8.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@8.10.1`.
+
+#### `@mui/x-data-grid-premium@8.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@8.10.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.10.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@8.10.0`.
+
+### Charts
+
+- Axes can now be grouped by category when using `band` and `point` scales
+
+  <img width="643" height="455" alt="Bar chart with y-axis grouped per categories" src="https://github.com/user-attachments/assets/59044afe-bcc5-4152-8bf1-225db0635025" />
+
+#### `@mui/x-charts@8.10.1`
+
+- [charts] Allow y-axis to be grouped (#19081) @JCQuintas
+- [charts] Fix default axis highlight for axes without data attribute (#18985) @alexfauquette
+- [charts] Fix tooltip mark unexpected wrapping in mobile (#19122) @bernardobelchior
+- [charts] Prevent overflow on charts tooltip (#19123) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@8.10.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.10.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@8.10.1`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.10.1`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add all planned charts on the overview page (#19077) @prakhargupta1
+- [docs] Add future charts components link in the sidebar (#19140) @prakhargupta1
+- [docs] Fix Heatmap docs duplicate text (#19138) @JCQuintas
+- [docs] Remove preview from Toolbar & Funnel (#19131) @mnajdova
+- [docs] Reproduce npm sparkline (#19089) @alexfauquette
+
+### Core
+
+- [core] Fix licensing model name (#19025) @oliviertassinari
+- [core] Fix usage of `:catalog` for `@babel/runtime` (#19028) @oliviertassinari
+- [core] Refactor virtualizer API (#18995) @romgrk
+
+### Miscellaneous
+
+- [code-infra] Remove namespaces (#19071) @Janpot
+- [code-infra] Fix `fs-extra` removal from `formattedTSDemos` script (#19132) @bernardobelchior
+- [code-infra] Remove unused code and dependency (#19139) @bernardobelchior
+- [code-infra] Replace `fs-extra` with `node:fs` where possible (#19127) @bernardobelchior
+- [internal] Edit, keep `lockFileMaintenance` simple @oliviertassinari
+- [internal] Fix writing style action name @oliviertassinari
+- [internal] Make it clear that `lockFileMaintenance` is enabled @oliviertassinari
+- [support-infra] Remove default issue label (#19104) @oliviertassinari
+
 ## 8.10.0
 
 _Aug 8, 2025_

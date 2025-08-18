@@ -231,7 +231,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
     scrollPosition.current = newScroll;
 
-    const direction = isScrolling ? directionForDelta(dx, dy) : ScrollDirection.NONE;
+    const direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE;
 
     // Since previous render, we have scrolled...
     const rowScroll = Math.abs(
@@ -310,7 +310,6 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       ignoreNextScrollEvent.current = false;
       return;
     }
-
     const nextRenderContext = triggerUpdateRenderContext();
     if (nextRenderContext) {
       onScrollChange?.(scrollPosition.current, nextRenderContext);
@@ -524,13 +523,13 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     return size;
   }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
 
-  const verticalScrollRestoreCallback = React.useRef<Function | null>(null);
-  const onContentSizeApplied = React.useCallback(
+  const scrollRestoreCallback = React.useRef<Function | null>(null);
+  const contentNodeRef = React.useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) {
         return;
       }
-      verticalScrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
+      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
     },
     [columnsTotalWidth, contentHeight],
   );
@@ -557,42 +556,43 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       const scroller = refs.scroller.current;
       const { top, left } = initialState.scroll;
 
-      // On initial mount, if we have columns available, we can restore the horizontal scroll immediately, but we need to skip the resulting scroll event, otherwise we would recalculate the render context at position top=0, left=restoredValue, but the initial render context is already calculated based on the initial value of scrollPosition ref.
       const isScrollRestored = {
         top: !(top > 0),
         left: !(left > 0),
       };
+
       if (!isScrollRestored.left && columnsTotalWidth) {
         scroller.scrollLeft = left;
-        ignoreNextScrollEvent.current = true;
         isScrollRestored.left = true;
+        ignoreNextScrollEvent.current = true;
       }
 
-      // For the sake of completeness, but I'm not sure if contentHeight is ever available at this point. Maybe when virtualisation is disabled?
+      // To restore the vertical scroll, we need to wait until the rows are available in the DOM (otherwise
+      // there's nowhere to scroll). We still set the scrollTop to the initial value at this point in case
+      // there already are rows rendered in the DOM, but we only confirm `isScrollRestored.top = true` in the
+      // asynchronous callback below.
       if (!isScrollRestored.top && contentHeight) {
         scroller.scrollTop = top;
         ignoreNextScrollEvent.current = true;
-        isScrollRestored.top = true;
       }
 
-      // To restore the vertical scroll, we need to wait until the rows are available in the DOM (otherwise there's nowhere to scroll), but before paint to avoid reflows
       if (!isScrollRestored.top || !isScrollRestored.left) {
-        verticalScrollRestoreCallback.current = (
+        scrollRestoreCallback.current = (
           columnsTotalWidthCurrent: number,
           contentHeightCurrent: number,
         ) => {
           if (!isScrollRestored.left && columnsTotalWidthCurrent) {
             scroller.scrollLeft = left;
-            ignoreNextScrollEvent.current = true;
             isScrollRestored.left = true;
+            ignoreNextScrollEvent.current = true;
           }
           if (!isScrollRestored.top && contentHeightCurrent) {
             scroller.scrollTop = top;
-            ignoreNextScrollEvent.current = true;
             isScrollRestored.top = true;
+            ignoreNextScrollEvent.current = true;
           }
           if (isScrollRestored.left && isScrollRestored.top) {
-            verticalScrollRestoreCallback.current = null;
+            scrollRestoreCallback.current = null;
           }
         };
       }
@@ -626,7 +626,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       tabIndex: platform.isFirefox ? -1 : undefined,
     }),
     getContentProps: () => ({
-      ref: onContentSizeApplied,
+      ref: contentNodeRef,
       style: contentSize,
       role: 'presentation',
     }),
@@ -1021,27 +1021,6 @@ export function computeOffsetLeft(
     (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
   return Math.abs(left);
-}
-
-function directionForDelta(dx: number, dy: number) {
-  if (dx === 0 && dy === 0) {
-    return ScrollDirection.NONE;
-  }
-  /* eslint-disable */
-  if (Math.abs(dy) >= Math.abs(dx)) {
-    if (dy > 0) {
-      return ScrollDirection.DOWN;
-    } else {
-      return ScrollDirection.UP;
-    }
-  } else {
-    if (dx > 0) {
-      return ScrollDirection.RIGHT;
-    } else {
-      return ScrollDirection.LEFT;
-    }
-  }
-  /* eslint-enable */
 }
 
 function bufferForDirection(
