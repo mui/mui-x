@@ -114,6 +114,67 @@ The example below demonstrates how to use an RTL language (Arabic) with the Data
 
 {{"demo": "DataGridRTL.js", "bg": "inline"}}
 
+## Pagination number formatting
+
+To format large numbers in the pagination component, customize the `paginationDisplayedRows` with the following code:
+
+```jsx
+import { DataGridPro } from '@mui/x-data-grid-pro';
+
+// ======================================================
+// TODO: replace with your locale
+import { enUS as locale } from '@mui/x-data-grid/locales';
+const LOCALE = 'en-US';
+// ======================================================
+
+const formatNumber = (value: number | string): string => {
+  if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
+    try {
+      const result = new Intl.NumberFormat(LOCALE).format(Number(value));
+      return result === 'NaN' ? value : result;
+    } catch {
+      return value;
+    }
+  }
+  return value;
+};
+
+const paginationDisplayedRows = ({
+  from,
+  to,
+  count,
+  estimated,
+}: {
+  from: number;
+  to: number;
+  count: number;
+  page: number;
+  estimated?: number;
+}) => {
+  if (!estimated) {
+    return `${formatNumber(from)}–${formatNumber(to)} sur ${
+      count !== -1 ? formatNumber(count) : `plus de ${formatNumber(to)}`
+    }`;
+  }
+  const estimatedLabel =
+    estimated && estimated > to
+      ? `environ ${formatNumber(estimated)}`
+      : `plus de ${formatNumber(to)}`;
+  return `${formatNumber(from)}–${formatNumber(to)} sur ${
+    count !== -1 ? formatNumber(count) : estimatedLabel
+  }`;
+};
+
+locale.components.MuiDataGrid.defaultProps.localeText.paginationDisplayedRows =
+  paginationDisplayedRows;
+
+<DataGridPro
+  localeText={locale.components.MuiDataGrid.defaultProps.localeText}
+/>
+```
+
+{{"demo": "PaginationNumberFormatting.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
