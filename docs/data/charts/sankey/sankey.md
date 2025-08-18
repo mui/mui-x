@@ -65,20 +65,22 @@ For example, in the demonstration below:
 
 ## Sorting
 
-By default, the nodes are sorted by their appearance in the `links` array.
-If a `nodes` array is provided, the nodes are sorted by their order in that array.
+Nodes are displayed in the same order as they are defined in the `nodes` array.  
+If a `nodes` array isn't provided, nodes are rendered according to the order in which they are referenced in the `links` array.
 
 To dynamically customize the order, use the sorting functions for the element that needs sorting.
 
 ### Node sorting
 
-The `nodeOptions.sort` function allows control of the vertical order of nodes within each column. It receives two `SankeyLayoutNode` objects and should return a number (similar to `Array.sort`).
+The `nodeOptions.sort` function allows control of the vertical order of nodes within each column.  
+It receives two `SankeyLayoutNode` objects and should return a number (similar to [`Array.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn)).
 
 {{"demo": "SankeyNodeSorting.js"}}
 
 ### Link sorting
 
-The `linkOptions.sort` function allows control of the order of links emanating from each node. It receives two `SankeyLayoutLink` objects and should return a number.
+The `linkOptions.sort` function allows control of the order of links emanating from each node.
+It receives two `SankeyLayoutLink` objects and should return a number.
 
 {{"demo": "SankeyLinkSorting.js"}}
 
