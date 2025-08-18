@@ -7,7 +7,6 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { State } from './store';
 import { useAssertModelConsistency } from '../utils/useAssertModelConsistency';
 import { useAdapter } from '../utils/adapter/useAdapter';
-import { Adapter } from '../utils/adapter/types';
 import {
   CalendarEvent,
   CalendarEventId,
@@ -18,9 +17,6 @@ import {
   SchedulerValidDate,
 } from '../models';
 import { useAssertStateValidity } from '../utils/useAssertStateValidity';
-
-// TODO: Create a prop to allow users to customize the number of days in agenda view
-export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 const EMPTY_ARRAY: any[] = [];
@@ -64,6 +60,7 @@ export function useEventCalendar(
         areEventsResizable,
         ampm,
         settings: settingsProp,
+        siblingVisibleDateSetter: (date) => date,
       }),
   ).current;
 
@@ -161,12 +158,12 @@ export function useEventCalendar(
 
   const goToPreviousVisibleDate: useEventCalendar.Instance['goToPreviousVisibleDate'] =
     useEventCallback((event) => {
-      setVisibleDate(getNavigationDate({ adapter, store, delta: -1 }), event);
+      setVisibleDate(store.state.siblingVisibleDateSetter(store.state.visibleDate, -1), event);
     });
 
   const goToNextVisibleDate: useEventCalendar.Instance['goToNextVisibleDate'] = useEventCallback(
     (event) => {
-      setVisibleDate(getNavigationDate({ adapter, store, delta: 1 }), event);
+      setVisibleDate(store.state.siblingVisibleDateSetter(store.state.visibleDate, 1), event);
     },
   );
 
@@ -192,6 +189,13 @@ export function useEventCalendar(
     store.set('settings', settings);
   });
 
+  const setSiblingVisibleDateSetter: useEventCalendar.Instance['setSiblingVisibleDateSetter'] =
+    useEventCallback((setter) => {
+      store.set('siblingVisibleDateSetter', setter);
+
+      return () => store.set('siblingVisibleDateSetter', (date: SchedulerValidDate) => date);
+    });
+
   const instanceRef = React.useRef<useEventCalendar.Instance>({
     setView,
     updateEvent,
@@ -202,34 +206,11 @@ export function useEventCalendar(
     switchToDay,
     setVisibleResources,
     setSettings,
+    setSiblingVisibleDateSetter,
   });
   const instance = instanceRef.current;
 
   return React.useMemo(() => ({ store, instance }), [store, instance]);
-}
-
-function getNavigationDate({
-  adapter,
-  store,
-  delta,
-}: {
-  adapter: Adapter;
-  store: useEventCalendar.Store;
-  delta: number;
-}) {
-  const { view, visibleDate } = store.state;
-  switch (view) {
-    case 'day':
-      return adapter.addDays(visibleDate, delta);
-    case 'week':
-      return adapter.addWeeks(adapter.startOfWeek(visibleDate), delta);
-    case 'month':
-      return adapter.addMonths(adapter.startOfMonth(visibleDate), delta);
-    case 'agenda':
-      return adapter.addDays(visibleDate, AGENDA_VIEW_DAYS_AMOUNT * delta);
-    default:
-      return visibleDate;
-  }
 }
 
 export namespace useEventCalendar {
@@ -349,6 +330,11 @@ export namespace useEventCalendar {
      * Set the settings of the calendar.
      */
     setSettings: (settings: CalendarSettings, event: React.UIEvent | Event) => void;
+    /**
+     * Sets the method used to determine the previous / next visible date.
+     * Returns the cleanup function.
+     */
+    setSiblingVisibleDateSetter: (setter: State['siblingVisibleDateSetter']) => () => void;
   }
 
   export type Store = BaseStore<State>;

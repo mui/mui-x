@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
@@ -33,7 +34,7 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const { store } = useEventCalendarContext();
+    const { store, instance } = useEventCalendarContext();
     const settings = useStore(store, selectors.settings);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
@@ -48,6 +49,12 @@ export const MonthView = React.memo(
         }),
       [getWeekList, visibleDate],
     );
+
+    useIsoLayoutEffect(() => {
+      return instance.setSiblingVisibleDateSetter((date, delta) =>
+        adapter.addMonths(adapter.startOfMonth(date), delta),
+      );
+    }, []);
 
     useResizeObserver(
       cellRef,

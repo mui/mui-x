@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { WeekViewProps } from './WeekView.types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
@@ -15,7 +16,7 @@ export const WeekView = React.memo(
     props: WeekViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { store } = useEventCalendarContext();
+    const { store, instance } = useEventCalendarContext();
     const visibleDate = useStore(store, selectors.visibleDate);
     const settings = useStore(store, selectors.settings);
     const getDayList = useDayList();
@@ -29,6 +30,12 @@ export const WeekView = React.memo(
         }),
       [getDayList, visibleDate, settings.hideWeekends],
     );
+
+    useIsoLayoutEffect(() => {
+      return instance.setSiblingVisibleDateSetter((date, delta) =>
+        adapter.addWeeks(adapter.startOfWeek(date), delta),
+      );
+    }, []);
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
