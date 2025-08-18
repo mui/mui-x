@@ -684,7 +684,7 @@ export class RowReorderExecutor {
 
         // eslint-disable-next-line no-await-in-loop
         await scenario.execute(operation, ctx);
-        break;
+        return;
       }
     }
 
