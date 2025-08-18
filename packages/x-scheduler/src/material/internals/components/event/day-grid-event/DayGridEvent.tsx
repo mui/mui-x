@@ -46,6 +46,15 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
             {eventProp.title}
           </p>
         );
+      case 'invisible':
+        return (
+          <p
+            className={clsx('DayGridEventTitle', 'LinesClamp')}
+            style={{ '--number-of-lines': 1 } as React.CSSProperties}
+          >
+            {eventProp.title}
+          </p>
+        );
       case 'compact':
       default:
         return (

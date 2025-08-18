@@ -129,6 +129,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           </div>
           <DayGrid.Row
             className="DayTimeGridAllDayEventsRow"
+            data-testid="day-time-grid-all-day-events-row"
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
@@ -136,6 +137,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               <DayGrid.Cell
                 key={day.toString()}
                 className="DayTimeGridAllDayEventsCell"
+                data-testid={`day-time-grid-all-day-events-cell-${adapter.format(day, 'month')}-${adapter.format(day, 'dayOfMonth')}`}
                 style={
                   {
                     '--row-count': getEventWithLargestRowIndex(allDayEvents),

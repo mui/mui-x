@@ -21,6 +21,7 @@
   border-radius: var(--radius-3);
   background-color: var(--event-background);
   cursor: pointer;
+  height: fit-content;
 }
 
 .EventCard--allDay,
@@ -49,6 +50,8 @@
 
 .EventCard--compact .DayGridEventCardContent {
   margin: 0;
+  height: var(--line-height-1);
+  line-height: var(--line-height-1);
 }
 
 .DayGridEventCardWrapper {
