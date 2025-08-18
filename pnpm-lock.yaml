@@ -423,7 +423,7 @@ importers:
         specifier: ^0.0.15
         version: 0.0.15
       eslint-plugin-jsdoc:
-        specifier: ^52.0.2
+        specifier: ^52.0.4
         version: 52.0.4(eslint@9.33.0)
       eslint-plugin-mui-x:
         specifier: workspace:^

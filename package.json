@@ -125,7 +125,7 @@
     "eslint": "^9.33.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
-    "eslint-plugin-jsdoc": "^52.0.2",
+    "eslint-plugin-jsdoc": "^52.0.4",
     "eslint-plugin-mui-x": "workspace:^",
     "fast-glob": "catalog:",
     "format-util": "^1.0.5",
