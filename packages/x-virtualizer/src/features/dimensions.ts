@@ -7,7 +7,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useStore, useStoreEffect, createSelectorMemoized } from '@mui/x-internals/store';
+import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 
@@ -119,6 +119,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       topPinnedHeight,
       bottomPinnedHeight,
     },
+    onResize,
   } = params;
 
   const containerNode = refs.container.current;
@@ -231,11 +232,13 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     }
 
     store.update({ dimensions: newDimensions });
+    onResize?.(newDimensions.root);
   }, [
     store,
     containerNode,
     params.dimensions.scrollbarSize,
     params.autoHeight,
+    onResize,
     rowHeight,
     columnsTotalWidth,
     leftPinnedWidth,
@@ -244,26 +247,16 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     bottomPinnedHeight,
   ]);
 
-  const { resizeThrottleMs, onResize } = params;
+  const { resizeThrottleMs } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
-    () =>
-      resizeThrottleMs > 0
-        ? throttle(() => {
-            updateDimensionCallback();
-            onResize?.(store.state.rootSize);
-          }, resizeThrottleMs)
-        : undefined,
-    [resizeThrottleMs, onResize, store, updateDimensionCallback],
+    () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
+    [resizeThrottleMs, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(() => observeRootNode(containerNode, store), [containerNode, store]);
-
-  useLayoutEffect(updateDimensions, [updateDimensions]);
-
-  useStoreEffect(store, selectors.rootSize, (_, size) => {
-    params.onResize?.(size);
+  const setRootSize = useEventCallback((rootSize: Size) => {
+    store.state.rootSize = rootSize;
 
     if (isFirstSizing.current || !debouncedUpdateDimensions) {
       // We want to initialize the grid dimensions as soon as possible to avoid flickering
@@ -273,6 +266,13 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       debouncedUpdateDimensions();
     }
   });
+
+  useLayoutEffect(
+    () => observeRootNode(containerNode, store, setRootSize),
+    [containerNode, store, setRootSize],
+  );
+
+  useLayoutEffect(updateDimensions, [updateDimensions]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 
@@ -518,7 +518,11 @@ function useRowsMeta(
   };
 }
 
-function observeRootNode(node: Element | null, store: Store<BaseState>) {
+function observeRootNode(
+  node: Element | null,
+  store: Store<BaseState>,
+  setRootSize: (size: Size) => void,
+) {
   if (!node) {
     return undefined;
   }
@@ -528,7 +532,7 @@ function observeRootNode(node: Element | null, store: Store<BaseState>) {
     height: roundToDecimalPlaces(bounds.height, 1),
   };
   if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
-    store.update({ rootSize: initialSize });
+    setRootSize(initialSize);
   }
 
   if (typeof ResizeObserver === 'undefined') {
@@ -543,7 +547,7 @@ function observeRootNode(node: Element | null, store: Store<BaseState>) {
       height: roundToDecimalPlaces(entry.contentRect.height, 1),
     };
     if (!Size.equals(rootSize, store.state.rootSize)) {
-      store.update({ rootSize });
+      setRootSize(rootSize);
     }
   });
 
