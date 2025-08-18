@@ -21,7 +21,7 @@ The Sankey chart requires a specific data structure with two main parts: `nodes`
 
 ### Automatic nodes
 
-If a node is referenced in links but not defined in the `nodes` array, it will be automatically created with the ID as the label.
+If a node is referenced in `links` but not defined in the `nodes` array, it is automatically created with the ID as the label.
 
 {{"demo": "SankeyBasicDataStructure.js"}}
 
