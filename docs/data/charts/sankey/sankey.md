@@ -47,7 +47,19 @@ Default styles can be applied to all links using the `linkOptions` prop:
 
 ### Node alignment
 
-Control how nodes are positioned within the chart:
+### Node alignment
+
+The node alignment determines how nodes are positioned within the Sankey chart. The layout follows these principles:
+
+- Nodes are grouped into columns based on the graph structure
+- Source nodes always appear to the left of their target nodes
+- Some nodes have fixed positions (determined by the graph topology), while others can be positioned more flexibly (affected by alignment)
+
+For example, in the demonstration below:
+
+- Nodes A, B, D, G, I, and K have fixed positions because moving them would require creating a new column
+- Node E can be placed in either the first or second column
+- Node F is flexible and can be positioned in columns 4, 5, or 6
 
 {{"demo": "SankeyNodeAlignment.js"}}
 

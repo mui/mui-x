@@ -1,6 +1,70 @@
 import * as React from 'react';
 import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import { Stack } from '@mui/system';
+import Typography from '@mui/material/Typography';
+
+export default function SankeyNodeAlignment() {
+  return (
+    <Stack spacing={2} width={'100%'}>
+      <Stack flex={1} direction={['column', 'column', 'row']} spacing={2}>
+        <Stack width={'100%'}>
+          <Typography>Left</Typography>
+          <SankeyChart
+            height={400}
+            series={{
+              data,
+              nodeOptions: {
+                align: 'left',
+                sort: nodeSortFunction,
+              },
+            }}
+          />
+        </Stack>
+        <Stack width={'100%'}>
+          <Typography>Right</Typography>
+          <SankeyChart
+            height={400}
+            series={{
+              data,
+              nodeOptions: {
+                align: 'right',
+                sort: nodeSortFunction,
+              },
+            }}
+          />
+        </Stack>
+      </Stack>
+      <Stack flex={1} direction={['column', 'column', 'row']} spacing={2}>
+        <Stack width={'100%'}>
+          <Typography>Justify</Typography>
+          <SankeyChart
+            height={400}
+            series={{
+              data,
+              nodeOptions: {
+                align: 'justify',
+                sort: nodeSortFunction,
+              },
+            }}
+          />
+        </Stack>
+        <Stack width={'100%'}>
+          <Typography>Center</Typography>
+          <SankeyChart
+            height={400}
+            series={{
+              data,
+              nodeOptions: {
+                align: 'center',
+                sort: nodeSortFunction,
+              },
+            }}
+          />
+        </Stack>
+      </Stack>
+    </Stack>
+  );
+}
 
 const data = {
   nodes: [],
@@ -17,43 +81,9 @@ const data = {
   ],
 };
 
-export default function SankeyNodeAlignment() {
-  return (
-    <ChartsUsageDemo
-      componentName="SankeyChart"
-      data={{
-        align: {
-          knob: 'radio',
-          defaultValue: 'justify',
-          options: ['justify', 'left', 'right', 'center'],
-        },
-      }}
-      renderDemo={(props) => (
-        <SankeyChart
-          height={400}
-          series={{
-            data,
-            nodeOptions: {
-              align: props.align,
-            },
-          }}
-        />
-      )}
-      getCode={({ props }) => {
-        return `import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
-
-<SankeyChart
-  height={400}
-  series={{
-    data: {
-      // ... your data
-    },
-    nodeOptions: {
-      align: '${props.align}',
-    },
-  }}
-/>`;
-      }}
-    />
-  );
-}
+// Sort nodes alphabetically by label
+const nodeSortFunction = (a, b) => {
+  const labelA = a.label || a.id;
+  const labelB = b.label || b.id;
+  return labelA.localeCompare(labelB);
+};
