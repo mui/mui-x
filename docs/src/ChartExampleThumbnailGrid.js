@@ -40,14 +40,11 @@ export function ChartThumbnailCard({ title, ChartComponent }) {
             alignItems: 'center',
             justifyContent: 'center',
             '& > div': {
-              width: '100% !important',
-              height: '100% !important',
-              minHeight: 'unset !important',
-            },
-            '& svg': {
               width: '100%',
               height: '100%',
-              objectFit: 'contain',
+            },
+            '& [data-hide-overview=true]': {
+              display: 'none',
             },
           }}
         >
