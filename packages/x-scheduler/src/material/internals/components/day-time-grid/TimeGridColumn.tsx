@@ -43,7 +43,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         <EventPopoverTrigger
           key={event.id}
           event={event}
-          nativeButton={false}
           render={
             <TimeGridEvent
               event={event}

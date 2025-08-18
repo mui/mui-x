@@ -313,5 +313,11 @@ export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   const { event: calendarEvent, ...other } = props;
   const { startEditing } = React.useContext(EventPopoverContext);
 
-  return <Popover.Trigger onClick={(event) => startEditing(event, calendarEvent)} {...other} />;
+  return (
+    <Popover.Trigger
+      nativeButton={false}
+      onClick={(event) => startEditing(event, calendarEvent)}
+      {...other}
+    />
+  );
 }
