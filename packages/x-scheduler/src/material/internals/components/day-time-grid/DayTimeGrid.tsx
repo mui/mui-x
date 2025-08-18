@@ -153,6 +153,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   return shouldRenderEvent ? (
                     <EventPopoverTrigger
                       key={`${event.id}-${day.toString()}`}
+                      nativeButton={false}
                       event={event}
                       render={
                         <DayGridEvent
