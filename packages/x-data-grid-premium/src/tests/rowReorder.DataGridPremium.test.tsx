@@ -20,6 +20,7 @@ import {
   GridDataSource,
   GridValidRowModel,
   gridRowTreeSelector,
+  gridRowsLookupSelector,
 } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -279,31 +280,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         expect(groupBIndex).to.be.lessThan(groupAIndex);
         expect(groupAIndex).to.be.lessThan(groupCIndex);
-      });
-
-      it.skip('should reorder groups at the same level when groups are expanded and the source group is drop on "below" portion of the last group child', () => {
-        // TODO: Add this functionality
-        render(
-          <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium {...baselineProps} />
-          </div>,
-        );
-
-        // Get group rows
-        const groupARow = getRow(2); // Category A group
-        const lastChildOfC = getRow(12); // Category C group
-
-        // Drag Category A to Category C position
-        performDragReorder(groupARow, lastChildOfC, 'below');
-
-        // Verify new group order: B, C, A
-        const groupingValues = getColumnValues(1);
-        const groupBIndex = groupingValues.findIndex((v) => v?.includes('B ('));
-        const groupCIndex = groupingValues.findIndex((v) => v?.includes('C ('));
-        const groupAIndex = groupingValues.findIndex((v) => v?.includes('A ('));
-
-        expect(groupBIndex).to.be.lessThan(groupCIndex);
-        expect(groupCIndex).to.be.lessThan(groupAIndex);
       });
 
       it('should handle leaf to group "above" when previous leaf exists', () => {
@@ -1159,6 +1135,107 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       expect(params.oldIndex).to.not.equal(params.targetIndex);
     });
 
+    it('should work with custom `getRowId()` function', async () => {
+      // This test verifies that drag and drop works correctly when using custom getRowId
+      // and that row IDs are maintained correctly after group moves
+      const rows = [
+        { uuid: 'item-1', department: 'Engineering', product: 'Widget Alpha' },
+        { uuid: 'item-2', department: 'Engineering', product: 'Widget Beta' },
+        { uuid: 'item-3', department: 'Sales', product: 'Package Gamma' },
+        { uuid: 'item-4', department: 'Marketing', product: 'Campaign Delta' },
+      ];
+
+      const getRowId = (row: any) => row.uuid;
+      const apiRef: RefObject<GridApi | null> = { current: null };
+
+      render(
+        <div style={{ width: 500, height: 400 }}>
+          <DataGridPremium
+            apiRef={apiRef}
+            rows={rows}
+            getRowId={getRowId}
+            columns={[
+              { field: 'department', width: 150 },
+              { field: 'product', width: 150 },
+            ]}
+            initialState={{
+              rowGrouping: {
+                model: ['department'],
+              },
+            }}
+            defaultGroupingExpansionDepth={-1}
+            rowReordering
+            disableVirtualization
+          />
+        </div>,
+      );
+
+      // Find Widget Alpha in Engineering and Package Gamma in Sales
+      const productValues = getColumnValues(2); // Assuming product is in column 2
+      let alphaIndex = productValues.indexOf('Widget Alpha');
+      let gammaIndex = productValues.indexOf('Package Gamma');
+
+      // Try different column if not found
+      if (alphaIndex === -1) {
+        const productValues3 = getColumnValues(3);
+        alphaIndex = productValues3.indexOf('Widget Alpha');
+        gammaIndex = productValues3.indexOf('Package Gamma');
+      }
+
+      expect(alphaIndex).to.not.equal(-1, 'Widget Alpha should be found');
+      expect(gammaIndex).to.not.equal(-1, 'Package Gamma should be found');
+
+      const alphaRow = getRow(alphaIndex);
+      const gammaRow = getRow(gammaIndex);
+
+      // Perform drag reorder - move Widget Alpha from Engineering to Sales
+      performDragReorder(alphaRow, gammaRow, 'above');
+
+      await waitFor(() => {
+        // Verify Widget Alpha moved to Sales department
+        const updatedRows = gridRowsLookupSelector(apiRef);
+        const widgetAlphaRow = Object.values(updatedRows).find((row) => row.uuid === 'item-1');
+        expect(widgetAlphaRow?.department).to.equal('Sales', 'Widget Alpha should move to Sales');
+      });
+
+      await waitFor(() => {
+        // Verify the custom row ID is maintained
+        const updatedRows = gridRowsLookupSelector(apiRef);
+        const widgetAlphaRow = Object.values(updatedRows).find((row) => row.uuid === 'item-1');
+        expect(widgetAlphaRow?.uuid).to.equal('item-1', 'Widget Alpha should keep its custom ID');
+      });
+
+      await waitFor(() => {
+        // Verify other row properties are preserved
+        const updatedRows = gridRowsLookupSelector(apiRef);
+        const widgetAlphaRow = Object.values(updatedRows).find((row) => row.uuid === 'item-1');
+        expect(widgetAlphaRow?.product).to.equal(
+          'Widget Alpha',
+          'Widget Alpha product should be preserved',
+        );
+      });
+
+      // Verify all rows still exist with their custom IDs
+      const finalRows = Object.values(gridRowsLookupSelector(apiRef));
+      const expectedUuids = ['item-1', 'item-2', 'item-3', 'item-4'];
+
+      for (const expectedUuid of expectedUuids) {
+        const foundRow = finalRows.find((row) => row.uuid === expectedUuid);
+        expect(foundRow).to.not.equal(undefined, `Row with UUID ${expectedUuid} should exist`);
+      }
+
+      expect(finalRows.length).to.equal(4, 'Should still have all 4 rows');
+
+      // Verify row IDs can still be accessed via the custom getRowId function
+      for (const row of finalRows) {
+        const customId = getRowId(row);
+        expect(expectedUuids).to.include(
+          customId,
+          `Custom ID ${customId} should be in expected list`,
+        );
+      }
+    });
+
     describe('processRowUpdate integration', () => {
       const baselineProps: DataGridPremiumProps = {
         rows: singleLevelData,
@@ -1686,11 +1763,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           </div>,
         );
 
-        await waitFor(() => {
-          // Wait for the rows to be rendered
-          expect(screen.queryAllByRole('row')).to.have.length.greaterThan(3);
-        });
-
         // Find the Sales department group (under Company A)
         const groupingValues = getColumnValues(1);
         const salesGroupIndex = groupingValues.findIndex((v) => v === 'Sales (1)');
@@ -1708,8 +1780,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify Alice's company field was updated to 'Company B'
-          const updatedRows = apiRef.current!.getRowModels();
-          const aliceRow = Array.from(updatedRows.values()).find((row) => row.id === 1);
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
           expect(aliceRow?.company).to.equal('Company B');
         });
       });
@@ -1747,10 +1819,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           </div>,
         );
 
-        await waitFor(() => {
-          expect(screen.queryAllByRole('row')).to.have.length.greaterThan(5);
-        });
-
         // Find the Engineering department group under Company A
         const groupingValues = getColumnValues(1);
         const engineeringIndexA = groupingValues.findIndex((v) => v === 'Engineering (3)');
@@ -1771,21 +1839,21 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify all engineers now have company: 'Company B'
-          const updatedRows = apiRef.current!.getRowModels();
-          const alice = Array.from(updatedRows.values()).find((row) => row.id === 1);
-          expect(alice?.company).to.equal('Company B', 'Alice should be in Company B');
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.company).to.equal('Company B', 'Alice should be in Company B');
         });
 
         await waitFor(() => {
-          const updatedRows = apiRef.current!.getRowModels();
-          const bob = Array.from(updatedRows.values()).find((row) => row.id === 2);
-          expect(bob?.company).to.equal('Company B', 'Bob should be in Company B');
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const bobRow = updatedRows[2];
+          expect(bobRow?.company).to.equal('Company B', 'Bob should be in Company B');
         });
 
         await waitFor(() => {
-          const updatedRows = apiRef.current!.getRowModels();
-          const charlie = Array.from(updatedRows.values()).find((row) => row.id === 3);
-          expect(charlie?.company).to.equal('Company B', 'Charlie should be in Company B');
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const charlieRow = updatedRows[3];
+          expect(charlieRow?.company).to.equal('Company B', 'Charlie should be in Company B');
         });
 
         // Verify the group structure
@@ -1850,10 +1918,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
             />
           </div>,
         );
-
-        await waitFor(() => {
-          expect(screen.queryAllByRole('row')).to.have.length.greaterThan(5);
-        });
 
         // Test "above" positioning
         const groupingValues = getColumnValues(1);
@@ -1928,10 +1992,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           </div>,
         );
 
-        await waitFor(() => {
-          expect(screen.queryAllByRole('row')).to.have.length.greaterThan(3);
-        });
-
         const groupingValues = getColumnValues(1);
         const salesIndex = groupingValues.findIndex((v) => v === 'Sales (1)');
         const engineeringIndex = groupingValues.findIndex((v) => v === 'Engineering (1)');
@@ -1997,10 +2057,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
             />
           </div>,
         );
-
-        await waitFor(() => {
-          expect(screen.queryAllByRole('row')).to.have.length.greaterThan(3);
-        });
 
         // Get initial state of Company B - should have Engineering department
         const initialGroupingValues = getColumnValues(1);
@@ -2104,10 +2160,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           </div>,
         );
 
-        await waitFor(() => {
-          expect(screen.queryAllByRole('row')).to.have.length.greaterThan(3);
-        });
-
         const groupingValues = getColumnValues(1);
         const salesIndex = groupingValues.findIndex((v) => v === 'Sales (2)');
         const engineeringIndex = groupingValues.findIndex((v) => v === 'Engineering (1)');
@@ -2128,27 +2180,27 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify all moved rows have the modified data (lastModified timestamp)
-          const updatedRows = apiRef.current!.getRowModels();
-          const alice = Array.from(updatedRows.values()).find((row) => row.id === 1);
-          expect(alice?.company).to.equal('Company B');
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.company).to.equal('Company B');
         });
 
         await waitFor(() => {
-          const updatedRows = apiRef.current!.getRowModels();
-          const bob = Array.from(updatedRows.values()).find((row) => row.id === 2);
-          expect(bob?.company).to.equal('Company B');
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const bobRow = updatedRows[2];
+          expect(bobRow?.company).to.equal('Company B');
         });
 
         await waitFor(() => {
-          const updatedRows = apiRef.current!.getRowModels();
-          const alice = Array.from(updatedRows.values()).find((row) => row.id === 1);
-          expect(alice?.lastModified).to.not.equal(null);
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.lastModified).to.not.equal(null);
         });
 
         await waitFor(() => {
-          const updatedRows = apiRef.current!.getRowModels();
-          const bob = Array.from(updatedRows.values()).find((row) => row.id === 2);
-          expect(bob?.lastModified).to.not.equal(null);
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const bobRow = updatedRows[2];
+          expect(bobRow?.lastModified).to.not.equal(null);
         });
       });
     });
@@ -2198,10 +2250,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           </div>,
         );
 
-        await waitFor(() => {
-          expect(screen.queryAllByRole('row')).to.have.length.greaterThan(4);
-        });
-
         const groupingValues = getColumnValues(1);
         const engineeringIndex = groupingValues.findIndex((v) => v === 'Engineering (3)');
         const salesIndex = groupingValues.findIndex((v) => v === 'Sales (1)');
@@ -2224,23 +2272,23 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         await waitFor(() => {
           // Verify Alice moved to Company B
-          const updatedRows = apiRef.current!.getRowModels();
-          const alice = Array.from(updatedRows.values()).find((row) => row.id === 1);
-          expect(alice?.company).to.equal('Company B');
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.company).to.equal('Company B');
         });
 
         await waitFor(() => {
           // Verify Charlie moved to Company B
-          const updatedRows = apiRef.current!.getRowModels();
-          const charlie = Array.from(updatedRows.values()).find((row) => row.id === 3);
-          expect(charlie?.company).to.equal('Company B');
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const charlieRow = updatedRows[3];
+          expect(charlieRow?.company).to.equal('Company B');
         });
 
         await waitFor(() => {
           // Verify Bob stays in Company A (due to failed update)
-          const updatedRows = apiRef.current!.getRowModels();
-          const bob = Array.from(updatedRows.values()).find((row) => row.id === 2);
-          expect(bob?.company).to.equal('Company A');
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const bobRow = updatedRows[2];
+          expect(bobRow?.company).to.equal('Company A');
         });
 
         // Verify both source and target groups exist
@@ -2259,22 +2307,230 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // This test verifies that when partial failures occur during group moves,
         // successful rows create a new group under the target while failed rows
         // remain in the source, resulting in duplicate group names under different parents
-        expect(true).to.equal(true, 'Test implemented - partial failures create duplicate groups');
+        const rows = [
+          { id: 1, company: 'Company A', department: 'Marketing', name: 'Alice' },
+          { id: 2, company: 'Company A', department: 'Marketing', name: 'Bob' },
+          { id: 3, company: 'Company A', department: 'Marketing', name: 'Charlie' },
+          { id: 4, company: 'Company B', department: 'Sales', name: 'David' },
+        ];
+
+        // processRowUpdate that fails for Bob (id: 2)
+        const processRowUpdate = spy((newRow: any) => {
+          if (newRow.id === 2) {
+            throw new Error('Update failed for Bob');
+          }
+          return newRow;
+        });
+
+        const onProcessRowUpdateError = spy();
+        const apiRef: RefObject<GridApi | null> = { current: null };
+
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              rows={rows}
+              columns={[
+                { field: 'company', width: 150 },
+                { field: 'department', width: 150 },
+                { field: 'name', width: 150 },
+              ]}
+              initialState={{
+                rowGrouping: {
+                  model: ['company', 'department'],
+                },
+              }}
+              defaultGroupingExpansionDepth={-1}
+              rowReordering
+              disableVirtualization
+              processRowUpdate={processRowUpdate}
+              onProcessRowUpdateError={onProcessRowUpdateError}
+            />
+          </div>,
+        );
+
+        const groupingValues = getColumnValues(1);
+        const marketingIndex = groupingValues.findIndex((v) => v === 'Marketing (3)');
+        const salesIndex = groupingValues.findIndex((v) => v === 'Sales (1)');
+
+        const marketingRow = getRow(marketingIndex);
+        const salesRow = getRow(salesIndex);
+
+        // Move Marketing from Company A to Company B (Bob's update will fail)
+        performDragReorder(marketingRow, salesRow, 'above');
+
+        await waitFor(() => {
+          expect(processRowUpdate.callCount).to.equal(3);
+        });
+
+        await waitFor(() => {
+          expect(onProcessRowUpdateError.callCount).to.equal(1);
+        });
+
+        // Verify duplicate Marketing groups exist under different companies
+        const finalGroupingValues = getColumnValues(1);
+        const hasMarketingInA = finalGroupingValues.some((v) => v === 'Marketing (1)'); // Bob only
+        const hasMarketingInB = finalGroupingValues.some((v) => v === 'Marketing (2)'); // Alice + Charlie
+
+        expect(hasMarketingInA).to.equal(
+          true,
+          'Marketing should remain in Company A with failed row',
+        );
+        expect(hasMarketingInB).to.equal(
+          true,
+          'Marketing should be created in Company B with successful rows',
+        );
+
+        // Verify the duplicate group names exist under different parents
+        const companyAIndex = finalGroupingValues.findIndex((v) => v?.includes('Company A'));
+        const companyBIndex = finalGroupingValues.findIndex((v) => v?.includes('Company B'));
+
+        expect(companyAIndex).to.not.equal(-1, 'Company A should still exist');
+        expect(companyBIndex).to.not.equal(-1, 'Company B should exist');
+
+        // Both companies should have a Marketing department
+        let hasMarketingUnderA = false;
+        let hasMarketingUnderB = false;
+
+        for (let i = companyAIndex + 1; i < finalGroupingValues.length; i += 1) {
+          if (finalGroupingValues[i]?.includes('Company')) {
+            break;
+          }
+          if (finalGroupingValues[i] === 'Marketing (1)') {
+            hasMarketingUnderA = true;
+          }
+        }
+
+        for (let i = companyBIndex + 1; i < finalGroupingValues.length; i += 1) {
+          if (finalGroupingValues[i]?.includes('Company')) {
+            break;
+          }
+          if (finalGroupingValues[i] === 'Marketing (2)') {
+            hasMarketingUnderB = true;
+          }
+        }
+
+        expect(hasMarketingUnderA).to.equal(true, 'Marketing group should exist under Company A');
+        expect(hasMarketingUnderB).to.equal(true, 'Marketing group should exist under Company B');
       });
 
       it('should allow group name duplication across different parents', async () => {
         // This test verifies that when partial failures occur, groups with the same name
         // can exist under different parent groups (e.g., Engineering under both Company A and Company B)
-        expect(true).to.equal(
-          true,
-          'Test implemented - allows group name duplication across parents',
-        );
-      });
+        const rows = [
+          { id: 1, company: 'Company A', department: 'Engineering', name: 'Alice' },
+          { id: 2, company: 'Company A', department: 'Engineering', name: 'Bob' },
+          { id: 3, company: 'Company B', department: 'Engineering', name: 'Charlie' },
+          { id: 4, company: 'Company B', department: 'Sales', name: 'David' },
+        ];
 
-      it('should not change tree when all row updates fail', async () => {
-        // This test verifies that when all row updates fail during a group move,
-        // the tree structure remains unchanged and no rows are moved
-        expect(true).to.equal(true, 'Test implemented - tree unchanged when all updates fail');
+        // processRowUpdate that fails for Alice (id: 1)
+        const processRowUpdate = spy((newRow: any) => {
+          if (newRow.id === 1) {
+            throw new Error('Update failed for Alice');
+          }
+          return newRow;
+        });
+
+        const onProcessRowUpdateError = spy();
+        const apiRef: RefObject<GridApi | null> = { current: null };
+
+        render(
+          <div style={{ width: 500, height: 500 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              rows={rows}
+              columns={[
+                { field: 'company', width: 150 },
+                { field: 'department', width: 150 },
+                { field: 'name', width: 150 },
+              ]}
+              initialState={{
+                rowGrouping: {
+                  model: ['company', 'department'],
+                },
+              }}
+              defaultGroupingExpansionDepth={-1}
+              rowReordering
+              disableVirtualization
+              processRowUpdate={processRowUpdate}
+              onProcessRowUpdateError={onProcessRowUpdateError}
+            />
+          </div>,
+        );
+
+        // Initially, both companies have Engineering departments with different sizes
+        const initialGroupingValues = getColumnValues(1);
+        expect(initialGroupingValues).to.include('Company A (2)');
+        expect(initialGroupingValues).to.include('Company B (2)');
+
+        const engineeringAIndex = initialGroupingValues.findIndex((v) => v === 'Engineering (2)');
+        const salesBIndex = initialGroupingValues.findIndex((v) => v === 'Sales (1)');
+
+        const engineeringARow = getRow(engineeringAIndex);
+        const salesBRow = getRow(salesBIndex);
+
+        // Move Engineering from Company A to Company B (Alice's update will fail, Bob will succeed)
+        performDragReorder(engineeringARow, salesBRow, 'above');
+
+        await waitFor(() => {
+          expect(processRowUpdate.callCount).to.equal(2);
+        });
+
+        await waitFor(() => {
+          expect(onProcessRowUpdateError.callCount).to.equal(1);
+        });
+
+        // Verify both companies now have Engineering departments (duplication allowed)
+        const finalGroupingValues = getColumnValues(1);
+
+        // Company A should still have Engineering (1) with Alice who failed to move
+        const hasEngInA = finalGroupingValues.some((v) => v === 'Engineering (1)');
+        expect(hasEngInA).to.equal(true, 'Engineering should remain in Company A');
+
+        // Company B should have Engineering (2) with Charlie + Bob (who moved successfully)
+        const hasEngInB = finalGroupingValues.some((v) => v === 'Engineering (2)');
+        expect(hasEngInB).to.equal(true, 'Engineering should exist in Company B');
+
+        // Verify that both parent companies exist and have Engineering departments with same name
+        const companyAIndex = finalGroupingValues.findIndex((v) => v?.includes('Company A'));
+        const companyBIndex = finalGroupingValues.findIndex((v) => v?.includes('Company B'));
+
+        expect(companyAIndex).to.not.equal(-1, 'Company A should exist');
+        expect(companyBIndex).to.not.equal(-1, 'Company B should exist');
+
+        // Verify duplicate group names under different parents
+        let engUnderA = false;
+        let engUnderB = false;
+
+        for (let i = companyAIndex + 1; i < finalGroupingValues.length; i += 1) {
+          if (finalGroupingValues[i]?.includes('Company')) {
+            break;
+          }
+          if (finalGroupingValues[i]?.includes('Engineering')) {
+            engUnderA = true;
+          }
+        }
+
+        for (let i = companyBIndex + 1; i < finalGroupingValues.length; i += 1) {
+          if (finalGroupingValues[i]?.includes('Company')) {
+            break;
+          }
+          if (finalGroupingValues[i]?.includes('Engineering')) {
+            engUnderB = true;
+          }
+        }
+
+        expect(engUnderA).to.equal(true, 'Engineering group should exist under Company A');
+        expect(engUnderB).to.equal(true, 'Engineering group should exist under Company B');
+
+        // Verify row locations - Alice should stay in Company A, Bob should move to Company B
+        const updatedRows = apiRef.current!.getRowModels();
+        const alice = Array.from(updatedRows.values()).find((row) => row.id === 1);
+        const bob = Array.from(updatedRows.values()).find((row) => row.id === 2);
+
+        expect(alice?.company).to.equal('Company A', 'Alice should remain in Company A');
+        expect(bob?.company).to.equal('Company B', 'Bob should move to Company B');
       });
     });
 
@@ -2282,51 +2538,554 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       it('should move groups in 3-level hierarchy (Company > Department > Team)', async () => {
         // This test verifies that groups can be moved between different levels in a 3-level hierarchy
         // and that all ancestor/descendant fields are updated correctly
-        expect(true).to.equal(true, 'Test implemented - moves groups in 3-level hierarchy');
+        const rows = [
+          {
+            id: 1,
+            company: 'TechCorp',
+            department: 'Engineering',
+            team: 'Frontend',
+            name: 'Alice',
+          },
+          { id: 2, company: 'TechCorp', department: 'Engineering', team: 'Frontend', name: 'Bob' },
+          {
+            id: 3,
+            company: 'TechCorp',
+            department: 'Engineering',
+            team: 'Backend',
+            name: 'Charlie',
+          },
+          { id: 4, company: 'TechCorp', department: 'Sales', team: 'Direct', name: 'David' },
+          { id: 5, company: 'BizCorp', department: 'Marketing', team: 'Digital', name: 'Eve' },
+          { id: 6, company: 'BizCorp', department: 'Marketing', team: 'Digital', name: 'Frank' },
+        ];
+
+        const apiRef: RefObject<GridApi | null> = { current: null };
+
+        render(
+          <div style={{ width: 600, height: 500 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              rows={rows}
+              columns={[
+                { field: 'company', width: 150 },
+                { field: 'department', width: 150 },
+                { field: 'team', width: 150 },
+                { field: 'name', width: 150 },
+              ]}
+              initialState={{
+                rowGrouping: {
+                  model: ['company', 'department', 'team'],
+                },
+              }}
+              defaultGroupingExpansionDepth={-1}
+              rowReordering
+              disableVirtualization
+            />
+          </div>,
+        );
+
+        // Find the Frontend team under TechCorp > Engineering
+        const groupingValues = getColumnValues(1);
+        const frontendIndex = groupingValues.findIndex((v) => v === 'Frontend (2)');
+        expect(frontendIndex).to.not.equal(-1, 'Frontend team should exist');
+
+        // Find the Digital team under BizCorp > Marketing as target
+        const digitalIndex = groupingValues.findIndex((v) => v === 'Digital (2)');
+        expect(digitalIndex).to.not.equal(-1, 'Digital team should exist');
+
+        const frontendRow = getRow(frontendIndex);
+        const digitalRow = getRow(digitalIndex);
+
+        // Move Frontend team from TechCorp/Engineering to BizCorp/Marketing
+        performDragReorder(frontendRow, digitalRow, 'above');
+
+        await waitFor(() => {
+          // Verify Alice and Bob moved to BizCorp/Marketing
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.company).to.equal('BizCorp', 'Alice should move to BizCorp');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.department).to.equal('Marketing', 'Alice should move to Marketing');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.team).to.equal('Frontend', 'Alice should keep Frontend team');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const bobRow = updatedRows[2];
+          expect(bobRow?.company).to.equal('BizCorp', 'Bob should move to BizCorp');
+        });
+
+        // Verify the group structure updated correctly
+        const finalGroupingValues = getColumnValues(1);
+
+        // TechCorp should have fewer employees now (4 -> 2)
+        expect(finalGroupingValues).to.include('TechCorp (2)', 'TechCorp should have 2 employees');
+
+        // BizCorp should have more employees now (2 -> 4)
+        expect(finalGroupingValues).to.include('BizCorp (4)', 'BizCorp should have 4 employees');
+
+        // Marketing department should now have Frontend and Digital teams
+        let hasMarketingFrontend = false;
+        let hasMarketingDigital = false;
+
+        const bizCorpIndex = finalGroupingValues.findIndex((v) => v?.includes('BizCorp'));
+        const marketingStartIndex = finalGroupingValues.findIndex(
+          (v, i) => i > bizCorpIndex && v === 'Marketing (4)',
+        );
+
+        for (let i = marketingStartIndex + 1; i < finalGroupingValues.length; i += 1) {
+          if (
+            finalGroupingValues[i]?.includes('TechCorp') ||
+            finalGroupingValues[i]?.includes('BizCorp')
+          ) {
+            break;
+          }
+          if (finalGroupingValues[i] === 'Frontend (2)') {
+            hasMarketingFrontend = true;
+          }
+          if (finalGroupingValues[i] === 'Digital (2)') {
+            hasMarketingDigital = true;
+          }
+        }
+
+        expect(hasMarketingFrontend).to.equal(true, 'Marketing should have Frontend team');
+        expect(hasMarketingDigital).to.equal(true, 'Marketing should still have Digital team');
       });
 
       it('should handle moves with nested subgroups correctly', async () => {
         // This test verifies that when moving a department with multiple teams,
         // all nested subgroups and their children are moved together correctly
-        expect(true).to.equal(true, 'Test implemented - handles nested subgroup moves');
+        const rows = [
+          {
+            id: 1,
+            company: 'MegaCorp',
+            department: 'Engineering',
+            team: 'Frontend',
+            name: 'Alice',
+          },
+          { id: 2, company: 'MegaCorp', department: 'Engineering', team: 'Frontend', name: 'Bob' },
+          {
+            id: 3,
+            company: 'MegaCorp',
+            department: 'Engineering',
+            team: 'Backend',
+            name: 'Charlie',
+          },
+          { id: 4, company: 'MegaCorp', department: 'Engineering', team: 'Backend', name: 'Diana' },
+          { id: 5, company: 'MegaCorp', department: 'Engineering', team: 'DevOps', name: 'Eve' },
+          { id: 6, company: 'StartupInc', department: 'Marketing', team: 'Content', name: 'Frank' },
+          { id: 7, company: 'StartupInc', department: 'Sales', team: 'Enterprise', name: 'Grace' },
+        ];
+
+        const apiRef: RefObject<GridApi | null> = { current: null };
+
+        render(
+          <div style={{ width: 600, height: 500 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              rows={rows}
+              columns={[
+                { field: 'company', width: 150 },
+                { field: 'department', width: 150 },
+                { field: 'team', width: 150 },
+                { field: 'name', width: 150 },
+              ]}
+              initialState={{
+                rowGrouping: {
+                  model: ['company', 'department', 'team'],
+                },
+              }}
+              defaultGroupingExpansionDepth={-1}
+              rowReordering
+              disableVirtualization
+            />
+          </div>,
+        );
+
+        // Find Engineering department (with 3 teams: Frontend, Backend, DevOps)
+        const groupingValues = getColumnValues(1);
+        const engineeringIndex = groupingValues.findIndex((v) => v === 'Engineering (5)');
+        expect(engineeringIndex).to.not.equal(-1, 'Engineering department should exist');
+
+        // Find Marketing department as target
+        const marketingIndex = groupingValues.findIndex((v) => v === 'Marketing (1)');
+        expect(marketingIndex).to.not.equal(-1, 'Marketing department should exist');
+
+        const engineeringRow = getRow(engineeringIndex);
+        const marketingRow = getRow(marketingIndex);
+
+        // Move entire Engineering department (with all its teams) from MegaCorp to StartupInc
+        performDragReorder(engineeringRow, marketingRow, 'above');
+
+        await waitFor(() => {
+          // Verify all Engineering employees moved to StartupInc
+          const updatedRows = gridRowsLookupSelector(apiRef);
+
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.company).to.equal('StartupInc', 'Alice should move to StartupInc');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const bobRow = updatedRows[2];
+          expect(bobRow?.company).to.equal('StartupInc', 'Bob should move to StartupInc');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const charlieRow = updatedRows[3];
+          expect(charlieRow?.company).to.equal('StartupInc', 'Charlie should move to StartupInc');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const dianaRow = updatedRows[4];
+          expect(dianaRow?.company).to.equal('StartupInc', 'Diana should move to StartupInc');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const eveRow = updatedRows[5];
+          expect(eveRow?.company).to.equal('StartupInc', 'Eve should move to StartupInc');
+        });
+
+        // Verify all teams preserved their department and team structure
+        const finalRows = Object.values(gridRowsLookupSelector(apiRef));
+        const movedEngineers = finalRows.filter((row) =>
+          ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'].includes(row.name as string),
+        );
+
+        for (const engineer of movedEngineers) {
+          expect(engineer.department).to.equal(
+            'Engineering',
+            `${engineer.name} should remain in Engineering`,
+          );
+        }
+
+        // Check team assignments are preserved
+        expect(finalRows.find((r) => r.id === 1)?.team).to.equal(
+          'Frontend',
+          'Alice team preserved',
+        );
+        expect(finalRows.find((r) => r.id === 2)?.team).to.equal('Frontend', 'Bob team preserved');
+        expect(finalRows.find((r) => r.id === 3)?.team).to.equal(
+          'Backend',
+          'Charlie team preserved',
+        );
+        expect(finalRows.find((r) => r.id === 4)?.team).to.equal('Backend', 'Diana team preserved');
+        expect(finalRows.find((r) => r.id === 5)?.team).to.equal('DevOps', 'Eve team preserved');
+
+        // Verify group structure updated
+        const finalGroupingValues = getColumnValues(1);
+
+        // MegaCorp should be empty now
+        expect(finalGroupingValues.some((v) => v?.includes('MegaCorp'))).to.equal(
+          false,
+          'MegaCorp should be removed',
+        );
+
+        // StartupInc should have all the people now (2 + 5 = 7)
+        expect(finalGroupingValues).to.include(
+          'StartupInc (7)',
+          'StartupInc should have 7 employees',
+        );
+
+        // StartupInc should have Engineering department with 3 teams
+        expect(finalGroupingValues).to.include(
+          'Engineering (5)',
+          'StartupInc should have Engineering',
+        );
+        expect(finalGroupingValues).to.include('Frontend (2)', 'Engineering should have Frontend');
+        expect(finalGroupingValues).to.include('Backend (2)', 'Engineering should have Backend');
+        expect(finalGroupingValues).to.include('DevOps (1)', 'Engineering should have DevOps');
       });
 
       it('should update path-based grouping fields correctly', async () => {
         // This test verifies that when moving groups in hierarchical data,
         // only the necessary ancestor fields are updated while preserving descendant fields
-        expect(true).to.equal(true, 'Test implemented - updates path-based fields correctly');
+        const rows = [
+          {
+            id: 1,
+            company: 'Alpha Corp',
+            department: 'R&D',
+            team: 'Innovation',
+            project: 'AI Research',
+            name: 'Alice',
+          },
+          {
+            id: 2,
+            company: 'Alpha Corp',
+            department: 'R&D',
+            team: 'Innovation',
+            project: 'ML Platform',
+            name: 'Bob',
+          },
+          {
+            id: 3,
+            company: 'Beta Inc',
+            department: 'Product',
+            team: 'Mobile',
+            project: 'iOS App',
+            name: 'Charlie',
+          },
+          {
+            id: 4,
+            company: 'Beta Inc',
+            department: 'Product',
+            team: 'Web',
+            project: 'Dashboard',
+            name: 'Diana',
+          },
+        ];
+
+        const apiRef: RefObject<GridApi | null> = { current: null };
+
+        render(
+          <div style={{ width: 700, height: 500 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              rows={rows}
+              columns={[
+                { field: 'company', width: 120 },
+                { field: 'department', width: 120 },
+                { field: 'team', width: 120 },
+                { field: 'project', width: 120 },
+                { field: 'name', width: 120 },
+              ]}
+              initialState={{
+                rowGrouping: {
+                  model: ['company', 'department'],
+                },
+              }}
+              defaultGroupingExpansionDepth={-1}
+              rowReordering
+              disableVirtualization
+            />
+          </div>,
+        );
+
+        // Find R&D department under Alpha Corp
+        const groupingValues = getColumnValues(1);
+        const rdIndex = groupingValues.findIndex((v) => v === 'R&D (2)');
+        expect(rdIndex).to.not.equal(-1, 'R&D department should exist');
+
+        // Find Product department under Beta Inc as target
+        const productIndex = groupingValues.findIndex((v) => v === 'Product (2)');
+        expect(productIndex).to.not.equal(-1, 'Product department should exist');
+
+        const rdRow = getRow(rdIndex);
+        const productRow = getRow(productIndex);
+
+        // Store original data to verify only necessary fields change
+        const originalRows = rows;
+        const originalAlice = originalRows.find((row) => row.id === 1);
+        const originalBob = originalRows.find((row) => row.id === 2);
+
+        // Move R&D department from Alpha Corp to Beta Inc
+        performDragReorder(rdRow, productRow, 'above');
+
+        await waitFor(() => {
+          // Verify ancestor fields updated (company, department)
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.company).to.equal('Beta Inc', 'Alice company should be updated');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const aliceRow = updatedRows[1];
+          expect(aliceRow?.department).to.equal('R&D', 'Alice department should be preserved');
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const bobRow = updatedRows[2];
+          expect(bobRow?.company).to.equal('Beta Inc', 'Bob company should be updated');
+        });
+
+        // Verify descendant fields are preserved (team, project, name)
+        const finalRows = Object.values(gridRowsLookupSelector(apiRef));
+        const finalAlice = finalRows.find((row) => row.id === 1);
+        const finalBob = finalRows.find((row) => row.id === 2);
+
+        expect(finalAlice?.team).to.equal(originalAlice?.team, 'Alice team should be preserved');
+        expect(finalAlice?.project).to.equal(
+          originalAlice?.project,
+          'Alice project should be preserved',
+        );
+        expect(finalAlice?.name).to.equal(originalAlice?.name, 'Alice name should be preserved');
+
+        expect(finalBob?.team).to.equal(originalBob?.team, 'Bob team should be preserved');
+        expect(finalBob?.project).to.equal(originalBob?.project, 'Bob project should be preserved');
+        expect(finalBob?.name).to.equal(originalBob?.name, 'Bob name should be preserved');
+
+        // Verify group structure shows correct hierarchy
+        const finalGroupingValues = getColumnValues(1);
+
+        // Alpha Corp should be empty
+        expect(finalGroupingValues.some((v) => v?.includes('Alpha Corp'))).to.equal(
+          false,
+          'Alpha Corp should be removed',
+        );
+
+        // Beta Inc should have all employees (2 + 2 = 4)
+        expect(finalGroupingValues).to.include('Beta Inc (4)', 'Beta Inc should have 4 employees');
+
+        // Beta Inc should have both R&D and Product departments
+        expect(finalGroupingValues).to.include('R&D (2)', 'Beta Inc should have R&D');
+        expect(finalGroupingValues).to.include('Product (2)', 'Beta Inc should have Product');
       });
 
       it('should work with complex grouping rules', async () => {
         // This test verifies that drag and drop works with custom groupingValueGetter/Setter
         // functions for complex nested data structures
-        expect(true).to.equal(true, 'Test implemented - works with complex grouping rules');
-      });
-    });
+        const rows = [
+          {
+            id: 1,
+            metadata: { region: 'US', tier: 'Premium' },
+            product: 'Widget A',
+            revenue: 1000,
+          },
+          {
+            id: 2,
+            metadata: { region: 'US', tier: 'Premium' },
+            product: 'Widget B',
+            revenue: 1200,
+          },
+          {
+            id: 3,
+            metadata: { region: 'EU', tier: 'Standard' },
+            product: 'Widget C',
+            revenue: 800,
+          },
+          {
+            id: 4,
+            metadata: { region: 'EU', tier: 'Standard' },
+            product: 'Widget D',
+            revenue: 900,
+          },
+          {
+            id: 5,
+            metadata: { region: 'APAC', tier: 'Enterprise' },
+            product: 'Widget E',
+            revenue: 1500,
+          },
+        ];
 
-    describe('Integration and UI behavior', () => {
-      it('should show correct drag and drop UI indicators', async () => {
-        // This test verifies that drag and drop indicators (above/below) are shown correctly
-        // for valid drop targets and hidden for invalid targets during group reordering
-        expect(true).to.equal(true, 'Test implemented - shows correct UI indicators');
-      });
+        const regionGroupingValueSetter = spy((groupingValue, row) => ({
+          ...row,
+          metadata: {
+            ...row.metadata,
+            region: groupingValue,
+          },
+        }));
 
-      it('should publish rowOrderChange event with correct data', async () => {
-        // This test verifies that the rowOrderChange event is fired with correct parameters
-        // including row data, old index, and target index when groups are reordered
-        expect(true).to.equal(true, 'Test implemented - publishes rowOrderChange event');
-      });
+        const apiRef: RefObject<GridApi | null> = { current: null };
 
-      it('should maintain row selection state after move', async () => {
-        // This test verifies that selected rows remain selected after being moved
-        // to a different parent group during drag and drop operations
-        expect(true).to.equal(true, 'Test implemented - maintains row selection after move');
-      });
+        render(
+          <div style={{ width: 600, height: 500 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              rows={rows}
+              columns={[
+                {
+                  field: 'metadata',
+                  width: 150,
+                  groupingValueGetter: (value: any) => value?.region || 'Unknown',
+                  groupingValueSetter: regionGroupingValueSetter,
+                  valueGetter: (value: any) =>
+                    `${value?.region || 'Unknown'}-${value?.tier || 'None'}`,
+                },
+                { field: 'product', width: 150 },
+                { field: 'revenue', width: 100, type: 'number' },
+              ]}
+              initialState={{
+                rowGrouping: {
+                  model: ['metadata'],
+                },
+              }}
+              defaultGroupingExpansionDepth={-1}
+              rowReordering
+              disableVirtualization
+            />
+          </div>,
+        );
 
-      it('should work with custom getRowId function', async () => {
-        // This test verifies that drag and drop works correctly when using custom getRowId
-        // and that row IDs are maintained correctly after group moves
-        expect(true).to.equal(true, 'Test implemented - works with custom getRowId');
+        // Find Widget A in US group
+        const nameValues = getColumnValues(3);
+        const widgetAIndex = nameValues.indexOf('Widget A');
+        expect(widgetAIndex).to.not.equal(-1, 'Widget A should be found');
+
+        // Find Widget C in EU group as target
+        const widgetCIndex = nameValues.indexOf('Widget C');
+        expect(widgetCIndex).to.not.equal(-1, 'Widget C should be found');
+
+        const widgetARow = getRow(widgetAIndex);
+        const widgetCRow = getRow(widgetCIndex);
+
+        // Move Widget A from US group to EU group
+        performDragReorder(widgetARow, widgetCRow, 'above');
+
+        await waitFor(() => {
+          // Verify groupingValueSetter was called
+          expect(regionGroupingValueSetter.callCount).to.equal(1);
+        });
+
+        await waitFor(() => {
+          // Verify the setter was called with correct parameters
+          expect(regionGroupingValueSetter.firstCall.args[0]).to.equal('EU'); // target region
+        });
+
+        await waitFor(() => {
+          // Verify Widget A moved to EU region
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const widgetARowUpdated = updatedRows[1];
+          expect(widgetARowUpdated?.metadata?.region).to.equal(
+            'EU',
+            'Widget A should move to EU region',
+          );
+        });
+
+        await waitFor(() => {
+          // Verify other metadata properties preserved
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const widgetARowUpdated = updatedRows[1];
+          expect(widgetARowUpdated?.metadata?.tier).to.equal(
+            'Premium',
+            'Widget A tier should be preserved',
+          );
+        });
+
+        await waitFor(() => {
+          // Verify product and revenue fields preserved
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const widgetARowUpdated = updatedRows[1];
+          expect(widgetARowUpdated?.product).to.equal(
+            'Widget A',
+            'Widget A product should be preserved',
+          );
+        });
+
+        await waitFor(() => {
+          const updatedRows = gridRowsLookupSelector(apiRef);
+          const widgetARowUpdated = updatedRows[1];
+          expect(widgetARowUpdated?.revenue).to.equal(1000, 'Widget A revenue should be preserved');
+        });
+
+        // Verify group counts updated
+        const finalGroupingValues = getColumnValues(1);
+        expect(finalGroupingValues).to.include('US (1)', 'US should have 1 item (Widget B)');
+        expect(finalGroupingValues).to.include('EU (3)', 'EU should have 3 items (A, C, D)');
+        expect(finalGroupingValues).to.include('APAC (1)', 'APAC should still have 1 item');
       });
     });
   });
