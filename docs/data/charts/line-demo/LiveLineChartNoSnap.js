@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { LineChart } from '@mui/x-charts/LineChart';
 
@@ -44,9 +45,8 @@ export default function LiveLineChartNoSnap() {
   }, [running]);
 
   return (
-    <div style={{ width: '100%' }}>
+    <Box sx={{ width: '100%', height: 300 }}>
       <LineChart
-        height={300}
         skipAnimation
         series={[
           { data: secondData, showMark: false },
@@ -78,7 +78,7 @@ export default function LiveLineChartNoSnap() {
       >
         reset
       </Button>
-    </div>
+    </Box>
   );
 }
 
