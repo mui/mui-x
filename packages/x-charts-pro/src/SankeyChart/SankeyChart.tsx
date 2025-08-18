@@ -17,6 +17,7 @@ import { SANKEY_CHART_PLUGINS, type SankeyChartPluginsSignatures } from './Sanke
 import type { SankeySeriesType } from './sankey.types';
 import { seriesConfig as sankeySeriesConfig } from './seriesConfig';
 import { SankeyTooltip } from './SankeyTooltip';
+import type { SankeyChartSlotExtension } from './sankeySlots.types';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 
@@ -25,10 +26,11 @@ const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig }
 export interface SankeyChartProps
   extends Omit<
       ChartContainerProProps<'sankey', SankeyChartPluginsSignatures>,
-      'plugins' | 'series'
+      'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
     >,
     Omit<SankeyPlotProps, 'data'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    SankeyChartSlotExtension {
   /**
    * The series to display in the Sankey chart.
    * A single object is expected.
@@ -61,21 +63,14 @@ const SankeyChart = React.forwardRef(function SankeyChart(
 ) {
   const themedProps = useThemeProps({ props, name: 'MuiSankeyChart' });
 
-  const {
-    chartContainerProps,
-    sankeyPlotProps,
-    overlayProps,
-    legendProps,
-    chartsWrapperProps,
-    children,
-  } = useSankeyChartProps(themedProps);
+  const { chartContainerProps, sankeyPlotProps, overlayProps, chartsWrapperProps, children } =
+    useSankeyChartProps(themedProps);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
     chartContainerProps,
     ref,
   );
 
-  // const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
-  const Tooltip = SankeyTooltip;
+  const Tooltip = themedProps.slots?.tooltip ?? SankeyTooltip;
 
   return (
     <ChartDataProviderPro<'sankey', SankeyChartPluginsSignatures>
@@ -84,13 +79,12 @@ const SankeyChart = React.forwardRef(function SankeyChart(
       plugins={SANKEY_CHART_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
-        {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
-        <Tooltip trigger="item" />
+        {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -117,10 +111,6 @@ SankeyChart.propTypes = {
    * @default rainbowSurgePalette
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
-  /**
-   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
-   */
-  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   /**
    * Options to enable features planned for the next major.
@@ -192,16 +182,13 @@ SankeyChart.propTypes = {
    */
   series: PropTypes.object.isRequired,
   /**
-   * If `true`, animations are skipped.
-   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props for the slots.
+   * The props used for each component slot.
+   * @default {}
    */
   slotProps: PropTypes.object,
   /**
-   * Slots to customize charts' components.
+   * Overridable component slots.
+   * @default {}
    */
   slots: PropTypes.object,
   sx: PropTypes.oneOfType([

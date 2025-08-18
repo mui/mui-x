@@ -1,6 +1,5 @@
 import { DEFAULT_MARGINS } from '@mui/x-charts/constants';
 import { defaultizeMargin } from '@mui/x-charts/internals';
-import type { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import type { SankeyChartProps } from './SankeyChart';
@@ -25,7 +24,6 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
     children,
     slots,
     slotProps,
-    skipAnimation,
     loading,
     highlightedItem,
     onHighlightChange,
@@ -63,27 +61,19 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
   };
 
   const overlayProps: ChartsOverlayProps = {
-    // slots,
-    // slotProps,
+    slots,
+    slotProps,
     loading,
-  };
-
-  const legendProps: ChartsLegendSlotExtension = {
-    // slots,
-    // slotProps,
   };
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
-    // legendPosition: props.slotProps?.legend?.position,
-    // legendDirection: props.slotProps?.legend?.direction,
   };
 
   return {
     chartContainerProps,
     sankeyPlotProps,
     overlayProps,
-    legendProps,
     chartsWrapperProps,
     children,
   };

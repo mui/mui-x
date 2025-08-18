@@ -47,8 +47,6 @@ Default styles can be applied to all links using the `linkOptions` prop:
 
 ### Node alignment
 
-### Node alignment
-
 The node alignment determines how nodes are positioned within the Sankey chart. The layout follows these principles:
 
 - Nodes are grouped into columns based on the graph structure
