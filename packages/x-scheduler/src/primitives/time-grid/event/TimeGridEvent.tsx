@@ -10,8 +10,12 @@ import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
 import { useEventPosition } from '../../utils/useEventPosition';
 import { SchedulerValidDate } from '../../models';
-import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
+import {
+  getCursorPositionRelativeToElement,
+  getOffsetMsInCollection,
+} from '../../utils/drag-utils';
 import { TimeGridEventContext } from './TimeGridEventContext';
+import { useAdapter } from '../../utils/adapter/useAdapter';
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   componentProps: TimeGridEvent.Props,
@@ -34,12 +38,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // to control whether the event should behave like a button
   const isInteractive = true;
 
+  const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
-  const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
+  const { start: columnStart, end: columnEnd, ref: columnRef } = useTimeGridColumnContext();
 
   const { position, duration } = useEventPosition({
     start,
@@ -90,7 +95,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         id: eventId,
         start,
         end,
-        position: getCursorPositionRelativeToElement({ ref, input }),
+        initialCursorPositionInEventMs: getOffsetMsInCollection({
+          adapter,
+          collectionStart: columnStart,
+          collectionEnd: columnEnd,
+          position:
+            getCursorPositionRelativeToElement({ ref, input }).y / columnRef.current!.offsetHeight,
+        }),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -98,7 +109,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [isDraggable, start, end, eventId]);
+  }, [adapter, columnStart, columnEnd, columnRef, isDraggable, start, end, eventId]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -129,7 +140,7 @@ export namespace TimeGridEvent {
      */
     eventId: string | number;
     /**
-     * Whether the event can be dragged to change its start and end dates without changing the duration.
+     * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
      */
     isDraggable?: boolean;
@@ -140,6 +151,6 @@ export namespace TimeGridEvent {
     id: string | number;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
-    position: { y: number };
+    initialCursorPositionInEventMs: number;
   }
 }

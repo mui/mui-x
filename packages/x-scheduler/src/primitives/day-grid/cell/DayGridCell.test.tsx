@@ -1,11 +1,14 @@
 import * as React from 'react';
+import { DateTime } from 'luxon';
 import { DayGrid } from '@mui/x-scheduler/primitives/day-grid';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
 describe('<DayGrid.Cell />', () => {
   const { render } = createSchedulerRenderer();
 
-  describeConformance(<DayGrid.Cell />, () => ({
+  const day = DateTime.now();
+
+  describeConformance(<DayGrid.Cell value={day} />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(

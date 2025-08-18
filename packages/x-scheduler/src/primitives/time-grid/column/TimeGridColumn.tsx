@@ -4,13 +4,13 @@ import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
-import { TimeGridColumnPlaceholderContext } from './TimeGridColumnPlaceholderContext';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { SchedulerValidDate } from '../../models';
+import { CalendarPrimitiveEventData, SchedulerValidDate } from '../../models';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
-import type { TimeGridRoot } from '../root';
 import {
-  createDateFromPositionInCollection,
+  addRoundedOffsetToDate,
+  createDateFromPositionInCollectionOld,
+  getOffsetMsInCollection,
   EVENT_DRAG_PRECISION_MINUTE,
   getCursorPositionRelativeToElement,
   isDraggingTimeGridEvent,
@@ -36,33 +36,15 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   } = componentProps;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const { onEventChange, setPlaceholder, placeholder } = useTimeGridRootContext();
-
-  const columnPlaceholder = React.useMemo(() => {
-    if (placeholder == null) {
-      return null;
-    }
-
-    if (adapter.isBefore(placeholder.start, start) || adapter.isAfter(placeholder.end, end)) {
-      return null;
-    }
-
-    return placeholder;
-  }, [adapter, start, end, placeholder]);
+  const { onEventChange, setPlaceholder } = useTimeGridRootContext();
 
   const contextValue: TimeGridColumnContext = React.useMemo(
     () => ({
       start,
       end,
+      ref,
     }),
     [start, end],
-  );
-
-  const placeholderContextValue: TimeGridColumnPlaceholderContext = React.useMemo(
-    () => ({
-      placeholder: columnPlaceholder,
-    }),
-    [columnPlaceholder],
   );
 
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
@@ -84,23 +66,27 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     }: {
       data: Record<string, unknown>;
       input: { clientY: number };
-    }): TimeGridRoot.EventData | undefined {
+    }): CalendarPrimitiveEventData | undefined {
       const position = getCursorPositionRelativeToElement({ ref, input });
 
       // Move event
       if (isDraggingTimeGridEvent(data)) {
-        const cursorPositionPx = position.y - data.position.y;
-
         // TODO: Avoid JS Date conversion
         const eventDuration =
           (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
           (60 * 1000);
 
-        const newStartDate = createDateFromPositionInCollection({
+        const cursorOffsetMs = getOffsetMsInCollection({
           adapter,
           collectionStart: start,
           collectionEnd: end,
-          position: cursorPositionPx / domElement!.offsetHeight,
+          position: position.y / domElement!.offsetHeight,
+        });
+
+        const newStartDate = addRoundedOffsetToDate({
+          adapter,
+          date: start,
+          offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs,
         });
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
@@ -111,7 +97,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       // Resize event
       if (isDraggingTimeGridEventResizeHandler(data)) {
         const cursorPositionPx = position.y - data.position.y;
-        const cursorDate = createDateFromPositionInCollection({
+        const cursorDate = createDateFromPositionInCollectionOld({
           adapter,
           collectionStart: start,
           collectionEnd: end,
@@ -185,11 +171,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   }, [adapter, onEventChange, setPlaceholder, start, end, columnId]);
 
   return (
-    <TimeGridColumnContext.Provider value={contextValue}>
-      <TimeGridColumnPlaceholderContext.Provider value={placeholderContextValue}>
-        {element}
-      </TimeGridColumnPlaceholderContext.Provider>
-    </TimeGridColumnContext.Provider>
+    <TimeGridColumnContext.Provider value={contextValue}>{element}</TimeGridColumnContext.Provider>
   );
 });
 
