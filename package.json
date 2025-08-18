@@ -75,7 +75,7 @@
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@emotion/styled": "catalog:",
-    "@inquirer/prompts": "^7.8.1",
+    "@inquirer/prompts": "^7.8.3",
     "@mui/icons-material": "catalog:",
     "@mui/internal-bundle-size-checker": "^1.0.9-canary.18",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.3",
