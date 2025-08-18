@@ -104,8 +104,8 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 // ======================================================
 // TODO: replace with your locale
-import { enUS as locale } from '@mui/x-data-grid/locales';
-const LOCALE = 'en-US';
+import { frFR as locale } from '@mui/x-data-grid/locales';
+const LOCALE = 'fr-FR';
 // ======================================================
 
 const formatNumber = (value: number | string): string => {

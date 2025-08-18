@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { enUS as locale } from '@mui/x-data-grid/locales';
+import { frFR as locale } from '@mui/x-data-grid/locales';
 
-const LOCALE = 'en-US'; // replace with your locale
+const LOCALE = 'fr-FR'; // replace with your locale
 
 const formatNumber = (value: number | string): string => {
   if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
