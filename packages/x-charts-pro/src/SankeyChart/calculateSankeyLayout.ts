@@ -28,7 +28,7 @@ export function calculateSankeyLayout(
   theme: Theme,
   series: Pick<SankeySeriesType, 'nodeOptions' | 'linkOptions' | 'iterations'> = {},
 ): SankeyLayout {
-  const { iterations = 32, nodeOptions, linkOptions } = series;
+  const { iterations = 6, nodeOptions, linkOptions } = series;
   const {
     width: nodeWidth = 15,
     padding: nodePadding = 10,

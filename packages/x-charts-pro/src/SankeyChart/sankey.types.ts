@@ -161,6 +161,7 @@ export interface SankeySeriesType {
 
   /**
    * Number of iterations for the layout algorithm
+   * @default 6
    */
   iterations?: number;
 }
@@ -199,7 +200,6 @@ export interface DefaultizedSankeySeriesType
   highlightScope?: HighlightScope;
 }
 
-// Define SankeyItemIdentifier type
 export type SankeyItemIdentifier = {
   type: 'sankey';
   /**
