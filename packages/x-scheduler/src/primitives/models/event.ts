@@ -7,10 +7,6 @@ export interface CalendarEvent {
    */
   id: CalendarEventId;
   /**
-   * The unique identifier of the event's occurrence if it is part of a recurring series.
-   */
-  occurrenceId?: CalendarEventId;
-  /**
    * The title of the event.
    */
   title: string;
@@ -109,8 +105,15 @@ export interface RecurrenceRule {
       };
 }
 
-export interface CalendarEventWithPosition extends CalendarEvent {
-  eventRowIndex?: number;
+export type CalendarProcessedEvent = CalendarEvent & {
+  /**
+   * The unique identifier of the event's occurrence if it is part of a recurring series.
+   */
+  occurrenceId?: CalendarEventId;
+};
+
+export interface CalendarProcessedEventWithPosition extends CalendarProcessedEvent {
+  eventRowIndex: number;
 }
 
 export type CalendarEventId = string | number;

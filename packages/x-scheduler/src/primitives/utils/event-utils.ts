@@ -1,18 +1,19 @@
 import {
   SchedulerValidDate,
   CalendarEvent,
-  CalendarEventWithPosition,
+  CalendarProcessedEvent,
+  CalendarProcessedEventWithPosition,
   RecurrenceRule,
 } from '../models';
 import { Adapter } from './adapter/types';
 import { diffIn, mergeDateAndTime } from './date-utils';
 
-export function getEventWithLargestRowIndex(events: CalendarEventWithPosition[]) {
+export function getEventWithLargestRowIndex(events: CalendarProcessedEventWithPosition[]) {
   return (
     events.reduce(
       (maxEvent, event) =>
         (event?.eventRowIndex ?? 0) > (maxEvent.eventRowIndex ?? 0) ? event : maxEvent,
-      { eventRowIndex: 0 } as CalendarEventWithPosition,
+      { eventRowIndex: 0 } as CalendarProcessedEventWithPosition,
     ).eventRowIndex || 0
   );
 }
@@ -31,10 +32,10 @@ export function isDayWithinRange(
 }
 
 export function getEventRowIndex(
-  event: CalendarEvent,
+  event: CalendarProcessedEvent,
   day: SchedulerValidDate,
   days: SchedulerValidDate[],
-  daysMap: Map<string, { allDayEvents: CalendarEventWithPosition[] }>,
+  daysMap: Map<string, { allDayEvents: CalendarProcessedEventWithPosition[] }>,
   adapter: Adapter,
 ): number {
   const dayKey = adapter.format(day, 'keyboardDate');
@@ -105,9 +106,9 @@ export function expandRecurringEventForVisibleDays(
   event: CalendarEvent,
   days: SchedulerValidDate[],
   adapter: Adapter,
-): CalendarEvent[] {
+): CalendarProcessedEvent[] {
   const rule = event.recurrenceRule!;
-  const instances: CalendarEvent[] = [];
+  const instances: CalendarProcessedEvent[] = [];
 
   const endGuard = buildEndGuard(rule, event.start, adapter);
   const durationMinutes = diffIn(adapter, event.end, event.start, 'minutes');
