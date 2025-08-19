@@ -10,15 +10,8 @@ import {
   useGridSelector,
   getDataGridUtilityClass,
   gridClasses,
-  GridRowId,
 } from '@mui/x-data-grid';
-import {
-  gridEditRowsStateSelector,
-  isEventTargetInPortal,
-  vars,
-  gridExpandedSortedRowIndexLookupSelector,
-  createSelectorMemoized,
-} from '@mui/x-data-grid/internals';
+import { gridEditRowsStateSelector, isEventTargetInPortal, vars } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -46,11 +39,6 @@ const RowReorderIcon = styled('svg', {
   color: vars.colors.foreground.muted,
 });
 
-const rowIndexSelector = createSelectorMemoized(
-  gridExpandedSortedRowIndexLookupSelector,
-  (lookup, id: GridRowId) => lookup[id],
-);
-
 function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -62,8 +50,6 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     (params.rowNode.type === 'group' ? (params.rowNode.groupingKey ?? params.id) : params.id);
   const cellRef = React.useRef<HTMLDivElement>(null);
   const listenerNodeRef = React.useRef<HTMLDivElement>(null);
-
-  const rowIndex = useGridSelector(apiRef, rowIndexSelector, params.id);
 
   // TODO: remove sortModel and treeData checks once row reorder is compatible
   const isDraggable = React.useMemo(
@@ -156,29 +142,13 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   }
 
   return (
-    <div
-      ref={cellRef}
-      className={classes.root}
-      draggable={isDraggable}
-      {...draggableEventHandlers}
-      style={{ position: 'relative' }}
-    >
+    <div ref={cellRef} className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
       <RowReorderIcon
         as={rootProps.slots.rowReorderIcon}
         ownerState={ownerState}
         className={classes.icon}
         fontSize="small"
       />
-      <div
-        style={{
-          position: 'absolute',
-          top: -20,
-          left: 21,
-          color: 'red',
-        }}
-      >
-        {rowIndex}
-      </div>
       <div className={classes.placeholder}>{cellValue}</div>
     </div>
   );
