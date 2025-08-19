@@ -10,7 +10,7 @@ export default function SankeyNodeAlignment() {
         <Stack width={'100%'}>
           <Typography>Left</Typography>
           <SankeyChart
-            height={400}
+            height={200}
             series={{
               data,
               nodeOptions: {
@@ -23,7 +23,7 @@ export default function SankeyNodeAlignment() {
         <Stack width={'100%'}>
           <Typography>Right</Typography>
           <SankeyChart
-            height={400}
+            height={200}
             series={{
               data,
               nodeOptions: {
@@ -38,7 +38,7 @@ export default function SankeyNodeAlignment() {
         <Stack width={'100%'}>
           <Typography>Justify</Typography>
           <SankeyChart
-            height={400}
+            height={200}
             series={{
               data,
               nodeOptions: {
@@ -51,7 +51,7 @@ export default function SankeyNodeAlignment() {
         <Stack width={'100%'}>
           <Typography>Center</Typography>
           <SankeyChart
-            height={400}
+            height={200}
             series={{
               data,
               nodeOptions: {

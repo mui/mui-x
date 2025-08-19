@@ -10,7 +10,6 @@
       "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
     },
     "height": { "type": { "name": "number" } },
-    "hideLegend": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },

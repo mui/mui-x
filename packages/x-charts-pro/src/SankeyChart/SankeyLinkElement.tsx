@@ -16,10 +16,6 @@ export interface SankeyLinkElementProps {
    */
   link: SankeyLayoutLink;
   /**
-   * Color to apply to the link
-   */
-  color?: string;
-  /**
    * Opacity to apply to the link
    */
   opacity?: number;
@@ -36,7 +32,7 @@ export interface SankeyLinkElementProps {
  */
 export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElementProps>(
   function SankeyLinkElement(props, ref) {
-    const { link, color, opacity = 0.4, onClick, seriesId } = props;
+    const { link, opacity = 0.4, onClick, seriesId } = props;
     const chartId = useChartId();
 
     const identifier: SankeyItemIdentifier = {
@@ -50,9 +46,7 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     const interactionProps = useInteractionItemProps(identifier);
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGPathElement>) => {
-      if (onClick) {
-        onClick(event, identifier);
-      }
+      onClick?.(event, identifier);
     });
 
     if (!link.path) {
@@ -81,7 +75,7 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
         <path
           ref={ref}
           d={link.path}
-          stroke={color || link.color}
+          stroke={link.color}
           strokeWidth={link.width}
           strokeOpacity={opacity}
           data-link-source={link.source.id}

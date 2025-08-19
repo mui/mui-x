@@ -35,11 +35,6 @@ export interface SankeyChartProps
    * A single object is expected.
    */
   series: SankeySeries;
-  /**
-   * If `true`, the legend is not rendered.
-   * @default false
-   */
-  hideLegend?: boolean;
 }
 
 /**
@@ -118,11 +113,6 @@ SankeyChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
-  /**
-   * If `true`, the legend is not rendered.
-   * @default false
-   */
-  hideLegend: PropTypes.bool,
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.

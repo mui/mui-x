@@ -62,9 +62,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
     const interactionProps = useInteractionItemProps(identifier);
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
-      if (onClick) {
-        onClick(event, identifier);
-      }
+      onClick?.(event, identifier);
     });
 
     return (
@@ -86,7 +84,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
             x={labelX}
             y={(y0 + y1) / 2}
             textAnchor={labelAnchor}
-            fill={theme.palette.text.primary}
+            fill={(theme.vars || theme).palette.text.primary}
             fontSize={theme.typography.caption.fontSize}
             fontFamily={theme.typography.fontFamily}
             pointerEvents="none"
