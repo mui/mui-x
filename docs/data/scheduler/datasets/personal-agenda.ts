@@ -14,12 +14,7 @@ export const initialEvents: CalendarEvent[] = [
     end: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 9, minute: 30 }),
     title: 'Daily Standup',
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 1,
-      daysOfWeek: [1, 2, 3, 4, 5],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
   },
   {
     id: 'work-retro',
@@ -27,12 +22,7 @@ export const initialEvents: CalendarEvent[] = [
     end: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 17 }),
     title: 'Team Retrospective',
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 2,
-      daysOfWeek: [2],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
   },
   {
     id: 'work-backlog-grooming',
@@ -40,12 +30,7 @@ export const initialEvents: CalendarEvent[] = [
     end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 3, hour: 15 }),
     title: 'Backlog Grooming',
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 2,
-      daysOfWeek: [3],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['WE'] },
   },
   {
     id: 'work-1on1-john',
@@ -53,12 +38,7 @@ export const initialEvents: CalendarEvent[] = [
     end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 3, hour: 11 }),
     title: '1-on-1 with John',
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 3,
-      daysOfWeek: [3],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['WE'] },
   },
   {
     id: 'work-1on1-abigail',
@@ -66,12 +46,7 @@ export const initialEvents: CalendarEvent[] = [
     end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 11 }),
     title: '1-on-1 with Abigail',
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 3,
-      daysOfWeek: [4],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['TH'] },
   },
   {
     id: 'work-1on1-hailey',
@@ -79,12 +54,7 @@ export const initialEvents: CalendarEvent[] = [
     end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 11 }),
     title: '1-on-1 with Hailey',
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 3,
-      daysOfWeek: [1],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
   },
 
   // Non-recurring work events
@@ -138,12 +108,7 @@ export const initialEvents: CalendarEvent[] = [
     end: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 7, minute: 45 }),
     title: 'Running',
     resource: 'workout',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 1,
-      daysOfWeek: [1, 3],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] },
   },
   {
     id: 'workout-long-run',
@@ -151,12 +116,7 @@ export const initialEvents: CalendarEvent[] = [
     end: START_OF_FIRST_WEEK.set({ weekday: 7, hour: 10, minute: 30 }),
     title: 'Long run',
     resource: 'workout',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 1,
-      daysOfWeek: [7],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['SU'] },
   },
   {
     id: 'workout-gym-class',
@@ -165,12 +125,7 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Evening Gym Class',
     allDay: false,
     resource: 'workout',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 1,
-      daysOfWeek: [2, 4],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['TU', 'TH'] },
   },
 
   // Birthday events
@@ -181,11 +136,7 @@ export const initialEvents: CalendarEvent[] = [
     title: "Alice's Birthday",
     resource: 'birthdays',
     allDay: true,
-    recurrenceRule: {
-      frequency: 'yearly',
-      interval: 1,
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'YEARLY', interval: 1 },
   },
   {
     id: 'birthdays-bob',
@@ -194,11 +145,7 @@ export const initialEvents: CalendarEvent[] = [
     title: "Bob's Birthday",
     resource: 'birthdays',
     allDay: true,
-    recurrenceRule: {
-      frequency: 'yearly',
-      interval: 1,
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'YEARLY', interval: 1 },
   },
   {
     id: 'birthdays-richard',
@@ -207,11 +154,7 @@ export const initialEvents: CalendarEvent[] = [
     title: "Richard's Birthday",
     resource: 'birthdays',
     allDay: true,
-    recurrenceRule: {
-      frequency: 'yearly',
-      interval: 1,
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'YEARLY', interval: 1 },
   },
 
   // Personal events
@@ -298,12 +241,7 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Team Weekly Sync',
     allDay: true,
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 1,
-      daysOfWeek: [5],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['FR'] },
   },
   {
     id: 'allday-work-recurrent-1',
@@ -312,12 +250,7 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Sprint Focus Block',
     allDay: true,
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 1,
-      daysOfWeek: [1],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO'] },
   },
   {
     id: 'allday-work-recurrent-2',
@@ -326,12 +259,7 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Internal Training',
     allDay: true,
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 2,
-      daysOfWeek: [4],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
   },
   {
     id: 'allday-work-recurrent-3',
@@ -340,12 +268,7 @@ export const initialEvents: CalendarEvent[] = [
     title: 'On-Call Rotation',
     allDay: true,
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'weekly',
-      interval: 4,
-      daysOfWeek: [5],
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'WEEKLY', interval: 4, byDay: ['FR'] },
   },
   {
     id: 'allday-work-recurrent-4',
@@ -354,12 +277,7 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Team Retreat',
     allDay: true,
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'monthly',
-      interval: 2,
-      monthly: { mode: 'onDate', day: 5 },
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'MONTHLY', interval: 2, byMonthDay: [5] },
   },
   {
     id: 'allday-work-recurrent-5',
@@ -368,11 +286,7 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Annual Tech Conference',
     allDay: true,
     resource: 'work',
-    recurrenceRule: {
-      frequency: 'yearly',
-      interval: 1,
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'YEARLY', interval: 1 },
   },
   {
     id: 'allday-workout-1',
@@ -421,12 +335,7 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Month-End Close',
     allDay: true,
     resource: 'personal',
-    recurrenceRule: {
-      frequency: 'monthly',
-      interval: 1,
-      monthly: { mode: 'onDate', day: 28 },
-      end: { type: 'never' },
-    },
+    rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [28] },
   },
   {
     id: 'allday-medical-1',
