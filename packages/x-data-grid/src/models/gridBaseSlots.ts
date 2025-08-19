@@ -268,6 +268,7 @@ export type SelectProps = CommonProps & {
     htmlInput?: { ref?: Ref } & React.InputHTMLAttributes<HTMLInputElement>;
   };
   children?: React.ReactNode;
+  density?: 'standard' | 'compact';
 };
 
 export type SelectOptionProps = CommonProps & {

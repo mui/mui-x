@@ -123,6 +123,20 @@ const ListItemText = styled(MUIListItemText)({
   },
 });
 
+const Select = styled(MUISelect, {
+  shouldForwardProp: (prop) => prop !== 'density',
+})<{ density?: P['baseSelect']['density'] }>(({ theme }) => ({
+  variants: [
+    {
+      props: { density: 'compact' },
+      style: {
+        paddingTop: theme.spacing(0.5),
+        paddingBottom: theme.spacing(0.5),
+      },
+    },
+  ],
+}));
+
 const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, ref) {
   const {
     id,
@@ -153,7 +167,7 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
       <MUIInputLabel id={labelId} htmlFor={id} shrink variant="outlined">
         {label}
       </MUIInputLabel>
-      <MUISelect
+      <Select
         id={id}
         labelId={labelId}
         label={label}
