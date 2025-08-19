@@ -29,88 +29,42 @@ export interface CalendarEvent {
   /**
    * The recurrence rule for the event, if it is a recurring event.
    */
-  recurrenceRule?: RecurrenceRule;
+  rrule?: RRuleSpec;
   /**
    * `true` if the event is an all-day event.
    */
   allDay?: boolean;
 }
 
-export type RecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
+// RRULE day codes
+export type ByDayCode = 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU';
 
-export interface RecurrenceRule {
-  /**
-   * The unit of recurrence.
-   */
-  frequency: RecurrenceFrequency;
-  /**
-   * Repeat every X units.
-   */
-  interval: number;
-  /**
-   * Days of the week (1 = Monday, 7 = Sunday).
-   * Only used when frequency is 'weekly'.
-   */
-  daysOfWeek?: number[];
-  /**
-   * Monthly recurrence rule.
-   * Only used when frequency is 'monthly'.
-   */
-  monthly?:
-    | {
-        /**
-         * Repeats on the same day of the month (e.g. 28th).
-         */
-        mode: 'onDate';
-        day: number;
-      }
-    | {
-        /**
-         * Repeats on the Nth weekday (e.g. 4th Saturday).
-         */
-        mode: 'onWeekday';
-        weekIndex: number;
-        weekday: number;
-      }
-    | {
-        /**
-         * Repeats on the last weekday of the month (e.g. last Saturday).
-         */
-        mode: 'onLastWeekday';
-        weekday: number;
-      };
-  /**
-   * End condition for the recurrence.
-   */
-  end:
-    | {
-        /**
-         * Never ends.
-         */
-        type: 'never';
-      }
-    | {
-        /**
-         * Ends after a number of occurrences.
-         */
-        type: 'after';
-        count: number;
-      }
-    | {
-        /**
-         * Ends on a specific date.
-         */
-        type: 'until';
-        date: SchedulerValidDate;
-      };
+// Ordinals for BYDAY: 'MO' | 'WE' | '4SA' | '-1MO' (1..5, negatives for "last")
+type Ordinal = `${'' | '-'}${1 | 2 | 3 | 4 | 5}`;
+export type ByDayValue = ByDayCode | `${Ordinal}${ByDayCode}`;
+
+// Minimal RRULE spec the scheduler needs
+export interface RRuleSpec {
+  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+  interval?: number;
+  /** BYDAY: MO..SU or ordinals like 4SA, -1MO */
+  byDay?: ByDayValue[];
+  /** BYMONTHDAY: 1..31 */
+  byMonthDay?: number[];
+  /** BYMONTH: 1..12 */
+  byMonth?: number[];
+  /** COUNT */
+  count?: number;
+  /** UNTIL (inclusive) */
+  until?: SchedulerValidDate;
 }
 
-export type CalendarProcessedEvent = CalendarEvent & {
+export interface CalendarProcessedEvent extends CalendarEvent {
   /**
    * The unique identifier of the event's occurrence if it is part of a recurring series.
    */
   occurrenceId?: CalendarEventId;
-};
+}
 
 export interface CalendarProcessedEventWithPosition extends CalendarProcessedEvent {
   eventRowIndex: number;

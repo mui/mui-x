@@ -124,7 +124,7 @@ export const selectors = {
           continue; // Skip events that are not in the visible days
         }
 
-        instances.push({ ...event } as CalendarProcessedEvent);
+        instances.push({ ...event });
       }
 
       // STEP 3: Sort by the actual start date of each instance
