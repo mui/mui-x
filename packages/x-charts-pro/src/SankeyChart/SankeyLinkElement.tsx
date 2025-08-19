@@ -3,8 +3,8 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
-import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
 import { useChartId } from '@mui/x-charts/hooks';
+import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
 
 export interface SankeyLinkElementProps {
   /**
@@ -72,7 +72,7 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     const clipId = `clip-${chartId}-${link.source.id}-${link.target.id}`;
 
     return (
-      <>
+      <React.Fragment>
         <defs>
           <clipPath id={clipId}>
             <path d={`M${x0},${y0} L${x1},${y0} L${x1},${y1} L${x0},${y1} Z`} />
@@ -92,7 +92,7 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
           clipPath={`url(#${clipId})`}
           {...interactionProps}
         />
-      </>
+      </React.Fragment>
     );
   },
 );
