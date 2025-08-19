@@ -54,9 +54,9 @@ export default function TimeGridPrimitiveStartEndTime() {
                 end={day.date.startOf('day').set({ hour: endTime.get('hour') })}
                 className={classes.Column}
               >
-                {day.events.map((event) => (
+                {day.events.map((event, index) => (
                   <TimeGrid.Event
-                    key={`${event.id}-${event.occurrenceId}`}
+                    key={`${event.id}-${index}`}
                     start={event.start}
                     end={event.end}
                     eventId={event.id}

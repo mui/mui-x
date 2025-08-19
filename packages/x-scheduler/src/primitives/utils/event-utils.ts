@@ -9,7 +9,7 @@ import {
 import { Adapter } from './adapter/types';
 import { diffIn, mergeDateAndTime } from './date-utils';
 
-export const NUM_TO_BYDAY: Record<1 | 2 | 3 | 4 | 5 | 6 | 7, ByDayCode> = {
+export const NUM_TO_BYDAY: Record<number, ByDayCode> = {
   1: 'MO',
   2: 'TU',
   3: 'WE',
@@ -19,7 +19,7 @@ export const NUM_TO_BYDAY: Record<1 | 2 | 3 | 4 | 5 | 6 | 7, ByDayCode> = {
   7: 'SU',
 };
 
-const BYDAY_TO_NUM: Record<ByDayCode, 1 | 2 | 3 | 4 | 5 | 6 | 7> = {
+export const BYDAY_TO_NUM: Record<ByDayCode, 1 | 2 | 3 | 4 | 5 | 6 | 7> = {
   MO: 1,
   TU: 2,
   WE: 3,
@@ -28,6 +28,22 @@ const BYDAY_TO_NUM: Record<ByDayCode, 1 | 2 | 3 | 4 | 5 | 6 | 7> = {
   SA: 6,
   SU: 7,
 };
+
+// Validate WEEKLY BYDAY and return ByDayCode[] (or fallback)
+export function weeklyByDayCodes(
+  ruleByDay: RRuleSpec['byDay'],
+  fallback: ByDayCode[],
+): ByDayCode[] {
+  if (!ruleByDay?.length) {
+    return fallback;
+  }
+  if (!ruleByDay.every((v) => /^(MO|TU|WE|TH|FR|SA|SU)$/.test(v as string))) {
+    throw new Error(
+      'WEEKLY expects plain BYDAY codes (MO..SU), ordinals like 1MO or -1FR are not valid.',
+    );
+  }
+  return ruleByDay as ByDayCode[];
+}
 
 export function getEventWithLargestRowIndex(events: CalendarEventOccurenceWithPosition[]) {
   return (
@@ -237,9 +253,7 @@ export function matchesRecurrence(
       }
 
       // If no BYDAY is provided in a WEEKLY rule, default to the weekday of DTSTART.
-      const byDay = rule.byDay?.length
-        ? rule.byDay
-        : [NUM_TO_BYDAY[adapter.getDayOfWeek(event.start)]];
+      const byDay = weeklyByDayCodes(rule.byDay, [NUM_TO_BYDAY[adapter.getDayOfWeek(event.start)]]);
 
       const dateDowCode = NUM_TO_BYDAY[adapter.getDayOfWeek(date)];
       if (!byDay.includes(dateDowCode)) {
@@ -366,9 +380,7 @@ export function countWeeklyOccurrencesUpToExact(
     return 0;
   }
 
-  const byDay: ByDayCode[] = rule.byDay?.length
-    ? rule.byDay
-    : [NUM_TO_BYDAY[adapter.getDayOfWeek(seriesStart)]];
+  const byDay = weeklyByDayCodes(rule.byDay, [NUM_TO_BYDAY[adapter.getDayOfWeek(seriesStart)]]);
 
   const interval = Math.max(1, rule.interval ?? 1);
 

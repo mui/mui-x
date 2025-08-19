@@ -38,9 +38,9 @@ export default function DayGridPrimitive() {
             {week.map((day) => (
               <DayGrid.Cell key={day.date.toString()} className={classes.Cell}>
                 <span className={classes.CellLabel}>{day.date.toFormat('dd')}</span>
-                {day.events.map((event) => (
+                {day.events.map((event, index) => (
                   <DayGrid.Event
-                    key={`${event.id}-${event.occurrenceId}`}
+                    key={`${event.id}-${index}`}
                     start={event.start}
                     end={event.end}
                     className={classes.Event}
