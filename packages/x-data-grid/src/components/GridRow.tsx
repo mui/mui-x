@@ -281,6 +281,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     return rowStyle;
   }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
 
+  // HACK: Sometimes, the rowNode has already been removed from the state but the row is still rendered.
+  if (!rowNode) {
+    return null;
+  }
+
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = getRowAriaAttributes(rowNode, index);
 
@@ -294,11 +299,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     };
 
     rowClassNames.push(rootProps.getRowClassName(rowParams));
-  }
-
-  // XXX: fix this properly
-  if (!rowNode) {
-    return null;
   }
 
   const getCell = (

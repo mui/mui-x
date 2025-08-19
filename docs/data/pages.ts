@@ -553,11 +553,15 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-funnel',
             title: 'Funnel',
             plan: 'pro',
-            unstable: true,
             children: [
               { pathname: '/x/react-charts/funnel', title: 'Funnel overview' },
               { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
             ],
+          },
+          {
+            pathname: '/x/react-charts/#planned-charts',
+            title: 'Future Components',
+            planned: true,
           },
           {
             pathname: '/x/react-charts/main-features',
@@ -584,7 +588,7 @@ const pages: MuiPage[] = [
                 title: 'Export',
                 plan: 'pro',
               },
-              { pathname: '/x/react-charts/toolbar', title: 'Toolbar', unstable: true },
+              { pathname: '/x/react-charts/toolbar', title: 'Toolbar' },
             ],
           },
           {
@@ -620,15 +624,6 @@ const pages: MuiPage[] = [
                   },
                 ],
               },
-            ],
-          },
-          {
-            pathname: '/x/react-charts-future',
-            subheader: 'Future components',
-            children: [
-              { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
-              { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
-              { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },
             ],
           },
         ],

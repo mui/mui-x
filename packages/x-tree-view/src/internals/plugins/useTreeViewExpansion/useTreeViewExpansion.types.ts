@@ -28,7 +28,7 @@ export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublic
    */
   expandAllSiblings: (event: React.KeyboardEvent, itemId: TreeViewItemId) => void;
   /**
-   * APply the new expansion status of a given item.
+   * Apply the new expansion status of a given item.
    * Is used by the `setItemExpansion` method and by the `useTreeViewLazyLoading` plugin.
    * Unlike `setItemExpansion`, this method does not trigger the lazy loading.
    * @param {object} parameters The parameters of the method.
@@ -41,6 +41,10 @@ export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublic
     event: React.SyntheticEvent | null;
     shouldBeExpanded: boolean;
   }) => void;
+  /**
+   * Reset the expansion state of all items.
+   */
+  resetItemExpansion: () => void;
 }
 
 export interface UseTreeViewExpansionParameters {
