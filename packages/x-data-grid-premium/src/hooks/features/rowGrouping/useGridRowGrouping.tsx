@@ -35,7 +35,8 @@ import {
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { rowGroupingReorderValidator, type ReorderContext } from './reorderUtils';
+import { rowGroupingReorderValidator } from '../rowReorder/reorderValidator';
+import { ReorderValidationContext } from '../rowReorder/types';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
@@ -317,7 +318,7 @@ export const useGridRowGrouping = (
       }
 
       // Create context object
-      const context: ReorderContext = {
+      const context: ReorderValidationContext = {
         sourceNode,
         targetNode,
         prevNode,

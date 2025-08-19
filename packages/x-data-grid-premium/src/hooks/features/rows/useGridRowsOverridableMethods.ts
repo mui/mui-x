@@ -6,10 +6,11 @@ import {
   gridRowNodeSelector,
 } from '@mui/x-data-grid-pro';
 import { gridExpandedSortedRowIndexLookupSelector } from '@mui/x-data-grid-pro/internals';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { reorderExecutor, type ReorderExecutionContext } from './reorderExecutionUtils';
+import type { RefObject } from '@mui/x-internals/types';
+import { rowGroupingReorderExecutor } from '../rowReorder/reorderExecutor';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { ReorderExecutionContext } from '../rowReorder/types';
 
 export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -48,8 +49,6 @@ export const useGridRowsOverridableMethods = (
        * | G ✅ | Group       | Group       | Different parents         | Only allowed at same depth to preserve grouping criteria                    |
        */
 
-      // TODO: Redo validation here to make sure the direct API calls are being handled properly too
-
       const executionContext: ReorderExecutionContext = {
         sourceRowId,
         placeholderIndex: targetOriginalIndex,
@@ -61,7 +60,7 @@ export const useGridRowsOverridableMethods = (
         onProcessRowUpdateError,
       };
 
-      await reorderExecutor.execute(executionContext);
+      await rowGroupingReorderExecutor.execute(executionContext);
     },
     [apiRef, processRowUpdate, onProcessRowUpdateError],
   );

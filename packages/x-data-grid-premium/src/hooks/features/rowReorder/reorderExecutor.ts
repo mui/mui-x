@@ -4,7 +4,6 @@ import {
   gridRowTreeSelector,
   gridRowsLookupSelector,
   gridColumnLookupSelector,
-  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 import type {
   GridRowId,
@@ -13,39 +12,19 @@ import type {
   GridLeafNode,
   GridValidRowModel,
   GridUpdateRowParams,
-  GridRowTreeConfig,
 } from '@mui/x-data-grid-pro';
-import { RowTreeBuilderGroupingCriterion } from '@mui/x-data-grid-pro/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-
-export interface ReorderExecutionContext {
-  sourceRowId: GridRowId;
-  placeholderIndex: number;
-  sortedFilteredRowIds: GridRowId[];
-  sortedFilteredRowIndexLookup: Record<GridRowId, number>;
-  rowTree: GridRowTreeConfig;
-  apiRef: any; // TODO: Replace with proper type
-  processRowUpdate?: DataGridPremiumProcessedProps['processRowUpdate'];
-  onProcessRowUpdateError?: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
-}
-
-interface ReorderOperation {
-  sourceNode: GridTreeNode;
-  targetNode: GridTreeNode; // The adjusted target node for the operation
-  actualTargetIndex: number; // Where in the parent's children to insert
-  isLastChild: boolean; // Whether to append at the end
-  operationType: 'same-parent-swap' | 'cross-parent-leaf' | 'cross-parent-group';
-}
-
-interface ReorderScenario {
-  name: string;
-  detectOperation: (ctx: ReorderExecutionContext) => ReorderOperation | null;
-  execute: (operation: ReorderOperation, ctx: ReorderExecutionContext) => Promise<void> | void;
-}
+import {
+  determineOperationType,
+  calculateTargetIndex,
+  collectAllLeafDescendants,
+  getNodePathInTree,
+} from './utils';
+import type { ReorderScenario, ReorderExecutionContext } from './types';
 
 const reorderScenarios: ReorderScenario[] = [
   // ===== Cases A & B: Same Parent Swap =====
@@ -162,7 +141,7 @@ const reorderScenarios: ReorderScenario[] = [
         operationType,
       };
     },
-    execute: async (operation, ctx) => {
+    execute: (operation, ctx) => {
       const { sourceNode, actualTargetIndex } = operation;
       const { apiRef, sourceRowId } = ctx;
 
@@ -210,8 +189,6 @@ const reorderScenarios: ReorderScenario[] = [
       }
 
       let targetNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[placeholderIndex]);
-
-      // Get initial target node at placeholder position (always the node next to the drop indicator)
       let isLastChild = false;
 
       if (!targetNode) {
@@ -227,7 +204,6 @@ const reorderScenarios: ReorderScenario[] = [
         }
       }
 
-      // Apply some custom adjustments
       let adjustedTargetNode = targetNode;
 
       // Case D adjustment: Leaf to group where we need previous leaf
@@ -236,13 +212,13 @@ const reorderScenarios: ReorderScenario[] = [
         targetNode.type === 'group' &&
         targetNode.depth < sourceNode.depth
       ) {
-        isLastChild = true;
         const prevIndex = placeholderIndex - 1;
         if (prevIndex >= 0) {
           const prevRowId = sortedFilteredRowIds[prevIndex];
           const leafTargetNode = gridRowNodeSelector(apiRef, prevRowId);
           if (leafTargetNode && leafTargetNode.type === 'leaf') {
             adjustedTargetNode = leafTargetNode as GridLeafNode;
+            isLastChild = true;
           }
         }
       }
@@ -656,14 +632,11 @@ const reorderScenarios: ReorderScenario[] = [
   },
 ];
 
-export class RowReorderExecutor {
+class RowReorderExecutor {
   private scenarios: ReorderScenario[];
 
-  private debugMode: boolean;
-
-  constructor(scenarios: ReorderScenario[] = reorderScenarios, debugMode = false) {
+  constructor(scenarios: ReorderScenario[]) {
     this.scenarios = scenarios;
-    this.debugMode = debugMode;
   }
 
   async execute(ctx: ReorderExecutionContext): Promise<void> {
@@ -672,25 +645,10 @@ export class RowReorderExecutor {
       const operation = scenario.detectOperation(ctx);
 
       if (operation) {
-        if (this.debugMode) {
-          // eslint-disable-next-line no-console
-          console.log(`Executing scenario: ${scenario.name}`, {
-            sourceId: operation.sourceNode.id,
-            targetId: operation.targetNode.id,
-            operationType: operation.operationType,
-            isLastChild: operation.isLastChild,
-          });
-        }
-
         // eslint-disable-next-line no-await-in-loop
         await scenario.execute(operation, ctx);
         return;
       }
-    }
-
-    // No matching scenario
-    if (this.debugMode) {
-      console.warn('No matching reorder scenario found');
     }
 
     warnOnce(
@@ -702,56 +660,6 @@ export class RowReorderExecutor {
     );
   }
 }
-
-export const reorderExecutor = new RowReorderExecutor(
-  reorderScenarios,
-  process.env.NODE_ENV === 'development',
-);
-
-// Get the path from a node to the root in the tree
-const getNodePathInTree = ({
-  id,
-  tree,
-}: {
-  id: GridRowId;
-  tree: GridRowTreeConfig;
-}): RowTreeBuilderGroupingCriterion[] => {
-  const path: RowTreeBuilderGroupingCriterion[] = [];
-  let node = tree[id] as GridGroupNode | GridLeafNode;
-
-  while (node.id !== GRID_ROOT_GROUP_ID) {
-    path.push({
-      field: node.type === 'leaf' ? null : node.groupingField,
-      key: node.groupingKey,
-    });
-
-    node = tree[node.parent!] as GridGroupNode | GridLeafNode;
-  }
-
-  path.reverse();
-
-  return path;
-};
-
-// Recursively collect all leaf node IDs from a group
-const collectAllLeafDescendants = (
-  groupNode: GridGroupNode,
-  tree: GridRowTreeConfig,
-): GridRowId[] => {
-  const leafIds: GridRowId[] = [];
-
-  const collectFromNode = (nodeId: GridRowId) => {
-    const node = tree[nodeId];
-    if (node.type === 'leaf') {
-      leafIds.push(nodeId);
-    } else if (node.type === 'group') {
-      (node as GridGroupNode).children.forEach(collectFromNode);
-    }
-  };
-
-  groupNode.children.forEach(collectFromNode);
-  return leafIds;
-};
 
 // Class to handle updates with partial failure tracking
 class GroupMoveRowUpdater {
@@ -835,39 +743,4 @@ class GroupMoveRowUpdater {
   }
 }
 
-function determineOperationType(
-  sourceNode: GridTreeNode,
-  targetNode: GridTreeNode,
-): 'same-parent-swap' | 'cross-parent-leaf' | 'cross-parent-group' {
-  if (sourceNode.parent === targetNode.parent) {
-    return 'same-parent-swap';
-  }
-  if (sourceNode.type === 'leaf') {
-    return 'cross-parent-leaf';
-  }
-  return 'cross-parent-group';
-}
-
-function calculateTargetIndex(
-  sourceNode: GridTreeNode,
-  targetNode: GridTreeNode,
-  isLastChild: boolean,
-  rowTree: Record<GridRowId, GridTreeNode>,
-): number {
-  if (sourceNode.parent === targetNode.parent && !isLastChild) {
-    // Same parent: find target's position in parent's children
-    const parent = rowTree[sourceNode.parent!] as GridGroupNode;
-    return parent.children.findIndex((id) => id === targetNode.id);
-  }
-
-  if (isLastChild) {
-    // Append at the end
-    const targetParent = rowTree[targetNode.parent!] as GridGroupNode;
-    return targetParent.children.length;
-  }
-
-  // Find position in target parent
-  const targetParent = rowTree[targetNode.parent!] as GridGroupNode;
-  const targetIndex = targetParent.children.findIndex((id) => id === targetNode.id);
-  return targetIndex >= 0 ? targetIndex : 0;
-}
+export const rowGroupingReorderExecutor = new RowReorderExecutor(reorderScenarios);

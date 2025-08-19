@@ -343,7 +343,7 @@ export const useGridRowReorder = (
           (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
           (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1);
 
-        const finalTargetIndex = apiRef.current.unstable_applyPipeProcessors(
+        const validatedIndex = apiRef.current.unstable_applyPipeProcessors(
           'getRowReorderTargetIndex',
           -1,
           {
@@ -355,7 +355,7 @@ export const useGridRowReorder = (
         );
 
         // Show drop indicator for valid drops OR adjacent positions OR same node
-        if (finalTargetIndex !== -1 || isAdjacentPosition || isSameNode) {
+        if (validatedIndex !== -1 || isAdjacentPosition || isSameNode) {
           dropTarget.current = {
             targetRowId: params.id,
             targetRowIndex,
@@ -381,15 +381,7 @@ export const useGridRowReorder = (
         event.dataTransfer.dropEffect = 'copy';
       }
     },
-    [
-      dragRowId,
-      apiRef,
-      logger,
-      timeout,
-      sortedRowIndexLookup,
-      applyDropIndicator,
-      props.dataSource,
-    ],
+    [dragRowId, apiRef, logger, timeout, sortedRowIndexLookup, applyDropIndicator],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
@@ -437,7 +429,7 @@ export const useGridRowReorder = (
         const sourceRowIndex = originRowIndex.current!;
         const targetRowIndex = dropTarget.current.targetRowIndex;
 
-        const finalTargetIndex = apiRef.current.unstable_applyPipeProcessors(
+        const validatedIndex = apiRef.current.unstable_applyPipeProcessors(
           'getRowReorderTargetIndex',
           targetRowIndex,
           {
@@ -448,9 +440,9 @@ export const useGridRowReorder = (
           },
         );
 
-        if (finalTargetIndex !== -1) {
+        if (validatedIndex !== -1) {
           applyRowAnimation(() => {
-            apiRef.current.setRowIndex(dragRowId, finalTargetIndex);
+            apiRef.current.setRowIndex(dragRowId, validatedIndex);
 
             // Emit the rowOrderChange event only once when the reordering stops.
             const rowOrderChangeParams: GridRowOrderChangeParams = {

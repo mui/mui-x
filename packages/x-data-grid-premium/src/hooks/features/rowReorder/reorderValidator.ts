@@ -1,126 +1,12 @@
-import { GridRowId, GridTreeNode, GridGroupNode } from '@mui/x-data-grid'; // Adjust import as needed
-
-type DropPosition = 'above' | 'below';
-type DragDirection = 'up' | 'down';
-
-export interface ReorderContext {
-  sourceNode: GridTreeNode;
-  targetNode: GridTreeNode;
-  prevNode: GridTreeNode | null;
-  nextNode: GridTreeNode | null;
-  rowTree: Record<GridRowId, GridTreeNode>;
-  dropPosition: DropPosition;
-  dragDirection: DragDirection;
-  targetRowIndex: number;
-  sourceRowIndex: number;
-  expandedSortedRowIndexLookup: Record<GridRowId, number>;
-}
+import { ReorderValidationContext } from './types';
+import { conditions } from './utils';
 
 interface ValidationRule {
   name: string;
-  applies: (ctx: ReorderContext) => boolean;
-  isInvalid: (ctx: ReorderContext) => boolean;
+  applies: (ctx: ReorderValidationContext) => boolean;
+  isInvalid: (ctx: ReorderValidationContext) => boolean;
   message?: string;
 }
-
-const conditions = {
-  // Node type checks
-  isGroupToGroup: (ctx: ReorderContext) =>
-    ctx.sourceNode.type === 'group' && ctx.targetNode.type === 'group',
-
-  isLeafToLeaf: (ctx: ReorderContext) =>
-    ctx.sourceNode.type === 'leaf' && ctx.targetNode.type === 'leaf',
-
-  isLeafToGroup: (ctx: ReorderContext) =>
-    ctx.sourceNode.type === 'leaf' && ctx.targetNode.type === 'group',
-
-  isGroupToLeaf: (ctx: ReorderContext) =>
-    ctx.sourceNode.type === 'group' && ctx.targetNode.type === 'leaf',
-
-  // Drop position checks
-  isDropAbove: (ctx: ReorderContext) => ctx.dropPosition === 'above',
-  isDropBelow: (ctx: ReorderContext) => ctx.dropPosition === 'below',
-
-  // Depth checks
-  sameDepth: (ctx: ReorderContext) => ctx.sourceNode.depth === ctx.targetNode.depth,
-
-  sourceDepthGreater: (ctx: ReorderContext) => ctx.sourceNode.depth > ctx.targetNode.depth,
-
-  targetDepthIsSourceMinusOne: (ctx: ReorderContext) =>
-    ctx.targetNode.depth === ctx.sourceNode.depth - 1,
-
-  // Parent checks
-  sameParent: (ctx: ReorderContext) => ctx.sourceNode.parent === ctx.targetNode.parent,
-
-  // Node state checks
-  targetGroupExpanded: (ctx: ReorderContext) =>
-    (ctx.targetNode.type === 'group' && (ctx.targetNode as GridGroupNode).childrenExpanded) ??
-    false,
-
-  targetGroupCollapsed: (ctx: ReorderContext) =>
-    ctx.targetNode.type === 'group' && !(ctx.targetNode as GridGroupNode).childrenExpanded,
-
-  // Previous/Next node checks
-  hasPrevNode: (ctx: ReorderContext) => ctx.prevNode !== null,
-  hasNextNode: (ctx: ReorderContext) => ctx.nextNode !== null,
-
-  prevIsLeaf: (ctx: ReorderContext) => ctx.prevNode?.type === 'leaf',
-  prevIsGroup: (ctx: ReorderContext) => ctx.prevNode?.type === 'group',
-  nextIsLeaf: (ctx: ReorderContext) => ctx.nextNode?.type === 'leaf',
-  nextIsGroup: (ctx: ReorderContext) => ctx.nextNode?.type === 'group',
-
-  prevDepthEquals: (ctx: ReorderContext, depth: number) => ctx.prevNode?.depth === depth,
-
-  prevDepthEqualsSource: (ctx: ReorderContext) => ctx.prevNode?.depth === ctx.sourceNode.depth,
-
-  // Complex checks
-  prevBelongsToSource: (ctx: ReorderContext) => {
-    if (!ctx.prevNode) {
-      return false;
-    }
-    // Check if prevNode.parent OR any of its ancestors === sourceNode.id
-    let currentId = ctx.prevNode.parent;
-    while (currentId) {
-      if (currentId === ctx.sourceNode.id) {
-        return true;
-      }
-      const node = ctx.rowTree[currentId];
-      if (!node) {
-        break;
-      }
-      currentId = node.parent;
-    }
-    return false;
-  },
-
-  // Position checks
-  isAdjacentPosition: (ctx: ReorderContext) => {
-    const { sourceRowIndex, targetRowIndex, dropPosition } = ctx;
-    return (
-      (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) ||
-      (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1)
-    );
-  },
-
-  // First child check
-  targetFirstChildIsGroupWithSourceDepth: (ctx: ReorderContext) => {
-    if (ctx.targetNode.type !== 'group') {
-      return false;
-    }
-    const targetGroup = ctx.targetNode as GridGroupNode;
-    const firstChild = targetGroup.children?.[0] ? ctx.rowTree[targetGroup.children[0]] : null;
-    return firstChild?.type === 'group' && firstChild.depth === ctx.sourceNode.depth;
-  },
-
-  targetFirstChildDepthEqualsSource: (ctx: ReorderContext) => {
-    if (ctx.targetNode.type !== 'group') {
-      return false;
-    }
-    const targetGroup = ctx.targetNode as GridGroupNode;
-    const firstChild = targetGroup.children?.[0] ? ctx.rowTree[targetGroup.children[0]] : null;
-    return firstChild ? firstChild.depth === ctx.sourceNode.depth : false;
-  },
-};
 
 const validationRules: ValidationRule[] = [
   // ===== Basic invalid cases =====
@@ -170,15 +56,15 @@ const validationRules: ValidationRule[] = [
   },
 
   {
-    name: 'group-to-group-above-different-parent',
+    name: 'group-to-group-above-different-parent-depth',
     applies: (ctx) =>
       conditions.isGroupToGroup(ctx) &&
       conditions.isDropAbove(ctx) &&
       conditions.prevIsGroup(ctx) &&
       conditions.prevDepthEqualsSource(ctx) &&
       conditions.targetGroupExpanded(ctx),
-    isInvalid: (ctx) => ctx.prevNode!.parent !== ctx.sourceNode.parent,
-    message: 'Cannot reorder groups with different parents',
+    isInvalid: (ctx) => ctx.prevNode!.depth !== ctx.sourceNode.depth,
+    message: 'Cannot reorder groups with different depths',
   },
 
   {
@@ -276,11 +162,8 @@ const validationRules: ValidationRule[] = [
 class RowReorderValidator {
   private rules: ValidationRule[];
 
-  private debugMode: boolean;
-
-  constructor(rules: ValidationRule[] = validationRules, debugMode = false) {
+  constructor(rules: ValidationRule[] = validationRules) {
     this.rules = rules;
-    this.debugMode = debugMode;
   }
 
   addRule(rule: ValidationRule): void {
@@ -291,17 +174,11 @@ class RowReorderValidator {
     this.rules = this.rules.filter((r) => r.name !== ruleName);
   }
 
-  validate(context: ReorderContext): boolean {
+  validate(context: ReorderValidationContext): boolean {
     // Check all validation rules
     for (const rule of this.rules) {
-      if (rule.applies(context)) {
-        if (rule.isInvalid(context)) {
-          if (this.debugMode) {
-            // eslint-disable-next-line no-console
-            console.log(`Validation failed - Rule: ${rule.name}`, rule.message);
-          }
-          return false;
-        }
+      if (rule.applies(context) && rule.isInvalid(context)) {
+        return false;
       }
     }
 
@@ -309,7 +186,4 @@ class RowReorderValidator {
   }
 }
 
-export const rowGroupingReorderValidator = new RowReorderValidator(
-  validationRules,
-  process.env.NODE_ENV === 'development',
-);
+export const rowGroupingReorderValidator = new RowReorderValidator(validationRules);
