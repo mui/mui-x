@@ -20,18 +20,17 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
   const ref = React.useRef<HTMLDivElement>(null);
   const { onEventChange, setPlaceholder } = useTimeGridRootContext();
 
-  const getCursorPositionInElementMs: useTimeGridColumnDropTarget.ReturnValue['getCursorPositionInElementMs'] =
+  // TODO: Avoid JS date conversion
+  const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
+  const collectionStartTimestamp = getTimestamp(start);
+  const collectionEndTimestamp = getTimestamp(end);
+  const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
+
+  const getCursorPositionInElementMs: TimeGridColumnContext['getCursorPositionInElementMs'] =
     useEventCallback(({ input, elementRef }) => {
       if (!ref.current || !elementRef.current) {
         return 0;
       }
-
-      // TODO: Avoid JS date conversion
-      const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
-
-      const collectionStartTimestamp = getTimestamp(start);
-      const collectionEndTimestamp = getTimestamp(end);
-      const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
       const clientY = input.clientY;
       const elementPosition = elementRef.current.getBoundingClientRect();

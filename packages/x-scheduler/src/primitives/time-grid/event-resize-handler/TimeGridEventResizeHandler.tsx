@@ -6,7 +6,6 @@ import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useTimeGridEventContext } from '../event/TimeGridEventContext';
 import { SchedulerValidDate } from '../../models';
-import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 
 export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEventResizeHandler(
@@ -24,9 +23,8 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
   } = componentProps;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const { eventId, setIsResizing, start: eventStart, end: eventEnd } = useTimeGridEventContext();
+  const { setIsResizing, getSharedDragData } = useTimeGridEventContext();
   const { getCursorPositionInElementMs } = useTimeGridColumnContext();
-  const adapter = useAdapter();
 
   const props = React.useMemo(() => ({}), []);
 
@@ -44,12 +42,9 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
     return draggable({
       element: domElement,
       getInitialData: ({ input }) => ({
+        ...getSharedDragData(input),
         source: 'TimeGridEventResizeHandler',
-        id: eventId,
-        start: eventStart,
-        end: eventEnd,
         side,
-        initialCursorPositionInEventMs: getCursorPositionInElementMs({ input, elementRef: ref }),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -57,7 +52,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
       onDragStart: () => setIsResizing(true),
       onDrop: () => setIsResizing(false),
     });
-  }, [adapter, eventStart, eventEnd, eventId, side, setIsResizing, getCursorPositionInElementMs]);
+  }, [side, setIsResizing, getCursorPositionInElementMs, getSharedDragData]);
 
   return useRenderElement('div', componentProps, {
     state,
