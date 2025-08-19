@@ -108,7 +108,7 @@ export const selectors = {
         }
 
         // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
-        if (event.recurrenceRule) {
+        if (event.rrule) {
           const occurrences = expandRecurringEventForVisibleDays(event, days, adapter);
           instances.push(...occurrences);
           continue;

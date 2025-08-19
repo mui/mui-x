@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { RecurrenceRule } from '@mui/x-scheduler/primitives/models';
+import { RRuleSpec } from '@mui/x-scheduler/primitives/models';
 import { detectRecurrenceKeyFromRule, buildRecurrencePresets } from './recurrence-utils';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 
@@ -12,26 +12,22 @@ describe('recurrence-utils', () => {
       const presets = buildRecurrencePresets(adapter, start);
 
       expect(presets.daily).to.deep.equal({
-        frequency: 'daily',
+        freq: 'DAILY',
         interval: 1,
-        end: { type: 'never' },
       });
       expect(presets.weekly).to.deep.equal({
-        frequency: 'weekly',
+        freq: 'WEEKLY',
         interval: 1,
-        daysOfWeek: [2],
-        end: { type: 'never' },
+        byDay: ['TU'],
       });
       expect(presets.monthly).to.deep.equal({
-        frequency: 'monthly',
+        freq: 'MONTHLY',
         interval: 1,
-        monthly: { mode: 'onDate', day: 5 },
-        end: { type: 'never' },
+        byMonthDay: [5],
       });
       expect(presets.yearly).to.deep.equal({
-        frequency: 'yearly',
+        freq: 'YEARLY',
         interval: 1,
-        end: { type: 'never' },
       });
     });
   });
@@ -50,35 +46,29 @@ describe('recurrence-utils', () => {
       expect(detectRecurrenceKeyFromRule(adapter, presets.yearly, start)).to.equal('yearly');
     });
 
-    it('classifies daily interval>1 or with finite end as custom', () => {
-      const ruleInterval2: RecurrenceRule = { ...presets.daily, interval: 2 };
+    it('classifies daily interval>1 or with finite end (count) as custom', () => {
+      const ruleInterval2: RRuleSpec = { ...presets.daily, interval: 2 };
       expect(detectRecurrenceKeyFromRule(adapter, ruleInterval2, start)).to.equal('custom');
 
-      const ruleFiniteEnd: RecurrenceRule = {
-        ...presets.daily,
-        end: { type: 'after', count: 5 },
-      };
-      expect(detectRecurrenceKeyFromRule(adapter, ruleFiniteEnd, start)).to.equal('custom');
+      const ruleFiniteCount: RRuleSpec = { ...presets.daily, count: 5 };
+      expect(detectRecurrenceKeyFromRule(adapter, ruleFiniteCount, start)).to.equal('custom');
     });
 
     it('classifies weekly with extra day as custom', () => {
-      const rule: RecurrenceRule = { ...presets.weekly, daysOfWeek: [2, 3] };
+      const rule: RRuleSpec = { ...presets.weekly, byDay: ['TU', 'WE'] };
       expect(detectRecurrenceKeyFromRule(adapter, rule, start)).to.equal('custom');
     });
 
     it('classifies monthly with different day or with interval>1 as custom', () => {
-      const ruleDifferentDay: RecurrenceRule = {
-        ...presets.monthly,
-        monthly: { mode: 'onDate', day: 26 },
-      };
+      const ruleDifferentDay: RRuleSpec = { ...presets.monthly, byMonthDay: [26] };
       expect(detectRecurrenceKeyFromRule(adapter, ruleDifferentDay, start)).to.equal('custom');
 
-      const ruleInterval2: RecurrenceRule = { ...presets.monthly, interval: 2 };
+      const ruleInterval2: RRuleSpec = { ...presets.monthly, interval: 2 };
       expect(detectRecurrenceKeyFromRule(adapter, ruleInterval2, start)).to.equal('custom');
     });
 
     it('classifies yearly interval>1 as custom', () => {
-      const rule: RecurrenceRule = { ...presets.yearly, interval: 2 };
+      const rule: RRuleSpec = { ...presets.yearly, interval: 2 };
       expect(detectRecurrenceKeyFromRule(adapter, rule, start)).to.equal('custom');
     });
   });

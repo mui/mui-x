@@ -1,100 +1,117 @@
 import { Adapter } from '../../../../primitives/utils/adapter/types';
 import {
+  ByDayCode,
   CalendarEvent,
-  RecurrenceFrequency,
-  RecurrenceRule,
+  RRuleSpec,
   SchedulerValidDate,
 } from '../../../../primitives/models';
 
-function sameSet(a: number[] = [], b: number[] = []) {
-  if (a.length !== b.length) {
+export type RecurrencePresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+function sameSet<T>(a: T[] = [], b: T[] = []) {
+  const sa = new Set(a);
+  const sb = new Set(b);
+  if (sa.size !== sb.size) {
     return false;
   }
-  const set = new Set(a);
-  return b.every((x) => set.has(x));
+  for (const x of sa) {
+    if (!sb.has(x)) {
+      return false;
+    }
+  }
+  return true;
 }
+
+const NUM_TO_BYDAY: Record<1 | 2 | 3 | 4 | 5 | 6 | 7, ByDayCode> = {
+  1: 'MO',
+  2: 'TU',
+  3: 'WE',
+  4: 'TH',
+  5: 'FR',
+  6: 'SA',
+  7: 'SU',
+};
 
 export function detectRecurrenceKeyFromRule(
   adapter: Adapter,
-  rule: CalendarEvent['recurrenceRule'] | undefined,
+  rule: CalendarEvent['rrule'] | undefined,
   start: SchedulerValidDate,
-): RecurrenceFrequency | 'custom' | null {
+): RecurrencePresetKey | 'custom' | null {
   if (!rule) {
     return null;
   }
 
-  switch (rule.frequency) {
-    case 'daily':
-      return rule.interval === 1 && rule.end?.type === 'never' ? 'daily' : 'custom';
+  const interval = rule.interval ?? 1;
+  const neverEnds = !rule.count && !rule.until;
+  const hasSelectors = !!(rule.byDay?.length || rule.byMonthDay?.length || rule.byMonth?.length);
 
-    case 'weekly': {
-      if (!Array.isArray(rule.daysOfWeek) || rule.daysOfWeek.length === 0) {
-        throw new Error(
-          [
-            'Invalid weekly recurrence rule.',
-            'The "daysOfWeek" array is required for frequency "weekly".',
-            `Got: ${JSON.stringify(rule.daysOfWeek)}`,
-          ].join('\n'),
-        );
-      }
+  switch (rule.freq) {
+    case 'DAILY': {
+      // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
+      return interval === 1 && neverEnds && !hasSelectors ? 'daily' : 'custom';
+    }
 
+    case 'WEEKLY': {
+      // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
+      const startDowCode = NUM_TO_BYDAY[adapter.getDayOfWeek(start)];
+      const byDay = rule.byDay ?? [];
       const isPresetWeekly =
-        rule.interval === 1 &&
-        rule.end?.type === 'never' &&
-        sameSet([adapter.getDayOfWeek(start)], rule.daysOfWeek);
+        interval === 1 &&
+        neverEnds &&
+        sameSet(byDay, [startDowCode]) &&
+        !(rule.byMonthDay?.length || rule.byMonth?.length);
 
       return isPresetWeekly ? 'weekly' : 'custom';
     }
 
-    case 'monthly': {
-      const sameOnDate =
-        rule.monthly?.mode === 'onDate' && rule.monthly.day === adapter.getDate(start);
-      return rule.interval === 1 && rule.end?.type === 'never' && sameOnDate ? 'monthly' : 'custom';
+    case 'MONTHLY': {
+      // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
+      const day = adapter.getDate(start);
+      const byMonthDay = rule.byMonthDay ?? [];
+      const isPresetMonthly =
+        interval === 1 &&
+        neverEnds &&
+        sameSet(byMonthDay, [day]) &&
+        !(rule.byDay?.length || rule.byMonth?.length);
+
+      return isPresetMonthly ? 'monthly' : 'custom';
     }
 
-    case 'yearly':
-      return rule.interval === 1 && rule.end?.type === 'never' ? 'yearly' : 'custom';
+    case 'YEARLY': {
+      // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
+      return interval === 1 && neverEnds && !hasSelectors ? 'yearly' : 'custom';
+    }
 
     default:
-      throw new Error(
-        [
-          'Invalid recurrence frequency.',
-          'Expected: "daily" | "weekly" | "monthly" | "yearly".',
-          `Got: ${JSON.stringify(rule.frequency)}`,
-        ].join('\n'),
-      );
+      return 'custom';
   }
 }
 
 export function buildRecurrencePresets(
   adapter: Adapter,
   start: SchedulerValidDate,
-): Record<RecurrenceFrequency, RecurrenceRule> {
+): Record<RecurrencePresetKey, RRuleSpec> {
+  const startDowCode = NUM_TO_BYDAY[adapter.getDayOfWeek(start)];
+  const startDayOfMonth = adapter.getDate(start);
+
   return {
     daily: {
-      frequency: 'daily',
+      freq: 'DAILY',
       interval: 1,
-      end: { type: 'never' },
     },
     weekly: {
-      frequency: 'weekly',
+      freq: 'WEEKLY',
       interval: 1,
-      daysOfWeek: [adapter.getDayOfWeek(start)],
-      end: { type: 'never' },
+      byDay: [startDowCode],
     },
     monthly: {
-      frequency: 'monthly',
+      freq: 'MONTHLY',
       interval: 1,
-      monthly: {
-        mode: 'onDate',
-        day: adapter.getDate(start),
-      },
-      end: { type: 'never' },
+      byMonthDay: [startDayOfMonth],
     },
     yearly: {
-      frequency: 'yearly',
+      freq: 'YEARLY',
       interval: 1,
-      end: { type: 'never' },
     },
   };
 }

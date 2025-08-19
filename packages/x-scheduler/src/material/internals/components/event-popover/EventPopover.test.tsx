@@ -75,7 +75,7 @@ describe('<EventPopover />', () => {
     expect(onEventsChange.calledOnce).to.equal(true);
     const updated = onEventsChange.firstCall.firstArg[0];
     expect(updated.title).to.equal('Running test');
-    expect(updated.recurrenceRule?.frequency).to.equal('daily');
+    expect(updated.rrule?.freq).to.equal('DAILY');
     expect(updated.allDay).to.equal(true);
   });
 

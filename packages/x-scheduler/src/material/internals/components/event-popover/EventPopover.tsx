@@ -20,11 +20,15 @@ import {
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { CalendarEvent, RecurrenceFrequency } from '../../../../primitives/models';
+import { CalendarEvent } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import './EventPopover.css';
-import { buildRecurrencePresets, detectRecurrenceKeyFromRule } from './recurrence-utils';
+import {
+  buildRecurrencePresets,
+  detectRecurrenceKeyFromRule,
+  RecurrencePresetKey,
+} from './recurrence-utils';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -57,7 +61,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const recurrenceOptions: {
     label: string;
-    value: RecurrenceFrequency | null;
+    value: RecurrencePresetKey | null;
   }[] = [
     { label: `${translations.recurrenceNoRepeat}`, value: null },
     { label: `${translations.recurrenceDailyPresetLabel}`, value: 'daily' },
@@ -75,9 +79,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
     },
   ];
 
-  const defaultRecurrenceKey = React.useMemo<RecurrenceFrequency | 'custom' | null>(
-    () => detectRecurrenceKeyFromRule(adapter, calendarEvent.recurrenceRule, calendarEvent.start),
-    [adapter, calendarEvent.recurrenceRule, calendarEvent.start],
+  const defaultRecurrenceKey = React.useMemo<RecurrencePresetKey | 'custom' | null>(
+    () => detectRecurrenceKeyFromRule(adapter, calendarEvent.rrule, calendarEvent.start),
+    [adapter, calendarEvent.rrule, calendarEvent.start],
   );
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -88,8 +92,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const startTimeValue = form.get('startTime');
     const endDateValue = form.get('endDate');
     const endTimeValue = form.get('endTime');
-    const recurrenceKey = form.get('recurrence') as RecurrenceFrequency;
-    const recurrenceRule = recurrenceKey ? recurrencePresets[recurrenceKey] : undefined;
+    const recurrenceKey = form.get('recurrence') as RecurrencePresetKey;
+    const rrule = recurrenceKey ? recurrencePresets[recurrenceKey] : undefined;
 
     const startISO = startTimeValue
       ? `${startDateValue}T${startTimeValue}`
@@ -117,7 +121,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       start,
       end,
       allDay: isAllDay,
-      recurrenceRule,
+      rrule,
     });
     onClose();
   };
@@ -259,7 +263,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                 <Field.Root name="recurrence">
                   {defaultRecurrenceKey === 'custom' ? (
                     // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
-                    <p className="EventPopoverFormLabel">{`Custom ${calendarEvent.recurrenceRule?.frequency} recurrence`}</p>
+                    <p className="EventPopoverFormLabel">{`Custom ${calendarEvent.rrule?.freq.toLowerCase()} recurrence`}</p>
                   ) : (
                     <Select.Root items={recurrenceOptions} defaultValue={defaultRecurrenceKey}>
                       <Select.Trigger
