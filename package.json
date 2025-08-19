@@ -65,7 +65,7 @@
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
     "execa": "^9.6.0",
-    "@babel/cli": "^7.28.0",
+    "@babel/cli": "^7.28.3",
     "@babel/core": "catalog:",
     "@babel/plugin-syntax-typescript": "^7.27.1",
     "@babel/plugin-transform-react-constant-elements": "catalog:",
