@@ -55,7 +55,6 @@ export const initialEvents = [
     resource: 'work',
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
   },
-
   // Non-recurring work events
   {
     id: 'client-call-1',
@@ -99,7 +98,6 @@ export const initialEvents = [
     title: 'Design review Scheduler',
     resource: 'work',
   },
-
   // Workout recurring events
   {
     id: 'workout-running',
@@ -126,7 +124,6 @@ export const initialEvents = [
     resource: 'workout',
     rrule: { freq: 'WEEKLY', interval: 1, byDay: ['TU', 'TH'] },
   },
-
   // Birthday events
   {
     id: 'birthdays-alice',
@@ -155,7 +152,6 @@ export const initialEvents = [
     allDay: true,
     rrule: { freq: 'YEARLY', interval: 1 },
   },
-
   // Personal events
   {
     id: 'dinner-with-friends-1',
@@ -192,7 +188,6 @@ export const initialEvents = [
     title: 'Shopping',
     resource: 'personal',
   },
-
   // Medical events
   {
     id: 'medical-1',
@@ -215,7 +210,6 @@ export const initialEvents = [
     title: 'Prescription Pickup',
     resource: 'medical',
   },
-
   // All day events
   {
     id: 'allday-work-1',
