@@ -63,14 +63,14 @@ For example, in the demonstration below:
 
 ## Sorting
 
-Nodes are displayed in the same order as they are defined in the `nodes` array.  
+Nodes are displayed in the same order as they are defined in the `nodes` array.
 If a `nodes` array isn't provided, nodes are rendered according to the order in which they are referenced in the `links` array.
 
 To dynamically customize the order, use the sorting functions for the element that needs sorting.
 
 ### Node sorting
 
-The `nodeOptions.sort` function allows control of the vertical order of nodes within each column.  
+The `nodeOptions.sort` function allows control of the vertical order of nodes within each column.
 It receives two `SankeyLayoutNode` objects and should return a number (similar to [`Array.sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn)).
 
 {{"demo": "SankeyNodeSorting.js"}}
