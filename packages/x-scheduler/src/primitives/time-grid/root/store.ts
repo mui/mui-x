@@ -15,7 +15,7 @@ export type TimeGridRootStore = Store<State>;
 
 export const selectors = {
   placeholderInRange: createSelector(
-    (state: State, [start, end]: [SchedulerValidDate, SchedulerValidDate]) => {
+    (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
       if (state.placeholder === null) {
         return null;
       }

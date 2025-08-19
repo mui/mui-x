@@ -6,7 +6,12 @@ import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useTimeGridEventContext } from '../event/TimeGridEventContext';
 import { SchedulerValidDate } from '../../models';
-import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
+import {
+  getCursorPositionRelativeToElement,
+  getOffsetMsInCollection,
+} from '../../utils/drag-utils';
+import { useAdapter } from '../../utils/adapter/useAdapter';
+import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 
 export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEventResizeHandler(
   componentProps: TimeGridEventResizeHandler.Props,
@@ -24,6 +29,8 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
 
   const ref = React.useRef<HTMLDivElement>(null);
   const { eventId, setIsResizing, start: eventStart, end: eventEnd } = useTimeGridEventContext();
+  const { start: columnStart, end: columnEnd, ref: columnRef } = useTimeGridColumnContext();
+  const adapter = useAdapter();
 
   const props = React.useMemo(() => ({}), []);
 
@@ -46,7 +53,13 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
         start: eventStart,
         end: eventEnd,
         side,
-        position: getCursorPositionRelativeToElement({ ref, input }),
+        initialCursorPositionInEventMs: getOffsetMsInCollection({
+          adapter,
+          collectionStart: columnStart,
+          collectionEnd: columnEnd,
+          position:
+            getCursorPositionRelativeToElement({ ref, input }).y / columnRef.current!.offsetHeight,
+        }),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -54,7 +67,17 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
       onDragStart: () => setIsResizing(true),
       onDrop: () => setIsResizing(false),
     });
-  }, [eventStart, eventEnd, eventId, side, setIsResizing]);
+  }, [
+    adapter,
+    eventStart,
+    eventEnd,
+    eventId,
+    side,
+    setIsResizing,
+    columnStart,
+    columnEnd,
+    columnRef,
+  ]);
 
   return useRenderElement('div', componentProps, {
     state,
@@ -87,7 +110,7 @@ export namespace TimeGridEventResizeHandler {
     id: string | number;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
+    initialCursorPositionInEventMs: number;
     side: 'start' | 'end';
-    position: { y: number };
   }
 }

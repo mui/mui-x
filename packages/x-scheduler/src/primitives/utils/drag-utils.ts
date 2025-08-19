@@ -64,24 +64,6 @@ interface GetOffsetMsInCollectionMsParameters {
   position: number;
 }
 
-export function createDateFromPositionInCollectionOld(
-  parameters: CreateDateFromPositionInCollectionParametersOld,
-): SchedulerValidDate {
-  const { adapter, collectionStart } = parameters;
-
-  const offsetMs = getOffsetMsInCollection(parameters);
-
-  // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-  return addRoundedOffsetToDate({
-    date: collectionStart,
-    offsetMs,
-    adapter,
-  });
-}
-
-interface CreateDateFromPositionInCollectionParametersOld
-  extends GetOffsetMsInCollectionMsParameters {}
-
 export function addRoundedOffsetToDate(
   parameters: AddRoundedOffsetToDateParameters,
 ): SchedulerValidDate {
