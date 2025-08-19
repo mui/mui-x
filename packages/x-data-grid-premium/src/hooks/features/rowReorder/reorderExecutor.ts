@@ -414,8 +414,15 @@ const reorderScenarios: ReorderScenario[] = [
           apiRef.current.setLoading(false);
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(error);
-          } else {
-            throw error;
+          } else if (process.env.NODE_ENV !== 'production') {
+            warnOnce(
+              [
+                'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
+                'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
+              ],
+              'error',
+            );
           }
         } finally {
           apiRef.current.setLoading(false);
@@ -720,7 +727,14 @@ class GroupMoveRowUpdater {
         if (this.onProcessRowUpdateError) {
           this.onProcessRowUpdateError(error);
         } else if (process.env.NODE_ENV !== 'production') {
-          console.error('Row update failed:', error);
+          warnOnce(
+            [
+              'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
+              'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+              'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
+            ],
+            'error',
+          );
         }
       }
     };
