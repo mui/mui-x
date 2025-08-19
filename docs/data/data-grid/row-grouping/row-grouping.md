@@ -406,6 +406,8 @@ For example, in a Data Grid displaying movies grouped by companies, if the **Ava
 
 The Data Grid updates the internal row data, but for the change to persist on the server, you must use the [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) callback.
 
+When moving a nested group to a different parent on the same depth, there will be multiple `processRowUpdate()` calls for all the leaf descendants of the dragged group. In case some of them fail, you might see the parent node appearing in both places. Consider using the `onProcessRowUpdateError()` to show the proper feedback to the user.
+
 ### Usage with groupingValueSetter()
 
 If you use [`colDef.groupingValueGetter()`](#using-groupingvaluegetter-for-complex-grouping-value) to handle complex grouping values and you want to group across rows, you must use the `colDef.groupingValueSetter()` to properly convert back the simple value to the complex one.
@@ -427,27 +429,6 @@ const columns: GridColDef[] = [
 ```
 
 {{"demo": "RowGroupingGroupingValueSetter.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::warning
-
-There are some limitations when reordering grouped rows:
-
-- Leaf rows (the lowest level) can only be moved within their current group or another group at the same level—they cannot become parents.
-- Parent rows can only be reordered among other parents at the same level; they cannot be moved to a different level or group.
-
-**For single-level grouping**: You can move leaf rows between any parent, and parents can be reordered like regular rows.
-
-**For multi-level grouping**: Top-level groups can be reordered freely, but lower-level parents can only be reordered within their own parent group.
-
-For example, in movies grouped by **Company** and **Director**:
-
-⛔️ You can't move a director parent row from one company to another, because this would lead to multiple rows being updated (via multiple `processRowUpdate()` calls).
-
-✅ You can reorder leaf rows from one director to another or move directors around within same company.
-
-Please open a [new issue](https://github.com/mui/mui-x/issues/new/choose) if that is a use-case you are interested in.
-
-:::
 
 ## Get all rows in a group
 
