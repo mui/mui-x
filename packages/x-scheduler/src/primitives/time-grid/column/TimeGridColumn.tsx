@@ -22,7 +22,7 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
   } = componentProps;
 
   const contextRef = React.useRef<HTMLDivElement>(null);
-  const dropTargetRef = useTimeGridColumnDropTarget({ start, end, columnId });
+  const { getCursorPositionInElementMs } = useTimeGridColumnDropTarget({ start, end, columnId });
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
 
   const contextValue: TimeGridColumnContext = React.useMemo(
@@ -30,12 +30,13 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
       start,
       end,
       ref: contextRef,
+      getCursorPositionInElementMs,
     }),
-    [start, end, contextRef],
+    [start, end, contextRef, getCursorPositionInElementMs],
   );
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, contextRef, dropTargetRef],
+    ref: [forwardedRef, contextRef],
     props: [props, elementProps],
   });
 

@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import { SchedulerValidDate } from '../../models';
+import { useTimeGridColumnDropTarget } from './useTimeGridColumnDropTarget';
 
-export interface TimeGridColumnContext {
+export interface TimeGridColumnContext extends useTimeGridColumnDropTarget.ReturnValue {
   /**
    * The start date and time of the column
    */
@@ -11,10 +12,6 @@ export interface TimeGridColumnContext {
    * The end date and time of the column
    */
   end: SchedulerValidDate;
-  /**
-   * The ref containing the DOM element of the column.
-   */
-  ref: React.RefObject<HTMLDivElement | null>;
 }
 
 export const TimeGridColumnContext = React.createContext<TimeGridColumnContext | undefined>(

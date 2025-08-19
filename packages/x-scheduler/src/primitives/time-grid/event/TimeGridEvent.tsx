@@ -10,10 +10,6 @@ import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
 import { useEventPosition } from '../../utils/useEventPosition';
 import { SchedulerValidDate } from '../../models';
-import {
-  getCursorPositionRelativeToElement,
-  getOffsetMsInCollection,
-} from '../../utils/drag-utils';
 import { TimeGridEventContext } from './TimeGridEventContext';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 
@@ -44,7 +40,11 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
-  const { start: columnStart, end: columnEnd, ref: columnRef } = useTimeGridColumnContext();
+  const {
+    start: columnStart,
+    end: columnEnd,
+    getCursorPositionInElementMs,
+  } = useTimeGridColumnContext();
 
   const { position, duration } = useEventPosition({
     start,
@@ -95,13 +95,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         id: eventId,
         start,
         end,
-        initialCursorPositionInEventMs: getOffsetMsInCollection({
-          adapter,
-          collectionStart: columnStart,
-          collectionEnd: columnEnd,
-          position:
-            getCursorPositionRelativeToElement({ ref, input }).y / columnRef.current!.offsetHeight,
-        }),
+        initialCursorPositionInEventMs: getCursorPositionInElementMs(input),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -109,7 +103,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [adapter, columnStart, columnEnd, columnRef, isDraggable, start, end, eventId]);
+  }, [adapter, getCursorPositionInElementMs, isDraggable, start, end, eventId]);
 
   const element = useRenderElement('div', componentProps, {
     state,

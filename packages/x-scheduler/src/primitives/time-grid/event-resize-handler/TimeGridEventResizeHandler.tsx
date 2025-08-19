@@ -6,10 +6,6 @@ import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useTimeGridEventContext } from '../event/TimeGridEventContext';
 import { SchedulerValidDate } from '../../models';
-import {
-  getCursorPositionRelativeToElement,
-  getOffsetMsInCollection,
-} from '../../utils/drag-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 
@@ -29,7 +25,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
 
   const ref = React.useRef<HTMLDivElement>(null);
   const { eventId, setIsResizing, start: eventStart, end: eventEnd } = useTimeGridEventContext();
-  const { start: columnStart, end: columnEnd, ref: columnRef } = useTimeGridColumnContext();
+  const { getCursorPositionInElementMs } = useTimeGridColumnContext();
   const adapter = useAdapter();
 
   const props = React.useMemo(() => ({}), []);
@@ -53,13 +49,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
         start: eventStart,
         end: eventEnd,
         side,
-        initialCursorPositionInEventMs: getOffsetMsInCollection({
-          adapter,
-          collectionStart: columnStart,
-          collectionEnd: columnEnd,
-          position:
-            getCursorPositionRelativeToElement({ ref, input }).y / columnRef.current!.offsetHeight,
-        }),
+        initialCursorPositionInEventMs: getCursorPositionInElementMs(input),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -67,17 +57,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
       onDragStart: () => setIsResizing(true),
       onDrop: () => setIsResizing(false),
     });
-  }, [
-    adapter,
-    eventStart,
-    eventEnd,
-    eventId,
-    side,
-    setIsResizing,
-    columnStart,
-    columnEnd,
-    columnRef,
-  ]);
+  }, [adapter, eventStart, eventEnd, eventId, side, setIsResizing, getCursorPositionInElementMs]);
 
   return useRenderElement('div', componentProps, {
     state,
