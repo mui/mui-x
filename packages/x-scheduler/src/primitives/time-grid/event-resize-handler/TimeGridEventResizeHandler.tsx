@@ -49,7 +49,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
         start: eventStart,
         end: eventEnd,
         side,
-        initialCursorPositionInEventMs: getCursorPositionInElementMs(input),
+        initialCursorPositionInEventMs: getCursorPositionInElementMs({ input, elementRef: ref }),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });

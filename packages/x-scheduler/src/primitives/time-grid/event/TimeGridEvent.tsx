@@ -95,7 +95,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         id: eventId,
         start,
         end,
-        initialCursorPositionInEventMs: getCursorPositionInElementMs(input),
+        initialCursorPositionInEventMs: getCursorPositionInElementMs({ input, elementRef: ref }),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });

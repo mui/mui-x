@@ -11,6 +11,7 @@ import {
   isDraggingTimeGridEventResizeHandler,
 } from '../../utils/drag-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
+import { TimeGridColumnContext } from './TimeGridColumnContext';
 
 export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTarget.Parameters) {
   const { start, end, columnId = null } = parameters;
@@ -19,31 +20,32 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
   const ref = React.useRef<HTMLDivElement>(null);
   const { onEventChange, setPlaceholder } = useTimeGridRootContext();
 
-  const getCursorPositionInElementMs = useEventCallback((input: { clientY: number }) => {
-    if (!ref.current) {
-      return 0;
-    }
+  const getCursorPositionInElementMs: useTimeGridColumnDropTarget.ReturnValue['getCursorPositionInElementMs'] =
+    useEventCallback(({ input, elementRef }) => {
+      if (!ref.current || !elementRef.current) {
+        return 0;
+      }
 
-    // TODO: Avoid JS date conversion
-    const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
+      // TODO: Avoid JS date conversion
+      const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
 
-    const collectionStartTimestamp = getTimestamp(start);
-    const collectionEndTimestamp = getTimestamp(end);
-    const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
+      const collectionStartTimestamp = getTimestamp(start);
+      const collectionEndTimestamp = getTimestamp(end);
+      const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
-    const clientY = input.clientY;
-    const pos = ref.current.getBoundingClientRect();
-    const positionY = (clientY - pos.y) / ref.current.offsetHeight;
+      const clientY = input.clientY;
+      const elementPosition = elementRef.current.getBoundingClientRect();
+      const positionY = (clientY - elementPosition.y) / ref.current.offsetHeight;
 
-    return Math.round(collectionDurationMs * positionY);
-  });
+      return Math.round(collectionDurationMs * positionY);
+    });
 
   const getEventDropData = useEventCallback(
     (
       data: Record<string, unknown>,
       input: { clientY: number },
     ): CalendarPrimitiveEventData | undefined => {
-      const cursorOffsetMs = getCursorPositionInElementMs(input);
+      const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
       // Move event
       if (isDraggingTimeGridEvent(data)) {
@@ -133,7 +135,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
     });
   }, [adapter, getEventDropData, setPlaceholder, columnId, onEventChange]);
 
-  return { getCursorPositionInElementMs };
+  return { getCursorPositionInElementMs, ref };
 }
 
 export namespace useTimeGridColumnDropTarget {
@@ -154,7 +156,6 @@ export namespace useTimeGridColumnDropTarget {
     columnId?: string;
   }
 
-  export interface ReturnValue {
-    getCursorPositionInElementMs: (input: { clientY: number }) => number;
-  }
+  export interface ReturnValue
+    extends Pick<TimeGridColumnContext, 'getCursorPositionInElementMs'> {}
 }

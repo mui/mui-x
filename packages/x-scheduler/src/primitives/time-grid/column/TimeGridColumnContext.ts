@@ -1,9 +1,8 @@
 'use client';
 import * as React from 'react';
 import { SchedulerValidDate } from '../../models';
-import { useTimeGridColumnDropTarget } from './useTimeGridColumnDropTarget';
 
-export interface TimeGridColumnContext extends useTimeGridColumnDropTarget.ReturnValue {
+export interface TimeGridColumnContext {
   /**
    * The start date and time of the column
    */
@@ -12,6 +11,13 @@ export interface TimeGridColumnContext extends useTimeGridColumnDropTarget.Retur
    * The end date and time of the column
    */
   end: SchedulerValidDate;
+  getCursorPositionInElementMs: ({
+    input,
+    elementRef,
+  }: {
+    input: { clientY: number };
+    elementRef: React.RefObject<HTMLElement | null>;
+  }) => number;
 }
 
 export const TimeGridColumnContext = React.createContext<TimeGridColumnContext | undefined>(
