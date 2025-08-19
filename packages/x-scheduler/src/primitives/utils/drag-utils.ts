@@ -21,38 +21,6 @@ export function isDraggingDayGridEvent(data: any): data is DayGridEvent.DragData
   return data.source === 'DayGridEvent';
 }
 
-export function getCursorPositionInElementMs(
-  parameters: GetCursorPositionInElementMsParameters,
-): number {
-  const { adapter, collectionStart, collectionEnd, input, ref, collectionRef } = parameters;
-
-  if (!ref.current || !collectionRef.current) {
-    return 0;
-  }
-
-  // TODO: Avoid JS date conversion
-  const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
-
-  const collectionStartTimestamp = getTimestamp(collectionStart);
-  const collectionEndTimestamp = getTimestamp(collectionEnd);
-  const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
-
-  const clientY = input.clientY;
-  const pos = ref.current.getBoundingClientRect();
-  const positionY = (clientY - pos.y) / collectionRef.current.offsetHeight;
-
-  return Math.round(collectionDurationMs * positionY);
-}
-
-interface GetCursorPositionInElementMsParameters {
-  adapter: Adapter;
-  collectionStart: SchedulerValidDate;
-  collectionEnd: SchedulerValidDate;
-  input: { clientY: number };
-  ref: React.RefObject<HTMLElement | null>;
-  collectionRef: React.RefObject<HTMLElement | null>;
-}
-
 export function addRoundedOffsetToDate(
   parameters: AddRoundedOffsetToDateParameters,
 ): SchedulerValidDate {
