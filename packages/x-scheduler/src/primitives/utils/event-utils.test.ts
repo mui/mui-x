@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { CalendarEvent, RecurrenceRule } from '@mui/x-scheduler/primitives/models';
+import { CalendarEvent, RRuleSpec, ByDayCode } from '@mui/x-scheduler/primitives/models';
 import {
   estimateOccurrencesUpTo,
   countYearlyOccurrencesUpToExact,
@@ -9,6 +9,7 @@ import {
   buildEndGuard,
   getAllDaySpanDays,
   expandRecurringEventForVisibleDays,
+  NUM_TO_BYDAY,
 } from './event-utils';
 import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
@@ -92,27 +93,26 @@ describe('event-utils', () => {
 
   describe('buildEndGuard', () => {
     const baseStart = DateTime.fromISO('2025-01-01T09:00:00Z');
-    const createDailyRule = (end: RecurrenceRule['end']): RecurrenceRule => ({
-      frequency: 'daily',
+    const createDailyRule = (overrides: Partial<RRuleSpec> = {}): RRuleSpec => ({
+      freq: 'DAILY',
       interval: 1,
-      end,
+      ...overrides,
     });
 
-    describe('type never', () => {
-      it('always returns true (no end)', () => {
-        const rule = createDailyRule({ type: 'never' });
+    describe('no end (never)', () => {
+      it('always returns true when count/until are not set', () => {
+        const rule = createDailyRule(); // no count/until
         const guard = buildEndGuard(rule, baseStart, adapter);
-        // A range of dates far into future should remain false
         expect(guard(baseStart)).to.equal(true);
         expect(guard(baseStart.plus({ days: 30 }))).to.equal(true);
         expect(guard(baseStart.plus({ years: 3 }))).to.equal(true);
       });
     });
 
-    describe('type until', () => {
-      it('returns false before or on boundary, true after boundary', () => {
+    describe('until', () => {
+      it('returns true before/on boundary, false after boundary', () => {
         const until = DateTime.fromISO('2025-01-05T09:00:00Z'); // inclusive boundary
-        const rule = createDailyRule({ type: 'until', date: until });
+        const rule = createDailyRule({ until });
         const guard = buildEndGuard(rule, baseStart, adapter);
 
         expect(guard(baseStart)).to.equal(true); // start
@@ -122,9 +122,9 @@ describe('event-utils', () => {
       });
     });
 
-    describe('type after', () => {
+    describe('count', () => {
       it('stops after specified number of occurrences (e.g. 3)', () => {
-        const rule = createDailyRule({ type: 'after', count: 3 });
+        const rule = createDailyRule({ count: 3 });
         const guard = buildEndGuard(rule, baseStart, adapter);
 
         // Occurrence dates: Jan 1,2,3. Guard should become false starting with Jan 4.
@@ -139,11 +139,11 @@ describe('event-utils', () => {
         expect(guard(after)).to.equal(false);
       });
 
-      it('returns false after first occurrence', () => {
-        const rule = createDailyRule({ type: 'after', count: 1 });
+      it('returns false after first occurrence when count=1', () => {
+        const rule = createDailyRule({ count: 1 });
         const guard = buildEndGuard(rule, baseStart, adapter);
-        expect(guard(baseStart)).to.equal(true); // first occurrence allowed
-        expect(guard(baseStart.plus({ days: 1 }))).to.equal(false); // second blocked
+        expect(guard(baseStart)).to.equal(true);
+        expect(guard(baseStart.plus({ days: 1 }))).to.equal(false);
       });
     });
   });
@@ -160,14 +160,14 @@ describe('event-utils', () => {
     describe('daily frequency', () => {
       it('returns false for date before series start', () => {
         const event = createEvent();
-        const rule: RecurrenceRule = { frequency: 'daily', interval: 1, end: { type: 'never' } };
+        const rule: RRuleSpec = { freq: 'DAILY', interval: 1 };
         const date = baseStart.minus({ days: 1 });
         expect(matchesRecurrence(rule, date, adapter, event)).to.equal(false);
       });
 
       it('returns true on start day and respects interval > 1', () => {
         const event = createEvent();
-        const rule: RecurrenceRule = { frequency: 'daily', interval: 2, end: { type: 'never' } };
+        const rule: RRuleSpec = { freq: 'DAILY', interval: 2 };
         const day0 = baseStart;
         const day1 = baseStart.plus({ days: 1 });
         const day2 = baseStart.plus({ days: 2 });
@@ -178,119 +178,105 @@ describe('event-utils', () => {
     });
 
     describe('weekly frequency', () => {
-      it('returns true when the weekday is in daysOfWeek', () => {
+      it('returns true when the weekday is in byDay', () => {
         const event = createEvent();
-        const rule: RecurrenceRule = {
-          frequency: 'weekly',
+        const code = NUM_TO_BYDAY[adapter.getDayOfWeek(event.start)];
+        const rule: RRuleSpec = {
+          freq: 'WEEKLY',
           interval: 1,
-          daysOfWeek: [5],
-          end: { type: 'never' },
+          byDay: [code],
         };
         expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true);
       });
 
-      it('returns false when the weekday is not in daysOfWeek', () => {
+      it('returns false when the weekday is not in byDay', () => {
         const event = createEvent();
-        const rule: RecurrenceRule = {
-          frequency: 'weekly',
+        const rule: RRuleSpec = {
+          freq: 'WEEKLY',
           interval: 1,
-          daysOfWeek: [1],
-          end: { type: 'never' },
+          byDay: ['MO'], // Monday
         };
-        expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(false);
+        expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(false); // Friday start
       });
 
       it('interval > 1 (every 2 weeks) includes only correct weeks', () => {
         const event = createEvent(baseStart);
-        const rule: RecurrenceRule = {
-          frequency: 'weekly',
+        const code = NUM_TO_BYDAY[adapter.getDayOfWeek(event.start)]; // FR
+        const rule: RRuleSpec = {
+          freq: 'WEEKLY',
           interval: 2,
-          daysOfWeek: [5],
-          end: { type: 'never' },
+          byDay: [code],
         };
-        const sameWeek = baseStart; // week 0 (included)
-        const nextWeek = baseStart.plus({ weeks: 1 }); // week 1 (skipped)
-        const week2 = baseStart.plus({ weeks: 2 }); // week 2 (included)
+        const sameWeek = baseStart; // included
+        const nextWeek = baseStart.plus({ weeks: 1 }); // skipped
+        const week2 = baseStart.plus({ weeks: 2 }); // included
         expect(matchesRecurrence(rule, sameWeek, adapter, event)).to.equal(true);
         expect(matchesRecurrence(rule, nextWeek, adapter, event)).to.equal(false);
         expect(matchesRecurrence(rule, week2, adapter, event)).to.equal(true);
       });
 
-      it('multiple daysOfWeek matches any of them', () => {
+      it('multiple byDay matches any of them', () => {
         const event = createEvent();
-        const rule: RecurrenceRule = {
-          frequency: 'weekly',
+        const rule: RRuleSpec = {
+          freq: 'WEEKLY',
           interval: 1,
-          daysOfWeek: [1, 2, 5],
-          end: { type: 'never' },
+          byDay: ['MO', 'TU', 'FR'],
         };
-        expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true);
+        expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true); // Friday
       });
     });
 
-    describe('monthly frequency', () => {
-      describe('"onDate" mode', () => {
-        it('returns true on start month/day', () => {
-          const event = createEvent();
-          const rule: RecurrenceRule = {
-            frequency: 'monthly',
-            interval: 1,
-            monthly: { mode: 'onDate', day: 10 },
-            end: { type: 'never' },
-          };
-          expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true);
-        });
-
-        it('interval > 1 (every 2 months) includes only correct months', () => {
-          const start = baseStart;
-          const event = createEvent(start);
-          const rule: RecurrenceRule = {
-            frequency: 'monthly',
-            interval: 2,
-            monthly: { mode: 'onDate', day: 10 },
-            end: { type: 'never' },
-          };
-          const month1 = start.plus({ months: 1 }); // +1 month (skipped)
-          const month2 = start.plus({ months: 2 }); // +2 months (included)
-          expect(matchesRecurrence(rule, month1, adapter, event)).to.equal(false);
-          expect(matchesRecurrence(rule, month2, adapter, event)).to.equal(true);
-        });
-
-        it('returns false when day does not match', () => {
-          const event = createEvent();
-          const rule: RecurrenceRule = {
-            frequency: 'monthly',
-            interval: 1,
-            monthly: { mode: 'onDate', day: 25 },
-            end: { type: 'never' },
-          };
-          const nextMonthSameOriginalDay = baseStart.plus({ months: 1 });
-          expect(matchesRecurrence(rule, nextMonthSameOriginalDay, adapter, event)).to.equal(false);
-        });
+    describe('monthly frequency (byMonthDay)', () => {
+      it('returns true on start month/day', () => {
+        const event = createEvent();
+        const day = adapter.getDate(event.start);
+        const rule: RRuleSpec = {
+          freq: 'MONTHLY',
+          interval: 1,
+          byMonthDay: [day],
+        };
+        expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true);
       });
 
-      describe('"onWeekday" mode', () => {
-        // TODO: Issue #19128 - Implement support for 'onWeekday' mode.
+      it('interval > 1 (every 2 months) includes only correct months', () => {
+        const start = baseStart;
+        const event = createEvent(start);
+        const rule: RRuleSpec = {
+          freq: 'MONTHLY',
+          interval: 2,
+          byMonthDay: [adapter.getDate(start)],
+        };
+        const month1 = start.plus({ months: 1 }); // skipped
+        const month2 = start.plus({ months: 2 }); // included
+        expect(matchesRecurrence(rule, month1, adapter, event)).to.equal(false);
+        expect(matchesRecurrence(rule, month2, adapter, event)).to.equal(true);
       });
 
-      describe('"onLastWeekday" mode', () => {
-        // TODO: Issue #19128 - Implement support for 'onLastWeekday' mode.
+      it('returns false when day does not match', () => {
+        const event = createEvent();
+        const rule: RRuleSpec = {
+          freq: 'MONTHLY',
+          interval: 1,
+          byMonthDay: [25],
+        };
+        const nextMonthSameOriginalDay = baseStart.plus({ months: 1 });
+        expect(matchesRecurrence(rule, nextMonthSameOriginalDay, adapter, event)).to.equal(false);
       });
     });
 
     describe('yearly frequency', () => {
       it('returns true on start year', () => {
         const event = createEvent();
-        const rule: RecurrenceRule = { frequency: 'yearly', interval: 1, end: { type: 'never' } };
+        const rule: RRuleSpec = { freq: 'YEARLY', interval: 1 };
         expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true);
       });
 
       it('interval > 1 (every 2 years) includes only correct years', () => {
         const start = DateTime.fromISO('2025-03-15T09:00:00Z');
         const event = createEvent(start);
-        const rule: RecurrenceRule = { frequency: 'yearly', interval: 2, end: { type: 'never' } };
-        const plus1 = start.plus({ years: 1 }); // +1 year (skipped)
-        const plus2 = start.plus({ years: 2 }); // +2 years (included)
+        const rule: RRuleSpec = { freq: 'YEARLY', interval: 2 };
+        const plus1 = start.plus({ years: 1 }); // skipped
+        const plus2 = start.plus({ years: 2 }); // included
         expect(matchesRecurrence(rule, plus1, adapter, event)).to.equal(false);
         expect(matchesRecurrence(rule, plus2, adapter, event)).to.equal(true);
       });
@@ -298,7 +284,7 @@ describe('event-utils', () => {
       it('returns false when day differs despite interval', () => {
         const start = DateTime.fromISO('2025-07-20T09:00:00Z');
         const event = createEvent(start);
-        const rule: RecurrenceRule = { frequency: 'yearly', interval: 1, end: { type: 'never' } };
+        const rule: RRuleSpec = { freq: 'YEARLY', interval: 1 };
         const diffDay = start.plus({ years: 1 }).plus({ days: 1 });
         expect(matchesRecurrence(rule, diffDay, adapter, event)).to.equal(false);
       });
@@ -306,10 +292,9 @@ describe('event-utils', () => {
   });
 
   describe('estimateOccurrencesUpTo', () => {
-    const createDailyRule = (interval = 1): RecurrenceRule => ({
-      frequency: 'daily',
+    const createDailyRule = (interval = 1): RRuleSpec => ({
+      freq: 'DAILY',
       interval,
-      end: { type: 'never' },
     });
 
     it('returns 0 when target is before start', () => {
@@ -331,7 +316,7 @@ describe('event-utils', () => {
     });
 
     it('throws an error on unknown frequency', () => {
-      const badRule = { frequency: 'foo', interval: 1, end: { type: 'never' } } as any;
+      const badRule = { freq: 'FOO', interval: 1 } as any;
       const start = DateTime.fromISO('2025-01-01T00:00:00Z');
       const target = DateTime.fromISO('2025-01-02T00:00:00Z');
       expect(() => estimateOccurrencesUpTo(adapter, badRule, start, target)).to.throw();
@@ -339,107 +324,84 @@ describe('event-utils', () => {
   });
 
   describe('countWeeklyOccurrencesUpToExact', () => {
-    const createRule = (daysOfWeek: number[], interval = 1): RecurrenceRule => ({
-      frequency: 'weekly',
+    const createRule = (by: ByDayCode[], interval = 1): RRuleSpec => ({
+      freq: 'WEEKLY',
       interval,
-      daysOfWeek,
-      end: { type: 'never' },
+      byDay: by,
     });
 
     it('returns 0 when target date is before series start', () => {
       const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
       const target = DateTime.fromISO('2025-06-09T23:59:59Z'); // Mon before start
-      expect(
-        countWeeklyOccurrencesUpToExact(
-          adapter,
-          createRule([adapter.getDayOfWeek(start)]),
-          start,
-          target,
-        ),
-      ).to.equal(0);
+      const code = NUM_TO_BYDAY[adapter.getDayOfWeek(start)]; // TU
+      expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
+        0,
+      );
     });
 
     it('counts first occurrence when target is same day', () => {
       const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
       const target = DateTime.fromISO('2025-06-10T23:59:59Z');
-      expect(
-        countWeeklyOccurrencesUpToExact(
-          adapter,
-          createRule([adapter.getDayOfWeek(start)]),
-          start,
-          target,
-        ),
-      ).to.equal(1);
+      const code = NUM_TO_BYDAY[adapter.getDayOfWeek(start)]; // TU
+      expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
+        1,
+      );
     });
 
     it('counts occurrences for a single weekday across several weeks (interval=1)', () => {
       const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
-      const target = DateTime.fromISO('2025-07-08T12:00:00Z'); // 5 Tuesdays inclusive (Jun 10,17,24, Jul 1,8)
-      expect(
-        countWeeklyOccurrencesUpToExact(
-          adapter,
-          createRule([adapter.getDayOfWeek(start)]),
-          start,
-          target,
-        ),
-      ).to.equal(5);
+      const target = DateTime.fromISO('2025-07-08T12:00:00Z'); // 5 Tuesdays inclusive
+      const code = NUM_TO_BYDAY[adapter.getDayOfWeek(start)]; // TU
+      expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
+        5,
+      );
     });
 
     it('counts multiple days per week (e.g. Mon & Wed) up to target inclusive', () => {
       const start = DateTime.fromISO('2025-06-02T09:00:00Z'); // Monday
-      const daysOfWeek = [1, 3];
-      const target = DateTime.fromISO('2025-06-18T23:59:59Z'); // Includes weeks of Jun 2,9,16
+      const byDay: ByDayCode[] = ['MO', 'WE'];
+      const target = DateTime.fromISO('2025-06-18T23:59:59Z'); // includes weeks of Jun 2,9,16
       // Occurrences: Mon(2), Wed(4), Mon(9), Wed(11), Mon(16), Wed(18) = 6
-      expect(
-        countWeeklyOccurrencesUpToExact(adapter, createRule(daysOfWeek), start, target),
-      ).to.equal(6);
+      expect(countWeeklyOccurrencesUpToExact(adapter, createRule(byDay), start, target)).to.equal(
+        6,
+      );
     });
 
     it('respects interval > 1 (every 2 weeks)', () => {
       const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
-      const target = DateTime.fromISO('2025-07-22T12:00:00Z'); // Tuesdays: Jun 10,17,24, Jul1,8,15,22
-      // Every 2 weeks from Jun 10: Jun 10, Jun 24, Jul 8, Jul 22 => 4
+      const target = DateTime.fromISO('2025-07-22T12:00:00Z');
+      const code = NUM_TO_BYDAY[adapter.getDayOfWeek(start)]; // TU
       expect(
-        countWeeklyOccurrencesUpToExact(
-          adapter,
-          createRule([adapter.getDayOfWeek(start)], 2),
-          start,
-          target,
-        ),
+        countWeeklyOccurrencesUpToExact(adapter, createRule([code], 2), start, target),
       ).to.equal(4);
     });
 
     it('does not count weekday in target week occurring after target day', () => {
       const start = DateTime.fromISO('2025-06-10T09:00:00Z'); // Tuesday
       const target = DateTime.fromISO('2025-06-23T12:00:00Z'); // Monday of week containing Tue 24
+      const code = NUM_TO_BYDAY[adapter.getDayOfWeek(start)]; // TU
       // Occurrences counted: Jun 10, Jun 17 => 2 (Jun 24 excluded)
-      expect(
-        countWeeklyOccurrencesUpToExact(
-          adapter,
-          createRule([adapter.getDayOfWeek(start)]),
-          start,
-          target,
-        ),
-      ).to.equal(2);
+      expect(countWeeklyOccurrencesUpToExact(adapter, createRule([code]), start, target)).to.equal(
+        2,
+      );
     });
 
-    it('handles unordered daysOfWeek array', () => {
+    it('handles unordered byDay array', () => {
       const start = DateTime.fromISO('2025-06-02T09:00:00Z'); // Monday
-      const daysOfWeek = [5, 1]; // Friday(5), Monday(1)
-      const target = DateTime.fromISO('2025-06-13T23:59:59Z'); // Cover Mon 2, Fri 6, Mon 9, Fri 13 => 4
-      expect(
-        countWeeklyOccurrencesUpToExact(adapter, createRule(daysOfWeek), start, target),
-      ).to.equal(4);
+      const byDay: ByDayCode[] = ['FR', 'MO'];
+      const target = DateTime.fromISO('2025-06-13T23:59:59Z'); // Mon 2, Fri 6, Mon 9, Fri 13 => 4
+      expect(countWeeklyOccurrencesUpToExact(adapter, createRule(byDay), start, target)).to.equal(
+        4,
+      );
     });
   });
 
   describe('countMonthlyOccurrencesUpToExact', () => {
-    describe('onDate', () => {
-      const createRule = (day: number, interval = 1): RecurrenceRule => ({
-        frequency: 'monthly',
+    describe('byMonthDay', () => {
+      const createRule = (day: number, interval = 1): RRuleSpec => ({
+        freq: 'MONTHLY',
         interval,
-        monthly: { mode: 'onDate', day },
-        end: { type: 'never' },
+        byMonthDay: [day],
       });
 
       it('returns 0 when target month is before start month', () => {
@@ -450,7 +412,7 @@ describe('event-utils', () => {
         );
       });
 
-      it('counts all onDate occurrences up to inclusive target (interval=1)', () => {
+      it('counts all byMonthDay occurrences up to inclusive target (interval=1)', () => {
         const start = DateTime.fromISO('2025-01-10T09:00:00Z');
         const target = DateTime.fromISO('2025-04-10T12:00:00Z'); // Jan, Feb, Mar, Apr
         expect(countMonthlyOccurrencesUpToExact(adapter, createRule(10), start, target)).to.equal(
@@ -481,34 +443,21 @@ describe('event-utils', () => {
           1,
         );
       });
-
-      it('throws an error on unknown mode', () => {
-        const badRule = {
-          frequency: 'monthly',
-          interval: 1,
-          monthly: { mode: 'foo', day: 1 },
-          end: { type: 'never' },
-        } as any;
-        const start = DateTime.fromISO('2025-01-01T00:00:00Z');
-        const target = DateTime.fromISO('2025-01-02T00:00:00Z');
-        expect(() => countMonthlyOccurrencesUpToExact(adapter, badRule, start, target)).to.throw();
-      });
     });
 
-    describe('onWeekday', () => {
-      // TODO: Issue #19128 - Implement support for 'onWeekday' and 'onLastWeekday'
+    describe('"onWeekday" mode (Nth weekday)', () => {
+      // TODO: Issue #19128 Implement via BYDAY ordinals (e.g., '4SA').
     });
 
-    describe('onLastWeekday', () => {
-      // TODO: Issue #19128 - Implement support for 'onWeekday' and 'onLastWeekday'
+    describe('"onLastWeekday" mode (last weekday)', () => {
+      // TODO: Issue #19128 Implement via BYDAY ordinals (e.g., '-1SA').
     });
   });
 
   describe('countYearlyOccurrencesUpToExact', () => {
-    const createRule = (interval = 1): RecurrenceRule => ({
-      frequency: 'yearly',
+    const createRule = (interval = 1): RRuleSpec => ({
+      freq: 'YEARLY',
       interval,
-      end: { type: 'never' },
     });
 
     it('returns 0 when target year is before start year', () => {
@@ -552,10 +501,9 @@ describe('event-utils', () => {
       start: DateTime.fromISO('2025-01-01T09:00:00Z'),
       end: DateTime.fromISO('2025-01-01T10:30:00Z'),
       allDay: false,
-      recurrenceRule: {
-        frequency: 'daily',
+      rrule: {
+        freq: 'DAILY',
         interval: 1,
-        end: { type: 'never' },
       },
       ...overrides,
     });
@@ -566,7 +514,7 @@ describe('event-utils', () => {
       const event = createEvent({
         start: DateTime.fromISO('2025-01-10T09:00:00Z'),
         end: DateTime.fromISO('2025-01-10T10:30:00Z'),
-        recurrenceRule: { frequency: 'daily', interval: 1, end: { type: 'never' } },
+        rrule: { freq: 'DAILY', interval: 1 },
       });
 
       const result = expandRecurringEventForVisibleDays(event, days, adapter);
@@ -577,20 +525,18 @@ describe('event-utils', () => {
           adapter.format(days[i], 'keyboardDate'),
         );
         expect(diffIn(adapter, occ.end, occ.start, 'minutes')).to.equal(90);
-        expect(occ.occurrenceId).to.equal(
-          `${event.id}::${adapter.format(occ.start, 'keyboardDate')}`,
-        );
+        expect(occ.key).to.equal(`${event.id}::${adapter.format(occ.start, 'keyboardDate')}`);
       }
     });
 
-    it('includes last day defined by an "until" end rule but excludes the following day', () => {
+    it('includes last day defined by "until" but excludes the following day', () => {
       const visibleStart = DateTime.fromISO('2025-01-01T00:00:00Z');
       const days = makeDays(visibleStart, 10);
       const until = DateTime.fromISO('2025-01-05T23:59:59Z');
       const event = createEvent({
         start: DateTime.fromISO('2025-01-01T09:00:00Z'),
         end: DateTime.fromISO('2025-01-01T09:30:00Z'),
-        recurrenceRule: { frequency: 'daily', interval: 1, end: { type: 'until', date: until } },
+        rrule: { freq: 'DAILY', interval: 1, until },
       });
 
       const result = expandRecurringEventForVisibleDays(event, days, adapter);
@@ -598,11 +544,11 @@ describe('event-utils', () => {
       expect(result.map((o) => adapter.getDate(o.start))).to.deep.equal([1, 2, 3, 4, 5]);
     });
 
-    it('respects "after" (count) end rule (count=3 gives 3 occurrences)', () => {
+    it('respects "count" end rule (count=3 gives 3 occurrences)', () => {
       const visibleStart = DateTime.fromISO('2025-01-01T00:00:00Z');
       const days = makeDays(visibleStart, 7);
       const event = createEvent({
-        recurrenceRule: { frequency: 'daily', interval: 1, end: { type: 'after', count: 3 } },
+        rrule: { freq: 'DAILY', interval: 1, count: 3 },
       });
 
       const result = expandRecurringEventForVisibleDays(event, days, adapter);
@@ -616,7 +562,7 @@ describe('event-utils', () => {
       const event = createEvent({
         start,
         end: start.plus({ minutes: 30 }),
-        recurrenceRule: { frequency: 'weekly', interval: 2, end: { type: 'never' } },
+        rrule: { freq: 'WEEKLY', interval: 2 }, // byDay omitted -> defaults to start weekday
       });
 
       const result = expandRecurringEventForVisibleDays(event, days, adapter);
@@ -625,17 +571,16 @@ describe('event-utils', () => {
       expect(dates).to.deep.equal([3, 17, 31]);
     });
 
-    it('generates monthly "onDate" occurrences only on matching day and within visible range', () => {
+    it('generates monthly byMonthDay occurrences only on matching day and within visible range', () => {
       const visibleStart = DateTime.fromISO('2025-01-01T00:00:00Z');
       const days = makeDays(visibleStart, 120); // ~4 months
       const event = createEvent({
         start: DateTime.fromISO('2025-01-10T09:00:00Z'),
         end: DateTime.fromISO('2025-01-10T09:30:00Z'),
-        recurrenceRule: {
-          frequency: 'monthly',
+        rrule: {
+          freq: 'MONTHLY',
           interval: 1,
-          monthly: { mode: 'onDate', day: 10 },
-          end: { type: 'never' },
+          byMonthDay: [10],
         },
       });
 
@@ -646,12 +591,11 @@ describe('event-utils', () => {
 
     it('generates yearly occurrences with interval', () => {
       const visibleStart = DateTime.fromISO('2025-01-01T00:00:00Z');
-      // Visible range spans multiple years
       const days = makeDays(visibleStart, 365 * 5 + 2); // ~5 years
       const event = createEvent({
         start: DateTime.fromISO('2025-07-20T09:00:00Z'),
         end: DateTime.fromISO('2025-07-20T10:00:00Z'),
-        recurrenceRule: { frequency: 'yearly', interval: 2, end: { type: 'never' } },
+        rrule: { freq: 'YEARLY', interval: 2 },
       });
 
       const result = expandRecurringEventForVisibleDays(event, days, adapter);
@@ -663,19 +607,19 @@ describe('event-utils', () => {
       // Visible: Jan 05-09
       const visibleStart = DateTime.fromISO('2025-01-05T00:00:00Z');
       const days = makeDays(visibleStart, 5);
-      // All-day event spanning 4 days starting Jan 03 (covers 3,4,5,6)
+      // All-day multi-day spanning Jan 03-06
       const event = createEvent({
         id: 'all-day-multi-day',
         allDay: true,
         start: DateTime.fromISO('2025-01-03T00:00:00Z'),
         end: DateTime.fromISO('2025-01-06T23:59:59Z'),
-        recurrenceRule: { frequency: 'daily', interval: 7, end: { type: 'never' } },
+        rrule: { freq: 'DAILY', interval: 7 },
       });
 
       const result = expandRecurringEventForVisibleDays(event, days, adapter);
       expect(result).to.have.length(1);
-      expect(adapter.getDate(result[0].start)).to.equal(3); // original start day retained
-      expect(adapter.getDate(result[0].end)).to.equal(6); // End should be end of Jan 06
+      expect(adapter.getDate(result[0].start)).to.equal(3);
+      expect(adapter.getDate(result[0].end)).to.equal(6);
     });
 
     it('returns empty array when no dates match recurrence in visible window', () => {
@@ -684,11 +628,11 @@ describe('event-utils', () => {
       const event = createEvent({
         start: DateTime.fromISO('2025-01-10T09:00:00Z'),
         end: DateTime.fromISO('2025-01-10T10:00:00Z'),
-        recurrenceRule: {
-          frequency: 'monthly',
+        rrule: {
+          freq: 'MONTHLY',
           interval: 1,
-          monthly: { mode: 'onDate', day: 10 },
-          end: { type: 'until', date: DateTime.fromISO('2025-01-31T23:59:59Z') },
+          byMonthDay: [10],
+          until: DateTime.fromISO('2025-01-31T23:59:59Z'),
         },
       });
 

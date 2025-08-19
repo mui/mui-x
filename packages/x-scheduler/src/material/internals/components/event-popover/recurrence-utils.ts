@@ -1,10 +1,6 @@
 import { Adapter } from '../../../../primitives/utils/adapter/types';
-import {
-  ByDayCode,
-  CalendarEvent,
-  RRuleSpec,
-  SchedulerValidDate,
-} from '../../../../primitives/models';
+import { NUM_TO_BYDAY } from '../../../../primitives/utils/event-utils';
+import { CalendarEvent, RRuleSpec, SchedulerValidDate } from '../../../../primitives/models';
 
 export type RecurrencePresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
@@ -21,16 +17,6 @@ function sameSet<T>(a: T[] = [], b: T[] = []) {
   }
   return true;
 }
-
-const NUM_TO_BYDAY: Record<1 | 2 | 3 | 4 | 5 | 6 | 7, ByDayCode> = {
-  1: 'MO',
-  2: 'TU',
-  3: 'WE',
-  4: 'TH',
-  5: 'FR',
-  6: 'SA',
-  7: 'SU',
-};
 
 export function detectRecurrenceKeyFromRule(
   adapter: Adapter,

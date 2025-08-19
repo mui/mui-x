@@ -7,8 +7,8 @@ import {
   CalendarResourceId,
   CalendarView,
   CalendarSettings,
-  CalendarProcessedEvent,
-  CalendarProcessedEventWithPosition,
+  CalendarEventOccurence,
+  CalendarEventOccurenceWithPosition,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import {
@@ -91,7 +91,7 @@ export const selectors = {
     (events, visibleResources, adapter, { days, shouldOnlyRenderEventInOneCell }) => {
       const daysMap = new Map<
         string,
-        { events: CalendarProcessedEvent[]; allDayEvents: CalendarProcessedEventWithPosition[] }
+        { events: CalendarEventOccurence[]; allDayEvents: CalendarEventOccurenceWithPosition[] }
       >();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
@@ -99,7 +99,7 @@ export const selectors = {
       }
 
       // Collect ALL event instances (both recurring and non-recurring)
-      const instances: CalendarProcessedEvent[] = [];
+      const instances: CalendarEventOccurence[] = [];
 
       for (const event of events) {
         // STEP 1: Skip events from resources that are not visible
@@ -124,7 +124,7 @@ export const selectors = {
           continue; // Skip events that are not in the visible days
         }
 
-        instances.push({ ...event });
+        instances.push({ key: event.id, ...event });
       }
 
       // STEP 3: Sort by the actual start date of each instance

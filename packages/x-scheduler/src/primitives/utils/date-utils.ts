@@ -21,7 +21,7 @@ export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean 
   return dayOfWeek === 6 || dayOfWeek === 7;
 }
 
-// TODO: Issue #19128 - This function will be used to support 'onWeekday' and 'onLastWeekday' modes.
+// TODO: Issue #19128 - This function will be used to support monthly recurrence mode with BYDAY rules
 // export function getWeekInfoInMonth(adapter: Adapter, date: SchedulerValidDate) {
 //   const startOfMonth = adapter.startOfMonth(date);
 //   const endOfMonth = adapter.endOfMonth(date);

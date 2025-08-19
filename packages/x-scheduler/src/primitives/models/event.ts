@@ -59,18 +59,17 @@ export interface RRuleSpec {
   until?: SchedulerValidDate;
 }
 
-export interface CalendarProcessedEvent extends CalendarEvent {
-  /**
-   * The unique identifier of the event's occurrence if it is part of a recurring series.
-   */
-  occurrenceId?: CalendarEventId;
+export interface CalendarEventOccurence extends CalendarEvent {
+  key: CalendarEventKey;
 }
 
-export interface CalendarProcessedEventWithPosition extends CalendarProcessedEvent {
-  eventRowIndex: number;
+export interface CalendarEventOccurenceWithPosition extends CalendarEventOccurence {
+  eventRowIndex?: number;
 }
 
 export type CalendarEventId = string | number;
+
+export type CalendarEventKey = string | number;
 
 export type CalendarEventColor =
   | 'primary'
