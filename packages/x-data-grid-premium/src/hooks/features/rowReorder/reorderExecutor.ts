@@ -23,6 +23,7 @@ import {
   calculateTargetIndex,
   collectAllLeafDescendants,
   getNodePathInTree,
+  removeEmptyAncestors,
 } from './utils';
 import type { ReorderScenario, ReorderExecutionContext } from './types';
 
@@ -336,13 +337,36 @@ const reorderScenarios: ReorderScenario[] = [
       const commitStateUpdate = (finalSourceRow: GridValidRowModel) => {
         apiRef.current.setState((state: any) => {
           const updatedSourceChildren = sourceChildren.filter((rowId) => rowId !== sourceRowId);
-
-          let sourceGroupRemoved = false;
           const updatedTree = { ...state.rows.tree };
+          const removedGroups = new Set<GridRowId>();
+          let rootLevelRemovals = 0;
 
           if (updatedSourceChildren.length === 0) {
-            delete updatedTree[sourceGroup.id];
-            sourceGroupRemoved = true;
+            removedGroups.add(sourceGroup.id);
+            rootLevelRemovals = removeEmptyAncestors(
+              sourceGroup.parent!,
+              updatedTree,
+              removedGroups,
+            );
+          }
+
+          removedGroups.forEach((groupId) => {
+            const group = updatedTree[groupId] as GridGroupNode;
+            if (group && group.parent && updatedTree[group.parent]) {
+              const parent = updatedTree[group.parent] as GridGroupNode;
+              updatedTree[group.parent] = {
+                ...parent,
+                children: parent.children.filter((childId) => childId !== groupId),
+              };
+            }
+            delete updatedTree[groupId];
+          });
+
+          if (!removedGroups.has(sourceGroup.id)) {
+            updatedTree[sourceNode.parent!] = {
+              ...sourceGroup,
+              children: updatedSourceChildren,
+            };
           }
 
           const updatedTargetChildren = isLastChild
@@ -353,42 +377,22 @@ const reorderScenarios: ReorderScenario[] = [
                 ...targetChildren.slice(targetIndex),
               ];
 
-          const sourceGroupParent = sourceGroupRemoved
-            ? (gridRowTreeSelector(apiRef)[sourceGroup.parent!] as GridGroupNode)
-            : null;
+          updatedTree[target.parent!] = {
+            ...targetGroup,
+            children: updatedTargetChildren,
+          };
+
+          updatedTree[sourceNode.id] = {
+            ...sourceNode,
+            parent: target.parent,
+          };
 
           return {
             ...state,
             rows: {
               ...state.rows,
-              totalTopLevelRowCount:
-                state.rows.totalTopLevelRowCount - (sourceGroupRemoved ? 1 : 0),
-              tree: {
-                ...updatedTree,
-                ...(sourceGroupRemoved && sourceGroupParent
-                  ? {
-                      [sourceGroupParent.id]: {
-                        ...sourceGroupParent,
-                        children: sourceGroupParent.children.filter(
-                          (childId) => childId !== sourceGroup.id,
-                        ),
-                      },
-                    }
-                  : {
-                      [sourceNode.parent!]: {
-                        ...sourceGroup,
-                        children: updatedSourceChildren,
-                      },
-                    }),
-                [target.parent!]: {
-                  ...targetGroup,
-                  children: updatedTargetChildren,
-                },
-                [sourceNode.id]: {
-                  ...sourceNode,
-                  parent: target.parent,
-                },
-              },
+              totalTopLevelRowCount: state.rows.totalTopLevelRowCount - rootLevelRemovals,
+              tree: updatedTree,
             },
           };
         });
@@ -480,7 +484,7 @@ const reorderScenarios: ReorderScenario[] = [
         }
         let prevNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[prevIndex]);
         if (prevNode && prevNode.depth !== sourceNode.depth) {
-          while (targetNode.depth > sourceNode.depth && prevIndex >= 0) {
+          while (prevNode.depth > sourceNode.depth && prevIndex >= 0) {
             prevIndex -= 1;
             prevNode = gridRowNodeSelector(apiRef, sortedFilteredRowIds[prevIndex]);
           }
@@ -588,34 +592,91 @@ const reorderScenarios: ReorderScenario[] = [
           apiRef.current.setState((state: any) => {
             const updatedTree = { ...state.rows.tree };
             const treeDepths = { ...state.rows.treeDepths };
+            let rootLevelRemovals = 0;
 
             if (failed.length === 0) {
               // Complete success: move entire group
               const sourceParentNode = updatedTree[sourceNode.parent!] as GridGroupNode;
-              updatedTree[sourceNode.parent!] = {
-                ...sourceParentNode,
-                children: sourceParentNode.children.filter((id) => id !== sourceNode.id),
-              };
 
-              const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
-              const targetIndex = targetParentNode.children.indexOf(targetNode.id);
-              const newTargetChildren = [...targetParentNode.children];
+              // Check if source parent still exists (it might have been removed in a previous operation)
+              if (!sourceParentNode) {
+                const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
+                const targetIndex = targetParentNode.children.indexOf(targetNode.id);
+                const newTargetChildren = [...targetParentNode.children];
 
-              if (isLastChild) {
-                newTargetChildren.push(sourceNode.id);
+                if (isLastChild) {
+                  newTargetChildren.push(sourceNode.id);
+                } else {
+                  newTargetChildren.splice(targetIndex, 0, sourceNode.id);
+                }
+
+                updatedTree[targetNode.parent!] = {
+                  ...targetParentNode,
+                  children: newTargetChildren,
+                };
+
+                updatedTree[sourceNode.id] = {
+                  ...sourceNode,
+                  parent: targetNode.parent,
+                };
               } else {
-                newTargetChildren.splice(targetIndex, 0, sourceNode.id);
+                const updatedSourceParentChildren = sourceParentNode.children.filter(
+                  (id) => id !== sourceNode.id,
+                );
+
+                // Check if source parent becomes empty and handle cascading removals
+                if (updatedSourceParentChildren.length === 0) {
+                  const removedGroups = new Set<GridRowId>();
+                  removedGroups.add(sourceNode.parent!);
+
+                  // Check and remove empty ancestors
+                  const parentOfSourceParent = (updatedTree[sourceNode.parent!] as GridGroupNode)
+                    .parent;
+                  if (parentOfSourceParent) {
+                    rootLevelRemovals = removeEmptyAncestors(parentOfSourceParent, updatedTree, removedGroups);
+                  }
+
+                  // Apply the removals to the tree
+                  removedGroups.forEach((groupId) => {
+                    const group = updatedTree[groupId] as GridGroupNode;
+                    if (group && group.parent && updatedTree[group.parent]) {
+                      const parent = updatedTree[group.parent] as GridGroupNode;
+                      updatedTree[group.parent] = {
+                        ...parent,
+                        children: parent.children.filter((childId) => childId !== groupId),
+                      };
+                    }
+                    delete updatedTree[groupId];
+                  });
+                } else {
+                  // Update source parent if it wasn't removed
+                  updatedTree[sourceNode.parent!] = {
+                    ...sourceParentNode,
+                    children: updatedSourceParentChildren,
+                  };
+                }
+
+                // Update target parent
+                const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
+                const targetIndex = targetParentNode.children.indexOf(targetNode.id);
+                const newTargetChildren = [...targetParentNode.children];
+
+                if (isLastChild) {
+                  newTargetChildren.push(sourceNode.id);
+                } else {
+                  newTargetChildren.splice(targetIndex, 0, sourceNode.id);
+                }
+
+                updatedTree[targetNode.parent!] = {
+                  ...targetParentNode,
+                  children: newTargetChildren,
+                };
+
+                updatedTree[sourceNode.id] = {
+                  ...sourceNode,
+                  parent: targetNode.parent,
+                };
               }
-
-              updatedTree[targetNode.parent!] = {
-                ...targetParentNode,
-                children: newTargetChildren,
-              };
-
-              updatedTree[sourceNode.id] = {
-                ...sourceNode,
-                parent: targetNode.parent,
-              };
             }
             // Handle partial success case...
 
@@ -623,6 +684,7 @@ const reorderScenarios: ReorderScenario[] = [
               ...state,
               rows: {
                 ...state.rows,
+                totalTopLevelRowCount: state.rows.totalTopLevelRowCount - rootLevelRemovals,
                 tree: updatedTree,
                 treeDepths,
               },

@@ -249,3 +249,43 @@ export function adjustTargetNode(
 
   return { adjustedTargetNode, isLastChild };
 }
+
+/**
+ * Removes empty ancestor groups from the tree after a row move operation.
+ * Walks up the tree from the given group, removing any empty groups encountered.
+ * 
+ * @param groupId - The ID of the group to start checking from
+ * @param tree - The row tree configuration
+ * @param removedGroups - Set to track which groups have been removed
+ * @returns The number of root-level groups that were removed
+ */
+export function removeEmptyAncestors(
+  groupId: GridRowId,
+  tree: GridRowTreeConfig,
+  removedGroups: Set<GridRowId>,
+): number {
+  let rootLevelRemovals = 0;
+  let currentGroupId = groupId;
+
+  while (currentGroupId && currentGroupId !== GRID_ROOT_GROUP_ID) {
+    const group = tree[currentGroupId] as GridGroupNode;
+    if (!group) {
+      break;
+    }
+
+    const remainingChildren = group.children.filter((childId) => !removedGroups.has(childId));
+
+    if (remainingChildren.length > 0) {
+      break;
+    }
+
+    if (group.depth === 0) {
+      rootLevelRemovals += 1;
+    }
+
+    removedGroups.add(currentGroupId);
+    currentGroupId = group.parent!;
+  }
+
+  return rootLevelRemovals;
+}

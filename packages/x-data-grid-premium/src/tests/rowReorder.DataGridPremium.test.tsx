@@ -3088,5 +3088,172 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(finalGroupingValues).to.include('APAC (1)', 'APAC should still have 1 item');
       });
     });
+
+    describe('Root row count update on cascading group removal', () => {
+      it('should correctly update totalTopLevelRowCount when leaf removal causes multiple ancestor removals', async () => {
+        // When moving the last leaf from a deeply nested group,
+        // all empty ancestor groups should be removed and `totalTopLevelRowCount` should be updated correctly
+        const rows = [
+          { id: 1, company: 'Warner Bros', director: 'Christopher Nolan', movie: 'Inception' },
+          { id: 2, company: 'Warner Bros', director: 'Christopher Nolan', movie: 'The Dark Knight' },
+          { id: 3, company: 'Paramount', director: 'Martin Scorsese', movie: 'The Aviator' },
+          { id: 4, company: 'Paramount', director: 'Martin Scorsese', movie: 'The Departed' },
+          { id: 5, company: 'Disney', director: 'James Cameron', movie: 'Avatar' },
+        ];
+
+        const apiRef: RefObject<GridApi | null> = { current: null };
+        const processRowUpdate = spy((newRow) => newRow);
+
+        render(
+          <div style={{ width: 600, height: 500 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              rows={rows}
+              columns={[
+                { field: 'company', width: 150, groupable: true },
+                { field: 'director', width: 150, groupable: true },
+                { field: 'movie', width: 200 },
+              ]}
+              initialState={{
+                rowGrouping: {
+                  model: ['company', 'director'],
+                },
+              }}
+              defaultGroupingExpansionDepth={-1}
+              rowReordering
+              processRowUpdate={processRowUpdate}
+            />
+          </div>,
+        );
+
+        await waitFor(() => {
+          expect(apiRef.current).not.to.equal(null);
+        });
+
+        // Initial state: 3 companies at root level
+        let state = apiRef.current!.state;
+        expect(state.rows.totalTopLevelRowCount).to.equal(3, 'Initially should have 3 root groups');
+
+        // Find the Avatar row (the only movie under Disney/James Cameron)
+        const avatarRow = document.querySelector('[data-id="5"]');
+        // Find Inception (a leaf under Warner Bros) to use as the drop target
+        const inceptionRow = document.querySelector('[data-id="1"]');
+        
+        if (!avatarRow || !inceptionRow) {
+          throw new Error('Required elements not found');
+        }
+
+        // Move Avatar to Inception (both are leaf rows)
+        performDragReorder(avatarRow as HTMLElement, inceptionRow as HTMLElement, 'above');
+
+        // Wait for state update
+        await waitFor(() => {
+          expect(processRowUpdate.callCount).to.be.greaterThan(0);
+        });
+
+        // After moving Avatar to Warner Bros:
+        // - The "James Cameron" director group becomes empty and is removed
+        // - The "Disney" company group becomes empty and is removed
+        // - `totalTopLevelRowCount` should decrease from 3 to 2
+        state = apiRef.current!.state;
+        expect(state.rows.totalTopLevelRowCount).to.equal(
+          2,
+          'After removing Disney group, should have 2 root groups',
+        );
+
+        // Verify the tree structure
+        const tree = state.rows.tree;
+        const disneyGroup = tree['auto-generated-row-company/Disney'];
+        const jamesCameronGroup = tree['auto-generated-row-director/James Cameron'];
+        
+        expect(disneyGroup).to.equal(undefined, 'Disney group should be removed');
+        expect(jamesCameronGroup).to.equal(undefined, 'James Cameron group should be removed');
+
+        // Verify Avatar was moved successfully
+        const updatedAvatarRow = processRowUpdate.lastCall?.args[0];
+        expect(updatedAvatarRow?.company).to.equal('Warner Bros', 'Avatar should be moved to Warner Bros');
+      });
+
+      it('should correctly update `totalTopLevelRowCount` when group removal causes cascading removals', async () => {
+        // Test case for group-to-group move that causes empty ancestor removal
+        const rows = [
+          { id: 1, company: 'TechCorp', department: 'Engineering', team: 'Frontend', name: 'Alice' },
+          { id: 2, company: 'TechCorp', department: 'Engineering', team: 'Backend', name: 'Bob' },
+          { id: 3, company: 'BizCorp', department: 'Sales', team: 'Direct', name: 'Charlie' },
+          { id: 4, company: 'DataCorp', department: 'Analytics', team: 'ML', name: 'David' },
+        ];
+
+        const apiRef: RefObject<GridApi | null> = { current: null };
+        const processRowUpdate = spy((newRow) => newRow);
+
+        render(
+          <div style={{ width: 600, height: 500 }}>
+            <DataGridPremium
+              apiRef={apiRef}
+              rows={rows}
+              columns={[
+                { field: 'company', width: 150, groupable: true },
+                { field: 'department', width: 150, groupable: true },
+                { field: 'team', width: 150, groupable: true },
+                { field: 'name', width: 150 },
+              ]}
+              initialState={{
+                rowGrouping: {
+                  model: ['company', 'department'],
+                },
+              }}
+              defaultGroupingExpansionDepth={-1}
+              rowReordering
+              processRowUpdate={processRowUpdate}
+            />
+          </div>,
+        );
+
+        await waitFor(() => {
+          expect(apiRef.current).not.to.equal(null);
+        });
+
+        // Initial state: 3 companies at root level
+        let state = apiRef.current!.state;
+        expect(state.rows.totalTopLevelRowCount).to.equal(3, 'Initially should have 3 root groups');
+
+        // Find the Analytics department group (only department under DataCorp)
+        const analyticsGroup = document.querySelector('[data-id="auto-generated-row-company/DataCorp-department/Analytics"]');
+        // Find Engineering department (under TechCorp) as the target
+        const engineeringGroup = document.querySelector('[data-id="auto-generated-row-company/TechCorp-department/Engineering"]');
+        
+        if (!analyticsGroup || !engineeringGroup) {
+          throw new Error('Required elements not found');
+        }
+
+        // Move Analytics department to Engineering department (both are group rows)
+        performDragReorder(analyticsGroup as HTMLElement, engineeringGroup as HTMLElement, 'above');
+
+        // Wait for state update
+        await waitFor(() => {
+          expect(processRowUpdate.callCount).to.be.greaterThan(0);
+        });
+
+        // After moving Analytics department to TechCorp:
+        // - The "DataCorp" company group becomes empty and is removed
+        // - `totalTopLevelRowCount` should decrease from 3 to 2
+        state = apiRef.current!.state;
+        expect(state.rows.totalTopLevelRowCount).to.equal(
+          2,
+          'After removing DataCorp group, should have 2 root groups',
+        );
+
+        // Verify the tree structure
+        const tree = state.rows.tree;
+        const dataCorpGroup = tree['auto-generated-row-company/DataCorp'];
+        
+        expect(dataCorpGroup).to.equal(undefined, 'DataCorp group should be removed');
+
+        // Verify David was moved successfully
+        const updatedRows = processRowUpdate.getCalls().map(call => call.args[0]);
+        const davidRow = updatedRows.find((row: any) => row.name === 'David');
+        expect(davidRow?.company).to.equal('TechCorp', 'David should be moved to TechCorp');
+      });
+    });
   });
 });
