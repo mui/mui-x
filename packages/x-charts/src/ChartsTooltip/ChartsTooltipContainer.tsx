@@ -151,6 +151,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             },
           ]
         : []), // Keep default behavior
+      { name: 'preventOverflow', options: { altAxis: true } },
     ],
     [isMouse, isTouch],
   );
