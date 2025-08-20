@@ -334,9 +334,7 @@ export function countWeeklyOccurrencesUpToExact(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  const seriesStartDay = adapter.startOfDay(seriesStart);
-  const targetDay = adapter.startOfDay(date);
-  if (adapter.isBefore(targetDay, seriesStartDay)) {
+  if (adapter.isBeforeDay(date, seriesStart)) {
     return 0;
   }
 
@@ -345,7 +343,7 @@ export function countWeeklyOccurrencesUpToExact(
   const interval = Math.max(1, rule.interval ?? 1);
 
   const seriesWeekStart = adapter.startOfWeek(seriesStart);
-  const targetWeekStart = adapter.startOfWeek(targetDay);
+  const targetWeekStart = adapter.startOfWeek(date);
 
   let count = 0;
 
@@ -359,10 +357,10 @@ export function countWeeklyOccurrencesUpToExact(
     for (const code of byDay) {
       const occurrenceDay = dayInWeek(adapter, week, code);
 
-      if (adapter.isBefore(occurrenceDay, seriesStartDay)) {
+      if (adapter.isBeforeDay(occurrenceDay, seriesStart)) {
         continue;
       }
-      if (adapter.isAfter(occurrenceDay, targetDay)) {
+      if (adapter.isAfterDay(occurrenceDay, date)) {
         continue;
       }
 
@@ -387,8 +385,6 @@ export function countMonthlyOccurrencesUpToExact(
   }
 
   const interval = Math.max(1, rule.interval ?? 1);
-  const seriesStartDay = adapter.startOfDay(seriesStart);
-  const targetDay = adapter.startOfDay(date);
 
   // TODO (#19128): Add support for monthly recurrence modes (BYDAY rules)
   if (rule.byDay?.length) {
@@ -419,10 +415,10 @@ export function countMonthlyOccurrencesUpToExact(
     }
 
     const candidate = adapter.startOfDay(adapter.setDate(month, dayOfMonth));
-    if (adapter.isBefore(candidate, seriesStartDay)) {
+    if (adapter.isBeforeDay(candidate, seriesStart)) {
       continue;
     }
-    if (adapter.isAfter(candidate, targetDay)) {
+    if (adapter.isAfterDay(candidate, date)) {
       continue;
     }
 
@@ -445,8 +441,6 @@ export function countYearlyOccurrencesUpToExact(
   }
 
   const interval = Math.max(1, rule.interval ?? 1);
-  const seriesStartDay = adapter.startOfDay(seriesStart);
-  const targetDay = adapter.startOfDay(date);
 
   // Only the exact same calendar date is supported for YEARLY (month and day of DTSTART).
   // Any use of BYMONTH, BYMONTHDAY, or BYDAY is not allowed at the moment.
@@ -476,10 +470,10 @@ export function countYearlyOccurrencesUpToExact(
     }
 
     const candidate = adapter.startOfDay(adapter.setDate(monthAnchor, targetDayOfMonth));
-    if (adapter.isBefore(candidate, seriesStartDay)) {
+    if (adapter.isBeforeDay(candidate, seriesStart)) {
       continue;
     }
-    if (adapter.isAfter(candidate, targetDay)) {
+    if (adapter.isAfterDay(candidate, date)) {
       continue;
     }
 
