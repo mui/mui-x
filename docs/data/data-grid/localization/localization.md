@@ -97,6 +97,10 @@ The example below demonstrates how to use an RTL language (Arabic) with the Data
 
 ## Pagination number formatting
 
+:::info
+This section is applicable for [Data Grid Pro](/x/introduction/licensing/#pro-plan) and above due to the non-limited [page size options](/x/react-data-grid/pagination/#size-of-the-page).
+:::
+
 To format large numbers in the pagination component, customize the `paginationDisplayedRows` with the following code:
 
 ```jsx
@@ -108,19 +112,19 @@ import { frFR as locale } from '@mui/x-data-grid/locales';
 const LOCALE = 'fr-FR';
 // ======================================================
 
-const formatNumber = (value: number | string): string => {
+function formatNumber(value: number | string) {
   if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
     try {
       const result = new Intl.NumberFormat(LOCALE).format(Number(value));
-      return result === 'NaN' ? value : result;
+      return result === 'NaN' ? String(value) : result;
     } catch {
-      return value;
+      return String(value);
     }
   }
-  return value;
-};
+  return String(value);
+}
 
-const paginationDisplayedRows = ({
+function paginationDisplayedRows({
   from,
   to,
   count,
@@ -129,9 +133,8 @@ const paginationDisplayedRows = ({
   from: number;
   to: number;
   count: number;
-  page: number;
   estimated?: number;
-}) => {
+}) {
   if (!estimated) {
     return `${formatNumber(from)}–${formatNumber(to)} sur ${
       count !== -1 ? formatNumber(count) : `plus de ${formatNumber(to)}`
@@ -144,14 +147,25 @@ const paginationDisplayedRows = ({
   return `${formatNumber(from)}–${formatNumber(to)} sur ${
     count !== -1 ? formatNumber(count) : estimatedLabel
   }`;
+}
+
+const localeText = {
+  ...locale.components.MuiDataGrid.defaultProps.localeText,
+  paginationDisplayedRows,
 };
 
-locale.components.MuiDataGrid.defaultProps.localeText.paginationDisplayedRows =
-  paginationDisplayedRows;
-
-<DataGridPro
-  localeText={locale.components.MuiDataGrid.defaultProps.localeText}
-/>
+function App() {
+  return (
+    <DataGridPro
+      pagination
+      paginationMode="server"
+      pageSizeOptions={[10000, 20000]}
+      paginationModel={{ page: 1, pageSize: 10000 }}
+      rowCount={1000000}
+      localeText={localeText}
+    />
+  )
+}
 ```
 
 {{"demo": "PaginationNumberFormatting.js", "bg": "inline"}}

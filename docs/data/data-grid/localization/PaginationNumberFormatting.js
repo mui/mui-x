@@ -5,7 +5,7 @@ import { frFR as locale } from '@mui/x-data-grid/locales';
 
 const LOCALE = 'fr-FR'; // replace with your locale
 
-const formatNumber = (value) => {
+function formatNumber(value) {
   if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
     try {
       const result = new Intl.NumberFormat(LOCALE).format(Number(value));
@@ -15,9 +15,9 @@ const formatNumber = (value) => {
     }
   }
   return String(value);
-};
+}
 
-const paginationDisplayedRows = ({ from, to, count, estimated }) => {
+function paginationDisplayedRows({ from, to, count, estimated }) {
   if (!estimated) {
     return `${formatNumber(from)}–${formatNumber(to)} sur ${
       count !== -1 ? formatNumber(count) : `plus de ${formatNumber(to)}`
@@ -30,7 +30,7 @@ const paginationDisplayedRows = ({ from, to, count, estimated }) => {
   return `${formatNumber(from)}–${formatNumber(to)} sur ${
     count !== -1 ? formatNumber(count) : estimatedLabel
   }`;
-};
+}
 
 const localeText = {
   ...locale.components.MuiDataGrid.defaultProps.localeText,
