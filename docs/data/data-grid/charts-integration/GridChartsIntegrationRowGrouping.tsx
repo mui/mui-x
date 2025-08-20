@@ -22,6 +22,10 @@ const onRender = (
   props: Record<string, any>,
   Component: React.ComponentType<any>,
 ) => {
+  if (type === 'pie') {
+    return <Component {...props} />;
+  }
+
   const axisProp = type === 'bar' ? 'yAxis' : 'xAxis';
   const adjustedProps = {
     ...props,
