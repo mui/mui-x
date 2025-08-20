@@ -48,7 +48,10 @@ import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegra
 import { isBlockedForSection } from './utils';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
 import { GridSidebarValue } from '../sidebar';
-import { getAvailableAggregationFunctions } from '../aggregation/gridAggregationUtils';
+import {
+  getAggregationFunctionLabel,
+  getAvailableAggregationFunctions,
+} from '../aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
@@ -209,6 +212,32 @@ export const useGridChartsIntegration = (
     [apiRef, pivotActive, props.slotProps?.chartsPanel],
   );
 
+  // Adds aggregation function label to the column name
+  const getSeriesLabel = React.useCallback(
+    (field: string) => {
+      const customFieldName = props.slotProps?.chartsPanel?.getColumnName?.(field);
+      if (customFieldName) {
+        return customFieldName;
+      }
+
+      const columnName = getColumnName(field);
+      const fieldAggregation = gridAggregationModelSelector(apiRef)[field];
+
+      const suffix = fieldAggregation
+        ? ` (${getAggregationFunctionLabel({
+            apiRef,
+            aggregationRule: {
+              aggregationFunctionName: fieldAggregation,
+              aggregationFunction: props.aggregationFunctions[fieldAggregation] || {},
+            },
+          })})`
+        : '';
+
+      return `${columnName}${suffix}`;
+    },
+    [apiRef, props.aggregationFunctions, props.slotProps?.chartsPanel, getColumnName],
+  );
+
   apiRef.current.registerControlState({
     stateId: 'activeChartId',
     propModel: props.activeChartId,
@@ -364,13 +393,13 @@ export const useGridChartsIntegration = (
           })),
           series: visibleSeries.current[chartId].map((seriesItem) => ({
             id: seriesItem.field,
-            label: getColumnName(seriesItem.field),
+            label: getSeriesLabel(seriesItem.field),
             data: (data[seriesItem.field] || []) as (number | null)[],
           })),
         });
       });
     },
-    [apiRef, activeChartId, orderedFields, getColumnName, setChartState],
+    [apiRef, activeChartId, orderedFields, getColumnName, getSeriesLabel, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(
