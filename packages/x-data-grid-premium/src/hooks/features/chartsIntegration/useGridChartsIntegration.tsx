@@ -520,16 +520,9 @@ export const useGridChartsIntegration = (
       });
 
       updateOtherModels();
-      debouncedHandleRowDataUpdate(chartIds);
+      handleRowDataUpdate(chartIds);
     },
-    [
-      apiRef,
-      chartStateLookup,
-      pivotActive,
-      pivotModel,
-      debouncedHandleRowDataUpdate,
-      updateOtherModels,
-    ],
+    [apiRef, chartStateLookup, pivotActive, pivotModel, handleRowDataUpdate, updateOtherModels],
   );
 
   const debouncedHandleColumnDataUpdate = React.useMemo(
@@ -667,16 +660,11 @@ export const useGridChartsIntegration = (
         },
       };
 
+      // make sure that the new categories and series limits are applied before changing the chart type
+      handleColumnDataUpdate([chartId], updatedChartStateLookup);
       setChartState(chartId, stateUpdate);
-      debouncedHandleColumnDataUpdate([chartId], updatedChartStateLookup);
     },
-    [
-      isChartsIntegrationAvailable,
-      chartStateLookup,
-      schema,
-      setChartState,
-      debouncedHandleColumnDataUpdate,
-    ],
+    [isChartsIntegrationAvailable, chartStateLookup, schema, setChartState, handleColumnDataUpdate],
   );
 
   const setChartSynchronizationState = React.useCallback<

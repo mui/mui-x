@@ -52,7 +52,7 @@ export default function GridChartsIntegrationPivoting() {
   const hasInitializedPivotingSeries = React.useRef(false);
   React.useEffect(() => {
     const handleColumnVisibilityModelChange = () => {
-      if (hasInitializedPivotingSeries.current) {
+      if (!apiRef.current || hasInitializedPivotingSeries.current) {
         return;
       }
 
@@ -66,7 +66,7 @@ export default function GridChartsIntegrationPivoting() {
 
       hasInitializedPivotingSeries.current = true;
       // pick up the first 5 dyamically created columns with quantity in the name and enable first 3
-      apiRef.current?.updateSeries(
+      apiRef.current.updateSeries(
         'main',
         unwrappedGroupingModel
           .filter((field) => field.endsWith('quantity'))

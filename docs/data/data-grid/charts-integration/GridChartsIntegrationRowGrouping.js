@@ -18,6 +18,10 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 // this is just for the demo
 // the logic needs an update to cover other possible configurations
 const onRender = (type, props, Component) => {
+  if (type === 'pie') {
+    return <Component {...props} />;
+  }
+
   const axisProp = type === 'bar' ? 'yAxis' : 'xAxis';
   const adjustedProps = {
     ...props,
