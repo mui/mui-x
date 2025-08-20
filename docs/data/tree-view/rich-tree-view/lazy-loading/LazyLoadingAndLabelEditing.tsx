@@ -1,7 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
-import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
+import {
+  RichTreeViewPro,
+  RichTreeViewProPluginSignatures,
+} from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
@@ -29,7 +32,7 @@ const fetchData = async (): Promise<
 const customCache = new DataSourceCacheDefault({}); // 10 seconds
 
 export default function LazyLoadingAndLabelEditing() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useTreeViewApiRef<RichTreeViewProPluginSignatures>();
 
   const handleItemLabelChange = (itemId: TreeViewItemId, newLabel: string) => {
     const parentId = apiRef.current?.getParentId(itemId) || 'root';
