@@ -39,20 +39,6 @@ export function weeklyByDayCodes(
 
 export type RecurrencePresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
-function sameSet<T>(a: T[] = [], b: T[] = []) {
-  const sa = new Set(a);
-  const sb = new Set(b);
-  if (sa.size !== sb.size) {
-    return false;
-  }
-  for (const x of sa) {
-    if (!sb.has(x)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 export function detectRecurrenceKeyFromRule(
   adapter: Adapter,
   rule: CalendarEvent['rrule'] | undefined,
@@ -76,10 +62,12 @@ export function detectRecurrenceKeyFromRule(
       // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
       const startDowCode = NUM_TO_BYDAY[adapter.getDayOfWeek(start)];
       const byDay = rule.byDay ?? [];
+      const matchesDefaultByDay =
+        byDay.length === 0 || (byDay.length === 1 && byDay[0] === startDowCode);
       const isPresetWeekly =
         interval === 1 &&
         neverEnds &&
-        sameSet(byDay, [startDowCode]) &&
+        matchesDefaultByDay &&
         !(rule.byMonthDay?.length || rule.byMonth?.length);
 
       return isPresetWeekly ? 'weekly' : 'custom';
@@ -89,10 +77,12 @@ export function detectRecurrenceKeyFromRule(
       // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
       const day = adapter.getDate(start);
       const byMonthDay = rule.byMonthDay ?? [];
+      const matchesDefaultByMonthDay =
+        byMonthDay.length === 0 || (byMonthDay.length === 1 && byMonthDay[0] === day);
       const isPresetMonthly =
         interval === 1 &&
         neverEnds &&
-        sameSet(byMonthDay, [day]) &&
+        matchesDefaultByMonthDay &&
         !(rule.byDay?.length || rule.byMonth?.length);
 
       return isPresetMonthly ? 'monthly' : 'custom';
@@ -136,8 +126,3 @@ export function buildRecurrencePresets(
     },
   };
 }
-
-export const isRecurring = (event: Pick<CalendarEvent, 'rrule'>) => Boolean(event.rrule);
-export const canEdit = (event: Pick<CalendarEvent, 'rrule'>) => !isRecurring(event);
-export const canDrag = canEdit;
-export const canResize = canEdit;
