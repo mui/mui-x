@@ -87,7 +87,7 @@ Internal changes.
 ### Miscellaneous
 
 - [code-infra] Prepare for incoming `execa` update (#19229) @Janpot
-- [virtualizer] fix: type import (#19192) @Methuselah96
+- [virtualizer] Fix type import (#19192) @Methuselah96
 - [virtualizer] Improve how the type are exported (#19192) @Methuselah96
 
 ## 8.10.1
