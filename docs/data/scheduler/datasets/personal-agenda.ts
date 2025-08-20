@@ -136,6 +136,7 @@ export const initialEvents: CalendarEvent[] = [
     title: "Alice's Birthday",
     resource: 'birthdays',
     allDay: true,
+    readOnly: true,
   },
   {
     id: 'birthdays-2',
@@ -144,6 +145,7 @@ export const initialEvents: CalendarEvent[] = [
     title: `Bob's Birthday`,
     resource: 'birthdays',
     allDay: true,
+    readOnly: true,
   },
   {
     id: 'birthdays-3',
@@ -152,6 +154,7 @@ export const initialEvents: CalendarEvent[] = [
     title: `Richard's Birthday`,
     resource: 'birthdays',
     allDay: true,
+    readOnly: true,
   },
 
   // Personal events
@@ -161,6 +164,7 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-04T22:00:00'),
     title: 'Dinner with Friends',
     resource: 'personal',
+    readOnly: true,
   },
   {
     id: 'dinner-with-friends-2',
@@ -168,6 +172,7 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-15T21:00:00'),
     title: 'Dinner with Friends',
     resource: 'personal',
+    readOnly: true,
   },
   {
     id: 'dinner-with-friends-3',
@@ -175,6 +180,7 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-28T21:30:00'),
     title: 'Dinner with Friends',
     resource: 'personal',
+    readOnly: true,
   },
   {
     id: 'shopping-1',

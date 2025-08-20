@@ -161,10 +161,12 @@ export const selectors = {
   getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
     state.events.find((event) => event.id === eventId),
   ),
-  isEventDraggable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
-    return !readOnly && state.areEventsDraggable;
+  // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
+  isEventDraggable: createSelector((state: State, event: CalendarEvent) => {
+    return !event.readOnly && state.areEventsDraggable;
   }),
-  isEventResizable: createSelector((state: State, { readOnly }: { readOnly?: boolean }) => {
-    return !readOnly && state.areEventsResizable;
+  // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
+  isEventResizable: createSelector((state: State, event: CalendarEvent) => {
+    return !event.readOnly && state.areEventsResizable;
   }),
 };

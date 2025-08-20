@@ -23,7 +23,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     eventResource,
     ariaLabelledBy,
     variant,
-    readOnly = false,
     className,
     id: idProp,
     ...other
@@ -31,8 +30,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const id = useId(idProp);
   const { store } = useEventCalendarContext();
-  const isDraggable = useStore(store, selectors.isEventDraggable, { readOnly });
-  const isResizable = useStore(store, selectors.isEventResizable, { readOnly });
+  const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
+  const isResizable = useStore(store, selectors.isEventResizable, eventProp);
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 

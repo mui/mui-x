@@ -113,6 +113,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       defaultValue={calendarEvent.title}
                       aria-label={translations.eventTitleAriaLabel}
                       required
+                      readOnly={calendarEvent.readOnly}
                     />
                   </Field.Label>
                   <Field.Error className="EventPopoverRequiredFieldError" />
@@ -139,6 +140,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           }
                           aria-describedby="startDate-error"
                           required
+                          readOnly={calendarEvent.readOnly}
                         />
                       </Field.Label>
                     </Field.Root>
@@ -154,6 +156,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             }
                             aria-describedby="startTime-error"
                             required
+                            readOnly={calendarEvent.readOnly}
                           />
                         </Field.Label>
                       </Field.Root>
@@ -170,6 +173,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             adapter.formatByString(calendarEvent.end, 'yyyy-MM-dd') ?? ''
                           }
                           required
+                          readOnly={calendarEvent.readOnly}
                         />
                       </Field.Label>
                     </Field.Root>
@@ -182,6 +186,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             type="time"
                             defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
                             required
+                            readOnly={calendarEvent.readOnly}
                           />
                         </Field.Label>
                       </Field.Root>
@@ -210,6 +215,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         id="enable-all-day-checkbox"
                         checked={isAllDay}
                         onCheckedChange={setIsAllDay}
+                        readOnly={calendarEvent.readOnly}
                       >
                         <Checkbox.Indicator className="AllDayCheckboxIndicator">
                           <CheckIcon className="AllDayCheckboxIcon" />
@@ -233,24 +239,27 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             rows={5}
                           />
                         }
+                        readOnly={calendarEvent.readOnly}
                       />
                     </Field.Label>
                   </Field.Root>
                 </div>
               </div>
               <Separator className="EventPopoverSeparator" />
-              <div className="EventPopoverActions">
-                <button
-                  className={clsx('SecondaryErrorButton', 'Button')}
-                  type="button"
-                  onClick={handleDelete}
-                >
-                  {translations.deleteEvent}
-                </button>
-                <button className={clsx('NeutralButton', 'Button')} type="submit">
-                  {translations.saveChanges}
-                </button>
-              </div>
+              {!calendarEvent.readOnly && (
+                <div className="EventPopoverActions">
+                  <button
+                    className={clsx('SecondaryErrorButton', 'Button')}
+                    type="button"
+                    onClick={handleDelete}
+                  >
+                    {translations.deleteEvent}
+                  </button>
+                  <button className={clsx('NeutralButton', 'Button')} type="submit">
+                    {translations.saveChanges}
+                  </button>
+                </div>
+              )}
             </Form>
           </Popover.Popup>
         </Popover.Positioner>
