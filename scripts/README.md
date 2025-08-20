@@ -69,10 +69,33 @@ In case of a problem, another method to generate the changelog is available at t
 
 ### Release the packages
 
-1. Checkout the last version of the working branch
-2. `pnpm i && pnpm release:build` (make sure you have the latest dependencies installed, and build the packages)
-3. `pnpm release:publish` (release the versions on npm, you need your 2FA device)
-4. `pnpm release:tag` (push the newly created tag)
+> [!WARNING]
+> If one of the packages hasn't been published before, a team member with admin role will have to do the initial publish. To find team member, use the command:
+>
+> ```bash
+> npm team ls mui:MUI-X
+> npm org ls mui
+> ```
+>
+> Cross-reference both lists to find a team memebr with admin rights.
+
+<!-- TODO
+- write guide on mui-public for publ=ishing packages and setting up OIDC publishing
+- write command for code-infra to find "team members with admin rights"
+-->
+
+1. Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
+2. Choose "Run workflow" dropdown
+
+> **Branch:** master
+> **Commit SHA to release from:** the commit that contains the merged release on master. This commit will also be linked to the github release.
+> **Run in dry-run mode:** Used for debugging.
+> **Create GitHub release:** Keep selected if you want a GitHub release to be automatically created from the changelog.
+
+3. Click "Run workflow"
+4. Optional: A maintainer may have to approve the workflow run.
+
+The action will publish packages, and prepare the GitHub release. The release tag will be created during GitHub release. It will be created in draft mode.
 
 > [!WARNING]
 > If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
@@ -95,9 +118,7 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 
 ### Publish GitHub release
 
-After documentation is deployed, publish a new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
-
-Create a new release on the newly published tag, then copy/paste the new changes in the changelog while removing the "version" and "date" sections. If in doubt, check the previous release notes.
+After documentation is deployed, review, then publish he release thatw as created in draft mode during the release step [GitHub releases page](https://github.com/mui/mui-x/releases)
 
 ### Announce
 
