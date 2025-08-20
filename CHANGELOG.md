@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.10.2
+
 _Aug 20, 2025_
 
 We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
