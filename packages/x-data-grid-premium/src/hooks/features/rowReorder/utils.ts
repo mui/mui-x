@@ -7,6 +7,7 @@ import {
   type GridGroupNode,
   type GridRowTreeConfig,
   type GridLeafNode,
+  type GridKeyValue,
 } from '@mui/x-data-grid-pro';
 import type { RowTreeBuilderGroupingCriterion } from '@mui/x-data-grid-pro/internals';
 import type { ReorderValidationContext as Ctx, ReorderOperationType } from './types';
@@ -248,6 +249,35 @@ export function adjustTargetNode(
   }
 
   return { adjustedTargetNode, isLastChild };
+}
+
+/**
+ * Finds an existing group node with the same groupingKey and groupingField under a parent.
+ *
+ * @param parentNode - The parent group node to search in
+ * @param groupingKey - The grouping key to match
+ * @param groupingField - The grouping field to match
+ * @param tree - The row tree configuration
+ * @returns The existing group node if found, null otherwise
+ */
+export function findExistingGroupWithSameKey(
+  parentNode: GridGroupNode,
+  groupingKey: GridKeyValue,
+  groupingField: string,
+  tree: GridRowTreeConfig,
+): GridGroupNode | null {
+  for (const childId of parentNode.children) {
+    const childNode = tree[childId];
+    if (
+      childNode &&
+      childNode.type === 'group' &&
+      (childNode as GridGroupNode).groupingKey === groupingKey &&
+      (childNode as GridGroupNode).groupingField === groupingField
+    ) {
+      return childNode as GridGroupNode;
+    }
+  }
+  return null;
 }
 
 /**

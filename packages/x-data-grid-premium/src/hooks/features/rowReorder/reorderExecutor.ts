@@ -24,6 +24,7 @@ import {
   collectAllLeafDescendants,
   getNodePathInTree,
   removeEmptyAncestors,
+  findExistingGroupWithSameKey,
 } from './utils';
 import type { ReorderScenario, ReorderExecutionContext } from './types';
 
@@ -660,26 +661,64 @@ const reorderScenarios: ReorderScenario[] = [
                   };
                 }
 
-                // Update target parent
+                // Update target parent - check for existing group with same key
                 const targetParentNode = updatedTree[targetNode.parent!] as GridGroupNode;
-                const targetIndex = targetParentNode.children.indexOf(targetNode.id);
-                const newTargetChildren = [...targetParentNode.children];
+                const sourceGroupNode = sourceNode as GridGroupNode;
 
-                if (isLastChild) {
-                  newTargetChildren.push(sourceNode.id);
+                // Check if target parent already has a group with the same key and field
+                const existingGroup =
+                  sourceGroupNode.groupingKey !== null && sourceGroupNode.groupingField !== null
+                    ? findExistingGroupWithSameKey(
+                        targetParentNode,
+                        sourceGroupNode.groupingKey,
+                        sourceGroupNode.groupingField,
+                        updatedTree,
+                      )
+                    : null;
+
+                if (existingGroup) {
+                  // Merge: move all children from source group to existing group
+                  const updatedExistingGroup = {
+                    ...existingGroup,
+                    children: [...existingGroup.children, ...sourceGroupNode.children],
+                  };
+
+                  updatedTree[existingGroup.id] = updatedExistingGroup;
+
+                  // Update parent references for all moved children
+                  sourceGroupNode.children.forEach((childId) => {
+                    const childNode = updatedTree[childId];
+                    if (childNode) {
+                      updatedTree[childId] = {
+                        ...childNode,
+                        parent: existingGroup.id,
+                      };
+                    }
+                  });
+
+                  // Remove the source group since it's now empty and merged
+                  delete updatedTree[sourceNode.id];
                 } else {
-                  newTargetChildren.splice(targetIndex, 0, sourceNode.id);
+                  // No existing group: move entire group
+                  const targetIndex = targetParentNode.children.indexOf(targetNode.id);
+                  const newTargetChildren = [...targetParentNode.children];
+
+                  if (isLastChild) {
+                    newTargetChildren.push(sourceNode.id);
+                  } else {
+                    newTargetChildren.splice(targetIndex, 0, sourceNode.id);
+                  }
+
+                  updatedTree[targetNode.parent!] = {
+                    ...targetParentNode,
+                    children: newTargetChildren,
+                  };
+
+                  updatedTree[sourceNode.id] = {
+                    ...sourceNode,
+                    parent: targetNode.parent,
+                  };
                 }
-
-                updatedTree[targetNode.parent!] = {
-                  ...targetParentNode,
-                  children: newTargetChildren,
-                };
-
-                updatedTree[sourceNode.id] = {
-                  ...sourceNode,
-                  parent: targetNode.parent,
-                };
               }
             }
             // Handle partial success case...
