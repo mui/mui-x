@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { Store } from '@base-ui-components/utils/store';
 import useForkRef from '@mui/utils/useForkRef';
 import { EventHandlers } from '@mui/utils/types';
 import {
@@ -18,7 +20,6 @@ import {
 import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
 import { useExtractPluginParamsFromProps } from './useExtractPluginParamsFromProps';
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
-import { TreeViewStore } from '../utils/TreeViewStore';
 
 function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
   if (inputApiRef.current == null) {
@@ -85,8 +86,7 @@ export const useTreeView = <
   const innerRootRef = React.useRef<HTMLUListElement>(null);
   const handleRootRef = useForkRef(innerRootRef, rootRef);
 
-  const storeRef = React.useRef<TreeViewStore<TSignaturesWithCorePluginSignatures> | null>(null);
-  if (storeRef.current == null) {
+  const store = useRefWithInit(() => {
     globalId += 1;
     const initialState = {
       cacheKey: { id: globalId },
@@ -98,14 +98,14 @@ export const useTreeView = <
       }
     });
 
-    storeRef.current = new TreeViewStore(initialState);
-  }
+    return new Store<TreeViewState<TSignaturesWithCorePluginSignatures>>(initialState);
+  }).current;
 
   const contextValue = useTreeViewBuildContext<TSignatures>({
     plugins,
     instance,
     publicAPI: publicAPI.current,
-    store: storeRef.current as TreeViewStore<any>,
+    store: store as any,
     rootRef: innerRootRef,
   });
 
@@ -119,7 +119,7 @@ export const useTreeView = <
       params: pluginParams,
       rootRef: innerRootRef,
       plugins,
-      store: storeRef.current as TreeViewStore<any>,
+      store: store as any,
     });
 
     if (pluginResponse.getRootProps) {

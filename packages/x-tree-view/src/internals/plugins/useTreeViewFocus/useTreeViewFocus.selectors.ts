@@ -1,5 +1,5 @@
+import { createSelector } from '@base-ui-components/utils/store';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
-import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 import { selectorSelectionModelArray } from '../useTreeViewSelection/useTreeViewSelection.selectors';
 import {
   selectorDisabledItemFocusable,
@@ -8,9 +8,13 @@ import {
 } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { isItemDisabled } from '../useTreeViewItems/useTreeViewItems.utils';
 import { selectorExpandedItemsMap } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { TreeViewState } from '../../models';
+import { TreeViewItemId } from '../../../models';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 
-const selectorTreeViewFocusState: TreeViewRootSelector<UseTreeViewFocusSignature> = (state) =>
-  state.focus;
+const selectorTreeViewFocusState = createSelector(
+  (state: TreeViewState<[UseTreeViewFocusSignature]>) => state.focus,
+);
 
 /**
  * Get the item that should be sequentially focusable (usually with the Tab key).
@@ -20,13 +24,12 @@ const selectorTreeViewFocusState: TreeViewRootSelector<UseTreeViewFocusSignature
  * @returns {TreeViewItemId | null} The id of the item that should be sequentially focusable.
  */
 export const selectorDefaultFocusableItemId = createSelector(
-  [
-    selectorSelectionModelArray,
-    selectorExpandedItemsMap,
-    selectorItemMetaLookup,
-    selectorDisabledItemFocusable,
-    (state) => selectorItemOrderedChildrenIds(state, null),
-  ],
+  selectorSelectionModelArray,
+  selectorExpandedItemsMap,
+  selectorItemMetaLookup,
+  selectorDisabledItemFocusable,
+  (state: TreeViewState<[UseTreeViewItemsSignature]>) =>
+    selectorItemOrderedChildrenIds(state, null),
   (selectedItems, expandedItemsMap, itemMetaLookup, disabledItemsFocusable, orderedRootItemIds) => {
     const firstSelectedItem = selectedItems.find((itemId) => {
       if (!disabledItemsFocusable && isItemDisabled(itemMetaLookup, itemId)) {
@@ -60,8 +63,8 @@ export const selectorDefaultFocusableItemId = createSelector(
  * @returns {boolean} `true` if the item is the default focusable item, `false` otherwise.
  */
 export const selectorIsItemTheDefaultFocusableItem = createSelector(
-  [selectorDefaultFocusableItemId, (_, itemId: string) => itemId],
-  (defaultFocusableItemId, itemId) => defaultFocusableItemId === itemId,
+  selectorDefaultFocusableItemId,
+  (defaultFocusableItemId, itemId: TreeViewItemId) => defaultFocusableItemId === itemId,
 );
 
 /**
@@ -81,6 +84,6 @@ export const selectorFocusedItemId = createSelector(
  * @returns {boolean} `true` if the item is focused, `false` otherwise.
  */
 export const selectorIsItemFocused = createSelector(
-  [selectorFocusedItemId, (_, itemId: string) => itemId],
-  (focusedItemId, itemId) => focusedItemId === itemId,
+  selectorFocusedItemId,
+  (focusedItemId, itemId: TreeViewItemId) => focusedItemId === itemId,
 );

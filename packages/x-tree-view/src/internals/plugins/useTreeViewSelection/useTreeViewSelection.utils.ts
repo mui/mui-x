@@ -30,7 +30,7 @@ export const getAddedAndRemovedItems = ({
   });
 
   return {
-    added: newModel.filter((itemId) => !selectorIsItemSelected(store.value, itemId)),
+    added: newModel.filter((itemId) => !selectorIsItemSelected(store.state, itemId)),
     removed: oldModel.filter((itemId) => !newModelMap.has(itemId)),
   };
 };
@@ -79,7 +79,7 @@ export const propagateSelection = ({
           newModelLookup[itemId] = true;
         }
 
-        selectorItemOrderedChildrenIds(store.value, itemId).forEach(selectDescendants);
+        selectorItemOrderedChildrenIds(store.state, itemId).forEach(selectDescendants);
       };
 
       selectDescendants(addedItemId);
@@ -91,17 +91,17 @@ export const propagateSelection = ({
           return false;
         }
 
-        const children = selectorItemOrderedChildrenIds(store.value, itemId);
+        const children = selectorItemOrderedChildrenIds(store.state, itemId);
         return children.every(checkAllDescendantsSelected);
       };
 
       const selectParents = (itemId: TreeViewItemId) => {
-        const parentId = selectorItemParentId(store.value, itemId);
+        const parentId = selectorItemParentId(store.state, itemId);
         if (parentId == null) {
           return;
         }
 
-        const siblings = selectorItemOrderedChildrenIds(store.value, parentId);
+        const siblings = selectorItemOrderedChildrenIds(store.state, parentId);
         if (siblings.every(checkAllDescendantsSelected)) {
           shouldRegenerateModel = true;
           newModelLookup[parentId] = true;
@@ -114,14 +114,14 @@ export const propagateSelection = ({
 
   changes.removed.forEach((removedItemId) => {
     if (selectionPropagation.parents) {
-      let parentId = selectorItemParentId(store.value, removedItemId);
+      let parentId = selectorItemParentId(store.state, removedItemId);
       while (parentId != null) {
         if (newModelLookup[parentId]) {
           shouldRegenerateModel = true;
           delete newModelLookup[parentId];
         }
 
-        parentId = selectorItemParentId(store.value, parentId);
+        parentId = selectorItemParentId(store.state, parentId);
       }
     }
 
@@ -132,7 +132,7 @@ export const propagateSelection = ({
           delete newModelLookup[itemId];
         }
 
-        selectorItemOrderedChildrenIds(store.value, itemId).forEach(deSelectDescendants);
+        selectorItemOrderedChildrenIds(store.state, itemId).forEach(deSelectDescendants);
       };
 
       deSelectDescendants(removedItemId);

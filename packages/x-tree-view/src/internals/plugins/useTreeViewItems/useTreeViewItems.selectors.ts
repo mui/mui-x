@@ -1,11 +1,12 @@
+import { createSelector } from '@base-ui-components/utils/store';
 import { TreeViewItemId } from '../../../models';
-import { TreeViewItemMeta } from '../../models';
-import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
-import { UseTreeViewItemsSignature } from './useTreeViewItems.types';
+import { TreeViewItemMeta, TreeViewState } from '../../models';
 import { isItemDisabled, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
+import { UseTreeViewItemsSignature } from './useTreeViewItems.types';
 
-const selectorTreeViewItemsState: TreeViewRootSelector<UseTreeViewItemsSignature> = (state) =>
-  state.items;
+const selectorTreeViewItemsState = createSelector(
+  (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items,
+);
 
 /**
  * Get the loading state for the Tree View.
@@ -41,12 +42,12 @@ const EMPTY_CHILDREN: TreeViewItemId[] = [];
 /**
  * Get the ordered children ids of a given item.
  * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
- * @param {TreeViewItemId} itemId The id of the item to get the children of.
+ * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
  * @returns {TreeViewItemId[]} The ordered children ids of the item.
  */
 export const selectorItemOrderedChildrenIds = createSelector(
-  [selectorTreeViewItemsState, (_, itemId: string | null) => itemId],
-  (itemsState, itemId) =>
+  selectorTreeViewItemsState,
+  (itemsState, itemId: TreeViewItemId | null) =>
     itemsState.itemOrderedChildrenIdsLookup[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? EMPTY_CHILDREN,
 );
 
@@ -57,8 +58,8 @@ export const selectorItemOrderedChildrenIds = createSelector(
  * @returns {R} The model of the item.
  */
 export const selectorItemModel = createSelector(
-  [selectorTreeViewItemsState, (_, itemId: string) => itemId],
-  (itemsState, itemId) => itemsState.itemModelLookup[itemId],
+  selectorTreeViewItemsState,
+  (itemsState, itemId: TreeViewItemId) => itemsState.itemModelLookup[itemId],
 );
 
 /**
@@ -69,8 +70,8 @@ export const selectorItemModel = createSelector(
  * @returns {TreeViewItemMeta | null} The meta-information of the item.
  */
 export const selectorItemMeta = createSelector(
-  [selectorItemMetaLookup, (_, itemId: string | null) => itemId],
-  (itemMetaLookup, itemId) =>
+  selectorItemMetaLookup,
+  (itemMetaLookup, itemId: TreeViewItemId) =>
     (itemMetaLookup[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? null) as TreeViewItemMeta | null,
 );
 
@@ -81,8 +82,8 @@ export const selectorItemMeta = createSelector(
  * @returns {boolean} `true` if the item is disabled, `false` otherwise.
  */
 export const selectorIsItemDisabled = createSelector(
-  [selectorItemMetaLookup, (_, itemId: string) => itemId],
-  isItemDisabled,
+  selectorItemMetaLookup,
+  (itemMetaLookup, itemId: TreeViewItemId) => isItemDisabled(itemMetaLookup, itemId),
 );
 
 /**
@@ -92,8 +93,9 @@ export const selectorIsItemDisabled = createSelector(
  * @returns {number} The index of the item in its parent's children.
  */
 export const selectorItemIndex = createSelector(
-  [selectorTreeViewItemsState, selectorItemMeta],
-  (itemsState, itemMeta) => {
+  selectorTreeViewItemsState,
+  selectorItemMeta,
+  (itemsState, itemMeta, _itemId: TreeViewItemId) => {
     if (itemMeta == null) {
       return -1;
     }
@@ -111,8 +113,8 @@ export const selectorItemIndex = createSelector(
  * @returns {TreeViewItemId | null} The id of the parent of the item.
  */
 export const selectorItemParentId = createSelector(
-  [selectorItemMeta],
-  (itemMeta) => itemMeta?.parentId ?? null,
+  selectorItemMeta,
+  (itemMeta, _itemId: TreeViewItemId) => itemMeta?.parentId ?? null,
 );
 
 /**
@@ -122,8 +124,8 @@ export const selectorItemParentId = createSelector(
  * @returns {number} The depth of the item.
  */
 export const selectorItemDepth = createSelector(
-  [selectorItemMeta],
-  (itemMeta) => itemMeta?.depth ?? 0,
+  selectorItemMeta,
+  (itemMeta, _itemId: TreeViewItemId) => itemMeta?.depth ?? 0,
 );
 
 /**
@@ -132,13 +134,14 @@ export const selectorItemDepth = createSelector(
  * @returns {boolean} Whether the disabled items are focusable.
  */
 export const selectorDisabledItemFocusable = createSelector(
-  [selectorTreeViewItemsState],
+  selectorTreeViewItemsState,
   (itemsState) => itemsState.disabledItemsFocusable,
 );
 
 export const selectorCanItemBeFocused = createSelector(
-  [selectorDisabledItemFocusable, selectorIsItemDisabled],
-  (disabledItemsFocusable, isDisabled) => {
+  selectorDisabledItemFocusable,
+  selectorIsItemDisabled,
+  (disabledItemsFocusable, isDisabled, _itemId: TreeViewItemId) => {
     if (disabledItemsFocusable) {
       return true;
     }

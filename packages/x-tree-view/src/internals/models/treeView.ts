@@ -1,3 +1,4 @@
+import { Store } from '@base-ui-components/utils/store';
 import type { TreeViewAnyPluginSignature } from './plugin';
 import type { MergeSignaturesProperty } from './helpers';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
@@ -39,3 +40,8 @@ export type TreeViewState<
   Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>> & {
     cacheKey: TreeViewStateCacheKey;
   };
+
+export type TreeViewStore<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = Store<TreeViewState<TSignatures, TOptionalSignatures>>;

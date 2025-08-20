@@ -1,11 +1,12 @@
+import { createSelector } from '@base-ui-components/utils/store';
 import { TreeViewItemId } from '../../../models';
-import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
+import { TreeViewState } from '../../models';
 import { selectorIsItemDisabled } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 
-const selectorTreeViewSelectionState: TreeViewRootSelector<UseTreeViewSelectionSignature> = (
-  state,
-) => state.selection;
+const selectorTreeViewSelectionState = createSelector(
+  (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection,
+);
 
 /**
  * Get the selected items.
@@ -13,7 +14,7 @@ const selectorTreeViewSelectionState: TreeViewRootSelector<UseTreeViewSelectionS
  * @returns {TreeViewSelectionValue<boolean>} The selected items.
  */
 export const selectorSelectionModel = createSelector(
-  [selectorTreeViewSelectionState],
+  selectorTreeViewSelectionState,
   (selectionState) => selectionState.selectedItems,
 );
 
@@ -23,7 +24,7 @@ export const selectorSelectionModel = createSelector(
  * @returns {TreeViewItemId[]} The selected items as an array.
  */
 export const selectorSelectionModelArray = createSelector(
-  [selectorSelectionModel],
+  selectorSelectionModel,
   (selectedItems) => {
     if (Array.isArray(selectedItems)) {
       return selectedItems;
@@ -42,7 +43,7 @@ export const selectorSelectionModelArray = createSelector(
  * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
  * @returns {Map<TreeViewItemId, true>} The selected items as a Map.
  */
-const selectorSelectionModelMap = createSelector([selectorSelectionModelArray], (selectedItems) => {
+const selectorSelectionModelMap = createSelector(selectorSelectionModelArray, (selectedItems) => {
   const selectedItemsMap = new Map<TreeViewItemId, true>();
   selectedItems.forEach((id) => {
     selectedItemsMap.set(id, true);
@@ -56,8 +57,8 @@ const selectorSelectionModelMap = createSelector([selectorSelectionModelArray], 
  * @returns {boolean} `true` if the item is selected, `false` otherwise.
  */
 export const selectorIsItemSelected = createSelector(
-  [selectorSelectionModelMap, (_, itemId: string) => itemId],
-  (selectedItemsMap, itemId) => selectedItemsMap.has(itemId),
+  selectorSelectionModelMap,
+  (selectedItemsMap, itemId: TreeViewItemId) => selectedItemsMap.has(itemId),
 );
 
 /**
@@ -66,7 +67,7 @@ export const selectorIsItemSelected = createSelector(
  * @returns {boolean} `true` if multi selection is enabled, `false` otherwise.
  */
 export const selectorIsMultiSelectEnabled = createSelector(
-  [selectorTreeViewSelectionState],
+  selectorTreeViewSelectionState,
   (selectionState) => selectionState.isEnabled && selectionState.isMultiSelectEnabled,
 );
 
@@ -76,7 +77,7 @@ export const selectorIsMultiSelectEnabled = createSelector(
  * @returns {boolean} `true` if selection is enabled, `false` otherwise.
  */
 export const selectorIsSelectionEnabled = createSelector(
-  [selectorTreeViewSelectionState],
+  selectorTreeViewSelectionState,
   (selectionState) => selectionState.isEnabled,
 );
 
@@ -86,7 +87,7 @@ export const selectorIsSelectionEnabled = createSelector(
  * @returns {boolean} `true` if checkbox selection is enabled, `false` otherwise.
  */
 export const selectorIsCheckboxSelectionEnabled = createSelector(
-  [selectorTreeViewSelectionState],
+  selectorTreeViewSelectionState,
   (selectionState) => selectionState.isCheckboxSelectionEnabled,
 );
 
@@ -97,8 +98,10 @@ export const selectorIsCheckboxSelectionEnabled = createSelector(
  * @returns {boolean} `true` if selection is enabled for the item, `false` otherwise.
  */
 export const selectorIsItemSelectionEnabled = createSelector(
-  [selectorIsItemDisabled, selectorIsSelectionEnabled],
-  (isItemDisabled, isSelectionEnabled) => isSelectionEnabled && !isItemDisabled,
+  selectorIsItemDisabled,
+  selectorIsSelectionEnabled,
+  (isItemDisabled, isSelectionEnabled, _itemId: TreeViewItemId) =>
+    isSelectionEnabled && !isItemDisabled,
 );
 
 /**
@@ -107,6 +110,6 @@ export const selectorIsItemSelectionEnabled = createSelector(
  * @returns {TreeViewSelectionPropagation} The selection propagation rules.
  */
 export const selectorSelectionPropagationRules = createSelector(
-  [selectorTreeViewSelectionState],
+  selectorTreeViewSelectionState,
   (selectionState) => selectionState.selectionPropagation,
 );

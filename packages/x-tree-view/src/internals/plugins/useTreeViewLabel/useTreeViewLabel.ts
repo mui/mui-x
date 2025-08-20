@@ -8,17 +8,14 @@ import { selectorIsItemEditable } from './useTreeViewLabel.selectors';
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ store, params }) => {
   const setEditedItem = (editedItemId: TreeViewItemId | null) => {
     if (editedItemId !== null) {
-      const isEditable = selectorIsItemEditable(store.value, editedItemId);
+      const isEditable = selectorIsItemEditable(store.state, editedItemId);
 
       if (!isEditable) {
         return;
       }
     }
 
-    store.update((prevState) => ({
-      ...prevState,
-      label: { ...prevState.label, editedItemId },
-    }));
+    store.set('label', { ...store.state.label, editedItemId });
   };
 
   const updateItemLabel = (itemId: TreeViewItemId, label: string) => {
@@ -31,19 +28,15 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
         ].join('\n'),
       );
     }
-    store.update((prevState) => {
-      const item = prevState.items.itemMetaLookup[itemId];
-      if (item.label !== label) {
-        return {
-          ...prevState,
-          items: {
-            ...prevState.items,
-            itemMetaLookup: { ...prevState.items.itemMetaLookup, [itemId]: { ...item, label } },
-          },
-        };
-      }
 
-      return prevState;
+    const item = store.state.items.itemMetaLookup[itemId];
+    if (item.label === label) {
+      return;
+    }
+
+    store.set('items', {
+      ...store.state.items,
+      itemMetaLookup: { ...store.state.items.itemMetaLookup, [itemId]: { ...item, label } },
     });
 
     if (params.onItemLabelChange) {
@@ -52,13 +45,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
   };
 
   useEnhancedEffect(() => {
-    store.update((prevState) => ({
-      ...prevState,
-      label: {
-        ...prevState.label,
-        isItemEditable: params.isItemEditable,
-      },
-    }));
+    store.set('label', { ...store.state.items, isItemEditable: params.isItemEditable });
   }, [store, params.isItemEditable]);
 
   return {

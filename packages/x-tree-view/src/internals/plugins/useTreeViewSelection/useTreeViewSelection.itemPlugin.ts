@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
+import { useStore } from '@base-ui-components/utils/store';
 import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewItemPlugin, TreeViewState } from '../../models';
@@ -15,7 +15,6 @@ import {
   selectorIsItemSelectionEnabled,
   selectorSelectionPropagationRules,
 } from './useTreeViewSelection.selectors';
-import { useSelector } from '../../hooks/useSelector';
 
 function selectorItemCheckboxStatus(
   state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>,
@@ -76,12 +75,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
   const { store } =
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
 
-  const checkboxStatus = useSelector(
-    store,
-    selectorItemCheckboxStatus,
-    itemId,
-    fastObjectShallowCompare,
-  );
+  const checkboxStatus = useStore(store, selectorItemCheckboxStatus, itemId);
 
   return {
     propsEnhancers: {
@@ -97,7 +91,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
             return;
           }
 
-          if (!selectorIsItemSelectionEnabled(store.value, itemId)) {
+          if (!selectorIsItemSelectionEnabled(store.state, itemId)) {
             return;
           }
 

@@ -1,20 +1,15 @@
-import {
-  createSelector,
-  TreeViewRootSelector,
-  TreeViewRootSelectorForOptionalPlugin,
-} from '../../utils/selectors';
+import { createSelector } from '@base-ui-components/utils/store';
+import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
+import { TreeViewState } from '../../models';
 
-const selectorLazyLoading: TreeViewRootSelector<UseTreeViewLazyLoadingSignature> = (state) =>
-  state.lazyLoading;
-
-const selectorLazyLoadingOptional: TreeViewRootSelectorForOptionalPlugin<
-  UseTreeViewLazyLoadingSignature
-> = (state) => state.lazyLoading;
+const selectorLazyLoadingOptional = createSelector(
+  (state: TreeViewState<[], [UseTreeViewLazyLoadingSignature]>) => state.lazyLoading,
+);
 
 export const selectorDataSourceState = createSelector(
-  [selectorLazyLoading],
-  (lazyLoading) => lazyLoading.dataSource,
+  selectorLazyLoadingOptional,
+  (lazyLoading) => lazyLoading?.dataSource,
 );
 
 /**
@@ -23,7 +18,7 @@ export const selectorDataSourceState = createSelector(
  * @returns {boolean} True if lazy loading is enabled, false if it isn't.
  */
 export const selectorIsLazyLoadingEnabled = createSelector(
-  [selectorLazyLoadingOptional],
+  selectorLazyLoadingOptional,
   (lazyLoading) => !!lazyLoading?.enabled,
 );
 
@@ -34,8 +29,8 @@ export const selectorIsLazyLoadingEnabled = createSelector(
  * @returns {boolean} The loading state for the Tree Item.
  */
 export const selectorIsItemLoading = createSelector(
-  [selectorDataSourceState, (_, itemId: string) => itemId],
-  (dataSourceState, itemId) => dataSourceState.loading[itemId] || false,
+  selectorDataSourceState,
+  (dataSourceState, itemId: TreeViewItemId) => dataSourceState?.loading[itemId] || false,
 );
 
 /**
@@ -45,6 +40,6 @@ export const selectorIsItemLoading = createSelector(
  * @returns {boolean} The error for the Tree Item.
  */
 export const selectorGetTreeItemError = createSelector(
-  [selectorDataSourceState, (_, itemId: string) => itemId],
-  (dataSourceState, itemId) => dataSourceState.errors[itemId] || null,
+  selectorDataSourceState,
+  (dataSourceState, itemId: TreeViewItemId) => dataSourceState?.errors[itemId] || null,
 );

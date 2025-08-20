@@ -1,9 +1,12 @@
+import { createSelector } from '@base-ui-components/utils/store';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
-import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 import { selectorItemModel } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { TreeViewState } from '../../models';
+import { TreeViewItemId } from '../../../models';
 
-const selectorTreeViewLabelState: TreeViewRootSelector<UseTreeViewLabelSignature, true> = (state) =>
-  state.label;
+const selectorTreeViewLabelStateOptional = createSelector(
+  (state: TreeViewState<[], [UseTreeViewLabelSignature]>) => state.label,
+);
 
 /**
  * Check if an item is editable.
@@ -12,8 +15,9 @@ const selectorTreeViewLabelState: TreeViewRootSelector<UseTreeViewLabelSignature
  * @returns {boolean} `true` if the item is editable, `false` otherwise.
  */
 export const selectorIsItemEditable = createSelector(
-  [selectorTreeViewLabelState, (state, itemId: string) => selectorItemModel(state, itemId)],
-  (labelState, itemModel) => {
+  selectorTreeViewLabelStateOptional,
+  selectorItemModel,
+  (labelState, itemModel, _itemId: TreeViewItemId) => {
     if (!itemModel || !labelState) {
       return false;
     }
@@ -29,12 +33,13 @@ export const selectorIsItemEditable = createSelector(
 /**
  * Check if the given item is being edited.
  * @param {TreeViewState<[UseTreeViewLabelSignature]>} state The state of the tree view.
- * @param {TreeViewItemId} itemId The id of the item to check.
+ * @param {TreeViewItemId | null} itemId The id of the item to check.
  * @returns {boolean} `true` if the item is being edited, `false` otherwise.
  */
 export const selectorIsItemBeingEdited = createSelector(
-  [selectorTreeViewLabelState, (_, itemId: string | null) => itemId],
-  (labelState, itemId) => (itemId ? labelState?.editedItemId === itemId : false),
+  selectorTreeViewLabelStateOptional,
+  (labelState, itemId: TreeViewItemId | null) =>
+    itemId ? labelState?.editedItemId === itemId : false,
 );
 
 /**
@@ -43,6 +48,6 @@ export const selectorIsItemBeingEdited = createSelector(
  * @returns {boolean} `true` if an item is being edited, `false` otherwise.
  */
 export const selectorIsAnyItemBeingEdited = createSelector(
-  selectorTreeViewLabelState,
+  selectorTreeViewLabelStateOptional,
   (labelState) => !!labelState?.editedItemId,
 );

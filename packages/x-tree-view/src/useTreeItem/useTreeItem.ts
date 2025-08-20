@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui-components/utils/store';
 import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
@@ -27,7 +28,6 @@ import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { useSelector } from '../internals/hooks/useSelector';
 import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
@@ -50,11 +50,11 @@ export const useTreeItem = <
   >();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const depth = useSelector(
+  const depth = useStore(
     store,
     (...params) => {
       if (typeof depthContext === 'function') {
-        return depthContext(...params);
+        return depthContext(...(params as [any, any]));
       }
 
       return depthContext;
@@ -72,15 +72,11 @@ export const useTreeItem = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const treeId = useSelector(store, selectorTreeViewId);
-  const isSelectionEnabledForItem = useSelector(store, selectorIsItemSelectionEnabled, itemId);
-  const isCheckboxSelectionEnabled = useSelector(store, selectorIsCheckboxSelectionEnabled);
+  const treeId = useStore(store, selectorTreeViewId);
+  const isSelectionEnabledForItem = useStore(store, selectorIsItemSelectionEnabled, itemId);
+  const isCheckboxSelectionEnabled = useStore(store, selectorIsCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const shouldBeAccessibleWithTab = useSelector(
-    store,
-    selectorIsItemTheDefaultFocusableItem,
-    itemId,
-  );
+  const shouldBeAccessibleWithTab = useStore(store, selectorIsItemTheDefaultFocusableItem, itemId);
 
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
@@ -97,7 +93,7 @@ export const useTreeItem = <
 
       if (
         !status.focused &&
-        selectorCanItemBeFocused(store.value, itemId) &&
+        selectorCanItemBeFocused(store.state, itemId) &&
         event.currentTarget === event.target
       ) {
         instance.focusItem(event, itemId);
@@ -165,7 +161,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-      if (selectorItemExpansionTrigger(store.value) === 'content') {
+      if (selectorItemExpansionTrigger(store.state) === 'content') {
         interactions.handleExpansion(event);
       }
 
@@ -193,7 +189,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented) {
         return;
       }
-      if (selectorItemExpansionTrigger(store.value) === 'iconContainer') {
+      if (selectorItemExpansionTrigger(store.state) === 'iconContainer') {
         interactions.handleExpansion(event);
       }
     };

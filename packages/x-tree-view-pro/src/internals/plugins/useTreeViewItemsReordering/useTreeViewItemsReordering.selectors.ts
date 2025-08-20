@@ -1,9 +1,10 @@
+import { createSelector } from '@base-ui-components/utils/store';
 import {
-  createSelector,
   TreeViewState,
   selectorItemMetaLookup,
   selectorIsAnyItemBeingEdited,
 } from '@mui/x-tree-view/internals';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
 
 /**
@@ -11,8 +12,9 @@ import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReorderin
  * @param {TreeViewState<[UseTreeViewItemsReorderingSignature]>} state The state of the tree view.
  * @returns {TreeViewItemsReorderingState} The items reordering state.
  */
-const selectorItemsReordering = (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
-  state.itemsReordering;
+const selectorItemsReordering = createSelector(
+  (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) => state.itemsReordering,
+);
 
 /**
  * Get the properties of the current reordering.
@@ -20,19 +22,20 @@ const selectorItemsReordering = (state: TreeViewState<[UseTreeViewItemsReorderin
  * @returns {TreeViewItemsReorderingState['currentReorder']} The properties of the current reordering.
  */
 export const selectorCurrentItemReordering = createSelector(
-  [selectorItemsReordering],
+  selectorItemsReordering,
   (itemsReordering) => itemsReordering.currentReorder,
 );
 
 /**
  * Get the properties of the dragged item.
  * @param {TreeViewState<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>} state The state of the tree view.
- * @param {string} itemId The id of the item.
+ * @param {TreeViewItemId} itemId The id of the item.
  * @returns {TreeViewItemDraggedItemProperties | null} The properties of the dragged item if the current item is being dragged, `null` otherwise.
  */
 export const selectorDraggedItemProperties = createSelector(
-  [selectorCurrentItemReordering, selectorItemMetaLookup, (_, itemId: string) => itemId],
-  (currentReorder, itemMetaLookup, itemId) => {
+  selectorCurrentItemReordering,
+  selectorItemMetaLookup,
+  (currentReorder, itemMetaLookup, itemId: TreeViewItemId) => {
     if (
       !currentReorder ||
       currentReorder.targetItemId !== itemId ||
@@ -58,12 +61,13 @@ export const selectorDraggedItemProperties = createSelector(
 /**
  * Check if the current item is a valid target for the dragged item.
  * @param {TreeViewState<[UseTreeViewItemsReorderingSignature]>} state The state of the tree view.
- * @param {string} itemId The id of the item.
+ * @param {TreeViewItemId} itemId The id of the item.
  * @returns {boolean} `true` if the current item is a valid target for the dragged item, `false` otherwise.
  */
 export const selectorIsItemValidReorderingTarget = createSelector(
-  [selectorCurrentItemReordering, (_, itemId: string) => itemId],
-  (currentReorder, itemId) => currentReorder && currentReorder.draggedItemId !== itemId,
+  selectorCurrentItemReordering,
+  (currentReorder, itemId: TreeViewItemId) =>
+    currentReorder && currentReorder.draggedItemId !== itemId,
 );
 
 /**
@@ -73,6 +77,8 @@ export const selectorIsItemValidReorderingTarget = createSelector(
  * @returns {boolean} `true` if the items can be reordered, `false` otherwise.
  */
 export const selectorCanItemBeReordered = createSelector(
-  [selectorItemsReordering, selectorIsAnyItemBeingEdited, (_, itemId: string) => itemId],
-  (itemsReordering, isEditing, itemId) => !isEditing && itemsReordering.isItemReorderable(itemId),
+  selectorItemsReordering,
+  selectorIsAnyItemBeingEdited,
+  (itemsReordering, isEditing, itemId: TreeViewItemId) =>
+    !isEditing && itemsReordering.isItemReorderable(itemId),
 );

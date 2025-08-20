@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { useStore } from '@base-ui-components/utils/store';
 import { TreeViewCancellableEvent } from '@mui/x-tree-view/models';
 import {
   TreeViewItemPlugin,
   useTreeViewContext,
   UseTreeViewItemsSignature,
   isTargetInDescendants,
-  useSelector,
   UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
 import {
@@ -32,9 +32,9 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
 
-  const draggedItemProperties = useSelector(store, selectorDraggedItemProperties, itemId);
-  const canItemBeReordered = useSelector(store, selectorCanItemBeReordered, itemId);
-  const isValidTarget = useSelector(store, selectorIsItemValidReorderingTarget, itemId);
+  const draggedItemProperties = useStore(store, selectorDraggedItemProperties, itemId);
+  const canItemBeReordered = useStore(store, selectorCanItemBeReordered, itemId);
+  const isValidTarget = useStore(store, selectorIsItemValidReorderingTarget, itemId);
 
   return {
     propsEnhancers: {

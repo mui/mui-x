@@ -1776,6 +1776,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.2
+      '@base-ui-components/utils':
+        specifier: 0.1.0
+        version: 0.1.0(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.1.9)(react@19.1.1)
@@ -1800,12 +1803,6 @@ importers:
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      reselect:
-        specifier: 'catalog:'
-        version: 5.1.1
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.5.0(react@19.1.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -1819,9 +1816,6 @@ importers:
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
-      '@types/use-sync-external-store':
-        specifier: 'catalog:'
-        version: 1.5.0
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -1838,6 +1832,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.2
+      '@base-ui-components/utils':
+        specifier: 0.1.0
+        version: 0.1.0(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.1.9)(react@19.1.1)
@@ -1935,6 +1932,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.2
+      '@base-ui-components/utils':
+        specifier: ^0.1.0
+        version: 0.1.0(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@emotion/cache':
         specifier: 'catalog:'
         version: 11.14.0

@@ -11,7 +11,6 @@ export {
   unstable_resetCleanupTracking,
   useInstanceEventHandler,
 } from './hooks/useInstanceEventHandler';
-export { useSelector } from './hooks/useSelector';
 
 export type {
   TreeViewPlugin,
@@ -89,9 +88,7 @@ export type {
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
-export { createSelector } from './utils/selectors';
 export { isTargetInDescendants } from './utils/tree';
-export { TreeViewStore } from './utils/TreeViewStore';
 
 export type {
   TreeViewClasses,

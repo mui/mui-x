@@ -9,9 +9,9 @@ import {
   TreeViewPublicAPI,
   TreeViewItemPluginSlotPropsEnhancers,
   TreeViewItemPluginSlotPropsEnhancerParams,
+  TreeViewStore,
 } from '../models';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
-import { TreeViewStore } from '../utils/TreeViewStore';
 
 export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
   parameters: UseTreeViewBuildContextParameters<TSignatures>,

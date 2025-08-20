@@ -1,7 +1,10 @@
-import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
+import { createSelector } from '@base-ui-components/utils/store';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
+import { TreeViewState } from '../../models';
 
-const selectorTreeViewIdState: TreeViewRootSelector<UseTreeViewIdSignature> = (state) => state.id;
+const selectorTreeViewIdState = createSelector(
+  (state: TreeViewState<[UseTreeViewIdSignature]>) => state.id,
+);
 
 /**
  * Get the id attribute of the tree view.
