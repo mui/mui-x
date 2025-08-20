@@ -60,7 +60,7 @@ export interface RRuleSpec {
 }
 
 export interface CalendarEventOccurence extends CalendarEvent {
-  key: CalendarEventKey;
+  key: string;
 }
 
 export interface CalendarEventOccurenceWithPosition extends CalendarEventOccurence {
@@ -68,8 +68,6 @@ export interface CalendarEventOccurenceWithPosition extends CalendarEventOccuren
 }
 
 export type CalendarEventId = string | number;
-
-export type CalendarEventKey = string | number;
 
 export type CalendarEventColor =
   | 'primary'
