@@ -49,7 +49,7 @@ export type State = {
 // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
 const isEventReadOnlySelector = createSelector((state: State, event: CalendarEvent) => {
   // TODO: Support putting the whole calendar as readOnly.
-  return !event.readOnly;
+  return event.readOnly;
 });
 
 export const selectors = {
