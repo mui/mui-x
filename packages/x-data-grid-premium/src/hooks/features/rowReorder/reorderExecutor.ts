@@ -633,7 +633,11 @@ const reorderScenarios: ReorderScenario[] = [
                   const parentOfSourceParent = (updatedTree[sourceNode.parent!] as GridGroupNode)
                     .parent;
                   if (parentOfSourceParent) {
-                    rootLevelRemovals = removeEmptyAncestors(parentOfSourceParent, updatedTree, removedGroups);
+                    rootLevelRemovals = removeEmptyAncestors(
+                      parentOfSourceParent,
+                      updatedTree,
+                      removedGroups,
+                    );
                   }
 
                   // Apply the removals to the tree

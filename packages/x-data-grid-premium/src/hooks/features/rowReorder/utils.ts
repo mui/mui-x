@@ -253,7 +253,7 @@ export function adjustTargetNode(
 /**
  * Removes empty ancestor groups from the tree after a row move operation.
  * Walks up the tree from the given group, removing any empty groups encountered.
- * 
+ *
  * @param groupId - The ID of the group to start checking from
  * @param tree - The row tree configuration
  * @param removedGroups - Set to track which groups have been removed

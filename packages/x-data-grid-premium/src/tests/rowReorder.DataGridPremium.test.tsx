@@ -3095,7 +3095,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // all empty ancestor groups should be removed and `totalTopLevelRowCount` should be updated correctly
         const rows = [
           { id: 1, company: 'Warner Bros', director: 'Christopher Nolan', movie: 'Inception' },
-          { id: 2, company: 'Warner Bros', director: 'Christopher Nolan', movie: 'The Dark Knight' },
+          {
+            id: 2,
+            company: 'Warner Bros',
+            director: 'Christopher Nolan',
+            movie: 'The Dark Knight',
+          },
           { id: 3, company: 'Paramount', director: 'Martin Scorsese', movie: 'The Aviator' },
           { id: 4, company: 'Paramount', director: 'Martin Scorsese', movie: 'The Departed' },
           { id: 5, company: 'Disney', director: 'James Cameron', movie: 'Avatar' },
@@ -3138,7 +3143,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const avatarRow = document.querySelector('[data-id="5"]');
         // Find Inception (a leaf under Warner Bros) to use as the drop target
         const inceptionRow = document.querySelector('[data-id="1"]');
-        
+
         if (!avatarRow || !inceptionRow) {
           throw new Error('Required elements not found');
         }
@@ -3165,19 +3170,28 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const tree = state.rows.tree;
         const disneyGroup = tree['auto-generated-row-company/Disney'];
         const jamesCameronGroup = tree['auto-generated-row-director/James Cameron'];
-        
+
         expect(disneyGroup).to.equal(undefined, 'Disney group should be removed');
         expect(jamesCameronGroup).to.equal(undefined, 'James Cameron group should be removed');
 
         // Verify Avatar was moved successfully
         const updatedAvatarRow = processRowUpdate.lastCall?.args[0];
-        expect(updatedAvatarRow?.company).to.equal('Warner Bros', 'Avatar should be moved to Warner Bros');
+        expect(updatedAvatarRow?.company).to.equal(
+          'Warner Bros',
+          'Avatar should be moved to Warner Bros',
+        );
       });
 
       it('should correctly update `totalTopLevelRowCount` when group removal causes cascading removals', async () => {
         // Test case for group-to-group move that causes empty ancestor removal
         const rows = [
-          { id: 1, company: 'TechCorp', department: 'Engineering', team: 'Frontend', name: 'Alice' },
+          {
+            id: 1,
+            company: 'TechCorp',
+            department: 'Engineering',
+            team: 'Frontend',
+            name: 'Alice',
+          },
           { id: 2, company: 'TechCorp', department: 'Engineering', team: 'Backend', name: 'Bob' },
           { id: 3, company: 'BizCorp', department: 'Sales', team: 'Direct', name: 'Charlie' },
           { id: 4, company: 'DataCorp', department: 'Analytics', team: 'ML', name: 'David' },
@@ -3218,10 +3232,14 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         expect(state.rows.totalTopLevelRowCount).to.equal(3, 'Initially should have 3 root groups');
 
         // Find the Analytics department group (only department under DataCorp)
-        const analyticsGroup = document.querySelector('[data-id="auto-generated-row-company/DataCorp-department/Analytics"]');
+        const analyticsGroup = document.querySelector(
+          '[data-id="auto-generated-row-company/DataCorp-department/Analytics"]',
+        );
         // Find Engineering department (under TechCorp) as the target
-        const engineeringGroup = document.querySelector('[data-id="auto-generated-row-company/TechCorp-department/Engineering"]');
-        
+        const engineeringGroup = document.querySelector(
+          '[data-id="auto-generated-row-company/TechCorp-department/Engineering"]',
+        );
+
         if (!analyticsGroup || !engineeringGroup) {
           throw new Error('Required elements not found');
         }
@@ -3246,11 +3264,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Verify the tree structure
         const tree = state.rows.tree;
         const dataCorpGroup = tree['auto-generated-row-company/DataCorp'];
-        
+
         expect(dataCorpGroup).to.equal(undefined, 'DataCorp group should be removed');
 
         // Verify David was moved successfully
-        const updatedRows = processRowUpdate.getCalls().map(call => call.args[0]);
+        const updatedRows = processRowUpdate.getCalls().map((call) => call.args[0]);
         const davidRow = updatedRows.find((row: any) => row.name === 'David');
         expect(davidRow?.company).to.equal('TechCorp', 'David should be moved to TechCorp');
       });
