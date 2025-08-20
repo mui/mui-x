@@ -13,7 +13,6 @@ import {
   isSingleSelectColDef,
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 
 export interface GridEditSingleSelectCellProps extends GridRenderEditCellParams {
   /**
@@ -66,7 +65,6 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(initialOpen);
 
-  const density = gridDensitySelector(apiRef);
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
@@ -148,7 +146,6 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       error={error}
       native={isSelectNative}
       fullWidth
-      density={density}
       slotProps={{
         htmlInput: {
           ref: inputRef,
