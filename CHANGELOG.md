@@ -24,6 +24,7 @@ The following are all team members who have contributed to this release:
 
 - [DataGrid] Fix display for `<GridEditSingleSelect />` when `density='compact'` (#19249) @sai6855
 - [DataGrid] Fix column header sortable classname when using `disableColumnSorting` (#19222) @wilcoschoneveld
+- [l10n] Improve finnish (fi-FI) locale (#19163) @lauri-heinonen-2025-04
 
 #### `@mui/x-data-grid-pro@8.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
