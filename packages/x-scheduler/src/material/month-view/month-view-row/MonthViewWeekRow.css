@@ -42,7 +42,7 @@
 .MonthViewCellNumber,
 .MonthViewCellNumberButton {
   grid-row: 1;
-  justify-self: end
+  justify-self: end;
 }
 
 .MonthViewCell.Today .MonthViewCellNumber {

@@ -163,6 +163,7 @@ describe('<MonthView />', () => {
     );
     expect(screen.getByText(/more/i)).not.to.equal(null);
   });
+
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
@@ -178,14 +179,19 @@ describe('<MonthView />', () => {
       expect(within(may5Cell!).getByText('Multi-day Conference')).not.to.equal(null);
 
       // Invisible events should exist in the spanned cells
-      const invisibleEvents = screen.getAllByLabelText('Multi-day Conference');
-      expect(invisibleEvents.length).to.be.greaterThan(1);
+      const eventInstances = screen.getAllByLabelText('Multi-day Conference');
+      expect(eventInstances.length).to.be.greaterThan(1);
 
       // Check that invisible events have aria-hidden attribute
-      const hiddenEvents = invisibleEvents.filter(
+      const hiddenEvents = eventInstances.filter(
         (event) => event.getAttribute('aria-hidden') === 'true',
       );
       expect(hiddenEvents.length).to.be.greaterThan(0);
+
+      const visibleEvents = eventInstances.filter(
+        (event) => event.getAttribute('aria-hidden') !== 'true',
+      );
+      expect(visibleEvents).to.have.length(1);
     });
 
     it('should render all-day event in first cell of week when event starts before the week', () => {

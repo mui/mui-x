@@ -9,12 +9,12 @@ import { useDayList } from '../../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { isWeekend } from '../../../primitives/utils/date-utils';
+import { getEventWithLargestRowIndex } from '../../../primitives/utils/event-utils';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { selectors } from '../../../primitives/use-event-calendar';
 import './MonthViewWeekRow.css';
-import { getEventWithLargestRowIndex } from '@mui/x-scheduler/primitives/utils/event-utils';
 
 const adapter = getAdapter();
 
@@ -105,7 +105,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
             )}
 
             {visibleAllDayEvents.map((event) => {
-              const durationInDays = adapter.startOfDay(event.end).diff(day, 'days').days + 1;
+              const durationInDays = adapter.getDurationInDays(day, event.end) + 1;
               const gridColumnSpan = Math.min(durationInDays, days.length - dayIdx); // Don't exceed available columns
               const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIdx === 0;
 

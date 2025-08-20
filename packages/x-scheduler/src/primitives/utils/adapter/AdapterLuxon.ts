@@ -498,4 +498,10 @@ export class AdapterLuxon implements Adapter<string> {
 
     return years;
   };
+
+  public getDurationInDays = (start: DateTime, end: DateTime) => {
+    const endDate = this.startOfDay(end);
+    const startDate = this.startOfDay(start);
+    return endDate.diff(startDate, 'days').days;
+  };
 }

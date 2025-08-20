@@ -47,11 +47,11 @@ describe('<WeekView />', () => {
       expect(within(may5Cell!).getByText('Multi-day Conference')).not.to.equal(null);
 
       // Invisible events should exist in the spanned cells
-      const invisibleEvents = screen.getAllByLabelText('Multi-day Conference');
-      expect(invisibleEvents.length).to.be.greaterThan(1);
+      const allEvents = screen.getAllByLabelText('Multi-day Conference');
+      expect(allEvents.length).to.be.greaterThan(1);
 
       // Check that invisible events have aria-hidden attribute
-      const hiddenEvents = invisibleEvents.filter(
+      const hiddenEvents = allEvents.filter(
         (event) => event.getAttribute('aria-hidden') === 'true',
       );
       expect(hiddenEvents.length).to.be.greaterThan(0);
@@ -64,7 +64,9 @@ describe('<WeekView />', () => {
         </StandaloneView>,
       );
 
-      const allDayRow = screen.getByTestId('day-time-grid-all-day-events-row');
+      const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
+      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
+      const allDayRow = within(allDayGrid).getByRole('row');
       const gridCells = within(allDayRow).getAllByRole('gridcell');
       // Find the first cell of the first week in May 2025
       const firstCell = gridCells[0];
@@ -144,7 +146,6 @@ describe('<WeekView />', () => {
       const event2GridRow = event2Style.match(/--grid-row:\s*(\d+)/)?.[1];
       const event3GridRow = event3Style.match(/--grid-row:\s*(\d+)/)?.[1];
 
-      // Rows in the month view always have +1 since row 1 is occupied by the day number
       expect(event1GridRow).to.equal('1');
       expect(event2GridRow).to.equal('2');
       expect(event3GridRow).to.equal('1');
@@ -157,7 +158,9 @@ describe('<WeekView />', () => {
         </StandaloneView>,
       );
 
-      const allDayRow = screen.getByTestId('day-time-grid-all-day-events-row');
+      const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
+      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
+      const allDayRow = within(allDayGrid).getByRole('row');
 
       const mainEvent = within(allDayRow)
         .getAllByLabelText('Four day event')
