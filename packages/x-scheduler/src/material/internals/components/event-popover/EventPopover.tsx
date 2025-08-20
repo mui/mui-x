@@ -93,7 +93,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const endDateValue = form.get('endDate');
     const endTimeValue = form.get('endTime');
     const recurrenceKey = form.get('recurrence') as RecurrencePresetKey;
-    const rrule = recurrenceKey ? recurrencePresets[recurrenceKey] : undefined;
+    const rrule = recurrenceKey ? recurrencePresets[recurrenceKey] : calendarEvent.rrule;
 
     const startISO = startTimeValue
       ? `${startDateValue}T${startTimeValue}`
