@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.10.2
-<!-- generated comparing v8.10.1..master -->
 _Aug 20, 2025_
 
 We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
@@ -14,16 +13,16 @@ We'd like to extend a big thank you to the 10 contributors who made this release
 - 🌎 Improve finnish (fi-FI) locale on the Data Grid
 
 Special thanks go out to the community members for their valuable contributions:
-@lauri-heinonen-2025-04, @Methuselah96, @wilcoschoneveld
+@lauri-heinonen-2025-04, @Methuselah96, @sai6855, @wilcoschoneveld
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @cherniavskii, @flaviendelangle, @Janpot, @oliviertassinari, @rita-codes, @sai6855
+@alexfauquette, @cherniavskii, @flaviendelangle, @Janpot, @oliviertassinari, @rita-codes
 
 ### Data Grid
 
 #### `@mui/x-data-grid@8.10.2`
 
-- [DataGrid]  Fix display for GridEditSingleSelect when density='compact' (#19249) @sai6855
+- [DataGrid] Fix display for `<GridEditSingleSelect />` when `density='compact'` (#19249) @sai6855
 - [DataGrid] Fix column header sortable classname when using `disableColumnSorting` (#19222) @wilcoschoneveld
 
 #### `@mui/x-data-grid-pro@8.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
@@ -86,7 +85,6 @@ Internal changes.
 
 ### Miscellaneous
 
-- [l10n] Improve finnish (fi-FI) locale (#19163) @lauri-heinonen-2025-04
 - [code-infra] Prepare for incoming `execa` update (#19229) @Janpot
 - [virtualizer] fix: type import (#19192) @Methuselah96
 
