@@ -77,15 +77,15 @@ When your component first renders, `apiRef` is `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 
-### Fetch the children of an item
+### Update the children of an item
 
-Use the `fetchItemChildren()` API method to fetch the children of an item:
+Use the `updateItemChildren()` API method to fetch the children of an item:
 
 ```ts
-apiRef.current.fetchItemChildren(
-  // The id of the item to fetch the children of
+apiRef.current.updateItemChildren(
+  // The id of the item to update the children of
   itemId,
 );
 ```
 
-{{"demo": "ApiMethodFetchItemChildren.js", "defaultCodeOpen": false}}
+{{"demo": "ApiMethodUpdateItemChildren.js", "defaultCodeOpen": false}}

@@ -240,6 +240,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     },
   );
 
+  const updateItemChildren: UseTreeViewLazyLoadingInstance['updateItemChildren'] = useEventCallback(
+    (itemId) => {
+      return instance.fetchItemChildren({ itemId, forceRefresh: true });
+    },
+  );
+
   useInstanceEventHandler(instance, 'beforeItemToggleExpansion', async (eventParameters) => {
     if (!isLazyLoadingEnabled || !eventParameters.shouldBeExpanded) {
       return;
@@ -302,7 +308,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       setDataSourceError,
     },
     publicAPI: {
-      fetchItemChildren,
+      updateItemChildren,
     },
   };
 };

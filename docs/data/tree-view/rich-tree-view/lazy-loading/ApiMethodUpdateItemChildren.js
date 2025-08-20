@@ -16,29 +16,16 @@ import {
   TreeItemLabel,
   TreeItemRoot,
   TreeItemCheckbox,
-  TreeItemProps,
 } from '@mui/x-tree-view/TreeItem';
-import {
-  TreeViewBaseItem,
-  TreeViewCancellableEventHandler,
-} from '@mui/x-tree-view/models';
+
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 
-type ItemType = TreeViewBaseItem<{
-  id: string;
-  label: string;
-  childrenCount?: number;
-}>;
-
 const LATENCY_MS = 1000;
 
-const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItemProps,
-  ref: React.Ref<HTMLLIElement>,
-) {
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, disabled, children, ...other } = props;
 
   const {
@@ -61,16 +48,14 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     rootRef: ref,
   });
 
-  const refreshChildren: TreeViewCancellableEventHandler<React.MouseEvent> = (
-    event,
-  ) => {
+  const refreshChildren = (event) => {
     event.defaultMuiPrevented = true;
-    publicAPI.fetchItemChildren!({ itemId, forceRefresh: true });
+    publicAPI.updateItemChildren(itemId);
   };
 
   return (
     <TreeItemProvider {...getContextProviderProps()}>
-      <TreeItemRoot {...getRootProps(other as any)}>
+      <TreeItemRoot {...getRootProps(other)}>
         <TreeItemContent {...getContentProps()}>
           <TreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
@@ -96,10 +81,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   );
 });
 
-export default function ApiMethodFetchItemChildren() {
-  const fetchData = async (): Promise<ItemType[]> => {
+export default function ApiMethodUpdateItemChildren() {
+  const fetchData = async () => {
     console.log('fetch');
-    const length: number = randomInt(5, 10);
+    const length = randomInt(5, 10);
     const rows = Array.from({ length }, () => ({
       id: randomId(),
       label: randomName({}, {}),
@@ -118,7 +103,7 @@ export default function ApiMethodFetchItemChildren() {
       <RichTreeViewPro
         items={[]}
         dataSource={{
-          getChildrenCount: (item) => item?.childrenCount as number,
+          getChildrenCount: (item) => item?.childrenCount,
           getTreeItems: fetchData,
         }}
         slots={{ item: CustomTreeItem }}
