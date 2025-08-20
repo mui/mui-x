@@ -8,6 +8,7 @@ import { Position } from '../models';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
+import { chartsToolbarClasses } from '../Toolbar';
 
 export interface ChartsWrapperProps {
   /**
@@ -89,6 +90,17 @@ const Root = styled('div', {
       },
     },
   ],
+  '&:has(.MuiChartsToolbar-root)': {
+    position: 'relative',
+    paddingTop: '64px',
+  },
+  [`& > .${chartsToolbarClasses.root}`]: {
+    position: 'absolute',
+    top: 0,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 1,
+  },
 }));
 
 /**
