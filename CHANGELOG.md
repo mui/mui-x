@@ -11,7 +11,7 @@ _Aug 20, 2025_
 We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve finnish (fi-FI) locale on the Data Grid
-
+- 🌎 Improve Finnish (fi-FI) locale on the Data Grid
 Special thanks go out to the community members for their valuable contributions:
 @lauri-heinonen-2025-04, @Methuselah96, @sai6855, @wilcoschoneveld
 
@@ -60,7 +60,7 @@ Same changes as in `@mui/x-charts@8.10.2`.
 
 #### `@mui/x-tree-view@8.10.2`
 
-- [tree view] Add aria-hidden to the Tree Item Checkbox (#19246) @flaviendelangle
+- [tree view] Add `aria-hidden` to the Tree Item Checkbox (#19246) @flaviendelangle
 
 #### `@mui/x-tree-view-pro@8.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
@@ -79,7 +79,7 @@ Internal changes.
 ### Core
 
 - [internal] Avoid script for CI only @oliviertassinari
-- [internal] Fix renovate.json @oliviertassinari
+- [internal] Fix `renovate.json` @oliviertassinari
 - [internal] Polish renovate config @oliviertassinari
 - [internal] Rename core to internal (#19203) @oliviertassinari
 - [internal] Update link to GitHub labels @oliviertassinari
@@ -88,6 +88,7 @@ Internal changes.
 
 - [code-infra] Prepare for incoming `execa` update (#19229) @Janpot
 - [virtualizer] fix: type import (#19192) @Methuselah96
+- [virtualizer] Improve how the type are exported (#19192) @Methuselah96
 
 ## 8.10.1
 
