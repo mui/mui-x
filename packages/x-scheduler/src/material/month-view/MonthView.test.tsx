@@ -323,8 +323,6 @@ describe('<MonthView />', () => {
         (el) => el.getAttribute('aria-hidden') !== 'true',
       );
 
-      console.log(visibleInstances);
-
       expect(visibleInstances).toHaveLength(2);
     });
   });
