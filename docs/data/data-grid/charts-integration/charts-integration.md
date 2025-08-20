@@ -6,7 +6,7 @@ title: Data Grid and Charts integration
 
 <p class="description">Use the MUI X Charts to visualize data from the Data Grid.</p>
 
-Data Grid seamlessly integrate with MUI X Charts for data visualization with dynamic Chart updates based on Grid state changes (whether through the Grid API or user interactions).
+Data Grid seamlessly integrates with [MUI X Charts](/x/react-charts/) for data visualization with dynamic Chart updates based on the Data Grid state changes (whether through the Data Grid API or user interactions).
 
 :::warning
 This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
@@ -35,26 +35,41 @@ To enable chart integration, pass the `chartsIntegration` prop to the Grid and `
 This enables the charts panel and makes it possible for the charts integration context provider state to receive updates.
 
 ```tsx
-<DataGridPremium
-  chartsIntegration
-  slots={{
-    chartsPanel: GridChartsPanel,
-    // ...other slots
-  }}
-  // ...other props
-/>
+import { DataGridPremium, GridChartsPanel } from '@mui/x-data-grid-premium';
+// ...
+
+return (
+  <DataGridPremium
+    chartsIntegration
+    slots={{
+      chartsPanel: GridChartsPanel,
+      // ...other slots
+    }}
+    // ...other props
+  />
+);
 ```
 
 Wrap your Grid and chart renderer in a `<GridChartsIntegrationContextProvider />`.
 Use `<GridChartsRendererProxy />` to connect the chart renderer to the Grid's state updates.
 
 ```tsx
-<GridChartsIntegrationContextProvider>
-  <DataGridPremium
-  // ...props
-  />
-  <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />
-</GridChartsIntegrationContextProvider>
+import {
+  DataGridPremium,
+  GridChartsIntegrationContextProvider,
+  GridChartsRendererProxy,
+} from '@mui/x-data-grid-premium';
+import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
+// ...
+
+return (
+  <GridChartsIntegrationContextProvider>
+    <DataGridPremium
+    // ...props
+    />
+    <GridChartsRendererProxy id="main" renderer={ChartsRenderer} />
+  </GridChartsIntegrationContextProvider>
+);
 ```
 
 ### Basic integration
