@@ -90,9 +90,9 @@ const Root = styled('div', {
       },
     },
   ],
-  '&:has(.MuiChartsToolbar-root)': {
+  [`&:has(.${chartsToolbarClasses.root})`]: {
     position: 'relative',
-    paddingTop: '64px',
+    paddingTop: '56px',
   },
   [`& > .${chartsToolbarClasses.root}`]: {
     position: 'absolute',
