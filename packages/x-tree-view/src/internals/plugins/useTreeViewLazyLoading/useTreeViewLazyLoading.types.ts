@@ -27,7 +27,21 @@ type DataSource<R extends {}> = {
   getTreeItems: (parentId?: TreeViewItemId) => Promise<R[]>;
 };
 
-export interface UseTreeViewLazyLoadingPublicAPI {}
+export interface UseTreeViewLazyLoadingPublicAPI {
+  /**
+   * Method used for fetching and item's children.
+   * Only relevant for lazy-loaded tree views.
+   *
+   * @param {object} parameters The parameters of the method.
+   * @param {TreeViewItemId} parameters.itemId The The id of the item to fetch the children of.
+   * @param {boolean} [parameters.forceRefresh] Whether to force a refresh of the children when the cache already contains some data.
+   * @returns { Promise<void>} The children of the item.
+   */
+  fetchItemChildren: (parameters: {
+    itemId: TreeViewItemId;
+    forceRefresh?: boolean;
+  }) => Promise<void>;
+}
 
 export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPublicAPI {
   /**
@@ -38,14 +52,6 @@ export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPu
    * @returns { Promise<void>} The children of the items.
    */
   fetchItems: (parentIds?: TreeViewItemId[]) => Promise<void>;
-  /**
-   * Method used for fetching and item's children.
-   * Only relevant for lazy-loaded tree views.
-   *
-   * @param {TreeViewItemId} itemId The The id of the item to fetch the children of.
-   * @returns { Promise<void>} The children of the item.
-   */
-  fetchItemChildren: (itemId: TreeViewItemId) => Promise<void>;
   /**
    * Set the loading state of an item.
    * @param {TreeViewItemId} itemId The id of the item to set the loading state of.
