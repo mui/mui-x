@@ -35,9 +35,9 @@ export default function TimelinePrimitive() {
                 start={boundaries.start}
                 end={boundaries.end}
               >
-                {item.events.map((event, index) => (
+                {item.events.map((event) => (
                   <Timeline.Event
-                    key={`${event.id}-${index}`}
+                    key={`${event.id}`}
                     className={classes.Event}
                     start={event.start}
                     end={event.end}

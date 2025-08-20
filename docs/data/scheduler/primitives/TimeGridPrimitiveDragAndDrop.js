@@ -60,9 +60,9 @@ export default function TimeGridPrimitiveDragAndDrop() {
                 end={day.date.endOf('day')}
                 className={classes.Column}
               >
-                {day.events.map((event, index) => (
+                {day.events.map((event) => (
                   <TimeGrid.Event
-                    key={`${event.id}-${index}`}
+                    key={`${event.id}`}
                     start={event.start}
                     end={event.end}
                     eventId={event.id}
