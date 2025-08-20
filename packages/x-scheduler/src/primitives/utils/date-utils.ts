@@ -39,8 +39,8 @@ export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean 
 // }
 
 /**
- * Differences in units using the adapter.
- * Avoids DST/time issues by anchoring to the correct units.
+ * Differences in units.
+ * TODO: move to adapter methods for DST/zone safety.
  */
 
 const MS_MIN = 60000;
