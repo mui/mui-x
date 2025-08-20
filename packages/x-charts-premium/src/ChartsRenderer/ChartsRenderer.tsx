@@ -18,8 +18,6 @@ export interface ChartsRendererProps {
   ) => React.ReactNode;
 }
 
-const CATEGORY_TICK_SIZE = 20;
-
 function ChartsRenderer({
   categories,
   series,
@@ -29,6 +27,7 @@ function ChartsRenderer({
 }: ChartsRendererProps) {
   const hasMultipleCategories = categories.length > 1;
   const categoryDataRaw = categories.length > 0 ? categories[categories.length - 1].data : [];
+  const categoryLabel = [...categories.map((category) => category.label)].reverse().join(' - ');
 
   // for single category: make sure that the category items are unique. for repeated values add the count to the value
   // for multiple categories: transpose the data and create a array of arrays with the data per index
@@ -48,10 +47,8 @@ function ChartsRenderer({
   const groups = hasMultipleCategories
     ? Array.from({ length: categories.length }, (_, categoryIndex) => ({
         getValue: (value: string[]) => value[categoryIndex],
-        tickSize: CATEGORY_TICK_SIZE * (categories.length - 1 - categoryIndex),
       })).reverse()
     : undefined;
-  const height = hasMultipleCategories ? CATEGORY_TICK_SIZE * (categories.length - 1) : undefined;
   const valueFormatter = (value: string | string[] | number): string => {
     if (Array.isArray(value)) {
       return value.join(' - ');
@@ -88,7 +85,7 @@ function ChartsRenderer({
           tickLabelPlacement: chartConfiguration.tickLabelPlacement,
           valueFormatter,
           groups,
-          height,
+          label: categoryLabel,
         },
       ],
     };
@@ -124,7 +121,15 @@ function ChartsRenderer({
     }));
 
     const props = {
-      xAxis: [{ data: categoryData, scaleType: 'point' as const, valueFormatter, groups, height }],
+      xAxis: [
+        {
+          data: categoryData,
+          scaleType: 'point' as const,
+          valueFormatter,
+          groups,
+          label: categoryLabel,
+        },
+      ],
       series: seriesProp,
       hideLegend: chartConfiguration.hideLegend,
       height: chartConfiguration.height,
