@@ -10,6 +10,11 @@ import { Adapter } from './adapter/types';
 import { diffIn, mergeDateAndTime } from './date-utils';
 import { BYDAY_TO_NUM, NUM_TO_BYDAY, weeklyByDayCodes } from './recurrence-utils';
 
+/**
+ *  Returns the largest `eventRowIndex` among all-day occurrences.
+ *  Useful to know how many stacked rows are already used for a given day.
+ *  @returns Highest row index found, or 0 if none.
+ */
 export function getEventWithLargestRowIndex(events: CalendarEventOccurrenceWithPosition[]) {
   return (
     events.reduce(
@@ -33,6 +38,12 @@ export function isDayWithinRange(
   );
 }
 
+/**
+ *  Computes the vertical row for an all-day occurrence on `day`.
+ *  If the event started before the visible range, reuses the row chosen on the first visible day.
+ *  Otherwise, assigns the first free row index in that day’s all-day stack.
+ *  @returns 1-based row index.
+ */
 export function getEventRowIndex(
   event: CalendarEventOccurrence,
   day: SchedulerValidDate,
@@ -71,6 +82,11 @@ export function getEventRowIndex(
   return i;
 }
 
+/**
+ *  Returns the list of visible days an event should render on.
+ *  When `shouldOnlyRenderEventInOneCell` is true, collapses multi-day to a single cell
+ *  (first visible day, or the event’s start if it is inside the range).
+ */
 export function getEventDays(
   event: CalendarEvent,
   days: SchedulerValidDate[],
@@ -89,6 +105,10 @@ export function getEventDays(
   return days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay, adapter));
 }
 
+/**
+ *  Inclusive span (in days) for all-day events.
+ *  @returns At least 1, start==end yields 1.
+ */
 export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): number {
   // TODO: Now only all-day events are implemented, we should add support for timed events that span multiple days later
   if (!event.allDay) {
@@ -101,6 +121,12 @@ export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): numbe
   );
 }
 
+/**
+ *  Expands a recurring `event` into concrete occurrences within the visible days.
+ *  Honors COUNT/UNTIL via `buildEndGuard` and date pattern via `matchesRecurrence`.
+ *  Preserves timed duration; for all-day spans, expands to cover the full multi-day block.
+ *  @returns Sorted list (by start) of concrete occurrences.
+ */
 export function expandRecurringEventForVisibleDays(
   event: CalendarEvent,
   days: SchedulerValidDate[],
@@ -154,6 +180,11 @@ export function expandRecurringEventForVisibleDays(
   return instances;
 }
 
+/**
+ *  Builds a predicate that says whether the series is still active on a given date.
+ *  Supports either COUNT or UNTIL (mutually exclusive, UNTIL is inclusive of that day).
+ *  COUNT uses `estimateOccurrencesUpTo` (inclusive) to stop after the Nth occurrence.
+ */
 export function buildEndGuard(
   rule: RRuleSpec,
   seriesStart: SchedulerValidDate,
@@ -191,7 +222,14 @@ export function buildEndGuard(
   };
 }
 
-// Checks if the date matches the recurrence pattern, only looking forward (not before seriesStart)
+/**
+ *  Tests whether `date` matches the RRULE (never matches before DTSTART).
+ *  DAILY: day-diff % interval === 0.
+ *  WEEKLY: week-diff % interval === 0 and weekday in BYDAY (defaults to DTSTART weekday).
+ *  MONTHLY: supports only BYMONTHDAY (or defaults to DTSTART day); BYDAY is not yet supported.
+ *  YEARLY: same month/day as DTSTART; BYxxx selectors are not allowed here.
+ *  @throws For unsupported YEARLY or MONTHLY selector combos.
+ */
 export function matchesRecurrence(
   rule: RRuleSpec,
   date: SchedulerValidDate,
@@ -281,6 +319,11 @@ export function matchesRecurrence(
   }
 }
 
+/**
+ *  Estimates how many occurrences exist from DTSTART up to `date` (inclusive).
+ *  Used to enforce COUNT. Delegates to exact counters for WEEKLY/MONTHLY/YEARLY.
+ *  Returns 0 if `date` is before DTSTART (day precision).
+ */
 export function estimateOccurrencesUpTo(
   adapter: Adapter,
   rule: RRuleSpec,
@@ -319,7 +362,9 @@ export function estimateOccurrencesUpTo(
   }
 }
 
-// Given a week start and a BYDAY code, return the exact occurrence date
+/**
+ *  Given a week start and a BYDAY code, returns the exact date in that week.
+ */
 function dayInWeek(adapter: Adapter, weekStart: SchedulerValidDate, code: ByDayCode) {
   const weekStartDow = adapter.getDayOfWeek(weekStart);
   const ruleDow = BYDAY_TO_NUM[code];
@@ -327,7 +372,11 @@ function dayInWeek(adapter: Adapter, weekStart: SchedulerValidDate, code: ByDayC
   return adapter.startOfDay(adapter.addDays(weekStart, delta));
 }
 
-// Counts exact WEEKLY occurrences up to `date` (inclusive) respecting interval and BYDAY
+/**
+ *  Exact WEEKLY occurrence count up to `date` (inclusive).
+ *  Iterates weeks by `interval`, checking each BYDAY. Skips days before DTSTART.
+ *  BYDAY defaults to DTSTART weekday if omitted.
+ */
 export function countWeeklyOccurrencesUpToExact(
   adapter: Adapter,
   rule: RRuleSpec,
@@ -371,7 +420,12 @@ export function countWeeklyOccurrencesUpToExact(
   return count;
 }
 
-// Counts exact MONTHLY occurrences up to `date` (inclusive) respecting interval and monthly rules
+/**
+ *  Exact MONTHLY occurrence count up to `date` (inclusive).
+ *  Supports a single BYMONTHDAY (defaults to DTSTART day). Skips months lacking that day.
+ *  Iterates months by `interval`, respecting series start and target boundaries.
+ *  @throws If multiple BYMONTHDAY values are provided.
+ */
 export function countMonthlyOccurrencesUpToExact(
   adapter: Adapter,
   rule: RRuleSpec,
@@ -428,6 +482,12 @@ export function countMonthlyOccurrencesUpToExact(
   return count;
 }
 
+/**
+ *  Exact YEARLY occurrence count up to `date` (inclusive).
+ *  Only same month/day as DTSTART, skips non-leap years for Feb 29.
+ *  Iterates years by `interval`, bounded by series start and target year.
+ *  @throws If BYMONTH/DAY/BYDAY are present (unsupported for YEARLY at the moment).
+ */
 export function countYearlyOccurrencesUpToExact(
   adapter: Adapter,
   rule: RRuleSpec,
