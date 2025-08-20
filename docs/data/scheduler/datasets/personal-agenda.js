@@ -9,8 +9,8 @@ export const initialEvents = [
   // Work events
   {
     id: 'work-daily-standup',
-    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 9, minute: 0 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 9, minute: 30 }),
+    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9, minute: 0 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9, minute: 30 }),
     title: 'Daily Standup',
     resource: 'work',
     rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },

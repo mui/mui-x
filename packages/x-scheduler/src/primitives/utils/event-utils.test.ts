@@ -99,6 +99,13 @@ describe('event-utils', () => {
       ...overrides,
     });
 
+    it('throws when COUNT and UNTIL are both set (RFC 5545)', () => {
+      const until = baseStart.plus({ days: 5 });
+      const rule: RRuleSpec = { freq: 'DAILY', interval: 1, count: 10, until };
+
+      expect(() => buildEndGuard(rule, baseStart, adapter)).to.throw();
+    });
+
     describe('no end (never)', () => {
       it('always returns true when count/until are not set', () => {
         const rule = createDailyRule(); // no count/until
@@ -224,6 +231,48 @@ describe('event-utils', () => {
         };
         expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true); // Friday
       });
+
+      it('does not match days before DTSTART within the first week', () => {
+        const event = createEvent(baseStart);
+        const rule: RRuleSpec = {
+          freq: 'WEEKLY',
+          interval: 1,
+          byDay: ['MO', 'TU', 'WE', 'TH', 'FR'],
+        };
+
+        // same week of DTSTART
+        const mon = baseStart.set({ weekday: 1 }); // Mon 2025-01-06
+        const tue = baseStart.set({ weekday: 2 }); // Tue 2025-01-07
+        const wed = baseStart.set({ weekday: 3 }); // Wed 2025-01-08
+        const thu = baseStart.set({ weekday: 4 }); // Thu 2025-01-09
+        const fri = baseStart.set({ weekday: 5 }); // Fri 2025-01-10 (DTSTART)
+
+        expect(matchesRecurrence(rule, mon, adapter, event)).to.equal(false);
+        expect(matchesRecurrence(rule, tue, adapter, event)).to.equal(false);
+        expect(matchesRecurrence(rule, wed, adapter, event)).to.equal(false);
+        expect(matchesRecurrence(rule, thu, adapter, event)).to.equal(false);
+        expect(matchesRecurrence(rule, fri, adapter, event)).to.equal(true);
+        const nextMon = baseStart.plus({ weeks: 1 }).set({ weekday: 1 });
+        expect(matchesRecurrence(rule, nextMon, adapter, event)).to.equal(true);
+      });
+
+      it('defaults to DTSTART weekday when byDay is omitted', () => {
+        const event = createEvent(baseStart);
+        const rule: RRuleSpec = { freq: 'WEEKLY', interval: 1 }; // no byDay
+        expect(matchesRecurrence(rule, baseStart, adapter, event)).to.equal(true); // same friday
+        expect(matchesRecurrence(rule, baseStart.plus({ days: 1 }), adapter, event)).to.equal(
+          false,
+        ); // saturday
+        expect(matchesRecurrence(rule, baseStart.plus({ weeks: 1 }), adapter, event)).to.equal(
+          true,
+        ); // next friday
+      });
+
+      it('throws an error for ordinal BYDAY values (e.g., 1MO)', () => {
+        const event = createEvent();
+        const bad: RRuleSpec = { freq: 'WEEKLY', byDay: ['1MO'] };
+        expect(() => matchesRecurrence(bad, event.start, adapter, event)).to.throw();
+      });
     });
 
     describe('monthly frequency (byMonthDay)', () => {
@@ -262,6 +311,23 @@ describe('event-utils', () => {
         const nextMonthSameOriginalDay = baseStart.plus({ months: 1 });
         expect(matchesRecurrence(rule, nextMonthSameOriginalDay, adapter, event)).to.equal(false);
       });
+
+      it('falls back to DTSTART day-of-month when byMonthDay is omitted', () => {
+        const start = DateTime.fromISO('2025-03-15T09:00:00Z');
+        const event = createEvent(start);
+        const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1 }; // no byMonthDay
+        expect(matchesRecurrence(rule, start.plus({ months: 1 }), adapter, event)).to.equal(true); // 15-Apr
+        expect(
+          matchesRecurrence(rule, start.plus({ months: 1, days: 1 }), adapter, event),
+        ).to.equal(false);
+      });
+
+      it('throws an error for BYDAY (not supported yet)', () => {
+        const event = createEvent();
+        const rule: RRuleSpec = { freq: 'MONTHLY', byDay: ['MO'] };
+        const nextMonth = event.start.plus({ months: 1 });
+        expect(() => matchesRecurrence(rule, nextMonth, adapter, event)).to.throw();
+      });
     });
 
     describe('yearly frequency', () => {
@@ -287,6 +353,16 @@ describe('event-utils', () => {
         const rule: RRuleSpec = { freq: 'YEARLY', interval: 1 };
         const diffDay = start.plus({ years: 1 }).plus({ days: 1 });
         expect(matchesRecurrence(rule, diffDay, adapter, event)).to.equal(false);
+      });
+
+      it('yearly throws when BY* selectors are provided', () => {
+        const event = createEvent();
+        const bad1: RRuleSpec = { freq: 'YEARLY', byMonth: [7] };
+        const bad2: RRuleSpec = { freq: 'YEARLY', byMonthDay: [20] };
+        const bad3: RRuleSpec = { freq: 'YEARLY', byDay: ['MO'] };
+        expect(() => matchesRecurrence(bad1, event.start, adapter, event)).to.throw();
+        expect(() => matchesRecurrence(bad2, event.start, adapter, event)).to.throw();
+        expect(() => matchesRecurrence(bad3, event.start, adapter, event)).to.throw();
       });
     });
   });
@@ -620,6 +696,29 @@ describe('event-utils', () => {
       expect(result).to.have.length(1);
       expect(adapter.getDate(result[0].start)).to.equal(3);
       expect(adapter.getDate(result[0].end)).to.equal(6);
+    });
+
+    it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
+      // Take the full week (Mon–Sun) and set DTSTART on Wednesday
+      const visibleStart = DateTime.fromISO('2025-01-05T00:00:00Z');
+      const weekStart = visibleStart.startOf('week'); // Monday
+      const days = makeDays(weekStart, 7); // 7 visible days for that week
+
+      // DTSTART on Wednesday of that same week
+      const start = weekStart.plus({ days: 2 }).set({ hour: 9, minute: 30 }); // Wednesday
+      const event: CalendarEvent = createEvent({
+        id: 'standup',
+        title: 'Standup',
+        start,
+        end: start.plus({ minutes: 30 }),
+        rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
+      });
+
+      const result = expandRecurringEventForVisibleDays(event, days, adapter);
+      const dows = result.map((o) => NUM_TO_BYDAY[adapter.getDayOfWeek(o.start)]);
+
+      // Only WE, TH, FR in the first week
+      expect(dows).to.deep.equal(['WE', 'TH', 'FR']);
     });
 
     it('returns empty array when no dates match recurrence in visible window', () => {

@@ -197,6 +197,10 @@ export function buildEndGuard(
   const hasCount = typeof rule.count === 'number' && rule.count > 0;
   const hasUntil = !!rule.until;
 
+  if (hasCount && hasUntil) {
+    throw new Error('RRULE invalid: COUNT and UNTIL are mutually exclusive per RFC 5545.');
+  }
+
   if (!hasCount && !hasUntil) {
     return () => true; // never ends
   }
@@ -231,31 +235,29 @@ export function matchesRecurrence(
 ): boolean {
   const interval = Math.max(1, rule.interval ?? 1);
 
+  const seriesStartDay = adapter.startOfDay(event.start);
+  const candidateDay = adapter.startOfDay(date);
+
+  if (adapter.isBefore(candidateDay, seriesStartDay)) {
+    return false;
+  }
+
   switch (rule.freq) {
     case 'DAILY': {
-      if (adapter.isBefore(adapter.startOfDay(date), adapter.startOfDay(event.start))) {
-        return false;
-      }
-      const daysDiff = diffIn(
-        adapter,
-        adapter.startOfDay(date),
-        adapter.startOfDay(event.start),
-        'days',
-      );
+      const daysDiff = diffIn(adapter, candidateDay, seriesStartDay, 'days');
       return daysDiff % interval === 0;
     }
 
     case 'WEEKLY': {
-      const seriesWeek = adapter.startOfWeek(event.start);
-      const dateWeek = adapter.startOfWeek(date);
-      if (adapter.isBefore(dateWeek, seriesWeek)) {
-        return false;
-      }
+      const seriesWeek = adapter.startOfWeek(seriesStartDay);
+      const dateWeek = adapter.startOfWeek(candidateDay);
 
       // If no BYDAY is provided in a WEEKLY rule, default to the weekday of DTSTART.
-      const byDay = weeklyByDayCodes(rule.byDay, [NUM_TO_BYDAY[adapter.getDayOfWeek(event.start)]]);
+      const byDay = weeklyByDayCodes(rule.byDay, [
+        NUM_TO_BYDAY[adapter.getDayOfWeek(seriesStartDay)],
+      ]);
 
-      const dateDowCode = NUM_TO_BYDAY[adapter.getDayOfWeek(date)];
+      const dateDowCode = NUM_TO_BYDAY[adapter.getDayOfWeek(candidateDay)];
       if (!byDay.includes(dateDowCode)) {
         return false;
       }
@@ -265,11 +267,8 @@ export function matchesRecurrence(
     }
 
     case 'MONTHLY': {
-      const seriesMonth = adapter.startOfMonth(event.start);
-      const dateMonth = adapter.startOfMonth(date);
-      if (adapter.isBefore(dateMonth, seriesMonth)) {
-        return false;
-      }
+      const seriesMonth = adapter.startOfMonth(seriesStartDay);
+      const dateMonth = adapter.startOfMonth(candidateDay);
 
       const monthsDiff = diffIn(adapter, dateMonth, seriesMonth, 'months');
       if (monthsDiff % interval !== 0) {
@@ -279,22 +278,22 @@ export function matchesRecurrence(
       // TODO (#19128): Add support for monthly recurrence modes (BYDAY rules)
       if (rule.byDay?.length) {
         // Only "same day-of-month" mode is supported right now.
-        // If BYDAY is present in a MONTHLY rule, the rule never matches.
-        return false;
+        throw new Error(
+          'MONTHLY supports only exact same date recurrence (day of month of DTSTART).',
+        );
       }
 
       // If no BYMONTHDAY is provided in a MONTHLY rule, default to the day of month of DTSTART.
-      const byMonthDay = rule.byMonthDay?.length ? rule.byMonthDay : [adapter.getDate(event.start)];
+      const byMonthDay = rule.byMonthDay?.length
+        ? rule.byMonthDay
+        : [adapter.getDate(seriesStartDay)];
 
-      return byMonthDay.includes(adapter.getDate(date));
+      return byMonthDay.includes(adapter.getDate(candidateDay));
     }
 
     case 'YEARLY': {
-      const seriesYear = adapter.startOfYear(event.start);
-      const dateYear = adapter.startOfYear(date);
-      if (adapter.isBefore(dateYear, seriesYear)) {
-        return false;
-      }
+      const seriesYear = adapter.startOfYear(seriesStartDay);
+      const dateYear = adapter.startOfYear(candidateDay);
 
       // Only exact "same month + same day" recurrence is supported.
       // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
@@ -302,13 +301,9 @@ export function matchesRecurrence(
         throw new Error('YEARLY supports only exact same date recurrence (month/day of DTSTART).');
       }
 
-      const month = adapter.getMonth(date);
-      const day = adapter.getDate(date);
-
-      const targetMonth = adapter.getMonth(event.start);
-      const targetDay = adapter.getDate(event.start);
-
-      if (month !== targetMonth || day !== targetDay) {
+      const sameMonth = adapter.getMonth(candidateDay) === adapter.getMonth(seriesStartDay);
+      const sameDay = adapter.getDate(candidateDay) === adapter.getDate(seriesStartDay);
+      if (!sameMonth || !sameDay) {
         return false;
       }
 
