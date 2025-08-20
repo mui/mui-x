@@ -8,10 +8,14 @@ import {
   type GridRowTreeConfig,
   type GridLeafNode,
   type GridKeyValue,
+  type GridValidRowModel,
+  type GridUpdateRowParams,
 } from '@mui/x-data-grid-pro';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { RowTreeBuilderGroupingCriterion } from '@mui/x-data-grid-pro/internals';
 import type { ReorderValidationContext as Ctx, ReorderOperationType } from './types';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 // TODO: Share these conditions with the executor by making the contexts similar
 /**
@@ -193,6 +197,23 @@ export const collectAllLeafDescendants = (
   return leafIds;
 };
 
+/**
+ * Adjusts the target node based on specific reorder scenarios and constraints.
+ *
+ * This function applies scenario-specific logic to find the actual target node
+ * for operations, handling cases like:
+ * - Moving to collapsed groups
+ * - Depth-based adjustments
+ * - End-of-list positioning
+ *
+ * @param sourceNode The node being moved
+ * @param targetNode The initial target node
+ * @param targetIndex The index of the target node in the visible rows
+ * @param placeholderIndex The index where the placeholder appears
+ * @param sortedFilteredRowIds Array of visible row IDs in display order
+ * @param apiRef Reference to the grid API
+ * @returns Object containing the adjusted target node and last child flag
+ */
 export function adjustTargetNode(
   sourceNode: GridTreeNode,
   targetNode: GridTreeNode,
@@ -318,4 +339,126 @@ export function removeEmptyAncestors(
   }
 
   return rootLevelRemovals;
+}
+
+export function handleProcessRowUpdateError(
+  error: any,
+  onProcessRowUpdateError?: DataGridPremiumProcessedProps['onProcessRowUpdateError'],
+): void {
+  if (onProcessRowUpdateError) {
+    onProcessRowUpdateError(error);
+  } else if (process.env.NODE_ENV !== 'production') {
+    warnOnce(
+      [
+        'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
+        'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+        'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
+      ],
+      'error',
+    );
+  }
+}
+
+/**
+ * Handles batch row updates with partial failure tracking.
+ *
+ * This class is designed for operations that need to update multiple rows
+ * atomically (like moving entire groups), while gracefully handling cases
+ * where some updates succeed and others fail.
+ *
+ * @example
+ * ```tsx
+ * const updater = new BatchRowUpdater(processRowUpdate, onError);
+ *
+ * // Queue multiple updates
+ * updater.queueUpdate('row1', originalRow1, newRow1);
+ * updater.queueUpdate('row2', originalRow2, newRow2);
+ *
+ * // Execute all updates
+ * const { successful, failed, updates } = await updater.executeAll();
+ *
+ * // Handle results
+ * if (successful.length > 0) {
+ *   apiRef.current.updateRows(updates);
+ * }
+ * ```
+ */
+export class BatchRowUpdater {
+  private rowsToUpdate = new Map<GridRowId, GridValidRowModel>();
+
+  private originalRows = new Map<GridRowId, GridValidRowModel>();
+
+  private successfulRowIds = new Set<GridRowId>();
+
+  private failedRowIds = new Set<GridRowId>();
+
+  private pendingRowUpdates: GridValidRowModel[] = [];
+
+  constructor(
+    private processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'] | undefined,
+    private onProcessRowUpdateError:
+      | DataGridPremiumProcessedProps['onProcessRowUpdateError']
+      | undefined,
+  ) {}
+
+  queueUpdate(
+    rowId: GridRowId,
+    originalRow: GridValidRowModel,
+    updatedRow: GridValidRowModel,
+  ): void {
+    this.originalRows.set(rowId, originalRow);
+    this.rowsToUpdate.set(rowId, updatedRow);
+  }
+
+  async executeAll(): Promise<{
+    successful: GridRowId[];
+    failed: GridRowId[];
+    updates: GridValidRowModel[];
+  }> {
+    const rowIds = Array.from(this.rowsToUpdate.keys());
+
+    if (rowIds.length === 0) {
+      return { successful: [], failed: [], updates: [] };
+    }
+
+    // Handle each row update, tracking success/failure
+    const handleRowUpdate = async (rowId: GridRowId) => {
+      const newRow = this.rowsToUpdate.get(rowId)!;
+      const oldRow = this.originalRows.get(rowId)!;
+
+      try {
+        if (typeof this.processRowUpdate === 'function') {
+          const params: GridUpdateRowParams = {
+            rowId,
+            previousRow: oldRow,
+            updatedRow: newRow,
+          };
+          const finalRow = await this.processRowUpdate(newRow, oldRow, params);
+          this.pendingRowUpdates.push(finalRow || newRow);
+          this.successfulRowIds.add(rowId);
+        } else {
+          this.pendingRowUpdates.push(newRow);
+          this.successfulRowIds.add(rowId);
+        }
+      } catch (error) {
+        this.failedRowIds.add(rowId);
+        handleProcessRowUpdateError(error, this.onProcessRowUpdateError);
+      }
+    };
+
+    // Use Promise.all with wrapped promises to avoid Promise.allSettled (browser support)
+    const promises = rowIds.map((rowId) => {
+      return new Promise<void>((resolve) => {
+        handleRowUpdate(rowId).then(resolve).catch(resolve);
+      });
+    });
+
+    await Promise.all(promises);
+
+    return {
+      successful: Array.from(this.successfulRowIds),
+      failed: Array.from(this.failedRowIds),
+      updates: this.pendingRowUpdates,
+    };
+  }
 }
