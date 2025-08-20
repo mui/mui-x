@@ -616,6 +616,11 @@ export const GridRootStyles = styled('div', {
         outlineOffset: focusOutlineWidth * -1,
       },
     },
+    [`& .${c['cell--editing']}`]: {
+      '& .MuiInputBase-root': {
+        height: '100%',
+      },
+    },
     [`& .${c['row--editing']}`]: {
       boxShadow: vars.shadows.base,
     },
