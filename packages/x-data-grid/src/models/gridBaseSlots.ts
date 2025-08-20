@@ -264,6 +264,7 @@ export type SelectProps = CommonProps & {
   native?: boolean;
   fullWidth?: boolean;
   size?: 'small' | 'medium';
+  density?: 'standard' | 'compact';
   slotProps?: {
     htmlInput?: { ref?: Ref } & React.InputHTMLAttributes<HTMLInputElement>;
   };

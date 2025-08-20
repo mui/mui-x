@@ -123,6 +123,22 @@ const ListItemText = styled(MUIListItemText)({
   },
 });
 
+const Select = styled(MUISelect, {
+  shouldForwardProp: (prop) => prop !== 'density',
+})<{ density?: P['baseSelect']['density'] }>(({ theme }) => ({
+  variants: [
+    {
+      props: { density: 'compact' },
+      style: {
+        '& .MuiSelect-select': {
+          paddingTop: theme.spacing(0.5),
+          paddingBottom: theme.spacing(0.5),
+        },
+      },
+    },
+  ],
+}));
+
 const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, ref) {
   const {
     id,
@@ -138,6 +154,7 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     size,
     style,
     fullWidth,
+    density,
     ...rest
   } = props;
   const menuProps = {
@@ -153,7 +170,7 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
       <MUIInputLabel id={labelId} htmlFor={id} shrink variant="outlined">
         {label}
       </MUIInputLabel>
-      <MUISelect
+      <Select
         id={id}
         labelId={labelId}
         label={label}
@@ -166,6 +183,7 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
         onOpen={onOpen}
         MenuProps={menuProps}
         size={size}
+        density={density}
         {...material}
       />
     </MUIFormControl>
