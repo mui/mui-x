@@ -42,7 +42,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const adapter = useAdapter();
   const translations = useTranslations();
   const { store, instance } = useEventCalendarContext();
-
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
