@@ -23,7 +23,7 @@ import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 
-const LATENCY_MS = 1000;
+const LATENCY_MS = 300;
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, disabled, children, ...other } = props;
@@ -83,7 +83,6 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
 
 export default function ApiMethodUpdateItemChildren() {
   const fetchData = async () => {
-    console.log('fetch');
     const length = randomInt(5, 10);
     const rows = Array.from({ length }, () => ({
       id: randomId(),

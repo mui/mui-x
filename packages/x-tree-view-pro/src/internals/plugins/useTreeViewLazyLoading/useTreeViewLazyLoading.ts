@@ -304,6 +304,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     instance: {
       fetchItemChildren,
       fetchItems,
+      updateItemChildren,
       setDataSourceLoading,
       setDataSourceError,
     },
