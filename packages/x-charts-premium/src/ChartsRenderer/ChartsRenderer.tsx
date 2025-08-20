@@ -157,7 +157,7 @@ function ChartsRenderer({
       data: seriesItem.data.map((item, itemIndex) => ({
         id: `${seriesItem.id}-${itemIndex}`,
         value: item || 0,
-        label: String(categoryData[itemIndex]),
+        label: `${String(categoryData[itemIndex])} - ${seriesItem.label}`,
       })),
       // each series starts from
       // - inner radius of the chart
