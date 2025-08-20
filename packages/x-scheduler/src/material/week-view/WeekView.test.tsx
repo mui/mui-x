@@ -2,7 +2,6 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
-import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { WeekView } from '@mui/x-scheduler/material/week-view';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 
