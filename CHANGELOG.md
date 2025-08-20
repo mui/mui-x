@@ -10,8 +10,8 @@ _Aug 20, 2025_
 
 We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌎 Improve finnish (fi-FI) locale on the Data Grid
 - 🌎 Improve Finnish (fi-FI) locale on the Data Grid
+
 Special thanks go out to the community members for their valuable contributions:
 @lauri-heinonen-2025-04, @Methuselah96, @sai6855, @wilcoschoneveld
 
