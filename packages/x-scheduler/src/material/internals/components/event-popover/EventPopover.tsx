@@ -41,7 +41,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const adapter = useAdapter();
   const translations = useTranslations();
-  const { instance } = useEventCalendarContext();
+  const { store, instance } = useEventCalendarContext();
+
+  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(calendarEvent.allDay));
@@ -113,7 +115,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       defaultValue={calendarEvent.title}
                       aria-label={translations.eventTitleAriaLabel}
                       required
-                      readOnly={calendarEvent.readOnly}
+                      readOnly={isEventReadOnly}
                     />
                   </Field.Label>
                   <Field.Error className="EventPopoverRequiredFieldError" />
@@ -140,7 +142,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           }
                           aria-describedby="startDate-error"
                           required
-                          readOnly={calendarEvent.readOnly}
+                          readOnly={isEventReadOnly}
                         />
                       </Field.Label>
                     </Field.Root>
@@ -156,7 +158,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             }
                             aria-describedby="startTime-error"
                             required
-                            readOnly={calendarEvent.readOnly}
+                            readOnly={isEventReadOnly}
                           />
                         </Field.Label>
                       </Field.Root>
@@ -173,7 +175,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             adapter.formatByString(calendarEvent.end, 'yyyy-MM-dd') ?? ''
                           }
                           required
-                          readOnly={calendarEvent.readOnly}
+                          readOnly={isEventReadOnly}
                         />
                       </Field.Label>
                     </Field.Root>
@@ -186,7 +188,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             type="time"
                             defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
                             required
-                            readOnly={calendarEvent.readOnly}
+                            readOnly={isEventReadOnly}
                           />
                         </Field.Label>
                       </Field.Root>
@@ -215,7 +217,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         id="enable-all-day-checkbox"
                         checked={isAllDay}
                         onCheckedChange={setIsAllDay}
-                        readOnly={calendarEvent.readOnly}
+                        readOnly={isEventReadOnly}
                       >
                         <Checkbox.Indicator className="AllDayCheckboxIndicator">
                           <CheckIcon className="AllDayCheckboxIcon" />
@@ -239,14 +241,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             rows={5}
                           />
                         }
-                        readOnly={calendarEvent.readOnly}
+                        readOnly={isEventReadOnly}
                       />
                     </Field.Label>
                   </Field.Root>
                 </div>
               </div>
               <Separator className="EventPopoverSeparator" />
-              {!calendarEvent.readOnly && (
+              {!isEventReadOnly && (
                 <div className="EventPopoverActions">
                   <button
                     className={clsx('SecondaryErrorButton', 'Button')}

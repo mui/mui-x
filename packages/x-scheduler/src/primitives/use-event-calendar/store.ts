@@ -46,6 +46,12 @@ export type State = {
   settings: CalendarSettings;
 };
 
+// We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
+const isEventReadOnlySelector = createSelector((state: State, event: CalendarEvent) => {
+  // TODO: Support putting the whole calendar as readOnly.
+  return !event.readOnly;
+});
+
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   ampm: createSelector((state: State) => state.ampm),
@@ -161,12 +167,15 @@ export const selectors = {
   getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
     state.events.find((event) => event.id === eventId),
   ),
-  // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
-  isEventDraggable: createSelector((state: State, event: CalendarEvent) => {
-    return !event.readOnly && state.areEventsDraggable;
-  }),
-  // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
-  isEventResizable: createSelector((state: State, event: CalendarEvent) => {
-    return !event.readOnly && state.areEventsResizable;
-  }),
+  isEventReadOnly: isEventReadOnlySelector,
+  isEventDraggable: createSelector(
+    isEventReadOnlySelector,
+    (state: State) => state.areEventsDraggable,
+    (isEventReadOnly, areEventsDraggable) => !isEventReadOnly && areEventsDraggable,
+  ),
+  isEventResizable: createSelector(
+    isEventReadOnlySelector,
+    (state: State) => state.areEventsResizable,
+    (isEventReadOnly, areEventsResizable) => !isEventReadOnly && areEventsResizable,
+  ),
 };
