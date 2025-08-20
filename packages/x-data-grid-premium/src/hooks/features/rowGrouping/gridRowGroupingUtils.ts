@@ -20,6 +20,7 @@ import {
   isGroupingColumn,
   GridStrategyGroup,
   getRowValue,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -36,11 +37,6 @@ export {
   getRowGroupingCriteriaFromGroupingField,
   isGroupingColumn,
 };
-
-export enum RowGroupingStrategy {
-  Default = 'grouping-columns',
-  DataSource = 'grouping-columns-data-source',
-}
 
 export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string | null) => {
   if (groupingCriteria === null) {

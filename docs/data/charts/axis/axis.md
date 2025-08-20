@@ -78,21 +78,7 @@ For example, it is common that an axis with a log scale has ticks that are not l
 The default tick formatter achieves this by rendering an empty string for ticks that should not show labels.
 If you want to customize the formatting, but want to keep the default behavior for ticks without labels, you can check that `context.defaultTickLabel` property is different from the empty string.
 
-```js
-<ScatterChart
-  xAxis={[
-    {
-      valueFormatter: (value, context) => {
-        if (context.location === 'tick' && context.defaultTickLabel === '') {
-          return '';
-        }
-
-        return `${value}€`;
-      },
-    },
-  ]}
-/>
-```
+{{"demo": "TicksWithoutLabels.js"}}
 
 #### Using the D3 formatter
 
@@ -240,11 +226,42 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 {{"demo": "MultipleAxes.js"}}
 
-### Grouped Axes
+## Grouped Axes
 
-You can group axes together by rendering more than one axis on the same side.
+To group `band` or `point` axes together, provide a `groups` property in the axis definition.
+This property expects an array of objects with a `getValue` function.
+This feature is available for both x- and y-axes.
+
+The `getValue` function receives the axis data value and should return a group name.
+Each group name will be used as is, overriding any `valueFormatter` for the axis.
+Groups are displayed in the order they are defined in the `groups` array.
+
+### X-axis grouping
+
+In the next demo, the x-axis is grouped by month, quarter, and year.
 
 {{"demo": "GroupedAxes.js"}}
+
+### Y-axis grouping
+
+In the following demo, the y-axis is grouped by category and subcategory.
+
+{{"demo": "GroupedYAxes.js"}}
+
+### Tick size
+
+The tick size can be customized for each group.
+To do so, you can provide a `tickSize` property in the `groups` array, the `tickSize` also affects the tick label position.
+Each item in the array corresponds to a group defined in the `getValue` function.
+
+{{"demo": "GroupedAxesTickSize.js"}}
+
+### Grouped axes styling
+
+In order to target a specific group, the `data-group-index` attribute can be used as a selector.
+The example below has a yellow tick color for the last group and blue text for the first group.
+
+{{"demo": "GroupedAxesStyling.js"}}
 
 ## Axis customization
 

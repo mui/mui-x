@@ -280,7 +280,7 @@ export async function generateChangelog({
   const treeViewProCommits = [];
   const schedulerCommits = [];
   const schedulerProCommits = [];
-  const coreCommits = [];
+  const internalCommits = [];
   const docsCommits = [];
   const otherCommits = [];
   const codemodCommits = [];
@@ -340,8 +340,9 @@ export async function generateChangelog({
         case 'docs':
           docsCommits.push(commitItem);
           break;
-        case 'core':
-          coreCommits.push(commitItem);
+        case 'core': // Legacy
+        case 'internal':
+          internalCommits.push(commitItem);
           break;
         case 'codemod':
           codemodCommits.push(commitItem);
@@ -366,7 +367,7 @@ export async function generateChangelog({
                   schedulerCommits.push(commitItem);
                   break;
                 default:
-                  coreCommits.push(commitItem);
+                  internalCommits.push(commitItem);
                   break;
               }
             });
@@ -585,7 +586,7 @@ ${logOtherSection({
 
 ${logOtherSection({
   sectionName: 'Core',
-  commits: coreCommits,
+  commits: internalCommits,
 })}
 
 ${logOtherSection({

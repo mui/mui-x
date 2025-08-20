@@ -4,6 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
+  useGridVirtualizer,
   useGridClipboard,
   useGridColumnMenu,
   useGridColumns,
@@ -76,7 +77,10 @@ import {
   detailPanelStateInitializer,
 } from '../hooks/features/detailPanel/useGridDetailPanel';
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
-import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
+import {
+  useGridRowReorder,
+  rowReorderStateInitializer,
+} from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
@@ -123,6 +127,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(propsStateInitializer, apiRef, props);
   useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
+  useGridInitializeState(rowReorderStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
@@ -146,6 +151,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
+  useGridVirtualizer(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);

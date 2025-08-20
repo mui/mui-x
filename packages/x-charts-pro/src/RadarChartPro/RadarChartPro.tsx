@@ -13,11 +13,12 @@ import {
   RadarChartSlots,
 } from '@mui/x-charts/RadarChart';
 import { useThemeProps } from '@mui/material/styles';
-import { useRadarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { useRadarChartProps } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginsSignatures } from './RadarChartPro.plugins';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
