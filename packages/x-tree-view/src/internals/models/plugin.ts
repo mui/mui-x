@@ -6,7 +6,6 @@ import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
 import { TreeViewItemPlugin } from './itemPlugin';
 import { TreeViewItemId } from '../../models';
-import { T } from 'vitest/dist/chunks/environment.d.cL3nLXbE.js';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   /**
