@@ -7,8 +7,8 @@ import {
   CalendarResourceId,
   CalendarView,
   CalendarSettings,
-  CalendarEventOccurence,
-  CalendarEventOccurenceWithPosition,
+  CalendarEventOccurrence,
+  CalendarEventOccurrenceWithPosition,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import {
@@ -91,15 +91,15 @@ export const selectors = {
     (events, visibleResources, adapter, { days, shouldOnlyRenderEventInOneCell }) => {
       const daysMap = new Map<
         string,
-        { events: CalendarEventOccurence[]; allDayEvents: CalendarEventOccurenceWithPosition[] }
+        { events: CalendarEventOccurrence[]; allDayEvents: CalendarEventOccurrenceWithPosition[] }
       >();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
         daysMap.set(dayKey, { events: [], allDayEvents: [] });
       }
 
-      // Collect ALL event instances (both recurring and non-recurring)
-      const instances: CalendarEventOccurence[] = [];
+      // Collect ALL event occurrences (both recurring and non-recurring)
+      const visibleOccurrences: CalendarEventOccurrence[] = [];
 
       for (const event of events) {
         // STEP 1: Skip events from resources that are not visible
@@ -110,7 +110,7 @@ export const selectors = {
         // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
         if (event.rrule) {
           const occurrences = expandRecurringEventForVisibleDays(event, days, adapter);
-          instances.push(...occurrences);
+          visibleOccurrences.push(...occurrences);
           continue;
         }
 
@@ -124,21 +124,24 @@ export const selectors = {
           continue; // Skip events that are not in the visible days
         }
 
-        instances.push({ ...event, key: String(event.id) });
+        visibleOccurrences.push({ ...event, key: String(event.id) });
       }
 
-      // STEP 3: Sort by the actual start date of each instance
+      // STEP 3: Sort by the actual start date of each occurrence
       // We sort here so that events are processed in the correct order, ensuring consistent row index assignment for all-day events
-      instances.sort((a, b) => {
-        const ta = adapter.toJsDate(a.start).getTime();
-        const tb = adapter.toJsDate(b.start).getTime();
-        return ta - tb;
-      });
+      const sortedOccurrences = visibleOccurrences
+        // TODO: Avoid JS Date conversion
+        .map((occurrence) => ({
+          occurrence,
+          timestamp: adapter.toJsDate(occurrence.start).getTime(),
+        }))
+        .sort((a, b) => a.timestamp - b.timestamp)
+        .map((item) => item.occurrence);
 
-      // STEP 4: Add the instances to the days map
-      for (const instance of instances) {
+      // STEP 4: Add the occurrence to the days map
+      for (const occurrence of sortedOccurrences) {
         const eventDays: SchedulerValidDate[] = getEventDays(
-          instance,
+          occurrence,
           days,
           adapter,
           shouldOnlyRenderEventInOneCell,
@@ -151,15 +154,15 @@ export const selectors = {
           }
 
           // STEP 4.1: Process all-day events and get their position in the row
-          if (instance.allDay) {
-            const eventRowIndex = getEventRowIndex(instance, day, days, daysMap, adapter);
+          if (occurrence.allDay) {
+            const eventRowIndex = getEventRowIndex(occurrence, day, days, daysMap, adapter);
 
             daysMap.get(dayKey)!.allDayEvents.push({
-              ...instance,
+              ...occurrence,
               eventRowIndex,
             });
           } else {
-            daysMap.get(dayKey)!.events.push(instance);
+            daysMap.get(dayKey)!.events.push(occurrence);
           }
         }
       }

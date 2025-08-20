@@ -59,11 +59,11 @@ export interface RRuleSpec {
   until?: SchedulerValidDate;
 }
 
-export interface CalendarEventOccurence extends CalendarEvent {
+export interface CalendarEventOccurrence extends CalendarEvent {
   key: string;
 }
 
-export interface CalendarEventOccurenceWithPosition extends CalendarEventOccurence {
+export interface CalendarEventOccurrenceWithPosition extends CalendarEventOccurrence {
   eventRowIndex?: number;
 }
 

@@ -1,8 +1,8 @@
 import {
   SchedulerValidDate,
   CalendarEvent,
-  CalendarEventOccurenceWithPosition,
-  CalendarEventOccurence,
+  CalendarEventOccurrenceWithPosition,
+  CalendarEventOccurrence,
   RRuleSpec,
   ByDayCode,
 } from '../models';
@@ -10,12 +10,12 @@ import { Adapter } from './adapter/types';
 import { diffIn, mergeDateAndTime } from './date-utils';
 import { BYDAY_TO_NUM, NUM_TO_BYDAY, weeklyByDayCodes } from './recurrence-utils';
 
-export function getEventWithLargestRowIndex(events: CalendarEventOccurenceWithPosition[]) {
+export function getEventWithLargestRowIndex(events: CalendarEventOccurrenceWithPosition[]) {
   return (
     events.reduce(
       (maxEvent, event) =>
         (event?.eventRowIndex ?? 0) > (maxEvent.eventRowIndex ?? 0) ? event : maxEvent,
-      { eventRowIndex: 0 } as CalendarEventOccurenceWithPosition,
+      { eventRowIndex: 0 } as CalendarEventOccurrenceWithPosition,
     ).eventRowIndex || 0
   );
 }
@@ -34,10 +34,10 @@ export function isDayWithinRange(
 }
 
 export function getEventRowIndex(
-  event: CalendarEventOccurence,
+  event: CalendarEventOccurrence,
   day: SchedulerValidDate,
   days: SchedulerValidDate[],
-  daysMap: Map<string, { allDayEvents: CalendarEventOccurenceWithPosition[] }>,
+  daysMap: Map<string, { allDayEvents: CalendarEventOccurrenceWithPosition[] }>,
   adapter: Adapter,
 ): number {
   const dayKey = adapter.format(day, 'keyboardDate');
@@ -105,9 +105,9 @@ export function expandRecurringEventForVisibleDays(
   event: CalendarEvent,
   days: SchedulerValidDate[],
   adapter: Adapter,
-): CalendarEventOccurence[] {
+): CalendarEventOccurrence[] {
   const rule = event.rrule!;
-  const instances: CalendarEventOccurence[] = [];
+  const instances: CalendarEventOccurrence[] = [];
 
   const endGuard = buildEndGuard(rule, event.start, adapter);
   const durationMinutes = diffIn(adapter, event.end, event.start, 'minutes');
