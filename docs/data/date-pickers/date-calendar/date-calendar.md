@@ -93,7 +93,7 @@ To create such layout we can do these steps:‌
 4. Allow overflow to be visible
 5. Adjust height according to day component heights
 
-{{"demo": "WideMonthLayout.js",  "defaultCodeOpen": false}}
+{{"demo": "WideCalendar.js",  "defaultCodeOpen": false}}
 
 ### Display week number
 
