@@ -19,7 +19,7 @@ import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
   gridColumnFieldsSelector,
   gridColumnLookupSelector,
-  gridVisibleColumnFieldsSelector,
+  gridColumnVisibilityModelSelector,
 } from '../columns';
 
 let hasEval: boolean;
@@ -314,9 +314,17 @@ const buildAggregatedQuickFilterApplier = (
     return null;
   }
 
-  const columnFields = shouldQuickFilterExcludeHiddenColumns(filterModel)
-    ? gridVisibleColumnFieldsSelector(apiRef)
-    : gridColumnFieldsSelector(apiRef);
+  const allColumnFields = gridColumnFieldsSelector(apiRef);
+  const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
+
+  let columnFields: string[];
+  if (shouldQuickFilterExcludeHiddenColumns(filterModel)) {
+    // Do not use gridVisibleColumnFieldsSelector here, because quick filter won't work in the list view mode
+    // See https://github.com/mui/mui-x/issues/19145
+    columnFields = allColumnFields.filter((field) => columnVisibilityModel[field] !== false);
+  } else {
+    columnFields = allColumnFields;
+  }
 
   const appliersPerField = [] as {
     column: GridColDef;
