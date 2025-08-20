@@ -51,6 +51,13 @@ const allDayEvents: CalendarEvent[] = [
     title: 'Three Day Event',
     allDay: true,
   },
+  {
+    id: 'all-day-5',
+    start: DateTime.fromISO('2025-05-06T00:00:00'),
+    end: DateTime.fromISO('2025-05-16T23:59:59'),
+    title: 'Multiple week event',
+    allDay: true,
+  },
 ];
 
 describe('<MonthView />', () => {
@@ -301,6 +308,24 @@ describe('<MonthView />', () => {
 
       // Should span 3 columns (3 days)
       expect(gridColumnSpan).to.equal('3');
+    });
+
+    it('should render one visible event per row if event spans across multiple weeks', () => {
+      render(
+        <StandaloneView events={allDayEvents} resources={[]}>
+          <MonthView />
+        </StandaloneView>,
+      );
+
+      const eventInstances = screen.getAllByLabelText('Multiple week event');
+
+      const visibleInstances = eventInstances.filter(
+        (el) => el.getAttribute('aria-hidden') !== 'true',
+      );
+
+      console.log(visibleInstances);
+
+      expect(visibleInstances).toHaveLength(2);
     });
   });
 });
