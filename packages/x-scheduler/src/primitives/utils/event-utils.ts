@@ -287,7 +287,7 @@ export function estimateOccurrencesUpTo(
   seriesStart: SchedulerValidDate,
   date: SchedulerValidDate,
 ): number {
-  if (adapter.isBefore(adapter.startOfDay(date), adapter.startOfDay(seriesStart))) {
+  if (adapter.isBeforeDay(date, seriesStart)) {
     return 0;
   }
 
