@@ -28,7 +28,7 @@ import {
   buildRecurrencePresets,
   detectRecurrenceKeyFromRule,
   RecurrencePresetKey,
-} from './recurrence-utils';
+} from '../../../../primitives/utils/recurrence-utils';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,

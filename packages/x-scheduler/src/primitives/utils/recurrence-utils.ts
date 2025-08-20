@@ -1,6 +1,41 @@
-import { Adapter } from '../../../../primitives/utils/adapter/types';
-import { NUM_TO_BYDAY } from '../../../../primitives/utils/event-utils';
-import { CalendarEvent, RRuleSpec, SchedulerValidDate } from '../../../../primitives/models';
+import { Adapter } from './adapter/types';
+import { ByDayCode, CalendarEvent, RRuleSpec, SchedulerValidDate } from '../models';
+
+export const NUM_TO_BYDAY: Record<number, ByDayCode> = {
+  1: 'MO',
+  2: 'TU',
+  3: 'WE',
+  4: 'TH',
+  5: 'FR',
+  6: 'SA',
+  7: 'SU',
+};
+
+export const BYDAY_TO_NUM: Record<ByDayCode, 1 | 2 | 3 | 4 | 5 | 6 | 7> = {
+  MO: 1,
+  TU: 2,
+  WE: 3,
+  TH: 4,
+  FR: 5,
+  SA: 6,
+  SU: 7,
+};
+
+// Validate WEEKLY BYDAY and return ByDayCode[] (or fallback)
+export function weeklyByDayCodes(
+  ruleByDay: RRuleSpec['byDay'],
+  fallback: ByDayCode[],
+): ByDayCode[] {
+  if (!ruleByDay?.length) {
+    return fallback;
+  }
+  if (!ruleByDay.every((v) => /^(MO|TU|WE|TH|FR|SA|SU)$/.test(v as string))) {
+    throw new Error(
+      'WEEKLY expects plain BYDAY codes (MO..SU), ordinals like 1MO or -1FR are not valid.',
+    );
+  }
+  return ruleByDay as ByDayCode[];
+}
 
 export type RecurrencePresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
@@ -101,3 +136,8 @@ export function buildRecurrencePresets(
     },
   };
 }
+
+export const isRecurring = (event: Pick<CalendarEvent, 'rrule'>) => Boolean(event.rrule);
+export const canEdit = (event: Pick<CalendarEvent, 'rrule'>) => !isRecurring(event);
+export const canDrag = canEdit;
+export const canResize = canEdit;

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { RRuleSpec } from '@mui/x-scheduler/primitives/models';
 import { detectRecurrenceKeyFromRule, buildRecurrencePresets } from './recurrence-utils';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { getAdapter } from './adapter/getAdapter';
 
 describe('recurrence-utils', () => {
   const adapter = getAdapter();

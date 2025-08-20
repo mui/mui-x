@@ -9,10 +9,10 @@ import {
   buildEndGuard,
   getAllDaySpanDays,
   expandRecurringEventForVisibleDays,
-  NUM_TO_BYDAY,
 } from './event-utils';
 import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
+import { NUM_TO_BYDAY } from './recurrence-utils';
 
 describe('event-utils', () => {
   const adapter = getAdapter();
