@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
 import { useTheme } from '@mui/material/styles';
 import { useRadarAxis, UseRadarAxisParams } from './useRadarAxis';
 import { getLabelAttributes } from './RadarAxis.utils';
-import { getRadarAxisUtilityClass, RadarAxisClasses } from './radarAxisClasses';
+import { RadarAxisClasses, useUtilityClasses } from './radarAxisClasses';
 
 export interface RadarAxisProps extends UseRadarAxisParams {
   /**
@@ -27,16 +26,6 @@ export interface RadarAxisProps extends UseRadarAxisParams {
    */
   classes?: Partial<RadarAxisClasses>;
 }
-
-const useUtilityClasses = (classes: RadarAxisProps['classes']) => {
-  const slots = {
-    root: ['root'],
-    line: ['line'],
-    label: ['label'],
-  };
-
-  return composeClasses(slots, getRadarAxisUtilityClass, classes);
-};
 
 function RadarAxis(props: RadarAxisProps) {
   const { labelOrientation = 'horizontal', textAnchor, dominantBaseline } = props;

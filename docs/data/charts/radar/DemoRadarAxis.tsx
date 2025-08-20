@@ -38,7 +38,7 @@ export default function DemoRadarAxis() {
             height={250}
             margin={{ top: 20 }}
             series={[{ data: [100, 98, 86, 99, 85, 55] }]}
-            divisions={props.divisions}
+            divisions={4}
             radar={{
               max: 100,
               metrics: [

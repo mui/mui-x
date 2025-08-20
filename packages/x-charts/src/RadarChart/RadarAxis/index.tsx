@@ -1,3 +1,3 @@
 export * from './RadarAxis';
 export * from './useRadarAxis';
-export * from './radarAxisClasses';
+export { type RadarAxisClasses, chartsAxisClasses } from './radarAxisClasses';
