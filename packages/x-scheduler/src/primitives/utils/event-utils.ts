@@ -523,3 +523,8 @@ export function countYearlyOccurrencesUpToExact(
 
   return count;
 }
+
+export const isRecurring = (event: Pick<CalendarEvent, 'rrule'>) => Boolean(event.rrule);
+export const canEdit = (event: Pick<CalendarEvent, 'rrule'>) => !isRecurring(event);
+export const canDrag = canEdit;
+export const canResize = canEdit;

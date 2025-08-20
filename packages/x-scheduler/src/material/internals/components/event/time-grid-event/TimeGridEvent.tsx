@@ -23,7 +23,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     eventResource,
     ariaLabelledBy,
     variant,
-    readOnly = false,
+    readOnly: readOnlyProp = false,
     className,
     id: idProp,
     ...other
@@ -31,6 +31,10 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const id = useId(idProp);
   const { store } = useEventCalendarContext();
+
+  const isRecurring = Boolean(eventProp.rrule);
+  const readOnly = readOnlyProp || isRecurring;
+
   const isDraggable = useStore(store, selectors.isEventDraggable, { readOnly });
   const isResizable = useStore(store, selectors.isEventResizable, { readOnly });
   const ampm = useStore(store, selectors.ampm);
@@ -98,6 +102,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         'EventCard',
         `EventCard--${variant}`,
         (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+        isDraggable && 'Draggable',
         getColorClassName({ resource: eventResource }),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}

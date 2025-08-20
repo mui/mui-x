@@ -28,6 +28,10 @@
   line-height: var(--line-height-1);
 }
 
+.EventCard[role='button'].Draggable {
+  cursor: grab;
+}
+
 .EventCard--regular {
   position: absolute;
   left: 2px;
