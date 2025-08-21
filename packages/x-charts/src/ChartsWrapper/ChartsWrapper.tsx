@@ -52,8 +52,7 @@ const getAlignItems = (position?: Position) => {
   return 'center';
 };
 
-const getGridTemplateAreas = (direction?: Direction, position?: Position) => {
-  console.log(direction, position);
+const getGridTemplateAreasWithToolBar = (direction?: Direction, position?: Position) => {
   if (direction === 'vertical') {
     if (position?.horizontal === 'start') {
       return `"toolbar toolbar"
@@ -70,6 +69,22 @@ const getGridTemplateAreas = (direction?: Direction, position?: Position) => {
   }
   return `"toolbar"
           "legend"
+          "chart"`;
+};
+
+const getGridTemplateAreasWithoutToolBar = (direction?: Direction, position?: Position) => {
+  if (direction === 'vertical') {
+    if (position?.horizontal === 'start') {
+      return `"legend chart"`;
+    }
+    return `"chart legend"`;
+  }
+
+  if (position?.vertical === 'bottom') {
+    return `"chart"
+            "legend"`;
+  }
+  return `"legend"
           "chart"`;
 };
 
@@ -90,9 +105,20 @@ const Root = styled('div', {
   display: 'grid',
   gridTemplateColumns: ownerState.legendDirection === 'vertical' ? 'auto auto' : '100%',
   gridTemplateRows: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : 'auto auto 1fr',
-  gridTemplateAreas: getGridTemplateAreas(ownerState.legendDirection, ownerState.legendPosition),
+  [`&:has(.${chartsToolbarClasses.root})`]: {
+    gridTemplateAreas: getGridTemplateAreasWithToolBar(
+      ownerState.legendDirection,
+      ownerState.legendPosition,
+    ),
+  },
+  [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
+    gridTemplateAreas: getGridTemplateAreasWithoutToolBar(
+      ownerState.legendDirection,
+      ownerState.legendPosition,
+    ),
+  },
   justifyContent: 'center',
-  justifyItems:getJustifyItems(ownerState.legendPosition),
+  justifyItems: getJustifyItems(ownerState.legendPosition),
   alignItems: getAlignItems(ownerState.legendPosition),
   [`& > .${chartsToolbarClasses.root}`]: {
     justifySelf: 'center',
