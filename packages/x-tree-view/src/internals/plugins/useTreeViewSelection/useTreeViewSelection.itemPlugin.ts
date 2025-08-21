@@ -1,7 +1,7 @@
 import * as React from 'react';
 // We need to import the shim because React 17 does not support the `useSyncExternalStore` API.
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
-import { useStore } from '@base-ui-components/utils/store';
+import { createSelector, useStore } from '@base-ui-components/utils/store';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
@@ -85,17 +85,52 @@ export function useItemCheckboxStatus(
   );
 }
 
+const selectorCheckboxSelectionStatus = createSelector(
+  (
+    state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>,
+    itemId: TreeViewItemId,
+  ) => {
+    if (selectorIsItemSelected(state, itemId)) {
+      return 'checked';
+    }
+
+    let hasSelectedDescendant = false;
+    let hasUnSelectedDescendant = false;
+
+    const traverseDescendants = (itemToTraverseId: TreeViewItemId) => {
+      if (itemToTraverseId !== itemId) {
+        if (selectorIsItemSelected(state, itemToTraverseId)) {
+          hasSelectedDescendant = true;
+        } else {
+          hasUnSelectedDescendant = true;
+        }
+      }
+
+      selectorItemOrderedChildrenIds(state, itemToTraverseId).forEach(traverseDescendants);
+    };
+
+    traverseDescendants(itemId);
+
+    if (hasSelectedDescendant && hasUnSelectedDescendant) {
+      return 'indeterminate';
+    }
+
+    const shouldSelectBasedOnDescendants = selectorSelectionPropagationRules(state).parents;
+    return shouldSelectBasedOnDescendants && hasSelectedDescendant && !hasUnSelectedDescendant
+      ? 'checked'
+      : 'empty';
+  },
+);
+
 export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { itemId } = props;
 
   const { store } =
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
 
-  const checkboxStatus = useStore(store, selectorItemCheckboxStatus, itemId);
-
-  if (itemId === 'grid') {
-    console.log(checkboxStatus);
-  }
+  const isCheckboxSelectionEnabled = useStore(store, selectorIsCheckboxSelectionEnabled);
+  const isItemSelectionEnabled = useStore(store, selectorIsItemSelectionEnabled, itemId);
+  const checkboxSelectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
 
   return {
     propsEnhancers: {
@@ -121,7 +156,10 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
         return {
           tabIndex: -1,
           onChange: handleChange,
-          ...checkboxStatus,
+          visible: isCheckboxSelectionEnabled,
+          disabled: !isItemSelectionEnabled,
+          checked: checkboxSelectionStatus === 'checked',
+          indeterminate: checkboxSelectionStatus === 'indeterminate',
         };
       },
     },

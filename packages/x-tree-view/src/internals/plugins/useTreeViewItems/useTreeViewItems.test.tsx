@@ -248,7 +248,7 @@ describeTreeView<
       });
     });
 
-    describe.only('Memoization (Rich Tree View only)', () => {
+    describe('Memoization (Rich Tree View only)', () => {
       it.skipIf(!isRichTreeView)(
         'should not re-render any children when the Tree View re-renders (flat tree)',
         () => {

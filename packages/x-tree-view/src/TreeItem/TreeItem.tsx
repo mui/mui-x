@@ -235,7 +235,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
-  console.log('Render', props.itemId);
 
   const {
     id,
