@@ -85,7 +85,6 @@ const Root = styled('div', {
       },
     },
   ],
-
   width: '100%',
   display: 'grid',
   gridTemplateColumns: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : '100%',
