@@ -16,7 +16,7 @@ const data = {
 };
 
 export default function SankeyCurveCorrection() {
-  const [curveCorrection, setCurveCorrection] = React.useState(5);
+  const [curveCorrection, setCurveCorrection] = React.useState(10);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -34,8 +34,8 @@ export default function SankeyCurveCorrection() {
           { value: -20, label: '-20' },
           { value: -10, label: '-10' },
           { value: 0, label: '0' },
-          { value: 5, label: '5 (default)' },
-          { value: 10, label: '10' },
+          { value: 5, label: '5' },
+          { value: 10, label: '10 (default)' },
           { value: 20, label: '20' },
         ]}
       />

@@ -30,7 +30,7 @@ export function calculateSankeyLayout(
     'nodeOptions' | 'linkOptions' | 'iterations' | 'curveCorrection'
   > = {},
 ): SankeyLayout {
-  const { iterations = 6, nodeOptions, linkOptions, curveCorrection = 5 } = series;
+  const { iterations = 6, nodeOptions, linkOptions, curveCorrection = 10 } = series;
   const {
     width: nodeWidth = 15,
     padding: nodePadding = 10,

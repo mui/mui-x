@@ -66,7 +66,7 @@ For example, in the demonstration below:
 The `curveCorrection` prop adjusts the look of the links between nodes by modifying the X dimension of the control points in the curve function.
 In some instances, this creates better-looking connections but is dependent on the graph layout, and is especially impacted by the chart height.
 
-Higher values create plumper links, while lower values create thinner connections. The default value is `5`.
+Higher values create plumper links, while lower values create thinner connections. The default value is `10`.
 
 {{"demo": "SankeyCurveCorrection.js"}}
 

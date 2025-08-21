@@ -169,7 +169,7 @@ export interface SankeySeriesType {
    * Applies the given number to the X dimension of the control points of the curve function.
    * This can create better looking links between nodes, but is dependent on the graph layout.
    * It is specially impacted by the chart height.
-   * @default 5
+   * @default 10
    */
   curveCorrection?: number;
 }
