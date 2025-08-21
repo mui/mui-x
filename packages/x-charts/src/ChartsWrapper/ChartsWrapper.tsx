@@ -32,47 +32,7 @@ export interface ChartsWrapperProps {
   sx?: SxProps<Theme>;
 }
 
-const getDirection = (direction?: Direction, position?: Position) => {
-  if (direction === 'vertical') {
-    if (position?.horizontal === 'start') {
-      return 'row';
-    }
-
-    return 'row-reverse';
-  }
-
-  if (position?.vertical === 'bottom') {
-    return 'column-reverse';
-  }
-
-  return 'column';
-};
-
-const getAlign = (direction?: Direction, position?: Position) => {
-  if (direction === 'vertical') {
-    if (position?.vertical === 'top') {
-      return 'flex-start';
-    }
-
-    if (position?.vertical === 'bottom') {
-      return 'flex-end';
-    }
-  }
-
-  if (direction === 'horizontal') {
-    if (position?.horizontal === 'start') {
-      return 'flex-start';
-    }
-
-    if (position?.horizontal === 'end') {
-      return 'flex-end';
-    }
-  }
-
-  return 'center';
-};
-
-const getJustifyItems = (direction?: Direction, position?: Position) => {
+const getJustifyItems = (position?: Position) => {
   if (position?.horizontal === 'start') {
     return 'start';
   }
@@ -82,16 +42,41 @@ const getJustifyItems = (direction?: Direction, position?: Position) => {
   return 'center';
 };
 
+const getAlignItems = (position?: Position) => {
+  if (position?.vertical === 'top') {
+    return 'flex-start';
+  }
+  if (position?.vertical === 'bottom') {
+    return 'flex-end';
+  }
+  return 'center';
+};
+
+const getGridTemplateAreas = (direction?: Direction, position?: Position) => {
+  if (direction === 'vertical') {
+    if (position?.horizontal === 'start') {
+      return `"toolbar toolbar"
+              "legend chart"`;
+    }
+    return `"toolbar toolbar"
+            "chart legend"`;
+  }
+
+  if (position?.vertical === 'bottom') {
+    return `"toolbar"
+            "chart"
+            "legend"`;
+  }
+  return `"toolbar"
+          "legend"
+          "chart"`;
+};
+
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically',
 })<{ ownerState: ChartsWrapperProps; extendVertically: boolean }>(({ ownerState }) => ({
-  // display: 'flex',
-  // flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
-  // flex: 1,
-  // justifyContent: 'center',
-  // alignItems: getAlign(ownerState.legendDirection, ownerState.legendPosition),
   variants: [
     {
       props: { extendVertically: true },
@@ -103,14 +88,14 @@ const Root = styled('div', {
 
   width: '100%',
   display: 'grid',
-  gridTemplateColumns: '100%',
-  gridTemplateRows: 'auto auto 1fr',
-  gridTemplateAreas: `
-    "toolbar"
-    "legend"
-    "chart"
-  `,
-  justifyItems: getJustifyItems(ownerState.legendDirection, ownerState.legendPosition),
+  gridTemplateColumns: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : '100%',
+  gridTemplateRows: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : 'auto auto 1fr',
+  gridTemplateAreas: getGridTemplateAreas(ownerState.legendDirection, ownerState.legendPosition),
+  justifyItems: getJustifyItems(ownerState.legendPosition),
+  [`& > .${chartsToolbarClasses.root}`]: {
+    justifySelf: 'center',
+  },
+  alignItems: getAlignItems(ownerState.legendPosition),
 }));
 
 /**
