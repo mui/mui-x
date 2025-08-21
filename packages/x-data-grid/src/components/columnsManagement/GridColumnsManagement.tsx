@@ -457,7 +457,7 @@ const GridColumnsManagementEmptyText = styled('div', {
   font: vars.typography.font.body,
 });
 
-const GridColumnsManagementRow = styled('button', {
+const GridColumnsManagementRow = styled(NotRendered<GridSlotProps['baseCheckbox']>, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementRow',
 })();
