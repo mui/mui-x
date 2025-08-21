@@ -20,10 +20,19 @@ type SeriesItemIdentifier = {
 };
 
 export interface UseChartKeyboardNavigationState {
-  keyboardNavigation: null | SeriesItemIdentifier;
+  keyboardNavigation: {
+    item: null | SeriesItemIdentifier;
+    enableKeyboardNavigation: boolean;
+  };
 }
 
+type UseChartKeyboardNavigationParameters = {
+  enableKeyboardNavigation?: boolean;
+};
+
 export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{
+  params: UseChartKeyboardNavigationParameters;
+  defaultizedParams: UseChartKeyboardNavigationParameters;
   instance: UseChartKeyboardNavigationInstance;
   state: UseChartKeyboardNavigationState;
 }>;

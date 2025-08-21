@@ -1,128 +1,23 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { ChartPlugin } from '../../models';
 import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
-import { ChartSeriesType, ChartsSeriesConfig } from '../../../../models/seriesType/config';
-import { SeriesId } from '../../../../models/seriesType/common';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import {
+  getNextSeriesWithData,
+  getPreviousSeriesWithData,
+  seriesHasData,
+} from './useChartKeyboardNavigation.helpers';
 
-/**
- * Returns the next series type and id that contains some data.
- * Returns `null` if no other series have data.
- */
-function getNextSeriesWithData(
-  series: ProcessedSeries<keyof ChartsSeriesConfig>,
-  type?: ChartSeriesType,
-  seriesId?: SeriesId,
-): {
-  type: ChartSeriesType;
-  seriesId: SeriesId;
-} | null {
-  const startingTypeIndex =
-    type !== undefined && series[type] ? Object.keys(series).indexOf(type) : 0;
-  const currentSeriesIndex =
-    type !== undefined && seriesId !== undefined && series[type] && series[type].series[seriesId]
-      ? series[type].seriesOrder.indexOf(seriesId)
-      : -1;
-  const typesAvailable = Object.keys(series) as (keyof typeof series)[];
-
-  for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {
-    const typeIndex = (startingTypeIndex + typeGap) % typesAvailable.length;
-    const seriesOfType = series[typesAvailable[typeIndex]]!;
-
-    const startingSeriesIndex =
-      typeGap === 0 ? (currentSeriesIndex + 1) % seriesOfType.seriesOrder.length : 0;
-
-    for (
-      let seriesIndex = startingSeriesIndex;
-      seriesIndex < seriesOfType.seriesOrder.length;
-      seriesIndex += 1
-    ) {
-      if (seriesOfType.series[seriesOfType.seriesOrder[seriesIndex]].data.length > 0) {
-        return {
-          type: typesAvailable[typeIndex],
-          seriesId: seriesOfType.seriesOrder[seriesIndex],
-        };
-      }
-    }
-  }
-
-  // End looping on the initial type up to the initial series
-  const typeIndex = startingTypeIndex % typesAvailable.length;
-  const seriesOfType = series[typesAvailable[typeIndex]]!;
-
-  const endingSeriesIndex = currentSeriesIndex;
-
-  for (let seriesIndex = 0; seriesIndex < endingSeriesIndex; seriesIndex += 1) {
-    if (seriesOfType.series[seriesOfType.seriesOrder[seriesIndex]].data.length > 0) {
-      return {
-        type: typesAvailable[typeIndex],
-        seriesId: seriesOfType.seriesOrder[seriesIndex],
-      };
-    }
-  }
-
-  return null;
-}
-
-/**
- * Returns the previous series type and id that contains some data.
- * Returns `null` if no other series have data.
- */
-function getPreviousSeriesWithData(
-  series: ProcessedSeries<keyof ChartsSeriesConfig>,
-  type?: ChartSeriesType,
-  seriesId?: SeriesId,
-): {
-  type: ChartSeriesType;
-  seriesId: SeriesId;
-} | null {
-  const startingTypeIndex =
-    type !== undefined && series[type] ? Object.keys(series).indexOf(type) : 0;
-  const startingSeriesIndex =
-    type !== undefined && seriesId !== undefined && series[type] && series[type].series[seriesId]
-      ? series[type].seriesOrder.indexOf(seriesId)
-      : 1;
-
-  const typesAvailable = Object.keys(series) as (keyof typeof series)[];
-
-  for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {
-    const typeIndex = (typesAvailable.length + startingTypeIndex - typeGap) % typesAvailable.length;
-    const seriesOfType = series[typesAvailable[typeIndex]]!;
-
-    for (let seriesGap = 1; seriesGap < seriesOfType.seriesOrder.length; seriesGap += 1) {
-      const seriesIndex =
-        (seriesOfType.seriesOrder.length + startingSeriesIndex - seriesGap) %
-        seriesOfType.seriesOrder.length;
-
-      if (seriesOfType.series[seriesOfType.seriesOrder[seriesIndex]].data.length > 0) {
-        return {
-          type: typesAvailable[typeIndex],
-          seriesId: seriesOfType.seriesOrder[seriesIndex],
-        };
-      }
-    }
-  }
-
-  return null;
-}
-
-function seriesHasData(
-  series: ProcessedSeries<keyof ChartsSeriesConfig>,
-  type: ChartSeriesType,
-  seriesId: SeriesId,
-) {
-  const data = series[type]?.series[seriesId]?.data;
-  return data && data.length > 0;
-}
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
+  params,
   store,
   svgRef,
 }) => {
   const focusNextItem = useEventCallback(function focusNextItem() {
     store.update((state) => {
-      let { type, seriesId } = state.keyboardNavigation ?? {};
+      let { type, seriesId } = state.keyboardNavigation.item ?? {};
       if (
         type === undefined ||
         seriesId === undefined ||
@@ -130,7 +25,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       ) {
         const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
         if (nextSeries === null) {
-          return { ...state, keyboardNavigation: null }; // No series to move the focus too.
+          return {
+            ...state,
+            keyboardNavigation: {
+              ...state.keyboardNavigation,
+              item: null, // No series to move the focus too.
+            },
+          };
         }
         type = nextSeries.type;
         seriesId = nextSeries.seriesId;
@@ -141,9 +42,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       return {
         ...state,
         keyboardNavigation: {
-          type,
-          seriesId,
-          dataIndex: ((state.keyboardNavigation?.dataIndex ?? -1) + 1) % dataLength,
+          ...state.keyboardNavigation,
+          item: {
+            type,
+            seriesId,
+            dataIndex: ((state.keyboardNavigation.item?.dataIndex ?? -1) + 1) % dataLength,
+          },
         },
       };
     });
@@ -151,7 +55,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
   const focusPreviousItem = useEventCallback(function focusPreviousItem() {
     store.update((state) => {
-      let { type, seriesId } = state.keyboardNavigation ?? {};
+      let { type, seriesId } = state.keyboardNavigation.item ?? {};
       if (
         type === undefined ||
         seriesId === undefined ||
@@ -163,7 +67,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           seriesId,
         );
         if (previousSeries === null) {
-          return { ...state, keyboardNavigation: null }; // No series to move the focus too.
+          return {
+            ...state,
+            keyboardNavigation: {
+              ...state.keyboardNavigation,
+              item: null, // No series to move the focus too.} };
+            },
+          };
         }
         type = previousSeries.type;
         seriesId = previousSeries.seriesId;
@@ -174,9 +84,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       return {
         ...state,
         keyboardNavigation: {
-          type,
-          seriesId,
-          dataIndex: (dataLength + (state.keyboardNavigation?.dataIndex ?? 1) - 1) % dataLength,
+          ...state.keyboardNavigation,
+          item: {
+            type,
+            seriesId,
+            dataIndex:
+              (dataLength + (state.keyboardNavigation.item?.dataIndex ?? 1) - 1) % dataLength,
+          },
         },
       };
     });
@@ -185,7 +99,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   const focusPreviousSeries = useEventCallback(function focusPreviousSeries() {
     let setNewSeries = false;
     store.update((state) => {
-      let { type, seriesId } = state.keyboardNavigation ?? {};
+      let { type, seriesId } = state.keyboardNavigation.item ?? {};
 
       const previousSeries = getPreviousSeriesWithData(
         state.series.processedSeries,
@@ -193,7 +107,13 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         seriesId,
       );
       if (previousSeries === null) {
-        return { ...state, keyboardNavigation: null }; // No series to move the focus too.
+        return {
+          ...state,
+          keyboardNavigation: {
+            ...state.keyboardNavigation,
+            item: null, // No series to move the focus too.
+          },
+        };
       }
       type = previousSeries.type;
       seriesId = previousSeries.seriesId;
@@ -204,9 +124,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       return {
         ...state,
         keyboardNavigation: {
-          type,
-          seriesId,
-          dataIndex: Math.min(dataLength - 1, state.keyboardNavigation?.dataIndex ?? 0),
+          ...state.keyboardNavigation,
+          item: {
+            type,
+            seriesId,
+            dataIndex: Math.min(dataLength - 1, state.keyboardNavigation.item?.dataIndex ?? 0),
+          },
         },
       };
     });
@@ -217,12 +140,18 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     let setNewSeries = false;
 
     store.update((state) => {
-      let { type, seriesId } = state.keyboardNavigation ?? {};
+      let { type, seriesId } = state.keyboardNavigation.item ?? {};
 
       const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
 
       if (nextSeries === null) {
-        return { ...state, keyboardNavigation: null }; // No series to move the focus too.
+        return {
+          ...state,
+          keyboardNavigation: {
+            ...state.keyboardNavigation,
+            item: null, // No series to move the focus too.
+          },
+        };
       }
       type = nextSeries.type;
       seriesId = nextSeries.seriesId;
@@ -233,9 +162,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       return {
         ...state,
         keyboardNavigation: {
-          type,
-          seriesId,
-          dataIndex: Math.min(dataLength - 1, state.keyboardNavigation?.dataIndex ?? 0),
+          ...state.keyboardNavigation,
+          item: {
+            type,
+            seriesId,
+            dataIndex: Math.min(dataLength - 1, state.keyboardNavigation.item?.dataIndex ?? 0),
+          },
         },
       };
     });
@@ -245,16 +177,22 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
   const removeFocus = useEventCallback(function removeFocus() {
     store.update((state) => {
-      if (state.keyboardNavigation === null) {
+      if (state.keyboardNavigation.item === null) {
         return state;
       }
-      return { ...state, keyboardNavigation: null };
+      return {
+        ...state,
+        keyboardNavigation: {
+          ...state.keyboardNavigation,
+          item: null,
+        },
+      };
     });
   });
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!element) {
+    if (!element || !params.enableKeyboardNavigation) {
       return undefined;
     }
 
@@ -296,15 +234,45 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       element.removeEventListener('focus', focusNextItem);
       element.removeEventListener('blur', removeFocus);
     };
-  }, [svgRef, focusNextItem, focusPreviousItem, removeFocus, focusPreviousSeries, focusNextSeries]);
+  }, [
+    svgRef,
+    focusNextItem,
+    focusPreviousItem,
+    removeFocus,
+    focusPreviousSeries,
+    focusNextSeries,
+    params.enableKeyboardNavigation,
+  ]);
+
+  useEnhancedEffect(
+    () =>
+      store.update((prev) =>
+        prev.keyboardNavigation.enableKeyboardNavigation === params.enableKeyboardNavigation
+          ? prev
+          : {
+              ...prev,
+              keyboardNavigation: {
+                ...prev.keyboardNavigation,
+                enableKeyboardNavigation: !!params.enableKeyboardNavigation,
+              },
+            },
+      ),
+
+    [store, params.enableKeyboardNavigation],
+  );
 
   return {
     instance: {},
   };
 };
 
-useChartKeyboardNavigation.getInitialState = () => ({
-  keyboardNavigation: null,
+useChartKeyboardNavigation.getInitialState = (params) => ({
+  keyboardNavigation: {
+    item: null,
+    enableKeyboardNavigation: !!params.enableKeyboardNavigation,
+  },
 });
 
-useChartKeyboardNavigation.params = {};
+useChartKeyboardNavigation.params = {
+  enableKeyboardNavigation: true,
+};

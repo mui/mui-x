@@ -11,6 +11,7 @@ import {
   selectorChartContainerSize,
   selectorChartPropsSize,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
+import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 export interface ChartsSurfaceProps
   extends Omit<
@@ -68,6 +69,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const store = useStore();
   const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
   const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+  const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
@@ -83,7 +85,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       className={className}
       {...other}
       ref={handleRef}
-      tabIndex={0}
+      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
     >
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}

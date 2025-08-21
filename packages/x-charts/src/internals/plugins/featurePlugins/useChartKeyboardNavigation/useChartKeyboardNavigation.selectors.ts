@@ -7,15 +7,22 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
 
 export const selectorChartsFocusedSeriesType = createSelector(
   [selectKeyboardNavigation],
-  (item) => item?.type,
+  (keyboardNavigationState) => keyboardNavigationState?.item?.type,
 );
 
 export const selectorChartsFocusedSeriesId = createSelector(
   [selectKeyboardNavigation],
-  (item) => item?.seriesId,
+  (keyboardNavigationState) => keyboardNavigationState?.item?.seriesId,
 );
 
 export const selectorChartsFocusedDataIndex = createSelector(
   [selectKeyboardNavigation],
-  (item) => item?.dataIndex,
+  (keyboardNavigationState) => keyboardNavigationState?.item?.dataIndex,
 );
+
+
+export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
+  [selectKeyboardNavigation],
+  (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
+);
+
