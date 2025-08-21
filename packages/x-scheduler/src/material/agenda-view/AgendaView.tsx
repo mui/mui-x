@@ -3,7 +3,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
@@ -12,6 +11,7 @@ import { selectors } from '../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import './AgendaView.css';
+import { useInitializeView } from '../internals/hooks/useInitializeView';
 
 // TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
@@ -27,7 +27,7 @@ export const AgendaView = React.memo(
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     const { className, ...other } = props;
-    const { store, instance } = useEventCalendarContext();
+    const { store } = useEventCalendarContext();
 
     const today = adapter.date();
 
@@ -50,11 +50,10 @@ export const AgendaView = React.memo(
     });
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
-    useIsoLayoutEffect(() => {
-      return instance.setSiblingVisibleDateSetter((date, delta) =>
+    useInitializeView({
+      siblingVisibleDateGetter: (date, delta) =>
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
-      );
-    }, []);
+    });
 
     return (
       <div

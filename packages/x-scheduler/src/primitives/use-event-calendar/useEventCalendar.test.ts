@@ -10,7 +10,7 @@ describe('useDateNavigation', () => {
   const adapter = getAdapter();
 
   describe('Method: goToPreviousVisibleDate', () => {
-    it('should respect the date returned by setSiblingVisibleDateSetter', () => {
+    it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
       const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
@@ -20,7 +20,7 @@ describe('useDateNavigation', () => {
         useEventCalendar({ ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange }),
       );
 
-      act(() => result.current.instance.setSiblingVisibleDateSetter(getter));
+      act(() => result.current.instance.setSiblingVisibleDateGetter(getter));
       act(() => result.current.instance.goToPreviousVisibleDate({} as any));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
       expect(getter.lastCall.lastArg).toEqual(-1);
@@ -28,7 +28,7 @@ describe('useDateNavigation', () => {
   });
 
   describe('Method: goToNextVisibleDate', () => {
-    it('should respect the date returned by setSiblingVisibleDateSetter', () => {
+    it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
       const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
@@ -38,7 +38,7 @@ describe('useDateNavigation', () => {
         useEventCalendar({ ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange }),
       );
 
-      act(() => result.current.instance.setSiblingVisibleDateSetter(getter));
+      act(() => result.current.instance.setSiblingVisibleDateGetter(getter));
       act(() => result.current.instance.goToNextVisibleDate({} as any));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
       expect(getter.lastCall.lastArg).toEqual(1);

@@ -48,7 +48,7 @@ export type State = {
    * Method used to determine the previous / the next visible date.
    * This property is defined by the currently rendered view.
    */
-  siblingVisibleDateSetter: (date: SchedulerValidDate, delta: 1 | -1) => SchedulerValidDate;
+  siblingVisibleDateGetter: (date: SchedulerValidDate, delta: 1 | -1) => SchedulerValidDate;
 };
 
 export const selectors = {

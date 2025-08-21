@@ -61,7 +61,7 @@ export function useEventCalendar(
         areEventsResizable,
         ampm,
         settings: settingsProp,
-        siblingVisibleDateSetter: (date) => date,
+        siblingVisibleDateGetter: (date) => date,
       }),
   ).current;
 
@@ -159,12 +159,12 @@ export function useEventCalendar(
 
   const goToPreviousVisibleDate: useEventCalendar.Instance['goToPreviousVisibleDate'] =
     useEventCallback((event) => {
-      setVisibleDate(store.state.siblingVisibleDateSetter(store.state.visibleDate, -1), event);
+      setVisibleDate(store.state.siblingVisibleDateGetter(store.state.visibleDate, -1), event);
     });
 
   const goToNextVisibleDate: useEventCalendar.Instance['goToNextVisibleDate'] = useEventCallback(
     (event) => {
-      setVisibleDate(store.state.siblingVisibleDateSetter(store.state.visibleDate, 1), event);
+      setVisibleDate(store.state.siblingVisibleDateGetter(store.state.visibleDate, 1), event);
     },
   );
 
@@ -195,11 +195,11 @@ export function useEventCalendar(
     },
   );
 
-  const setSiblingVisibleDateSetter: useEventCalendar.Instance['setSiblingVisibleDateSetter'] =
+  const setSiblingVisibleDateGetter: useEventCalendar.Instance['setSiblingVisibleDateGetter'] =
     useEventCallback((setter) => {
-      store.set('siblingVisibleDateSetter', setter);
+      store.set('siblingVisibleDateGetter', setter);
 
-      return () => store.set('siblingVisibleDateSetter', (date: SchedulerValidDate) => date);
+      return () => store.set('siblingVisibleDateGetter', (date: SchedulerValidDate) => date);
     });
 
   const instanceRef = React.useRef<useEventCalendar.Instance>({
@@ -212,7 +212,7 @@ export function useEventCalendar(
     switchToDay,
     setVisibleResources,
     setSettings,
-    setSiblingVisibleDateSetter,
+    setSiblingVisibleDateGetter,
   });
   const instance = instanceRef.current;
 
@@ -340,7 +340,7 @@ export namespace useEventCalendar {
      * Sets the method used to determine the previous / next visible date.
      * Returns the cleanup function.
      */
-    setSiblingVisibleDateSetter: (setter: State['siblingVisibleDateSetter']) => () => void;
+    setSiblingVisibleDateGetter: (getter: State['siblingVisibleDateGetter']) => () => void;
   }
 
   export type Store = BaseStore<State>;
