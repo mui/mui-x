@@ -13,9 +13,9 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
 
     return {
       identifier,
-      color: node.color!,
+      color: node.color,
       label: `${node.label}:`,
-      value: node.value!,
+      value: node.value,
       formattedValue: `${node.value}`,
       markType: 'square' as const,
     };
@@ -33,9 +33,9 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
 
     return {
       identifier,
-      color: link.color!,
+      color: link.color,
       label: `${sourceLabel} → ${targetLabel}:`,
-      value: link.value!,
+      value: link.value,
       formattedValue: `${link.value}`,
       markType: 'line' as const,
     };

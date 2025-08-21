@@ -99,9 +99,9 @@ export function calculateSankeyLayout(
     });
 
     return {
-      color: linkColor,
       ...originalLink,
       ...link,
+      color: originalLink?.color ?? linkColor,
       path: improvedNaiveSankeyLinkPathHorizontal(link, curveCorrection),
     };
   });
