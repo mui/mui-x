@@ -40,6 +40,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const content = React.useMemo(() => {
     switch (variant) {
       case 'allDay':
+      case 'invisible':
         return (
           <p
             className={clsx('DayGridEventTitle', 'LinesClamp')}

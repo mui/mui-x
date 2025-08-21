@@ -1,20 +1,21 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
+import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
 import { useDayList } from '../../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { selectors } from '../../../primitives/use-event-calendar';
-import { MonthViewCell } from './MonthViewCell';
 import './MonthViewWeekRow.css';
+import { MonthViewCell } from './MonthViewCell';
+
+const adapter = getAdapter();
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, week, firstDayRef } = props;
 
-  const adapter = useAdapter();
   const { store } = useEventCalendarContext();
   const settings = useStore(store, selectors.settings);
 
@@ -42,12 +43,15 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       >
         {weekNumber}
       </div>
-      {daysWithEvents.map(({ day, events }, dayIdx) => (
+      {daysWithEvents.map(({ day, events, allDayEvents }, dayIdx) => (
         <MonthViewCell
-          key={day.toString()}
           ref={dayIdx === 0 ? firstDayRef : undefined}
+          key={day.toString()}
           day={day}
+          dayIndexInRow={dayIdx}
+          rowLength={days.length}
           events={events}
+          allDayEvents={allDayEvents}
           maxEvents={maxEvents}
         />
       ))}

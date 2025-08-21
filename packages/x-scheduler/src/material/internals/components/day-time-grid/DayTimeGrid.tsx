@@ -141,6 +141,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 key={day.toString()}
                 value={day}
                 className="DayTimeGridAllDayEventsCell"
+                data-testid={`day-time-grid-all-day-events-cell-${adapter.format(day, 'month')}-${adapter.format(day, 'dayOfMonth')}`}
                 style={
                   {
                     '--row-count': getEventWithLargestRowIndex(allDayEvents),
@@ -151,7 +152,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 data-weekend={isWeekend(adapter, day) ? '' : undefined}
               >
                 {allDayEvents.map((event) => {
-                  const durationInDays = adapter.startOfDay(event.end).diff(day, 'days').days + 1;
+                  const durationInDays = adapter.getDurationInDays(day, event.end) + 1;
                   const gridColumnSpan = Math.min(durationInDays, days.length - dayIndex); // Don't exceed available columns
                   const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIndex === 0;
 
