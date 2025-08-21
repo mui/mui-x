@@ -72,16 +72,26 @@ const getAlign = (direction?: Direction, position?: Position) => {
   return 'center';
 };
 
+const getJustifyItems = (direction?: Direction, position?: Position) => {
+  if (position?.horizontal === 'start') {
+    return 'start';
+  }
+  if (position?.horizontal === 'end') {
+    return 'end';
+  }
+  return 'center';
+};
+
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically',
 })<{ ownerState: ChartsWrapperProps; extendVertically: boolean }>(({ ownerState }) => ({
-  display: 'flex',
-  flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: getAlign(ownerState.legendDirection, ownerState.legendPosition),
+  // display: 'flex',
+  // flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
+  // flex: 1,
+  // justifyContent: 'center',
+  // alignItems: getAlign(ownerState.legendDirection, ownerState.legendPosition),
   variants: [
     {
       props: { extendVertically: true },
@@ -90,17 +100,17 @@ const Root = styled('div', {
       },
     },
   ],
-  [`&:has(.${chartsToolbarClasses.root})`]: {
-    position: 'relative',
-    paddingTop: '56px',
-  },
-  [`& > .${chartsToolbarClasses.root}`]: {
-    position: 'absolute',
-    top: 0,
-    left: '50%',
-    transform: 'translateX(-50%)',
-    zIndex: 1,
-  },
+
+  width: '100%',
+  display: 'grid',
+  gridTemplateColumns: '100%',
+  gridTemplateRows: 'auto auto 1fr',
+  gridTemplateAreas: `
+    "toolbar"
+    "legend"
+    "chart"
+  `,
+  justifyItems: getJustifyItems(ownerState.legendDirection, ownerState.legendPosition),
 }));
 
 /**
