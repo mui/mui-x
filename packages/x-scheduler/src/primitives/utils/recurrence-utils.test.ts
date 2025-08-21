@@ -3,7 +3,7 @@ import { ByDayCode, CalendarEvent, RRuleSpec } from '@mui/x-scheduler/primitives
 import {
   detectRecurrenceKeyFromRule,
   buildRecurrencePresets,
-  getRecurringEventOccurencesForVisibleDays,
+  getRecurringEventOccurrencesForVisibleDays,
   countMonthlyOccurrencesUpToExact,
   countWeeklyOccurrencesUpToExact,
   estimateOccurrencesUpTo,
@@ -672,7 +672,7 @@ describe('recurrence-utils', () => {
     });
   });
 
-  describe('getRecurringEventOccurencesForVisibleDays', () => {
+  describe('getRecurringEventOccurrencesForVisibleDays', () => {
     const makeDays = (start: DateTime, count: number) =>
       Array.from({ length: count }, (_, i) => start.plus({ days: i }));
 
@@ -698,7 +698,7 @@ describe('recurrence-utils', () => {
         rrule: { freq: 'DAILY', interval: 1 },
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       expect(result).to.have.length(5);
       for (let i = 0; i < result.length; i += 1) {
         const occ = result[i];
@@ -720,7 +720,7 @@ describe('recurrence-utils', () => {
         rrule: { freq: 'DAILY', interval: 1, until },
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       // Jan 1..5 inclusive
       expect(result.map((o) => adapter.getDate(o.start))).to.deep.equal([1, 2, 3, 4, 5]);
     });
@@ -732,7 +732,7 @@ describe('recurrence-utils', () => {
         rrule: { freq: 'DAILY', interval: 1, count: 3 },
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       expect(result).to.have.length(3);
       expect(result.map((o) => adapter.getDate(o.start))).to.deep.equal([1, 2, 3]);
     });
@@ -746,7 +746,7 @@ describe('recurrence-utils', () => {
         rrule: { freq: 'WEEKLY', interval: 2 }, // byDay omitted -> defaults to start weekday
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       // Expect Fridays at week 0, 2 and 4
       const dates = result.map((o) => adapter.getDate(o.start));
       expect(dates).to.deep.equal([3, 17, 31]);
@@ -765,7 +765,7 @@ describe('recurrence-utils', () => {
         },
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       const daysOfMonth = result.map((o) => adapter.getDate(o.start));
       expect(daysOfMonth).to.deep.equal([10, 10, 10, 10]);
     });
@@ -779,7 +779,7 @@ describe('recurrence-utils', () => {
         rrule: { freq: 'YEARLY', interval: 2 },
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       const years = result.map((o) => adapter.getYear(o.start));
       expect(years).to.deep.equal([2025, 2027, 2029]);
     });
@@ -797,7 +797,7 @@ describe('recurrence-utils', () => {
         rrule: { freq: 'DAILY', interval: 7 },
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       expect(result).to.have.length(1);
       expect(adapter.getDate(result[0].start)).to.equal(3);
       expect(adapter.getDate(result[0].end)).to.equal(6);
@@ -819,7 +819,7 @@ describe('recurrence-utils', () => {
         rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       const { numToByDay } = getByDayMaps(adapter);
       const dows = result.map((o) => numToByDay[adapter.getDayOfWeek(o.start)]);
 
@@ -841,7 +841,7 @@ describe('recurrence-utils', () => {
         },
       });
 
-      const result = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
+      const result = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
       expect(result).to.have.length(0);
     });
   });

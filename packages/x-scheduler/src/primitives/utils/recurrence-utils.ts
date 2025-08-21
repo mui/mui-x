@@ -164,7 +164,7 @@ export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): numbe
  *  Preserves timed duration; for all-day spans, expands to cover the full multi-day block.
  *  @returns Sorted list (by start) of concrete occurrences.
  */
-export function getRecurringEventOccurencesForVisibleDays(
+export function getRecurringEventOccurrencesForVisibleDays(
   event: CalendarEvent,
   days: SchedulerValidDate[],
   adapter: Adapter,
