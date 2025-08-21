@@ -469,6 +469,12 @@ export const GridRootStyles = styled('div', {
         opacity: 0.5,
       },
     },
+    // Hide the column separator when the column is the first pinned column and it is not resizable
+    // In this case, this column separator blocks interaction with the separator from the previous column since it has a higher z-index
+    [`& .${c['columnHeader--withLeftBorder']} .${c['columnSeparator--sideLeft']}:not(.${c['columnSeparator--resizable']}), & .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideRight']}:not(.${c['columnSeparator--resizable']})`]:
+      {
+        display: 'none',
+      },
     [`& .${c['columnSeparator--sideLeft']}`]: {
       left: columnSeparatorOffset,
     },
