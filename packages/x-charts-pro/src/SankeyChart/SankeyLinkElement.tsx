@@ -3,7 +3,6 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
-import { useChartId } from '@mui/x-charts/hooks';
 import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
 
 export interface SankeyLinkElementProps {
@@ -33,7 +32,6 @@ export interface SankeyLinkElementProps {
 export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElementProps>(
   function SankeyLinkElement(props, ref) {
     const { link, opacity = 0.4, onClick, seriesId } = props;
-    const chartId = useChartId();
 
     const identifier: SankeyItemIdentifier = {
       type: 'sankey',
@@ -53,37 +51,17 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
       return null; // No path defined, nothing to render
     }
 
-    const allY = [link.source.y0!, link.source.y1!, link.target.y0!, link.target.y1!];
-
-    const targetWidth = link.target.x1! - link.target.x0!;
-    const sourceWidth = link.source.x1! - link.source.x0!;
-
-    const x0 = link.source.x1! - sourceWidth;
-    const y0 = Math.max(...allY);
-    const x1 = link.target.x0! + targetWidth;
-    const y1 = Math.min(...allY);
-
-    const clipId = `clip-${chartId}-${link.source.id}-${link.target.id}`;
-
     return (
       <React.Fragment>
-        <defs>
-          <clipPath id={clipId}>
-            <path d={`M${x0},${y0} L${x1},${y0} L${x1},${y1} L${x0},${y1} Z`} />
-          </clipPath>
-        </defs>
         <path
           ref={ref}
           d={link.path}
-          stroke={link.color}
-          strokeWidth={link.width}
-          strokeOpacity={opacity}
+          fill={link.color}
+          opacity={opacity}
           data-link-source={link.source.id}
           data-link-target={link.target.id}
           onClick={onClick ? handleClick : undefined}
           cursor={onClick ? 'pointer' : 'default'}
-          fill="none"
-          clipPath={`url(#${clipId})`}
           {...interactionProps}
         />
       </React.Fragment>

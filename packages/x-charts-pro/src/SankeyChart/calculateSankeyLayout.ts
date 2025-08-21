@@ -1,7 +1,8 @@
 'use client';
-import { sankey, type SankeyGraph, sankeyLinkHorizontal } from '@mui/x-charts-vendor/d3-sankey';
+import { sankey, type SankeyGraph } from '@mui/x-charts-vendor/d3-sankey';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import type { Theme } from '@mui/material/styles';
+import { path } from '@mui/x-charts-vendor/d3-path';
 import type {
   SankeySeriesType,
   SankeyLayout,
@@ -26,9 +27,12 @@ export function calculateSankeyLayout(
   data: DefaultizedSankeySeriesType['data'],
   drawingArea: ChartDrawingArea,
   theme: Theme,
-  series: Pick<SankeySeriesType, 'nodeOptions' | 'linkOptions' | 'iterations'> = {},
+  series: Pick<
+    SankeySeriesType,
+    'nodeOptions' | 'linkOptions' | 'iterations' | 'curveCorrection'
+  > = {},
 ): SankeyLayout {
-  const { iterations = 6, nodeOptions, linkOptions } = series;
+  const { iterations = 6, nodeOptions, linkOptions, curveCorrection = 5 } = series;
   const {
     width: nodeWidth = 15,
     padding: nodePadding = 10,
@@ -89,9 +93,6 @@ export function calculateSankeyLayout(
   }
   const { nodes, links } = result;
 
-  // Link path generator
-  const linkGenerator = sankeyLinkHorizontal();
-
   // Convert d3-sankey links to our format
   // Cast to SankeyLayoutLink as it has the correct properties
   const layoutLinks: SankeyLayoutLink[] = (links as SankeyLayoutLink[]).map((link) => {
@@ -104,7 +105,7 @@ export function calculateSankeyLayout(
       color: linkColor,
       ...originalLink,
       ...link,
-      path: linkGenerator(link),
+      path: improvedNaiveSankeyLinkPathHorizontal(link, curveCorrection),
     };
   });
 
@@ -120,4 +121,46 @@ export function calculateSankeyLayout(
     nodes: layoutNodes,
     links: layoutLinks,
   };
+}
+
+export function improvedNaiveSankeyLinkPathHorizontal(
+  link: SankeyLayoutLink,
+  curveCorrection?: number,
+) {
+  const sx = link.source.x1!;
+  const tx = link.target.x0!;
+  // Weirdly this seems to work for any chart or node width change
+  // But needs to be changed when the sankey height changes.
+  const correction = curveCorrection ?? 5;
+  const y0 = link.y0!;
+  const y1 = link.y1!;
+  const w = link.width!;
+  const halfW = w / 2;
+  const sy0 = y0 - halfW;
+  const sy1 = y0 + halfW;
+  const ty0 = y1 - halfW;
+  const ty1 = y1 + halfW;
+
+  const halfX = (tx - sx) / 2;
+
+  const p = path();
+  p.moveTo(sx, sy0);
+
+  const isDecreasing = y0 > y1;
+  const direction = isDecreasing ? -1 : 1;
+
+  let cpx1 = sx + halfX + correction * direction;
+  let cpy1 = sy0;
+  let cpx2 = sx + halfX + correction * direction;
+  let cpy2 = ty0;
+  p.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, tx, ty0);
+  p.lineTo(tx, ty1);
+
+  cpx1 = sx + halfX - correction * direction;
+  cpy1 = ty1;
+  cpx2 = sx + halfX - correction * direction;
+  cpy2 = sy1;
+  p.bezierCurveTo(cpx1, cpy1, cpx2, cpy2, sx, sy1);
+  p.lineTo(sx, sy0);
+  return p.toString();
 }

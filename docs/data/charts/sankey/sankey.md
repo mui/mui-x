@@ -61,6 +61,15 @@ For example, in the demonstration below:
 
 {{"demo": "SankeyNodeAlignment.js"}}
 
+### Curve correction
+
+The `curveCorrection` prop adjusts the look of the links between nodes by modifying the X dimension of the control points in the curve function.
+In some instances, this creates better-looking connections but is dependent on the graph layout, and is especially impacted by the chart height.
+
+Higher values create plumper links, while lower values create thinner connections. The default value is `5`.
+
+{{"demo": "SankeyCurveCorrection.js"}}
+
 ## Sorting
 
 Nodes are displayed in the same order as they are defined in the `nodes` array.
