@@ -16,8 +16,7 @@ export default function RowGroupingGroupingValueSetter() {
       {
         field: 'composer',
         headerName: 'Composer',
-        valueGetter: (value) => value.name,
-        groupingValueGetter: (value) => value.name,
+        valueGetter: (value) => value?.name,
         groupingValueSetter: (value, row) => {
           return {
             ...row,
@@ -29,20 +28,13 @@ export default function RowGroupingGroupingValueSetter() {
       {
         field: 'decade',
         headerName: 'Decade',
-        valueGetter: (value, row) => Math.floor(row.year / 10) * 10,
-        groupingValueGetter: (value, row) => Math.floor(row.year / 10) * 10,
+        valueGetter: (_, row) => (row.year ? Math.floor(row.year / 10) * 10 : null),
         groupingValueSetter: (value, row) => ({
           ...row,
           // Since converting to decade is a lossy operation, directly using the decade value should be sufficient here
           year: value,
         }),
-        renderCell: (params) => {
-          if (params.value == null) {
-            return '';
-          }
-
-          return `${params.value.toString().slice(-2)}'s`;
-        },
+        valueFormatter: (value) => (value ? `${value.toString().slice(-2)}'s` : ''),
       },
     ],
     [data.columns],
