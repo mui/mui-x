@@ -5,8 +5,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Ei sarakkeita',
+  noColumnsOverlayManageColumns: 'Hallitse sarakkeita',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -67,9 +67,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'sisältää',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'ei sisällä',
   filterOperatorEquals: 'on yhtä suuri kuin',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'on eri suuri kuin',
   filterOperatorStartsWith: 'alkaa',
   filterOperatorEndsWith: 'päättyy',
   filterOperatorIs: 'on',
@@ -90,9 +90,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Sisältää',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Ei sisällä',
   headerFilterOperatorEquals: 'On yhtä suuri kuin',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'On eri suuri kuin',
   headerFilterOperatorStartsWith: 'Alkaa',
   headerFilterOperatorEndsWith: 'Päättyy',
   headerFilterOperatorIs: 'On',

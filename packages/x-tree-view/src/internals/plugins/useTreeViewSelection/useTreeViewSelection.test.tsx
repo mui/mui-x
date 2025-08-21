@@ -718,6 +718,53 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
         });
 
+        it('should keep the parent checkbox indeterminate after collapsing it and expanding another node', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              { id: '1', children: [{ id: '1.1' }, { id: '1.2' }] },
+              { id: '2', children: [{ id: '2.1' }] },
+            ],
+            defaultSelectedItems: ['1.1'],
+            defaultExpandedItems: ['1'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+
+          fireEvent.click(view.getItemContent('1'));
+          fireEvent.click(view.getItemContent('2'));
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
+        it('should keep parent indeterminate (3 levels) after collapsing the parent and expanding a sibling node', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              {
+                id: '1',
+                children: [
+                  { id: '1.1', children: [{ id: '1.1.1' }, { id: '1.1.2' }] },
+                  { id: '1.2' },
+                ],
+              },
+              { id: '2', children: [{ id: '2.1' }] },
+            ],
+            defaultSelectedItems: ['1.1.1'],
+            defaultExpandedItems: ['1', '1.1'],
+          });
+
+          expect(view.getItemCheckboxInput('1.1').dataset.indeterminate).to.equal('true');
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+
+          fireEvent.click(view.getItemContent('1'));
+          fireEvent.click(view.getItemContent('2'));
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
         it('should not set the parent checkbox as indeterminate when no child is selected and the parent is not either', () => {
           const view = render({
             multiSelect: true,

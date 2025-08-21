@@ -1,8 +1,7 @@
-import { Annotation } from 'doctrine';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
-import * as fse from 'fs-extra';
 import { Symbol, isPropertySignature, isExportSpecifier, TypeFormatFlags } from 'typescript';
+import fs from 'node:fs/promises';
 import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 import { resolvePrettierConfigPath } from '../utils';
 
@@ -17,14 +16,6 @@ export const getSymbolDescription = (symbol: Symbol, project: XTypeScriptProject
 
 export const getSymbolJSDocTags = (symbol: Symbol) =>
   Object.fromEntries(symbol.getJsDocTags().map((tag) => [tag.name, tag]));
-
-export function getJsdocDefaultValue(jsdoc: Annotation) {
-  const defaultTag = jsdoc.tags.find((tag) => tag.title === 'default');
-  if (defaultTag === undefined) {
-    return undefined;
-  }
-  return defaultTag.description || '';
-}
 
 export function escapeCell(value: string) {
   return value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r?\n/g, '<br />');
@@ -97,7 +88,7 @@ export async function writePrettifiedFile(filename: string, data: string) {
     );
   }
 
-  fse.writeFileSync(
+  await fs.writeFile(
     filename,
     await prettier.format(data, { ...prettierConfig, filepath: filename }),
     {
