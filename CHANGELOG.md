@@ -5,6 +5,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.10.2
+
+_Aug 20, 2025_
+
+We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌎 Improve Finnish (fi-FI) locale on the Data Grid
+
+Special thanks go out to the community members for their valuable contributions:
+@lauri-heinonen-2025-04, @Methuselah96, @sai6855, @wilcoschoneveld
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @cherniavskii, @flaviendelangle, @Janpot, @oliviertassinari, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.10.2`
+
+- [DataGrid] Fix display for `<GridEditSingleSelect />` when `density='compact'` (#19249) @sai6855
+- [DataGrid] Fix column header sortable classname when using `disableColumnSorting` (#19222) @wilcoschoneveld
+- [l10n] Improve finnish (fi-FI) locale (#19163) @lauri-heinonen-2025-04
+
+#### `@mui/x-data-grid-pro@8.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@8.10.2`, plus:
+
+- [DataGridPro] Fix quick filter not working in List View mode (#19254) @cherniavskii
+
+#### `@mui/x-data-grid-premium@8.10.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@8.10.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.10.2`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-date-pickers@8.10.2`.
+
+### Charts
+
+#### `@mui/x-charts@8.10.2`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-charts@8.10.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.10.2`
+
+- [tree view] Add `aria-hidden` to the Tree Item Checkbox (#19246) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-tree-view@8.10.2`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.10.2`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix links to the pyramid chart (#19250) @alexfauquette
+
+### Core
+
+- [internal] Avoid script for CI only @oliviertassinari
+- [internal] Fix `renovate.json` @oliviertassinari
+- [internal] Polish renovate config @oliviertassinari
+- [internal] Rename core to internal (#19203) @oliviertassinari
+- [internal] Update link to GitHub labels @oliviertassinari
+
+### Miscellaneous
+
+- [code-infra] Prepare for incoming `execa` update (#19229) @Janpot
+- [virtualizer] Fix type import (#19192) @Methuselah96
+- [virtualizer] Improve type export (#19192) @Methuselah96
+
 ## 8.10.1
 
 _Aug 15, 2025_
