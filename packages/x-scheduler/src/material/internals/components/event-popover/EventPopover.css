@@ -186,6 +186,13 @@
     outline: 2px solid var(--gray-3);
     outline-offset: 2px;
   }
+
+  &[data-disabled] {
+    cursor: var(--cursor-disabled);
+    &[data-checked] {
+      background-color: var(--disabled-text-color);
+    }
+  }
 }
 
 .AllDayCheckboxIndicator {
@@ -281,4 +288,22 @@
 
 .EventPopoverSelectItemText {
   grid-column: 2;
+}
+
+.EventPopoverFieldRoot[data-disabled] {
+  & input,
+  & textarea {
+    cursor: var(--cursor-disabled);
+    color: var(--disabled-text-color);
+  }
+
+  .EventPopoverSelectTrigger {
+    color: var(--disabled-text-color);
+    cursor: var(--cursor-disabled);
+  }
+
+  .EventPopoverFormLabel,
+  .AllDayCheckboxLabel {
+    color: var(--disabled-text-color);
+  }
 }
