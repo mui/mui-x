@@ -103,6 +103,7 @@ export type UseTreeItemLabelInputSlotProps<ExternalProps = {}> = ExternalProps &
 
 export interface UseTreeItemCheckboxSlotOwnProps {
   ref: React.RefObject<HTMLButtonElement | null>;
+  'aria-hidden': true;
 }
 
 export type UseTreeItemCheckboxSlotProps<ExternalProps = {}> = ExternalProps &
