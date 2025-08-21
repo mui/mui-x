@@ -63,12 +63,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           <span className="EventTitle">{eventProp.title}</span>
           <time className="EventTime">{adapter.format(eventProp.start, timeFormat)}</time>
           {isRecurring && (
-            <Repeat
-              size={12}
-              strokeWidth={1.5}
-              className="EventRecurringIcon"
-              aria-label="Recurring event"
-            />
+            <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
           )}
         </p>
       );
@@ -89,12 +84,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           {adapter.format(eventProp.end, timeFormat)}
         </time>
         {isRecurring && (
-          <Repeat
-            size={12}
-            strokeWidth={1.5}
-            className="EventRecurringIcon"
-            aria-label="Recurring event"
-          />
+          <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
         )}
       </React.Fragment>
     );

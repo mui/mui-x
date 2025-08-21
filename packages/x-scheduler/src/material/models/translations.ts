@@ -35,6 +35,7 @@ export interface SchedulerTranslations {
   closeButtonAriaLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
+  editDisabledNotice: string;
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;

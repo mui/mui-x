@@ -326,6 +326,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     </Select.Root>
                   )}
                 </Field.Root>
+                {isRecurring && (
+                  <p className="EventPopoverEditDisabledNotice">
+                    {translations.editDisabledNotice}
+                  </p>
+                )}
                 <Separator className="EventPopoverSeparator" />
                 <div>
                   <Field.Root

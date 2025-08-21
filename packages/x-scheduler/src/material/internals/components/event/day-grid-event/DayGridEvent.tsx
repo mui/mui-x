@@ -53,7 +53,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 size={12}
                 strokeWidth={1.5}
                 className="EventRecurringIcon"
-                aria-label="Recurring event"
+                aria-hidden="true"
               />
             )}
           </React.Fragment>
@@ -96,7 +96,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 size={12}
                 strokeWidth={1.5}
                 className="EventRecurringIcon"
-                aria-label="Recurring event"
+                aria-hidden="true"
               />
             )}
           </div>

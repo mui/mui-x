@@ -307,3 +307,13 @@
     color: var(--disabled-text-color);
   }
 }
+
+.EventPopoverEditDisabledNotice {
+  margin: 0;
+  padding: var(--space-2);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--event-color-9);
+  border: 1px solid var(--event-color-6);
+  border-radius: var(--radius-4);
+}
