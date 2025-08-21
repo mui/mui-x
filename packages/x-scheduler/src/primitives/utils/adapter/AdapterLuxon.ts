@@ -482,7 +482,7 @@ export class AdapterLuxon implements Adapter<string> {
   };
 
   public getDayOfWeek = (value: DateTime) => {
-    return value.weekday;
+    return value.localWeekday ?? value.weekday;
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {

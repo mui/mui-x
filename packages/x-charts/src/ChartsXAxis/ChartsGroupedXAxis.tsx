@@ -139,6 +139,10 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
                 x={xTickLabel}
                 y={labelPositionY}
                 {...axisTickLabelProps}
+                style={{
+                  ...axisTickLabelProps.style,
+                  ...groupConfig.tickLabelStyle,
+                }}
                 text={tickLabel}
               />
             )}
