@@ -147,8 +147,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               >
                 {allDayEvents.map((event) => {
                   const durationInDays = diffIn(adapter, event.end, day, 'days') + 1;
-
-                  console.log(durationInDays);
                   const gridColumnSpan = Math.min(durationInDays, days.length - dayIndex); // Don't exceed available columns
                   const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIndex === 0;
 
