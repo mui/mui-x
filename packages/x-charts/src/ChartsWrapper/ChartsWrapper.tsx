@@ -92,10 +92,10 @@ const Root = styled('div', {
   gridTemplateRows: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : 'auto auto 1fr',
   gridTemplateAreas: getGridTemplateAreas(ownerState.legendDirection, ownerState.legendPosition),
   justifyItems: getJustifyItems(ownerState.legendPosition),
+  alignItems: getAlignItems(ownerState.legendPosition),
   [`& > .${chartsToolbarClasses.root}`]: {
     justifySelf: 'center',
   },
-  alignItems: getAlignItems(ownerState.legendPosition),
 }));
 
 /**
