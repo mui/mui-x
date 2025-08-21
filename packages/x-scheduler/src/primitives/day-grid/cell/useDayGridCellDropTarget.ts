@@ -27,7 +27,9 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
         (60 * 1000);
 
-      const newStartDate = mergeDateAndTime(adapter, value, data.start);
+      const valueWithOffset = data.dayOffset === 0 ? value : adapter.addDays(value, data.dayOffset);
+
+      const newStartDate = mergeDateAndTime(adapter, valueWithOffset, data.start);
       const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
 
       return { start: newStartDate, end: newEndDate, eventId: data.id, columnId: null };

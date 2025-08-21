@@ -2,11 +2,13 @@
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useEvent } from '../../utils/useEvent';
 import { SchedulerValidDate } from '../../models';
+import { useAdapter } from '../../utils/adapter/useAdapter';
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   componentProps: DayGridEvent.Props,
@@ -29,6 +31,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   // to control whether the event should behave like a button
   const isInteractive = true;
 
+  const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
@@ -40,6 +43,20 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     [eventState, isDragging],
   );
 
+  // TODO: Add support for multi row events.
+  const getDayOffset = useEventCallback((input: { clientX: number }) => {
+    if (!ref.current) {
+      return adapter.startOfDay(start);
+    }
+
+    const eventDayLength = adapter.getDurationInDays(start, end) + 1;
+    const clientX = input.clientX;
+    const elementPosition = ref.current.getBoundingClientRect();
+    const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
+
+    return -Math.floor(positionX * eventDayLength);
+  });
+
   React.useEffect(() => {
     if (!isDraggable) {
       return;
@@ -48,12 +65,13 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     // eslint-disable-next-line consistent-return
     return draggable({
       element: ref.current!,
-      getInitialData: () => ({
+      getInitialData: ({ input }) => ({
         type: 'event',
         source: 'DayGridEvent',
         id: eventId,
         start,
         end,
+        dayOffset: getDayOffset(input),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -61,7 +79,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [isDraggable, start, end, eventId]);
+  }, [isDraggable, start, end, eventId, getDayOffset]);
 
   return useRenderElement('div', componentProps, {
     state,
@@ -96,5 +114,6 @@ export namespace DayGridEvent {
     id: string | number;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
+    dayOffset: number;
   }
 }
