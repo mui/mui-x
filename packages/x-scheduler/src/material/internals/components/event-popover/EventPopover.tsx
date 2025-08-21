@@ -91,6 +91,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
     onClose();
   });
 
+  console.log(isEventReadOnly);
+
   return (
     <div ref={forwardedRef} className={className} {...other}>
       <Popover.Portal container={container}>
