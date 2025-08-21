@@ -88,6 +88,18 @@ const getGridTemplateAreasWithoutToolBar = (direction?: Direction, position?: Po
           "chart"`;
 };
 
+const getTemplateColumns = (direction?: Direction, position?: Position) => {
+  if (direction === 'vertical') {
+    if (position?.horizontal === 'start') {
+      return 'auto 1fr';
+    }
+
+    return '1fr auto';
+  }
+
+  return '100%';
+};
+
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
@@ -101,9 +113,8 @@ const Root = styled('div', {
       },
     },
   ],
-  width: '100%',
   display: 'grid',
-  gridTemplateColumns: ownerState.legendDirection === 'vertical' ? 'auto auto' : '100%',
+  gridTemplateColumns: getTemplateColumns(ownerState.legendDirection, ownerState.legendPosition),
   gridTemplateRows: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : 'auto auto 1fr',
   [`&:has(.${chartsToolbarClasses.root})`]: {
     gridTemplateAreas: getGridTemplateAreasWithToolBar(
