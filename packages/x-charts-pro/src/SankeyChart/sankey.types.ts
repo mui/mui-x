@@ -177,14 +177,16 @@ export interface SankeySeriesType {
 /**
  * Represents the calculated positions and dimensions for a node in the Sankey diagram
  */
-export interface SankeyLayoutNode
-  extends D3SankeyNode<SankeyNode, Omit<SankeyLink, 'source' | 'target'>> {}
+export interface SankeyLayoutNode extends D3SankeyNode<SankeyNode, SankeyLayoutLink> {
+  targetLinks: SankeyLayoutLink[];
+  sourceLinks: SankeyLayoutLink[];
+}
 
 /**
  * Represents the calculated positions and paths for a link in the Sankey diagram
  */
 export interface SankeyLayoutLink
-  extends D3SankeyLink<SankeyNode, Omit<SankeyLink, 'source' | 'target'>> {
+  extends D3SankeyLink<SankeyLayoutNode, Omit<SankeyLink, 'source' | 'target'>> {
   path?: string | null;
   source: SankeyLayoutNode;
   target: SankeyLayoutNode;

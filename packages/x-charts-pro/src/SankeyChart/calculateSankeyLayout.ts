@@ -6,8 +6,6 @@ import { path } from '@mui/x-charts-vendor/d3-path';
 import type {
   SankeySeriesType,
   SankeyLayout,
-  SankeyNode,
-  SankeyLink,
   SankeyLayoutLink,
   SankeyLayoutNode,
   DefaultizedSankeySeriesType,
@@ -77,7 +75,7 @@ export function calculateSankeyLayout(
   }
 
   // Generate the layout
-  let result: SankeyGraph<SankeyNode, Omit<SankeyLink, 'source' | 'target'>>;
+  let result: SankeyGraph<SankeyLayoutNode, SankeyLayoutLink>;
   try {
     result = sankeyGenerator(graph);
   } catch (error) {
@@ -94,8 +92,7 @@ export function calculateSankeyLayout(
   const { nodes, links } = result;
 
   // Convert d3-sankey links to our format
-  // Cast to SankeyLayoutLink as it has the correct properties
-  const layoutLinks: SankeyLayoutLink[] = (links as SankeyLayoutLink[]).map((link) => {
+  const layoutLinks = (links as SankeyLayoutLink[]).map((link) => {
     // Get the original link data
     const originalLink = data.links.find((l) => {
       return l.source === link.source.id && l.target === link.target.id;
@@ -109,8 +106,9 @@ export function calculateSankeyLayout(
     };
   });
 
-  const layoutNodes: SankeyLayoutNode[] = nodes.map((node) => {
+  const layoutNodes = nodes.map((node) => {
     const originalNode = data.nodes.get(node.id) || {};
+
     return {
       ...originalNode,
       ...node,
