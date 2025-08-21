@@ -98,7 +98,7 @@ The example below demonstrates how to use an RTL language (Arabic) with the Data
 ## Pagination number formatting
 
 :::info
-This section is applicable for [Data Grid Pro](/x/introduction/licensing/#pro-plan) and above due to the non-limited [page size options](/x/react-data-grid/pagination/#size-of-the-page).
+This section is applicable for [Data Grid Pro](/x/introduction/licensing/#pro-plan) and above due to the limited [page size options](/x/react-data-grid/pagination/#size-of-the-page) for community license.
 :::
 
 To format large numbers in the pagination component, customize the `paginationDisplayedRows` with the following code:
