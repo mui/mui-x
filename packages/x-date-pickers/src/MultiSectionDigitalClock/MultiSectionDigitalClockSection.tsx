@@ -198,7 +198,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
 
       // Center the selected item in the container view
       // This provides better UX by showing options both above and below the selected item
-      const scrollPosition = offsetTop - (containerHeight / 2) + (itemHeight / 2);
+      const scrollPosition = offsetTop - containerHeight / 2 + itemHeight / 2;
       containerRef.current.scrollTop = Math.max(0, scrollPosition);
     });
 
