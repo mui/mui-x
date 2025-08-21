@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 import { frFR as locale } from '@mui/x-data-grid/locales';
 
 const LOCALE = 'fr-FR'; // replace with your locale
@@ -45,15 +45,7 @@ export default function PaginationNumberFormatting() {
   });
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
-        {...data}
-        pagination
-        paginationMode="server"
-        pageSizeOptions={[10000, 20000]}
-        paginationModel={{ page: 1, pageSize: 10000 }}
-        rowCount={1000000}
-        localeText={localeText}
-      />
+      <DataGrid {...data} rowCount={1000000} localeText={localeText} />
     </div>
   );
 }

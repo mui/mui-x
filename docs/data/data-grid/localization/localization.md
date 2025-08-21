@@ -97,14 +97,10 @@ The example below demonstrates how to use an RTL language (Arabic) with the Data
 
 ## Pagination number formatting
 
-:::info
-This section is applicable for [Data Grid Pro](/x/introduction/licensing/#pro-plan) and above due to the limited [page size options](/x/react-data-grid/pagination/#size-of-the-page) for community license.
-:::
-
 To format large numbers in the pagination component, customize the `paginationDisplayedRows` with the following code:
 
 ```jsx
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 
 // ======================================================
 // TODO: replace with your locale
@@ -156,11 +152,7 @@ const localeText = {
 
 function App() {
   return (
-    <DataGridPro
-      pagination
-      paginationMode="server"
-      pageSizeOptions={[10000, 20000]}
-      paginationModel={{ page: 1, pageSize: 10000 }}
+    <DataGrid
       rowCount={1000000}
       localeText={localeText}
     />
