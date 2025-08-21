@@ -53,6 +53,7 @@ const getAlignItems = (position?: Position) => {
 };
 
 const getGridTemplateAreas = (direction?: Direction, position?: Position) => {
+  console.log(direction, position);
   if (direction === 'vertical') {
     if (position?.horizontal === 'start') {
       return `"toolbar toolbar"
@@ -87,10 +88,11 @@ const Root = styled('div', {
   ],
   width: '100%',
   display: 'grid',
-  gridTemplateColumns: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : '100%',
+  gridTemplateColumns: ownerState.legendDirection === 'vertical' ? 'auto auto' : '100%',
   gridTemplateRows: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : 'auto auto 1fr',
   gridTemplateAreas: getGridTemplateAreas(ownerState.legendDirection, ownerState.legendPosition),
-  justifyItems: getJustifyItems(ownerState.legendPosition),
+  justifyContent: 'center',
+  justifyItems:getJustifyItems(ownerState.legendPosition),
   alignItems: getAlignItems(ownerState.legendPosition),
   [`& > .${chartsToolbarClasses.root}`]: {
     justifySelf: 'center',
