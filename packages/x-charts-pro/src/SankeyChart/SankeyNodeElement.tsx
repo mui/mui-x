@@ -55,6 +55,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
       type: 'sankey',
       seriesId,
       subType: 'node',
+      nodeId: node.id,
       node,
     };
 

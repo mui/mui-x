@@ -37,6 +37,8 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
       type: 'sankey',
       seriesId,
       subType: 'link',
+      targetId: link.target.id,
+      sourceId: link.source.id,
       link,
     };
 

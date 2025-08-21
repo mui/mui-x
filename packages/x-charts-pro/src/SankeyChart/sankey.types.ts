@@ -228,9 +228,13 @@ export type SankeyItemIdentifier = {
        */
       subType: 'node';
       /**
+       * The id of the node
+       */
+      nodeId: SankeyNodeId;
+      /**
        * The node object with all the calculated properties
        */
-      node: SankeyLayoutNode;
+      node?: SankeyLayoutNode;
     }
   | {
       /**
@@ -238,8 +242,16 @@ export type SankeyItemIdentifier = {
        */
       subType: 'link';
       /**
+       * The id of the source node
+       */
+      sourceId: SankeyNodeId;
+      /**
+       * The id of the target node
+       */
+      targetId: SankeyNodeId;
+      /**
        * The link object with all the calculated properties
        */
-      link: SankeyLayoutLink;
+      link?: SankeyLayoutLink;
     }
 );
