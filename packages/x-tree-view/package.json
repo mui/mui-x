@@ -46,7 +46,8 @@
     "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:",
-    "react-transition-group": "catalog:"
+    "react-transition-group": "catalog:",
+    "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
@@ -69,6 +70,7 @@
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"

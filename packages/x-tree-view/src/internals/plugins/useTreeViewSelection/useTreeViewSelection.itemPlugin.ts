@@ -1,8 +1,11 @@
 import * as React from 'react';
+// We need to import the shim because React 17 does not support the `useSyncExternalStore` API.
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
 import { useStore } from '@base-ui-components/utils/store';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { TreeViewItemPlugin, TreeViewState } from '../../models';
+import { TreeViewItemPlugin, TreeViewState, TreeViewStore } from '../../models';
 import {
   UseTreeItemCheckboxSlotPropsFromSelection,
   UseTreeViewSelectionSignature,
@@ -69,6 +72,19 @@ function selectorItemCheckboxStatus(
   };
 }
 
+export function useItemCheckboxStatus(
+  store: TreeViewStore<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>,
+  itemId: TreeViewItemId,
+): unknown {
+  return useSyncExternalStoreWithSelector(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
+    (state: typeof store.state) => selectorItemCheckboxStatus(state, itemId),
+    fastObjectShallowCompare,
+  );
+}
+
 export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { itemId } = props;
 
@@ -76,6 +92,10 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
 
   const checkboxStatus = useStore(store, selectorItemCheckboxStatus, itemId);
+
+  if (itemId === 'grid') {
+    console.log(checkboxStatus);
+  }
 
   return {
     propsEnhancers: {
