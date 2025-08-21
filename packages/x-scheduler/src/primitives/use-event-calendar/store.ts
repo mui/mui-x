@@ -11,11 +11,8 @@ import {
   CalendarEventOccurrenceWithPosition,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
-import {
-  expandRecurringEventForVisibleDays,
-  getEventDays,
-  getEventRowIndex,
-} from '../utils/event-utils';
+import { getEventDays, getEventRowIndex } from '../utils/event-utils';
+import { getRecurringEventOccurencesForVisibleDays } from '../utils/recurrence-utils';
 
 export type State = {
   /**
@@ -109,7 +106,7 @@ export const selectors = {
 
         // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
         if (event.rrule) {
-          const occurrences = expandRecurringEventForVisibleDays(event, days, adapter);
+          const occurrences = getRecurringEventOccurencesForVisibleDays(event, days, adapter);
           visibleOccurrences.push(...occurrences);
           continue;
         }
