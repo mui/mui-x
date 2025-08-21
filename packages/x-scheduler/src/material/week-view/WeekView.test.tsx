@@ -39,8 +39,11 @@ describe('<WeekView />', () => {
           <WeekView />
         </StandaloneView>,
       );
-
-      const may5Cell = screen.getByTestId('day-time-grid-all-day-events-cell-May-5');
+      const allDayCells = screen.getAllByRole('gridcell');
+      const may5Cell = allDayCells.find((cell) => {
+        const labelledBy = cell.getAttribute('aria-labelledby');
+        return labelledBy?.includes('DayTimeGridHeaderCell-5 DayTimeGridAllDayEventsHeaderCell');
+      });
 
       // Main event should render in the start date cell
       expect(within(may5Cell!).getByText('Multi-day Conference')).not.to.equal(null);

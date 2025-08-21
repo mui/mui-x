@@ -8,7 +8,7 @@ import { DayGrid } from '../../../primitives/day-grid';
 import { useDayList } from '../../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { isWeekend } from '../../../primitives/utils/date-utils';
+import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
 import { getEventWithLargestRowIndex } from '../../../primitives/utils/event-utils';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
@@ -105,11 +105,11 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
             )}
 
             {visibleAllDayEvents.map((event) => {
-              const durationInDays = adapter.getDurationInDays(day, event.end) + 1;
+              const durationInDays = diffIn(adapter, event.end, day, 'days') + 1;
               const gridColumnSpan = Math.min(durationInDays, days.length - dayIdx); // Don't exceed available columns
-              const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIdx === 0;
+              const shouldEventBeVisible = adapter.isSameDay(event.start, day) || dayIdx === 0;
 
-              return shouldRenderEvent ? (
+              return shouldEventBeVisible ? (
                 <EventPopoverTrigger
                   key={`${event.id}-${day.toString()}`}
                   event={event}
@@ -119,12 +119,8 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
                       eventResource={resourcesByIdMap.get(event.resource)}
                       variant="allDay"
                       ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-                      style={
-                        {
-                          '--grid-row': (event.eventRowIndex || 0) + 1,
-                          '--grid-column-span': gridColumnSpan,
-                        } as React.CSSProperties
-                      }
+                      gridRow={(event.eventRowIndex || 0) + 1}
+                      columnSpan={gridColumnSpan}
                     />
                   }
                 />
@@ -135,12 +131,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
                   eventResource={resourcesByIdMap.get(event.resource)}
                   variant="invisible"
                   ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-                  aria-hidden="true"
-                  style={
-                    {
-                      '--grid-row': (event.eventRowIndex || 0) + 1,
-                    } as React.CSSProperties
-                  }
+                  gridRow={(event.eventRowIndex || 0) + 1}
                 />
               );
             })}

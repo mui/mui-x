@@ -303,7 +303,7 @@ describe('event-utils', () => {
       });
 
       const result2 = getEventRowIndex(event2, adapter.date('2024-01-16'), days, daysMap, adapter);
-      expect(result).toBe(2);
+      expect(result2).toBe(2);
     });
   });
 

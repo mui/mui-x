@@ -27,6 +27,9 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     className,
     onEventClick,
     id: idProp,
+    gridRow,
+    columnSpan = 1,
+    style,
     ...other
   } = props;
 
@@ -47,6 +50,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
             {eventProp.title}
           </p>
         );
+
       case 'compact':
       default:
         return (
@@ -106,8 +110,16 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         getColorClassName({ resource: eventResource }),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
+      aria-hidden={variant === 'invisible'}
       start={eventProp.start}
       end={eventProp.end}
+      style={
+        {
+          '--grid-row': gridRow,
+          '--grid-column-span': columnSpan,
+          ...style,
+        } as React.CSSProperties
+      }
       {...other}
     >
       {content}
