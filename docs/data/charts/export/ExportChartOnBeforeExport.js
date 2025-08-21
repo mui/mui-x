@@ -86,7 +86,7 @@ export default function ExportChartOnBeforeExport() {
             imageExportOptions: [{ type: 'image/png', onBeforeExport }],
           },
         }}
-        sx={{ [`& .${legendClasses.root}`]: { display: 'none' } }}
+        hideLegend
       />
       <Typography variant="caption">Source: World Bank</Typography>
     </Stack>
