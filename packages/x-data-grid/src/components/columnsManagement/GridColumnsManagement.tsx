@@ -457,7 +457,7 @@ const GridColumnsManagementEmptyText = styled('div', {
   font: vars.typography.font.body,
 });
 
-const GridColumnsManagementRow = styled('input', {
+const GridColumnsManagementRow = styled('button', {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementRow',
 })();
