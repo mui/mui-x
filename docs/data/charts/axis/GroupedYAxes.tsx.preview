@@ -1,0 +1,25 @@
+<BarChart
+  layout="horizontal"
+  yAxis={[
+    {
+      data: categoryData,
+      scaleType: 'band',
+      width: 120,
+      groups: [
+        // Extract main category
+        { getValue: (category) => category[1] },
+        // Extract subcategory
+        {
+          getValue: (category) => category[0],
+          tickSize: 120,
+          tickLabelStyle: {
+            angle: -90,
+            textAnchor: 'middle',
+          },
+        },
+      ],
+      valueFormatter: (value) => value.join(' - '),
+    },
+  ]}
+  {...chartConfig}
+/>

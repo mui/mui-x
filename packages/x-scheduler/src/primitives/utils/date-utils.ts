@@ -16,7 +16,9 @@ export function mergeDateAndTime(
 }
 
 export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean {
-  const dayOfWeek = adapter.getDayOfWeek(value);
+  const sunday = adapter.format(adapter.date('2025-08-09'), 'weekday');
+  const saturday = adapter.format(adapter.date('2025-08-10'), 'weekday');
+  const formattedValue = adapter.format(value, 'weekday');
 
-  return dayOfWeek === 6 || dayOfWeek === 7;
+  return formattedValue === sunday || formattedValue === saturday;
 }

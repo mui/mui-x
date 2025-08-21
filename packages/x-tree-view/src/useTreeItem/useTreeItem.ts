@@ -288,6 +288,7 @@ export const useTreeItem = <
     const props = {
       ...externalEventHandlers,
       ref: checkboxRef,
+      'aria-hidden': true,
       ...externalProps,
     };
 
