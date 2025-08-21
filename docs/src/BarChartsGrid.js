@@ -1,7 +1,5 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-
-import { ChartThumbnailCard } from './ChartExampleThumbnailGrid';
+import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 import SimpleBarChart from '../data/charts/bar-demo/SimpleBarChart';
 import StackedBarChart from '../data/charts/bar-demo/StackedBarChart';
 import MixedBarChart from '../data/charts/bar-demo/MixedBarChart';
@@ -14,55 +12,51 @@ const chartData = [
   {
     title: 'Simple Bar Chart',
     ChartComponent: SimpleBarChart,
+    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/bar-demo/SimpleBarChart.tsx',
   },
   {
     title: 'Stacked Bar Chart',
     ChartComponent: StackedBarChart,
+    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/bar-demo/StackedBarChart.tsx',
   },
   {
     title: 'Mixed Bar Chart',
     ChartComponent: MixedBarChart,
+    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/bar-demo/MixedBarChart.tsx',
   },
   {
     title: 'Positive and Negative Bar Chart',
     ChartComponent: PositiveAndNegativeBarChart,
+    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/bar-demo/PositiveAndNegativeBarChart.tsx',
   },
   {
     title: 'Bar Chart Stacked by Sign',
     ChartComponent: BarChartStackedBySign,
+    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/bar-demo/BarChartStackedBySign.tsx',
   },
   {
     title: 'Biaxial Bar Chart',
     ChartComponent: BiaxialBarChart,
+    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/bar-demo/BiaxialBarChart.tsx',
   },
   {
     title: 'Population Pyramid Bar Chart',
     ChartComponent: PopulationPyramidBarChart,
+    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/bar-demo/PopulationPyramidBarChart.tsx',
   },
 ];
 
 export default function BarChartsGrid() {
   return (
-    <Box
-      sx={{
-        width: '100%',
-        mb: 5,
-        display: 'grid',
-        gridTemplateColumns: {
-          xs: '1fr',
-          md: '1fr 1fr',
-        },
-        gap: 3,
-      }}
-    >
+    <ChartThumbnailGridWrapper>
       {chartData.map((chart) => (
         <ChartThumbnailCard
           key={chart.title}
           title={chart.title}
-          // link={chart.link}
+          link={chart.link}
           ChartComponent={chart.ChartComponent}
         />
       ))}
-    </Box>
+    </ChartThumbnailGridWrapper>
   );
 }

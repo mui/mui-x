@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
+import CodeIcon from '@mui/icons-material/Code';
+import Tooltip from '@mui/material/Tooltip';
 
-export function ChartThumbnailCard({ title, ChartComponent }) {
+export function ChartThumbnailCard({ title, ChartComponent, link }) {
   return (
     <Paper
       variant="outlined"
@@ -13,18 +16,59 @@ export function ChartThumbnailCard({ title, ChartComponent }) {
         display: 'flex',
         flexDirection: 'column',
         paddingTop: '10px',
-        border: 2,
-        borderColor: 'secondary.main',
-        borderRadius: 1,
+        border: '1px dashed',
+        borderColor: 'divider',
         overflow: 'hidden',
-        backgroundColor: 'background.paper',
+        borderRadius: 0,
       }}
     >
       <Box
         sx={{
+          p: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography
+          fontFamily={'IBM Plex Sans'}
+          fontWeight="medium"
+          variant="body1"
+          color="text.primary"
+        >
+          {title}
+        </Typography>
+        {link && (
+          <Tooltip title="View code">
+            <IconButton
+              component="a"
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              size="small"
+              sx={{
+                width: 32,
+                height: 32,
+                border: 1,
+                borderColor: 'divider',
+                backgroundColor: 'background.paper',
+                color: 'primary.main',
+                borderRadius: '8px',
+                '&:hover': {
+                  backgroundColor: 'action.hover',
+                },
+              }}
+            >
+              <CodeIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Box>
+      <Box
+        sx={{
           width: '100%',
           height: 0,
-          paddingBottom: '60%',
+          paddingBottom: '70%',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -51,22 +95,49 @@ export function ChartThumbnailCard({ title, ChartComponent }) {
           <ChartComponent />
         </Box>
       </Box>
-
-      <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography
-          fontFamily={'IBM Plex Sans'}
-          fontWeight="bold"
-          variant="body1"
-          color="text.primary"
-        >
-          {title}
-        </Typography>
-      </Box>
     </Paper>
   );
 }
 
 ChartThumbnailCard.propTypes = {
   ChartComponent: PropTypes.elementType.isRequired,
+  link: PropTypes.string,
   title: PropTypes.string.isRequired,
+};
+
+export function ChartThumbnailGridWrapper({ children, ...props }) {
+  return (
+    <Paper
+      component="div"
+      variant="outlined"
+      sx={{
+        my: 4,
+        p: 2,
+        overflow: 'hidden',
+        background: 'background.paper',
+        borderRadius: 1,
+        ...props.sx,
+      }}
+      {...props}
+    >
+      <Box
+        sx={{
+          width: '100%',
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            md: '1fr 1fr',
+          },
+          gap: 0,
+        }}
+      >
+        {children}
+      </Box>
+    </Paper>
+  );
+}
+
+ChartThumbnailGridWrapper.propTypes = {
+  children: PropTypes.node.isRequired,
+  sx: PropTypes.object,
 };
