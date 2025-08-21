@@ -25,7 +25,15 @@ const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig }
 export interface SankeyChartProps
   extends Omit<
       ChartContainerProProps<'sankey', SankeyChartPluginsSignatures>,
-      'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
+      | 'plugins'
+      | 'series'
+      | 'slotProps'
+      | 'slots'
+      | 'dataset'
+      | 'hideLegend'
+      | 'skipAnimation'
+      | 'highlightedItem'
+      | 'onHighlightChange'
     >,
     Omit<SankeyPlotProps, 'data'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,

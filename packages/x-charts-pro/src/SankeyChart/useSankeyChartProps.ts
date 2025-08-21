@@ -28,7 +28,6 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
     // highlightedItem,
     // onHighlightChange,
     className,
-    hideLegend,
     apiRef,
     onItemClick,
     ...rest
