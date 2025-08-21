@@ -19,7 +19,6 @@ class TestGesture extends Gesture<string> {
 
   protected readonly mutableStateType!: never;
 
-  // eslint-disable-next-line class-methods-use-this
   protected resetState(): void {}
 
   public clone(): TestGesture {

@@ -290,7 +290,6 @@ export class PointerManager {
    * @param event - The original browser pointer event
    * @returns A new PointerData object representing this pointer
    */
-  // eslint-disable-next-line class-methods-use-this
   private createPointerData(event: PointerEvent): PointerData {
     return {
       pointerId: event.pointerId,

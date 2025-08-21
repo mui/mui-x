@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { DateTime, Info } from 'luxon';
 import {
   AdapterFormats,

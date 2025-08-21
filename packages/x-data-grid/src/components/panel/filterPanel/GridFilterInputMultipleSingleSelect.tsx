@@ -27,7 +27,9 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const getOptionValue = resolvedColumn?.getOptionValue!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
   const getOptionLabel = resolvedColumn?.getOptionLabel!;
 
   const isOptionEqualToValue = React.useCallback(

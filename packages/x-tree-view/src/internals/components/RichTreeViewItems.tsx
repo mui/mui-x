@@ -31,8 +31,8 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
   const { ownerState, ...itemProps } = useSlotProps({
     elementType: Item,
     externalSlotProps: itemSlotProps,
-    additionalProps: { label: itemMeta?.label!, id: itemMeta?.idAttribute!, itemId },
-    ownerState: { itemId, label: itemMeta?.label! },
+    additionalProps: { label: itemMeta?.label, id: itemMeta?.idAttribute, itemId },
+    ownerState: { itemId, label: itemMeta?.label as string },
   });
 
   return <Item {...itemProps}>{children?.map(renderItemForRichTreeView)}</Item>;

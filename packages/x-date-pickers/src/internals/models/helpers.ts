@@ -24,6 +24,7 @@ type OverridesStyleRules<
     (ComponentName extends keyof ComponentsPropsList
       ? ComponentsPropsList[ComponentName] &
           Record<string, unknown> & {
+            // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
             ownerState: OwnerState extends Object
               ? OwnerState
               : ComponentsPropsList[ComponentName] & Record<string, unknown>;
