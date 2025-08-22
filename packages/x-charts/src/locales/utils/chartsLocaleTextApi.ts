@@ -33,6 +33,7 @@ export interface ChartsLocaleText {
    * @returns {string} The localized string for an export image button.
    */
   toolbarExportImage: (mimeType: ChartImageExportMimeType | (string & {})) => string;
+
   // Charts renderer configuration
   /**
    * Label for the bar chart type.
@@ -115,6 +116,18 @@ export interface ChartsLocaleText {
    */
   chartConfigurationSectionChart: string;
   /**
+   * Label for the axes configuration section.
+   */
+  chartConfigurationSectionAxes: string;
+  /**
+   * Label for the tooltip configuration section.
+   */
+  chartConfigurationSectionTooltip: string;
+  /**
+   * Label for the legend configuration section.
+   */
+  chartConfigurationSectionLegend: string;
+  /**
    * Label for the columns configuration section.
    */
   chartConfigurationSectionColumns: string;
@@ -123,25 +136,21 @@ export interface ChartsLocaleText {
    */
   chartConfigurationSectionBars: string;
   /**
+   * Label for the lines configuration section.
+   */
+  chartConfigurationSectionLines: string;
+  /**
+   * Label for the areas configuration section.
+   */
+  chartConfigurationSectionAreas: string;
+  /**
+   * Label for the arcs configuration section.
+   */
+  chartConfigurationSectionArcs: string;
+  /**
    * Label for the grid configuration control.
    */
   chartConfigurationGrid: string;
-  /**
-   * Label for the horizontal grid configuration option.
-   */
-  chartConfigurationGridHorizontal: string;
-  /**
-   * Label for the vertical grid configuration option.
-   */
-  chartConfigurationGridVertical: string;
-  /**
-   * Label for the option that enables both horizontal and vertical grid lines.
-   */
-  chartConfigurationGridBoth: string;
-  /**
-   * Label for the option that disables grid lines.
-   */
-  chartConfigurationGridNone: string;
   /**
    * Label for the border radius configuration control.
    */
@@ -199,33 +208,198 @@ export interface ChartsLocaleText {
    */
   chartConfigurationTickPlacement: string;
   /**
-   * Label for the start tick placement configuration option.
-   */
-  chartConfigurationTickPlacementStart: string;
-  /**
-   * Label for the middle tick placement configuration option.
-   */
-  chartConfigurationTickPlacementMiddle: string;
-  /**
-   * Label for the end tick placement configuration option.
-   */
-  chartConfigurationTickPlacementEnd: string;
-  /**
-   * Label for the extremities tick placement configuration option.
-   */
-  chartConfigurationTickPlacementExtremities: string;
-  /**
    * Label for the tick label placement configuration control.
    */
   chartConfigurationTickLabelPlacement: string;
   /**
-   * Label for the tick label placement configuration option.
+   * Label for the categories axis label configuration control.
    */
-  chartConfigurationTickLabelPlacementTick: string;
+  chartConfigurationCategoriesAxisLabel: string;
   /**
-   * Label for the middle tick label placement configuration option.
+   * Label for the series axis label configuration control.
    */
-  chartConfigurationTickLabelPlacementMiddle: string;
+  chartConfigurationSeriesAxisLabel: string;
+  /**
+   * Label for the X-axis position configuration control.
+   */
+  chartConfigurationXAxisPosition: string;
+  /**
+   * Label for the Y-axis position configuration control.
+   */
+  chartConfigurationYAxisPosition: string;
+  /**
+   * Label for the reverse series axis configuration control.
+   */
+  chartConfigurationSeriesAxisReverse: string;
+  /**
+   * Label for the tooltip placement configuration control.
+   */
+  chartConfigurationTooltipPlacement: string;
+  /**
+   * Label for the tooltip trigger configuration control.
+   */
+  chartConfigurationTooltipTrigger: string;
+  /**
+   * Label for the legend position configuration control.
+   */
+  chartConfigurationLegendPosition: string;
+  /**
+   * Label for the legend direction configuration control.
+   */
+  chartConfigurationLegendDirection: string;
+  /**
+   * Label for the bar labels configuration control.
+   */
+  chartConfigurationBarLabels: string;
+  /**
+   * Label for the column labels configuration control.
+   */
+  chartConfigurationColumnLabels: string;
+  /**
+   * Label for the interpolation configuration control.
+   */
+  chartConfigurationInterpolation: string;
+  /**
+   * Label for the padding angle configuration control.
+   */
+  chartConfigurationPaddingAngle: string;
+  /**
+   * Label for the corner radius configuration control.
+   */
+  chartConfigurationCornerRadius: string;
+  /**
+   * Label for the arc labels configuration control.
+   */
+  chartConfigurationArcLabels: string;
+  /**
+   * Label for the start angle configuration control.
+   */
+  chartConfigurationStartAngle: string;
+  /**
+   * Label for the end angle configuration control.
+   */
+  chartConfigurationEndAngle: string;
+  /**
+   * Label for the pie tooltip trigger configuration control.
+   */
+  chartConfigurationPieTooltipTrigger: string;
+  /**
+   * Label for the pie legend position configuration control.
+   */
+  chartConfigurationPieLegendPosition: string;
+  /**
+   * Label for the pie legend direction configuration control.
+   */
+  chartConfigurationPieLegendDirection: string;
+  // Common option labels
+  /**
+   * Label for the "None" option.
+   */
+  chartConfigurationOptionNone: string;
+  /**
+   * Label for the "Value" option.
+   */
+  chartConfigurationOptionValue: string;
+  /**
+   * Label for the "Auto" option.
+   */
+  chartConfigurationOptionAuto: string;
+  /**
+   * Label for the "Top" option.
+   */
+  chartConfigurationOptionTop: string;
+  /**
+   * Label for the "Bottom" option.
+   */
+  chartConfigurationOptionBottom: string;
+  /**
+   * Label for the "Left" option.
+   */
+  chartConfigurationOptionLeft: string;
+  /**
+   * Label for the "Right" option.
+   */
+  chartConfigurationOptionRight: string;
+  /**
+   * Label for the "Axis" option.
+   */
+  chartConfigurationOptionAxis: string;
+  /**
+   * Label for the "Item" option.
+   */
+  chartConfigurationOptionItem: string;
+  /**
+   * Label for the "Horizontal" option.
+   */
+  chartConfigurationOptionHorizontal: string;
+  /**
+   * Label for the "Vertical" option.
+   */
+  chartConfigurationOptionVertical: string;
+  /**
+   * Label for the "Both" grid configuration option.
+   */
+  chartConfigurationOptionBoth: string;
+  /**
+   * Label for the "Start" option.
+   */
+  chartConfigurationOptionStart: string;
+  /**
+   * Label for the "Middle" option.
+   */
+  chartConfigurationOptionMiddle: string;
+  /**
+   * Label for the "End" option.
+   */
+  chartConfigurationOptionEnd: string;
+  /**
+   * Label for the "Extremities" option.
+   */
+  chartConfigurationOptionExtremities: string;
+  /**
+   * Label for the "Tick" option.
+   */
+  chartConfigurationOptionTick: string;
+  /**
+   * Label for the "Monotone X" interpolation option.
+   */
+  chartConfigurationOptionMonotoneX: string;
+  /**
+   * Label for the "Monotone Y" interpolation option.
+   */
+  chartConfigurationOptionMonotoneY: string;
+  /**
+   * Label for the "Catmull-Rom" interpolation option.
+   */
+  chartConfigurationOptionCatmullRom: string;
+  /**
+   * Label for the "Linear" interpolation option.
+   */
+  chartConfigurationOptionLinear: string;
+  /**
+   * Label for the "Natural" interpolation option.
+   */
+  chartConfigurationOptionNatural: string;
+  /**
+   * Label for the "Step" interpolation option.
+   */
+  chartConfigurationOptionStep: string;
+  /**
+   * Label for the "Step Before" interpolation option.
+   */
+  chartConfigurationOptionStepBefore: string;
+  /**
+   * Label for the "Step After" interpolation option.
+   */
+  chartConfigurationOptionStepAfter: string;
+  /**
+   * Label for the "Bump X" interpolation option.
+   */
+  chartConfigurationOptionBumpX: string;
+  /**
+   * Label for the "Bump Y" interpolation option.
+   */
+  chartConfigurationOptionBumpY: string;
 }
 
 export type ChartsTranslationKeys = keyof ChartsLocaleText;
