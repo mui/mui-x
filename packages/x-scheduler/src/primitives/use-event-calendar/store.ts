@@ -20,10 +20,25 @@ export type State = {
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
    */
   adapter: Adapter;
+  /**
+   * The date used to determine the visible date range in each view.
+   */
   visibleDate: SchedulerValidDate;
+  /**
+   * The view displayed in the calendar.
+   */
   view: CalendarView;
+  /**
+   * The views available in the calendar.
+   */
   views: CalendarView[];
+  /**
+   * The events available in the calendar.
+   */
   events: CalendarEvent[];
+  /**
+   * The resources the events can be assigned to.
+   */
   resources: CalendarResource[];
   /**
    * Visibility status for each resource.
