@@ -4,11 +4,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-
-import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
-
+import {
+  Unstable_SankeyChart as SankeyChart,
+  SankeyItemIdentifier,
+} from '@mui/x-charts-pro/SankeyChart';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { SankeyItemIdentifier } from '@mui/x-charts-pro/SankeyChart';
 
 const getCircularReplacer = () => {
   const seen = new WeakSet();

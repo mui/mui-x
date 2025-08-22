@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { SeriesItemIdentifier } from '../models';
+import { SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
+import { ChartSeriesType, type ChartItemIdentifierWithData } from '../models/seriesType/config';
 import { ChartInstance } from '../internals/plugins/models';
 
 function onPointerDown(event: React.PointerEvent) {
@@ -17,7 +17,7 @@ function onPointerDown(event: React.PointerEvent) {
 }
 
 export const useInteractionItemProps = (
-  data: SeriesItemIdentifier,
+  data: SeriesItemIdentifierWithData,
   skip?: boolean,
 ): {
   onPointerEnter?: () => void;
@@ -60,7 +60,10 @@ export const useInteractionItemProps = (
   };
 };
 
-export const useInteractionAllItemProps = (data: SeriesItemIdentifier[], skip?: boolean) => {
+export const useInteractionAllItemProps = (
+  data: SeriesItemIdentifierWithData[],
+  skip?: boolean,
+) => {
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
 
@@ -75,7 +78,7 @@ export const useInteractionAllItemProps = (data: SeriesItemIdentifier[], skip?: 
 
 export function getInteractionItemProps(
   instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
-  item: ChartItemIdentifier<ChartSeriesType>,
+  item: ChartItemIdentifierWithData<ChartSeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;

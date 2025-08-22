@@ -54,19 +54,17 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     }
 
     return (
-      <React.Fragment>
-        <path
-          ref={ref}
-          d={link.path}
-          fill={link.color}
-          opacity={opacity}
-          data-link-source={link.source.id}
-          data-link-target={link.target.id}
-          onClick={onClick ? handleClick : undefined}
-          cursor={onClick ? 'pointer' : 'default'}
-          {...interactionProps}
-        />
-      </React.Fragment>
+      <path
+        ref={ref}
+        d={link.path}
+        fill={link.color}
+        opacity={opacity}
+        data-link-source={link.source.id}
+        data-link-target={link.target.id}
+        onClick={onClick ? handleClick : undefined}
+        cursor={onClick ? 'pointer' : 'default'}
+        {...interactionProps}
+      />
     );
   },
 );
