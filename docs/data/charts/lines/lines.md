@@ -153,7 +153,7 @@ There is a slight difference between the `event` of `onAxisClick` and the others
 
 ### Composition
 
-If you're using composition, you can get those click event as follow.
+If you're using composition, you can get those click events as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
