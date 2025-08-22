@@ -5,7 +5,14 @@ import { useEventCalendarContext } from './useEventCalendarContext';
 
 /**
  * Initializes the view on the event calendar.
- * The initialization is only done during the 1st render, if you need to access variables inside some of the callbacks, make sure to use a ref.
+ * The initialization is only done during the 1st render. If you need to access variables in a callback you can use a ref:
+ * ```ts
+ * const { daysPerPage = 12 } = props;
+ * const daysPerPageRef = React.useRef(daysPerPage);
+ * useInitializeView(() => ({
+ *   siblingVisibleDateGetter: (date, delta) => adapter.addDays(date, daysPerPageRef.current * delta),
+ *  }));
+ * ```
  * @param parameters Parameters for the view.
  */
 export function useInitializeView(parameters: () => CalendarViewConfig) {
