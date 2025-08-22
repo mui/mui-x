@@ -631,6 +631,12 @@
       "class": null
     },
     {
+      "name": "detailPanelsToggle",
+      "description": "Component responsible for rendering the detail panels toggle.",
+      "default": "GridDetailPanelsToggle",
+      "class": null
+    },
+    {
       "name": "bottomContainer",
       "description": "Component rendered for the bottom container.",
       "default": "GridBottomContainer",
