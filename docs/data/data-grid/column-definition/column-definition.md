@@ -233,7 +233,7 @@ If you want the cell information to persist, you should save it either in the Da
 ### Expand cell renderer
 
 By default, the Data Grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
-As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the Data Grid.
+As a workaround, you can create a cell renderer that lets users see the full content of the cell in the Data Grid.
 
 {{"demo": "RenderExpandCellGrid.js", "bg": "inline"}}
 

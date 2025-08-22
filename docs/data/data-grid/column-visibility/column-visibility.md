@@ -59,7 +59,7 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 
 ## Column visibility panel
 
-The column visibility panel allows the user to control which columns are visible in the Data Grid.
+The column visibility panel lets users control which columns are visible in the Data Grid.
 
 The panel can be opened by:
 
@@ -77,7 +77,7 @@ To disable the column visibility panel, set the prop `disableColumnSelector={tru
 <DataGrid disableColumnSelector columnVisibilityModel={columnVisibilityModel} />
 ```
 
-In the following demo, the columns panel is disabled, and access to columns `id`, `quantity`, and `filledQuantity` is only allowed for the `Admin` type user.
+In the following demo, the columns panel is disabled, and access to columns `id`, `quantity`, and `filledQuantity` is only permitted for the `Admin` type user.
 
 {{"demo": "ColumnSelectorDisabledGrid.js", "bg": "inline"}}
 

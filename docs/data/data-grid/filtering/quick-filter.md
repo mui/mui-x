@@ -2,7 +2,7 @@
 
 <p class="description">One filter field to quickly filter grid.</p>
 
-Quick filter allows filtering rows by multiple columns with a single text input.
+Quick filter lets users filter rows by multiple columns with a single text input.
 
 By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
 

@@ -248,7 +248,7 @@ The demo below shows how to add a custom JSON export option.
 ## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
-The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
+With Excel export, users can translate the column types and tree structures of a Data Grid to an Excel file.
 
 Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/x/react-data-grid/column-definition/#converting-types) as needed.
 
