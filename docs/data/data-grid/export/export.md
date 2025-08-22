@@ -303,7 +303,7 @@ You can customize the document using two callback functions:
 - `exceljsPostProcess` called **after** the dataset has been exported to the document.
 
 Both functions receive `{ workbook, worksheet }` as input.
-They are [exceljs](https://github.com/exceljs/exceljs#interface) objects and let you directly manipulate the Excel file.
+These are [exceljs](https://github.com/exceljs/exceljs#interface) objects that let you directly manipulate the Excel file.
 
 Thanks to these two methods, you can modify the metadata of the exported spreadsheet.
 You can also use it to add custom content on top or bottom of the worksheet, as follows:
