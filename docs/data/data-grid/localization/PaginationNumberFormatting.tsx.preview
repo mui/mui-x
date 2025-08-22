@@ -1,1 +1,1 @@
-<DataGrid {...data} rowCount={1000000} localeText={localeText} />
+<DataGrid {...data} localeText={localeText} />

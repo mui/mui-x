@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGrid } from '@mui/x-data-grid';
+
+// ======================================================
+// TODO: replace with your locale
 import { frFR as locale } from '@mui/x-data-grid/locales';
 
-const LOCALE = 'fr-FR'; // replace with your locale
+const LOCALE = 'fr-FR';
+// ======================================================
 
 function formatNumber(value) {
   if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
@@ -40,12 +44,12 @@ const localeText = {
 export default function PaginationNumberFormatting() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 4,
+    rowLength: 1000000,
     maxColumns: 6,
   });
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} rowCount={1000000} localeText={localeText} />
+      <DataGrid {...data} localeText={localeText} />
     </div>
   );
 }
