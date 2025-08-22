@@ -8,7 +8,7 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
 
   const { subType } = identifier;
 
-  if (subType === 'node' && identifier.node) {
+  if (subType === 'node') {
     const node = identifier.node;
 
     return {
@@ -21,7 +21,7 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
     };
   }
 
-  if (subType === 'link' && identifier.link) {
+  if (subType === 'link') {
     const link = identifier.link;
 
     if (!link) {

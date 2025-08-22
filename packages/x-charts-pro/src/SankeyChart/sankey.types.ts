@@ -231,10 +231,6 @@ export type SankeyItemIdentifier = {
        * The id of the node
        */
       nodeId: SankeyNodeId;
-      /**
-       * The node object with all the calculated properties
-       */
-      node?: SankeyLayoutNode;
     }
   | {
       /**
@@ -249,9 +245,29 @@ export type SankeyItemIdentifier = {
        * The id of the target node
        */
       targetId: SankeyNodeId;
-      /**
-       * The link object with all the calculated properties
-       */
-      link?: SankeyLayoutLink;
     }
 );
+
+export type SankeyItemIdentifierWithData = SankeyItemIdentifier &
+  (
+    | {
+        /**
+         * Subtype to differentiate between node and link
+         */
+        subType: 'node';
+        /**
+         * The node object with all the calculated properties
+         */
+        node: SankeyLayoutNode;
+      }
+    | {
+        /**
+         * Subtype to differentiate between node and link
+         */
+        subType: 'link';
+        /**
+         * The link object with all the calculated properties
+         */
+        link: SankeyLayoutLink;
+      }
+  );

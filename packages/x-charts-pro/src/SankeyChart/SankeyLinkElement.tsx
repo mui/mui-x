@@ -3,7 +3,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
-import { SankeyLayoutLink, type SankeyItemIdentifier } from './sankey.types';
+import { SankeyLayoutLink, type SankeyItemIdentifierWithData } from './sankey.types';
 
 export interface SankeyLinkElementProps {
   /**
@@ -23,7 +23,7 @@ export interface SankeyLinkElementProps {
    * @param {React.MouseEvent<SVGPathElement>} event - The click event
    * @param {SankeyLayoutLink} link - The link data
    */
-  onClick?: (event: React.MouseEvent<SVGPathElement>, link: SankeyItemIdentifier) => void;
+  onClick?: (event: React.MouseEvent<SVGPathElement>, link: SankeyItemIdentifierWithData) => void;
 }
 
 /**
@@ -33,7 +33,7 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
   function SankeyLinkElement(props, ref) {
     const { link, opacity = 0.4, onClick, seriesId } = props;
 
-    const identifier: SankeyItemIdentifier = {
+    const identifier: SankeyItemIdentifierWithData = {
       type: 'sankey',
       seriesId,
       subType: 'link',
