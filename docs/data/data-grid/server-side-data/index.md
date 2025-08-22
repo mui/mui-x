@@ -62,7 +62,7 @@ But this example only scratches the surface of the complexity when working with 
 - Handling updates to the data (row editing and deletion)
 - On-demand data refetching
 
-Trying to tackle each of these features invidually can make the code overly complex and difficult to maintain.
+Trying to tackle each of these features individually can make the code overly complex and difficult to maintain.
 
 ### The solution: the Data Source layer
 
