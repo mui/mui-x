@@ -6,7 +6,7 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot
 
 # Charts - Pie demonstration
 
-<p class="description">This page groups demonstration using pie charts.</p>
+<p class="description">This page groups demos using pie charts.</p>
 
 ## TwoLevelPieChart
 

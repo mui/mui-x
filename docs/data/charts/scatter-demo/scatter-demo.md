@@ -6,7 +6,7 @@ components: Scatter, ScatterChart, ScatterPlot
 
 # Charts - Scatter demonstration
 
-<p class="description">This page groups demonstration using scatter charts.</p>
+<p class="description">This page groups demos using scatter charts.</p>
 
 ## SimpleScatterChart
 

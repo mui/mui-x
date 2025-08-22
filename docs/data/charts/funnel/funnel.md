@@ -161,7 +161,7 @@ To display a category axis, pass a `position` and a list of `categories` to the 
 ### Scaled sections
 
 By default, the sections have the same size because they use the `band` scale type.
-A linear scale, is also available, and will scale the the sections based on their value.
+A linear scale is also available, and will scale the sections based on their value.
 To do so, set the `scaleType` property to `linear` in the `categoryAxis`.
 
 {{"demo": "FunnelLinearScale.js"}}

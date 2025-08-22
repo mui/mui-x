@@ -6,7 +6,7 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 # Charts - Line demonstration
 
-<p class="description">This page groups demonstration using line charts.</p>
+<p class="description">This page groups demos using line charts.</p>
 
 ## SimpleLineChart
 

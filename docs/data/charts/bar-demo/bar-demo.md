@@ -6,7 +6,7 @@ components: BarChart, BarElement, BarPlot
 
 # Charts - Bar demonstration
 
-<p class="description">This page groups demonstration using bar charts.</p>
+<p class="description">This page groups demos using bar charts.</p>
 
 ## TinyBarChart
 

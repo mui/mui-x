@@ -6,7 +6,7 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 # Charts - Areas demonstration
 
-<p class="description">This page groups demonstration using area charts.</p>
+<p class="description">This page groups demos using area charts.</p>
 
 ## SimpleAreaChart
 
