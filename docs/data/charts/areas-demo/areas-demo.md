@@ -1,10 +1,10 @@
 ---
-title: Charts - Areas demonstration
+title: Charts - Areas demos
 productId: x-charts
 components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot
 ---
 
-# Charts - Areas demonstration
+# Charts - Areas demos
 
 <p class="description">This page groups demos using area charts.</p>
 

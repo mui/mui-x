@@ -18,7 +18,7 @@ It's responsible for the mapping between your data and element positions.
 You can define custom axes by using `xAxis` and `yAxis` props.
 Those props expect an array of objects.
 
-Here is a demonstration with two lines with the same data.
+Here is a demo with two lines with the same data.
 But one uses a linear, and the other a log axis.
 Each axis definition is identified by its property `id`.
 Then each series specifies the axis they use with the `xAxisId` and `yAxisId` properties.
@@ -31,8 +31,8 @@ Or customized axes.
 
 If you do not provide a `xAxisId` or `yAxisId`, the series will use the first axis defined.
 
-That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
-Those demonstrations use the defaultized values.
+That's why in most of the demos with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
+Those demos use the defaultized values.
 :::
 
 ### Axis type
@@ -281,7 +281,7 @@ To avoid this, you can use the `margin` prop to increase the space between the c
 
 ### Rendering
 
-Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
+Axes rendering can be further customized. Below is an interactive demo of the axis props.
 
 {{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 

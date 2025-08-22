@@ -43,7 +43,7 @@ This kind of interaction is controlled by series properties `highlightScope` whi
 
 :::info
 For line chart, you can increase the interaction area by using slots.
-Detailed explanations are available in a [dedicated line interaction demonstration](/x/react-charts/line-demo/#larger-interaction-area).
+Detailed explanations are available in a [dedicated line interaction demo](/x/react-charts/line-demo/#larger-interaction-area).
 :::
 
 {{"demo": "ElementHighlights.js"}}
