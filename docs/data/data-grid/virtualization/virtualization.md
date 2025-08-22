@@ -2,7 +2,7 @@
 
 <p class="description">The grid is high performing thanks to its rows and columns virtualization engine.</p>
 
-DOM virtualization is what makes it possible for the Data Grid handle an unlimited\* number of rows and columns.
+DOM virtualization is what makes it possible for the Data Grid to handle an unlimited\* number of rows and columns.
 This is a built-in feature of the rendering engine and greatly improves rendering performance.
 
 _\*unlimited: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
