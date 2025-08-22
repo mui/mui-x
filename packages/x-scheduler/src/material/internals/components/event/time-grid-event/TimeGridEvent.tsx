@@ -24,7 +24,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     eventResource,
     ariaLabelledBy,
     variant,
-    readOnly: readOnlyProp = false,
     className,
     id: idProp,
     ...other
@@ -34,11 +33,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { store } = useEventCalendarContext();
 
   const isRecurring = Boolean(eventProp.rrule);
-  // TODO: Use `isEventReadOnlySelector` after #19251
-  const readOnly = readOnlyProp || isRecurring;
-
-  const isDraggable = useStore(store, selectors.isEventDraggable, { readOnly });
-  const isResizable = useStore(store, selectors.isEventResizable, { readOnly });
+  const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
+  const isResizable = useStore(store, selectors.isEventResizable, eventProp);
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 

@@ -47,7 +47,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const adapter = useAdapter();
   const translations = useTranslations();
-  const { instance } = useEventCalendarContext();
+  const { store, instance } = useEventCalendarContext();
+  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
   const isRecurring = Boolean(calendarEvent.rrule);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -155,6 +156,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       defaultValue={calendarEvent.title}
                       aria-label={translations.eventTitleAriaLabel}
                       required
+                      readOnly={isEventReadOnly}
                     />
                   </Field.Label>
                   <Field.Error className="EventPopoverRequiredFieldError" />
@@ -185,6 +187,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           }
                           aria-describedby="startDate-error"
                           required
+                          readOnly={isEventReadOnly}
                         />
                       </Field.Label>
                     </Field.Root>
@@ -204,6 +207,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             }
                             aria-describedby="startTime-error"
                             required
+                            readOnly={isEventReadOnly}
                           />
                         </Field.Label>
                       </Field.Root>
@@ -224,6 +228,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             adapter.formatByString(calendarEvent.end, 'yyyy-MM-dd') ?? ''
                           }
                           required
+                          readOnly={isEventReadOnly}
                         />
                       </Field.Label>
                     </Field.Root>
@@ -240,6 +245,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             type="time"
                             defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
                             required
+                            readOnly={isEventReadOnly}
                           />
                         </Field.Label>
                       </Field.Root>
@@ -272,6 +278,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         id="enable-all-day-checkbox"
                         checked={isAllDay}
                         onCheckedChange={setIsAllDay}
+                        readOnly={isEventReadOnly}
                       >
                         <Checkbox.Indicator className="AllDayCheckboxIndicator">
                           <CheckIcon className="AllDayCheckboxIcon" />
@@ -290,7 +297,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
                     <p className="EventPopoverFormLabel">{`Custom ${calendarEvent.rrule?.freq.toLowerCase()} recurrence`}</p>
                   ) : (
-                    <Select.Root items={recurrenceOptions} defaultValue={defaultRecurrenceKey}>
+                    <Select.Root
+                      items={recurrenceOptions}
+                      defaultValue={defaultRecurrenceKey}
+                      readOnly={isEventReadOnly}
+                    >
                       <Select.Trigger
                         className="EventPopoverSelectTrigger"
                         aria-label={translations.recurrenceLabel}
@@ -348,28 +359,27 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             rows={5}
                           />
                         }
+                        readOnly={isEventReadOnly}
                       />
                     </Field.Label>
                   </Field.Root>
                 </div>
               </div>
               <Separator className="EventPopoverSeparator" />
-              <div className="EventPopoverActions">
-                <button
-                  className={clsx('SecondaryErrorButton', 'Button')}
-                  type="button"
-                  onClick={handleDelete}
-                >
-                  {translations.deleteEvent}
-                </button>
-                <button
-                  className={clsx('NeutralButton', 'Button')}
-                  type="submit"
-                  disabled={isRecurring}
-                >
-                  {translations.saveChanges}
-                </button>
-              </div>
+              {!isEventReadOnly && (
+                <div className="EventPopoverActions">
+                  <button
+                    className={clsx('SecondaryErrorButton', 'Button')}
+                    type="button"
+                    onClick={handleDelete}
+                  >
+                    {translations.deleteEvent}
+                  </button>
+                  <button className={clsx('NeutralButton', 'Button')} type="submit">
+                    {translations.saveChanges}
+                  </button>
+                </div>
+              )}
             </Form>
           </Popover.Popup>
         </Popover.Positioner>

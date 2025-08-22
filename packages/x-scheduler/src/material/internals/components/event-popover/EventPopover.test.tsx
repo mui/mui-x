@@ -110,4 +110,22 @@ describe('<EventPopover />', () => {
     expect(onEventsChange.calledOnce).to.equal(true);
     expect(onEventsChange.firstCall.firstArg).to.deep.equal([]);
   });
+
+  it('should handle read-only events', () => {
+    render(
+      <StandaloneView events={[calendarEvent]}>
+        <Popover.Root open>
+          <EventPopover {...defaultProps} calendarEvent={{ ...calendarEvent, readOnly: true }} />
+        </Popover.Root>
+      </StandaloneView>,
+    );
+    expect(screen.getByDisplayValue('Running')).to.have.attribute('readonly');
+    expect(screen.getByDisplayValue('Morning run')).to.have.attribute('readonly');
+    expect(screen.getByLabelText(/start date/i)).to.have.attribute('readonly');
+    expect(screen.getByLabelText(/end date/i)).to.have.attribute('readonly');
+    expect(screen.getByLabelText(/start time/i)).to.have.attribute('readonly');
+    expect(screen.getByLabelText(/end time/i)).to.have.attribute('readonly');
+    expect(screen.queryByRole('button', { name: /save changes/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /delete event/i })).to.equal(null);
+  });
 });

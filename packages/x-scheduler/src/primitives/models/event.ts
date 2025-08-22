@@ -32,9 +32,14 @@ export interface CalendarEvent {
    */
   rrule?: RRuleSpec;
   /**
-   * `true` if the event is an all-day event.
+   * Whether the event is an all-day event.
    */
   allDay?: boolean;
+  /**
+   * Whether the event is read-only.
+   * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
+   */
+  readOnly?: boolean;
 }
 
 /** Two-letter weekday codes as defined by RFC 5545 (`BYDAY`). */

@@ -258,7 +258,7 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       return null;
     }
 
-    return { ...event, start: placeholder.start, end: placeholder.end };
+    return { ...event, start: placeholder.start, end: placeholder.end, readOnly: true };
   }, [event, placeholder]);
 
   if (!updatedEvent) {
@@ -271,7 +271,6 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       eventResource={resourcesByIdMap.get(updatedEvent.resource)}
       variant="regular"
       ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
-      readOnly
     />
   );
 }
