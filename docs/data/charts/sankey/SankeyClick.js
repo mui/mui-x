@@ -9,6 +9,26 @@ import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyCha
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (key === 'source' || key === 'target') {
+      return '(Circular Node)';
+    }
+    if (key === 'sourceLinks' || key === 'targetLinks') {
+      return '[...(Circular Links)]';
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return undefined;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
 const sankeyChartsParams = {
   series: {
     data: {
@@ -81,7 +101,7 @@ export default function SankeyClick() {
         </Box>
         <HighlightedCode
           code={`// Data from item click
-${itemData ? JSON.stringify(itemData, null, 2) : '// The data will appear here'}
+${itemData ? JSON.stringify(itemData, getCircularReplacer(), 2) : '// The data will appear here'}
 `}
           language="json"
           copyButtonHidden

@@ -437,6 +437,7 @@
   { "name": "SankeyChartSlots", "kind": "Interface" },
   { "name": "SankeyData", "kind": "Interface" },
   { "name": "SankeyItemIdentifier", "kind": "TypeAlias" },
+  { "name": "SankeyItemIdentifierWithData", "kind": "TypeAlias" },
   { "name": "SankeyLayout", "kind": "Interface" },
   { "name": "SankeyLayoutLink", "kind": "Interface" },
   { "name": "SankeyLayoutNode", "kind": "Interface" },
