@@ -6,6 +6,21 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { configurationOptions } from './configuration';
 import { colorPaletteLookup } from './colors';
 
+const getLegendPosition = (position: string) => {
+  switch (position) {
+    case 'top':
+      return { vertical: 'top' as const };
+    case 'bottom':
+      return { vertical: 'bottom' as const };
+    case 'left':
+      return { horizontal: 'start' as const };
+    case 'right':
+      return { horizontal: 'end' as const };
+    default:
+      return undefined;
+  }
+};
+
 export interface ChartsRendererProps {
   categories: { id: string; label: string; data: (string | number | null)[] }[];
   series: { id: string; label: string; data: (number | null)[] }[];
@@ -74,29 +89,56 @@ function ChartsRenderer({
 
   if (chartType === 'bar' || chartType === 'column') {
     const layout = chartType === 'bar' ? 'horizontal' : 'vertical';
-    const axis = layout === 'vertical' ? 'xAxis' : 'yAxis';
-    const axisProp = {
-      [axis]: [
-        {
-          data: categoryData,
-          categoryGapRatio: chartConfiguration.categoryGapRatio,
-          barGapRatio: chartConfiguration.barGapRatio,
-          tickPlacement: chartConfiguration.tickPlacement,
-          tickLabelPlacement: chartConfiguration.tickLabelPlacement,
-          valueFormatter,
-          groups,
-          label: categoryLabel,
-        },
-      ],
+    const { categoriesAxis, categoriesAxisPosition, seriesAxis, seriesAxisPosition } =
+      layout === 'vertical'
+        ? {
+            categoriesAxis: 'xAxis',
+            categoriesAxisPosition: chartConfiguration.xAxisPosition,
+            seriesAxis: 'yAxis',
+            seriesAxisPosition: chartConfiguration.yAxisPosition,
+          }
+        : {
+            categoriesAxis: 'yAxis',
+            categoriesAxisPosition: chartConfiguration.yAxisPosition,
+            seriesAxis: 'xAxis',
+            seriesAxisPosition: chartConfiguration.xAxisPosition,
+          };
+
+    // Build axis configuration
+    const categoriesAxisConfig = {
+      data: categoryData,
+      categoryGapRatio: chartConfiguration.categoryGapRatio,
+      barGapRatio: chartConfiguration.barGapRatio,
+      tickPlacement: chartConfiguration.tickPlacement,
+      tickLabelPlacement: chartConfiguration.tickLabelPlacement,
+      valueFormatter,
+      groups,
+      label: chartConfiguration.categoriesAxisLabel || categoryLabel,
+      position: categoriesAxisPosition,
     };
+
+    const seriesAxisConfig = {
+      label: chartConfiguration.seriesAxisLabel,
+      position: seriesAxisPosition,
+      reverse: chartConfiguration.seriesAxisReverse,
+    };
+
+    const axisProp = {
+      [categoriesAxis]: [categoriesAxisConfig],
+      [seriesAxis]: [seriesAxisConfig],
+    };
+
     const seriesProp = chartConfiguration.stacked
       ? series.map((ser) => ({ ...ser, stack: 'stack' }))
       : series;
 
+    const barLabel = chartConfiguration.itemLabel === 'value' ? ('value' as const) : undefined;
+    const legendPosition = getLegendPosition(chartConfiguration.legendPosition);
+
     const props = {
       ...axisProp,
       series: seriesProp,
-      hideLegend: chartConfiguration.hideLegend,
+      hideLegend: legendPosition === undefined,
       height: chartConfiguration.height,
       layout: layout as 'horizontal' | 'vertical',
       borderRadius: chartConfiguration.borderRadius,
@@ -106,6 +148,17 @@ function ChartsRenderer({
         horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
       },
       skipAnimation: chartConfiguration.skipAnimation,
+      barLabel,
+      slotProps: {
+        tooltip: {
+          trigger: chartConfiguration.tooltipTrigger,
+          placement: chartConfiguration.tooltipPlacement,
+        },
+        legend: {
+          direction: chartConfiguration.legendDirection,
+          position: legendPosition,
+        },
+      },
     };
 
     return onRender ? onRender(chartType, props, BarChart) : <BarChart {...props} />;
@@ -116,25 +169,50 @@ function ChartsRenderer({
     const seriesProp = series.map((ser) => ({
       ...ser,
       area,
+      curve: chartConfiguration.interpolation,
       showMark: chartConfiguration.showMark,
       stack: chartConfiguration.stacked ? 'stack' : undefined,
     }));
 
+    // Build axis configuration
+    const xAxisConfig = {
+      data: categoryData,
+      scaleType: 'point' as const,
+      valueFormatter,
+      groups,
+      label: chartConfiguration.categoriesAxisLabel || categoryLabel,
+      position: chartConfiguration.xAxisPosition,
+    };
+
+    const yAxisConfig = {
+      label: chartConfiguration.seriesAxisLabel,
+      position: chartConfiguration.yAxisPosition,
+      reverse: chartConfiguration.seriesAxisReverse,
+    };
+
+    const legendPosition = getLegendPosition(chartConfiguration.legendPosition);
     const props = {
-      xAxis: [
-        {
-          data: categoryData,
-          scaleType: 'point' as const,
-          valueFormatter,
-          groups,
-          label: categoryLabel,
-        },
-      ],
+      xAxis: [xAxisConfig],
+      yAxis: [yAxisConfig],
       series: seriesProp,
-      hideLegend: chartConfiguration.hideLegend,
+      hideLegend: legendPosition === undefined,
       height: chartConfiguration.height,
       colors: colorPaletteLookup.get(chartConfiguration.colors),
       skipAnimation: chartConfiguration.skipAnimation,
+      grid: {
+        vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
+        horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
+      },
+      slotProps: {
+        tooltip: {
+          trigger: chartConfiguration.tooltipTrigger,
+          placement: chartConfiguration.tooltipPlacement,
+        },
+        legend: {
+          direction: chartConfiguration.legendDirection,
+          position: legendPosition,
+        },
+      },
     };
 
     return onRender ? onRender(chartType, props, LineChart) : <LineChart {...props} />;
@@ -159,6 +237,7 @@ function ChartsRenderer({
         value: item || 0,
         label: `${String(categoryData[itemIndex])} - ${seriesItem.label}`,
       })),
+      arcLabel: chartConfiguration.itemLabel === 'value' ? ('value' as const) : undefined,
       // each series starts from
       // - inner radius of the chart
       // - plus all the series before
@@ -172,21 +251,33 @@ function ChartsRenderer({
         chartConfiguration.innerRadius +
         (seriesIndex + 1) * radiusPerSeries +
         chartConfiguration.seriesGap * seriesIndex,
+      cornerRadius: chartConfiguration.cornerRadius,
+      startAngle: chartConfiguration.startAngle,
+      endAngle: chartConfiguration.endAngle,
+      paddingAngle: chartConfiguration.paddingAngle,
     }));
 
+    const legendPosition = getLegendPosition(chartConfiguration.pieLegendPosition);
     const props = {
       series: seriesProp,
       height: chartConfiguration.height,
       width: chartConfiguration.width,
-      hideLegend: chartConfiguration.hideLegend,
+      skipAnimation: chartConfiguration.skipAnimation,
+      hideLegend: legendPosition === undefined,
       colors: colorPaletteLookup.get(chartConfiguration.colors),
       slotProps: {
         legend: {
+          direction: chartConfiguration.pieLegendDirection,
+          position: legendPosition,
           sx: {
             overflowY: 'scroll',
             flexWrap: 'nowrap',
             height: chartConfiguration.height,
           },
+        },
+        tooltip: {
+          trigger: chartConfiguration.pieTooltipTrigger,
+          placement: chartConfiguration.tooltipPlacement,
         },
       },
     };
