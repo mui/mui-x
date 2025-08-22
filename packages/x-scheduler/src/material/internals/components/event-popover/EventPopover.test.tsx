@@ -14,7 +14,6 @@ const calendarEvent: CalendarEvent = {
   end: DateTime.fromISO('2025-05-26T08:15:00'),
   title: 'Running',
   description: 'Morning run',
-  allDay: false,
 };
 
 const calendarEventResource: CalendarResource = {

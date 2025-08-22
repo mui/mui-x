@@ -34,6 +34,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { store } = useEventCalendarContext();
 
   const isRecurring = Boolean(eventProp.rrule);
+  // TODO: Use `isEventReadOnlySelector` after #19251
   const readOnly = readOnlyProp || isRecurring;
 
   const isDraggable = useStore(store, selectors.isEventDraggable, { readOnly });

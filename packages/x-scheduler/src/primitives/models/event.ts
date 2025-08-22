@@ -27,7 +27,8 @@ export interface CalendarEvent {
    */
   resource?: CalendarResourceId;
   /**
-   * The recurrence rule for the event, if it is a recurring event.
+   * The recurrence rule for the event.
+   * If not defined, the event will have only one occurrence.
    */
   rrule?: RRuleSpec;
   /**
@@ -72,6 +73,9 @@ export interface RRuleSpec {
  *  A concrete occurrence derived from a `CalendarEvent` (recurring or single).
  */
 export interface CalendarEventOccurrence extends CalendarEvent {
+  /**
+   * Unique key that can be passed to the React `key` property when looping through events.
+   */
   key: string;
 }
 
