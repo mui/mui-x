@@ -38,7 +38,6 @@ export const enUSLocaleText: ChartsLocaleText = {
   chartPaletteNameYellow: 'Yellow',
   chartPaletteNameCyan: 'Cyan',
   chartPaletteNamePink: 'Pink',
-  chartConfigurationSectionMain: 'Main section',
   chartConfigurationSectionChart: 'Chart',
   chartConfigurationSectionColumns: 'Columns',
   chartConfigurationSectionBars: 'Bars',

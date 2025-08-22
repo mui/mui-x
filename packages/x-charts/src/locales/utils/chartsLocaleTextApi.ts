@@ -111,10 +111,6 @@ export interface ChartsLocaleText {
    */
   chartPaletteNamePink: string;
   /**
-   * Label for the main configuration section.
-   */
-  chartConfigurationSectionMain: string;
-  /**
    * Label for the chart configuration section.
    */
   chartConfigurationSectionChart: string;
