@@ -1,5 +1,6 @@
 import { GridSlotsComponent } from '@mui/x-data-grid';
 import { GridProIconSlotsComponent } from './gridProIconSlotsComponent';
+import type { GridProSlotProps } from './gridProSlotProps';
 
 /**
  * Grid components React prop interface containing all the overridable components
@@ -16,4 +17,9 @@ export interface GridProSlotsComponent extends GridSlotsComponent, GridProIconSl
    * @default GridHeaderFilterMenu
    */
   headerFilterMenu: React.JSXElementConstructor<any> | null;
+  /**
+   * Component responsible for rendering the detail panels toggle.
+   * @default GridDetailPanelsToggle
+   */
+  detailPanelsToggle: React.JSXElementConstructor<GridProSlotProps['detailPanelsToggle']>;
 }

@@ -1,33 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
-import {
-  getDataGridUtilityClass,
-  useGridSelector,
-  GridRenderCellParams,
-  GridRowId,
-} from '@mui/x-data-grid';
+import { useGridSelector, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
 import { createSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridDetailPanelExpandedRowIdsSelector,
   gridDetailPanelExpandedRowsContentCacheSelector,
 } from '../hooks/features/detailPanel/gridDetailPanelSelector';
 import { GridApiPro } from '../models';
-
-type OwnerState = { classes: DataGridProProcessedProps['classes']; isExpanded: boolean };
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, isExpanded } = ownerState;
-
-  const slots = {
-    root: ['detailPanelToggleCell', isExpanded && 'detailPanelToggleCell--expanded'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
 
 const isExpandedSelector = createSelector(
   gridDetailPanelExpandedRowIdsSelector,
@@ -43,32 +24,16 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const ownerState: OwnerState = { classes: rootProps.classes, isExpanded };
-  const classes = useUtilityClasses(ownerState);
 
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
   const hasContent = React.isValidElement(contentCache[id]);
 
-  const Icon = isExpanded
-    ? rootProps.slots.detailPanelCollapseIcon
-    : rootProps.slots.detailPanelExpandIcon;
-
   return (
-    <rootProps.slots.baseIconButton
-      size="small"
-      tabIndex={-1}
-      disabled={!hasContent}
-      className={classes.root}
-      aria-expanded={isExpanded}
-      aria-label={
-        isExpanded
-          ? apiRef.current.getLocaleText('collapseDetailPanel')
-          : apiRef.current.getLocaleText('expandDetailPanel')
-      }
-      {...rootProps.slotProps?.baseIconButton}
-    >
-      <Icon fontSize="inherit" />
-    </rootProps.slots.baseIconButton>
+    <rootProps.slots.detailPanelsToggle
+      hasContent={hasContent}
+      isExpanded={isExpanded}
+      {...rootProps.slotProps?.detailPanelsToggle}
+    />
   );
 }
 

@@ -76,6 +76,7 @@ export interface ColumnHeaderSortIconPropsOverrides {}
 export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
 export interface DetailPanelsPropsOverrides {}
+export interface DetailPanelsTogglePropsOverrides {}
 export interface ColumnsManagementPropsOverrides {}
 export interface FilterPanelPropsOverrides {}
 export interface FooterPropsOverrides {}
