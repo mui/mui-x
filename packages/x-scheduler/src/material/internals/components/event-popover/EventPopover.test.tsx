@@ -50,6 +50,10 @@ describe('<EventPopover />', () => {
     expect(screen.getByLabelText(/end date/i)).to.have.value('2025-05-26');
     expect(screen.getByLabelText(/start time/i)).to.have.value('07:30');
     expect(screen.getByLabelText(/end time/i)).to.have.value('08:15');
+    expect(screen.getByRole('checkbox', { name: /all day/i })).to.have.attribute(
+      'aria-checked',
+      'false',
+    );
   });
 
   it('should call "onEventsChange" with updated values on submit', async () => {
@@ -62,9 +66,16 @@ describe('<EventPopover />', () => {
       </StandaloneView>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
+    await user.click(screen.getByRole('checkbox', { name: /all day/i }));
+    await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+    await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
+
     expect(onEventsChange.calledOnce).to.equal(true);
-    expect(onEventsChange.firstCall.firstArg[0].title).to.equal('Running test');
+    const updated = onEventsChange.firstCall.firstArg[0];
+    expect(updated.title).to.equal('Running test');
+    expect(updated.rrule?.freq).to.equal('DAILY');
+    expect(updated.allDay).to.equal(true);
   });
 
   it('should show error if start date is after end date', async () => {
