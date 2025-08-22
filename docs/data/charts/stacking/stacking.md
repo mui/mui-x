@@ -37,7 +37,7 @@ To show series evolution relative to other stacked series (instead of their abso
 | `'expand'`    | Set baseline at zero and scale data to end up at 1.       |
 | `'diverging'` | Stack positive value above zero and negative value below. |
 
-The next demonstration lets you test the different `stackOffset` values.
+The next demo lets you test the different `stackOffset` values.
 
 To see how they interact with a dataset containing negative values, you can toggle "data has negative values" switch.
 When turned on, the series will have the following composition:

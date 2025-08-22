@@ -61,7 +61,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ### Axis domain
 
-By default axes round their limits to match human-readable values.
+By default, axes round their limits to match human-readable values.
 For example, if your data ranges from 2 to 195, the axis displays values from 0 to 200.
 This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
 
