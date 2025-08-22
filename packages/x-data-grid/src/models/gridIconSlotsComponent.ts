@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IconProps } from './gridBaseSlots';
+import type { GridColumnUnsortedIconProps } from '../components/GridColumnUnsortedIcon';
 
 /**
  * Set of icons used in the grid component UI.
@@ -35,6 +36,11 @@ export interface GridIconSlotsComponent {
    * @default GridColumnIcon
    */
   columnSelectorIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the side of the column header title when unsorted.
+   * @default GridColumnUnsortedIcon
+   */
+  columnUnsortedIcon: React.JSXElementConstructor<GridColumnUnsortedIconProps> | null;
   /**
    * Icon displayed on the side of the column header title when sorted in ascending order.
    * @default GridArrowUpwardIcon
