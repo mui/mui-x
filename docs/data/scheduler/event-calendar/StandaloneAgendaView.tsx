@@ -7,7 +7,7 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './StandaloneWeekView.module.css';
+import classes from './StandaloneAgendaView.module.css';
 
 export default function StandaloneAgendaView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
