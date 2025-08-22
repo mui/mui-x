@@ -5,7 +5,7 @@
 ## Using the `sx` prop
 
 For one-off styles, the `sx` prop can be used.
-It lets you apply simple to complex customizations directly onto the Data Grid element.
+It lets you apply both simple and complex customizations directly to the Data Grid element.
 The keys accepted can be any CSS property as well as the custom properties provided by MUI.
 For more details, visit the [`sx` prop page](/system/getting-started/the-sx-prop/).
 
