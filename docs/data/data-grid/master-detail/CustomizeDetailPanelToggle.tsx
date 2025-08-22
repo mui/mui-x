@@ -53,17 +53,27 @@ function CustomDetailPanelsToggle(props: GridProSlotProps['detailPanelsToggle'])
     : rootProps.slots.detailPanelExpandIcon;
 
   return (
-    <rootProps.slots.baseIconButton
-      material={{
-        sx: {
-          display: 'flex',
-          cursor: hasContent ? 'pointer' : 'default',
-        },
+    <Box
+      sx={{
+        flex: 1,
+        display: 'flex',
+        placeItems: 'center',
+        placeContent: 'center',
+        height: '100%',
       }}
-      aria-label={isExpanded ? 'Collapse detail panel' : 'Expand detail panel'}
     >
-      <Icon fontSize="small" />
-    </rootProps.slots.baseIconButton>
+      <rootProps.slots.baseIconButton
+        material={{
+          sx: {
+            display: 'flex',
+            cursor: hasContent ? 'pointer' : 'default',
+          },
+        }}
+        aria-label={isExpanded ? 'Collapse detail panel' : 'Expand detail panel'}
+      >
+        <Icon fontSize="small" />
+      </rootProps.slots.baseIconButton>
+    </Box>
   );
 }
 
