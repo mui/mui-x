@@ -366,7 +366,7 @@ Make sure that the Material UI version you are using is also installing the cor
 :::
 
 Instead of generating the Excel file in the main thread, you can delegate the task to a web worker.
-This method reduces the amount of time that the main thread remains frozen, allowing to interact with the grid while the data is exported in background.
+This method reduces the amount of time that the main thread remains frozen so users can interact with the grid while the data is exported in background.
 To start using web workers for the Excel export, first you need to create a file with the content below.
 This file will be later used as the worker script, so it must be accessible by a direct URL.
 

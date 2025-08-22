@@ -292,7 +292,7 @@ You can manually trigger a refetch by calling the `dataSource.fetchRows()` API m
 
 You can handle errors with the Data Source by providing an error handler function with `onDataSourceError()`.
 This gets called whenever there's an error in fetching or updating the data.
-This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
+This function receives an error object of type `GridGetRowsError | GridUpdateRowError`.
 Each error type has a corresponding `error.params` type which is passed as an argument to the callback:
 
 | **Error type**       | `error.params` **type** |
