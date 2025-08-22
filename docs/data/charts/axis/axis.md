@@ -100,15 +100,14 @@ xAxis={[
 
 ### Relative axis subdomain
 
-You can adjust the axis range relatively to its data by using the `domainLimit` option.
+You can adjust the axis range relative to its data by using the `domainLimit` option.
 This expects one of three possible values:
 
-- `"nice"` Rounds the domain at human friendly values. It's the default behavior.
-- `"strict"` Sets the domain to the min/max value to display.
-- `(minValue, maxValue) => { min, max }` Receives the calculated extremums as parameters, and should return the axis domain.
+- `"nice"` (default): Rounds the domain to human-friendly values
+- `"strict"`: Sets the domain to the min/max value to display
+- `(minValue, maxValue) => { min, max }`: Receives the calculated extrema as parameters, and should return the axis domain
 
-The demo below shows different ways to set the y-axis range.
-They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
+The demo below illustrates these differences in behavior, showing data ranging from -15 to 92 with different domain limits:
 
 {{"demo": "CustomDomainYAxis.js"}}
 
@@ -124,7 +123,7 @@ You can apply the `reverse` property to change this:
 You can add a grid in the background of a Cartesian chart with the `grid` prop.
 This prop accepts an object with `vertical` and `horizontal` properties that are responsible for creating their respective lines when set to `true`.
 
-If you use composition you can pass those as props to the `<ChartsGrid />` component:
+If you use composition you can pass these as props to the `<ChartsGrid />` component:
 
 ```jsx
 <BarChart grid={{ vertical: true }}>
@@ -140,7 +139,7 @@ If you use composition you can pass those as props to the `<ChartsGrid />` compo
 
 ### Automatic tick position
 
-You can customize the number of ticks with the property `tickNumber`.
+Use the `tickNumber` property to customize the number of ticks.
 
 :::info
 This number is not the exact number of ticks displayed.
@@ -161,10 +160,9 @@ Here the top axis has a `tickMinStep` of half a day, and the bottom axis a `tick
 
 If you want more control over the tick position, you can use the `tickInterval` property.
 
-This property accepts an array of values.
-Ticks will be placed at those values.
+This property accepts an array of values that define where ticks will be placed.
 
-For axis with scale type `'point'`, the `tickInterval` property can be a filtering function of the type `(value, index) => boolean`.
+For axes with the`'point'` scale type, the `tickInterval` property can be a filtering function of the type `(value, index) => boolean`.
 
 In the next demo, both axes are with `scaleType='point'`.
 The top axis displays the default behavior.
@@ -175,8 +173,8 @@ The bottom axis uses a filtering function to only display a tick at the beginnin
 
 ### Filtering tick labels
 
-You can display labels only on a subset of ticks with the `tickLabelInterval` property.
-It's a filtering function in the `(value, index) => boolean` form.
+You can use the `tickLabelInterval` property to only display labels on a specific subset of ticks.
+This is a filtering function in the `(value, index) => boolean` form.
 
 For example `tickLabelInterval: (value, index) => index % 2 === 0` will show the label every two ticks.
 
