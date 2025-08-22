@@ -137,7 +137,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
             })}
             {visibleEvents.map((event) => (
               <EventPopoverTrigger
-                key={event.id}
+                key={event.key}
                 event={event}
                 render={
                   <DayGridEvent

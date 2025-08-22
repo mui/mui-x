@@ -152,7 +152,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
                   return shouldRenderEvent ? (
                     <EventPopoverTrigger
-                      key={`${event.id}-${day.toString()}`}
+                      key={`${event.key}-${day.toString()}`}
                       event={event}
                       render={
                         <DayGridEvent
@@ -167,7 +167,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     />
                   ) : (
                     <DayGridEvent
-                      key={`invisible-${event.id}-${day.toString()}`}
+                      key={`invisible-${event.key}-${day.toString()}`}
                       event={event}
                       eventResource={resourcesByIdMap.get(event.resource)}
                       variant="invisible"
@@ -215,7 +215,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   >
                     {regularEvents.map((event) => (
                       <EventPopoverTrigger
-                        key={event.id}
+                        key={event.key}
                         event={event}
                         render={
                           <TimeGridEvent
@@ -250,7 +250,7 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       return null;
     }
 
-    return { ...event, start: placeholder.start, end: placeholder.end };
+    return { ...event, start: placeholder.start, end: placeholder.end, readOnly: true };
   }, [event, placeholder]);
 
   if (!updatedEvent) {
@@ -263,7 +263,6 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       eventResource={resourcesByIdMap.get(updatedEvent.resource)}
       variant="regular"
       ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
-      readOnly
     />
   );
 }
