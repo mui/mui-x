@@ -20,9 +20,7 @@ export const selectorChartsFocusedDataIndex = createSelector(
   (keyboardNavigationState) => keyboardNavigationState?.item?.dataIndex,
 );
 
-
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
   [selectKeyboardNavigation],
   (keyboardNavigationState) => !!keyboardNavigationState?.enableKeyboardNavigation,
 );
-
