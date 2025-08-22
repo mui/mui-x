@@ -131,7 +131,7 @@ If you want to use a custom wrapper element, you need to use the `useChartRootRe
 
 The `apiRef` prop exposes a `exportAsPrint()` method that can be used to open the browser's print dialog.
 
-The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
+The print dialog lets you print the chart or save it as a PDF, as well as configuring other settings.
 
 {{"demo": "PrintChart.js"}}
 
