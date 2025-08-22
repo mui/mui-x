@@ -3,7 +3,7 @@ import * as React from 'react';
 import { warn } from '@base-ui-components/utils/warn';
 
 /**
- * Make sure a controlled prop is used correctly.
+ * Makes sure a controlled prop is used correctly.
  * Logs errors if the prop either:
  *
  * - switch between controlled and uncontrolled
