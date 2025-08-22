@@ -91,7 +91,7 @@ import {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
 } from '@mui/x-data-grid-premium';
 
-// stop `id`, GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, and `status` columns to be togglable
+// stop `id`, GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, and `status` columns from being togglable
 const hiddenFields = ['id', GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'status'];
 
 const getTogglableColumns = (columns: GridColDef[]) => {

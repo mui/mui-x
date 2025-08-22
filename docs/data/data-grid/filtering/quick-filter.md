@@ -56,7 +56,7 @@ However, when you disable the `Exclude hidden columns` switch, the rows containi
 ## Custom filtering logic
 
 The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
-To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follow:
+To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follows:
 
 ```js
 initialState={{

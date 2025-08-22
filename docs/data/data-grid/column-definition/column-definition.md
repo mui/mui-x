@@ -141,7 +141,7 @@ It resolves the rendered output in the following order:
 4. `row[field]`
 
 The `renderCell` method of the column definitions is similar to `valueFormatter`.
-However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
+However, it trades the ability to only render in a cell in exchange for letting you return a React node (instead of a string).
 
 ```tsx
 const columns: GridColDef[] = [
