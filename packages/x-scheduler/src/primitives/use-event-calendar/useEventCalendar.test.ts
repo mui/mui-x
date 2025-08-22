@@ -14,16 +14,16 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
       const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
-      const getter = spy(() => targetDate);
+      const siblingVisibleDateGetter = spy(() => targetDate);
 
       const { result } = renderHook(() =>
         useEventCalendar({ ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange }),
       );
 
-      act(() => result.current.instance.setSiblingVisibleDateGetter(getter));
+      act(() => result.current.instance.setViewConfig({ siblingVisibleDateGetter }));
       act(() => result.current.instance.goToPreviousVisibleDate({} as any));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
-      expect(getter.lastCall.lastArg).toEqual(-1);
+      expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(-1);
     });
   });
 
@@ -32,16 +32,16 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
       const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
-      const getter = spy(() => targetDate);
+      const siblingVisibleDateGetter = spy(() => targetDate);
 
       const { result } = renderHook(() =>
         useEventCalendar({ ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange }),
       );
 
-      act(() => result.current.instance.setSiblingVisibleDateGetter(getter));
+      act(() => result.current.instance.setViewConfig({ siblingVisibleDateGetter }));
       act(() => result.current.instance.goToNextVisibleDate({} as any));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
-      expect(getter.lastCall.lastArg).toEqual(1);
+      expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(1);
     });
   });
 });
