@@ -9,6 +9,7 @@ import {
   CalendarSettings,
   CalendarEventOccurrence,
   CalendarEventOccurrenceWithPosition,
+  CalendarViewConfig,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import { getEventDays, getEventRowIndex } from '../utils/event-utils';
@@ -62,10 +63,10 @@ export type State = {
    */
   settings: CalendarSettings;
   /**
-   * Method used to determine the previous / the next visible date.
-   * This property is defined by the currently rendered view.
+   * The config of the current view.
+   * Should not be used in selectors, only in event handlers.
    */
-  siblingVisibleDateGetter: (date: SchedulerValidDate, delta: 1 | -1) => SchedulerValidDate;
+  viewConfig: CalendarViewConfig | null;
 };
 
 // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.

@@ -50,10 +50,10 @@ export const AgendaView = React.memo(
     });
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
-    useInitializeView({
+    useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
-    });
+    }));
 
     return (
       <div

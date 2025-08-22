@@ -50,10 +50,10 @@ export const MonthView = React.memo(
       [getWeekList, visibleDate],
     );
 
-    useInitializeView({
+    useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addMonths(adapter.startOfMonth(date), delta),
-    });
+    }));
 
     useResizeObserver(
       cellRef,

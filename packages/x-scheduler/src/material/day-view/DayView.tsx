@@ -18,9 +18,9 @@ export const DayView = React.memo(
     const visibleDate = useStore(store, selectors.visibleDate);
     const days = React.useMemo(() => [visibleDate], [visibleDate]);
 
-    useInitializeView({
+    useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) => adapter.addDays(date, delta),
-    });
+    }));
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),

@@ -14,6 +14,7 @@ import {
   CalendarResourceId,
   CalendarSettings,
   CalendarView,
+  CalendarViewConfig,
   SchedulerValidDate,
 } from '../models';
 import { useAssertStateValidity } from '../utils/useAssertStateValidity';
@@ -61,7 +62,7 @@ export function useEventCalendar(
         areEventsResizable,
         ampm,
         settings: settingsProp,
-        siblingVisibleDateGetter: (date) => date,
+        viewConfig: null,
       }),
   ).current;
 
@@ -159,12 +160,22 @@ export function useEventCalendar(
 
   const goToPreviousVisibleDate: useEventCalendar.Instance['goToPreviousVisibleDate'] =
     useEventCallback((event) => {
-      setVisibleDate(store.state.siblingVisibleDateGetter(store.state.visibleDate, -1), event);
+      const siblingVisibleDateGetter = store.state.viewConfig?.siblingVisibleDateGetter;
+      if (!siblingVisibleDateGetter) {
+        return;
+      }
+
+      setVisibleDate(siblingVisibleDateGetter(store.state.visibleDate, -1), event);
     });
 
   const goToNextVisibleDate: useEventCalendar.Instance['goToNextVisibleDate'] = useEventCallback(
     (event) => {
-      setVisibleDate(store.state.siblingVisibleDateGetter(store.state.visibleDate, 1), event);
+      const siblingVisibleDateGetter = store.state.viewConfig?.siblingVisibleDateGetter;
+      if (!siblingVisibleDateGetter) {
+        return;
+      }
+
+      setVisibleDate(siblingVisibleDateGetter(store.state.visibleDate, 1), event);
     },
   );
 
@@ -195,12 +206,11 @@ export function useEventCalendar(
     },
   );
 
-  const setSiblingVisibleDateGetter: useEventCalendar.Instance['setSiblingVisibleDateGetter'] =
-    useEventCallback((setter) => {
-      store.set('siblingVisibleDateGetter', setter);
+  const setViewConfig: useEventCalendar.Instance['setViewConfig'] = useEventCallback((config) => {
+    store.set('viewConfig', config);
 
-      return () => store.set('siblingVisibleDateGetter', (date: SchedulerValidDate) => date);
-    });
+    return () => store.set('viewConfig', null);
+  });
 
   const instanceRef = React.useRef<useEventCalendar.Instance>({
     setView,
@@ -212,7 +222,7 @@ export function useEventCalendar(
     switchToDay,
     setVisibleResources,
     setSettings,
-    setSiblingVisibleDateGetter,
+    setViewConfig,
   });
   const instance = instanceRef.current;
 
@@ -340,7 +350,7 @@ export namespace useEventCalendar {
      * Sets the method used to determine the previous / next visible date.
      * Returns the cleanup function.
      */
-    setSiblingVisibleDateGetter: (getter: State['siblingVisibleDateGetter']) => () => void;
+    setViewConfig: (getter: CalendarViewConfig) => () => void;
   }
 
   export type Store = BaseStore<State>;

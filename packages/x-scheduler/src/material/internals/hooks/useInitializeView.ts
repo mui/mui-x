@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { SchedulerValidDate } from '../../../primitives/models';
+import { CalendarViewConfig } from '../../../primitives/models';
 import { useEventCalendarContext } from './useEventCalendarContext';
 
 /**
@@ -8,15 +8,11 @@ import { useEventCalendarContext } from './useEventCalendarContext';
  * The initialization is only done during the 1st render, if you need to access variables inside some of the callbacks, make sure to use a ref.
  * @param parameters Parameters for the view.
  */
-export function useInitializeView(parameters: UseInitializeViewParameters) {
+export function useInitializeView(parameters: () => CalendarViewConfig) {
   const { instance } = useEventCalendarContext();
   const initialParameters = React.useRef(parameters);
 
   useIsoLayoutEffect(() => {
-    return instance.setSiblingVisibleDateGetter(initialParameters.current.siblingVisibleDateGetter);
+    return instance.setViewConfig(initialParameters.current());
   }, []);
-}
-
-export interface UseInitializeViewParameters {
-  siblingVisibleDateGetter: (date: SchedulerValidDate, delta: 1 | -1) => SchedulerValidDate;
 }
