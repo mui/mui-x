@@ -45,7 +45,7 @@ interface GridColDef {
 
 ## Function signature
 
-The function signature lets you span only **specific cells** in the column.
+The function signature makes it possible to only span specific cells in the column.
 The function receives [`GridCellParams`](/x/api/data-grid/grid-cell-params/) as argument.
 
 ```ts
