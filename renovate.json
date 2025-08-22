@@ -30,10 +30,6 @@
       "schedule": "* * 1 1,7 *"
     },
     {
-      "groupName": "Material UI",
-      "matchPackageNames": ["@mui/*"]
-    },
-    {
       "groupName": "date-fns-v2",
       "matchPackageNames": ["date-fns-v2"],
       "allowedVersions": "< 3.0.0"

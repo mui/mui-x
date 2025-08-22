@@ -98,13 +98,13 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
       <ChartDataProviderPro<'pie', PieChartProPluginSignatures> {...chartDataProviderProProps}>
         <ChartsWrapper
           legendPosition={props.slotProps?.legend?.position}
-          legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
+          legendDirection={props.slotProps?.legend?.direction ?? 'vertical'}
           sx={sx}
         >
           {showToolbar ? <Toolbar /> : null}
           {!hideLegend && (
             <ChartsLegend
-              direction={props?.slotProps?.legend?.direction ?? 'vertical'}
+              direction={props.slotProps?.legend?.direction ?? 'vertical'}
               slots={slots}
               slotProps={slotProps}
             />
