@@ -97,6 +97,14 @@ The `iterations` prop controls how many times the layout algorithm runs to optim
 
 {{"demo": "SankeyIterations.js"}}
 
+## Interaction
+
+### Click event
+
+You can use the `onItemClick` prop to handle click events on both nodes and links in the Sankey chart. The callback receives the mouse event and a `SankeyItemIdentifier` object that contains information about the clicked item.
+
+{{"demo": "SankeyClick.js"}}
+
 ## Tooltip
 
 The Sankey chart has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
