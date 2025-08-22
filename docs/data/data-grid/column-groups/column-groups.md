@@ -17,7 +17,7 @@ A column group is defined by at least two properties:
 The `children` attribute can contain two types of objects:
 
 - leafs with type `{ field: string }`, which add the column with the corresponding `field` to this group.
-- other column groups which lets you have nested groups.
+- other column groups, making it possible to create nested groups
 
 :::warning
 A column can only be associated with one group.
