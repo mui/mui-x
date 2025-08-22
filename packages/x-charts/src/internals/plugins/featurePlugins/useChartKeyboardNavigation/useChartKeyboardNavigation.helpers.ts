@@ -22,12 +22,13 @@ export function getNextSeriesWithData(
       : -1;
   const typesAvailable = Object.keys(series) as (keyof typeof series)[];
 
+  // Loop over all series types starting with the current seriesType
   for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {
     const typeIndex = (startingTypeIndex + typeGap) % typesAvailable.length;
     const seriesOfType = series[typesAvailable[typeIndex]]!;
 
-    const startingSeriesIndex =
-      typeGap === 0 ? (currentSeriesIndex + 1) % seriesOfType.seriesOrder.length : 0;
+    // Edge case for the current series type: we don't loop on previous series of the same type.
+    const startingSeriesIndex = typeGap === 0 ? currentSeriesIndex + 1 : 0;
 
     for (
       let seriesIndex = startingSeriesIndex;
@@ -43,8 +44,8 @@ export function getNextSeriesWithData(
     }
   }
 
-  // End looping on the initial type up to the initial series
-  const typeIndex = startingTypeIndex % typesAvailable.length;
+  // End looping on the initial type up to the initial series (excluded)
+  const typeIndex = startingTypeIndex;
   const seriesOfType = series[typesAvailable[typeIndex]]!;
 
   const endingSeriesIndex = currentSeriesIndex;
@@ -82,11 +83,13 @@ export function getPreviousSeriesWithData(
 
   const typesAvailable = Object.keys(series) as (keyof typeof series)[];
 
+  // Loop over all series types starting with the current seriesType
   for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {
     const typeIndex = (typesAvailable.length + startingTypeIndex - typeGap) % typesAvailable.length;
     const seriesOfType = series[typesAvailable[typeIndex]]!;
 
-    for (let seriesGap = 1; seriesGap < seriesOfType.seriesOrder.length; seriesGap += 1) {
+    const maxGap = typeGap === 0 ? startingSeriesIndex + 1 : seriesOfType.seriesOrder.length;
+    for (let seriesGap = 1; seriesGap < maxGap; seriesGap += 1) {
       const seriesIndex =
         (seriesOfType.seriesOrder.length + startingSeriesIndex - seriesGap) %
         seriesOfType.seriesOrder.length;
@@ -100,6 +103,24 @@ export function getPreviousSeriesWithData(
     }
   }
 
+  // End looping on the initial type down to the initial series (excluded)
+  const typeIndex = startingTypeIndex;
+  const seriesOfType = series[typesAvailable[typeIndex]]!;
+
+  const availableSeriesIds = seriesOfType.seriesOrder;
+
+  for (
+    let seriesIndex = availableSeriesIds.length - 1;
+    seriesIndex > startingSeriesIndex;
+    seriesIndex -= 1
+  ) {
+    if (seriesOfType.series[seriesOfType.seriesOrder[seriesIndex]].data.length > 0) {
+      return {
+        type: typesAvailable[typeIndex],
+        seriesId: seriesOfType.seriesOrder[seriesIndex],
+      };
+    }
+  }
   return null;
 }
 

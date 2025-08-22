@@ -208,6 +208,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           const updatedStore = focusPreviousSeries();
 
           if (updatedStore) {
+            // prevents scrolling
             event.preventDefault();
           }
 
@@ -217,6 +218,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           const updatedStore = focusNextSeries();
 
           if (updatedStore) {
+            // prevents scrolling
             event.preventDefault();
           }
           break;
