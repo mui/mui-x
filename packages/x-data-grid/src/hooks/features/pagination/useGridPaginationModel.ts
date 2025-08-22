@@ -335,7 +335,7 @@ export const useGridPaginationModel = (
     apiRef.current.setState((state) => {
       const isEnabled = props.pagination === true;
       if (
-        state.pagination.paginationMode === props.paginationMode ||
+        state.pagination.paginationMode === props.paginationMode &&
         state.pagination.enabled === isEnabled
       ) {
         return state;
