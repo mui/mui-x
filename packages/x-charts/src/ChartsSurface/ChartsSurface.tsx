@@ -83,9 +83,9 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       ownerState={{ width: propsWidth, height: propsHeight }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={className}
+      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
       {...other}
       ref={handleRef}
-      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
     >
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}

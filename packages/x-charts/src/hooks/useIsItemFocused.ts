@@ -6,12 +6,12 @@ type UseItemFocusedParams = FocusedItemData;
 /**
  * A hook to check if an item has the focus.
  *
- * If you need to process multiple points, use the `useItemFocusedGetter` hook instead.
+ * If you need to process multiple points, use the `useIsItemFocusedGetter` hook instead.
  *
  * @param {FocusedItemData} item is the item to check
  * @returns {boolean} the focus state
  */
-export function useItemFocused(item: UseItemFocusedParams): boolean {
+export function useIsItemFocused(item: UseItemFocusedParams): boolean {
   const focusedItem = useFocusedItem();
 
   return (

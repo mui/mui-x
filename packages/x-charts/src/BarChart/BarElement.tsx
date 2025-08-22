@@ -7,7 +7,7 @@ import { BarElementOwnerState, useUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
-import { useItemFocused } from '../hooks/useItemFocused';
+import { useIsItemFocused } from '../hooks/useIsItemFocused';
 
 export interface BarElementSlots {
   /**
@@ -68,7 +68,7 @@ function BarElement(props: BarElementProps) {
     seriesId: id,
     dataIndex,
   });
-  const isFocused = useItemFocused({
+  const isFocused = useIsItemFocused({
     seriesType: 'bar',
     seriesId: id,
     dataIndex,

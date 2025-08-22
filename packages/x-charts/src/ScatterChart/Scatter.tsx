@@ -20,7 +20,7 @@ import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { useItemFocusedGetter } from '../hooks/useItemFocusedGetter';
+import { useIsItemFocusedGetter } from '../hooks/useIsItemFocusedGetter';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -76,7 +76,7 @@ function Scatter(props: ScatterProps) {
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
-  const isFocused = useItemFocusedGetter();
+  const isFocused = useIsItemFocusedGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
 

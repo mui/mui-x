@@ -6,7 +6,7 @@ import {
   DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { useItemFocusedGetter } from '../../hooks/useItemFocusedGetter';
+import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
 import { deg2rad } from '../../internals/angleConversion';
 
 export interface AnimatedObject {
@@ -46,7 +46,7 @@ export function useTransformData(
   } = series;
 
   const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
-  const isItemFocused = useItemFocusedGetter();
+  const isItemFocused = useIsItemFocusedGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
