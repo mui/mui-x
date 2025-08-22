@@ -157,7 +157,7 @@ To update it, use the `xAxis` and `yAxis` configuration as follows:
 - **`y-axis`**: Uses the `width` prop instead.
 
 Axes only take up space in the side they are positioned.
-If the axis is not displayed (`position: 'none'`), they will not take up any space, regardless of their size.
+If an axis is not displayed (`position: 'none'`), it will not take up any space, regardless of its size.
 
 {{"demo": "Margin.js", "hideToolbar": true, "bg": "playground"}}
 
