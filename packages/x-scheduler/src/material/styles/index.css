@@ -15,12 +15,17 @@
   color: var(--default-text-color);
 }
 
-.mui-x-scheduler .NeutralButton:hover {
+.mui-x-scheduler .NeutralButton:hover:not(:disabled) {
   background: var(--gray-4);
 }
 
-.mui-x-scheduler .NeutralButton:active {
+.mui-x-scheduler .NeutralButton:active:not(:disabled) {
   background: var(--gray-5);
+}
+
+.mui-x-scheduler .NeutralButton:disabled {
+  opacity: 0.5;
+  cursor: var(--cursor-disabled);
 }
 
 .mui-x-scheduler .NeutralButton:focus-visible {
