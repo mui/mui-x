@@ -146,6 +146,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
+  const rowsMeta = useStore(store, Dimensions.selectors.rowsMeta);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
@@ -315,6 +316,10 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       onScrollChange?.(scrollPosition.current, nextRenderContext);
     }
   });
+
+  const getOffsetTop = () => {
+    return rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
+  };
 
   /**
    * HACK: unstable_rowTree fixes the issue described below, but does it by tightly coupling this
@@ -610,6 +615,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const getters = {
     setPanels,
+    getOffsetTop,
     getRows,
     getContainerProps: () => ({
       ref: refSetter('container'),
