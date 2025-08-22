@@ -9,8 +9,7 @@ import {
 
 export type AddItemsParameters<R> = {
   items: readonly R[];
-  parentId?: TreeViewItemId;
-  depth: number;
+  parentId: TreeViewItemId | null;
   getChildrenCount?: (item: R) => number;
 };
 
@@ -75,9 +74,9 @@ export interface UseTreeViewItemsInstance<R extends {}>
   addItems: (args: AddItemsParameters<R>) => void;
   /**
    * Remove the children of an item.
-   * @param {TreeViewItemId} parentId The id of the item to remove the children of.
+   * @param {TreeViewItemId | null} parentId The id of the item to remove the children of.
    */
-  removeChildren: (parentId?: TreeViewItemId) => void;
+  removeChildren: (parentId: TreeViewItemId | null) => void;
   /**
    * Set the loading state of the tree.
    * @param {boolean} loading True if the tree view is loading.
