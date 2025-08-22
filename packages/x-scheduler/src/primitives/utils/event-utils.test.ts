@@ -1,8 +1,5 @@
 import { DateTime } from 'luxon';
-import {
-  CalendarEvent,
-  CalendarEventOccurrenceWithPosition,
-} from '@mui/x-scheduler/primitives/models';
+import { CalendarEventOccurrenceWithPosition } from '@mui/x-scheduler/primitives/models';
 import {
   getEventDays,
   getEventRowIndex,
