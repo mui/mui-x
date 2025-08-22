@@ -35,7 +35,6 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   chartPaletteNameYellow: 'Jaune',
   chartPaletteNameCyan: 'Cyan',
   chartPaletteNamePink: 'Rose',
-  chartConfigurationSectionMain: 'Section principale',
   chartConfigurationSectionChart: 'Graphique',
   chartConfigurationSectionColumns: 'Colonnes',
   chartConfigurationSectionBars: 'Barres',
