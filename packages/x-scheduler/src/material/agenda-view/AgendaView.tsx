@@ -88,7 +88,7 @@ export const AgendaView = React.memo(
                 {allDayEvents.map((event) => (
                   <li>
                     <EventPopoverTrigger
-                      key={event.id}
+                      key={event.key}
                       event={event}
                       render={
                         <DayGridEvent
@@ -104,7 +104,7 @@ export const AgendaView = React.memo(
                 {events.map((event) => (
                   <li>
                     <EventPopoverTrigger
-                      key={event.id}
+                      key={event.key}
                       event={event}
                       render={
                         <DayGridEvent
