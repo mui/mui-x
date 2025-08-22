@@ -114,7 +114,7 @@ Note that the signature of `valueFormatter` has changed in v7 – see the [migra
 If you're using v6, please use the [v6 documentation](https://v6.mui.com/x/react-data-grid/column-definition/#value-formatter).
 :::
 
-The value formatter allows you to convert the value before displaying it.
+The value formatter lets you convert the value before displaying it.
 Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (for example "1,000.50").
 
 Note, that the value returned by `valueFormatter` is only used for rendering purposes.

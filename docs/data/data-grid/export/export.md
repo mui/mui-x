@@ -303,7 +303,7 @@ You can customize the document using two callback functions:
 - `exceljsPostProcess` called **after** the dataset has been exported to the document.
 
 Both functions receive `{ workbook, worksheet }` as input.
-They are [exceljs](https://github.com/exceljs/exceljs#interface) objects and allow you to directly manipulate the Excel file.
+They are [exceljs](https://github.com/exceljs/exceljs#interface) objects and let you directly manipulate the Excel file.
 
 Thanks to these two methods, you can modify the metadata of the exported spreadsheet.
 You can also use it to add custom content on top or bottom of the worksheet, as follows:
@@ -489,7 +489,7 @@ If you want to keep the formulas working, you can set the `escapeFormulas` optio
 
 ## Clipboard
 
-The clipboard export allows you to copy the content of the Data Grid to the clipboard.
+The clipboard export lets you copy the content of the Data Grid to the clipboard.
 For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#clipboard-copy) docs.
 
 ## apiRef

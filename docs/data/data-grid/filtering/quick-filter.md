@@ -111,7 +111,7 @@ If you control the `quickFilterValues` either by controlling `filterModel` or wi
 By default, values are joint with spaces. You can customize this behavior by providing a custom formatter.
 This formatter can be seen as the inverse of the `parser`.
 
-For example, the following parser allows to search words containing a space by using the `','` to split values.
+For example, the following parser lets you search words containing a space by using the `','` to split values.
 
 ```jsx
 // Default toolbar:
