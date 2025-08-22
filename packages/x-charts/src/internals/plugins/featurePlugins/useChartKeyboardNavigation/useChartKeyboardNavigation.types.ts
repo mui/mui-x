@@ -10,11 +10,11 @@ type SeriesItemIdentifier = {
    */
   type: ChartSeriesType;
   /**
-   * The series id of the funnel.
+   * The id of the series with focus.
    */
   seriesId: SeriesId;
   /**
-   * The index of the data point in the series.
+   * The index of the data point with focus.
    */
   dataIndex: number;
 };
