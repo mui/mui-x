@@ -31,7 +31,7 @@
     },
     {
       "groupName": "Material UI",
-      "matchPackageNames": ["@mui/*"]
+      "matchPackageNames": ["@mui/*", "!@mui/internal-*", "!@mui/docs"]
     },
     {
       "groupName": "date-fns-v2",
