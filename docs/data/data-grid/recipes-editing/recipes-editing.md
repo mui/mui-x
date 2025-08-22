@@ -94,7 +94,7 @@ const handleChange = async () => {
 
 A similar behavior can be reproduced with cell editing.
 Instead of `apiRef.current.setEditCellValue()`, the `rows` prop must be updated or `apiRef.current.updateRows()` be used.
-Note that the `onCellEditStart` and `onCellEditStop` props also have to be used to revert the value of the cell changed, in case the user cancels the edit.
+Note that the `onCellEditStart` and `onCellEditStop` props also need to be used to revert the value of the cell changed, in case the user cancels the edit.
 
 {{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
