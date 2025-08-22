@@ -8,9 +8,9 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './FullEventCalendar.module.css';
+import classes from './BasicMonthView.module.css';
 
-export default function StandaloneMonthView() {
+export default function BasicMonthView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
