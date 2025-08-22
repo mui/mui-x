@@ -1,13 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   DataGridPro,
-  useGridSelector,
-  useGridApiContext,
-  gridDetailPanelExpandedRowsContentCacheSelector,
-  gridDetailPanelExpandedRowIdsSelector,
+  useGridRootProps,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 } from '@mui/x-data-grid-pro';
 import {
@@ -31,6 +26,9 @@ export default function CustomizeDetailPanelToggle() {
       <DataGridPro
         rows={rows}
         columns={columns}
+        slots={{
+          detailPanelsToggle: CustomDetailPanelsToggle,
+        }}
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}
       />
@@ -38,44 +36,30 @@ export default function CustomizeDetailPanelToggle() {
   );
 }
 
-function CustomDetailPanelToggle(props) {
-  const { id } = props;
-  const apiRef = useGridApiContext();
+function CustomDetailPanelsToggle(props) {
+  const { hasContent, isExpanded } = props;
+  const rootProps = useGridRootProps();
 
-  // To avoid calling ´getDetailPanelContent` all the time, the following selector
-  // gives an object with the detail panel content for each row id.
-  const contentCache = useGridSelector(
-    apiRef,
-    gridDetailPanelExpandedRowsContentCacheSelector,
-  );
+  if (!hasContent) {
+    return null;
+  }
 
-  const expandedRowIds = useGridSelector(
-    apiRef,
-    gridDetailPanelExpandedRowIdsSelector,
-  );
-
-  const isExpanded = expandedRowIds.has(id);
-
-  // If the value is not a valid React element, it means that the row has no detail panel.
-  const hasDetail = React.isValidElement(contentCache[id]);
+  const Icon = isExpanded
+    ? rootProps.slots.detailPanelCollapseIcon
+    : rootProps.slots.detailPanelExpandIcon;
 
   return (
-    <IconButton
-      size="small"
-      tabIndex={-1}
-      disabled={!hasDetail}
-      aria-label={isExpanded ? 'Close' : 'Open'}
+    <rootProps.slots.baseIconButton
+      material={{
+        sx: {
+          display: 'flex',
+          cursor: hasContent ? 'pointer' : 'default',
+        },
+      }}
+      aria-label={isExpanded ? 'Collapse detail panel' : 'Expand detail panel'}
     >
-      <ExpandMoreIcon
-        sx={(theme) => ({
-          transform: `rotateZ(${isExpanded ? 180 : 0}deg)`,
-          transition: theme.transitions.create('transform', {
-            duration: theme.transitions.duration.shortest,
-          }),
-        })}
-        fontSize="inherit"
-      />
-    </IconButton>
+      <Icon fontSize="small" />
+    </rootProps.slots.baseIconButton>
   );
 }
 
@@ -85,12 +69,7 @@ const columns = [
   { field: 'date', type: 'date', headerName: 'Placed at' },
   { field: 'currency', headerName: 'Currency' },
   { field: 'total', type: 'number', headerName: 'Total' },
-  {
-    ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
-    renderCell: (params) => (
-      <CustomDetailPanelToggle id={params.id} value={params.value} />
-    ),
-  },
+  GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 ];
 
 const rows = [
