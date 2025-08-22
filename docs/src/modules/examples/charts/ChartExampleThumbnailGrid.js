@@ -15,11 +15,10 @@ export function ChartThumbnailCard({ title, ChartComponent, link }) {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        paddingTop: '10px',
-        border: '1px dashed',
-        borderColor: 'divider',
+        padding: '10px 0',
         overflow: 'hidden',
         borderRadius: 0,
+        borderWidth: 0.5,
       }}
     >
       <Box
@@ -43,7 +42,6 @@ export function ChartThumbnailCard({ title, ChartComponent, link }) {
             <IconButton
               component="a"
               href={link}
-              target="_blank"
               rel="noopener noreferrer"
               size="small"
               sx={{
@@ -112,10 +110,10 @@ export function ChartThumbnailGridWrapper({ children, ...props }) {
       variant="outlined"
       sx={{
         my: 4,
-        p: 2,
         overflow: 'hidden',
         background: 'background.paper',
-        borderRadius: 1,
+        borderRadius: 0.5,
+        borderWidth: 1,
         ...props.sx,
       }}
       {...props}
