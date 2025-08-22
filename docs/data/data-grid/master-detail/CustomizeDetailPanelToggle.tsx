@@ -52,6 +52,8 @@ function CustomDetailPanelsToggle(props: GridProSlotProps['detailPanelsToggle'])
     ? rootProps.slots.detailPanelCollapseIcon
     : rootProps.slots.detailPanelExpandIcon;
 
+  const ariaLabel = isExpanded ? 'Collapse detail panel' : 'Expand detail panel';
+
   return (
     <Box
       sx={{
@@ -62,15 +64,7 @@ function CustomDetailPanelsToggle(props: GridProSlotProps['detailPanelsToggle'])
         height: '100%',
       }}
     >
-      <rootProps.slots.baseIconButton
-        material={{
-          sx: {
-            display: 'flex',
-            cursor: hasContent ? 'pointer' : 'default',
-          },
-        }}
-        aria-label={isExpanded ? 'Collapse detail panel' : 'Expand detail panel'}
-      >
+      <rootProps.slots.baseIconButton aria-label={ariaLabel}>
         <Icon fontSize="small" />
       </rootProps.slots.baseIconButton>
     </Box>
