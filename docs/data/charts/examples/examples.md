@@ -13,37 +13,37 @@ packageName: '@mui/x-charts'
 
 Vertical and horizontal bars, stacked and grouped variations.
 
-{{"component": "BarChartsGrid.js"}}
+{{"component": "modules/examples/charts/BarChartsGrid.js"}}
 
 ## Line Charts
 
 Connected data points showing trends over time.
 
-{{"component": "LineChartsGrid.js"}}
+{{"component": "modules/examples/charts/LineChartsGrid.js"}}
 
 ## Area Charts
 
 Filled areas below lines for cumulative data.
 
-{{"component": "AreaChartsGrid.js"}}
+{{"component": "modules/examples/charts/AreaChartsGrid.js"}}
 
 ## Scatter Charts
 
 Plot points to show relationships between variables.
 
-{{"component": "ScatterChartsGrid.js"}}
+{{"component": "modules/examples/charts/ScatterChartsGrid.js"}}
 
 ## Pie Charts
 
 Circular slices showing proportional data.
 
-{{"component": "PieChartsGrid.js"}}
+{{"component": "modules/examples/charts/PieChartsGrid.js"}}
 
 ## Other Charts
 
 Gauge, sparkline, and specialized chart types.
 
-{{"component": "OtherChartsGrid.js"}}
+{{"component": "modules/examples/charts/OtherChartsGrid.js"}}
 
 ## More demos
 

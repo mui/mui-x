@@ -1,30 +1,30 @@
 import * as React from 'react';
+import SimpleAreaChart from 'docsx/data/charts/areas-demo/SimpleAreaChart';
+import StackedAreaChart from 'docsx/data/charts/areas-demo/StackedAreaChart';
+import PercentAreaChart from 'docsx/data/charts/areas-demo/PercentAreaChart';
+import AreaChartConnectNulls from 'docsx/data/charts/areas-demo/AreaChartConnectNulls';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
-import SimpleAreaChart from '../data/charts/areas-demo/SimpleAreaChart';
-import StackedAreaChart from '../data/charts/areas-demo/StackedAreaChart';
-import PercentAreaChart from '../data/charts/areas-demo/PercentAreaChart';
-import AreaChartConnectNulls from '../data/charts/areas-demo/AreaChartConnectNulls';
 
 const chartData = [
   {
     title: 'Simple Area Chart',
     ChartComponent: SimpleAreaChart,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/areas-demo/SimpleAreaChart.tsx',
+    link: '/x/react-charts/areas-demo/#SimpleAreaChart',
   },
   {
     title: 'Stacked Area Chart',
     ChartComponent: StackedAreaChart,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/areas-demo/StackedAreaChart.tsx',
+    link: '/x/react-charts/areas-demo/#StackedAreaChart',
   },
   {
     title: 'Percent Area Chart',
     ChartComponent: PercentAreaChart,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/areas-demo/PercentAreaChart.tsx',
+    link: '/x/react-charts/areas-demo/#PercentAreaChart',
   },
   {
     title: 'Area Chart Connect Nulls',
     ChartComponent: AreaChartConnectNulls,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/areas-demo/AreaChartConnectNulls.tsx',
+    link: '/x/react-charts/areas-demo/#AreaChartConnectNulls',
   },
 ];
 

@@ -1,36 +1,36 @@
 import * as React from 'react';
+import BasicGauges from 'docsx/data/charts/gauge/BasicGauges';
+import ArcDesign from 'docsx/data/charts/gauge/ArcDesign';
+import CompositionExample from 'docsx/data/charts/gauge/CompositionExample';
+import BasicSparkLine from 'docsx/data/charts/sparkline/BasicSparkLine';
+import AreaSparkLine from 'docsx/data/charts/sparkline/AreaSparkLine';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
-import BasicGauges from '../data/charts/gauge/BasicGauges';
-import ArcDesign from '../data/charts/gauge/ArcDesign';
-import CompositionExample from '../data/charts/gauge/CompositionExample';
-import BasicSparkLine from '../data/charts/sparkline/BasicSparkLine';
-import AreaSparkLine from '../data/charts/sparkline/AreaSparkLine';
 
 const chartData = [
   {
     title: 'Basic Gauges',
     ChartComponent: BasicGauges,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/gauge/BasicGauges.tsx',
+    link: '/x/react-charts/gauge/#BasicGauges',
   },
   {
     title: 'Arc Design',
     ChartComponent: ArcDesign,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/gauge/ArcDesign.tsx',
+    link: '/x/react-charts/gauge/#ArcDesign',
   },
   {
     title: 'Customized Gauge with Pointer',
     ChartComponent: CompositionExample,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/gauge/CompositionExample.tsx',
+    link: '/x/react-charts/gauge/#CompositionExample',
   },
   {
     title: 'Basic Sparkline',
     ChartComponent: BasicSparkLine,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/sparkline/BasicSparkLine.tsx',
+    link: '/x/react-charts/sparkline/#BasicSparkLine',
   },
   {
     title: 'Area Sparkline',
     ChartComponent: AreaSparkLine,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/sparkline/AreaSparkLine.tsx',
+    link: '/x/react-charts/sparkline/#AreaSparkLine',
   },
 ];
 

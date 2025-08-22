@@ -1,18 +1,18 @@
 import * as React from 'react';
+import SimpleScatterChart from 'docsx/data/charts/scatter-demo/SimpleScatterChart';
+import MultipleYAxesScatterChart from 'docsx/data/charts/scatter-demo/MultipleYAxesScatterChart';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
-import SimpleScatterChart from '../data/charts/scatter-demo/SimpleScatterChart';
-import MultipleYAxesScatterChart from '../data/charts/scatter-demo/MultipleYAxesScatterChart';
 
 const chartData = [
   {
     title: 'Simple Scatter Chart',
     ChartComponent: SimpleScatterChart,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/scatter-demo/SimpleScatterChart.tsx',
+    link: '/x/react-charts/scatter-demo/#SimpleScatterChart',
   },
   {
     title: 'Multiple Y Axes Scatter Chart',
     ChartComponent: MultipleYAxesScatterChart,
-    link: 'https://github.com/mui/mui-x/blob/v8.10.2/docs/data/charts/scatter-demo/MultipleYAxesScatterChart.tsx',
+    link: '/x/react-charts/scatter-demo/#MultipleYAxesScatterChart',
   },
 ];
 
