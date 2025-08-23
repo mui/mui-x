@@ -232,6 +232,11 @@ catalogs:
 overrides:
   ast-types: ^0.14.2
 
+patchedDependencies:
+  '@vitest/browser':
+    hash: b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516
+    path: patches/@vitest__browser.patch
+
 importers:
 
   .:
@@ -355,7 +360,7 @@ importers:
         version: 5.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
       '@vitest/browser':
         specifier: 'catalog:'
-        version: 3.2.4(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
+        version: 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)
@@ -2149,9 +2154,6 @@ importers:
 
   test/performance-charts:
     devDependencies:
-      '@codspeed/vitest-plugin':
-        specifier: ^4.0.1
-        version: 4.0.1(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
       '@emotion/react':
         specifier: 'catalog:'
         version: 11.14.0(@types/react@19.1.9)(react@19.1.1)
@@ -2164,12 +2166,6 @@ importers:
       '@mui/x-charts-pro':
         specifier: workspace:*
         version: link:../../packages/x-charts-pro/build
-      '@testing-library/react':
-        specifier: ^16.3.0
-        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.7(@types/react@19.1.9))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@testing-library/user-event':
-        specifier: ^14.6.1
-        version: 14.6.1(@testing-library/dom@10.4.1)
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
@@ -2178,22 +2174,28 @@ importers:
         version: 4.0.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
       '@vitest/browser':
         specifier: 'catalog:'
-        version: 3.2.4(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
+        version: 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
+      '@vitest/runner':
+        specifier: ^3.2.4
+        version: 3.2.4
       '@vitest/ui':
         specifier: 'catalog:'
         version: 3.2.4(vitest@3.2.4)
-      jsdom:
-        specifier: ^26.1.0
-        version: 26.1.0
       react:
         specifier: 'catalog:'
         version: 19.1.1
       react-dom:
         specifier: 'catalog:'
         version: 19.1.1(react@19.1.1)
+      tinybench:
+        specifier: ^2.9.0
+        version: 2.9.0
       vitest:
         specifier: 'catalog:'
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.2.1)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
+      vitest-browser-react:
+        specifier: ^1.0.0
+        version: 1.0.1(@types/react-dom@19.1.7(@types/react@19.1.9))(@types/react@19.1.9)(@vitest/browser@3.2.4)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(vitest@3.2.4)
 
   test/regressions:
     devDependencies:
@@ -3210,15 +3212,6 @@ packages:
   '@bcoe/v8-coverage@1.0.2':
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
     engines: {node: '>=18'}
-
-  '@codspeed/core@4.0.1':
-    resolution: {integrity: sha512-fJ53arfgtzCDZa8DuGJhpTZ3Ll9A1uW5nQ2jSJnfO4Hl5MRD2cP8P4vPvIUAGbdbjwCxR1jat6cW8OloMJkJXw==}
-
-  '@codspeed/vitest-plugin@4.0.1':
-    resolution: {integrity: sha512-aqmrPJzX9cD50UWDsOyih5L5WcEYlNQg3u84sJJ9ZuuLApA51w+LGxk6Xbyb8LJF9n/CwM94HKHV/qArfnvDoQ==}
-    peerDependencies:
-      vite: ^4.2.0 || ^5.0.0 || ^6.0.0
-      vitest: '>=1.2.2'
 
   '@colors/colors@1.6.0':
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
@@ -8214,10 +8207,6 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  find-up@6.3.0:
-    resolution: {integrity: sha512-v2ZsoEuVHYy8ZIlYqwPe/39Cy+cFDzp4dXPaxNvkEuouymu+2Jbz0PxpKarJHYJTmv2HWT3O382qY8l4jMWthw==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
   find-up@7.0.0:
     resolution: {integrity: sha512-YyZM99iHrqLKjmt4LJDj58KI+fYyufRLBSYcqycxf//KpBk9FoewoGX0450m9nB44qrZnovzC2oeP5hUibxc/g==}
     engines: {node: '>=18'}
@@ -12126,6 +12115,22 @@ packages:
       yaml:
         optional: true
 
+  vitest-browser-react@1.0.1:
+    resolution: {integrity: sha512-LqiGFCdknrbMoSDWXTCTrPsED3SvdIXIgYOOZyYUNj2dkJusW2eF6NENOlBlxwq+FBQqzNK1X59b+b03pXFpAQ==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      '@types/react': ^18.0.0 || ^19.0.0
+      '@types/react-dom': ^18.0.0 || ^19.0.0
+      '@vitest/browser': ^2.1.0 || ^3.0.0 || ^4.0.0-0
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+      vitest: ^2.1.0 || ^3.0.0 || ^4.0.0-0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
   vitest-fail-on-console@0.9.0:
     resolution: {integrity: sha512-GgoS9gSy3ctwGVgFhY6NaAaRE5ve9EmgN9iDpqtEG1Z7Z9Y8x/4GzDrhky5+050Hy0FnndoM/mpmqsmGWywFZw==}
     peerDependencies:
@@ -14052,23 +14057,6 @@ snapshots:
   '@bcoe/v8-coverage@0.2.3': {}
 
   '@bcoe/v8-coverage@1.0.2': {}
-
-  '@codspeed/core@4.0.1':
-    dependencies:
-      axios: 1.11.0(debug@4.4.1)
-      find-up: 6.3.0
-      form-data: 4.0.4
-      node-gyp-build: 4.8.4
-    transitivePeerDependencies:
-      - debug
-
-  '@codspeed/vitest-plugin@4.0.1(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)':
-    dependencies:
-      '@codspeed/core': 4.0.1
-      vite: 7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.2.1)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
-    transitivePeerDependencies:
-      - debug
 
   '@colors/colors@1.6.0': {}
 
@@ -17163,7 +17151,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/browser@3.2.4(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)':
+  '@vitest/browser@3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)':
     dependencies:
       '@testing-library/dom': 10.4.1
       '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
@@ -17199,7 +17187,7 @@ snapshots:
       tinyrainbow: 2.0.0
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.2.1)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
     optionalDependencies:
-      '@vitest/browser': 3.2.4(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
+      '@vitest/browser': 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -19827,11 +19815,6 @@ snapshots:
     dependencies:
       locate-path: 6.0.0
       path-exists: 4.0.0
-
-  find-up@6.3.0:
-    dependencies:
-      locate-path: 7.2.0
-      path-exists: 5.0.0
 
   find-up@7.0.0:
     dependencies:
@@ -24255,6 +24238,16 @@ snapshots:
       tsx: 4.20.3
       yaml: 2.8.1
 
+  vitest-browser-react@1.0.1(@types/react-dom@19.1.7(@types/react@19.1.9))(@types/react@19.1.9)(@vitest/browser@3.2.4)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(vitest@3.2.4):
+    dependencies:
+      '@vitest/browser': 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.2.1)(@vitest/browser@3.2.4)(@vitest/ui@3.2.4)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
+    optionalDependencies:
+      '@types/react': 19.1.9
+      '@types/react-dom': 19.1.7(@types/react@19.1.9)
+
   vitest-fail-on-console@0.9.0(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4):
     dependencies:
       chalk: 5.5.0
@@ -24289,7 +24282,7 @@ snapshots:
     optionalDependencies:
       '@types/debug': 4.1.12
       '@types/node': 24.2.1
-      '@vitest/browser': 3.2.4(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
+      '@vitest/browser': 3.2.4(patch_hash=b6f57ed4fef8f62d7429d29e2a98fce942f03687840af33905b0d82982703516)(playwright@1.54.2)(vite@7.1.1(@types/node@24.2.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))(vitest@3.2.4)
       '@vitest/ui': 3.2.4(vitest@3.2.4)
       jsdom: 26.1.0
     transitivePeerDependencies:

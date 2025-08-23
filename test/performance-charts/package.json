@@ -4,25 +4,25 @@
   "type": "module",
   "scripts": {
     "test:performance": "vitest bench",
+    "test:performance:ci": "vitest bench --run --outputJson results.json",
     "test:performance:trace": "TRACE=true vitest bench --run",
     "build": "pnpm --filter=\"@mui/x-charts-premium...\" build",
     "test:performance:browser": "vitest bench --browser"
   },
   "devDependencies": {
-    "@codspeed/vitest-plugin": "^4.0.1",
     "@emotion/react": "catalog:",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@mui/x-charts-premium": "workspace:*",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",
     "@vitest/browser": "catalog:",
     "@vitest/ui": "catalog:",
-    "jsdom": "^26.1.0",
+    "@vitest/runner": "^3.2.4",
+    "tinybench": "^2.9.0",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "vitest-browser-react": "^1.0.0"
   }
 }
