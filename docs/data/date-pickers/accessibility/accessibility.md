@@ -43,7 +43,7 @@ Date and Time Pickers use ARIA roles and robust focus management across the inte
 
 ## Keyboard support
 
-The Date and Time Pickers consist of different associations of Field, Calendar, and Clock components. 
+The Date and Time Pickers consist of different associations of Field, Calendar, and Clock components.
 Each of these components is designed to respond intuitively to keyboard interactions, providing extensive keyboard navigation support.
 
 ### Fields
@@ -73,7 +73,7 @@ Among the [available view components](https://mui.com/x/react-date-pickers/date-
 
 ### Date Picker
 
-The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components. 
+The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components.
 Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [Date Field](/x/react-date-pickers/accessibility/#fields) or [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar).
 
 ### Date Range Calendar
