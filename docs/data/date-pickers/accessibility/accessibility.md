@@ -54,9 +54,9 @@ The following table describes the keyboard support for all [field components](/x
 | --------------------------------------------------------------------: | :------------------------------------------- |
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus among date/time sections         |
 |                                       <kbd class="key">Arrow Up</kbd> | Increases focused section value by 1         |
-|                                     <kbd class="key">Arrow Down</kbd> | Decreases focused section value section by 1 |
-|                                        <kbd class="key">Page Up</kbd> | Increases focused section value section by 5 |
-|                                      <kbd class="key">Page Down</kbd> | Decreases focused section value section by 5 |
+|                                     <kbd class="key">Arrow Down</kbd> | Decreases focused section value by 1 |
+|                                        <kbd class="key">Page Up</kbd> | Increases focused section value by 5 |
+|                                      <kbd class="key">Page Down</kbd> | Decreases focused section value by 5 |
 |                                           <kbd class="key">Home</kbd> | Sets focused section to the minimal value    |
 |                                            <kbd class="key">End</kbd> | Sets focused section to the maximal value    |
 
@@ -79,15 +79,15 @@ Depending on which component is in focus, the Picker will provide the correspond
 
 ### Date Range Calendar
 
-The [Date Range Calendar](/x/react-date-pickers/date-range-calendar/) implements a similar keyboard support as the day view of the [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference on the navigation among the previous and next months that must be achieved using the arrows in the calendar header.
+The [Date Range Calendar](/x/react-date-pickers/date-range-calendar/) implements similar keyboard support as the day view of the [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar) component, with a difference in the navigation between the previous and next months that must be achieved using the arrows in the calendar header.
 
 |                                                                                                                                          Keys | Description                                                   |
 | --------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------ |
 | <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd>,<br> <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus among the available values                        |
 |                                                                                                                <kbd class="key">Page Up</kbd> | Moves focus to the last day of the month                      |
 |                                                                                                              <kbd class="key">Page Down</kbd> | Moves focus to the first day of the month                     |
-|                                                                                                                   <kbd class="key">Home</kbd> | Moves focus to first day of the week within the current month |
-|                                                                                                                    <kbd class="key">End</kbd> | Moves focus to last day of the week within the current month  |
+|                                                                                                                   <kbd class="key">Home</kbd> | Moves focus to the first day of the week within the current month |
+|                                                                                                                    <kbd class="key">End</kbd> | Moves focus to the last day of the week within the current month  |
 
 ### Date Range Picker
 

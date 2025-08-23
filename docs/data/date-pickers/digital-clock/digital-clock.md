@@ -12,7 +12,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Description
 
-There are two component versions for different cases. The `DigitalClock` handles selection of a single time instance in one step, just like a `select` component. The `MultiSectionDigitalClock` allows selecting time using separate sections for separate views.
+There are two component versions for different cases. The `DigitalClock` handles selection of a single time instance in one step, just like a `select` component. The `MultiSectionDigitalClock` lets users select time using separate sections for separate views.
 
 The `DigitalClock` is more appropriate when there is a limited number of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
 
