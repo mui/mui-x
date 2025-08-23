@@ -60,7 +60,7 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 ## Autosizing
 
-By default, the Data Grid automatically sets column dimensions based on their content. 
+By default, the Data Grid automatically sets column dimensions based on their content.
 To disable this behavior, pass the `disableAutosize` prop to the Data Grid.
 
 Autosizing can be used by one of the following methods:
