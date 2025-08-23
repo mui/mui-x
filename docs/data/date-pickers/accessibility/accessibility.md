@@ -26,8 +26,7 @@ The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https
 
 ### Dialog considerations
 
-Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
-This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
+Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility). This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
 A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
 
 - Use `toolbar` id if the toolbar is visible;
@@ -43,8 +42,7 @@ Date and Time Pickers use ARIA roles and robust focus management across the inte
 
 ## Keyboard support
 
-The Date and Time Pickers consist of different associations of Field, Calendar, and Clock components.
-Each of these components is designed to respond intuitively to keyboard interactions, providing extensive keyboard navigation support.
+The Date and Time Pickers consist of different associations of Field, Calendar, and Clock components. Each of these components is designed to respond intuitively to keyboard interactions, providing extensive keyboard navigation support.
 
 ### Fields
 
@@ -73,9 +71,7 @@ Among the [available view components](https://mui.com/x/react-date-pickers/date-
 
 ### Date Picker
 
-The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components.
-
-Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [Date Field](/x/react-date-pickers/accessibility/#fields) or [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar).
+The [Date Picker](/x/react-date-pickers/date-picker/) combines the functionalities of the Date Field and Date Calendar components. Depending on which component is in focus, the Picker will provide the corresponding keyboard support, either from [Date Field](/x/react-date-pickers/accessibility/#fields) or [Date Calendar](/x/react-date-pickers/accessibility/#date-calendar).
 
 ### Date Range Calendar
 
