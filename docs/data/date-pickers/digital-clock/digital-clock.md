@@ -77,7 +77,7 @@ The prop accepts:
 
 ## Skip rendering disabled options
 
-With the `skipDisabled` prop, the components don't render options that are not available to the user (for example through `minTime`, `maxTime`, `shouldDisabledTime` etc.).
+With the `skipDisabled` prop, the components don't render options that are not available to the user (for example through `minTime`, `maxTime`, `shouldDisableTime` etc.).
 
 The following example combines these properties to customize which options are rendered.
 

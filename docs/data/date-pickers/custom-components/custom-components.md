@@ -221,7 +221,7 @@ Customize the look and feel by creating a custom theme with `styleOverrides`.
 This button lets users change the selected month in the `month` view.
 
 :::success
-You can learn more on how to enable the `month` view on the [`DateCalendar` doc page](/x/react-date-pickers/date-calendar/#views).
+You can learn more about how to enable the `month` view on the [`DateCalendar` doc page](/x/react-date-pickers/date-calendar/#views).
 :::
 
 ### Component props
