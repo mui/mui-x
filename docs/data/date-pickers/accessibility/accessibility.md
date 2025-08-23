@@ -26,7 +26,7 @@ The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https
 
 ### Dialog considerations
 
-Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility). 
+Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
 This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
 A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
 
