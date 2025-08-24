@@ -6,7 +6,7 @@ exports.handler = async (event) => {
   const { payload } = JSON.parse(event.body);
   const repo = payload.review_url.match(/github\.com\/(.*)\/pull\/(.*)/);
   if (!repo) {
-    throw new Error(`No repo found at review_url: ${payload.review_url}`);
+    throw new Error(`No repository found at review_url: ${payload.review_url}`);
   }
 
   // eslint-disable-next-line no-console
