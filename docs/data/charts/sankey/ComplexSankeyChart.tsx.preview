@@ -1,0 +1,6 @@
+<SankeyChart
+  height={500}
+  series={{
+    data,
+  }}
+/>

@@ -22,6 +22,7 @@ We presently provide the following top-level libraries:
 - d3-color
 - d3-delaunay
 - d3-interpolate
+- d3-sankey
 - d3-scale
 - d3-shape
 - d3-time
@@ -36,6 +37,7 @@ This is the total list of top and transitive libraries we vendor:
 - d3-format
 - d3-interpolate
 - d3-path
+- d3-sankey
 - d3-scale
 - d3-shape
 - d3-time
@@ -43,6 +45,12 @@ This is the total list of top and transitive libraries we vendor:
 - delaunator
 - internmap
 - robust-predicates
+
+## How to add a new package
+
+To add a new package, simply install it as a dependency in this package, and then run the build script.
+
+If your package is not built, you may need to adjust the parameters on [./scripts/build.js](./scripts/build.js), then run the build script again.
 
 ## How it works
 
