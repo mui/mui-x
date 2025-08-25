@@ -12,7 +12,11 @@ import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { DateNavigator } from '../internals/components/date-navigator';
 import { ResourceLegend } from '../internals/components/resource-legend';
-import { useEventCalendar, selectors } from '../../primitives/use-event-calendar';
+import {
+  useEventCalendar,
+  selectors,
+  useExtractEventCalendarParameters,
+} from '../../primitives/use-event-calendar';
 import '../index.css';
 import './EventCalendar.css';
 
@@ -20,41 +24,14 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const contextValue = useEventCalendar(parameters);
+  const view = useStore(contextValue.store, selectors.view);
   const {
-    events: eventsProp,
-    onEventsChange,
-    resources: resourcesProp,
-    view: viewProp,
-    defaultView,
-    views,
-    visibleDate: visibleDateProp,
-    defaultVisibleDate,
-    onVisibleDateChange,
-    areEventsDraggable,
-    areEventsResizable,
-    ampm,
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
-    className,
     ...other
-  } = props;
-
-  const contextValue = useEventCalendar({
-    events: eventsProp,
-    onEventsChange,
-    resources: resourcesProp,
-    view: viewProp,
-    defaultView,
-    views,
-    visibleDate: visibleDateProp,
-    defaultVisibleDate,
-    onVisibleDateChange,
-    areEventsDraggable,
-    areEventsResizable,
-    ampm,
-  });
-
-  const view = useStore(contextValue.store, selectors.view);
+  } = forwardedProps;
 
   let content: React.ReactNode;
   switch (view) {
@@ -78,9 +55,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     <EventCalendarContext.Provider value={contextValue}>
       <TranslationsProvider translations={translations}>
         <div
-          className={clsx(className, 'EventCalendarRoot', 'mui-x-scheduler')}
-          ref={forwardedRef}
           {...other}
+          className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
+          ref={forwardedRef}
         >
           <aside className="EventCalendarSidePanel">
             <DateNavigator />
