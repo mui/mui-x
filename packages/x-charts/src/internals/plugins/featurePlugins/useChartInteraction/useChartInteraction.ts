@@ -2,7 +2,11 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { ChartPlugin } from '../../models';
 import { Coordinate, UseChartInteractionSignature } from './useChartInteraction.types';
-import { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  ChartItemIdentifier,
+  ChartSeriesType,
+  type ChartItemIdentifierWithData,
+} from '../../../../models/seriesType/config';
 
 export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({ store }) => {
   const cleanInteraction = useEventCallback(function cleanInteraction() {
@@ -56,7 +60,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   });
 
   const setItemInteraction = useEventCallback(function setItemInteraction(
-    newItem: ChartItemIdentifier<ChartSeriesType>,
+    newItem: ChartItemIdentifierWithData<ChartSeriesType>,
   ) {
     store.update((prev) => {
       if (fastObjectShallowCompare(prev.interaction.item, newItem)) {
