@@ -39,7 +39,7 @@ export default function SankeyCurveCorrection() {
 
 function SliderHandle(props) {
   return (
-    <>
+    <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Curve Correction: {props.curveCorrection}
       </Typography>
@@ -59,6 +59,6 @@ function SliderHandle(props) {
           { value: 20, label: '20' },
         ]}
       />
-    </>
+    </React.Fragment>
   );
 }

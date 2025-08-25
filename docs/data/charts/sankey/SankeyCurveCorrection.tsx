@@ -42,7 +42,7 @@ function SliderHandle(props: {
   setCurveCorrection: (value: number) => void;
 }) {
   return (
-    <>
+    <React.Fragment>
       <Typography variant="h6" gutterBottom>
         Curve Correction: {props.curveCorrection}
       </Typography>
@@ -62,6 +62,6 @@ function SliderHandle(props: {
           { value: 20, label: '20' },
         ]}
       />
-    </>
+    </React.Fragment>
   );
 }
