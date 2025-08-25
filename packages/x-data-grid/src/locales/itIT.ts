@@ -5,9 +5,9 @@ const itITGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nessun record',
   noResultsOverlayLabel: 'Nessun record trovato.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
-  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  noColumnsOverlayLabel: 'Nessuna colonna',
+  noColumnsOverlayManageColumns: 'Gestisci colonne',
+  emptyPivotOverlayLabel: 'Aggiungi campi a righe, colonne e valori per creare una tabella pivot',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densità',
