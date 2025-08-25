@@ -28,6 +28,19 @@
   line-height: var(--line-height-1);
 }
 
+.EventCard[role='button'].Draggable {
+  cursor: grab;
+}
+
+.EventCard[role='button'].Recurrent {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(var(--event-color-4-rgb), 0.5) 0 12px,
+    var(--event-color-3) 12px 22.5px
+  );
+  background-color: var(--event-color-3);
+}
+
 .EventCard--regular {
   position: absolute;
   left: 2px;
@@ -35,7 +48,7 @@
   top: var(--y-position);
   bottom: calc(100% - var(--y-position) - var(--height));
   z-index: 2;
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-3);
 }
 
 .EventCard--regular.UnderHourEventCard {

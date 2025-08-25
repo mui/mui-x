@@ -459,6 +459,7 @@
   { "name": "ScatterSlots", "kind": "Interface" },
   { "name": "ScatterValueType", "kind": "TypeAlias" },
   { "name": "SeriesItemIdentifier", "kind": "TypeAlias" },
+  { "name": "SeriesItemIdentifierWithData", "kind": "TypeAlias" },
   { "name": "SeriesLegendItemContext", "kind": "Interface" },
   { "name": "ShowMarkParams", "kind": "Interface" },
   { "name": "SparkLineChart", "kind": "Variable" },
