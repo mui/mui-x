@@ -29,7 +29,9 @@ You can override the `onBeforeExport` callback to customize this behavior.
 {{"demo": "ExportChartToolbar.js"}}
 
 :::warning
-Image export requires the `rasterizehtml` npm dependency to be installed in your project.
+Raster image export (PNG, JPEG, WebP) requires the `rasterizehtml` npm dependency to be installed in your project.
+
+SVG export does not require this dependency.
 
 Follow the [installation instructions](#image-export-pre-requisites).
 :::
@@ -40,7 +42,9 @@ See the [Toolbar composition](/x/react-charts/toolbar/#composition) section for 
 
 ## Image export pre-requisites
 
-For image export to work, you need to add the `rasterizehtml` npm dependency in your project.
+For raster image export (PNG, JPEG, WebP) to work, you need to add the `rasterizehtml` npm dependency in your project.
+
+SVG export does not require this dependency since it extracts the vector graphics directly.
 
 <codeblock storageKey="package-manager">
 
@@ -150,11 +154,16 @@ Follow the installation instructions [here](#image-export-pre-requisites).
 The function accepts an options object with the `type` property, which specifies the image format. The available formats are:
 
 - `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/);
-- `image/webp` which is only supported in some browsers.
+- `image/webp` which is only supported in some browsers;
+- `image/svg+xml` which exports the chart as a scalable vector graphic (SVG).
 
 If the format is not supported by the browser, `exportAsImage()` falls back to `image/png`.
 
 Additionally, for lossy formats such as `image/jpeg` and `image/webp`, the options object also accepts the `quality` property, which is a number between 0 and 1.
 The default value is 0.9.
+
+:::info
+SVG export (`image/svg+xml`) does not require the `rasterizehtml` dependency and produces scalable vector graphics that maintain quality at any zoom level.
+:::
 
 {{"demo": "ExportChartAsImage.js"}}
