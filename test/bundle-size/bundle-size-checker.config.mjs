@@ -73,6 +73,7 @@ export default defineConfig(async () => {
       ...treeViewComponents,
       '@mui/x-tree-view-pro',
       ...treeViewProComponents,
+      '@mui/x-telemetry',
     ],
     upload: !!process.env.CI,
   };
