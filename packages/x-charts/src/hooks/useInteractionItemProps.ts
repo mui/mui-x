@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { SeriesItemIdentifier } from '../models';
+import { SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
+import { ChartSeriesType, type ChartItemIdentifierWithData } from '../models/seriesType/config';
 import { ChartInstance } from '../internals/plugins/models';
 
 function onPointerDown(event: React.PointerEvent) {
@@ -17,7 +17,7 @@ function onPointerDown(event: React.PointerEvent) {
 }
 
 export const useInteractionItemProps = (
-  data: SeriesItemIdentifier,
+  data: SeriesItemIdentifierWithData,
   skip?: boolean,
 ): {
   onPointerEnter?: () => void;
@@ -30,26 +30,15 @@ export const useInteractionItemProps = (
 
   const onPointerEnter = React.useCallback(() => {
     interactionActive.current = true;
-    instance.setItemInteraction({
-      type: data.type,
-      seriesId: data.seriesId,
-      dataIndex: data.dataIndex,
-    } as SeriesItemIdentifier);
-    instance.setHighlight({
-      seriesId: data.seriesId,
-      dataIndex: data.dataIndex,
-    });
-  }, [instance, data.type, data.seriesId, data.dataIndex]);
+    instance.setItemInteraction(data);
+    instance.setHighlight(data);
+  }, [instance, data]);
 
   const onPointerLeave = React.useCallback(() => {
     interactionActive.current = false;
-    instance.removeItemInteraction({
-      type: data.type,
-      seriesId: data.seriesId,
-      dataIndex: data.dataIndex,
-    } as SeriesItemIdentifier);
+    instance.removeItemInteraction(data);
     instance.clearHighlight();
-  }, [instance, data.type, data.seriesId, data.dataIndex]);
+  }, [instance, data]);
 
   React.useEffect(() => {
     return () => {
@@ -71,7 +60,10 @@ export const useInteractionItemProps = (
   };
 };
 
-export const useInteractionAllItemProps = (data: SeriesItemIdentifier[], skip?: boolean) => {
+export const useInteractionAllItemProps = (
+  data: SeriesItemIdentifierWithData[],
+  skip?: boolean,
+) => {
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
 
@@ -86,7 +78,7 @@ export const useInteractionAllItemProps = (data: SeriesItemIdentifier[], skip?: 
 
 export function getInteractionItemProps(
   instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
-  item: ChartItemIdentifier<ChartSeriesType>,
+  item: ChartItemIdentifierWithData<ChartSeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -97,10 +89,7 @@ export function getInteractionItemProps(
       return;
     }
     instance.setItemInteraction(item);
-    instance.setHighlight({
-      seriesId: item.seriesId,
-      dataIndex: item.dataIndex,
-    });
+    instance.setHighlight(item);
   }
 
   function onPointerLeave() {
