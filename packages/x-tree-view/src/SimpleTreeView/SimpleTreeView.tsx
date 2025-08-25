@@ -121,15 +121,16 @@ SimpleTreeView.propTypes = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
-      focusItem: PropTypes.func.isRequired,
-      getItem: PropTypes.func.isRequired,
-      getItemDOMElement: PropTypes.func.isRequired,
-      getItemOrderedChildrenIds: PropTypes.func.isRequired,
-      getItemTree: PropTypes.func.isRequired,
-      getParentId: PropTypes.func.isRequired,
-      setIsItemDisabled: PropTypes.func.isRequired,
-      setItemExpansion: PropTypes.func.isRequired,
-      setItemSelection: PropTypes.func.isRequired,
+      focusItem: PropTypes.func,
+      getItem: PropTypes.func,
+      getItemDOMElement: PropTypes.func,
+      getItemOrderedChildrenIds: PropTypes.func,
+      getItemTree: PropTypes.func,
+      getParentId: PropTypes.func,
+      isItemExpanded: PropTypes.func,
+      setIsItemDisabled: PropTypes.func,
+      setItemExpansion: PropTypes.func,
+      setItemSelection: PropTypes.func,
     }),
   }),
   /**

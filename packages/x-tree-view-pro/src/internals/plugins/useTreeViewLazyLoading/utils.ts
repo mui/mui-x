@@ -66,7 +66,7 @@ export class NestedDataManager {
       this.queuedRequests.delete(id);
       this.pendingRequests.add(id);
 
-      fetchPromises.push(this.instance.fetchItemChildren(id));
+      fetchPromises.push(this.instance.fetchItemChildren({ itemId: id }));
     }
     await Promise.all(fetchPromises);
   };

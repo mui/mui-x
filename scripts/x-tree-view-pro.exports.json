@@ -7,6 +7,7 @@
   { "name": "richTreeViewProClasses", "kind": "Variable" },
   { "name": "RichTreeViewProClasses", "kind": "Interface" },
   { "name": "RichTreeViewProClassKey", "kind": "TypeAlias" },
+  { "name": "RichTreeViewProPluginSignatures", "kind": "TypeAlias" },
   { "name": "RichTreeViewProProps", "kind": "Interface" },
   { "name": "RichTreeViewProPropsBase", "kind": "Interface" },
   { "name": "RichTreeViewProRoot", "kind": "Variable" },
