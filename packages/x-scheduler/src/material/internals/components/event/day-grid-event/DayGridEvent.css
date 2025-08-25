@@ -1,3 +1,5 @@
+@import '../../../../styles/colors.css';
+
 .DayGridEventTitle {
   margin: 0;
   color: var(--event-primary-text);
