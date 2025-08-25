@@ -1,16 +1,17 @@
 import * as React from 'react';
 
-import { DayView } from '@mui/x-scheduler/material/day-view';
+import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { MonthView } from '@mui/x-scheduler/material/month-view';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './FullEventCalendar.module.css';
+import classes from './BasicMonthView.module.css';
 
-export default function StandaloneDayView() {
-  const [events, setEvents] = React.useState(initialEvents);
+export default function BasicMonthView() {
+  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
     <StandaloneView
@@ -19,7 +20,7 @@ export default function StandaloneDayView() {
       defaultVisibleDate={defaultVisibleDate}
       onEventsChange={setEvents}
     >
-      <DayView className={classes.Container} />
+      <MonthView className={classes.Container} />
     </StandaloneView>
   );
 }
