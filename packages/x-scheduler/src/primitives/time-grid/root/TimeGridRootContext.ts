@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
-import type { TimeGridRoot } from './TimeGridRoot';
+import { CalendarPrimitiveEventData } from '../../models';
+import { TimeGridRootStore } from './store';
 
 export interface TimeGridRootContext {
-  onEventChange: (data: TimeGridRoot.EventData) => void;
-  placeholder: TimeGridRoot.EventData | null;
-  setPlaceholder: (placeholder: TimeGridRoot.EventData | null) => void;
+  onEventChange: (data: CalendarPrimitiveEventData) => void;
+  setPlaceholder: (placeholder: CalendarPrimitiveEventData | null) => void;
+  store: TimeGridRootStore;
 }
 
 export const TimeGridRootContext = React.createContext<TimeGridRootContext | undefined>(undefined);

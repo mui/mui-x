@@ -11,6 +11,13 @@ export interface TimeGridColumnContext {
    * The end date and time of the column
    */
   end: SchedulerValidDate;
+  getCursorPositionInElementMs: ({
+    input,
+    elementRef,
+  }: {
+    input: { clientY: number };
+    elementRef: React.RefObject<HTMLElement | null>;
+  }) => number;
 }
 
 export const TimeGridColumnContext = React.createContext<TimeGridColumnContext | undefined>(

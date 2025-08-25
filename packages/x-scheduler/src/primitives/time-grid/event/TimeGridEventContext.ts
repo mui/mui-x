@@ -1,24 +1,13 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
+import type { TimeGridEvent } from './TimeGridEvent';
 
 export interface TimeGridEventContext {
-  /**
-   * The unique identifier of the event.
-   */
-  eventId: string | number;
-  /**
-   * The start date and time of the event
-   */
-  start: SchedulerValidDate;
-  /**
-   * The end date and time of the event
-   */
-  end: SchedulerValidDate;
   /**
    * Sets whether the event is being resized.
    */
   setIsResizing: (isResizing: boolean) => void;
+  getSharedDragData: (input: { clientY: number }) => TimeGridEvent.SharedDragData;
 }
 
 export const TimeGridEventContext = React.createContext<TimeGridEventContext | undefined>(

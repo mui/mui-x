@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
+import { useDayGridCellDropTarget } from './useDayGridCellDropTarget';
 
 export const DayGridCell = React.forwardRef(function DayGridCell(
   componentProps: DayGridCell.Props,
@@ -11,17 +12,19 @@ export const DayGridCell = React.forwardRef(function DayGridCell(
     // Rendering props
     className,
     render,
+    // Internal props
+    value,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
+  const dropTargetRef = useDayGridCellDropTarget({ value });
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
-
   const state: DayGridCell.State = React.useMemo(() => ({}), []);
 
   return useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef],
+    ref: [forwardedRef, dropTargetRef],
     props: [props, elementProps],
   });
 });
@@ -29,5 +32,7 @@ export const DayGridCell = React.forwardRef(function DayGridCell(
 export namespace DayGridCell {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {}
+  export interface Props
+    extends BaseUIComponentProps<'div', State>,
+      useDayGridCellDropTarget.Parameters {}
 }

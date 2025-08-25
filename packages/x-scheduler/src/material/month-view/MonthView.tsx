@@ -6,6 +6,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { CalendarEvent, CalendarPrimitiveEventData } from '../../primitives/models';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
@@ -33,7 +34,7 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const { store } = useEventCalendarContext();
+    const { store, instance } = useEventCalendarContext();
     const settings = useStore(store, selectors.settings);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
@@ -47,6 +48,19 @@ export const MonthView = React.memo(
           amount: 'end-of-month',
         }),
       [getWeekList, visibleDate],
+    );
+
+    const handleEventChangeFromPrimitive = React.useCallback(
+      (data: CalendarPrimitiveEventData) => {
+        const updatedEvent: CalendarEvent = {
+          ...selectors.getEventById(store.state, data.eventId)!,
+          start: data.start,
+          end: data.end,
+        };
+
+        instance.updateEvent(updatedEvent);
+      },
+      [instance, store],
     );
 
     useResizeObserver(
@@ -68,7 +82,7 @@ export const MonthView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          <DayGrid.Root className="MonthViewRoot">
+          <DayGrid.Root className="MonthViewRoot" onEventChange={handleEventChangeFromPrimitive}>
             <div className="MonthViewHeader">
               <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
               {getDayList({
