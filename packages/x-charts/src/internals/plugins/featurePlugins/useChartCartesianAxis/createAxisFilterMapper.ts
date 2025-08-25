@@ -14,6 +14,7 @@ import { getAxisExtremum } from './getAxisExtremum';
 import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
 import { getScale } from '../../../getScale';
+import { getAxisDomainLimit } from './getAxisDomainLimit';
 
 type CreateAxisFilterMapperParams = {
   zoomMap: Map<AxisId, ZoomData>;
@@ -21,6 +22,7 @@ type CreateAxisFilterMapperParams = {
   seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
   formattedSeries: ProcessedSeries;
   direction: 'x' | 'y';
+  preferStrictDomainInLineCharts: boolean;
 };
 
 export function createAxisFilterMapper(params: {
@@ -29,6 +31,7 @@ export function createAxisFilterMapper(params: {
   seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
   formattedSeries: ProcessedSeries;
   direction: 'x';
+  preferStrictDomainInLineCharts: boolean;
 }): (
   axis: AxisConfig<ScaleName, any, ChartsXAxisProps>,
   axisIndex: number,
@@ -39,6 +42,7 @@ export function createAxisFilterMapper(params: {
   seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
   formattedSeries: ProcessedSeries;
   direction: 'y';
+  preferStrictDomainInLineCharts: boolean;
 }): (
   axis: AxisConfig<ScaleName, any, ChartsYAxisProps>,
   axisIndex: number,
@@ -49,6 +53,7 @@ export function createAxisFilterMapper({
   seriesConfig,
   formattedSeries,
   direction,
+  preferStrictDomainInLineCharts,
 }: CreateAxisFilterMapperParams) {
   return (axis: AxisConfig, axisIndex: number): ExtremumFilter | null => {
     const zoomOption = zoomOptions[axis.id];
@@ -69,6 +74,11 @@ export function createAxisFilterMapper({
       return createDiscreteScaleGetAxisFilter(axis.data, zoom.start, zoom.end, direction);
     }
 
+    // Determine domain limit using the same logic as computeAxisValue
+    const domainLimit = preferStrictDomainInLineCharts
+      ? getAxisDomainLimit(axis, direction, axisIndex, formattedSeries)
+      : (axis.domainLimit ?? 'nice');
+
     return createContinuousScaleGetAxisFilter(
       scaleType,
       getAxisExtremum(axis, direction, seriesConfig, axisIndex, formattedSeries),
@@ -76,6 +86,7 @@ export function createAxisFilterMapper({
       zoom.end,
       direction,
       axis.data,
+      domainLimit,
     );
   };
 }
@@ -110,13 +121,21 @@ export function createContinuousScaleGetAxisFilter(
   zoomEnd: number,
   direction: 'x' | 'y',
   axisData: AxisConfig['data'],
+  domainLimit: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number }),
 ): ExtremumFilter {
   let min: number | Date;
   let max: number | Date;
+  
+  // Apply domain limit function if provided, similar to computeAxisValue
+  let adjustedExtrema = extrema;
+  if (typeof domainLimit === 'function') {
+    const { min: adjustedMin, max: adjustedMax } = domainLimit(extrema[0], extrema[1]);
+    adjustedExtrema = [adjustedMin, adjustedMax] as const;
+  }
 
-  [min, max] = getScale(scaleType ?? 'linear', extrema, [0, 100])
-    .nice()
-    .domain();
+  const scale = getScale(scaleType ?? 'linear', adjustedExtrema, [0, 100]);
+  const finalScale = domainLimit === 'nice' ? scale.nice() : scale;
+  [min, max] = finalScale.domain();
 
   min = min instanceof Date ? min.getTime() : min;
   max = max instanceof Date ? max.getTime() : max;
