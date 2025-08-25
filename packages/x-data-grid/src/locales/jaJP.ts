@@ -42,6 +42,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
 
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
+
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
 
@@ -127,6 +130,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: '昇順ソート',
   columnMenuSortDesc: '降順ソート',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
@@ -210,6 +214,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: '合計',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: '和',
   aggregationFunctionLabelAvg: '平均',
   aggregationFunctionLabelMin: '最小値',
@@ -244,6 +249,32 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToCategories: 'Add to Categories',
+  // chartsMenuAddToSeries: 'Add to Series',
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToCategories: 'Drag here to use column as category',
+  // chartsDragToSeries: 'Drag here to use column as series',
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
