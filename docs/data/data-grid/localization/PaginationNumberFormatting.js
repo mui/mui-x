@@ -44,7 +44,7 @@ const localeText = {
 export default function PaginationNumberFormatting() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 1000000,
+    rowLength: 100000,
     maxColumns: 6,
   });
   return (
