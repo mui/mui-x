@@ -88,7 +88,7 @@ This is the recommended version for larger trees, as well as those that require 
 ### Accessibility
 
 The MUI X Tree View follows the [WAI-ARIA authoring practices for a tree view](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/).
-The component includes many built-in [accessibility features](/x/react-tree-view/accessibility/), but it's the developer's responsibilty to provide the component with a descriptive `aria-labelledby`or `aria-label` tag—otherwise, screen readers will announce it as "tree," making it difficult for the end user to understand the purpose of the tree items.
+The component includes many built-in [accessibility features](/x/react-tree-view/accessibility/), but it's the developer's responsibility to provide the component with a descriptive `aria-labelledby` or `aria-label` tag—otherwise, screen readers will announce it as "tree," making it difficult for the end user to understand the purpose of the tree items.
 
 ## TypeScript
 
