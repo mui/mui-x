@@ -20,9 +20,27 @@ export async function exportSvg(
   } = params ?? {};
 
   // Find the SVG element within the chart
-  const svgElement = element.tagName.toLowerCase() === 'svg' 
-    ? element as SVGElement 
-    : element.querySelector('svg');
+  let svgElement: SVGElement | null = null;
+
+  if (element.tagName.toLowerCase() === 'svg') {
+    svgElement = element as SVGElement;
+  } else {
+    // First try to find the main chart SVG by class (ChartsSurface component)
+    svgElement = element.querySelector('svg.MuiChartsSurface-root');
+    
+    // If not found, try to find SVG with title element (ChartsSurface adds title/desc)
+    if (!svgElement) {
+      const titleElement = element.querySelector('svg title');
+      if (titleElement) {
+        svgElement = titleElement.parentElement as SVGElement;
+      }
+    }
+    
+    // Final fallback to the first SVG (for backward compatibility)
+    if (!svgElement) {
+      svgElement = element.querySelector('svg');
+    }
+  }
 
   if (!svgElement) {
     throw new Error('MUI X Charts: No SVG element found in the chart for SVG export.');

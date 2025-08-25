@@ -1,0 +1,21 @@
+"use strict";
+'use client';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useFunnelSeries = useFunnelSeries;
+exports.useFunnelSeriesContext = useFunnelSeriesContext;
+var internals_1 = require("@mui/x-charts/internals");
+var useSelectorSeries = (0, internals_1.createSeriesSelectorsOfType)('funnel');
+var useSelectorSeriesContext = (0, internals_1.createAllSeriesSelectorOfType)('funnel');
+function useFunnelSeries(seriesIds) {
+    return useSelectorSeries(seriesIds);
+}
+/**
+ * Get access to the internal state of funnel series.
+ * The returned object contains:
+ * - series: a mapping from ids to series attributes.
+ * - seriesOrder: the array of series ids.
+ * @returns the funnel series
+ */
+function useFunnelSeriesContext() {
+    return useSelectorSeriesContext();
+}

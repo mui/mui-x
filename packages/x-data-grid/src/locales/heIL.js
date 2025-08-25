@@ -1,0 +1,268 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.heIL = void 0;
+var getGridLocalization_1 = require("../utils/getGridLocalization");
+var heILGrid = {
+    // Root
+    noRowsLabel: 'אין שורות',
+    noResultsOverlayLabel: 'לא נמצאו תוצאות.',
+    // noColumnsOverlayLabel: 'No columns',
+    // noColumnsOverlayManageColumns: 'Manage columns',
+    // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+    // Density selector toolbar button text
+    toolbarDensity: 'צפיפות',
+    toolbarDensityLabel: 'צפיפות',
+    toolbarDensityCompact: 'דחוסה',
+    toolbarDensityStandard: 'רגילה',
+    toolbarDensityComfortable: 'אוורירית',
+    // Columns selector toolbar button text
+    toolbarColumns: 'עמודות',
+    toolbarColumnsLabel: 'בחר עמודות',
+    // Filters toolbar button text
+    toolbarFilters: 'סינון',
+    toolbarFiltersLabel: 'הצג מסננים',
+    toolbarFiltersTooltipHide: 'הסתר מסננים',
+    toolbarFiltersTooltipShow: 'הצג מסננים',
+    toolbarFiltersTooltipActive: function (count) {
+        return count !== 1 ? "".concat(count, " \u05DE\u05E1\u05E0\u05E0\u05D9\u05DD \u05E4\u05E2\u05D9\u05DC\u05D9\u05DD") : "\u05DE\u05E1\u05E0\u05DF \u05D0\u05D7\u05D3 \u05E4\u05E2\u05D9\u05DC";
+    },
+    // Quick filter toolbar field
+    toolbarQuickFilterPlaceholder: 'חיפוש…',
+    toolbarQuickFilterLabel: 'חיפוש',
+    toolbarQuickFilterDeleteIconLabel: 'ניקוי',
+    // Export selector toolbar button text
+    toolbarExport: 'ייצוא',
+    toolbarExportLabel: 'ייצוא',
+    toolbarExportCSV: 'ייצוא ל- CSV',
+    toolbarExportPrint: 'הדפסה',
+    toolbarExportExcel: 'ייצוא ל- Excel',
+    // Toolbar pivot button
+    // toolbarPivot: 'Pivot',
+    // Toolbar AI Assistant button
+    // toolbarAssistant: 'AI Assistant',
+    // Columns management text
+    columnsManagementSearchTitle: 'חיפוש',
+    columnsManagementNoColumns: 'אין עמודות',
+    columnsManagementShowHideAllText: 'הצג/הסתר הכל',
+    columnsManagementReset: 'אתחול',
+    columnsManagementDeleteIconLabel: 'נקה',
+    // Filter panel text
+    filterPanelAddFilter: 'הוסף מסנן',
+    filterPanelRemoveAll: 'מחק הכל',
+    filterPanelDeleteIconLabel: 'מחק',
+    filterPanelLogicOperator: 'אופרטור לוגי',
+    filterPanelOperator: 'אופרטור',
+    filterPanelOperatorAnd: 'וגם',
+    filterPanelOperatorOr: 'או',
+    filterPanelColumns: 'עמודות',
+    filterPanelInputLabel: 'ערך',
+    filterPanelInputPlaceholder: 'ערך מסנן',
+    // Filter operators text
+    filterOperatorContains: 'מכיל',
+    filterOperatorDoesNotContain: 'לא מכיל',
+    filterOperatorEquals: 'שווה',
+    filterOperatorDoesNotEqual: 'לא שווה',
+    filterOperatorStartsWith: 'מתחיל ב-',
+    filterOperatorEndsWith: 'נגמר ב-',
+    filterOperatorIs: 'הינו',
+    filterOperatorNot: 'אינו',
+    filterOperatorAfter: 'אחרי',
+    filterOperatorOnOrAfter: 'ב- או אחרי',
+    filterOperatorBefore: 'לפני',
+    filterOperatorOnOrBefore: 'ב- או לפני',
+    filterOperatorIsEmpty: 'ריק',
+    filterOperatorIsNotEmpty: 'אינו ריק',
+    filterOperatorIsAnyOf: 'הוא אחד מ-',
+    'filterOperator=': '=',
+    'filterOperator!=': '!=',
+    'filterOperator>': '>',
+    'filterOperator>=': '>=',
+    'filterOperator<': '<',
+    'filterOperator<=': '<=',
+    // Header filter operators text
+    headerFilterOperatorContains: 'מכיל',
+    headerFilterOperatorDoesNotContain: 'לא מכיל',
+    headerFilterOperatorEquals: 'שווה',
+    headerFilterOperatorDoesNotEqual: 'לא שווה',
+    headerFilterOperatorStartsWith: 'מתחיל ב-',
+    headerFilterOperatorEndsWith: 'נגמר ב-',
+    headerFilterOperatorIs: 'הינו',
+    headerFilterOperatorNot: 'אינו',
+    headerFilterOperatorAfter: 'אחרי',
+    headerFilterOperatorOnOrAfter: 'ב- או אחרי',
+    headerFilterOperatorBefore: 'לפני',
+    headerFilterOperatorOnOrBefore: 'ב- או לפני',
+    headerFilterOperatorIsEmpty: 'ריק',
+    headerFilterOperatorIsNotEmpty: 'אינו ריק',
+    headerFilterOperatorIsAnyOf: 'הוא אחד מ-',
+    'headerFilterOperator=': 'שווה',
+    'headerFilterOperator!=': 'אינו שווה',
+    'headerFilterOperator>': 'גדול מ-',
+    'headerFilterOperator>=': 'גדול שווה ל-',
+    'headerFilterOperator<': 'קטן מ-',
+    'headerFilterOperator<=': 'קטן שווה ל-',
+    // headerFilterClear: 'Clear filter',
+    // Filter values text
+    filterValueAny: 'כל ערך',
+    filterValueTrue: 'כן',
+    filterValueFalse: 'לא',
+    // Column menu text
+    columnMenuLabel: 'תפריט',
+    // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+    columnMenuShowColumns: 'הצג עמודות',
+    columnMenuManageColumns: 'נהל עמודות',
+    columnMenuFilter: 'סנן',
+    columnMenuHideColumn: 'הסתר',
+    columnMenuUnsort: 'בטל מיון',
+    columnMenuSortAsc: 'מיין בסדר עולה',
+    columnMenuSortDesc: 'מיין בסדר יורד',
+    // columnMenuManagePivot: 'Manage pivot',
+    // Column header text
+    columnHeaderFiltersTooltipActive: function (count) {
+        return count !== 1 ? "".concat(count, " \u05DE\u05E1\u05E0\u05E0\u05D9\u05DD \u05E4\u05E2\u05D9\u05DC\u05D9\u05DD") : "\u05DE\u05E1\u05E0\u05DF \u05D0\u05D7\u05D3 \u05E4\u05E2\u05D9\u05DC";
+    },
+    columnHeaderFiltersLabel: 'הצג מסננים',
+    columnHeaderSortIconLabel: 'מיין',
+    // Rows selected footer text
+    footerRowSelected: function (count) {
+        return count !== 1 ? "".concat(count.toLocaleString(), " \u05E9\u05D5\u05E8\u05D5\u05EA \u05E0\u05D1\u05D7\u05E8\u05D5") : "\u05E9\u05D5\u05E8\u05D4 \u05D0\u05D7\u05EA \u05E0\u05D1\u05D7\u05E8\u05D4";
+    },
+    // Total row amount footer text
+    footerTotalRows: 'סך הכל:',
+    // Total visible row amount footer text
+    footerTotalVisibleRows: function (visibleCount, totalCount) {
+        return "".concat(visibleCount.toLocaleString(), " \u05DE\u05EA\u05D5\u05DA ").concat(totalCount.toLocaleString());
+    },
+    // Checkbox selection text
+    checkboxSelectionHeaderName: 'בחירה',
+    checkboxSelectionSelectAllRows: 'בחר הכל',
+    checkboxSelectionUnselectAllRows: 'בטל הכל',
+    checkboxSelectionSelectRow: 'בחר שורה',
+    checkboxSelectionUnselectRow: 'בטל בחירת שורה',
+    // Boolean cell text
+    booleanCellTrueLabel: 'כן',
+    booleanCellFalseLabel: 'לא',
+    // Actions cell more text
+    actionsCellMore: 'עוד',
+    // Column pinning text
+    pinToLeft: 'נעץ משמאל',
+    pinToRight: 'נעץ מימין',
+    unpin: 'הסר נעיצה',
+    // Tree Data
+    treeDataGroupingHeaderName: 'קבוצה',
+    treeDataExpand: 'הרחב',
+    treeDataCollapse: 'כווץ',
+    // Grouping columns
+    groupingColumnHeaderName: 'קבוצה',
+    groupColumn: function (name) { return "\u05E7\u05D1\u05E5 \u05DC\u05E4\u05D9 ".concat(name); },
+    unGroupColumn: function (name) { return "\u05D4\u05E4\u05E1\u05E7 \u05DC\u05E7\u05D1\u05E5 \u05DC\u05E4\u05D9 ".concat(name); },
+    // Master/detail
+    detailPanelToggle: 'הצג/הסתר פרטים',
+    expandDetailPanel: 'הרחב',
+    collapseDetailPanel: 'כווץ',
+    // Pagination
+    paginationRowsPerPage: 'שורות בעמוד:',
+    paginationDisplayedRows: function (_a) {
+        var from = _a.from, to = _a.to, count = _a.count, estimated = _a.estimated;
+        if (!estimated) {
+            return "".concat(from, "-").concat(to, " \u05DE\u05EA\u05D5\u05DA ").concat(count !== -1 ? count : "\u05D9\u05D5\u05EA\u05E8 \u05DE\u05BE".concat(to));
+        }
+        var estimatedLabel = estimated && estimated > to ? "\u05DB\u05BE".concat(estimated) : "\u05D9\u05D5\u05EA\u05E8 \u05DE\u05BE".concat(to);
+        return "".concat(from, "-").concat(to, " \u05DE\u05EA\u05D5\u05DA ").concat(count !== -1 ? count : estimatedLabel);
+    },
+    paginationItemAriaLabel: function (type) {
+        if (type === 'first') {
+            return 'לעמוד הראשון';
+        }
+        if (type === 'last') {
+            return 'לעמוד האחרון';
+        }
+        if (type === 'next') {
+            return 'לעמוד הבא';
+        }
+        // if (type === 'previous') {
+        return 'לעמוד הקודם';
+    },
+    // Row reordering text
+    rowReorderingHeaderName: 'סידור שורות',
+    // Aggregation
+    aggregationMenuItemHeader: 'צבירה',
+    aggregationFunctionLabelSum: 'סכום',
+    aggregationFunctionLabelAvg: 'ממוצע',
+    aggregationFunctionLabelMin: 'מינימום',
+    aggregationFunctionLabelMax: 'מקסימום',
+    aggregationFunctionLabelSize: 'גודל',
+    // Pivot panel
+    // pivotToggleLabel: 'Pivot',
+    // pivotRows: 'Rows',
+    // pivotColumns: 'Columns',
+    // pivotValues: 'Values',
+    // pivotCloseButton: 'Close pivot settings',
+    // pivotSearchButton: 'Search fields',
+    // pivotSearchControlPlaceholder: 'Search fields',
+    // pivotSearchControlLabel: 'Search fields',
+    // pivotSearchControlClear: 'Clear search',
+    // pivotNoFields: 'No fields',
+    // pivotMenuMoveUp: 'Move up',
+    // pivotMenuMoveDown: 'Move down',
+    // pivotMenuMoveToTop: 'Move to top',
+    // pivotMenuMoveToBottom: 'Move to bottom',
+    // pivotMenuRows: 'Rows',
+    // pivotMenuColumns: 'Columns',
+    // pivotMenuValues: 'Values',
+    // pivotMenuOptions: 'Field options',
+    // pivotMenuAddToRows: 'Add to Rows',
+    // pivotMenuAddToColumns: 'Add to Columns',
+    // pivotMenuAddToValues: 'Add to Values',
+    // pivotMenuRemove: 'Remove',
+    // pivotDragToRows: 'Drag here to create rows',
+    // pivotDragToColumns: 'Drag here to create columns',
+    // pivotDragToValues: 'Drag here to create values',
+    // pivotYearColumnHeaderName: '(Year)',
+    // pivotQuarterColumnHeaderName: '(Quarter)',
+    // AI Assistant panel
+    // aiAssistantPanelTitle: 'AI Assistant',
+    // aiAssistantPanelClose: 'Close AI Assistant',
+    // aiAssistantPanelNewConversation: 'New conversation',
+    // aiAssistantPanelConversationHistory: 'Conversation history',
+    // aiAssistantPanelEmptyConversation: 'No prompt history',
+    // aiAssistantSuggestions: 'Suggestions',
+    // Prompt field
+    promptFieldLabel: 'הזן ערך',
+    promptFieldPlaceholder: 'הקלד ערך…',
+    promptFieldPlaceholderWithRecording: 'הקלד או הקלט ערך…',
+    promptFieldPlaceholderListening: 'ממתין להנחיה…',
+    // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+    promptFieldSend: 'שלח',
+    promptFieldRecord: 'הקלטה',
+    promptFieldStopRecording: 'הפסק הקלטה',
+    // Prompt
+    // promptRerun: 'Run again',
+    // promptProcessing: 'Processing…',
+    // promptAppliedChanges: 'Applied changes',
+    // Prompt changes
+    // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
+    // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
+    // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
+    // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+    //   if (operator === 'is any of') {
+    //     return `${column} is any of: ${value}`;
+    //   }
+    //   return `${column} ${operator} ${value}`;
+    // },
+    // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+    //   if (operator === 'is any of') {
+    //     return `Filter where ${column} is any of: ${value}`;
+    //   }
+    //   return `Filter where ${column} ${operator} ${value}`;
+    // },
+    // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
+    // promptChangePivotEnableLabel: 'Pivot',
+    // promptChangePivotEnableDescription: 'Enable pivot',
+    // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
+    // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+    // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
+    // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
+    // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+};
+exports.heIL = (0, getGridLocalization_1.getGridLocalization)(heILGrid);

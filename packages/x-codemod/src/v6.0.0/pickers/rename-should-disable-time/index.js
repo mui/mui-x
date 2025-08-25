@@ -1,0 +1,38 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = transformer;
+/**
+ * @param {import('jscodeshift').FileInfo} file
+ * @param {import('jscodeshift').API} api
+ */
+function transformer(file, api, options) {
+    var j = api.jscodeshift;
+    var printOptions = options.printOptions;
+    var root = j(file.source);
+    root
+        .find(j.ImportDeclaration)
+        .filter(function (_a) {
+        var node = _a.node;
+        return node.source.value.startsWith('@mui/x-date-pickers');
+    })
+        .forEach(function (path) {
+        path.node.specifiers.forEach(function (node) {
+            // Process only date-pickers components
+            root.findJSXElements(node.local.name).forEach(function (elementPath) {
+                if (elementPath.node.type !== 'JSXElement') {
+                    return;
+                }
+                elementPath.node.openingElement.attributes.forEach(function (elementNode) {
+                    if (elementNode.type !== 'JSXAttribute') {
+                        return;
+                    }
+                    if (elementNode.name.name === 'shouldDisableTime') {
+                        elementNode.name.name = 'shouldDisableClock';
+                    }
+                });
+            });
+        });
+    });
+    var transformed = root.findJSXElements();
+    return transformed.toSource(printOptions);
+}

@@ -1,0 +1,103 @@
+"use strict";
+'use client';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useDataGridComponent = void 0;
+var React = require("react");
+var useGridInitialization_1 = require("../hooks/core/useGridInitialization");
+var useGridVirtualizer_1 = require("../hooks/core/useGridVirtualizer");
+var useGridInitializeState_1 = require("../hooks/utils/useGridInitializeState");
+var useGridClipboard_1 = require("../hooks/features/clipboard/useGridClipboard");
+var useGridColumnMenu_1 = require("../hooks/features/columnMenu/useGridColumnMenu");
+var useGridColumns_1 = require("../hooks/features/columns/useGridColumns");
+var useGridDensity_1 = require("../hooks/features/density/useGridDensity");
+var useGridCsvExport_1 = require("../hooks/features/export/useGridCsvExport");
+var useGridPrintExport_1 = require("../hooks/features/export/useGridPrintExport");
+var useGridFilter_1 = require("../hooks/features/filter/useGridFilter");
+var useGridFocus_1 = require("../hooks/features/focus/useGridFocus");
+var useGridKeyboardNavigation_1 = require("../hooks/features/keyboardNavigation/useGridKeyboardNavigation");
+var useGridPagination_1 = require("../hooks/features/pagination/useGridPagination");
+var useGridPreferencesPanel_1 = require("../hooks/features/preferencesPanel/useGridPreferencesPanel");
+var useGridEditing_1 = require("../hooks/features/editing/useGridEditing");
+var useGridRows_1 = require("../hooks/features/rows/useGridRows");
+var useGridRowsPreProcessors_1 = require("../hooks/features/rows/useGridRowsPreProcessors");
+var useGridParamsApi_1 = require("../hooks/features/rows/useGridParamsApi");
+var useGridRowSelection_1 = require("../hooks/features/rowSelection/useGridRowSelection");
+var useGridRowSelectionPreProcessors_1 = require("../hooks/features/rowSelection/useGridRowSelectionPreProcessors");
+var useGridSorting_1 = require("../hooks/features/sorting/useGridSorting");
+var useGridScroll_1 = require("../hooks/features/scroll/useGridScroll");
+var useGridEvents_1 = require("../hooks/features/events/useGridEvents");
+var useGridDimensions_1 = require("../hooks/features/dimensions/useGridDimensions");
+var useGridRowsMeta_1 = require("../hooks/features/rows/useGridRowsMeta");
+var useGridStatePersistence_1 = require("../hooks/features/statePersistence/useGridStatePersistence");
+var useGridColumnSpanning_1 = require("../hooks/features/columns/useGridColumnSpanning");
+var useGridColumnGrouping_1 = require("../hooks/features/columnGrouping/useGridColumnGrouping");
+var virtualization_1 = require("../hooks/features/virtualization");
+var useGridColumnResize_1 = require("../hooks/features/columnResize/useGridColumnResize");
+var useGridRowSpanning_1 = require("../hooks/features/rows/useGridRowSpanning");
+var useGridListView_1 = require("../hooks/features/listView/useGridListView");
+var useGridProps_1 = require("../hooks/core/useGridProps");
+var useGridDataSource_1 = require("../hooks/features/dataSource/useGridDataSource");
+var useDataGridComponent = function (apiRef, props) {
+    (0, useGridInitialization_1.useGridInitialization)(apiRef, props);
+    /**
+     * Register all pre-processors called during state initialization here.
+     */
+    (0, useGridRowSelectionPreProcessors_1.useGridRowSelectionPreProcessors)(apiRef, props);
+    (0, useGridRowsPreProcessors_1.useGridRowsPreProcessors)(apiRef);
+    /**
+     * Register all state initializers here.
+     */
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridProps_1.propsStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridRowSelection_1.rowSelectionStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridColumns_1.columnsStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridRows_1.rowsStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridPagination_1.paginationStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridEditing_1.editingStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridFocus_1.focusStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridSorting_1.sortingStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridPreferencesPanel_1.preferencePanelStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridFilter_1.filterStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridRowSpanning_1.rowSpanningStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridDensity_1.densityStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridColumnResize_1.columnResizeStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridColumnMenu_1.columnMenuStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridColumnGrouping_1.columnGroupsStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(virtualization_1.virtualizationStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridDimensions_1.dimensionsStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridRowsMeta_1.rowsMetaStateInitializer, apiRef, props);
+    (0, useGridInitializeState_1.useGridInitializeState)(useGridListView_1.listViewStateInitializer, apiRef, props);
+    (0, useGridVirtualizer_1.useGridVirtualizer)(apiRef, props);
+    (0, useGridKeyboardNavigation_1.useGridKeyboardNavigation)(apiRef, props);
+    (0, useGridRowSelection_1.useGridRowSelection)(apiRef, props);
+    (0, useGridColumns_1.useGridColumns)(apiRef, props);
+    (0, useGridRows_1.useGridRows)(apiRef, props);
+    (0, useGridRowSpanning_1.useGridRowSpanning)(apiRef, props);
+    (0, useGridParamsApi_1.useGridParamsApi)(apiRef, props);
+    (0, useGridColumnSpanning_1.useGridColumnSpanning)(apiRef);
+    (0, useGridColumnGrouping_1.useGridColumnGrouping)(apiRef, props);
+    (0, useGridEditing_1.useGridEditing)(apiRef, props);
+    (0, useGridFocus_1.useGridFocus)(apiRef, props);
+    (0, useGridPreferencesPanel_1.useGridPreferencesPanel)(apiRef, props);
+    (0, useGridFilter_1.useGridFilter)(apiRef, props);
+    (0, useGridSorting_1.useGridSorting)(apiRef, props);
+    (0, useGridDensity_1.useGridDensity)(apiRef, props);
+    (0, useGridColumnResize_1.useGridColumnResize)(apiRef, props);
+    (0, useGridPagination_1.useGridPagination)(apiRef, props);
+    (0, useGridRowsMeta_1.useGridRowsMeta)(apiRef, props);
+    (0, useGridScroll_1.useGridScroll)(apiRef, props);
+    (0, useGridColumnMenu_1.useGridColumnMenu)(apiRef);
+    (0, useGridCsvExport_1.useGridCsvExport)(apiRef, props);
+    (0, useGridPrintExport_1.useGridPrintExport)(apiRef, props);
+    (0, useGridClipboard_1.useGridClipboard)(apiRef, props);
+    (0, useGridDimensions_1.useGridDimensions)(apiRef, props);
+    (0, useGridEvents_1.useGridEvents)(apiRef, props);
+    (0, useGridStatePersistence_1.useGridStatePersistence)(apiRef);
+    (0, virtualization_1.useGridVirtualization)(apiRef, props);
+    (0, useGridListView_1.useGridListView)(apiRef, props);
+    (0, useGridDataSource_1.useGridDataSource)(apiRef, props);
+    // Should be the last thing to run, because all pre-processors should have been registered by now.
+    React.useEffect(function () {
+        apiRef.current.runAppliersForPendingProcessors();
+    });
+};
+exports.useDataGridComponent = useDataGridComponent;

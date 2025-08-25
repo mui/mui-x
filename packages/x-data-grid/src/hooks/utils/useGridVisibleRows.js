@@ -1,0 +1,26 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useGridVisibleRows = exports.getVisibleRows = void 0;
+var gridPaginationSelector_1 = require("../features/pagination/gridPaginationSelector");
+var _1 = require(".");
+var getVisibleRows = function (apiRef, 
+// TODO: remove after getVisibleRows implementations have been updated
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+props) {
+    return (0, gridPaginationSelector_1.gridVisibleRowsSelector)(apiRef);
+};
+exports.getVisibleRows = getVisibleRows;
+/**
+ * Computes the list of rows that are reachable by scroll.
+ * Depending on whether pagination is enabled, it will return the rows in the current page.
+ * - If the pagination is disabled or in server mode, it equals all the visible rows.
+ * - If the row tree has several layers, it contains up to `state.pageSize` top level rows and all their descendants.
+ * - If the row tree is flat, it only contains up to `state.pageSize` rows.
+ */
+var useGridVisibleRows = function (apiRef, 
+// TODO: remove after useGridVisibleRows implementations have been updated
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+props) {
+    return (0, _1.useGridSelector)(apiRef, gridPaginationSelector_1.gridVisibleRowsSelector);
+};
+exports.useGridVisibleRows = useGridVisibleRows;

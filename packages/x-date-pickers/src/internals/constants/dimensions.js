@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MULTI_SECTION_CLOCK_SECTION_WIDTH = exports.DIGITAL_CLOCK_VIEW_HEIGHT = exports.VIEW_HEIGHT = exports.MAX_CALENDAR_HEIGHT = exports.DIALOG_WIDTH = exports.DAY_MARGIN = exports.DAY_SIZE = void 0;
+exports.DAY_SIZE = 36;
+exports.DAY_MARGIN = 2;
+exports.DIALOG_WIDTH = 320;
+exports.MAX_CALENDAR_HEIGHT = 280;
+exports.VIEW_HEIGHT = 336;
+exports.DIGITAL_CLOCK_VIEW_HEIGHT = 232;
+exports.MULTI_SECTION_CLOCK_SECTION_WIDTH = 48;

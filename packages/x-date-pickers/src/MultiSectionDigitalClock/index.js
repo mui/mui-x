@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getMultiSectionDigitalClockUtilityClass = exports.multiSectionDigitalClockClasses = exports.multiSectionDigitalClockSectionClasses = exports.MultiSectionDigitalClock = void 0;
+var MultiSectionDigitalClock_1 = require("./MultiSectionDigitalClock");
+Object.defineProperty(exports, "MultiSectionDigitalClock", { enumerable: true, get: function () { return MultiSectionDigitalClock_1.MultiSectionDigitalClock; } });
+var multiSectionDigitalClockSectionClasses_1 = require("./multiSectionDigitalClockSectionClasses");
+Object.defineProperty(exports, "multiSectionDigitalClockSectionClasses", { enumerable: true, get: function () { return multiSectionDigitalClockSectionClasses_1.multiSectionDigitalClockSectionClasses; } });
+var multiSectionDigitalClockClasses_1 = require("./multiSectionDigitalClockClasses");
+Object.defineProperty(exports, "multiSectionDigitalClockClasses", { enumerable: true, get: function () { return multiSectionDigitalClockClasses_1.multiSectionDigitalClockClasses; } });
+Object.defineProperty(exports, "getMultiSectionDigitalClockUtilityClass", { enumerable: true, get: function () { return multiSectionDigitalClockClasses_1.getMultiSectionDigitalClockUtilityClass; } });
