@@ -19,6 +19,32 @@ This package is not published yet.
 
 {{"demo": "FullEventCalendar.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Recurrence
+
+Recurring events let you define a repeating pattern on each event using the `rrule` field.  
+The scheduler expands recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
+
+{{"demo": "Recurrence.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Supported RRULE subset
+
+- `DAILY` with interval. No selectors are required.
+
+- `WEEKLY` with interval and byDay using plain weekday codes MO..SU. Ordinals like 1MO or -1FR are not allowed for weekly.
+
+- `MONTHLY` in two modes:
+  - `byMonthDay` with a single day number. Months without that day are skipped automatically.
+
+  - `byDay` with ordinal entries like `2TU` or `-1FR`. Mixing `byDay` and `byMonthDay` is not supported.
+
+- `YEARLY` on the same calendar date as the start. Advanced selectors such as `byMonth`, `byMonthDay` or `byDay` are not supported for yearly yet.
+
+- Ends: `COUNT` or `UNTIL` (inclusive). Only one at a time.
+
+:::info
+**Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
+:::
+
 ## Drag interactions
 
 You can enable the drag and drop using the `areEventsDraggable` and `areEventsResizable` props.

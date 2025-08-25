@@ -4,10 +4,10 @@
 import { DateTime } from 'luxon';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
 
-export const defaultVisibleDateRecurring = DateTime.fromISO('2025-07-01T00:00:00');
-const START = defaultVisibleDateRecurring.startOf('week');
+export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
+const START = defaultVisibleDate.startOf('week');
 
-export const recurringStressEvents: CalendarEvent[] = [
+export const initialEvents: CalendarEvent[] = [
   // WEEKLY PATTERNS
   {
     id: 'weekly-weekdays-only',
@@ -165,7 +165,7 @@ export const recurringStressEvents: CalendarEvent[] = [
   },
 ];
 
-export const recurringStressResources: CalendarResource[] = [
+export const resources: CalendarResource[] = [
   { name: 'Weekly Patterns', id: 'weekly', color: 'violet' },
   { name: 'Monthly Patterns', id: 'monthly', color: 'jade' },
   { name: 'Yearly Patterns', id: 'yearly', color: 'lime' },

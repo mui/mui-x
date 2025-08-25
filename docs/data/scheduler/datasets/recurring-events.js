@@ -3,10 +3,10 @@
 
 import { DateTime } from 'luxon';
 
-export const defaultVisibleDateRecurring = DateTime.fromISO('2025-07-01T00:00:00');
-const START = defaultVisibleDateRecurring.startOf('week');
+export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
+const START = defaultVisibleDate.startOf('week');
 
-export const recurringStressEvents = [
+export const initialEvents = [
   // WEEKLY PATTERNS
   {
     id: 'weekly-weekdays-only',
@@ -160,7 +160,7 @@ export const recurringStressEvents = [
   },
 ];
 
-export const recurringStressResources = [
+export const resources = [
   { name: 'Weekly Patterns', id: 'weekly', color: 'violet' },
   { name: 'Monthly Patterns', id: 'monthly', color: 'jade' },
   { name: 'Yearly Patterns', id: 'yearly', color: 'lime' },
