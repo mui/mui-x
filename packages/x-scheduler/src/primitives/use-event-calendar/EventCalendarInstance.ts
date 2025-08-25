@@ -239,7 +239,7 @@ export class EventCalendarInstance {
    * Goes to a specific day and set the view to 'day'.
    */
   switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
-    if (!this.store.state.views.includes('day')) {
+    if (!selectors.hasDayView(this.store.state)) {
       throw new Error(
         'The "day" view is disabled on your Event Calendar. Please ensure that "day" is included in the views prop before using the switchToDay method.',
       );
