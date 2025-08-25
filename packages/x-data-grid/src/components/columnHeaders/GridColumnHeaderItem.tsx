@@ -269,10 +269,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
-      elementToFocus?.focus();
-      if (apiRef.current.columnHeadersContainerRef?.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-      }
+      elementToFocus?.focus({ preventScroll: true });
     }
   }, [apiRef, hasFocus]);
 
