@@ -552,7 +552,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         await act(async () => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
 
         expect(consoleMock.mock.lastCall?.[0]).to.include(
-          'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+          'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });

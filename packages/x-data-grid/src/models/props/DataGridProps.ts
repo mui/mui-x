@@ -831,7 +831,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   processRowUpdate?: (newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R;
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;

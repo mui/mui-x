@@ -482,7 +482,7 @@
       }
     },
     "onProcessRowUpdateError": {
-      "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
+      "description": "Callback called when <code>processRowUpdate()</code> throws an error or rejects.",
       "typeDescriptions": { "error": { "name": "error", "description": "The error thrown." } }
     },
     "onResize": {
