@@ -45,8 +45,14 @@ export interface UseChartVoronoiParameters {
   onItemClick?: (event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void;
 }
 
-export type UseChartVoronoiDefaultizedParameters = UseChartVoronoiParameters & {
-  disableVoronoi: boolean;
+export type UseChartVoronoiDefaultizedParameters = Pick<
+  UseChartVoronoiParameters,
+  'voronoiMaxRadius' | 'onItemClick'
+> & {
+  /**
+   * If true, a point is only returned if the pointer is within the radius of the point.
+   */
+  disableClosestPoint: boolean;
 };
 
 export type UseChartVoronoiSignature = ChartPluginSignature<{
