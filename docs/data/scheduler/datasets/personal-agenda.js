@@ -55,6 +55,38 @@ export const initialEvents = [
     resource: 'work',
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
   },
+  {
+    id: 'work-board-meeting',
+    start: START_OF_FIRST_WEEK.set({ month: 7, day: 3, hour: 7 }),
+    end: START_OF_FIRST_WEEK.set({ month: 7, day: 3, hour: 8 }),
+    title: 'Board Meeting',
+    resource: 'work',
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['1TH', '3TH'] },
+  },
+  {
+    id: 'work-ops-oncall-handoff',
+    start: START_OF_FIRST_WEEK.set({ month: 7, day: 21, hour: 8 }),
+    end: START_OF_FIRST_WEEK.set({ month: 7, day: 21, hour: 9 }),
+    title: 'Ops On-Call Handoff',
+    resource: 'work',
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['-1MO'] },
+  },
+  {
+    id: 'work-architecture-forum',
+    start: START_OF_FIRST_WEEK.set({ month: 7, day: 8, hour: 11 }),
+    end: START_OF_FIRST_WEEK.set({ month: 7, day: 8, hour: 12 }),
+    title: 'Architecture Forum',
+    resource: 'work',
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] },
+  },
+  {
+    id: 'work-payroll-review',
+    start: START_OF_FIRST_WEEK.set({ month: 7, day: 25, hour: 16 }),
+    end: START_OF_FIRST_WEEK.set({ month: 7, day: 25, hour: 17 }),
+    title: 'Payroll Review',
+    resource: 'work',
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] },
+  },
   // Non-recurring work events
   {
     id: 'client-call-1',
@@ -195,6 +227,14 @@ export const initialEvents = [
     title: 'Shopping',
     resource: 'personal',
   },
+  {
+    id: 'community-workshop',
+    start: START_OF_FIRST_WEEK.set({ month: 7, day: 26, hour: 10 }),
+    end: START_OF_FIRST_WEEK.set({ month: 7, day: 26, hour: 12 }),
+    title: 'Community Workshop',
+    resource: 'personal',
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['4SA'] },
+  },
   // Medical events
   {
     id: 'medical-1',
@@ -287,6 +327,15 @@ export const initialEvents = [
     allDay: true,
     resource: 'work',
     rrule: { freq: 'YEARLY', interval: 1 },
+  },
+  {
+    id: 'allday-work-recurrent-6',
+    start: START_OF_FIRST_WEEK.set({ month: 7, day: 9, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ month: 7, day: 9, hour: 9 }),
+    title: 'Team Building Event',
+    resource: 'work',
+    allDay: true,
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['2WE'] },
   },
   {
     id: 'allday-workout-1',
