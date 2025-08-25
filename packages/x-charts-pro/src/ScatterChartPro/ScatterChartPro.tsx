@@ -135,7 +135,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           <ChartsAxisHighlight {...axisHighlightProps} />
           {children}
         </ChartsSurface>
-        {!props.loading && <Tooltip trigger="item" {...props?.slotProps?.tooltip} />}
+        {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
