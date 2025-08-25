@@ -12,21 +12,13 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
    */
   calendarEventResource: CalendarResource | undefined;
   /**
-   * The anchor element for the popover positioning.
-   */
-  anchor: HTMLElement;
-  /**
    * The container element for the popover portal.
    */
   container: HTMLElement | null;
-  /**
-   * Handles the close action of the popover.
-   */
-  onClose: () => void;
-}
-
-export interface EventPopoverContextValue {
-  startEditing: (event: React.MouseEvent, calendarEvent: CalendarEvent) => void;
+  // /**
+  //  * Handles the close action of the popover.
+  //  */
+  // onClose: () => void;
 }
 
 export interface EventPopoverProviderProps {
