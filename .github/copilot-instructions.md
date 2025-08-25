@@ -22,9 +22,10 @@ MUI X is a suite of advanced React UI components including Data Grid, Date and T
 - Alternative: `pnpm test:unit:browser` -- requires playwright browsers (see Browser Tests section)
 
 **Run docs development server:**
-- `pnpm docs:dev` -- starts on port 3001 (not 3000!)
-- Open http://localhost:3001 to view documentation
-- Takes ~3.5 seconds to be ready
+- **IMPORTANT**: The docs server currently has configuration issues with babel/ESM compatibility
+- `pnpm docs:dev` -- may fail due to babel configuration errors
+- Alternative: Use built documentation or focus on component testing via unit tests
+- If working: starts on port 3001 (not 3000!), takes ~3.5 seconds to be ready
 
 ### Browser Tests and E2E Tests
 
@@ -57,23 +58,52 @@ MUI X is a suite of advanced React UI components including Data Grid, Date and T
 ## Validation
 
 **ALWAYS manually validate any new code by building and testing.**
-- Run `pnpm release:build` to ensure your changes build correctly
-- Run `pnpm test` to ensure tests pass (or run specific test suites)
-- For component changes, start the docs server with `pnpm docs:dev` and test the component in the browser
-- **CRITICAL**: When making component changes, always test the actual component functionality in the docs, not just that it builds
+- Run `pnpm release:build` to ensure your changes build correctly (takes ~2.5 minutes)
+- Run `pnpm test` to ensure tests pass (takes ~10 minutes, or run specific test files)
+- Run `pnpm typescript` to validate TypeScript compilation across all packages (~3 minutes)
+- **CRITICAL**: When making component changes, test functionality via unit tests since docs server has issues
+- For component validation: run specific test files, e.g., `pnpm test packages/x-data-grid/src/tests/columns.DataGrid.test.tsx`
 
 **Component testing workflow:**
 1. Make your changes
-2. Run `pnpm release:build` 
-3. Start `pnpm docs:dev`
-4. Navigate to the relevant component documentation page
-5. Test the component interactively in the browser
-6. Run relevant test suites for the component you modified
+2. Run `pnpm release:build` to build packages
+3. Run specific tests for the component you modified
+4. Run `pnpm typescript` to ensure no type errors
+5. Consider running the full test suite with `pnpm test`
 
-**For data grid components:** Test filtering, sorting, selection, editing workflows
-**For date pickers:** Test date selection, keyboard input, locale changes
-**For charts:** Test data visualization, interactions, responsive behavior
-**For tree view:** Test expansion, selection, keyboard navigation
+**For data grid components:** Test filtering, sorting, selection, editing workflows via unit tests
+**For date pickers:** Test date selection, keyboard input, locale changes via unit tests  
+**For charts:** Test data visualization, interactions, responsive behavior via unit tests
+**For tree view:** Test expansion, selection, keyboard navigation via unit tests
+
+## Working Around Documentation Issues
+
+**Current Issue**: The docs development server (`pnpm docs:dev`) and build (`pnpm docs:build`) fail due to babel configuration compatibility issues between ESM and CommonJS modules.
+
+**Alternative validation approaches:**
+1. **Unit test validation**: Run specific test files to validate component behavior
+   ```bash
+   pnpm test packages/x-data-grid/src/tests/columns.DataGrid.test.tsx
+   ```
+2. **TypeScript validation**: Ensure no type errors across packages
+   ```bash
+   pnpm typescript  # ~3 minutes, validates all packages
+   ```
+3. **Build validation**: Ensure packages build correctly
+   ```bash
+   pnpm release:build  # ~2.5 minutes for all packages
+   pnpm --filter @mui/x-data-grid build  # ~21 seconds for specific package
+   ```
+4. **Demo transpilation**: Validate demo examples work
+   ```bash
+   pnpm docs:typescript:formatted  # ~3 seconds
+   ```
+
+**For component development without docs server:**
+- Modify component code
+- Run `pnpm --filter @mui/x-[package-name] build` 
+- Run relevant unit tests to validate functionality
+- Run `pnpm typescript` to catch type issues
 
 ## Common Tasks
 
@@ -115,33 +145,41 @@ pnpm test:e2e                   # E2E tests (requires build first)
 pnpm test:regressions           # Visual regression tests
 
 # Development servers
-pnpm docs:dev                   # Docs server on port 3001
+pnpm docs:dev                   # Docs server on port 3001 (currently has issues)
 pnpm start                      # Alias for docs:dev
 
 # Code quality
 pnpm prettier                   # Format changed files
 pnpm eslint                     # Lint (may show import errors)
 pnpm markdownlint               # Lint markdown
-pnpm validate                   # Full validation suite
+pnpm typescript                # TypeScript compilation (~3 minutes)
+pnpm validate                   # Full validation suite (currently fails due to docs issues)
 
 # Specific workflows
 pnpm proptypes                  # Generate component prop types
-pnpm docs:api                   # Generate API documentation
+pnpm docs:api:buildX            # Generate API documentation (~15 seconds)
+pnpm docs:typescript:formatted  # Transpile demos (~3 seconds)
 ```
 
 ### Timing Expectations
 - **Dependency install**: 102 seconds - Set timeout 180+ seconds
 - **Full build**: 147 seconds - Set timeout 300+ seconds  
+- **Individual package build**: 21 seconds for x-data-grid - Set timeout 60+ seconds
 - **Unit tests**: 619 seconds - Set timeout 900+ seconds
-- **Docs server start**: 3.5 seconds
+- **Individual test file**: 7 seconds - Set timeout 30+ seconds
+- **TypeScript compilation**: 180 seconds - Set timeout 300+ seconds
 - **Prettier**: < 2 seconds
 - **Markdown lint**: 5 seconds
+- **API docs generation**: 15 seconds
+- **Demo transpilation**: 3 seconds
 
 ### Known Issues and Workarounds
-- **Browser tests**: May fail if playwright browsers not installed or network restricted
-- **ESLint**: Shows import/export errors that don't block functionality
-- **Docs port**: Uses 3001, not 3000 (differs from main MUI repository)
-- **Build dependencies**: Requires building packages before running E2E or regression tests
+- **Docs server**: Currently fails due to babel configuration issues with ESM/CommonJS compatibility
+- **Browser tests**: May fail if playwright browsers not installed (`pnpm exec playwright install`)
+- **Network restrictions**: Playwright browser downloads may fail in CI/restricted environments  
+- **ESLint**: Shows import/export errors in some packages that don't block functionality
+- **Build dependencies**: E2E and regression tests require building packages first and playwright browsers
+- **Babel config**: docs:build and docs:dev currently fail due to ESM module compatibility issues
 
 ### Repository Context
 - **Main branch**: `master` 
@@ -152,7 +190,9 @@ pnpm docs:api                   # Generate API documentation
 
 ### When Making Changes
 1. **ALWAYS build and test your changes** - never commit untested code
-2. **Use specific timeouts** - builds and tests take significant time, don't let them timeout prematurely
-3. **Test component functionality manually** - don't just check that code compiles
-4. **Run prettier and markdown lint** before committing
-5. **Consider the license** - Pro/Premium features require CLA signature for contributions
+2. **Use specific timeouts** - builds and tests take significant time, don't let them timeout prematurely  
+3. **Test component functionality via unit tests** - docs server currently has configuration issues
+4. **Run typescript compilation** to catch type errors across packages
+5. **Run prettier and markdown lint** before committing
+6. **Focus on unit test validation** rather than manual browser testing due to docs server issues
+7. **Consider the license** - Pro/Premium features require CLA signature for contributions
