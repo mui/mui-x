@@ -26,7 +26,7 @@ The following example shows how to only let users reorder the leaves using the [
 {{"demo": "OnlyReorderLeaves.js"}}
 
 You can also limit the items in which an item can be dropped using the `canMoveItemToNewPosition` prop.
-The following example shows how to only let users re-order inside the same parent:
+The following example shows how to only let users reorder inside the same parent:
 
 {{"demo": "OnlyReorderInSameParent.js"}}
 
