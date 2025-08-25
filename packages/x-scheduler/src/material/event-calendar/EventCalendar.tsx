@@ -51,9 +51,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     <EventCalendarContext.Provider value={contextValue}>
       <TranslationsProvider translations={translations}>
         <div
+          {...other}
           className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
           ref={forwardedRef}
-          {...other}
         >
           <aside className="EventCalendarSidePanel">
             <DateNavigator />
