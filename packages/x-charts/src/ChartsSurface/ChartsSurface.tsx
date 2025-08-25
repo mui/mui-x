@@ -40,6 +40,7 @@ const ChartsSurfaceStyles = styled('svg', {
   // For example, prevent page scroll & zoom.
   touchAction: 'pan-y',
   userSelect: 'none',
+  gridArea: 'chart',
 }));
 
 /**

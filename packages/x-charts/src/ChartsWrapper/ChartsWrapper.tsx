@@ -8,6 +8,7 @@ import { Position } from '../models';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
+import { chartsToolbarClasses } from '../Toolbar';
 
 export interface ChartsWrapperProps {
   /**
@@ -31,44 +32,72 @@ export interface ChartsWrapperProps {
   sx?: SxProps<Theme>;
 }
 
-const getDirection = (direction?: Direction, position?: Position) => {
+const getJustifyItems = (position?: Position) => {
+  if (position?.horizontal === 'start') {
+    return 'start';
+  }
+  if (position?.horizontal === 'end') {
+    return 'end';
+  }
+  return 'center';
+};
+
+const getAlignItems = (position?: Position) => {
+  if (position?.vertical === 'top') {
+    return 'flex-start';
+  }
+  if (position?.vertical === 'bottom') {
+    return 'flex-end';
+  }
+  return 'center';
+};
+
+const getGridTemplateAreasWithToolBar = (direction?: Direction, position?: Position) => {
   if (direction === 'vertical') {
     if (position?.horizontal === 'start') {
-      return 'row';
+      return `"toolbar toolbar"
+              "legend chart"`;
     }
-
-    return 'row-reverse';
+    return `"toolbar toolbar"
+            "chart legend"`;
   }
 
   if (position?.vertical === 'bottom') {
-    return 'column-reverse';
+    return `"toolbar"
+            "chart"
+            "legend"`;
   }
-
-  return 'column';
+  return `"toolbar"
+          "legend"
+          "chart"`;
 };
 
-const getAlign = (direction?: Direction, position?: Position) => {
+const getGridTemplateAreasWithoutToolBar = (direction?: Direction, position?: Position) => {
   if (direction === 'vertical') {
-    if (position?.vertical === 'top') {
-      return 'flex-start';
-    }
-
-    if (position?.vertical === 'bottom') {
-      return 'flex-end';
-    }
-  }
-
-  if (direction === 'horizontal') {
     if (position?.horizontal === 'start') {
-      return 'flex-start';
+      return `"legend chart"`;
     }
-
-    if (position?.horizontal === 'end') {
-      return 'flex-end';
-    }
+    return `"chart legend"`;
   }
 
-  return 'center';
+  if (position?.vertical === 'bottom') {
+    return `"chart"
+            "legend"`;
+  }
+  return `"legend"
+          "chart"`;
+};
+
+const getTemplateColumns = (direction?: Direction, position?: Position) => {
+  if (direction === 'vertical') {
+    if (position?.horizontal === 'start') {
+      return 'auto 1fr';
+    }
+
+    return '1fr auto';
+  }
+
+  return '100%';
 };
 
 const Root = styled('div', {
@@ -76,11 +105,6 @@ const Root = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically',
 })<{ ownerState: ChartsWrapperProps; extendVertically: boolean }>(({ ownerState }) => ({
-  display: 'flex',
-  flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: getAlign(ownerState.legendDirection, ownerState.legendPosition),
   variants: [
     {
       props: { extendVertically: true },
@@ -89,6 +113,28 @@ const Root = styled('div', {
       },
     },
   ],
+  width: '100%',
+  display: 'grid',
+  gridTemplateColumns: getTemplateColumns(ownerState.legendDirection, ownerState.legendPosition),
+  gridTemplateRows: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : 'auto auto 1fr',
+  [`&:has(.${chartsToolbarClasses.root})`]: {
+    gridTemplateAreas: getGridTemplateAreasWithToolBar(
+      ownerState.legendDirection,
+      ownerState.legendPosition,
+    ),
+  },
+  [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
+    gridTemplateAreas: getGridTemplateAreasWithoutToolBar(
+      ownerState.legendDirection,
+      ownerState.legendPosition,
+    ),
+  },
+  justifyContent: 'center',
+  justifyItems: getJustifyItems(ownerState.legendPosition),
+  alignItems: getAlignItems(ownerState.legendPosition),
+  [`& > .${chartsToolbarClasses.root}`]: {
+    justifySelf: 'center',
+  },
 }));
 
 /**
