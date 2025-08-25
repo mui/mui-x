@@ -1,4 +1,4 @@
-import type { PieChartPluginSignatures } from '../PieChart/PieChart.plugins';
+import type { PieChartPluginsSignatures } from '../PieChart/PieChart.plugins';
 import type { BarChartPluginsSignatures } from '../BarChart/BarChart.plugins';
 import type { ScatterChartPluginsSignatures } from '../ScatterChart/ScatterChart.plugins';
 import type { LineChartPluginsSignatures } from '../LineChart/LineChart.plugins';
@@ -10,7 +10,7 @@ export type PluginsPerSeriesType = {
   line: LineChartPluginsSignatures;
   scatter: ScatterChartPluginsSignatures;
   bar: BarChartPluginsSignatures;
-  pie: PieChartPluginSignatures;
+  pie: PieChartPluginsSignatures;
   /* Special value when creating a chart using composition. */
   composition: DefaultPluginSignatures;
 };
