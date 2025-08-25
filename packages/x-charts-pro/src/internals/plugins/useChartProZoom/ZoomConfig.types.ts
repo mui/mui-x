@@ -19,7 +19,11 @@ export type ZoomConfig = {
 };
 
 type Entry<T extends AnyInteraction> = {
-  [K in T['type']]?: Omit<T, 'pointerMode'> & Pick<T, 'pointerMode'>;
+  [K in T['type']]?: Omit<T, 'pointerMode'> & {
+    mouse: { requiredKeys?: KeyboardKey[] };
+    touch: { requiredKeys?: KeyboardKey[] };
+    pointerMode?: PointerMode[];
+  };
 };
 export type DefaultizedZoomConfig = {
   zoom: Entry<ZoomInteraction>;
@@ -60,7 +64,7 @@ type NoKeysProp = {
 
 type NoModeProp = {
   /**
-   * This gesture only works on touch devices. Mode has no effect.
+   * This gesture only works on a specific pointer mode. Mode has no effect.
    */
   pointerMode?: undefined;
 };

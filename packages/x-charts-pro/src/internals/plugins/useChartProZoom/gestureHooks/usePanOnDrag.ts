@@ -11,7 +11,6 @@ import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { PanEvent } from '@mui/x-internal-gestures/core';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
-import { isGestureEnabledForPointer } from '../isGestureEnabledForPointer';
 import { selectorPanConfig } from '../ZoomConfig.selectors';
 
 export const usePanOnDrag = (
@@ -40,7 +39,11 @@ export const usePanOnDrag = (
 
     instance.updateZoomInteractionListeners('zoomPan', {
       requiredKeys: config.requiredKeys,
-      pointerMode: config.pointerMode ? [config.pointerMode] : undefined,
+      pointerMode: config.pointerMode,
+      pointerOptions: {
+        mouse: config.mouse,
+        touch: config.touch,
+      },
     });
   }, [isPanEnabled, config, instance]);
 
@@ -52,9 +55,6 @@ export const usePanOnDrag = (
     }
 
     const handlePanStart = (event: PanEvent) => {
-      if (!isGestureEnabledForPointer(event.detail.srcEvent, config!.pointerMode)) {
-        return;
-      }
       if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
         startRef.current = store.value.zoom.zoomData;
       }
