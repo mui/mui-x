@@ -143,6 +143,7 @@ export const recurringStressEvents: CalendarEvent[] = [
     resource: 'yearly',
     rrule: { freq: 'YEARLY', interval: 1 },
   },
+
   // ALL-DAY AND SPANNING EVENTS
   {
     id: 'allday-monthly-1st-sat-weekend',
