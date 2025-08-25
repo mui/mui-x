@@ -7,7 +7,7 @@ githubLabel: 'scope: scheduler'
 
 # Scheduler - Month View
 
-<p class="description">The Day View component lets users manage events for an entire month.</p>
+<p class="description">The Month View component lets users manage events for an entire month.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
