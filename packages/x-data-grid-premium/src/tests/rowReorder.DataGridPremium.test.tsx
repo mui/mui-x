@@ -693,10 +693,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           </div>,
         );
 
-        // Find John and Jane rows (both in Microsoft/Engineering)
+        // Find John and Jane rows (both in Microsoft/Engineering) and make sure they have right order
         const nameValues = getColumnValues(5);
         const johnIndex = nameValues.indexOf('John');
         const janeIndex = nameValues.indexOf('Jane');
+
+        expect(johnIndex).to.be.lessThan(janeIndex);
 
         const johnRow = getRow(johnIndex);
         const janeRow = getRow(janeIndex);
@@ -721,8 +723,13 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Find John (Engineering) and Alice (Sales) rows
         const nameValues = getColumnValues(5);
+
         const johnIndex = nameValues.indexOf('John');
         const aliceIndex = nameValues.indexOf('Alice');
+        const bobIndex = nameValues.indexOf('Bob');
+
+        // John should be before Bob initially
+        expect(johnIndex).to.be.lessThan(bobIndex);
 
         const johnRow = getRow(johnIndex);
         const aliceRow = getRow(aliceIndex);
@@ -734,10 +741,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const newNameValues = getColumnValues(5);
         const newJohnIndex = newNameValues.indexOf('John');
         const newAliceIndex = newNameValues.indexOf('Alice');
-        const bobIndex = newNameValues.indexOf('Bob'); // Should still be in Engineering
+        const newBobIndex = newNameValues.indexOf('Bob'); // Should still be in Engineering
 
         expect(newJohnIndex).to.be.lessThan(newAliceIndex);
-        expect(newJohnIndex).to.be.greaterThan(bobIndex);
+        expect(newJohnIndex).to.be.greaterThan(newBobIndex);
       });
 
       it('should reorder department groups within company', () => {
@@ -752,6 +759,9 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const engIndex = deptValues.indexOf('Engineering (3)');
         const salesIndex = deptValues.indexOf('Google (3)');
 
+        // Sales should be after Engineering initially
+        expect(salesIndex).to.be.greaterThan(engIndex);
+
         const engRow = getRow(engIndex);
         const googleRow = getRow(salesIndex);
 
@@ -763,6 +773,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const newEngIndex = newDeptValues.indexOf('Engineering (3)');
         const newSalesIndex = newDeptValues.indexOf('Sales (2)');
 
+        // Sales should be before Engineering after the drag
         expect(newSalesIndex).to.be.lessThan(newEngIndex);
       });
 
@@ -799,6 +810,9 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const googleRow = getRow(googleIndex);
         const appleRow = getRow(appleIndex);
 
+        // Google should be before Apple initially
+        expect(googleIndex).to.be.lessThan(appleIndex);
+
         performDragReorder(googleRow, appleRow, 'below');
 
         // Verify new order: Microsoft, Apple, Google
@@ -809,16 +823,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         expect(newMsIndex).to.be.lessThan(newAppleIndex);
         expect(newAppleIndex).to.be.lessThan(newGoogleIndex);
-
-        // Test 2: Verify the group reordering worked correctly
-        const finalValues = getColumnValues(1);
-        const finalMsIndex = finalValues.findIndex((v) => v?.includes('Microsoft ('));
-        const finalAppleIndex = finalValues.findIndex((v) => v?.includes('Apple ('));
-        const finalGoogleIndex = finalValues.findIndex((v) => v?.includes('Google ('));
-
-        // Verify the group order is correct: Microsoft, Apple, Google
-        expect(finalMsIndex).to.be.lessThan(finalAppleIndex);
-        expect(finalAppleIndex).to.be.lessThan(finalGoogleIndex);
       });
 
       it('should auto-expand collapsed groups at multiple levels when leaf is dragged over', async () => {
@@ -1081,6 +1085,9 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
       const null1Row = getRow(null1Index);
       const null2Row = getRow(null2Index);
+
+      // Null1 should be before Null2 initially
+      expect(null1Index).to.be.lessThan(null2Index);
 
       // Reorder within null group
       performDragReorder(null1Row, null2Row, 'below');
@@ -1368,8 +1375,15 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           </div>,
         );
 
-        const itemA1Row = getRow(3);
-        const itemB1Row = getRow(7);
+        const initialNameValues = getColumnValues(3);
+        const initialA1Index = initialNameValues.indexOf('Item A1');
+        const initialB1Index = initialNameValues.indexOf('Item B1');
+
+        // A1 should be before B1 initially
+        expect(initialA1Index).to.be.lessThan(initialB1Index);
+
+        const itemA1Row = getRow(initialA1Index);
+        const itemB1Row = getRow(initialB1Index);
 
         performDragReorder(itemA1Row, itemB1Row, 'above');
 
@@ -1921,11 +1935,15 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Test "above" positioning
         const groupingValues = getColumnValues(1);
+        const companyBIndex = groupingValues.findIndex((v) => v === 'Company B (3)');
         const salesIndex = groupingValues.findIndex((v) => v === 'Sales (1)');
         const engineeringIndex = groupingValues.findIndex((v) => v === 'Engineering (1)');
 
         const salesRow = getRow(salesIndex);
         const engineeringRow = getRow(engineeringIndex);
+
+        // Sales should be before Company B initially
+        expect(salesIndex).to.be.lessThan(companyBIndex);
 
         // Move Sales from Company A to Company B, drop above Engineering
         performDragReorder(salesRow, engineeringRow, 'above');
@@ -1939,6 +1957,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
             expect(salesIdx).to.be.lessThan(engIdx);
           }
         });
+
+        const updateVals = getColumnValues(1);
+        const newCompanyBIndex = updateVals.findIndex((v) => v === 'Company B (4)');
+        expect(newCompanyBIndex).to.be.lessThan(updateVals.findIndex((v) => v === 'Sales (1)'));
 
         // Reset and test "below" positioning
         const marketingIndex = groupingValues.findIndex((v) => v === 'Marketing (1)');
