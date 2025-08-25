@@ -113,6 +113,13 @@ export type SankeyLinkOptions = {
    * @returns {number} Comparison result
    */
   sort?: (a: SankeyLayoutLink, b: SankeyLayoutLink) => number | null;
+  /**
+   * Applies the given number to the X dimension of the control points of the link's curve function.
+   * This can create better looking links between nodes, but is dependent on the graph layout.
+   * It is specially impacted by the chart height.
+   * @default 10
+   */
+  curveCorrection?: number;
 };
 
 export interface SankeyData {
@@ -164,14 +171,6 @@ export interface SankeySeriesType {
    * @default 6
    */
   iterations?: number;
-
-  /**
-   * Applies the given number to the X dimension of the control points of the curve function.
-   * This can create better looking links between nodes, but is dependent on the graph layout.
-   * It is specially impacted by the chart height.
-   * @default 10
-   */
-  curveCorrection?: number;
 }
 
 /**

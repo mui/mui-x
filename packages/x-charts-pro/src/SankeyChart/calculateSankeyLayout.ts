@@ -25,12 +25,9 @@ export function calculateSankeyLayout(
   data: DefaultizedSankeySeriesType['data'],
   drawingArea: ChartDrawingArea,
   theme: Theme,
-  series: Pick<
-    SankeySeriesType,
-    'nodeOptions' | 'linkOptions' | 'iterations' | 'curveCorrection'
-  > = {},
+  series: Pick<SankeySeriesType, 'nodeOptions' | 'linkOptions' | 'iterations'> = {},
 ): SankeyLayout {
-  const { iterations = 6, nodeOptions, linkOptions, curveCorrection = 10 } = series;
+  const { iterations = 6, nodeOptions, linkOptions } = series;
   const {
     width: nodeWidth = 15,
     padding: nodePadding = 10,
@@ -38,8 +35,11 @@ export function calculateSankeyLayout(
     sort: nodeSort = null,
   } = nodeOptions ?? {};
 
-  const { color: linkColor = (theme.vars || theme).palette.text.primary, sort: linkSort = null } =
-    linkOptions ?? {};
+  const {
+    color: linkColor = (theme.vars || theme).palette.text.primary,
+    sort: linkSort = null,
+    curveCorrection = 10,
+  } = linkOptions ?? {};
 
   const { width, height, left, top, bottom, right } = drawingArea;
   if (!data || !data.links) {

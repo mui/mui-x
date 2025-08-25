@@ -20,12 +20,32 @@ export default function SankeyCurveCorrection() {
 
   return (
     <Box sx={{ width: '100%' }}>
+      <SliderHandle
+        curveCorrection={curveCorrection}
+        setCurveCorrection={setCurveCorrection}
+      />
+      <SankeyChart
+        height={400}
+        series={{
+          data,
+          linkOptions: {
+            curveCorrection,
+          },
+        }}
+      />
+    </Box>
+  );
+}
+
+function SliderHandle(props) {
+  return (
+    <>
       <Typography variant="h6" gutterBottom>
-        Curve Correction: {curveCorrection}
+        Curve Correction: {props.curveCorrection}
       </Typography>
       <Slider
-        value={curveCorrection}
-        onChange={(_, value) => setCurveCorrection(value)}
+        value={props.curveCorrection}
+        onChange={(_, value) => props.setCurveCorrection(value)}
         min={-20}
         max={20}
         step={1}
@@ -39,13 +59,6 @@ export default function SankeyCurveCorrection() {
           { value: 20, label: '20' },
         ]}
       />
-      <SankeyChart
-        height={400}
-        series={{
-          data,
-          curveCorrection,
-        }}
-      />
-    </Box>
+    </>
   );
 }
