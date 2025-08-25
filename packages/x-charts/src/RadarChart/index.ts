@@ -22,3 +22,4 @@ export * from './RadarAxis';
 export * from './RadarAxisHighlight';
 export * from './RadarMetricLabels';
 export * from './RadarSeriesPlot';
+export * from './RadarChart.plugins';

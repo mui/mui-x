@@ -23,7 +23,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from './PieChart.plugins';
+import { PIE_CHART_PLUGINS, PieChartPluginsSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface PieChartSlots
@@ -45,7 +45,7 @@ export interface PieChartSlotProps
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
   extends Omit<
-      ChartContainerProps<'pie', PieChartPluginSignatures>,
+      ChartContainerProps<'pie', PieChartPluginsSignatures>,
       'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -119,7 +119,7 @@ const PieChart = React.forwardRef(function PieChart(
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps<
     'pie',
-    PieChartPluginSignatures
+    PieChartPluginsSignatures
   >(
     {
       ...other,
@@ -141,7 +141,7 @@ const PieChart = React.forwardRef(function PieChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
+    <ChartDataProvider<'pie', PieChartPluginsSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
         legendPosition={props.slotProps?.legend?.position}
         legendDirection={props.slotProps?.legend?.direction ?? 'vertical'}
