@@ -57,14 +57,6 @@ export const initialEvents: CalendarEvent[] = [
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
   },
   {
-    id: 'work-board-meeting',
-    start: START_OF_FIRST_WEEK.set({ month: 7, day: 3, hour: 7 }),
-    end: START_OF_FIRST_WEEK.set({ month: 7, day: 3, hour: 8 }),
-    title: 'Board Meeting',
-    resource: 'work',
-    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['1TH', '3TH'] },
-  },
-  {
     id: 'work-ops-oncall-handoff',
     start: START_OF_FIRST_WEEK.set({ month: 7, day: 21, hour: 8 }),
     end: START_OF_FIRST_WEEK.set({ month: 7, day: 21, hour: 9 }),
@@ -79,14 +71,6 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Architecture Forum',
     resource: 'work',
     rrule: { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] },
-  },
-  {
-    id: 'work-payroll-review',
-    start: START_OF_FIRST_WEEK.set({ month: 7, day: 25, hour: 16 }),
-    end: START_OF_FIRST_WEEK.set({ month: 7, day: 25, hour: 17 }),
-    title: 'Payroll Review',
-    resource: 'work',
-    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] },
   },
 
   // Non-recurring work events

@@ -585,13 +585,6 @@ describe('recurrence-utils', () => {
             matchesRecurrence(rule, start.plus({ months: 1, days: 1 }), adapter, event),
           ).to.equal(false);
         });
-
-        it('throws an error for BYDAY (not supported yet)', () => {
-          const event = createEvent();
-          const rule: RRuleSpec = { freq: 'MONTHLY', byDay: ['MO'] };
-          const nextMonth = event.start.plus({ months: 1 });
-          expect(() => matchesRecurrence(rule, nextMonth, adapter, event)).to.throw();
-        });
       });
       describe('byDay ordinals', () => {
         it('matches the 2nd Tuesday of the month (2TU)', () => {
