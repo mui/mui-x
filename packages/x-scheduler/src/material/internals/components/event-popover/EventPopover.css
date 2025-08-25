@@ -64,11 +64,11 @@
 }
 
 .EventPopoverMainContent > :not(:first-child):not(.EventPopoverSeparator) {
-  padding-block-start: var(--space-5);
+  margin-block-start: var(--space-5);
 }
 
 .EventPopoverMainContent > :not(:last-child):not(.EventPopoverSeparator) {
-  padding-block-end: var(--space-5);
+  margin-block-end: var(--space-5);
 }
 
 .EventPopoverSeparator {
@@ -183,8 +183,15 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--primary-5);
+    outline: 2px solid var(--gray-3);
     outline-offset: 2px;
+  }
+
+  &[data-disabled] {
+    cursor: var(--cursor-disabled);
+    &[data-checked] {
+      background-color: var(--disabled-text-color);
+    }
   }
 }
 
@@ -200,4 +207,113 @@
 .AllDayCheckboxIcon {
   width: 0.8rem;
   height: 0.8rem;
+}
+
+.EventPopoverSelectTrigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 10px var(--space-2) var(--space-3);
+  width: fit-content;
+  max-height: var(--space-7);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-4);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.EventPopoverSelectTrigger:focus-visible {
+  outline: 2px solid var(--gray-3);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.EventPopoverSelectIcon {
+  display: flex;
+}
+
+.EventPopoverSelectPositioner {
+  z-index: 10000;
+}
+
+.EventPopoverSelectPopup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-4);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-5);
+  outline: 1px solid var(--border-color);
+}
+
+.EventPopoverSelectItem {
+  background-color: var(--surface);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2);
+  border-radius: var(--radius-3);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.EventPopoverSelectItem:hover,
+.EventPopoverSelectItem[data-highlighted] {
+  background-color: var(--interactive-hover-bg);
+}
+
+.EventPopoverSelectItem[data-selected] {
+  background: var(--interactive-selected-bg);
+}
+
+.EventPopoverSelectItem[data-selected]:hover {
+  background: var(--interactive-selected-hover-bg);
+}
+
+.EventPopoverSelectItem:focus-visible {
+  outline: 2px solid var(--gray-3);
+  outline-offset: var(--outline-focus-offset);
+}
+
+.EventPopoverSelectItemIndicatorIcon {
+  display: block;
+}
+
+.EventPopoverSelectItemText {
+  grid-column: 2;
+}
+
+.EventPopoverFieldRoot[data-disabled] {
+  & input,
+  & textarea {
+    cursor: var(--cursor-disabled);
+    color: var(--disabled-text-color);
+  }
+
+  .EventPopoverSelectTrigger {
+    color: var(--disabled-text-color);
+    cursor: var(--cursor-disabled);
+  }
+
+  .EventPopoverFormLabel,
+  .AllDayCheckboxLabel {
+    color: var(--disabled-text-color);
+  }
+}
+
+.EventPopoverEditDisabledNotice {
+  margin: 0;
+  padding: var(--space-2);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--event-color-9);
+  border: 1px solid var(--event-color-6);
+  border-radius: var(--radius-4);
 }

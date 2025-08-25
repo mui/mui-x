@@ -77,7 +77,7 @@
 /* Smaller containers (month view) */
 @container (width < 300px) {
   .EventCard--compact .DayGridEventCardWrapper {
-    padding: 2px 0 2px var(--space-1);
+    padding: 2px var(--space-4) 2px var(--space-1);
     gap: var(--space-1);
   }
 
@@ -91,5 +91,6 @@
 
   .DayGridEventTitle {
     margin-inline-start: var(--space-1);
+    padding-inline-end: var(--space-3);
   }
 }

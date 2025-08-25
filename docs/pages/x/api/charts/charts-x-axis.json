@@ -4,7 +4,6 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disableLine": { "type": { "name": "bool" }, "default": "false" },
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
-    "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
     "labelStyle": { "type": { "name": "object" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -13,7 +12,6 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
     "tickInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
       "default": "'auto'"
