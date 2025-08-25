@@ -5,7 +5,6 @@ import { useTheme } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import {
   SankeyLayout,
-  type SankeyItemIdentifier,
   type SankeyLinkIdentifierWithData,
   type SankeyNodeIdentifierWithData,
 } from './sankey.types';

@@ -3,11 +3,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
-import {
-  SankeyLayoutLink,
-  type SankeyItemIdentifierWithData,
-  type SankeyLinkIdentifierWithData,
-} from './sankey.types';
+import { SankeyLayoutLink, type SankeyLinkIdentifierWithData } from './sankey.types';
 
 export interface SankeyLinkElementProps {
   /**

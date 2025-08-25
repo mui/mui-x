@@ -4,11 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
-import {
-  SankeyLayoutNode,
-  type SankeyItemIdentifierWithData,
-  type SankeyNodeIdentifierWithData,
-} from './sankey.types';
+import { SankeyLayoutNode, type SankeyNodeIdentifierWithData } from './sankey.types';
 
 export interface SankeyNodeElementProps {
   /**
