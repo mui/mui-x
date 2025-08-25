@@ -8,7 +8,7 @@ import {
   selectorChartsHighlightXAxisValue,
   selectorChartXAxis,
   UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+} from '../plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
 import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';

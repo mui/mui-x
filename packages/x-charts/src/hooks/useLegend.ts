@@ -4,12 +4,12 @@ import {
   ProcessedSeries,
   UseChartSeriesSignature,
   selectorChartSeriesConfig,
-} from '../internals/plugins/corePlugins/useChartSeries';
+} from '../plugins/corePlugins/useChartSeries';
 import { useSeries } from './useSeries';
 import type { LegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { ChartSeriesConfig } from '../internals/plugins/models/seriesConfig';
+import { ChartSeriesConfig } from '../plugins/models/seriesConfig';
 
 function getSeriesToDisplay(
   series: ProcessedSeries,

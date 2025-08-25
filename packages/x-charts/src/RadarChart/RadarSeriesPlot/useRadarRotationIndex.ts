@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { selectorChartPolarCenter } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import { selectorChartPolarCenter } from '../../plugins/featurePlugins/useChartPolarAxis';
 import { getSVGPoint } from '../../internals/getSVGPoint';
-import { generateSvg2rotation } from '../../internals/plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
+import { generateSvg2rotation } from '../../plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 import { useSelector } from '../../internals/store/useSelector';
-import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
+import { getAxisIndex } from '../../plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 import { useStore } from '../../internals/store/useStore';
 import { useSvgRef } from '../../hooks/useSvgRef';
 import { useRotationAxis } from '../../hooks/useAxis';

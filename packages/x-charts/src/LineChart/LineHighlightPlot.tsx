@@ -13,7 +13,7 @@ import { useChartContext } from '../context/ChartProvider';
 import {
   UseChartCartesianAxisSignature,
   selectorChartsHighlightXAxisIndex,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+} from '../plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 export interface LineHighlightPlotSlots {

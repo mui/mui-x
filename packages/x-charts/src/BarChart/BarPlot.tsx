@@ -10,7 +10,7 @@ import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import { useInternalIsZoomInteracting } from '../plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
 

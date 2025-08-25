@@ -11,11 +11,8 @@ import {
   UseChartVoronoiSignature,
   ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
-import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import { useChartProExport, UseChartProExportSignature } from '../plugins/useChartProExport';
+import { useChartProZoom, UseChartProZoomSignature } from '../plugins/useChartProZoom';
 
 export type ScatterChartProPluginsSignatures = [
   UseChartZAxisSignature,

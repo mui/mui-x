@@ -1,4 +1,4 @@
-import type { ZoomSliderShowTooltip } from './plugins/featurePlugins/useChartCartesianAxis/zoom.types';
+import type { ZoomSliderShowTooltip } from '../plugins/featurePlugins/useChartCartesianAxis/zoom.types';
 
 /** Margin in the opposite direction of the axis, i.e., horizontal if the axis is vertical and vice versa. */
 export const ZOOM_SLIDER_MARGIN = 4;

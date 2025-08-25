@@ -2,7 +2,7 @@ import * as React from 'react';
 import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isBandScale } from '../internals/isBandScale';
-import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { ComputedAxisConfig } from '../plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';

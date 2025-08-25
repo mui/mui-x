@@ -5,10 +5,7 @@ import {
   useChartInteraction,
   UseChartInteractionSignature,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
+import { useChartProExport, UseChartProExportSignature } from '../plugins/useChartProExport';
 import { useChartFunnelAxis } from './funnelAxisPlugin/useChartFunnelAxis';
 import { UseChartFunnelAxisSignature } from './funnelAxisPlugin/useChartFunnelAxis.types';
 

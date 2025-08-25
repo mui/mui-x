@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { UseChartHighlightSignature } from '../plugins/featurePlugins/useChartHighlight';
+import { UseChartInteractionSignature } from '../plugins/featurePlugins/useChartInteraction';
 import { ChartSeriesType, type ChartItemIdentifierWithData } from '../models/seriesType/config';
-import { ChartInstance } from '../internals/plugins/models';
+import { ChartInstance } from '../plugins/models';
 
 function onPointerDown(event: React.PointerEvent) {
   if (

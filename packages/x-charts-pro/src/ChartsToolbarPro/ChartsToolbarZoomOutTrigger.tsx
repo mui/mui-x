@@ -10,10 +10,7 @@ import {
   UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
-import {
-  selectorChartCanZoomOut,
-  UseChartProZoomSignature,
-} from '../internals/plugins/useChartProZoom';
+import { selectorChartCanZoomOut, UseChartProZoomSignature } from '../plugins/useChartProZoom';
 
 interface ChartsToolbarZoomOutTriggerProps {
   /**

@@ -3,7 +3,7 @@ import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { SeriesId } from '../../models/seriesType/common';
-import { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import { UseChartPolarAxisSignature } from '../../plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 
 /**

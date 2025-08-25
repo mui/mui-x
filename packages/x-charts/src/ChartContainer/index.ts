@@ -1,6 +1,6 @@
 import type { ChartApi as ChartApiOriginal, PluginsPerSeriesType } from '../context/ChartApi';
-import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
-import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { ChartAnyPluginSignature } from '../plugins/models/plugin';
+import type { AllPluginSignatures } from '../plugins/allPlugins';
 
 export * from './ChartContainer';
 

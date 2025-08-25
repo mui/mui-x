@@ -48,7 +48,4 @@ export * from './RadarChartPro';
 export * from './ChartZoomSlider';
 export * from './ChartsToolbarPro';
 
-export type {
-  ChartImageExportOptions,
-  ChartPrintExportOptions,
-} from './internals/plugins/useChartProExport';
+export * from './plugins';

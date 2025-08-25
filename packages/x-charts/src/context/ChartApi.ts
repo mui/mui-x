@@ -2,9 +2,9 @@ import type { PieChartPluginSignatures } from '../PieChart/PieChart.plugins';
 import type { BarChartPluginsSignatures } from '../BarChart/BarChart.plugins';
 import type { ScatterChartPluginsSignatures } from '../ScatterChart/ScatterChart.plugins';
 import type { LineChartPluginsSignatures } from '../LineChart/LineChart.plugins';
-import type { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
-import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
-import type { ChartPublicAPI } from '../internals/plugins/models';
+import type { AllPluginSignatures, DefaultPluginSignatures } from '../plugins/allPlugins';
+import type { ChartAnyPluginSignature } from '../plugins/models/plugin';
+import type { ChartPublicAPI } from '../plugins/models';
 
 export type PluginsPerSeriesType = {
   line: LineChartPluginsSignatures;

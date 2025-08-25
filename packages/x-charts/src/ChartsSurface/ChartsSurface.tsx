@@ -10,7 +10,7 @@ import { useStore } from '../internals/store/useStore';
 import {
   selectorChartContainerSize,
   selectorChartPropsSize,
-} from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
+} from '../plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export interface ChartsSurfaceProps
   extends Omit<

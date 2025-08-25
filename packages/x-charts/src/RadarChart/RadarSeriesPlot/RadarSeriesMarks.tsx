@@ -6,7 +6,7 @@ import { RadarSeriesMarksProps } from './RadarSeriesPlot.types';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { SeriesId } from '../../models/seriesType/common';
-import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import { HighlightItemData } from '../../plugins/featurePlugins/useChartHighlight';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;

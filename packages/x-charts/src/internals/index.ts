@@ -21,19 +21,19 @@ export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './createSeriesSelectorOfType';
 
 // plugins
-export * from './plugins/corePlugins/useChartId';
-export * from './plugins/corePlugins/useChartSeries';
-export * from './plugins/corePlugins/useChartDimensions';
-export * from './plugins/corePlugins/useChartInteractionListener';
-export * from './plugins/featurePlugins/useChartZAxis';
-export * from './plugins/featurePlugins/useChartCartesianAxis';
-export * from './plugins/featurePlugins/useChartPolarAxis';
-export * from './plugins/featurePlugins/useChartInteraction';
-export * from './plugins/featurePlugins/useChartHighlight';
-export * from './plugins/featurePlugins/useChartVoronoi';
-export * from './plugins/utils/selectors';
-export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
-export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
+export * from '../plugins/corePlugins/useChartId';
+export * from '../plugins/corePlugins/useChartSeries';
+export * from '../plugins/corePlugins/useChartDimensions';
+export * from '../plugins/corePlugins/useChartInteractionListener';
+export * from '../plugins/featurePlugins/useChartZAxis';
+export * from '../plugins/featurePlugins/useChartCartesianAxis';
+export * from '../plugins/featurePlugins/useChartPolarAxis';
+export * from '../plugins/featurePlugins/useChartInteraction';
+export * from '../plugins/featurePlugins/useChartHighlight';
+export * from '../plugins/featurePlugins/useChartVoronoi';
+export * from '../plugins/utils/selectors';
+export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from '../plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
+export { getAxisIndex as getCartesianAxisIndex } from '../plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 
 export * from './store/useCharts';
 export * from './store/useStore';
@@ -67,7 +67,7 @@ export * from './isBandScale';
 export * from './findMinMax';
 
 // contexts
-export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
+export { getAxisExtremum } from '../plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
 export * from '../context/ChartProvider';
 export * from '../context/ChartsSlotsContext';
 
@@ -78,7 +78,7 @@ export * from '../models/seriesType/common';
 export * from '../models/z-axis';
 export * from '../models/axis';
 
-export * from './plugins/models';
+export * from '../plugins/models';
 export * from './material';
 export * from './createSvgIcon';
 

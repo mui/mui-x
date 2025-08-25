@@ -11,12 +11,12 @@ import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
 import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartsInteractionItemIsDefined } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { selectorChartsInteractionItemIsDefined } from '../plugins/featurePlugins/useChartInteraction';
 import {
   selectorChartsInteractionAxisTooltip,
   UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
+} from '../plugins/featurePlugins/useChartCartesianAxis';
+import { selectorChartsInteractionPolarAxisTooltip } from '../plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
 

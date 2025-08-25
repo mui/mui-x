@@ -5,11 +5,11 @@ import { useSelector } from '../internals/store/useSelector';
 import {
   selectorChartsIsFaded,
   selectorChartsIsHighlighted,
-} from '../internals/plugins/featurePlugins/useChartHighlight';
+} from '../plugins/featurePlugins/useChartHighlight';
 import {
   HighlightItemData,
   UseChartHighlightSignature,
-} from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
+} from '../plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
 
 type UseItemHighlightedReturnType = {
   /**

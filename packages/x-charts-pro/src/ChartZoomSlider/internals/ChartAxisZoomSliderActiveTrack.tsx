@@ -17,10 +17,7 @@ import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { shouldForwardProp } from '@mui/system';
-import {
-  selectorChartAxisZoomData,
-  UseChartProZoomSignature,
-} from '../../internals/plugins/useChartProZoom';
+import { selectorChartAxisZoomData, UseChartProZoomSignature } from '../../plugins/useChartProZoom';
 import { ChartAxisZoomSliderThumb } from './ChartAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';

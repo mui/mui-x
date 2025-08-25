@@ -4,8 +4,8 @@ import { ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
 import { MaskData, ProcessedBarSeriesData } from './types';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
-import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
-import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
+import { SeriesProcessorResult } from '../plugins/models/seriesConfig/seriesProcessor.types';
+import { ComputedAxisConfig } from '../plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,

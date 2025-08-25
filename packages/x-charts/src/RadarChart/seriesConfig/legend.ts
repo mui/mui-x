@@ -1,6 +1,6 @@
 import { LegendItemParams } from '../../ChartsLegend/legendContext.types';
 import { getLabel } from '../../internals/getLabel';
-import { LegendGetter } from '../../internals/plugins/models/seriesConfig';
+import { LegendGetter } from '../../plugins/models/seriesConfig';
 
 const legendGetter: LegendGetter<'radar'> = (params) => {
   const { seriesOrder, series } = params;

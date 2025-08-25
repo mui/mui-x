@@ -5,10 +5,10 @@ import type {
   ChartPublicAPI,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
-} from '../../internals/plugins/models';
-import type { ChartStore } from '../../internals/plugins/utils/ChartStore';
-import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
-import type { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
+} from '../../plugins/models';
+import type { ChartStore } from '../../plugins/utils/ChartStore';
+import type { ChartCorePluginSignatures } from '../../plugins/corePlugins';
+import type { ChartSeriesConfig } from '../../plugins/models/seriesConfig';
 import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
 import type { ChartSeriesType } from '../../models/seriesType/config';
 

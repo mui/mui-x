@@ -1,5 +1,5 @@
 import { ScatterValueType } from '../../models';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { SeriesProcessor } from '../../plugins/models';
 
 const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
   const completeSeries = Object.fromEntries(

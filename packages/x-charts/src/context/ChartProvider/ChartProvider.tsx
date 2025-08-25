@@ -3,15 +3,12 @@ import * as React from 'react';
 import { useCharts } from '../../internals/store/useCharts';
 import type { ChartProviderProps } from './ChartProvider.types';
 import { ChartContext } from './ChartContext';
-import {
-  ChartAnyPluginSignature,
-  ConvertSignaturesIntoPlugins,
-} from '../../internals/plugins/models';
-import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
-import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
-import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
-import { useChartHighlight } from '../../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight';
+import { ChartAnyPluginSignature, ConvertSignaturesIntoPlugins } from '../../plugins/models';
+import { ChartSeriesConfig } from '../../plugins/models/seriesConfig';
+import { useChartCartesianAxis } from '../../plugins/featurePlugins/useChartCartesianAxis';
+import { useChartInteraction } from '../../plugins/featurePlugins/useChartInteraction';
+import { useChartZAxis } from '../../plugins/featurePlugins/useChartZAxis';
+import { useChartHighlight } from '../../plugins/featurePlugins/useChartHighlight/useChartHighlight';
 import { seriesConfig as barSeriesConfig } from '../../BarChart/seriesConfig';
 import { seriesConfig as scatterSeriesConfig } from '../../ScatterChart/seriesConfig';
 import { seriesConfig as lineSeriesConfig } from '../../LineChart/seriesConfig';

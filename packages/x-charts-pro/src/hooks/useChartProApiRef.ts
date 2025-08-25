@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ChartAnyPluginSignature } from '@mui/x-charts/internals';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { AllPluginSignatures } from '../plugins/allPlugins';
 import { ProPluginsPerSeriesType, type ChartProApi } from '../context/ChartProApi';
 
 /**

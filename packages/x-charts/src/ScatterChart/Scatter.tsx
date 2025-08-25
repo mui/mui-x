@@ -12,14 +12,14 @@ import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import {
   selectorChartsVoronoiIsVoronoiEnabled,
   UseChartVoronoiSignature,
-} from '../internals/plugins/featurePlugins/useChartVoronoi';
+} from '../plugins/featurePlugins/useChartVoronoi';
 import { ScatterMarker } from './ScatterMarker';
-import { ColorGetter } from '../internals/plugins/models/seriesConfig';
+import { ColorGetter } from '../plugins/models/seriesConfig';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { UseChartInteractionSignature } from '../plugins/featurePlugins/useChartInteraction';
+import { UseChartHighlightSignature } from '../plugins/featurePlugins/useChartHighlight';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;

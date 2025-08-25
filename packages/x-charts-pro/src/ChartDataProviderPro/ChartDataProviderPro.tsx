@@ -13,7 +13,7 @@ import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { ChartsSlotPropsPro, ChartsSlotsPro, defaultSlotsMaterial } from '../internals/material';
-import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import { AllPluginSignatures, DEFAULT_PLUGINS } from '../plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 
 const releaseInfo = '__RELEASE_INFO__';

@@ -3,10 +3,10 @@ import { HeatmapPluginsSignatures } from '../Heatmap/Heatmap.plugins';
 import { LineChartProPluginsSignatures } from '../LineChartPro/LineChartPro.plugins';
 import { ScatterChartProPluginsSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
 import { BarChartProPluginsSignatures } from '../BarChartPro/BarChartPro.plugins';
-import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
 import { FunnelChartPluginsSignatures } from '../FunnelChart/FunnelChart.plugins';
 import { RadarChartProPluginsSignatures } from '../RadarChartPro/RadarChartPro.plugins';
 import { PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
+import { AllPluginSignatures, DefaultPluginSignatures } from '../plugins/allPlugins';
 
 export type ProPluginsPerSeriesType = {
   heatmap: HeatmapPluginsSignatures;

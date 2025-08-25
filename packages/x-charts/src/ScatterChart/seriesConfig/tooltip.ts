@@ -1,5 +1,5 @@
 import { getLabel } from '../../internals/getLabel';
-import type { TooltipGetter } from '../../internals/plugins/models';
+import type { TooltipGetter } from '../../plugins/models';
 
 const tooltipGetter: TooltipGetter<'scatter'> = (params) => {
   const { series, getColor, identifier } = params;

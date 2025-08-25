@@ -20,7 +20,7 @@ import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
-import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
+import { ChartMargin } from '../plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,

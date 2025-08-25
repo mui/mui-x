@@ -4,7 +4,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
 import { useChartProApiContext } from '../context';
-import { ChartPrintExportOptions } from '../internals/plugins/useChartProExport';
+import { ChartPrintExportOptions } from '../plugins/useChartProExport';
 import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 
 export interface ChartsToolbarPrintExportOptions extends ChartPrintExportOptions {

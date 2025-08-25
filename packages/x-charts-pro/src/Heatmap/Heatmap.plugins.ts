@@ -9,10 +9,7 @@ import {
   UseChartHighlightSignature,
   ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
-import {
-  useChartProExport,
-  UseChartProExportSignature,
-} from '../internals/plugins/useChartProExport';
+import { useChartProExport, UseChartProExportSignature } from '../plugins/useChartProExport';
 
 export type HeatmapPluginsSignatures = [
   UseChartZAxisSignature,

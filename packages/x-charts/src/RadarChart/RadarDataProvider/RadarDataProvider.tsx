@@ -9,7 +9,7 @@ import { ChartDataProvider, ChartDataProviderProps } from '../../ChartDataProvid
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import { radarSeriesConfig } from '../seriesConfig';
 import { RadarConfig } from './radar.types';
-import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
+import { ChartAnyPluginSignature } from '../../plugins/models/plugin';
 
 const RADAR_SERIES_CONFIG = { radar: radarSeriesConfig };
 const DEFAULT_RADAR_MARGIN = { top: 30, bottom: 30, left: 50, right: 50 };

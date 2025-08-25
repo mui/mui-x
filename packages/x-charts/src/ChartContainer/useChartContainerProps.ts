@@ -4,8 +4,8 @@ import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../plugins/models/plugin';
 
 export type UseChartContainerPropsReturnValue<
   TSeries extends ChartSeriesType,

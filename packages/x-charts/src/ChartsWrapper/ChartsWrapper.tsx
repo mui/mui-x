@@ -7,7 +7,7 @@ import { Direction } from '../ChartsLegend';
 import { Position } from '../models';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
+import { selectorChartPropsSize } from '../plugins/corePlugins/useChartDimensions';
 
 export interface ChartsWrapperProps {
   /**

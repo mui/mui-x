@@ -1,5 +1,5 @@
 'use client';
-import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
+import { ProcessedSeries } from '../plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { SeriesId } from '../models/seriesType/common';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
 import {
