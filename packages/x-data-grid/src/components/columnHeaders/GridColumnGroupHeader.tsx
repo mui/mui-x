@@ -147,7 +147,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     if (hasFocus) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
-      elementToFocus?.focus();
+      elementToFocus?.focus({ preventScroll: true });
     }
   }, [apiRef, hasFocus]);
 
