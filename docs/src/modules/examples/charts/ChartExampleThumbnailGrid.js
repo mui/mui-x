@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import CodeIcon from '@mui/icons-material/Code';
 import Tooltip from '@mui/material/Tooltip';
 
-export function ChartThumbnailCard({ title, ChartComponent, link }) {
+export function ChartThumbnailCard({ title, ChartComponent, link, aspectRatio = '80%' }) {
   return (
     <Paper
       variant="outlined"
@@ -15,7 +15,7 @@ export function ChartThumbnailCard({ title, ChartComponent, link }) {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        padding: '10px 0',
+        padding: '10px',
         overflow: 'hidden',
         borderRadius: 0,
         borderWidth: 0.5,
@@ -29,12 +29,7 @@ export function ChartThumbnailCard({ title, ChartComponent, link }) {
           justifyContent: 'space-between',
         }}
       >
-        <Typography
-          fontFamily={'IBM Plex Sans'}
-          fontWeight="medium"
-          variant="body1"
-          color="text.primary"
-        >
+        <Typography fontFamily={'IBM Plex Sans'} variant="body1" color="text.primary">
           {title}
         </Typography>
         {link && (
@@ -66,7 +61,7 @@ export function ChartThumbnailCard({ title, ChartComponent, link }) {
         sx={{
           width: '100%',
           height: 0,
-          paddingBottom: '70%',
+          paddingBottom: aspectRatio,
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -98,6 +93,7 @@ export function ChartThumbnailCard({ title, ChartComponent, link }) {
 }
 
 ChartThumbnailCard.propTypes = {
+  aspectRatio: PropTypes.string,
   ChartComponent: PropTypes.elementType.isRequired,
   link: PropTypes.string,
   title: PropTypes.string.isRequired,

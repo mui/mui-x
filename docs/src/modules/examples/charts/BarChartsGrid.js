@@ -55,6 +55,7 @@ export default function BarChartsGrid() {
           title={chart.title}
           link={chart.link}
           ChartComponent={chart.ChartComponent}
+          aspectRatio={chart.title === 'Population Pyramid Bar Chart' ? '90%' : undefined} // temporary fix to avoid Y axis labels from being cramped
         />
       ))}
     </ChartThumbnailGridWrapper>
