@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import {
   initialEvents,
