@@ -35,7 +35,7 @@ The scheduler expands recurring events only for the visible range, keeps the ori
 - `MONTHLY` in two modes:
   - `byMonthDay` with a single day number. Months without that day are skipped automatically.
 
-  - `byDay` with ordinal entries like `2TU` or `-1FR`. Mixing `byDay` and `byMonthDay` is not supported.
+  - `byDay` with a single ordinal entry like `2TU` or `-1FR`. Mixing `byDay` and `byMonthDay` is not supported.
 
 - `YEARLY` on the same calendar date as the start. Advanced selectors such as `byMonth`, `byMonthDay` or `byDay` are not supported for yearly yet.
 
