@@ -3,6 +3,28 @@ import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { RadarChart, RadarAxis } from '@mui/x-charts/RadarChart';
 
+function getTextAnchor(textAnchor) {
+  switch (textAnchor) {
+    case 'default':
+      return undefined;
+    case 'function':
+      return (angle) => (angle < 180 ? 'start' : 'end');
+    default:
+      return textAnchor;
+  }
+}
+
+function getTextAnchorCode(textAnchor) {
+  switch (textAnchor) {
+    case 'default':
+      return '';
+    case 'function':
+      return `textAnchor={(angle) => angle < 180 ? 'start' : 'end'}`;
+    default:
+      return `textAnchor="${textAnchor}"`;
+  }
+}
+
 export default function DemoRadarAxis() {
   return (
     <ChartsUsageDemo
@@ -55,19 +77,15 @@ export default function DemoRadarAxis() {
               metric="Math"
               labelOrientation={props.labelOrientation}
               angle={props.angle}
-              textAnchor={
-                (props.textAnchor === 'default' && undefined) ||
-                (props.textAnchor === 'function' &&
-                  ((angle) => (angle < 180 ? 'start' : 'end'))) ||
-                props.textAnchor
-              }
+              textAnchor={getTextAnchor(props.textAnchor)}
               divisions={props.divisions}
             />
           </RadarChart>
         </Box>
       )}
-      getCode={({ props }) =>
-        [
+      getCode={({ props }) => {
+        const textAnchorCode = getTextAnchorCode(props.textAnchor);
+        return [
           `import { RadarChart, RadarAxis } from '@mui/x-charts/RadarChart';`,
           '',
           '<RadarChart>',
@@ -76,14 +94,11 @@ export default function DemoRadarAxis() {
           `    divisions={${props.divisions}}`,
           `    labelOrientation="${props.labelOrientation}"`,
           `    angle="${props.angle}"`,
-          ...((props.textAnchor === 'default' && []) ||
-            (props.textAnchor === 'function' && [
-              `    textAnchor={(angle) => angle < 180 ? 'start' : 'end'}`,
-            ]) || [`    textAnchor="${props.textAnchor}"`]),
+          ...(textAnchorCode ? [`    ${textAnchorCode}`] : []),
           '  />',
           '</RadarChart>',
-        ].join('\n')
-      }
+        ].join('\n');
+      }}
     />
   );
 }
