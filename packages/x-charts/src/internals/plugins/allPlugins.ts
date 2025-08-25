@@ -24,6 +24,7 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartVoronoiSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
 export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
