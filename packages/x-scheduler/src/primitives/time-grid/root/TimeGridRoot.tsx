@@ -1,11 +1,16 @@
 'use client';
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { Store } from '@base-ui-components/utils/store';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { SchedulerValidDate } from '../../models';
+import { CalendarPrimitiveEventData } from '../../models';
 import { TimeGridRootContext } from './TimeGridRootContext';
 import { useAdapter } from '../../utils/adapter/useAdapter';
+import { State } from './store';
+import { useSetPlaceholder } from '../../utils/useSetPlaceholder';
 
 export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   componentProps: TimeGridRoot.Props,
@@ -23,41 +28,29 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
     ...elementProps
   } = componentProps;
 
-  const [placeholder, setPlaceholder] = React.useState<TimeGridRoot.EventData | null>(null);
-
-  const handlePlaceholderChange = useEventCallback(
-    (newPlaceholder: TimeGridRoot.EventData | null) => {
-      if (
-        newPlaceholder != null &&
-        placeholder != null &&
-        adapter.isEqual(newPlaceholder.start, placeholder.start) &&
-        adapter.isEqual(newPlaceholder.end, placeholder.end) &&
-        placeholder.eventId === newPlaceholder.eventId &&
-        placeholder.columnId === newPlaceholder.columnId
-      ) {
-        return;
-      }
-
-      setPlaceholder(newPlaceholder);
-    },
-  );
+  const store = useRefWithInit(() => new Store<State>({ placeholder: null, adapter })).current;
+  const setPlaceholder = useSetPlaceholder(store);
 
   const props = React.useMemo(() => ({ role: 'grid' }), []);
 
   const state: TimeGridRoot.State = React.useMemo(() => ({}), []);
+
+  const updateEvent = useEventCallback(onEventChangeProp);
+
+  const contextValue: TimeGridRootContext = React.useMemo(
+    () => ({ updateEvent, setPlaceholder, store }),
+    [updateEvent, setPlaceholder, store],
+  );
+
+  useIsoLayoutEffect(() => {
+    store.apply({ adapter });
+  }, [store, adapter]);
 
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
-
-  const onEventChange = useEventCallback(onEventChangeProp);
-
-  const contextValue: TimeGridRootContext = React.useMemo(
-    () => ({ onEventChange, placeholder, setPlaceholder: handlePlaceholderChange }),
-    [onEventChange, placeholder, handlePlaceholderChange],
-  );
 
   return (
     <TimeGridRootContext.Provider value={contextValue}>{element}</TimeGridRootContext.Provider>
@@ -68,13 +61,10 @@ export namespace TimeGridRoot {
   export interface State {}
 
   export interface Props extends BaseUIComponentProps<'div', State> {
-    onEventChange?: (data: EventData) => void;
-  }
-
-  export interface EventData {
-    eventId: string | number;
-    columnId: string | null;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    /**
+     * Event handler called when an event is changed.
+     * Provides the new event data as an argument.
+     */
+    onEventChange?: (data: CalendarPrimitiveEventData) => void;
   }
 }

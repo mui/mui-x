@@ -104,3 +104,13 @@ export type CalendarEventColor =
   | 'pink'
   | 'indigo'
   | 'blue';
+
+/**
+ * Object forwarded to the `onEventChange` handler of the Day Grid Root and Time Grid Root parts.
+ */
+export interface CalendarPrimitiveEventData {
+  eventId: string | number;
+  columnId: string | null;
+  start: SchedulerValidDate;
+  end: SchedulerValidDate;
+}
