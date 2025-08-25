@@ -5,7 +5,7 @@
  */
 
 // Export core classes
-export { Gesture, type PointerMode } from './Gesture';
+export { Gesture } from './Gesture';
 export { GestureManager } from './GestureManager';
 export { KeyboardManager, type KeyboardKey } from './KeyboardManager';
 export { PointerGesture } from './PointerGesture';
@@ -21,7 +21,14 @@ export { TapGesture } from './gestures/TapGesture';
 export { TurnWheelGesture } from './gestures/TurnWheelGesture';
 
 // Export types
-export type { GestureEventData, GestureOptions, GesturePhase, GestureState } from './Gesture';
+export type {
+  GestureEventData,
+  GestureOptions,
+  GesturePhase,
+  GestureState,
+  PointerMode,
+  BaseGestureOptions,
+} from './Gesture';
 export type { PointerGestureEventData, PointerGestureOptions } from './PointerGesture';
 
 export type { PointerData, PointerManagerOptions } from './PointerManager';
