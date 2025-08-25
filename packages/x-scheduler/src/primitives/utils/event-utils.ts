@@ -1,7 +1,7 @@
 import {
   SchedulerValidDate,
   CalendarEvent,
-  CalendarEventOccurrenceWithPosition,
+  CalendarEventOccurrencesWithRowIndex,
   CalendarEventOccurrence,
 } from '../models';
 import { Adapter } from './adapter/types';
@@ -11,12 +11,12 @@ import { Adapter } from './adapter/types';
  *  Useful to know how many stacked rows are already used for a given day.
  *  @returns Highest row index found, or 0 if none.
  */
-export function getEventWithLargestRowIndex(events: CalendarEventOccurrenceWithPosition[]) {
+export function getEventWithLargestRowIndex(events: CalendarEventOccurrencesWithRowIndex[]) {
   return (
     events.reduce(
       (maxEvent, event) =>
         (event?.eventRowIndex ?? 0) > (maxEvent.eventRowIndex ?? 0) ? event : maxEvent,
-      { eventRowIndex: 0 } as CalendarEventOccurrenceWithPosition,
+      { eventRowIndex: 0 } as CalendarEventOccurrencesWithRowIndex,
     ).eventRowIndex || 0
   );
 }
@@ -44,7 +44,7 @@ export function getEventRowIndex(
   event: CalendarEventOccurrence,
   day: SchedulerValidDate,
   days: SchedulerValidDate[],
-  daysMap: Map<string, { allDayEvents: CalendarEventOccurrenceWithPosition[] }>,
+  daysMap: Map<string, { allDayEvents: CalendarEventOccurrencesWithRowIndex[] }>,
   adapter: Adapter,
 ): number {
   const dayKey = adapter.format(day, 'keyboardDate');

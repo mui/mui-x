@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { CalendarEventOccurrenceWithPosition } from '@mui/x-scheduler/primitives/models';
+import { CalendarEventOccurrencesWithRowIndex } from '@mui/x-scheduler/primitives/models';
 import {
   getEventDays,
   getEventRowIndex,
@@ -14,7 +14,7 @@ describe('event-utils', () => {
     id: string,
     start: string,
     end: string,
-  ): CalendarEventOccurrenceWithPosition => ({
+  ): CalendarEventOccurrencesWithRowIndex => ({
     id,
     key: id,
     start: adapter.date(start),
@@ -25,7 +25,7 @@ describe('event-utils', () => {
 
   describe('getEventWithLargestRowIndex', () => {
     it('should return the largest row index from events', () => {
-      const events: CalendarEventOccurrenceWithPosition[] = [
+      const events: CalendarEventOccurrencesWithRowIndex[] = [
         {
           id: '1',
           key: '1',
@@ -60,7 +60,7 @@ describe('event-utils', () => {
     });
 
     it('should return 0 when events array is empty', () => {
-      const events: CalendarEventOccurrenceWithPosition[] = [];
+      const events: CalendarEventOccurrencesWithRowIndex[] = [];
 
       const result = getEventWithLargestRowIndex(events);
 
@@ -68,7 +68,7 @@ describe('event-utils', () => {
     });
 
     it('should return 0 when all events have undefined eventRowIndex', () => {
-      const eventsWithUndefinedRowIndex: CalendarEventOccurrenceWithPosition[] = [
+      const eventsWithUndefinedRowIndex: CalendarEventOccurrencesWithRowIndex[] = [
         {
           id: '1',
           key: '1',
@@ -95,7 +95,7 @@ describe('event-utils', () => {
     });
 
     it('should handle mix of defined and undefined eventRowIndex values', () => {
-      const events: CalendarEventOccurrenceWithPosition[] = [
+      const events: CalendarEventOccurrencesWithRowIndex[] = [
         {
           id: '1',
           key: '1',
@@ -181,7 +181,7 @@ describe('event-utils', () => {
       start: string,
       end: string,
       eventRowIndex: number,
-    ): CalendarEventOccurrenceWithPosition => ({
+    ): CalendarEventOccurrencesWithRowIndex => ({
       ...createEvent(id, start, end),
       eventRowIndex,
     });

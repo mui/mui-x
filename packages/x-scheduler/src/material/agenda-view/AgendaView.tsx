@@ -6,7 +6,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { AGENDA_VIEW_DAYS_AMOUNT, selectors } from '../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
