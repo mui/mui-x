@@ -193,7 +193,7 @@ Luxon is not able to respect the leading zeroes when using macro tokens (for exa
 
 ### Custom field placeholder
 
-When a section is empty, the fields displays its placeholder instead of an empty value.
+When a section is empty, the field displays its placeholder instead of an empty value.
 For example, if you did not fill any value for the `year` section, the field will render the year placeholder.
 
 These placeholders are based on your current component localization, not on your date localization.
@@ -239,8 +239,8 @@ This prop is available on all pickers.
 ### Custom day of week format
 
 Use `dayOfWeekFormatter` to customize day names in the calendar header.
-This prop takes two parameters, `day` (a string with the name of the day) and `date` ( the day in the format of your date library) and returns the formatted string to display.
-The default formatter only keeps the first letter of the name and capitalises it.
+This prop takes two parameters, `day` (a string with the name of the day) and `date` (the day in the format of your date library), and returns the formatted string to display.
+The default formatter only keeps the first letter of the name and capitalizes it.
 
 :::warning
 The first parameter `day` will be removed in v7 in favor of the second parameter `date` for more flexibility.

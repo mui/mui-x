@@ -16,13 +16,13 @@ See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-compon
 
 ## Default layout structure
 
-By default, pickers are made of 5 subcomponents present in the following order:
+By default, pickers are made of five subcomponents present in the following order:
 
-- The **toolbar** displaying the selected date. Can be enforced with `slotProps: { toolbar: { hidden: false } }` prop.
-- The **shortcuts** allowing quick selection of some values. Can be added with [`slotProps.shortcuts`](/x/react-date-pickers/shortcuts/#adding-shortcuts)
-- The **content** displaying the current view. Can be a calendar, or a clock.
-- The **tabs** allowing to switch between day and time views in Date Time Pickers. Can be enforced with `slotProps: { tabs: { hidden: false } }` prop.
-- The **action bar** allowing some interactions. Can be added with [`slotProps.actionBar`](/x/react-date-pickers/custom-components/#action-bar) prop.
+- The **toolbar** displays the selected date. Can be enforced with `slotProps: { toolbar: { hidden: false } }` prop.
+- The **shortcuts** let users quickly select some values. Can be added with [`slotProps.shortcuts`](/x/react-date-pickers/shortcuts/#adding-shortcuts)
+- The **content** displays the current view. Can be a calendar, or a clock.
+- The **tabs** let users switch between day and time views in Date Time Pickers. Can be enforced with `slotProps: { tabs: { hidden: false } }` prop.
+- The **action bar** lets users perform some interactions. Can be added with [`slotProps.actionBar`](/x/react-date-pickers/custom-components/#action-bar) prop.
 
 By default the `content` and `tabs` are wrapped together in a `contentWrapper` to simplify the layout.
 

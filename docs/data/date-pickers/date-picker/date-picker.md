@@ -19,7 +19,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 The component is built using the `DateField` for the keyboard editing and the `DateCalendar` for the view editing.
 
-Check-out their documentation page for more information:
+Check out their documentation page for more information:
 
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
@@ -96,8 +96,7 @@ Use the `openTo` prop to change this behavior:
 
 :::success
 The views will appear in the order defined by the `views` array.
-If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow
-(for example view the default behaviors, the `year` is only accessible when clicking on the toolbar).
+If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow (for example, viewing the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
 
 ## Order of years
