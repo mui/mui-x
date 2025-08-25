@@ -3,7 +3,7 @@ title: React Treemap chart
 productId: x-charts
 ---
 
-# Charts - Treemap 🚧
+# Charts - Treemap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
 <p class="description">Treemap allows to display data with a hierarchical structure.</p>
 

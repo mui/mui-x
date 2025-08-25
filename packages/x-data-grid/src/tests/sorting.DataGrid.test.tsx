@@ -792,4 +792,33 @@ describe('<DataGrid /> - Sorting', () => {
       expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);
     });
   });
+
+  describe('Header class names', () => {
+    it('should have the sortable class when the column is sortable', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand', sortable: true }]} />
+        </div>,
+      );
+      expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--sortable');
+    });
+
+    it('should not have the sortable class when the column is not sortable', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand', sortable: false }]} />
+        </div>,
+      );
+      expect(getColumnHeaderCell(0)).not.to.have.class('MuiDataGrid-columnHeader--sortable');
+    });
+
+    it('should not have the sortable class when column sorting is disabled', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} disableColumnSorting columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+      expect(getColumnHeaderCell(0)).not.to.have.class('MuiDataGrid-columnHeader--sortable');
+    });
+  });
 });

@@ -135,7 +135,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           <ChartsAxisHighlight {...axisHighlightProps} />
           {children}
         </ChartsSurface>
-        {!props.loading && <Tooltip trigger="item" {...props?.slotProps?.tooltip} />}
+        {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -363,6 +363,7 @@ ScatterChartPro.propTypes = {
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
             tickSize: PropTypes.number,
           }),
         ),
@@ -461,6 +462,7 @@ ScatterChartPro.propTypes = {
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
             tickSize: PropTypes.number,
           }),
         ),
@@ -1152,6 +1154,7 @@ ScatterChartPro.propTypes = {
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
             tickSize: PropTypes.number,
           }),
         ),
@@ -1249,6 +1252,7 @@ ScatterChartPro.propTypes = {
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
+            tickLabelStyle: PropTypes.object,
             tickSize: PropTypes.number,
           }),
         ),

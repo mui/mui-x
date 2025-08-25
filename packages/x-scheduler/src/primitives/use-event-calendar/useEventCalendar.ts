@@ -23,6 +23,7 @@ import { useAssertStateValidity } from '../utils/useAssertStateValidity';
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
 const EMPTY_ARRAY: any[] = [];
 
 export function useEventCalendar(
@@ -47,7 +48,7 @@ export function useEventCalendar(
     areEventsDraggable = false,
     areEventsResizable = false,
     ampm = true,
-    settings: settingsProp = { hideWeekends: false },
+    settings: settingsProp = DEFAULT_SETTINGS,
   } = parameters;
 
   const store = useRefWithInit(
@@ -188,9 +189,14 @@ export function useEventCalendar(
     },
   );
 
-  const setSettings: useEventCalendar.Instance['setSettings'] = useEventCallback((settings, _) => {
-    store.set('settings', settings);
-  });
+  const setSettings: useEventCalendar.Instance['setSettings'] = useEventCallback(
+    (partialSettings, _) => {
+      store.set('settings', {
+        ...store.state.settings,
+        ...partialSettings,
+      });
+    },
+  );
 
   const instanceRef = React.useRef<useEventCalendar.Instance>({
     setView,
@@ -235,7 +241,7 @@ function getNavigationDate({
 export namespace useEventCalendar {
   export interface Parameters {
     /**
-     * The events to render in the calendar.
+     * The events currently available in the calendar.
      */
     events: CalendarEvent[];
     /**
@@ -243,7 +249,7 @@ export namespace useEventCalendar {
      */
     onEventsChange?: (value: CalendarEvent[]) => void;
     /**
-     * The resources that can be assigned to events.
+     * The resources the events can be assigned to.
      */
     resources?: CalendarResource[];
     /**
@@ -266,11 +272,11 @@ export namespace useEventCalendar {
      */
     onViewChange?: (view: CalendarView, event: React.UIEvent | Event) => void;
     /**
-     * The date currently displayed in the calendar.
+     * The date currently used to determine the visible date range in each view.
      */
     visibleDate?: SchedulerValidDate;
     /**
-     * The date initially displayed in the calendar.
+     * The date initially used to determine the visible date range in each view.
      * To render a controlled calendar, use the `visibleDate` prop.
      * @default today
      */
@@ -346,9 +352,9 @@ export namespace useEventCalendar {
      */
     setVisibleResources: (visibleResources: Map<CalendarResourceId, boolean>) => void;
     /**
-     * Set the settings of the calendar.
+     * Updates some settings of the calendar.
      */
-    setSettings: (settings: CalendarSettings, event: React.UIEvent | Event) => void;
+    setSettings: (settings: Partial<CalendarSettings>, event: React.UIEvent | Event) => void;
   }
 
   export type Store = BaseStore<State>;
