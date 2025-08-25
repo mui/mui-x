@@ -94,7 +94,7 @@ const columns: GridColDef[] = [
 
 ### Render the component
 
-With the component and utilites imported, and rows and columns defined, you're now ready to render the Data Grid as shown below:
+With the component and utilities imported, and rows and columns defined, you're now ready to render the Data Grid as shown below:
 
 {{"demo": "RenderComponent.js", "defaultCodeOpen": true, "bg": "inline"}}
 
