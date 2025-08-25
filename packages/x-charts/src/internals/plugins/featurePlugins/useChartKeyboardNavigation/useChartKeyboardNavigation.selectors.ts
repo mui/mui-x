@@ -5,6 +5,11 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
   state,
 ) => state.keyboardNavigation;
 
+export const selectorChartsHasFocusedItem = createSelector(
+  [selectKeyboardNavigation],
+  (keyboardNavigationState) => keyboardNavigationState?.item != null,
+);
+
 export const selectorChartsFocusedSeriesType = createSelector(
   [selectKeyboardNavigation],
   (keyboardNavigationState) => keyboardNavigationState?.item?.type,

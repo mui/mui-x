@@ -229,11 +229,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     element.addEventListener('keydown', keyBoardHandler);
-    element.addEventListener('focus', focusNextItem);
     element.addEventListener('blur', removeFocus);
     return () => {
       element.removeEventListener('keydown', keyBoardHandler);
-      element.removeEventListener('focus', focusNextItem);
       element.removeEventListener('blur', removeFocus);
     };
   }, [
