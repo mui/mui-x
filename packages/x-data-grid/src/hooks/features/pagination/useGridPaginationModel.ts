@@ -346,7 +346,7 @@ export const useGridPaginationModel = (
         pagination: {
           ...state.pagination,
           paginationMode: props.paginationMode,
-          enabled: props.pagination === true,
+          enabled: isEnabled,
         },
       };
     });
