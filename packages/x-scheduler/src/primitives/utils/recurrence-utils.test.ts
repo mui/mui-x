@@ -20,8 +20,8 @@ import {
   getByDayMaps,
   tokenizeByDay,
   parseWeeklyByDayPlain,
-  parseMonthlyByDayOrdinalSingle,
   nthWeekdayOfMonth,
+  parseMonthlyByDayOrdinal,
 } from './recurrence-utils';
 import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
@@ -286,20 +286,24 @@ describe('recurrence-utils', () => {
       });
     });
 
-    describe('parseMonthlyByDayOrdinalSingle', () => {
+    describe('parseMonthlyByDayOrdinal', () => {
       it('throws when ruleByDay is undefined or empty', () => {
-        expect(() => parseMonthlyByDayOrdinalSingle(undefined)).to.throw();
-        expect(() => parseMonthlyByDayOrdinalSingle([])).to.throw();
+        expect(() => parseMonthlyByDayOrdinal(undefined)).to.throw();
+        expect(() => parseMonthlyByDayOrdinal([])).to.throw();
+      });
+
+      it('parses multiple ordinal byDay codes (e.g., 1MO, 3WE, -1FR)', () => {
+        const byDay: RRuleSpec['byDay'] = ['1MO', '3WE', '-1FR'];
+        expect(parseMonthlyByDayOrdinal(byDay)).to.deep.equal([
+          { ord: 1, code: 'MO' },
+          { ord: 3, code: 'WE' },
+          { ord: -1, code: 'FR' },
+        ]);
       });
 
       it('throws when any entry lacks an ordinal (e.g., plain MO)', () => {
         const mixed: RRuleSpec['byDay'] = ['2TU', 'MO'];
-        expect(() => parseMonthlyByDayOrdinalSingle(mixed)).to.throw();
-      });
-
-      it('throws when multiple entries are provided (e.g., 1MO, 2TU)', () => {
-        const multipleByDay: RRuleSpec['byDay'] = ['1MO', '2TU'];
-        expect(() => parseMonthlyByDayOrdinalSingle(multipleByDay)).to.throw();
+        expect(() => parseMonthlyByDayOrdinal(mixed)).to.throw();
       });
     });
   });
@@ -616,6 +620,20 @@ describe('recurrence-utils', () => {
           expect(matchesRecurrence(rule, lastWed, adapter, event)).to.equal(false);
         });
 
+        it('matches any of the BYDAY entries (e.g., 1MO or -1FR)', () => {
+          const start = DateTime.fromISO('2025-07-01T09:00:00Z');
+          const event = createEvent(start);
+
+          // 1st Monday of July 2025 is Jul 7, last Friday is Jul 25
+          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['1MO', '-1FR'] };
+          expect(
+            matchesRecurrence(rule, DateTime.fromISO('2025-07-07T10:00:00Z'), adapter, event),
+          ).to.equal(true);
+          expect(
+            matchesRecurrence(rule, DateTime.fromISO('2025-07-25T10:00:00Z'), adapter, event),
+          ).to.equal(true);
+        });
+
         it('respects interval > 1 (every 2 months)', () => {
           // July 1st Friday: Jul 4 → with interval=2 starting in Jul, Jul & Sep match
           const start = DateTime.fromISO('2025-07-01T09:00:00Z');
@@ -911,6 +929,20 @@ describe('recurrence-utils', () => {
         expect(
           countMonthlyOccurrencesUpToExact(adapter, createByDayRule(['-5MO']), start, target),
         ).to.equal(1);
+      });
+
+      it('counts all occurrences for multiple ordinals across months', () => {
+        const start = DateTime.fromISO('2025-07-01T00:00:00Z');
+        const target = DateTime.fromISO('2025-10-31T23:59:59Z');
+        // BYDAY: 2nd Tuesday + last Friday → (Jul, Aug, Sep, Oct) = 4 * 2 = 8
+        expect(
+          countMonthlyOccurrencesUpToExact(
+            adapter,
+            createByDayRule(['2TU', '-1FR']),
+            start,
+            target,
+          ),
+        ).to.equal(8);
       });
 
       it('throws when BYDAY and BYMONTHDAY are both provided', () => {
