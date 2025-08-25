@@ -8,9 +8,7 @@ export const defaultVisibleDateRecurring = DateTime.fromISO('2025-07-01T00:00:00
 const START = defaultVisibleDateRecurring.startOf('week');
 
 export const recurringStressEvents: CalendarEvent[] = [
-  // =====================
   // WEEKLY PATTERNS
-  // =====================
   {
     id: 'weekly-weekdays-only',
     start: START.set({ weekday: 1, hour: 8, minute: 30 }),
@@ -52,9 +50,7 @@ export const recurringStressEvents: CalendarEvent[] = [
     rrule: { freq: 'WEEKLY', interval: 3, byDay: ['TU'] },
   },
 
-  // =====================
   // DAILY AND INTERVALS
-  // =====================
   {
     id: 'daily-every-2-days',
     start: START.set({ weekday: 1, hour: 6, minute: 0 }),
@@ -72,9 +68,7 @@ export const recurringStressEvents: CalendarEvent[] = [
     rrule: { freq: 'DAILY', interval: 3 },
   },
 
-  // =====================
   // MONTHLY PATTERNS
-  // =====================
   {
     id: 'monthly-1st-monday',
     start: START.set({ weekday: 1, hour: 10 }),
@@ -132,9 +126,7 @@ export const recurringStressEvents: CalendarEvent[] = [
     rrule: { freq: 'MONTHLY', interval: 2, byDay: ['2TH'] },
   },
 
-  // =====================
   // YEARLY PATTERNS
-  // =====================
   {
     id: 'yearly-event',
     start: DateTime.fromISO('2024-11-28T12:00:00'),
@@ -151,9 +143,7 @@ export const recurringStressEvents: CalendarEvent[] = [
     resource: 'yearly',
     rrule: { freq: 'YEARLY', interval: 1 },
   },
-  // =====================
   // ALL-DAY AND SPANNING EVENTS
-  // =====================
   {
     id: 'allday-monthly-1st-sat-weekend',
     start: START.set({ month: 7, day: 5, hour: 9 }),
