@@ -298,7 +298,7 @@ importers:
         version: 7.3.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@mui/monorepo':
         specifier: github:Janpot/material-ui#bring-vitest-changes
-        version: https://codeload.github.com/Janpot/material-ui/tar.gz/b0f26aacf3dd34c9a42af8ed71f12f77ab410f77(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(karma@6.4.4)(rollup@4.46.2)
+        version: https://codeload.github.com/Janpot/material-ui/tar.gz/7b0f28a2e8c3707ade5f8581cb14a3fef803d012(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(karma@6.4.4)(rollup@4.46.2)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.1(@types/react@19.1.9)(react@19.1.1)
@@ -4394,8 +4394,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/b0f26aacf3dd34c9a42af8ed71f12f77ab410f77':
-    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/b0f26aacf3dd34c9a42af8ed71f12f77ab410f77}
+  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/7b0f28a2e8c3707ade5f8581cb14a3fef803d012':
+    resolution: {tarball: https://codeload.github.com/Janpot/material-ui/tar.gz/7b0f28a2e8c3707ade5f8581cb14a3fef803d012}
     version: 7.3.1
     engines: {pnpm: 10.14.0}
 
@@ -4636,8 +4636,8 @@ packages:
     resolution: {integrity: sha512-Y3kVGxynxi/Lz42bi20A+PQ0vh25zVjbGnQWZQUTwLzQozEIeokCgUWskPvlhs6btheLZyzUjqGuhUCymOoD1g==}
     engines: {node: ^18.14.0 || >=20}
 
-  '@netlify/functions@4.2.1':
-    resolution: {integrity: sha512-FhwXULPeD9qbUdWxtD9AUjV5GEjB93fqLhl0N4KZAf00i1Ec0t3WmCJ4j5bCbnETxXEkTOYhhUBHZi2BAFQSgw==}
+  '@netlify/functions@4.2.2':
+    resolution: {integrity: sha512-FZ7+Y4e1x5VJ3+36tpcB5kyBk4/mFWR7UBlhNksHWjdhNhC3CP6fqckMBW+OnZ849fMcZL2kq93/fIM49LjS+Q==}
     engines: {node: '>=18.0.0'}
 
   '@netlify/runtime-utils@2.1.0':
@@ -15448,9 +15448,9 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1)
       '@types/react': 19.1.9
 
-  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/b0f26aacf3dd34c9a42af8ed71f12f77ab410f77(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(karma@6.4.4)(rollup@4.46.2)':
+  '@mui/monorepo@https://codeload.github.com/Janpot/material-ui/tar.gz/7b0f28a2e8c3707ade5f8581cb14a3fef803d012(@babel/core@7.28.0)(@types/express@5.0.3)(encoding@0.1.13)(karma@6.4.4)(rollup@4.46.2)':
     dependencies:
-      '@netlify/functions': 4.2.1(encoding@0.1.13)(rollup@4.46.2)
+      '@netlify/functions': 4.2.2(encoding@0.1.13)(rollup@4.46.2)
       '@slack/bolt': 4.4.0(@types/express@5.0.3)
       babel-plugin-transform-import-meta: 2.3.3(@babel/core@7.28.0)
       execa: 9.6.0
@@ -15687,7 +15687,7 @@ snapshots:
       uuid: 11.1.0
       write-file-atomic: 5.0.1
 
-  '@netlify/functions@4.2.1(encoding@0.1.13)(rollup@4.46.2)':
+  '@netlify/functions@4.2.2(encoding@0.1.13)(rollup@4.46.2)':
     dependencies:
       '@netlify/blobs': 10.0.8
       '@netlify/dev-utils': 4.1.1
