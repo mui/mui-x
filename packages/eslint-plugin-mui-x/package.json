@@ -16,9 +16,5 @@
   "scripts": {
     "test": "vitest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mui/mui-x.git"
-  },
   "license": "MIT"
 }

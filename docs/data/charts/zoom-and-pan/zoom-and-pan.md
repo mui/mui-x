@@ -54,7 +54,7 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 ## Zoom slider
 
-You can provide an overview and allow the manipulation of the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
+You can provide an overview that lets users manipulate the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
 
 {{"demo": "ZoomSlider.js"}}
 
