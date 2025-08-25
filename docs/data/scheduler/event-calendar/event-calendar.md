@@ -21,7 +21,7 @@ This package is not published yet.
 
 ## Recurrence
 
-Recurring events let you define a repeating pattern on each event using the `rrule` field.  
+Recurring events let you define a repeating pattern on each event using the `rrule` field.
 The scheduler expands recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
 
 {{"demo": "Recurrence.js", "bg": "inline", "defaultCodeOpen": false}}
