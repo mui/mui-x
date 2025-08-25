@@ -170,7 +170,7 @@ This can be set up using the `requiredKeys` property in the interaction configur
 Available keys include:
 
 - Modifier keys: `'Shift'`, `'Control'`, `'Alt'`, `'Meta'`
-- Special combinations: `'ControlOrMeta'` (useful for cross-platform support)
+- `'ControlOrMeta'` which resolves to `Control` on Windows and Linux and to `Meta` on macOS.
 - Any other key can be used as well, such as `'Space'` and `'Enter'` based on `event.key` values.
 
 It is also possible to require multiple keys to be pressed simultaneously:
@@ -203,3 +203,21 @@ Available pointer modes:
 - `undefined`: Allow both mouse and touch interactions (default)
 - `'mouse'`: Only allow mouse interactions
 - `'touch'`: Only allow touch interactions
+
+### Multiple interactions of the same type
+
+It is possible to define multiple interactions of the same type with different configurations.
+
+In the example below, the pan `onDrag` interaction is configured to require a specific key combination for mouse, while touch interactions don't require any key to be pressed:
+
+```jsx
+<BarChartPro
+  zoomConfig={{
+    pan: [
+      { type: 'onDrag', pointerMode: 'mouse', requiredKeys: ['ControlOrMeta'] },
+      { type: 'onDrag', pointerMode: 'touch', requiredKeys: [] },
+    ],
+  }}
+  // other props
+/>
+```

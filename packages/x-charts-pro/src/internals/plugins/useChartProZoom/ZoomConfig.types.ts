@@ -40,7 +40,6 @@ export type InteractionMode = Exclude<PointerMode, 'pen'>;
 type AllKeysProp = {
   /**
    * The keys that must be pressed to trigger the interaction.
-   * This has no effect on touch devices.
    */
   requiredKeys?: KeyboardKey[];
 };
