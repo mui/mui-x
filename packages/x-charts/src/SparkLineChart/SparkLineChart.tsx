@@ -21,6 +21,7 @@ import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
 import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
+import { FocusedMark } from '../LineChart/FocusedMark';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,
@@ -298,7 +299,12 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
             </React.Fragment>
           )}
         </g>
-        {plotType === 'line' && <LineHighlightPlot slots={slots} slotProps={slotProps} />}
+        {plotType === 'line' && (
+          <React.Fragment>
+            <LineHighlightPlot slots={slots} slotProps={slotProps} />
+            <FocusedMark />
+          </React.Fragment>
+        )}
         {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}
         <ChartsAxisHighlight {...axisHighlight} />
         {children}
