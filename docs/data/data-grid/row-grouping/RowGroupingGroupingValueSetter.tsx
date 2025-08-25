@@ -21,7 +21,10 @@ export default function RowGroupingGroupingValueSetter() {
         groupingValueSetter: (value, row) => {
           return {
             ...row,
-            composer: { name: value },
+            composer: {
+              ...row.composer,
+              name: value,
+            },
           };
         },
         width: 200,

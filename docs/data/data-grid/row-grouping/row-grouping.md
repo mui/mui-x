@@ -421,7 +421,10 @@ const columns: GridColDef[] = [
     groupingValueGetter: (value) => value.name,
     groupingValueSetter: (value, row) => ({
       ...row,
-      composer: { name: value },
+      composer: {
+        ...row.composer,
+        name: value,
+      },
     }),
   },
   // ...
