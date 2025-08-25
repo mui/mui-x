@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
+import { useDayGridRowEventOccurrences } from '../../../../primitives/use-day-grid-row-event-occurrences';
 import { SchedulerValidDate, CalendarEvent } from '../../../../primitives/models';
 import { getEventWithLargestRowIndex } from '../../../../primitives/utils/event-utils';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
@@ -13,7 +14,7 @@ import { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
@@ -38,7 +39,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
-  const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
+  const daysWithEvents = useDayGridRowEventOccurrences({
     days,
     shouldOnlyRenderEventInOneCell: false,
   });

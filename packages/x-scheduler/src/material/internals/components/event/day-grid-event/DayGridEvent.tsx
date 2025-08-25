@@ -10,7 +10,7 @@ import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
 import './DayGridEvent.css';
 import '../index.css';
 

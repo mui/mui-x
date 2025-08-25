@@ -22,7 +22,7 @@ import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEvent } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
 import './EventPopover.css';
 import {
   buildRecurrencePresets,

@@ -7,7 +7,7 @@ import { CheckIcon, Settings } from 'lucide-react';
 import { Menu } from '@base-ui-components/react/menu';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 import './SettingsMenu.css';
 

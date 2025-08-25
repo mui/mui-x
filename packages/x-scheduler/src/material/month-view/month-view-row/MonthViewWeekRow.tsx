@@ -2,11 +2,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
+import { useDayGridRowEventOccurrences } from '../../../primitives/use-day-grid-row-event-occurrences';
 import { SchedulerValidDate } from '../../../primitives/models';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
 import { useDayList } from '../../../primitives/use-day-list/useDayList';
-import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../primitives/utils/useEventCalendarContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
 import { getEventWithLargestRowIndex } from '../../../primitives/utils/event-utils';
@@ -36,7 +37,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
     [getDayList, week, settings.hideWeekends],
   );
 
-  const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
+  const daysWithEvents = useDayGridRowEventOccurrences({
     days,
     shouldOnlyRenderEventInOneCell: false,
   });
