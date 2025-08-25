@@ -33,6 +33,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     areEventsDraggable,
     areEventsResizable,
     ampm,
+    // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
     className,
     ...other

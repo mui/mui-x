@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { EventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { useEventCalendar } from '../../primitives/use-event-calendar';
+import '../index.css';
 
 /**
  * Temporary component to help rendering standalone views in the doc.

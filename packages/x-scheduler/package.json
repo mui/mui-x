@@ -16,9 +16,22 @@
   },
   "exports": {
     "./material": "./src/material/index.ts",
-    "./material/*": "./src/material/*/index.ts",
+    "./material/agenda-view": "./src/material/agenda-view/index.ts",
+    "./material/day-view": "./src/material/day-view/index.ts",
+    "./material/event-calendar": "./src/material/event-calendar/index.ts",
+    "./material/month-view": "./src/material/month-view/index.ts",
+    "./material/standalone-view": "./src/material/standalone-view/index.ts",
+    "./material/week-view": "./src/material/week-view/index.ts",
+    "./material/translations/enUS": "./src/material/translations/enUS.ts",
+    "./material/translations/frFR": "./src/material/translations/frFR.ts",
     "./primitives": "./src/primitives/index.ts",
-    "./primitives/*": "./src/primitives/*/index.ts"
+    "./primitives/models": "./src/primitives/models/index.ts",
+    "./primitives/day-grid": "./src/primitives/day-grid/index.ts",
+    "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
+    "./primitives/timeline": "./src/primitives/timeline/index.ts",
+    "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
+    "./primitives/use-event-calendar": "./src/primitives/use-event-calendar/index.ts",
+    "./primitives/use-week-list": "./src/primitives/use-week-list/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
