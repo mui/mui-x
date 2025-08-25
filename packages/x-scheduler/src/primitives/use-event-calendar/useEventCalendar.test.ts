@@ -10,118 +10,38 @@ describe('useDateNavigation', () => {
   const adapter = getAdapter();
 
   describe('Method: goToPreviousVisibleDate', () => {
-    it('should go to previous day when used in the day view', () => {
+    it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
+      const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
+      const siblingVisibleDateGetter = spy(() => targetDate);
 
       const { result } = renderHook(() =>
         useEventCalendar({ ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange }),
       );
 
+      act(() => result.current.instance.setViewConfig({ siblingVisibleDateGetter }));
       act(() => result.current.instance.goToPreviousVisibleDate({} as any));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addDays(visibleDate, -1),
-      );
-    });
-
-    it('should go to start of previous week when used in the week view', () => {
-      const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z'); // Thursday
-
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'week', visibleDate, onVisibleDateChange }),
-      );
-
-      act(() => result.current.instance.goToPreviousVisibleDate({} as any));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addWeeks(adapter.startOfWeek(visibleDate), -1),
-      );
-    });
-
-    it('should go to start of previous month when used in the month view', () => {
-      const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-15T00:00:00Z');
-
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'month', visibleDate, onVisibleDateChange }),
-      );
-
-      act(() => result.current.instance.goToPreviousVisibleDate({} as any));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(visibleDate), -1),
-      );
-    });
-
-    it('should go to previous agenda period (12 days) when used in the agenda view', () => {
-      const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
-
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'agenda', visibleDate, onVisibleDateChange }),
-      );
-
-      act(() => result.current.instance.goToPreviousVisibleDate({} as any));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addDays(visibleDate, -12),
-      );
+      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
+      expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(-1);
     });
   });
 
   describe('Method: goToNextVisibleDate', () => {
-    it('should go to next day when used in the day view', () => {
+    it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
+      const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
+      const siblingVisibleDateGetter = spy(() => targetDate);
 
       const { result } = renderHook(() =>
         useEventCalendar({ ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange }),
       );
 
+      act(() => result.current.instance.setViewConfig({ siblingVisibleDateGetter }));
       act(() => result.current.instance.goToNextVisibleDate({} as any));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addDays(visibleDate, 1),
-      );
-    });
-
-    it('should go to start of next week when used in the week view', () => {
-      const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z'); // Thursday
-
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'week', visibleDate, onVisibleDateChange }),
-      );
-
-      act(() => result.current.instance.goToNextVisibleDate({} as any));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addWeeks(adapter.startOfWeek(visibleDate), 1),
-      );
-    });
-
-    it('should go to start of next month when used in the month view', () => {
-      const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-15T00:00:00Z');
-
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'month', visibleDate, onVisibleDateChange }),
-      );
-
-      act(() => result.current.instance.goToNextVisibleDate({} as any));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addMonths(adapter.startOfMonth(visibleDate), 1),
-      );
-    });
-
-    it('should go to next agenda period (12 days) when used in the agenda view', () => {
-      const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
-
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'agenda', visibleDate, onVisibleDateChange }),
-      );
-
-      act(() => result.current.instance.goToNextVisibleDate({} as any));
-      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
-        adapter.addDays(visibleDate, 12),
-      );
+      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
+      expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(1);
     });
   });
 });

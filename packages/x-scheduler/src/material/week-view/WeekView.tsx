@@ -7,6 +7,7 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
+import { useInitializeView } from '../internals/hooks/useInitializeView';
 
 const adapter = getAdapter();
 
@@ -29,6 +30,10 @@ export const WeekView = React.memo(
         }),
       [getDayList, visibleDate, settings.hideWeekends],
     );
+
+    useInitializeView(() => ({
+      siblingVisibleDateGetter: (date, delta) => adapter.addWeeks(adapter.startOfWeek(date), delta),
+    }));
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),
