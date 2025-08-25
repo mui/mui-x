@@ -193,13 +193,13 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
 
       // Calculate the ideal centered position
       const centeredPosition = offsetTop - containerHeight / 2 + itemHeight / 2;
-      
+
       // Calculate the maximum scroll position that would show content at the bottom
       const maxScrollTop = scrollableHeight - containerHeight;
-      
+
       // If centering would create empty space at the bottom, align the last items to the bottom instead
       const scrollPosition = Math.min(centeredPosition, maxScrollTop);
-      
+
       // Ensure we don't scroll past the top
       containerRef.current.scrollTop = Math.max(0, scrollPosition);
     });
