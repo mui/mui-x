@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarEventWithPosition } from '@mui/x-scheduler/primitives/models';
+import { CalendarEventOccurrenceWithPosition } from '@mui/x-scheduler/primitives/models';
 import {
   getEventDays,
   getEventRowIndex,
@@ -10,8 +10,13 @@ import { getAdapter } from './adapter/getAdapter';
 
 describe('event-utils', () => {
   const adapter = getAdapter();
-  const createEvent = (id: string, start: string, end: string): CalendarEvent => ({
+  const createEvent = (
+    id: string,
+    start: string,
+    end: string,
+  ): CalendarEventOccurrenceWithPosition => ({
     id,
+    key: id,
     start: adapter.date(start),
     end: adapter.date(end),
     title: `Event ${id}`,
@@ -20,9 +25,10 @@ describe('event-utils', () => {
 
   describe('getEventWithLargestRowIndex', () => {
     it('should return the largest row index from events', () => {
-      const events: CalendarEventWithPosition[] = [
+      const events: CalendarEventOccurrenceWithPosition[] = [
         {
           id: '1',
+          key: '1',
           start: DateTime.fromISO('2025-05-01T09:00:00'),
           end: DateTime.fromISO('2025-05-01T10:00:00'),
           title: 'Meeting',
@@ -31,6 +37,7 @@ describe('event-utils', () => {
         },
         {
           id: '2',
+          key: '2',
           start: DateTime.fromISO('2025-05-15T14:00:00'),
           end: DateTime.fromISO('2025-05-15T15:00:00'),
           title: 'Doctor Appointment',
@@ -39,6 +46,7 @@ describe('event-utils', () => {
         },
         {
           id: '3',
+          key: '3',
           start: DateTime.fromISO('2025-05-20T16:00:00'),
           end: DateTime.fromISO('2025-05-20T17:00:00'),
           title: 'Conference Call',
@@ -52,7 +60,7 @@ describe('event-utils', () => {
     });
 
     it('should return 0 when events array is empty', () => {
-      const events: CalendarEventWithPosition[] = [];
+      const events: CalendarEventOccurrenceWithPosition[] = [];
 
       const result = getEventWithLargestRowIndex(events);
 
@@ -60,9 +68,10 @@ describe('event-utils', () => {
     });
 
     it('should return 0 when all events have undefined eventRowIndex', () => {
-      const eventsWithUndefinedRowIndex: CalendarEventWithPosition[] = [
+      const eventsWithUndefinedRowIndex: CalendarEventOccurrenceWithPosition[] = [
         {
           id: '1',
+          key: '1',
           start: DateTime.fromISO('2025-05-01T09:00:00'),
           end: DateTime.fromISO('2025-05-01T10:00:00'),
           title: 'Meeting',
@@ -71,6 +80,7 @@ describe('event-utils', () => {
         },
         {
           id: '2',
+          key: '2',
           start: DateTime.fromISO('2025-05-15T14:00:00'),
           end: DateTime.fromISO('2025-05-15T15:00:00'),
           title: 'Doctor Appointment',
@@ -85,9 +95,10 @@ describe('event-utils', () => {
     });
 
     it('should handle mix of defined and undefined eventRowIndex values', () => {
-      const events: CalendarEventWithPosition[] = [
+      const events: CalendarEventOccurrenceWithPosition[] = [
         {
           id: '1',
+          key: '1',
           start: DateTime.fromISO('2025-05-01T09:00:00'),
           end: DateTime.fromISO('2025-05-01T10:00:00'),
           title: 'Meeting',
@@ -96,6 +107,7 @@ describe('event-utils', () => {
         },
         {
           id: '2',
+          key: '2',
           start: DateTime.fromISO('2025-05-15T14:00:00'),
           end: DateTime.fromISO('2025-05-15T15:00:00'),
           title: 'Doctor Appointment',
@@ -104,6 +116,7 @@ describe('event-utils', () => {
         },
         {
           id: '3',
+          key: '3',
           start: DateTime.fromISO('2025-05-20T16:00:00'),
           end: DateTime.fromISO('2025-05-20T17:00:00'),
           title: 'Conference Call',
@@ -168,7 +181,7 @@ describe('event-utils', () => {
       start: string,
       end: string,
       eventRowIndex: number,
-    ): CalendarEventWithPosition => ({
+    ): CalendarEventOccurrenceWithPosition => ({
       ...createEvent(id, start, end),
       eventRowIndex,
     });
@@ -303,7 +316,7 @@ describe('event-utils', () => {
       });
 
       const result2 = getEventRowIndex(event2, adapter.date('2024-01-16'), days, daysMap, adapter);
-      expect(result).toBe(2);
+      expect(result2).toBe(2);
     });
   });
 

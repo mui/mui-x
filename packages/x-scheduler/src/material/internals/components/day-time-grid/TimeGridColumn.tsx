@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerValidDate, CalendarEvent } from '../../../../primitives/models';
+import { SchedulerValidDate, CalendarEventOccurrence } from '../../../../primitives/models';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
@@ -28,7 +28,12 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       return null;
     }
 
-    return { ...initialDraggedEvent, start: placeholder.start, end: placeholder.end };
+    return {
+      ...initialDraggedEvent,
+      start: placeholder.start,
+      end: placeholder.end,
+      readOnly: true,
+    };
   }, [initialDraggedEvent, placeholder]);
 
   return (
@@ -41,7 +46,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
     >
       {events.map((event) => (
         <EventPopoverTrigger
-          key={event.id}
+          key={event.key}
           event={event}
           render={
             <TimeGridEvent
@@ -59,7 +64,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
           eventResource={resourcesByIdMap.get(draggedEvent.resource)}
           variant="regular"
           ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
-          readOnly
         />
       )}
     </TimeGrid.Column>
@@ -68,5 +72,5 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 
 interface TimeGridColumnProps {
   day: SchedulerValidDate;
-  events: CalendarEvent[];
+  events: CalendarEventOccurrence[];
 }

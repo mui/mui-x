@@ -4,14 +4,14 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import {
   CalendarEvent,
-  CalendarEventWithPosition,
+  CalendarEventOccurrenceWithPosition,
   SchedulerValidDate,
 } from '../../../primitives/models';
 import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
 import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { isWeekend } from '../../../primitives/utils/date-utils';
+import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
@@ -93,7 +93,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       )}
       <div className="MonthViewCellEvents">
         {visibleAllDayEvents.map((event) => {
-          const durationInDays = adapter.getDurationInDays(day, event.end) + 1;
+          const durationInDays = diffIn(adapter, event.end, day, 'days') + 1;
           const gridColumnSpan = Math.min(durationInDays, rowLength - dayIndexInRow); // Don't exceed available columns
           const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIndexInRow === 0;
 
@@ -167,7 +167,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 interface MonthViewCellProps {
   day: SchedulerValidDate;
   events: CalendarEvent[];
-  allDayEvents: CalendarEventWithPosition[];
+  allDayEvents: CalendarEventOccurrenceWithPosition[];
   maxEvents: number;
   dayIndexInRow: number;
   rowLength: number;

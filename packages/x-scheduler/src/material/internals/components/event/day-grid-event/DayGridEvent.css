@@ -94,5 +94,6 @@
 
   .DayGridEventTitle {
     margin-inline-start: var(--space-1);
+    padding-inline-end: var(--space-3);
   }
 }

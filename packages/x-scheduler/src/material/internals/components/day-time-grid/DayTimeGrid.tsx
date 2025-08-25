@@ -14,7 +14,7 @@ import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayGrid } from '../../../../primitives/day-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
-import { isWeekend } from '../../../../primitives/utils/date-utils';
+import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
@@ -141,7 +141,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 key={day.toString()}
                 value={day}
                 className="DayTimeGridAllDayEventsCell"
-                data-testid={`day-time-grid-all-day-events-cell-${adapter.format(day, 'month')}-${adapter.format(day, 'dayOfMonth')}`}
                 style={
                   {
                     '--row-count': getEventWithLargestRowIndex(allDayEvents),
@@ -152,13 +151,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 data-weekend={isWeekend(adapter, day) ? '' : undefined}
               >
                 {allDayEvents.map((event) => {
-                  const durationInDays = adapter.getDurationInDays(day, event.end) + 1;
+                  const durationInDays = diffIn(adapter, event.end, day, 'days') + 1;
                   const gridColumnSpan = Math.min(durationInDays, days.length - dayIndex); // Don't exceed available columns
                   const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIndex === 0;
 
                   return shouldRenderEvent ? (
                     <EventPopoverTrigger
-                      key={`${event.id}-${day.toString()}`}
+                      key={`${event.key}-${day.toString()}`}
                       event={event}
                       render={
                         <DayGridEvent
@@ -166,28 +165,20 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                           eventResource={resourcesByIdMap.get(event.resource)}
                           variant="allDay"
                           ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-                          style={
-                            {
-                              '--grid-row': event.eventRowIndex,
-                              '--grid-column-span': gridColumnSpan,
-                            } as React.CSSProperties
-                          }
+                          gridRow={event.eventRowIndex}
+                          columnSpan={gridColumnSpan}
                         />
                       }
                     />
                   ) : (
                     <DayGridEvent
-                      key={`invisible-${event.id}-${day.toString()}`}
+                      key={`invisible-${event.key}-${day.toString()}`}
                       event={event}
                       eventResource={resourcesByIdMap.get(event.resource)}
                       variant="invisible"
                       ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                       aria-hidden="true"
-                      style={
-                        {
-                          '--grid-row': event.eventRowIndex,
-                        } as React.CSSProperties
-                      }
+                      gridRow={event.eventRowIndex}
                     />
                   );
                 })}

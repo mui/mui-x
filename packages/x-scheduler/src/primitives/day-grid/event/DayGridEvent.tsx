@@ -9,6 +9,7 @@ import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useEvent } from '../../utils/useEvent';
 import { SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../utils/adapter/useAdapter';
+import { diffIn } from '../../utils/date-utils';
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   componentProps: DayGridEvent.Props,
@@ -49,7 +50,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       return adapter.startOfDay(start);
     }
 
-    const eventDayLength = adapter.getDurationInDays(start, end) + 1;
+    const eventDayLength = diffIn(adapter, end, start, 'days') + 1;
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
