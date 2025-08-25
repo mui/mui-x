@@ -67,21 +67,22 @@ export function parseWeeklyByDayPlain(
 }
 
 /**
- * Parses MONTHLY BYDAY expecting one or more ordinal entries (e.g. 2TU, -1FR).
+ * Parses MONTHLY BYDAY expecting one ordinal entry (e.g. 2TU, -1FR).
  * Returns normalized tokens with positive/negative ordinals.
- * @throws if BYDAY is missing or any entry lacks an ordinal.
+ * @throws if BYDAY is missing, multiple, or missing ordinal.
  */
-export function parseMonthlyByDayOrdinal(
-  ruleByDay: RRuleSpec['byDay'],
-): Array<{ ord: number; code: ByDayCode }> {
-  if (!ruleByDay?.length) {
-    throw new Error('MONTHLY: BYDAY with ordinal is required (e.g. 2TU or -1FR).');
+export function parseMonthlyByDayOrdinalSingle(ruleByDay: RRuleSpec['byDay']): {
+  ord: number;
+  code: ByDayCode;
+} {
+  if (!ruleByDay?.length || ruleByDay.length !== 1) {
+    throw new Error('MONTHLY: BYDAY must contain exactly one ordinal entry (e.g. 2TU or -1FR).');
   }
-  const parsed = ruleByDay.map(tokenizeByDay);
-  if (parsed.some((item) => item.ord == null)) {
+  const { ord, code } = tokenizeByDay(ruleByDay[0]);
+  if (ord == null) {
     throw new Error('MONTHLY: BYDAY must include an ordinal (e.g. 2TU or -1FR).');
   }
-  return parsed.map((item) => ({ ord: item.ord as number, code: item.code }));
+  return { ord, code };
 }
 
 export type RecurrencePresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -404,12 +405,11 @@ export function matchesRecurrence(
         if (rule.byMonthDay?.length) {
           throw new Error('MONTHLY: use either BYDAY (ordinal) or BYMONTHDAY, not both.');
         }
-        const entries = parseMonthlyByDayOrdinal(rule.byDay);
-        for (const { ord, code } of entries) {
-          const occurrenceDate = nthWeekdayOfMonth(adapter, dateMonth, code, ord);
-          if (occurrenceDate && adapter.isSameDay(occurrenceDate, candidateDay)) {
-            return true;
-          }
+
+        const { ord, code } = parseMonthlyByDayOrdinalSingle(rule.byDay);
+        const occurrenceDate = nthWeekdayOfMonth(adapter, dateMonth, code, ord);
+        if (occurrenceDate && adapter.isSameDay(occurrenceDate, candidateDay)) {
+          return true;
         }
         return false;
       }
@@ -576,7 +576,7 @@ export function countMonthlyOccurrencesUpToExact(
       throw new Error('MONTHLY: use either BYDAY (ordinal) or BYMONTHDAY, not both.');
     }
 
-    const entries = parseMonthlyByDayOrdinal(rule.byDay);
+    const { ord, code } = parseMonthlyByDayOrdinalSingle(rule.byDay);
 
     let count = 0;
     for (
@@ -584,19 +584,19 @@ export function countMonthlyOccurrencesUpToExact(
       !adapter.isAfter(month, targetMonth);
       month = adapter.addMonths(month, interval)
     ) {
-      for (const { ord, code } of entries) {
-        const occurrenceDate = nthWeekdayOfMonth(adapter, month, code, ord);
-        if (!occurrenceDate) {
-          continue;
-        }
-        if (adapter.isBeforeDay(occurrenceDate, seriesStart)) {
-          continue;
-        }
-        if (adapter.isAfterDay(occurrenceDate, date)) {
-          continue;
-        }
-        count += 1;
+      const occurrenceDate = nthWeekdayOfMonth(adapter, month, code, ord);
+      if (!occurrenceDate) {
+        continue;
       }
+
+      if (adapter.isBeforeDay(occurrenceDate, seriesStart)) {
+        continue;
+      }
+      if (adapter.isAfterDay(occurrenceDate, date)) {
+        continue;
+      }
+
+      count += 1;
     }
     return count;
   }
