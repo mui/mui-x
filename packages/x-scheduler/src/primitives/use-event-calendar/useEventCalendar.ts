@@ -241,7 +241,7 @@ function getNavigationDate({
 export namespace useEventCalendar {
   export interface Parameters {
     /**
-     * The events to render in the calendar.
+     * The events currently available in the calendar.
      */
     events: CalendarEvent[];
     /**
@@ -249,7 +249,7 @@ export namespace useEventCalendar {
      */
     onEventsChange?: (value: CalendarEvent[]) => void;
     /**
-     * The resources that can be assigned to events.
+     * The resources the events can be assigned to.
      */
     resources?: CalendarResource[];
     /**
@@ -272,11 +272,11 @@ export namespace useEventCalendar {
      */
     onViewChange?: (view: CalendarView, event: React.UIEvent | Event) => void;
     /**
-     * The date currently displayed in the calendar.
+     * The date currently used to determine the visible date range in each view.
      */
     visibleDate?: SchedulerValidDate;
     /**
-     * The date initially displayed in the calendar.
+     * The date initially used to determine the visible date range in each view.
      * To render a controlled calendar, use the `visibleDate` prop.
      * @default today
      */
@@ -352,7 +352,7 @@ export namespace useEventCalendar {
      */
     setVisibleResources: (visibleResources: Map<CalendarResourceId, boolean>) => void;
     /**
-     * Set the settings of the calendar.
+     * Updates some settings of the calendar.
      */
     setSettings: (settings: Partial<CalendarSettings>, event: React.UIEvent | Event) => void;
   }
