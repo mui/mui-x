@@ -86,14 +86,6 @@ export const initialEvents: CalendarEvent[] = [
     rrule: { freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] },
   },
   {
-    id: 'monthly-2nd-and-4th-tuesday',
-    start: START.set({ weekday: 2, hour: 11 }),
-    end: START.set({ weekday: 2, hour: 12 }),
-    title: '2nd and 4th Tuesday',
-    resource: 'monthly',
-    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['2TU', '4TU'] },
-  },
-  {
     id: 'monthly-15th',
     start: START.set({ weekday: 4, hour: 13 }),
     end: START.set({ weekday: 4, hour: 14 }),
