@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
+import { Repeat } from 'lucide-react';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../../../primitives/day-grid';
 import { DayGridEventProps } from './DayGridEvent.types';
@@ -27,6 +28,9 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     className,
     onEventClick,
     id: idProp,
+    gridRow,
+    columnSpan = 1,
+    style,
     ...other
   } = props;
 
@@ -34,18 +38,31 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const translations = useTranslations();
   const { store } = useEventCalendarContext();
   const ampm = useStore(store, selectors.ampm);
+  const isRecurring = Boolean(eventProp.rrule);
 
   const content = React.useMemo(() => {
     switch (variant) {
       case 'allDay':
+      case 'invisible':
         return (
-          <p
-            className={clsx('DayGridEventTitle', 'LinesClamp')}
-            style={{ '--number-of-lines': 1 } as React.CSSProperties}
-          >
-            {eventProp.title}
-          </p>
+          <React.Fragment>
+            <p
+              className={clsx('DayGridEventTitle', 'LinesClamp')}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
+              {eventProp.title}
+            </p>
+            {isRecurring && (
+              <Repeat
+                size={12}
+                strokeWidth={1.5}
+                className="EventRecurringIcon"
+                aria-hidden="true"
+              />
+            )}
+          </React.Fragment>
         );
+
       case 'compact':
       default:
         return (
@@ -79,15 +96,24 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
               <span className="DayGridEventTitle">{eventProp.title}</span>
             </p>
+            {isRecurring && (
+              <Repeat
+                size={12}
+                strokeWidth={1.5}
+                className="EventRecurringIcon"
+                aria-hidden="true"
+              />
+            )}
           </div>
         );
     }
   }, [
     variant,
     eventProp.title,
+    eventProp?.allDay,
     eventProp.start,
     eventProp.end,
-    eventProp.allDay,
+    isRecurring,
     eventResource?.name,
     translations,
     ampm,
@@ -105,8 +131,16 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         getColorClassName({ resource: eventResource }),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
+      aria-hidden={variant === 'invisible'}
       start={eventProp.start}
       end={eventProp.end}
+      style={
+        {
+          '--grid-row': gridRow,
+          '--grid-column-span': columnSpan,
+          ...style,
+        } as React.CSSProperties
+      }
       {...other}
     >
       {content}
