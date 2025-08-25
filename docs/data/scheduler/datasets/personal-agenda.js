@@ -63,14 +63,6 @@ export const initialEvents = [
     resource: 'work',
     rrule: { freq: 'MONTHLY', interval: 1, byDay: ['-1MO'] },
   },
-  {
-    id: 'work-architecture-forum',
-    start: START_OF_FIRST_WEEK.set({ month: 7, day: 8, hour: 11 }),
-    end: START_OF_FIRST_WEEK.set({ month: 7, day: 8, hour: 12 }),
-    title: 'Architecture Forum',
-    resource: 'work',
-    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] },
-  },
   // Non-recurring work events
   {
     id: 'client-call-1',
