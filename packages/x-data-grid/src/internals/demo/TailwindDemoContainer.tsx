@@ -12,22 +12,30 @@ interface TailwindDemoContainerProps {
  * WARNING: This is an internal component used in documentation to inject the Tailwind script.
  * Please do not use it in your application.
  */
+
 export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
   const { children, documentBody } = props;
   const [isLoaded, setIsLoaded] = React.useState(false);
 
+  const tailwindPromiseRef = React.useRef<Promise<HTMLScriptElement>>(null);
+
   React.useEffect(() => {
     const body = documentBody ?? document.body;
+    if (!tailwindPromiseRef.current) {
+      tailwindPromiseRef.current = new Promise<HTMLScriptElement>((resolve) => {
+        const script = document.createElement('script');
+        script.onload = () => resolve(script);
+        script.src = 'https://unpkg.com/@tailwindcss/browser@4';
+        body.appendChild(script);
+      });
+    }
 
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/@tailwindcss/browser@4';
+    tailwindPromiseRef.current.then(() => setIsLoaded(true));
 
-    let mounted = true;
     const cleanup = () => {
-      mounted = false;
-      script.remove();
+      tailwindPromiseRef.current?.then((el) => el.remove());
 
-      const head = body?.ownerDocument?.head;
+      const head = body?.ownerDocument.head;
       if (!head) {
         return;
       }
@@ -41,15 +49,6 @@ export function TailwindDemoContainer(props: TailwindDemoContainerProps) {
         }
       });
     };
-
-    script.onload = () => {
-      if (!mounted) {
-        cleanup();
-        return;
-      }
-      setIsLoaded(true);
-    };
-    body.appendChild(script);
 
     return cleanup;
   }, [documentBody]);
