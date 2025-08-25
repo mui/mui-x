@@ -139,7 +139,7 @@
     "jss-rtl": "^0.3.0",
     "lerna": "^8.2.3",
     "lodash": "catalog:",
-    "magic-string": "^0.30.17",
+    "magic-string": "^0.30.18",
     "markdownlint-cli2": "^0.18.1",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
