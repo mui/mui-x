@@ -551,10 +551,10 @@ export function countWeeklyOccurrencesUpToExact(
 }
 
 /**
- *  Exact MONTHLY occurrence count up to `date` (inclusive).
- *  Supports a single BYMONTHDAY (defaults to DTSTART day). Skips months lacking that day.
- *  Iterates months by `interval`, respecting series start and target boundaries.
- *  @throws If multiple BYMONTHDAY values are provided.
+ * Counts MONTHLY occurrences up to `date` (inclusive).
+ * Modes: BYDAY with ordinals (e.g. 2TU, -1FR; multiple allowed) OR single BYMONTHDAY (default = DTSTART day).
+ * Skips months without a match. Steps by `interval`, respecting series start and target boundaries.
+ * @throws If BYDAY is combined with BYMONTHDAY, or BYMONTHDAY has >1 value.
  */
 export function countMonthlyOccurrencesUpToExact(
   adapter: Adapter,
