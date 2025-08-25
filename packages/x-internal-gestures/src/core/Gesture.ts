@@ -397,14 +397,9 @@ export abstract class Gesture<GestureName extends string> {
    * @param pointerType - The type of pointer triggering the gesture
    * @returns true if the gesture should be prevented, false otherwise
    */
-  protected shouldPreventGesture(element: TargetElement, pointerType?: PointerMode): boolean {
+  protected shouldPreventGesture(element: TargetElement, pointerType: string): boolean {
     // Get effective configuration for this pointer type
-    const effectiveConfig = pointerType
-      ? this.getEffectiveConfig(pointerType)
-      : {
-          preventIf: this.preventIf,
-          requiredKeys: this.requiredKeys,
-        };
+    const effectiveConfig = this.getEffectiveConfig(pointerType as PointerMode);
 
     // First check if required keyboard keys are pressed
     if (!this.keyboardManager.areKeysPressed(effectiveConfig.requiredKeys)) {

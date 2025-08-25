@@ -185,6 +185,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -241,7 +242,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     }
 
     // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement)) {
+    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
       // If the gesture was active but now should be prevented, cancel it gracefully
       this.cancel(targetElement, pointersArray, event);
       return;
