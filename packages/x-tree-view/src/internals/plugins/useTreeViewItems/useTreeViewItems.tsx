@@ -241,68 +241,57 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const addItems = ({
     items,
     parentId,
-    depth,
     getChildrenCount,
   }: AddItemsParameters<TreeViewBaseItem>) => {
-    if (items) {
-      const newState = processItemsLookups({
-        disabledItemsFocusable: params.disabledItemsFocusable,
-        items,
-        isItemDisabled: params.isItemDisabled,
-        getItemId: params.getItemId,
-        getItemLabel: params.getItemLabel,
-        getItemChildren: params.getItemChildren,
-        getChildrenCount,
-        initialDepth: depth,
-        initialParentId: parentId,
-        ignoreChildren: true,
-      });
+    const parentDepth = parentId == null ? 0 : selectorItemDepth(store.value, parentId);
 
-      store.update((prevState) => {
-        let newItems;
-        if (parentId) {
-          newItems = {
-            itemModelLookup: { ...prevState.items.itemModelLookup, ...newState.itemModelLookup },
-            itemMetaLookup: { ...prevState.items.itemMetaLookup, ...newState.itemMetaLookup },
-            itemOrderedChildrenIdsLookup: {
-              ...newState.itemOrderedChildrenIdsLookup,
-              ...prevState.items.itemOrderedChildrenIdsLookup,
-            },
-            itemChildrenIndexesLookup: {
-              ...newState.itemChildrenIndexesLookup,
-              ...prevState.items.itemChildrenIndexesLookup,
-            },
-          };
-        } else {
-          newItems = {
-            itemModelLookup: newState.itemModelLookup,
-            itemMetaLookup: newState.itemMetaLookup,
-            itemOrderedChildrenIdsLookup: newState.itemOrderedChildrenIdsLookup,
-            itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
-          };
-        }
-        Object.values(prevState.items.itemMetaLookup).forEach((item) => {
-          if (!newItems.itemMetaLookup[item.id]) {
-            publishTreeViewEvent(instance, 'removeItem', { id: item.id });
-          }
-        });
-        return { ...prevState, items: { ...prevState.items, ...newItems } };
-      });
-    }
-  };
-  const removeChildren = (parentId: string | undefined) => {
+    const newState = processItemsLookups({
+      disabledItemsFocusable: params.disabledItemsFocusable,
+      items,
+      isItemDisabled: params.isItemDisabled,
+      getItemId: params.getItemId,
+      getItemLabel: params.getItemLabel,
+      getItemChildren: params.getItemChildren,
+      getChildrenCount,
+      initialDepth: parentDepth + 1,
+      initialParentId: parentId,
+      ignoreChildren: true,
+    });
+
     store.update((prevState) => {
-      if (!parentId) {
-        return {
-          ...prevState,
-          items: {
-            ...prevState.items,
-            itemMetaLookup: {},
-            itemOrderedChildrenIdsLookup: {},
-            itemChildrenIndexesLookup: {},
+      let newItems;
+      if (parentId) {
+        newItems = {
+          itemModelLookup: { ...prevState.items.itemModelLookup, ...newState.itemModelLookup },
+          itemMetaLookup: { ...prevState.items.itemMetaLookup, ...newState.itemMetaLookup },
+          itemOrderedChildrenIdsLookup: {
+            ...newState.itemOrderedChildrenIdsLookup,
+            ...prevState.items.itemOrderedChildrenIdsLookup,
+          },
+          itemChildrenIndexesLookup: {
+            ...newState.itemChildrenIndexesLookup,
+            ...prevState.items.itemChildrenIndexesLookup,
           },
         };
+      } else {
+        newItems = {
+          itemModelLookup: newState.itemModelLookup,
+          itemMetaLookup: newState.itemMetaLookup,
+          itemOrderedChildrenIdsLookup: newState.itemOrderedChildrenIdsLookup,
+          itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
+        };
       }
+      Object.values(prevState.items.itemMetaLookup).forEach((item) => {
+        if (!newItems.itemMetaLookup[item.id]) {
+          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
+        }
+      });
+      return { ...prevState, items: { ...prevState.items, ...newItems } };
+    });
+  };
+
+  const removeChildren = useEventCallback((parentId: string | null) => {
+    store.update((prevState) => {
       const newMetaMap = Object.keys(prevState.items.itemMetaLookup).reduce((acc, key) => {
         const item = prevState.items.itemMetaLookup[key];
         if (item.parentId === parentId) {
@@ -314,8 +303,9 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
       const newItemOrderedChildrenIdsLookup = prevState.items.itemOrderedChildrenIdsLookup;
       const newItemChildrenIndexesLookup = prevState.items.itemChildrenIndexesLookup;
-      delete newItemChildrenIndexesLookup[parentId];
-      delete newItemOrderedChildrenIdsLookup[parentId];
+      const cleanId = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+      delete newItemChildrenIndexesLookup[cleanId];
+      delete newItemOrderedChildrenIdsLookup[cleanId];
 
       return {
         ...prevState,
@@ -327,7 +317,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         },
       };
     });
-  };
+  });
 
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {

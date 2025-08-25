@@ -8,8 +8,9 @@ import {
   selectorIsItemSelected,
   useInstanceEventHandler,
   selectorDataSourceState,
+  selectorGetTreeViewError,
   selectorGetTreeItemError,
-  selectorExpandedItems,
+  TREE_VIEW_ROOT_PARENT_ID,
 } from '@mui/x-tree-view/internals';
 import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
@@ -40,7 +41,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   store,
 }) => {
   const isLazyLoadingEnabled = !!params.dataSource;
-  const firstRenderRef = React.useRef(true);
 
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
     () => new NestedDataManager(instance),
@@ -48,36 +48,50 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
   const cacheRef = useLazyRef<DataSourceCache, void>(() => getCache(params.dataSourceCache));
 
-  const setDataSourceLoading = useEventCallback((itemId: TreeViewItemId, isLoading: boolean) => {
+  const setDataSourceLoading = useEventCallback(
+    (itemId: TreeViewItemId | null, isLoading: boolean) => {
+      if (!isLazyLoadingEnabled) {
+        return;
+      }
+
+      if (itemId == null) {
+        instance.setTreeViewLoading(isLoading);
+        return;
+      }
+
+      store.update((prevState) => {
+        if (!prevState.lazyLoading.dataSource.loading[itemId] && !isLoading) {
+          return prevState;
+        }
+
+        const loading = { ...prevState.lazyLoading.dataSource.loading };
+        if (isLoading === false) {
+          delete loading[itemId];
+        } else {
+          loading[itemId] = isLoading;
+        }
+
+        return {
+          ...prevState,
+          lazyLoading: {
+            ...prevState.lazyLoading,
+            dataSource: { ...prevState.lazyLoading.dataSource, loading },
+          },
+        };
+      });
+    },
+  );
+
+  const setDataSourceError = (itemId: TreeViewItemId | null, error: Error | null) => {
     if (!isLazyLoadingEnabled) {
       return;
     }
-    store.update((prevState) => {
-      if (!prevState.lazyLoading.dataSource.loading[itemId] && !isLoading) {
-        return prevState;
-      }
 
-      const loading = { ...prevState.lazyLoading.dataSource.loading };
-      if (isLoading === false) {
-        delete loading[itemId];
-      } else {
-        loading[itemId] = isLoading;
-      }
-
-      return {
-        ...prevState,
-        lazyLoading: {
-          ...prevState.lazyLoading,
-          dataSource: { ...prevState.lazyLoading.dataSource, loading },
-        },
-      };
-    });
-  });
-
-  const setDataSourceError = (itemId: TreeViewItemId, error: Error | null) => {
-    if (!isLazyLoadingEnabled) {
+    if (itemId == null) {
+      instance.setTreeViewError(error);
       return;
     }
+
     store.update((prevState) => {
       const errors = { ...prevState.lazyLoading.dataSource.errors };
       if (error === null && errors[itemId] !== undefined) {
@@ -110,7 +124,11 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     }));
   });
 
-  const fetchItems = useEventCallback(async (parentIds?: TreeViewItemId[]) => {
+  const fetchItems = useEventCallback(async (parentIds: TreeViewItemId[]) =>
+    nestedDataManager.queue(parentIds),
+  );
+
+  const fetchItemChildren = useEventCallback(async (id: TreeViewItemId | null) => {
     if (!isLazyLoadingEnabled) {
       return;
     }
@@ -118,100 +136,66 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
     const getTreeItems = params.dataSource?.getTreeItems;
     if (!getTreeItems) {
+      if (id != null) {
+        nestedDataManager.clearPendingRequest(id);
+      }
       return;
     }
 
-    if (parentIds) {
-      await nestedDataManager.queue(parentIds);
-      return;
-    }
-
-    nestedDataManager.clear();
-    // handle loading here
-    instance.setTreeViewLoading(true);
-    // reset the state if we are refetching the first visible items
-    if (selectorDataSourceState(store.value) !== INITIAL_STATE) {
-      resetDataSourceState();
-    }
-    // handle caching here
-    const cachedData = cacheRef.current.get('root');
-
-    if (cachedData !== undefined && cachedData !== -1) {
-      instance.addItems({ items: cachedData, depth: 0, getChildrenCount });
-      instance.setTreeViewLoading(false);
-
-      return;
-    }
-
-    try {
-      const getTreeItemsResponse = await getTreeItems();
-
-      // set caching
-      cacheRef.current.set('root', getTreeItemsResponse);
-
-      // update the items in the state
-      instance.addItems({ items: getTreeItemsResponse, depth: 0, getChildrenCount });
-    } catch (error) {
-      // set the items to empty
-      instance.addItems({ items: [], depth: 0, getChildrenCount });
-      // set error state
-      instance.setTreeViewError(error as Error);
-    } finally {
-      // set loading state
-      instance.setTreeViewLoading(false);
-    }
-  });
-
-  const fetchItemChildren = useEventCallback(async (id: TreeViewItemId) => {
-    if (!isLazyLoadingEnabled) {
-      return;
-    }
-    const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
-
-    const getTreeItems = params.dataSource?.getTreeItems;
-    if (!getTreeItems) {
+    if (id != null && !selectorItemMeta(store.value, id)) {
       nestedDataManager.clearPendingRequest(id);
       return;
     }
 
-    const parent = selectorItemMeta(store.value, id);
-    if (!parent) {
-      nestedDataManager.clearPendingRequest(id);
-      return;
+    // reset the state if we are fetching the root items
+    if (id == null) {
+      if (selectorDataSourceState(store.value) !== INITIAL_STATE) {
+        resetDataSourceState();
+      }
     }
 
-    const depth = parent.depth ? parent.depth + 1 : 1;
+    const cacheKey = id ?? TREE_VIEW_ROOT_PARENT_ID;
 
     // handle loading here
     instance.setDataSourceLoading(id, true);
 
     // handle caching here
-    const cachedData = cacheRef.current.get(id);
+    const cachedData = cacheRef.current.get(cacheKey);
 
     if (cachedData !== undefined && cachedData !== -1) {
-      nestedDataManager.setRequestSettled(id);
-      instance.addItems({ items: cachedData, depth, parentId: id, getChildrenCount });
+      if (id != null) {
+        nestedDataManager.setRequestSettled(id);
+      }
+      instance.addItems({ items: cachedData, parentId: id, getChildrenCount });
       instance.setDataSourceLoading(id, false);
-
       return;
     }
+
     if (cachedData === -1) {
       instance.removeChildren(id);
     }
 
-    const existingError = selectorGetTreeItemError(store.value, id) ?? null;
+    const existingError =
+      id == null
+        ? selectorGetTreeViewError(store.value)
+        : (selectorGetTreeItemError(store.value, id) ?? null);
     if (existingError) {
       instance.setDataSourceError(id, null);
     }
 
     try {
-      const getTreeItemsResponse = await getTreeItems(id);
-      nestedDataManager.setRequestSettled(id);
+      let response: any[];
+      if (id == null) {
+        response = await getTreeItems();
+      } else {
+        response = await getTreeItems(id);
+        nestedDataManager.setRequestSettled(id);
+      }
 
       // set caching
-      cacheRef.current.set(id, getTreeItemsResponse);
+      cacheRef.current.set(cacheKey, response);
       // update the items in the state
-      instance.addItems({ items: getTreeItemsResponse, depth, parentId: id, getChildrenCount });
+      instance.addItems({ items: response, parentId: id, getChildrenCount });
     } catch (error) {
       const childrenFetchError = error as Error;
       // handle errors here
@@ -220,8 +204,9 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     } finally {
       // unset loading
       instance.setDataSourceLoading(id, false);
-
-      nestedDataManager.setRequestSettled(id);
+      if (id != null) {
+        nestedDataManager.setRequestSettled(id);
+      }
     }
   });
 
@@ -252,26 +237,26 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     }
   });
 
+  const firstRenderRef = React.useRef(true);
   React.useEffect(() => {
-    if (isLazyLoadingEnabled && firstRenderRef.current) {
-      store.update((prevState) => ({
-        ...prevState,
-        lazyLoading: {
-          ...prevState.lazyLoading,
-          enabled: true,
-        },
-      }));
-      if (params.items.length) {
-        const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
-        instance.addItems({ items: params.items, depth: 0, getChildrenCount });
-      } else {
-        const expandedItems = selectorExpandedItems(store.value);
-        if (expandedItems.length > 0) {
-          instance.resetItemExpansion();
-        }
-        instance.fetchItems();
-      }
-      firstRenderRef.current = false;
+    if (!isLazyLoadingEnabled || !firstRenderRef.current) {
+      return;
+    }
+
+    firstRenderRef.current = false;
+    store.update((prevState) => ({
+      ...prevState,
+      lazyLoading: {
+        ...prevState.lazyLoading,
+        enabled: true,
+      },
+    }));
+
+    if (params.items.length) {
+      const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
+      instance.addItems({ items: params.items, parentId: null, getChildrenCount });
+    } else {
+      instance.fetchItemChildren(null);
     }
   }, [instance, params.items, params.dataSource, isLazyLoadingEnabled, store]);
 

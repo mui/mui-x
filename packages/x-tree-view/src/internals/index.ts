@@ -57,6 +57,7 @@ export {
   selectorItemMeta,
   selectorItemIndex,
   selectorItemOrderedChildrenIds,
+  selectorGetTreeViewError,
 } from './plugins/useTreeViewItems/useTreeViewItems.selectors';
 export type {
   UseTreeViewItemsSignature,
