@@ -12,6 +12,8 @@ import { useTranslations } from '../../../utils/TranslationsContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import './DayGridEvent.css';
+// TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
+import '../../resource-legend/ResourceLegend.css';
 import '../index.css';
 
 const adapter = getAdapter();
@@ -28,6 +30,9 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     className,
     onEventClick,
     id: idProp,
+    gridRow,
+    columnSpan = 1,
+    style,
     ...other
   } = props;
 
@@ -40,6 +45,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const content = React.useMemo(() => {
     switch (variant) {
       case 'allDay':
+      case 'invisible':
         return (
           <React.Fragment>
             <p
@@ -58,6 +64,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
             )}
           </React.Fragment>
         );
+
       case 'compact':
       default:
         return (
@@ -126,8 +133,16 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         getColorClassName({ resource: eventResource }),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
+      aria-hidden={variant === 'invisible'}
       start={eventProp.start}
       end={eventProp.end}
+      style={
+        {
+          '--grid-row': gridRow,
+          '--grid-column-span': columnSpan,
+          ...style,
+        } as React.CSSProperties
+      }
       {...other}
     >
       {content}

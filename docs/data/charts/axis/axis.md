@@ -18,7 +18,7 @@ It's responsible for the mapping between your data and element positions.
 You can define custom axes by using `xAxis` and `yAxis` props.
 Those props expect an array of objects.
 
-Here is a demonstration with two lines with the same data.
+Here is a demo with two lines with the same data.
 But one uses a linear, and the other a log axis.
 Each axis definition is identified by its property `id`.
 Then each series specifies the axis they use with the `xAxisId` and `yAxisId` properties.
@@ -31,8 +31,8 @@ Or customized axes.
 
 If you do not provide a `xAxisId` or `yAxisId`, the series will use the first axis defined.
 
-That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
-Those demonstrations use the defaultized values.
+That's why in most of the demos with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
+Those demos use the defaultized values.
 :::
 
 ### Axis type
@@ -281,7 +281,7 @@ To avoid this, you can use the `margin` prop to increase the space between the c
 
 ### Rendering
 
-Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
+Axes rendering can be further customized. Below is an interactive demo of the axis props.
 
 {{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
@@ -308,7 +308,7 @@ You can also configure the values at which the scale switches from linear to log
 
 If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
 
-It will provide all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>` components as children.
+It will provide all the scaling properties to its children, and lets you use `<XAxis/>` and `<YAxis/>` components as children.
 Those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
 
 You can choose their position with `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
