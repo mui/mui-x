@@ -1,7 +1,7 @@
 name: Check PR type label
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, labeled, unlabeled]
 
 permissions: {}
@@ -9,9 +9,7 @@ permissions: {}
 jobs:
   check-label:
     name: check PR labels
+    permissions:
+      pull-requests: read
     # no need for a check if the PR is merged. That is done inside the reusable workflow
     uses: mui/mui-public/.github/workflows/prs_check-if-pr-has-type-label.yml@master
-    permissions:
-      issues: write
-      pull-requests: write
-      contents: write
