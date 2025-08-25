@@ -28,7 +28,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const contextValue = useEventCalendar(parameters);
   const view = useStore(contextValue.store, selectors.view);
   const {
-    // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).translations,
+    // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
+    translations,
     ...other
   } = forwardedProps;
 
