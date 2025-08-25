@@ -1,4 +1,4 @@
-import type { GetSeriesWithDefaultValues } from '../../internals/plugins/models/seriesConfig';
+import type { GetSeriesWithDefaultValues } from '../../plugins/models/seriesConfig';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'bar'> = (
   seriesData,

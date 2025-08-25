@@ -6,8 +6,8 @@ import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../plugins/models/plugin';
+import { AllPluginSignatures } from '../plugins/allPlugins';
 import {
   ChartsLocalizationProvider,
   ChartsLocalizationProviderProps,

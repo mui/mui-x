@@ -5,7 +5,7 @@ import type {
   ChartProApi as ChartProApiOriginal,
   ProPluginsPerSeriesType,
 } from '../context/ChartProApi';
-import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { AllPluginSignatures } from '../plugins/allPlugins';
 
 export * from './ChartContainerPro';
 

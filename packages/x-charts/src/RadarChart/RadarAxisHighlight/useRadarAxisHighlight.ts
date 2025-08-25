@@ -7,14 +7,14 @@ import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import {
   selectorChartPolarCenter,
   UseChartPolarAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+} from '../../plugins/featurePlugins/useChartPolarAxis';
 import { AxisId } from '../../models/axis';
 import { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
-import { ChartInstance } from '../../internals/plugins/models';
+import { ChartInstance } from '../../plugins/models';
 import {
   selectorChartsInteractionRotationAxisIndex,
   selectorChartsInteractionRotationAxisValue,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
+} from '../../plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 
 interface UseRadarAxisHighlightReturnValue {
   /**

@@ -1,4 +1,4 @@
-import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
+import { HighlightScope } from '../../plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
 

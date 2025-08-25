@@ -13,11 +13,11 @@ import getColor from './seriesConfig/getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
-import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import { useInternalIsZoomInteracting } from '../plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import {
   selectorChartsHighlightXAxisIndex,
   UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+} from '../plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { AxisId } from '../models/axis';
 

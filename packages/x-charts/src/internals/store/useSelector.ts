@@ -1,9 +1,9 @@
 /* We need to import the shim because React 17 does not support the `useSyncExternalStore` API.
  * More info: https://github.com/mui/mui-x/issues/18303#issuecomment-2958392341 */
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
-import { ChartAnyPluginSignature, ChartState } from '../plugins/models';
-import { ChartsSelector } from '../plugins/utils/selectors';
-import { ChartStore } from '../plugins/utils/ChartStore';
+import { ChartAnyPluginSignature, ChartState } from '../../plugins/models';
+import { ChartsSelector } from '../../plugins/utils/selectors';
+import { ChartStore } from '../../plugins/utils/ChartStore';
 
 const defaultCompare = Object.is;
 

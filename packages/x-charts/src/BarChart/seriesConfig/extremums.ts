@@ -1,4 +1,4 @@
-import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
+import { CartesianExtremumGetter } from '../../plugins/models/seriesConfig';
 import { findMinMax } from '../../internals/findMinMax';
 
 const createResult = (data: any, direction: 'x' | 'y') => {

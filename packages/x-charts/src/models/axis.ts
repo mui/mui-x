@@ -12,7 +12,7 @@ import type {
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
-import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { DefaultizedZoomOptions } from '../plugins/featurePlugins/useChartCartesianAxis';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';

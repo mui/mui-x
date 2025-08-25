@@ -1,19 +1,19 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import { selectorChartsInteractionItem } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { selectorChartsInteractionItem } from '../plugins/featurePlugins/useChartInteraction';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { useRadiusAxes, useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
-import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartSeriesConfig } from '../plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import {
   ItemTooltip,
   ItemTooltipWithMultipleValues,
   TooltipGetter,
   TooltipGetterAxesConfig,
-} from '../internals/plugins/models/seriesConfig/tooltipGetter.types';
-import { ColorProcessor } from '../internals/plugins/models/seriesConfig';
+} from '../plugins/models/seriesConfig/tooltipGetter.types';
+import { ColorProcessor } from '../plugins/models/seriesConfig';
 
 export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;

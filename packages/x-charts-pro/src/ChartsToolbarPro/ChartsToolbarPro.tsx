@@ -13,7 +13,7 @@ import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
 import { ChartsToolbarDivider } from './internals/ChartsToolbarDivider';
 import { ChartsMenu } from './internals/ChartsMenu';
-import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
+import { selectorChartZoomIsEnabled } from '../plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
 import { ChartsSlotsPro } from '../internals/material';

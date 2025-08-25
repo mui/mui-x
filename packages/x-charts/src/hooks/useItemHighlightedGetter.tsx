@@ -4,7 +4,7 @@ import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsIsFadedCallback,
   selectorChartsIsHighlightedCallback,
-} from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.selectors';
+} from '../plugins/featurePlugins/useChartHighlight/useChartHighlight.selectors';
 
 /**
  * A hook to check the highlighted state of multiple items.

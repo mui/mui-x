@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import type { ChartContainerProProps } from './ChartContainerPro';
-import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../plugins/allPlugins';
 
 export type UseChartContainerProPropsReturnValue<
   TSeries extends ChartSeriesType,

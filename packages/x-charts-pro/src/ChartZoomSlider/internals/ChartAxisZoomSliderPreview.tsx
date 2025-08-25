@@ -8,7 +8,7 @@ import {
 } from '@mui/x-charts/internals';
 import { alpha } from '@mui/system';
 import useId from '@mui/utils/useId';
-import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
+import { selectorChartAxisZoomData } from '../../plugins/useChartProZoom';
 import { ChartAxisZoomSliderPreviewContent } from './ChartAxisZoomSliderPreviewContent';
 
 const PreviewBackgroundRect = styled('rect')(({ theme }) => ({

@@ -1,4 +1,4 @@
-import { PolarExtremumGetter } from '../../internals/plugins/models/seriesConfig';
+import { PolarExtremumGetter } from '../../plugins/models/seriesConfig';
 
 export const radiusExtremumGetter: PolarExtremumGetter<'radar'> = ({ series, axisIndex }) => {
   return Object.keys(series)

@@ -5,7 +5,7 @@ import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import {
   selectorChartPolarCenter,
   UseChartPolarAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+} from '../../plugins/featurePlugins/useChartPolarAxis';
 import { isBandScale } from '../../internals/isBandScale';
 import { degToRad } from '../../internals/degToRad';
 import { clampAngle } from '../../internals/clampAngle';

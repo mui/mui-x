@@ -1,12 +1,12 @@
 import {
   useChartInteraction,
   UseChartInteractionSignature,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
+} from '../plugins/featurePlugins/useChartInteraction';
 import {
   useChartHighlight,
   UseChartHighlightSignature,
-} from '../internals/plugins/featurePlugins/useChartHighlight';
-import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
+} from '../plugins/featurePlugins/useChartHighlight';
+import { ConvertSignaturesIntoPlugins } from '../plugins/models/helpers';
 
 export type PieChartPluginSignatures = [UseChartInteractionSignature, UseChartHighlightSignature];
 

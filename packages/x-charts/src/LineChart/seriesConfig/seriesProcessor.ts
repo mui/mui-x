@@ -5,7 +5,7 @@ import { getStackingGroups } from '../../internals/stackSeries';
 import { ChartSeries, DatasetElementType, DatasetType } from '../../models/seriesType/config';
 import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
 import { SeriesId } from '../../models/seriesType/common';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { SeriesProcessor } from '../../plugins/models';
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {

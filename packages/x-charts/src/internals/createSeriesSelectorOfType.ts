@@ -2,8 +2,8 @@ import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
 import { SeriesId } from '../models/seriesType/common';
-import { createSelector } from './plugins/utils/selectors';
-import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import { createSelector } from '../plugins/utils/selectors';
+import { selectorChartSeriesProcessed } from '../plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import { useStore } from './store/useStore';
 import { useSelector } from './store/useSelector';
 

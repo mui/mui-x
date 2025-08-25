@@ -31,7 +31,7 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
+import { UseChartVoronoiSignature } from '../plugins/featurePlugins/useChartVoronoi';
 import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 
 export interface ScatterChartSlots

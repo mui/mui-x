@@ -8,7 +8,7 @@ import { RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClas
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
 import { SeriesId } from '../../models/seriesType/common';
-import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import { HighlightItemData } from '../../plugins/featurePlugins/useChartHighlight';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {

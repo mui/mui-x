@@ -1,11 +1,11 @@
-import { ChartCorePluginSignatures } from '../plugins/corePlugins';
+import { ChartCorePluginSignatures } from '../../plugins/corePlugins';
 import {
   ChartAnyPluginSignature,
   ChartPlugin,
   ChartPluginSignature,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
-} from '../plugins/models';
+} from '../../plugins/models';
 import { UseChartBaseProps } from './useCharts.types';
 
 export const extractPluginParamsFromProps = <

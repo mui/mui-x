@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { ChartAnyPluginSignature } from '../../internals/plugins/models';
+import { ChartAnyPluginSignature } from '../../plugins/models';
 import { ChartContext } from './ChartContext';
 import { ChartContextValue } from './ChartProvider.types';
 

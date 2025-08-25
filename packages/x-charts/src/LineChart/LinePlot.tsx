@@ -12,7 +12,7 @@ import {
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks';
-import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
+import { useInternalIsZoomInteracting } from '../plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useLinePlotData } from './useLinePlotData';
 
 export interface LinePlotSlots extends LineElementSlots {}

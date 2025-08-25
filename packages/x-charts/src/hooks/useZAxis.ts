@@ -3,7 +3,7 @@ import { useStore } from '../internals/store/useStore';
 import {
   selectorChartZAxis,
   UseChartZAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartZAxis';
+} from '../plugins/featurePlugins/useChartZAxis';
 import { useSelector } from '../internals/store/useSelector';
 
 export function useZAxes() {

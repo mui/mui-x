@@ -1,7 +1,7 @@
 'use client';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { selectorChartId } from '../internals/plugins/corePlugins/useChartId/useChartId.selectors';
+import { selectorChartId } from '../plugins/corePlugins/useChartId/useChartId.selectors';
 
 /**
  * Get the unique identifier of the chart.

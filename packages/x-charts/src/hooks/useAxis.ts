@@ -1,14 +1,14 @@
 'use client';
-import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { UseChartCartesianAxisSignature } from '../plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+} from '../plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
   UseChartPolarAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartPolarAxis';
+} from '../plugins/featurePlugins/useChartPolarAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {

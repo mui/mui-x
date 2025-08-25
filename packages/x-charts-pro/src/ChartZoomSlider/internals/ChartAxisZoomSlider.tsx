@@ -18,7 +18,7 @@ import {
   ZOOM_SLIDER_SIZE,
   ZOOM_SLIDER_TRACK_SIZE,
 } from './constants';
-import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
+import { selectorChartAxisZoomData } from '../../plugins/useChartProZoom';
 import { ChartAxisZoomSliderTrack } from './ChartAxisZoomSliderTrack';
 import { ChartAxisZoomSliderActiveTrack } from './ChartAxisZoomSliderActiveTrack';
 

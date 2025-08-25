@@ -1,7 +1,7 @@
 import type {
   ChartMargin,
   UseChartDimensionsParameters,
-} from './plugins/corePlugins/useChartDimensions/useChartDimensions.types';
+} from '../plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
 export function defaultizeMargin(
   input: UseChartDimensionsParameters['margin'],

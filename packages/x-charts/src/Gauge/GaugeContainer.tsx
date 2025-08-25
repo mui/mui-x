@@ -5,8 +5,8 @@ import { styled } from '@mui/material/styles';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
 import { ChartProvider } from '../context/ChartProvider';
-import { MergeSignaturesProperty } from '../internals/plugins/models';
-import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { MergeSignaturesProperty } from '../plugins/models';
+import { ChartCorePluginSignatures } from '../plugins/corePlugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps

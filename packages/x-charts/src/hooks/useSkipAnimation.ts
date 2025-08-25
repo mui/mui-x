@@ -1,5 +1,5 @@
 'use client';
-import { selectorChartSkipAnimation } from '../internals/plugins/corePlugins/useChartAnimation';
+import { selectorChartSkipAnimation } from '../plugins/corePlugins/useChartAnimation';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 

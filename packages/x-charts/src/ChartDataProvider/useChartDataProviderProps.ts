@@ -2,10 +2,10 @@
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { ChartProviderProps } from '../context/ChartProvider';
-import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';
+import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../plugins/models';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
-import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import { ChartCorePluginSignatures } from '../plugins/corePlugins';
+import { AllPluginSignatures, DEFAULT_PLUGINS } from '../plugins/allPlugins';
 import { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
 export const useChartDataProviderProps = <

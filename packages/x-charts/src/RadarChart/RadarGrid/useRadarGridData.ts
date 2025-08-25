@@ -3,7 +3,7 @@ import { useRadiusAxes } from '../../hooks';
 import {
   selectorChartPolarCenter,
   UseChartPolarAxisSignature,
-} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+} from '../../plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import { useSelector } from '../../internals/store/useSelector';
 

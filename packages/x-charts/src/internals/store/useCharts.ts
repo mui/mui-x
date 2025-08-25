@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { ChartStore } from '../plugins/utils/ChartStore';
+import { ChartStore } from '../../plugins/utils/ChartStore';
 import {
   ChartAnyPluginSignature,
   ChartInstance,
@@ -8,13 +8,13 @@ import {
   ChartPublicAPI,
   ChartState,
   ConvertSignaturesIntoPlugins,
-} from '../plugins/models';
-import { CHART_CORE_PLUGINS, ChartCorePluginSignatures } from '../plugins/corePlugins';
+} from '../../plugins/models';
+import { CHART_CORE_PLUGINS, ChartCorePluginSignatures } from '../../plugins/corePlugins';
 import { UseChartBaseProps } from './useCharts.types';
-import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
+import { UseChartInteractionState } from '../../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { ChartSeriesType } from '../../models/seriesType/config';
-import { ChartSeriesConfig } from '../plugins/models/seriesConfig';
+import { ChartSeriesConfig } from '../../plugins/models/seriesConfig';
 
 let globalId = 0;
 

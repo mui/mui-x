@@ -1,6 +1,6 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
-import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
+import { useColorProcessor } from '../plugins/corePlugins/useChartSeries/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
 import {
   CartesianChartSeriesType,
@@ -26,9 +26,9 @@ import {
   selectorChartsInteractionTooltipXAxes,
   selectorChartsInteractionTooltipYAxes,
   UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+} from '../plugins/featurePlugins/useChartCartesianAxis';
 import { ChartsLabelMarkProps } from '../ChartsLabel';
-import { selectorChartsInteractionTooltipRotationAxes } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
+import { selectorChartsInteractionTooltipRotationAxes } from '../plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
 
 export interface UseAxisTooltipReturnValue<
