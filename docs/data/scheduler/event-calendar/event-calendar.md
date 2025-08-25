@@ -30,7 +30,7 @@ The scheduler expands recurring events only for the visible range, keeps the ori
 
 - `DAILY` with interval. No selectors are required.
 
-- `WEEKLY` with interval and byDay using plain weekday codes MO..SU. Ordinals like 1MO or -1FR are not allowed for weekly.
+- `WEEKLY` with interval and `byDay` using plain weekday codes like `MO` or `SU`. Ordinals like `1MO` or `-1FR` are not allowed for weekly.
 
 - `MONTHLY` in two modes:
   - `byMonthDay` with a single day number. Months without that day are skipped automatically.
