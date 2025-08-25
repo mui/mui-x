@@ -408,7 +408,7 @@ export function matchesRecurrence(
         for (const { ord, code } of entries) {
           const occurrenceDate = nthWeekdayOfMonth(adapter, dateMonth, code, ord);
           if (occurrenceDate && adapter.isSameDay(occurrenceDate, candidateDay)) {
-            return true; // match con cualquiera de los BYDAY
+            return true;
           }
         }
         return false;
