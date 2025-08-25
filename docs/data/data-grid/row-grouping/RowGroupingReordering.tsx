@@ -14,7 +14,7 @@ export default function RowGroupingReordering() {
     apiRef,
     initialState: {
       rowGrouping: {
-        model: ['company'],
+        model: ['company', 'director'],
       },
     },
   });
