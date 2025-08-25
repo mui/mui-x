@@ -6,8 +6,8 @@ import {
   TreeViewInstance,
   TreeViewItemPluginResponse,
   TreeViewPublicAPI,
+  TreeViewStore,
 } from '../models';
-import { TreeViewStore } from '../utils/TreeViewStore';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
 import { TreeViewClasses, TreeViewSlotProps, TreeViewSlots } from './TreeViewStyleContext';
 

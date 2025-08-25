@@ -28,7 +28,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       return;
     }
 
-    const previousChildrenIds = selectorItemOrderedChildrenIds(store.value, itemId ?? null) ?? [];
+    const previousChildrenIds = selectorItemOrderedChildrenIds(store.state, itemId ?? null) ?? [];
     const escapedIdAttr = escapeOperandAttributeSelector(idAttribute ?? rootRef.current.id);
 
     // If collapsed, skip childrenIds update prevents clearing the parent's indeterminate state after opening a sibling.

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui-components/utils/store';
 import { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';
 import type { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading';
@@ -14,7 +15,6 @@ import {
 import type { UseTreeItemStatus } from '../../useTreeItem';
 import { hasPlugin } from '../../internals/utils/plugins';
 import { TreeViewPublicAPI } from '../../internals/models';
-import { useSelector } from '../../internals/hooks/useSelector';
 import {
   selectorIsItemExpandable,
   selectorIsItemExpanded,
@@ -94,23 +94,23 @@ export const useTreeItemUtils = <
 }): UseTreeItemUtilsReturnValue<TSignatures, TOptionalSignatures> => {
   const { instance, store, publicAPI } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
-  const isItemExpandable = useSelector(store, selectorIsItemExpandable, itemId);
-  const isLazyLoadingEnabled = useSelector(store, selectorIsLazyLoadingEnabled);
-  const isMultiSelectEnabled = useSelector(store, selectorIsMultiSelectEnabled);
+  const isItemExpandable = useStore(store, selectorIsItemExpandable, itemId);
+  const isLazyLoadingEnabled = useStore(store, selectorIsLazyLoadingEnabled);
+  const isMultiSelectEnabled = useStore(store, selectorIsMultiSelectEnabled);
 
-  const loading = useSelector(store, (state) =>
+  const loading = useStore(store, (state) =>
     isLazyLoadingEnabled ? selectorIsItemLoading(state, itemId) : false,
   );
-  const error = useSelector(store, (state) =>
+  const error = useStore(store, (state) =>
     isLazyLoadingEnabled ? Boolean(selectorGetTreeItemError(state, itemId)) : false,
   );
   const isExpandable = itemHasChildren(children) || isItemExpandable;
-  const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
-  const isFocused = useSelector(store, selectorIsItemFocused, itemId);
-  const isSelected = useSelector(store, selectorIsItemSelected, itemId);
-  const isDisabled = useSelector(store, selectorIsItemDisabled, itemId);
-  const isEditing = useSelector(store, selectorIsItemBeingEdited, itemId);
-  const isEditable = useSelector(store, selectorIsItemEditable, itemId);
+  const isExpanded = useStore(store, selectorIsItemExpanded, itemId);
+  const isFocused = useStore(store, selectorIsItemFocused, itemId);
+  const isSelected = useStore(store, selectorIsItemSelected, itemId);
+  const isDisabled = useStore(store, selectorIsItemDisabled, itemId);
+  const isEditing = useStore(store, selectorIsItemBeingEdited, itemId);
+  const isEditable = useStore(store, selectorIsItemEditable, itemId);
 
   const status: UseTreeItemStatus = {
     expandable: isExpandable,
@@ -136,7 +136,7 @@ export const useTreeItemUtils = <
     const multiple = isMultiSelectEnabled && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
-    if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
+    if (status.expandable && !(multiple && selectorIsItemExpanded(store.state, itemId))) {
       // make sure the children selection is propagated again
       instance.setItemExpansion({ event, itemId });
     }
@@ -201,7 +201,7 @@ export const useTreeItemUtils = <
     // As a side effect of `instance.focusItem` called here and in `handleCancelItemLabelEditing` the `labelInput` is blurred
     // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
-    if (selectorIsItemBeingEdited(store.value, itemId)) {
+    if (selectorIsItemBeingEdited(store.state, itemId)) {
       instance.updateItemLabel(itemId, newLabel);
       toggleItemEditing();
       instance.focusItem(event, itemId);
@@ -213,7 +213,7 @@ export const useTreeItemUtils = <
       return;
     }
 
-    if (selectorIsItemBeingEdited(store.value, itemId)) {
+    if (selectorIsItemBeingEdited(store.state, itemId)) {
       toggleItemEditing();
       instance.focusItem(event, itemId);
     }

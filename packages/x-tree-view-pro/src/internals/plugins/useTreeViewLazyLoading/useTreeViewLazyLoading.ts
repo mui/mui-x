@@ -52,25 +52,21 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     if (!isLazyLoadingEnabled) {
       return;
     }
-    store.update((prevState) => {
-      if (!prevState.lazyLoading.dataSource.loading[itemId] && !isLoading) {
-        return prevState;
-      }
 
-      const loading = { ...prevState.lazyLoading.dataSource.loading };
-      if (isLoading === false) {
-        delete loading[itemId];
-      } else {
-        loading[itemId] = isLoading;
-      }
+    if (!store.state.lazyLoading.dataSource.loading[itemId] && !isLoading) {
+      return;
+    }
 
-      return {
-        ...prevState,
-        lazyLoading: {
-          ...prevState.lazyLoading,
-          dataSource: { ...prevState.lazyLoading.dataSource, loading },
-        },
-      };
+    const loadingState = { ...store.state.lazyLoading.dataSource.loading };
+    if (isLoading === false) {
+      delete loadingState[itemId];
+    } else {
+      loadingState[itemId] = isLoading;
+    }
+
+    store.set('lazyLoading', {
+      ...store.state.lazyLoading,
+      dataSource: { ...store.state.lazyLoading.dataSource, loading: loadingState },
     });
   });
 
@@ -78,22 +74,19 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     if (!isLazyLoadingEnabled) {
       return;
     }
-    store.update((prevState) => {
-      const errors = { ...prevState.lazyLoading.dataSource.errors };
-      if (error === null && errors[itemId] !== undefined) {
-        delete errors[itemId];
-      } else {
-        errors[itemId] = error;
-      }
 
+    const errors = { ...store.state.lazyLoading.dataSource.errors };
+    if (error === null && errors[itemId] !== undefined) {
+      delete errors[itemId];
+    } else {
       errors[itemId] = error;
-      return {
-        ...prevState,
-        lazyLoading: {
-          ...prevState.lazyLoading,
-          dataSource: { ...prevState.lazyLoading.dataSource, errors },
-        },
-      };
+    }
+
+    errors[itemId] = error;
+
+    store.set('lazyLoading', {
+      ...store.state.lazyLoading,
+      dataSource: { ...store.state.lazyLoading.dataSource, errors },
     });
   };
 
@@ -101,13 +94,8 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     if (!isLazyLoadingEnabled) {
       return;
     }
-    store.update((prevState) => ({
-      ...prevState,
-      lazyLoading: {
-        ...prevState.lazyLoading,
-        dataSource: INITIAL_STATE,
-      },
-    }));
+
+    store.set('lazyLoading', { ...store.state.lazyLoading, dataSource: INITIAL_STATE });
   });
 
   const fetchItems = useEventCallback(async (parentIds?: TreeViewItemId[]) => {
@@ -130,7 +118,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     // handle loading here
     instance.setTreeViewLoading(true);
     // reset the state if we are refetching the first visible items
-    if (selectorDataSourceState(store.value) !== INITIAL_STATE) {
+    if (selectorDataSourceState(store.state) !== INITIAL_STATE) {
       resetDataSourceState();
     }
     // handle caching here
@@ -174,7 +162,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       return;
     }
 
-    const parent = selectorItemMeta(store.value, id);
+    const parent = selectorItemMeta(store.state, id);
     if (!parent) {
       nestedDataManager.clearPendingRequest(id);
       return;
@@ -199,7 +187,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       instance.removeChildren(id);
     }
 
-    const existingError = selectorGetTreeItemError(store.value, id) ?? null;
+    const existingError = selectorGetTreeItemError(store.state, id) ?? null;
     if (existingError) {
       instance.setDataSourceError(id, null);
     }
@@ -233,14 +221,14 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
     eventParameters.isExpansionPrevented = true;
     await instance.fetchItems([eventParameters.itemId]);
-    const fetchErrors = Boolean(selectorGetTreeItemError(store.value, eventParameters.itemId));
+    const fetchErrors = Boolean(selectorGetTreeItemError(store.state, eventParameters.itemId));
     if (!fetchErrors) {
       instance.applyItemExpansion({
         itemId: eventParameters.itemId,
         shouldBeExpanded: true,
         event: eventParameters.event,
       });
-      if (selectorIsItemSelected(store.value, eventParameters.itemId)) {
+      if (selectorIsItemSelected(store.state, eventParameters.itemId)) {
         // make sure selection propagation works correctly
         instance.setItemSelection({
           event: eventParameters.event as React.SyntheticEvent,
@@ -254,18 +242,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
   React.useEffect(() => {
     if (isLazyLoadingEnabled && firstRenderRef.current) {
-      store.update((prevState) => ({
-        ...prevState,
-        lazyLoading: {
-          ...prevState.lazyLoading,
-          enabled: true,
-        },
-      }));
+      store.set('lazyLoading', { ...store.state.lazyLoading, enabled: true });
       if (params.items.length) {
         const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
         instance.addItems({ items: params.items, depth: 0, getChildrenCount });
       } else {
-        const expandedItems = selectorExpandedItems(store.value);
+        const expandedItems = selectorExpandedItems(store.state);
         if (expandedItems.length > 0) {
           instance.resetItemExpansion();
         }

@@ -165,6 +165,7 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
 export interface UseTreeItemCheckboxSlotPropsFromSelection {
   visible?: boolean;
   checked?: boolean;
+  indeterminate?: boolean;
   disabled?: boolean;
   tabIndex?: -1;
   onChange?: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;

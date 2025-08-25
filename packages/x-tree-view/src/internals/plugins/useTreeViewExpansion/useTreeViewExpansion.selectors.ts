@@ -1,18 +1,19 @@
+import { createSelector } from '@base-ui-components/utils/store';
 import { TreeViewItemId } from '../../../models';
-import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
+import { TreeViewState } from '../../models';
 import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
-const selectorExpansion: TreeViewRootSelector<UseTreeViewExpansionSignature> = (state) =>
-  state.expansion;
-
+const selectorExpansion = createSelector(
+  (state: TreeViewState<[UseTreeViewExpansionSignature]>) => state.expansion,
+);
 /**
  * Get the expanded items.
  * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
  * @returns {TreeViewItemId[]} The expanded items.
  */
 export const selectorExpandedItems = createSelector(
-  [selectorExpansion],
+  selectorExpansion,
   (expansionState) => expansionState.expandedItems,
 );
 
@@ -21,7 +22,7 @@ export const selectorExpandedItems = createSelector(
  * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
  * @returns {TreeViewExpansionValue} The expanded items as a Map.
  */
-export const selectorExpandedItemsMap = createSelector([selectorExpandedItems], (expandedItems) => {
+export const selectorExpandedItemsMap = createSelector(selectorExpandedItems, (expandedItems) => {
   const expandedItemsMap = new Map<TreeViewItemId, true>();
   expandedItems.forEach((id) => {
     expandedItemsMap.set(id, true);
@@ -33,11 +34,12 @@ export const selectorExpandedItemsMap = createSelector([selectorExpandedItems], 
 /**
  * Check if an item is expanded.
  * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
+ * @param {TreeViewItemId} itemId The id of the item to check.
  * @returns {boolean} `true` if the item is expanded, `false` otherwise.
  */
 export const selectorIsItemExpanded = createSelector(
-  [selectorExpandedItemsMap, (_, itemId: string) => itemId],
-  (expandedItemsMap, itemId) => expandedItemsMap.has(itemId),
+  selectorExpandedItemsMap,
+  (expandedItemsMap, itemId: TreeViewItemId) => expandedItemsMap.has(itemId),
 );
 
 /**
@@ -46,8 +48,8 @@ export const selectorIsItemExpanded = createSelector(
  * @returns {boolean} `true` if the item is expandable, `false` otherwise.
  */
 export const selectorIsItemExpandable = createSelector(
-  [selectorItemMeta],
-  (itemMeta) => itemMeta?.expandable ?? false,
+  selectorItemMeta,
+  (itemMeta, _itemId: TreeViewItemId) => itemMeta?.expandable ?? false,
 );
 
 /**
@@ -56,6 +58,6 @@ export const selectorIsItemExpandable = createSelector(
  * @returns {'content' | 'iconContainer'} The slot that triggers the item's expansion when clicked. Is `null` if the item is not expandable.
  */
 export const selectorItemExpansionTrigger = createSelector(
-  [selectorExpansion],
+  selectorExpansion,
   (expansionState) => expansionState.expansionTrigger,
 );

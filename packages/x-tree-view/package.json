@@ -40,13 +40,13 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui-components/utils": "0.1.0",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:",
     "react-transition-group": "catalog:",
-    "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
   },
   "peerDependencies": {
