@@ -453,7 +453,7 @@ export const useGridColumnResize = (
     }
 
     refs.groupHeaderElements = findGroupHeaderElementsFromField(
-      apiRef.current.columnHeadersContainerRef?.current!,
+      apiRef.current.columnHeadersContainerRef?.current as Element,
       colDef.field,
     );
 

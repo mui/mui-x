@@ -439,7 +439,7 @@ const getTreeDataFilteredRows: GetTreeDataFilteredRows = (
   columnsWithDefaultColDef,
 ): GridValidRowModel[] => {
   let filteredRows = [...rows];
-  if (filterModel && filterModel.quickFilterValues?.length! > 0) {
+  if (filterModel?.quickFilterValues && filterModel.quickFilterValues.length > 0) {
     filteredRows = getQuicklyFilteredRows(rows, filterModel, columnsWithDefaultColDef);
   }
   if ((filterModel?.items.length ?? 0) > 0) {

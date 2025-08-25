@@ -27,11 +27,12 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
   }
 
-  const getOptionValue = resolvedColumn?.getOptionValue!;
-  const getOptionLabel = resolvedColumn?.getOptionLabel!;
+  const getOptionValue = resolvedColumn?.getOptionValue;
+  const getOptionLabel = resolvedColumn?.getOptionLabel;
 
   const isOptionEqualToValue = React.useCallback(
-    (option: ValueOptions, value: ValueOptions) => getOptionValue(option) === getOptionValue(value),
+    (option: ValueOptions, value: ValueOptions) =>
+      getOptionValue?.(option) === getOptionValue?.(value),
     [getOptionValue],
   );
 
@@ -47,7 +48,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
 
     return item.value.reduce<ValueOptions[]>((acc, value) => {
-      const resolvedValue = resolvedValueOptions.find((v) => getOptionValue(v) === value);
+      const resolvedValue = resolvedValueOptions.find((v) => getOptionValue?.(v) === value);
       if (resolvedValue != null) {
         acc.push(resolvedValue);
       }
@@ -59,7 +60,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     NonNullable<AutocompleteProps<ValueOptions, true, false, true>['onChange']>
   >(
     (event, value) => {
-      applyValue({ ...item, value: value.map(getOptionValue) });
+      applyValue({ ...item, value: value.map(getOptionValue!) });
     },
     [applyValue, item, getOptionValue],
   );

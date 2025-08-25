@@ -11,8 +11,7 @@ import {
 export function setupExcelExportWebWorker(
   workerOptions: Pick<GridExcelExportOptions, 'exceljsPostProcess' | 'exceljsPreProcess'> = {},
 ) {
-  // eslint-disable-next-line no-restricted-globals
-  addEventListener('message', async (event: MessageEvent<ExcelExportInitEvent>) => {
+  globalThis.addEventListener('message', async (event: MessageEvent<ExcelExportInitEvent>) => {
     const {
       namespace,
       serializedColumns,

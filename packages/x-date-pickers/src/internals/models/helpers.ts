@@ -24,7 +24,7 @@ type OverridesStyleRules<
     (ComponentName extends keyof ComponentsPropsList
       ? ComponentsPropsList[ComponentName] &
           Record<string, unknown> & {
-            ownerState: OwnerState extends Object
+            ownerState: OwnerState extends object
               ? OwnerState
               : ComponentsPropsList[ComponentName] & Record<string, unknown>;
           }

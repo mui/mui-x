@@ -145,8 +145,8 @@ interface Props
 
 /* I use this method to parse whatever component props are passed in and format them for the code example, 
 so the code example includes the same props as the rendered component. e.g. the views={['month']} */
-function formatComponentProps(componentProps?: Object, spacing: number = 1) {
-  function formatObject(obj: Object, indentLevel = 0, separator = ': '): string {
+function formatComponentProps(componentProps?: object, spacing: number = 1) {
+  function formatObject(obj: object, indentLevel = 0, separator = ': '): string {
     const indent = ' '.repeat(indentLevel * 2);
 
     return (Object.keys(obj) as Array<keyof typeof obj>)
@@ -161,7 +161,7 @@ function formatComponentProps(componentProps?: Object, spacing: number = 1) {
           return val;
         };
 
-        const value = obj[key];
+        const value = obj[key] as object | Array<unknown> | string;
         if (typeof value === 'object' && !Array.isArray(value)) {
           return `${indent}${key}${separator}${separator === '=' ? '{' : ''}{\n${formatObject(
             getValue(value),

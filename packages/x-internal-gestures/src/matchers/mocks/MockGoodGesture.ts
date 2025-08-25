@@ -36,7 +36,6 @@ export class MockGoodGesture extends Gesture<string> {
   }
 
   // Extra property for coverage
-  // eslint-disable-next-line class-methods-use-this
   public extra = () => {};
 
   // Add custom properties for testing complex options
