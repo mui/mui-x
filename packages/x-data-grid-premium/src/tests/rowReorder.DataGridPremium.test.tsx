@@ -9,7 +9,7 @@ import {
   act,
 } from '@mui/internal-test-utils';
 import { RefObject } from '@mui/x-internals/types';
-import { getColumnValues, getRow } from 'test/utils/helperFn';
+import { getCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -826,72 +826,65 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       });
 
       it('should auto-expand collapsed groups at multiple levels when leaf is dragged over', async () => {
+        const props = { ...baselineProps };
+        delete props.defaultGroupingExpansionDepth;
         render(
           <div style={{ width: 500, height: 500 }}>
-            <DataGridPremium
-              {...baselineProps}
-              defaultGroupingExpansionDepth={0} // All collapsed by default
-              isGroupExpandedByDefault={(node: GridGroupNode) => {
-                // Expand Microsoft and its Sales dept to have visible leaf rows
-                if (node.groupingKey === 'Microsoft') {
-                  return true;
-                }
-                if (
-                  (node.parent as unknown as GridGroupNode)?.groupingKey === 'Microsoft' &&
-                  node.groupingKey === 'Sales'
-                ) {
-                  return true;
-                }
-                return false;
-              }}
-            />
+            <DataGridPremium {...props} />
           </div>,
         );
 
-        const values = getColumnValues(1);
-        const googleIndex = values.findIndex((v) => v?.includes('Google ('));
-        const googleRow = getRow(googleIndex);
+        // State: Companies expanded, departments visible but collapsed
+        expect(getColumnValues(1)).to.include('Microsoft (5)');
 
-        // Use the first visible row as the source
-        const allRows = screen.getAllByRole('row');
-        const sourceRow = allRows.find(
-          (row) =>
-            row.getAttribute('data-id') &&
-            !row.querySelector('[data-field="__row_group_by_columns_group__"]'),
+        // Expand Microsoft
+        fireEvent.click(getCell(0, 1).querySelector('button')!);
+
+        // Should include child groups of Microsoft
+        const updatedValues = getColumnValues(1);
+        expect(updatedValues.length).to.equal(5);
+        expect(updatedValues).to.include('Engineering (3)');
+
+        // Expand Microsoft > Engineering
+        fireEvent.click(getCell(1, 1).querySelector('button')!);
+        const values = getColumnValues(1);
+        expect(values.length).to.equal(8);
+
+        const msEngIndex = values.findIndex((v) => v?.includes('Engineering (3)'));
+
+        // Microsoft Engineering's first child as source
+        const sourceRow = getRow(msEngIndex + 1);
+
+        const msSalesIndex = values.findIndex((v) => v?.includes('Sales (2)'));
+
+        const sourceCell = sourceRow.querySelector('[role="gridcell"]')!.firstChild!;
+        const targetCell = getRow(msSalesIndex).querySelector('[role="gridcell"]')!;
+
+        // Start drag
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+
+        // Drag over collapsed Google
+        const dragOverEvent = createDragOverEvent(targetCell, 'below');
+        fireEvent(targetCell, dragOverEvent);
+
+        // Wait for auto-expand - Google should show its departments
+        await waitFor(
+          () => {
+            const currentValues = getColumnValues(1);
+            expect(currentValues.length).to.be.greaterThan(8);
+          },
+          { timeout: 1500 },
         );
 
-        if (sourceRow) {
-          const sourceCell = sourceRow.querySelector('[role="gridcell"]')!.firstChild!;
-          const targetCell = googleRow.querySelector('[role="gridcell"]')!;
+        const currentValues = getColumnValues(1);
+        expect(currentValues.length).to.equal(10);
 
-          fireDragStart(sourceCell);
-          fireEvent.dragEnter(targetCell);
+        // Verify that the children of Sales are visible
+        const salesIndex = currentValues.findIndex((v) => v?.includes('Sales (2)'));
+        const googleIndex = currentValues.findIndex((v) => v?.includes('Google (3)'));
 
-          // Drag over collapsed Google
-          const dragOverEvent = createDragOverEvent(targetCell, 'below');
-          fireEvent(targetCell, dragOverEvent);
-
-          // Wait for auto-expand - Google should show its departments
-          await waitFor(
-            () => {
-              const currentValues = getColumnValues(1);
-              // Look for any department under Google (Engineering or other)
-              const hasExpandedDept = currentValues.some(
-                (v, i) => i > googleIndex && (v === 'Engineering (3)' || v === 'Design (2)'),
-              );
-              expect(hasExpandedDept).to.equal(true);
-            },
-            { timeout: 1000 },
-          );
-
-          // Complete the drag
-          const dragEndEvent = createDragEndEvent(sourceCell);
-          fireEvent(sourceCell, dragEndEvent);
-        }
-
-        const finalValues = getColumnValues(1);
-        const finalGoogleIndex = finalValues.findIndex((v) => v?.includes('Google ('));
-        expect(finalGoogleIndex).to.not.equal(-1);
+        expect(googleIndex).to.equal(salesIndex + 3); // Sales has two children
       });
     });
 
