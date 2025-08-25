@@ -49,15 +49,15 @@ export interface ChartPrintExportOptions extends ChartExportOptions {}
 export interface ChartImageExportOptions extends ChartExportOptions {
   /**
    * The format of the image to be exported.
-   * Browsers are required to support 'image/png'. Some browsers also support 'image/jpeg' and 'image/webp'.
+   * Browsers are required to support 'image/png'. Some browsers also support 'image/jpeg', 'image/webp', and 'image/svg+xml'.
    * If the provided `type` is not supported by the browser, it will default to 'image/png'.
    * @default 'image/png'
    */
-  type?: 'image/png' | string;
+  type?: 'image/png' | 'image/svg+xml' | string;
 
   /**
    * The quality of the image to be exported between 0 and 1. This is only applicable for lossy formats, such as
-   * 'image/jpeg' and 'image/webp'. 'image/png' does not support this option.
+   * 'image/jpeg' and 'image/webp'. 'image/png' and 'image/svg+xml' do not support this option.
    * @default 0.9
    */
   quality?: number;

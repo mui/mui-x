@@ -42,6 +42,7 @@ export default function ExportChartToolbarCustomization() {
     'image/png': true,
     'image/jpeg': false,
     'image/webp': false,
+    'image/svg+xml': false,
   });
 
   const imageExportOptions = Object.entries(formats)

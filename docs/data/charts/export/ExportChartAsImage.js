@@ -43,6 +43,11 @@ function ExportParamsSelector({ apiRef }) {
             control={<Radio />}
             label="image/webp"
           />
+          <FormControlLabel
+            value="image/svg+xml"
+            control={<Radio />}
+            label="image/svg+xml"
+          />
         </RadioGroup>
       </FormControl>
       <FormControl>
@@ -50,7 +55,7 @@ function ExportParamsSelector({ apiRef }) {
           label="Quality"
           value={rawQuality}
           onChange={(event) => setRawQuality(event.target.value)}
-          disabled={type === 'image/png'}
+          disabled={type === 'image/png' || type === 'image/svg+xml'}
           helperText="Only applicable to lossy formats."
         />
       </FormControl>

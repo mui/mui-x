@@ -52,6 +52,16 @@ export default function ExportOptionSelector(props) {
             />
           }
         />
+        <FormControlLabel
+          label="image/svg+xml"
+          control={
+            <Checkbox
+              name="image/svg+xml"
+              checked={formats['image/svg+xml']}
+              onChange={handleChange}
+            />
+          }
+        />
       </FormGroup>
     </FormControl>
   );

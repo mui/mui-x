@@ -1,6 +1,7 @@
 import { ChartPlugin } from '@mui/x-charts/internals';
 import { printChart } from './print';
 import { exportImage } from './exportImage';
+import { exportSvg } from './exportSvg';
 import {
   ChartImageExportOptions,
   ChartPrintExportOptions,
@@ -51,7 +52,13 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
       try {
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
-        await exportImage(chartRoot, options);
+        
+        // Check if it's SVG export
+        if (options?.type === 'image/svg+xml') {
+          await exportSvg(chartRoot, options);
+        } else {
+          await exportImage(chartRoot, options);
+        }
       } catch (error) {
         console.error('MUI X Charts: Error exporting chart as image:', error);
       } finally {
