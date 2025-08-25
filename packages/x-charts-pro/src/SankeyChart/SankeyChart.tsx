@@ -153,9 +153,15 @@ SankeyChart.propTypes = {
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {SankeyItemIdentifier} sankeyItemIdentifier The sankey item identifier.
+   * @param {SankeyLinkIdentifierWithData} link The sankey link identifier.
    */
-  onItemClick: PropTypes.func,
+  onLinkClick: PropTypes.func,
+  /**
+   * Callback fired when a sankey item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {SankeyNodeIdentifierWithData} node The sankey node identifier.
+   */
+  onNodeClick: PropTypes.func,
   /**
    * The series to display in the Sankey chart.
    * A single object is expected.

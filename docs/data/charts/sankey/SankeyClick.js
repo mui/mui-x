@@ -74,7 +74,8 @@ export default function SankeyClick() {
       <Box sx={{ flexGrow: 1 }}>
         <SankeyChart
           {...sankeyChartsParams}
-          onItemClick={(event, d) => setItemData(d)}
+          onNodeClick={(event, d) => setItemData(d)}
+          onLinkClick={(event, d) => setItemData(d)}
         />
       </Box>
 

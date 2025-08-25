@@ -29,7 +29,8 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
     // onHighlightChange,
     className,
     apiRef,
-    onItemClick,
+    onNodeClick,
+    onLinkClick,
     ...rest
   } = props;
 
@@ -56,7 +57,8 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
   };
 
   const sankeyPlotProps = {
-    onItemClick,
+    onNodeClick,
+    onLinkClick,
   };
 
   const overlayProps: ChartsOverlayProps = {

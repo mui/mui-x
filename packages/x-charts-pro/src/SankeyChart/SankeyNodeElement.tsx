@@ -4,7 +4,11 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
-import { SankeyLayoutNode, type SankeyItemIdentifierWithData } from './sankey.types';
+import {
+  SankeyLayoutNode,
+  type SankeyItemIdentifierWithData,
+  type SankeyNodeIdentifierWithData,
+} from './sankey.types';
 
 export interface SankeyNodeElementProps {
   /**
@@ -20,11 +24,14 @@ export interface SankeyNodeElementProps {
    */
   showLabel?: boolean;
   /**
-   * Handler for click events
-   * @param {React.MouseEvent<SVGRectElement>} event - The click event
-   * @param {SankeyLayoutNode} node - The node data
+   * Callback fired when a sankey item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {SankeyNodeIdentifierWithData} node The sankey node identifier.
    */
-  onClick?: (event: React.MouseEvent<SVGRectElement>, node: SankeyItemIdentifierWithData) => void;
+  onClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    node: SankeyNodeIdentifierWithData,
+  ) => void;
 }
 
 /**
@@ -51,7 +58,7 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
 
     const labelAnchor = node.depth === 0 ? 'start' : 'end';
 
-    const identifier: SankeyItemIdentifierWithData = {
+    const identifier: SankeyNodeIdentifierWithData = {
       type: 'sankey',
       seriesId,
       subType: 'node',

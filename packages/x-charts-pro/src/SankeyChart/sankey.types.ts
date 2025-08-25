@@ -215,59 +215,56 @@ export interface DefaultizedSankeySeriesType
   highlightScope?: HighlightScope;
 }
 
-export type SankeyItemIdentifier = {
+type SankeyNodeIdentifierBase = {
   type: 'sankey';
   /**
    * Unique identifier for the series
    */
   seriesId: SeriesId;
-} & (
-  | {
-      /**
-       * Subtype to differentiate between node and link
-       */
-      subType: 'node';
-      /**
-       * The id of the node
-       */
-      nodeId: SankeyNodeId;
-    }
-  | {
-      /**
-       * Subtype to differentiate between node and link
-       */
-      subType: 'link';
-      /**
-       * The id of the source node
-       */
-      sourceId: SankeyNodeId;
-      /**
-       * The id of the target node
-       */
-      targetId: SankeyNodeId;
-    }
-);
+};
 
-export type SankeyItemIdentifierWithData = SankeyItemIdentifier &
-  (
-    | {
-        /**
-         * Subtype to differentiate between node and link
-         */
-        subType: 'node';
-        /**
-         * The node object with all the calculated properties
-         */
-        node: SankeyLayoutNode;
-      }
-    | {
-        /**
-         * Subtype to differentiate between node and link
-         */
-        subType: 'link';
-        /**
-         * The link object with all the calculated properties
-         */
-        link: SankeyLayoutLink;
-      }
-  );
+export type SankeyNodeIdentifier = SankeyNodeIdentifierBase & {
+  /**
+   * Subtype to differentiate between node and link
+   */
+  subType: 'node';
+  /**
+   * The id of the node
+   */
+  nodeId: SankeyNodeId;
+};
+
+export type SankeyNodeIdentifierWithData = SankeyNodeIdentifier & {
+  /**
+   * The node object with all the calculated properties
+   */
+  node: SankeyLayoutNode;
+};
+
+export type SankeyLinkIdentifier = SankeyNodeIdentifierBase & {
+  /**
+   * Subtype to differentiate between node and link
+   */
+  subType: 'link';
+  /**
+   * The id of the source node
+   */
+  sourceId: SankeyNodeId;
+  /**
+   * The id of the target node
+   */
+  targetId: SankeyNodeId;
+};
+
+export type SankeyLinkIdentifierWithData = SankeyLinkIdentifier & {
+  /**
+   * The link object with all the calculated properties
+   */
+  link: SankeyLayoutLink;
+};
+
+export type SankeyItemIdentifier = SankeyNodeIdentifier | SankeyLinkIdentifier;
+
+export type SankeyItemIdentifierWithData =
+  | SankeyNodeIdentifierWithData
+  | SankeyLinkIdentifierWithData;

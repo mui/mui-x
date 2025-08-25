@@ -19,11 +19,18 @@
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
-    "onItemClick": {
+    "onLinkClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, sankeyItemIdentifier: SankeyItemIdentifier) => void",
-        "describedArgs": ["event", "sankeyItemIdentifier"]
+        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, link: SankeyLinkIdentifierWithData) => void",
+        "describedArgs": ["event", "link"]
+      }
+    },
+    "onNodeClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, node: SankeyNodeIdentifierWithData) => void",
+        "describedArgs": ["event", "node"]
       }
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

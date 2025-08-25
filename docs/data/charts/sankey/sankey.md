@@ -101,7 +101,9 @@ The `iterations` prop controls how many times the layout algorithm runs to optim
 
 ### Click event
 
-You can use the `onItemClick` prop to handle click events on both nodes and links in the Sankey chart. The callback receives the mouse event and a `SankeyItemIdentifier` object that contains information about the clicked item.
+You can use the `onNodeClick` and `onLinkClick` props to handle click events on both nodes and links in the Sankey chart. The callback receives the mouse event and a `SankeyNodeIdentifierWithData` or `SankeyLinkIdentifierWithData` respectively, both of which contain information about the clicked item.
+
+The `SankeyItemIdentifierWithData` type is a union of `SankeyNodeIdentifierWithData` and `SankeyLinkIdentifierWithData`, allowing you to handle both types of items in a single callback if needed.
 
 {{"demo": "SankeyClick.js"}}
 

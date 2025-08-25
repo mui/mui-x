@@ -3,7 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useDrawingArea } from '@mui/x-charts/hooks';
-import { SankeyLayout, type SankeyItemIdentifier } from './sankey.types';
+import {
+  SankeyLayout,
+  type SankeyItemIdentifier,
+  type SankeyLinkIdentifierWithData,
+  type SankeyNodeIdentifierWithData,
+} from './sankey.types';
 import { calculateSankeyLayout } from './calculateSankeyLayout';
 import { SankeyNodeElement } from './SankeyNodeElement';
 import { SankeyLinkElement } from './SankeyLinkElement';
@@ -20,11 +25,21 @@ export interface SankeyPlotProps {
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {SankeyItemIdentifier} sankeyItemIdentifier The sankey item identifier.
+   * @param {SankeyNodeIdentifierWithData} node The sankey node identifier.
    */
-  onItemClick?: (
+  onNodeClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    sankeyItemIdentifier: SankeyItemIdentifier,
+    node: SankeyNodeIdentifierWithData,
+  ) => void;
+
+  /**
+   * Callback fired when a sankey item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {SankeyLinkIdentifierWithData} link The sankey link identifier.
+   */
+  onLinkClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    link: SankeyLinkIdentifierWithData,
   ) => void;
 }
 
@@ -32,7 +47,7 @@ export interface SankeyPlotProps {
  * Renders a Sankey diagram plot.
  */
 function SankeyPlot(props: SankeyPlotProps) {
-  const { classes: inputClasses, onItemClick } = props;
+  const { classes: inputClasses, onLinkClick, onNodeClick } = props;
 
   const seriesContext = useSankeySeriesContext();
   const series = seriesContext?.series[seriesContext?.seriesOrder?.[0]]!;
@@ -61,7 +76,7 @@ function SankeyPlot(props: SankeyPlotProps) {
             key={`${link.source.id}-${link.target.id}`}
             link={link}
             opacity={linkOptions?.opacity}
-            onClick={onItemClick}
+            onClick={onLinkClick}
           />
         ))}
       </g>
@@ -73,7 +88,7 @@ function SankeyPlot(props: SankeyPlotProps) {
             key={node.id}
             node={node}
             showLabel={nodeOptions?.showLabels}
-            onClick={onItemClick}
+            onClick={onNodeClick}
           />
         ))}
       </g>
@@ -101,9 +116,15 @@ SankeyPlot.propTypes = {
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {SankeyItemIdentifier} sankeyItemIdentifier The sankey item identifier.
+   * @param {SankeyLinkIdentifierWithData} link The sankey link identifier.
    */
-  onItemClick: PropTypes.func,
+  onLinkClick: PropTypes.func,
+  /**
+   * Callback fired when a sankey item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {SankeyNodeIdentifierWithData} node The sankey node identifier.
+   */
+  onNodeClick: PropTypes.func,
 } as any;
 
 export { SankeyPlot };
