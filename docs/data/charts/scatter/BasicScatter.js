@@ -1,21 +1,24 @@
 import * as React from 'react';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { data } from './randomData';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+
+const data = [
+  { x: 4, y: 1 },
+  { x: 6, y: 2 },
+  { x: 2, y: 8 },
+  { x: 2, y: 8 },
+  { x: 1.5, y: 1 },
+  { x: 4, y: 2 },
+];
 
 export default function BasicScatter() {
   return (
-    <ScatterChart
-      height={300}
-      series={[
-        {
-          label: 'Series A',
-          data: data.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
-        },
-        {
-          label: 'Series B',
-          data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
-        },
-      ]}
-    />
+    <React.StrictMode>
+      <ScatterChartPro
+        series={[{ data }]}
+        height={300}
+        xAxis={[{ zoom: { filterMode: 'discard' } }]}
+        yAxis={[{ max: 7 }]}
+      />
+    </React.StrictMode>
   );
 }
