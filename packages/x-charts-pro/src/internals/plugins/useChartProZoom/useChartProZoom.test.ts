@@ -1,5 +1,5 @@
 import { ZoomData } from '@mui/x-charts/internals';
-import { initializeZoomData } from './useChartProZoom';
+import { initializeZoomData } from './initializeZoomData';
 
 describe('initializeZoomData', () => {
   const defaultZoomOptions = {
