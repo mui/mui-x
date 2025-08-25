@@ -31,9 +31,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     gridRow,
     columnSpan = 1,
     style,
-    gridRow,
-    columnSpan = 1,
-    style,
     ...other
   } = props;
 
@@ -47,7 +44,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const content = React.useMemo(() => {
     switch (variant) {
       case 'allDay':
-      case 'invisible':
       case 'invisible':
         return (
           <React.Fragment>
