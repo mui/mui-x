@@ -1,7 +1,7 @@
 ---
 title: React Radar chart
 productId: x-charts
-components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, ChartsWrapper
+components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarAxis, ChartsWrapper
 ---
 
 # Charts - Radar
@@ -52,6 +52,18 @@ The radar chart displays a grid behind the series that can be configured with:
 - `stripeColor` The callback that defines stripe colors. Set it to `null` to remove stripes.
 
 {{"demo": "DemoRadar.js" }}
+
+## Axis values
+
+You can add labels to metrics with the `<RadarAxis />`.
+This component requires a `metric` prop and can be configured with:
+
+- `angle` The angle used to display labels. By default it's the one associated to the given metric.
+- `labelOrientation` The orientation strategy. Either horizontal labels with moving anchor point, or label rotating with the axis.
+- `divisions` The number of labels to display.
+- `textAnchor`/`dominantBaseline` The label placement. Can either be a string, or a function with the `angle` value (in degree) as an argument.
+
+{{"demo": "DemoRadarAxis.js" }}
 
 ## Highlight
 
