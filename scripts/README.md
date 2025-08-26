@@ -70,7 +70,7 @@ In case of a problem, another method to generate the changelog is available at t
 ### Release the packages
 
 > [!WARNING]
-> If one of the packages hasn't been published before, a team member with admin role will have to do the initial publish. To find team member, use the command:
+> If one of the packages hasn't been published before, a team member with admin role must do the initial publish. To find team member, use the command:
 >
 > ```bash
 > npm team ls mui:MUI-X
