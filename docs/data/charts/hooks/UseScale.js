@@ -23,18 +23,11 @@ function CustomDataPoints() {
       {data.map((point, index) => {
         const x = xMapper(point.x);
         const y = yMapper(point.y);
-        
+
         return (
           <g key={index}>
             {/* Custom data point */}
-            <circle
-              cx={x}
-              cy={y}
-              r={6}
-              fill="red"
-              stroke="white"
-              strokeWidth={2}
-            />
+            <circle cx={x} cy={y} r={6} fill="red" stroke="white" strokeWidth={2} />
             {/* Value label */}
             <text
               x={x}
@@ -70,34 +63,40 @@ function ScaleInfo() {
   const transformedY = yScale(exampleY);
 
   return (
-    <div style={{
-      position: 'absolute',
-      top: 10,
-      right: 10,
-      background: 'rgba(255, 255, 255, 0.95)',
-      padding: 12,
-      borderRadius: 4,
-      fontSize: '12px',
-      border: '1px solid #e0e0e0',
-      fontFamily: 'monospace',
-      maxWidth: 250,
-    }}>
+    <div
+      style={{
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        background: 'rgba(255, 255, 255, 0.95)',
+        padding: 12,
+        borderRadius: 4,
+        fontSize: '12px',
+        border: '1px solid #e0e0e0',
+        fontFamily: 'monospace',
+        maxWidth: 250,
+      }}
+    >
       <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontFamily: 'inherit' }}>
         Scale Information
       </h4>
-      
+
       <div style={{ marginBottom: 8 }}>
         <strong>X Scale:</strong>
         <div>Domain: [{xDomain.join(', ')}]</div>
         <div>Range: [{xRange.join(', ')}]</div>
-        <div>Example: {exampleX} → {transformedX?.toFixed(1)}px</div>
+        <div>
+          Example: {exampleX} → {transformedX?.toFixed(1)}px
+        </div>
       </div>
-      
+
       <div style={{ marginBottom: 8 }}>
         <strong>Y Scale:</strong>
         <div>Domain: [{yDomain.join(', ')}]</div>
         <div>Range: [{yRange.join(', ')}]</div>
-        <div>Example: {exampleY} → {transformedY?.toFixed(1)}px</div>
+        <div>
+          Example: {exampleY} → {transformedY?.toFixed(1)}px
+        </div>
       </div>
 
       <div style={{ fontSize: '10px', color: '#666', marginTop: 8 }}>
@@ -107,7 +106,7 @@ function ScaleInfo() {
   );
 }
 
-export default function UseScaleDemo() {
+export default function UseScale() {
   return (
     <div style={{ width: '100%', height: 400, position: 'relative' }}>
       <LineChart

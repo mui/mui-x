@@ -37,7 +37,7 @@ function BasicUseLegendExample() {
   );
 }
 
-export default function UseLegendDemo() {
+export default function UseLegend() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <PieChart

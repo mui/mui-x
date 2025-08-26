@@ -65,7 +65,7 @@ function CustomComponent() {
 
 This example shows how to use scale functions to position custom elements:
 
-{{"demo": "UseScaleDemo.js"}}
+{{"demo": "UseScale.js"}}
 
 ## Caveats
 

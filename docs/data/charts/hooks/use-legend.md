@@ -20,7 +20,7 @@ function CustomLegend() {
 }
 ```
 
-{{"demo": "UseLegendDemo.js"}}
+{{"demo": "UseLegend.js"}}
 
 ## Return value
 

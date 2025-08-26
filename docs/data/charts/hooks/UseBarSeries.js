@@ -12,7 +12,7 @@ const dataset = [
   { month: 'Jun', revenue: 3000, expenses: 8000 },
 ];
 
-const inUSD = (value: number | null | undefined) => {
+const inUSD = (value) => {
   if (value == null) {
     return '';
   }
@@ -61,7 +61,7 @@ function BarSeriesInfo() {
   );
 }
 
-export default function UseBarSeriesDemo() {
+export default function UseBarSeries() {
   return (
     <div>
       <BarChart

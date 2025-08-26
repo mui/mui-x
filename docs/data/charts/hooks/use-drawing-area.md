@@ -37,7 +37,7 @@ The hook returns an object with the following properties:
 
 This example shows how to use the `useDrawingArea` hook to access drawing area dimensions and position custom elements within the chart:
 
-{{"demo": "UseDrawingAreaDemo.js"}}
+{{"demo": "UseDrawingArea.js"}}
 
 The demo displays:
 

@@ -18,13 +18,11 @@ function CustomOverlay() {
         strokeWidth={2}
         strokeDasharray="5,5"
       />
-
       {/* Corner markers */}
       <circle cx={left} cy={top} r={4} fill="red" />
       <circle cx={width + left} cy={top} r={4} fill="red" />
       <circle cx={width + left} cy={top + height} r={4} fill="red" />
       <circle cx={left} cy={top + height} r={4} fill="red" />
-
       {/* Center cross */}
       <g stroke="red" strokeWidth={1}>
         <line
@@ -64,7 +62,7 @@ function CustomOverlay() {
   );
 }
 
-export default function UseDrawingAreaDemo() {
+export default function UseDrawingArea() {
   return (
     <LineChart
       dataset={[

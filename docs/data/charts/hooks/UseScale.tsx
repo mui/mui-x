@@ -46,7 +46,7 @@ function CustomDataPoints() {
   );
 }
 
-export default function UseScaleDemo() {
+export default function UseScale() {
   return (
     <LineChart
       dataset={data}

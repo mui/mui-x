@@ -34,7 +34,7 @@ function CustomComponent() {
 
 This example demonstrates using the `useBarSeries` hook to access specific bar chart series data:
 
-{{"demo": "UseBarSeriesDemo.js"}}
+{{"demo": "UseBarSeries.js"}}
 
 ## Advanced usage
 
@@ -46,7 +46,7 @@ The `useSeries` hook is more suitable for advanced use cases where you need to w
 The `useSeries` hook can be used to access all series data at once.
 In the example below, the `useSeries` hook is used to create a custom component that displays a line over each series max value.
 
-{{"demo": "UseSeriesDemo.js"}}
+{{"demo": "UseSeries.js"}}
 
 ## Caveats
 
