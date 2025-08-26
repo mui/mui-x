@@ -7,6 +7,7 @@ import {
   CalendarResourceId,
   CalendarSettings,
   CalendarView,
+  CalendarViewConfig,
   SchedulerValidDate,
 } from '../models';
 import {
@@ -88,6 +89,7 @@ export class EventCalendarInstance {
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
       settings: parameters.settings ?? DEFAULT_SETTINGS,
+      viewConfig: null,
       // Store elements that should only be updated when their controlled prop changes.
       visibleDate:
         parameters.visibleDate ??
@@ -233,14 +235,30 @@ export class EventCalendarInstance {
    * Goes to the previous visible date span based on the current view.
    */
   public goToPreviousVisibleDate = (event: React.UIEvent) => {
-    this.setVisibleDate(this.getNavigationDate(-1), event);
+    const siblingVisibleDateGetter = this.store.state.viewConfig?.siblingVisibleDateGetter;
+    if (!siblingVisibleDateGetter) {
+      warn(
+        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+      );
+      return;
+    }
+
+    this.setVisibleDate(siblingVisibleDateGetter(this.store.state.visibleDate, -1), event);
   };
 
   /**
    * Goes to the next visible date span based on the current view.
    */
   public goToNextVisibleDate = (event: React.UIEvent) => {
-    this.setVisibleDate(this.getNavigationDate(1), event);
+    const siblingVisibleDateGetter = this.store.state.viewConfig?.siblingVisibleDateGetter;
+    if (!siblingVisibleDateGetter) {
+      warn(
+        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+      );
+      return;
+    }
+
+    this.setVisibleDate(siblingVisibleDateGetter(this.store.state.visibleDate, 1), event);
   };
 
   /**
@@ -274,5 +292,14 @@ export class EventCalendarInstance {
       ...this.store.state.settings,
       ...partialSettings,
     });
+  };
+
+  /**
+   * Sets the method used to determine the previous / next visible date.
+   * Returns the cleanup function.
+   */
+  public setViewConfig = (config: CalendarViewConfig) => {
+    this.store.set('viewConfig', config);
+    return () => this.store.set('viewConfig', null);
   };
 }

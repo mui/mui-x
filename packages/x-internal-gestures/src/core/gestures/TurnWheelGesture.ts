@@ -57,6 +57,16 @@ export type TurnWheelGestureOptions<GestureName extends string> = GestureOptions
    * @default false
    */
   invert?: boolean;
+
+  /**
+   * Wheel events happen on mouse mode only.
+   */
+  pointerMode?: never;
+
+  /**
+   * Wheel events happen on mouse mode only.
+   */
+  pointerOptions?: never;
 };
 
 /**
@@ -125,7 +135,10 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
 
   protected readonly optionsType!: TurnWheelGestureOptions<GestureName>;
 
-  protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
+  protected readonly mutableOptionsType!: Omit<
+    typeof this.optionsType,
+    'name' | 'pointerMode' | 'pointerOptions'
+  >;
 
   protected readonly mutableStateType!: Partial<typeof this.state>;
 
@@ -187,7 +200,6 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
       initialDelta: this.initialDelta,
       invert: this.invert,
       requiredKeys: [...this.requiredKeys],
-      pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
       ...overrides,
@@ -241,7 +253,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
    */
   private handleWheelEvent(event: WheelEvent): void {
     // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(this.element)) {
+    if (this.shouldPreventGesture(this.element, 'mouse')) {
       return;
     }
 
