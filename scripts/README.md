@@ -77,7 +77,7 @@ In case of a problem, another method to generate the changelog is available at t
 > npm org ls mui
 > ```
 >
-> Cross-reference both lists to find a team memebr with admin rights.
+> Cross-reference both lists to find a team member with admin rights.
 
 <!-- TODO
 - write guide on mui-public for publishing packages and setting up OIDC publishing
