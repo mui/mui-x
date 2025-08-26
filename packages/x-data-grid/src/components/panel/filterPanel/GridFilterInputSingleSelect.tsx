@@ -71,8 +71,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;
 
-  const getOptionValue = resolvedColumn?.getOptionValue;
-  const getOptionLabel = resolvedColumn?.getOptionLabel;
+  const getOptionValue = resolvedColumn!.getOptionValue;
+  const getOptionLabel = resolvedColumn!.getOptionLabel;
 
   const currentValueOptions = React.useMemo(() => {
     return getValueOptions(resolvedColumn!);
@@ -83,11 +83,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       let value = event.target.value;
 
       // NativeSelect casts the value to a string.
-      value = getValueFromValueOptions(
-        value,
-        currentValueOptions,
-        getOptionValue as Exclude<GridSingleSelectColDef['getOptionValue'], undefined>,
-      );
+      value = getValueFromValueOptions(value, currentValueOptions, getOptionValue);
       applyValue({ ...item, value });
     },
     [currentValueOptions, getOptionValue, applyValue, item],
@@ -127,14 +123,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         {renderSingleSelectOptions({
           column: resolvedColumn,
           OptionComponent: rootProps.slots.baseSelectOption,
-          getOptionLabel: getOptionLabel as Exclude<
-            GridSingleSelectColDef['getOptionLabel'],
-            undefined
-          >,
-          getOptionValue: getOptionValue as Exclude<
-            GridSingleSelectColDef['getOptionValue'],
-            undefined
-          >,
+          getOptionLabel,
+          getOptionValue,
           isSelectNative,
           baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
         })}
