@@ -150,19 +150,7 @@ export class EventCalendarInstance {
     return { store, instance, updater, contextValue: { store, instance } };
   }
 
-  private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
-    const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
-    if (visibleDateProp === undefined) {
-      this.store.set('visibleDate', visibleDate);
-    }
-    onVisibleDateChange?.(visibleDate, event);
-  };
-
-  /**
-   * Sets the view of the calendar.
-   */
-  public setView = (view: CalendarView, event: React.UIEvent | Event) => {
-    const { view: viewProp, onViewChange } = this.parameters;
+  private assertViewValidity(view: CalendarView) {
     const views = this.store.state.views;
     if (!views.includes(view)) {
       throw new Error(
@@ -172,11 +160,73 @@ export class EventCalendarInstance {
         ].join('\n'),
       );
     }
+  }
 
-    if (viewProp === undefined) {
+  private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+    const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
+
+    const hasVisibleDateChange = visibleDate !== this.store.state.visibleDate;
+    const shouldUpdateVisibleDateState = hasVisibleDateChange && visibleDateProp === undefined;
+
+    if (shouldUpdateVisibleDateState) {
+      this.store.set('visibleDate', visibleDate);
+    }
+
+    if (hasVisibleDateChange) {
+      onVisibleDateChange?.(visibleDate, event);
+    }
+  };
+
+  private setVisibleDateAndView = (
+    visibleDate: SchedulerValidDate,
+    view: CalendarView,
+    event: React.UIEvent,
+  ) => {
+    const {
+      visibleDate: visibleDateProp,
+      view: viewProp,
+      onVisibleDateChange,
+      onViewChange,
+    } = this.parameters;
+
+    const hasVisibleDateChange = visibleDate !== this.store.state.visibleDate;
+    const hasViewChange = view !== this.store.state.view;
+    const shouldUpdateVisibleDateState = hasVisibleDateChange && visibleDateProp === undefined;
+    const shouldUpdateViewState = hasViewChange && viewProp === undefined;
+
+    if (shouldUpdateVisibleDateState || shouldUpdateViewState) {
+      this.store.apply({
+        ...(shouldUpdateVisibleDateState ? { visibleDate } : {}),
+        ...(shouldUpdateViewState ? { view } : {}),
+      });
+    }
+
+    if (hasVisibleDateChange) {
+      onVisibleDateChange?.(visibleDate, event);
+    }
+    if (hasViewChange) {
+      this.assertViewValidity(view);
+      onViewChange?.(view, event);
+    }
+  };
+
+  /**
+   * Sets the view of the calendar.
+   */
+  public setView = (view: CalendarView, event: React.UIEvent | Event) => {
+    const { view: viewProp, onViewChange } = this.parameters;
+
+    const hasViewChange = view !== this.store.state.view;
+    const shouldUpdateViewState = hasViewChange && viewProp === undefined;
+
+    if (shouldUpdateViewState) {
       this.store.set('view', view);
     }
-    onViewChange?.(view, event);
+
+    if (hasViewChange) {
+      this.assertViewValidity(view);
+      onViewChange?.(view, event);
+    }
   };
 
   /**
@@ -246,8 +296,8 @@ export class EventCalendarInstance {
         'Event Calendar: The "day" view is not enabled. Please ensure that "day" is included in the views prop before using the switchToDay method.',
       );
     }
-    this.setVisibleDate(visibleDate, event);
-    this.setView('day', event);
+
+    this.setVisibleDateAndView(visibleDate, 'day', event);
   };
 
   /**
