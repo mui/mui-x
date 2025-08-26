@@ -20,6 +20,7 @@ declare module '@mui/x-charts/internals' {
       series: DefaultizedHeatmapSeriesType;
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
+      itemIdentifierWithData: HeatmapItemIdentifier;
       valueType: HeatmapValueType;
       axisType: 'cartesian';
     };
@@ -30,6 +31,7 @@ declare module '@mui/x-charts/internals' {
       series: DefaultizedFunnelSeriesType;
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
+      itemIdentifierWithData: FunnelItemIdentifier;
       valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
       axisType: 'cartesian';
     };

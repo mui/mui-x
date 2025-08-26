@@ -18,7 +18,7 @@ It's responsible for the mapping between your data and element positions.
 You can define custom axes by using `xAxis` and `yAxis` props.
 Those props expect an array of objects.
 
-Here is a demonstration with two lines with the same data.
+Here is a demo with two lines with the same data.
 But one uses a linear, and the other a log axis.
 Each axis definition is identified by its property `id`.
 Then each series specifies the axis they use with the `xAxisId` and `yAxisId` properties.
@@ -31,8 +31,8 @@ Or customized axes.
 
 If you do not provide a `xAxisId` or `yAxisId`, the series will use the first axis defined.
 
-That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
-Those demonstrations use the defaultized values.
+That's why in most of the demos with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
+Those demos use the defaultized values.
 :::
 
 ### Axis type
@@ -78,21 +78,7 @@ For example, it is common that an axis with a log scale has ticks that are not l
 The default tick formatter achieves this by rendering an empty string for ticks that should not show labels.
 If you want to customize the formatting, but want to keep the default behavior for ticks without labels, you can check that `context.defaultTickLabel` property is different from the empty string.
 
-```js
-<ScatterChart
-  xAxis={[
-    {
-      valueFormatter: (value, context) => {
-        if (context.location === 'tick' && context.defaultTickLabel === '') {
-          return '';
-        }
-
-        return `${value}€`;
-      },
-    },
-  ]}
-/>
-```
+{{"demo": "TicksWithoutLabels.js"}}
 
 #### Using the D3 formatter
 
@@ -242,16 +228,25 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 ## Grouped Axes
 
-In order to group `band` or `point` axes together, a user can provide a `groups` property in the x-axis definition.
+To group `band` or `point` axes together, provide a `groups` property in the axis definition.
 This property expects an array of objects with a `getValue` function.
+This feature is available for both x- and y-axes.
 
 The `getValue` function receives the axis data value and should return a group name.
 Each group name will be used as is, overriding any `valueFormatter` for the axis.
 Groups are displayed in the order they are defined in the `groups` array.
 
+### X-axis grouping
+
 In the next demo, the x-axis is grouped by month, quarter, and year.
 
 {{"demo": "GroupedAxes.js"}}
+
+### Y-axis grouping
+
+In the following demo, the y-axis is grouped by category and subcategory.
+
+{{"demo": "GroupedYAxes.js"}}
 
 ### Tick size
 
@@ -286,7 +281,7 @@ To avoid this, you can use the `margin` prop to increase the space between the c
 
 ### Rendering
 
-Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
+Axes rendering can be further customized. Below is an interactive demo of the axis props.
 
 {{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
@@ -313,7 +308,7 @@ You can also configure the values at which the scale switches from linear to log
 
 If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
 
-It will provide all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>` components as children.
+It will provide all the scaling properties to its children, and lets you use `<XAxis/>` and `<YAxis/>` components as children.
 Those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
 
 You can choose their position with `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.

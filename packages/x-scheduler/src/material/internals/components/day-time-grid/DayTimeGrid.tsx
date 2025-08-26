@@ -11,7 +11,7 @@ import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayGrid } from '../../../../primitives/day-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
-import { isWeekend } from '../../../../primitives/utils/date-utils';
+import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
@@ -146,13 +146,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 data-weekend={isWeekend(adapter, day) ? '' : undefined}
               >
                 {allDayEvents.map((event) => {
-                  const durationInDays = adapter.startOfDay(event.end).diff(day, 'days').days + 1;
+                  const durationInDays = diffIn(adapter, event.end, day, 'days') + 1;
                   const gridColumnSpan = Math.min(durationInDays, days.length - dayIndex); // Don't exceed available columns
                   const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIndex === 0;
 
                   return shouldRenderEvent ? (
                     <EventPopoverTrigger
-                      key={`${event.id}-${day.toString()}`}
+                      key={`${event.key}-${day.toString()}`}
                       event={event}
                       render={
                         <DayGridEvent
@@ -160,28 +160,20 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                           eventResource={resourcesByIdMap.get(event.resource)}
                           variant="allDay"
                           ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-                          style={
-                            {
-                              '--grid-row': event.eventRowIndex,
-                              '--grid-column-span': gridColumnSpan,
-                            } as React.CSSProperties
-                          }
+                          gridRow={event.eventRowIndex}
+                          columnSpan={gridColumnSpan}
                         />
                       }
                     />
                   ) : (
                     <DayGridEvent
-                      key={`invisible-${event.id}-${day.toString()}`}
+                      key={`invisible-${event.key}-${day.toString()}`}
                       event={event}
                       eventResource={resourcesByIdMap.get(event.resource)}
                       variant="invisible"
                       ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                       aria-hidden="true"
-                      style={
-                        {
-                          '--grid-row': event.eventRowIndex,
-                        } as React.CSSProperties
-                      }
+                      gridRow={event.eventRowIndex}
                     />
                   );
                 })}
@@ -223,9 +215,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   >
                     {regularEvents.map((event) => (
                       <EventPopoverTrigger
-                        key={event.id}
+                        key={event.key}
                         event={event}
-                        nativeButton={false}
                         render={
                           <TimeGridEvent
                             event={event}
@@ -259,7 +250,7 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       return null;
     }
 
-    return { ...event, start: placeholder.start, end: placeholder.end };
+    return { ...event, start: placeholder.start, end: placeholder.end, readOnly: true };
   }, [event, placeholder]);
 
   if (!updatedEvent) {
@@ -272,7 +263,6 @@ function TimeGridEventPlaceholder({ day }: { day: SchedulerValidDate }) {
       eventResource={resourcesByIdMap.get(updatedEvent.resource)}
       variant="regular"
       ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
-      readOnly
     />
   );
 }

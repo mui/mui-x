@@ -469,6 +469,12 @@ export const GridRootStyles = styled('div', {
         opacity: 0.5,
       },
     },
+    // Hide the column separator when the column has border and it is not resizable
+    // In this case, this column separator may block interaction with the separator from the adjacent column that is resizable
+    [`& .${c['columnHeader--withLeftBorder']} .${c['columnSeparator--sideLeft']}:not(.${c['columnSeparator--resizable']}), & .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideRight']}:not(.${c['columnSeparator--resizable']})`]:
+      {
+        display: 'none',
+      },
     [`& .${c['columnSeparator--sideLeft']}`]: {
       left: columnSeparatorOffset,
     },
@@ -614,6 +620,11 @@ export const GridRootStyles = styled('div', {
       '&:focus-within': {
         outline: `${focusOutlineWidth}px solid ${vars.colors.interactive.focus}`,
         outlineOffset: focusOutlineWidth * -1,
+      },
+    },
+    [`& .${c['cell--editing']}`]: {
+      '& .MuiInputBase-root': {
+        height: '100%',
       },
     },
     [`& .${c['row--editing']}`]: {
