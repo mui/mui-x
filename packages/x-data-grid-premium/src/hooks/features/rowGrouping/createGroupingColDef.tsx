@@ -133,16 +133,11 @@ function getGroupingCriteriaProperties(
   if (rowGroupingColumnMode === 'single' && rowGroupingModel.length > 1) {
     // In single column grouping mode, the `valueFormatter` of the grouping column uses
     // value formatters from original columns for each of the grouping criteria
-    const originalColDefs: Map<string, GridColDef> = new Map();
-    rowGroupingModel.forEach((field) => {
-      const colDef = columnsLookup[field];
-      originalColDefs.set(field, colDef);
-    });
     valueFormatter = (value, row, column, apiRef) => {
       const rowId = gridRowIdSelector(apiRef, row);
       const rowNode = gridRowNodeSelector(apiRef, rowId);
       if (rowNode.type === 'group') {
-        const originalColDef = originalColDefs.get(rowNode.groupingField!)!;
+        const originalColDef = columnsLookup[rowNode.groupingField!]!;
         if (originalColDef.type === 'singleSelect') {
           // the default valueFormatter of a singleSelect colDef won't work with the grouping column values
           return value;
