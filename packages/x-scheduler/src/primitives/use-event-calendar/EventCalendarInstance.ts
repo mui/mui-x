@@ -1,6 +1,6 @@
 import { Store } from '@base-ui-components/utils/store';
 import { warn } from '@base-ui-components/utils/warn';
-import { selectors, State } from './store';
+import { State } from './store';
 import {
   CalendarEvent,
   CalendarEventId,
@@ -145,7 +145,7 @@ export class EventCalendarInstance {
     if (!views.includes(view)) {
       throw new Error(
         [
-          `Event Calendar: The view "${view}" provided to the setView method is not compatible with the available views: ${views.join(', ')}.`,
+          `Event Calendar: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
           'Please ensure that the requested view is included in the views array.',
         ].join('\n'),
       );
@@ -176,13 +176,15 @@ export class EventCalendarInstance {
 
     const hasVisibleDateChange = visibleDate !== this.store.state.visibleDate;
     const hasViewChange = view !== this.store.state.view;
-    const shouldUpdateVisibleDateState = hasVisibleDateChange && visibleDateProp === undefined;
-    const shouldUpdateViewState = hasViewChange && viewProp === undefined;
+    if (!hasVisibleDateChange && !hasViewChange) {
+      return;
+    }
 
-    if (shouldUpdateVisibleDateState || shouldUpdateViewState) {
+    this.assertViewValidity(view);
+    if (visibleDateProp !== undefined || viewProp !== undefined) {
       this.store.apply({
-        ...(shouldUpdateVisibleDateState ? { visibleDate } : {}),
-        ...(shouldUpdateViewState ? { view } : {}),
+        ...(visibleDateProp !== undefined ? { visibleDate } : {}),
+        ...(viewProp !== undefined ? { view } : {}),
       });
     }
 
@@ -190,7 +192,6 @@ export class EventCalendarInstance {
       onVisibleDateChange?.(visibleDate, event);
     }
     if (hasViewChange) {
-      this.assertViewValidity(view);
       onViewChange?.(view, event);
     }
   };
@@ -263,12 +264,6 @@ export class EventCalendarInstance {
    * Goes to a specific day and set the view to 'day'.
    */
   public switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
-    if (!selectors.hasDayView(this.store.state)) {
-      throw new Error(
-        'Event Calendar: The "day" view is not enabled. Please ensure that "day" is included in the views prop before using the switchToDay method.',
-      );
-    }
-
     this.setVisibleDateAndView(visibleDate, 'day', event);
   };
 
