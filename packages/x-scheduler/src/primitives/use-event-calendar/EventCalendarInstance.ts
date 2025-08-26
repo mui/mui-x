@@ -195,6 +195,18 @@ export class EventCalendarInstance {
     }
   };
 
+  private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
+    const siblingVisibleDateGetter = this.store.state.viewConfig?.siblingVisibleDateGetter;
+    if (!siblingVisibleDateGetter) {
+      warn(
+        'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
+      );
+      return;
+    }
+
+    this.setVisibleDate(siblingVisibleDateGetter(this.store.state.visibleDate, delta), event);
+  };
+
   /**
    * Sets the view of the calendar.
    */
@@ -240,32 +252,12 @@ export class EventCalendarInstance {
   /**
    * Goes to the previous visible date span based on the current view.
    */
-  public goToPreviousVisibleDate = (event: React.UIEvent) => {
-    const siblingVisibleDateGetter = this.store.state.viewConfig?.siblingVisibleDateGetter;
-    if (!siblingVisibleDateGetter) {
-      warn(
-        'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
-      );
-      return;
-    }
-
-    this.setVisibleDate(siblingVisibleDateGetter(this.store.state.visibleDate, -1), event);
-  };
+  public goToPreviousVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(-1, event);
 
   /**
    * Goes to the next visible date span based on the current view.
    */
-  public goToNextVisibleDate = (event: React.UIEvent) => {
-    const siblingVisibleDateGetter = this.store.state.viewConfig?.siblingVisibleDateGetter;
-    if (!siblingVisibleDateGetter) {
-      warn(
-        'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
-      );
-      return;
-    }
-
-    this.setVisibleDate(siblingVisibleDateGetter(this.store.state.visibleDate, 1), event);
-  };
+  public goToNextVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(1, event);
 
   /**
    * Goes to a specific day and set the view to 'day'.
@@ -284,7 +276,9 @@ export class EventCalendarInstance {
    * Updates the visible resources.
    */
   public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
-    this.store.set('visibleResources', visibleResources);
+    if (this.store.state.visibleResources !== visibleResources) {
+      this.store.set('visibleResources', visibleResources);
+    }
   };
 
   /**
