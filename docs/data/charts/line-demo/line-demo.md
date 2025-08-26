@@ -1,12 +1,12 @@
 ---
-title: Charts - Line demonstration
+title: Charts - Line demos
 productId: x-charts
 components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot
 ---
 
-# Charts - Line demonstration
+# Charts - Line demos
 
-<p class="description">This page groups demonstration using line charts.</p>
+<p class="description">This page groups demos using line charts.</p>
 
 ## SimpleLineChart
 

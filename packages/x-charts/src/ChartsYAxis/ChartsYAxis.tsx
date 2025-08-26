@@ -52,11 +52,6 @@ ChartsYAxis.propTypes = {
    */
   disableTicks: PropTypes.bool,
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill: PropTypes.string,
-  /**
    * The label of the axis.
    */
   label: PropTypes.string,
@@ -74,11 +69,6 @@ ChartsYAxis.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke: PropTypes.string,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

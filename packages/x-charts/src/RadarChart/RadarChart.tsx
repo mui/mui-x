@@ -53,7 +53,6 @@ export interface RadarChartProps
    * @default false
    */
   showToolbar?: boolean;
-
   /**
    * Overridable component slots.
    * @default {}
