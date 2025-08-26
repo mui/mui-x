@@ -8,7 +8,7 @@ import { EventCalendarContextValue, EventCalendarParameters } from './useEventCa
 export function useEventCalendar(parameters: EventCalendarParameters): EventCalendarContextValue {
   const adapter = useAdapter();
   const { contextValue, updater } = useRefWithInit(() =>
-    EventCalendarInstance.createWithStore(parameters, adapter),
+    EventCalendarInstance.create(parameters, adapter),
   ).current;
 
   useIsoLayoutEffect(() => updater(parameters, adapter), [adapter, parameters]);

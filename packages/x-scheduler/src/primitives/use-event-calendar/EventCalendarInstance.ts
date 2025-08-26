@@ -10,11 +10,7 @@ import {
   CalendarViewConfig,
   SchedulerValidDate,
 } from '../models';
-import {
-  EventCalendarContextValue,
-  EventCalendarParameters,
-  EventCalendarStore,
-} from './useEventCalendar.types';
+import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
@@ -31,7 +27,7 @@ export class EventCalendarInstance {
 
   private initialParameters: EventCalendarParameters | null = null;
 
-  constructor(parameters: EventCalendarParameters, store: EventCalendarStore) {
+  private constructor(parameters: EventCalendarParameters, store: EventCalendarStore) {
     this.store = store;
     this.parameters = parameters;
 
@@ -83,7 +79,7 @@ export class EventCalendarInstance {
     };
   }
 
-  public static createWithStore(parameters: EventCalendarParameters, adapter: Adapter) {
+  public static create(parameters: EventCalendarParameters, adapter: Adapter) {
     const store = new Store<State>({
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
@@ -100,7 +96,6 @@ export class EventCalendarInstance {
     });
 
     const instance = new EventCalendarInstance(parameters, store);
-    const contextValue: EventCalendarContextValue = { store, instance };
 
     function updater(newParameters: EventCalendarParameters, newAdapter: Adapter) {
       const partialState: Partial<State> = EventCalendarInstance.getPartialStateFromParameters(
@@ -152,7 +147,7 @@ export class EventCalendarInstance {
       updateModel('visibleDate', 'defaultVisibleDate');
     }
 
-    return { store, instance, updater, contextValue };
+    return { store, instance, updater, contextValue: { store, instance } };
   }
 
   private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
@@ -160,7 +155,6 @@ export class EventCalendarInstance {
     if (visibleDateProp === undefined) {
       this.store.set('visibleDate', visibleDate);
     }
-
     onVisibleDateChange?.(visibleDate, event);
   };
 
@@ -249,7 +243,7 @@ export class EventCalendarInstance {
   public switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     if (!selectors.hasDayView(this.store.state)) {
       throw new Error(
-        'The "day" view is disabled on your Event Calendar. Please ensure that "day" is included in the views prop before using the switchToDay method.',
+        'Event Calendar: The "day" view is not enabled. Please ensure that "day" is included in the views prop before using the switchToDay method.',
       );
     }
     this.setVisibleDate(visibleDate, event);

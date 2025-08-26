@@ -15,7 +15,7 @@ describe('EventCalendarInstance', () => {
       const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
       const siblingVisibleDateGetter = spy(() => targetDate);
 
-      const { instance } = EventCalendarInstance.createWithStore(
+      const { instance } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange },
         adapter,
       );
@@ -34,7 +34,7 @@ describe('EventCalendarInstance', () => {
       const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
       const siblingVisibleDateGetter = spy(() => targetDate);
 
-      const { instance } = EventCalendarInstance.createWithStore(
+      const { instance } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange },
         adapter,
       );
