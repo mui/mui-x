@@ -10,18 +10,23 @@ const data = [
 
 function BasicUseLegendExample() {
   const { items } = useLegend();
-  
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <h4>Legend Items from useLegend:</h4>
       <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
         {items.map((item) => (
-          <li key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <li
+            key={item.id}
+            style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+          >
             <div
               style={{
                 width: 16,
                 height: 16,
                 backgroundColor: item.color,
+                borderRadius: 4,
+                transform: 'rotate(45deg) skew(-10deg, -10deg)',
               }}
             />
             <span>{item.label}</span>
