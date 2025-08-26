@@ -107,25 +107,15 @@ export class EventCalendarInstance {
         newAdapter,
       );
 
-      if (newParameters.view !== undefined) {
-        partialState.view = newParameters.view;
-      }
-      if (newParameters.visibleDate !== undefined) {
-        partialState.visibleDate = newParameters.visibleDate;
-      }
+      function updateModel(
+        controlledProp: keyof EventCalendarParameters,
+        defaultValueProp: keyof EventCalendarParameters,
+      ) {
+        if (newParameters[controlledProp] !== undefined) {
+          partialState[controlledProp] = newParameters[controlledProp];
+        }
 
-      instance.parameters = newParameters;
-      store.apply(partialState);
-
-      if (process.env.NODE_ENV !== 'production') {
-        // Asserts the model validity (not applied in prod)
-        const checkModel = ({
-          controlledProp,
-          defaultValueProp,
-        }: {
-          controlledProp: keyof EventCalendarParameters;
-          defaultValueProp: keyof EventCalendarParameters;
-        }) => {
+        if (process.env.NODE_ENV !== 'production') {
           const defaultValue = newParameters[defaultValueProp];
           const isControlled = newParameters[controlledProp] !== undefined;
           const initialDefaultValue = instance.initialParameters?.[defaultValueProp];
@@ -154,11 +144,11 @@ export class EventCalendarInstance {
               'error',
             );
           }
-        };
-
-        checkModel({ controlledProp: 'view', defaultValueProp: 'defaultView' });
-        checkModel({ controlledProp: 'visibleDate', defaultValueProp: 'defaultVisibleDate' });
+        }
       }
+
+      updateModel('view', 'defaultView');
+      updateModel('visibleDate', 'defaultVisibleDate');
     }
 
     return { store, instance, updater, contextValue };
