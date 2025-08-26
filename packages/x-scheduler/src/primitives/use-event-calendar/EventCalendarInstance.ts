@@ -35,17 +35,7 @@ export class EventCalendarInstance {
       this.initialParameters = parameters;
       // Add listeners to assert the state validity (not applied in prod)
       this.store.subscribe((state) => {
-        const views = selectors.views(state);
-        const view = selectors.view(state);
-        if (!views.includes(view)) {
-          warn(
-            [
-              `Event Calendar: The current view "${view}" is not compatible with the available views: ${views.join(', ')}.`,
-              'Please ensure that the current view is included in the views array.',
-            ].join('\n'),
-          );
-        }
-
+        this.assertViewValidity(state.view);
         return null;
       });
     }
@@ -164,15 +154,10 @@ export class EventCalendarInstance {
 
   private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
-
-    const hasVisibleDateChange = visibleDate !== this.store.state.visibleDate;
-    const shouldUpdateVisibleDateState = hasVisibleDateChange && visibleDateProp === undefined;
-
-    if (shouldUpdateVisibleDateState) {
-      this.store.set('visibleDate', visibleDate);
-    }
-
-    if (hasVisibleDateChange) {
+    if (visibleDate !== this.store.state.visibleDate) {
+      if (visibleDateProp === undefined) {
+        this.store.set('visibleDate', visibleDate);
+      }
       onVisibleDateChange?.(visibleDate, event);
     }
   };
@@ -215,16 +200,11 @@ export class EventCalendarInstance {
    */
   public setView = (view: CalendarView, event: React.UIEvent | Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
-
-    const hasViewChange = view !== this.store.state.view;
-    const shouldUpdateViewState = hasViewChange && viewProp === undefined;
-
-    if (shouldUpdateViewState) {
-      this.store.set('view', view);
-    }
-
-    if (hasViewChange) {
+    if (view !== this.store.state.view) {
       this.assertViewValidity(view);
+      if (viewProp === undefined) {
+        this.store.set('view', view);
+      }
       onViewChange?.(view, event);
     }
   };
