@@ -25,7 +25,7 @@ Charts come with built-in color palettes to automatically assign colors to serie
 If a particular series lacks a color prop, the chart will default to assigning a color based on the series' index.
 
 You can set a custom color palette by using the prop `colors` on chart components (or `<ChartContainer />` if you are using composition).
-This prop takes an array of colors, or callback whose input is the theme's mode (`'dark'` or `'light'`) and returns the array of colors.
+This prop takes an array of colors, or a callback whose input is the theme's mode (`'dark'` or `'light'`), and returns the array of colors.
 
 #### Provided palettes
 
@@ -157,7 +157,7 @@ To update it, use the `xAxis` and `yAxis` configuration as follows:
 - **`y-axis`**: Uses the `width` prop instead.
 
 Axes only take up space in the side they are positioned.
-If the axis is not be displayed (`position: 'none'`), they will not take up any space, regardless of their size.
+If an axis is not displayed (`position: 'none'`), it will not take up any space, regardless of its size.
 
 {{"demo": "Margin.js", "hideToolbar": true, "bg": "playground"}}
 
