@@ -125,7 +125,7 @@ export function createContinuousScaleGetAxisFilter(
 ): ExtremumFilter {
   let min: number | Date;
   let max: number | Date;
-  
+
   // Apply domain limit function if provided, similar to computeAxisValue
   let adjustedExtrema = extrema;
   if (typeof domainLimit === 'function') {
