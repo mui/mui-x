@@ -80,7 +80,7 @@ In case of a problem, another method to generate the changelog is available at t
 > Cross-reference both lists to find a team memebr with admin rights.
 
 <!-- TODO
-- write guide on mui-public for publ=ishing packages and setting up OIDC publishing
+- write guide on mui-public for publishing packages and setting up OIDC publishing
 - write command for code-infra to find "team members with admin rights"
 -->
 
