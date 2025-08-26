@@ -27,16 +27,12 @@ The charts package provides several categories of hooks:
 
 ## Quick start
 
-All chart hooks are available from the `@mui/x-charts/hooks` import:
+All chart hooks are available from the `@mui/x-charts/hooks` import, with pro and premium packages also providing additional hooks.
 
 ```js
-import {
-  useSeries,
-  useLegend,
-  useDrawingArea,
-  useXScale,
-  useYScale,
-} from '@mui/x-charts/hooks';
+import { useSeries, useLegend, ... } from '@mui/x-charts/hooks';
+import { useSeries, useLegend, ... } from '@mui/x-charts-pro/hooks';
+import { useSeries, useLegend, ... } from '@mui/x-charts-premium/hooks';
 ```
 
 ## Caveats
