@@ -14,6 +14,7 @@ export * from './useRadarSeries';
 export * from './useItemHighlighted';
 export * from './useItemHighlightedGetter';
 export * from './useLegend';
+export type { LegendItemParams } from '../ChartsLegend/legendContext.types';
 export { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
 export * from './animation';
 export * from './useChartRootRef';
