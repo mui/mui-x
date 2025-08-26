@@ -1,25 +1,25 @@
 import * as React from 'react';
 
-import { WeekView } from '@mui/x-scheduler/material/week-view';
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './StandaloneWeekView.module.css';
+import classes from './FullEventCalendar.module.css';
 
-export default function StandaloneWeekView() {
+export default function DragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <StandaloneView
+    <EventCalendar
       events={events}
       resources={resources}
       defaultVisibleDate={defaultVisibleDate}
       onEventsChange={setEvents}
-    >
-      <WeekView className={classes.Container} />
-    </StandaloneView>
+      className={classes.Container}
+      areEventsDraggable
+      areEventsResizable
+    />
   );
 }
