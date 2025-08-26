@@ -104,7 +104,7 @@ However, there is one caveat regarding using [portal](https://react.dev/referenc
 
 The tooltip renders as a child of the document's body element.
 From a DOM perspective, it's not inside the chart.
-So using the chart's `sx` prop as follow does not work.
+So using the chart's `sx` prop as follows does not work:
 
 ```tsx
 import { chartsTooltipClasses } from '@mui/x-charts';

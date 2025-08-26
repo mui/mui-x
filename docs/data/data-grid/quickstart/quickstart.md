@@ -154,6 +154,104 @@ export default function Demo() {
 It comes with two datasets: `Commodity` and `Employee`.
 You can customize the data generation by passing the custom options of type [`UseDemoDataOptions`](https://github.com/mui/mui-x/blob/6aad22644ee710690b90dc2ac6bbafceb91fecf0/packages/x-data-grid-generator/src/hooks/useDemoData.ts#L29-L36).
 
+## Bundling
+
+The Data Grid requires a bundler that can handle CSS imports.
+If you're using a setup that doesn't support CSS imports out of the box, follow the instructions below for your specific environment.
+
+### Webpack
+
+Update your config to add the `style-loader` and `css-loader`.
+
+```ts title="webpack.config.js"
+export default {
+  // other webpack config
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+};
+```
+
+### Vite
+
+CSS imports should work with no additional configuration when using Vite.
+
+### Vitest
+
+Add the Data Grid packages to `test.deps.inline`.
+
+```ts title="vitest.config.ts"
+export default defineConfig({
+  test: {
+    deps: {
+      inline: [
+        '@mui/x-data-grid',
+        '@mui/x-data-grid-pro',
+        '@mui/x-data-grid-premium',
+      ],
+    },
+  },
+});
+```
+
+### Next.js
+
+If you're using the App Router, CSS imports should work out of the box.
+
+If you're using the Pages Router, you need to add the Data Grid packages to [`transpilePackages`](https://nextjs.org/docs/app/api-reference/config/next-config-js/transpilePackages).
+
+```ts title="next.config.ts"
+export default {
+  transpilePackages: [
+    '@mui/x-data-grid',
+    '@mui/x-data-grid-pro',
+    '@mui/x-data-grid-premium',
+  ],
+};
+```
+
+### Node.js
+
+If you're importing the packages inside Node.js, you can make CSS imports a no-op like this:
+
+**Using `require()`**:
+
+```js
+require.extensions['.css'] = () => null;
+```
+
+**Using `import`**:
+
+```js title="node-ignore-css.js"
+// node-ignore-css.js
+// Needs to be loaded before your code runs:
+//   node --import ./node-ignore-css.js ./index.js
+import { registerHooks } from 'node:module';
+registerHooks({
+  load(url, context, nextLoad) {
+    if (url.endsWith('.css')) {
+      return { url, format: 'module', source: '', shortCircuit: true };
+    }
+    return nextLoad(url, context);
+  },
+});
+```
+
+### Jest
+
+If you're using Jest, add the [`identity-obj-proxy`](https://www.npmjs.com/package/identity-obj-proxy) package to mock CSS imports.
+
+```ts title="jest.config.js"
+moduleNameMapper: {
+  '\\.(css|less|scss|sass)$': 'identity-obj-proxy'',
+},
+```
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

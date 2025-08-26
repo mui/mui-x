@@ -40,7 +40,7 @@ You can either use the piecewise or continuous [color mapping](https://mui.com/x
 
 ## Highlight
 
-You can chose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
+You can choose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
 To fade the other item, set `highlightScope.fade` to `'global'`.
 
 {{"demo": "HighlightHeatmap.js"}}
@@ -69,15 +69,6 @@ The Heatmap has an item tooltip that can be customized as described in the [Tool
 
 The only difference of the Heatmap Tooltip is its default content.
 You can import the default tooltip, or only its content as follows:
-
-```js
-import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
-```
-
-The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
-
-The specificity of the Heatmap Tooltip is its default content.
-You can import the default tooltip, or only its content as follow:
 
 ```js
 import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',

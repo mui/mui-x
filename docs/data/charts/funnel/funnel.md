@@ -4,13 +4,9 @@ productId: x-charts
 components: FunnelChart, FunnelPlot
 ---
 
-# Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
+# Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Funnel charts allow to express quantity evolution along a process, such as audience engagement, population education levels or yields of multiple processes.</p>
-
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
+<p class="description">Funnel charts let you express quantity evolution along a process, such as audience engagement, population education levels, or yields of multiple processes.</p>
 
 ## Basics
 
@@ -165,7 +161,7 @@ To display a category axis, pass a `position` and a list of `categories` to the 
 ### Scaled sections
 
 By default, the sections have the same size because they use the `band` scale type.
-A linear scale, is also available, and will scale the the sections based on their value.
+A linear scale is also available, and scales the sections based on their values.
 To do so, set the `scaleType` property to `linear` in the `categoryAxis`.
 
 {{"demo": "FunnelLinearScale.js"}}

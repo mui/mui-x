@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react/popover';
-import { CalendarEvent } from '../../../models/events';
-import { CalendarResource } from '../../../models/resource';
+import { CalendarEvent, CalendarResource } from '../../../../primitives/models';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

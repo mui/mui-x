@@ -8,15 +8,14 @@ import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { selectors } from '../event-calendar/store';
+import { selectors } from '../../primitives/use-event-calendar';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
-import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
-import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
-import { SchedulerValidDate } from '../../primitives/models';
-import { isWeekend } from '../internals/utils/date-utils';
+import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
+import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import './MonthView.css';
+import { useInitializeView } from '../internals/hooks/useInitializeView';
 
 const adapter = getAdapter();
 const EVENT_HEIGHT = 22;
@@ -35,42 +34,26 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const { store, instance } = useEventCalendarContext();
+    const { store } = useEventCalendarContext();
+    const settings = useStore(store, selectors.settings);
     const visibleDate = useStore(store, selectors.visibleDate);
-    const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
-    const hasDayView = useStore(store, selectors.hasDayView);
-    const today = adapter.date();
     const translations = useTranslations();
 
-    const getWeekList = useWeekList();
     const getDayList = useDayList();
-    const getEventsStartingInDay = useStore(store, selectors.getEventsStartingInDay);
+    const getWeekList = useWeekList();
+    const weeks = React.useMemo(
+      () =>
+        getWeekList({
+          date: adapter.startOfMonth(visibleDate),
+          amount: 'end-of-month',
+        }),
+      [getWeekList, visibleDate],
+    );
 
-    const weeks = React.useMemo(() => {
-      const weeksFirstDays = getWeekList({
-        date: adapter.startOfMonth(visibleDate),
-        amount: 'end-of-month',
-      });
-
-      return weeksFirstDays.map((weekStart) => {
-        const weekDays = getDayList({ date: weekStart, amount: 7 });
-        return weekDays.map((date) => ({
-          date,
-          events: getEventsStartingInDay(date),
-        }));
-      });
-    }, [getWeekList, visibleDate, getDayList, getEventsStartingInDay]);
-
-    const renderCellNumberContent = (day: SchedulerValidDate) => {
-      const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));
-      return (
-        <span className="MonthViewCellNumber">
-          {isFirstDayOfMonth
-            ? adapter.formatByString(day, adapter.formats.shortDate)
-            : adapter.formatByString(day, adapter.formats.dayOfMonth)}
-        </span>
-      );
-    };
+    useInitializeView(() => ({
+      siblingVisibleDateGetter: (date, delta) =>
+        adapter.addMonths(adapter.startOfMonth(date), delta),
+    }));
 
     useResizeObserver(
       cellRef,
@@ -94,85 +77,31 @@ export const MonthView = React.memo(
           <DayGrid.Root className="MonthViewRoot">
             <div className="MonthViewHeader">
               <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
-              {weeks[0].map((day) => (
+              {getDayList({
+                date: weeks[0],
+                amount: 'week',
+                excludeWeekends: settings.hideWeekends,
+              }).map((day) => (
                 <div
-                  key={day.date.toString()}
-                  id={`MonthViewHeaderCell-${day.date.toString()}`}
+                  key={day.toString()}
+                  id={`MonthViewHeaderCell-${day.toString()}`}
                   role="columnheader"
                   className="MonthViewHeaderCell"
-                  aria-label={adapter.format(day.date, 'weekday')}
+                  aria-label={adapter.format(day, 'weekday')}
                 >
-                  {adapter.formatByString(day.date, 'ccc')}
+                  {adapter.formatByString(day, 'ccc')}
                 </div>
               ))}
             </div>
             <div className="MonthViewBody">
-              {weeks.map((week, weekIdx) => {
-                const weekNumer = adapter.getWeekNumber(week[0].date);
-                return (
-                  <DayGrid.Row key={weekNumer} className="MonthViewRow">
-                    <div
-                      className="MonthViewWeekNumberCell"
-                      role="rowheader"
-                      aria-label={translations.weekNumberAriaLabel(weekNumer)}
-                    >
-                      {weekNumer}
-                    </div>
-                    {week.map((day, dayIdx) => {
-                      const isCurrentMonth = adapter.isSameMonth(day.date, visibleDate);
-                      const isToday = adapter.isSameDay(day.date, today);
-
-                      const visibleEvents = day.events.slice(0, maxEvents);
-                      const hiddenCount = day.events.length - maxEvents;
-                      return (
-                        <DayGrid.Cell
-                          ref={weekIdx === 0 && dayIdx === 0 ? cellRef : undefined}
-                          key={day.date.toString()}
-                          className={clsx(
-                            'MonthViewCell',
-                            !isCurrentMonth && 'OtherMonth',
-                            isToday && 'Today',
-                            isWeekend(adapter, day.date) && 'Weekend',
-                          )}
-                        >
-                          {hasDayView ? (
-                            <button
-                              type="button"
-                              className="MonthViewCellNumberButton"
-                              onClick={(event) => instance.switchToDay(day.date, event)}
-                              tabIndex={0}
-                            >
-                              {renderCellNumberContent(day.date)}
-                            </button>
-                          ) : (
-                            renderCellNumberContent(day.date)
-                          )}
-                          {visibleEvents.map((event) => (
-                            <EventPopoverTrigger
-                              key={event.id}
-                              event={event}
-                              nativeButton={false}
-                              render={
-                                <DayGridEvent
-                                  event={event}
-                                  eventResource={resourcesByIdMap.get(event.resource)}
-                                  variant="compact"
-                                  ariaLabelledBy={`MonthViewHeaderCell-${day.date.toString()}`}
-                                />
-                              }
-                            />
-                          ))}
-                          {hiddenCount > 0 && day.events.length > 0 && (
-                            <p className="MonthViewMoreEvents">
-                              {translations.hiddenEvents(hiddenCount)}
-                            </p>
-                          )}
-                        </DayGrid.Cell>
-                      );
-                    })}
-                  </DayGrid.Row>
-                );
-              })}
+              {weeks.map((week, weekIdx) => (
+                <MonthViewWeekRow
+                  key={weekIdx}
+                  maxEvents={maxEvents}
+                  week={week}
+                  firstDayRef={weekIdx === 0 ? cellRef : undefined}
+                />
+              ))}
             </div>
           </DayGrid.Root>
         </EventPopoverProvider>

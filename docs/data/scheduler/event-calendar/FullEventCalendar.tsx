@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/material';
+import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../datasets/personal-agenda';
+} from '../datasets/palette-demo';
 import classes from './FullEventCalendar.module.css';
 
 export default function FullEventCalendar() {
