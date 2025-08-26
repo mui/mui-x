@@ -157,7 +157,7 @@ Here's how the Pie Chart is composed:
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartDataProvider>;
+</ChartDataProvider>
 ```
 
 :::info
