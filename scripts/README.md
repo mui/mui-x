@@ -93,14 +93,14 @@ In case of a problem, another method to generate the changelog is available at t
 2. Choose "Run workflow" dropdown
 
 > **Branch:** master
-> **Commit SHA to release from:** the commit that contains the merged release on master. This commit will also be linked to the github release.
+> **Commit SHA to release from:** the commit that contains the merged release on master. This commit is linked to the GitHub release.
 > **Run in dry-run mode:** Used for debugging.
 > **Create GitHub release:** Keep selected if you want a GitHub release to be automatically created from the changelog.
 
 3. Click "Run workflow"
 4. Optional: A maintainer may have to approve the workflow run.
 
-The action will publish packages, and prepare the GitHub release. The release tag will be created during GitHub release. It will be created in draft mode.
+The action publishes packages, and prepare the GitHub release. The release tag is created during GitHub release. The GitHub release is created in draft mode.
 
 > [!WARNING]
 > If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
