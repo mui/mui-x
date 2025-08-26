@@ -192,7 +192,7 @@ function GridActionsCell(props: GridActionsCellProps) {
           role: 'menu',
           onKeyDown: handleRootKeyDown,
         }
-      : {};
+      : undefined;
 
   return (
     <div ref={rootRef} tabIndex={-1} className={gridClasses.actionsCell} {...attributes} {...other}>
