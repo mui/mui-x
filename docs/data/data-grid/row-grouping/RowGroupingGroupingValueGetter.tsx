@@ -18,22 +18,15 @@ export default function RowGroupingGroupingValueGetter() {
         field: 'composer',
         headerName: 'Composer',
         valueGetter: (value: { name: string }) => value.name,
-        groupingValueGetter: (value: { name: string }) => value.name,
         width: 200,
       } as GridColDef<Movie, string>,
       {
         field: 'decade',
         headerName: 'Decade',
         valueGetter: (value, row) => Math.floor(row.year / 10) * 10,
-        groupingValueGetter: (value, row) => Math.floor(row.year / 10) * 10,
-        renderCell: (params) => {
-          if (params.value == null) {
-            return '';
-          }
-
-          return `${params.value.toString().slice(-2)}'s`;
-        },
-      } as GridColDef<Movie, number>,
+        valueFormatter: (value: number | null) =>
+          value ? `${value.toString().slice(-2)}'s` : '',
+      } as GridColDef<Movie, number, string>,
     ],
     [data.columns],
   );

@@ -17,21 +17,13 @@ export default function RowGroupingGroupingValueGetter() {
         field: 'composer',
         headerName: 'Composer',
         valueGetter: (value) => value.name,
-        groupingValueGetter: (value) => value.name,
         width: 200,
       },
       {
         field: 'decade',
         headerName: 'Decade',
         valueGetter: (value, row) => Math.floor(row.year / 10) * 10,
-        groupingValueGetter: (value, row) => Math.floor(row.year / 10) * 10,
-        renderCell: (params) => {
-          if (params.value == null) {
-            return '';
-          }
-
-          return `${params.value.toString().slice(-2)}'s`;
-        },
+        valueFormatter: (value) => (value ? `${value.toString().slice(-2)}'s` : ''),
       },
     ],
     [data.columns],
