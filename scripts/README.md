@@ -123,7 +123,7 @@ Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for t
 
 ### Publish GitHub release
 
-After documentation is deployed, review, then publish he release thatw as created in draft mode during the release step [GitHub releases page](https://github.com/mui/mui-x/releases)
+After the documentation deployment is done, review and then publish the release that was created in draft mode during the release step [GitHub releases page](https://github.com/mui/mui-x/releases)
 
 ### Announce
 
