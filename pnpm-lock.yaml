@@ -297,8 +297,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#38a35bb1739caf6add62fbbdeb0cd77ee8acdb6a
-        version: https://codeload.github.com/mui/material-ui/tar.gz/38a35bb1739caf6add62fbbdeb0cd77ee8acdb6a(@babel/core@7.28.3)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.46.2)
+        specifier: github:mui/material-ui#41da88f24d0c2a2ccb5480a95d352a6650607080
+        version: https://codeload.github.com/mui/material-ui/tar.gz/41da88f24d0c2a2ccb5480a95d352a6650607080(@babel/core@7.28.3)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.46.2)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.1(@types/react@19.1.9)(react@19.1.1)
@@ -4291,8 +4291,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/38a35bb1739caf6add62fbbdeb0cd77ee8acdb6a':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/38a35bb1739caf6add62fbbdeb0cd77ee8acdb6a}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/41da88f24d0c2a2ccb5480a95d352a6650607080':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/41da88f24d0c2a2ccb5480a95d352a6650607080}
     version: 7.3.1
     engines: {pnpm: 10.14.0}
 
@@ -4533,8 +4533,8 @@ packages:
     resolution: {integrity: sha512-Y3kVGxynxi/Lz42bi20A+PQ0vh25zVjbGnQWZQUTwLzQozEIeokCgUWskPvlhs6btheLZyzUjqGuhUCymOoD1g==}
     engines: {node: ^18.14.0 || >=20}
 
-  '@netlify/functions@4.2.1':
-    resolution: {integrity: sha512-FhwXULPeD9qbUdWxtD9AUjV5GEjB93fqLhl0N4KZAf00i1Ec0t3WmCJ4j5bCbnETxXEkTOYhhUBHZi2BAFQSgw==}
+  '@netlify/functions@4.2.2':
+    resolution: {integrity: sha512-FZ7+Y4e1x5VJ3+36tpcB5kyBk4/mFWR7UBlhNksHWjdhNhC3CP6fqckMBW+OnZ849fMcZL2kq93/fIM49LjS+Q==}
     engines: {node: '>=18.0.0'}
 
   '@netlify/runtime-utils@2.1.0':
@@ -15087,9 +15087,9 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.9)(react@19.1.1))(@types/react@19.1.9)(react@19.1.1)
       '@types/react': 19.1.9
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/38a35bb1739caf6add62fbbdeb0cd77ee8acdb6a(@babel/core@7.28.3)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.46.2)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/41da88f24d0c2a2ccb5480a95d352a6650607080(@babel/core@7.28.3)(@types/express@5.0.3)(encoding@0.1.13)(rollup@4.46.2)':
     dependencies:
-      '@netlify/functions': 4.2.1(encoding@0.1.13)(rollup@4.46.2)
+      '@netlify/functions': 4.2.2(encoding@0.1.13)(rollup@4.46.2)
       '@slack/bolt': 4.4.0(@types/express@5.0.3)
       babel-plugin-transform-import-meta: 2.3.3(@babel/core@7.28.3)
       execa: 9.6.0
@@ -15324,7 +15324,7 @@ snapshots:
       uuid: 11.1.0
       write-file-atomic: 5.0.1
 
-  '@netlify/functions@4.2.1(encoding@0.1.13)(rollup@4.46.2)':
+  '@netlify/functions@4.2.2(encoding@0.1.13)(rollup@4.46.2)':
     dependencies:
       '@netlify/blobs': 10.0.8
       '@netlify/dev-utils': 4.1.1
