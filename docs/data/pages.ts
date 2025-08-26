@@ -573,7 +573,17 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/composition' },
               { pathname: '/x/react-charts/label' },
               { pathname: '/x/react-charts/legend' },
-              { pathname: '/x/react-charts/hooks' },
+              {
+                pathname: '/x/react-charts/hooks-group',
+                title: 'Hooks',
+                children: [
+                  { pathname: '/x/react-charts/hooks', title: 'Overview' },
+                  { pathname: '/x/react-charts/hooks/use-series', title: 'useSeries' },
+                  { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
+                  { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
+                  { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
+                ],
+              },
               { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
