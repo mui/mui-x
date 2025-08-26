@@ -229,7 +229,11 @@ export const getCellGroupingCriteria = ({
 }) => {
   let key: GridKeyValue | null | undefined;
   if (groupingRule.groupingValueGetter) {
-    key = groupingRule.groupingValueGetter(row[groupingRule.field] as never, row, colDef, apiRef);
+    key = row[groupingRule.field];
+    if (colDef.valueGetter) {
+      key = colDef.valueGetter(key as never, row, colDef, apiRef);
+    }
+    key = groupingRule.groupingValueGetter(key as never, row, colDef, apiRef);
   } else {
     key = getRowValue(row, colDef, apiRef) as GridKeyValue | null | undefined;
   }
