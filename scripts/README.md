@@ -78,11 +78,16 @@ In case of a problem, another method to generate the changelog is available at t
 > ```
 >
 > Cross-reference both lists to find a team member with admin rights.
-
-<!-- TODO
-- write guide on mui-public for publishing packages and setting up OIDC publishing
-- write command for code-infra to find "team members with admin rights"
--->
+>
+> After publishing you'll have to setup the access parameters for [trusted publishing](http://docs.npmjs.com/trusted-publishers#configuring-trusted-publishing). You can find > them under `https://www.npmjs.com/package/<pkg>/access`. Use the following values:
+>
+> - **Publisher:** GitHub actions
+> - **Organization or user:** mui
+> - **Repository:** mui-x
+> - **Workflow filename:** publish.yml
+> - **Environment name:** npm-publish
+>
+> and click _Set up connection_
 
 1. Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
 2. Choose "Run workflow" dropdown
