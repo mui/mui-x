@@ -17,6 +17,7 @@ import {
 import { Adapter } from '../utils/adapter/types';
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+const DEFAULT_VIEW: CalendarView = 'week';
 const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
 const EMPTY_ARRAY: any[] = [];
 // TODO: Create a prop to allow users to customize the number of days in agenda view
@@ -54,41 +55,58 @@ export class EventCalendarInstance {
     }
   }
 
-  public static createWithStore(parameters: EventCalendarParameters, adapter: Adapter) {
-    const store = new Store<State>({
+  /**
+   * Returns the properties of the state that are derived from the parameters.
+   * This do not contain state properties that don't update whenever the parameters update.
+   */
+  private static getPartialStateFromParameters(
+    parameters: EventCalendarParameters,
+    adapter: Adapter,
+  ): Pick<
+    State,
+    | 'adapter'
+    | 'events'
+    | 'resources'
+    | 'views'
+    | 'areEventsDraggable'
+    | 'areEventsResizable'
+    | 'ampm'
+  > {
+    return {
       adapter,
       events: parameters.events,
       resources: parameters.resources ?? EMPTY_ARRAY,
-      visibleResources: new Map(),
-      visibleDate:
-        parameters.visibleDate ??
-        parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.date()),
-      view: parameters.view ?? parameters.defaultView ?? 'week',
       views: parameters.views ?? DEFAULT_VIEWS,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
       ampm: parameters.ampm ?? true,
+    };
+  }
+
+  public static createWithStore(parameters: EventCalendarParameters, adapter: Adapter) {
+    const store = new Store<State>({
+      // Store elements that should not be updated when the parameters change.
+      visibleResources: new Map(),
       settings: parameters.settings ?? DEFAULT_SETTINGS,
+      // Store elements that should only be updated when their controlled prop changes.
+      visibleDate:
+        parameters.visibleDate ??
+        parameters.defaultVisibleDate ??
+        adapter.startOfDay(adapter.date()),
+      view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+      // Store elements that should be synchronized when the parameters change.
+      ...EventCalendarInstance.getPartialStateFromParameters(parameters, adapter),
     });
 
     const instance = new EventCalendarInstance(parameters, store);
-
-    const contextValue: EventCalendarContextValue = {
-      store,
-      instance,
-    };
+    const contextValue: EventCalendarContextValue = { store, instance };
 
     function updater(newParameters: EventCalendarParameters, newAdapter: Adapter) {
-      const partialState: Partial<State> = {
-        adapter: newAdapter,
-        events: newParameters.events,
-        resources: newParameters.resources ?? EMPTY_ARRAY,
-        views: newParameters.views ?? DEFAULT_VIEWS,
-        areEventsDraggable: newParameters.areEventsDraggable ?? false,
-        areEventsResizable: newParameters.areEventsResizable ?? false,
-        ampm: newParameters.ampm ?? true,
-      };
+      const partialState: Partial<State> = EventCalendarInstance.getPartialStateFromParameters(
+        newParameters,
+        newAdapter,
+      );
+
       if (newParameters.view !== undefined) {
         partialState.view = newParameters.view;
       }
