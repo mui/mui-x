@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { Store as BaseStore } from '@base-ui-components/utils/store';
+import { warn } from '@base-ui-components/utils/warn';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { State } from './store';
 import { useAssertModelConsistency } from '../utils/useAssertModelConsistency';
@@ -18,7 +19,6 @@ import {
   SchedulerValidDate,
 } from '../models';
 import { useAssertStateValidity } from '../utils/useAssertStateValidity';
-import { warn } from '@base-ui-components/utils/warn';
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
