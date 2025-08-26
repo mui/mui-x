@@ -27,14 +27,14 @@ export class EventCalendarInstance {
 
   private parameters: EventCalendarParameters;
 
-  private initialParameters: EventCalendarParameters;
+  private initialParameters: EventCalendarParameters | null = null;
 
   constructor(parameters: EventCalendarParameters, store: EventCalendarStore) {
     this.store = store;
     this.parameters = parameters;
-    this.initialParameters = parameters;
 
     if (process.env.NODE_ENV !== 'production') {
+      this.initialParameters = parameters;
       // Add listeners to assert the state validity (not applied in prod)
       this.store.subscribe((state) => {
         const views = selectors.views(state);
@@ -110,8 +110,8 @@ export class EventCalendarInstance {
         }) => {
           const defaultValue = newParameters[defaultValueProp];
           const isControlled = newParameters[controlledProp] !== undefined;
-          const initialDefaultValue = instance.initialParameters[defaultValueProp];
-          const initialIsControlled = instance.initialParameters[controlledProp] !== undefined;
+          const initialDefaultValue = instance.initialParameters?.[defaultValueProp];
+          const initialIsControlled = instance.initialParameters?.[controlledProp] !== undefined;
 
           if (initialIsControlled !== isControlled) {
             warn(
@@ -143,7 +143,7 @@ export class EventCalendarInstance {
       }
     }
 
-    return { contextValue, updater };
+    return { store, instance, updater, contextValue };
   }
 
   private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {

@@ -1,12 +1,11 @@
-import { renderHook, act } from '@mui/internal-test-utils';
 import { DateTime } from 'luxon';
 import { spy } from 'sinon';
-import { useEventCalendar } from './useEventCalendar';
 import { getAdapter } from '../utils/adapter/getAdapter';
+import { EventCalendarInstance } from './EventCalendarInstance';
 
 const DEFAULT_PARAMS = { events: [] };
 
-describe('useDateNavigation', () => {
+describe('EventCalendarInstance', () => {
   const adapter = getAdapter();
 
   describe('Method: goToPreviousVisibleDate', () => {
@@ -14,11 +13,12 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
 
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange }),
+      const { instance } = EventCalendarInstance.createWithStore(
+        { ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange },
+        adapter,
       );
 
-      act(() => result.current.instance.goToPreviousVisibleDate({} as any));
+      instance.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addDays(visibleDate, -1),
       );
@@ -28,11 +28,12 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z'); // Thursday
 
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'week', visibleDate, onVisibleDateChange }),
+      const { instance } = EventCalendarInstance.createWithStore(
+        { ...DEFAULT_PARAMS, view: 'week', visibleDate, onVisibleDateChange },
+        adapter,
       );
 
-      act(() => result.current.instance.goToPreviousVisibleDate({} as any));
+      instance.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(visibleDate), -1),
       );
@@ -42,11 +43,12 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-15T00:00:00Z');
 
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'month', visibleDate, onVisibleDateChange }),
+      const { instance } = EventCalendarInstance.createWithStore(
+        { ...DEFAULT_PARAMS, view: 'month', visibleDate, onVisibleDateChange },
+        adapter,
       );
 
-      act(() => result.current.instance.goToPreviousVisibleDate({} as any));
+      instance.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(visibleDate), -1),
       );
@@ -56,11 +58,12 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
 
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'agenda', visibleDate, onVisibleDateChange }),
+      const { instance } = EventCalendarInstance.createWithStore(
+        { ...DEFAULT_PARAMS, view: 'agenda', visibleDate, onVisibleDateChange },
+        adapter,
       );
 
-      act(() => result.current.instance.goToPreviousVisibleDate({} as any));
+      instance.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addDays(visibleDate, -12),
       );
@@ -72,11 +75,12 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
 
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange }),
+      const { instance } = EventCalendarInstance.createWithStore(
+        { ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange },
+        adapter,
       );
 
-      act(() => result.current.instance.goToNextVisibleDate({} as any));
+      instance.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addDays(visibleDate, 1),
       );
@@ -86,11 +90,12 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z'); // Thursday
 
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'week', visibleDate, onVisibleDateChange }),
+      const { instance } = EventCalendarInstance.createWithStore(
+        { ...DEFAULT_PARAMS, view: 'week', visibleDate, onVisibleDateChange },
+        adapter,
       );
 
-      act(() => result.current.instance.goToNextVisibleDate({} as any));
+      instance.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(visibleDate), 1),
       );
@@ -100,11 +105,12 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-15T00:00:00Z');
 
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'month', visibleDate, onVisibleDateChange }),
+      const { instance } = EventCalendarInstance.createWithStore(
+        { ...DEFAULT_PARAMS, view: 'month', visibleDate, onVisibleDateChange },
+        adapter,
       );
 
-      act(() => result.current.instance.goToNextVisibleDate({} as any));
+      instance.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(visibleDate), 1),
       );
@@ -114,11 +120,12 @@ describe('useDateNavigation', () => {
       const onVisibleDateChange = spy();
       const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
 
-      const { result } = renderHook(() =>
-        useEventCalendar({ ...DEFAULT_PARAMS, view: 'agenda', visibleDate, onVisibleDateChange }),
+      const { instance } = EventCalendarInstance.createWithStore(
+        { ...DEFAULT_PARAMS, view: 'agenda', visibleDate, onVisibleDateChange },
+        adapter,
       );
 
-      act(() => result.current.instance.goToNextVisibleDate({} as any));
+      instance.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addDays(visibleDate, 12),
       );
