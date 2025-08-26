@@ -104,11 +104,11 @@ export class EventCalendarInstance {
       );
 
       function updateModel(
-        controlledProp: keyof EventCalendarParameters,
-        defaultValueProp: keyof EventCalendarParameters,
+        controlledProp: 'view' | 'visibleDate',
+        defaultValueProp: 'defaultView' | 'defaultVisibleDate',
       ) {
         if (newParameters[controlledProp] !== undefined) {
-          partialState[controlledProp] = newParameters[controlledProp];
+          partialState[controlledProp] = newParameters[controlledProp] as any;
         }
 
         if (process.env.NODE_ENV !== 'production') {
