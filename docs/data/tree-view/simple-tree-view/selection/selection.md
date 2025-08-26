@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Single selection
 
-By default, the Tree View allows selecting a single item.
+By default, the Tree View lets users select a single item.
 
 {{"demo": "SingleSelectTreeView.js"}}
 
