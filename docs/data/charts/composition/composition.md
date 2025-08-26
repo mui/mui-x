@@ -190,7 +190,7 @@ This component defines a rectangular clip path that acts as a boundary.
 </ChartContainer>
 ```
 
-The following demo allows you to toggle clipping for scatter and line plots.
+The following demo lets you toggle clipping for scatter and line plots.
 Observe how line markers extend beyond the clip area, rendering on top of the axes.
 
 {{"demo": "LimitOverflow.js" }}
