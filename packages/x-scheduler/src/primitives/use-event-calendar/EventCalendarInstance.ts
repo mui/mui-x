@@ -41,7 +41,6 @@ export class EventCalendarInstance {
       this.store.subscribe((state) => {
         const views = selectors.views(state);
         const view = selectors.view(state);
-
         if (!views.includes(view)) {
           warn(
             [
@@ -126,7 +125,7 @@ export class EventCalendarInstance {
           if (initialIsControlled !== isControlled) {
             warn(
               [
-                `MUI X Scheduler: A component is changing the ${
+                `Event Calendar: A component is changing the ${
                   initialIsControlled ? '' : 'un'
                 }controlled ${controlledProp} state of Event Calendar to be ${initialIsControlled ? 'un' : ''}controlled.`,
                 'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -140,7 +139,7 @@ export class EventCalendarInstance {
           if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
             warn(
               [
-                `MUI X Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
+                `Event Calendar: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
                 `To suppress this warning opt to use a controlled Event Calendar.`,
               ].join('\n'),
               'error',
@@ -165,22 +164,6 @@ export class EventCalendarInstance {
     onVisibleDateChange?.(visibleDate, event);
   };
 
-  private getNavigationDate(delta: number) {
-    const { adapter, view, visibleDate: visibleDateProp } = this.store.state;
-    switch (view) {
-      case 'day':
-        return adapter.addDays(visibleDateProp, delta);
-      case 'week':
-        return adapter.addWeeks(adapter.startOfWeek(visibleDateProp), delta);
-      case 'month':
-        return adapter.addMonths(adapter.startOfMonth(visibleDateProp), delta);
-      case 'agenda':
-        return adapter.addDays(visibleDateProp, AGENDA_VIEW_DAYS_AMOUNT * delta);
-      default:
-        return visibleDateProp;
-    }
-  }
-
   /**
    * Sets the view of the calendar.
    */
@@ -199,7 +182,6 @@ export class EventCalendarInstance {
     if (viewProp === undefined) {
       this.store.set('view', view);
     }
-
     onViewChange?.(view, event);
   };
 
@@ -238,7 +220,7 @@ export class EventCalendarInstance {
     const siblingVisibleDateGetter = this.store.state.viewConfig?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+        'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
       );
       return;
     }
@@ -253,7 +235,7 @@ export class EventCalendarInstance {
     const siblingVisibleDateGetter = this.store.state.viewConfig?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+        'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
       );
       return;
     }
