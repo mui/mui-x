@@ -50,9 +50,25 @@ export default function UseScale() {
   return (
     <LineChart
       dataset={data}
-      xAxis={[{ dataKey: 'x', label: 'X Values' }]}
-      yAxis={[{ dataKey: 'y', label: 'Y Values' }]}
-      series={[{ dataKey: 'y', label: 'Sample Data', color: '#8884d8' }]}
+      xAxis={[
+        {
+          dataKey: 'x',
+          label: 'X Values',
+        },
+      ]}
+      yAxis={[
+        {
+          dataKey: 'y',
+          label: 'Y Values',
+        },
+      ]}
+      series={[
+        {
+          dataKey: 'y',
+          label: 'Sample Data',
+          color: '#8884d8',
+        },
+      ]}
     >
       <CustomDataPoints />
     </LineChart>
