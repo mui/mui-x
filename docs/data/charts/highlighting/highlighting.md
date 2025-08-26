@@ -43,7 +43,7 @@ This kind of interaction is controlled by series properties `highlightScope` whi
 
 :::info
 For line chart, you can increase the interaction area by using slots.
-Detailed explanations are available in a [dedicated line interaction demonstration](/x/react-charts/line-demo/#larger-interaction-area).
+Detailed explanations are available in a [dedicated line interaction demo](/x/react-charts/line-demo/#larger-interaction-area).
 :::
 
 {{"demo": "ElementHighlights.js"}}
@@ -95,7 +95,7 @@ const Component = ({ data }) => {
 
 ## Synchronizing highlights
 
-Having a controlled highlight allows you to control it in multiple charts at the same time.
+Having a controlled highlight lets you control it in multiple charts at the same time.
 You need to ensure that the `series` has the same `ids` and the data is in the same order.
 
 {{"demo": "SyncHighlight.js"}}
