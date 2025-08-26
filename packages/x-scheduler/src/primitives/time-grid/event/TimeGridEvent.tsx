@@ -149,14 +149,7 @@ export namespace TimeGridEvent {
     initialCursorPositionInEventMs: number;
   }
 
-  export type DragData = SharedDragData &
-    (
-      | {
-          source: 'TimeGridEvent';
-        }
-      | {
-          source: 'TimeGridEventResizeHandler';
-          side: 'start' | 'end';
-        }
-    );
+  export interface DragData extends SharedDragData {
+    source: 'TimeGridEvent';
+  }
 }

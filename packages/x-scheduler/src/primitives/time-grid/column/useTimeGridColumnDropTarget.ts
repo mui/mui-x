@@ -49,7 +49,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       // Move event
       if (isDraggingTimeGridEvent(data)) {
         // TODO: Avoid JS Date conversion
-        const eventDuration =
+        const eventDurationMinute =
           (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
           (60 * 1000);
 
@@ -59,20 +59,20 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs,
         });
 
-        const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
+        const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
 
         return { start: newStartDate, end: newEndDate, eventId: data.id, columnId };
       }
 
       // Resize event
       if (isDraggingTimeGridEventResizeHandler(data)) {
-        const cursorDate = addRoundedOffsetToDate({
-          adapter,
-          date: start,
-          offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs,
-        });
-
         if (data.side === 'start') {
+          const cursorDate = addRoundedOffsetToDate({
+            adapter,
+            date: start,
+            offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs,
+          });
+
           // Ensure the new start date is not after or too close to the end date.
           const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
           const newStartDate = adapter.isBefore(cursorDate, maxStartDate)
@@ -86,6 +86,16 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
             columnId,
           };
         }
+
+        // TODO: Avoid JS Date conversion
+        const eventDurationMs =
+          adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime();
+
+        const cursorDate = addRoundedOffsetToDate({
+          adapter,
+          date: start,
+          offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
+        });
 
         // Ensure the new end date is not before or too close to the start date.
         const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
