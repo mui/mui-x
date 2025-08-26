@@ -49,7 +49,14 @@ function SankeyPlot(props: SankeyPlotProps) {
   const { classes: inputClasses, onLinkClick, onNodeClick } = props;
 
   const seriesContext = useSankeySeriesContext();
-  const series = seriesContext?.series[seriesContext?.seriesOrder?.[0]]!;
+
+  if (!seriesContext) {
+    throw new Error(
+      `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartDataProviderPro.`,
+    );
+  }
+
+  const series = seriesContext.series[seriesContext.seriesOrder?.[0]];
   const classes = useUtilityClasses({ classes: inputClasses });
   const drawingArea = useDrawingArea();
   const { data, linkOptions, nodeOptions } = series;
