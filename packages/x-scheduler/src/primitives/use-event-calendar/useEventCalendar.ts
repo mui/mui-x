@@ -18,6 +18,7 @@ import {
   SchedulerValidDate,
 } from '../models';
 import { useAssertStateValidity } from '../utils/useAssertStateValidity';
+import { warn } from '@base-ui-components/utils/warn';
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
@@ -162,6 +163,9 @@ export function useEventCalendar(
     useEventCallback((event) => {
       const siblingVisibleDateGetter = store.state.viewConfig?.siblingVisibleDateGetter;
       if (!siblingVisibleDateGetter) {
+        warn(
+          'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+        );
         return;
       }
 
@@ -172,6 +176,9 @@ export function useEventCalendar(
     (event) => {
       const siblingVisibleDateGetter = store.state.viewConfig?.siblingVisibleDateGetter;
       if (!siblingVisibleDateGetter) {
+        warn(
+          'MUI X Scheduler: No config found for the current view. Please use useInitializeView in your custom view.',
+        );
         return;
       }
 
