@@ -27,6 +27,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 ) {
   const { days, className, ...other } = props;
 
+  // TODO: prop to opt out of the current time indicator
+  const showCurrentTimeIndicator = true;
+
   const translations = useTranslations();
   const today = adapter.date();
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -74,11 +77,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     <span className="DayTimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
       <span className="DayTimeGridHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
-      <span
-        className={clsx('DayTimeGridHeaderDayNumber', adapter.isSameDay(day, today) && 'Today')}
-      >
-        {adapter.format(day, 'dayOfMonth')}
-      </span>
+      <span className="DayTimeGridHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
     </span>
   );
 
@@ -98,6 +97,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 id={`DayTimeGridHeaderCell-${day.toString()}`}
                 role="columnheader"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+                data-current={adapter.isSameDay(day, today) ? '' : undefined}
               >
                 {hasDayView ? (
                   <button
@@ -212,6 +212,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     end={adapter.endOfDay(day)}
                     className="DayTimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
+                    data-current={adapter.isSameDay(day, today) ? '' : undefined}
                   >
                     {regularEvents.map((event) => (
                       <EventPopoverTrigger
@@ -228,6 +229,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                       />
                     ))}
                     <TimeGridEventPlaceholder day={day} />
+                    {showCurrentTimeIndicator ? <TimeGrid.CurrentTimeIndicator /> : null}
                   </TimeGrid.Column>
                 ))}
               </div>
