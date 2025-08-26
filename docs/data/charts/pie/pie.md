@@ -148,10 +148,7 @@ In addition to the common chart components available for [composition](/x/react-
 Here's how the Pie Chart is composed:
 
 ```jsx
-// Disable the default axis behavior
-const noAxis = [{ position: 'none' }];
-
-<ChartDataProvider xAxis={noAxis} yAxis={noAxis}>
+<ChartDataProvider plugins={PIE_CHART_PLUGINS}>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -164,6 +161,8 @@ const noAxis = [{ position: 'none' }];
 ```
 
 :::info
-The code defines `noAxis` for the x and y-axes to override the default axes created by the `<ChartDataProvider />`.
-This ensures that the pie is centered.
+The `<ChartDataProvider />` get a prop [`plugins`](/x/react-charts/plugins).
+This is done to remove cartesian-axis features which are useless for a pie chart, and interfere with the pie position.
+
+For pro users, use the `PIE_CHART_PRO_PLUGINS` instead to activate the export feature.
 :::
