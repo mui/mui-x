@@ -38,46 +38,55 @@ Below are the shapes we support, with small examples.
 - Daily (`freq: 'DAILY'`), no extra fields required.
 
   ```tsx
-  rrule={{ freq: 'DAILY', interval: 2 }} // Every 2 days
+  // Every 2 days
+  rrule={{ freq: 'DAILY', interval: 2 }}
   ```
 
 - Weekly (`freq: 'WEEKLY'`), use `byDay` with plain weekday codes (no ordinals).
 
   ```tsx
-  rrule={{ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE', 'FR'] }} // Every week on Monday, Wednesday and Friday
+  // Every week on Monday, Wednesday and Friday
+  rrule={{ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE', 'FR'] }}
   ```
 
 - Monthly (`freq: 'MONTHLY'`), pick one mode:
   - `byMonthDay` with a single day number (months missing that day are skipped).
 
     ```tsx
-    rrule={{ freq: 'MONTHLY', interval: 1, byMonthDay: [15] }} // Every month on the 15th
+    // Every month on the 15th
+    rrule={{ freq: 'MONTHLY', interval: 1, byMonthDay: [15] }}
     ```
 
   - `byDay` with one ordinal entry (`2TU` represents 2nd Tuesday, `-1FR` represents last Friday, etc).
     Do not mix with `byMonthDay`.
 
     ```tsx
-    rrule={{ freq: 'MONTHLY', interval: 1, byDay: ['2TU'] }} // Second Tuesday of every month
+    // Second Tuesday of every month
+    rrule={{ freq: 'MONTHLY', interval: 1, byDay: ['2TU'] }}
 
-    rrule={{ freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] }} // Last Friday of every month
+    // Last Friday of every month
+    rrule={{ freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] }}
 
     ```
 
 - Yearly (`freq: 'YEARLY'`), repeats each year on the same calendar date (month and day) as the event's start. Advanced selectors (`byMonth`, `byMonthDay`, `byDay`) are not supported yet.
 
   ```tsx
-  rrule={{ freq: 'YEARLY', interval: 1 }} // Every year on the event's start date
+  // Every year on the event's start date
+  rrule={{ freq: 'YEARLY', interval: 1 }}
   ```
 
 - End of rule, use `count` or `until` (inclusive), only one at a time. If neither `count` nor `until` is provided, the series never ends.
 
   ```tsx
-  rrule={{ freq: 'DAILY', interval: 1 }} // Never ends (default)
+  // Never ends (default)
+  rrule={{ freq: 'DAILY', interval: 1 }}
 
-  rrule={{ freq: 'DAILY', count: 5 }} // Stop after 5 occurrences
+  // Stop after 5 occurrences
+  rrule={{ freq: 'DAILY', count: 5 }}
 
-  rrule={{ freq: 'WEEKLY', byDay: ['TU'], until: DateTime.fromISO('2025-12-31T23:59:59Z') }} // Until a date (inclusive)
+  // Until a date (inclusive)
+  rrule={{ freq: 'WEEKLY', byDay: ['TU'], until: DateTime.fromISO('2025-12-31T23:59:59Z') }}
   ```
 
 :::info
