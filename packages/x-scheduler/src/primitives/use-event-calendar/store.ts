@@ -7,6 +7,7 @@ import {
   CalendarResourceId,
   CalendarView,
   CalendarSettings,
+  CalendarViewConfig,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
@@ -57,6 +58,11 @@ export type State = {
    * Settings for the calendar.
    */
   settings: CalendarSettings;
+  /**
+   * The config of the current view.
+   * Should not be used in selectors, only in event handlers.
+   */
+  viewConfig: CalendarViewConfig | null;
 };
 
 // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.

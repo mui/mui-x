@@ -6,6 +6,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
@@ -48,6 +49,11 @@ export const MonthView = React.memo(
         }),
       [getWeekList, visibleDate],
     );
+
+    useInitializeView(() => ({
+      siblingVisibleDateGetter: (date, delta) =>
+        adapter.addMonths(adapter.startOfMonth(date), delta),
+    }));
 
     useResizeObserver(
       cellRef,
