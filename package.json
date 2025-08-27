@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "postinstall": "node scripts/sync-monorepo-docs-deps.mjs",
     "start": "pnpm i && pnpm docs:dev",
     "docs:dev": "pnpm --filter docs dev",
     "docs:serve": "pnpm --filter docs serve",
@@ -56,6 +57,7 @@
     "release:publish:dry-run": "pnpm publish --recursive --tag latest --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
     "release:prepare": "node scripts/createReleasePR.mjs",
+    "sync-monorepo-docs-deps": "node scripts/sync-monorepo-docs-deps.mjs",
     "generate:exports": "node scripts/generateDeepExports.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\"",
