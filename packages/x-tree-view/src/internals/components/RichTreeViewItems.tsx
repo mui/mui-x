@@ -14,6 +14,7 @@ import {
 import { selectorItemExpansionFlatList } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { useTreeViewContext } from '../TreeViewProvider';
 import { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
+import { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 
 const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
@@ -50,7 +51,8 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
 
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { slots, slotProps } = props;
-  const { store } = useTreeViewContext<[UseTreeViewItemsSignature]>();
+  const { store } =
+    useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>();
 
   const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;
@@ -60,8 +62,6 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
     domStructure === 'flat' ? selectorItemExpansionFlatList : selectorItemOrderedChildrenIds,
     null,
   );
-
-  console.log('ITEMS', items);
 
   const skipChildren = domStructure === 'flat';
 
