@@ -42,7 +42,7 @@ export function getByDayMaps(adapter: Adapter): {
 export function tokenizeByDay(byDay: ByDayValue): { ord: number | null; code: ByDayCode } {
   const match = String(byDay).match(/^(-?[1-5])?(MO|TU|WE|TH|FR|SA|SU)$/);
   if (!match) {
-    throw new Error('RRULE: invalid BYDAY value.');
+    throw new Error('Event Calendar: invalid BYDAY value.');
   }
   return { ord: match[1] ? Number(match[1]) : null, code: match[2] as ByDayCode };
 }
@@ -61,7 +61,9 @@ export function parseWeeklyByDayPlain(
   }
   const parsed = ruleByDay.map(tokenizeByDay);
   if (parsed.some((item) => item.ord !== null)) {
-    throw new Error('WEEKLY: BYDAY must be plain MO..SU (no ordinals like 1MO, -1FR).');
+    throw new Error(
+      'Event Calendar: WEEKLY BYDAY must be plain MO..SU (no ordinals like 1MO, -1FR).',
+    );
   }
   return parsed.map((item) => item.code);
 }
@@ -76,11 +78,13 @@ export function parseMonthlyByDayOrdinalSingle(ruleByDay: RRuleSpec['byDay']): {
   code: ByDayCode;
 } {
   if (!ruleByDay?.length || ruleByDay.length !== 1) {
-    throw new Error('MONTHLY: BYDAY must contain exactly one ordinal entry (e.g. 2TU or -1FR).');
+    throw new Error(
+      'Event Calendar: MONTHLY BYDAY must contain exactly one ordinal entry (e.g. 2TU or -1FR).',
+    );
   }
   const { ord, code } = tokenizeByDay(ruleByDay[0]);
   if (ord == null) {
-    throw new Error('MONTHLY: BYDAY must include an ordinal (e.g. 2TU or -1FR).');
+    throw new Error('Event Calendar: MONTHLY BYDAY must include an ordinal (e.g. 2TU or -1FR).');
   }
   return { ord, code };
 }
@@ -267,7 +271,9 @@ export function buildEndGuard(
   const hasUntil = !!rule.until;
 
   if (hasCount && hasUntil) {
-    throw new Error('RRULE invalid: COUNT and UNTIL are mutually exclusive per RFC 5545.');
+    throw new Error(
+      'Event Calendar: RRULE invalid, COUNT and UNTIL are mutually exclusive per RFC 5545.',
+    );
   }
 
   if (!hasCount && !hasUntil) {
@@ -403,7 +409,9 @@ export function matchesRecurrence(
       // If BYDAY provided, support ordinal BYDAY (Nth/last).
       if (rule.byDay?.length) {
         if (rule.byMonthDay?.length) {
-          throw new Error('MONTHLY: use either BYDAY (ordinal) or BYMONTHDAY, not both.');
+          throw new Error(
+            'Event Calendar: For MONTHLY use either BYDAY (ordinal) or BYMONTHDAY, not both.',
+          );
         }
 
         const { ord, code } = parseMonthlyByDayOrdinalSingle(rule.byDay);
@@ -429,7 +437,9 @@ export function matchesRecurrence(
       // Only exact "same month + same day" recurrence is supported.
       // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
       if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
-        throw new Error('YEARLY supports only exact same date recurrence (month/day of DTSTART).');
+        throw new Error(
+          'Event Calendar: YEARLY supports only exact same date recurrence (month/day of DTSTART).',
+        );
       }
 
       const sameMonth = adapter.getMonth(candidateDay) === adapter.getMonth(seriesStartDay);
@@ -483,7 +493,7 @@ export function estimateOccurrencesUpTo(
     default:
       throw new Error(
         [
-          `Unknown frequency: ${rule.freq}`,
+          `Event Calendar: Unknown frequency ${rule.freq}`,
           'Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".',
         ].join('\n'),
       );
@@ -573,7 +583,9 @@ export function countMonthlyOccurrencesUpToExact(
   // Path A: BYDAY with ordinals (e.g. 2TU, -1FR). Not mixed with BYMONTHDAY.
   if (rule.byDay?.length) {
     if (rule.byMonthDay?.length) {
-      throw new Error('MONTHLY: use either BYDAY (ordinal) or BYMONTHDAY, not both.');
+      throw new Error(
+        'Event Calendar: MONTHLY use either BYDAY (ordinal) or BYMONTHDAY, not both.',
+      );
     }
 
     const { ord, code } = parseMonthlyByDayOrdinalSingle(rule.byDay);
@@ -603,7 +615,7 @@ export function countMonthlyOccurrencesUpToExact(
 
   // Path B: BYMONTHDAY (single mode, default to DTSTART day)
   if ((rule.byMonthDay?.length ?? 0) > 1) {
-    throw new Error('MONTHLY supports only a single BYMONTHDAY.');
+    throw new Error('Event Calendar: MONTHLY supports only a single BYMONTHDAY.');
   }
 
   // If no BYMONTHDAY is provided in a MONTHLY rule, default to the day of month of DTSTART.
@@ -660,7 +672,9 @@ export function countYearlyOccurrencesUpToExact(
   // Only the exact same calendar date is supported for YEARLY (month and day of DTSTART).
   // Any use of BYMONTH, BYMONTHDAY, or BYDAY is not allowed at the moment.
   if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
-    throw new Error('YEARLY supports only exact same date recurrence (month/day of DTSTART).');
+    throw new Error(
+      'Event Calendar: YEARLY supports only exact same date recurrence (month/day of DTSTART).',
+    );
   }
 
   const targetMonth = adapter.getMonth(seriesStart);
