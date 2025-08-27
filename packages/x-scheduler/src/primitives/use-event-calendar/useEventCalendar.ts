@@ -46,6 +46,7 @@ export function useEventCalendar(
     areEventsDraggable = false,
     areEventsResizable = false,
     ampm = true,
+    showCurrentTimeIndicator = true,
     settings: settingsProp = DEFAULT_SETTINGS,
   } = parameters;
 
@@ -62,6 +63,7 @@ export function useEventCalendar(
         areEventsDraggable,
         areEventsResizable,
         ampm,
+        showCurrentTimeIndicator,
         settings: settingsProp,
         viewConfig: null,
       }),
@@ -92,6 +94,7 @@ export function useEventCalendar(
       areEventsDraggable,
       areEventsResizable,
       ampm,
+      showCurrentTimeIndicator,
     };
     if (viewProp !== undefined) {
       partialState.view = viewProp;
@@ -110,6 +113,7 @@ export function useEventCalendar(
     visibleDateProp,
     areEventsDraggable,
     areEventsResizable,
+    showCurrentTimeIndicator,
     views,
     ampm,
   ]);
@@ -298,6 +302,11 @@ export namespace useEventCalendar {
      * @default true
      */
     ampm?: boolean;
+    /**
+     * Whether the component should display the current time indicator.
+     * @default true
+     */
+    showCurrentTimeIndicator?: boolean;
     /**
      * Settings for the calendar.
      * @default { hideWeekends: false }

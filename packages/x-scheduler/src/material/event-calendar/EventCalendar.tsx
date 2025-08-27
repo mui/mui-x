@@ -33,6 +33,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     areEventsDraggable,
     areEventsResizable,
     ampm,
+    showCurrentTimeIndicator,
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
     className,
@@ -52,6 +53,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     areEventsDraggable,
     areEventsResizable,
     ampm,
+    showCurrentTimeIndicator,
   });
 
   const view = useStore(contextValue.store, selectors.view);

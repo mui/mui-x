@@ -28,9 +28,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 ) {
   const { days, className, ...other } = props;
 
-  // TODO: prop to opt out of the current time indicator
-  const showCurrentTimeIndicator = true;
-
   const translations = useTranslations();
   const today = adapter.date();
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -47,6 +44,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     shouldOnlyRenderEventInOneCell: false,
   });
   const ampm = useStore(store, selectors.ampm);
+  const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
+  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+
   const isTodayInView = React.useMemo(
     () => days.some((d) => adapter.isSameDay(d, today)),
     [days, today],
@@ -80,10 +80,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const [now, setNow] = React.useState(() => adapter.date());
   useOnEveryMinuteStart(() => setNow(adapter.date()));
 
-  const currentTimeLabel = React.useMemo(
-    () => adapter.format(now, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h'),
-    [now, ampm],
-  );
+  const currentTimeLabel = React.useMemo(() => adapter.format(now, timeFormat), [now, timeFormat]);
+
   const shouldHideHour = React.useCallback(
     (hour: number) => {
       if (!isTodayInView || !showCurrentTimeIndicator) {
@@ -221,10 +219,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     >
                       {hour === 0
                         ? null
-                        : adapter.format(
-                            adapter.setHours(visibleDate, hour),
-                            ampm ? 'hoursMinutes12h' : 'hoursMinutes24h',
-                          )}
+                        : adapter.format(adapter.setHours(visibleDate, hour), timeFormat)}
                     </time>
                   </div>
                 ))}
