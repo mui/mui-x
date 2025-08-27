@@ -170,6 +170,10 @@
   text-align: end;
 }
 
+.DayTimeGridTimeAxisText[aria-hidden] {
+  opacity: 0;
+}
+
 .DayTimeGridTimeAxisText:not(:empty) {
   font-size: var(--font-size-1);
   line-height: calc(100% / 24);

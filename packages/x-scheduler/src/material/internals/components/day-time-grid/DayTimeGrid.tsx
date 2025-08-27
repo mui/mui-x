@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
+import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import { SchedulerValidDate, CalendarEvent } from '../../../../primitives/models';
 import { getEventWithLargestRowIndex } from '../../../../primitives/utils/event-utils';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
@@ -75,6 +76,24 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   }, [daysWithEvents]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
+
+  const [now, setNow] = React.useState(() => adapter.date());
+  useOnEveryMinuteStart(() => setNow(adapter.date()));
+
+  const currentTimeLabel = React.useMemo(
+    () => adapter.format(now, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h'),
+    [now, ampm],
+  );
+  const shouldHideHour = React.useCallback(
+    (hour: number) => {
+      if (!isTodayInView || !showCurrentTimeIndicator) {
+        return false;
+      }
+      const slotCenter = adapter.setMinutes(adapter.setHours(now, hour), 0);
+      return Math.abs(diffIn(adapter, now, slotCenter, 'minutes')) <= 25;
+    },
+    [now, isTodayInView, showCurrentTimeIndicator],
+  );
 
   const renderHeaderContent = (day: SchedulerValidDate) => (
     <span className="DayTimeGridHeaderContent">
@@ -196,7 +215,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     className="DayTimeGridTimeAxisCell"
                     style={{ '--hour': hour } as React.CSSProperties}
                   >
-                    <time className="DayTimeGridTimeAxisText">
+                    <time
+                      className="DayTimeGridTimeAxisText"
+                      aria-hidden={shouldHideHour(hour) || undefined}
+                    >
                       {hour === 0
                         ? null
                         : adapter.format(
@@ -234,16 +256,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     <TimeGridEventPlaceholder day={day} />
                     {showCurrentTimeIndicator && isTodayInView ? (
                       <TimeGrid.CurrentTimeIndicator>
-                        {idx === 0
-                          ? (labelDate) => (
-                              <span className="DayTimeGridCurrentTimeLabel" aria-hidden="true">
-                                {adapter.format(
-                                  labelDate,
-                                  ampm ? 'hoursMinutes12h' : 'hoursMinutes24h',
-                                )}
-                              </span>
-                            )
-                          : null}
+                        {idx === 0 ? (
+                          <span className="DayTimeGridCurrentTimeLabel" aria-hidden="true">
+                            {currentTimeLabel}
+                          </span>
+                        ) : null}
                       </TimeGrid.CurrentTimeIndicator>
                     ) : null}
                   </TimeGrid.Column>

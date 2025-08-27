@@ -8,7 +8,6 @@ import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { TimeGridCurrentTimeIndicatorCssVars } from './TimeGridCurrentTimeIndicatorCssVars';
 import { mergeDateAndTime } from '../../utils/date-utils';
-import { SchedulerValidDate } from '../../models';
 
 export const TimeGridCurrentTimeIndicator = React.forwardRef(function TimeGridCurrentTimeIndicator(
   componentProps: TimeGridCurrentTimeIndicator.Props,
@@ -20,7 +19,6 @@ export const TimeGridCurrentTimeIndicator = React.forwardRef(function TimeGridCu
     // Rendering props
     className,
     render,
-    children,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -62,11 +60,7 @@ export const TimeGridCurrentTimeIndicator = React.forwardRef(function TimeGridCu
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [
-      props,
-      elementProps,
-      { children: typeof children === 'function' ? children(baseNow) : children },
-    ],
+    props: [props, elementProps],
   });
 
   return isOutOfRange ? null : element;
@@ -74,7 +68,5 @@ export const TimeGridCurrentTimeIndicator = React.forwardRef(function TimeGridCu
 
 export namespace TimeGridCurrentTimeIndicator {
   export interface State {}
-  export interface Props extends Omit<BaseUIComponentProps<'div', State>, 'children'> {
-    children?: React.ReactNode | ((labelDate: SchedulerValidDate) => React.ReactNode);
-  }
+  export interface Props extends BaseUIComponentProps<'div', State> {}
 }
