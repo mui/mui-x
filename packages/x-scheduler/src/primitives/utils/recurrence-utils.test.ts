@@ -1,5 +1,11 @@
 import { DateTime } from 'luxon';
-import { ByDayCode, CalendarEvent, RRuleSpec } from '@mui/x-scheduler/primitives/models';
+import {
+  ByDayCode,
+  ByDayValue,
+  CalendarEvent,
+  RRuleSpec,
+  SchedulerValidDate,
+} from '@mui/x-scheduler/primitives/models';
 import {
   detectRecurrenceKeyFromRule,
   buildRecurrencePresets,
@@ -12,6 +18,10 @@ import {
   getAllDaySpanDays,
   countYearlyOccurrencesUpToExact,
   getByDayMaps,
+  tokenizeByDay,
+  parseWeeklyByDayPlain,
+  nthWeekdayOfMonth,
+  parseMonthlyByDayOrdinalSingle,
 } from './recurrence-utils';
 import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
@@ -189,6 +199,117 @@ describe('recurrence-utils', () => {
     });
   });
 
+  describe('BYDAY parsers: tokenizeByDay / parseWeeklyByDayPlain / parseMonthlyByDayOrdinalSingle', () => {
+    describe('tokenizeByDay', () => {
+      it('parses plain byDay codes without ordinal', () => {
+        const ALL_CODES: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+        ALL_CODES.forEach((code) => {
+          const res = tokenizeByDay(code);
+          expect(res).to.deep.equal({ ord: null, code });
+        });
+      });
+
+      it('parses positive ordinals', () => {
+        const cases: Array<[ByDayValue, number, ByDayCode]> = [
+          ['1MO', 1, 'MO'],
+          ['2TU', 2, 'TU'],
+          ['3WE', 3, 'WE'],
+          ['4TH', 4, 'TH'],
+          ['5FR', 5, 'FR'],
+        ];
+        cases.forEach(([input, ord, code]) => {
+          const res = tokenizeByDay(input);
+          expect(res.ord).to.equal(ord);
+          expect(res.code).to.equal(code);
+        });
+      });
+
+      it('parses negative ordinals (-1..-5)', () => {
+        const cases: Array<[ByDayValue, number, ByDayCode]> = [
+          ['-1MO', -1, 'MO'],
+          ['-2TU', -2, 'TU'],
+          ['-3WE', -3, 'WE'],
+          ['-4TH', -4, 'TH'],
+          ['-5FR', -5, 'FR'],
+        ];
+        cases.forEach(([input, ord, code]) => {
+          const res = tokenizeByDay(input);
+          expect(res.ord).to.equal(ord);
+          expect(res.code).to.equal(code);
+        });
+      });
+
+      it('throws on invalid ordinal range or malformed strings', () => {
+        const invalidInputs = [
+          '0MO',
+          '6MO',
+          '-6FR',
+          'MO2',
+          '2XX',
+          '',
+          '12MO',
+          '--1MO',
+          '1SUU',
+          'mo',
+        ];
+
+        invalidInputs.forEach((input) => {
+          expect(() => tokenizeByDay(input as ByDayCode)).to.throw();
+        });
+      });
+    });
+
+    describe('parseWeeklyByDayPlain', () => {
+      it('returns fallback when ruleByDay is undefined or empty', () => {
+        // ruleByDay is undefined
+        const fallbackTU: ByDayCode[] = ['TU'];
+        expect(parseWeeklyByDayPlain(undefined, fallbackTU)).to.deep.equal(fallbackTU);
+
+        // ruleByDay is empty
+        const fallbackMO: ByDayCode[] = ['MO'];
+        expect(parseWeeklyByDayPlain([], fallbackMO)).to.deep.equal(fallbackMO);
+      });
+
+      it('accepts plain byDay codes and returns them unchanged', () => {
+        const byDay: RRuleSpec['byDay'] = ['MO', 'WE', 'FR'];
+        expect(parseWeeklyByDayPlain(byDay, ['TU'])).to.deep.equal(['MO', 'WE', 'FR']);
+      });
+
+      it('throws when any ordinal is provided (e.g., 1MO, -1FR)', () => {
+        const withOrdinal: RRuleSpec['byDay'] = ['1MO', '-1FR'];
+        expect(() => parseWeeklyByDayPlain(withOrdinal, ['MO'])).to.throw();
+      });
+
+      it('throws for invalid BYDAY values (e.g., XX)', () => {
+        const invalid: RRuleSpec['byDay'] = ['XX' as any];
+        expect(() => parseWeeklyByDayPlain(invalid, ['MO'])).to.throw();
+      });
+    });
+
+    describe('parseMonthlyByDayOrdinalSingle', () => {
+      it('throws when ruleByDay is undefined, empty or multiple', () => {
+        expect(() => parseMonthlyByDayOrdinalSingle(undefined)).to.throw();
+        expect(() => parseMonthlyByDayOrdinalSingle([])).to.throw();
+        expect(() => parseMonthlyByDayOrdinalSingle(['1MO', '2TU'])).to.throw();
+      });
+
+      it('parses one ordinal byDay code (e.g., 1MO, 3WE, -1FR)', () => {
+        const byDay: RRuleSpec['byDay'] = ['1FR'];
+        expect(parseMonthlyByDayOrdinalSingle(byDay)).to.deep.equal({ ord: 1, code: 'FR' });
+        const negativeByDay: RRuleSpec['byDay'] = ['-1MO'];
+        expect(parseMonthlyByDayOrdinalSingle(negativeByDay)).to.deep.equal({
+          ord: -1,
+          code: 'MO',
+        });
+      });
+
+      it('throws when any entry lacks an ordinal (e.g., plain MO)', () => {
+        const mixed: RRuleSpec['byDay'] = ['2TU', 'MO'];
+        expect(() => parseMonthlyByDayOrdinalSingle(mixed)).to.throw();
+      });
+    });
+  });
+
   describe('buildEndGuard', () => {
     const baseStart = DateTime.fromISO('2025-01-01T09:00:00Z');
     const createDailyRule = (overrides: Partial<RRuleSpec> = {}): RRuleSpec => ({
@@ -250,6 +371,50 @@ describe('recurrence-utils', () => {
         expect(guard(baseStart)).to.equal(true);
         expect(guard(baseStart.plus({ days: 1 }))).to.equal(false);
       });
+    });
+  });
+
+  describe('nthWeekdayOfMonth', () => {
+    const expectYMD = (date: SchedulerValidDate, year: number, month: number, day: number) => {
+      expect(adapter.getYear(date)).to.equal(year);
+      // The adapter uses 0-based months
+      expect(adapter.getMonth(date)).to.equal(month - 1);
+      expect(adapter.getDate(date)).to.equal(day);
+    };
+
+    it('returns the 2nd Tuesday of July 2025 (positive ordinal from start)', () => {
+      // 2nd Tuesday is 8
+      const monthStart = adapter.startOfMonth(DateTime.fromISO('2025-07-01T00:00:00Z'));
+      const result = nthWeekdayOfMonth(adapter, monthStart, 'TU', 2);
+      expectYMD(result!, 2025, 7, 8);
+    });
+
+    it('returns the last Friday of July 2025 (-1 from end)', () => {
+      // Last Friday is 25
+      const monthStart = adapter.startOfMonth(DateTime.fromISO('2025-07-01T00:00:00Z'));
+      const result = nthWeekdayOfMonth(adapter, monthStart, 'FR', -1);
+      expectYMD(result!, 2025, 7, 25);
+    });
+
+    it('returns the 2nd last Wednesday of July 2025 (-2 from end)', () => {
+      // 2nd last Wednesday is 23
+      const monthStart = adapter.startOfMonth(DateTime.fromISO('2025-07-01T00:00:00Z'));
+      const result = nthWeekdayOfMonth(adapter, monthStart, 'WE', -2);
+      expectYMD(result!, 2025, 7, 23);
+    });
+
+    it('returns null when the 5th Friday does not exist (Feb 2025)', () => {
+      // Feb 2025 has only 4 Fridays
+      const monthStart = adapter.startOfMonth(DateTime.fromISO('2025-02-01T00:00:00Z'));
+      const result = nthWeekdayOfMonth(adapter, monthStart, 'FR', 5);
+      expect(result).to.equal(null);
+    });
+
+    it('handles a month with 5 Mondays for -5 (June 2025)', () => {
+      // Mondays in Jun 2025: 2, 9, 16, 23, 30 → 5th from end = first = 2
+      const monthStart = adapter.startOfMonth(DateTime.fromISO('2025-06-01T00:00:00Z'));
+      const result = nthWeekdayOfMonth(adapter, monthStart, 'MO', -5);
+      expectYMD(result!, 2025, 6, 2);
     });
   });
 
@@ -375,58 +540,118 @@ describe('recurrence-utils', () => {
       });
     });
 
-    describe('monthly frequency (byMonthDay)', () => {
-      it('returns true on start month/day', () => {
-        const event = createEvent();
-        const day = adapter.getDate(event.start);
-        const rule: RRuleSpec = {
-          freq: 'MONTHLY',
-          interval: 1,
-          byMonthDay: [day],
-        };
-        expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true);
-      });
+    describe('monthly frequency', () => {
+      describe('byMonthDay', () => {
+        it('returns true on start month/day', () => {
+          const event = createEvent();
+          const day = adapter.getDate(event.start);
+          const rule: RRuleSpec = {
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [day],
+          };
+          expect(matchesRecurrence(rule, event.start, adapter, event)).to.equal(true);
+        });
 
-      it('interval > 1 (every 2 months) includes only correct months', () => {
-        const start = baseStart;
-        const event = createEvent(start);
-        const rule: RRuleSpec = {
-          freq: 'MONTHLY',
-          interval: 2,
-          byMonthDay: [adapter.getDate(start)],
-        };
-        const month1 = start.plus({ months: 1 }); // skipped
-        const month2 = start.plus({ months: 2 }); // included
-        expect(matchesRecurrence(rule, month1, adapter, event)).to.equal(false);
-        expect(matchesRecurrence(rule, month2, adapter, event)).to.equal(true);
-      });
+        it('interval > 1 (every 2 months) includes only correct months', () => {
+          const start = baseStart;
+          const event = createEvent(start);
+          const rule: RRuleSpec = {
+            freq: 'MONTHLY',
+            interval: 2,
+            byMonthDay: [adapter.getDate(start)],
+          };
+          const month1 = start.plus({ months: 1 }); // skipped
+          const month2 = start.plus({ months: 2 }); // included
+          expect(matchesRecurrence(rule, month1, adapter, event)).to.equal(false);
+          expect(matchesRecurrence(rule, month2, adapter, event)).to.equal(true);
+        });
 
-      it('returns false when day does not match', () => {
-        const event = createEvent();
-        const rule: RRuleSpec = {
-          freq: 'MONTHLY',
-          interval: 1,
-          byMonthDay: [25],
-        };
-        const nextMonthSameOriginalDay = baseStart.plus({ months: 1 });
-        expect(matchesRecurrence(rule, nextMonthSameOriginalDay, adapter, event)).to.equal(false);
-      });
+        it('returns false when day does not match', () => {
+          const event = createEvent();
+          const rule: RRuleSpec = {
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [25],
+          };
+          const nextMonthSameOriginalDay = baseStart.plus({ months: 1 });
+          expect(matchesRecurrence(rule, nextMonthSameOriginalDay, adapter, event)).to.equal(false);
+        });
 
-      it('falls back to DTSTART day-of-month when byMonthDay is omitted', () => {
-        const start = DateTime.fromISO('2025-03-15T09:00:00Z');
-        const event = createEvent(start);
-        const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1 }; // no byMonthDay
-        expect(matchesRecurrence(rule, start.plus({ months: 1 }), adapter, event)).to.equal(true); // 15-Apr
-        expect(
-          matchesRecurrence(rule, start.plus({ months: 1, days: 1 }), adapter, event),
-        ).to.equal(false);
+        it('falls back to DTSTART day-of-month when byMonthDay is omitted', () => {
+          const start = DateTime.fromISO('2025-03-15T09:00:00Z');
+          const event = createEvent(start);
+          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1 }; // no byMonthDay
+          expect(matchesRecurrence(rule, start.plus({ months: 1 }), adapter, event)).to.equal(true); // 15 Apr
+          expect(
+            matchesRecurrence(rule, start.plus({ months: 1, days: 1 }), adapter, event),
+          ).to.equal(false);
+        });
       });
+      describe('byDay ordinals', () => {
+        it('matches the 2nd Tuesday of the month (2TU)', () => {
+          // July 2025: 2nd Tuesday is Jul 8
+          const start = DateTime.fromISO('2025-07-01T09:00:00Z');
+          const event = createEvent(start);
+          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] };
 
-      it('throws an error for BYDAY (not supported yet)', () => {
-        const event = createEvent();
-        const rule: RRuleSpec = { freq: 'MONTHLY', byDay: ['MO'] };
-        const nextMonth = event.start.plus({ months: 1 });
-        expect(() => matchesRecurrence(rule, nextMonth, adapter, event)).to.throw();
+          const secondTue = start.plus({ week: 1 });
+          const nextTue = start.plus({ week: 2 });
+
+          expect(matchesRecurrence(rule, secondTue, adapter, event)).to.equal(true);
+          expect(matchesRecurrence(rule, nextTue, adapter, event)).to.equal(false);
+        });
+
+        it('matches the 2nd last Wednesday of the month (-2WE)', () => {
+          // July 2025: Wednesdays are 2,9,16,23,30 → 2nd last is 23
+          const start = DateTime.fromISO('2025-07-01T09:00:00Z');
+          const event = createEvent(start);
+          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['-2WE'] };
+
+          const secondLastWed = DateTime.fromISO('2025-07-23T09:00:00Z');
+          const lastWed = secondLastWed.plus({ weeks: 1 });
+
+          expect(matchesRecurrence(rule, secondLastWed, adapter, event)).to.equal(true);
+          expect(matchesRecurrence(rule, lastWed, adapter, event)).to.equal(false);
+        });
+
+        it('respects interval > 1 (every 2 months)', () => {
+          // July 1st Friday: Jul 4 → with interval=2 starting in Jul, Jul & Sep match
+          const start = DateTime.fromISO('2025-07-01T09:00:00Z');
+          const event = createEvent(start);
+          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 2, byDay: ['1FR'] };
+
+          const julFirstFri = DateTime.fromISO('2025-07-04T09:00:00Z'); // included
+          const augFirstFri = DateTime.fromISO('2025-08-01T09:00:00Z'); // skipped
+          const sepFirstFri = DateTime.fromISO('2025-09-05T09:00:00Z'); // included
+
+          expect(matchesRecurrence(rule, julFirstFri, adapter, event)).to.equal(true);
+          expect(matchesRecurrence(rule, augFirstFri, adapter, event)).to.equal(false);
+          expect(matchesRecurrence(rule, sepFirstFri, adapter, event)).to.equal(true);
+        });
+
+        it('does not match an ordinal that occurred before DTSTART within the same month', () => {
+          // DTSTART: 20 July 2025. 2nd Tuesday in July is 8 July (before DTSTART)
+          // Next valid is 12 August
+          const start = DateTime.fromISO('2025-07-20T09:00:00Z'); // 20 July
+          const event = createEvent(start);
+          const rule: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] };
+
+          const julSecondTue = DateTime.fromISO('2025-07-08T09:00:00Z'); // before DTSTART
+          const augSecondTue = DateTime.fromISO('2025-08-12T09:00:00Z');
+
+          expect(matchesRecurrence(rule, julSecondTue, adapter, event)).to.equal(false);
+          expect(matchesRecurrence(rule, augSecondTue, adapter, event)).to.equal(true);
+        });
+
+        it('throws when BYDAY is mixed with BYMONTHDAY', () => {
+          const start = DateTime.fromISO('2025-07-01T09:00:00Z');
+          const event = createEvent(start);
+          const mixedRule: RRuleSpec = { freq: 'MONTHLY', byDay: ['2TU'], byMonthDay: [10] };
+          const candidate = DateTime.fromISO('2025-07-08T09:00:00Z'); // 2nd Tue
+
+          expect(() => matchesRecurrence(mixedRule, candidate, adapter, event)).to.throw();
+        });
       });
     });
 
@@ -626,12 +851,73 @@ describe('recurrence-utils', () => {
       });
     });
 
-    describe('"onWeekday" mode (Nth weekday)', () => {
-      // TODO: Issue #19128 Implement via BYDAY ordinals (e.g., '4SA').
-    });
+    describe('ByDay (ordinal: Nth / last weekday)', () => {
+      const createByDayRule = (byDay: ByDayValue[], interval = 1): RRuleSpec => ({
+        freq: 'MONTHLY',
+        interval,
+        byDay,
+      });
 
-    describe('"onLastWeekday" mode (last weekday)', () => {
-      // TODO: Issue #19128 Implement via BYDAY ordinals (e.g., '-1SA').
+      it('counts 2nd Tuesday from July to October 2025 (interval=1)', () => {
+        const start = DateTime.fromISO('2025-07-01T09:00:00Z'); // before 2nd Tuesday (Jul 8)
+        const target = DateTime.fromISO('2025-10-31T23:59:59Z');
+        // Jul 8, Aug 12, Sep 9, Oct 14 => 4
+        expect(
+          countMonthlyOccurrencesUpToExact(adapter, createByDayRule(['2TU']), start, target),
+        ).to.equal(4);
+      });
+
+      it('respects interval > 1 (e.g., 2nd Tuesday every 2 months)', () => {
+        const start = DateTime.fromISO('2025-07-01T09:00:00Z'); // before 2nd Tuesday (Jul 8)
+        const target = DateTime.fromISO('2025-10-31T23:59:59Z');
+        // Jul 8, Sep 9 => 2
+        expect(
+          countMonthlyOccurrencesUpToExact(adapter, createByDayRule(['2TU'], 2), start, target),
+        ).to.equal(2);
+      });
+
+      it('skips the start month if DTSTART is after that month’s occurrence (2TU)', () => {
+        const start = DateTime.fromISO('2025-07-20T09:00:00Z'); // after Jul 8
+        const target = DateTime.fromISO('2025-08-31T23:59:59Z');
+        // July skipped, Aug 12 counted => 1
+        expect(
+          countMonthlyOccurrencesUpToExact(adapter, createByDayRule(['2TU']), start, target),
+        ).to.equal(1);
+      });
+
+      it('counts last Friday (-1FR) from July to October 2025', () => {
+        const start = DateTime.fromISO('2025-07-01T00:00:00Z');
+        const target = DateTime.fromISO('2025-10-31T23:59:59Z');
+        // Jul 25, Aug 29, Sep 26, Oct 31 => 4
+        expect(
+          countMonthlyOccurrencesUpToExact(adapter, createByDayRule(['-1FR']), start, target),
+        ).to.equal(4);
+      });
+
+      it('counts 2nd last Wednesday (-2WE) across months (Jul–Sep 2025)', () => {
+        const start = DateTime.fromISO('2025-07-01T00:00:00Z');
+        const target = DateTime.fromISO('2025-09-30T23:59:59Z');
+        // Jul 23, Aug 20, Sep 17 => 3
+        expect(
+          countMonthlyOccurrencesUpToExact(adapter, createByDayRule(['-2WE']), start, target),
+        ).to.equal(3);
+      });
+
+      it('handles months without a 5th weekday: -5MO counts only months that have 5 Mondays', () => {
+        const start = DateTime.fromISO('2025-06-01T00:00:00Z'); // Jun 2025 has 5 Mondays
+        const target = DateTime.fromISO('2025-07-31T23:59:59Z'); // Jul 2025 has 4 Mondays
+        // Jun: -5MO => Jun 2 (exists), Jul: no -5MO => skip => total 1
+        expect(
+          countMonthlyOccurrencesUpToExact(adapter, createByDayRule(['-5MO']), start, target),
+        ).to.equal(1);
+      });
+
+      it('throws when BYDAY and BYMONTHDAY are both provided', () => {
+        const start = DateTime.fromISO('2025-07-01T00:00:00Z');
+        const target = DateTime.fromISO('2025-07-31T23:59:59Z');
+        const bad: RRuleSpec = { freq: 'MONTHLY', byDay: ['2TU'], byMonthDay: [10] };
+        expect(() => countMonthlyOccurrencesUpToExact(adapter, bad, start, target)).to.throw();
+      });
     });
   });
 
