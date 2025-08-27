@@ -8,7 +8,7 @@ components: SparkLineChart
 
 <p class="description">Sparkline chart can provide an overview of data trends.</p>
 
-A sparkline is a chart drawn without visible axes or coordinates that presents the the data trends in a simplified way.
+A sparkline is a chart drawn without visible axes or coordinates that presents data trends in a simplified way.
 For example, npm uses a sparkline to display a package's weekly downloads trend.
 
 {{"demo": "NpmSparkLine.js"}}

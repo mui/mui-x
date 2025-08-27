@@ -71,7 +71,7 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
     {
       props: { fieldDirection: 'rtl' },
       style: {
-        textAlign: 'right /*! @noflip */' as any,
+        justifyContent: 'end',
       },
     },
     {

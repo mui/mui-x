@@ -179,7 +179,7 @@ const clickHandler = (
 {{"demo": "BarClick.js"}}
 
 :::info
-Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
 
 - For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
 - For `onAxisClick` it's a native mouse event emitted by the svg component.
