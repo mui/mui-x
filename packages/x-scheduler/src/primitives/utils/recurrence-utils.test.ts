@@ -1098,7 +1098,7 @@ describe('recurrence-utils', () => {
       expect(adapter.getDate(result[0].end)).to.equal(6);
     });
 
-    it.only('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
+    it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
       // Take the full week (Mon–Sun) and set DTSTART on Wednesday
       const visibleStart = adapter.date('2025-01-05T00:00:00Z');
       const weekStart = adapter.addDays(adapter.startOfWeek(visibleStart), 1); // Monday
