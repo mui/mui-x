@@ -14,6 +14,10 @@ export const enUS: SchedulerTranslations = {
   today: 'Today',
   week: 'Week',
 
+  // Timeline toggle
+  timelineView: 'Timeline View',
+  calendarView: 'Calendar View',
+
   // SettingsMenu
   hideWeekends: 'Hide weekends',
   settingsMenu: 'Settings',

@@ -14,6 +14,10 @@ export interface SchedulerTranslations {
   today: string;
   week: string;
 
+  // Timeline toggle
+  timelineView: string;
+  calendarView: string;
+
   // SettingsMenu
   hideWeekends: string;
   settingsMenu: string;

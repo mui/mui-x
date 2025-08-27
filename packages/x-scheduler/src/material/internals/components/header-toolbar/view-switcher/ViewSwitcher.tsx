@@ -10,7 +10,6 @@ import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import './ViewSwitcher.css';
 
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   props: React.HTMLAttributes<HTMLDivElement>,
@@ -39,18 +38,23 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
-  const currentOverflowView = dropdown.includes(view) ? view : null;
-  const dropdownLabel = currentOverflowView
-    ? translations[currentOverflowView]
-    : translations.other;
+
+  const [dropdownLabel, setDropdownLabel] = React.useState<CalendarView>(dropdown[0]);
+
+  // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
+  React.useEffect(() => {
+    if (dropdown.includes(view)) {
+      setDropdownLabel(view);
+    }
+  }, [view]);
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
-      <Menubar className="ViewSwitcherMenuBar">
+      <Menubar className="MenuBar">
         {visible.map((visibleView) => (
           <button
             key={visibleView}
-            className="ViewSwitcherMainItem"
+            className="MainItem"
             onClick={handleClick}
             data-view={visibleView}
             type="button"
@@ -60,43 +64,53 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             {translations[visibleView]}
           </button>
         ))}
+
         {dropdown.length > 0 && (
-          <Menu.Root>
-            <Menu.Trigger
-              className="ViewSwitcherMainItem"
-              data-view="other"
-              data-highlighted={dropdown.includes(view) || undefined}
+          <React.Fragment>
+            <button
+              key={dropdownLabel}
+              className="MainItem"
+              onClick={handleClick}
+              data-view={dropdownLabel}
+              type="button"
+              data-pressed={view === dropdownLabel || undefined}
+              aria-pressed={view === dropdownLabel}
             >
-              {dropdownLabel} <ChevronDown size={16} strokeWidth={2} />
-            </Menu.Trigger>
-            <Menu.Portal container={containerRef}>
-              <Menu.Positioner
-                className="ViewSwitcherMenuPositioner"
-                sideOffset={9}
-                align="end"
-                alignOffset={-4}
-              >
-                <Menu.Popup className="ViewSwitcherMenuPopup">
-                  <Menu.RadioGroup
-                    value={view}
-                    onValueChange={instance.setView}
-                    className="ViewSwitcherRadioGroup"
-                  >
-                    {dropdown.map((dropdownView) => (
-                      <Menu.RadioItem
-                        key={dropdownView}
-                        className="ViewSwitcherRadioItem"
-                        value={dropdownView}
-                        closeOnClick
-                      >
-                        {translations[dropdownView]}
-                      </Menu.RadioItem>
-                    ))}
-                  </Menu.RadioGroup>
-                </Menu.Popup>
-              </Menu.Positioner>
-            </Menu.Portal>
-          </Menu.Root>
+              {translations[dropdownLabel]}
+            </button>
+            <Menu.Root>
+              <Menu.Trigger className="MainItem" data-view="other">
+                <ChevronDown size={16} strokeWidth={1.5} />
+              </Menu.Trigger>
+              <Menu.Portal container={containerRef}>
+                <Menu.Positioner
+                  className="MenuPositioner "
+                  sideOffset={9}
+                  align="end"
+                  alignOffset={-4}
+                >
+                  <Menu.Popup className="MenuPopup ">
+                    <Menu.RadioGroup
+                      value={view}
+                      onValueChange={instance.setView}
+                      className="RadioGroup "
+                    >
+                      {dropdown.map((dropdownView) => (
+                        <Menu.RadioItem
+                          key={dropdownView}
+                          className="RadioItem"
+                          value={dropdownView}
+                          closeOnClick
+                        >
+                          {translations[dropdownView]}
+                        </Menu.RadioItem>
+                      ))}
+                    </Menu.RadioGroup>
+                  </Menu.Popup>
+                </Menu.Positioner>
+              </Menu.Portal>
+            </Menu.Root>
+          </React.Fragment>
         )}
       </Menubar>
     </div>

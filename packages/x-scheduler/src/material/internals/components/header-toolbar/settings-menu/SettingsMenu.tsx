@@ -32,21 +32,21 @@ export const SettingsMenu = React.forwardRef(function SettingsMenu(
       <Menu.Root>
         <Menu.Trigger
           aria-label={translations.settingsMenu}
-          className={clsx('NeutralTextButton', 'Button', 'SettingsMenuButton')}
+          className={clsx('OutlinedNeutralButton', 'Button', 'SettingsMenuButton')}
         >
           <Settings size={20} strokeWidth={1.5} />
         </Menu.Trigger>
         <Menu.Portal container={containerRef}>
-          <Menu.Positioner className="SettingsMenuPositioner" sideOffset={4} align="end">
-            <Menu.Popup className="SettingsMenuPopup">
+          <Menu.Positioner className="MenuPositioner" sideOffset={4} align="end">
+            <Menu.Popup className="MenuPopup">
               <Menu.CheckboxItem
                 checked={settings.hideWeekends}
                 onCheckedChange={handleHideWeekend}
                 closeOnClick
-                className="SettingsMenuCheckboxItem"
+                className="CheckboxItem"
               >
                 <span>{translations.hideWeekends}</span>
-                <Menu.CheckboxItemIndicator className="SettingsMenuCheckboxIndicator">
+                <Menu.CheckboxItemIndicator className="CheckboxIndicator">
                   <CheckIcon size={16} strokeWidth={1.5} />
                 </Menu.CheckboxItemIndicator>
               </Menu.CheckboxItem>

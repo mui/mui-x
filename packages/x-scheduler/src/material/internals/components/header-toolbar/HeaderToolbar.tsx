@@ -8,6 +8,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { SettingsMenu } from './settings-menu';
+import { TimelineToggle } from './timeline-toggle';
 import './HeaderToolbar.css';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
@@ -31,13 +32,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       )}
       {...other}
     >
-      <div className="PrimaryActionWrapper">
-        {showViewSwitcher && <ViewSwitcher />}
-        <button className="HeaderToolbarButton" onClick={instance.goToToday} type="button">
+      <div className="PrimaryActionWrapper">{showViewSwitcher && <ViewSwitcher />}</div>
+      <div className="SecondaryActionWrapper">
+        <button className="Button OutlinedNeutralButton" onClick={instance.goToToday} type="button">
           {translations.today}
         </button>
+        <TimelineToggle />
+        <SettingsMenu />
       </div>
-      <SettingsMenu />
     </header>
   );
 });
