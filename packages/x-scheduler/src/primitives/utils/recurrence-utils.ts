@@ -315,15 +315,14 @@ export function nthWeekdayOfMonth(
   const { byDayToNum } = getByDayMaps(adapter);
   const targetWeekdayNumber = byDayToNum[weekdayCode];
 
-  const firstDayOfMonth = adapter.startOfDay(adapter.setDate(monthStart, 1));
   const totalDaysInMonth = adapter.getDaysInMonth(monthStart);
 
   // Path A — Nth occurrence from the start of the month (ordinal > 0)
   if (ordinal > 0) {
-    const firstDayWeekdayNumber = adapter.getDayOfWeek(firstDayOfMonth);
+    const firstDayWeekdayNumber = adapter.getDayOfWeek(monthStart);
     const offsetToFirstTargetWeekday =
       (((targetWeekdayNumber - firstDayWeekdayNumber) % 7) + 7) % 7;
-    const firstTargetWeekdayInMonth = adapter.addDays(firstDayOfMonth, offsetToFirstTargetWeekday);
+    const firstTargetWeekdayInMonth = adapter.addDays(monthStart, offsetToFirstTargetWeekday);
     // Jump (ordinal - 1) whole weeks forward
     const nthOccurrenceDate = adapter.addDays(firstTargetWeekdayInMonth, 7 * (ordinal - 1));
 
