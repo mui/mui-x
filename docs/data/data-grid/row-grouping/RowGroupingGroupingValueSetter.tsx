@@ -38,9 +38,9 @@ export default function RowGroupingGroupingValueSetter() {
           // Since converting to decade is a lossy operation, directly using the decade value should be sufficient here
           year: value,
         }),
-        valueFormatter: (value: number | null) =>
-          value ? `${value.toString().slice(-2)}'s` : '',
-      } as GridColDef<Movie, number, string>,
+        renderCell: (params) =>
+          params.value ? `${params.value.toString().slice(-2)}'s` : '',
+      } as GridColDef<Movie, number>,
     ],
     [data.columns],
   );
