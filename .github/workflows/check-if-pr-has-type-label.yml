@@ -2,7 +2,8 @@ name: Check PR type label
 
 on:
   pull_request:
-    types: [opened, reopened, labeled, unlabeled]
+    # Adding `synchronize` to handle workflow runs when the PR's branch is updated
+    types: [opened, reopened, labeled, unlabeled, synchronize]
 
 permissions: {}
 

@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
+import { spy } from 'sinon';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/material/week-view';
+import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 
 const allDayEvents = [
   {
@@ -31,6 +34,7 @@ const allDayEvents = [
 
 describe('<WeekView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-04') });
+  const adapter = getAdapter();
 
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
@@ -172,6 +176,46 @@ describe('<WeekView />', () => {
 
       // Should span 4 columns (4 days)
       expect(gridColumnSpan).to.equal('4');
+    });
+  });
+
+  describe('time navigation', () => {
+    it('should go to start of previous week when clicking on the Previous Week button', async () => {
+      const onVisibleDateChange = spy();
+      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z'); // Thursday
+
+      const { user } = render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          onVisibleDateChange={onVisibleDateChange}
+          view="week"
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /previous week/i }));
+      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+        adapter.addWeeks(adapter.startOfWeek(visibleDate), -1),
+      );
+    });
+
+    it('should go to start of next week when clicking on the Next Week button', async () => {
+      const onVisibleDateChange = spy();
+      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z'); // Thursday
+
+      const { user } = render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          onVisibleDateChange={onVisibleDateChange}
+          view="week"
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /next week/i }));
+      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+        adapter.addWeeks(adapter.startOfWeek(visibleDate), 1),
+      );
     });
   });
 });

@@ -18,6 +18,7 @@ const buildPackageExports = (project: XTypeScriptProject) => {
       return {
         name,
         kind: syntaxKindToSyntaxName[
+          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
           resolveExportSpecifier(symbol, project).declarations?.[0].kind!
         ],
       };
@@ -27,7 +28,6 @@ const buildPackageExports = (project: XTypeScriptProject) => {
   writePrettifiedFile(
     path.resolve(project.workspaceRoot, `scripts/${project.name}.exports.json`),
     JSON.stringify(exports),
-    project,
   );
 };
 
