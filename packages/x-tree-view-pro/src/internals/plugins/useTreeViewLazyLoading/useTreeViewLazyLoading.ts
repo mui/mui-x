@@ -10,7 +10,9 @@ import {
   selectorDataSourceState,
   selectorGetTreeViewError,
   selectorGetTreeItemError,
+  selectorIsItemExpanded,
   TREE_VIEW_ROOT_PARENT_ID,
+  selectorItemOrderedChildrenIds,
 } from '@mui/x-tree-view/internals';
 import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
@@ -256,7 +258,16 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
       instance.addItems({ items: params.items, parentId: null, getChildrenCount });
     } else {
-      instance.fetchItemChildren(null);
+      async function fetchItemDescendants(itemId: TreeViewItemId | null) {
+        await instance.fetchItemChildren(itemId);
+        const children = selectorItemOrderedChildrenIds(store.value, itemId);
+        const expandedChildren = children.filter((childId) =>
+          selectorIsItemExpanded(store.value, childId),
+        );
+
+        return Promise.all(expandedChildren.map(fetchItemDescendants));
+      }
+      fetchItemDescendants(null);
     }
   }, [instance, params.items, params.dataSource, isLazyLoadingEnabled, store]);
 
