@@ -120,10 +120,16 @@ export class AdapterDateFns
   };
 
   public format = (value: Date, formatKey: keyof AdapterFormats): string => {
+    if (!isValid(value)) {
+      return '';
+    }
     return this.formatByString(value, this.formats[formatKey]);
   };
 
   public formatByString = (value: Date, formatString: string): string => {
+    if (!isValid(value)) {
+      return '';
+    }
     return dateFnsFormat(value, formatString, { locale: this.locale });
   };
 
