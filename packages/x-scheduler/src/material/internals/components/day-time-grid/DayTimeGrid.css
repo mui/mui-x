@@ -241,7 +241,6 @@
 
 .DayTimeGridCurrentTimeLabel {
   position: absolute;
-  top: var(--y-position);
   transform: translate(calc(-100%), -50%);
   padding: 0 2px;
   background-color: var(--primary-10);
