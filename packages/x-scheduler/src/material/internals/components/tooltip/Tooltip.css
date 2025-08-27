@@ -1,7 +1,7 @@
 .TooltipPopup {
   display: flex;
   border-radius: var(--radius-3);
-  font-size: var(--font-size-2);
+  font-size: var(--font-size-1);
   border: 1px solid var(--border-color);
   transform-origin: var(--transform-origin);
   transition:

@@ -7,7 +7,7 @@ type TooltipPopupProps = { message: string };
 
 function TooltipPopup({ message }: TooltipPopupProps) {
   return (
-    <BaseTooltip.Portal keepMounted>
+    <BaseTooltip.Portal>
       <BaseTooltip.Positioner sideOffset={10}>
         <BaseTooltip.Popup className="mui-x-scheduler TooltipPopup">
           <BaseTooltip.Arrow className="TooltipArrow">
