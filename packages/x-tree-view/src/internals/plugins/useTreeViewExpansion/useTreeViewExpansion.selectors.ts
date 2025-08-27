@@ -4,11 +4,10 @@ import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewItems';
 import {
   selectorItemItemOrderedChildrenIdsLookup,
   selectorItemMeta,
-  selectorItemOrderedChildrenIds,
 } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
-export const selectorExpansion: TreeViewRootSelector<UseTreeViewExpansionSignature> = (state) =>
+const selectorExpansion: TreeViewRootSelector<UseTreeViewExpansionSignature> = (state) =>
   state.expansion;
 
 /**
