@@ -45,8 +45,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     days,
     shouldOnlyRenderEventInOneCell: false,
   });
-
   const ampm = useStore(store, selectors.ampm);
+  const isTodayInView = React.useMemo(
+    () => days.some((d) => adapter.isSameDay(d, today)),
+    [days, today],
+  );
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
@@ -205,7 +208,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {daysWithEvents.map(({ day, events: regularEvents }) => (
+                {daysWithEvents.map(({ day, events: regularEvents }, idx) => (
                   <TimeGrid.Column
                     key={day.day.toString()}
                     start={adapter.startOfDay(day)}
@@ -229,7 +232,20 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                       />
                     ))}
                     <TimeGridEventPlaceholder day={day} />
-                    {showCurrentTimeIndicator ? <TimeGrid.CurrentTimeIndicator /> : null}
+                    {showCurrentTimeIndicator && isTodayInView ? (
+                      <TimeGrid.CurrentTimeIndicator>
+                        {idx === 0
+                          ? (labelDate) => (
+                              <span className="DayTimeGridCurrentTimeLabel" aria-hidden="true">
+                                {adapter.format(
+                                  labelDate,
+                                  ampm ? 'hoursMinutes12h' : 'hoursMinutes24h',
+                                )}
+                              </span>
+                            )
+                          : null}
+                      </TimeGrid.CurrentTimeIndicator>
+                    ) : null}
                   </TimeGrid.Column>
                 ))}
               </div>
