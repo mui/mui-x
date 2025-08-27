@@ -227,9 +227,12 @@
   right: 0;
 }
 
+.DayTimeGridColumn:first-child .DayTimeGridCurrentTimeIndicator {
+  left: -6px;
+}
+
 .DayTimeGridColumn[data-current] .DayTimeGridCurrentTimeIndicator {
   height: 2px;
-  left: 0;
   right: 1px;
   background-color: var(--primary-10);
   z-index: 3;
@@ -239,7 +242,7 @@
 .DayTimeGridCurrentTimeLabel {
   position: absolute;
   top: var(--y-position);
-  transform: translate(calc(-100% - 4px), -50%);
+  transform: translate(calc(-100%), -50%);
   padding: 0 2px;
   background-color: var(--primary-10);
   color: var(--primary-1);
@@ -247,20 +250,4 @@
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
   white-space: nowrap;
-}
-
-.DayTimeGridCurrentTimeLabel::after {
-  content: '';
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  height: 2px;
-  width: var(--space-2);
-  transform: translateY(-50%);
-  background-color: var(--primary-10);
-}
-
-.DayTimeGridColumn:not([data-current]) .DayTimeGridCurrentTimeLabel::after {
-  height: 1px;
-  background-color: var(--primary-8);
 }
