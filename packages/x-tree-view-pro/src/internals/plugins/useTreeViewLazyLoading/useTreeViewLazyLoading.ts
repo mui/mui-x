@@ -258,16 +258,25 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
       instance.addItems({ items: params.items, parentId: null, getChildrenCount });
     } else {
-      async function fetchItemDescendants(itemId: TreeViewItemId | null) {
-        await instance.fetchItemChildren(itemId);
-        const children = selectorItemOrderedChildrenIds(store.value, itemId);
-        const expandedChildren = children.filter((childId) =>
-          selectorIsItemExpanded(store.value, childId),
-        );
+      async function fetchAllExpandedItems() {
+        async function fetchChildrenIfExpanded(parentIds: TreeViewItemId[]) {
+          const expandedParentIds = parentIds.filter((id) =>
+            selectorIsItemExpanded(store.value, id),
+          );
+          if (expandedParentIds.length > 0) {
+            await instance.fetchItems(expandedParentIds);
+            const childrenIds = expandedParentIds.flatMap((id) =>
+              selectorItemOrderedChildrenIds(store.value, id),
+            );
+            await fetchChildrenIfExpanded(childrenIds);
+          }
+        }
 
-        return Promise.all(expandedChildren.map(fetchItemDescendants));
+        await instance.fetchItemChildren(null);
+        await fetchChildrenIfExpanded(selectorItemOrderedChildrenIds(store.value, null));
       }
-      fetchItemDescendants(null);
+
+      fetchAllExpandedItems();
     }
   }, [instance, params.items, params.dataSource, isLazyLoadingEnabled, store]);
 
