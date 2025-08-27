@@ -37,22 +37,22 @@ Below are the shapes we support, with small examples.
 
 - Daily (`freq: 'DAILY'`), no extra fields required.
 
-```tsx
-rrule={{ freq: 'DAILY', interval: 2 }} // Every 2 days
-```
+  ```tsx
+  rrule={{ freq: 'DAILY', interval: 2 }} // Every 2 days
+  ```
 
 - Weekly (`freq: 'WEEKLY'`), use `byDay` with plain weekday codes (no ordinals).
 
-```tsx
-rrule={{ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE', 'FR'] }} // Every week on Monday, Wednesday and Friday
-```
+  ```tsx
+  rrule={{ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE', 'FR'] }} // Every week on Monday, Wednesday and Friday
+  ```
 
 - Monthly (`freq: 'MONTHLY'`), pick one mode:
   - `byMonthDay` with a single day number (months missing that day are skipped).
 
-  ```tsx
-  rrule={{ freq: 'MONTHLY', interval: 1, byMonthDay: [15] }} // Every month on the 15th
-  ```
+    ```tsx
+    rrule={{ freq: 'MONTHLY', interval: 1, byMonthDay: [15] }} // Every month on the 15th
+    ```
 
   - `byDay` with one ordinal entry (`2TU` represents 2nd Tuesday, `-1FR` represents last Friday, etc).
     Do not mix with `byMonthDay`.
@@ -72,14 +72,13 @@ rrule={{ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE', 'FR'] }} // Every week
 
 - End of rule, use `count` or `until` (inclusive), only one at a time. If neither `count` nor `until` is provided, the series never ends.
 
-```tsx
-rrule={{ freq: 'DAILY', interval: 1 }} // Never ends (default)
+  ```tsx
+  rrule={{ freq: 'DAILY', interval: 1 }} // Never ends (default)
 
-rrule={{ freq: 'DAILY', count: 5 }} // Stop after 5 occurrences
+  rrule={{ freq: 'DAILY', count: 5 }} // Stop after 5 occurrences
 
-rrule={{ freq: 'WEEKLY', byDay: ['TU'], until: DateTime.fromISO('2025-12-31T23:59:59Z') }} // Until a date (inclusive)
-
-```
+  rrule={{ freq: 'WEEKLY', byDay: ['TU'], until: DateTime.fromISO('2025-12-31T23:59:59Z') }} // Until a date (inclusive)
+  ```
 
 :::info
 **Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
