@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { spy } from 'sinon';
 import { getAdapter } from '../utils/adapter/getAdapter';
 import { EventCalendarInstance } from './EventCalendarInstance';
@@ -11,12 +10,16 @@ describe('EventCalendarInstance', () => {
   describe('Method: goToPreviousVisibleDate', () => {
     it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
-      const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
+      const targetDate = adapter.date('2025-07-03T00:00:00Z');
       const siblingVisibleDateGetter = spy(() => targetDate);
 
       const { instance } = EventCalendarInstance.create(
-        { ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange },
+        {
+          ...DEFAULT_PARAMS,
+          view: 'day',
+          visibleDate: adapter.date('2025-07-01T00:00:00Z'),
+          onVisibleDateChange,
+        },
         adapter,
       );
 
@@ -30,12 +33,16 @@ describe('EventCalendarInstance', () => {
   describe('Method: goToNextVisibleDate', () => {
     it('should respect the date returned by setSiblingVisibleDateGetter', () => {
       const onVisibleDateChange = spy();
-      const visibleDate = DateTime.fromISO('2025-07-01T00:00:00Z');
-      const targetDate = adapter.addDays(DateTime.fromISO('2025-07-01T00:00:00Z'), 3);
+      const targetDate = adapter.date('2025-07-03T00:00:00Z');
       const siblingVisibleDateGetter = spy(() => targetDate);
 
       const { instance } = EventCalendarInstance.create(
-        { ...DEFAULT_PARAMS, view: 'day', visibleDate, onVisibleDateChange },
+        {
+          ...DEFAULT_PARAMS,
+          view: 'day',
+          visibleDate: adapter.date('2025-07-01T00:00:00Z'),
+          onVisibleDateChange,
+        },
         adapter,
       );
 
