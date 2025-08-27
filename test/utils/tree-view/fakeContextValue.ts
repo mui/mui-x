@@ -28,6 +28,7 @@ export const getFakeContextValue = (
       itemChildrenIndexesLookup: {},
       loading: false,
       error: null,
+      domStructure: 'flat',
     },
     expansion: { expandedItems: [], expansionTrigger: 'content' },
     selection: {
