@@ -170,7 +170,7 @@
   text-align: end;
 }
 
-.DayTimeGridTimeAxisText[aria-hidden] {
+.DayTimeGridTimeAxisText.HiddenHourLabel {
   opacity: 0;
 }
 
@@ -213,7 +213,7 @@
   background: var(--weekend-background);
 }
 
-.DayTimeGridColumn [data-current-time-indicator] {
+.DayTimeGridCurrentTimeIndicator {
   position: absolute;
   left: -2px;
   right: -2px;
@@ -223,11 +223,11 @@
   z-index: 2;
 }
 
-.DayTimeGridColumn:last-child [data-current-time-indicator] {
+.DayTimeGridColumn:last-child .DayTimeGridCurrentTimeIndicator {
   right: 0;
 }
 
-.DayTimeGridColumn[data-current] [data-current-time-indicator] {
+.DayTimeGridColumn[data-current] .DayTimeGridCurrentTimeIndicator {
   height: 2px;
   left: 0;
   right: 1px;

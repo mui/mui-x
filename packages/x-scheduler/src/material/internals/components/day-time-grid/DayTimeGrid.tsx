@@ -214,8 +214,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     style={{ '--hour': hour } as React.CSSProperties}
                   >
                     <time
-                      className="DayTimeGridTimeAxisText"
-                      aria-hidden={shouldHideHour(hour) || undefined}
+                      className={clsx(
+                        'DayTimeGridTimeAxisText',
+                        shouldHideHour(hour) ? 'HiddenHourLabel' : undefined,
+                      )}
                     >
                       {hour === 0
                         ? null
@@ -250,7 +252,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     ))}
                     <TimeGridEventPlaceholder day={day} />
                     {showCurrentTimeIndicator && isTodayInView ? (
-                      <TimeGrid.CurrentTimeIndicator>
+                      <TimeGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
                         {idx === 0 ? (
                           <span className="DayTimeGridCurrentTimeLabel" aria-hidden="true">
                             {currentTimeLabel}

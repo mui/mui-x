@@ -53,7 +53,7 @@ export const TimeGridCurrentTimeIndicator = React.forwardRef(function TimeGridCu
     [position],
   );
 
-  const props = React.useMemo(() => ({ style, 'data-current-time-indicator': '' }), [style]);
+  const props = React.useMemo(() => ({ style }), [style]);
 
   const isOutOfRange =
     adapter.isBefore(nowForColumn, columnStart) || adapter.isAfter(nowForColumn, columnEnd);
