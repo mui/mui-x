@@ -164,10 +164,13 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       // 'x-charts-premium'
     ],
     documentedInterfaces: [
-      'BarSeriesType',
-      'LineSeriesType',
-      'PieSeriesType',
-      'ScatterSeriesType',
+      'BarSeries',
+      'LineSeries',
+      'PieSeries',
+      'ScatterSeries',
+      'FunnelSeries',
+      'HeatmapSeries',
+      'RadarSeries',
       'AxisConfig',
       'ChartImageExportOptions',
       'ChartPrintExportOptions',

@@ -16,6 +16,7 @@
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
     "layout": { "type": { "description": "'horizontal' | 'vertical'" }, "default": "'vertical'" },
+    "minBarSize": { "type": { "description": "number" }, "default": "0px" },
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },

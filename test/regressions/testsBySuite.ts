@@ -24,9 +24,18 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
     '!docsx/data/charts/tooltip/Custom*', // Composition example
     '!docsx/data/charts/tooltip/Item*', // Composition example
+    '!docsx/data/charts/tooltip/AxisFormatter',
+    '!docsx/data/charts/tooltip/Formatting',
+    '!docsx/data/charts/tooltip/SeriesFormatter',
+    '!docsx/data/charts/tooltip/TooltipStyle',
     '!docsx/data/data-grid/server-side-data/useNestedPagination',
     '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
+
+    // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
+    '!docsx/data/migration/migration-pickers-v5/MobileKeyboardView',
+    '!docsx/data/migration/migration-data-grid-v4/CoreV5WithCoreV4',
+    //
   ],
   { eager: true, import: 'default' },
 );

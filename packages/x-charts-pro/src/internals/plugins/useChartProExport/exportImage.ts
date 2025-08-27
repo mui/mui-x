@@ -2,6 +2,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { createExportIframe } from './common';
 import { ChartImageExportOptions } from './useChartProExport.types';
+import { defaultOnBeforeExport } from './defaults';
 
 export const getDrawDocument = async () => {
   try {
@@ -24,7 +25,7 @@ export async function exportImage(
     fileName,
     type = 'image/png',
     quality = 0.9,
-    onBeforeExport,
+    onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
   } = params ?? {};
   const drawDocumentPromise = getDrawDocument();
@@ -66,7 +67,7 @@ export async function exportImage(
   doc.body.appendChild(iframe);
 
   await iframeLoadPromise;
-  await onBeforeExport?.(iframe);
+  await onBeforeExport(iframe);
 
   const drawDocument = await drawDocumentPromise;
 

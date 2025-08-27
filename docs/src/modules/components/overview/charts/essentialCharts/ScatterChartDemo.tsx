@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { ScatterSeriesType } from '@mui/x-charts/models';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChart, ScatterSeries } from '@mui/x-charts/ScatterChart';
 import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -17,7 +16,7 @@ const chartSetting = {
 
 const constructors = ['Intel', 'Apple', 'AMD'];
 
-const series: ScatterSeriesType[] = [
+const series = [
   {
     type: 'scatter',
     label: 'Other',
@@ -28,8 +27,7 @@ const series: ScatterSeriesType[] = [
       .map((item) => ({ x: item.year, y: item.density as number, id: item.id })),
   },
   ...constructors.map(
-    (constructor): ScatterSeriesType => ({
-      type: 'scatter',
+    (constructor): ScatterSeries => ({
       label: constructor,
       highlightScope: { highlight: 'item', fade: 'global' },
       markerSize: 3,
@@ -38,7 +36,7 @@ const series: ScatterSeriesType[] = [
         .map((item) => ({ x: item.year, y: item.density as number, id: item.id })),
     }),
   ),
-];
+] satisfies ScatterSeries[];
 
 const numberFormatter = new Intl.NumberFormat('en-US').format;
 

@@ -62,6 +62,10 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     params.onExpandedItemsChange?.(event, value);
   };
 
+  const resetItemExpansion = useEventCallback(() => {
+    setExpandedItems(null, []);
+  });
+
   const applyItemExpansion: UseTreeViewExpansionInstance['applyItemExpansion'] = useEventCallback(
     ({ itemId, event, shouldBeExpanded }) => {
       const oldExpanded = selectorExpandedItems(store.value);
@@ -150,6 +154,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       setItemExpansion,
       applyItemExpansion,
       expandAllSiblings,
+      resetItemExpansion,
     },
   };
 };

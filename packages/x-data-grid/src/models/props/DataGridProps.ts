@@ -229,6 +229,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   filterDebounceMs: number;
   /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  columnFilterDebounceMs: number;
+  /**
    * Sets the height in pixel of the column headers in the Data Grid.
    * @default 56
    */
@@ -826,7 +831,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   processRowUpdate?: (newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R;
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;

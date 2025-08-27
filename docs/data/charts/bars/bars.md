@@ -77,6 +77,22 @@ You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
 
+### Minimum bar size
+
+You can set a minimum bar size with the `minBarSize` property.
+This property is useful when you want to ensure that bars are always visible, even when the data is sparse or the chart is small.
+
+The `minBarSize` property is ignored if the series value is `null` or `0`.
+It also doesn't work with stacked series.
+
+{{"demo": "MinBarSize.js"}}
+
+### Log scale
+
+A bar chart renders a bar from 0 to the value of a data point. However, the logarithm of zero is undefined, meaning that a y-axis with a log scale cannot plot the bar.
+
+You can work around this limitation by using a [symlog scale](/x/react-charts/axis/#symlog-scale).
+
 ## Customization
 
 ### Grid
@@ -163,7 +179,7 @@ const clickHandler = (
 {{"demo": "BarClick.js"}}
 
 :::info
-Their is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
+There is a slight difference between the `event` of `onItemClick` and `onAxisClick`:
 
 - For `onItemClick` it's a React synthetic mouse event emitted by the bar component.
 - For `onAxisClick` it's a native mouse event emitted by the svg component.

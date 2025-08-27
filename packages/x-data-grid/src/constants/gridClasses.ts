@@ -581,6 +581,18 @@ export interface GridClasses {
    */
   'row--dragging': string;
   /**
+   * Styles applied to the row element when it is a drop target above.
+   */
+  'row--dropAbove': string;
+  /**
+   * Styles applied to the row element when it is a drop target below.
+   */
+  'row--dropBelow': string;
+  /**
+   * Styles applied to the row element when it is being dragged (entire row).
+   */
+  'row--beingDragged': string;
+  /**
    * Styles applied to the first visible row element on every page of the grid.
    */
   'row--firstVisible': string;
@@ -1067,7 +1079,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--editing',
   'row--firstVisible',
   'row--lastVisible',
+  // TODO v9: Rename to `cell--dragging`
   'row--dragging',
+  'row--dropAbove',
+  'row--dropBelow',
+  'row--beingDragged',
   'row--dynamicHeight',
   'row--detailPanelExpanded',
   'row--borderBottom',

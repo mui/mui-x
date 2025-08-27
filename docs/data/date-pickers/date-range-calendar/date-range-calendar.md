@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Range Calendar component
 components: DateRangeCalendar
-githubLabel: 'scope: DateRangePicker'
+githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 ---
 

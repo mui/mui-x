@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "8.8.0",
+  "version": "8.10.2",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
   "bin": "./codemod.js",
@@ -15,8 +15,8 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
-    "copy-files": "cpy README.md build && cpy package.json build",
-    "build": "node ../../scripts/build.mjs node --ignore 'src/types.ts' && pnpm copy-files"
+    "build": "code-infra build --bundle cjs --buildTypes false --ignore 'src/types.ts' && pnpm copy-files",
+    "copy-files": "code-infra copy-files"
   },
   "repository": {
     "type": "git",

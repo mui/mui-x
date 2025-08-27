@@ -214,6 +214,7 @@ export class GestureManager<
       detail: options,
       bubbles: false,
       cancelable: false,
+      composed: false,
     });
 
     element.dispatchEvent(event);
@@ -250,6 +251,7 @@ export class GestureManager<
       detail: state,
       bubbles: false,
       cancelable: false,
+      composed: false,
     });
 
     element.dispatchEvent(event);
@@ -298,17 +300,13 @@ export class GestureManager<
     options?: Partial<Pick<GestureNameToOptionsMap, GN>>,
   ): GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T> {
     // Handle array of gesture names
-    if (Array.isArray(gestureNames)) {
-      gestureNames.forEach((name) => {
-        const gestureOptions = options?.[name];
-        this.registerSingleGesture(name, element, gestureOptions!);
-      });
-      return element as GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T>;
+    if (!Array.isArray(gestureNames)) {
+      gestureNames = [gestureNames as GN];
     }
-
-    // Handle single gesture name
-    const gestureOptions = options?.[gestureNames];
-    this.registerSingleGesture(gestureNames, element, gestureOptions!);
+    gestureNames.forEach((name) => {
+      const gestureOptions = options?.[name];
+      this.registerSingleGesture(name, element, gestureOptions!);
+    });
     return element as GestureElement<GestureNameUnionComplete, GestureNameToEventMap, T>;
   }
 
@@ -426,5 +424,6 @@ export class GestureManager<
     this.elementGestureMap.clear();
     this.activeGesturesRegistry.destroy();
     this.keyboardManager.destroy();
+    this.pointerManager.destroy();
   }
 }

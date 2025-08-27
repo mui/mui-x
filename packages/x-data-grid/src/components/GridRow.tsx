@@ -24,14 +24,12 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelection
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedColumnPosition } from '../internals/constants';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
-import {
-  gridRowMaximumTreeDepthSelector,
-  gridRowNodeSelector,
-} from '../hooks/features/rows/gridRowsSelector';
+import { gridRowNodeSelector } from '../hooks/features/rows/gridRowsSelector';
 import {
   gridEditRowsStateSelector,
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
+import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
@@ -40,8 +38,8 @@ import { createSelector } from '../utils/createSelector';
 
 const isRowReorderingEnabledSelector = createSelector(
   gridEditRowsStateSelector,
-  (editRows, rowReordering: boolean) => {
-    if (!rowReordering) {
+  (editRows, { rowReordering, treeData }: { rowReordering: boolean; treeData: boolean }) => {
+    if (!rowReordering || treeData) {
       return false;
     }
     const isEditingRows = !isObjectEmpty(editRows);
@@ -119,14 +117,14 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const rowReordering = (rootProps as any).rowReordering as boolean;
-  const isRowReorderingEnabled = useGridSelector(
-    apiRef,
-    isRowReorderingEnabledSelector,
+  const treeData = (rootProps as any).treeData as boolean;
+  const isRowReorderingEnabled = useGridSelector(apiRef, isRowReorderingEnabledSelector, {
     rowReordering,
-  );
+    treeData,
+  });
+  const isRowDragActive = useGridSelector(apiRef, gridIsRowDragActiveSelector);
   const handleRef = useForkRef(ref, refProp);
   const rowNode = gridRowNodeSelector(apiRef, rowId);
   const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
@@ -283,6 +281,11 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     return rowStyle;
   }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
 
+  // HACK: Sometimes, the rowNode has already been removed from the state but the row is still rendered.
+  if (!rowNode) {
+    return null;
+  }
+
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = getRowAriaAttributes(rowNode, index);
 
@@ -344,9 +347,13 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     const isReorderCell = column.field === '__reorder__';
 
     const canReorderColumn = !(disableColumnReorder || column.disableReorder);
-    const canReorderRow = isRowReorderingEnabled && !sortModel.length && treeDepth <= 1;
+    const canReorderRow = isRowReorderingEnabled && !sortModel.length;
 
-    const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
+    const disableDragEvents = !(
+      canReorderColumn ||
+      (isReorderCell && canReorderRow) ||
+      isRowDragActive
+    );
 
     const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 

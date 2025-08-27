@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
-import { ChartsLabel } from '@mui/x-charts/ChartsLabel/ChartsLabel';
-import { labelClasses } from '@mui/x-charts/ChartsLabel';
+import { ChartsLabel, labelClasses } from '@mui/x-charts/ChartsLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 describe('<ChartsLabel />', () => {

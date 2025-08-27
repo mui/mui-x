@@ -15,8 +15,11 @@
     "dayOfWeekFormatter": {
       "description": "Formats the day of week displayed in the calendar header.",
       "typeDescriptions": {
-        "date": "The date of the day of week provided by the adapter.",
-        "string": "The name to display."
+        "date": {
+          "name": "date",
+          "description": "The date of the day of week provided by the adapter."
+        },
+        "string": { "name": "string", "description": "The name to display." }
       }
     },
     "defaultRangePosition": {
@@ -90,15 +93,31 @@
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
       "typeDescriptions": {
-        "value": "The value that was just accepted.",
-        "context": "The context containing the validation result of the current value."
+        "value": {
+          "name": "value",
+          "description": "The value that was just accepted.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "context": {
+          "name": "context",
+          "description": "The context containing the validation result of the current value."
+        }
       }
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
       "typeDescriptions": {
-        "value": "The new value.",
-        "context": "The context containing the validation result of the current value."
+        "value": {
+          "name": "value",
+          "description": "The new value.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "context": {
+          "name": "context",
+          "description": "The context containing the validation result of the current value."
+        }
       }
     },
     "onClose": {
@@ -107,28 +126,49 @@
     "onError": {
       "description": "Callback fired when the error associated with the current value changes. When a validation error is detected, the <code>error</code> parameter contains a non-null value. This can be used to render an appropriate form error.",
       "typeDescriptions": {
-        "error": "The reason why the current value is not valid.",
-        "value": "The value associated with the error."
+        "error": {
+          "name": "error",
+          "description": "The reason why the current value is not valid.",
+          "argType": "TError",
+          "argTypeDescription": "The validation error type. It will be either <code>string</code> or a <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        },
+        "value": {
+          "name": "value",
+          "description": "The value associated with the error.",
+          "argType": "TValue",
+          "argTypeDescription": "The value type. It will be the same type as <code>value</code> or <code>null</code>. It can be in <code>[start, end]</code> format in case of range value."
+        }
       }
     },
     "onMonthChange": {
       "description": "Callback fired on month change.",
-      "typeDescriptions": { "month": "The new month." }
+      "typeDescriptions": { "month": { "name": "month", "description": "The new month." } }
     },
     "onOpen": {
       "description": "Callback fired when the popup requests to be opened. Use in controlled mode (see <code>open</code>)."
     },
     "onRangePositionChange": {
       "description": "Callback fired when the range position changes.",
-      "typeDescriptions": { "rangePosition": "The new range position." }
+      "typeDescriptions": {
+        "rangePosition": { "name": "rangePosition", "description": "The new range position." }
+      }
     },
     "onSelectedSectionsChange": {
       "description": "Callback fired when the selected sections change.",
-      "typeDescriptions": { "newValue": "The new selected sections." }
+      "typeDescriptions": {
+        "newValue": { "name": "newValue", "description": "The new selected sections." }
+      }
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "typeDescriptions": { "view": "The new view." }
+      "typeDescriptions": {
+        "view": {
+          "name": "view",
+          "description": "The new view.",
+          "argType": "TView",
+          "argTypeDescription": "Type of the view. It will vary based on the Picker type and the <code>views</code> it uses."
+        }
+      }
     },
     "open": { "description": "Control the popup or dialog open state." },
     "openTo": {
@@ -146,7 +186,12 @@
     },
     "renderLoading": {
       "description": "Component rendered on the &quot;day&quot; view when <code>props.loading</code> is true.",
-      "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
+      "typeDescriptions": {
+        "React.ReactNode": {
+          "name": "React.ReactNode",
+          "description": "The node to render when loading."
+        }
+      }
     },
     "selectedSections": {
       "description": "The currently selected sections. This prop accepts four formats: 1. If a number is provided, the section at this index will be selected. 2. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 3. If <code>&quot;all&quot;</code> is provided, all the sections will be selected. 4. If <code>null</code> is provided, no section will be selected. If not provided, the selected sections will be handled internally."
@@ -154,17 +199,26 @@
     "shouldDisableDate": {
       "description": "Disable specific date.<br>Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.",
       "typeDescriptions": {
-        "day": "The date to test.",
-        "position": "The date to test, &#39;start&#39; or &#39;end&#39;.",
-        "boolean": "Returns <code>true</code> if the date should be disabled."
+        "day": { "name": "day", "description": "The date to test." },
+        "position": {
+          "name": "position",
+          "description": "The date to test, &#39;start&#39; or &#39;end&#39;."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "Returns <code>true</code> if the date should be disabled."
+        }
       }
     },
     "shouldDisableTime": {
       "description": "Disable specific time.",
       "typeDescriptions": {
-        "value": "The value to check.",
-        "view": "The clock type of the timeValue.",
-        "boolean": "If <code>true</code> the time will be disabled."
+        "value": { "name": "value", "description": "The value to check." },
+        "view": { "name": "view", "description": "The clock type of the timeValue." },
+        "boolean": {
+          "name": "boolean",
+          "description": "If <code>true</code> the time will be disabled."
+        }
       }
     },
     "showDaysOutsideCurrentMonth": {
@@ -182,7 +236,7 @@
       "description": "Amount of time options below or at which the single column time renderer is used."
     },
     "timeSteps": {
-      "description": "The time steps between two time unit options. For example, if <code>timeStep.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>. When single column time renderer is used, only <code>timeStep.minutes</code> will be used."
+      "description": "The time steps between two time unit options. For example, if <code>timeSteps.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>. When single column time renderer is used, only <code>timeSteps.minutes</code> will be used."
     },
     "timezone": {
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.",

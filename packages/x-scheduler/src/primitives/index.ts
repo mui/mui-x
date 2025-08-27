@@ -1,4 +1,4 @@
-// This folder folder contains all the primitives used in the Joy UI scheduler components.
+// This folder folder contains all the primitives used in the Material UI scheduler components.
 // Those primitives are not meant for public usage for now.
 // In the future, they might either:
 // - Be extracted into a standalone package

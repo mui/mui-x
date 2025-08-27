@@ -8,6 +8,7 @@ import type {
   ScaleSequential,
   ScaleThreshold,
   ScaleTime,
+  ScaleSymLog,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
@@ -25,6 +26,7 @@ export type D3Scale<
   Output = number,
 > =
   | ScaleBand<Domain>
+  | ScaleSymLog<Range, Output>
   | ScaleLogarithmic<Range, Output>
   | ScalePoint<Domain>
   | ScalePower<Range, Output>
@@ -32,6 +34,7 @@ export type D3Scale<
   | ScaleLinear<Range, Output>;
 
 export type D3ContinuousScale<Range = number, Output = number> =
+  | ScaleSymLog<Range, Output>
   | ScaleLogarithmic<Range, Output>
   | ScalePower<Range, Output>
   | ScaleTime<Range, Output>
@@ -84,11 +87,6 @@ export interface ChartsAxisProps extends TickParams {
    */
   disableTicks?: boolean;
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill?: string;
-  /**
    * The style applied to ticks text.
    */
   tickLabelStyle?: ChartsTextProps['style'];
@@ -107,11 +105,6 @@ export interface ChartsAxisProps extends TickParams {
    * The label of the axis.
    */
   label?: string;
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke?: string;
   /**
    * The size of the ticks.
    * @default 6
@@ -217,7 +210,53 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
 }
 
 export type ScaleName = keyof AxisScaleConfig;
-export type ContinuousScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ContinuousScaleName = 'linear' | 'log' | 'symlog' | 'pow' | 'sqrt' | 'time' | 'utc';
+
+export type AxisGroup = {
+  /**
+   * The function used to return the value for this group.
+   *
+   * @param {any} value The value of the axis item.
+   * @param {number} dataIndex  The index of the data item.
+   * @returns {string | number | Date} The value that will be used to group the axis items.
+   */
+  getValue: (value: any, dataIndex: number) => string | number | Date;
+  /**
+   * The size of the tick in pixels.
+   * @default 6
+   */
+  tickSize?: number;
+  /**
+   * The style applied to ticks text.
+   */
+  tickLabelStyle?: ChartsTextProps['style'];
+};
+
+export type AxisGroups = {
+  /**
+   * Each group will have a label that is the stringified value of the group.
+   *
+   * @example
+   * If the axis is grouped by day, month and year.
+   *
+   * ```tsx
+   * [
+   *   { getValue: getDate },
+   *   { getValue: getMonth },
+   *   { getValue: getFullYear }
+   * ]
+   * ```
+   *
+   * Then the axis will have three rows, one for each group.
+   *
+   * ```bash
+   * | 31   | 1    | 2    |
+   * | Jan  | Feb         |
+   * | 2021               |
+   * ```
+   */
+  groups?: AxisGroup[];
+};
 
 export interface AxisScaleConfig {
   band: {
@@ -236,16 +275,27 @@ export interface AxisScaleConfig {
      */
     barGapRatio: number;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
-  } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
+  } & AxisGroups &
+    Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
     scale: ScalePoint<number | Date | string>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
-  };
+  } & AxisGroups;
   log: {
     scaleType: 'log';
     scale: ScaleLogarithmic<number, number>;
     colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+  };
+  symlog: {
+    scaleType: 'symlog';
+    scale: ScaleSymLog<number, number>;
+    colorMap?: ContinuousColorConfig | PiecewiseColorConfig;
+    /**
+     * The constant used to define the zero point of the symlog scale.
+     * @default 1
+     */
+    constant?: number;
   };
   pow: {
     scaleType: 'pow';
@@ -296,6 +346,9 @@ export interface AxisScaleComputedConfig {
   log: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
+  symlog: {
+    colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
+  };
   pow: {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
@@ -336,11 +389,38 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'legend'` The value is displayed in the legend when using color legend.
        * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
        */
-      location: 'tick' | 'tooltip' | 'zoom-slider-tooltip';
+      location: 'tooltip' | 'zoom-slider-tooltip';
       /**
        * The d3-scale instance associated to the axis.
        */
       scale: AxisScaleConfig[S]['scale'];
+    }
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       */
+      location: 'tick';
+      /**
+       * The d3-scale instance associated to the axis.
+       */
+      scale: AxisScaleConfig[S]['scale'];
+      /**
+       * The tick label shown by default if the value isn't formatted.
+       * This value might be an empty string if no tick label should be displayed, which is particularly useful in log
+       * scales where we want to show ticks to demonstrate it's a log scale, but not labels to avoid them overlapping.
+       * @see See {@link https://d3js.org/d3-scale/log#log_tickFormat D3 log scale docs} for more details.
+       */
+      defaultTickLabel: string;
+      /**
+       * A suggestion of the number of ticks to show.
+       * Can be provided to the scale's `ticks` method to compute the ticks, or to `tickFormat` to format the ticks.
+       * Can be `undefined` if the scale doesn't support it, e.g., band, point scales.
+       */
+      tickNumber?: number;
     };
 
 /**
@@ -497,6 +577,12 @@ export function isPointScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
   return scaleConfig.scaleType === 'point';
+}
+
+export function isSymlogScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' } {
+  return scaleConfig.scaleType === 'symlog';
 }
 
 /**

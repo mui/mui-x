@@ -3,16 +3,59 @@ import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, createEvent } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
 import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
+import { isJSDOM } from 'test/utils/skipIf';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
-function createDragOverEvent(target: ChildNode) {
+function createDragOverEvent(target: ChildNode, dropPosition: 'above' | 'below' = 'above') {
   const dragOverEvent = createEvent.dragOver(target);
   // Safari 13 doesn't have DragEvent.
   // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
   Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
-  Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
+
+  // Mock getBoundingClientRect for the target
+  const targetElement = target as Element;
+  if (!targetElement.getBoundingClientRect) {
+    targetElement.getBoundingClientRect = () => ({
+      top: 0,
+      left: 0,
+      width: 100,
+      height: 52,
+      right: 100,
+      bottom: 52,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
+    });
+  }
+
+  // Set clientY based on drop position - relative to getBoundingClientRect
+  const rect = targetElement.getBoundingClientRect();
+  const clientY =
+    dropPosition === 'above'
+      ? rect.top + rect.height * 0.25 // Upper quarter
+      : rect.top + rect.height * 0.75; // Lower quarter
+
+  Object.defineProperty(dragOverEvent, 'clientY', { value: clientY });
+  Object.defineProperty(dragOverEvent, 'target', { value: target });
+  Object.defineProperty(dragOverEvent, 'dataTransfer', {
+    value: {
+      dropEffect: 'copy',
+    },
+  });
 
   return dragOverEvent;
+}
+
+function fireDragStart(target: ChildNode) {
+  const dragStartEvent = createEvent.dragStart(target);
+  Object.defineProperty(dragStartEvent, 'dataTransfer', {
+    value: {
+      effectAllowed: 'copy',
+      setData: () => {},
+      getData: () => '',
+    },
+  });
+  fireEvent(target, dragStartEvent);
 }
 
 function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false) {
@@ -24,7 +67,7 @@ function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false
   return dragEndEvent;
 }
 
-describe('<DataGridPro /> - Row reorder', () => {
+describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
   const { render } = createRenderer();
 
   it('should cancel the reordering when dropping the row outside the grid', () => {
@@ -46,15 +89,19 @@ describe('<DataGridPro /> - Row reorder', () => {
     render(<Test />);
 
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-    const rowReorderCell = getCell(0, 0).firstChild!;
-    const targetCell = getCell(1, 0);
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    const targetCell = getCell(2, 0);
 
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetCell);
+    // Start the drag
+    fireDragStart(rowReorderCell);
+
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
-    expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
+    const targetRow = targetCell.closest('[data-id]');
+    expect(targetRow).to.have.class(gridClasses['row--dropAbove']);
+
+    // End the drag to update the row order
     const dragEndEvent = createDragEndEvent(rowReorderCell, true);
     fireEvent(rowReorderCell, dragEndEvent);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -79,7 +126,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     render(<Test />);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0)!;
-    fireEvent.dragStart(rowReorderCell);
+    fireDragStart(rowReorderCell);
     expect(rowReorderCell).not.to.have.class(gridClasses['row--dragging']);
   });
 
@@ -134,9 +181,9 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
     const rowReorderCell = getCell(0, 0).firstChild!;
-    const targetCell = getCell(1, 0)!;
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetCell);
+    const targetCell = getCell(2, 0)!;
+    fireDragStart(rowReorderCell);
+
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     expect(handleOnRowOrderChange.callCount).to.equal(0);
@@ -174,8 +221,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     const rowReorderCell = getCell(0, 0).firstChild!;
     const targetrowReorderCell = getCell(1, 0)!;
 
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetrowReorderCell);
+    fireDragStart(rowReorderCell);
     const dragOverRowEvent = createDragOverEvent(targetrowReorderCell);
     fireEvent(targetrowReorderCell, dragOverRowEvent);
     const dragEndRowEvent = createDragEndEvent(rowReorderCell);
@@ -192,6 +238,8 @@ describe('<DataGridPro /> - Row reorder', () => {
       { id: 1, brand: 'Adidas' },
       { id: 2, brand: 'Puma' },
       { id: 3, brand: 'Skechers' },
+      { id: 4, brand: 'Vans' },
+      { id: 5, brand: 'Converse' },
     ];
     const columns = [{ field: 'brand' }];
 
@@ -205,10 +253,10 @@ describe('<DataGridPro /> - Row reorder', () => {
             pagination
             initialState={{
               pagination: {
-                paginationModel: { pageSize: 2 },
+                paginationModel: { pageSize: 3 },
               },
             }}
-            pageSizeOptions={[2]}
+            pageSizeOptions={[3]}
           />
         </div>
       );
@@ -216,16 +264,26 @@ describe('<DataGridPro /> - Row reorder', () => {
 
     render(<Test />);
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getColumnValues(0)).to.deep.equal(['2', '3']);
-    expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Skechers']);
-    const rowReorderCell = getCell(2, 0).firstChild!;
-    const targetCell = getCell(3, 0);
+    expect(getColumnValues(0)).to.deep.equal(['3', '4', '5']);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Vans', 'Converse']);
+    const rowReorderCell = getCell(3, 0).firstChild! as Element;
+    const targetCell = getCell(5, 0);
 
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetCell);
+    // Start the drag
+    fireDragStart(rowReorderCell);
+    const sourceRow = rowReorderCell.closest('[data-id]');
+    expect(sourceRow).to.have.class(gridClasses['row--beingDragged']);
+
+    // Hover over the target row to render a drop indicator
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
-    expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Puma']);
+    const targetRow = targetCell.closest('[data-id]');
+    expect(targetRow).to.have.class(gridClasses['row--dropAbove']);
+
+    // End the drag to update the row order
+    const dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Vans', 'Skechers', 'Converse']);
   });
 
   it('should render vertical scroll areas when row reordering is active', () => {
@@ -252,7 +310,7 @@ describe('<DataGridPro /> - Row reorder', () => {
 
     // Start dragging a row at the top (scroll = 0)
     const rowReorderCell = getCell(0, 0).firstChild!;
-    fireEvent.dragStart(rowReorderCell);
+    fireDragStart(rowReorderCell);
 
     // Check what scroll areas are rendered when at the top
     let allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
@@ -276,7 +334,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     fireEvent.scroll(virtualScroller, { target: { scrollTop: 100 } });
 
     // Start dragging again after scrolling down
-    fireEvent.dragStart(rowReorderCell);
+    fireDragStart(rowReorderCell);
 
     // Check scroll areas after scrolling down
     allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
@@ -294,5 +352,56 @@ describe('<DataGridPro /> - Row reorder', () => {
 
     // Scroll areas should be hidden again
     expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
+  });
+
+  it('should allow row reordering when dragging from any cell during active reorder', () => {
+    const rows = [
+      { id: 0, brand: 'Nike', category: 'Sportswear' },
+      { id: 1, brand: 'Adidas', category: 'Sportswear' },
+      { id: 2, brand: 'Puma', category: 'Sportswear' },
+    ];
+    const columns = [
+      { field: 'brand', width: 150 },
+      { field: 'category', width: 150 },
+    ];
+
+    function Test() {
+      return (
+        <div style={{ width: 400, height: 300 }}>
+          <DataGridPro rows={rows} columns={columns} rowReordering disableColumnReorder />
+        </div>
+      );
+    }
+
+    render(<Test />);
+
+    // Verify initial row order
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+    // Start drag from the reorder cell (column 0, row 0)
+    const rowReorderCell = getCell(0, 0).firstChild! as Element;
+    fireDragStart(rowReorderCell);
+
+    // Verify that the reorder cell has the dragging class (this happens immediately)
+    expect(rowReorderCell).to.have.class(gridClasses['row--dragging']);
+
+    // Now drag over a non-reorder cell (brand cell of row 2)
+    const targetNonReorderCell = getCell(2, 1); // brand cell of the third row
+    fireEvent.dragEnter(targetNonReorderCell);
+
+    // Hover over the target cell to render a drop indicator
+    const dragOverEvent = createDragOverEvent(targetNonReorderCell);
+    fireEvent(targetNonReorderCell, dragOverEvent);
+
+    // Verify that the target row shows the drop indicator
+    const targetRow = targetNonReorderCell.closest('[data-id]');
+    expect(targetRow).to.have.class(gridClasses['row--dropAbove']);
+
+    // End the drag to complete the row reorder
+    const dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
+
+    // Verify that the row order has changed (Nike should now be between Adidas and Puma)
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 });

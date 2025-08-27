@@ -8,7 +8,7 @@ import {
   MuiCommercialPackageName,
 } from '@mui/x-license';
 import { isJSDOM } from 'test/utils/skipIf';
-import { sharedLicenseStatuses } from './useLicenseVerifier';
+import { clearLicenseStatusCache } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 
 const oneDayInMS = 1000 * 60 * 60 * 24;
@@ -41,10 +41,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
   describe('error', () => {
     beforeEach(() => {
-      Object.keys(sharedLicenseStatuses).forEach((key) => {
-        // @ts-ignore
-        delete sharedLicenseStatuses[key];
-      });
+      clearLicenseStatusCache();
     });
 
     it('should log the missing license key error only once', () => {
@@ -58,7 +55,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       const key = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
         licenseModel: 'perpetual',
-        orderNumber: '12345',
+        orderNumber: '123',
         planScope: 'pro',
         planVersion: 'initial',
       });
@@ -83,7 +80,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
-        orderNumber: 'MUI-123',
+        orderNumber: '123',
         planScope: 'pro',
         licenseModel: 'subscription',
         planVersion: 'initial',
@@ -113,7 +110,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
       const licenseKey = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: 'MUI-123',
+        orderNumber: '123',
         planScope: 'pro',
         licenseModel: 'subscription',
         planVersion: 'initial',
@@ -139,7 +136,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
       const licenseKey = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: 'MUI-123',
+        orderNumber: '123',
         planScope: 'pro',
         licenseModel: 'subscription',
         planVersion: 'Q3-2024',
@@ -163,7 +160,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
       const licenseKey = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-        orderNumber: 'MUI-123',
+        orderNumber: '123',
         planScope: 'premium',
         licenseModel: 'subscription',
         planVersion: 'Q3-2024',

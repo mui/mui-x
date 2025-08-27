@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
-import { gridPivotPanelOpenSelector } from '@mui/x-data-grid-pro/internals';
+import { gridPivotPanelOpenSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { GridSidebarValue } from '../hooks/features/sidebar';
 
 export function GridColumnMenuPivotItem(props: GridColumnMenuItemProps) {
   const { onClick } = props;
@@ -12,7 +13,7 @@ export function GridColumnMenuPivotItem(props: GridColumnMenuItemProps) {
 
   const openPivotSettings = (event: React.MouseEvent<HTMLElement>) => {
     onClick(event);
-    apiRef.current.setPivotPanelOpen(true);
+    apiRef.current.showSidebar(GridSidebarValue.Pivot);
   };
 
   return (

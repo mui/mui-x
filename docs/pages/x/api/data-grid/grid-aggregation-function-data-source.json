@@ -3,6 +3,11 @@
   "imports": ["import { GridAggregationFunctionDataSource } from '@mui/x-data-grid-premium'"],
   "demos": "<ul><li><a href=\"/x/react-data-grid/server-side-data/aggregation/\">Server-side aggregation</a></li></ul>",
   "properties": {
+    "applySorting": {
+      "type": { "description": "boolean" },
+      "default": "false",
+      "isPremiumPlan": true
+    },
     "columnTypes": { "type": { "description": "string[]" }, "isPremiumPlan": true },
     "hasCellUnit": {
       "type": { "description": "boolean" },

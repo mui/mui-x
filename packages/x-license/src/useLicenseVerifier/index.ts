@@ -1,1 +1,1 @@
-export { useLicenseVerifier } from './useLicenseVerifier';
+export { clearLicenseStatusCache, useLicenseVerifier } from './useLicenseVerifier';

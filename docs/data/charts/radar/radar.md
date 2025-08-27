@@ -1,12 +1,12 @@
 ---
 title: React Radar chart
 productId: x-charts
-components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight
+components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarAxis, ChartsWrapper
 ---
 
 # Charts - Radar
 
-<p class="description">Radar allows to compare multivariate data in a 2D chart.</p>
+<p class="description">Radar lets you compare multivariate data in a 2D chart.</p>
 
 ## Basics
 
@@ -53,6 +53,18 @@ The radar chart displays a grid behind the series that can be configured with:
 
 {{"demo": "DemoRadar.js" }}
 
+## Axis values
+
+You can add labels to metrics with the `<RadarAxis />`.
+This component requires a `metric` prop and can be configured with:
+
+- `angle` The angle used to display labels. By default it's the one associated to the given metric.
+- `labelOrientation` The orientation strategy. Either horizontal labels with moving anchor point, or label rotating with the axis.
+- `divisions` The number of labels to display.
+- `textAnchor`/`dominantBaseline` The label placement. Can either be a string, or a function with the `angle` value (in degree) as an argument.
+
+{{"demo": "DemoRadarAxis.js" }}
+
 ## Highlight
 
 ### Axis highlight
@@ -91,6 +103,33 @@ The `trigger` prop of the `tooltip` slot accepts the following values:
 - `'none'`—disable the tooltip.
 
 {{"demo": "RadarTooltip.js" }}
+
+## Click event
+
+Radar charts provides multiple click handlers:
+
+- `onAreaClick` for click on a specific area.
+- `onMarkClick` for click on a specific mark.
+- `onAxisClick` for a click anywhere in the chart
+
+They all provide the following signature.
+
+```js
+const clickHandler = (
+  event, // The mouse event.
+  params, // An object that identifies the clicked elements.
+) => {};
+```
+
+{{"demo": "RadarClick.js"}}
+
+:::info
+There is a slight difference between the `event` of `onAxisClick` and the others:
+
+- For `onAxisClick` it's a native mouse event emitted by the svg component.
+- For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
+
+:::
 
 ## Composition
 

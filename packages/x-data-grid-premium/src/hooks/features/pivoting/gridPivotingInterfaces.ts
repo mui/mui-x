@@ -1,9 +1,11 @@
-import type { GridColDef } from '@mui/x-data-grid-pro';
+import type { GridColDef, GridRowModel } from '@mui/x-data-grid-pro';
 import type {
   GridPivotingPrivateApiCommunity,
   GridPivotingStatePartial,
 } from '@mui/x-data-grid/internals';
+import type { RefObject } from '@mui/x-internals/types';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export type GridPivotingPropsOverrides = {
   rows: DataGridPremiumProcessedProps['rows'];
@@ -27,6 +29,10 @@ export interface GridPivotingState extends GridPivotingStatePartial {
 export interface GridPivotingInitialState {
   model?: GridPivotModel;
   enabled?: boolean;
+  /**
+   * To open the pivot sidebar on init, set sidebar's `openValue` to `GridSidebarValue.Pivot`.
+   * @deprecated Use sidebar state instead.
+   */
   panelOpen?: boolean;
 }
 
@@ -58,6 +64,7 @@ export interface GridPivotingApi {
   setPivotActive: (active: boolean | ((prev: boolean) => boolean)) => void;
   /**
    * Sets whether the pivot panel is open.
+   * @deprecated Use the `showSidebar` method instead. Using this method will not trigger the `sidebarOpen` and `sidebarClose` events.
    * @param {boolean | ((prev: boolean) => boolean)} open - The new value of the pivot panel open state.
    */
   setPivotPanelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
@@ -89,3 +96,15 @@ export type GridPivotingColDefOverrides = Pick<
   | 'resizable'
   | 'sortingOrder'
 >;
+
+export interface GridPivotingInternalCache {
+  nonPivotDataRef: RefObject<
+    | {
+        rows: GridRowModel[];
+        columns: Map<string, GridColDef>;
+        originalRowsProp: readonly GridRowModel[];
+      }
+    | undefined
+  >;
+  exportedStateRef: RefObject<GridInitialStatePremium | null>;
+}

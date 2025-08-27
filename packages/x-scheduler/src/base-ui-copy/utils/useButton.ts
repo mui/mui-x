@@ -2,10 +2,10 @@
 /* eslint-disable jsdoc/require-returns-type */
 'use client';
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
-import useForkRef from '@mui/utils/useForkRef';
-import { makeEventPreventable, mergeProps } from '../merge-props';
-import { useModernLayoutEffect } from './useModernLayoutEffect';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { makeEventPreventable, mergeProps } from '@base-ui-components/react/merge-props';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useRootElementName } from './useRootElementName';
 import { useCompositeRootContext } from '../composite/CompositeRootContext';
 import { BaseUIEvent, HTMLProps } from './types';
@@ -44,7 +44,7 @@ export function useButton(parameters: useButton.Parameters = {}): useButton.Retu
     return Boolean(elementName === 'A' && (element as HTMLAnchorElement)?.href);
   });
 
-  const mergedRef = useForkRef(updateRootElementName, externalRef, buttonRef);
+  const mergedRef = useMergedRefs(updateRootElementName, externalRef, buttonRef);
 
   const buttonProps = React.useMemo(() => {
     const additionalProps: AdditionalButtonProps = {};
@@ -83,7 +83,7 @@ export function useButton(parameters: useButton.Parameters = {}): useButton.Retu
   // <Toolbar.Button disabled render={<Menu.Trigger />} />
   // the `disabled` prop needs to pass through 2 `useButton`s then finally
   // delete the `disabled` attribute from DOM
-  useModernLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const element = buttonRef.current;
     if (!(element instanceof HTMLButtonElement)) {
       return;
