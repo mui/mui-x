@@ -113,6 +113,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -236,7 +237,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       return;
     }
 
-    if (this.shouldPreventGesture(targetElement)) {
+    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
       if (!this.isActive) {
         return;
       }
