@@ -340,7 +340,6 @@ export async function generateChangelog({
         case 'docs':
           docsCommits.push(commitItem);
           break;
-        case 'core': // Legacy
         case 'internal':
         case 'support-infra':
         case 'code-infra':
