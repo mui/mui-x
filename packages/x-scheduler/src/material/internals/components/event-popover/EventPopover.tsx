@@ -33,7 +33,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, style, container, calendarEvent, calendarEventResource, ...other } = props;
+  const { className, style, container, calendarEvent, calendarEventResource, onClose, ...other } =
+    props;
 
   const adapter = useAdapter();
   const translations = useTranslations();
@@ -115,12 +116,12 @@ export const EventPopover = React.forwardRef(function EventPopover(
       allDay: isAllDay,
       rrule,
     });
-    // onClose();
+    onClose();
   };
 
   const handleDelete = useEventCallback(() => {
     instance.deleteEvent(calendarEvent.id);
-    // onClose();
+    onClose();
   });
 
   return (
@@ -383,9 +384,12 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const { store } = useEventCalendarContext();
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+  const actionsRef = React.useRef<Popover.Root.Actions>(null);
+
+  const handleClose = useEventCallback(() => actionsRef.current?.close());
 
   return (
-    <Popover.Root handle={editingPopoverHandle} modal>
+    <Popover.Root handle={editingPopoverHandle} actionsRef={actionsRef} modal>
       {({ payload }) => (
         <React.Fragment>
           {children}
@@ -394,6 +398,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
               calendarEvent={payload}
               calendarEventResource={resourcesByIdMap.get(payload.resource)}
               container={containerRef.current}
+              onClose={handleClose}
             />
           )}
         </React.Fragment>

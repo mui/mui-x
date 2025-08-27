@@ -15,10 +15,10 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
    * The container element for the popover portal.
    */
   container: HTMLElement | null;
-  // /**
-  //  * Handles the close action of the popover.
-  //  */
-  // onClose: () => void;
+  /**
+   * Closes the popover.
+   */
+  onClose: () => void;
 }
 
 export interface EventPopoverProviderProps {
