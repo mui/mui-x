@@ -5,7 +5,7 @@ import { selectors } from '../use-event-calendar/store';
 import type { useEventCalendar } from '../use-event-calendar';
 
 /**
- * Make sure the state current value doesn't contain incompatible values.
+ * Makes sure the state current value doesn't contain incompatible values.
  */
 function useAssertStateValidityOutsideOfProduction(store: useEventCalendar.Store) {
   useStore(store, () => {
