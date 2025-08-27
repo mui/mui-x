@@ -51,7 +51,6 @@ export abstract class BaseReorderOperation {
 /**
  * Handles reordering of items within the same parent group.
  */
-/* eslint-disable class-methods-use-this */
 export class SameParentSwapOperation extends BaseReorderOperation {
   readonly operationType = 'same-parent-swap';
 
@@ -193,7 +192,6 @@ export class SameParentSwapOperation extends BaseReorderOperation {
 /**
  * Handles moving leaf nodes between different parent groups.
  */
-/* eslint-disable class-methods-use-this */
 export class CrossParentLeafOperation extends BaseReorderOperation {
   readonly operationType = 'cross-parent-leaf';
 
@@ -439,7 +437,6 @@ export class CrossParentLeafOperation extends BaseReorderOperation {
 /**
  * Handles moving entire groups between different parents.
  */
-/* eslint-disable class-methods-use-this */
 export class CrossParentGroupOperation extends BaseReorderOperation {
   readonly operationType = 'cross-parent-group';
 
