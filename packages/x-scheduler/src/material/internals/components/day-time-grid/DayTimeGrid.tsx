@@ -29,7 +29,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const { days, className, ...other } = props;
 
   const translations = useTranslations();
-  const today = adapter.date();
+  const [now, setNow] = React.useState(() => adapter.date());
+  useOnEveryMinuteStart(() => setNow(adapter.date()));
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -47,10 +48,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
-  const isTodayInView = React.useMemo(
-    () => days.some((d) => adapter.isSameDay(d, today)),
-    [days, today],
-  );
+  const isTodayInView = React.useMemo(() => {
+    const start = adapter.startOfDay(days[0]);
+    const end = adapter.endOfDay(days[days.length - 1]);
+    return adapter.isWithinRange(now, [start, end]);
+  }, [days, now]);
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
@@ -76,9 +78,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   }, [daysWithEvents]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
-
-  const [now, setNow] = React.useState(() => adapter.date());
-  useOnEveryMinuteStart(() => setNow(adapter.date()));
 
   const currentTimeLabel = React.useMemo(() => adapter.format(now, timeFormat), [now, timeFormat]);
 
@@ -117,7 +116,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 id={`DayTimeGridHeaderCell-${day.toString()}`}
                 role="columnheader"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(day, today) ? '' : undefined}
+                data-current={adapter.isSameDay(day, now) ? '' : undefined}
               >
                 {hasDayView ? (
                   <button
@@ -234,7 +233,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     end={adapter.endOfDay(day)}
                     className="DayTimeGridColumn"
                     data-weekend={isWeekend(adapter, day) ? '' : undefined}
-                    data-current={adapter.isSameDay(day, today) ? '' : undefined}
+                    data-current={adapter.isSameDay(day, now) ? '' : undefined}
                   >
                     {regularEvents.map((event) => (
                       <EventPopoverTrigger
