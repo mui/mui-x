@@ -37,7 +37,8 @@ export default function RowGroupingGroupingValueSetter() {
           // Since converting to decade is a lossy operation, directly using the decade value should be sufficient here
           year: value,
         }),
-        valueFormatter: (value) => (value ? `${value.toString().slice(-2)}'s` : ''),
+        renderCell: (params) =>
+          params.value ? `${params.value.toString().slice(-2)}'s` : '',
       },
     ],
     [data.columns],
