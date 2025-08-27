@@ -243,7 +243,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     parentId,
     getChildrenCount,
   }: AddItemsParameters<TreeViewBaseItem>) => {
-    const parentDepth = parentId == null ? 0 : selectorItemDepth(store.value, parentId);
+    const parentDepth = parentId == null ? -1 : selectorItemDepth(store.value, parentId);
 
     const newState = processItemsLookups({
       disabledItemsFocusable: params.disabledItemsFocusable,
