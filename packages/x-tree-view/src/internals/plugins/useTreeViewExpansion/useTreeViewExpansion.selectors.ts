@@ -1,9 +1,14 @@
 import { TreeViewItemId } from '../../../models';
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
-import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewItems';
+import {
+  selectorItemItemOrderedChildrenIdsLookup,
+  selectorItemMeta,
+  selectorItemOrderedChildrenIds,
+} from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
-const selectorExpansion: TreeViewRootSelector<UseTreeViewExpansionSignature> = (state) =>
+export const selectorExpansion: TreeViewRootSelector<UseTreeViewExpansionSignature> = (state) =>
   state.expansion;
 
 /**
@@ -58,4 +63,30 @@ export const selectorIsItemExpandable = createSelector(
 export const selectorItemExpansionTrigger = createSelector(
   [selectorExpansion],
   (expansionState) => expansionState.expansionTrigger,
+);
+
+/**
+ * Get the flat list of all items in the tree.
+ * @param {TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>} state The state of the tree view.
+ * @returns {TreeViewItemId[]} The flat list of all items in the tree.
+ */
+export const selectorItemExpansionFlatList = createSelector(
+  [selectorItemItemOrderedChildrenIdsLookup, selectorExpandedItemsMap],
+  (itemOrderedChildrenIds, expandedItemsMap) => {
+    function appendChildren(itemId: TreeViewItemId): TreeViewItemId[] {
+      if (!expandedItemsMap.has(itemId)) {
+        return [itemId];
+      }
+
+      const itemsWithDescendants: TreeViewItemId[] = [itemId];
+      const children = itemOrderedChildrenIds[itemId] || [];
+      for (const childId of children) {
+        itemsWithDescendants.push(...appendChildren(childId));
+      }
+
+      return itemsWithDescendants;
+    }
+
+    return (itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID] ?? []).flatMap(appendChildren);
+  },
 );

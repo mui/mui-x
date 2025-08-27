@@ -36,6 +36,16 @@ export const selectorItemMetaLookup = createSelector(
   (items) => items.itemMetaLookup,
 );
 
+/**
+ * Get the ordered children ids of all items.
+ * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
+ * @returns {{ [parentItemId: string]: TreeViewItemId[] }} The ordered children ids of all items.
+ */
+export const selectorItemItemOrderedChildrenIdsLookup = createSelector(
+  selectorTreeViewItemsState,
+  (items) => items.itemOrderedChildrenIdsLookup,
+);
+
 const EMPTY_CHILDREN: TreeViewItemId[] = [];
 
 /**
@@ -45,9 +55,8 @@ const EMPTY_CHILDREN: TreeViewItemId[] = [];
  * @returns {TreeViewItemId[]} The ordered children ids of the item.
  */
 export const selectorItemOrderedChildrenIds = createSelector(
-  [selectorTreeViewItemsState, (_, itemId: string | null) => itemId],
-  (itemsState, itemId) =>
-    itemsState.itemOrderedChildrenIdsLookup[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? EMPTY_CHILDREN,
+  [selectorItemItemOrderedChildrenIdsLookup, (_, itemId: string | null) => itemId],
+  (lookup, itemId) => lookup[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? EMPTY_CHILDREN,
 );
 
 /**
@@ -145,4 +154,14 @@ export const selectorCanItemBeFocused = createSelector(
 
     return !isDisabled;
   },
+);
+
+/**
+ * Get the current DOM structure of the tree.
+ * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
+ * @returns {boolean} The current DOM structure of the tree.
+ */
+export const selectorItemDomStructure = createSelector(
+  [selectorTreeViewItemsState],
+  (itemsState) => itemsState.domStructure,
 );
