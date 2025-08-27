@@ -411,7 +411,7 @@ useTreeViewItems.getInitialState = (params) => ({
     }),
     loading: false,
     error: null,
-    domStructure: 'flat',
+    domStructure: 'nested',
   },
 });
 
