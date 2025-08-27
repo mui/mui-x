@@ -62,7 +62,6 @@ export const useTreeItem = <
     parameters.itemId,
   );
 
-  console.log(useSelector(store, (state) => state));
   const { id, itemId, label, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef, propsEnhancers } = runItemPlugins(parameters);
