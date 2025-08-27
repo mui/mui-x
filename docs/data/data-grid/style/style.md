@@ -5,7 +5,7 @@
 ## Using the `sx` prop
 
 For one-off styles, the `sx` prop can be used.
-It allows to apply simple to complex customizations directly onto the Data Grid element.
+It lets you apply both simple and complex customizations directly to the Data Grid element.
 The keys accepted can be any CSS property as well as the custom properties provided by MUI.
 For more details, visit the [`sx` prop page](/system/getting-started/the-sx-prop/).
 
@@ -68,7 +68,7 @@ There are multiple ways to apply a custom CSS class on a cell.
 
 1. Using the`cellClassName` property of `GridColDef`:
 
-This property allows to set a CSS class that is applied on every cell of the column it was defined.
+This property lets you set a CSS class that is applied on every cell of the column it was defined.
 It can also be a function, which is called with a `GridCellParams` object.
 
 ```tsx
