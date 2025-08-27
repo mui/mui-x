@@ -294,8 +294,6 @@ async function getNextSemanticVersions(lastVersion) {
  * }>} Object containing version information
  */
 async function selectVersionType(majorVersion) {
-  console.log(`Fetching latest tag for major version ${majorVersion}...`);
-
   const { success, nextPatch, nextMinor, nextMajor } = await getNextSemanticVersions(majorVersion);
 
   let nextPatchDisplay = nextPatch;
@@ -893,7 +891,8 @@ async function main({ githubToken }) {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
-    const previousVersion = await findLatestTaggedVersion();
+    const latestTag = await findLatestTaggedVersion();
+    const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
     // If no arguments provided, use interactive menu to select version type
