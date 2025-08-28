@@ -14,7 +14,13 @@ _Aug 28, 2025_
 We'd like to extend a big thank you to the 19 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add new `SankeyChart`
+
+<img height="300" alt="Screenshot 2025-07-24 at 12 54 33" src="https://github.com/user-attachments/assets/d77bcec1-044b-48c6-b37d-d7b74793b91c" />
+
 - 🚀 Data Grid row grouping now supports row reordering
+
+  See the [Drag-and-drop group reordering](https://mui.com/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering) section for more details.
+
 - 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
@@ -25,22 +31,15 @@ The following are all team members who have contributed to this release:
 
 ### Data Grid
 
-From https://github.com/mui/mui-x/pull/18251
-
-- 🚀 Data Grid row grouping now supports row reordering (#18251)
-
-  See the [Drag-and-drop group reordering](https://mui.com/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering) section for more details.
-
 #### `@mui/x-data-grid@8.11.0`
 
-- [data grid] Fix focused column header scroll jump (#19323) @lauri865
+- [DataGrid] Fix focused column header scroll jump (#19323) @lauri865
 - [DataGrid] Bring `columnUnsortedIcon` slot back (#19268) @arminmeh
 - [DataGrid] Do not add `menu` role to the empty actions menu (#19338) @arminmeh
 - [DataGrid] Fix `columnsManagementRow` style override slot not working (#19097) @dwrth
 - [DataGrid] Fix pagination state synchronization issue (#19290) @MBilalShafi
 - [DataGrid] Fix scroll issue in R17 (#19265) @romgrk
 - [DataGrid] Hide column separator of non-resizable pinned column (#19277) @arminmeh
-- [docs][DataGrid] Add pagination number formatting doc with a demo (#19221) @siriwatknp
 
 #### `@mui/x-data-grid-pro@8.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -69,12 +68,6 @@ Same changes as in `@mui/x-date-pickers@8.11.0`.
 
 ### Charts
 
-From https://github.com/mui/mui-x/pull/18895
-
-- Add new `SankeyChart` under the `Unstable_` key.
-
-<img height="300" alt="Screenshot 2025-07-24 at 12 54 33" src="https://github.com/user-attachments/assets/d77bcec1-044b-48c6-b37d-d7b74793b91c" />
-
 #### `@mui/x-charts@8.11.0`
 
 - [charts] Add component to render axis labels (#19240) @alexfauquette
@@ -82,7 +75,6 @@ From https://github.com/mui/mui-x/pull/18895
 - [charts] Handle item identifier with data (#19295) @JCQuintas
 - [charts] Refactor optional chaining for props in PieChart, PieChartPro, and ScatterChartPro components (#19292) @sai6855
 - [charts] Remove unused `fill` and `stroke` properties (#19316) @sai6855
-- [charts][docs] Correct some small grammar mistakes (#19297) @mapache-salvaje
 
 #### `@mui/x-charts-pro@8.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -108,7 +100,10 @@ Internal changes.
 
 ### Docs
 
-- [tree-view][docs] Fix grammar and spelling mistakes (#19299) @mapache-salvaje
+- [docs][TreeView] Fix grammar and spelling mistakes (#19299) @mapache-salvaje
+- [docs][DataGrid] Add pagination number formatting doc with a demo (#19221) @siriwatknp
+- [docs][Charts] Correct some small grammar mistakes (#19297) @mapache-salvaje
+- [docs][DataGrid] Correct grammar mistakes (#19298) @mapache-salvaje
 
 ### Core
 
@@ -125,7 +120,6 @@ Internal changes.
 ### Miscellaneous
 
 - [ai-assistant] Make it clear that the API key must be private (#19244) @oliviertassinari
-- [data-grid][docs] Correct grammar mistakes (#19298) @mapache-salvaje
 - [infra] Add `synchronize` to workflow triggers (#19342) @michelengelen
 - [infra] Add charts docs folder in codowner (#19317) @alexfauquette
 - [infra] Fix publish workflow complaint (#19346) @JCQuintas
