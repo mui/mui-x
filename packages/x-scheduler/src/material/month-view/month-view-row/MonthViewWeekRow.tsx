@@ -65,7 +65,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       </div>
       {daysWithEvents.map(({ day, events, allDayEvents }, dayIdx) => {
         const isCurrentMonth = adapter.isSameMonth(day, visibleDate);
-        const isToday = adapter.isSameDay(day, today);
 
         const visibleAllDayEvents = allDayEvents.slice(0, maxEvents);
         const visibleEvents = events.slice(0, maxEvents - visibleAllDayEvents.length);
@@ -79,10 +78,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           <DayGrid.Cell
             ref={dayIdx === 0 ? firstDayRef : undefined}
             key={day.toString()}
+            data-current={adapter.isSameDay(day, today) ? '' : undefined}
             className={clsx(
               'MonthViewCell',
               !isCurrentMonth && 'OtherMonth',
-              isToday && 'Today',
               isWeekend(adapter, day) && 'Weekend',
             )}
             style={

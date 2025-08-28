@@ -8,7 +8,7 @@ import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
-import { useEventPosition } from '../../utils/useEventPosition';
+import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { SchedulerValidDate } from '../../models';
 import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
 import { TimeGridEventContext } from './TimeGridEventContext';
@@ -41,7 +41,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
 
-  const { position, duration } = useEventPosition({
+  const { position, duration } = useElementPositionInCollection({
     start,
     end,
     collectionStart: columnStart,

@@ -60,6 +60,10 @@ export type State = {
    */
   ampm: boolean;
   /**
+   * Whether the component should display the current time indicator.
+   */
+  showCurrentTimeIndicator: boolean;
+  /**
    * Preferences for the calendar.
    */
   preferences: CalendarPreferences;
@@ -84,6 +88,7 @@ const isEventReadOnlySelector = createSelector((state: State, event: CalendarEve
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   ampm: createSelector((state: State) => state.ampm),
+  showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
   preferences: createSelector((state: State) => state.preferences),

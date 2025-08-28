@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useAdapter } from './adapter/useAdapter';
 import { SchedulerValidDate } from '../models';
 
-export function useEventPosition(
-  parameters: useEventPosition.Parameters,
-): useEventPosition.ReturnValue {
+export function useElementPositionInCollection(
+  parameters: useElementPositionInCollection.Parameters,
+): useElementPositionInCollection.ReturnValue {
   const { start, end, collectionStart, collectionEnd } = parameters;
 
   const adapter = useAdapter();
@@ -26,7 +26,7 @@ export function useEventPosition(
   }, [adapter, collectionStart, collectionEnd, start, end]);
 }
 
-namespace useEventPosition {
+namespace useElementPositionInCollection {
   export interface Parameters {
     start: SchedulerValidDate;
     end: SchedulerValidDate;

@@ -71,8 +71,9 @@ export const AgendaView = React.memo(
             >
               <header
                 id={`DayHeaderCell-${day.toString()}`}
-                className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
+                className="DayHeaderCell"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+                data-current={adapter.isSameDay(day, today) ? '' : undefined}
               >
                 <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
                 <div className="WeekDayCell">
