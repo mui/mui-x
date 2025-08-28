@@ -242,7 +242,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getChildrenCount,
       initialDepth: parentDepth + 1,
       initialParentId: parentId,
-      ignoreChildren: true,
+      // ignoreChildren: true,
     });
 
     store.update((prevState) => {
