@@ -160,19 +160,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [store],
   );
 
-  const setTreeViewLoading = useEventCallback((isLoading: boolean) => {
-    store.update((prevState) => ({
-      ...prevState,
-      items: { ...prevState.items, loading: isLoading },
-    }));
-  });
-  const setTreeViewError = useEventCallback((error: Error | null) => {
-    store.update((prevState) => ({
-      ...prevState,
-      items: { ...prevState.items, error },
-    }));
-  });
-
   const setIsItemDisabled = useEventCallback(
     ({ itemId, shouldBeDisabled }: { itemId: string; shouldBeDisabled?: boolean }) => {
       store.update((prevState) => {
@@ -381,8 +368,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       preventItemUpdates,
       areItemUpdatesPrevented,
       addItems,
-      setTreeViewLoading,
-      setTreeViewError,
       removeChildren,
       handleItemClick,
     },

@@ -78,16 +78,6 @@ export interface UseTreeViewItemsInstance<R extends {}>
    */
   removeChildren: (parentId: TreeViewItemId | null) => void;
   /**
-   * Set the loading state of the tree.
-   * @param {boolean} loading True if the tree view is loading.
-   */
-  setTreeViewLoading: (loading: boolean) => void;
-  /**
-   * Set the error state of the tree.
-   * @param {Error | null} error The error on the tree view.
-   */
-  setTreeViewError: (error: Error | null) => void;
-  /**
    * Event handler to fire when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {TreeViewItemId} itemId The id of the item being clicked.
@@ -188,14 +178,6 @@ export interface UseTreeViewItemsState<R extends {}> {
      * Index of each child in the ordered children ids of its parent.
      */
     itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
-    /**
-     * The loading state of the tree.
-     */
-    loading: boolean;
-    /**
-     * The error state of the tree.
-     */
-    error: Error | null;
   };
 }
 

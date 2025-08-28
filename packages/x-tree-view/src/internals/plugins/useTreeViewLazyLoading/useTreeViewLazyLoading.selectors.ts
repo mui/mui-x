@@ -4,6 +4,8 @@ import {
   TreeViewRootSelectorForOptionalPlugin,
 } from '../../utils/selectors';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
+import { TREE_VIEW_ROOT_PARENT_ID } from '../useTreeViewItems';
+import { TreeViewItemId } from '../../../models';
 
 const selectorLazyLoading: TreeViewRootSelector<UseTreeViewLazyLoadingSignature> = (state) =>
   state.lazyLoading;
@@ -30,21 +32,21 @@ export const selectorIsLazyLoadingEnabled = createSelector(
 /**
  * Get the loading state for a tree item.
  * @param {TreeViewState<[UseTreeViewLazyLoadingSignature]>} state The state of the tree view.
- * @param {TreeViewItemId} itemId The id of the item to get the loading state of.
- * @returns {boolean} The loading state for the Tree Item.
+ * @param {TreeViewItemId | null} itemId The id of the item to get the loading state of. If null, will return the loading state of the tree view itself.
+ * @returns {boolean} The loading state of the provided item.
  */
 export const selectorIsItemLoading = createSelector(
-  [selectorDataSourceState, (_, itemId: string) => itemId],
-  (dataSourceState, itemId) => dataSourceState.loading[itemId] || false,
+  [selectorDataSourceState, (_, itemId: TreeViewItemId | null) => itemId],
+  (dataSourceState, itemId) => dataSourceState.loading[itemId ?? TREE_VIEW_ROOT_PARENT_ID] || false,
 );
 
 /**
  * Get the error for a tree item.
  * @param {TreeViewState<[UseTreeViewLazyLoadingSignature]>} state The state of the tree view.
- * @param {TreeViewItemId} itemId The id of the item to get the error for.
- * @returns {boolean} The error for the Tree Item.
+ * @param {TreeViewItemId | null} itemId The id of the item to get the error for. If null, will return the error status of the tree view itself.
+ * @returns {boolean} The error of the provided item.
  */
-export const selectorGetTreeItemError = createSelector(
-  [selectorDataSourceState, (_, itemId: string) => itemId],
-  (dataSourceState, itemId) => dataSourceState.errors[itemId] || null,
+export const selectorTreeItemError = createSelector(
+  [selectorDataSourceState, (_, itemId: TreeViewItemId | null) => itemId],
+  (dataSourceState, itemId) => dataSourceState.errors[itemId ?? TREE_VIEW_ROOT_PARENT_ID] || null,
 );
