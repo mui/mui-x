@@ -11,6 +11,9 @@ import { useIsHydrated } from '../hooks/useIsHydrated';
 export interface ChartsTextProps
   extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref' | 'style'>,
     Omit<GetWordsByLinesParams, 'props'> {
+  /**
+   * Style applied to text elements.
+   */
   style?: ChartsTextStyle;
   ownerState?: any;
 }
@@ -36,7 +39,7 @@ function ChartsText(props: ChartsTextProps) {
 
   const wordsByLines = React.useMemo(
     () => getWordsByLines({ props, needsComputation: isHydrated && text.includes('\n'), text }),
-    [style, text, isHydrated],
+    [props, text, isHydrated],
   );
 
   let startDy: number;
