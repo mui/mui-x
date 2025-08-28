@@ -18,6 +18,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     areEventsDraggable,
     areEventsResizable,
     ampm,
+    showCurrentTimeIndicator,
     ...forwardedProps
   } = props;
 
@@ -36,6 +37,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       areEventsDraggable,
       areEventsResizable,
       ampm,
+      showCurrentTimeIndicator,
     }),
     [
       events,
@@ -51,6 +53,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       areEventsDraggable,
       areEventsResizable,
       ampm,
+      showCurrentTimeIndicator,
     ],
   );
 

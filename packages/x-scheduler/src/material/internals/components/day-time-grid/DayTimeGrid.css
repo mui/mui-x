@@ -140,7 +140,7 @@
   border-radius: var(--radius-3);
 }
 
-.DayTimeGridHeaderDayNumber.Today {
+[data-current] .DayTimeGridHeaderDayNumber {
   background-color: var(--primary-3);
 }
 
@@ -168,6 +168,10 @@
   border-right: 1px solid var(--border-color);
   padding-inline: var(--space-2);
   text-align: end;
+}
+
+.DayTimeGridTimeAxisText.HiddenHourLabel {
+  opacity: 0;
 }
 
 .DayTimeGridTimeAxisText:not(:empty) {
@@ -207,4 +211,42 @@
 .DayTimeGridColumn[data-weekend],
 .DayTimeGridAllDayEventsCell[data-weekend] {
   background: var(--weekend-background);
+}
+
+.DayTimeGridCurrentTimeIndicator {
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: var(--y-position);
+  height: 1px;
+  background-color: var(--primary-8);
+  z-index: 2;
+}
+
+.DayTimeGridColumn:last-child .DayTimeGridCurrentTimeIndicator {
+  right: 0;
+}
+
+.DayTimeGridColumn:first-child .DayTimeGridCurrentTimeIndicator {
+  left: -6px;
+}
+
+.DayTimeGridColumn[data-current] .DayTimeGridCurrentTimeIndicator {
+  height: 2px;
+  right: 1px;
+  background-color: var(--primary-10);
+  z-index: 3;
+  margin: -0.5px;
+}
+
+.DayTimeGridCurrentTimeLabel {
+  position: absolute;
+  transform: translate(calc(-100%), -50%);
+  padding: 0 2px;
+  background-color: var(--primary-10);
+  color: var(--primary-1);
+  border-radius: var(--radius-3);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  white-space: nowrap;
 }

@@ -73,6 +73,11 @@ export interface EventCalendarParameters {
    */
   ampm?: boolean;
   /**
+   * Whether the component should display the current time indicator.
+   * @default true
+   */
+  showCurrentTimeIndicator?: boolean;
+  /**
    * Settings for the calendar.
    * @default { hideWeekends: false }
    */
