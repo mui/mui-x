@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { useEventCalendar } from '../../primitives/use-event-calendar';
+import {
+  EventCalendarParameters,
+  useEventCalendar,
+  useExtractEventCalendarParameters,
+} from '../../primitives/use-event-calendar';
 import '../index.css';
 
 /**
@@ -8,15 +12,17 @@ import '../index.css';
  * A clean solution will be implemented later.
  */
 export function StandaloneView(props: StandaloneViewProps) {
-  const { children, ...other } = props;
-
-  const contextValue = useEventCalendar(other);
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const contextValue = useEventCalendar(parameters);
 
   return (
-    <EventCalendarContext.Provider value={contextValue}>{children}</EventCalendarContext.Provider>
+    <EventCalendarContext.Provider value={contextValue}>
+      {forwardedProps.children}
+    </EventCalendarContext.Provider>
   );
 }
 
-export interface StandaloneViewProps extends useEventCalendar.Parameters {
+export interface StandaloneViewProps extends EventCalendarParameters {
+  // eslint-disable-next-line react/no-unused-prop-types
   children?: React.ReactNode;
 }
