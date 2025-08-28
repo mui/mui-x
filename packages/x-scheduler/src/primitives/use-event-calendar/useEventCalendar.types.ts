@@ -3,9 +3,10 @@ import { State } from './store';
 import {
   CalendarEvent,
   CalendarResource,
-  CalendarSettings,
+  CalendarPreferences,
   CalendarView,
   SchedulerValidDate,
+  CalendarPreferencesMenuConfig,
 } from '../models';
 import type { EventCalendarInstance } from './EventCalendarInstance';
 
@@ -73,10 +74,17 @@ export interface EventCalendarParameters {
    */
   ampm?: boolean;
   /**
-   * Settings for the calendar.
+   * Preferences for the calendar.
    * @default { hideWeekends: false }
    */
-  settings?: CalendarSettings;
+  preferences?: Partial<CalendarPreferences>;
+  /**
+   * Config of the preferences menu.
+   * Defines which options are visible in the menu.
+   * If `false`, the menu will be entirely hidden.
+   * @default { toggleWeekEndVisibility: true }
+   */
+  preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
 }
 
 export interface EventCalendarContextValue {
