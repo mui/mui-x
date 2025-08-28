@@ -10,6 +10,9 @@ const propNames = [
   'textAnchor',
   'textDecoration',
   'letterSpacing',
+  'stroke',
+  'strokeWidth',
+  'shapeRendering',
 ];
 export const filterAttributeSafeProperties = (props: any) => {
   const safe: Record<string, any> = {};

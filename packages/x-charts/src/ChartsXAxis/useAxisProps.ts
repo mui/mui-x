@@ -92,6 +92,31 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
     (!isScaleBand && domain.some(isInfinity)) ||
     position === 'none';
 
+  const axisLineProps = useSlotProps({
+    elementType: Line,
+    externalSlotProps: slotProps?.axisLine,
+    additionalProps: {
+      strokeLinecap: 'square' as const,
+      stroke: (theme.vars || theme).palette.text.primary,
+      strokeWidth: 1,
+      shapeRendering: 'crispEdges',
+      className: classes.line,
+    },
+    ownerState: {},
+  });
+
+  const axisTickProps = useSlotProps({
+    elementType: Tick,
+    externalSlotProps: slotProps?.axisTick,
+    additionalProps: {
+      stroke: (theme.vars || theme).palette.text.primary,
+      strokeWidth: 1,
+      shapeRendering: 'crispEdges',
+      className: classes.tick,
+    },
+    ownerState: {},
+  });
+
   return {
     xScale,
     defaultizedProps,
@@ -105,6 +130,8 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
     Label,
     axisTickLabelProps,
     axisLabelProps,
+    axisLineProps,
+    axisTickProps,
     reverse,
     isRtl,
   };

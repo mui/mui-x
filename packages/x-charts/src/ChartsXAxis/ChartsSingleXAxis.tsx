@@ -29,6 +29,8 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     Label,
     axisTickLabelProps,
     axisLabelProps,
+    axisLineProps,
+    axisTickProps,
     reverse,
     isRtl,
   } = useAxisProps(inProps);
@@ -109,9 +111,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
       className={classes.root}
       sx={sx}
     >
-      {!disableLine && (
-        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
-      )}
+      {!disableLine && <Line x1={left} x2={left + width} {...axisLineProps} />}
 
       {xTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
@@ -128,13 +128,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
             transform={`translate(${tickOffset}, 0)`}
             className={classes.tickContainer}
           >
-            {!disableTicks && showTick && (
-              <Tick
-                y2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
+            {!disableTicks && showTick && <Tick y2={positionSign * tickSize} {...axisTickProps} />}
 
             {tickLabel !== undefined && showTickLabel && (
               <TickLabel

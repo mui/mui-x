@@ -46,6 +46,8 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     Label,
     axisTickLabelProps,
     axisLabelProps,
+    axisLineProps,
+    axisTickProps,
   } = useAxisProps(inProps);
 
   if (!isBandScale(xScale)) {
@@ -106,9 +108,7 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
       className={classes.root}
       sx={sx}
     >
-      {!disableLine && (
-        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
-      )}
+      {!disableLine && <Line x1={left} x2={left + width} {...axisLineProps} />}
 
       {xTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
@@ -130,9 +130,7 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
             className={classes.tickContainer}
             data-group-index={groupIndex}
           >
-            {!disableTicks && !ignoreTick && showTick && (
-              <Tick y2={tickYSize} className={classes.tick} {...slotProps?.axisTick} />
-            )}
+            {!disableTicks && !ignoreTick && showTick && <Tick y2={tickYSize} {...axisTickProps} />}
 
             {tickLabel !== undefined && (
               <TickLabel

@@ -27,7 +27,8 @@ function ChartsSingleYAxis(inProps: ChartsYAxisProps) {
     Label,
     axisTickLabelProps,
     axisLabelProps,
-    lineProps,
+    axisLineProps,
+    axisTickProps,
     isRtl,
   } = useAxisProps(inProps);
 
@@ -96,7 +97,7 @@ function ChartsSingleYAxis(inProps: ChartsYAxisProps) {
       className={classes.root}
       sx={sx}
     >
-      {!disableLine && <Line y1={top} y2={top + height} className={classes.line} {...lineProps} />}
+      {!disableLine && <Line y1={top} y2={top + height} {...axisLineProps} />}
 
       {yTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset, value } = item;
@@ -118,13 +119,7 @@ function ChartsSingleYAxis(inProps: ChartsYAxisProps) {
             transform={`translate(0, ${tickOffset})`}
             className={classes.tickContainer}
           >
-            {!disableTicks && (
-              <Tick
-                x2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
+            {!disableTicks && <Tick x2={positionSign * tickSize} {...axisTickProps} />}
 
             {tickLabel !== undefined && !skipLabel && (
               <TickLabel
