@@ -47,10 +47,6 @@ GaugeValueText.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Height of a text line (in `em`).
-   */
-  lineHeight: PropTypes.number,
-  /**
    * If `true`, the line width is computed.
    * @default false
    */
