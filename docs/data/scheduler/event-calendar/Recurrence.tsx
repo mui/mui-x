@@ -11,7 +11,7 @@ export default function Recurrence() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
-    <div style={{ height: '500px', width: '100%' }}>
+    <div style={{ height: '600px', width: '100%' }}>
       <EventCalendar
         events={events}
         resources={resources}

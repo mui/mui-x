@@ -10,7 +10,7 @@ export default function DefaultVisibleDate() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '500px', width: '100%' }}>
+    <div style={{ height: '600px', width: '100%' }}>
       <EventCalendar
         events={events}
         resources={resources}
