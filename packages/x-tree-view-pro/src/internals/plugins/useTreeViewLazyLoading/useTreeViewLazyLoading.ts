@@ -119,7 +119,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
     // reads from the value from the cache
     const cachedData = cache.get(cacheKey);
-    console.log('HEY', cache);
     if (cachedData !== undefined && cachedData !== -1) {
       if (id != null) {
         nestedDataManager.setRequestSettled(id);
