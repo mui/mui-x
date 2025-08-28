@@ -6,6 +6,7 @@ import {
   CalendarResource,
   CalendarResourceId,
   CalendarView,
+  TimelineView,
   CalendarSettings,
   CalendarEventOccurrence,
   CalendarEventOccurrenceWithPosition,
@@ -26,13 +27,17 @@ export type State = {
    */
   visibleDate: SchedulerValidDate;
   /**
-   * The view displayed in the calendar.
+   * The current view displayed in the calendar or timeline.
    */
-  view: CalendarView;
+  view: CalendarView | TimelineView;
   /**
-   * The views available in the calendar.
+   * The calendarViews available in the calendar.
    */
-  views: CalendarView[];
+  calendarViews: CalendarView[];
+  /**
+   * The calendarViews available in the timeline.
+   */
+  timelineViews: TimelineView[];
   /**
    * The events available in the calendar.
    */
@@ -67,6 +72,14 @@ export type State = {
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
+  /**
+   * Whether the timeline view is enabled.
+   */
+  enableTimeline?: boolean;
+  /**
+   * The config of the current mode.
+   */
+  layoutMode: 'calendar' | 'timeline';
 };
 
 // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
@@ -79,9 +92,14 @@ export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   ampm: createSelector((state: State) => state.ampm),
   view: createSelector((state: State) => state.view),
-  views: createSelector((state: State) => state.views),
+  calendarViews: createSelector((state: State) => state.calendarViews),
+  timelineViews: createSelector((state: State) => state.timelineViews),
   settings: createSelector((state: State) => state.settings),
-  hasDayView: createSelector((state: State) => state.views.includes('day')),
+  isTimelineEnabled: createSelector((state: State) => state.enableTimeline),
+  layoutMode: createSelector((state: State) => state.layoutMode),
+  hasDayView: createSelector(
+    (state: State) => state.layoutMode === 'calendar' && state.calendarViews.includes('day'),
+  ),
   resources: createSelector((state: State) => state.resources),
   visibleResourcesList: createSelectorMemoized(
     (state: State) => state.resources,

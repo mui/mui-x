@@ -9,14 +9,14 @@ import type { useEventCalendar } from '../use-event-calendar';
  */
 function useAssertStateValidityOutsideOfProduction(store: useEventCalendar.Store) {
   useStore(store, () => {
-    const views = selectors.views(store.state);
+    const calendarViews = selectors.calendarViews(store.state);
     const view = selectors.view(store.state);
 
-    if (!views.includes(view)) {
+    if (!calendarViews.includes(view)) {
       warn(
         [
-          `Event Calendar: The current view "${view}" is not compatible with the available views: ${views.join(', ')}.`,
-          'Please ensure that the current view is included in the views array.',
+          `Event Calendar: The current view "${view}" is not compatible with the available calendarViews: ${calendarViews.join(', ')}.`,
+          'Please ensure that the current view is included in the calendarViews array.',
         ].join('\n'),
       );
     }

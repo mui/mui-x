@@ -6,3 +6,7 @@
 .mui-x-scheduler .Button.SettingsMenuButton {
   padding: var(--space-1);
 }
+
+.SettingsIcon {
+  margin: var(--space-05);
+}

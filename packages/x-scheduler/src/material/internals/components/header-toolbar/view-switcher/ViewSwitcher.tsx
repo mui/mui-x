@@ -6,19 +6,22 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
-import { CalendarView } from '../../../../../primitives/models';
+import { CalendarView, TimelineView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 
+interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
+  views: (CalendarView | TimelineView)[];
+}
+
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
-  props: React.HTMLAttributes<HTMLDivElement>,
+  props: ViewSwitcherProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, ...other } = props;
+  const { className, views, ...other } = props;
 
   const { store, instance } = useEventCalendarContext();
-  const views = useStore(store, selectors.views);
   const view = useStore(store, selectors.view);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -39,11 +42,13 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
 
-  const [dropdownLabel, setDropdownLabel] = React.useState<CalendarView>(dropdown[0]);
+  const [dropdownLabel, setDropdownLabel] = React.useState<CalendarView | TimelineView>(
+    dropdown[0],
+  );
 
   // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
   React.useEffect(() => {
-    if (dropdown.includes(view)) {
+    if ((dropdown as (CalendarView | TimelineView)[]).includes(view)) {
       setDropdownLabel(view);
     }
   }, [view]);
@@ -79,7 +84,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
               {translations[dropdownLabel]}
             </button>
             <Menu.Root>
-              <Menu.Trigger className="MainItem" data-view="other">
+              <Menu.Trigger className="MainItem" data-view="other" aria-label="Show more views">
                 <ChevronDown size={16} strokeWidth={1.5} />
               </Menu.Trigger>
               <Menu.Portal container={containerRef}>

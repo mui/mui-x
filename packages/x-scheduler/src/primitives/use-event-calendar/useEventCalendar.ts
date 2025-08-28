@@ -17,10 +17,12 @@ import {
   CalendarView,
   CalendarViewConfig,
   SchedulerValidDate,
+  TimelineView,
 } from '../models';
 import { useAssertStateValidity } from '../utils/useAssertStateValidity';
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+const DEFAULT_TIMELINE_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
 const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
 const EMPTY_ARRAY: any[] = [];
 
@@ -38,7 +40,8 @@ export function useEventCalendar(
     resources: resourcesProp = EMPTY_ARRAY,
     view: viewProp,
     defaultView = 'week',
-    views = DEFAULT_VIEWS,
+    calendarViews = DEFAULT_VIEWS,
+    timelineViews = DEFAULT_TIMELINE_VIEWS,
     onViewChange,
     visibleDate: visibleDateProp,
     defaultVisibleDate = defaultVisibleDateFallback,
@@ -47,6 +50,7 @@ export function useEventCalendar(
     areEventsResizable = false,
     ampm = true,
     settings: settingsProp = DEFAULT_SETTINGS,
+    enableTimeline = false,
   } = parameters;
 
   const store = useRefWithInit(
@@ -58,12 +62,15 @@ export function useEventCalendar(
         visibleResources: new Map(),
         visibleDate: visibleDateProp ?? defaultVisibleDate,
         view: viewProp ?? defaultView,
-        views,
+        calendarViews,
+        timelineViews,
         areEventsDraggable,
         areEventsResizable,
         ampm,
         settings: settingsProp,
         viewConfig: null,
+        enableTimeline,
+        layoutMode: 'calendar',
       }),
   ).current;
 
@@ -88,10 +95,12 @@ export function useEventCalendar(
       adapter,
       events: eventsProp,
       resources: resourcesProp,
-      views,
+      calendarViews,
+      timelineViews,
       areEventsDraggable,
       areEventsResizable,
       ampm,
+      enableTimeline,
     };
     if (viewProp !== undefined) {
       partialState.view = viewProp;
@@ -110,8 +119,10 @@ export function useEventCalendar(
     visibleDateProp,
     areEventsDraggable,
     areEventsResizable,
-    views,
+    calendarViews,
+    timelineViews,
     ampm,
+    enableTimeline,
   ]);
 
   const setVisibleDate = useEventCallback(
@@ -125,11 +136,14 @@ export function useEventCalendar(
   );
 
   const setView: useEventCalendar.Instance['setView'] = useEventCallback((view, event) => {
-    if (!store.state.views.includes(view)) {
+    if (
+      !store.state.calendarViews.includes(view as CalendarView) &&
+      !(enableTimeline && store.state.timelineViews.includes(view as TimelineView))
+    ) {
       throw new Error(
         [
-          `Event Calendar: The view "${view}" provided to the setView method is not compatible with the available views: ${views.join(', ')}.`,
-          'Please ensure that the requested view is included in the views array.',
+          `Event Calendar: The view "${view}" provided to the setView method is not compatible with the available calendarViews: ${calendarViews.join(', ')}.`,
+          'Please ensure that the requested view is included in the calendarViews array.',
         ].join('\n'),
       );
     }
@@ -188,9 +202,9 @@ export function useEventCalendar(
 
   const switchToDay: useEventCalendar.Instance['switchToDay'] = useEventCallback(
     (visibleDate, event) => {
-      if (!store.state.views.includes('day')) {
+      if (!store.state.calendarViews.includes('day')) {
         throw new Error(
-          'The "day" view is disabled on your Event Calendar. Please ensure that "day" is included in the views prop before using the switchToDay method.',
+          'The "day" view is disabled on your Event Calendar. Please ensure that "day" is included in the calendarViews prop before using the switchToDay method.',
         );
       }
       setVisibleDate(visibleDate, event);
@@ -219,6 +233,22 @@ export function useEventCalendar(
     return () => store.set('viewConfig', null);
   });
 
+  const setLayoutMode: useEventCalendar.Instance['setLayoutMode'] = useEventCallback(
+    (layoutMode) => {
+      if (!store.state.enableTimeline && layoutMode === 'timeline') {
+        throw new Error(
+          [
+            `Event Calendar: The layout mode "${layoutMode}" is not enabled.`,
+            'Please ensure that the timeline view is enabled in the calendar settings.',
+          ].join('\n'),
+        );
+      }
+
+      store.set('layoutMode', layoutMode);
+      store.set('view', store.state.timelineViews[0]);
+    },
+  );
+
   const instanceRef = React.useRef<useEventCalendar.Instance>({
     setView,
     updateEvent,
@@ -230,6 +260,7 @@ export function useEventCalendar(
     setVisibleResources,
     setSettings,
     setViewConfig,
+    setLayoutMode,
   });
   const instance = instanceRef.current;
 
@@ -261,14 +292,18 @@ export namespace useEventCalendar {
      */
     defaultView?: CalendarView;
     /**
-     * The views available in the calendar.
-     * @default ["week", "day", "month", "agenda"]
+     * The calendarViews available in the calendar.
      */
-    views?: CalendarView[];
+    calendarViews?: CalendarView[];
+    /**
+     * The calendarViews available in the timeline.
+     * @default ['time', "weeks", "days", "months", "years"]
+     */
+    timelineViews?: TimelineView[];
     /**
      * Event handler called when the view changes.
      */
-    onViewChange?: (view: CalendarView, event: React.UIEvent | Event) => void;
+    onViewChange?: (view: CalendarView | TimelineView, event: React.UIEvent | Event) => void;
     /**
      * The date currently used to determine the visible date range in each view.
      */
@@ -303,6 +338,10 @@ export namespace useEventCalendar {
      * @default { hideWeekends: false }
      */
     settings?: CalendarSettings;
+    /**
+     * Whether the timeline view is enabled.
+     */
+    enableTimeline?: boolean;
   }
 
   export interface ReturnValue {
@@ -320,7 +359,7 @@ export namespace useEventCalendar {
     /**
      * Sets the view of the calendar.
      */
-    setView: (view: CalendarView, event: React.UIEvent | Event) => void;
+    setView: (view: CalendarView | TimelineView, event: React.UIEvent | Event) => void;
     /**
      * Updates an event in the calendar.
      */
@@ -358,6 +397,10 @@ export namespace useEventCalendar {
      * Returns the cleanup function.
      */
     setViewConfig: (getter: CalendarViewConfig) => () => void;
+    /**
+     * Sets the current layout mode.
+     */
+    setLayoutMode: (layoutMode: 'calendar' | 'timeline') => void;
   }
 
   export type Store = BaseStore<State>;

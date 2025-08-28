@@ -125,7 +125,7 @@ describe('<MonthView />', () => {
 
   it('should render day numbers as plain text when the day view is not enabled', () => {
     render(
-      <StandaloneView {...standaloneDefaults} views={['week', 'month']}>
+      <StandaloneView {...standaloneDefaults} calendarViews={['week', 'month']}>
         <MonthView />
       </StandaloneView>,
     );
