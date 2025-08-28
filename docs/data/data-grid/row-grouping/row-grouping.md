@@ -424,7 +424,7 @@ This method should return the updated row based on the groupKey (`value`) that c
 const columns: GridColDef[] = [
   {
     field: 'composer',
-    groupingValueGetter: (value) => value.name,
+    valueGetter: (value) => value?.name,
     groupingValueSetter: (value, row) => ({
       ...row,
       composer: {
