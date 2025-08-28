@@ -6,8 +6,6 @@
   width: 100%;
   display: flex;
   gap: var(--space-4);
-  height: 100vh;
-  height: 100dvh;
 }
 
 .EventCalendarSidePanel {
