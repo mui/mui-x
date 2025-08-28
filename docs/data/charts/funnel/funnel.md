@@ -8,6 +8,35 @@ components: FunnelChart, FunnelPlot
 
 <p class="description">Funnel charts let you express quantity evolution along a process, such as audience engagement, population education levels, or yields of multiple processes.</p>
 
+## Guidelines
+
+Funnel charts are specifically designed to visualize sequential processes where quantities decrease at each stage, making them ideal for analyzing conversion rates, process efficiency, and identifying bottlenecks in workflows.
+
+- **Process visualization**: Perfect for showing how quantities flow through sequential stages
+- **Conversion analysis**: Identify where the biggest drop-offs occur in multi-step processes
+- **Bottleneck detection**: Quickly spot stages that need improvement or optimization
+- **Progress tracking**: Monitor how entities move through defined stages or levels
+
+**When to use funnel charts:**
+
+- You have sequential stages where quantities naturally decrease
+- You want to analyze conversion rates or process efficiency
+- You need to identify bottlenecks in workflows or user journeys
+- You're tracking progress through defined stages (sales pipeline, user onboarding)
+- The order of stages is meaningful and progressive
+
+**Data requirements:**
+
+- Sequential stages with logical order and progression
+- Positive numerical values that generally decrease through stages
+- Each stage should represent a subset of the previous stage
+- Works best with 3-8 stages (too many can become cluttered)
+- Clear, descriptive labels for each stage
+
+**Choose funnel charts when:** you're analyzing processes with natural drop-offs, tracking conversions through multiple steps, or when the "funnel" metaphor helps communicate your data story effectively.
+
+**Use pyramid variation** when values increase through stages, or when you want to emphasize growth rather than conversion. Consider **gap spacing** to highlight transition points between stages.
+
 ## Basics
 
 Funnel charts series must contain a `data` property containing an array of objects.

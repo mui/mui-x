@@ -8,6 +8,33 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 
 <p class="description">Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
 
+## Guidelines
+
+Line charts are the go-to choice for visualizing trends and changes over continuous periods. They excel at revealing patterns in time-series data and showing relationships between variables. Key strengths include:
+
+- **Trend visualization**: Perfect for showing how values change over time (stock prices, website traffic, temperature)
+- **Pattern recognition**: Easy to spot trends, cycles, seasonality, and anomalies in data
+- **Multiple series comparison**: Compare trends across different categories or datasets simultaneously
+- **Continuous data**: Ideal for data points that have a natural progression or sequence
+
+**When to use line charts:**
+
+- You have time-series data or any continuous scale
+- The focus is on trends and changes rather than individual values
+- You want to show the relationship between two continuous variables
+- You need to display multiple data series for comparison
+- Your data points are connected in a meaningful sequence
+
+**Data requirements:**
+
+- At least one continuous dimension (typically time on x-axis)
+- One or more numerical dimensions for the y-axis
+- Data points should have a logical connection or sequence
+- Works best with evenly spaced intervals
+- Can handle missing data points with interpolation
+
+**Choose line charts over bars when:** continuity matters more than precise individual values, you're showing trends over time, or when you have many data points that would make bars cluttered.
+
 ## Basics
 
 ### Data format

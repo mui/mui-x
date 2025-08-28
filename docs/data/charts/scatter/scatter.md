@@ -8,6 +8,35 @@ components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ChartsWrappe
 
 <p class="description">Scatter charts express the relation between two variables, using points in a surface.</p>
 
+## Guidelines
+
+Scatter charts are the ideal choice for exploring relationships between two continuous variables and identifying patterns, correlations, or outliers in your data. They excel at revealing insights that other chart types might miss.
+
+- **Correlation analysis**: Perfect for showing positive, negative, or no correlation between two variables
+- **Pattern discovery**: Identify clusters, trends, and outliers in multi-dimensional data
+- **Distribution visualization**: See how data points are spread across two dimensions
+- **Outlier detection**: Easily spot data points that don't follow the general pattern
+
+**When to use scatter charts:**
+
+- You want to explore the relationship between two continuous variables
+- You're looking for correlations, patterns, or trends in your data
+- You need to identify outliers or anomalies
+- You want to show the distribution of data points across two dimensions
+- You're conducting statistical analysis or data exploration
+
+**Data requirements:**
+
+- Two continuous numerical variables (x and y coordinates)
+- Optional third variable for color coding or sizing points
+- Works well with any number of data points (from dozens to thousands)
+- Each point represents a single observation or entity
+- No requirement for data to be sorted or sequential
+
+**Choose scatter charts when:** the relationship between variables is more important than individual values, you're doing exploratory data analysis, or when you want to identify patterns that might not be obvious in other chart formats.
+
+**Add trend lines** to highlight correlations, use **color coding** to show additional dimensions, or vary **point sizes** to represent a third variable for richer data storytelling.
+
 ## Basics
 
 Scatter chart series should contain a `data` property containing an array of objects.

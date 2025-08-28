@@ -8,6 +8,35 @@ components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent
 
 <p class="description">Sankey charts are great for visualizing flows between different elements.</p>
 
+## Guidelines
+
+Sankey charts excel at visualizing flows, transfers, and connections between different entities, making complex relationships and resource movements easy to understand through proportional link widths.
+
+- **Flow visualization**: Perfect for showing how quantities move between different states, categories, or entities
+- **Resource tracking**: Ideal for energy flows, budget allocations, migration patterns, or supply chains
+- **Network analysis**: Visualize connections and transfers in complex systems
+- **Proportional relationships**: Link thickness represents quantity, making relative flows immediately apparent
+
+**When to use Sankey charts:**
+
+- You have data representing flows or transfers between entities
+- You want to show how quantities are distributed across different paths
+- You need to visualize complex networks with weighted connections
+- You're analyzing resource allocation, process flows, or migration patterns
+- The thickness of connections meaningfully represents quantity or importance
+
+**Data requirements:**
+
+- Source-target relationships with associated quantities
+- Clear entity definitions (nodes) that can send/receive flows
+- Positive numerical values representing flow quantities
+- Logical flow direction (from sources to targets)
+- Works best when total inflows equal total outflows for balanced visualization
+
+**Choose Sankey charts when:** you need to show how things flow through a system, visualize resource allocation or redistribution, track multi-step processes, or when the proportional thickness of connections adds insight to your data story.
+
+**Common applications:** energy flows, financial transfers, user journey analysis, supply chain visualization, and demographic migrations.
+
 :::info
 This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
 :::

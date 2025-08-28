@@ -8,6 +8,35 @@ components: FunnelChart, FunnelPlot
 
 <p class="description">The pyramid chart is a variation of the funnel chart.</p>
 
+## Guidelines
+
+Pyramid charts are ideal for visualizing hierarchical data or showing how quantities build up through progressive levels, making them perfect for displaying demographic data, organizational structures, or any data that naturally forms a pyramid shape.
+
+- **Hierarchical visualization**: Perfect for showing data with natural hierarchical relationships
+- **Population analysis**: Ideal for age demographics, organizational levels, or skill distributions
+- **Foundation-to-peak progression**: Show how smaller segments build toward a larger base or peak
+- **Comparative hierarchy**: Compare different pyramid structures side by side
+
+**When to use pyramid charts:**
+
+- Your data has a natural hierarchical or layered structure
+- You want to show how smaller categories contribute to larger ones
+- You're displaying demographic data (age pyramids, population distribution)
+- You need to visualize organizational hierarchies or skill levels
+- The pyramid metaphor helps communicate your data story
+
+**Data requirements:**
+
+- Hierarchical or layered categorical data
+- Positive numerical values with meaningful relationships between levels
+- Natural ordering from base to peak (or vice versa)
+- Works best with 3-7 levels for clarity
+- Clear labels that convey the hierarchical relationship
+
+**Choose pyramid charts when:** your data naturally forms a pyramid structure, you're showing demographic distributions, organizational hierarchies, or when the pyramid shape adds meaning to your data presentation.
+
+**Direction matters:** Use ascending pyramids for growth/building concepts, descending for filtering/reduction concepts. Consider **proportional segments** when relative sizes within levels are important.
+
 ## Pyramid Chart
 
 To create a pyramid chart, set the `curve` property to `pyramid` in the series.
