@@ -87,11 +87,6 @@ export interface ChartsAxisProps extends TickParams {
    */
   disableTicks?: boolean;
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill?: string;
-  /**
    * The style applied to ticks text.
    */
   tickLabelStyle?: ChartsTextProps['style'];
@@ -110,11 +105,6 @@ export interface ChartsAxisProps extends TickParams {
    * The label of the axis.
    */
   label?: string;
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke?: string;
   /**
    * The size of the ticks.
    * @default 6

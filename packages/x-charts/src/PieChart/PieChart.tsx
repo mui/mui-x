@@ -144,13 +144,13 @@ const PieChart = React.forwardRef(function PieChart(
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
         legendPosition={props.slotProps?.legend?.position}
-        legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
+        legendDirection={props.slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
       >
         {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
-            direction={props?.slotProps?.legend?.direction ?? 'vertical'}
+            direction={props.slotProps?.legend?.direction ?? 'vertical'}
             slots={slots}
             slotProps={slotProps}
           />

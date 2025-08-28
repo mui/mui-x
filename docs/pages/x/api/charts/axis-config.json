@@ -20,7 +20,6 @@
         "description": "'nice' | 'strict' | ((min: number, max: number) =&gt; { min: number; max: number })"
       }
     },
-    "fill": { "type": { "description": "string" }, "default": "'currentColor'" },
     "height": { "type": { "description": "number" }, "default": "30" },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
@@ -36,7 +35,6 @@
       "default": "{}"
     },
     "slots": { "type": { "description": "Partial&lt;ChartsAxisSlots&gt;" }, "default": "{}" },
-    "stroke": { "type": { "description": "string" }, "default": "'currentColor'" },
     "sx": { "type": { "description": "SxProps" } },
     "tickInterval": {
       "type": { "description": "'auto' | ((value: any, index: number) =&gt; boolean) | any[]" },
