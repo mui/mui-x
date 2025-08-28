@@ -5,29 +5,31 @@ import {
   GridColDef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
-import { useMovieData, Movie } from '@mui/x-data-grid-generator';
+import { useMovieData } from '@mui/x-data-grid-generator';
 
 export default function RowGroupingGroupingValueGetter() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 
-  const columnsWithComposer = React.useMemo(
-    () => [
-      ...data.columns,
-      {
-        field: 'composer',
-        headerName: 'Composer',
-        valueGetter: (value: { name: string }) => value.name,
-        width: 200,
-      } as GridColDef<Movie, string>,
-      {
-        field: 'decade',
-        headerName: 'Decade',
-        valueGetter: (value, row) => Math.floor(row.year / 10) * 10,
-        valueFormatter: (value: number | null) =>
-          value ? `${value.toString().slice(-2)}'s` : '',
-      } as GridColDef<Movie, number, string>,
-    ],
+  const columnsWithComposer = React.useMemo<GridColDef[]>(
+    () =>
+      data.columns.map((column) => {
+        if (column.field === 'year') {
+          return {
+            field: 'year',
+            headerName: 'Year',
+            type: 'number',
+            groupingValueGetter: (value) => {
+              const yearDecade = Math.floor(value / 10) * 10;
+              return `${yearDecade.toString().slice(-2)}'s`;
+            },
+            valueFormatter: (value) => (value ? `${value}` : ''),
+            availableAggregationFunctions: ['max', 'min'],
+          };
+        }
+        return column;
+      }),
+
     [data.columns],
   );
 
@@ -35,7 +37,7 @@ export default function RowGroupingGroupingValueGetter() {
     apiRef,
     initialState: {
       rowGrouping: {
-        model: ['composer', 'decade'],
+        model: ['year'],
       },
     },
   });
