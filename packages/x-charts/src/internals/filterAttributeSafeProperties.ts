@@ -12,16 +12,19 @@ const propNames = [
   'letterSpacing',
 ];
 export const filterAttributeSafeProperties = (props: any) => {
-  return {
-    safe: Object.fromEntries(
-      Object.entries(props).filter(
-        ([key, value]) => value !== undefined && propNames.includes(key),
-      ),
-    ),
-    unsafe: Object.fromEntries(
-      Object.entries(props).filter(
-        ([key, value]) => value !== undefined && !propNames.includes(key),
-      ),
-    ),
-  };
+  const safe: Record<string, any> = {};
+  const unsafe: Record<string, any> = {};
+
+  for (const key in props) {
+    if (props.hasOwnProperty(key) && props[key] !== undefined) {
+      const value = props[key];
+      if (propNames.includes(key)) {
+        safe[key] = value;
+      } else {
+        unsafe[key] = value;
+      }
+    }
+  }
+
+  return { safe, unsafe };
 };

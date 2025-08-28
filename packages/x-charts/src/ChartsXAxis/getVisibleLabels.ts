@@ -8,25 +8,31 @@ import { getWordsByLines } from '../internals/getWordsByLines';
 export function getVisibleLabels<T extends TickItemType>(
   xTicks: T[],
   {
-    tickLabelStyle: style,
+    tickLabelProps,
     tickLabelInterval,
     tickLabelMinGap,
     reverse,
     isMounted,
     isXInside,
-  }: Pick<ChartsXAxisProps, 'tickLabelInterval' | 'tickLabelStyle'> &
+  }: Pick<ChartsXAxisProps, 'tickLabelInterval'> &
     Pick<ComputedXAxis, 'reverse'> & {
       isMounted: boolean;
       tickLabelMinGap: NonNullable<ChartsXAxisProps['tickLabelMinGap']>;
       isXInside: (x: number) => boolean;
+      tickLabelProps: { style?: React.CSSProperties };
     },
 ): Set<T> {
+  const style = { ...tickLabelProps, ...tickLabelProps.style };
   const getTickLabelSize = (tick: T) => {
     if (!isMounted || tick.formattedValue === undefined) {
       return { width: 0, height: 0 };
     }
 
-    const tickSizes = getWordsByLines({ style, needsComputation: true, text: tick.formattedValue });
+    const tickSizes = getWordsByLines({
+      props: tickLabelProps,
+      needsComputation: true,
+      text: tick.formattedValue,
+    });
 
     return {
       width: Math.max(...tickSizes.map((size) => size.width)),
@@ -61,7 +67,11 @@ export function getVisibleLabels<T extends TickItemType>(
       /* Measuring text width is expensive, so we need to delay it as much as possible to improve performance. */
       const { width, height } = getTickLabelSize(item);
 
-      const distance = getMinXTranslation(width, height, style?.angle);
+      const distance = getMinXTranslation(
+        width,
+        height,
+        'angle' in style ? (style.angle as number) : 0,
+      );
 
       const currentTextLimit = textPosition - (direction * distance) / 2;
       if (

@@ -98,10 +98,15 @@ let domCleanTimeout: ReturnType<typeof setTimeout> | undefined;
  * @param style The style applied
  * @returns width and height of the text
  */
-export const getStringSize = (text: string | number, style: React.CSSProperties = {}) => {
+export const getStringSize = (
+  text: string | number,
+  props: { style?: React.CSSProperties } = {},
+) => {
   if (text === undefined || text === null || isSsr()) {
     return { width: 0, height: 0 };
   }
+
+  const style = { ...props, ...props.style };
 
   const str = `${text}`;
   const styleString = getStyleString(style);

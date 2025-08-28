@@ -71,7 +71,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {
-    tickLabelStyle: axisTickLabelProps.style,
+    tickLabelProps: axisTickLabelProps,
     tickLabelInterval,
     tickLabelMinGap,
     reverse,
@@ -87,7 +87,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     return null;
   }
 
-  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelHeight = label ? getStringSize(label, axisLabelProps).height : 0;
   const labelRefPoint = {
     x: left + width / 2,
     y: positionSign * axisHeight,
@@ -100,13 +100,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
   );
 
   const tickLabels = isHydrated
-    ? shortenLabels(
-        visibleLabels,
-        drawingArea,
-        tickLabelsMaxHeight,
-        isRtl,
-        axisTickLabelProps.style,
-      )
+    ? shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, isRtl, axisTickLabelProps)
     : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 
   return (

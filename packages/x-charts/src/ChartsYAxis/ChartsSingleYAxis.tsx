@@ -81,13 +81,13 @@ function ChartsSingleYAxis(inProps: ChartsYAxisProps) {
   const tickLabelsMaxWidth = Math.max(
     0,
     axisWidth -
-      (label ? getStringSize(label, axisLabelProps.style).height + AXIS_LABEL_TICK_LABEL_GAP : 0) -
+      (label ? getStringSize(label, axisLabelProps).height + AXIS_LABEL_TICK_LABEL_GAP : 0) -
       tickSize -
       TICK_LABEL_GAP,
   );
 
   const tickLabels = isHydrated
-    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)
+    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps)
     : new Map(Array.from(yTicks).map((item) => [item, item.formattedValue]));
 
   return (

@@ -1,12 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
+import {
+  GetWordsByLinesParams,
+  getWordsByLines,
+  type ChartsTextStyle,
+} from '../internals/getWordsByLines';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 
 export interface ChartsTextProps
   extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref' | 'style'>,
-    GetWordsByLinesParams {
+    Omit<GetWordsByLinesParams, 'props'> {
+  style?: ChartsTextStyle;
   ownerState?: any;
 }
 
@@ -30,7 +35,7 @@ function ChartsText(props: ChartsTextProps) {
   const isHydrated = useIsHydrated();
 
   const wordsByLines = React.useMemo(
-    () => getWordsByLines({ style, needsComputation: isHydrated && text.includes('\n'), text }),
+    () => getWordsByLines({ props, needsComputation: isHydrated && text.includes('\n'), text }),
     [style, text, isHydrated],
   );
 
