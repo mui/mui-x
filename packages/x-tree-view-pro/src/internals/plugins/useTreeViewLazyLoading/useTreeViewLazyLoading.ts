@@ -3,14 +3,14 @@ import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
-  selectorItemMeta,
+  TREE_VIEW_ROOT_PARENT_ID,
   TreeViewPlugin,
-  selectorIsItemSelected,
   useInstanceEventHandler,
+  selectorItemMeta,
+  selectorIsItemSelected,
   selectorDataSourceState,
   selectorTreeItemError,
   selectorIsItemExpanded,
-  TREE_VIEW_ROOT_PARENT_ID,
   selectorItemOrderedChildrenIds,
 } from '@mui/x-tree-view/internals';
 import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
