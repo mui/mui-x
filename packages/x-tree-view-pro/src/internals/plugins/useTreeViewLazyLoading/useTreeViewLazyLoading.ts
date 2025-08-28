@@ -28,13 +28,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   params,
   store,
 }) => {
-  const isLazyLoadingEnabled = !!params.dataSource;
   const nestedDataManager = useLazyRef(() => new NestedDataManager(instance)).current;
   const cache = useLazyRef(() => params.dataSourceCache ?? new DataSourceCacheDefault({})).current;
 
   const setDataSourceLoading = useEventCallback(
     (itemId: TreeViewItemId | null, isLoading: boolean) => {
-      if (!isLazyLoadingEnabled) {
+      if (!params.dataSource) {
         return;
       }
 
@@ -63,7 +62,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   );
 
   const setDataSourceError = (itemId: TreeViewItemId | null, error: Error | null) => {
-    if (!isLazyLoadingEnabled) {
+    if (!params.dataSource) {
       return;
     }
 
@@ -95,19 +94,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   );
 
   const fetchItemChildren = useEventCallback(async (id: TreeViewItemId | null) => {
-    if (!isLazyLoadingEnabled) {
+    if (!params.dataSource) {
       return;
     }
-    const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
-
-    const getTreeItems = params.dataSource?.getTreeItems;
-    if (!getTreeItems) {
-      if (id != null) {
-        nestedDataManager.clearPendingRequest(id);
-      }
-      return;
-    }
-
+    const { getChildrenCount, getTreeItems } = params.dataSource;
     // clear the request if the item is not in the tree
     if (id != null && !selectorItemMeta(store.value, id)) {
       nestedDataManager.clearPendingRequest(id);
@@ -178,11 +168,11 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   });
 
   useInstanceEventHandler(instance, 'beforeItemToggleExpansion', async (eventParameters) => {
-    if (!isLazyLoadingEnabled || !eventParameters.shouldBeExpanded) {
+    if (!params.dataSource || !eventParameters.shouldBeExpanded) {
       return;
     }
-    // prevent the default expansion behavior
 
+    // prevent the default expansion behavior
     eventParameters.isExpansionPrevented = true;
     await instance.fetchItems([eventParameters.itemId]);
     const fetchErrors = Boolean(selectorTreeItemError(store.value, eventParameters.itemId));
@@ -206,7 +196,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
   const firstRenderRef = React.useRef(true);
   React.useEffect(() => {
-    if (!isLazyLoadingEnabled || !firstRenderRef.current) {
+    if (!params.dataSource || !firstRenderRef.current) {
       return;
     }
 
@@ -219,33 +209,34 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       },
     }));
 
-    if (params.items.length) {
-      const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
-      instance.addItems({ items: params.items, parentId: null, getChildrenCount });
-    } else {
-      async function fetchAllExpandedItems() {
-        async function fetchChildrenIfExpanded(parentIds: TreeViewItemId[]) {
-          const expandedParentIds = parentIds.filter((id) =>
-            selectorIsItemExpanded(store.value, id),
+    async function fetchAllExpandedItems() {
+      async function fetchChildrenIfExpanded(parentIds: TreeViewItemId[]) {
+        const expandedParentIds = parentIds.filter((id) => selectorIsItemExpanded(store.value, id));
+        if (expandedParentIds.length > 0) {
+          await instance.fetchItems(expandedParentIds);
+          const childrenIds = expandedParentIds.flatMap((id) =>
+            selectorItemOrderedChildrenIds(store.value, id),
           );
-          if (expandedParentIds.length > 0) {
-            await instance.fetchItems(expandedParentIds);
-            const childrenIds = expandedParentIds.flatMap((id) =>
-              selectorItemOrderedChildrenIds(store.value, id),
-            );
-            await fetchChildrenIfExpanded(childrenIds);
-          }
+          await fetchChildrenIfExpanded(childrenIds);
         }
-
-        await instance.fetchItemChildren(null);
-        await fetchChildrenIfExpanded(selectorItemOrderedChildrenIds(store.value, null));
       }
 
-      fetchAllExpandedItems();
+      if (params.items.length) {
+        instance.addItems({
+          items: params.items,
+          parentId: null,
+          getChildrenCount: params.dataSource.getChildrenCount,
+        });
+      } else {
+        await instance.fetchItemChildren(null);
+      }
+      await fetchChildrenIfExpanded(selectorItemOrderedChildrenIds(store.value, null));
     }
-  }, [instance, params.items, params.dataSource, isLazyLoadingEnabled, store]);
 
-  if (isLazyLoadingEnabled) {
+    fetchAllExpandedItems();
+  }, [instance, params.items, params.dataSource, store]);
+
+  if (params.dataSource) {
     instance.preventItemUpdates();
   }
 
