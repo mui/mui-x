@@ -57,6 +57,7 @@ export class EventCalendarInstance {
     | 'areEventsDraggable'
     | 'areEventsResizable'
     | 'ampm'
+    | 'showCurrentTimeIndicator'
   > {
     return {
       adapter,
@@ -66,6 +67,7 @@ export class EventCalendarInstance {
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
       ampm: parameters.ampm ?? true,
+      showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
     };
   }
 
