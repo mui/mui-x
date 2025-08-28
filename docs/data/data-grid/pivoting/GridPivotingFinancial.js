@@ -8,8 +8,7 @@ const columns = [
     type: 'date',
     headerName: 'Transaction Date',
     width: 140,
-    valueGetter: (value) => new Date(value),
-    groupingValueGetter: (value) => value,
+    valueGetter: (value) => (value ? new Date(value) : null),
   },
   { field: 'ticker', headerName: 'Ticker' },
   {

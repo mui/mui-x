@@ -18,11 +18,6 @@ function getComponents() {
       href: 'https://github.com/mui/mui-x/issues/17275',
     },
     {
-      title: 'Sankey Chart',
-      href: '/x/react-charts/sankey/',
-      pro: true,
-    },
-    {
       title: 'Treemap',
       href: '/x/react-charts/treemap/',
       pro: true,
