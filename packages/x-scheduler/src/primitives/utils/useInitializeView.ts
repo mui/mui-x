@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { CalendarViewConfig } from '../../../primitives/models';
+import { CalendarViewConfig } from '../models';
 import { useEventCalendarContext } from './useEventCalendarContext';
 
 /**

@@ -9,7 +9,7 @@ import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../../primitives/time-grid';
 import { getColorClassName } from '../../../utils/color-utils';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
 import './TimeGridEvent.css';
 import '../index.css';
 

@@ -6,8 +6,9 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { MonthViewProps } from './MonthView.types';
-import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
@@ -15,7 +16,6 @@ import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import './MonthView.css';
-import { useInitializeView } from '../internals/hooks/useInitializeView';
 
 const adapter = getAdapter();
 const EVENT_HEIGHT = 22;

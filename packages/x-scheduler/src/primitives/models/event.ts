@@ -84,8 +84,10 @@ export interface CalendarEventOccurrence extends CalendarEvent {
   key: string;
 }
 
-/** Extension of an occurrence with layout information for all-day rows. */
-export interface CalendarEventOccurrenceWithPosition extends CalendarEventOccurrence {
+/**
+ * Extension of an occurrence with layout information for all-day rows.
+ */
+export interface CalendarEventOccurrencesWithRowIndex extends CalendarEventOccurrence {
   eventRowIndex?: number;
 }
 
