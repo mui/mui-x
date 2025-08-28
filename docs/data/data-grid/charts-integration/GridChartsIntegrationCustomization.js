@@ -12,8 +12,6 @@ import {
   ChartsRenderer,
   configurationOptions,
 } from '@mui/x-charts-premium/ChartsRenderer';
-// The import path has to include the docs folder because the demo is used in the charts docs as well
-// eslint-disable-next-line import/no-useless-path-segments
 import { downloads } from '../../../data/data-grid/charts-integration/dataset';
 
 const columns = [
