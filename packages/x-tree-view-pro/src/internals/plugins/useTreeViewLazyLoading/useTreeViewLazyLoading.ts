@@ -15,7 +15,7 @@ import {
 } from '@mui/x-tree-view/internals';
 import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
-import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
+import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import { NestedDataManager } from './utils';
 
 const INITIAL_STATE = {
@@ -23,31 +23,14 @@ const INITIAL_STATE = {
   errors: {},
 };
 
-const noopCache: DataSourceCache = {
-  clear: () => {},
-  get: () => undefined,
-  set: () => {},
-};
-
-function getCache(cacheProp?: DataSourceCache | null) {
-  if (cacheProp === null) {
-    return noopCache;
-  }
-  return cacheProp ?? new DataSourceCacheDefault({});
-}
-
 export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignature> = ({
   instance,
   params,
   store,
 }) => {
   const isLazyLoadingEnabled = !!params.dataSource;
-
-  const nestedDataManager = useLazyRef<NestedDataManager, void>(
-    () => new NestedDataManager(instance),
-  ).current;
-
-  const cacheRef = useLazyRef<DataSourceCache, void>(() => getCache(params.dataSourceCache));
+  const nestedDataManager = useLazyRef(() => new NestedDataManager(instance)).current;
+  const cache = useLazyRef(() => params.dataSourceCache ?? new DataSourceCacheDefault({})).current;
 
   const setDataSourceLoading = useEventCallback(
     (itemId: TreeViewItemId | null, isLoading: boolean) => {
@@ -144,8 +127,8 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
     const cacheKey = id ?? TREE_VIEW_ROOT_PARENT_ID;
 
-    // handle caching here
-    const cachedData = cacheRef.current.get(cacheKey);
+    // reads from the value from the cache
+    const cachedData = cache.get(cacheKey);
     if (cachedData !== undefined && cachedData !== -1) {
       if (id != null) {
         nestedDataManager.setRequestSettled(id);
@@ -177,7 +160,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       }
 
       // save the response in the cache
-      cacheRef.current.set(cacheKey, response);
+      cache.set(cacheKey, response);
       // update the items in the state
       instance.addItems({ items: response, parentId: id, getChildrenCount });
     } catch (error) {
