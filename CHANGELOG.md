@@ -5,6 +5,133 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.11.0
+
+<!-- generated comparing v8.10.2..master -->
+
+_Aug 28, 2025_
+
+We'd like to extend a big thank you to the 19 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Add new `SankeyChart`
+- 🚀 Reordering support for row grouping
+- 📚 Documentation improvements
+
+Special thanks go out to the community members for their valuable contributions:
+@dwrth, @lauri865, @Webini
+
+The following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
+
+### Data Grid
+
+From https://github.com/mui/mui-x/pull/18251
+
+- 🚀 Data Grid row grouping now supports row reordering (#18251)
+
+  See the [Drag-and-drop group reordering](https://mui.com/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering) section for more details.
+
+#### `@mui/x-data-grid@8.11.0`
+
+- [data grid] Fix focused column header scroll jump (#19323) @lauri865
+- [DataGrid] Bring `columnUnsortedIcon` slot back (#19268) @arminmeh
+- [DataGrid] Do not add `menu` role to the empty actions menu (#19338) @arminmeh
+- [DataGrid] Fix `columnsManagementRow` style override slot not working (#19097) @dwrth
+- [DataGrid] Fix pagination state synchronization issue (#19290) @MBilalShafi
+- [DataGrid] Fix scroll issue in R17 (#19265) @romgrk
+- [DataGrid] Hide column separator of non-resizable pinned column (#19277) @arminmeh
+- [docs][DataGrid] Add pagination number formatting doc with a demo (#19221) @siriwatknp
+
+#### `@mui/x-data-grid-pro@8.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.11.0`, plus:
+
+- [DataGridPro] Fix column menu sort when multipleColumnsSortingMode="always" (#19099) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.11.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.11.0`, plus:
+
+- [DataGridPremium] Fix `valueFormatter` issues when `rowGroupingColumnMode="single"` (#18967) @cherniavskii
+- [DataGridPremium] Reordering support for row grouping (#18251) @MBilalShafi
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.11.0`
+
+- [DatePicker]fix firefox bug causing crash when startContainer is Restricted object (#18772) @Webini
+- [pickers] RTL not applied correctly for Calendar Systems examples (works in v7.x but broken in latest version) (#19287) @rita-codes
+- [pickers] Use the locale week day on the Luxon adapter (#19230) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.11.0`.
+
+### Charts
+
+From https://github.com/mui/mui-x/pull/18895
+
+- Add new `SankeyChart` under the `Unstable_` key.
+
+<img height="300" alt="Screenshot 2025-07-24 at 12 54 33" src="https://github.com/user-attachments/assets/d77bcec1-044b-48c6-b37d-d7b74793b91c" />
+
+#### `@mui/x-charts@8.11.0`
+
+- [charts] Add component to render axis labels (#19240) @alexfauquette
+- [charts] Gestures config by pointermode (#19331) @JCQuintas
+- [charts] Handle item identifier with data (#19295) @JCQuintas
+- [charts] Refactor optional chaining for props in PieChart, PieChartPro, and ScatterChartPro components (#19292) @sai6855
+- [charts] Remove unused `fill` and `stroke` properties (#19316) @sai6855
+- [charts][docs] Correct some small grammar mistakes (#19297) @mapache-salvaje
+
+#### `@mui/x-charts-pro@8.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.11.0`, plus:
+
+- [charts-pro] Add new `SankeyChart` (#18895) @JCQuintas
+
+### Tree View
+
+#### `@mui/x-tree-view@8.11.0`
+
+- [tree view] Improve the typing of the item's checkbox `slotProps` (#19247) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.11.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.11.0`
+
+Internal changes.
+
+### Docs
+
+- [tree-view][docs] Fix grammar and spelling mistakes (#19299) @mapache-salvaje
+
+### Core
+
+- [code-infra] Remove unnecessary triggers from publish workflow (#19348) @Janpot
+- [code-infra] Set up publishing from GitHub actions (#19264) @Janpot
+- [code-infra] Update renovate, exclude infra packages from MUI group (#19288) @Janpot
+- [internal] Add comment for Codspeed triggers (#19302) @oliviertassinari
+- [internal] Fix changelog generation for infra tags (#19266) @oliviertassinari
+- [internal] Remove dead repository field (#19301) @oliviertassinari
+- [internal] Sentence case @oliviertassinari
+- [internal] Update 8.10.1 changelog with missing changes (#19345) @cherniavskii
+- [support-infra] Improve GitHub Action that check PRs labels (#19303) @oliviertassinari
+
+### Miscellaneous
+
+- [ai-assistant] Make it clear that the API key must be private (#19244) @oliviertassinari
+- [data-grid][docs] Correct grammar mistakes (#19298) @mapache-salvaje
+- [infra] Add `synchronize` to workflow triggers (#19342) @michelengelen
+- [infra] Add charts docs folder in codowner (#19317) @alexfauquette
+- [infra] Fix publish workflow complaint (#19346) @JCQuintas
+- [infra] Migrate to use eslint without airbnb config (#19269) @brijeshb42
+- [infra] Simplify release preparation script (#19351) @michelengelen
+
 ## 8.10.2
 
 _Aug 20, 2025_
