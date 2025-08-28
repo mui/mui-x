@@ -22,7 +22,7 @@ export const selectorDataSourceState = createSelector(
 /**
  * Check if lazy loading is enabled.
  * @param {TreeViewState<[UseTreeViewLazyLoadingSignature]>} state The state of the tree view.
- * @returns {boolean} True if lazy loading is enabled, false if it isn't.
+ * @returns {boolean} Whether f lazy loading is enabled, false if it isn't.
  */
 export const selectorIsLazyLoadingEnabled = createSelector(
   [selectorLazyLoadingOptional],
