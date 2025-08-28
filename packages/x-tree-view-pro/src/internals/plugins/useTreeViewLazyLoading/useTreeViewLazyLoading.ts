@@ -113,19 +113,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     });
   };
 
-  const resetDataSourceState = useEventCallback(() => {
-    if (!isLazyLoadingEnabled) {
-      return;
-    }
-    store.update((prevState) => ({
-      ...prevState,
-      lazyLoading: {
-        ...prevState.lazyLoading,
-        dataSource: INITIAL_STATE,
-      },
-    }));
-  });
-
   const fetchItems = useEventCallback(async (parentIds: TreeViewItemId[]) =>
     nestedDataManager.queue(parentIds),
   );
@@ -150,10 +137,14 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     }
 
     // reset the state if we are fetching the root items
-    if (id == null) {
-      if (selectorDataSourceState(store.value) !== INITIAL_STATE) {
-        resetDataSourceState();
-      }
+    if (id == null && selectorDataSourceState(store.value) !== INITIAL_STATE) {
+      store.update((prevState) => ({
+        ...prevState,
+        lazyLoading: {
+          ...prevState.lazyLoading,
+          dataSource: INITIAL_STATE,
+        },
+      }));
     }
 
     const cacheKey = id ?? TREE_VIEW_ROOT_PARENT_ID;
@@ -163,7 +154,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
     // handle caching here
     const cachedData = cacheRef.current.get(cacheKey);
-
     if (cachedData !== undefined && cachedData !== -1) {
       if (id != null) {
         nestedDataManager.setRequestSettled(id);
