@@ -14,7 +14,7 @@ _Aug 28, 2025_
 We'd like to extend a big thank you to the 19 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add new `SankeyChart`
-- 🚀 Reordering support for row grouping
+- 🚀 Data Grid row grouping now supports row reordering
 - 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
@@ -59,7 +59,7 @@ Same changes as in `@mui/x-data-grid-pro@8.11.0`, plus:
 
 #### `@mui/x-date-pickers@8.11.0`
 
-- [DatePicker]fix firefox bug causing crash when startContainer is Restricted object (#18772) @Webini
+- [DatePicker] Fix firefox bug causing crash when `startContainer` is a restricted object (#18772) @Webini
 - [pickers] RTL not applied correctly for Calendar Systems examples (works in v7.x but broken in latest version) (#19287) @rita-codes
 - [pickers] Use the locale week day on the Luxon adapter (#19230) @flaviendelangle
 
