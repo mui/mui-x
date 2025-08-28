@@ -217,14 +217,20 @@ In the following example, the **Company** column is not groupable through the in
 
 ## Using groupingValueGetter() for complex grouping value
 
-The grouping value must be either a string, a number, `null`, or `undefined`.
-If your cell value is more complex, pass a `groupingValueGetter()` property to the column definition to convert it into a valid value.
+The grouping value must be either a string, a number, `Date`, `null`, or `undefined`.
+If your cell value is more complex, or if you want to use a different value for grouping than the one displayed in the cell, use the `groupingValueGetter()` property in the column definition:
 
 ```ts
 const columns: GridColDef[] = [
   {
-    field: 'composer',
-    groupingValueGetter: (value) => value.name,
+    field: 'year',
+    type: 'number',
+    valueFormatter: (value) => (value ? `${value}` : ''),
+    // Group by decade
+    groupingValueGetter: (value) => {
+      const yearDecade = Math.floor(value / 10) * 10;
+      return `${yearDecade.toString().slice(-2)}'s`;
+    },
   },
   // ...
 ];
@@ -418,7 +424,7 @@ This method should return the updated row based on the groupKey (`value`) that c
 const columns: GridColDef[] = [
   {
     field: 'composer',
-    groupingValueGetter: (value) => value.name,
+    valueGetter: (value) => value?.name,
     groupingValueSetter: (value, row) => ({
       ...row,
       composer: {
