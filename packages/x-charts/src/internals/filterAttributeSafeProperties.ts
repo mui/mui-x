@@ -12,6 +12,8 @@ const propNames = [
   'letterSpacing',
   'stroke',
   'strokeWidth',
+  'fill',
+  'opacity',
   'shapeRendering',
 ];
 export const filterAttributeSafeProperties = (props: any) => {

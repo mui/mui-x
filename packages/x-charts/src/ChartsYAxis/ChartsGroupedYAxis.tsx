@@ -63,7 +63,6 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
     label,
     tickSize,
     valueFormatter,
-    slotProps,
     tickInterval,
     tickPlacement,
     tickLabelPlacement,

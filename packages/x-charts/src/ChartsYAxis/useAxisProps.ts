@@ -52,6 +52,7 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
       fontSize: tickFontSize,
       textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
       dominantBaseline: defaultDominantBaseline,
+      fill: (theme.vars || theme).palette.text.primary,
       ...tickLabelStyle,
     });
 
@@ -73,6 +74,7 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
     angle: positionSign * 90,
     textAnchor: 'middle',
     dominantBaseline: 'text-before-edge',
+    fill: (theme.vars || theme).palette.text.primary,
     ...labelStyle,
   });
 

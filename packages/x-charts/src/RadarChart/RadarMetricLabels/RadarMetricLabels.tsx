@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useRadarMetricData } from './useRadarMetricData';
-import { getDefaultBaseline, getDefaultTextAnchor } from '../../ChartsText/defaultTextPlacement';
 import { ChartsText } from '../../ChartsText';
-import { filterAttributeSafeProperties } from '../../internals/filterAttributeSafeProperties';
 
 function RadarMetricLabels() {
   const { corners } = useRadarMetricData();

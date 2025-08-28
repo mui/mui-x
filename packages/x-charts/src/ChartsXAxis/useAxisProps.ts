@@ -51,6 +51,7 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
       lineHeight: 1.25,
       textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
       dominantBaseline: defaultDominantBaseline,
+      fill: (theme.vars || theme).palette.text.primary,
       ...tickLabelStyle,
     });
 
@@ -71,6 +72,7 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
     fontSize: 14,
     textAnchor: 'middle',
     dominantBaseline: position === 'bottom' ? 'text-after-edge' : 'text-before-edge',
+    fill: (theme.vars || theme).palette.text.primary,
     ...labelStyle,
   });
 
@@ -83,14 +85,6 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
     } as Partial<ChartsTextProps>,
     ownerState: {},
   });
-
-  const domain = xScale.domain();
-  const isScaleBand = isBandScale(xScale);
-
-  const skipAxisRendering =
-    (isScaleBand && domain.length === 0) ||
-    (!isScaleBand && domain.some(isInfinity)) ||
-    position === 'none';
 
   const axisLineProps = useSlotProps({
     elementType: Line,
@@ -116,6 +110,14 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
     },
     ownerState: {},
   });
+
+  const domain = xScale.domain();
+  const isScaleBand = isBandScale(xScale);
+
+  const skipAxisRendering =
+    (isScaleBand && domain.length === 0) ||
+    (!isScaleBand && domain.some(isInfinity)) ||
+    position === 'none';
 
   return {
     xScale,

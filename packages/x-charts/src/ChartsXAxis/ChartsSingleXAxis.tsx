@@ -44,7 +44,6 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     label,
     tickSize: tickSizeProp,
     valueFormatter,
-    slotProps,
     tickInterval,
     tickLabelInterval,
     tickPlacement,

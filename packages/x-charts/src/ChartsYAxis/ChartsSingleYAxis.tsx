@@ -39,7 +39,6 @@ function ChartsSingleYAxis(inProps: ChartsYAxisProps) {
     label,
     tickSize: tickSizeProp,
     valueFormatter,
-    slotProps,
     tickPlacement,
     tickLabelPlacement,
     tickInterval,

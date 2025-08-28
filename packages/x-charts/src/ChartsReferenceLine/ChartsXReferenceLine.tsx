@@ -10,6 +10,7 @@ import {
   ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
+import { filterAttributeSafeProperties } from '../internals/filterAttributeSafeProperties';
 
 export type ChartsXReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -37,28 +38,22 @@ const getTextParams = ({
     case 'start':
       return {
         y: top + spacingY,
-        style: {
-          dominantBaseline: 'hanging',
-          textAnchor: 'start',
-        } as const,
+        dominantBaseline: 'hanging',
+        textAnchor: 'start',
       };
 
     case 'end':
       return {
         y: top + height - spacingY,
-        style: {
-          dominantBaseline: 'auto',
-          textAnchor: 'start',
-        } as const,
+        dominantBaseline: 'auto',
+        textAnchor: 'start',
       };
 
     default:
       return {
         y: top + height / 2,
-        style: {
-          dominantBaseline: 'central',
-          textAnchor: 'start',
-        } as const,
+        dominantBaseline: 'central',
+        textAnchor: 'start',
       };
   }
 };
@@ -108,23 +103,30 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
   const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
 
-  const textParams = {
-    x: xPosition + spacingX,
-    text: label,
+  const { y, ...other } = getTextParams({
+    top,
+    height,
+    spacingY,
+    labelAlign,
+  });
+
+  const { safe, unsafe } = filterAttributeSafeProperties({
     fontSize: 12,
-    ...getTextParams({
-      top,
-      height,
-      spacingY,
-      labelAlign,
-    }),
-    className: classes.label,
-  };
+    ...other,
+    ...labelStyle,
+  });
 
   return (
     <ReferenceLineRoot className={classes.root}>
       <path d={d} className={classes.line} style={lineStyle} />
-      <ChartsText {...textParams} style={{ ...textParams.style, ...labelStyle }} />
+      <ChartsText
+        x={xPosition + spacingX}
+        y={y}
+        text={label}
+        className={classes.label}
+        {...safe}
+        style={unsafe}
+      />
     </ReferenceLineRoot>
   );
 }
