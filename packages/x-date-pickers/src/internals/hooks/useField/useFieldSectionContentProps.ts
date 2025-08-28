@@ -248,11 +248,16 @@ function getSectionValueText(
         return adapter.isValid(dateWithMonth) ? adapter.format(dateWithMonth, 'month') : '';
       }
       const parsedDate = adapter.parse(section.value, section.format);
-      return parsedDate && adapter.isValid(parsedDate) ? adapter.format(parsedDate, 'month') : undefined;
+      return parsedDate && adapter.isValid(parsedDate)
+        ? adapter.format(parsedDate, 'month')
+        : undefined;
     }
     case 'day':
       if (section.contentType === 'digit') {
-        const dateWithDay = adapter.setDate(adapter.startOfYear(adapter.date()), Number(section.value));
+        const dateWithDay = adapter.setDate(
+          adapter.startOfYear(adapter.date()),
+          Number(section.value),
+        );
         return adapter.isValid(dateWithDay) ? adapter.format(dateWithDay, 'dayOfMonthFull') : '';
       }
       return section.value;
