@@ -14,7 +14,7 @@ In the demo below, the [`React.useSyncExternalStore` hook](https://react.dev/ref
 
 {{"demo": "FilteringLocalStorage.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Adding presets to the filter panel
+## Save and manage filters from the panel
 
 Create a custom filter panel by wrapping the `GridFilterPanel` component and pass it to the `slots.filterPanel` prop.
 
