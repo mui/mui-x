@@ -82,8 +82,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
-  const currentTimeLabel = React.useMemo(() => adapter.format(now, timeFormat), [now, timeFormat]);
-
   const shouldHideHour = (hour: number) => {
     if (!isTodayInView || !showCurrentTimeIndicator) {
       return false;
@@ -229,8 +227,15 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {daysWithEvents.map(({ day, events }) => (
-                  <TimeGridColumn key={day.toString()} day={day} events={events} />
+                {daysWithEvents.map(({ day, events }, index) => (
+                  <TimeGridColumn
+                    key={day.toString()}
+                    day={day}
+                    events={events}
+                    isToday={adapter.isSameDay(day, now)}
+                    index={index}
+                    showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
+                  />
                 ))}
               </div>
             </div>
