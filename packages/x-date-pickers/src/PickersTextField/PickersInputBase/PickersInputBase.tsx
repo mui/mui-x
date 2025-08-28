@@ -108,7 +108,7 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
         isFieldFocused: false,
         isFieldValueEmpty: true,
         inputHasLabel: true,
-        hasFieldShrunk: true,
+        isLabelShrunk: true,
       },
       style: theme.vars
         ? {

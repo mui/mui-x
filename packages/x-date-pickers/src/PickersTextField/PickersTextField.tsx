@@ -131,7 +131,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       hasStartAdornment: Boolean(startAdornment ?? InputProps?.startAdornment),
       hasEndAdornment: Boolean(endAdornment ?? InputProps?.endAdornment),
       inputHasLabel: !!label,
-      hasFieldShrunk: Boolean(InputLabelProps?.shrink),
+      isLabelShrunk: Boolean(InputLabelProps?.shrink),
     }),
     [
       fieldOwnerState,
