@@ -245,7 +245,10 @@ export function useEventCalendar(
       }
 
       store.set('layoutMode', layoutMode);
-      store.set('view', store.state.timelineViews[0]);
+      store.set(
+        'view',
+        layoutMode === 'timeline' ? store.state.timelineViews[0] : store.state.calendarViews[0],
+      );
     },
   );
 
