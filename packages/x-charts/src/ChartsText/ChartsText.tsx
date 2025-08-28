@@ -5,15 +5,8 @@ import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByL
 import { useIsHydrated } from '../hooks/useIsHydrated';
 
 export interface ChartsTextProps
-  extends Omit<
-      React.SVGTextElementAttributes<SVGTextElement>,
-      'width' | 'ref' | 'style' | 'dominantBaseline'
-    >,
+  extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref' | 'style'>,
     GetWordsByLinesParams {
-  /**
-   * Height of a text line (in `em`).
-   */
-  lineHeight?: number;
   ownerState?: any;
 }
 
@@ -21,9 +14,18 @@ export interface ChartsTextProps
  * Helper component to manage multiline text in SVG
  */
 function ChartsText(props: ChartsTextProps) {
-  const { x, y, style: styleProps, text, ownerState, ...textProps } = props;
+  const {
+    x,
+    y,
+    style: styleProps,
+    text,
+    ownerState,
+    textAnchor,
+    dominantBaseline,
+    ...textProps
+  } = props;
 
-  const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
+  const { angle, ...style } = styleProps ?? {};
 
   const isHydrated = useIsHydrated();
 
