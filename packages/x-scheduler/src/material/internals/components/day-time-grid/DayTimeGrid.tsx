@@ -48,11 +48,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
-  const isTodayInView = React.useMemo(() => {
-    const start = adapter.startOfDay(days[0]);
-    const end = adapter.endOfDay(days[days.length - 1]);
-    return adapter.isWithinRange(now, [start, end]);
-  }, [days, now]);
+  const isTodayInView = React.useMemo(
+    () => !adapter.isBeforeDay(now, days[0]) && !adapter.isAfterDay(now, days[days.length - 1]),
+    [days, now],
+  );
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: TimeGrid.Root.EventData) => {
