@@ -8,6 +8,8 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 <p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
+{{"demo": "ShinyBarChartHorizontal.js"}}
+
 ## Basics
 
 Bar charts series should contain a `data` property containing an array of values.
