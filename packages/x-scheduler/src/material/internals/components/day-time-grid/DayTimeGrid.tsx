@@ -81,16 +81,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const currentTimeLabel = React.useMemo(() => adapter.format(now, timeFormat), [now, timeFormat]);
 
-  const shouldHideHour = React.useCallback(
-    (hour: number) => {
-      if (!isTodayInView || !showCurrentTimeIndicator) {
-        return false;
-      }
-      const slotCenter = adapter.setMinutes(adapter.setHours(now, hour), 0);
-      return Math.abs(diffIn(adapter, now, slotCenter, 'minutes')) <= 25;
-    },
-    [now, isTodayInView, showCurrentTimeIndicator],
-  );
+  const shouldHideHour = (hour: number) => {
+    if (!isTodayInView || !showCurrentTimeIndicator) {
+      return false;
+    }
+    const slotCenter = adapter.setMinutes(adapter.setHours(now, hour), 0);
+    return Math.abs(diffIn(adapter, now, slotCenter, 'minutes')) <= 25;
+  };
 
   const renderHeaderContent = (day: SchedulerValidDate) => (
     <span className="DayTimeGridHeaderContent">
