@@ -58,12 +58,11 @@ export const TimeGridCurrentTimeIndicator = React.forwardRef(function TimeGridCu
   const isOutOfRange =
     adapter.isBefore(nowForColumn, columnStart) || adapter.isAfter(nowForColumn, columnEnd);
 
-  const element = useRenderElement('div', componentProps, {
+  return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
     props: [props, elementProps],
+    enabled: !isOutOfRange,
   });
-
-  return isOutOfRange ? null : element;
 });
 
 export namespace TimeGridCurrentTimeIndicator {
