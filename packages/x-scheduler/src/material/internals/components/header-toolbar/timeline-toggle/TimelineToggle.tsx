@@ -13,7 +13,7 @@ export function TimelineToggle() {
   const { store, instance } = useEventCalendarContext();
   const view = useStore(store, selectors.view);
   const views = useStore(store, selectors.views);
-  const viewsWithoutTimeline = views.filter((view) => view !== 'timeline');
+  const viewsWithoutTimeline = views.filter((currentView) => currentView !== 'timeline');
 
   const layoutMode = view === 'timeline' ? 'timeline' : 'calendar';
 

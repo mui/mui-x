@@ -70,7 +70,6 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[0]).to.have.text('Agenda');
     expect(buttons[1]).to.have.text('Week');
     expect(buttons[2]).to.have.text('Day');
-    expect(buttons[3]).to.not.exist;
   });
 
   it('should render the two first views for a custom set of views (with exactly 2 views)', () => {
@@ -84,6 +83,5 @@ describe('<ViewSwitcher />', () => {
     expect(buttons).toHaveLength(2);
     expect(buttons[0]).to.have.text('Agenda');
     expect(buttons[1]).to.have.text('Week');
-    expect(buttons[2]).to.not.exist;
   });
 });
