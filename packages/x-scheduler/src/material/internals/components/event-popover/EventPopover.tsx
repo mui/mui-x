@@ -12,7 +12,6 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
 import {
-  EventPopoverContextValue,
   EventPopoverProps,
   EventPopoverProviderProps,
   EventPopoverTriggerProps,
@@ -34,16 +33,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    className,
-    style,
-    container,
-    anchor,
-    calendarEvent,
-    calendarEventResource,
-    onClose,
-    ...other
-  } = props;
+  const { className, style, container, calendarEvent, calendarEventResource, onClose, ...other } =
+    props;
 
   const adapter = useAdapter();
   const translations = useTranslations();
@@ -138,14 +129,13 @@ export const EventPopover = React.forwardRef(function EventPopover(
       <Popover.Portal container={container}>
         <Popover.Positioner
           sideOffset={8}
-          anchor={anchor}
           trackAnchor={false}
           className={clsx(
             'PopoverPositioner',
             getColorClassName({ resource: calendarEventResource }),
           )}
         >
-          <Popover.Popup finalFocus={{ current: anchor }}>
+          <Popover.Popup>
             <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
               <header className="EventPopoverHeader">
                 <Field.Root className="EventPopoverFieldRoot" name="title" disabled={isRecurring}>
@@ -388,64 +378,43 @@ export const EventPopover = React.forwardRef(function EventPopover(
   );
 });
 
-const EventPopoverContext = React.createContext<EventPopoverContextValue>({
-  startEditing: () => {},
-});
+const editingPopoverHandle = Popover.createHandle<CalendarEvent>();
 
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
-  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
-  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
-  const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
   const { store } = useEventCalendarContext();
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+  const actionsRef = React.useRef<Popover.Root.Actions>(null);
 
-  const startEditing = useEventCallback((event: React.MouseEvent, calendarEvent: CalendarEvent) => {
-    setAnchor(event.currentTarget as HTMLElement);
-    setSelectedEvent(calendarEvent);
-    setIsPopoverOpen(true);
-  });
-
-  const handleClose = useEventCallback(() => {
-    if (!isPopoverOpen) {
-      return;
-    }
-    setIsPopoverOpen(false);
-    setAnchor(null);
-    setSelectedEvent(null);
-  });
-
-  const contextValue = React.useMemo<EventPopoverContextValue>(
-    () => ({ startEditing }),
-    [startEditing],
-  );
+  const handleClose = useEventCallback(() => actionsRef.current?.close());
 
   return (
-    <EventPopoverContext.Provider value={contextValue}>
-      <Popover.Root open={isPopoverOpen} onOpenChange={handleClose} modal>
-        {children}
-        {anchor && selectedEvent && (
-          <EventPopover
-            anchor={anchor}
-            calendarEvent={selectedEvent}
-            calendarEventResource={resourcesByIdMap.get(selectedEvent.resource)}
-            container={containerRef.current}
-            onClose={handleClose}
-          />
-        )}
-      </Popover.Root>
-    </EventPopoverContext.Provider>
+    <Popover.Root handle={editingPopoverHandle} actionsRef={actionsRef} modal>
+      {({ payload }) => (
+        <React.Fragment>
+          {children}
+          {payload !== undefined && (
+            <EventPopover
+              calendarEvent={payload}
+              calendarEventResource={resourcesByIdMap.get(payload.resource)}
+              container={containerRef.current}
+              onClose={handleClose}
+            />
+          )}
+        </React.Fragment>
+      )}
+    </Popover.Root>
   );
 }
 
 export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   const { event: calendarEvent, ...other } = props;
-  const { startEditing } = React.useContext(EventPopoverContext);
 
   return (
     <Popover.Trigger
       nativeButton={false}
-      onClick={(event) => startEditing(event, calendarEvent)}
+      handle={editingPopoverHandle}
+      payload={calendarEvent}
       {...other}
     />
   );
