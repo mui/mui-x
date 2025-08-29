@@ -10,9 +10,12 @@ import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
+import { SchedulerTranslations } from '../../../../models/translations';
 
+type TimelineViews = 'time' | 'days' | 'months' | 'weeks' | 'years';
+type AllViews = CalendarView | TimelineViews;
 interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
-  views: string[];
+  views: AllViews[];
 }
 
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
