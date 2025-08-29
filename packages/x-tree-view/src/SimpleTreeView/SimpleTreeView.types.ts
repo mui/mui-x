@@ -25,8 +25,8 @@ export interface SimpleTreeViewSlotProps extends TreeViewSlotProps {
   root?: SlotComponentProps<'ul', {}, {}>;
 }
 
-export type SimpleTreeViewApiRef = React.RefObject<
-  TreeViewPublicAPI<SimpleTreeViewPluginSignatures> | undefined
+type SimpleTreeViewApiRef = React.RefObject<
+  Partial<TreeViewPublicAPI<SimpleTreeViewPluginSignatures>> | undefined
 >;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
