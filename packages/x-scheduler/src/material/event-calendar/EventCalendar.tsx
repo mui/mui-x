@@ -34,6 +34,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   } = forwardedProps;
 
   let content: React.ReactNode;
+
   switch (view) {
     case 'week':
       content = <WeekView />;
@@ -46,6 +47,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       break;
     case 'agenda':
       content = <AgendaView />;
+      break;
+    case 'timeline':
+      content = <div>Timeline View</div>;
       break;
     default:
       content = null;
