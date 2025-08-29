@@ -10,8 +10,6 @@ import { SettingsMenu } from './settings-menu';
 import { TimelineToggle } from './timeline-toggle';
 import './HeaderToolbar.css';
 import { CalendarViewSwitcher } from './calendar-view-switcher';
-import { TimelineViewSwitcher } from './timeline-view-switcher';
-import { ViewSwitcher } from './view-switcher';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,
@@ -21,20 +19,19 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
 
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
-  const layoutMode = useStore(store, selectors.layoutMode);
-
-  const isTimelineEnabled = useStore(store, selectors.isTimelineEnabled);
+  const view = useStore(store, selectors.view);
+  const layoutMode = view === 'timeline' ? 'timeline' : 'calendar';
 
   return (
     <header ref={forwardedRef} className={clsx('HeaderToolbarContainer', className)} {...other}>
       <div className="PrimaryActionWrapper">
-        {layoutMode === 'calendar' ? <CalendarViewSwitcher /> : <TimelineViewSwitcher />}
+        {layoutMode === 'calendar' && <CalendarViewSwitcher />}
       </div>
       <div className="SecondaryActionWrapper">
         <button className="Button OutlinedNeutralButton" onClick={instance.goToToday} type="button">
           {translations.today}
         </button>
-        {isTimelineEnabled && <TimelineToggle />}
+        <TimelineToggle />
         <SettingsMenu />
       </div>
     </header>

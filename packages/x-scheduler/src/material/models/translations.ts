@@ -13,6 +13,7 @@ export interface SchedulerTranslations {
   other: string;
   today: string;
   week: string;
+  timeline: string;
   time: string;
   days: string;
   months: string;
@@ -20,8 +21,8 @@ export interface SchedulerTranslations {
   years: string;
 
   // Timeline toggle
-  timelineView: string;
-  calendarView: string;
+  timelineMode: string;
+  calendarMode: string;
 
   // SettingsMenu
   hideWeekends: string;

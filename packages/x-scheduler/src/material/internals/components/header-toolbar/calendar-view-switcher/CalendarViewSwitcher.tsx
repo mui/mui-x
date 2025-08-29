@@ -9,7 +9,8 @@ export function CalendarViewSwitcher(props: React.HTMLAttributes<HTMLDivElement>
   const { className, ...other } = props;
 
   const { store } = useEventCalendarContext();
-  const views = useStore(store, selectors.calendarViews);
+  const views = useStore(store, selectors.views);
+  const viewsWithoutTimeline = views.filter((view) => view !== 'timeline');
 
-  return <ViewSwitcher views={views} {...other} />;
+  return <ViewSwitcher views={viewsWithoutTimeline} {...other} />;
 }

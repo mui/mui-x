@@ -6,7 +6,6 @@ import {
   CalendarResource,
   CalendarResourceId,
   CalendarView,
-  TimelineView,
   CalendarSettings,
   CalendarEventOccurrence,
   CalendarEventOccurrenceWithPosition,
@@ -27,17 +26,13 @@ export type State = {
    */
   visibleDate: SchedulerValidDate;
   /**
-   * The current view displayed in the calendar or timeline.
+   * The current view displayed in the calendar.
    */
-  view: CalendarView | TimelineView;
+  view: CalendarView;
   /**
-   * The calendarViews available in the calendar.
+   * The views available in the calendar.
    */
-  calendarViews: CalendarView[];
-  /**
-   * The calendarViews available in the timeline.
-   */
-  timelineViews: TimelineView[];
+  views: CalendarView[];
   /**
    * The events available in the calendar.
    */
@@ -72,14 +67,6 @@ export type State = {
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
-  /**
-   * Whether the timeline view is enabled.
-   */
-  enableTimeline?: boolean;
-  /**
-   * The config of the current mode.
-   */
-  layoutMode: 'calendar' | 'timeline';
 };
 
 // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
@@ -92,14 +79,9 @@ export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   ampm: createSelector((state: State) => state.ampm),
   view: createSelector((state: State) => state.view),
-  calendarViews: createSelector((state: State) => state.calendarViews),
-  timelineViews: createSelector((state: State) => state.timelineViews),
+  views: createSelector((state: State) => state.views),
   settings: createSelector((state: State) => state.settings),
-  isTimelineEnabled: createSelector((state: State) => state.enableTimeline),
-  layoutMode: createSelector((state: State) => state.layoutMode),
-  hasDayView: createSelector(
-    (state: State) => state.layoutMode === 'calendar' && state.calendarViews.includes('day'),
-  ),
+  hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
   visibleResourcesList: createSelectorMemoized(
     (state: State) => state.resources,

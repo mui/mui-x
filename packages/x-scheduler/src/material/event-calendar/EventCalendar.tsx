@@ -26,15 +26,13 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     resources: resourcesProp,
     view: viewProp,
     defaultView,
-    calendarViews,
-    timelineViews,
+    views,
     visibleDate: visibleDateProp,
     defaultVisibleDate,
     onVisibleDateChange,
     areEventsDraggable,
     areEventsResizable,
     ampm,
-    enableTimeline,
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
     className,
@@ -47,40 +45,37 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     resources: resourcesProp,
     view: viewProp,
     defaultView,
-    calendarViews,
-    timelineViews,
+    views,
     visibleDate: visibleDateProp,
     defaultVisibleDate,
     onVisibleDateChange,
     areEventsDraggable,
     areEventsResizable,
     ampm,
-    enableTimeline,
   });
 
   const view = useStore(contextValue.store, selectors.view);
-  const layoutMode = useStore(contextValue.store, selectors.layoutMode);
 
   let content: React.ReactNode;
-  if (layoutMode === 'calendar') {
-    switch (view) {
-      case 'week':
-        content = <WeekView />;
-        break;
-      case 'day':
-        content = <DayView />;
-        break;
-      case 'month':
-        content = <MonthView />;
-        break;
-      case 'agenda':
-        content = <AgendaView />;
-        break;
-      default:
-        content = null;
-    }
-  } else {
-    content = <div>Timeline View</div>;
+
+  switch (view) {
+    case 'week':
+      content = <WeekView />;
+      break;
+    case 'day':
+      content = <DayView />;
+      break;
+    case 'month':
+      content = <MonthView />;
+      break;
+    case 'agenda':
+      content = <AgendaView />;
+      break;
+    case 'timeline':
+      content = <div>Timeline View</div>;
+      break;
+    default:
+      content = null;
   }
 
   return (

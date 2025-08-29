@@ -6,13 +6,13 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
-import { CalendarView, TimelineView } from '../../../../../primitives/models';
+import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 
 interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
-  views: (CalendarView | TimelineView)[];
+  views: string[];
 }
 
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
@@ -42,13 +42,13 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = showAll ? [] : views.slice(2);
 
-  const [dropdownLabel, setDropdownLabel] = React.useState<CalendarView | TimelineView>(
-    dropdown[0],
-  );
+  const [dropdownLabel, setDropdownLabel] = React.useState<string>(dropdown[0]);
 
+  console.log('views: ', views, visible, dropdown, dropdownLabel);
   // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
   React.useEffect(() => {
-    if ((dropdown as (CalendarView | TimelineView)[]).includes(view)) {
+    if (dropdown.includes(view)) {
+      console.log('what');
       setDropdownLabel(view);
     }
   }, [view]);

@@ -12,7 +12,7 @@ describe('<ViewSwitcher />', () => {
     resources: [],
   };
 
-  it('should render the first three calendarViews + Arrow down for the default set of calendarViews', () => {
+  it('should render the first three views + Arrow down for the default set of views', () => {
     const { container } = render(
       <StandaloneView {...standaloneDefaults}>
         <ViewSwitcher views={['week', 'day', 'month', 'agenda']} />
@@ -27,7 +27,7 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[3]).to.have.attribute('aria-label', 'Show more views');
   });
 
-  it('should render the first three calendarViews + Arrow down for a custom set of calendarViews (with more than 3 calendarViews)', () => {
+  it('should render the first three views + Arrow down for a custom set of views (with more than 3 views)', () => {
     const { container } = render(
       <StandaloneView {...standaloneDefaults}>
         <ViewSwitcher views={['agenda', 'week', 'day', 'month']} />
@@ -42,7 +42,7 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[3]).to.have.attribute('aria-label', 'Show more views');
   });
 
-  it('should render the first three calendarViews + the selected view for a custom set of calendarViews (with more than 3 calendarViews)', () => {
+  it('should render the first three views + the selected view for a custom set of views (with more than 3 views)', () => {
     const { container } = render(
       <StandaloneView {...standaloneDefaults} view="month">
         <ViewSwitcher views={['agenda', 'week', 'day', 'month']} />
@@ -58,9 +58,9 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[2]).to.have.attribute('data-pressed', 'true');
   });
 
-  it('should render the three first calendarViews for a custom set of calendarViews (with exactly 3 calendarViews)', () => {
+  it('should render the three first views for a custom set of views (with exactly 3 views)', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults} calendarViews={['agenda', 'week', 'day']}>
+      <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day']}>
         <CalendarViewSwitcher />
       </StandaloneView>,
     );
@@ -73,9 +73,9 @@ describe('<ViewSwitcher />', () => {
     expect(buttons[3]).to.not.exist;
   });
 
-  it('should render the two first calendarViews for a custom set of calendarViews (with exactly 2 calendarViews)', () => {
+  it('should render the two first views for a custom set of views (with exactly 2 views)', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults} calendarViews={['agenda', 'week']}>
+      <StandaloneView {...standaloneDefaults} views={['agenda', 'week']}>
         <CalendarViewSwitcher />
       </StandaloneView>,
     );

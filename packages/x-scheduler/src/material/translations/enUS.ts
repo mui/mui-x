@@ -13,6 +13,7 @@ export const enUS: SchedulerTranslations = {
   other: 'Other',
   today: 'Today',
   week: 'Week',
+  timeline: 'Timeline',
   time: 'Time',
   days: 'Days',
   months: 'Months',
@@ -20,8 +21,8 @@ export const enUS: SchedulerTranslations = {
   years: 'Years',
 
   // Timeline toggle
-  timelineView: 'Timeline View',
-  calendarView: 'Calendar View',
+  timelineMode: 'Timeline Mode',
+  calendarMode: 'Calendar Mode',
 
   // SettingsMenu
   hideWeekends: 'Hide weekends',

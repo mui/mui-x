@@ -1,7 +1,6 @@
 import { SchedulerValidDate } from './date';
 
-export type CalendarView = 'week' | 'day' | 'month' | 'agenda';
-export type TimelineView = 'time' | 'days' | 'weeks' | 'months' | 'years';
+export type CalendarView = 'week' | 'day' | 'month' | 'agenda' | 'timeline';
 
 /**
  * Configuration defined by each view.
