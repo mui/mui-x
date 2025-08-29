@@ -22,7 +22,6 @@ export function getVisibleLabels<T extends TickItemType>(
       tickLabelProps: { style?: React.CSSProperties };
     },
 ): Set<T> {
-  const style = { ...tickLabelProps, ...tickLabelProps.style };
   const getTickLabelSize = (tick: T) => {
     if (!isMounted || tick.formattedValue === undefined) {
       return { width: 0, height: 0 };
@@ -67,6 +66,7 @@ export function getVisibleLabels<T extends TickItemType>(
       /* Measuring text width is expensive, so we need to delay it as much as possible to improve performance. */
       const { width, height } = getTickLabelSize(item);
 
+      const style = tickLabelProps.style ?? {};
       const distance = getMinXTranslation(
         width,
         height,
