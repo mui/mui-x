@@ -6,7 +6,6 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './FullEventCalendar.module.css';
 
 export default function PreferencesMenu() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
