@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
+import { useTheme } from '@mui/material/styles';
 import { useDrawingArea, useYScale } from '../hooks';
 import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
 import { ChartsText } from '../ChartsText';
@@ -11,7 +12,6 @@ import {
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
 import { filterAttributeSafeProperties } from '../internals/filterAttributeSafeProperties';
-import { useTheme } from '@mui/material/styles';
 
 export type ChartsYReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
