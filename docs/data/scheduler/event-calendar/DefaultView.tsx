@@ -6,19 +6,19 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './FullEventCalendar.module.css';
 
 export default function DefaultView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
-    <EventCalendar
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-      className={classes.Container}
-      defaultView="month"
-    />
+    <div style={{ height: '650px', width: '100%' }}>
+      <EventCalendar
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        defaultView="month"
+      />
+    </div>
   );
 }
