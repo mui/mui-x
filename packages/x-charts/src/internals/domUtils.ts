@@ -118,13 +118,18 @@ export const getStringSize = (
   }
 
   try {
-    let measurementSpan = document.getElementById(MEASUREMENT_SPAN_ID);
-    if (measurementSpan === null) {
-      measurementSpan = document.createElement('span');
-      measurementSpan.setAttribute('id', MEASUREMENT_SPAN_ID);
-      measurementSpan.setAttribute('aria-hidden', 'true');
-      document.body.appendChild(measurementSpan);
+    let measurementContainer = document.getElementById(MEASUREMENT_SPAN_ID) as SVGSVGElement | null;
+    if (measurementContainer === null) {
+      measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      measurementContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
+      measurementContainer.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(measurementContainer);
+      measurementContainer.appendChild(
+        document.createElementNS('http://www.w3.org/2000/svg', 'text'),
+      );
     }
+
+    const measurementSpan = measurementContainer.firstElementChild as SVGTextElement;
 
     while (measurementSpan.attributes.length > 0) {
       measurementSpan.removeAttribute(measurementSpan.attributes[0].name);
@@ -151,7 +156,7 @@ export const getStringSize = (
       return styleKey;
     });
     measurementSpan.textContent = str;
-    const rect = measurementSpan.getBoundingClientRect();
+    const rect = measurementSpan.getBBox();
     const result = { width: rect.width, height: rect.height };
 
     stringCache.set(cacheKey, result);
