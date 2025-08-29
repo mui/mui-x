@@ -72,7 +72,10 @@ const useCustomPlugin = ({ store }) => {
     console.log(store.value.expansion.expandedItems);
 
     // Check if an item is expanded
-    const isExpanded = useSelector(selectorIsItemExpanded, 'some-item-id');
+    const isExpanded = useSelector(
+      expansionSelectors.isItemExpanded,
+      'some-item-id',
+    );
   };
 };
 ```

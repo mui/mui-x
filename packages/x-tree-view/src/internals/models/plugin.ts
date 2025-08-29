@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { EventHandlers } from '@mui/utils/types';
-import { TreeViewInstance } from './treeView';
+import { TreeViewInstance, TreeViewStore } from './treeView';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
 import { TreeViewItemPlugin } from './itemPlugin';
 import { TreeViewItemId } from '../../models';
-import { TreeViewStore } from '../utils/TreeViewStore';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   /**
@@ -122,7 +121,8 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
   };
 
 export type TreeViewUsedStore<TSignature extends TreeViewAnyPluginSignature> = TreeViewStore<
-  [TSignature, ...TSignature['dependencies']]
+  [TSignature, ...TSignature['dependencies']],
+  TSignature['optionalDependencies']
 >;
 
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =

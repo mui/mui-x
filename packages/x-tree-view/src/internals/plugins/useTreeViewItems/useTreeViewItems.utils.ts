@@ -15,7 +15,7 @@ export const buildSiblingIndexes = (siblings: string[]) => {
 /**
  * Check if an item is disabled.
  * This method should only be used in selectors that are checking if several items are disabled.
- * Otherwise, use the `selectorIsItemDisabled` selector.
+ * Otherwise, use the `itemsSelector.isItemDisabled` selector.
  * @returns
  */
 export const isItemDisabled = (
