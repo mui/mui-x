@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
-import { selectorTreeViewId } from './useTreeViewId.selectors';
+import { idSelectors } from './useTreeViewId.selectors';
 import { createTreeViewDefaultId } from './useTreeViewId.utils';
 
 export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, store }) => {
@@ -16,7 +16,7 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, 
     store.set('id', { ...prevIdState, treeId: params.id ?? createTreeViewDefaultId() });
   }, [store, params.id]);
 
-  const treeId = useStore(store, selectorTreeViewId);
+  const treeId = useStore(store, idSelectors.treeId);
 
   return {
     getRootProps: () => ({

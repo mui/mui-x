@@ -21,13 +21,7 @@ import {
   getAddedAndRemovedItems,
   getLookupFromArray,
 } from './useTreeViewSelection.utils';
-import {
-  selectorIsItemSelected,
-  selectorIsMultiSelectEnabled,
-  selectorIsSelectionEnabled,
-  selectorSelectionModel,
-  selectorSelectionModelArray,
-} from './useTreeViewSelection.selectors';
+import { selectionSelectors } from './useTreeViewSelection.selectors';
 import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
@@ -49,9 +43,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     newModel: typeof params.defaultSelectedItems,
     additionalItemsToPropagate?: TreeViewItemId[],
   ) => {
-    const oldModel = selectorSelectionModel(store.state);
+    const oldModel = selectionSelectors.selectedItemsRaw(store.state);
     let cleanModel: typeof newModel;
-    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.state);
+    const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
 
     if (
       isMultiSelectEnabled &&
@@ -108,15 +102,15 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     keepExistingSelection = false,
     shouldBeSelected,
   }) => {
-    if (!selectorIsSelectionEnabled(store.state)) {
+    if (!selectionSelectors.isSelectionEnabled(store.state)) {
       return;
     }
 
     let newSelected: TreeViewSelectionValue<boolean>;
-    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.state);
+    const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
     if (keepExistingSelection) {
-      const oldSelected = selectorSelectionModelArray(store.state);
-      const isSelectedBefore = selectorIsItemSelected(store.state, itemId);
+      const oldSelected = selectionSelectors.selectedItems(store.state);
+      const isSelectedBefore = selectionSelectors.isItemSelected(store.state, itemId);
       if (isSelectedBefore && (shouldBeSelected === false || shouldBeSelected == null)) {
         newSelected = oldSelected.filter((id) => id !== itemId);
       } else if (!isSelectedBefore && (shouldBeSelected === true || shouldBeSelected == null)) {
@@ -128,7 +122,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       // eslint-disable-next-line no-lonely-if
       if (
         shouldBeSelected === false ||
-        (shouldBeSelected == null && selectorIsItemSelected(store.state, itemId))
+        (shouldBeSelected == null && selectionSelectors.isItemSelected(store.state, itemId))
       ) {
         newSelected = isMultiSelectEnabled ? [] : null;
       } else {
@@ -139,7 +133,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     setSelectedItems(
       event,
       newSelected,
-      // If shouldBeSelected === selectorIsItemSelected(store, itemId), we still want to propagate the select.
+      // If shouldBeSelected === selectionSelectors.isItemSelected(store, itemId), we still want to propagate the select.
       // This is useful when the element is in an indeterminate state.
       [itemId],
     );
@@ -148,12 +142,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const selectRange = (event: React.SyntheticEvent, [start, end]: [string, string]) => {
-    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.state);
+    const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
     if (!isMultiSelectEnabled) {
       return;
     }
 
-    let newSelectedItems = selectorSelectionModelArray(store.state).slice();
+    let newSelectedItems = selectionSelectors.selectedItems(store.state).slice();
 
     // If the last selection was a range selection,
     // remove the items that were part of the last range from the model
@@ -187,7 +181,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const selectAllNavigableItems = (event: React.SyntheticEvent) => {
-    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.state);
+    const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
     if (!isMultiSelectEnabled) {
       return;
     }
@@ -203,12 +197,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     currentItem: string,
     nextItem: string,
   ) => {
-    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.state);
+    const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
     if (!isMultiSelectEnabled) {
       return;
     }
 
-    let newSelectedItems = selectorSelectionModelArray(store.state).slice();
+    let newSelectedItems = selectionSelectors.selectedItems(store.state).slice();
 
     if (Object.keys(lastSelectedRange.current).length === 0) {
       newSelectedItems.push(nextItem);

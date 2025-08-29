@@ -12,13 +12,8 @@ import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
-import {
-  selectorItemMeta,
-  selectorItemOrderedChildrenIds,
-  selectorItemModel,
-  selectorItemDepth,
-} from './useTreeViewItems.selectors';
-import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { itemsSelectors } from './useTreeViewItems.selectors';
+import { idSelectors } from '../../corePlugins/useTreeViewId';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
 interface ProcessItemsLookupsParameters
@@ -149,12 +144,12 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   store,
 }) => {
   const getItem = React.useCallback(
-    (itemId: string) => selectorItemModel(store.state, itemId),
+    (itemId: string) => itemsSelectors.itemModel(store.state, itemId),
     [store],
   );
   const getParentId = React.useCallback(
     (itemId: string) => {
-      const itemMeta = selectorItemMeta(store.state, itemId);
+      const itemMeta = itemsSelectors.itemMeta(store.state, itemId);
       return itemMeta?.parentId || null;
     },
     [store],
@@ -185,8 +180,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
-      const item = selectorItemModel(store.state, itemId);
-      const newChildren = selectorItemOrderedChildrenIds(store.state, itemId);
+      const item = itemsSelectors.itemModel(store.state, itemId);
+      const newChildren = itemsSelectors.itemOrderedChildrenIds(store.state, itemId);
       if (newChildren.length > 0) {
         item.children = newChildren.map(getItemFromItemId);
       } else {
@@ -196,22 +191,22 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return item;
     };
 
-    return selectorItemOrderedChildrenIds(store.state, null).map(getItemFromItemId);
+    return itemsSelectors.itemOrderedChildrenIds(store.state, null).map(getItemFromItemId);
   }, [store]);
 
   const getItemOrderedChildrenIds = React.useCallback(
-    (itemId: string | null) => selectorItemOrderedChildrenIds(store.state, itemId),
+    (itemId: string | null) => itemsSelectors.itemOrderedChildrenIds(store.state, itemId),
     [store],
   );
 
   const getItemDOMElement = (itemId: string) => {
-    const itemMeta = selectorItemMeta(store.state, itemId);
+    const itemMeta = itemsSelectors.itemMeta(store.state, itemId);
     if (itemMeta == null) {
       return null;
     }
 
     const idAttribute = generateTreeItemIdAttribute({
-      treeId: selectorTreeViewId(store.state),
+      treeId: idSelectors.treeId(store.state),
       itemId,
       id: itemMeta.idAttribute,
     });
@@ -400,7 +395,7 @@ useTreeViewItems.applyDefaultValuesToParams = ({ params }) => ({
 
 useTreeViewItems.wrapRoot = ({ children }) => {
   return (
-    <TreeViewItemDepthContext.Provider value={selectorItemDepth}>
+    <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
       {children}
     </TreeViewItemDepthContext.Provider>
   );

@@ -3,13 +3,13 @@ import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
-  selectorItemMeta,
+  itemsSelectors,
+  expansionSelectors,
+  selectionSelectors,
   TreeViewPlugin,
-  selectorIsItemSelected,
   useInstanceEventHandler,
   selectorDataSourceState,
   selectorGetTreeItemError,
-  selectorExpandedItems,
 } from '@mui/x-tree-view/internals';
 import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
@@ -162,7 +162,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       return;
     }
 
-    const parent = selectorItemMeta(store.state, id);
+    const parent = itemsSelectors.itemMeta(store.state, id);
     if (!parent) {
       nestedDataManager.clearPendingRequest(id);
       return;
@@ -228,7 +228,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         shouldBeExpanded: true,
         event: eventParameters.event,
       });
-      if (selectorIsItemSelected(store.state, eventParameters.itemId)) {
+      if (selectionSelectors.isItemSelected(store.state, eventParameters.itemId)) {
         // make sure selection propagation works correctly
         instance.setItemSelection({
           event: eventParameters.event as React.SyntheticEvent,
@@ -247,7 +247,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
         instance.addItems({ items: params.items, depth: 0, getChildrenCount });
       } else {
-        const expandedItems = selectorExpandedItems(store.state);
+        const expandedItems = expansionSelectors.expandedItemsRaw(store.state);
         if (expandedItems.length > 0) {
           instance.resetItemExpansion();
         }

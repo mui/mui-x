@@ -9,7 +9,7 @@ import {
   UseTreeItemLabelInputSlotPropsFromLabelEditing,
   UseTreeViewLabelSignature,
 } from './useTreeViewLabel.types';
-import { selectorIsItemBeingEdited, selectorIsItemEditable } from './useTreeViewLabel.selectors';
+import { labelSelectors } from './useTreeViewLabel.selectors';
 
 export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { store } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewLabelSignature]>();
@@ -17,8 +17,8 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
 
   const [labelInputValue, setLabelInputValue] = React.useState(label as string);
 
-  const isItemEditable = useStore(store, selectorIsItemEditable, itemId);
-  const isItemBeingEdited = useStore(store, selectorIsItemBeingEdited, itemId);
+  const isItemEditable = useStore(store, labelSelectors.isItemEditable, itemId);
+  const isItemBeingEdited = useStore(store, labelSelectors.isItemBeingEdited, itemId);
 
   React.useEffect(() => {
     if (!isItemBeingEdited) {

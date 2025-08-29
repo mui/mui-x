@@ -14,10 +14,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import {
-  selectorGetTreeViewError,
-  selectorIsTreeViewLoading,
-} from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -91,8 +88,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
     props: other,
   });
-  const isLoading = useStore(contextValue.store, selectorIsTreeViewLoading);
-  const treeViewError = useStore(contextValue.store, selectorGetTreeViewError);
+  const isLoading = useStore(contextValue.store, itemsSelectors.isLoading);
+  const treeViewError = useStore(contextValue.store, itemsSelectors.error);
 
   const classes = useUtilityClasses(props);
 

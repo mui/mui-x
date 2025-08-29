@@ -28,15 +28,12 @@ import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
+import { focusSelectors } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { selectorTreeViewId } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
-import { selectorItemExpansionTrigger } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
-import {
-  selectorIsCheckboxSelectionEnabled,
-  selectorIsItemSelectionEnabled,
-} from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import { itemsSelectors } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { idSelectors } from '../internals/corePlugins/useTreeViewId';
+import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectionSelectors } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -72,11 +69,19 @@ export const useTreeItem = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const treeId = useStore(store, selectorTreeViewId);
-  const isSelectionEnabledForItem = useStore(store, selectorIsItemSelectionEnabled, itemId);
-  const isCheckboxSelectionEnabled = useStore(store, selectorIsCheckboxSelectionEnabled);
+  const treeId = useStore(store, idSelectors.treeId);
+  const isSelectionEnabledForItem = useStore(
+    store,
+    selectionSelectors.isItemSelectionEnabled,
+    itemId,
+  );
+  const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const shouldBeAccessibleWithTab = useStore(store, selectorIsItemTheDefaultFocusableItem, itemId);
+  const shouldBeAccessibleWithTab = useStore(
+    store,
+    focusSelectors.isItemTheDefaultFocusableItem,
+    itemId,
+  );
 
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
@@ -93,7 +98,7 @@ export const useTreeItem = <
 
       if (
         !status.focused &&
-        selectorCanItemBeFocused(store.state, itemId) &&
+        itemsSelectors.canItemBeFocused(store.state, itemId) &&
         event.currentTarget === event.target
       ) {
         instance.focusItem(event, itemId);
@@ -161,7 +166,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-      if (selectorItemExpansionTrigger(store.state) === 'content') {
+      if (expansionSelectors.expansionTrigger(store.state) === 'content') {
         interactions.handleExpansion(event);
       }
 
@@ -189,7 +194,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented) {
         return;
       }
-      if (selectorItemExpansionTrigger(store.state) === 'iconContainer') {
+      if (expansionSelectors.expansionTrigger(store.state) === 'iconContainer') {
         interactions.handleExpansion(event);
       }
     };

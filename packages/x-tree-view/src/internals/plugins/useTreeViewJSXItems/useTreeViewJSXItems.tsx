@@ -19,7 +19,7 @@ import {
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
-import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { idSelectors } from '../../corePlugins/useTreeViewId';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -122,7 +122,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
   const expandable = itemHasChildren(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useForkRef(pluginContentRef, contentRef);
-  const treeId = useStore(store, selectorTreeViewId);
+  const treeId = useStore(store, idSelectors.treeId);
 
   // Prevent any flashing
   useEnhancedEffect(() => {

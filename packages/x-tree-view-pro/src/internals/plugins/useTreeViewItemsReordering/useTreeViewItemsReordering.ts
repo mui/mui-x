@@ -1,12 +1,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import {
-  TreeViewPlugin,
-  selectorIsItemBeingEdited,
-  selectorItemIndex,
-  selectorItemMeta,
-  selectorItemOrderedChildrenIds,
-} from '@mui/x-tree-view/internals';
+import { TreeViewPlugin, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
   TreeViewItemItemReorderingValidActions,
@@ -54,13 +48,13 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       }
 
       const canMoveItemToNewPosition = params.canMoveItemToNewPosition;
-      const targetItemMeta = selectorItemMeta(store.state, itemId)!;
-      const targetItemIndex = selectorItemIndex(store.state, targetItemMeta.id);
-      const draggedItemMeta = selectorItemMeta(store.state, currentReorder.draggedItemId)!;
-      const draggedItemIndex = selectorItemIndex(store.state, draggedItemMeta.id);
+      const targetItemMeta = itemsSelectors.itemMeta(store.state, itemId)!;
+      const targetItemIndex = itemsSelectors.itemIndex(store.state, targetItemMeta.id);
+      const draggedItemMeta = itemsSelectors.itemMeta(store.state, currentReorder.draggedItemId)!;
+      const draggedItemIndex = itemsSelectors.itemIndex(store.state, draggedItemMeta.id);
       const isTargetLastSibling =
         targetItemIndex ===
-        selectorItemOrderedChildrenIds(store.state, targetItemMeta.parentId).length - 1;
+        itemsSelectors.itemOrderedChildrenIds(store.state, targetItemMeta.parentId).length - 1;
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
@@ -117,7 +111,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
             ? null
             : {
                 parentId: targetItemMeta.parentId,
-                index: selectorItemOrderedChildrenIds(store.state, targetItemMeta.parentId).length,
+                index: itemsSelectors.itemOrderedChildrenIds(store.state, targetItemMeta.parentId)
+                  .length,
               },
       };
 
@@ -136,7 +131,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const startDraggingItem = React.useCallback(
     (itemId: string) => {
-      const isItemBeingEditing = selectorIsItemBeingEdited(store.state, itemId);
+      const isItemBeingEditing = labelSelectors.isItemBeingEdited(store.state, itemId);
       if (isItemBeingEditing) {
         return;
       }
@@ -179,11 +174,11 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         return;
       }
 
-      const draggedItemMeta = selectorItemMeta(store.state, currentReorder.draggedItemId)!;
+      const draggedItemMeta = itemsSelectors.itemMeta(store.state, currentReorder.draggedItemId)!;
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
-        index: selectorItemIndex(store.state, draggedItemMeta.id),
+        index: itemsSelectors.itemIndex(store.state, draggedItemMeta.id),
       };
 
       const newPosition = currentReorder.newPosition;

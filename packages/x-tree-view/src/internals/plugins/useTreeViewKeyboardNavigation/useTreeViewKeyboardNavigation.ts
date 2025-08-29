@@ -18,24 +18,10 @@ import {
 } from './useTreeViewKeyboardNavigation.types';
 import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
-import {
-  selectorItemMetaLookup,
-  selectorIsItemDisabled,
-  selectorItemParentId,
-} from '../useTreeViewItems/useTreeViewItems.selectors';
-import {
-  selectorIsItemBeingEdited,
-  selectorIsItemEditable,
-} from '../useTreeViewLabel/useTreeViewLabel.selectors';
-import {
-  selectorIsItemSelected,
-  selectorIsMultiSelectEnabled,
-  selectorIsSelectionEnabled,
-} from '../useTreeViewSelection/useTreeViewSelection.selectors';
-import {
-  selectorIsItemExpandable,
-  selectorIsItemExpanded,
-} from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { labelSelectors } from '../useTreeViewLabel/useTreeViewLabel.selectors';
+import { selectionSelectors } from '../useTreeViewSelection/useTreeViewSelection.selectors';
+import { expansionSelectors } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
 
 function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -53,7 +39,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     },
   );
 
-  const itemMetaLookup = useStore(store, selectorItemMetaLookup);
+  const itemMetaLookup = useStore(store, itemsSelectors.itemMetaLookup);
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
       return;
@@ -99,11 +85,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   const canToggleItemSelection = (itemId: string) =>
-    selectorIsSelectionEnabled(store.state) && !selectorIsItemDisabled(store.state, itemId);
+    selectionSelectors.isSelectionEnabled(store.state) &&
+    !itemsSelectors.isItemDisabled(store.state, itemId);
 
   const canToggleItemExpansion = (itemId: string) => {
     return (
-      !selectorIsItemDisabled(store.state, itemId) && selectorIsItemExpandable(store.state, itemId)
+      !itemsSelectors.isItemDisabled(store.state, itemId) &&
+      expansionSelectors.isItemExpandable(store.state, itemId)
     );
   };
 
@@ -125,7 +113,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     const ctrlPressed = event.ctrlKey || event.metaKey;
     const key = event.key;
-    const isMultiSelectEnabled = selectorIsMultiSelectEnabled(store.state);
+    const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
 
     // eslint-disable-next-line default-case
     switch (true) {
@@ -150,8 +138,8 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case key === 'Enter': {
         if (
           hasPlugin(instance, useTreeViewLabel) &&
-          selectorIsItemEditable(store.state, itemId) &&
-          !selectorIsItemBeingEdited(store.state, itemId)
+          labelSelectors.isItemEditable(store.state, itemId) &&
+          !labelSelectors.isItemBeingEdited(store.state, itemId)
         ) {
           instance.setEditedItem(itemId);
         } else if (canToggleItemExpansion(itemId)) {
@@ -161,7 +149,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           if (isMultiSelectEnabled) {
             event.preventDefault();
             instance.setItemSelection({ event, itemId, keepExistingSelection: true });
-          } else if (!selectorIsItemSelected(store.state, itemId)) {
+          } else if (!selectionSelectors.isItemSelected(store.state, itemId)) {
             instance.setItemSelection({ event, itemId });
             event.preventDefault();
           }
@@ -210,7 +198,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (ctrlPressed) {
           return;
         }
-        if (selectorIsItemExpanded(store.state, itemId)) {
+        if (expansionSelectors.isItemExpanded(store.state, itemId)) {
           const nextItemId = getNextNavigableItem(store.state, itemId);
           if (nextItemId) {
             instance.focusItem(event, nextItemId);
@@ -230,11 +218,14 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (ctrlPressed) {
           return;
         }
-        if (canToggleItemExpansion(itemId) && selectorIsItemExpanded(store.state, itemId)) {
+        if (
+          canToggleItemExpansion(itemId) &&
+          expansionSelectors.isItemExpanded(store.state, itemId)
+        ) {
           instance.setItemExpansion({ event, itemId });
           event.preventDefault();
         } else {
-          const parent = selectorItemParentId(store.state, itemId);
+          const parent = itemsSelectors.itemParentId(store.state, itemId);
           if (parent) {
             instance.focusItem(event, parent);
             event.preventDefault();
@@ -294,7 +285,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case String.fromCharCode(event.keyCode) === 'A' &&
         ctrlPressed &&
         isMultiSelectEnabled &&
-        selectorIsSelectionEnabled(store.state): {
+        selectionSelectors.isSelectionEnabled(store.state): {
         instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;

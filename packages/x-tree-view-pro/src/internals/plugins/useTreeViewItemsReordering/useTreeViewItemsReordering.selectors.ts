@@ -1,9 +1,5 @@
 import { createSelector } from '@base-ui-components/utils/store';
-import {
-  TreeViewState,
-  selectorItemMetaLookup,
-  selectorIsAnyItemBeingEdited,
-} from '@mui/x-tree-view/internals';
+import { TreeViewState, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
 
@@ -34,7 +30,7 @@ export const selectorCurrentItemReordering = createSelector(
  */
 export const selectorDraggedItemProperties = createSelector(
   selectorCurrentItemReordering,
-  selectorItemMetaLookup,
+  itemsSelectors.itemMetaLookup,
   (currentReorder, itemMetaLookup, itemId: TreeViewItemId) => {
     if (
       !currentReorder ||
@@ -78,7 +74,7 @@ export const selectorIsItemValidReorderingTarget = createSelector(
  */
 export const selectorCanItemBeReordered = createSelector(
   selectorItemsReordering,
-  selectorIsAnyItemBeingEdited,
+  labelSelectors.isAnyItemBeingEdited,
   (itemsReordering, isEditing, itemId: TreeViewItemId) =>
     !isEditing && itemsReordering.isItemReorderable(itemId),
 );
