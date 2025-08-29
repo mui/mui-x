@@ -33,6 +33,8 @@ export const useChartContainerProps = <
     dataset,
     desc,
     onAxisClick,
+    highlightedAxis,
+    onHighlightedAxisChange,
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick,
@@ -50,6 +52,9 @@ export const useChartContainerProps = <
     seriesConfig,
     plugins,
     localeText,
+    slots,
+    slotProps,
+    experimentalFeatures,
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
@@ -70,6 +75,8 @@ export const useChartContainerProps = <
     highlightedItem,
     onHighlightChange,
     onAxisClick,
+    highlightedAxis,
+    onHighlightedAxisChange,
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick,
@@ -83,7 +90,10 @@ export const useChartContainerProps = <
     height,
     localeText,
     seriesConfig,
+    experimentalFeatures,
     plugins: plugins ?? DEFAULT_PLUGINS,
+    slots,
+    slotProps,
   } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
 
   return {

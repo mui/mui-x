@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
+import { RadarChartPluginsSignatures } from './RadarChart.plugins';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -10,34 +11,48 @@ import {
   ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface } from '../ChartsSurface';
-import { ChartsWrapper } from '../internals/components/ChartsWrapper';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsWrapper, ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { RadarSeriesArea, RadarSeriesMarks } from './RadarSeriesPlot';
+import { RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlotProps } from './RadarSeriesPlot';
 import { RadarAxisHighlight, RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
 import { ChartsTooltip, ChartsTooltipSlotProps, ChartsTooltipSlots } from '../ChartsTooltip';
+import { ChartsSlotProps, ChartsSlots } from '../internals/material';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
 
 export interface RadarChartSlots
   extends ChartsTooltipSlots,
     ChartsOverlaySlots,
-    ChartsLegendSlots {}
+    ChartsLegendSlots,
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
 
 export interface RadarChartSlotProps
   extends ChartsTooltipSlotProps,
     ChartsOverlaySlotProps,
-    ChartsLegendSlotProps {}
+    ChartsLegendSlotProps,
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotProps> {}
 
 export interface RadarChartProps
   extends RadarDataProviderProps,
     Omit<RadarGridProps, 'classes'>,
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    Pick<ChartsWrapperProps, 'sx'>,
+    Omit<ChartsSurfaceProps, 'sx'>,
+    Pick<RadarSeriesPlotProps, 'onAreaClick' | 'onMarkClick'> {
   /**
    * If `true`, the legend is not rendered.
    */
   hideLegend?: boolean;
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -50,6 +65,15 @@ export interface RadarChartProps
   slotProps?: RadarChartSlotProps;
 }
 
+/**
+ * Demos:
+ *
+ * - [Radar Chart](https://mui.com/x/react-charts/radar/)
+ *
+ * API:
+ *
+ * - [RadarChart API](https://mui.com/x/api/charts/radar-chart/)
+ */
 const RadarChart = React.forwardRef(function RadarChart(
   inProps: RadarChartProps,
   ref: React.Ref<SVGSVGElement>,
@@ -60,6 +84,8 @@ const RadarChart = React.forwardRef(function RadarChart(
     chartsSurfaceProps,
     radarDataProviderProps,
     radarGrid,
+    radarSeriesAreaProps,
+    radarSeriesMarksProps,
     overlayProps,
     legendProps,
     highlight,
@@ -67,17 +93,19 @@ const RadarChart = React.forwardRef(function RadarChart(
   } = useRadarChartProps(props);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+  const Toolbar = props.slots?.toolbar;
 
   return (
-    <RadarDataProvider {...radarDataProviderProps}>
+    <RadarDataProvider<RadarChartPluginsSignatures> {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
+        {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
-          <RadarSeriesArea />
+          <RadarSeriesArea {...radarSeriesAreaProps} />
           {highlight === 'axis' && <RadarAxisHighlight />}
-          <RadarSeriesMarks />
+          <RadarSeriesMarks {...radarSeriesMarksProps} />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -95,7 +123,6 @@ RadarChart.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
-  children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
@@ -165,11 +192,30 @@ RadarChart.propTypes = {
     }),
   ]),
   /**
+   * Callback fired when an area is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
+   */
+  onAreaClick: PropTypes.func,
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
+   */
+  onAxisClick: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * Callback fired when a mark is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
+   */
+  onMarkClick: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */
@@ -191,7 +237,7 @@ RadarChart.propTypes = {
   }).isRequired,
   /**
    * The series to display in the bar chart.
-   * An array of [[RadarSeriesType]] objects.
+   * An array of [[RadarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -199,6 +245,11 @@ RadarChart.propTypes = {
    * @default 'sharp'
    */
   shape: PropTypes.oneOf(['circular', 'sharp']),
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

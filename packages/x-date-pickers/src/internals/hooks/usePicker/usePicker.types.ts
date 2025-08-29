@@ -13,6 +13,7 @@ import {
   DateOrTimeViewWithMeridiem,
   FormProps,
   PickerOrientation,
+  PickerRangeValue,
   PickerValidValue,
   PickerValueManager,
   PickerVariant,
@@ -75,7 +76,7 @@ export interface UsePickerBaseProps<
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate?: PickerValidDate;
+  referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   /**
    * Force rendering in particular orientation.
    */
@@ -145,7 +146,7 @@ export interface UsePickerProps<
 > extends UsePickerBaseProps<TValue, TView, TError, TExternalProps>,
     UsePickerNonStaticProps {
   // We don't add JSDoc here because we want the `referenceDate` JSDoc to be the one from the view which has more context.
-  referenceDate?: PickerValidDate;
+  referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   className?: string;
   sx?: SxProps<Theme>;
 }

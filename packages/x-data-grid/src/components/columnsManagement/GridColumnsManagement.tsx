@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import debounce from '@mui/utils/debounce';
 import { styled } from '@mui/material/styles';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { TextFieldProps } from '../../models/gridBaseSlots';
@@ -34,6 +36,11 @@ export interface GridColumnsManagementProps {
   sort?: 'asc' | 'desc';
   searchPredicate?: (column: GridColDef, searchValue: string) => boolean;
   searchInputProps?: Partial<TextFieldProps>;
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  searchDebounceMs?: DataGridProcessedProps['columnFilterDebounceMs'];
   /**
    * If `true`, the column search field will be focused automatically.
    * If `false`, the first column switch input will be focused automatically.
@@ -114,7 +121,16 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     toggleAllMode = 'all',
     getTogglableColumns,
     searchInputProps,
+    searchDebounceMs = rootProps.columnFilterDebounceMs,
   } = props;
+
+  const debouncedFilter = React.useMemo(
+    () =>
+      debounce((value: string) => {
+        setSearchValue(value);
+      }, searchDebounceMs ?? 150),
+    [searchDebounceMs],
+  );
 
   const isResetDisabled = React.useMemo(
     () => checkColumnVisibilityModelsSame(columnVisibilityModel, initialColumnVisibilityModel),
@@ -138,8 +154,8 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     }
   }, [columns, sort]);
 
-  const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const { name: field } = event.target as HTMLInputElement;
+  const toggleColumn = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name: field } = event.target;
     apiRef.current.setColumnVisibility(field, columnVisibilityModel[field] === false);
   };
 
@@ -183,9 +199,9 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
 
   const handleSearchValueChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchValue(event.target.value);
+      debouncedFilter(event.target.value);
     },
-    [],
+    [debouncedFilter],
   );
 
   const hideableColumns = React.useMemo(
@@ -228,7 +244,10 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
   };
   const handleSearchReset = React.useCallback(() => {
     setSearchValue('');
-    searchInputRef.current?.focus();
+    if (searchInputRef.current) {
+      searchInputRef.current.value = '';
+      searchInputRef.current.focus();
+    }
   }, []);
 
   return (
@@ -240,7 +259,6 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           placeholder={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
           inputRef={searchInputRef}
           className={classes.searchInput}
-          value={searchValue}
           onChange={handleSearchValueChange}
           size="small"
           type="search"
@@ -282,12 +300,13 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       <GridColumnsManagementScrollArea ownerState={rootProps}>
         <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
           {currentColumns.map((column) => (
-            <rootProps.slots.baseCheckbox
+            <GridColumnsManagementRow
+              as={rootProps.slots.baseCheckbox}
               key={column.field}
               className={classes.row}
               disabled={column.hideable === false || pivotActive}
               checked={columnVisibilityModel[column.field] !== false}
-              onClick={toggleColumn}
+              onChange={toggleColumn}
               name={column.field}
               inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
               label={column.headerName || column.field}
@@ -310,7 +329,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               disabled={hideableColumns.length === 0 || pivotActive}
               checked={allHideableColumnsVisible}
               indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
-              onClick={() => toggleAllColumns(!allHideableColumnsVisible)}
+              onChange={() => toggleAllColumns(!allHideableColumnsVisible)}
               name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
               label={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
               density="compact"
@@ -365,6 +384,11 @@ GridColumnsManagement.propTypes = {
    * @returns {GridColDef['field'][]} The list of togglable columns' field names.
    */
   getTogglableColumns: PropTypes.func,
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  searchDebounceMs: PropTypes.number,
   searchInputProps: PropTypes.object,
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
@@ -432,5 +456,10 @@ const GridColumnsManagementEmptyText = styled('div', {
   alignSelf: 'center',
   font: vars.typography.font.body,
 });
+
+const GridColumnsManagementRow = styled(NotRendered<GridSlotProps['baseCheckbox']>, {
+  name: 'MuiDataGrid',
+  slot: 'ColumnsManagementRow',
+})();
 
 export { GridColumnsManagement };

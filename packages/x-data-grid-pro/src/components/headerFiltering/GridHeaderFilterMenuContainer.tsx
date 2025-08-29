@@ -7,7 +7,8 @@ import {
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid';
-import { refType, unstable_useId as useId } from '@mui/utils';
+import refType from '@mui/utils/refType';
+import useId from '@mui/utils/useId';
 import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 

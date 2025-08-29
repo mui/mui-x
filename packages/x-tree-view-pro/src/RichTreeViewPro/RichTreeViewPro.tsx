@@ -161,10 +161,16 @@ RichTreeViewPro.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * The data source object.
+   */
   dataSource: PropTypes.shape({
     getChildrenCount: PropTypes.func.isRequired,
     getTreeItems: PropTypes.func.isRequired,
   }),
+  /**
+   * The data source cache object.
+   */
   dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,

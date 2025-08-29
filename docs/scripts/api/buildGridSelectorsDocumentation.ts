@@ -48,15 +48,8 @@ export default async function buildGridSelectorsDocumentation(
           return null;
         }
 
-        const parameterSymbol = signature.getParameters()[0];
-
-        const firstParamName = project.checker.getTypeOfSymbolAtLocation(
-          parameterSymbol,
-          parameterSymbol.valueDeclaration!,
-        ).symbol?.name;
-
         if (
-          firstParamName !== 'RefObject' ||
+          !/^[a-z]\w+Selector/.test(symbol.name) ||
           symbol.name === 'useGridSelector' // Ignore hook
         ) {
           return null;

@@ -1,5 +1,3 @@
-import chai from 'chai';
-
 import chaiDom from 'chai-dom';
 import chaiPlugin from '@mui/internal-test-utils/chaiPlugin';
 
@@ -8,6 +6,7 @@ chai.use(chaiPlugin);
 
 // https://stackoverflow.com/a/46755166/3406963
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Chai {
     interface Assertion {
       /**

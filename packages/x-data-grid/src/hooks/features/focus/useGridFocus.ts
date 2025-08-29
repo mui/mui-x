@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -457,7 +458,7 @@ export const useGridFocus = (
     });
 
     const rowIsInCurrentPage = currentPage.rows.find((row) => row.id === currentFocusedCell.id);
-    if (rowIsInCurrentPage) {
+    if (rowIsInCurrentPage || currentPage.rows.length === 0) {
       return;
     }
 

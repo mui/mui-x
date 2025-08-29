@@ -1,9 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -70,7 +71,7 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
     {
       props: { fieldDirection: 'rtl' },
       style: {
-        textAlign: 'right /*! @noflip */' as any,
+        justifyContent: 'end',
       },
     },
     {
@@ -92,6 +93,22 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
         isFieldFocused: false,
         isFieldValueEmpty: true,
         inputHasLabel: false,
+      },
+      style: theme.vars
+        ? {
+            opacity: theme.vars.opacity.inputPlaceholder,
+          }
+        : {
+            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
+          },
+    },
+    {
+      props: {
+        hasStartAdornment: false,
+        isFieldFocused: false,
+        isFieldValueEmpty: true,
+        inputHasLabel: true,
+        isLabelShrunk: true,
       },
       style: theme.vars
         ? {

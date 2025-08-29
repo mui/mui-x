@@ -7,7 +7,10 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
-import { PickersArrowSwitcherProps } from './PickersArrowSwitcher.types';
+import {
+  PickersArrowSwitcherOwnerState,
+  PickersArrowSwitcherProps,
+} from './PickersArrowSwitcher.types';
 import {
   getPickersArrowSwitcherUtilityClass,
   PickersArrowSwitcherClasses,
@@ -37,7 +40,7 @@ const PickersArrowSwitcherButton = styled(IconButton, {
   name: 'MuiPickersArrowSwitcher',
   slot: 'Button',
 })<{
-  ownerState: PickerOwnerState;
+  ownerState: PickersArrowSwitcherOwnerState;
 }>({
   variants: [
     {

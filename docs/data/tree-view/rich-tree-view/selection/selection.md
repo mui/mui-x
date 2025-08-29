@@ -2,7 +2,7 @@
 productId: x-tree-view
 components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
@@ -136,7 +136,7 @@ apiRef.current.setItemSelection({
   keepExistingSelection,
   // If `true` the item will be selected
   // If `false` the item will be deselected
-  // If not defined, the item's selection status will toggled
+  // If not defined, the item's selection status will be toggled
   shouldBeSelected,
 });
 ```

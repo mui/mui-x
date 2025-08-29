@@ -31,11 +31,9 @@ MUI_X_TELEMETRY_DISABLED=true # Enable telemetry
 3. By setting the flag to global object on the application start (for example, in the main file).
 
 ```js
-import { ponyfillGlobal } from '@mui/utils';
-
-ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = false; // enabled
+globalThis.__MUI_X_TELEMETRY_DISABLED__ = false; // enabled
 // or
-ponyfillGlobal.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
+globalThis.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
 ```
 
 OR

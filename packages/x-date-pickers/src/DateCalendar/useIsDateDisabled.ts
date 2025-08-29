@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { ValidateDateProps, validateDate } from '../validation';
-import { useLocalizationContext } from '../internals/hooks/useUtils';
 import { PickerValidDate, TimezoneProps } from '../models';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 export const useIsDateDisabled = ({
   shouldDisableDate,
@@ -15,7 +15,7 @@ export const useIsDateDisabled = ({
   disablePast,
   timezone,
 }: ValidateDateProps & DefaultizedProps<TimezoneProps, 'timezone'>) => {
-  const adapter = useLocalizationContext();
+  const adapter = usePickerAdapter();
 
   return React.useCallback(
     (day: PickerValidDate | null) =>

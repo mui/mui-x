@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { createIsHighlighted } from './createIsHighlighted';
 
 const seriesId = 'id1';

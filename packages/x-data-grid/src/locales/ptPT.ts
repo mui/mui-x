@@ -12,7 +12,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Density selector toolbar button text
   toolbarDensity: 'Densidade',
   toolbarDensityLabel: 'Densidade',
-  toolbarDensityCompact: 'Compactar',
+  toolbarDensityCompact: 'Compacto',
   toolbarDensityStandard: 'Padrão',
   toolbarDensityComfortable: 'Confortável',
 
@@ -31,7 +31,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'Procurar…',
   toolbarQuickFilterLabel: 'Procurar',
-  toolbarQuickFilterDeleteIconLabel: 'Claro',
+  toolbarQuickFilterDeleteIconLabel: 'Limpar',
 
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
@@ -169,8 +169,8 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Tree Data
   treeDataGroupingHeaderName: 'Grupo',
-  treeDataExpand: 'ver crianças',
-  treeDataCollapse: 'esconder crianças',
+  treeDataExpand: 'expandir',
+  treeDataCollapse: 'colapsar',
 
   // Grouping columns
   groupingColumnHeaderName: 'Grupo',

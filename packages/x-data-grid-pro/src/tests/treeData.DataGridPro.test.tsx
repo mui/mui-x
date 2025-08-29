@@ -9,7 +9,6 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   DataGridPro,

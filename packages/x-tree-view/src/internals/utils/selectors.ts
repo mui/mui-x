@@ -16,6 +16,8 @@ const cache = new WeakMap<
 
 /**
  * Type of a selector that take the whole tree view state as input and returns a value based on a required plugin.
+ * @param {TreeViewState} state The state of the Tree View.
+ * @returns {any | undefined} The value of the plugin state.
  */
 export type TreeViewRootSelector<
   TSignature extends TreeViewAnyPluginSignature,
@@ -31,6 +33,9 @@ export type TreeViewRootSelector<
 
 /**
  * Type of a selector that take the whole tree view state as input and returns a value based on an optional plugin.
+ *
+ * @param {TreeViewState} state The state of the Tree View.
+ * @returns {any | undefined} The value of the plugin state or undefined if the plugin is not registered.
  */
 export type TreeViewRootSelectorForOptionalPlugin<TSignature extends TreeViewAnyPluginSignature> = <
   TSignatures extends [],

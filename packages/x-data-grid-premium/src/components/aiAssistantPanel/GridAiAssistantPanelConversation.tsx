@@ -1,6 +1,7 @@
+'use client';
 import * as React from 'react';
 import { getDataGridUtilityClass, GridShadowScrollArea } from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';

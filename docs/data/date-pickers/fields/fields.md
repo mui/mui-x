@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Fields components
 components: DateField, TimeField, DateTimeField, MultiInputDateRangeField, SingleInputDateRangeField, MultiInputTimeRangeField, SingleInputTimeRangeField, MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 

@@ -20,8 +20,8 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     if (dataGridSources.has(path.node.source.value as string)) {
       path.node.specifiers?.forEach((specifier) => {
         if (
-          (specifier as ImportSpecifier).imported &&
-          dataGridComponents.has((specifier as ImportSpecifier).imported.name)
+          specifier.type === 'ImportSpecifier' &&
+          dataGridComponents.has(specifier.imported.name)
         ) {
           const localName = (specifier as ImportSpecifier).local?.name;
           if (localName) {

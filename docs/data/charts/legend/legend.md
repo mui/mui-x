@@ -90,11 +90,17 @@ Make sure that the legend container has a fixed height or width to enable scroll
 
 {{"demo": "ScrollableLegend.js"}}
 
+### Series styling
+
+You can use CSS to style the series in the legend.
+Each legend item has a `data-series` attribute where its value is the ID of the series it represents.
+
+{{"demo": "LegendStyleSeries.js"}}
+
 ### Custom component
 
 For advanced customization, you can create your own legend with `useLegend`.
-This hook returns the items that the default legend would plot.
-Allowing you to focus on the rendering.
+This hook returns the items that the default legend would plot so you can focus on the rendering.
 
 This demo also shows how to use `labelMarkType` together with a custom legend to create a legend with custom shapes.
 

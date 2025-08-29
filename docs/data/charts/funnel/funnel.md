@@ -4,13 +4,9 @@ productId: x-charts
 components: FunnelChart, FunnelPlot
 ---
 
-# Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
+# Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Funnel charts allow to express quantity evolution along a process, such as audience engagement, population education levels or yields of multiple processes.</p>
-
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
+<p class="description">Funnel charts let you express quantity evolution along a process, such as audience engagement, population education levels, or yields of multiple processes.</p>
 
 ## Basics
 
@@ -45,6 +41,12 @@ To format the labels, a `valueFormatter` function can be provided.
 
 {{"demo": "FunnelLabels.js"}}
 
+### Styling labels
+
+The labels can be styled by using the `funnelSectionClasses.label` helper.
+
+{{"demo": "FunnelLabelStyling.js"}}
+
 ### Positioning labels
 
 The labels can be positioned relative to the section they represent.
@@ -66,7 +68,7 @@ It also accepts a function that receives the data object and should return the l
 ### Curve interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'bump'`, `'pyramid'`, `'step'` and `'step-pyramid'`.
+This property expects one of the following string values, corresponding to the interpolation method: `'linear'`, `'linear-sharp'`, `'bump'`, `'pyramid'`, `'step'` and `'step-pyramid'`.
 
 This series property adds the option to control the interpolation of a series.
 
@@ -85,8 +87,8 @@ The border radius of the sections can be customized by the `borderRadius` proper
 It accepts a number that represents the radius in pixels.
 
 - The `bump` curve interpolation will not respect the border radius.
-- The `linear` and `pyramid` curve respects the border radius to some extent due to the angle of the sections.
-- The `step` and `step-pyramid` curve respects the border radius.
+- The `linear`, `linear-sharp` and `pyramid` curves respect the border radius to some extent due to the angle of the sections.
+- The `step` and `step-pyramid` curves respect the border radius.
 
 To understand how the border radius interacts with the `curve` prop, see the [curve interpolation example](/x/react-charts/funnel/#curve-interpolation) above.
 
@@ -116,6 +118,16 @@ The funnel colors can be customized in two ways.
 2. You can provide a `color` property in `data` objects, which overrides the palette.
 
 {{"demo": "FunnelColor.js"}}
+
+### CSS
+
+The funnel chart can be styled using CSS.
+
+Each section group has a `data-series` attribute that can be used to target specific series sections.
+
+In order to target specific sections, you can use the `:nth-child` or `:nth-child-of-type` selectors as shown in the example below.
+
+{{"demo": "FunnelDataAttributes.js"}}
 
 ## Multiple funnels
 
@@ -149,7 +161,7 @@ To display a category axis, pass a `position` and a list of `categories` to the 
 ### Scaled sections
 
 By default, the sections have the same size because they use the `band` scale type.
-A linear scale, is also available, and will scale the the sections based on their value.
+A linear scale is also available, and scales the sections based on their values.
 To do so, set the `scaleType` property to `linear` in the `categoryAxis`.
 
 {{"demo": "FunnelLinearScale.js"}}

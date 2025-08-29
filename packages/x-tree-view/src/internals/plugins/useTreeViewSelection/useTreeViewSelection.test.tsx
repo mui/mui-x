@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, act } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
@@ -81,7 +80,6 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
       });
 
       // TODO: Re-enable this test if we have a way to un-select an item in single selection.
-      // eslint-disable-next-line mocha/no-skipped-tests
       it.skip('should call onSelectedItemsChange callback when the model is updated (single selection and remove selected item', () => {
         const onSelectedItemsChange = spy();
 
@@ -716,6 +714,53 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
             defaultSelectedItems: ['1.1'],
             defaultExpandedItems: ['1'],
           });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
+        it('should keep the parent checkbox indeterminate after collapsing it and expanding another node', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              { id: '1', children: [{ id: '1.1' }, { id: '1.2' }] },
+              { id: '2', children: [{ id: '2.1' }] },
+            ],
+            defaultSelectedItems: ['1.1'],
+            defaultExpandedItems: ['1'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+
+          fireEvent.click(view.getItemContent('1'));
+          fireEvent.click(view.getItemContent('2'));
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
+        it('should keep parent indeterminate (3 levels) after collapsing the parent and expanding a sibling node', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [
+              {
+                id: '1',
+                children: [
+                  { id: '1.1', children: [{ id: '1.1.1' }, { id: '1.1.2' }] },
+                  { id: '1.2' },
+                ],
+              },
+              { id: '2', children: [{ id: '2.1' }] },
+            ],
+            defaultSelectedItems: ['1.1.1'],
+            defaultExpandedItems: ['1', '1.1'],
+          });
+
+          expect(view.getItemCheckboxInput('1.1').dataset.indeterminate).to.equal('true');
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+
+          fireEvent.click(view.getItemContent('1'));
+          fireEvent.click(view.getItemContent('2'));
 
           expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
         });

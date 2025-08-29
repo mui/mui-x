@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridComponentRenderer, RenderProp } from '../../hooks/utils/useGridComponentRenderer';
 import { GridPrintExportOptions } from '../../models/gridExport';
 import type { GridSlotProps } from '../../models';
 
@@ -43,7 +43,7 @@ const ExportPrint = forwardRef<HTMLButtonElement, ExportPrintProps>(
       onClick?.(event);
     };
 
-    const element = useGridComponentRenderer(rootProps.slots.baseButton, render, {
+    const element = useComponentRenderer(rootProps.slots.baseButton, render, {
       ...rootProps.slotProps?.baseButton,
       onClick: handleClick,
       ...other,

@@ -49,7 +49,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Columns management text
   columnsManagementSearchTitle: 'Søg',
   columnsManagementNoColumns: 'Ingen søjler',
-  columnsManagementShowHideAllText: 'Vis/Skjul Alle',
+  columnsManagementShowHideAllText: 'Vis/Skjul alle',
   columnsManagementReset: 'Nulstil',
   // columnsManagementDeleteIconLabel: 'Clear',
 
@@ -121,12 +121,12 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnMenuLabel: 'Menu',
   // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Vis kolonner',
-  columnMenuManageColumns: 'Administrer kolonner',
-  columnMenuFilter: 'Filtrer',
+  columnMenuManageColumns: 'Administrér kolonner',
+  columnMenuFilter: 'Filtrér',
   columnMenuHideColumn: 'Skjul kolonne',
   columnMenuUnsort: 'Fjern sortering',
-  columnMenuSortAsc: 'Sorter stigende',
-  columnMenuSortDesc: 'Sorter faldende',
+  columnMenuSortAsc: 'Sortér stigende',
+  columnMenuSortDesc: 'Sortér faldende',
   // columnMenuManagePivot: 'Manage pivot',
 
   // Column header text

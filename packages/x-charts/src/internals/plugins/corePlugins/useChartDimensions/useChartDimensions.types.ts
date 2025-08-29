@@ -72,10 +72,10 @@ export interface UseChartDimensionsInstance {
    * Checks if a point is inside the drawing area.
    * @param {number} x The x coordinate of the point.
    * @param {number} y The y coordinate of the point.
-   * @param {Element} targetElement The element to check if it is allowed to overflow the drawing area.
+   * @param {Element | EventTarget | null} targetElement The element to check if it is allowed to overflow the drawing area.
    * @returns {boolean} `true` if the point is inside the drawing area, `false` otherwise.
    */
-  isPointInside: (x: number, y: number, targetElement?: Element) => boolean;
+  isPointInside: (x: number, y: number, targetElement?: Element | EventTarget | null) => boolean;
   /**
    * Checks if the x coordinate is inside the drawing area.
    * @param {number} x The x coordinate of the point.

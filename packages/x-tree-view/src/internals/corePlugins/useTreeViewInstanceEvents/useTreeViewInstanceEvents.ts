@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { EventManager } from '@mui/x-internals/EventManager';
 import type { TreeViewPlugin } from '../../models';

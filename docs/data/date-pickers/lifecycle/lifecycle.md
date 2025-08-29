@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: Components lifecycle
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 

@@ -6,8 +6,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerContext, usePickerTranslations } from '../hooks';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
   DatePickerToolbarClasses,
@@ -18,7 +17,6 @@ import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
-import { usePickerContext } from '../hooks';
 import { DateView } from '../models/views';
 import { PickerValue } from '../internals/models';
 
@@ -85,21 +83,21 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
     classes: classesProp,
     ...other
   } = props;
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const { value, views, orientation } = usePickerContext<PickerValue, DateView>();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp);
 
   const dateText = React.useMemo(() => {
-    if (!utils.isValid(value)) {
+    if (!adapter.isValid(value)) {
       return toolbarPlaceholder;
     }
 
-    const formatFromViews = resolveDateFormat(utils, { format: toolbarFormat, views }, true);
+    const formatFromViews = resolveDateFormat(adapter, { format: toolbarFormat, views }, true);
 
-    return utils.formatByString(value, formatFromViews);
-  }, [value, toolbarFormat, toolbarPlaceholder, utils, views]);
+    return adapter.formatByString(value, formatFromViews);
+  }, [value, toolbarFormat, toolbarPlaceholder, adapter, views]);
 
   return (
     <DatePickerToolbarRoot

@@ -22,12 +22,18 @@
     },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
-      "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
+      "typeDescriptions": {
+        "highlightedItem": {
+          "name": "highlightedItem",
+          "description": "The newly highlighted item."
+        }
+      }
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
     "series": {
-      "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series-type/'>PieSeriesType</a> objects."
+      "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series/'>PieSeries</a> objects."
     },
+    "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },
@@ -39,11 +45,14 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "baseButton": "",
+    "baseIconButton": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "pieArc": "",
     "pieArcLabel": "",
+    "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper."
   }
 }

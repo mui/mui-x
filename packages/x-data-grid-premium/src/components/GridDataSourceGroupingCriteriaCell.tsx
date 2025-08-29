@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridPrivateApiContext,
   gridDataSourceErrorSelector,
@@ -56,7 +56,9 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
       // always fetch/get from cache the children when the node is expanded
       apiRef.current.dataSource.fetchRows(id);
     } else {
-      apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
+      // Collapse the node and remove child rows from the grid
+      apiRef.current.setRowChildrenExpansion(id, false);
+      apiRef.current.removeChildrenRows(id);
     }
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();

@@ -3,7 +3,7 @@ title: Data Grid - Prompt Field component
 productId: x-data-grid
 components: PromptField, PromptFieldRecord, PromptFieldControl, PromptFieldSend
 packageName: '@mui/x-data-grid-premium'
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 ---
 
 # Data Grid - Prompt Field component [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')

@@ -1,7 +1,6 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import * as path from 'path';
-import * as fse from 'fs-extra';
+import * as fs from 'node:fs/promises';
 import * as prettier from 'prettier';
 import {
   getPropTypesFromFile,
@@ -9,8 +8,13 @@ import {
 } from '@mui/internal-scripts/typescript-to-proptypes';
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
+import { resolvePrettierConfigPath } from './utils';
 
-const COMPONENTS_WITHOUT_PROPTYPES = ['AnimatedBarElement'];
+const COMPONENTS_WITHOUT_PROPTYPES = [
+  'AnimatedBarElement',
+  /* RadarDataProvider is disabled because many `any` were being generated. More info: https://github.com/mui/mui-x/pull/17968 */
+  'RadarDataProvider',
+];
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const isDateObject = (name: string) => {
@@ -97,7 +101,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     return;
   }
 
-  const sourceContent = await fse.readFile(sourceFile, 'utf8');
+  const sourceContent = await fs.readFile(sourceFile, 'utf8');
 
   const result = injectPropTypesInFile({
     components,
@@ -165,15 +169,16 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     throw new Error('Unable to produce inject propTypes into code.');
   }
 
+  const prettierConfigPath = await resolvePrettierConfigPath();
   const prettierConfig = await prettier.resolveConfig(process.cwd(), {
-    config: path.join(__dirname, '../../prettier.config.js'),
+    config: prettierConfigPath,
   });
 
   const prettified = await prettier.format(result, { ...prettierConfig, filepath: sourceFile });
   const formatted = fixBabelGeneratorIssues(prettified);
   const correctedLineEndings = fixLineEndings(sourceContent, formatted);
 
-  await fse.writeFile(sourceFile, correctedLineEndings);
+  await fs.writeFile(sourceFile, correctedLineEndings);
 }
 
 async function run() {

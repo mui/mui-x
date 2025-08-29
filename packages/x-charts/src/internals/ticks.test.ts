@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { scaleTickNumberByRange } from './ticks';
 
 describe('scaleTickNumberByRange', () => {

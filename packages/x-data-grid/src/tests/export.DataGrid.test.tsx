@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { DataGrid, DataGridProps, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 // We need `createObjectURL` to test the downloaded value
-describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
+describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
   const { render } = createRenderer();
 
   function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
@@ -22,12 +21,10 @@ describeSkipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
   let spyCreateObjectURL: SinonSpy;
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
   });
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   afterEach(() => {
     spyCreateObjectURL.restore();
   });

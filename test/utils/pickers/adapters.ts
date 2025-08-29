@@ -42,8 +42,8 @@ if (/jsdom/.test(window.navigator.userAgent)) {
   if (flagIndex !== -1 && flagIndex + 1 < args.length) {
     const potentialAdapter = args[flagIndex + 1];
     if (potentialAdapter) {
-      if (availableAdapters[potentialAdapter]) {
-        AdapterClassToExtend = availableAdapters[potentialAdapter];
+      if (availableAdapters[potentialAdapter as AdapterName]) {
+        AdapterClassToExtend = availableAdapters[potentialAdapter as AdapterName];
       } else {
         const supportedAdapters = Object.keys(availableAdapters);
         const message = `Error: Invalid --date-adapter value "${potentialAdapter}". Supported date adapters: ${supportedAdapters

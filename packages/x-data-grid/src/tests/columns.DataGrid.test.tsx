@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import {
   DataGrid,
@@ -10,7 +9,7 @@ import {
   gridColumnLookupSelector,
 } from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 import type { RefObject } from '@mui/x-internals/types';
 import type { GridApiCommunity } from '@mui/x-data-grid/internals';
 
@@ -132,7 +131,7 @@ describe('<DataGrid /> - Columns', () => {
 
   // https://github.com/mui/mui-x/issues/13719
   // Needs layout
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not crash when updating columns immediately after scrolling',
     async () => {
       const data = [

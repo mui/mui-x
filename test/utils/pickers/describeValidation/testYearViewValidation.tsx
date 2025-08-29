@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
-import { describeSkipIf } from 'test/utils/skipIf';
 import { SinonFakeTimers, useFakeTimers } from 'sinon';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
@@ -21,7 +19,7 @@ const queryByTextInView = (text: string) => {
 export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { views, componentFamily, render } = getOptions();
 
-  describeSkipIf(componentFamily === 'field' || !views.includes('year'))('year view:', () => {
+  describe.skipIf(componentFamily === 'field' || !views.includes('year'))('year view:', () => {
     const defaultProps = {
       onChange: () => {},
       ...(views.length > 1 && {
@@ -60,9 +58,8 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
         timer?.restore();
       });
       it('should apply disablePast', () => {
-        let now;
+        const now = adapterToUse.date();
         function WithFakeTimer(props: any) {
-          now = adapterToUse.date();
           return <ElementToTest value={now} {...props} />;
         }
         render(<WithFakeTimer {...defaultProps} disablePast />);
@@ -82,9 +79,8 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       });
 
       it('should apply disableFuture', () => {
-        let now;
+        const now = adapterToUse.date();
         function WithFakeTimer(props: any) {
-          now = adapterToUse.date();
           return <ElementToTest value={now} {...props} />;
         }
         render(<WithFakeTimer {...defaultProps} disableFuture />);

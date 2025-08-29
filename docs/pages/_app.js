@@ -65,9 +65,12 @@ globalThis.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
+      // TODO: CHARTS-PREMIUM: uncomment when premium is available
+      // '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
+      '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',
     };
   },

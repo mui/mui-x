@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { ExportedBaseTabsProps } from '../internals/models/props/tabs';
@@ -41,6 +41,11 @@ export interface PickerLayoutOwnerState extends PickerOwnerState {
    * Is equal to "rtl" when the layout is in right-to-left direction.
    */
   layoutDirection: 'ltr' | 'rtl';
+  /**
+   * Whether the layout should display the shortcuts panel or not.
+   * This flag is used to adjust the layout accordingly.
+   */
+  hasShortcuts: boolean;
 }
 
 export interface ExportedPickersLayoutSlotProps<TValue extends PickerValidValue> {

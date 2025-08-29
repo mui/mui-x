@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { DateTime, Settings } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';

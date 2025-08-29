@@ -5,6 +5,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
@@ -23,6 +24,7 @@ const configuration: GridConfiguration = {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes,
     useGridRowAriaAttributes,
+    useGridRowsOverridableMethods,
     useCellAggregationResult: () => null,
   },
 };
@@ -36,7 +38,7 @@ const DataGridRaw = function DataGrid<R extends GridValidRowModel>(
     props.apiRef,
     props,
   );
-  useDataGridComponent(privateApiRef, props);
+  useDataGridComponent(privateApiRef, props, configuration);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGrid);
@@ -144,6 +146,11 @@ DataGridRaw.propTypes = {
    * @default 150
    */
   columnBufferPx: PropTypes.number,
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  columnFilterDebounceMs: PropTypes.number,
   /**
    * Sets the height in pixels of the column group headers in the Data Grid.
    * Inherits the `columnHeaderHeight` value if not set.
@@ -598,7 +605,7 @@ DataGridRaw.propTypes = {
    */
   onPreferencePanelOpen: PropTypes.func,
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,

@@ -3,12 +3,12 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
-import { useUtils } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../models';
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
+import { usePickerAdapter } from '../hooks/usePickerAdapter';
 
 interface CalendarState {
   currentMonth: PickerValidDate;
@@ -31,7 +31,7 @@ interface SetVisibleDatePayload {
 }
 
 const createCalendarStateReducer =
-  (reduceAnimations: boolean, utils: MuiPickersAdapter) =>
+  (reduceAnimations: boolean, adapter: MuiPickersAdapter) =>
   (
     state: CalendarState,
     action:
@@ -46,7 +46,7 @@ const createCalendarStateReducer =
           slideDirection: action.direction,
           currentMonth: action.month,
           isMonthSwitchingAnimating:
-            !utils.isSameMonth(action.month, state.currentMonth) &&
+            !adapter.isSameMonth(action.month, state.currentMonth) &&
             !reduceAnimations &&
             !action.skipAnimation,
           focusedDay: action.focusedDay,
@@ -54,12 +54,12 @@ const createCalendarStateReducer =
 
       case 'changeMonthTimezone': {
         const newTimezone = action.newTimezone;
-        if (utils.getTimezone(state.currentMonth) === newTimezone) {
+        if (adapter.getTimezone(state.currentMonth) === newTimezone) {
           return state;
         }
-        let newCurrentMonth = utils.setTimezone(state.currentMonth, newTimezone);
-        if (utils.getMonth(newCurrentMonth) !== utils.getMonth(state.currentMonth)) {
-          newCurrentMonth = utils.setMonth(newCurrentMonth, utils.getMonth(state.currentMonth));
+        let newCurrentMonth = adapter.setTimezone(state.currentMonth, newTimezone);
+        if (adapter.getMonth(newCurrentMonth) !== adapter.getMonth(state.currentMonth)) {
+          newCurrentMonth = adapter.setMonth(newCurrentMonth, adapter.getMonth(state.currentMonth));
         }
         return {
           ...state,
@@ -125,17 +125,17 @@ export const useCalendarState = (
     getCurrentMonthFromVisibleDate,
   } = params;
 
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const reducerFn = React.useRef(
-    createCalendarStateReducer(Boolean(reduceAnimations), utils),
+    createCalendarStateReducer(Boolean(reduceAnimations), adapter),
   ).current;
 
   const referenceDate = React.useMemo<PickerValidDate>(
     () => {
       return singleItemValueManager.getInitialReferenceValue({
         value,
-        utils,
+        adapter,
         timezone,
         props: params,
         referenceDate: referenceDateProp,
@@ -150,7 +150,7 @@ export const useCalendarState = (
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
     focusedDay: referenceDate,
-    currentMonth: utils.startOfMonth(referenceDate),
+    currentMonth: adapter.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
 
@@ -168,15 +168,15 @@ export const useCalendarState = (
   React.useEffect(() => {
     dispatch({
       type: 'changeMonthTimezone',
-      newTimezone: utils.getTimezone(referenceDate),
+      newTimezone: adapter.getTimezone(referenceDate),
     });
-  }, [referenceDate, utils]);
+  }, [referenceDate, adapter]);
 
   const setVisibleDate = useEventCallback(({ target, reason }: SetVisibleDateParameters) => {
     if (
       reason === 'cell-interaction' &&
       calendarState.focusedDay != null &&
-      utils.isSameDay(target, calendarState.focusedDay)
+      adapter.isSameDay(target, calendarState.focusedDay)
     ) {
       return;
     }
@@ -188,20 +188,20 @@ export const useCalendarState = (
       month = getCurrentMonthFromVisibleDate(target, calendarState.currentMonth);
       focusedDay = target;
     } else {
-      month = utils.isSameMonth(target, calendarState.currentMonth)
+      month = adapter.isSameMonth(target, calendarState.currentMonth)
         ? calendarState.currentMonth
-        : utils.startOfMonth(target);
+        : adapter.startOfMonth(target);
       focusedDay = target;
 
       // If the date is disabled, we try to find a non-disabled date inside the same month.
       if (isDateDisabled(focusedDay)) {
-        const startOfMonth = utils.startOfMonth(target);
-        const endOfMonth = utils.endOfMonth(target);
+        const startOfMonth = adapter.startOfMonth(target);
+        const endOfMonth = adapter.endOfMonth(target);
         focusedDay = findClosestEnabledDate({
-          utils,
+          adapter,
           date: focusedDay,
-          minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-          maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+          minDate: adapter.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+          maxDate: adapter.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
           disablePast,
           disableFuture,
           isDateDisabled,
@@ -210,23 +210,23 @@ export const useCalendarState = (
       }
     }
 
-    const hasChangedMonth = !utils.isSameMonth(calendarState.currentMonth, month);
-    const hasChangedYear = !utils.isSameYear(calendarState.currentMonth, month);
+    const hasChangedMonth = !adapter.isSameMonth(calendarState.currentMonth, month);
+    const hasChangedYear = !adapter.isSameYear(calendarState.currentMonth, month);
     if (hasChangedMonth) {
       onMonthChange?.(month);
     }
     if (hasChangedYear) {
-      onYearChange?.(utils.startOfYear(month));
+      onYearChange?.(adapter.startOfYear(month));
     }
 
     dispatch({
       type: 'setVisibleDate',
       month,
-      direction: utils.isAfterDay(month, calendarState.currentMonth) ? 'left' : 'right',
+      direction: adapter.isAfterDay(month, calendarState.currentMonth) ? 'left' : 'right',
       focusedDay:
         calendarState.focusedDay != null &&
         focusedDay != null &&
-        utils.isSameDay(focusedDay, calendarState.focusedDay)
+        adapter.isSameDay(focusedDay, calendarState.focusedDay)
           ? calendarState.focusedDay
           : focusedDay,
       skipAnimation,

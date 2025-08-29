@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { unstable_debounce as debounce } from '@mui/utils';
+import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
@@ -41,7 +42,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   apiRef: RefObject<Api>,
   props: Pick<
     DataGridProcessedProps,
-    'dataSource' | 'dataSourceCache' | 'onDataSourceError' | 'pageSizeOptions' | 'signature'
+    | 'dataSource'
+    | 'dataSourceCache'
+    | 'onDataSourceError'
+    | 'pageSizeOptions'
+    | 'pagination'
+    | 'signature'
   >,
   options: GridDataSourceBaseOptions = {},
 ) => {
@@ -62,6 +68,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const onDataSourceErrorProp = props.onDataSourceError;
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
+    if (!props.pagination) {
+      return new CacheChunkManager(paginationModel.pageSize);
+    }
+
     const sortedPageSizeOptions = props.pageSizeOptions
       .map((option) => (typeof option === 'number' ? option : option.value))
       .sort((a, b) => a - b);
@@ -87,16 +97,18 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
       options.clearDataSourceState?.();
 
+      const { skipCache, ...getRowsParams } = params || {};
+
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
-        ...params,
+        ...getRowsParams,
       };
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
-      if (responses.every((response) => response !== undefined)) {
+      if (!skipCache && responses.every((response) => response !== undefined)) {
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
@@ -271,6 +283,11 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
     }
+
+    return () => {
+      // ignore the current request on unmount
+      lastRequestId.current += 1;
+    };
   }, [apiRef, props.dataSource]);
 
   return {

@@ -1,4 +1,4 @@
-import { CurveFactory } from '@mui/x-charts-vendor/d3-shape';
+import type { Path } from '@mui/x-charts-vendor/d3-path';
 import { CurveOptions, FunnelCurveType } from './curve.types';
 import { Step } from './step';
 import { Linear } from './linear';
@@ -22,9 +22,11 @@ const curveConstructor = (curve: FunnelCurveType | undefined) => {
   return Linear;
 };
 
-export const getFunnelCurve = (
-  curve: FunnelCurveType | undefined,
-  options: CurveOptions,
-): CurveFactory => {
-  return (context) => new (curveConstructor(curve))(context as any, options);
+export const getFunnelCurve = (curve: FunnelCurveType | undefined, options: CurveOptions) => {
+  if (curve === 'linear-sharp') {
+    options.pointShape = 'sharp';
+  }
+
+  return (context: CanvasRenderingContext2D | Path) =>
+    new (curveConstructor(curve))(context as any, options);
 };

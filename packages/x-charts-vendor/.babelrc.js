@@ -7,15 +7,20 @@
  */
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
 
 const packageJsonPath = path.resolve('./package.json');
 const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
-const babelRuntimeVersion = packageJson.dependencies['@babel/runtime'];
+let babelRuntimeVersion = packageJson.dependencies['@babel/runtime'];
 
 if (!babelRuntimeVersion) {
   throw new Error(
     'package.json needs to have a dependency on `@babel/runtime` when building with `@babel/plugin-transform-runtime`.',
   );
+} else if (babelRuntimeVersion === 'catalog:') {
+  const listedBabelRuntime = execSync('pnpm list "@babel/runtime" --json');
+  const jsonListedDependencies = JSON.parse(listedBabelRuntime);
+  babelRuntimeVersion = jsonListedDependencies[0].dependencies['@babel/runtime'].version;
 }
 
 module.exports = function getBabelConfig(api) {

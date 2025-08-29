@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridSlotProps, RenderProp } from '@mui/x-data-grid-pro';
-import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { PromptFieldState, usePromptFieldContext } from './PromptFieldContext';
 
@@ -41,7 +41,7 @@ const PromptFieldSend = forwardRef<HTMLButtonElement, PromptFieldSendProps>(
       onClick?.(event);
     };
 
-    const element = useGridComponentRenderer(
+    const element = useComponentRenderer(
       rootProps.slots.baseIconButton,
       render,
       {

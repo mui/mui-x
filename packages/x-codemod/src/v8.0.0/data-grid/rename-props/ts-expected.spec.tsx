@@ -12,7 +12,7 @@ const dataSourceCache = {};
 // prettier-ignore
 function App() {
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <DataGrid
         rowSpanning
       />
@@ -26,7 +26,7 @@ function App() {
         listView
         listViewColumn={{}}
       />
-    </React.Fragment>)
+    </React.Fragment>
   );
 }
 

@@ -1,5 +1,5 @@
 import type {
-  ChartItemIdentifier,
+  ChartItemIdentifierWithData,
   ChartSeriesDefaultized,
   ChartSeriesType,
   ChartsSeriesConfig,
@@ -20,7 +20,7 @@ export interface ItemTooltip<T extends ChartSeriesType> {
   /**
    * An object that identifies the item to display.
    */
-  identifier: ChartItemIdentifier<T>;
+  identifier: ChartItemIdentifierWithData<T>;
   /**
    * The color associated with the item.
    */
@@ -78,7 +78,7 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
   series: ChartSeriesDefaultized<TSeriesType>;
   axesConfig: TooltipGetterAxesConfig;
   getColor: ColorGetter<TSeriesType>;
-  identifier: ChartItemIdentifier<TSeriesType> | null;
+  identifier: ChartItemIdentifierWithData<TSeriesType> | null;
 }) =>
   | (TSeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<TSeriesType>
@@ -86,9 +86,10 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
   | null;
 
 /**
- * Return an array of the axes that should trigger the tooltip.
- *
  * If `axisId` is set to undefined, the default axis will be used.
+ *
+ * @param {Record<SeriesId, ChartSeriesDefaultized<TSeriesType>>} series A map of series ID to their series configuration.
+ * @returns {{ direction: Directions; axisId: AxisId | undefined }[]} an array of the axes that should trigger the tooltip.
  */
 export type AxisTooltipGetter<
   TSeriesType extends ChartSeriesType,

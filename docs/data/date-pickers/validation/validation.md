@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, TimeRangePicker, DesktopTimeRangePicker, MobileTimeRangePicker, DateTimeRangePicker, DesktopDateTimeRangePicker, MobileDateTimeRangePicker, DateCalendar
-githubLabel: 'component: pickers'
+githubLabel: 'scope: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -20,7 +20,6 @@ But the same props are available on:
 - all the other variants of this picker;
 
   For example, the validation props showcased with `DatePicker` are also available on:
-
   - `DesktopDatePicker`
   - `MobileDatePicker`
   - `StaticDatePicker`

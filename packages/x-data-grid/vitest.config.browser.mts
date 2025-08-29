@@ -12,10 +12,18 @@ export default mergeConfig(sharedConfig, {
       instances: [
         {
           browser: 'chromium',
-          launch: {
-            // Required for tests which use scrollbars.
-            ignoreDefaultArgs: ['--hide-scrollbars'],
-          },
+          ...(process.env.PLAYWRIGHT_SERVER_WS
+            ? {
+                connect: {
+                  wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
+                },
+              }
+            : {
+                launch: {
+                  // Required for tests which use scrollbars.
+                  ignoreDefaultArgs: ['--hide-scrollbars'],
+                },
+              }),
         },
       ],
     },

@@ -2,7 +2,7 @@
 productId: x-data-grid
 components: ExportPrint, ExportCsv, ExportExcel
 packageName: '@mui/x-data-grid'
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 ---
 
 # Data Grid - Export component

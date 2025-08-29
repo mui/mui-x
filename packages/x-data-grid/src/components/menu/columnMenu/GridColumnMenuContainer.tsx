@@ -15,6 +15,14 @@ const StyledMenuList = styled(NotRendered<GridSlotProps['baseMenuList']>)(() => 
   minWidth: 248,
 }));
 
+function handleMenuScrollCapture(event: React.WheelEvent | React.TouchEvent) {
+  if (!event.currentTarget.contains(event.target as Node)) {
+    return;
+  }
+
+  event.stopPropagation();
+}
+
 const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
   function GridColumnMenuContainer(props, ref) {
     const { hideMenu, colDef, id, labelledby, className, children, open, ...other } = props;
@@ -39,6 +47,8 @@ const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuConta
         className={clsx(gridClasses.menuList, className)}
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}
+        onWheel={handleMenuScrollCapture}
+        onTouchMove={handleMenuScrollCapture}
         autoFocus={open}
         {...other}
         ref={ref}

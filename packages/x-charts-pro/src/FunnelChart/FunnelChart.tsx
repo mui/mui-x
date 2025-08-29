@@ -4,12 +4,13 @@ import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { ChartSeriesConfig, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
+import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
 import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
@@ -19,8 +20,9 @@ import { useChartContainerProProps } from '../ChartContainerPro/useChartContaine
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { FunnelChartSlotExtension } from './funnelSlots.types';
 import { CategoryAxis } from './categoryAxis.types';
-import { FunnelChartPluginsSignatures } from './FunnelChart.plugins';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 
+export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
   extends Omit<
       ChartContainerProProps<'funnel', FunnelChartPluginsSignatures>,
@@ -34,15 +36,18 @@ export interface FunnelChartProps
       | 'xAxis'
       | 'rotationAxis'
       | 'radiusAxis'
+      | 'slots'
+      | 'slotProps'
+      | 'experimentalFeatures'
     >,
     Omit<FunnelPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     FunnelChartSlotExtension {
   /**
    * The series to display in the funnel chart.
-   * An array of [[FunnelSeriesType]] objects.
+   * An array of [[FunnelSeries]] objects.
    */
-  series: Readonly<MakeOptional<FunnelSeriesType, 'type'>[]>;
+  series: Readonly<FunnelSeries[]>;
   /**
    * The configuration of the category axis.
    *
@@ -92,7 +97,9 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   return (
     <ChartDataProviderPro<'funnel', FunnelChartPluginsSignatures>
       {...chartDataProviderProProps}
+      gap={themedProps.gap}
       seriesConfig={seriesConfig}
+      plugins={FUNNEL_CHART_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
@@ -103,7 +110,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
           <ChartsAxis {...chartsAxisProps} />
           {children}
         </ChartsSurface>
-        {!themedProps.loading && <Tooltip {...themedProps.slotProps?.tooltip} trigger="item" />}
+        {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>
   );
@@ -153,7 +160,7 @@ FunnelChart.propTypes = {
       disableTicks: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['point']),
+      scaleType: PropTypes.oneOf(['log']),
       size: PropTypes.number,
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
@@ -164,7 +171,7 @@ FunnelChart.propTypes = {
       disableTicks: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       position: PropTypes.oneOf(['bottom', 'left', 'none', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['log']),
+      scaleType: PropTypes.oneOf(['symlog']),
       size: PropTypes.number,
       tickLabelStyle: PropTypes.object,
       tickSize: PropTypes.number,
@@ -291,7 +298,7 @@ FunnelChart.propTypes = {
   ]),
   /**
    * The function called for onClick events.
-   * The second argument contains information about all line/bar elements at the current mouse position.
+   * The second argument contains information about all funnel elements at the current position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
@@ -310,7 +317,7 @@ FunnelChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The series to display in the funnel chart.
-   * An array of [[FunnelSeriesType]] objects.
+   * An array of [[FunnelSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

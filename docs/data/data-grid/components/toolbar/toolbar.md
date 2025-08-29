@@ -2,7 +2,7 @@
 productId: x-data-grid
 components: Toolbar, ToolbarButton
 packageName: '@mui/x-data-grid'
-githubLabel: 'component: data grid'
+githubLabel: 'scope: data grid'
 ---
 
 # Data Grid - Toolbar component
@@ -48,6 +48,12 @@ Below are some ways the Toolbar component can be used.
 The demo below shows how to display an appearance settings menu on the toolbar. It uses local storage to persist the user's selections.
 
 {{"demo": "GridToolbarSettingsMenu.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Custom trigger and panel
+
+The demo below shows how to add a custom trigger and panel to the toolbar.
+
+{{"demo": "GridToolbarCustomPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Filter bar
 

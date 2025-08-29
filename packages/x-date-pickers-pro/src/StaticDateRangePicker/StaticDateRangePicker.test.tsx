@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { screen } from '@mui/internal-test-utils';
@@ -59,7 +58,7 @@ describe('<StaticDateRangePicker />', () => {
     // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
     expect(
       document.querySelector(
-        '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+        '[role="grid"] [role="rowgroup"] > [role="row"] [role="gridcell"][data-testid="DateRangePickerDay"]',
       ),
     ).to.have.text('1');
   });

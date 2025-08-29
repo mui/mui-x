@@ -4,7 +4,7 @@ import type { GridColDef } from '../colDef/gridColDef';
 /**
  * Object passed as parameter in the row callbacks.
  * @demos
- *   - [Master detail](/x/react-data-grid/master-detail/)
+ *   - [Master-detail row panels](/x/react-data-grid/master-detail/)
  */
 export interface GridRowParams<R extends GridValidRowModel = any> {
   /**

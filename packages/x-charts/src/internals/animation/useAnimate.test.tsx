@@ -1,9 +1,9 @@
-import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
-import { useAnimateInternal } from '@mui/x-charts/internals/animation/useAnimateInternal';
-import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { spy } from 'sinon';
+import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
+import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
+// It's not publicly exported, so, using a relative import
+import { useAnimateInternal } from './useAnimateInternal';
 
 // Wait for the next animation frame
 const waitNextFrame = () =>

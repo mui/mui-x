@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import { config } from 'react-transition-group';
 import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
@@ -13,7 +12,6 @@ import {
   openPickerAsync,
   PickerRangeComponentType,
 } from 'test/utils/pickers';
-import { describeSkipIf, testSkipIf } from 'test/utils/skipIf';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
 
@@ -31,7 +29,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     (pickerParams.type === 'date' || pickerParams.type === 'date-range') &&
     pickerParams.variant === 'desktop';
 
-  describeSkipIf(componentFamily !== 'picker')('Picker open / close lifecycle', () => {
+  describe.skipIf(componentFamily !== 'picker')('Picker open / close lifecycle', () => {
     it('should not open on mount if `props.open` is false', () => {
       render(<ElementToTest />);
       expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
@@ -100,7 +98,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
       expect(onClose.callCount).to.equal(!shouldCloseOnSelect ? 0 : 1);
     });
 
-    testSkipIf(pickerParams.variant !== 'mobile')(
+    it.skipIf(pickerParams.variant !== 'mobile')(
       'should not select input content after closing on mobile',
       () => {
         const { selectSection, pressKey } = renderWithProps(
@@ -296,7 +294,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     });
 
     // TODO: Fix this test and enable it on mobile and date-range
-    testSkipIf(pickerParams.variant === 'mobile' || isRangeType)(
+    it.skipIf(pickerParams.variant === 'mobile' || isRangeType)(
       'should call onClose when clicking outside of the picker without prior change',
       () => {
         const onChange = spy();
@@ -323,7 +321,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     );
 
     // TODO: Fix this test and enable it on mobile and date-range
-    testSkipIf(pickerParams.variant === 'mobile' || isRangeType)(
+    it.skipIf(pickerParams.variant === 'mobile' || isRangeType)(
       'should call onClose and onAccept with the live value when clicking outside of the picker',
       () => {
         const onChange = spy();
@@ -393,7 +391,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     });
   });
 
-  testSkipIf(
+  it.skipIf(
     !['date-range', 'time-range', 'date-time-range'].includes(pickerParams.type) ||
       (pickerParams as any).fieldType !== 'single-input',
   )('should return back to start range position after reopening a range picker', async () => {
@@ -437,4 +435,38 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidVal
     }
     expect(toolbarButton.querySelector('[data-selected="true"]')).to.not.equal(null);
   });
+
+  it.skipIf(
+    componentFamily !== 'picker' ||
+      (pickerParams as any).fieldType === 'multi-input' ||
+      pickerParams.variant === 'mobile',
+  )(
+    'should close a Desktop Picker when clicking outside of the picker after selecting a value with "Enter" key',
+    async () => {
+      const onChange = spy();
+      const onAccept = spy();
+      const onClose = spy();
+
+      const { user } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          closeOnSelect: false,
+        },
+        { componentFamily },
+      );
+
+      await openPickerAsync(user, pickerParams);
+
+      await user.keyboard('{Enter}');
+
+      await user.click(document.body);
+      expect(onChange.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(1);
+      await waitFor(() => expect(screen.queryByRole(viewWrapperRole)).to.equal(null));
+    },
+  );
 };

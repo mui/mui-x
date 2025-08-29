@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { AnimatedLineProps, LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { HighlightScope } from '@mui/x-charts/context';
@@ -86,6 +86,28 @@ const pieChartsParams = {
   margin: { top: 50, bottom: 50 },
 };
 
+function CustomLine(props: AnimatedLineProps) {
+  const { d, ownerState, className, ...other } = props;
+
+  return (
+    <React.Fragment>
+      <path
+        d={d}
+        stroke={
+          ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color
+        }
+        strokeWidth={ownerState.isHighlighted ? 4 : 2}
+        strokeLinejoin="round"
+        fill="none"
+        filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+        opacity={ownerState.isFaded ? 0.3 : 1}
+        className={className}
+      />
+      <path d={d} stroke="transparent" strokeWidth={25} fill="none" {...other} />
+    </React.Fragment>
+  );
+}
+
 export default function ElementHighlights() {
   const [chartType, setChartType] = React.useState('bar');
   const [withArea, setWithArea] = React.useState(false);
@@ -142,6 +164,7 @@ export default function ElementHighlights() {
                 fade,
               } as HighlightScope,
             }))}
+            slots={withArea ? {} : { line: CustomLine }}
           />
         )}
 

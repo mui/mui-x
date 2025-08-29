@@ -43,7 +43,7 @@ See [Column definition—Rendering cells](/x/react-data-grid/column-definition/#
 ### valueGetter()
 
 Use the `valueGetter()` function to derive a cell's value from the row data.
-This is the the most performant way to customize the contents of a cell, and it does so without altering the row data itself.
+This is the most performant way to customize the contents of a cell, and it does so without altering the row data itself.
 
 Common use cases include:
 

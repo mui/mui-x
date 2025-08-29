@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { RenderProp } from '@mui/x-data-grid';
-import { useGridComponentRenderer } from '@mui/x-data-grid/internals';
+import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { PromptFieldContext, PromptFieldState } from './PromptFieldContext';
 
@@ -83,7 +84,7 @@ const PromptField = forwardRef<HTMLDivElement, PromptFieldProps>(function Prompt
     [state, lang, onRecordError, handleOnSubmit],
   );
 
-  const element = useGridComponentRenderer(
+  const element = useComponentRenderer(
     'div',
     render,
     {

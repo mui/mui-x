@@ -104,7 +104,7 @@ However, there is one caveat regarding using [portal](https://react.dev/referenc
 
 The tooltip renders as a child of the document's body element.
 From a DOM perspective, it's not inside the chart.
-So using the chart's `sx` prop as follow does not work.
+So using the chart's `sx` prop as follows does not work:
 
 ```tsx
 import { chartsTooltipClasses } from '@mui/x-charts';
@@ -134,7 +134,7 @@ You can replace the default tooltip in single component charts by using slots.
 <LineChart slots={{ tooltip: CustomItemTooltip }} />
 ```
 
-With compositon, you can use your component inside the container.
+With composition, you can use your component inside the container.
 
 ```jsx
 <ChartContainer>
@@ -200,25 +200,6 @@ The following demo shows how to use additional hooks such as `useXAxis()` and `u
 
 To keep the default placement, use the `<ChartsTooltipContainer />` wrapper.
 It accepts a prop `trigger = 'item' | 'axis'` that defines when the Popper should open.
-
-:::warning
-The tooltip might not open if the ChartsTooltipContainer isn't rendered.
-
-For example the following code does not work.
-
-```jsx
-if (tooltipData === null) {
-  return null;
-}
-
-return (
-  <ChartsTooltipContainer trigger="item">
-    {/** My content **/}
-  </ChartsTooltipContainer>
-);
-```
-
-:::
 
 ##### Item content
 

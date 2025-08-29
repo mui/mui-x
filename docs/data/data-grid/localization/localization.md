@@ -1,8 +1,9 @@
-# Data Grid - Translated components
+# Data Grid - Localization
 
-<p class="description">The Data Grid allows to support users from different locales, with formatting, and localized strings.</p>
+<p class="description">The Data Grid's localization features provide the appropriate translations and formatting for users around the world.</p>
 
-The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
+The default locale of MUI X is English (United States).
+To use other locales, follow the instructions below.
 
 ## Translation keys
 
@@ -12,25 +13,6 @@ in the GitHub repository.
 In the following example, the label of the quick filter placeholder is customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
-
-:::warning
-It's important to note that because the Data Grid uses components from the Material UI library, some translation keys need to be accessed using that component key.
-
-One example is the table pagination component used in the Data Grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [Table Pagination](/material-ui/api/table-pagination/) component.
-
-```jsx
-<DataGrid
-  {...data}
-  localeText={{
-    MuiTablePagination: {
-      labelDisplayedRows: ({ from, to, count }) =>
-        `${from} - ${to} of ${count === -1 ? `more than ${to}` : count}`,
-    },
-  }}
-/>
-```
-
-:::
 
 ## Locale text
 
@@ -112,6 +94,73 @@ Follow [this guide](/material-ui/customization/right-to-left/) to use them.
 The example below demonstrates how to use an RTL language (Arabic) with the Data Grid.
 
 {{"demo": "DataGridRTL.js", "bg": "inline"}}
+
+## Pagination number formatting
+
+To format large numbers in the pagination component, customize the `paginationDisplayedRows` with the following code:
+
+```jsx
+import { DataGrid } from '@mui/x-data-grid';
+
+// ======================================================
+// TODO: replace with your locale
+import { frFR as locale } from '@mui/x-data-grid/locales';
+const LOCALE = 'fr-FR';
+// ======================================================
+
+function formatNumber(value: number | string) {
+  if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
+    try {
+      const result = new Intl.NumberFormat(LOCALE).format(Number(value));
+      return result === 'NaN' ? String(value) : result;
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value);
+}
+
+function paginationDisplayedRows({
+  from,
+  to,
+  count,
+  estimated,
+}: {
+  from: number;
+  to: number;
+  count: number;
+  estimated?: number;
+}) {
+  if (!estimated) {
+    return `${formatNumber(from)}–${formatNumber(to)} sur ${
+      count !== -1 ? formatNumber(count) : `plus de ${formatNumber(to)}`
+    }`;
+  }
+  const estimatedLabel =
+    estimated && estimated > to
+      ? `environ ${formatNumber(estimated)}`
+      : `plus de ${formatNumber(to)}`;
+  return `${formatNumber(from)}–${formatNumber(to)} sur ${
+    count !== -1 ? formatNumber(count) : estimatedLabel
+  }`;
+}
+
+const localeText = {
+  ...locale.components.MuiDataGrid.defaultProps.localeText,
+  paginationDisplayedRows,
+};
+
+function App() {
+  return (
+    <DataGrid
+      rowCount={1000000}
+      localeText={localeText}
+    />
+  )
+}
+```
+
+{{"demo": "PaginationNumberFormatting.js", "bg": "inline"}}
 
 ## API
 

@@ -14,9 +14,8 @@ import {
   ChartSeriesConfig,
   XAxis,
   YAxis,
-  ChartsWrapper,
-  ChartsWrapperProps,
 } from '@mui/x-charts/internals';
+import { ChartsWrapper, type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
   ChartsOverlay,
@@ -31,6 +30,7 @@ import {
   ChartsLegendSlots,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
+import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
@@ -39,8 +39,18 @@ import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
+import { ChartsToolbarPro } from '../ChartsToolbarPro';
+import {
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
+} from '../ChartsToolbarPro/Toolbar.types';
 
-export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
+export interface HeatmapSlots
+  extends ChartsAxisSlots,
+    ChartsOverlaySlots,
+    HeatmapItemSlots,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {
   /**
    * Custom component for the tooltip.
    * @default ChartsTooltipRoot
@@ -56,14 +66,26 @@ export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
-    ChartsLegendSlotProps {
+    ChartsLegendSlotProps,
+    ChartsToolbarProSlotProps,
+    Partial<ChartsSlotPropsPro> {
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 
+export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 export interface HeatmapProps
   extends Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'skipAnimation'
+      | 'series'
+      | 'plugins'
+      | 'xAxis'
+      | 'yAxis'
+      | 'skipAnimation'
+      | 'slots'
+      | 'slotProps'
+      | 'experimentalFeatures'
+      | 'highlightedAxis'
+      | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -81,9 +103,9 @@ export interface HeatmapProps
   yAxis: Readonly<Omit<MakeOptional<YAxis<'band'>, 'scaleType'>, 'zoom'>[]>;
   /**
    * The series to display in the bar chart.
-   * An array of [[HeatmapSeriesType]] objects.
+   * An array of [[HeatmapSeries]] objects.
    */
-  series: Readonly<MakeOptional<HeatmapSeriesType, 'type'>[]>;
+  series: Readonly<HeatmapSeries[]>;
   /**
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
@@ -94,6 +116,11 @@ export interface HeatmapProps
    * @default true
    */
   hideLegend?: boolean;
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -159,6 +186,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     highlightedItem,
     onHighlightChange,
     hideLegend = true,
+    showToolbar = false,
   } = props;
 
   const id = useId();
@@ -207,6 +235,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     legendDirection: props.slotProps?.legend?.direction,
   };
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
+  const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
 
   return (
     <ChartDataProviderPro<'heatmap', HeatmapPluginsSignatures>
@@ -231,6 +260,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       plugins={HEATMAP_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
+        {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
             slots={{ ...slots, legend: slots?.legend ?? ContinuousColorLegend }}
@@ -342,7 +372,7 @@ Heatmap.propTypes = {
   onHighlightChange: PropTypes.func,
   /**
    * The series to display in the bar chart.
-   * An array of [[HeatmapSeriesType]] objects.
+   * An array of [[HeatmapSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -350,6 +380,11 @@ Heatmap.propTypes = {
    * @ignore Unstable props for internal usage.
    */
   seriesConfig: PropTypes.object,
+  /**
+   * If true, shows the default chart toolbar.
+   * @default false
+   */
+  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -419,7 +454,13 @@ Heatmap.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
+      groups: PropTypes.arrayOf(
+        PropTypes.shape({
+          getValue: PropTypes.func.isRequired,
+          tickLabelStyle: PropTypes.object,
+          tickSize: PropTypes.number,
+        }),
+      ),
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -434,7 +475,6 @@ Heatmap.propTypes = {
       scaleType: PropTypes.oneOf(['band']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -500,7 +540,13 @@ Heatmap.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
+      groups: PropTypes.arrayOf(
+        PropTypes.shape({
+          getValue: PropTypes.func.isRequired,
+          tickLabelStyle: PropTypes.object,
+          tickSize: PropTypes.number,
+        }),
+      ),
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -514,7 +560,6 @@ Heatmap.propTypes = {
       scaleType: PropTypes.oneOf(['band']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,

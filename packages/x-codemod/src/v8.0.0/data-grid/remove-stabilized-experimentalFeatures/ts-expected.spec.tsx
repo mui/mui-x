@@ -5,7 +5,7 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 // prettier-ignore
 function App() {
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <DataGridPremium
         experimentalFeatures={{
           warnIfFocusStateIsNotSynced: true,
@@ -13,7 +13,7 @@ function App() {
       />
       <DataGridPremium />
       <DataGridPremium {...props} />
-    </React.Fragment>)
+    </React.Fragment>
   );
 }
 

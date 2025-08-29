@@ -3,7 +3,7 @@ productId: x-tree-view
 title: Simple Tree View - Items
 components: SimpleTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 

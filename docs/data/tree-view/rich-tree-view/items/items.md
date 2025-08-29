@@ -2,7 +2,7 @@
 productId: x-tree-view
 components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
@@ -268,7 +268,7 @@ publicAPI.getParentId(itemId);
 
 ### Imperatively disable an item
 
-Use the `setIsItemDisabled` API method to imperatively toggle the items's disabled state.
+Use the `setIsItemDisabled` API method to imperatively toggle the item's disabled state.
 
 ```ts
 publicAPI.setIsItemDisabled({

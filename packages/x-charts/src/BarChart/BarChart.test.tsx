@@ -2,25 +2,11 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
-import { expect } from 'chai';
 import { screen } from '@mui/internal-test-utils';
-import { isJSDOM, testSkipIf } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<BarChart />', () => {
   const { render } = createRenderer();
-
-  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-  beforeEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
 
   describeConformance(
     <BarChart height={100} width={100} series={[{ data: [100, 200] }]} />,
@@ -62,7 +48,7 @@ describe('<BarChart />', () => {
   );
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should hide tooltip if the item the tooltip was showing is removed',
     async () => {
       const { setProps, user } = render(
@@ -92,7 +78,7 @@ describe('<BarChart />', () => {
   );
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should hide tooltip if the series of the item the tooltip was showing is removed',
     async () => {
       const { setProps, user } = render(

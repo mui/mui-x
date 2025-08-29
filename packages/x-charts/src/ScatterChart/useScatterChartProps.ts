@@ -8,7 +8,7 @@ import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartContainerProps } from '../ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
-import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 
@@ -43,6 +43,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    showToolbar,
     ...other
   } = props;
 
@@ -69,6 +70,8 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
       : (onItemClick as UseChartVoronoiSignature['params']['onItemClick']),
     className,
     plugins: SCATTER_CHART_PLUGINS,
+    slots,
+    slotProps,
   };
 
   const chartsAxisProps: ChartsAxisProps = {

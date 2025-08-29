@@ -5,8 +5,9 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { useUtils, usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
+import { usePickerDayOwnerState } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import {
   DateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
@@ -281,7 +282,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
   } = props;
 
   useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const shouldRenderHighlight = isHighlighting && !outsideCurrentMonth;
   const shouldRenderPreview = isPreviewing && !outsideCurrentMonth;
@@ -309,8 +310,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
     isDayPreviewEnd: isEndOfPreviewing,
     isDayInsidePreview: isPreviewing && !isStartOfPreviewing && !isEndOfPreviewing,
     // Properties specific to the MUI implementation (some might be removed in the next major)
-    isDayStartOfMonth: utils.isSameDay(day, utils.startOfMonth(day)),
-    isDayEndOfMonth: utils.isSameDay(day, utils.endOfMonth(day)),
+    isDayStartOfMonth: adapter.isSameDay(day, adapter.startOfMonth(day)),
+    isDayEndOfMonth: adapter.isSameDay(day, adapter.endOfMonth(day)),
     isDayFirstVisibleCell: isFirstVisibleCell,
     isDayLastVisibleCell: isLastVisibleCell,
     isDayFillerCell: outsideCurrentMonth && !showDaysOutsideCurrentMonth,

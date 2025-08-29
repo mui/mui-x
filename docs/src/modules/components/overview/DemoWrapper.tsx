@@ -48,7 +48,6 @@ export default function DemoWrapper({
         })}
       >
         {ToolbarControls}
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Button size="small" href={link} endIcon={<ArrowForwardIcon />}>
           More info
         </Button>

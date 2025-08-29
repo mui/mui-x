@@ -8,8 +8,7 @@ import { shouldForwardProp } from '@mui/system/createStyled';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
-import { useUtils } from '../internals/hooks/useUtils';
+import { usePickerAdapter, usePickerTranslations } from '../hooks';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
   dateTimePickerToolbarClasses,
@@ -135,21 +134,14 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
       },
     },
     {
-      props: ({
-        pickerOrientation,
-        toolbarVariant,
-      }: PickerToolbarOwnerState & { toolbarVariant: PickerVariant }) =>
+      props: ({ pickerOrientation, toolbarVariant }) =>
         pickerOrientation === 'landscape' && toolbarVariant !== 'desktop',
       style: {
         flexDirection: 'column',
       },
     },
     {
-      props: ({
-        pickerOrientation,
-        toolbarVariant,
-        toolbarDirection,
-      }: PickerToolbarOwnerState & { toolbarVariant: PickerVariant }) =>
+      props: ({ pickerOrientation, toolbarVariant, toolbarDirection }) =>
         pickerOrientation === 'landscape' &&
         toolbarVariant !== 'desktop' &&
         toolbarDirection === 'rtl',
@@ -280,7 +272,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const overrides = React.useContext(DateTimePickerToolbarOverrideContext);
 
   const value = overrides ? overrides.value : valueContext;
@@ -298,23 +290,23 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 
   const dateText = React.useMemo(() => {
-    if (!utils.isValid(value)) {
+    if (!adapter.isValid(value)) {
       return toolbarPlaceholder;
     }
 
     if (toolbarFormat) {
-      return utils.formatByString(value, toolbarFormat);
+      return adapter.formatByString(value, toolbarFormat);
     }
 
-    return utils.format(value, 'shortDate');
-  }, [value, toolbarFormat, toolbarPlaceholder, utils]);
+    return adapter.format(value, 'shortDate');
+  }, [value, toolbarFormat, toolbarPlaceholder, adapter]);
 
   const formatSection = (format: keyof AdapterFormats, fallback: string) => {
-    if (!utils.isValid(value)) {
+    if (!adapter.isValid(value)) {
       return fallback;
     }
 
-    return utils.format(value, format);
+    return adapter.format(value, format);
   };
 
   return (
@@ -428,7 +420,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
               variant="subtitle2"
               selected={meridiemMode === 'am'}
               typographyClassName={classes.ampmLabel}
-              value={formatMeridiem(utils, 'am')}
+              value={formatMeridiem(adapter, 'am')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
               disabled={disabled}
             />
@@ -436,7 +428,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
               variant="subtitle2"
               selected={meridiemMode === 'pm'}
               typographyClassName={classes.ampmLabel}
-              value={formatMeridiem(utils, 'pm')}
+              value={formatMeridiem(adapter, 'pm')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
               disabled={disabled}
             />
@@ -449,7 +441,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
             data-testid="am-pm-view-button"
             onClick={() => setView('meridiem')}
             selected={view === 'meridiem'}
-            value={value && meridiemMode ? formatMeridiem(utils, meridiemMode) : '--'}
+            value={value && meridiemMode ? formatMeridiem(adapter, meridiemMode) : '--'}
             width={MULTI_SECTION_CLOCK_SECTION_WIDTH}
           />
         )}

@@ -1,6 +1,5 @@
 /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
 import * as React from 'react';
-import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
   MultiSectionDigitalClock,

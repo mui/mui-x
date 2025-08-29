@@ -15,8 +15,8 @@ function App() {
 
   // prettier-ignore
   return (
-    (<SimpleTreeView>
+    <SimpleTreeView>
       <TreeItem nodeId="1" label="Item 1" />
-    </SimpleTreeView>)
+    </SimpleTreeView>
   );
 }

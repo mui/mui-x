@@ -9,6 +9,7 @@ const chartSetting = {
     },
   ],
   height: 400,
+  margin: { left: 0 },
 };
 
 export default function HorizontalBars() {

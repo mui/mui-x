@@ -1,7 +1,17 @@
 import { ChartsOverlaySlotProps, ChartsOverlaySlots } from '@mui/x-charts/ChartsOverlay';
-import { ChartsTooltipSlotProps, ChartsTooltipSlots } from '@mui/x-charts/ChartsTooltip';
-import { ChartsAxisSlotProps, ChartsAxisSlots } from '@mui/x-charts/internals';
+import {
+  ChartsTooltipProps,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
+} from '@mui/x-charts/ChartsTooltip';
+import {
+  ChartsAxisSlotProps,
+  ChartsAxisSlots,
+  ChartsSlotProps,
+  ChartsSlots,
+} from '@mui/x-charts/internals';
 import { ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
 import { FunnelPlotSlotProps, FunnelPlotSlots } from './funnelPlotSlots.types';
 
 export interface FunnelChartSlots
@@ -10,14 +20,24 @@ export interface FunnelChartSlots
     ChartsLegendSlots,
     ChartsTooltipSlots,
     ChartsOverlaySlots,
-    ChartsAxisSlots {}
+    ChartsAxisSlots,
+    ChartsToolbarSlots,
+    Partial<ChartsSlots> {}
 export interface FunnelChartSlotProps
   extends ChartsAxisSlotProps,
     FunnelPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    Omit<ChartsTooltipSlotProps, 'tooltip'>,
     ChartsOverlaySlotProps,
-    ChartsAxisSlotProps {}
+    ChartsAxisSlotProps,
+    ChartsToolbarSlotProps,
+    Partial<ChartsSlotProps> {
+  /**
+   * Slot props for the tooltip component.
+   * @default {}
+   */
+  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
+}
 
 export interface FunnelChartSlotExtension {
   /**

@@ -1,4 +1,4 @@
-import { test as base, expect, Page } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import kebabCase from 'lodash/kebabCase';
 import { TestFixture } from './playwright.config';
 

@@ -10,6 +10,7 @@ import {
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
 import { gridIsRtlSelector } from '../../core/gridCoreSelector';
+import { gridListColumnSelector, gridListViewSelector } from '../listView';
 
 /**
  * Get the columns state
@@ -75,8 +76,12 @@ export const gridInitialColumnVisibilityModelSelector = createSelector(
 export const gridVisibleColumnDefinitionsSelector = createSelectorMemoized(
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
-  (columns, columnVisibilityModel) =>
-    columns.filter((column) => columnVisibilityModel[column.field] !== false),
+  gridListViewSelector,
+  gridListColumnSelector,
+  (columns, columnVisibilityModel, listView, listColumn) =>
+    listView && listColumn
+      ? [listColumn]
+      : columns.filter((column) => columnVisibilityModel[column.field] !== false),
 );
 
 /**
@@ -97,6 +102,18 @@ export const gridPinnedColumnsSelector = createRootSelector(
 );
 
 /**
+ * Get all existing pinned columns. Place the columns on the side that depends on the rtl state.
+ * @category Pinned Columns
+ * @ignore - Do not document
+ */
+export const gridExistingPinnedColumnSelector = createSelectorMemoized(
+  gridPinnedColumnsSelector,
+  gridColumnFieldsSelector,
+  gridIsRtlSelector,
+  (model, orderedFields, isRtl) => filterMissingColumns(model, orderedFields, isRtl),
+);
+
+/**
  * Get the visible pinned columns.
  * @category Visible Columns
  */
@@ -105,8 +122,12 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   gridPinnedColumnsSelector,
   gridVisibleColumnFieldsSelector,
   gridIsRtlSelector,
-  (columnsState, model, visibleColumnFields, isRtl) => {
-    const visiblePinnedFields = filterVisibleColumns(model, visibleColumnFields, isRtl);
+  gridListViewSelector,
+  (columnsState, model, visibleColumnFields, isRtl, listView) => {
+    if (listView) {
+      return EMPTY_PINNED_COLUMN_FIELDS;
+    }
+    const visiblePinnedFields = filterMissingColumns(model, visibleColumnFields, isRtl);
     const visiblePinnedColumns = {
       left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
       right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),
@@ -115,7 +136,7 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   },
 );
 
-function filterVisibleColumns(
+function filterMissingColumns(
   pinnedColumns: GridPinnedColumnFields,
   columns: string[],
   invert?: boolean,

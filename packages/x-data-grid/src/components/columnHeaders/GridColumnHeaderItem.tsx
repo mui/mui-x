@@ -1,9 +1,12 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
+import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
+import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -50,6 +53,7 @@ type OwnerState = GridColumnHeaderItemProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
+  const { disableColumnSorting } = useGridRootProps();
   const {
     colDef,
     classes,
@@ -63,6 +67,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isSiblingFocused,
   } = ownerState;
 
+  const isColumnSortable = colDef.sortable && !disableColumnSorting;
   const isColumnSorted = sortDirection != null;
   const isColumnFiltered = filterItemsCounter != null && filterItemsCounter > 0;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
@@ -74,7 +79,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
       colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
       colDef.headerAlign === 'right' && 'columnHeader--alignRight',
-      colDef.sortable && 'columnHeader--sortable',
+      isColumnSortable && 'columnHeader--sortable',
       isDragging && 'columnHeader--moving',
       isColumnSorted && 'columnHeader--sorted',
       isColumnFiltered && 'columnHeader--filtered',
@@ -265,9 +270,15 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
-      elementToFocus?.focus();
-      if (apiRef.current.columnHeadersContainerRef?.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
+      if (!elementToFocus) {
+        return;
+      }
+      if (doesSupportPreventScroll()) {
+        elementToFocus.focus({ preventScroll: true });
+      } else {
+        const scrollPosition = apiRef.current.getScrollPosition();
+        elementToFocus.focus();
+        apiRef.current.scroll(scrollPosition);
       }
     }
   }, [apiRef, hasFocus]);

@@ -15,12 +15,16 @@ The first two numbers in each tuple correspond to the x and y indexes of the cel
 The third number is the value for the given cell.
 
 ```jsx
-series={[{
-    data: [
+<Heatmap
+  series={[
+    {
+      data: [
         [0, 2, 2.7], // Cell (0, 2) receives the value 2.7
         [1, 2, 4.5], // Cell (1, 2) receives the value 4.5
-    ]
-}]}
+      ],
+    },
+  ]}
+/>
 ```
 
 You can specify x and y ticks with the `xAxis` and `yAxis` props.
@@ -36,7 +40,7 @@ You can either use the piecewise or continuous [color mapping](https://mui.com/x
 
 ## Highlight
 
-You can chose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
+You can choose to highlight the hovered element by setting `highlightScope.highlight` to `'item'`.
 To fade the other item, set `highlightScope.fade` to `'global'`.
 
 {{"demo": "HighlightHeatmap.js"}}
@@ -70,15 +74,6 @@ You can import the default tooltip, or only its content as follows:
 import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
 ```
 
-The Heatmap has an item tooltip that can be customized as described in the [Tooltip documentation page](/x/react-charts/tooltip/).
-
-The specificity of the Heatmap Tooltip is its default content.
-You can import the default tooltip, or only its content as follow:
-
-```js
-import { HeatmapTooltip, HeatmapTooltipContent } from '@mui/x-charts/Heatmap',
-```
-
 ### Legend
 
 The Heatmap comes with a legend which is by default the [ContinuousColorLegend](/x/react-charts/legend/#color-legend).
@@ -87,8 +82,6 @@ To display it set `hideLegend` to `false`.
 You can modify it with `slots.legend` and `slotProps.legend`.
 
 {{"demo": "HeatmapLegend.js"}}
-
-## Labels 🚧
 
 ## Custom item
 

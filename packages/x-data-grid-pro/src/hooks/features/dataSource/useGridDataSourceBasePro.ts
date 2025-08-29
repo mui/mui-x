@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
@@ -12,6 +13,7 @@ import {
   GridRowModel,
   gridRowTreeSelector,
   GridUpdateRowParams,
+  GridRowId,
 } from '@mui/x-data-grid';
 import {
   gridRowGroupsToFetchSelector,
@@ -129,7 +131,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
         apiRef.current.updateNestedRows(rows, rowNode.path);
-        apiRef.current.setRowCount(cachedData.rowCount === undefined ? -1 : cachedData.rowCount);
+        if (cachedData.rowCount !== undefined) {
+          apiRef.current.setRowCount(cachedData.rowCount);
+        }
         apiRef.current.setRowChildrenExpansion(id, true);
         apiRef.current.dataSource.setChildrenLoading(id, false);
         return;
@@ -158,9 +162,9 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           cache.set(key, response);
         });
 
-        apiRef.current.setRowCount(
-          getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
-        );
+        if (getRowsResponse.rowCount !== undefined) {
+          apiRef.current.setRowCount(getRowsResponse.rowCount);
+        }
         // Remove existing outdated rows before setting the new ones
         const rowsToDelete: GridRowModelUpdate[] = [];
         getRowsResponse.rows.forEach((row) => {
@@ -271,6 +275,35 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     });
   }, [apiRef]);
 
+  const removeChildrenRows = React.useCallback<GridDataSourcePrivateApiPro['removeChildrenRows']>(
+    (parentId) => {
+      const rowNode = gridRowNodeSelector(apiRef, parentId);
+      if (!rowNode || rowNode.type !== 'group' || rowNode.children.length === 0) {
+        return;
+      }
+
+      const removedRows: { id: GridRowId; _action: 'delete' }[] = [];
+      const traverse = (nodeId: GridRowId) => {
+        const node = gridRowNodeSelector(apiRef, nodeId);
+        if (!node) {
+          return;
+        }
+
+        if (node.type === 'group' && node.children.length > 0) {
+          node.children.forEach(traverse);
+        }
+        removedRows.push({ id: nodeId, _action: 'delete' });
+      };
+
+      rowNode.children.forEach(traverse);
+
+      if (removedRows.length > 0) {
+        apiRef.current.updateNestedRows(removedRows, (rowNode as GridDataSourceGroupNode).path);
+      }
+    },
+    [apiRef],
+  );
+
   const dataSourceApi: GridDataSourceApiPro = {
     dataSource: {
       ...api.public.dataSource,
@@ -282,6 +315,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const dataSourcePrivateApi: GridDataSourcePrivateApiPro = {
     fetchRowChildren,
     resetDataSourceState,
+    removeChildrenRows,
   };
 
   React.useEffect(() => {

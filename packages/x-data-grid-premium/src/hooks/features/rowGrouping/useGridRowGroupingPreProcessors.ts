@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -5,7 +6,6 @@ import {
   GridRowId,
   gridRowTreeSelector,
   useFirstRender,
-  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -19,6 +19,7 @@ import {
   updateRowTree,
   RowTreeBuilderGroupingCriterion,
   getVisibleRowsLookup,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -32,7 +33,6 @@ import {
 import {
   filterRowTreeFromGroupingColumns,
   getColDefOverrides,
-  RowGroupingStrategy,
   isGroupingColumn,
   setStrategyAvailability,
   getCellGroupingCriteria,
@@ -137,17 +137,7 @@ export const useGridRowGroupingPreProcessors = (
         newColumnsLookup[groupingColDef.field] = groupingColDef;
       });
 
-      const checkBoxFieldIndex = newColumnFields.findIndex(
-        (field) => field === GRID_CHECKBOX_SELECTION_FIELD,
-      );
-      const checkBoxColumn =
-        checkBoxFieldIndex !== -1 ? newColumnFields.splice(checkBoxFieldIndex, 1) : [];
-
-      newColumnFields = [
-        ...checkBoxColumn,
-        ...groupingColDefs.map((colDef) => colDef.field),
-        ...newColumnFields,
-      ];
+      newColumnFields = [...groupingColDefs.map((colDef) => colDef.field), ...newColumnFields];
 
       columnsState.orderedFields = newColumnFields;
       columnsState.lookup = newColumnsLookup;

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const config = {
   dataset: [
@@ -31,21 +30,8 @@ const config = {
 describe('ScatterChart - click event', () => {
   const { render } = createRenderer();
 
-  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-  beforeEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  describeSkipIf(isJSDOM)('onItemClick - using voronoi', () => {
+  describe.skipIf(isJSDOM)('onItemClick - using voronoi', () => {
     it('should provide the right context as second argument when clicking svg', async () => {
       const onItemClick = spy();
       const { user } = render(

@@ -1,4 +1,4 @@
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 

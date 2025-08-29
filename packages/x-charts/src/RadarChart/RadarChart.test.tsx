@@ -2,9 +2,8 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { Unstable_RadarChart as RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';
-import { expect } from 'chai';
 import { spy } from 'sinon';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const radarConfig: RadarChartProps = {
   height: 100,
@@ -44,7 +43,7 @@ describe('<RadarChart />', () => {
   });
 
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-  testSkipIf(isJSDOM)('should call onHighlightChange', async () => {
+  it.skipIf(isJSDOM)('should call onHighlightChange', async () => {
     const onHighlightChange = spy();
     const { user } = render(<RadarChart {...radarConfig} onHighlightChange={onHighlightChange} />);
 
@@ -54,7 +53,7 @@ describe('<RadarChart />', () => {
     expect(onHighlightChange.callCount).to.equal(1);
   });
 
-  testSkipIf(isJSDOM)('should highlight axis on hover', async () => {
+  it.skipIf(isJSDOM)('should highlight axis on hover', async () => {
     const { user } = render(
       <div
         style={{

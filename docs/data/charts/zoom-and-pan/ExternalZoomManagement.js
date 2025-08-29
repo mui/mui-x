@@ -3,6 +3,7 @@ import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
+import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { randomData } from './randomData';
 
 const initialZoomData = [
@@ -14,7 +15,7 @@ const initialZoomData = [
 ];
 
 export default function ExternalZoomManagement() {
-  const apiRef = React.useRef(undefined);
+  const apiRef = useChartProApiRef();
   const [zoomData, setZoomData] = React.useState(initialZoomData);
 
   return (
@@ -38,7 +39,9 @@ export default function ExternalZoomManagement() {
         <Button
           variant="contained"
           onClick={() =>
-            apiRef.current.setZoomData([{ axisId: 'my-x-axis', start: 0, end: 100 }])
+            apiRef.current?.setZoomData([
+              { axisId: 'my-x-axis', start: 0, end: 100 },
+            ])
           }
         >
           Reset zoom

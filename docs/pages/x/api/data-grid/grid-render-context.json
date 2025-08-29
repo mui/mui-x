@@ -1,0 +1,14 @@
+{
+  "name": "GridRenderContext",
+  "imports": [
+    "import { GridRenderContext } from '@mui/x-data-grid-premium'",
+    "import { GridRenderContext } from '@mui/x-data-grid-pro'",
+    "import { GridRenderContext } from '@mui/x-data-grid'"
+  ],
+  "properties": {
+    "firstColumnIndex": { "type": { "description": "number" }, "required": true },
+    "firstRowIndex": { "type": { "description": "number" }, "required": true },
+    "lastColumnIndex": { "type": { "description": "number" }, "required": true },
+    "lastRowIndex": { "type": { "description": "number" }, "required": true }
+  }
+}

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { getSectionVisibleValue, parseSelectedSections } from './useField.utils';
 
 const COMMON_PROPERTIES = {

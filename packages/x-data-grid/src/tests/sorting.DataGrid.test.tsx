@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
@@ -714,7 +713,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     setProps({ columns: [{ field: 'id' }] });
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    expect(onSortModelChange.callCount).to.equal(1);
+    expect(onSortModelChange.callCount).to.equal(2);
     expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
   });
 
@@ -791,6 +790,35 @@ describe('<DataGrid /> - Sorting', () => {
 
       fireEvent.click(header);
       expect(getColumnValues(0)).to.deep.equal(['b', 'a', '', '']);
+    });
+  });
+
+  describe('Header class names', () => {
+    it('should have the sortable class when the column is sortable', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand', sortable: true }]} />
+        </div>,
+      );
+      expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--sortable');
+    });
+
+    it('should not have the sortable class when the column is not sortable', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand', sortable: false }]} />
+        </div>,
+      );
+      expect(getColumnHeaderCell(0)).not.to.have.class('MuiDataGrid-columnHeader--sortable');
+    });
+
+    it('should not have the sortable class when column sorting is disabled', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} disableColumnSorting columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+      expect(getColumnHeaderCell(0)).not.to.have.class('MuiDataGrid-columnHeader--sortable');
     });
   });
 });

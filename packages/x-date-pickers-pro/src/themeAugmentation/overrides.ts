@@ -1,4 +1,5 @@
 import { DateRangePickerDayClassKey } from '../DateRangePickerDay';
+import { DateRangePickerDay2ClassKey } from '../DateRangePickerDay2';
 import { DateRangeCalendarClassKey } from '../DateRangeCalendar';
 import { DateRangePickerToolbarClassKey } from '../DateRangePicker';
 import {
@@ -13,6 +14,7 @@ import { MultiInputTimeRangeFieldClassKey } from '../MultiInputTimeRangeField';
 export interface PickersProComponentNameToClassKey {
   MuiDateRangeCalendar: DateRangeCalendarClassKey;
   MuiDateRangePickerDay: DateRangePickerDayClassKey;
+  MuiDateRangePickerDay2: DateRangePickerDay2ClassKey;
   MuiDateRangePickerToolbar: DateRangePickerToolbarClassKey;
 
   MuiDateTimeRangePickerTabs: DateTimeRangePickerTabsClassKey;

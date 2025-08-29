@@ -1,7 +1,7 @@
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import * as React from 'react';
 
-const dataLength = 800;
+const dataLength = 801;
 const data = Array.from({ length: dataLength }).map((_, i) => ({
   x: i,
   y: 50 + Math.sin(i / 5) * 25,

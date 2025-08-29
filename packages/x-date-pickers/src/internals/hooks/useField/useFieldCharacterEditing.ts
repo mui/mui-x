@@ -1,6 +1,5 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { FieldSection, InferFieldSection } from '../../../models';
-import { useUtils } from '../useUtils';
 import {
   changeSectionValueFormat,
   cleanDigitSectionValue,
@@ -14,6 +13,7 @@ import {
 } from './useField.utils';
 import { UseFieldStateReturnValue } from './useFieldState';
 import { PickerValidValue } from '../../models';
+import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 
 const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
   response: ReturnType<QueryApplier<TValue>>,
@@ -40,7 +40,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
     updateSectionValue,
   },
 }: UseFieldCharacterEditingParameters<TValue>): UseFieldCharacterEditingReturnValue => {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
 
   const applyQuery = (
     { keyPressed, sectionIndex }: ApplyCharacterEditingParameters,
@@ -119,7 +119,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
       const getOptions = (format: string) =>
-        getLetterEditingOptions(utils, timezone, activeSection.type, format);
+        getLetterEditingOptions(adapter, timezone, activeSection.type, format);
 
       if (activeSection.contentType === 'letter') {
         return findMatchingOptions(
@@ -135,7 +135,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
       if (
         fallbackFormat &&
         formatFallbackValue != null &&
-        getDateSectionConfigFromFormatToken(utils, fallbackFormat).contentType === 'letter'
+        getDateSectionConfigFromFormatToken(adapter, fallbackFormat).contentType === 'letter'
       ) {
         const fallbackOptions = getOptions(fallbackFormat);
         const response = findMatchingOptions(fallbackFormat, fallbackOptions, queryValue);
@@ -160,16 +160,16 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
         case 'month': {
           const formatFallbackValue = (fallbackValue: string) =>
             changeSectionValueFormat(
-              utils,
+              adapter,
               fallbackValue,
-              utils.formats.month,
+              adapter.formats.month,
               activeSection.format,
             );
 
           return testQueryOnFormatAndFallbackFormat(
             queryValue,
             activeSection,
-            utils.formats.month,
+            adapter.formats.month,
             formatFallbackValue,
           );
         }
@@ -181,7 +181,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
           return testQueryOnFormatAndFallbackFormat(
             queryValue,
             activeSection,
-            utils.formats.weekday,
+            adapter.formats.weekday,
             formatFallbackValue,
           );
         }
@@ -241,7 +241,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
         cleanQueryValue.length === sectionBoundaries.maximum.toString().length;
 
       const newSectionValue = cleanDigitSectionValue(
-        utils,
+        adapter,
         queryValueNumber,
         sectionBoundaries,
         localizedDigits,
@@ -270,7 +270,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
       // We can support the numeric editing by using the digit-format month and re-formatting the result.
       if (activeSection.type === 'month') {
         const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
-          utils,
+          adapter,
           'digit',
           'month',
           'MM',
@@ -294,7 +294,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
         }
 
         const formattedValue = changeSectionValueFormat(
-          utils,
+          adapter,
           response.sectionValue,
           'MM',
           activeSection.format,
@@ -318,7 +318,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
           return response;
         }
 
-        const formattedValue = getDaysInWeekStr(utils, activeSection.format)[
+        const formattedValue = getDaysInWeekStr(adapter, activeSection.format)[
           Number(response.sectionValue) - 1
         ];
         return {

@@ -47,11 +47,11 @@ const arSDGrid: Partial<GridLocaleText> = {
   // toolbarAssistant: 'AI Assistant',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: 'بحث',
+  columnsManagementNoColumns: 'لا يوجد أعمدة',
+  columnsManagementShowHideAllText: 'عرض/إخفاء الكل',
+  columnsManagementReset: 'إعادة ضبط',
+  columnsManagementDeleteIconLabel: 'مسح',
 
   // Filter panel text
   filterPanelAddFilter: 'إضافة مرشِح',

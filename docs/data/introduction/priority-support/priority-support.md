@@ -1,67 +1,74 @@
 ---
-title: MUI X - Priority Support
+title: MUI X - Priority support
 ---
 
-# Priority Support [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+# Priority support [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Learn how to use priority technical support for MUI components.</p>
+<p class="description">Learn more about the priority support services that MUI offers as an add-on for Premium license holders.</p>
 
 ## What is priority support?
 
-Priority Support is a premium service ensuring fast, expert assistance for your critical applications, with expedited troubleshooting and priority handling of inquiries.
+The MUI X team offers priority support as an add-on service for Premium license holders.
+With priority support you get expedited assistance and troubleshooting for your critical applications, ensuring the fastest possible resolution times.
 
-Priority support takes precedence over standard support, which is included by default in paid plans and only covers MUI X components. Support requests are prioritized in the following order:
+Unlike MUI X's standard support services—which are provided to all Pro and Premium license holders and only cover MUI X components—priority support covers the entire MUI ecosystem, including Material UI and Base UI.
 
-:::info
-Community < Pro < Premium Standard (No SLA) < Priority Support (SLA governed)
-:::
-
-The SLAs included in priority support are:
-
-- **24 hour response SLA**
-  Receive an initial response within 24 business hours.
-- **4 hour pre-screening SLA**
-  Issues submitted through priority support channels undergo an initial review to validate, and reproduce the issue. This ensures your tickets have the right information for debugging.
-- **Issue Escalation**
-  Critical issues are escalated to senior engineers for focused attention and faster resolutions.
-
-For all the details, please check the [Service Level Agreement for Technical Support](https://mui.com/legal/technical-support-sla/).
-
-## Who benefits from priority support?
+### Why teams choose priority support
 
 Priority support is tailored for enterprise teams who rely on the MUI ecosystem at scale and want faster turnaround on bug reports, closer collaboration on issue triaging, and coverage across the entire component library.
 
-Priority support covers the following products:
+Priority support covers _all_ MUI products, including:
 
-- MUI X
-  - Data Grid
-  - Date and Time Pickers
-  - Tree View
-  - Charts
-- MUI Core
-  - Material UI
-  - Base UI
-  - MUI System
-  - Pigment CSS
-  - Joy UI
+- The entire MUI X suite: Data Grid, Date and Time Pickers, Tree View, and Charts
+- Material UI
+- Base UI
+- MUI System
+- Pigment CSS
+- Joy UI
 
-## How to buy priority support?
+### Service-level agreement (SLA)
 
-Priority support is available as an add-on to the premium plan users. At $399/developer/year you can purchase it by reaching out to the support team. Both existing and new premium plan customers can buy it. In case, you are a pro plan user, you'll need to upgrade to the premium plan.
+Priority support is governed by a service-level agreement (SLA) that ensures:
 
-Upon purchase you'll receive a support key that you need to validate when raising queries. You must keep it safe.
+- **24-hour response times**: Priority support requests receive an initial response within one business day.
+- **Four-hour pre-screenings**: Priority requests undergo a review of up to four hours to validate and reproduce the issues.
+- **Issue escalation**: Critical issues are escalated to senior engineers for focused attention and prompt resolutions.
 
-## How to use priority support?
+For complete details, see our [SLA for technical support](https://mui.com/legal/technical-support-sla/).
 
-### On GitHub
+### How MUI prioritizes support requests
 
-- You'll go to either [mui-x](https://github.com/mui/mui-x) or [material-ui](https://github.com/mui/material-ui) repo and use the "**Priority support: SLA ⏰**" issue template to create a new issue invoking the Priority support SLA.
-- Once the issue is created it will have the following labels: [status: needs triage](https://github.com/mui/mui-x/labels/status%3A%20needs%20triage), [support: commercial](https://github.com/mui/mui-x/labels/support%3A%20commercial), [support: unknown](https://github.com/mui/mui-x/labels/support%3A%20unknown)
-- A GitHub action will prompt you to follow an external link leading to a validation app where you need to validate your support key.
-- Once your support key is successfully validated the labels in the issue will update to the following: [status: needs triage](https://github.com/mui/mui-x/labels/status%3A%20needs%20triage), [support: commercial](https://github.com/mui/mui-x/labels/support%3A%20commercial), [support: priority](https://github.com/mui/mui-x/labels/support%3A%20priority)
-- The GitHub action will update the previous comment with the following: `Thank you for verifying your support key 🔑, your SLA starts now.` Thus marking the start of the SLA.
-- You get a response from the team within the SLA.
+Support requests are prioritized based on the type of license the developer holds:
 
-### Support Website
+1. Premium license with priority support (SLA-governed)
+2. Premium license with standard support (no SLA)
+3. Pro license
+4. Community (free) license
 
-If private information needs to be shared, you can submit a [support request](https://support.mui.com/hc/en-us/requests/new) through our website.
+## How to purchase priority support
+
+Priority support is available as an add-on for Premium users.
+
+<!-- update this link when it officially launches in the MUI Store -->
+
+Please [contact our support team](mailto:support@mui.com) to purchase.
+
+Community and Pro users must upgrade to a Premium license to purchase priority support.
+
+## How to use priority support
+
+MUI accepts priority support requests through two main channels: the public repositories on GitHub (preferred), and our private support system on Zendesk.
+
+### Public repositories
+
+When submitting a priority support request on GitHub, please follow these instructions to ensure your request is handled in a timely manner:
+
+1. Depending on the product you need support for, visit either the [MUI X](https://github.com/mui/mui-x) or the [Material UI](https://github.com/mui/material-ui) repo.
+2. Create a new issue using the **Priority support: SLA ⏰** template—this ensures it will include the necessary labels to trigger our automated process.
+3. After you've created the issue, a GitHub action will prompt you to follow an external link to validate your support key (which was issued to you upon purchase).
+
+Once your support key is validated, the action comment will update to confirm that your SLA is now in effect, and the issue labels will update accordingly to alert our team to review your request as soon as possible.
+
+### Private support desk
+
+If your request includes sensitive information that you can't share publicly, you can [submit a support request](https://support.mui.com/hc/en-us/requests/new) to us through Zendesk instead.

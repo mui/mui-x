@@ -1,3 +1,4 @@
+import ownerDocument from '@mui/utils/ownerDocument';
 import { PickerValidValue } from '../../models';
 import { getActiveElement } from '../../utils/utils';
 import { UseFieldDOMGetters } from './useField.types';
@@ -20,7 +21,7 @@ export function syncSelectionToDOM<TValue extends PickerValidValue>(
     return;
   }
 
-  const selection = document.getSelection();
+  const selection = ownerDocument(domGetters.getRoot()).getSelection();
   if (!selection) {
     return;
   }
@@ -29,6 +30,8 @@ export function syncSelectionToDOM<TValue extends PickerValidValue>(
     // If the selection contains an element inside the field, we reset it.
     if (
       selection.rangeCount > 0 &&
+      // Firefox can return a Restricted object here
+      selection.getRangeAt(0).startContainer instanceof Node &&
       domGetters.getRoot().contains(selection.getRangeAt(0).startContainer)
     ) {
       selection.removeAllRanges();
@@ -41,7 +44,7 @@ export function syncSelectionToDOM<TValue extends PickerValidValue>(
   }
 
   // On multi input range pickers we want to update selection range only for the active input
-  if (!domGetters.getRoot().contains(getActiveElement(document))) {
+  if (!domGetters.getRoot().contains(getActiveElement(domGetters.getRoot()))) {
     return;
   }
 

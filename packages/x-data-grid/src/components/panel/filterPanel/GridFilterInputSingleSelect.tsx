@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId } from '@mui/utils';
+import useId from '@mui/utils/useId';
 import { TextFieldProps } from '../../../models/gridBaseSlots';
 import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
@@ -69,16 +69,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? false;
 
-  let resolvedColumn: GridSingleSelectColDef | null = null;
-  if (item.field) {
-    const column = apiRef.current.getColumn(item.field);
-    if (isSingleSelectColDef(column)) {
-      resolvedColumn = column;
-    }
-  }
+  const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;
 
-  const getOptionValue = resolvedColumn?.getOptionValue!;
-  const getOptionLabel = resolvedColumn?.getOptionLabel!;
+  const getOptionValue = resolvedColumn!.getOptionValue;
+  const getOptionLabel = resolvedColumn!.getOptionLabel;
 
   const currentValueOptions = React.useMemo(() => {
     return getValueOptions(resolvedColumn!);
@@ -95,7 +89,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     [currentValueOptions, getOptionValue, applyValue, item],
   );
 
-  if (!isSingleSelectColDef(resolvedColumn)) {
+  if (!resolvedColumn || !isSingleSelectColDef(resolvedColumn)) {
     return null;
   }
 

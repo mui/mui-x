@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -452,7 +453,7 @@ export const useGridColumnResize = (
     }
 
     refs.groupHeaderElements = findGroupHeaderElementsFromField(
-      apiRef.current.columnHeadersContainerRef?.current!,
+      apiRef.current.columnHeadersContainerRef?.current as Element,
       colDef.field,
     );
 

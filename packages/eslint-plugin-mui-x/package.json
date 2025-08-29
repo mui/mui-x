@@ -1,0 +1,20 @@
+{
+  "name": "eslint-plugin-mui-x",
+  "private": true,
+  "description": "Custom eslint rules for MUI X.",
+  "type": "module",
+  "main": "src/index.mjs",
+  "module": "src/index.mjs",
+  "dependencies": {
+    "@typescript-eslint/utils": "^8.39.1"
+  },
+  "devDependencies": {
+    "@types/eslint": "^9.6.1",
+    "@typescript-eslint/parser": "catalog:",
+    "@typescript-eslint/rule-tester": "^8.39.1"
+  },
+  "scripts": {
+    "test": "vitest"
+  },
+  "license": "MIT"
+}

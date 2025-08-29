@@ -3,8 +3,7 @@
 <p class="description">Span cells across several columns.</p>
 
 By default, each cell takes up the width of one column.
-You can modify this behavior with column spanning.
-It allows cells to span multiple columns.
+You can modify this behavior with column spanning, which makes it possible for cells to span multiple columns.
 This is very close to the "column spanning" in an HTML `<table>`.
 
 To change the number of columns a cell should span, use the `colSpan` property available in `GridColDef`:
@@ -28,7 +27,7 @@ To avoid a confusing grid layout, consider disabling the following features for 
 - [filtering](/x/react-data-grid/filtering/#disable-the-filters)
 - [column reorder](/x/react-data-grid/column-ordering/)
 - [hiding columns](/x/react-data-grid/column-visibility/)
-- [column pinning](/x/react-data-grid/column-pinning/#disable-column-pinning)
+- [column pinning](/x/react-data-grid/column-pinning/#disabling-column-pinning)
 
 :::
 
@@ -46,7 +45,7 @@ interface GridColDef {
 
 ## Function signature
 
-The function signature allows spanning only **specific cells** in the column.
+The function signature makes it possible to only span specific cells in the column.
 The function receives [`GridCellParams`](/x/api/data-grid/grid-cell-params/) as argument.
 
 ```ts

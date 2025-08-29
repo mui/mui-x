@@ -12,7 +12,7 @@ import getColor from './seriesConfig/getColor';
 import { useChartContext } from '../context/ChartProvider';
 import {
   UseChartCartesianAxisSignature,
-  selectorChartsInteractionXAxisIndex,
+  selectorChartsHighlightXAxisIndex,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 
@@ -57,9 +57,9 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { instance } = useChartContext();
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const highlightedIndex = useSelector(store, selectorChartsInteractionXAxisIndex);
+  const highlightedIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
 
-  if (highlightedIndex === null) {
+  if (highlightedIndexes.length === 0) {
     return null;
   }
 
@@ -74,55 +74,60 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
   return (
     <g {...other}>
-      {stackingGroups.flatMap(({ ids: groupIds }) => {
-        return groupIds.flatMap((seriesId) => {
-          const {
-            xAxisId = defaultXAxisId,
-            yAxisId = defaultYAxisId,
-            stackedData,
-            data,
-            disableHighlight,
-            shape = 'circle',
-          } = series[seriesId];
+      {highlightedIndexes.flatMap(({ dataIndex: highlightedIndex, axisId: highlightedAxisId }) =>
+        stackingGroups.flatMap(({ ids: groupIds }) => {
+          return groupIds.flatMap((seriesId) => {
+            const {
+              xAxisId = defaultXAxisId,
+              yAxisId = defaultYAxisId,
+              stackedData,
+              data,
+              disableHighlight,
+              shape = 'circle',
+            } = series[seriesId];
 
-          if (disableHighlight || data[highlightedIndex] == null) {
-            return null;
-          }
-          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
-          const yScale = yAxis[yAxisId].scale;
-          const xData = xAxis[xAxisId].data;
+            if (disableHighlight || data[highlightedIndex] == null) {
+              return null;
+            }
+            if (highlightedAxisId !== xAxisId) {
+              return null;
+            }
+            const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+            const yScale = yAxis[yAxisId].scale;
+            const xData = xAxis[xAxisId].data;
 
-          if (xData === undefined) {
-            throw new Error(
-              `MUI X Charts: ${
-                xAxisId === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+            if (xData === undefined) {
+              throw new Error(
+                `MUI X Charts: ${
+                  xAxisId === DEFAULT_X_AXIS_KEY
+                    ? 'The first `xAxis`'
+                    : `The x-axis with id "${xAxisId}"`
+                } should have data property to be able to display a line plot.`,
+              );
+            }
+
+            const x = xScale(xData[highlightedIndex]);
+            const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
+
+            if (!instance.isPointInside(x, y)) {
+              return null;
+            }
+
+            const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
+            return (
+              <Element
+                key={`${seriesId}`}
+                id={seriesId}
+                color={colorGetter(highlightedIndex)}
+                x={x}
+                y={y}
+                shape={shape}
+                {...slotProps?.lineHighlight}
+              />
             );
-          }
-
-          const x = xScale(xData[highlightedIndex]);
-          const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
-
-          if (!instance.isPointInside(x, y)) {
-            return null;
-          }
-
-          const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
-          return (
-            <Element
-              key={`${seriesId}`}
-              id={seriesId}
-              color={colorGetter(highlightedIndex)}
-              x={x}
-              y={y}
-              shape={shape}
-              {...slotProps?.lineHighlight}
-            />
-          );
-        });
-      })}
+          });
+        }),
+      )}
     </g>
   );
 }

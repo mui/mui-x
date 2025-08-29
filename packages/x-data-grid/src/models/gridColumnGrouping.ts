@@ -13,6 +13,8 @@ export function isLeaf(node: GridColumnNode): node is GridLeafColumn {
 
 /**
  * A function used to process headerClassName params.
+ * @param {GridColumnGroupHeaderParams} params The parameters of the column group header.
+ * @returns {string} The class name to be added to the column group header cell.
  */
 export type GridColumnGroupHeaderClassFn = (params: GridColumnGroupHeaderParams) => string;
 

@@ -17,13 +17,13 @@ export type Meridiem = 'am' | 'pm';
 
 export const getMeridiem = (
   date: PickerValidDate | null,
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
 ): Meridiem | null => {
   if (!date) {
     return null;
   }
 
-  return utils.getHours(date) >= 12 ? 'pm' : 'am';
+  return adapter.getHours(date) >= 12 ? 'pm' : 'am';
 };
 
 export const convertValueToMeridiem = (value: number, meridiem: Meridiem | null, ampm: boolean) => {
@@ -41,28 +41,28 @@ export const convertToMeridiem = (
   time: PickerValidDate,
   meridiem: Meridiem,
   ampm: boolean,
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
 ): PickerValidDate => {
-  const newHoursAmount = convertValueToMeridiem(utils.getHours(time), meridiem, ampm);
-  return utils.setHours(time, newHoursAmount);
+  const newHoursAmount = convertValueToMeridiem(adapter.getHours(time), meridiem, ampm);
+  return adapter.setHours(time, newHoursAmount);
 };
 
-export const getSecondsInDay = (date: PickerValidDate, utils: MuiPickersAdapter) => {
-  return utils.getHours(date) * 3600 + utils.getMinutes(date) * 60 + utils.getSeconds(date);
+export const getSecondsInDay = (date: PickerValidDate, adapter: MuiPickersAdapter) => {
+  return adapter.getHours(date) * 3600 + adapter.getMinutes(date) * 60 + adapter.getSeconds(date);
 };
 
 export const createIsAfterIgnoreDatePart =
-  (disableIgnoringDatePartForTimeValidation: boolean, utils: MuiPickersAdapter) =>
+  (disableIgnoringDatePartForTimeValidation: boolean, adapter: MuiPickersAdapter) =>
   (dateLeft: PickerValidDate, dateRight: PickerValidDate) => {
     if (disableIgnoringDatePartForTimeValidation) {
-      return utils.isAfter(dateLeft, dateRight);
+      return adapter.isAfter(dateLeft, dateRight);
     }
 
-    return getSecondsInDay(dateLeft, utils) > getSecondsInDay(dateRight, utils);
+    return getSecondsInDay(dateLeft, adapter) > getSecondsInDay(dateRight, adapter);
   };
 
 export const resolveTimeFormat = (
-  utils: MuiPickersAdapter,
+  adapter: MuiPickersAdapter,
   {
     format,
     views,
@@ -73,7 +73,7 @@ export const resolveTimeFormat = (
     return format;
   }
 
-  const formats = utils.formats;
+  const formats = adapter.formats;
   if (areViewsEqual(views, ['hours'])) {
     return ampm ? `${formats.hours12h} ${formats.meridiem}` : formats.hours24h;
   }

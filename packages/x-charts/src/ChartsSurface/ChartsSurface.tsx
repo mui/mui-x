@@ -12,7 +12,11 @@ import {
   selectorChartPropsSize,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
-export interface ChartsSurfaceProps {
+export interface ChartsSurfaceProps
+  extends Omit<
+    React.SVGProps<SVGSVGElement>,
+    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
+  > {
   className?: string;
   title?: string;
   desc?: string;
@@ -34,7 +38,8 @@ const ChartsSurfaceStyles = styled('svg', {
   overflow: 'hidden',
   // This prevents default touch actions when using the svg on mobile devices.
   // For example, prevent page scroll & zoom.
-  touchAction: 'none',
+  touchAction: 'pan-y',
+  userSelect: 'none',
 }));
 
 /**

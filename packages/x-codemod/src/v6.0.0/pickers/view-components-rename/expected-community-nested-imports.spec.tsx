@@ -58,12 +58,12 @@ function App() {
   getDayCalendarSkeletonUtilityClass('root');
 
   return (
-    (<React.Fragment>
+    <React.Fragment>
       <DateCalendar value={null} onChange={() => {}} />
       <MonthCalendar value={null} onChange={() => {}} />
       <YearCalendar value={null} onChange={() => {}} />
       <TimeClock value={null} onChange={() => {}} />
       <DayCalendarSkeleton />
-    </React.Fragment>)
+    </React.Fragment>
   );
 }

@@ -66,6 +66,7 @@ export interface ContinuousColorLegendProps
   classes?: Partial<ContinuousColorLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  tabIndex?: number;
 }
 
 const templateAreas = (reverse?: boolean) => {

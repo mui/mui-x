@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
-import { refType } from '@mui/utils';
+import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersFilledInputClasses,
@@ -27,6 +27,7 @@ export interface PickerFilledInputOwnerState extends PickerTextFieldOwnerState {
    * `true` if the input  has an underline, `false` otherwise.
    */
   inputHasUnderline: boolean;
+  hiddenLabel?: boolean;
 }
 
 const PickersFilledInputRoot = styled(PickersInputBaseRoot, {

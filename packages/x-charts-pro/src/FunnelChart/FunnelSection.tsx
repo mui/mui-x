@@ -62,6 +62,8 @@ const FunnelSection = consumeSlots(
         strokeWidth={isOutlined ? 1.5 : 0}
         cursor={onClick ? 'pointer' : 'unset'}
         onClick={onClick}
+        data-highlighted={isHighlighted || undefined}
+        data-faded={isFaded || undefined}
         className={clsx(
           classes?.root,
           isHighlighted && classes?.highlighted,

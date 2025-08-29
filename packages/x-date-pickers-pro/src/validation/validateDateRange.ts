@@ -63,7 +63,7 @@ export const validateDateRange: Validator<
     return [null, null];
   }
 
-  if (!isRangeValid(adapter.utils, value)) {
+  if (!isRangeValid(adapter, value)) {
     return ['invalidRange', 'invalidRange'];
   }
 

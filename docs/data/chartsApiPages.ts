@@ -101,8 +101,28 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsText',
   },
   {
+    pathname: '/x/api/charts/charts-toolbar-image-export-trigger',
+    title: 'ChartsToolbarImageExportTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-print-export-trigger',
+    title: 'ChartsToolbarPrintExportTrigger',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-toolbar-pro',
     title: 'ChartsToolbarPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-in-trigger',
+    title: 'ChartsToolbarZoomInTrigger',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-zoom-out-trigger',
+    title: 'ChartsToolbarZoomOutTrigger',
     plan: 'pro',
   },
   {
@@ -112,6 +132,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-tooltip-container',
     title: 'ChartsTooltipContainer',
+  },
+  {
+    pathname: '/x/api/charts/charts-wrapper',
+    title: 'ChartsWrapper',
   },
   {
     pathname: '/x/api/charts/charts-x-axis',
@@ -226,8 +250,17 @@ const chartsApiPages: MuiPage[] = [
     title: 'PieChart',
   },
   {
+    pathname: '/x/api/charts/pie-chart-pro',
+    title: 'PieChartPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/pie-plot',
     title: 'PiePlot',
+  },
+  {
+    pathname: '/x/api/charts/radar-axis',
+    title: 'RadarAxis',
   },
   {
     pathname: '/x/api/charts/radar-axis-highlight',
@@ -238,8 +271,9 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarChart',
   },
   {
-    pathname: '/x/api/charts/radar-data-provider',
-    title: 'RadarDataProvider',
+    pathname: '/x/api/charts/radar-chart-pro',
+    title: 'RadarChartPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/radar-grid',
@@ -260,6 +294,26 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radar-series-plot',
     title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/sankey-chart',
+    title: 'SankeyChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-plot',
+    title: 'SankeyPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip',
+    title: 'SankeyTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip-content',
+    title: 'SankeyTooltipContent',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/scatter',

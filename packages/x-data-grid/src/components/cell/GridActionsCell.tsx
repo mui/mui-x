@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
-import { unstable_useId as useId } from '@mui/utils';
+import useId from '@mui/utils/useId';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
@@ -184,24 +185,17 @@ function GridActionsCell(props: GridActionsCellProps) {
     }
   };
 
-  const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-    }
-    if (['Tab', 'Escape'].includes(event.key)) {
-      hideMenu();
-    }
-  };
+  // role="menu" requires at least one child element
+  const attributes =
+    numberOfButtons > 0
+      ? {
+          role: 'menu',
+          onKeyDown: handleRootKeyDown,
+        }
+      : undefined;
 
   return (
-    <div
-      role="menu"
-      ref={rootRef}
-      tabIndex={-1}
-      className={gridClasses.actionsCell}
-      onKeyDown={handleRootKeyDown}
-      {...other}
-    >
+    <div ref={rootRef} tabIndex={-1} className={gridClasses.actionsCell} {...attributes} {...other}>
       {iconButtons.map((button, index) =>
         React.cloneElement(button, {
           key: index,
@@ -235,7 +229,6 @@ function GridActionsCell(props: GridActionsCellProps) {
           <rootProps.slots.baseMenuList
             id={menuId}
             className={gridClasses.menuList}
-            onKeyDown={handleListKeyDown}
             aria-labelledby={buttonId}
             autoFocusItem
           >

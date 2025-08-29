@@ -3,7 +3,7 @@ productId: x-tree-view
 title: Simple Tree View - Selection
 components: SimpleTreeView, TreeItem
 packageName: '@mui/x-tree-view'
-githubLabel: 'component: tree view'
+githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Single selection
 
-By default, the Tree View allows selecting a single item.
+By default, the Tree View lets users select a single item.
 
 {{"demo": "SingleSelectTreeView.js"}}
 

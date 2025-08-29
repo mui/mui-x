@@ -12,6 +12,11 @@ export interface GridSortCellParams<V = any> {
 
 /**
  * The type of the sort comparison function.
+ * @param {V} v1 The first value to compare.
+ * @param {V} v2 The second value to compare.
+ * @param {GridSortCellParams<V>} cellParams1 The parameters of the first cell.
+ * @param {GridSortCellParams<V>} cellParams2 The parameters of the second cell.
+ * @returns {number} The result of the comparison.
  */
 export type GridComparatorFn<V = any> = (
   v1: V,

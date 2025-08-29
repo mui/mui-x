@@ -1,12 +1,7 @@
 import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import * as React from 'react';
 import { useFunnelSeries, useFunnelSeriesContext } from './useFunnelSeries';
-import {
-  DefaultizedFunnelSeriesType,
-  Unstable_FunnelChart as FunnelChart,
-  FunnelSeriesType,
-} from '../FunnelChart';
+import { DefaultizedFunnelSeriesType, FunnelChart, FunnelSeriesType } from '../FunnelChart';
 
 const mockSeries: FunnelSeriesType[] = [
   {
@@ -41,7 +36,6 @@ describe('useFunnelSeriesContext', () => {
   });
 });
 
-// eslint-disable-next-line mocha/max-top-level-suites
 describe('useFunnelSeries', () => {
   it('should return the specific funnel series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useFunnelSeries('1'), options);

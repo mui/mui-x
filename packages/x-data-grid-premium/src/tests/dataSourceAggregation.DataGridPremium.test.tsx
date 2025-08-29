@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { createRenderer, waitFor, screen, within } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -15,9 +14,9 @@ import {
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
-describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
+describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
@@ -99,7 +98,6 @@ describeSkipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
   }
 
   // TODO @MBilalShafi: Flaky test, fix it
-  // eslint-disable-next-line mocha/no-skipped-tests
   it.skip('should show aggregation option in the column menu', async () => {
     const dataSource = {
       getRows: async () => {

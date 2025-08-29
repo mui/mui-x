@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
+import { useItemTooltip } from './useItemTooltip';
+import { useBarSeries } from '../hooks';
+import { ChartsTooltipContainer } from './ChartsTooltipContainer';
 
 const config: Partial<BarChartProps> = {
   dataset: [
@@ -35,27 +37,14 @@ const config: Partial<BarChartProps> = {
 const cellSelector =
   '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th, .MuiChartsTooltip-root caption';
 
-describe('ChartsTooltip', () => {
+// can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+describe.skipIf(isJSDOM)('ChartsTooltip', () => {
   const { render } = createRenderer();
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
     <div style={{ width: 400, height: 400 }}>{children}</div>
   );
 
-  beforeEach(() => {
-    // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '0';
-    }
-  });
-
-  afterEach(() => {
-    if (window?.document?.body?.style) {
-      window.document.body.style.margin = '8px';
-    }
-  });
-
-  // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-  describeSkipIf(isJSDOM)('axis trigger', () => {
+  describe('axis trigger', () => {
     it('should show right values with vertical layout on axis', async () => {
       const { user } = render(
         <BarChart
@@ -174,8 +163,7 @@ describe('ChartsTooltip', () => {
     });
   });
 
-  // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-  describeSkipIf(isJSDOM)('item trigger', () => {
+  describe('item trigger', () => {
     it('should show right values with vertical layout on item', async () => {
       const { user } = render(
         <BarChart
@@ -245,6 +233,89 @@ describe('ChartsTooltip', () => {
       await waitFor(() => {
         const cells = document.querySelectorAll<HTMLElement>(cellSelector);
         expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['S2', '1']);
+      });
+    });
+  });
+
+  describe('custom tooltip', () => {
+    it('should show custom tooltip', async () => {
+      function CustomTooltip() {
+        const tooltipData = useItemTooltip<'bar'>();
+        const barSeries = useBarSeries(tooltipData?.identifier.seriesId ?? '');
+
+        if (!tooltipData || !barSeries) {
+          return null;
+        }
+
+        const sum = barSeries.data
+          .slice(0, tooltipData.identifier.dataIndex + 1)
+          .reduce((acc, v) => acc! + (v ?? 0), 0);
+
+        return (
+          <ChartsTooltipContainer trigger="item">
+            <div>
+              <div>
+                <p>sum</p>
+                <p>{sum}</p>
+              </div>
+              <div>
+                <p>current</p>
+                <p>{tooltipData?.formattedValue}</p>
+              </div>
+            </div>
+          </ChartsTooltipContainer>
+        );
+      }
+
+      const { user } = render(
+        <BarChart
+          {...config}
+          dataset={undefined}
+          series={[{ id: 's1', label: 'S1', data: [100, 200, 300, 400] }]}
+          xAxis={[{ data: ['A', 'B', 'C', 'D'], position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'item' } }}
+          slots={{ tooltip: CustomTooltip }}
+        />,
+        { wrapper },
+      );
+      const rectangles = document.querySelectorAll<HTMLElement>('rect');
+
+      // Trigger the tooltip
+      await user.pointer({
+        target: rectangles[1],
+        coords: {
+          x: 50,
+          y: 350,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root p');
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          'sum',
+          '300',
+          'current',
+          '200',
+        ]);
+      });
+
+      // Trigger the tooltip
+      await user.pointer({
+        target: rectangles[3],
+        coords: {
+          x: 350,
+          y: 350,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root p');
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          'sum',
+          '1000',
+          'current',
+          '400',
+        ]);
       });
     });
   });

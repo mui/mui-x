@@ -7,7 +7,7 @@ export const gridPreferencePanelStateSelector = createRootSelector(
 
 export const gridPreferencePanelSelectorWithLabel = createSelector(
   gridPreferencePanelStateSelector,
-  (panel, labelId: string) => {
+  (panel, labelId: string | undefined) => {
     if (panel.open && panel.labelId === labelId) {
       return true;
     }

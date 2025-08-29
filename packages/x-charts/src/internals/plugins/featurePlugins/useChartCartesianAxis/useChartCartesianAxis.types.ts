@@ -9,9 +9,10 @@ import type {
   XAxis,
   DefaultedXAxis,
   DefaultedYAxis,
+  AxisItemIdentifier,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import type { ZoomData, ZoomOptions } from './zoom.types';
+import type { ZoomData, ZoomOptions, ZoomSliderShowTooltip } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
 
@@ -48,6 +49,19 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    */
   onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
   /**
+   * The function called when the pointer position corresponds to a new axis data item.
+   * This update can either be caused by a pointer movement, or an axis update.
+   * In case of multiple axes, the function is called if at least one axis is updated.
+   * The argument contains the identifier for all axes with a `data` property.
+   * @param {AxisItemIdentifier[]} axisItems The array of axes item identifiers.
+   */
+  onHighlightedAxisChange?: (axisItems: AxisItemIdentifier[]) => void;
+  /**
+   * The controlled axis highlight.
+   * Identified by the axis id, and data index.
+   */
+  highlightedAxis?: AxisItemIdentifier[];
+  /**
    * If `true`, the charts will not listen to the mouse move event.
    * It might break interactive features, but will improve performance.
    * @default false
@@ -61,10 +75,15 @@ export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = Sca
     defaultizedYAxis: DefaultedYAxis<S>[];
   };
 
+export interface DefaultedZoomSliderOptions
+  extends Omit<NonNullable<Required<ZoomOptions['slider']>>, 'showTooltip'> {
+  showTooltip: ZoomSliderShowTooltip;
+}
+
 export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slider'>> {
   axisId: AxisId;
   axisDirection: 'x' | 'y';
-  slider: NonNullable<Required<ZoomOptions['slider']>>;
+  slider: DefaultedZoomSliderOptions;
 }
 
 export interface UseChartCartesianAxisState {
@@ -79,6 +98,10 @@ export interface UseChartCartesianAxisState {
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
   };
+  /**
+   * The controlled axis item highlighted.
+   */
+  controlledCartesianAxisHighlight?: AxisItemIdentifier[];
 }
 
 export type ExtremumFilter = (

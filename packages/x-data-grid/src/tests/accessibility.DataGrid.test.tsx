@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
-import { expect } from 'chai';
 
 describe('<DataGrid /> - Accessibility', () => {
   const { render } = createRenderer();

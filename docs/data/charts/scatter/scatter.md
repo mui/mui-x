@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ChartsWrapper
 ---
 
 # Charts - Scatter
@@ -73,7 +73,7 @@ The scatter charts use by priority:
 4. The series color
 
 :::info
-The z-axis is a third axis that allows to customize scatter points independently from their position.
+The z-axis is a third axis that lets you customize scatter points independently from their positions.
 It can be provided with `zAxis` props.
 
 The value to map can either come from the `z` property of series data, or from the zAxis data.
@@ -105,7 +105,19 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 {{"demo": "GridDemo.js"}}
 
-### CSS 🚧
+### CSS
+
+You can target scatter markers with the following CSS selectors:
+
+- `[data-series='<series id>']` Selects the group containing markers of the series with the given id.
+- `[data-highlighted=true]` Selects markers with highlighted state.
+- `[data-faded=true]` Selects markers with faded state.
+
+To select all marker groups, use the `scatterClasses.root` class name.
+
+Here is an example that customizes the look of highlighted items depending on the series they belong to.
+
+{{"demo": "ScatterCSSSelectors.js"}}
 
 ### Shape
 

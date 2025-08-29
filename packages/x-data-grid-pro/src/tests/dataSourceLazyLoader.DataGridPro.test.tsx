@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { getCell, getRow } from 'test/utils/helperFn';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -13,12 +12,14 @@ import {
   GridGetRowsResponse,
   GridRowSelectionModel,
   useGridApiRef,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
-import { describeSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
+import { TestCache } from '@mui/x-data-grid/internals';
 
 // Needs layout
-describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
+describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
   const fetchRowsSpy = spy();
@@ -102,7 +103,6 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     );
   }
 
-  // eslint-disable-next-line mocha/no-top-level-hooks
   beforeEach(() => {
     transformGetRowsResponse = defaultTransformGetRowsResponse;
   });
@@ -458,6 +458,45 @@ describeSkipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
       // The 11th row should be a skeleton
       expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10');
+    });
+  });
+
+  describe('Cache', () => {
+    it('should combine cache chunks when possible to reduce the number of requests', async () => {
+      const testCache = new TestCache();
+      const cacheGetSpy = spy(testCache, 'get');
+      render(<TestDataSourceLazyLoader dataSourceCache={testCache} />);
+
+      await waitFor(() => {
+        expect(cacheGetSpy.called).to.equal(true);
+      });
+
+      cacheGetSpy.resetHistory();
+      fetchRowsSpy.resetHistory();
+
+      act(() => {
+        apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
+          start: 0,
+          end: 29,
+        });
+      });
+
+      await waitFor(() => {
+        expect(cacheGetSpy.callCount).to.equal(3);
+      });
+      expect(fetchRowsSpy.callCount).to.equal(1);
+
+      act(() => {
+        apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
+          start: 20,
+          end: 29,
+        });
+      });
+
+      await waitFor(() => {
+        expect(cacheGetSpy.callCount).to.equal(4);
+      });
+      expect(fetchRowsSpy.callCount).to.equal(1);
     });
   });
 });

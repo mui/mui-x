@@ -80,6 +80,7 @@ const chartSetting = {
   ],
   series: [{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }],
   height: 300,
+  margin: { left: 0 },
 };
 
 export default function TickPlacementBars() {

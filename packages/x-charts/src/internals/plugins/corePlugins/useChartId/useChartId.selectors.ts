@@ -8,4 +8,4 @@ const selectorChartIdState: ChartRootSelector<UseChartIdSignature> = (state) => 
  * @param {ChartState<[UseChartIdSignature]>} state The state of the chart.
  * @returns {string} The id attribute of the chart.
  */
-export const selectorChartId = createSelector(selectorChartIdState, (idState) => idState.chartId);
+export const selectorChartId = createSelector([selectorChartIdState], (idState) => idState.chartId);

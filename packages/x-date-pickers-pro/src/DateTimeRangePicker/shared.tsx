@@ -3,7 +3,6 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent } from '@mui/x-date-pickers/locales';
 import {
-  useUtils,
   BasePickerInputProps,
   PickerViewRendererLookup,
   BaseClockProps,
@@ -22,6 +21,7 @@ import {
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import { DateTimeRangeValidationError } from '../models';
 import { DateTimeRangePickerView, DateTimeRangePickerViewExternal } from '../internals/models';
 import {
@@ -127,14 +127,14 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
   props: Props,
   name: string,
 ): UseDateTimeRangePickerDefaultizedProps<Props> {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
   const validationProps = useApplyDefaultValuesToDateTimeValidationProps(themeProps);
-  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const ampm = themeProps.ampm ?? adapter.is12HourCycleInCurrentLocale();
 
   const { openTo, views: defaultViews } = applyDefaultViewProps<DateTimeRangePickerViewExternal>({
     views: themeProps.views,

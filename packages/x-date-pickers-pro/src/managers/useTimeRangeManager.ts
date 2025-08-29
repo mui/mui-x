@@ -2,14 +2,13 @@
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerManager } from '@mui/x-date-pickers/models';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import {
   AmPmProps,
   PickerManagerFieldInternalPropsWithDefaults,
   PickerRangeValue,
   UseFieldInternalProps,
   useApplyDefaultValuesToTimeValidationProps,
-  useUtils,
 } from '@mui/x-date-pickers/internals';
 import { TimeRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
@@ -46,15 +45,15 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
 
 function createUseOpenPickerButtonAriaLabel(ampm: boolean | undefined) {
   return function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
-    const utils = useUtils();
+    const adapter = usePickerAdapter();
     const translations = usePickerTranslations();
 
     return React.useMemo(() => {
       const formatKey =
-        (ampm ?? utils.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
+        (ampm ?? adapter.is12HourCycleInCurrentLocale()) ? 'fullTime12h' : 'fullTime24h';
 
-      return translations.openRangePickerDialogue(formatRange(utils, value, formatKey));
-    }, [value, translations, utils]);
+      return translations.openRangePickerDialogue(formatRange(adapter, value, formatKey));
+    }, [value, translations, adapter]);
   };
 }
 
@@ -65,12 +64,12 @@ function useApplyDefaultValuesToTimeRangeFieldInternalProps<
 ): PickerManagerFieldInternalPropsWithDefaults<
   UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
 > {
-  const utils = useUtils();
+  const adapter = usePickerAdapter();
   const validationProps = useApplyDefaultValuesToTimeValidationProps(internalProps);
 
   const ampm = React.useMemo(
-    () => internalProps.ampm ?? utils.is12HourCycleInCurrentLocale(),
-    [internalProps.ampm, utils],
+    () => internalProps.ampm ?? adapter.is12HourCycleInCurrentLocale(),
+    [internalProps.ampm, adapter],
   );
 
   return React.useMemo(
@@ -78,9 +77,9 @@ function useApplyDefaultValuesToTimeRangeFieldInternalProps<
       ...internalProps,
       ...validationProps,
       format:
-        internalProps.format ?? (ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h),
+        internalProps.format ?? (ampm ? adapter.formats.fullTime12h : adapter.formats.fullTime24h),
     }),
-    [internalProps, validationProps, ampm, utils],
+    [internalProps, validationProps, ampm, adapter],
   );
 }
 

@@ -2,11 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import {
-  useGridComponentRenderer,
-  RenderProp,
-  useGridPanelContext,
-} from '@mui/x-data-grid-pro/internals';
+import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useGridPanelContext } from '@mui/x-data-grid-pro/internals';
 import {
   gridPreferencePanelStateSelector,
   GridPreferencePanelsValue,
@@ -78,7 +75,7 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
       onPointerUp?.(event);
     };
 
-    const element = useGridComponentRenderer(
+    const element = useComponentRenderer(
       rootProps.slots.baseButton,
       render,
       {

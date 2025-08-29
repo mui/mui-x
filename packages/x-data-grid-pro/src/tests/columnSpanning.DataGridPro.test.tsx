@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { expect } from 'chai';
 import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { testSkipIf, isJSDOM } from 'test/utils/skipIf';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Column spanning', () => {
   const { render } = createRenderer();
@@ -37,7 +36,7 @@ describe('<DataGridPro /> - Column spanning', () => {
   };
 
   // Need layouting
-  testSkipIf(isJSDOM)(
+  it.skipIf(isJSDOM)(
     'should not apply `colSpan` in pinned columns section if there is only one column there',
     () => {
       render(
@@ -155,7 +154,7 @@ describe('<DataGridPro /> - Column spanning', () => {
   });
 
   // Need layouting
-  testSkipIf(isJSDOM)('should work with column resizing', () => {
+  it.skipIf(isJSDOM)('should work with column resizing', () => {
     const columns = [{ field: 'brand', colSpan: 2 }, { field: 'category' }, { field: 'price' }];
 
     render(

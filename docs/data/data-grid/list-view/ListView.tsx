@@ -137,7 +137,7 @@ export default function ListView() {
   const rowHeight = isListView ? 64 : 52;
 
   return (
-    <div style={{ maxWidth: 360, height: 600 }}>
+    <div style={{ width: '100%', maxWidth: 360, height: 600 }}>
       <DataGridPro
         {...data}
         loading={loading}

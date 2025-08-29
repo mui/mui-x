@@ -5,7 +5,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   GridRenderCellParams,
   GridRowEventLookup,
-  gridRowMaximumTreeDepthSelector,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
@@ -44,19 +43,22 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
-  // eslint-disable-next-line no-underscore-dangle
-  const cellValue = params.row.__reorder__ || params.id;
+  const cellValue =
+    // eslint-disable-next-line no-underscore-dangle
+    params.row.__reorder__ ||
+    (params.rowNode.type === 'group' ? (params.rowNode.groupingKey ?? params.id) : params.id);
+  const cellRef = React.useRef<HTMLDivElement>(null);
+  const listenerNodeRef = React.useRef<HTMLDivElement>(null);
 
-  // TODO: remove sortModel and treeDepth checks once row reorder is compatible
+  // TODO: remove sortModel and treeData checks once row reorder is compatible
   const isDraggable = React.useMemo(
     () =>
       !!rootProps.rowReordering &&
       !sortModel.length &&
-      treeDepth === 1 &&
+      !rootProps.treeData &&
       Object.keys(editRowsState).length === 0,
-    [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
+    [rootProps.rowReordering, sortModel, rootProps.treeData, editRowsState],
   );
 
   const ownerState = { isDraggable, classes: rootProps.classes };
@@ -101,18 +103,35 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   }, [apiRef]);
 
   const handleDragEnd = React.useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
+    (event: DragEvent) => {
       handleMouseUp();
-      publish('rowDragEnd')(event);
+      if (apiRef.current.getRow(params.id)) {
+        apiRef.current.publishEvent('rowDragEnd', apiRef.current.getRowParams(params.id), event);
+      }
+
+      listenerNodeRef.current!.removeEventListener('dragend', handleDragEnd);
+      listenerNodeRef.current = null;
     },
-    [publish, handleMouseUp],
+    [apiRef, params.id, handleMouseUp],
+  );
+
+  const handleDragStart = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (!cellRef.current) {
+        return;
+      }
+      publish('rowDragStart')(event);
+      cellRef.current.addEventListener('dragend', handleDragEnd);
+      // cache the node to remove the listener when the drag ends
+      listenerNodeRef.current = cellRef.current;
+    },
+    [publish, handleDragEnd],
   );
 
   const draggableEventHandlers = isDraggable
     ? {
-        onDragStart: publish('rowDragStart'),
+        onDragStart: handleDragStart,
         onDragOver: publish('rowDragOver'),
-        onDragEnd: handleDragEnd,
         onMouseDown: handleMouseDown,
         onMouseUp: handleMouseUp,
       }
@@ -123,7 +142,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   }
 
   return (
-    <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
+    <div ref={cellRef} className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
       <RowReorderIcon
         as={rootProps.slots.rowReorderIcon}
         ownerState={ownerState}
