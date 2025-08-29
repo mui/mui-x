@@ -11,14 +11,14 @@ export default function PreferencesMenu() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
-     <div style={{ height: '600px', width: '100%' }}>
-        <EventCalendar
-          events={events}
-          resources={resources}
-          defaultVisibleDate={defaultVisibleDate}
-          onEventsChange={setEvents}
-          preferencesMenuConfig={{ toggleWeekEndVisibility: false }}
-    />
+    <div style={{ height: '600px', width: '100%' }}>
+      <EventCalendar
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        preferencesMenuConfig={{ toggleWeekEndVisibility: false }}
+      />
     </div>
   );
 }

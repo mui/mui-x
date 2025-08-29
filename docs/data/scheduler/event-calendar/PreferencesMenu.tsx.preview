@@ -1,7 +1,7 @@
 <EventCalendar
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-      preferencesMenuConfig={{ toggleWeekEndVisibility: false }}
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  preferencesMenuConfig={{ toggleWeekEndVisibility: false }}
 />
