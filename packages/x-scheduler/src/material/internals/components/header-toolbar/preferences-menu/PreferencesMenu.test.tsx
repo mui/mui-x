@@ -20,7 +20,7 @@ describe('<PreferencesMenu />', () => {
     expect(getPreferencesMenu()).not.to.equal(null);
   });
 
-  it('should render the menu when not all items are disabled', async () => {
+  it('should render the menu when preferencesMenuConfig has no disabled items', async () => {
     render(
       <StandaloneView events={[]} preferencesMenuConfig={{}}>
         <PreferencesMenu />
