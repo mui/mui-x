@@ -4,5 +4,5 @@
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
 >
-  <MonthView className={classes.Container} />
+  <MonthView />
 </StandaloneView>
