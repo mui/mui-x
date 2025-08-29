@@ -130,9 +130,14 @@ export const getStringSize = (
       measurementSpan.removeAttribute(measurementSpan.attributes[0].name);
     }
 
+    measurementSpan.setAttribute('id', MEASUREMENT_SPAN_ID);
+    measurementSpan.setAttribute('aria-hidden', 'true');
+
     for (const attr in other) {
       if (other.hasOwnProperty(attr)) {
-        measurementSpan.setAttribute(attr, `${other[attr]}`);
+        if (typeof other[attr] !== 'object') {
+          measurementSpan.setAttribute(attr, `${other[attr]}`);
+        }
       }
     }
 
