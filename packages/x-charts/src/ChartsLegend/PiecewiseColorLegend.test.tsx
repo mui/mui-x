@@ -49,4 +49,66 @@ describe('<PiecewiseColorLegend />', () => {
     // SKIP
     skip: ['themeVariants', 'componentProp', 'componentsProp'],
   }));
+
+  it('should apply inline-start class when labelPosition="inline-start"', () => {
+    const { container } = render(
+      <ChartDataProvider
+        height={50}
+        width={50}
+        series={[
+          {
+            type: 'line',
+            label: 'Line 1',
+            data: [10, 20, 30, 40, 50],
+          },
+        ]}
+        zAxis={[
+          {
+            colorMap: {
+              type: 'piecewise',
+              thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
+              colors: ['blue', 'gray', 'red'],
+            },
+          },
+        ]}
+      >
+        <PiecewiseColorLegend labelPosition="inline-start" />
+        <ChartsSurface />
+      </ChartDataProvider>,
+    );
+
+    expect(container.querySelector(`.${piecewiseColorLegendClasses.inlineStart}`)).not.to.equal(
+      null,
+    );
+  });
+
+  it('should apply inline-end class when labelPosition="inline-end"', () => {
+    const { container } = render(
+      <ChartDataProvider
+        height={50}
+        width={50}
+        series={[
+          {
+            type: 'line',
+            label: 'Line 1',
+            data: [10, 20, 30, 40, 50],
+          },
+        ]}
+        zAxis={[
+          {
+            colorMap: {
+              type: 'piecewise',
+              thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
+              colors: ['blue', 'gray', 'red'],
+            },
+          },
+        ]}
+      >
+        <PiecewiseColorLegend labelPosition="inline-end" />
+        <ChartsSurface />
+      </ChartDataProvider>,
+    );
+
+    expect(container.querySelector(`.${piecewiseColorLegendClasses.inlineEnd}`)).not.to.equal(null);
+  });
 });
