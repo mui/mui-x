@@ -39,6 +39,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const id = useId(idProp);
   const translations = useTranslations();
   const { store } = useEventCalendarContext();
+  const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
   const ampm = useStore(store, selectors.ampm);
   const isRecurring = Boolean(eventProp.rrule);
 
@@ -125,6 +126,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     <DayGrid.Event
       ref={forwardedRef}
       id={id}
+      isDraggable={isDraggable}
       className={clsx(
         className,
         'EventContainer',
@@ -133,6 +135,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         getColorClassName({ resource: eventResource }),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
+      eventId={eventProp.id}
       aria-hidden={variant === 'invisible'}
       start={eventProp.start}
       end={eventProp.end}

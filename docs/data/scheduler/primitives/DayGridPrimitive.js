@@ -34,13 +34,23 @@ export default function DayGridPrimitive() {
     <div className={classes.Container}>
       <DayGrid.Root className={classes.Root}>
         {weeks.map((week) => (
-          <DayGrid.Row key={week[0].date.toString()} className={classes.Row}>
+          <DayGrid.Row
+            key={week[0].date.toString()}
+            start={week[0].date.startOf('week')}
+            end={week[0].date.endOf('week')}
+            className={classes.Row}
+          >
             {week.map((day) => (
-              <DayGrid.Cell key={day.date.toString()} className={classes.Cell}>
+              <DayGrid.Cell
+                key={day.date.toString()}
+                className={classes.Cell}
+                value={day.date}
+              >
                 <span className={classes.CellLabel}>{day.date.toFormat('dd')}</span>
                 {day.events.map((event) => (
                   <DayGrid.Event
                     key={event.id}
+                    eventId={event.id}
                     start={event.start}
                     end={event.end}
                     className={classes.Event}

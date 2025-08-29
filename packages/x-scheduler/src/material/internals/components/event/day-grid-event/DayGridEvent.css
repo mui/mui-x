@@ -1,5 +1,12 @@
 @import '../../../../styles/colors.css';
 
+.EventCard {
+  &[data-dragging],
+  &[data-resizing] {
+    opacity: 0.5;
+  }
+}
+
 .DayGridEventTitle {
   margin: 0;
   color: var(--event-primary-text);

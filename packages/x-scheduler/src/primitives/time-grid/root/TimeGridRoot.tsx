@@ -23,7 +23,7 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
     className,
     render,
     // Internal props
-    onEventChange: onEventChangeProp,
+    onEventChange,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -33,9 +33,7 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
 
   const props = React.useMemo(() => ({ role: 'grid' }), []);
 
-  const state: TimeGridRoot.State = React.useMemo(() => ({}), []);
-
-  const updateEvent = useEventCallback(onEventChangeProp);
+  const updateEvent = useEventCallback(onEventChange);
 
   const contextValue: TimeGridRootContext = React.useMemo(
     () => ({ updateEvent, setPlaceholder, store }),
@@ -47,7 +45,6 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   }, [store, adapter]);
 
   const element = useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
