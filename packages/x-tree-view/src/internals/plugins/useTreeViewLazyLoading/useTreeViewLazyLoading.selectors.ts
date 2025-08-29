@@ -23,16 +23,6 @@ export const lazyLoadingSelectors = {
       state.lazyLoading?.dataSource.loading[itemId] ?? false,
   ),
   /**
-   * Get the error for a tree item.
-   * @param {TreeViewState<[UseTreeViewLazyLoadingSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to get the error for.
-   * @returns {boolean} The item's error.
-   */
-  itemError: createSelector(
-    (state: TreeViewState<[], [UseTreeViewLazyLoadingSignature]>, itemId: TreeViewItemId) =>
-      state.lazyLoading?.dataSource.errors[itemId] ?? null,
-  ),
-  /**
    * Check whether an item has errors.
    * @param {TreeViewState<[UseTreeViewLazyLoadingSignature]>} state The state of the tree view.
    * @param {TreeViewItemId} itemId The id of the item to check for errors.

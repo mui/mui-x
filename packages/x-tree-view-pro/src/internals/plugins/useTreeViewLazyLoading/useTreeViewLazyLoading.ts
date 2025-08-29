@@ -9,7 +9,6 @@ import {
   lazyLoadingSelectors,
   TreeViewPlugin,
   useInstanceEventHandler,
-  selectorGetTreeItemError,
 } from '@mui/x-tree-view/internals';
 import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
@@ -187,8 +186,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       instance.removeChildren(id);
     }
 
-    const existingError = selectorGetTreeItemError(store.state, id) ?? null;
-    if (existingError) {
+    if (lazyLoadingSelectors.itemHasError(store.state, id)) {
       instance.setDataSourceError(id, null);
     }
 
@@ -221,8 +219,8 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
     eventParameters.isExpansionPrevented = true;
     await instance.fetchItems([eventParameters.itemId]);
-    const fetchErrors = Boolean(selectorGetTreeItemError(store.state, eventParameters.itemId));
-    if (!fetchErrors) {
+    const itemHasError = lazyLoadingSelectors.itemHasError(store.state, eventParameters.itemId);
+    if (!itemHasError) {
       instance.applyItemExpansion({
         itemId: eventParameters.itemId,
         shouldBeExpanded: true,

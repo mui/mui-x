@@ -6,9 +6,8 @@ import { SlotComponentProps } from '@mui/utils/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
 import { TreeViewItemId } from '../../models';
-import { itemsSelectors } from '../plugins/useTreeViewItems';
+import { itemsSelectors, UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 import { useTreeViewContext } from '../TreeViewProvider';
-import { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 
 const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null

@@ -162,7 +162,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-      if (expansionSelectors.expansionTrigger(store.state) === 'content') {
+      if (expansionSelectors.triggerSlot(store.state) === 'content') {
         interactions.handleExpansion(event);
       }
 
@@ -190,7 +190,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented) {
         return;
       }
-      if (expansionSelectors.expansionTrigger(store.state) === 'iconContainer') {
+      if (expansionSelectors.triggerSlot(store.state) === 'iconContainer') {
         interactions.handleExpansion(event);
       }
     };

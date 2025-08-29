@@ -82,7 +82,6 @@ export const useTreeItemUtils = <
   const { instance, store, publicAPI } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
   const isItemExpandable = useStore(store, expansionSelectors.isItemExpandable, itemId);
-  const isMultiSelectEnabled = useStore(store, selectionSelectors.isMultiSelectEnabled);
   const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, itemId);
   const hasError = useStore(store, lazyLoadingSelectors.itemHasError, itemId);
   const isExpandable = itemHasChildren(children) || isItemExpandable;
@@ -114,7 +113,9 @@ export const useTreeItemUtils = <
       instance.focusItem(event, itemId);
     }
 
-    const multiple = isMultiSelectEnabled && (event.shiftKey || event.ctrlKey || event.metaKey);
+    const multiple =
+      selectionSelectors.isMultiSelectEnabled(store.state) &&
+      (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
     if (
@@ -135,7 +136,9 @@ export const useTreeItemUtils = <
       instance.focusItem(event, itemId);
     }
 
-    const multiple = isMultiSelectEnabled && (event.shiftKey || event.ctrlKey || event.metaKey);
+    const multiple =
+      selectionSelectors.isMultiSelectEnabled(store.state) &&
+      (event.shiftKey || event.ctrlKey || event.metaKey);
 
     if (multiple) {
       if (event.shiftKey) {
@@ -150,6 +153,7 @@ export const useTreeItemUtils = <
 
   const handleCheckboxSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     const hasShift = (event.nativeEvent as PointerEvent).shiftKey;
+    const isMultiSelectEnabled = selectionSelectors.isMultiSelectEnabled(store.state);
     if (isMultiSelectEnabled && hasShift) {
       instance.expandSelectionRange(event, itemId);
     } else {

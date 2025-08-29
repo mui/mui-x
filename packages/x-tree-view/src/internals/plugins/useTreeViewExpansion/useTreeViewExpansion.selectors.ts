@@ -35,7 +35,7 @@ export const expansionSelectors = {
    * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
    * @returns {'content' | 'iconContainer'} The slot that triggers the item's expansion when clicked. Is `null` if the item is not expandable.
    */
-  expansionTrigger: createSelector(
+  triggerSlot: createSelector(
     (state: TreeViewState<[UseTreeViewExpansionSignature]>) => state.expansion.expansionTrigger,
   ),
   /**

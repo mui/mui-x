@@ -62,7 +62,6 @@ export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
 } from './plugins/useTreeViewLabel';
-export { selectorGetTreeItemError } from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 export type {
   UseTreeViewLazyLoadingSignature,
   UseTreeViewLazyLoadingParameters,
