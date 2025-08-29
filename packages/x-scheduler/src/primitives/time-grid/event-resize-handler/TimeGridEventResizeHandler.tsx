@@ -24,7 +24,6 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
 
   const ref = React.useRef<HTMLDivElement>(null);
   const { setIsResizing, getSharedDragData } = useTimeGridEventContext();
-  const { getCursorPositionInElementMs } = useTimeGridColumnContext();
 
   const props = React.useMemo(() => ({}), []);
 
@@ -52,7 +51,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
       onDragStart: () => setIsResizing(true),
       onDrop: () => setIsResizing(false),
     });
-  }, [side, setIsResizing, getCursorPositionInElementMs, getSharedDragData]);
+  }, [side, setIsResizing, getSharedDragData]);
 
   return useRenderElement('div', componentProps, {
     state,

@@ -105,7 +105,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [getCursorPositionInElementMs, getSharedDragData, isDraggable]);
+  }, [getSharedDragData, isDraggable]);
 
   const element = useRenderElement('div', componentProps, {
     state,
