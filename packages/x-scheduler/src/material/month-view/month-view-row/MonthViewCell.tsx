@@ -161,7 +161,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                 {
                   backgroundColor: 'red',
                   opacity: 1,
-                  zIndex: 1,
+                  zIndex: 2,
                   '--grid-column-span': diffIn(adapter, draggedEvent.end, day, 'days') + 1,
                 } as React.CSSProperties
               }

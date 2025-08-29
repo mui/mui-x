@@ -18,7 +18,7 @@ const initialEvents = [
   },
 ];
 
-const defaultVisibleDate = DateTime.fromISO('2025-08-01');
+const defaultVisibleDate = DateTime.fromISO('2025-08-12');
 
 export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);
@@ -35,7 +35,6 @@ export default function FullEventCalendar() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsDraggable
-        defaultView="month"
       />
     </div>
   );
