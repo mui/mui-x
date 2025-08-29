@@ -359,9 +359,13 @@ export const useGridColumnReorder = (
   );
 
   React.useEffect(() => {
+    if (!props.keepColumnPositionIfDraggedOutside) {
+      return () => {};
+    }
+
     const doc = ownerDocument(apiRef.current.rootElementRef!.current);
     const listener = (event: DragEvent) => {
-      if (props.keepColumnPositionIfDraggedOutside && event.dataTransfer) {
+      if (event.dataTransfer) {
         // keep the drop effect if we are keeping the column position if dragged outside
         // https://github.com/mui/mui-x/issues/19183#issuecomment-3202307783
         event.preventDefault();
