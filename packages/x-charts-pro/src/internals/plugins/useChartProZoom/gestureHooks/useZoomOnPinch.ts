@@ -17,6 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { selectorZoomConfig } from '../ZoomConfig.selectors';
 
 export const useZoomOnPinch = (
   {
@@ -29,11 +30,12 @@ export const useZoomOnPinch = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const config = useSelector(store, selectorZoomConfig, ['onPinch' as const]);
 
   // Zoom on pinch
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomEnabled || !config) {
       return () => {};
     }
 
@@ -73,11 +75,20 @@ export const useZoomOnPinch = (
       });
     });
 
-    const zoomHandler = instance.addInteractionListener('pinch', rafThrottledCallback);
+    const zoomHandler = instance.addInteractionListener('zoomPinch', rafThrottledCallback);
 
     return () => {
       zoomHandler.cleanup();
       rafThrottledCallback.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, store, instance, setZoomDataCallback]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomEnabled,
+    optionsLookup,
+    store,
+    instance,
+    setZoomDataCallback,
+    config,
+  ]);
 };

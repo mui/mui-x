@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
   ChartPlugin,
   AxisId,
-  DefaultizedZoomOptions,
   ZoomData,
   useSelector,
   selectorChartZoomOptionsLookup,
@@ -17,33 +16,8 @@ import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
-
-// It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
-export function initializeZoomData(
-  options: Record<AxisId, Pick<DefaultizedZoomOptions, 'axisId' | 'minStart' | 'maxEnd'>>,
-  zoomData?: readonly ZoomData[],
-) {
-  const zoomDataMap = new Map<AxisId, ZoomData>();
-
-  zoomData?.forEach((zoom) => {
-    const option = options[zoom.axisId];
-    if (option) {
-      zoomDataMap.set(zoom.axisId, zoom);
-    }
-  });
-
-  return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => {
-    if (zoomDataMap.has(axisId)) {
-      return zoomDataMap.get(axisId)!;
-    }
-
-    return {
-      axisId,
-      start,
-      end,
-    };
-  });
-}
+import { initializeZoomConfig } from './initializeZoomConfig';
+import { initializeZoomData } from './initializeZoomData';
 
 export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   store,
@@ -248,12 +222,7 @@ useChartProZoom.params = {
   initialZoom: true,
   onZoomChange: true,
   zoomData: true,
-};
-
-useChartProZoom.getDefaultizedParams = ({ params }) => {
-  return {
-    ...params,
-  };
+  zoomConfig: true,
 };
 
 useChartProZoom.getInitialState = (params) => {
@@ -272,6 +241,7 @@ useChartProZoom.getInitialState = (params) => {
       zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
+      zoomConfig: initializeZoomConfig(params.zoomConfig),
     },
   };
 };
