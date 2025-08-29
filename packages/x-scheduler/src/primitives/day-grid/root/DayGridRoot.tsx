@@ -22,7 +22,7 @@ export const DayGridRoot = React.forwardRef(function DayGridRoot(
     className,
     render,
     // Internal props
-    onEventChange: onEventChangeProp,
+    onEventChange,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -34,11 +34,11 @@ export const DayGridRoot = React.forwardRef(function DayGridRoot(
 
   const state: DayGridRoot.State = React.useMemo(() => ({}), []);
 
-  const onEventChange = useEventCallback(onEventChangeProp);
+  const updateEvent = useEventCallback(onEventChange);
 
   const contextValue: DayGridRootContext = React.useMemo(
-    () => ({ onEventChange, setPlaceholder, store }),
-    [onEventChange, setPlaceholder, store],
+    () => ({ updateEvent, setPlaceholder, store }),
+    [updateEvent, setPlaceholder, store],
   );
 
   useIsoLayoutEffect(() => {

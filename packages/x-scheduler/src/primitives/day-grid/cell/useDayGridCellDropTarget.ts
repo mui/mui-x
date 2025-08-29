@@ -12,7 +12,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
   const { value } = parameters;
 
   const adapter = useAdapter();
-  const { onEventChange, setPlaceholder } = useDayGridRootContext();
+  const { updateEvent, setPlaceholder } = useDayGridRootContext();
   const ref = React.useRef<HTMLDivElement>(null);
 
   const getEventDropData = useEventCallback((data: Record<string, unknown>) => {
@@ -28,7 +28,6 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         (60 * 1000);
 
       const valueWithOffset = data.dayOffset === 0 ? value : adapter.addDays(value, data.dayOffset);
-
       const newStartDate = mergeDateAndTime(adapter, valueWithOffset, data.start);
       const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
 
@@ -62,12 +61,12 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         const newEvent = getEventDropData(data);
 
         if (newEvent) {
-          onEventChange(newEvent);
+          updateEvent(newEvent);
           setPlaceholder(null);
         }
       },
     });
-  }, [adapter, onEventChange, setPlaceholder, getEventDropData]);
+  }, [adapter, updateEvent, setPlaceholder, getEventDropData]);
 
   return ref;
 }
