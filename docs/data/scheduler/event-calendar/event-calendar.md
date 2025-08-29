@@ -190,3 +190,17 @@ import { frFR } from '@mui/x-scheduler/material/translations/frFR';
 ```
 
 {{"demo": "Translations.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Preferences menu
+
+You can customize the preferences menu using the `preferencesMenuConfig` prop:
+
+```ts
+// will hide the menu
+preferencesMenuConfig={false}
+
+// will hide the menu item responsible for toggling the week-end visibility
+preferencesMenuConfig={{ toggleWeekendVisibility: false }}
+```
+
+{{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
