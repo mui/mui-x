@@ -87,7 +87,7 @@ export interface EventCalendarParameters {
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekEndVisibility: true }
+   * @default { toggleWeekendVisibility: true }
    */
   preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
 }
