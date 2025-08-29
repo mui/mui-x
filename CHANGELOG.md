@@ -7,15 +7,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.11.0
 
-<!-- generated comparing v8.10.2..master -->
-
-_Aug 28, 2025_
+_Aug 29, 2025_
 
 We'd like to extend a big thank you to the 19 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add new `SankeyChart`
 
-<img height="300" alt="Screenshot 2025-07-24 at 12 54 33" src="https://github.com/user-attachments/assets/d77bcec1-044b-48c6-b37d-d7b74793b91c" />
+  <img height="300" alt="Screenshot 2025-07-24 at 12 54 33" src="https://github.com/user-attachments/assets/d77bcec1-044b-48c6-b37d-d7b74793b91c" />
 
 - 🚀 Data Grid row grouping now supports row reordering
 
@@ -45,7 +43,8 @@ The following are all team members who have contributed to this release:
 
 Same changes as in `@mui/x-data-grid@8.11.0`, plus:
 
-- [DataGridPro] Fix column menu sort when multipleColumnsSortingMode="always" (#19099) @MBilalShafi
+- [DataGridPro] Fix column menu sort when `multipleColumnsSortingMode="always"` (#19099) @MBilalShafi
+- [DataGridPro] Keep the drop effect if `keepColumnPositionIfDraggedOutside` is enabled (#19372) @arminmeh
 
 #### `@mui/x-data-grid-premium@8.11.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -70,8 +69,7 @@ Same changes as in `@mui/x-date-pickers@8.11.0`.
 
 #### `@mui/x-charts@8.11.0`
 
-- [charts] Add component to render axis labels (#19240) @alexfauquette
-- [charts] Gestures config by pointermode (#19331) @JCQuintas
+- [charts] Add `RadarAxis` component to render labels (#19240) @alexfauquette
 - [charts] Handle item identifier with data (#19295) @JCQuintas
 - [charts] Refactor optional chaining for props in PieChart, PieChartPro, and ScatterChartPro components (#19292) @sai6855
 - [charts] Remove unused `fill` and `stroke` properties (#19316) @sai6855
@@ -119,7 +117,7 @@ Internal changes.
 
 ### Miscellaneous
 
-- [ai-assistant] Make it clear that the API key must be private (#19244) @oliviertassinari
+- [docs][DataGrid] Make it clear that the API key for AI Assistant must be private (#19244) @oliviertassinari
 - [infra] Add `synchronize` to workflow triggers (#19342) @michelengelen
 - [infra] Add charts docs folder in codowner (#19317) @alexfauquette
 - [infra] Fix publish workflow complaint (#19346) @JCQuintas
