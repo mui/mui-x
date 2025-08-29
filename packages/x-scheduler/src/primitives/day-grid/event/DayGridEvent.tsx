@@ -10,6 +10,7 @@ import { useEvent } from '../../utils/useEvent';
 import { SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { diffIn } from '../../utils/date-utils';
+import { useDayGridRowContext } from '../row/DayGridRowContext';
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   componentProps: DayGridEvent.Props,
@@ -36,6 +37,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const ref = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
+  const { start: rowStart, end: rowEnd } = useDayGridRowContext();
 
   const { state: eventState, props: eventProps } = useEvent({ start, end });
 
@@ -44,18 +46,18 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     [eventState, isDragging],
   );
 
-  // TODO: Add support for multi row events.
-  const getDayOffset = useEventCallback((input: { clientX: number }) => {
+  const getDraggedDay = useEventCallback((input: { clientX: number }) => {
     if (!ref.current) {
-      return adapter.startOfDay(start);
+      return start;
     }
 
-    const eventDayLength = diffIn(adapter, end, start, 'days') + 1;
+    const eventStartInRow = adapter.isBefore(start, rowStart) ? rowStart : start;
+    const eventEndInRow = adapter.isAfter(end, rowEnd) ? rowEnd : end;
+    const eventDayLengthInRow = diffIn(adapter, eventEndInRow, eventStartInRow, 'days') + 1;
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
-
-    return -Math.floor(positionX * eventDayLength);
+    return adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1);
   });
 
   React.useEffect(() => {
@@ -72,7 +74,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         id: eventId,
         start,
         end,
-        dayOffset: getDayOffset(input),
+        draggedDay: getDraggedDay(input),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -80,7 +82,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [isDraggable, start, end, eventId, getDayOffset]);
+  }, [isDraggable, start, end, eventId, getDraggedDay]);
 
   return useRenderElement('div', componentProps, {
     state,
@@ -115,6 +117,6 @@ export namespace DayGridEvent {
     id: string | number;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
-    dayOffset: number;
+    draggedDay: SchedulerValidDate;
   }
 }

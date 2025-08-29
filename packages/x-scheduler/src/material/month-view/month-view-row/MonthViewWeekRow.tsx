@@ -33,8 +33,16 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
 
   const weekNumber = adapter.getWeekNumber(week);
 
+  const { start, end } = React.useMemo(
+    () => ({
+      start: days[0],
+      end: adapter.endOfDay(days[days.length - 1]),
+    }),
+    [days],
+  );
+
   return (
-    <DayGrid.Row key={weekNumber} className="MonthViewRow">
+    <DayGrid.Row key={weekNumber} start={start} end={end} className="MonthViewRow">
       <div
         className="MonthViewWeekNumberCell"
         role="rowheader"

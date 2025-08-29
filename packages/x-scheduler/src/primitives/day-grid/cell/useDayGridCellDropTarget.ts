@@ -6,7 +6,7 @@ import { isDraggingDayGridEvent } from '../../utils/drag-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useDayGridRootContext } from '../root/DayGridRootContext';
 import { SchedulerValidDate } from '../../models';
-import { mergeDateAndTime } from '../../utils/date-utils';
+import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
 
 export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Parameters) {
   const { value } = parameters;
@@ -22,16 +22,14 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
 
     // Move event
     if (isDraggingDayGridEvent(data)) {
-      // TODO: Avoid JS Date conversion
-      const eventDuration =
-        (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
-        (60 * 1000);
+      const offset = diffIn(adapter, value, data.draggedDay, 'days');
 
-      const valueWithOffset = data.dayOffset === 0 ? value : adapter.addDays(value, data.dayOffset);
-      const newStartDate = mergeDateAndTime(adapter, valueWithOffset, data.start);
-      const newEndDate = adapter.addMinutes(newStartDate, eventDuration);
-
-      return { start: newStartDate, end: newEndDate, eventId: data.id, columnId: null };
+      return {
+        start: offset === 0 ? data.start : adapter.addDays(data.start, offset),
+        end: offset === 0 ? data.end : adapter.addDays(data.end, offset),
+        eventId: data.id,
+        columnId: null,
+      };
     }
 
     return undefined;
