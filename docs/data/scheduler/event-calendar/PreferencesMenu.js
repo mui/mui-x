@@ -6,19 +6,19 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './FullEventCalendar.module.css';
 
 export default function PreferencesMenu() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <EventCalendar
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-      className={classes.Container}
-      preferencesMenuConfig={{ toggleWeekEndVisibility: false }}
-    />
+    <div style={{ height: '600px', width: '100%' }}>
+      <EventCalendar
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        preferencesMenuConfig={{ toggleWeekEndVisibility: false }}
+      />
+    </div>
   );
 }
