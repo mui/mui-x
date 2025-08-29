@@ -32,8 +32,6 @@ export const DayGridRoot = React.forwardRef(function DayGridRoot(
 
   const props = React.useMemo(() => ({ role: 'grid' }), []);
 
-  const state: DayGridRoot.State = React.useMemo(() => ({}), []);
-
   const updateEvent = useEventCallback(onEventChange);
 
   const contextValue: DayGridRootContext = React.useMemo(
@@ -46,7 +44,6 @@ export const DayGridRoot = React.forwardRef(function DayGridRoot(
   }, [store, adapter]);
 
   const element = useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });

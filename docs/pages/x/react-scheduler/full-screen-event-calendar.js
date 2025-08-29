@@ -11,7 +11,7 @@ import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 const initialEvents = [
   {
     id: 'test',
-    start: DateTime.fromISO('2025-08-02'),
+    start: DateTime.fromISO('2025-08-12'),
     end: DateTime.fromISO('2025-08-21'),
     title: 'Test event',
     allDay: true,

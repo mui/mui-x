@@ -23,6 +23,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
     // Move event
     if (isDraggingDayGridEvent(data)) {
       const offset = diffIn(adapter, value, data.draggedDay, 'days');
+      console.log(ref.current.querySelector('.MonthViewCellNumberButton')?.innerText);
 
       return {
         start: offset === 0 ? data.start : adapter.addDays(data.start, offset),

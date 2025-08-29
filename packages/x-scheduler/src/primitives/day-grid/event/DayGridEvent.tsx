@@ -3,6 +3,7 @@ import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
@@ -11,6 +12,8 @@ import { SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { diffIn } from '../../utils/date-utils';
 import { useDayGridRowContext } from '../row/DayGridRowContext';
+import { useDayGridRootContext } from '../root/DayGridRootContext';
+import { selectors } from '../root/store';
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   componentProps: DayGridEvent.Props,
@@ -39,6 +42,13 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
   const { state: eventState, props: eventProps } = useEvent({ start, end });
+  const { store } = useDayGridRootContext();
+  const hasPlaceholder = useStore(store, selectors.hasPlaceholder);
+
+  const props = React.useMemo(
+    () => (hasPlaceholder ? { style: { pointerEvents: 'none' as const } } : {}),
+    [hasPlaceholder],
+  );
 
   const state: DayGridEvent.State = React.useMemo(
     () => ({ ...eventState, dragging: isDragging }),
@@ -86,7 +96,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef, ref],
-    props: [eventProps, elementProps, getButtonProps],
+    props: [props, eventProps, elementProps, getButtonProps],
   });
 });
 
