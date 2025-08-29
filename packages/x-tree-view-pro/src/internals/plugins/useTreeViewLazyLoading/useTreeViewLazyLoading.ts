@@ -52,7 +52,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       return;
     }
 
-    if (!store.state.lazyLoading.dataSource.loading[itemId] && !isLoading) {
+    if (lazyLoadingSelectors.isItemLoading(store.state, itemId) === isLoading) {
       return;
     }
 
