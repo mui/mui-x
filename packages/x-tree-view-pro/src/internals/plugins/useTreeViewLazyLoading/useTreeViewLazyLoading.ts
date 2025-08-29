@@ -210,18 +210,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     }));
 
     async function fetchAllExpandedItems() {
-      const itemsParamLookup = new Map<string, any>();
-      for (const item of params.items) {
-        itemsParamLookup.set(item.id, item);
-      }
-
       async function fetchChildrenIfExpanded(parentIds: TreeViewItemId[]) {
         const expandedItems = parentIds.filter((id) => selectorIsItemExpanded(store.value, id));
         if (expandedItems.length > 0) {
-          const itemsToLazyLoad = expandedItems.filter((id) => {
-            const childrenIdsFromParams = itemsParamLookup.get(id)?.children || [];
-            return childrenIdsFromParams.length === 0;
-          });
+          const itemsToLazyLoad = expandedItems.filter(
+            (id) => selectorItemOrderedChildrenIds(store.value, id).length === 0,
+          );
           if (itemsToLazyLoad.length > 0) {
             await instance.fetchItems(itemsToLazyLoad);
           }
