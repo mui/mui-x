@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
 import './Tooltip.css';
 
