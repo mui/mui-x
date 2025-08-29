@@ -200,7 +200,7 @@ You can customize the preferences menu using the `preferencesMenuConfig` prop:
 preferencesMenuConfig={false}
 
 // will hide the menu item responsible for toggling the week-end visibility
-preferencesMenuConfig={{ toggleWeekEndVisibility: false }}
+preferencesMenuConfig={{ toggleWeekendVisibility: false }}
 ```
 
 {{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
