@@ -18,7 +18,7 @@ const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 const DEFAULT_VIEW: CalendarView = 'week';
 const DEFAULT_PREFERENCES: CalendarPreferences = { hideWeekends: false };
 const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
-  toggleWeekEndVisibility: true,
+  toggleWeekendVisibility: true,
 };
 const EMPTY_ARRAY: any[] = [];
 
