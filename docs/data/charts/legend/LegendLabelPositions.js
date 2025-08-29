@@ -151,6 +151,22 @@ export default function LegendLabelPositions() {
                 labelFormatter={piecewiseFormatter}
               />
             </div>
+            <div>
+              <Typography>inline-start</Typography>
+              <PiecewiseColorLegend
+                axisDirection="x"
+                direction="horizontal"
+                labelPosition="inline-start"
+              />
+            </div>
+            <div>
+              <Typography>inline-end</Typography>
+              <PiecewiseColorLegend
+                axisDirection="x"
+                direction="horizontal"
+                labelPosition="inline-end"
+              />
+            </div>
           </Stack>
           <Divider />
           <Typography variant="h5">Vertical</Typography>
@@ -190,6 +206,22 @@ export default function LegendLabelPositions() {
                 direction="vertical"
                 labelPosition="extremes"
                 labelFormatter={piecewiseFormatter}
+              />
+            </div>
+            <div>
+              <Typography>inline-start</Typography>
+              <PiecewiseColorLegend
+                axisDirection="x"
+                direction="vertical"
+                labelPosition="inline-start"
+              />
+            </div>
+            <div>
+              <Typography>inline-end</Typography>
+              <PiecewiseColorLegend
+                axisDirection="x"
+                direction="vertical"
+                labelPosition="inline-end"
               />
             </div>
           </Stack>
