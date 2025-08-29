@@ -1,7 +1,11 @@
 import { screen } from '@mui/internal-test-utils';
 
-export async function openSettingsMenu(user) {
-  const button = await screen.findByRole('button', { name: /settings/i });
+export function getPreferencesMenu() {
+  return screen.queryByRole('button', { name: /settings/i });
+}
+
+export async function openPreferencesMenu(user) {
+  const button = getPreferencesMenu();
   await user.click(button);
   await screen.findByRole('menu');
   return button;
