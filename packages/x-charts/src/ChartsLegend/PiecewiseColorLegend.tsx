@@ -9,7 +9,7 @@ import { ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabe
 import { Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {
-  piecewiseColorLegendClasses as classes,
+  piecewiseColorLegendClasses,
   PiecewiseColorLegendClasses,
   useUtilityClasses,
 } from './piecewiseColorLegendClasses';
@@ -63,6 +63,7 @@ const RootElement = styled('ul', {
   name: 'MuiPiecewiseColorLegend',
   slot: 'Root',
 })<{ ownerState: PiecewiseColorLegendProps }>(({ theme, ownerState }) => {
+  const classes = piecewiseColorLegendClasses;
   return {
     ...theme.typography.caption,
     color: (theme.vars || theme).palette.text.primary,
