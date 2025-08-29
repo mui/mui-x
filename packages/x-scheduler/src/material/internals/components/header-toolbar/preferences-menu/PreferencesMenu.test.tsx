@@ -42,7 +42,7 @@ describe('<PreferencesMenu />', () => {
 
   it('should not render the menu when all the items are disabled', async () => {
     render(
-      <StandaloneView events={[]} preferencesMenuConfig={{ toggleWeekEndVisibility: false }}>
+      <StandaloneView events={[]} preferencesMenuConfig={{ toggleWeekendVisibility: false }}>
         <PreferencesMenu />
       </StandaloneView>,
     );
