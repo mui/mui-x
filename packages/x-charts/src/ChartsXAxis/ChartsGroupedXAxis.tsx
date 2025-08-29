@@ -39,6 +39,7 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     tickNumber,
     positionSign,
     skipAxisRendering,
+    skipTickRendering,
     classes,
     Line,
     Tick,
@@ -92,10 +93,6 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     groups,
   });
 
-  // Skip axis rendering if no data is available
-  // - The domain is an empty array for band/point scales.
-  // - The domains contains Infinity for continuous scales.
-  // - The position is set to 'none'.
   if (skipAxisRendering) {
     return null;
   }
@@ -110,45 +107,47 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicks.map((item, index) => {
-        const { offset: tickOffset, labelOffset } = item;
-        const xTickLabel = labelOffset ?? 0;
+      {skipTickRendering
+        ? null
+        : xTicks.map((item, index) => {
+            const { offset: tickOffset, labelOffset } = item;
+            const xTickLabel = labelOffset ?? 0;
 
-        const showTick = instance.isXInside(tickOffset);
-        const tickLabel = item.formattedValue;
-        const ignoreTick = item.ignoreTick ?? false;
-        const groupIndex = item.groupIndex ?? 0;
-        const groupConfig = getGroupingConfig(groups, groupIndex, tickSize);
+            const showTick = instance.isXInside(tickOffset);
+            const tickLabel = item.formattedValue;
+            const ignoreTick = item.ignoreTick ?? false;
+            const groupIndex = item.groupIndex ?? 0;
+            const groupConfig = getGroupingConfig(groups, groupIndex, tickSize);
 
-        const tickYSize = positionSign * groupConfig.tickSize;
-        const labelPositionY = positionSign * (groupConfig.tickSize + TICK_LABEL_GAP);
+            const tickYSize = positionSign * groupConfig.tickSize;
+            const labelPositionY = positionSign * (groupConfig.tickSize + TICK_LABEL_GAP);
 
-        return (
-          <g
-            key={index}
-            transform={`translate(${tickOffset}, 0)`}
-            className={classes.tickContainer}
-            data-group-index={groupIndex}
-          >
-            {!disableTicks && !ignoreTick && showTick && (
-              <Tick y2={tickYSize} className={classes.tick} {...slotProps?.axisTick} />
-            )}
+            return (
+              <g
+                key={index}
+                transform={`translate(${tickOffset}, 0)`}
+                className={classes.tickContainer}
+                data-group-index={groupIndex}
+              >
+                {!disableTicks && !ignoreTick && showTick && (
+                  <Tick y2={tickYSize} className={classes.tick} {...slotProps?.axisTick} />
+                )}
 
-            {tickLabel !== undefined && (
-              <TickLabel
-                x={xTickLabel}
-                y={labelPositionY}
-                {...axisTickLabelProps}
-                style={{
-                  ...axisTickLabelProps.style,
-                  ...groupConfig.tickLabelStyle,
-                }}
-                text={tickLabel}
-              />
-            )}
-          </g>
-        );
-      })}
+                {tickLabel !== undefined && (
+                  <TickLabel
+                    x={xTickLabel}
+                    y={labelPositionY}
+                    {...axisTickLabelProps}
+                    style={{
+                      ...axisTickLabelProps.style,
+                      ...groupConfig.tickLabelStyle,
+                    }}
+                    text={tickLabel}
+                  />
+                )}
+              </g>
+            );
+          })}
 
       {label && (
         <g className={classes.label}>
