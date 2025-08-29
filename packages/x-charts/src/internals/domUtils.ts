@@ -106,13 +106,7 @@ export const getStringSize = (
     return { width: 0, height: 0 };
   }
 
-  const style: React.CSSProperties = { ...props.style };
-
-  for (const key of Object.keys(props)) {
-    if (key !== 'style' && typeof props[key] !== 'object') {
-      (style as Record<string, any>)[key] = props[key];
-    }
-  }
+  const { style = {}, ...other } = props;
 
   const str = `${text}`;
   const styleString = getStyleString(style);
@@ -136,6 +130,21 @@ export const getStringSize = (
     }
 
     const measurementSpan = measurementContainer.firstElementChild as SVGTextElement;
+
+    while (measurementSpan.attributes.length > 0) {
+      measurementSpan.removeAttribute(measurementSpan.attributes[0].name);
+    }
+
+    measurementSpan.setAttribute('id', MEASUREMENT_SPAN_ID);
+    measurementSpan.setAttribute('aria-hidden', 'true');
+
+    for (const attr in other) {
+      if (other.hasOwnProperty(attr)) {
+        if (typeof other[attr] !== 'object') {
+          measurementSpan.setAttribute(attr, `${other[attr]}`);
+        }
+      }
+    }
 
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
