@@ -85,8 +85,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   const canToggleItemSelection = (itemId: string) =>
-    selectionSelectors.isSelectionEnabled(store.state) &&
-    !itemsSelectors.isItemDisabled(store.state, itemId);
+    selectionSelectors.enabled(store.state) && !itemsSelectors.isItemDisabled(store.state, itemId);
 
   const canToggleItemExpansion = (itemId: string) => {
     return (
@@ -285,7 +284,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       case String.fromCharCode(event.keyCode) === 'A' &&
         ctrlPressed &&
         isMultiSelectEnabled &&
-        selectionSelectors.isSelectionEnabled(store.state): {
+        selectionSelectors.enabled(store.state): {
         instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;

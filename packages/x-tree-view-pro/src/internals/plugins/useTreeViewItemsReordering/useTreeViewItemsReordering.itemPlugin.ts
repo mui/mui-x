@@ -15,11 +15,7 @@ import {
   TreeViewItemItemReorderingValidActions,
   UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
-import {
-  selectorCanItemBeReordered,
-  selectorDraggedItemProperties,
-  selectorIsItemValidReorderingTarget,
-} from './useTreeViewItemsReordering.selectors';
+import { itemsReorderingSelectors } from './useTreeViewItemsReordering.selectors';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
@@ -32,9 +28,13 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
 
-  const draggedItemProperties = useStore(store, selectorDraggedItemProperties, itemId);
-  const canItemBeReordered = useStore(store, selectorCanItemBeReordered, itemId);
-  const isValidTarget = useStore(store, selectorIsItemValidReorderingTarget, itemId);
+  const draggedItemProperties = useStore(
+    store,
+    itemsReorderingSelectors.draggedItemProperties,
+    itemId,
+  );
+  const canItemBeReordered = useStore(store, itemsReorderingSelectors.canItemBeReordered, itemId);
+  const isValidTarget = useStore(store, itemsReorderingSelectors.isItemValidDropTarget, itemId);
 
   return {
     propsEnhancers: {

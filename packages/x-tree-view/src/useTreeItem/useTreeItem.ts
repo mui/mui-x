@@ -70,11 +70,7 @@ export const useTreeItem = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const treeId = useStore(store, idSelectors.treeId);
-  const isSelectionEnabledForItem = useStore(
-    store,
-    selectionSelectors.isItemSelectionEnabled,
-    itemId,
-  );
+  const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const shouldBeAccessibleWithTab = useStore(

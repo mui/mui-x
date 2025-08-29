@@ -14,7 +14,7 @@ import {
   moveItemInTree,
 } from './useTreeViewItemsReordering.utils';
 import { useTreeViewItemsReorderingItemPlugin } from './useTreeViewItemsReordering.itemPlugin';
-import { selectorCurrentItemReordering } from './useTreeViewItemsReordering.selectors';
+import { itemsReorderingSelectors } from './useTreeViewItemsReordering.selectors';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
@@ -38,7 +38,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const getDroppingTargetValidActions = React.useCallback(
     (itemId: string) => {
-      const currentReorder = selectorCurrentItemReordering(store.state);
+      const currentReorder = itemsReorderingSelectors.currentReorder(store.state);
       if (!currentReorder) {
         throw new Error('There is no ongoing reordering.');
       }
@@ -150,7 +150,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
   );
 
   const cancelDraggingItem = React.useCallback(() => {
-    const currentReorder = selectorCurrentItemReordering(store.state);
+    const currentReorder = itemsReorderingSelectors.currentReorder(store.state);
     if (currentReorder == null) {
       return;
     }
@@ -160,7 +160,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const completeDraggingItem = React.useCallback(
     (itemId: string) => {
-      const currentReorder = selectorCurrentItemReordering(store.state);
+      const currentReorder = itemsReorderingSelectors.currentReorder(store.state);
       if (currentReorder == null || currentReorder.draggedItemId !== itemId) {
         return;
       }

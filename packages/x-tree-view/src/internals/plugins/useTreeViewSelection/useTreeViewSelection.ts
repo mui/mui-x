@@ -102,7 +102,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     keepExistingSelection = false,
     shouldBeSelected,
   }) => {
-    if (!selectionSelectors.isSelectionEnabled(store.state)) {
+    if (!selectionSelectors.enabled(store.state)) {
       return;
     }
 

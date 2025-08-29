@@ -19,11 +19,7 @@ import { expansionSelectors } from '../../internals/plugins/useTreeViewExpansion
 import { focusSelectors } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { itemsSelectors } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { selectionSelectors } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
-import {
-  selectorGetTreeItemError,
-  selectorIsItemLoading,
-  selectorIsLazyLoadingEnabled,
-} from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
+import { lazyLoadingSelectors } from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 import { labelSelectors } from '../../internals/plugins/useTreeViewLabel/useTreeViewLabel.selectors';
 
 export interface UseTreeItemInteractions {
@@ -86,15 +82,9 @@ export const useTreeItemUtils = <
   const { instance, store, publicAPI } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
   const isItemExpandable = useStore(store, expansionSelectors.isItemExpandable, itemId);
-  const isLazyLoadingEnabled = useStore(store, selectorIsLazyLoadingEnabled);
   const isMultiSelectEnabled = useStore(store, selectionSelectors.isMultiSelectEnabled);
-
-  const loading = useStore(store, (state) =>
-    isLazyLoadingEnabled ? selectorIsItemLoading(state, itemId) : false,
-  );
-  const error = useStore(store, (state) =>
-    isLazyLoadingEnabled ? Boolean(selectorGetTreeItemError(state, itemId)) : false,
-  );
+  const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, itemId);
+  const hasError = useStore(store, lazyLoadingSelectors.itemHasError, itemId);
   const isExpandable = itemHasChildren(children) || isItemExpandable;
   const isExpanded = useStore(store, expansionSelectors.isItemExpanded, itemId);
   const isFocused = useStore(store, focusSelectors.isItemFocused, itemId);
@@ -111,8 +101,8 @@ export const useTreeItemUtils = <
     disabled: isDisabled,
     editing: isEditing,
     editable: isEditable,
-    loading,
-    error,
+    loading: isLoading,
+    error: hasError,
   };
 
   const handleExpansion = (event: React.MouseEvent) => {

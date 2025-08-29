@@ -19,7 +19,7 @@ function selectorItemCheckboxStatus(
   itemId: TreeViewItemId,
 ) {
   const isCheckboxSelectionEnabled = selectionSelectors.isCheckboxSelectionEnabled(state);
-  const isSelectionEnabledForItem = selectionSelectors.isItemSelectionEnabled(state, itemId);
+  const isSelectionEnabledForItem = selectionSelectors.canItemBeSelected(state, itemId);
 
   if (selectionSelectors.isItemSelected(state, itemId)) {
     return {
@@ -124,7 +124,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
 
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
-  const isItemSelectionEnabled = useStore(store, selectionSelectors.isItemSelectionEnabled, itemId);
+  const isItemSelectionEnabled = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const checkboxSelectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
 
   return {
@@ -141,7 +141,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
             return;
           }
 
-          if (!selectionSelectors.isItemSelectionEnabled(store.state, itemId)) {
+          if (!selectionSelectors.canItemBeSelected(store.state, itemId)) {
             return;
           }
 

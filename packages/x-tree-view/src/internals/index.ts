@@ -62,12 +62,12 @@ export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
 } from './plugins/useTreeViewLabel';
-export {
-  selectorDataSourceState,
-  selectorGetTreeItemError,
-} from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
-export type { UseTreeViewLazyLoadingSignature } from './plugins/useTreeViewLazyLoading';
-export type { UseTreeViewLazyLoadingParameters } from './plugins/useTreeViewLazyLoading';
+export { selectorGetTreeItemError } from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
+export type {
+  UseTreeViewLazyLoadingSignature,
+  UseTreeViewLazyLoadingParameters,
+} from './plugins/useTreeViewLazyLoading';
+export { lazyLoadingSelectors } from './plugins/useTreeViewLazyLoading';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,

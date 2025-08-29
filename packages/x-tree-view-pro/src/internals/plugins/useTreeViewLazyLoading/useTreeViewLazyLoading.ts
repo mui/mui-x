@@ -6,9 +6,9 @@ import {
   itemsSelectors,
   expansionSelectors,
   selectionSelectors,
+  lazyLoadingSelectors,
   TreeViewPlugin,
   useInstanceEventHandler,
-  selectorDataSourceState,
   selectorGetTreeItemError,
 } from '@mui/x-tree-view/internals';
 import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
@@ -118,7 +118,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     // handle loading here
     instance.setTreeViewLoading(true);
     // reset the state if we are refetching the first visible items
-    if (selectorDataSourceState(store.state) !== INITIAL_STATE) {
+    if (lazyLoadingSelectors.dataSource(store.state) !== INITIAL_STATE) {
       resetDataSourceState();
     }
     // handle caching here
