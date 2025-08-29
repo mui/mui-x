@@ -11,7 +11,7 @@ import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 
-type TimelineViews = 'time' | 'days' | 'months' | 'weeks' | 'years';
+export type TimelineViews = 'time' | 'days' | 'months' | 'weeks' | 'years';
 type AllViews = CalendarView | TimelineViews;
 interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
   views: AllViews[];
