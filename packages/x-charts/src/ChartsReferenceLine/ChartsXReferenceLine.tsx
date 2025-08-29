@@ -11,6 +11,7 @@ import {
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
 import { filterAttributeSafeProperties } from '../internals/filterAttributeSafeProperties';
+import { useTheme } from '@mui/material/styles';
 
 export type ChartsXReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -83,6 +84,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   } = props;
 
   const { top, height } = useDrawingArea();
+  const theme = useTheme();
   const xAxisScale = useXScale(axisId);
 
   const xPosition = xAxisScale(x as any);
@@ -110,22 +112,35 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
     labelAlign,
   });
 
-  const { safe, unsafe } = filterAttributeSafeProperties({
+  const { safe: safeLabel, unsafe: unsafeLabel } = filterAttributeSafeProperties({
     fontSize: 12,
+    fill: (theme.vars || theme).palette.text.primary,
+    stroke: 'none',
+    pointerEvents: 'none',
+    ...theme.typography.body1,
     ...other,
     ...labelStyle,
   });
 
+  const { safe: safeLine, unsafe: unsafeLine } = filterAttributeSafeProperties({
+    fill: 'none',
+    stroke: (theme.vars || theme).palette.text.primary,
+    shapeRendering: 'crispEdges',
+    strokeWidth: 1,
+    pointerEvents: 'none',
+    ...lineStyle,
+  });
+
   return (
     <ReferenceLineRoot className={classes.root}>
-      <path d={d} className={classes.line} style={lineStyle} />
+      <path d={d} className={classes.line} {...safeLine} style={unsafeLine} />
       <ChartsText
         x={xPosition + spacingX}
         y={y}
         text={label}
         className={classes.label}
-        {...safe}
-        style={unsafe}
+        {...safeLabel}
+        style={unsafeLabel}
       />
     </ReferenceLineRoot>
   );

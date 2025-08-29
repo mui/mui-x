@@ -12,9 +12,11 @@ const propNames = [
   'letterSpacing',
   'stroke',
   'strokeWidth',
+  'strokeDasharray',
   'fill',
   'opacity',
   'shapeRendering',
+  'pointerEvents',
 ];
 export const filterAttributeSafeProperties = (props: any) => {
   const safe: Record<string, any> = {};

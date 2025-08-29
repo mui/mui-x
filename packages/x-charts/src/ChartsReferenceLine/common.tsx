@@ -38,19 +38,4 @@ export type CommonChartsReferenceLineProps = {
   classes?: Partial<ChartsReferenceLineClasses>;
 };
 
-export const ReferenceLineRoot = styled('g')(({ theme }) => ({
-  [`& .${referenceLineClasses.line}`]: {
-    fill: 'none',
-    stroke: (theme.vars || theme).palette.text.primary,
-    shapeRendering: 'crispEdges',
-    strokeWidth: 1,
-    pointerEvents: 'none',
-  },
-  [`& .${referenceLineClasses.label}`]: {
-    fill: (theme.vars || theme).palette.text.primary,
-    stroke: 'none',
-    pointerEvents: 'none',
-    fontSize: 12,
-    ...theme.typography.body1,
-  },
-}));
+export const ReferenceLineRoot = styled('g')();
