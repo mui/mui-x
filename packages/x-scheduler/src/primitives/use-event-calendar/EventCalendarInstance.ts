@@ -5,20 +5,22 @@ import {
   CalendarEvent,
   CalendarEventId,
   CalendarResourceId,
-  CalendarSettings,
+  CalendarPreferences,
   CalendarView,
   CalendarViewConfig,
   SchedulerValidDate,
+  CalendarPreferencesMenuConfig,
 } from '../models';
 import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 
 const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 const DEFAULT_VIEW: CalendarView = 'week';
-const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
+const DEFAULT_PREFERENCES: CalendarPreferences = { hideWeekends: false };
+const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
+  toggleWeekendVisibility: true,
+};
 const EMPTY_ARRAY: any[] = [];
-// TODO: Create a prop to allow users to customize the number of days in agenda view
-export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 export class EventCalendarInstance {
   private store: EventCalendarStore;
@@ -75,7 +77,14 @@ export class EventCalendarInstance {
     const store = new Store<State>({
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
-      settings: parameters.settings ?? DEFAULT_SETTINGS,
+      preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
+      preferencesMenuConfig:
+        parameters.preferencesMenuConfig === false
+          ? parameters.preferencesMenuConfig
+          : {
+              ...DEFAULT_PREFERENCES_MENU_CONFIG,
+              ...parameters.preferencesMenuConfig,
+            },
       viewConfig: null,
       // Store elements that should only be updated when their controlled prop changes.
       visibleDate:
@@ -280,15 +289,15 @@ export class EventCalendarInstance {
   };
 
   /**
-   * Updates some settings of the calendar.
+   * Updates some preferences of the calendar.
    */
-  public setSettings = (
-    partialSettings: Partial<CalendarSettings>,
+  public setPreferences = (
+    partialPreferences: Partial<CalendarPreferences>,
     _event: React.UIEvent | Event,
   ) => {
-    this.store.set('settings', {
-      ...this.store.state.settings,
-      ...partialSettings,
+    this.store.set('preferences', {
+      ...this.store.state.preferences,
+      ...partialPreferences,
     });
   };
 
