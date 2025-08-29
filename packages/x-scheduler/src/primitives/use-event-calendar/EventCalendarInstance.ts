@@ -137,6 +137,7 @@ export class EventCalendarInstance {
 
       updateModel('view', 'defaultView');
       updateModel('visibleDate', 'defaultVisibleDate');
+      store.apply(partialState);
     }
 
     return { store, instance, updater, contextValue: { store, instance } };

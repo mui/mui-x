@@ -70,16 +70,11 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
             </section>
             <ResourceLegend />
           </aside>
-          <div
-            className={clsx(
-              'EventCalendarMainPanel',
-              view === 'month' && 'EventCalendarMainPanel--month',
-            )}
-          >
+          <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
             <HeaderToolbar />
             <section
               // TODO: Add localization
-              className="EventCalendarContent"
+              className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
               aria-label="Calendar content"
             >
               {content}
