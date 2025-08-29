@@ -8,11 +8,12 @@ import { isWeekend } from '../../../../primitives/utils/date-utils';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import { EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, events } = props;
+  const { day, events, isToday, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
@@ -38,11 +39,11 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 
   return (
     <TimeGrid.Column
-      key={day.toString()}
       start={start}
       end={end}
       className="DayTimeGridColumn"
       data-weekend={isWeekend(adapter, day) ? '' : undefined}
+      data-current={isToday ? '' : undefined}
     >
       {events.map((event) => (
         <EventPopoverTrigger
@@ -66,11 +67,40 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
           ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
         />
       )}
+      {showCurrentTimeIndicator ? (
+        <TimeGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
+          {index === 0 && <TimeGridCurrentTimeLabel />}
+        </TimeGrid.CurrentTimeIndicator>
+      ) : null}
     </TimeGrid.Column>
+  );
+}
+
+function TimeGridCurrentTimeLabel() {
+  const adapter = useAdapter();
+  const { store } = useEventCalendarContext();
+  const ampm = useStore(store, selectors.ampm);
+  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+
+  const [now, setNow] = React.useState(() => adapter.date());
+  useOnEveryMinuteStart(() => setNow(adapter.date()));
+
+  const currentTimeLabel = React.useMemo(
+    () => adapter.format(now, timeFormat),
+    [now, timeFormat, adapter],
+  );
+
+  return (
+    <span className="DayTimeGridCurrentTimeLabel" aria-hidden="true">
+      {currentTimeLabel}
+    </span>
   );
 }
 
 interface TimeGridColumnProps {
   day: SchedulerValidDate;
   events: CalendarEventOccurrence[];
+  isToday: boolean;
+  index: number;
+  showCurrentTimeIndicator: boolean;
 }

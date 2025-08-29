@@ -5,8 +5,7 @@ import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/elem
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useTimeGridEventContext } from '../event/TimeGridEventContext';
-import { SchedulerValidDate } from '../../models';
-import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
+import type { TimeGridEvent } from '../event/TimeGridEvent';
 
 export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEventResizeHandler(
   componentProps: TimeGridEventResizeHandler.Props,
@@ -24,7 +23,6 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
 
   const ref = React.useRef<HTMLDivElement>(null);
   const { setIsResizing, getSharedDragData } = useTimeGridEventContext();
-  const { getCursorPositionInElementMs } = useTimeGridColumnContext();
 
   const props = React.useMemo(() => ({}), []);
 
@@ -52,7 +50,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
       onDragStart: () => setIsResizing(true),
       onDrop: () => setIsResizing(false),
     });
-  }, [side, setIsResizing, getCursorPositionInElementMs, getSharedDragData]);
+  }, [side, setIsResizing, getSharedDragData]);
 
   return useRenderElement('div', componentProps, {
     state,
@@ -80,12 +78,8 @@ export namespace TimeGridEventResizeHandler {
     side: 'start' | 'end';
   }
 
-  export interface DragData {
+  export interface DragData extends TimeGridEvent.SharedDragData {
     source: 'TimeGridEventResizeHandler';
-    id: string | number;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
-    initialCursorPositionInEventMs: number;
     side: 'start' | 'end';
   }
 }

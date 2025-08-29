@@ -67,6 +67,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       ref={ref}
       key={day.toString()}
       value={day}
+      data-current={isToday ? '' : undefined}
       className={clsx(
         'MonthViewCell',
         !isCurrentMonth && 'OtherMonth',

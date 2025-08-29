@@ -16,6 +16,7 @@ import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import './MonthView.css';
+import { useInitializeView } from '../internals/hooks/useInitializeView';
 
 const adapter = getAdapter();
 const EVENT_HEIGHT = 22;
@@ -35,7 +36,7 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const { store, instance } = useEventCalendarContext();
-    const settings = useStore(store, selectors.settings);
+    const preferences = useStore(store, selectors.preferences);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
 
@@ -49,6 +50,11 @@ export const MonthView = React.memo(
         }),
       [getWeekList, visibleDate],
     );
+
+    useInitializeView(() => ({
+      siblingVisibleDateGetter: (date, delta) =>
+        adapter.addMonths(adapter.startOfMonth(date), delta),
+    }));
 
     const handleEventChangeFromPrimitive = React.useCallback(
       (data: CalendarPrimitiveEventData) => {
@@ -88,7 +94,7 @@ export const MonthView = React.memo(
               {getDayList({
                 date: weeks[0],
                 amount: 'week',
-                excludeWeekends: settings.hideWeekends,
+                excludeWeekends: preferences.hideWeekends,
               }).map((day) => (
                 <div
                   key={day.toString()}

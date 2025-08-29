@@ -296,6 +296,26 @@ const chartsApiPages: MuiPage[] = [
     title: 'RadarSeriesPlot',
   },
   {
+    pathname: '/x/api/charts/sankey-chart',
+    title: 'SankeyChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-plot',
+    title: 'SankeyPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip',
+    title: 'SankeyTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip-content',
+    title: 'SankeyTooltipContent',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/scatter',
     title: 'Scatter',
   },

@@ -9,7 +9,7 @@ import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
-import { useEventPosition } from '../../utils/useEventPosition';
+import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { SchedulerValidDate } from '../../models';
 import { TimeGridEventContext } from './TimeGridEventContext';
 
@@ -45,7 +45,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     getCursorPositionInElementMs,
   } = useTimeGridColumnContext();
 
-  const { position, duration } = useEventPosition({
+  const { position, duration } = useElementPositionInCollection({
     start,
     end,
     collectionStart: columnStart,
@@ -105,7 +105,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [getCursorPositionInElementMs, getSharedDragData, isDraggable]);
+  }, [getSharedDragData, isDraggable]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -149,14 +149,7 @@ export namespace TimeGridEvent {
     initialCursorPositionInEventMs: number;
   }
 
-  export type DragData = SharedDragData &
-    (
-      | {
-          source: 'TimeGridEvent';
-        }
-      | {
-          source: 'TimeGridEventResizeHandler';
-          side: 'start' | 'end';
-        }
-    );
+  export interface DragData extends SharedDragData {
+    source: 'TimeGridEvent';
+  }
 }

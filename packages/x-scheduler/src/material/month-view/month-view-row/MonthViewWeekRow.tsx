@@ -17,14 +17,13 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, week, firstDayRef } = props;
 
   const { store } = useEventCalendarContext();
-  const settings = useStore(store, selectors.settings);
-
+  const preferences = useStore(store, selectors.preferences);
   const translations = useTranslations();
 
   const getDayList = useDayList();
   const days = React.useMemo(
-    () => getDayList({ date: week, amount: 'week', excludeWeekends: settings.hideWeekends }),
-    [getDayList, week, settings.hideWeekends],
+    () => getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }),
+    [getDayList, week, preferences.hideWeekends],
   );
 
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {

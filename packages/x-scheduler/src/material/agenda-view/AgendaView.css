@@ -23,7 +23,7 @@
   gap: var(--space-1);
 }
 
-.DayHeaderCell.Today {
+.DayHeaderCell[data-current] {
   background-color: var(--primary-2);
   color: var(--primary-12);
 }
@@ -54,7 +54,7 @@
   color: var(--secondary-text-color);
 }
 
-.Today .AgendaYearAndMonthLabel {
+[data-current] .AgendaYearAndMonthLabel {
   color: var(--primary-12);
 }
 

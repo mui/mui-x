@@ -6,7 +6,7 @@ components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMa
 
 # Charts - Radar
 
-<p class="description">Radar allows to compare multivariate data in a 2D chart.</p>
+<p class="description">Radar lets you compare multivariate data in a 2D chart.</p>
 
 ## Basics
 

@@ -35,11 +35,11 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
 
   const state: TimeGridRoot.State = React.useMemo(() => ({}), []);
 
-  const onEventChange = useEventCallback(onEventChangeProp);
+  const updateEvent = useEventCallback(onEventChangeProp);
 
   const contextValue: TimeGridRootContext = React.useMemo(
-    () => ({ onEventChange, setPlaceholder, store }),
-    [onEventChange, setPlaceholder, store],
+    () => ({ updateEvent, setPlaceholder, store }),
+    [updateEvent, setPlaceholder, store],
   );
 
   useIsoLayoutEffect(() => {
