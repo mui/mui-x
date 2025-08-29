@@ -10,6 +10,7 @@ import {
 } from '../models';
 import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
 import { TreeViewClasses, TreeViewSlotProps, TreeViewSlots } from './TreeViewStyleContext';
+import { TreeViewCorePluginSignatures } from '../corePlugins';
 
 export type TreeViewItemPluginsRunner = (
   props: TreeItemProps,
@@ -21,7 +22,7 @@ export interface TreeViewContextValue<
 > {
   instance: TreeViewInstance<TSignatures, TOptionalSignatures>;
   publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
-  store: TreeViewStore<TSignatures>;
+  store: TreeViewStore<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
   rootRef: React.RefObject<HTMLUListElement | null>;
   wrapItem: TreeItemWrapper<TSignatures>;
   wrapRoot: TreeRootWrapper;
