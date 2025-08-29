@@ -21,7 +21,7 @@ It must contain a property `value` and can have other optional properties, like 
 The funnel chart displays a legend by default.
 The only requirement is to provide a `label` value in the data objects.
 
-To disable the legend, set the `hideLegend` prop to `true`.
+To hide the legend, set the `hideLegend` prop to `true`.
 
 {{"demo": "FunnelLegend.js"}}
 

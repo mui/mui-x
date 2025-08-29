@@ -14,9 +14,9 @@ export interface SchedulerTranslations {
   today: string;
   week: string;
 
-  // SettingsMenu
+  // PreferencesMenu
+  preferencesMenu: string;
   hideWeekends: string;
-  settingsMenu: string;
 
   // WeekView
   allDay: string;

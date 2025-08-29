@@ -3,7 +3,6 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  className={classes.Container}
   areEventsDraggable
   areEventsResizable
 />
