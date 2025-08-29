@@ -14,20 +14,15 @@ export type State = {
 export type DayGridRootStore = Store<State>;
 
 export const selectors = {
-  placeholderInRange: createSelector(
-    (state: State, [start, end]: [SchedulerValidDate, SchedulerValidDate]) => {
-      if (state.placeholder === null) {
-        return null;
-      }
+  placeholderInDay: createSelector((state: State, day: SchedulerValidDate) => {
+    if (state.placeholder === null) {
+      return null;
+    }
 
-      if (
-        state.adapter.isBefore(state.placeholder.end, start) ||
-        state.adapter.isAfter(state.placeholder.start, end)
-      ) {
-        return null;
-      }
-
+    if (state.adapter.isSameDay(day, state.placeholder.start)) {
       return state.placeholder;
-    },
-  ),
+    }
+
+    return null;
+  }),
 };

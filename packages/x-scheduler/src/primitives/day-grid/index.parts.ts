@@ -3,4 +3,4 @@ export { DayGridRow as Row } from './row/DayGridRow';
 export { DayGridCell as Cell } from './cell/DayGridCell';
 export { DayGridEvent as Event } from './event/DayGridEvent';
 
-export { useDayGridCellPlaceholder as useCellPlaceholder } from './use-cell-placeholder/useDayGridCellPlaceholder';
+export { useDayGridPlaceholderInDay as usePlaceholderInDay } from './use-placeholder-in-day';

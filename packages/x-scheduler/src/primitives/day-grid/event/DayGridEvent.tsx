@@ -38,7 +38,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const [isDragging, setIsDragging] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
-
   const { state: eventState, props: eventProps } = useEvent({ start, end });
 
   const state: DayGridEvent.State = React.useMemo(

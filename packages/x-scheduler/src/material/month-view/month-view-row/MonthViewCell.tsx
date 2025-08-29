@@ -26,7 +26,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
-  const placeholder = DayGrid.useCellPlaceholder(day);
+  const placeholder = DayGrid.usePlaceholderInDay(day);
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
@@ -157,6 +157,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="allDay"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+              style={{ backgroundColor: 'red' }}
             />
           </div>
         )}

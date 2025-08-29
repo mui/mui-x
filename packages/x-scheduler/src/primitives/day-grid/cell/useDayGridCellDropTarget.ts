@@ -6,7 +6,7 @@ import { isDraggingDayGridEvent } from '../../utils/drag-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useDayGridRootContext } from '../root/DayGridRootContext';
 import { SchedulerValidDate } from '../../models';
-import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
+import { diffIn } from '../../utils/date-utils';
 
 export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Parameters) {
   const { value } = parameters;
