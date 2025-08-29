@@ -46,4 +46,4 @@ jobs:
             ARGS="$ARGS --github-release"
           fi
 
-          pnpm code-infra publish $ARGS
+          pnpm code-infra publish --no-git-checks $ARGS
