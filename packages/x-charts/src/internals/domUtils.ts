@@ -100,13 +100,13 @@ let domCleanTimeout: ReturnType<typeof setTimeout> | undefined;
  */
 export const getStringSize = (
   text: string | number,
-  props: { style?: React.CSSProperties } = {},
+  props: { style?: React.CSSProperties; [key: string]: any } = {},
 ) => {
   if (text === undefined || text === null || isSsr()) {
     return { width: 0, height: 0 };
   }
 
-  const style = { ...props, ...props.style };
+  const { style = {}, ...other } = props;
 
   const str = `${text}`;
   const styleString = getStyleString(style);
@@ -125,6 +125,17 @@ export const getStringSize = (
       measurementSpan.setAttribute('aria-hidden', 'true');
       document.body.appendChild(measurementSpan);
     }
+
+    while (measurementSpan.attributes.length > 0) {
+      measurementSpan.removeAttribute(measurementSpan.attributes[0].name);
+    }
+
+    for (const attr in other) {
+      if (other.hasOwnProperty(attr)) {
+        measurementSpan.setAttribute(attr, `${other[attr]}`);
+      }
+    }
+
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
     const measurementSpanStyle: Record<string, any> = { ...SPAN_STYLE, ...style };
