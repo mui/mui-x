@@ -52,6 +52,14 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
+  const { start, end } = React.useMemo(
+    () => ({
+      start: days[0],
+      end: adapter.endOfDay(days[days.length - 1]),
+    }),
+    [days],
+  );
+
   const isTodayInView = React.useMemo(
     () => !adapter.isBeforeDay(now, days[0]) && !adapter.isAfterDay(now, days[days.length - 1]),
     [days, now],
@@ -145,6 +153,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             {translations.allDay}
           </div>
           <DayGrid.Row
+            start={start}
+            end={end}
             className="DayTimeGridAllDayEventsRow"
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
