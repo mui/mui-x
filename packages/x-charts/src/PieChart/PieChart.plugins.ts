@@ -8,9 +8,9 @@ import {
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
 
-export type PieChartPluginSignatures = [UseChartInteractionSignature, UseChartHighlightSignature];
+export type PieChartPluginsSignatures = [UseChartInteractionSignature, UseChartHighlightSignature];
 
-export const PIE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<PieChartPluginSignatures> = [
+export const PIE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<PieChartPluginsSignatures> = [
   useChartInteraction,
   useChartHighlight,
 ];
