@@ -65,6 +65,7 @@ import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps as P } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
+import { GridColumnUnsortedIcon } from '../components/GridColumnUnsortedIcon';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -633,6 +634,7 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelDeleteIcon: GridCloseIcon,
   columnFilteredIcon: GridFilterAltIcon,
   columnSelectorIcon: GridColumnIcon,
+  columnUnsortedIcon: GridColumnUnsortedIcon,
   columnSortedAscendingIcon: GridArrowUpwardIcon,
   columnSortedDescendingIcon: GridArrowDownwardIcon,
   columnResizeIcon: GridSeparatorIcon,

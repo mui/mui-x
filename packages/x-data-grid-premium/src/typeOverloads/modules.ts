@@ -5,7 +5,11 @@ import type {
   GridApiCachesPro,
   GridEventLookupPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
-import type { GridGroupingValueGetter, GridPastedValueParser } from '../models';
+import type {
+  GridGroupingValueGetter,
+  GridGroupingValueSetter,
+  GridPastedValueParser,
+} from '../models';
 import type {
   GridRowGroupingModel,
   GridAggregationModel,
@@ -95,6 +99,12 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
   groupingValueGetter?: GridGroupingValueGetter<R>;
+  /**
+   * Function that takes a grouping value and updates the row data accordingly.
+   * This is the inverse operation of `groupingValueGetter`.
+   * @returns {R} The updated row.
+   */
+  groupingValueSetter?: GridGroupingValueSetter<R>;
   /**
    * Function that takes the clipboard-pasted value and converts it to a value used internally.
    * @returns {V} The converted value.

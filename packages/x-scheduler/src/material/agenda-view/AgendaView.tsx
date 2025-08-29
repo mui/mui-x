@@ -7,10 +7,14 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { AGENDA_VIEW_DAYS_AMOUNT, selectors } from '../../primitives/use-event-calendar';
+import { selectors } from '../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
 import './AgendaView.css';
+import { useInitializeView } from '../internals/hooks/useInitializeView';
+
+// TODO: Create a prop to allow users to customize the number of days in agenda view
+export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 const adapter = getAdapter();
 
@@ -46,6 +50,11 @@ export const AgendaView = React.memo(
     });
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
+    useInitializeView(() => ({
+      siblingVisibleDateGetter: (date, delta) =>
+        adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
+    }));
+
     return (
       <div
         ref={handleRef}
@@ -62,8 +71,9 @@ export const AgendaView = React.memo(
             >
               <header
                 id={`DayHeaderCell-${day.toString()}`}
-                className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
+                className="DayHeaderCell"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+                data-current={adapter.isSameDay(day, today) ? '' : undefined}
               >
                 <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
                 <div className="WeekDayCell">
@@ -79,7 +89,7 @@ export const AgendaView = React.memo(
                 {allDayEvents.map((event) => (
                   <li>
                     <EventPopoverTrigger
-                      key={event.id}
+                      key={event.key}
                       event={event}
                       render={
                         <DayGridEvent
@@ -95,7 +105,7 @@ export const AgendaView = React.memo(
                 {events.map((event) => (
                   <li>
                     <EventPopoverTrigger
-                      key={event.id}
+                      key={event.key}
                       event={event}
                       render={
                         <DayGridEvent

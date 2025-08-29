@@ -33,6 +33,6 @@
   "muiName": "MuiScatter",
   "filename": "/packages/x-charts/src/ScatterChart/Scatter.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demonstration</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
   "cssComponent": false
 }

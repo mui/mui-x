@@ -3,19 +3,21 @@ name: Benchmarks
 on:
   push:
     branches:
-      - 'master'
-      - 'next'
+      - master
+      - next
     paths:
       - 'packages/x-charts*/**'
   pull_request:
     types:
-      - labeled
+      # Default
       - opened
       - synchronize
       - reopened
+      # To run when the right labels are applied
+      - labeled
     branches:
-      - 'master'
-      - 'next'
+      - master
+      - next
 
 permissions: {}
 
