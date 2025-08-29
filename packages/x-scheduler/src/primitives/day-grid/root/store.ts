@@ -25,9 +25,8 @@ export const selectors = {
       }
 
       if (
-        state.adapter.isBefore(state.placeholder.start, rowStart) &&
         state.adapter.isSameDay(day, rowStart) &&
-        !state.adapter.isBefore(state.placeholder.end, rowStart)
+        state.adapter.isWithinRange(rowStart, [state.placeholder.start, state.placeholder.end])
       ) {
         return state.placeholder;
       }
