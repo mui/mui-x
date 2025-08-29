@@ -4,17 +4,18 @@ import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { ChartDrawingArea } from '../hooks';
 import { TickItemType } from '../hooks/useTicks';
-import { ChartsYAxisProps } from '../models';
 
 export function shortenLabels(
   visibleLabels: TickItemType[],
   drawingArea: Pick<ChartDrawingArea, 'top' | 'height' | 'bottom'>,
   maxWidth: number,
   isRtl: boolean,
-  tickLabelStyle: ChartsYAxisProps['tickLabelStyle'],
+  props: { style?: React.CSSProperties } = {},
 ) {
+  const tickLabelStyle = props?.style ?? {};
+
   const shortenedLabels = new Map<TickItemType, string>();
-  const angle = clampAngle(tickLabelStyle?.angle ?? 0);
+  const angle = clampAngle('angle' in tickLabelStyle ? (tickLabelStyle?.angle as number) : 0);
 
   let topBoundFactor = 1;
   let bottomBoundFactor = 1;
@@ -56,7 +57,7 @@ export function shortenLabels(
           width: maxWidth,
           height,
           angle,
-          measureText: (string: string) => getStringSize(string, tickLabelStyle),
+          measureText: (string: string) => getStringSize(string, props),
         });
 
       shortenedLabels.set(item, ellipsize(item.formattedValue.toString(), doesTextFit));

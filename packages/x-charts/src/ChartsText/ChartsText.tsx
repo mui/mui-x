@@ -1,19 +1,20 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
+import {
+  GetWordsByLinesParams,
+  getWordsByLines,
+  type ChartsTextStyle,
+} from '../internals/getWordsByLines';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 
 export interface ChartsTextProps
-  extends Omit<
-      React.SVGTextElementAttributes<SVGTextElement>,
-      'width' | 'ref' | 'style' | 'dominantBaseline'
-    >,
-    GetWordsByLinesParams {
+  extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref' | 'style'>,
+    Omit<GetWordsByLinesParams, 'props'> {
   /**
-   * Height of a text line (in `em`).
+   * Style applied to text elements.
    */
-  lineHeight?: number;
+  style?: ChartsTextStyle;
   ownerState?: any;
 }
 
@@ -21,15 +22,24 @@ export interface ChartsTextProps
  * Helper component to manage multiline text in SVG
  */
 function ChartsText(props: ChartsTextProps) {
-  const { x, y, style: styleProps, text, ownerState, ...textProps } = props;
+  const {
+    x,
+    y,
+    style: styleProps,
+    text,
+    ownerState,
+    textAnchor,
+    dominantBaseline,
+    ...textProps
+  } = props;
 
-  const { angle, textAnchor, dominantBaseline, ...style } = styleProps ?? {};
+  const { angle, ...style } = styleProps ?? {};
 
   const isHydrated = useIsHydrated();
 
   const wordsByLines = React.useMemo(
-    () => getWordsByLines({ style, needsComputation: isHydrated && text.includes('\n'), text }),
-    [style, text, isHydrated],
+    () => getWordsByLines({ props, needsComputation: isHydrated && text.includes('\n'), text }),
+    [props, text, isHydrated],
   );
 
   let startDy: number;
@@ -75,10 +85,6 @@ ChartsText.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Height of a text line (in `em`).
-   */
-  lineHeight: PropTypes.number,
   /**
    * If `true`, the line width is computed.
    * @default false

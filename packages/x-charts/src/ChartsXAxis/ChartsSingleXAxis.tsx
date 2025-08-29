@@ -29,6 +29,8 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     Label,
     axisTickLabelProps,
     axisLabelProps,
+    axisLineProps,
+    axisTickProps,
     reverse,
     isRtl,
   } = useAxisProps(inProps);
@@ -42,7 +44,6 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     label,
     tickSize: tickSizeProp,
     valueFormatter,
-    slotProps,
     tickInterval,
     tickLabelInterval,
     tickPlacement,
@@ -71,7 +72,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {
-    tickLabelStyle: axisTickLabelProps.style,
+    tickLabelProps: axisTickLabelProps,
     tickLabelInterval,
     tickLabelMinGap,
     reverse,
@@ -87,7 +88,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     return null;
   }
 
-  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
+  const labelHeight = label ? getStringSize(label, axisLabelProps).height : 0;
   const labelRefPoint = {
     x: left + width / 2,
     y: positionSign * axisHeight,
@@ -100,13 +101,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
   );
 
   const tickLabels = isHydrated
-    ? shortenLabels(
-        visibleLabels,
-        drawingArea,
-        tickLabelsMaxHeight,
-        isRtl,
-        axisTickLabelProps.style,
-      )
+    ? shortenLabels(visibleLabels, drawingArea, tickLabelsMaxHeight, isRtl, axisTickLabelProps)
     : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 
   return (
@@ -115,9 +110,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
       className={classes.root}
       sx={sx}
     >
-      {!disableLine && (
-        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
-      )}
+      {!disableLine && <Line x1={left} x2={left + width} {...axisLineProps} />}
 
       {xTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
@@ -134,13 +127,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
             transform={`translate(${tickOffset}, 0)`}
             className={classes.tickContainer}
           >
-            {!disableTicks && showTick && (
-              <Tick
-                y2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
+            {!disableTicks && showTick && <Tick y2={positionSign * tickSize} {...axisTickProps} />}
 
             {tickLabel !== undefined && showTickLabel && (
               <TickLabel

@@ -98,9 +98,20 @@ let domCleanTimeout: ReturnType<typeof setTimeout> | undefined;
  * @param style The style applied
  * @returns width and height of the text
  */
-export const getStringSize = (text: string | number, style: React.CSSProperties = {}) => {
+export const getStringSize = (
+  text: string | number,
+  props: { style?: React.CSSProperties; [key: string]: any } = {},
+) => {
   if (text === undefined || text === null || isSsr()) {
     return { width: 0, height: 0 };
+  }
+
+  const style: React.CSSProperties = { ...props.style };
+
+  for (const key of Object.keys(props)) {
+    if (key !== 'style' && typeof props[key] !== 'object') {
+      (style as Record<string, any>)[key] = props[key];
+    }
   }
 
   const str = `${text}`;
@@ -113,13 +124,19 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
   }
 
   try {
-    let measurementSpan = document.getElementById(MEASUREMENT_SPAN_ID);
-    if (measurementSpan === null) {
-      measurementSpan = document.createElement('span');
-      measurementSpan.setAttribute('id', MEASUREMENT_SPAN_ID);
-      measurementSpan.setAttribute('aria-hidden', 'true');
-      document.body.appendChild(measurementSpan);
+    let measurementContainer = document.getElementById(MEASUREMENT_SPAN_ID) as SVGSVGElement | null;
+    if (measurementContainer === null) {
+      measurementContainer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      measurementContainer.setAttribute('id', MEASUREMENT_SPAN_ID);
+      measurementContainer.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(measurementContainer);
+      measurementContainer.appendChild(
+        document.createElementNS('http://www.w3.org/2000/svg', 'text'),
+      );
     }
+
+    const measurementSpan = measurementContainer.firstElementChild as SVGTextElement;
+
     // Need to use CSS Object Model (CSSOM) to be able to comply with Content Security Policy (CSP)
     // https://en.wikipedia.org/wiki/Content_Security_Policy
     const measurementSpanStyle: Record<string, any> = { ...SPAN_STYLE, ...style };
@@ -130,7 +147,7 @@ export const getStringSize = (text: string | number, style: React.CSSProperties 
       return styleKey;
     });
     measurementSpan.textContent = str;
-    const rect = measurementSpan.getBoundingClientRect();
+    const rect = measurementSpan.getBBox();
     const result = { width: rect.width, height: rect.height };
 
     stringCache.set(cacheKey, result);

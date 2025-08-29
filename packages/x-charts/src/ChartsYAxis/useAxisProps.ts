@@ -10,6 +10,7 @@ import { invertTextAnchor } from '../internals/invertTextAnchor';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { isBandScale } from '../internals/isBandScale';
 import { isInfinity } from '../internals/isInfinity';
+import { filterAttributeSafeProperties } from '../internals/filterAttributeSafeProperties';
 
 export const useAxisProps = (inProps: ChartsYAxisProps) => {
   const { yAxis, yAxisIds } = useYAxes();
@@ -45,44 +46,69 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
     (position === 'right' ? -90 : 90) - (tickLabelStyle?.angle ?? 0),
   );
 
+  const { safe: axisTickLabelSafeProps, unsafe: axisTickLabelUnsafeProps } =
+    filterAttributeSafeProperties({
+      ...theme.typography.caption,
+      fontSize: tickFontSize,
+      textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
+      dominantBaseline: defaultDominantBaseline,
+      fill: (theme.vars || theme).palette.text.primary,
+      ...tickLabelStyle,
+    });
+
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
-      style: {
-        ...theme.typography.caption,
-        fontSize: tickFontSize,
-        textAnchor: isRtl ? invertTextAnchor(defaultTextAnchor) : defaultTextAnchor,
-        dominantBaseline: defaultDominantBaseline,
-        ...tickLabelStyle,
-      },
+      ...axisTickLabelSafeProps,
+      style: axisTickLabelUnsafeProps,
     } as Partial<ChartsTextProps>,
     className: classes.tickLabel,
     ownerState: {},
+  });
+
+  const { safe: axisLabelSafeProps, unsafe: axisLabelUnsafeProps } = filterAttributeSafeProperties({
+    ...theme.typography.body1,
+    lineHeight: 1,
+    fontSize: 14,
+    angle: positionSign * 90,
+    textAnchor: 'middle',
+    dominantBaseline: 'text-before-edge',
+    fill: (theme.vars || theme).palette.text.primary,
+    ...labelStyle,
   });
 
   const axisLabelProps = useSlotProps({
     elementType: Label,
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
-      style: {
-        ...theme.typography.body1,
-        lineHeight: 1,
-        fontSize: 14,
-        angle: positionSign * 90,
-        textAnchor: 'middle',
-        dominantBaseline: 'text-before-edge',
-        ...labelStyle,
-      },
+      ...axisLabelSafeProps,
+      style: axisLabelUnsafeProps,
     } as Partial<ChartsTextProps>,
     ownerState: {},
   });
 
-  const lineProps = useSlotProps({
+  const axisLineProps = useSlotProps({
     elementType: Line,
     externalSlotProps: slotProps?.axisLine,
     additionalProps: {
       strokeLinecap: 'square' as const,
+      stroke: (theme.vars || theme).palette.text.primary,
+      strokeWidth: 1,
+      shapeRendering: 'crispEdges',
+      className: classes.line,
+    },
+    ownerState: {},
+  });
+
+  const axisTickProps = useSlotProps({
+    elementType: Tick,
+    externalSlotProps: slotProps?.axisTick,
+    additionalProps: {
+      stroke: (theme.vars || theme).palette.text.primary,
+      strokeWidth: 1,
+      shapeRendering: 'crispEdges',
+      className: classes.tick,
     },
     ownerState: {},
   });
@@ -108,7 +134,8 @@ export const useAxisProps = (inProps: ChartsYAxisProps) => {
     Label,
     axisTickLabelProps,
     axisLabelProps,
-    lineProps,
+    axisLineProps,
+    axisTickProps,
     reverse,
     isRtl,
   };

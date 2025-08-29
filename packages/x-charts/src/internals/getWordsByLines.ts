@@ -22,9 +22,9 @@ export interface GetWordsByLinesParams {
    */
   text: string;
   /**
-   * Style applied to text elements.
+   * Props applied to text elements.
    */
-  style?: ChartsTextStyle;
+  props?: { style?: React.CSSProperties };
   /**
    * If `true`, the line width is computed.
    * @default false
@@ -32,9 +32,9 @@ export interface GetWordsByLinesParams {
   needsComputation?: boolean;
 }
 
-export function getWordsByLines({ style, needsComputation, text }: GetWordsByLinesParams) {
+export function getWordsByLines({ props, needsComputation, text }: GetWordsByLinesParams) {
   return text.split('\n').map((subText) => ({
     text: subText,
-    ...(needsComputation ? getStringSize(subText, style) : { width: 0, height: 0 }),
+    ...(needsComputation ? getStringSize(subText, props) : { width: 0, height: 0 }),
   }));
 }

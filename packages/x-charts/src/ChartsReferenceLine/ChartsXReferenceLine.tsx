@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
+import { useTheme } from '@mui/material/styles';
 import { useDrawingArea, useXScale } from '../hooks';
 import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
 import { ChartsText } from '../ChartsText';
@@ -10,6 +11,7 @@ import {
   ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
+import { filterAttributeSafeProperties } from '../internals/filterAttributeSafeProperties';
 
 export type ChartsXReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -37,28 +39,22 @@ const getTextParams = ({
     case 'start':
       return {
         y: top + spacingY,
-        style: {
-          dominantBaseline: 'hanging',
-          textAnchor: 'start',
-        } as const,
+        dominantBaseline: 'hanging',
+        textAnchor: 'start',
       };
 
     case 'end':
       return {
         y: top + height - spacingY,
-        style: {
-          dominantBaseline: 'auto',
-          textAnchor: 'start',
-        } as const,
+        dominantBaseline: 'auto',
+        textAnchor: 'start',
       };
 
     default:
       return {
         y: top + height / 2,
-        style: {
-          dominantBaseline: 'central',
-          textAnchor: 'start',
-        } as const,
+        dominantBaseline: 'central',
+        textAnchor: 'start',
       };
   }
 };
@@ -88,6 +84,7 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   } = props;
 
   const { top, height } = useDrawingArea();
+  const theme = useTheme();
   const xAxisScale = useXScale(axisId);
 
   const xPosition = xAxisScale(x as any);
@@ -108,23 +105,43 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
   const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
 
-  const textParams = {
-    x: xPosition + spacingX,
-    text: label,
+  const { y, ...other } = getTextParams({
+    top,
+    height,
+    spacingY,
+    labelAlign,
+  });
+
+  const { safe: safeLabel, unsafe: unsafeLabel } = filterAttributeSafeProperties({
     fontSize: 12,
-    ...getTextParams({
-      top,
-      height,
-      spacingY,
-      labelAlign,
-    }),
-    className: classes.label,
-  };
+    fill: (theme.vars || theme).palette.text.primary,
+    stroke: 'none',
+    pointerEvents: 'none',
+    ...theme.typography.body1,
+    ...other,
+    ...labelStyle,
+  });
+
+  const { safe: safeLine, unsafe: unsafeLine } = filterAttributeSafeProperties({
+    fill: 'none',
+    stroke: (theme.vars || theme).palette.text.primary,
+    shapeRendering: 'crispEdges',
+    strokeWidth: 1,
+    pointerEvents: 'none',
+    ...lineStyle,
+  });
 
   return (
     <ReferenceLineRoot className={classes.root}>
-      <path d={d} className={classes.line} style={lineStyle} />
-      <ChartsText {...textParams} style={{ ...textParams.style, ...labelStyle }} />
+      <path d={d} className={classes.line} {...safeLine} style={unsafeLine} />
+      <ChartsText
+        x={xPosition + spacingX}
+        y={y}
+        text={label}
+        className={classes.label}
+        {...safeLabel}
+        style={unsafeLabel}
+      />
     </ReferenceLineRoot>
   );
 }

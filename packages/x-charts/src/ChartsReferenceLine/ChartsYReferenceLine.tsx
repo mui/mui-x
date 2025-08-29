@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
+import { useTheme } from '@mui/material/styles';
 import { useDrawingArea, useYScale } from '../hooks';
 import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
 import { ChartsText } from '../ChartsText';
@@ -10,6 +11,7 @@ import {
   ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
+import { filterAttributeSafeProperties } from '../internals/filterAttributeSafeProperties';
 
 export type ChartsYReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -37,28 +39,22 @@ const getTextParams = ({
     case 'start':
       return {
         x: left + spacingX,
-        style: {
-          dominantBaseline: 'auto',
-          textAnchor: 'start',
-        } as const,
+        dominantBaseline: 'auto',
+        textAnchor: 'start',
       };
 
     case 'end':
       return {
         x: left + width - spacingX,
-        style: {
-          dominantBaseline: 'auto',
-          textAnchor: 'end',
-        } as const,
+        dominantBaseline: 'auto',
+        textAnchor: 'end',
       };
 
     default:
       return {
         x: left + width / 2,
-        style: {
-          dominantBaseline: 'auto',
-          textAnchor: 'middle',
-        } as const,
+        dominantBaseline: 'auto',
+        textAnchor: 'middle',
       };
   }
 };
@@ -88,6 +84,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   } = props;
 
   const { left, width } = useDrawingArea();
+  const theme = useTheme();
   const yAxisScale = useYScale(axisId);
 
   const yPosition = yAxisScale(y as any);
@@ -109,22 +106,43 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
   const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
 
-  const textParams = {
-    y: yPosition - spacingY,
-    text: label,
+  const { x, ...other } = getTextParams({
+    left,
+    width,
+    spacingX,
+    labelAlign,
+  });
+
+  const { safe: safeLabel, unsafe: unsafeLabel } = filterAttributeSafeProperties({
     fontSize: 12,
-    ...getTextParams({
-      left,
-      width,
-      spacingX,
-      labelAlign,
-    }),
-    className: classes.label,
-  };
+    fill: (theme.vars || theme).palette.text.primary,
+    stroke: 'none',
+    pointerEvents: 'none',
+    ...theme.typography.body1,
+    ...labelStyle,
+    ...other,
+  });
+
+  const { safe: safeLine, unsafe: unsafeLine } = filterAttributeSafeProperties({
+    fill: 'none',
+    stroke: (theme.vars || theme).palette.text.primary,
+    shapeRendering: 'crispEdges',
+    strokeWidth: 1,
+    pointerEvents: 'none',
+    ...lineStyle,
+  });
+
   return (
     <ReferenceLineRoot className={classes.root}>
-      <path d={d} className={classes.line} style={lineStyle} />
-      <ChartsText {...textParams} style={{ ...textParams.style, ...labelStyle }} />
+      <path d={d} className={classes.line} {...safeLine} style={unsafeLine} />
+      <ChartsText
+        x={x}
+        y={yPosition - spacingY}
+        text={label}
+        className={classes.label}
+        {...safeLabel}
+        style={unsafeLabel}
+      />
     </ReferenceLineRoot>
   );
 }
