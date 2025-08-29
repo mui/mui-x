@@ -49,6 +49,6 @@
     "directory": "build"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=20.19"
   }
 }
