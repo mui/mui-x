@@ -88,9 +88,7 @@ export const useTreeView = <
 
   const store = useRefWithInit(() => {
     globalId += 1;
-    const initialState = {
-      cacheKey: { id: globalId },
-    } as TreeViewState<TSignaturesWithCorePluginSignatures>;
+    const initialState = {} as TreeViewState<TSignaturesWithCorePluginSignatures>;
 
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
