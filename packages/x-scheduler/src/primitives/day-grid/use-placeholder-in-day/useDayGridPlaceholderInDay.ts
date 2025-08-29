@@ -8,7 +8,7 @@ export function useDayGridPlaceholderInDay(
   day: SchedulerValidDate,
 ): CalendarPrimitiveEventData | null {
   const { store } = useDayGridRootContext();
-  const { start: rowStart } = useDayGridRowContext();
+  const { start: rowStart, end: rowEnd } = useDayGridRowContext();
 
-  return useStore(store, selectors.placeholderInDay, day, rowStart);
+  return useStore(store, selectors.placeholderInDay, day, rowStart, rowEnd);
 }

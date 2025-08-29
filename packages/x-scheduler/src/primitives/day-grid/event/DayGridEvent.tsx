@@ -38,12 +38,12 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
   const { state: eventState, props: eventProps } = useEvent({ start, end });
   const { store } = useDayGridRootContext();
   const hasPlaceholder = useStore(store, selectors.hasPlaceholder);
+  const isDragging = useStore(store, selectors.isDraggingEvent, eventId);
 
   const props = React.useMemo(
     () => (hasPlaceholder ? { style: { pointerEvents: 'none' as const } } : {}),
@@ -88,8 +88,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDragStart: () => setIsDragging(true),
-      onDrop: () => setIsDragging(false),
     });
   }, [isDraggable, start, end, eventId, getDraggedDay]);
 

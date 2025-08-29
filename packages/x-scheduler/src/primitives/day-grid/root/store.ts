@@ -1,5 +1,5 @@
 import { createSelector, Store } from '@base-ui-components/utils/store';
-import { CalendarPrimitiveEventData, SchedulerValidDate } from '../../models';
+import { CalendarEventId, CalendarPrimitiveEventData, SchedulerValidDate } from '../../models';
 import { Adapter } from '../../utils/adapter/types';
 
 export type State = {
@@ -14,21 +14,38 @@ export type State = {
 export type DayGridRootStore = Store<State>;
 
 export const selectors = {
+  isDraggingEvent: (state: State, eventId: CalendarEventId) =>
+    state.placeholder?.eventId === eventId,
   placeholderInDay: createSelector(
-    (state: State, day: SchedulerValidDate, rowStart: SchedulerValidDate) => {
+    (
+      state: State,
+      day: SchedulerValidDate,
+      rowStart: SchedulerValidDate,
+      rowEnd: SchedulerValidDate,
+    ) => {
       if (state.placeholder === null) {
         return null;
       }
 
-      if (state.adapter.isSameDay(day, state.placeholder.start)) {
-        return state.placeholder;
-      }
+      let shouldRenderPlaceholder = false;
 
-      if (
+      if (state.adapter.isSameDay(day, state.placeholder.start)) {
+        shouldRenderPlaceholder = true;
+      } else if (
         state.adapter.isSameDay(day, rowStart) &&
         state.adapter.isWithinRange(rowStart, [state.placeholder.start, state.placeholder.end])
       ) {
-        return state.placeholder;
+        shouldRenderPlaceholder = true;
+      }
+
+      if (shouldRenderPlaceholder) {
+        return {
+          ...state.placeholder,
+          start: day,
+          end: state.adapter.isAfter(state.placeholder.end, rowEnd)
+            ? rowEnd
+            : state.placeholder.end,
+        };
       }
 
       return null;

@@ -157,7 +157,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="allDay"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-              style={{ backgroundColor: 'red' }}
+              style={
+                {
+                  backgroundColor: 'red',
+                  opacity: 1,
+                  zIndex: 1,
+                  '--grid-column-span': diffIn(adapter, draggedEvent.end, day, 'days') + 1,
+                } as React.CSSProperties
+              }
             />
           </div>
         )}
