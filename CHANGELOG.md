@@ -60,6 +60,7 @@ Same changes as in `@mui/x-data-grid-pro@8.11.0`, plus:
 - [DatePicker] Fix firefox bug causing crash when `startContainer` is a restricted object (#18772) @Webini
 - [pickers] RTL not applied correctly for Calendar Systems examples (works in v7.x but broken in latest version) (#19287) @rita-codes
 - [pickers] Use the locale week day on the Luxon adapter (#19230) @flaviendelangle
+- [pickers] Fix display of placeholder when label is shrunk (#19318) @sai6855
 
 #### `@mui/x-date-pickers-pro@8.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -73,6 +74,7 @@ Same changes as in `@mui/x-date-pickers@8.11.0`.
 - [charts] Handle item identifier with data (#19295) @JCQuintas
 - [charts] Refactor optional chaining for props in PieChart, PieChartPro, and ScatterChartPro components (#19292) @sai6855
 - [charts] Remove unused `fill` and `stroke` properties (#19316) @sai6855
+- [charts] Correct `hideLegend` prop description in docs (#19371) @sai6855
 
 #### `@mui/x-charts-pro@8.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -102,6 +104,7 @@ Internal changes.
 - [docs][DataGrid] Add pagination number formatting doc with a demo (#19221) @siriwatknp
 - [docs][Charts] Correct some small grammar mistakes (#19297) @mapache-salvaje
 - [docs][DataGrid] Correct grammar mistakes (#19298) @mapache-salvaje
+- [docs][DataGrid] Make it clear that the API key for AI Assistant must be private (#19244) @oliviertassinari
 
 ### Core
 
@@ -117,7 +120,6 @@ Internal changes.
 
 ### Miscellaneous
 
-- [docs][DataGrid] Make it clear that the API key for AI Assistant must be private (#19244) @oliviertassinari
 - [infra] Add `synchronize` to workflow triggers (#19342) @michelengelen
 - [infra] Add charts docs folder in codowner (#19317) @alexfauquette
 - [infra] Fix publish workflow complaint (#19346) @JCQuintas
