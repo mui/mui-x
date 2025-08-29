@@ -1,5 +1,4 @@
 <BarChart
-  height={300}
   series={[
     { data: pData, label: 'pv' },
     { data: uData, label: 'uv' },
