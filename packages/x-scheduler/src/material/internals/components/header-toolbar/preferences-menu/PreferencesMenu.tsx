@@ -44,7 +44,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         <Menu.Portal container={containerRef}>
           <Menu.Positioner className="PreferencesMenuPositioner" sideOffset={4} align="end">
             <Menu.Popup className="PreferencesMenuPopup">
-              {preferencesMenuConfig.toggleWeekEndVisibility && (
+              {preferencesMenuConfig.toggleWeekendVisibility && (
                 <Menu.CheckboxItem
                   checked={preferences.hideWeekends}
                   onCheckedChange={handleHideWeekend}
