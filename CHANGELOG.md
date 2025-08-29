@@ -57,7 +57,7 @@ Same changes as in `@mui/x-data-grid-pro@8.11.0`, plus:
 
 #### `@mui/x-date-pickers@8.11.0`
 
-- [DatePicker] Fix firefox bug causing crash when `startContainer` is a restricted object (#18772) @Webini
+- [pickers] Fix Firefox bug causing crash when `startContainer` is a restricted object (#18772) @Webini
 - [pickers] RTL not applied correctly for Calendar Systems examples (works in v7.x but broken in latest version) (#19287) @rita-codes
 - [pickers] Use the locale week day on the Luxon adapter (#19230) @flaviendelangle
 - [pickers] Fix display of placeholder when label is shrunk (#19318) @sai6855
