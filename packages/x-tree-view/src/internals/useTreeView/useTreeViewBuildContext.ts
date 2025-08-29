@@ -148,6 +148,6 @@ interface UseTreeViewBuildContextParameters<
   plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
   instance: TreeViewInstance<TSignatures>;
   publicAPI: TreeViewPublicAPI<TSignatures>;
-  store: TreeViewStore<TSignatures>;
+  store: TreeViewStore<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>;
   rootRef: React.RefObject<HTMLUListElement | null>;
 }

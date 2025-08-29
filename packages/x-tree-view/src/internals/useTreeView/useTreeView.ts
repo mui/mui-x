@@ -40,8 +40,6 @@ export function useTreeViewApiInitialization<T>(
   return fallbackPublicApiRef;
 }
 
-let globalId: number = 0;
-
 /**
  * This is the main hook that sets the plugin system up for the tree-view.
  *
@@ -87,15 +85,12 @@ export const useTreeView = <
   const handleRootRef = useForkRef(innerRootRef, rootRef);
 
   const store = useRefWithInit(() => {
-    globalId += 1;
     const initialState = {} as TreeViewState<TSignaturesWithCorePluginSignatures>;
-
-    plugins.forEach((plugin) => {
+    for (const plugin of plugins) {
       if (plugin.getInitialState) {
         Object.assign(initialState, plugin.getInitialState(pluginParams));
       }
-    });
-
+    }
     return new Store<TreeViewState<TSignaturesWithCorePluginSignatures>>(initialState);
   }).current;
 
@@ -103,7 +98,7 @@ export const useTreeView = <
     plugins,
     instance,
     publicAPI: publicAPI.current,
-    store: store as any,
+    store,
     rootRef: innerRootRef,
   });
 
@@ -117,7 +112,7 @@ export const useTreeView = <
       params: pluginParams,
       rootRef: innerRootRef,
       plugins,
-      store: store as any,
+      store,
     });
 
     if (pluginResponse.getRootProps) {
