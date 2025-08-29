@@ -9,9 +9,9 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import './SettingsMenu.css';
+import './PreferencesMenu.css';
 
-export const SettingsMenu = React.forwardRef(function SettingsMenu(
+export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   props: React.HTMLAttributes<HTMLDivElement>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -21,35 +21,42 @@ export const SettingsMenu = React.forwardRef(function SettingsMenu(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
   const { store, instance } = useEventCalendarContext();
-  const settings = useStore(store, selectors.settings);
+  const preferences = useStore(store, selectors.preferences);
+  const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
 
   const handleHideWeekend = useEventCallback((checked: boolean, event: Event) => {
-    instance.setSettings({ hideWeekends: checked }, event);
+    instance.setPreferences({ hideWeekends: checked }, event);
   });
 
+  if (preferencesMenuConfig === false || !preferencesMenuConfig?.toggleWeekendVisibility) {
+    return null;
+  }
+
   return (
-    <div ref={handleRef} className={clsx('SettingsMenuContainer', className)} {...other}>
+    <div ref={handleRef} className={clsx('PreferencesMenuContainer', className)} {...other}>
       <Menu.Root>
         <Menu.Trigger
-          aria-label={translations.settingsMenu}
-          className={clsx('OutlinedNeutralButton', 'Button', 'SettingsMenuButton')}
+          aria-label={translations.preferencesMenu}
+          className={clsx('OutlinedNeutralButton', 'Button', 'PreferencesMenuButton')}
         >
           <Settings size={20} strokeWidth={1.5} className="SettingsIcon" />
         </Menu.Trigger>
         <Menu.Portal container={containerRef}>
           <Menu.Positioner className="MenuPositioner" sideOffset={4} align="end">
             <Menu.Popup className="MenuPopup">
-              <Menu.CheckboxItem
-                checked={settings.hideWeekends}
-                onCheckedChange={handleHideWeekend}
-                closeOnClick
-                className="CheckboxItem"
-              >
-                <span>{translations.hideWeekends}</span>
-                <Menu.CheckboxItemIndicator className="CheckboxIndicator">
-                  <CheckIcon size={16} strokeWidth={1.5} />
-                </Menu.CheckboxItemIndicator>
-              </Menu.CheckboxItem>
+              {preferencesMenuConfig.toggleWeekendVisibility && (
+                <Menu.CheckboxItem
+                  checked={preferences.hideWeekends}
+                  onCheckedChange={handleHideWeekend}
+                  closeOnClick
+                  className="CheckboxItem"
+                >
+                  <span>{translations.hideWeekends}</span>
+                  <Menu.CheckboxItemIndicator className="CheckboxIndicator">
+                    <CheckIcon size={16} strokeWidth={1.5} />
+                  </Menu.CheckboxItemIndicator>
+                </Menu.CheckboxItem>
+              )}
             </Menu.Popup>
           </Menu.Positioner>
         </Menu.Portal>

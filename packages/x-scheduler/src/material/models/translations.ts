@@ -24,9 +24,9 @@ export interface SchedulerTranslations {
   timelineMode: string;
   calendarMode: string;
 
-  // SettingsMenu
+  // PreferencesMenu
+  preferencesMenu: string;
   hideWeekends: string;
-  settingsMenu: string;
 
   // WeekView
   allDay: string;

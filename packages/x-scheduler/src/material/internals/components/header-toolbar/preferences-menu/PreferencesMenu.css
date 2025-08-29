@@ -1,9 +1,9 @@
-.SettingsMenuContainer {
+.PreferencesMenuContainer {
   grid-column: 3;
   justify-self: end;
 }
 
-.mui-x-scheduler .Button.SettingsMenuButton {
+.mui-x-scheduler .Button.PreferencesMenuButton {
   padding: var(--space-1);
 }
 

@@ -6,8 +6,8 @@ import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { SettingsMenu } from './settings-menu';
 import { TimelineToggle } from './timeline-toggle';
+import { PreferencesMenu } from './preferences-menu';
 import './HeaderToolbar.css';
 import { CalendarViewSwitcher } from './calendar-view-switcher';
 
@@ -32,7 +32,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {translations.today}
         </button>
         <TimelineToggle />
-        <SettingsMenu />
+        <PreferencesMenu />
       </div>
     </header>
   );

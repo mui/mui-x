@@ -36,7 +36,7 @@
   color: var(--primary-text-color);
 }
 
-.MonthViewCell.Today {
+.MonthViewCell[data-current] {
   background-color: var(--primary-2);
 }
 .MonthViewCellNumber,
@@ -45,7 +45,7 @@
   justify-self: end;
 }
 
-.MonthViewCell.Today .MonthViewCellNumber {
+.MonthViewCell[data-current] .MonthViewCellNumber {
   background: var(--primary-5);
   color: var(--interactive-selected-text);
 }
@@ -55,24 +55,24 @@
 }
 
 /* Today (Highlighted) */
-.MonthViewCell.Today > .MonthViewCellNumberButton > .MonthViewCellNumber,
-.MonthViewCell.Today > .MonthViewCellNumberButton:hover > .MonthViewCellNumber,
-.MonthViewCell.Today > .MonthViewCellNumberButton:active > .MonthViewCellNumber {
+.MonthViewCell[data-current] > .MonthViewCellNumberButton > .MonthViewCellNumber,
+.MonthViewCell[data-current] > .MonthViewCellNumberButton:hover > .MonthViewCellNumber,
+.MonthViewCell[data-current] > .MonthViewCellNumberButton:active > .MonthViewCellNumber {
   background: transparent;
 }
 
-.MonthViewCell.Today > .MonthViewCellNumberButton {
+.MonthViewCell[data-current] > .MonthViewCellNumberButton {
   background: var(--primary-5);
   color: var(--interactive-selected-text);
 }
 
 /* Today and hovered */
-.MonthViewCell.Today > .MonthViewCellNumberButton:hover {
+.MonthViewCell[data-current] > .MonthViewCellNumberButton:hover {
   background: var(--primary-6);
 }
 
 /* Today and active */
-.MonthViewCell.Today > .MonthViewCellNumberButton:active {
+.MonthViewCell[data-current] > .MonthViewCellNumberButton:active {
   background: var(--primary-7);
 }
 

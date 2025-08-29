@@ -31,7 +31,7 @@ import { hideBin } from 'yargs/helpers';
 import fs from 'fs/promises';
 import path from 'path';
 import { input, select, confirm } from '@inquirer/prompts';
-import { generateChangelog as generateChangelogFromModule } from './changelogUtils.mjs';
+import { getChangelogUtils } from './changelogUtils.mjs';
 import pck from '../package.json' with { type: 'json' };
 
 const packageVersion = pck.version;
@@ -220,86 +220,6 @@ async function findLatestMajorVersion() {
 }
 
 /**
- * Compares and sorts version strings extracted from tags following semantic versioning logic.
- * @param {string} a The first tag string prefixed with 'v' (e.g., 'v1.2.3-alpha.1').
- * @param {string} b The second tag string prefixed with 'v' (e.g., 'v1.2.3').
- * @return {number} A negative number if `a` is less than `b`, a positive number if `a` is greater than `b`, or 0 if they are equal.
- */
-function sortVersionsFromTags(a, b) {
-  // Sort versions using semver logic
-  // Remove 'v' prefix
-  const aVersion = a.substring(1);
-  const bVersion = b.substring(1);
-
-  // Split into version parts and prerelease parts
-  const [aVersionPart, aPrereleasePart] = aVersion.split('-');
-  const [bVersionPart, bPrereleasePart] = bVersion.split('-');
-
-  // Compare version parts (major.minor.patch)
-  const aParts = aVersionPart.split('.').map(Number);
-  const bParts = bVersionPart.split('.').map(Number);
-
-  for (let i = 0; i < 3; i += 1) {
-    if (aParts[i] !== bParts[i]) {
-      return aParts[i] - bParts[i];
-    }
-  }
-
-  // If version parts are equal, handle prerelease parts
-
-  // If one has prerelease and the other doesn't, the one without prerelease is greater
-  if (!aPrereleasePart && bPrereleasePart) {
-    return 1;
-  }
-  if (aPrereleasePart && !bPrereleasePart) {
-    return -1;
-  }
-  if (!aPrereleasePart && !bPrereleasePart) {
-    return 0;
-  }
-
-  // Both have prerelease parts, compare them
-  const aPrereleaseParts = aPrereleasePart.split('.');
-  const bPrereleaseParts = bPrereleasePart.split('.');
-
-  // Compare prerelease identifiers (alpha, beta, etc.)
-  if (aPrereleaseParts[0] !== bPrereleaseParts[0]) {
-    // alphabetical order for identifiers, since we basically only use alpha and beta
-    return aPrereleaseParts[0].localeCompare(bPrereleaseParts[0]);
-  }
-
-  // Same prerelease identifier, compare the version number
-  if (aPrereleaseParts.length > 1 && bPrereleaseParts.length > 1) {
-    return Number(aPrereleaseParts[1]) - Number(bPrereleaseParts[1]);
-  }
-
-  // this should never happen, but just in case
-  // If one has a version number and the other doesn't, the one with version is greater
-  return aPrereleaseParts.length - bPrereleaseParts.length;
-}
-
-/**
- * Find the latest version for a specific major version
- * @param majorVersion - The major version to search for (e.g., '7', '6', etc.)
- * @returns {Promise<*|null>} - The latest tag for the specified major version, or null if not found
- */
-async function findLastVersionForMajor(majorVersion) {
-  try {
-    const { stdout } = await execa('git', ['tag', '-l', `v${majorVersion}.*`]);
-    const tags = stdout.split('\n').filter(Boolean).sort(sortVersionsFromTags);
-
-    if (tags.length === 0) {
-      console.warn(`Warning: No tags found for major version ${majorVersion}`);
-      return null;
-    }
-    return tags[tags.length - 1].substring(1); // Remove 'v' prefix
-  } catch (error) {
-    console.error('Error finding latest tag for major version:', error);
-    return null;
-  }
-}
-
-/**
  * Select the major version to update
  * @param {string} latestMajorVersion - The latest major version found from the upstream remote
  * @returns {Promise<string>} The selected major version
@@ -374,8 +294,6 @@ async function getNextSemanticVersions(lastVersion) {
  * }>} Object containing version information
  */
 async function selectVersionType(majorVersion) {
-  console.log(`Fetching latest tag for major version ${majorVersion}...`);
-
   const { success, nextPatch, nextMinor, nextMajor } = await getNextSemanticVersions(majorVersion);
 
   let nextPatchDisplay = nextPatch;
@@ -650,12 +568,13 @@ async function updatePackageJson(newVersion) {
 
 /**
  * Generate the changelog
+ * @param {function} generator - The changelog generator function
  * @param {string} newVersion - The new version
  * @param {string} lastVersion - The last version to compare against
  * @param {string} [releaseBranch='master'] - The branch to compare against (default is 'master')
  * @returns {Promise<string>} The changelog content
  */
-async function generateChangelog(newVersion, lastVersion, releaseBranch = 'master') {
+async function generateChangelog(generator, newVersion, lastVersion, releaseBranch = 'master') {
   try {
     console.log('Generating changelog...');
 
@@ -663,7 +582,7 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
     console.log(`New version: ${newVersion}`);
     console.log(`Last version: ${lastVersion}`);
 
-    return await generateChangelogFromModule({
+    return await generator({
       octokit,
       nextVersion: newVersion,
       lastRelease: `v${lastVersion}`,
@@ -681,7 +600,7 @@ async function generateChangelog(newVersion, lastVersion, releaseBranch = 'maste
  * @param {string} changelogContent - The changelog content
  * @returns {Promise<void>}
  */
-async function updateChangelog(changelogContent) {
+async function updateChangelogFile(changelogContent) {
   try {
     console.log('Adding changelog entry to CHANGELOG.md...');
 
@@ -940,6 +859,8 @@ async function main({ githubToken }) {
       auth: githubToken,
     });
 
+    const { findLatestTaggedVersion, generateChangelog: generator } = getChangelogUtils(octokit);
+
     // Find the upstream remote
     const upstreamRemote = await findMuiXRemote();
     console.log(`Found upstream remote: ${upstreamRemote}`);
@@ -970,7 +891,8 @@ async function main({ githubToken }) {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
-    const previousVersion = await findLastVersionForMajor(majorVersion);
+    const latestTag = await findLatestTaggedVersion();
+    const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
     // If no arguments provided, use interactive menu to select version type
@@ -1067,13 +989,14 @@ async function main({ githubToken }) {
 
     // Generate the changelog
     const changelogContent = await generateChangelog(
+      generator,
       newVersion,
       previousVersion,
       majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
     );
 
     // Add the new changelog entry to the CHANGELOG.md file
-    await updateChangelog(changelogContent);
+    await updateChangelogFile(changelogContent);
 
     // Wait for user confirmation
     await confirm({

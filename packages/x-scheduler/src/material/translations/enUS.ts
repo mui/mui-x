@@ -24,9 +24,9 @@ export const enUS: SchedulerTranslations = {
   timelineMode: 'Timeline Mode',
   calendarMode: 'Calendar Mode',
 
-  // SettingsMenu
+  // Preferences menu
+  preferencesMenu: 'Settings',
   hideWeekends: 'Hide weekends',
-  settingsMenu: 'Settings',
 
   // WeekView
   allDay: 'All day',

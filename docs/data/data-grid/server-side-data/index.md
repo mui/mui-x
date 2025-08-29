@@ -62,7 +62,7 @@ But this example only scratches the surface of the complexity when working with 
 - Handling updates to the data (row editing and deletion)
 - On-demand data refetching
 
-Trying to tackle each of these features invidually can make the code overly complex and difficult to maintain.
+Trying to tackle each of these features individually can make the code overly complex and difficult to maintain.
 
 ### The solution: the Data Source layer
 
@@ -292,7 +292,7 @@ You can manually trigger a refetch by calling the `dataSource.fetchRows()` API m
 
 You can handle errors with the Data Source by providing an error handler function with `onDataSourceError()`.
 This gets called whenever there's an error in fetching or updating the data.
-This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
+This function receives an error object of type `GridGetRowsError | GridUpdateRowError`.
 Each error type has a corresponding `error.params` type which is passed as an argument to the callback:
 
 | **Error type**       | `error.params` **type** |
