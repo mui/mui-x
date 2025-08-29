@@ -35,7 +35,7 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const { store } = useEventCalendarContext();
-    const settings = useStore(store, selectors.settings);
+    const preferences = useStore(store, selectors.preferences);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
 
@@ -80,7 +80,7 @@ export const MonthView = React.memo(
               {getDayList({
                 date: weeks[0],
                 amount: 'week',
-                excludeWeekends: settings.hideWeekends,
+                excludeWeekends: preferences.hideWeekends,
               }).map((day) => (
                 <div
                   key={day.toString()}
