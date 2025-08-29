@@ -228,7 +228,7 @@ The Charts Legend is an HTML element since v8.
 It must be rendered inside the Data Provider to get access to the data, but outside the Surface since it's not an SVG element.
 
 ```jsx
-// ✅ Good
+// ✅ Correct
 <ChartDataProvider>
   <ChartsLegend />
   <ChartsSurface>{/* SVG components */}</ChartsSurface>
