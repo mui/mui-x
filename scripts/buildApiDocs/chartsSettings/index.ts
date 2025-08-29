@@ -92,6 +92,7 @@ export default chartsApiPages;
       'x-charts/src/ScatterChart/ScatterMarker.tsx',
       'x-charts/src/BarChart/AnimatedBarElement.tsx',
       'x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx',
+      'x-charts/src/ScatterChart/BatchScatter.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
