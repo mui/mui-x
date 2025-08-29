@@ -6,18 +6,18 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/palette-demo';
-import classes from './FullEventCalendar.module.css';
 
 export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <EventCalendar
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-      className={classes.Container}
-    />
+    <div style={{ height: '600px', width: '100%' }}>
+      <EventCalendar
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+      />
+    </div>
   );
 }
