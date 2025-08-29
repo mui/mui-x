@@ -7,19 +7,20 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './BasicWeekView.module.css';
 
 export default function BasicWeekView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <StandaloneView
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-    >
-      <WeekView className={classes.Container} />
-    </StandaloneView>
+    <div style={{ height: '500px', width: '100%' }}>
+      <StandaloneView
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+      >
+        <WeekView />
+      </StandaloneView>
+    </div>
   );
 }

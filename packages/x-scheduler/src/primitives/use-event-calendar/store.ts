@@ -6,10 +6,11 @@ import {
   CalendarResource,
   CalendarResourceId,
   CalendarView,
-  CalendarSettings,
+  CalendarPreferences,
   CalendarEventOccurrence,
   CalendarEventOccurrenceWithPosition,
   CalendarViewConfig,
+  CalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import { getEventDays, getEventRowIndex } from '../utils/event-utils';
@@ -63,11 +64,16 @@ export type State = {
    */
   showCurrentTimeIndicator: boolean;
   /**
-   * Settings for the calendar.
+   * Preferences for the calendar.
    */
-  settings: CalendarSettings;
+  preferences: CalendarPreferences;
   /**
-   * The config of the current view.
+   * Config of the preferences menu.
+   * Defines which options are visible in the menu.
+   */
+  preferencesMenuConfig: CalendarPreferencesMenuConfig | false;
+  /**
+   * Config of the current view.
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
@@ -85,7 +91,8 @@ export const selectors = {
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
-  settings: createSelector((state: State) => state.settings),
+  preferences: createSelector((state: State) => state.preferences),
+  preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
   visibleResourcesList: createSelectorMemoized(

@@ -225,41 +225,24 @@ To add a legend, use the `<ChartsLegend />` component.
 
 :::warning
 The Charts Legend is an HTML element since v8.
-It must be rendered inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
+It must be rendered inside the Data Provider to get access to the data, but outside the Surface since it's not an SVG element.
 
 ```jsx
+// ✅ Correct
 <ChartDataProvider>
   <ChartsLegend />
   <ChartsSurface>{/* SVG components */}</ChartsSurface>
 </ChartDataProvider>
+
+// ❌ Wrong
+<ChartContainer>
+  <ChartsLegend />
+</ChartContainer>
 ```
 
 :::
 
-See [HTML components](/x/react-charts/components/#html-components) documentation for more information.
-
-### Additional information
-
-To add a legend to your chart, you can use `<ChartsLegend />`.
-
-Most of the props are explained in the [legend page](/x/react-charts/legend/).
-The demos use the `slotProps.legend` object, but with composition, you can pass props directly to `<ChartsLegend />`.
-
-```jsx
-// With single component chart
-<BarChart
-  slotProps={{
-    legend: {
-      direction: 'horizontal',
-    }
-  }}
-/>
-
-// With composition
-<ChartContainer>
-  <ChartsLegend direction="horizontal" />
-</ChartContainer>
-```
+See [HTML components](/x/react-charts/components/#html-components) documentation for more information on how to use custom legends.
 
 ### Interaction
 

@@ -440,7 +440,6 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     };
 
     children = column.renderEditCell(params);
-
     classNames.push(gridClasses['cell--editing']);
     classNames.push(rootClasses?.['cell--editing']);
   }
