@@ -43,6 +43,7 @@
   { "name": "DEFAULT_GRID_AUTOSIZE_OPTIONS", "kind": "Variable" },
   { "name": "DEFAULT_GRID_COL_TYPE_KEY", "kind": "Variable" },
   { "name": "DetailPanelsPropsOverrides", "kind": "Interface" },
+  { "name": "DetailPanelsTogglePropsOverrides", "kind": "Interface" },
   { "name": "ElementSize", "kind": "Interface" },
   { "name": "EMPTY_PINNED_COLUMN_FIELDS", "kind": "Variable" },
   { "name": "EMPTY_RENDER_CONTEXT", "kind": "Variable" },
