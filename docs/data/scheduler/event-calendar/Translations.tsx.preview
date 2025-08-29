@@ -4,5 +4,4 @@
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
   translations={frFR}
-  className={classes.Container}
 />
