@@ -5,14 +5,14 @@ import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 
 const selectedItemsSelector = createSelectorMemoized(
-  (state: TreeViewState<[UseTreeViewSelectionSignature]>) => {
-    const selectedItems = state.selection.selectedItems;
-    if (Array.isArray(selectedItems)) {
-      return selectedItems;
+  (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.selectedItems,
+  (selectedItemsRaw) => {
+    if (Array.isArray(selectedItemsRaw)) {
+      return selectedItemsRaw;
     }
 
-    if (selectedItems != null) {
-      return [selectedItems];
+    if (selectedItemsRaw != null) {
+      return [selectedItemsRaw];
     }
 
     return [];

@@ -5,9 +5,10 @@ import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
 const expandedItemMapSelector = createSelectorMemoized(
-  (state: TreeViewState<[UseTreeViewExpansionSignature]>) => {
+  (state: TreeViewState<[UseTreeViewExpansionSignature]>) => state.expansion.expandedItems,
+  (expandedItems) => {
     const expandedItemsMap = new Map<TreeViewItemId, true>();
-    state.expansion.expandedItems.forEach((id) => {
+    expandedItems.forEach((id) => {
       expandedItemsMap.set(id, true);
     });
 
