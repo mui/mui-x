@@ -34,7 +34,6 @@ interface ProcessItemsLookupsParameters
   initialDepth?: number;
   initialParentId?: string | null;
   getChildrenCount?: (item: TreeViewBaseItem) => number;
-  ignoreChildren?: boolean;
 }
 
 type State = UseTreeViewItemsState<any>['items'];
@@ -76,7 +75,6 @@ const processItemsLookups = ({
   initialDepth = 0,
   initialParentId = null,
   getChildrenCount,
-  ignoreChildren = false,
 }: ProcessItemsLookupsParameters): State => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
@@ -118,11 +116,7 @@ const processItemsLookups = ({
       itemOrderedChildrenIdsLookup[parentIdWithDefault] = [];
     }
     itemOrderedChildrenIdsLookup[parentIdWithDefault].push(id);
-
-    // if lazy loading is enabled, we don't want to process children passed through the `items` prop
-    if (!ignoreChildren) {
-      children?.forEach((child) => processItem(child, depth + 1, id));
-    }
+    children?.forEach((child) => processItem(child, depth + 1, id));
   };
 
   items?.forEach((item) => processItem(item, initialDepth, initialParentId));
@@ -242,7 +236,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getChildrenCount,
       initialDepth: parentDepth + 1,
       initialParentId: parentId,
-      // ignoreChildren: true,
     });
 
     store.update((prevState) => {
