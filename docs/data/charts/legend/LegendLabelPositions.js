@@ -52,7 +52,12 @@ export default function LegendLabelPositions() {
         <Stack direction="column" width="100%" height="100%" gap={2}>
           <Typography variant="h4">Continuous</Typography>
           <Typography variant="h5">Horizontal</Typography>
-          <Stack direction="row" gap={2} sx={{ '&>div': { flex: 1 } }}>
+          <Stack
+            direction="row"
+            flexWrap="wrap"
+            gap={2}
+            sx={{ '&>div': { flex: 1 } }}
+          >
             <div>
               <Typography>start</Typography>
               <ContinuousColorLegend
@@ -82,6 +87,7 @@ export default function LegendLabelPositions() {
           <Typography variant="h5">Vertical</Typography>
           <Stack
             direction="row"
+            flexWrap="wrap"
             height={150}
             gap={2}
             sx={{
@@ -123,7 +129,12 @@ export default function LegendLabelPositions() {
         <Stack direction="column" width="100%" height="100%" gap={2}>
           <Typography variant="h4">Piecewise</Typography>
           <Typography variant="h5">Horizontal</Typography>
-          <Stack direction="row" gap={2} sx={{ '&>div': { flex: 1 } }}>
+          <Stack
+            direction="row"
+            flexWrap="wrap"
+            gap={2}
+            sx={{ '&>div': { flex: 1 } }}
+          >
             <div>
               <Typography>start</Typography>
               <PiecewiseColorLegend
@@ -172,7 +183,7 @@ export default function LegendLabelPositions() {
           <Typography variant="h5">Vertical</Typography>
           <Stack
             direction="row"
-            height={150}
+            flexWrap="wrap"
             gap={2}
             sx={{
               '&>div': {
