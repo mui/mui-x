@@ -20,6 +20,8 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
   const view = useStore(store, selectors.view);
+  const views = useStore(store, selectors.views);
+  const isTimelineViewEnabled = views.includes('timeline');
   const layoutMode = view === 'timeline' ? 'timeline' : 'calendar';
 
   return (
@@ -31,7 +33,8 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
         <button className="Button OutlinedNeutralButton" onClick={instance.goToToday} type="button">
           {translations.today}
         </button>
-        <TimelineToggle />
+
+        {isTimelineViewEnabled && <TimelineToggle />}
         <PreferencesMenu />
       </div>
     </header>

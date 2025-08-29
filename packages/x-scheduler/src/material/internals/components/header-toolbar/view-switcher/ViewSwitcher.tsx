@@ -44,11 +44,9 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 
   const [dropdownLabel, setDropdownLabel] = React.useState<string>(dropdown[0]);
 
-  console.log('views: ', views, visible, dropdown, dropdownLabel);
   // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
   React.useEffect(() => {
     if (dropdown.includes(view)) {
-      console.log('what');
       setDropdownLabel(view);
     }
   }, [view]);
