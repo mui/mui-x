@@ -234,7 +234,7 @@ It must be rendered inside the Data Provider to get access to the data, but outs
   <ChartsSurface>{/* SVG components */}</ChartsSurface>
 </ChartDataProvider>
 
-// ❌ Bad
+// ❌ Wrong
 <ChartContainer>
   <ChartsLegend />
 </ChartContainer>
