@@ -15,9 +15,10 @@ import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTree
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { useSelector } from '../internals/hooks/useSelector';
 import {
-  selectorGetTreeViewError,
-  selectorIsTreeViewLoading,
-} from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+  selectorIsLazyLoadingEnabled,
+  selectorTreeItemError,
+  selectorIsItemLoading,
+} from '../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -91,8 +92,15 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
     props: other,
   });
-  const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
-  const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
+  const isLazyLoadingEnabled = useSelector(contextValue.store, selectorIsLazyLoadingEnabled);
+  const isLoading = useSelector(
+    contextValue.store,
+    isLazyLoadingEnabled ? (state) => selectorIsItemLoading(state, null) : () => false,
+  );
+  const error = useSelector(
+    contextValue.store,
+    isLazyLoadingEnabled ? (state) => selectorTreeItemError(state, null) : () => null,
+  );
 
   const classes = useUtilityClasses(props);
 
@@ -109,8 +117,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     return <Typography>Loading...</Typography>;
   }
 
-  if (treeViewError) {
-    return <Alert severity="error">{treeViewError.message}</Alert>;
+  if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
   }
 
   return (

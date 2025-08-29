@@ -26,7 +26,7 @@ import {
   selectorIsMultiSelectEnabled,
 } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 import {
-  selectorGetTreeItemError,
+  selectorTreeItemError,
   selectorIsItemLoading,
   selectorIsLazyLoadingEnabled,
 } from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
@@ -102,7 +102,7 @@ export const useTreeItemUtils = <
     isLazyLoadingEnabled ? selectorIsItemLoading(state, itemId) : false,
   );
   const error = useSelector(store, (state) =>
-    isLazyLoadingEnabled ? Boolean(selectorGetTreeItemError(state, itemId)) : false,
+    isLazyLoadingEnabled ? Boolean(selectorTreeItemError(state, itemId)) : false,
   );
   const isExpandable = itemHasChildren(children) || isItemExpandable;
   const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);

@@ -79,7 +79,7 @@ export {
 export { selectorIsItemSelected } from './plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 export {
   selectorDataSourceState,
-  selectorGetTreeItemError,
+  selectorTreeItemError,
 } from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 export type { UseTreeViewLazyLoadingSignature } from './plugins/useTreeViewLazyLoading';
 export type { UseTreeViewLazyLoadingParameters } from './plugins/useTreeViewLazyLoading';

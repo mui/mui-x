@@ -37,27 +37,27 @@ export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPu
    * @param {TreeViewItemId[]} parentIds The ids of the items to fetch the children of.
    * @returns { Promise<void>} The children of the items.
    */
-  fetchItems: (parentIds?: TreeViewItemId[]) => Promise<void>;
+  fetchItems: (parentIds: TreeViewItemId[]) => Promise<void>;
   /**
    * Method used for fetching and item's children.
    * Only relevant for lazy-loaded tree views.
    *
-   * @param {TreeViewItemId} itemId The The id of the item to fetch the children of.
+   * @param {TreeViewItemId | null} itemId The The id of the item to fetch the children of. If `null` is passed, it will fetch the root items.
    * @returns { Promise<void>} The children of the item.
    */
-  fetchItemChildren: (itemId: TreeViewItemId) => Promise<void>;
+  fetchItemChildren: (itemId: TreeViewItemId | null) => Promise<void>;
   /**
    * Set the loading state of an item.
-   * @param {TreeViewItemId} itemId The id of the item to set the loading state of.
+   * @param {TreeViewItemId} itemId The id of the item to set the loading state of. If `null` is passed, it will set the loading state of the root.
    * @param {boolean} isLoading True if the item is loading.
    */
-  setDataSourceLoading: (itemId: TreeViewItemId, isLoading: boolean) => void;
+  setDataSourceLoading: (itemId: TreeViewItemId | null, isLoading: boolean) => void;
   /**
    * Set the error state of an item.
-   * @param {TreeViewItemId} itemId The id of the item to set the error state of.
+   * @param {TreeViewItemId} itemId The id of the item to set the error state of. If `null` is passed, it will set the error state of the root.
    * @param {Error | null} error The error caught on the item.
    */
-  setDataSourceError: (itemId: TreeViewItemId, error: Error | null) => void;
+  setDataSourceError: (itemId: TreeViewItemId | null, error: Error | null) => void;
 }
 
 export interface UseTreeViewLazyLoadingParameters<R extends {}> {

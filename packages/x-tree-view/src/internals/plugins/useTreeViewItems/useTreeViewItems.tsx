@@ -34,7 +34,6 @@ interface ProcessItemsLookupsParameters
   initialDepth?: number;
   initialParentId?: string | null;
   getChildrenCount?: (item: TreeViewBaseItem) => number;
-  ignoreChildren?: boolean;
 }
 
 type State = UseTreeViewItemsState<any>['items'];
@@ -76,8 +75,7 @@ const processItemsLookups = ({
   initialDepth = 0,
   initialParentId = null,
   getChildrenCount,
-  ignoreChildren = false,
-}: ProcessItemsLookupsParameters): Omit<State, 'loading' | 'error'> => {
+}: ProcessItemsLookupsParameters): State => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
   const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
@@ -118,11 +116,7 @@ const processItemsLookups = ({
       itemOrderedChildrenIdsLookup[parentIdWithDefault] = [];
     }
     itemOrderedChildrenIdsLookup[parentIdWithDefault].push(id);
-
-    // if lazy loading is enabled, we don't want to process children passed through the `items` prop
-    if (!ignoreChildren) {
-      children?.forEach((child) => processItem(child, depth + 1, id));
-    }
+    children?.forEach((child) => processItem(child, depth + 1, id));
   };
 
   items?.forEach((item) => processItem(item, initialDepth, initialParentId));
@@ -159,19 +153,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     },
     [store],
   );
-
-  const setTreeViewLoading = useEventCallback((isLoading: boolean) => {
-    store.update((prevState) => ({
-      ...prevState,
-      items: { ...prevState.items, loading: isLoading },
-    }));
-  });
-  const setTreeViewError = useEventCallback((error: Error | null) => {
-    store.update((prevState) => ({
-      ...prevState,
-      items: { ...prevState.items, error },
-    }));
-  });
 
   const setIsItemDisabled = useEventCallback(
     ({ itemId, shouldBeDisabled }: { itemId: string; shouldBeDisabled?: boolean }) => {
@@ -241,68 +222,56 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const addItems = ({
     items,
     parentId,
-    depth,
     getChildrenCount,
   }: AddItemsParameters<TreeViewBaseItem>) => {
-    if (items) {
-      const newState = processItemsLookups({
-        disabledItemsFocusable: params.disabledItemsFocusable,
-        items,
-        isItemDisabled: params.isItemDisabled,
-        getItemId: params.getItemId,
-        getItemLabel: params.getItemLabel,
-        getItemChildren: params.getItemChildren,
-        getChildrenCount,
-        initialDepth: depth,
-        initialParentId: parentId,
-        ignoreChildren: true,
-      });
+    const parentDepth = parentId == null ? -1 : selectorItemDepth(store.value, parentId);
 
-      store.update((prevState) => {
-        let newItems;
-        if (parentId) {
-          newItems = {
-            itemModelLookup: { ...prevState.items.itemModelLookup, ...newState.itemModelLookup },
-            itemMetaLookup: { ...prevState.items.itemMetaLookup, ...newState.itemMetaLookup },
-            itemOrderedChildrenIdsLookup: {
-              ...newState.itemOrderedChildrenIdsLookup,
-              ...prevState.items.itemOrderedChildrenIdsLookup,
-            },
-            itemChildrenIndexesLookup: {
-              ...newState.itemChildrenIndexesLookup,
-              ...prevState.items.itemChildrenIndexesLookup,
-            },
-          };
-        } else {
-          newItems = {
-            itemModelLookup: newState.itemModelLookup,
-            itemMetaLookup: newState.itemMetaLookup,
-            itemOrderedChildrenIdsLookup: newState.itemOrderedChildrenIdsLookup,
-            itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
-          };
-        }
-        Object.values(prevState.items.itemMetaLookup).forEach((item) => {
-          if (!newItems.itemMetaLookup[item.id]) {
-            publishTreeViewEvent(instance, 'removeItem', { id: item.id });
-          }
-        });
-        return { ...prevState, items: { ...prevState.items, ...newItems } };
-      });
-    }
-  };
-  const removeChildren = (parentId: string | undefined) => {
+    const newState = processItemsLookups({
+      disabledItemsFocusable: params.disabledItemsFocusable,
+      items,
+      isItemDisabled: params.isItemDisabled,
+      getItemId: params.getItemId,
+      getItemLabel: params.getItemLabel,
+      getItemChildren: params.getItemChildren,
+      getChildrenCount,
+      initialDepth: parentDepth + 1,
+      initialParentId: parentId,
+    });
+
     store.update((prevState) => {
-      if (!parentId) {
-        return {
-          ...prevState,
-          items: {
-            ...prevState.items,
-            itemMetaLookup: {},
-            itemOrderedChildrenIdsLookup: {},
-            itemChildrenIndexesLookup: {},
+      let newItems;
+      if (parentId) {
+        newItems = {
+          itemModelLookup: { ...prevState.items.itemModelLookup, ...newState.itemModelLookup },
+          itemMetaLookup: { ...prevState.items.itemMetaLookup, ...newState.itemMetaLookup },
+          itemOrderedChildrenIdsLookup: {
+            ...newState.itemOrderedChildrenIdsLookup,
+            ...prevState.items.itemOrderedChildrenIdsLookup,
+          },
+          itemChildrenIndexesLookup: {
+            ...newState.itemChildrenIndexesLookup,
+            ...prevState.items.itemChildrenIndexesLookup,
           },
         };
+      } else {
+        newItems = {
+          itemModelLookup: newState.itemModelLookup,
+          itemMetaLookup: newState.itemMetaLookup,
+          itemOrderedChildrenIdsLookup: newState.itemOrderedChildrenIdsLookup,
+          itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
+        };
       }
+      Object.values(prevState.items.itemMetaLookup).forEach((item) => {
+        if (!newItems.itemMetaLookup[item.id]) {
+          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
+        }
+      });
+      return { ...prevState, items: { ...prevState.items, ...newItems } };
+    });
+  };
+
+  const removeChildren = useEventCallback((parentId: string | null) => {
+    store.update((prevState) => {
       const newMetaMap = Object.keys(prevState.items.itemMetaLookup).reduce((acc, key) => {
         const item = prevState.items.itemMetaLookup[key];
         if (item.parentId === parentId) {
@@ -314,8 +283,9 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
       const newItemOrderedChildrenIdsLookup = prevState.items.itemOrderedChildrenIdsLookup;
       const newItemChildrenIndexesLookup = prevState.items.itemChildrenIndexesLookup;
-      delete newItemChildrenIndexesLookup[parentId];
-      delete newItemOrderedChildrenIdsLookup[parentId];
+      const cleanId = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+      delete newItemChildrenIndexesLookup[cleanId];
+      delete newItemOrderedChildrenIdsLookup[cleanId];
 
       return {
         ...prevState,
@@ -327,7 +297,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         },
       };
     });
-  };
+  });
 
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
@@ -391,8 +361,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       preventItemUpdates,
       areItemUpdatesPrevented,
       addItems,
-      setTreeViewLoading,
-      setTreeViewError,
       removeChildren,
       handleItemClick,
     },
@@ -409,8 +377,6 @@ useTreeViewItems.getInitialState = (params) => ({
       getItemLabel: params.getItemLabel,
       getItemChildren: params.getItemChildren,
     }),
-    loading: false,
-    error: null,
   },
 });
 
