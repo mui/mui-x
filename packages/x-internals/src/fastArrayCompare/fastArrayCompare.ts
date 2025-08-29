@@ -9,7 +9,7 @@
  *
  * @returns true if arrays contain the same elements in the same order, false otherwise.
  */
-export function fastArrayCompare<T extends any>(a: T, b: T): boolean {
+export function fastArrayCompare<T>(a: T, b: T): boolean {
   if (a === b) {
     return true;
   }
