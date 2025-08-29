@@ -78,8 +78,7 @@ export const useTreeView = <
     props,
   });
 
-  const instanceRef = React.useRef({} as TreeViewInstance<TSignatures>);
-  const instance = instanceRef.current;
+  const instance = useRefWithInit(() => ({}) as TreeViewInstance<TSignatures>).current;
   const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignatures>>(apiRef);
   const innerRootRef = React.useRef<HTMLUListElement>(null);
   const handleRootRef = useForkRef(innerRootRef, rootRef);
