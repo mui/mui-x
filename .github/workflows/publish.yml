@@ -18,13 +18,14 @@ on:
         type: boolean
         default: true
 
-permissions:
-  contents: write # Required for pushing tags and creating releases
-  id-token: write # Required for provenance
+permissions: {}
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required for pushing tags and creating releases
+      id-token: write # Required for provenance
     environment:
       name: npm-publish
     steps:
