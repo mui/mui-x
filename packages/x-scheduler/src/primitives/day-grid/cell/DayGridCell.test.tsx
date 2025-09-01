@@ -13,7 +13,9 @@ describe('<DayGrid.Cell />', () => {
     render(node) {
       return render(
         <DayGrid.Root>
-          <DayGrid.Row>{node}</DayGrid.Row>
+          <DayGrid.Row start={day.startOf('day')} end={day.endOf('day')}>
+            {node}
+          </DayGrid.Row>
         </DayGrid.Root>,
       );
     },
