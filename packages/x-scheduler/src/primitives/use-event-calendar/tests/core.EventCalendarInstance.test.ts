@@ -1,5 +1,4 @@
-import { getAdapter } from '@mui/x-scheduler/primitives/utils/adapter/getAdapter';
-import * as warnModule from '@base-ui-components/utils/warn';
+import { getAdapter } from './../../utils/adapter/getAdapter';
 import {
   DEFAULT_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
@@ -9,10 +8,6 @@ import {
 } from '../EventCalendarInstance';
 import { buildEvent, getIds } from './utils';
 import { CalendarView } from '../../models';
-
-vi.mock('@base-ui-components/utils/warn', () => ({
-  warn: vi.fn(),
-}));
 
 const adapter = getAdapter();
 const DEFAULT_PARAMS = { events: [] };
@@ -123,7 +118,14 @@ describe('Core - EventCalendarInstance', () => {
         adapter,
       );
 
-      updater({ ...DEFAULT_PARAMS, resources: [{ id: 'r1', name: 'Resource 1' }] }, adapter);
+      updater(
+        {
+          ...DEFAULT_PARAMS,
+          resources: [{ id: 'r1', name: 'Resource 1' }],
+          view: store.state.view,
+        },
+        adapter,
+      );
 
       expect(store.state.view).to.equal('month');
     });
@@ -139,6 +141,7 @@ describe('Core - EventCalendarInstance', () => {
         {
           ...DEFAULT_PARAMS,
           resources: [{ id: 'r1', name: 'Resource 1' }],
+          visibleDate: store.state.visibleDate,
         },
         adapter,
       );
@@ -150,24 +153,38 @@ describe('Core - EventCalendarInstance', () => {
       const defaultDate = adapter.date('2025-07-15T00:00:00Z');
       const defaultView = 'month';
 
-      const warnSpy = vi.spyOn(warnModule, 'warn').mockImplementation(() => {});
-
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, defaultView, defaultVisibleDate: defaultDate },
         adapter,
       );
 
-      updater(
-        {
-          ...DEFAULT_PARAMS,
-          resources: [{ id: 'r1', name: 'Resource 1' }],
-          defaultView: 'day',
-          defaultVisibleDate: adapter.date('2025-12-30T00:00:00Z'),
-        },
-        adapter,
-      );
+      expect(() => {
+        updater(
+          {
+            ...DEFAULT_PARAMS,
+            resources: [{ id: 'r1', name: 'Resource 1' }],
+            defaultView: 'day',
+            defaultVisibleDate: adapter.date('2025-12-30T00:00:00Z'),
+          },
+          adapter,
+        );
+      }).toWarnDev([
+        [
+          'Base UI: ',
+          [
+            'Event Calendar: A component is changing the default view state of an uncontrolled Event Calendar after being initialized. ',
+            'To suppress this warning opt to use a controlled Event Calendar.',
+          ].join('\n'),
+        ].join(''),
+        [
+          'Base UI: ',
+          [
+            'Event Calendar: A component is changing the default visibleDate state of an uncontrolled Event Calendar after being initialized. ',
+            'To suppress this warning opt to use a controlled Event Calendar.',
+          ].join('\n'),
+        ].join(''),
+      ]);
 
-      expect(warnSpy).toHaveBeenCalled();
       expect(store.state.view).to.equal(defaultView);
       expect(store.state.visibleDate).toEqualDateTime(defaultDate);
     });
@@ -178,11 +195,21 @@ describe('Core - EventCalendarInstance', () => {
         adapter,
       );
 
-      const warnSpy = vi.spyOn(warnModule, 'warn').mockImplementation(() => {});
+      expect(() => {
+        updater({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
+      }).toWarnDev(
+        [
+          'Base UI: ',
+          [
+            'Event Calendar: A component is changing the uncontrolled view state of Event Calendar to be controlled.',
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            'Decide between using a controlled or uncontrolled view element for the lifetime of the component.',
+            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        ].join(''),
+      );
 
-      updater({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
-
-      expect(warnSpy).toHaveBeenCalled();
       expect(store.state.view).to.equal('day');
     });
 
@@ -192,12 +219,22 @@ describe('Core - EventCalendarInstance', () => {
         adapter,
       );
 
-      const warnSpy = vi.spyOn(warnModule, 'warn').mockImplementation(() => {});
-
       const newDate = adapter.date('2025-07-10T00:00:00Z');
-      updater({ ...DEFAULT_PARAMS, visibleDate: newDate }, adapter);
+      expect(() => {
+        updater({ ...DEFAULT_PARAMS, visibleDate: newDate }, adapter);
+      }).toWarnDev(
+        [
+          'Base UI: ',
+          [
+            'Event Calendar: A component is changing the uncontrolled visibleDate state of Event Calendar to be controlled.',
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            'Decide between using a controlled or uncontrolled visibleDate element for the lifetime of the component.',
+            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        ].join(''),
+      );
 
-      expect(warnSpy).toHaveBeenCalled();
       expect(store.state.visibleDate).toEqualDateTime(newDate);
     });
 
@@ -206,17 +243,28 @@ describe('Core - EventCalendarInstance', () => {
         { ...DEFAULT_PARAMS, view: 'day' },
         adapter,
       );
-      const warnSpy = vi.spyOn(warnModule, 'warn').mockImplementation(() => {});
 
-      updater(
-        {
-          ...DEFAULT_PARAMS,
-          resources: [{ id: 'r1', name: 'Resource 1' }],
-        },
-        adapter,
+      expect(() => {
+        updater(
+          {
+            ...DEFAULT_PARAMS,
+            resources: [{ id: 'r1', name: 'Resource 1' }],
+          },
+          adapter,
+        );
+      }).toWarnDev(
+        [
+          'Base UI: ',
+          [
+            'Event Calendar: A component is changing the controlled view state of Event Calendar to be uncontrolled.',
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            'Decide between using a controlled or uncontrolled view element for the lifetime of the component.',
+            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        ].join(''),
       );
 
-      expect(warnSpy).toHaveBeenCalled();
       expect(store.state.view).to.equal('day');
     });
 
@@ -226,17 +274,28 @@ describe('Core - EventCalendarInstance', () => {
         { ...DEFAULT_PARAMS, visibleDate: initial },
         adapter,
       );
-      const warnSpy = vi.spyOn(warnModule, 'warn').mockImplementation(() => {});
 
-      updater(
-        {
-          ...DEFAULT_PARAMS,
-          resources: [{ id: 'r1', name: 'Resource 1' }],
-        },
-        adapter,
+      expect(() => {
+        updater(
+          {
+            ...DEFAULT_PARAMS,
+            resources: [{ id: 'r1', name: 'Resource 1' }],
+          },
+          adapter,
+        );
+      }).toWarnDev(
+        [
+          'Base UI: ',
+          [
+            'Event Calendar: A component is changing the controlled visibleDate state of Event Calendar to be uncontrolled.',
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            'Decide between using a controlled or uncontrolled visibleDate element for the lifetime of the component.',
+            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        ].join(''),
       );
 
-      expect(warnSpy).toHaveBeenCalled();
       expect(store.state.visibleDate).toEqualDateTime(initial);
     });
   });

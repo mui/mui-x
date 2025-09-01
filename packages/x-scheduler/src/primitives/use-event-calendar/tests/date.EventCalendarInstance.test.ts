@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
-import { getAdapter } from '@mui/x-scheduler/primitives/utils/adapter/getAdapter';
 import { EventCalendarInstance } from '@mui/x-scheduler/primitives/use-event-calendar/EventCalendarInstance';
+import { getAdapter } from './../../utils/adapter/getAdapter';
 import { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
