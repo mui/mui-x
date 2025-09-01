@@ -105,7 +105,7 @@ export default function GridChartsIntegrationMultipleCharts() {
   return (
     <GridChartsIntegrationContextProvider>
       <div style={{ gap: 32, width: '100%' }}>
-        <div style={{ height: 575 }}>
+        <div style={{ height: 575, paddingBottom: 16 }}>
           <DataGridPremium
             {...data}
             apiRef={apiRef}

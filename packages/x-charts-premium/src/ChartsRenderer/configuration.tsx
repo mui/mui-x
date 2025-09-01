@@ -18,6 +18,11 @@ const getChartSection = (localeText: ChartsLocaleText): GridChartsConfigurationS
   id: 'chart',
   label: localeText.chartConfigurationSectionChart,
   controls: {
+    showToolbar: {
+      label: localeText.chartConfigurationShowToolbar,
+      type: 'boolean',
+      default: false,
+    },
     height: { label: localeText.chartConfigurationHeight, type: 'number', default: 350 },
     grid: {
       label: localeText.chartConfigurationGrid,
@@ -381,6 +386,11 @@ export const getLocalizedConfigurationOptions = (
           id: 'chart',
           label: localeText.chartConfigurationSectionChart,
           controls: {
+            showToolbar: {
+              label: localeText.chartConfigurationShowToolbar,
+              type: 'boolean',
+              default: false,
+            },
             innerRadius: {
               label: localeText.chartConfigurationInnerRadius,
               type: 'number',

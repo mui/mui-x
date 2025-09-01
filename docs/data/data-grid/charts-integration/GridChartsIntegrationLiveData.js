@@ -12,7 +12,7 @@ import {
   ChartsRenderer,
   configurationOptions,
 } from '@mui/x-charts-premium/ChartsRenderer';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
 const columns = [
   { field: 'id' },
@@ -67,7 +67,7 @@ export default function GridChartsIntegrationLiveData() {
   return (
     <GridChartsIntegrationContextProvider>
       <div style={{ gap: 32, width: '100%' }}>
-        <div style={{ height: 420 }}>
+        <div style={{ height: 420, paddingBottom: 16 }}>
           <DataGridPremium
             apiRef={apiRef}
             columns={columns}
@@ -167,6 +167,6 @@ function getOnRender(max, unit) {
       },
     ];
 
-    return <BarChart {...props} series={series} yAxis={yAxis} />;
+    return <BarChartPro {...props} series={series} yAxis={yAxis} />;
   };
 }

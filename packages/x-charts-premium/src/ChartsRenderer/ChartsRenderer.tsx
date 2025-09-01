@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BarChart } from '@mui/x-charts/BarChart';
-import { LineChart } from '@mui/x-charts/LineChart';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
+import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
 import { configurationOptions } from './configuration';
 import { colorPaletteLookup } from './colors';
 
@@ -148,6 +148,7 @@ function ChartsRenderer({
         horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
       },
       skipAnimation: chartConfiguration.skipAnimation,
+      showToolbar: chartConfiguration.showToolbar,
       barLabel,
       slotProps: {
         tooltip: {
@@ -161,7 +162,7 @@ function ChartsRenderer({
       },
     };
 
-    return onRender ? onRender(chartType, props, BarChart) : <BarChart {...props} />;
+    return onRender ? onRender(chartType, props, BarChartPro) : <BarChartPro {...props} />;
   }
 
   if (chartType === 'line' || chartType === 'area') {
@@ -199,6 +200,7 @@ function ChartsRenderer({
       height: chartConfiguration.height,
       colors: colorPaletteLookup.get(chartConfiguration.colors),
       skipAnimation: chartConfiguration.skipAnimation,
+      showToolbar: chartConfiguration.showToolbar,
       grid: {
         vertical: chartConfiguration.grid === 'vertical' || chartConfiguration.grid === 'both',
         horizontal: chartConfiguration.grid === 'horizontal' || chartConfiguration.grid === 'both',
@@ -215,7 +217,7 @@ function ChartsRenderer({
       },
     };
 
-    return onRender ? onRender(chartType, props, LineChart) : <LineChart {...props} />;
+    return onRender ? onRender(chartType, props, LineChartPro) : <LineChartPro {...props} />;
   }
 
   if (chartType === 'pie') {
@@ -265,6 +267,7 @@ function ChartsRenderer({
       skipAnimation: chartConfiguration.skipAnimation,
       hideLegend: legendPosition === undefined,
       colors: colorPaletteLookup.get(chartConfiguration.colors),
+      showToolbar: chartConfiguration.showToolbar,
       slotProps: {
         legend: {
           direction: chartConfiguration.pieLegendDirection,
@@ -282,7 +285,7 @@ function ChartsRenderer({
       },
     };
 
-    return onRender ? onRender(chartType, props, PieChart) : <PieChart {...props} />;
+    return onRender ? onRender(chartType, props, PieChartPro) : <PieChartPro {...props} />;
   }
 
   return null;
