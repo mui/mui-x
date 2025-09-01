@@ -5,6 +5,7 @@ import { ChartsYAxisProps } from '../models/axis';
 import { useYAxes } from '../hooks/useAxis';
 import { ChartsSingleYAxis } from './ChartsSingleYAxis';
 import { ChartsGroupedYAxis } from './ChartsGroupedYAxis';
+import { warnOnce } from '@mui/x-internals/warning';
 
 /**
  * Demos:
@@ -19,7 +20,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const { yAxis, yAxisIds } = useYAxes();
 
   const axis = yAxis[inProps.axisId ?? yAxisIds[0]];
-  if (axis && 'groups' in axis && Array.isArray(axis.groups)) {
+
+  if (!axis) {
+    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    return null;
+  }
+
+  if ('groups' in axis && Array.isArray(axis.groups)) {
     return <ChartsGroupedYAxis {...inProps} />;
   }
 
