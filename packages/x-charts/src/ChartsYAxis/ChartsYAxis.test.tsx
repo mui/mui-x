@@ -11,7 +11,7 @@ describe('<ChartsYAxis />', () => {
     width: 400,
     height: 300,
     series: [{ type: 'bar', data: [1, 2, 3, 4, 5] }],
-    yAxis: [{ id: 'test-y-axis', label: 'Downloads' }],
+    yAxis: [{ id: 'test-y-axis', label: 'Downloads', data: [1, 2, 3, 4, 5] }],
   } as const;
 
   it('should not crash when axisId is invalid', () => {
