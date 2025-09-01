@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsXAxisProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
 import { ChartsSingleXAxis } from './ChartsSingleXAxis';
 import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
-import { warnOnce } from '@mui/x-internals/warning';
 
 /**
  * Demos:
