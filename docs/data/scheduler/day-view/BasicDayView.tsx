@@ -7,19 +7,20 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './BasicDayView.module.css';
 
 export default function BasicDayView() {
   const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
 
   return (
-    <StandaloneView
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-    >
-      <DayView className={classes.Container} />
-    </StandaloneView>
+    <div style={{ height: '500px', width: '100%' }}>
+      <StandaloneView
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+      >
+        <DayView />
+      </StandaloneView>
+    </div>
   );
 }
