@@ -20,6 +20,7 @@ export interface GridChartsPanelProps {
   /**
    * The schema of the charts configuration.
    * @type {GridChartsConfigurationOptions}
+   * @default {}
    */
   schema?: GridChartsConfigurationOptions;
   /**
@@ -301,6 +302,7 @@ GridChartsPanel.propTypes = {
   /**
    * The schema of the charts configuration.
    * @type {GridChartsConfigurationOptions}
+   * @default {}
    */
   schema: PropTypes.object,
 } as any;
