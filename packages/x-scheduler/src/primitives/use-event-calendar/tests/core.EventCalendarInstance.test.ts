@@ -169,20 +169,8 @@ describe('Core - EventCalendarInstance', () => {
           adapter,
         );
       }).toWarnDev([
-        [
-          'Base UI: ',
-          [
-            'Event Calendar: A component is changing the default view state of an uncontrolled Event Calendar after being initialized. ',
-            'To suppress this warning opt to use a controlled Event Calendar.',
-          ].join('\n'),
-        ].join(''),
-        [
-          'Base UI: ',
-          [
-            'Event Calendar: A component is changing the default visibleDate state of an uncontrolled Event Calendar after being initialized. ',
-            'To suppress this warning opt to use a controlled Event Calendar.',
-          ].join('\n'),
-        ].join(''),
+        'Base UI: Event Calendar: A component is changing the default view state',
+        'Base UI: Event Calendar: A component is changing the default visibleDate state',
       ]);
 
       expect(store.state.view).to.equal(defaultView);
@@ -197,18 +185,7 @@ describe('Core - EventCalendarInstance', () => {
 
       expect(() => {
         updater({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
-      }).toWarnDev(
-        [
-          'Base UI: ',
-          [
-            'Event Calendar: A component is changing the uncontrolled view state of Event Calendar to be controlled.',
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            'Decide between using a controlled or uncontrolled view element for the lifetime of the component.',
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        ].join(''),
-      );
+      }).toWarnDev('Base UI: Event Calendar: A component is changing the uncontrolled view state');
 
       expect(store.state.view).to.equal('day');
     });
@@ -223,16 +200,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(() => {
         updater({ ...DEFAULT_PARAMS, visibleDate: newDate }, adapter);
       }).toWarnDev(
-        [
-          'Base UI: ',
-          [
-            'Event Calendar: A component is changing the uncontrolled visibleDate state of Event Calendar to be controlled.',
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            'Decide between using a controlled or uncontrolled visibleDate element for the lifetime of the component.',
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        ].join(''),
+        'Base UI: Event Calendar: A component is changing the uncontrolled visibleDate state',
       );
 
       expect(store.state.visibleDate).toEqualDateTime(newDate);
@@ -252,18 +220,7 @@ describe('Core - EventCalendarInstance', () => {
           },
           adapter,
         );
-      }).toWarnDev(
-        [
-          'Base UI: ',
-          [
-            'Event Calendar: A component is changing the controlled view state of Event Calendar to be uncontrolled.',
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            'Decide between using a controlled or uncontrolled view element for the lifetime of the component.',
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        ].join(''),
-      );
+      }).toWarnDev('Base UI: Event Calendar: A component is changing the controlled view state');
 
       expect(store.state.view).to.equal('day');
     });
@@ -284,16 +241,7 @@ describe('Core - EventCalendarInstance', () => {
           adapter,
         );
       }).toWarnDev(
-        [
-          'Base UI: ',
-          [
-            'Event Calendar: A component is changing the controlled visibleDate state of Event Calendar to be uncontrolled.',
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            'Decide between using a controlled or uncontrolled visibleDate element for the lifetime of the component.',
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        ].join(''),
+        'Base UI: Event Calendar: A component is changing the controlled visibleDate state',
       );
 
       expect(store.state.visibleDate).toEqualDateTime(initial);
