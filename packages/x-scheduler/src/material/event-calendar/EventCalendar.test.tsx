@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
-import { openSettingsMenu, toggleHideWeekends } from '../internals/utils/test-utils';
+import { openPreferencesMenu, toggleHideWeekends } from '../internals/utils/test-utils';
 
 describe('EventCalendar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });
@@ -100,14 +100,14 @@ describe('EventCalendar', () => {
     expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
 
     // Hide the weekends
-    await openSettingsMenu(user);
+    await openPreferencesMenu(user);
     await toggleHideWeekends(user);
 
     expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
     expect(screen.queryByRole('columnheader', { name: /Saturday 31/i })).to.equal(null);
 
     // Show the weekends again
-    await openSettingsMenu(user);
+    await openPreferencesMenu(user);
     await toggleHideWeekends(user);
 
     expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
@@ -122,14 +122,14 @@ describe('EventCalendar', () => {
     expect(screen.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
 
     // Hide the weekends
-    await openSettingsMenu(user);
+    await openPreferencesMenu(user);
     await toggleHideWeekends(user);
 
     expect(screen.queryByRole('columnheader', { name: /Sunday/i })).to.equal(null);
     expect(screen.queryByRole('columnheader', { name: /Saturday/i })).to.equal(null);
 
     // Show the weekends again
-    await openSettingsMenu(user);
+    await openPreferencesMenu(user);
     await toggleHideWeekends(user);
 
     expect(screen.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
@@ -144,14 +144,14 @@ describe('EventCalendar', () => {
     expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
 
     // Hide the weekends
-    await openSettingsMenu(user);
+    await openPreferencesMenu(user);
     await toggleHideWeekends(user);
 
     expect(screen.queryByLabelText(/Saturday 31/i)).to.equal(null);
     expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
 
     // Show the weekends again
-    await openSettingsMenu(user);
+    await openPreferencesMenu(user);
     await toggleHideWeekends(user);
 
     expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);

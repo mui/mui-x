@@ -14,9 +14,9 @@ export interface SchedulerTranslations {
   today: string;
   week: string;
 
-  // SettingsMenu
+  // PreferencesMenu
+  preferencesMenu: string;
   hideWeekends: string;
-  settingsMenu: string;
 
   // WeekView
   allDay: string;
@@ -31,12 +31,20 @@ export interface SchedulerTranslations {
   weekNumberAriaLabel: (weekNumber: number) => string;
 
   // EventPopover
+  allDayLabel: string;
   closeButtonAriaLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
+  editDisabledNotice: string;
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
+  recurrenceLabel: string;
+  recurrenceNoRepeat: string;
+  recurrenceDailyPresetLabel: string;
+  recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
+  recurrenceYearlyPresetLabel: (date: string) => string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;

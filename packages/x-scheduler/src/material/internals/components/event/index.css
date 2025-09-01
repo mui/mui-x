@@ -30,3 +30,10 @@
   --event-background: var(--allDay-accepted-bg);
   --event-primary-text: var(--allDay-accepted-primary-text);
 }
+
+.EventRecurringIcon {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  color: var(--event-secondary-text);
+}
