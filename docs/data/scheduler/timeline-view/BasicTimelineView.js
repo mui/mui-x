@@ -8,7 +8,7 @@ import {
   resources,
 } from '../datasets/personal-agenda';
 
-export default function BasicWeekView() {
+export default function BasicTimelineView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
