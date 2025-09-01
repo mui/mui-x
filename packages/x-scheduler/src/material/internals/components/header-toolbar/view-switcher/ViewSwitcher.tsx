@@ -11,19 +11,14 @@ import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 
-export type TimelineViews = 'time' | 'days' | 'months' | 'weeks' | 'years';
-type AllViews = CalendarView | TimelineViews;
-interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
-  views: AllViews[];
-}
-
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
-  props: ViewSwitcherProps,
+  props: React.HTMLAttributes<HTMLDivElement>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, views, ...other } = props;
+  const { className, ...other } = props;
 
   const { store, instance } = useEventCalendarContext();
+  const views = useStore(store, selectors.views);
   const view = useStore(store, selectors.view);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -44,14 +39,14 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = React.useMemo(() => (showAll ? [] : views.slice(2)), [showAll, views]);
 
-  const [dropdownLabel, setDropdownLabel] = React.useState(dropdown[0]);
+  const [dropdownLabel, setDropdownLabel] = React.useState<CalendarView>(dropdown[0]);
 
   // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
   React.useEffect(() => {
     if (dropdown.includes(view)) {
       setDropdownLabel(view);
     }
-  }, [dropdown, view]);
+  }, [view, dropdown]);
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { ViewSwitcher } from './ViewSwitcher';
-import { CalendarViewSwitcher } from '../calendar-view-switcher';
 
 describe('<ViewSwitcher />', () => {
   const { render } = createSchedulerRenderer();
@@ -15,7 +14,7 @@ describe('<ViewSwitcher />', () => {
   it('should render the first three views + Arrow down for the default set of views', () => {
     const { container } = render(
       <StandaloneView {...standaloneDefaults}>
-        <ViewSwitcher views={['week', 'day', 'month', 'agenda']} />
+        <ViewSwitcher />
       </StandaloneView>,
     );
 
@@ -29,8 +28,8 @@ describe('<ViewSwitcher />', () => {
 
   it('should render the first three views + Arrow down for a custom set of views (with more than 3 views)', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults}>
-        <ViewSwitcher views={['agenda', 'week', 'day', 'month']} />
+      <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day', 'month']}>
+        <ViewSwitcher />
       </StandaloneView>,
     );
 
@@ -44,8 +43,12 @@ describe('<ViewSwitcher />', () => {
 
   it('should render the first three views + the selected view for a custom set of views (with more than 3 views)', () => {
     const { container } = render(
-      <StandaloneView {...standaloneDefaults} view="month">
-        <ViewSwitcher views={['agenda', 'week', 'day', 'month']} />
+      <StandaloneView
+        {...standaloneDefaults}
+        view="month"
+        views={['agenda', 'week', 'day', 'month']}
+      >
+        <ViewSwitcher />
       </StandaloneView>,
     );
 
@@ -61,7 +64,7 @@ describe('<ViewSwitcher />', () => {
   it('should render the three first views for a custom set of views (with exactly 3 views)', () => {
     const { container } = render(
       <StandaloneView {...standaloneDefaults} views={['agenda', 'week', 'day']}>
-        <CalendarViewSwitcher />
+        <ViewSwitcher />
       </StandaloneView>,
     );
 
@@ -75,7 +78,7 @@ describe('<ViewSwitcher />', () => {
   it('should render the two first views for a custom set of views (with exactly 2 views)', () => {
     const { container } = render(
       <StandaloneView {...standaloneDefaults} views={['agenda', 'week']}>
-        <CalendarViewSwitcher />
+        <ViewSwitcher />
       </StandaloneView>,
     );
 

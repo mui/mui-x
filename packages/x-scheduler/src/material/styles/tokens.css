@@ -391,6 +391,9 @@
   --panel: white;
   --shadow-black: 0 0% 0%;
   --shadow-tint: 215 22% 17%;
+
+  --code-background: var(--surface);
+  --code-color: var(--violet-9);
 }
 
 .mode-dark .mui-x-scheduler {
@@ -556,6 +559,9 @@
   --surface: var(--mauve-1);
   --panel: var(--mauve-1);
   --shadow-tint: 0 0% 0%;
+
+  --code-background: var(--surface);
+  --code-color: var(--violet-9);
 }
 
 body .mui-x-scheduler {
