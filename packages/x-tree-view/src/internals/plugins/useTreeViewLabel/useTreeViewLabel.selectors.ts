@@ -6,10 +6,7 @@ import { TreeViewItemId } from '../../../models';
 
 export const labelSelectors = {
   /**
-   * Check if an item is editable.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} Whether the item is editable.
+   * Checks whether an item is editable.
    */
   isItemEditable: createSelector(
     (state: TreeViewState<[], [UseTreeViewLabelSignature]>) => state.label?.isItemEditable,
@@ -27,19 +24,14 @@ export const labelSelectors = {
     },
   ),
   /**
-   * Check if the given item is being edited.
-   * @param {TreeViewState<[UseTreeViewLabelSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId | null} itemId The id of the item to check.
-   * @returns {boolean} Whether the item is being edited.
+   * Checks whether an item is being edited.
    */
   isItemBeingEdited: createSelector(
     (state: TreeViewState<[], [UseTreeViewLabelSignature]>, itemId: TreeViewItemId | null) =>
       itemId == null ? false : state.label?.editedItemId === itemId,
   ),
   /**
-   * Check if an item is being edited.
-   * @param {TreeViewState<[UseTreeViewLabelSignature]>} state The state of the tree view.
-   * @returns {boolean} Whether an item is being edited.
+   * Checks whether any item is being edited.
    */
   isAnyItemBeingEdited: createSelector(
     (state: TreeViewState<[], [UseTreeViewLabelSignature]>) => !!state.label?.editedItemId,

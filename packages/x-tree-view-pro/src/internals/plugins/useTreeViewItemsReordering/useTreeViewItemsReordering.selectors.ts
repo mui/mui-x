@@ -5,19 +5,14 @@ import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReorderin
 
 export const itemsReorderingSelectors = {
   /**
-   * Get the properties of the current reordering.
-   * @param {TreeViewState<[UseTreeViewItemsReorderingSignature]>} state The state of the tree view.
-   * @returns {TreeViewItemsReorderingState['currentReorder']} The properties of the current reordering.
+   * Gets the properties of the current reordering.
    */
   currentReorder: createSelector(
     (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
       state.itemsReordering.currentReorder,
   ),
   /**
-   * Get the properties of the dragged item.
-   * @param {TreeViewState<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item.
-   * @returns {TreeViewItemDraggedItemProperties | null} The properties of the dragged item if the current item is being dragged, `null` otherwise.
+   * Gets the properties of the dragged item.
    */
   draggedItemProperties: createSelector(
     (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
@@ -46,10 +41,7 @@ export const itemsReorderingSelectors = {
     },
   ),
   /**
-   * Check if an item is a valid target for the dragged item.
-   * @param {TreeViewState<[UseTreeViewItemsReorderingSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item.
-   * @returns {boolean} Whether the item is a valid target for the dragged item.
+   * Checks whether an item is a valid target for the dragged item.
    */
   isItemValidDropTarget: createSelector(
     (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>, itemId: TreeViewItemId) => {
@@ -58,10 +50,7 @@ export const itemsReorderingSelectors = {
     },
   ),
   /**
-   * Check if an item can be reordered.
-   * @param {TreeViewState<[UseTreeViewItemsReorderingSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item.
-   * @returns {boolean} Whether the item can be reordered.
+   * Checks whether an item can be reordered.
    */
   canItemBeReordered: createSelector(
     (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>

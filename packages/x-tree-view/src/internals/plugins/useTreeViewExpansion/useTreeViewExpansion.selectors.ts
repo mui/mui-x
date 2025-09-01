@@ -18,9 +18,7 @@ const expandedItemMapSelector = createSelectorMemoized(
 
 export const expansionSelectors = {
   /**
-   * Get the expanded items as provided to the component.
-   * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
-   * @returns {TreeViewItemId[]} The expanded items.
+   * Gets the expanded items as provided to the component.
    */
   expandedItemsRaw: createSelector(
     (state: TreeViewState<[UseTreeViewExpansionSignature]>) => state.expansion.expandedItems,
@@ -32,27 +30,20 @@ export const expansionSelectors = {
    */
   expandedItemsMap: expandedItemMapSelector,
   /**
-   * Get the slot that triggers the item's expansion when clicked.
-   * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
-   * @returns {'content' | 'iconContainer'} The slot that triggers the item's expansion when clicked. Is `null` if the item is not expandable.
+   * Gets the slot that triggers the item's expansion when clicked.
    */
   triggerSlot: createSelector(
     (state: TreeViewState<[UseTreeViewExpansionSignature]>) => state.expansion.expansionTrigger,
   ),
   /**
-   * Check if an item is expanded.
-   * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} Whether item is expanded.
+   * Checks whether an item is expanded.
    */
   isItemExpanded: createSelector(
     expandedItemMapSelector,
     (expandedItemsMap, itemId: TreeViewItemId) => expandedItemsMap.has(itemId),
   ),
   /**
-   * Check if an item is expandable.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @returns {boolean} Whether the item is expandable.
+   * Checks whether an item is expandable.
    */
   isItemExpandable: createSelector(
     itemsSelectors.itemMeta,

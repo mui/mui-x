@@ -8,45 +8,37 @@ const EMPTY_CHILDREN: TreeViewItemId[] = [];
 
 export const itemsSelectors = {
   /**
-   * Get the loading state for the Tree View.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @returns {boolean} The loading state for the Tree View.
+   * Gets the loading state for the Tree View.
    */
   isLoading: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.loading,
   ),
   /**
-   * Get the error state for the Tree View.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @returns {boolean} The error state for the Tree View.
+   * Gets the error state for the Tree View.
    */
   error: createSelector((state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.error),
   /**
-   * Check if the disabled items are focusable.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @returns {boolean} Whether the disabled items are focusable.
+   * Checks whether the disabled items are focusable.
    */
   disabledItemFocusable: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.disabledItemsFocusable,
   ),
   /**
-   * Get the meta-information of all items.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @returns {TreeViewItemMetaLookup} The meta-information of all items.
+   * Gets the meta-information of all items.
    */
   itemMetaLookup: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.itemMetaLookup,
   ),
+  /**
+   * Gets the meta-information of an item.
+   */
   itemMeta: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId | null) =>
       (state.items.itemMetaLookup[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ??
         null) as TreeViewItemMeta | null,
   ),
   /**
-   * Get the ordered children ids of a given item.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId | null} itemId The id of the item to get the children of.
-   * @returns {TreeViewItemId[]} The ordered children ids of the item.
+   * Gets the ordered children ids of an item.
    */
   itemOrderedChildrenIds: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId | null) =>
@@ -54,30 +46,21 @@ export const itemsSelectors = {
       EMPTY_CHILDREN,
   ),
   /**
-   * Get the model of an item.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to get the model of.
-   * @returns {R} The model of the item.
+   * Gets the model of an item.
    */
   itemModel: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) =>
       state.items.itemModelLookup[itemId],
   ),
   /**
-   * Check if an item is disabled.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} Whether the item is disabled.
+   * Checks whether an item is disabled.
    */
   isItemDisabled: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) =>
       isItemDisabled(state.items.itemMetaLookup, itemId),
   ),
   /**
-   * Get the index of an item in its parent's children.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to get the index of.
-   * @returns {number} The index of the item in its parent's children.
+   * Gets the index of an item in its parent's children.
    */
   itemIndex: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) => {
@@ -92,30 +75,21 @@ export const itemsSelectors = {
     },
   ),
   /**
-   * Get the index of an item in its parent's children.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to get the index of.
-   * @returns {number} The index of the item in its parent's children.
+   * Gets the id of an item's parent.
    */
   itemParentId: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) =>
       state.items.itemMetaLookup[itemId]?.parentId ?? null,
   ),
   /**
-   * Get the depth of an item (items at the root level have a depth of 0).
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to get the depth of.
-   * @returns {number} The depth of the item.
+   * Gets the depth of an item (items at the root level have a depth of 0).
    */
   itemDepth: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) =>
       state.items.itemMetaLookup[itemId]?.depth ?? 0,
   ),
   /**
-   * Check if an item can be focused.
-   * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} Whether the item can be focused.
+   * Checks whether an item can be focused.
    */
   canItemBeFocused: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) =>
