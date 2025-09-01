@@ -834,8 +834,7 @@ async function initializeEnvironment(
           await page.keyboard.press('Tab');
 
           const endButton = page.getByTestId('end-btn');
-          const isFocused = await endButton.evaluate((el) => document.activeElement === el);
-          expect(isFocused).to.be.true;
+          expect(await endButton.evaluate((el) => document.activeElement === el)).to.be.true;
         });
       });
 
