@@ -32,7 +32,7 @@ export const AgendaView = React.memo(
     const today = adapter.date();
 
     const visibleDate = useStore(store, selectors.visibleDate);
-    const settings = useStore(store, selectors.settings);
+    const preferences = useStore(store, selectors.preferences);
     const getDayList = useDayList();
 
     const days = React.useMemo(
@@ -40,9 +40,9 @@ export const AgendaView = React.memo(
         getDayList({
           date: visibleDate,
           amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: settings.hideWeekends,
+          excludeWeekends: preferences.hideWeekends,
         }),
-      [getDayList, settings.hideWeekends, visibleDate],
+      [getDayList, preferences.hideWeekends, visibleDate],
     );
     const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
       days,

@@ -5,16 +5,16 @@ const DEFAULT_PARAMS = { events: [] };
 
 const adapter = getAdapter();
 
-describe('Settings - EventCalendarInstance', () => {
-  describe('Method: setSettings', () => {
+describe('Preferences - EventCalendarInstance', () => {
+  describe('Method: setPreferences', () => {
     it('should toggle hideWeekends correctly', () => {
       const { instance, store } = EventCalendarInstance.create(DEFAULT_PARAMS, adapter);
 
-      instance.setSettings({ hideWeekends: true }, {} as any);
-      expect(store.state.settings).to.deep.equal({ hideWeekends: true });
+      instance.setPreferences({ hideWeekends: true }, {} as any);
+      expect(store.state.preferences).to.deep.equal({ hideWeekends: true });
 
-      instance.setSettings({ hideWeekends: false }, {} as any);
-      expect(store.state.settings).to.deep.equal({ hideWeekends: false });
+      instance.setPreferences({ hideWeekends: false }, {} as any);
+      expect(store.state.preferences).to.deep.equal({ hideWeekends: false });
     });
   });
 });

@@ -1,7 +1,8 @@
 import { getAdapter } from '@mui/x-scheduler/primitives/utils/adapter/getAdapter';
 import * as warnModule from '@base-ui-components/utils/warn';
 import {
-  DEFAULT_SETTINGS,
+  DEFAULT_PREFERENCES,
+  DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
   DEFAULT_VIEWS,
   EventCalendarInstance,
@@ -26,7 +27,8 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.resources).to.deep.equal([]);
       expect(store.state.ampm).to.equal(true);
       expect(store.state.showCurrentTimeIndicator).to.equal(true);
-      expect(store.state.settings).to.deep.equal(DEFAULT_SETTINGS);
+      expect(store.state.preferences).to.deep.equal(DEFAULT_PREFERENCES);
+      expect(store.state.preferencesMenuConfig).to.deep.equal(DEFAULT_PREFERENCES_MENU_CONFIG);
 
       const expectedToday = adapter.startOfDay(adapter.date());
       expect(store.state.visibleDate).toEqualDateTime(expectedToday);
