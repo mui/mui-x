@@ -42,7 +42,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
-  const dropdown = showAll ? [] : views.slice(2);
+  const dropdown = React.useMemo(() => (showAll ? [] : views.slice(2)), [showAll, views]);
 
   const [dropdownLabel, setDropdownLabel] = React.useState(dropdown[0]);
 
