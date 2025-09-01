@@ -13,10 +13,10 @@ import {
 import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 
-const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
-const DEFAULT_VIEW: CalendarView = 'week';
-const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
-const EMPTY_ARRAY: any[] = [];
+export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+export const DEFAULT_VIEW: CalendarView = 'week';
+export const DEFAULT_SETTINGS: CalendarSettings = { hideWeekends: false };
+export const EMPTY_ARRAY: any[] = [];
 // TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
@@ -157,7 +157,10 @@ export class EventCalendarInstance {
 
   private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
-    if (visibleDate !== this.store.state.visibleDate) {
+    const { adapter } = this.store.state;
+    const hasChange = !adapter.isEqual(this.store.state.visibleDate, visibleDate);
+
+    if (hasChange) {
       if (visibleDateProp === undefined) {
         this.store.set('visibleDate', visibleDate);
       }
@@ -184,10 +187,14 @@ export class EventCalendarInstance {
     }
 
     this.assertViewValidity(view);
-    if (visibleDateProp !== undefined || viewProp !== undefined) {
+
+    const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
+    const canSetView = viewProp === undefined && hasViewChange;
+
+    if (canSetVisibleDate || canSetView) {
       this.store.apply({
-        ...(visibleDateProp !== undefined ? { visibleDate } : {}),
-        ...(viewProp !== undefined ? { view } : {}),
+        ...(canSetVisibleDate ? { visibleDate } : {}),
+        ...(canSetView ? { view } : {}),
       });
     }
 
