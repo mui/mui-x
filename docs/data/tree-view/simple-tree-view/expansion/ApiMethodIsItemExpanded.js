@@ -18,7 +18,7 @@ export default function ApiMethodIsItemExpanded() {
   };
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ position: 'relative' }}>
       <Stack spacing={2} direction="row">
         <Button onClick={checkExpansion}>
           Check if the the Data Grid is expanded
@@ -29,6 +29,7 @@ export default function ApiMethodIsItemExpanded() {
           onClose={() => setIsSnackbarOpen(false)}
           message={`Data Grid is ${isGridExpanded ? 'expanded' : 'collapsed'}`}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          sx={{ position: 'absolute' }}
         />
       </Stack>
       <Box sx={{ minHeight: 352, minWidth: 250 }}>
