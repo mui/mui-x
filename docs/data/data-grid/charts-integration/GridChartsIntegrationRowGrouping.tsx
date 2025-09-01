@@ -93,7 +93,7 @@ export default function GridChartsIntegrationRowGrouping() {
   return (
     <GridChartsIntegrationContextProvider>
       <div style={{ gap: 32, width: '100%' }}>
-        <div style={{ height: 420 }}>
+        <div style={{ height: 420, paddingBottom: 16 }}>
           <DataGridPremium
             {...data}
             showToolbar

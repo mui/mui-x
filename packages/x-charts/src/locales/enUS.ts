@@ -47,6 +47,7 @@ export const enUSLocaleText: ChartsLocaleText = {
   chartConfigurationCategoryGapRatio: 'Category gap ratio',
   chartConfigurationBarGapRatio: 'Series gap ratio',
   chartConfigurationStacked: 'Stacked',
+  chartConfigurationShowToolbar: 'Show toolbar',
   chartConfigurationSkipAnimation: 'Skip animation',
   chartConfigurationInnerRadius: 'Inner radius',
   chartConfigurationOuterRadius: 'Outer radius',

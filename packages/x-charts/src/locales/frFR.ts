@@ -44,6 +44,7 @@ export const frFRLocalText: Partial<ChartsLocaleText> = {
   chartConfigurationCategoryGapRatio: "Ratio d'espacement des catégories",
   chartConfigurationBarGapRatio: "Ratio d'espacement des séries",
   chartConfigurationStacked: 'Empilé',
+  chartConfigurationShowToolbar: "Afficher la barre d'outils",
   chartConfigurationSkipAnimation: "Ignorer l'animation",
   chartConfigurationInnerRadius: 'Rayon intérieur',
   chartConfigurationOuterRadius: 'Rayon extérieur',

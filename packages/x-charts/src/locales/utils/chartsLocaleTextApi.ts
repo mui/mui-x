@@ -170,6 +170,10 @@ export interface ChartsLocaleText {
   /**
    * Label for the skip animation configuration control.
    */
+  chartConfigurationShowToolbar: string;
+  /**
+   * Label for the skip animation configuration control.
+   */
   chartConfigurationSkipAnimation: string;
   /**
    * Label for the inner radius configuration control.
