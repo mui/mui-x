@@ -83,4 +83,4 @@ apiRef.current.isItemExpanded(
 );
 ```
 
-{{"demo": "ApiMethodIsItemExpanded.js"}}
+{{"demo": "ApiMethodIsItemExpanded.js", "defaultCodeOpen": false}}
