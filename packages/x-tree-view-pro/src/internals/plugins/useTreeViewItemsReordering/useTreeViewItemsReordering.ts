@@ -183,7 +183,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
       const newPosition = currentReorder.newPosition;
 
-      store.apply({
+      store.update({
         itemsReordering: {
           ...store.state.itemsReordering,
           currentReorder: null,

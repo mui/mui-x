@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { TreeViewItemId } from '../../../models';
 import { TreeViewState } from '../../models';
 import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';

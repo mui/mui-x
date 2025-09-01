@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { selectionSelectors } from '../useTreeViewSelection/useTreeViewSelection.selectors';
 import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';

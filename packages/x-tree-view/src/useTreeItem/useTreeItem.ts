@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
@@ -28,12 +28,12 @@ import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { focusSelectors } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { itemsSelectors } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { focusSelectors } from '../internals/plugins/useTreeViewFocus';
+import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
 import { idSelectors } from '../internals/corePlugins/useTreeViewId';
-import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
-import { selectionSelectors } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion';
+import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,

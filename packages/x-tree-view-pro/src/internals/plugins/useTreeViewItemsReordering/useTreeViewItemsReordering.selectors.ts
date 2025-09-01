@@ -1,4 +1,4 @@
-import { createSelector } from '@base-ui-components/utils/store';
+import { createSelector } from '@mui/x-internals/store';
 import { TreeViewState, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';

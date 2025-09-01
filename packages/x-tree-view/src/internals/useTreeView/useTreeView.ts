@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
-import { Store } from '@base-ui-components/utils/store';
+import { Store } from '@mui/x-internals/store';
 import useForkRef from '@mui/utils/useForkRef';
 import { EventHandlers } from '@mui/utils/types';
 import {

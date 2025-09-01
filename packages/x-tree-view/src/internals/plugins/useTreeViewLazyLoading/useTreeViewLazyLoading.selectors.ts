@@ -1,4 +1,4 @@
-import { createSelector } from '@base-ui-components/utils/store';
+import { createSelector } from '@mui/x-internals/store';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
 import { TreeViewState } from '../../models';

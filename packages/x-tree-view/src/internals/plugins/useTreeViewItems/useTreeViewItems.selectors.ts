@@ -1,4 +1,4 @@
-import { createSelector } from '@base-ui-components/utils/store';
+import { createSelector } from '@mui/x-internals/store';
 import { TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta, TreeViewState } from '../../models';
 import { isItemDisabled, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
