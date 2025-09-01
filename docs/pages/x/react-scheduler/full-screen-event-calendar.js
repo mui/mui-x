@@ -10,11 +10,21 @@ import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 
 const initialEvents = [
   {
+    id: 'fix',
+    start: DateTime.fromISO('2025-08-09'),
+    end: DateTime.fromISO('2025-08-13'),
+    title: 'Fix event',
+    allDay: true,
+    resource: 'jade',
+    readOnly: true,
+  },
+  {
     id: 'test',
     start: DateTime.fromISO('2025-08-12'),
     end: DateTime.fromISO('2025-08-21'),
     title: 'Test event',
     allDay: true,
+    resource: 'blue',
   },
 ];
 
@@ -36,6 +46,10 @@ export default function FullEventCalendar() {
         onEventsChange={setEvents}
         areEventsDraggable
         defaultView="month"
+        resources={[
+          { id: 'jade', name: 'Jade', color: 'jade' },
+          { id: 'blue', name: 'Blue', color: 'blue' },
+        ]}
       />
     </div>
   );
