@@ -222,6 +222,7 @@ export default function GridChartsIntegrationCustomization() {
             columns={columns}
             rows={rows}
             showToolbar
+            label="Data Grid downloads"
             chartsIntegration
             slots={{
               chartsPanel: GridChartsPanel,
