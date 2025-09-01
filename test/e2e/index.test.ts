@@ -834,7 +834,7 @@ async function initializeEnvironment(
           await page.keyboard.press('Tab');
 
           const endButton = page.getByTestId('end-btn');
-          expect(await endButton.evaluate((el) => document.activeElement === el)).to.be.true;
+          expect(await endButton.evaluate((el) => document.activeElement === el)).to.equal(true);
         });
       });
 
