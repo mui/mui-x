@@ -9,7 +9,8 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["../../mui-env.d.ts"]
+    "types": ["../../mui-env.d.ts"],
+    "jsx": "react-jsx"
   },
   "references": [
     { "path": "../x-internals/tsconfig.build.json" },
