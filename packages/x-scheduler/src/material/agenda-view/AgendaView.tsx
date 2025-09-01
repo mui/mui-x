@@ -9,7 +9,7 @@ import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
-import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
+import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import './AgendaView.css';
 import { useInitializeView } from '../internals/hooks/useInitializeView';
 
@@ -92,9 +92,8 @@ export const AgendaView = React.memo(
                       key={event.key}
                       event={event}
                       render={
-                        <DayGridEvent
+                        <AgendaEvent
                           event={event}
-                          variant="compact"
                           eventResource={resourcesByIdMap.get(event.resource)}
                           ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />
@@ -108,7 +107,7 @@ export const AgendaView = React.memo(
                       key={event.key}
                       event={event}
                       render={
-                        <DayGridEvent
+                        <AgendaEvent
                           event={event}
                           variant="compact"
                           eventResource={resourcesByIdMap.get(event.resource)}

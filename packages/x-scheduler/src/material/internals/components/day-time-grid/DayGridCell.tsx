@@ -85,14 +85,13 @@ export function DayGridCell(props: DayGridCellProps) {
               eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="allDay"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-              style={
-                {
-                  backgroundColor: 'red',
-                  opacity: 1,
-                  zIndex: 2,
-                  '--grid-column-span': diffIn(adapter, draggedEvent.end, day, 'days') + 1,
-                } as React.CSSProperties
-              }
+              gridRow={1} // TODO: Fix
+              columnSpan={diffIn(adapter, draggedEvent.end, day, 'days') + 1}
+              style={{
+                backgroundColor: 'red',
+                opacity: 1,
+                zIndex: 2,
+              }}
             />
           </div>
         )}

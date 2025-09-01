@@ -87,10 +87,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 <span className="DayGridEventTime">{translations.allDay}</span>
               ) : (
                 <time className="DayGridEventTime">
-                  <span className="DayGridEventTimeStart">
+                  <span>
                     {adapter.format(eventProp.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                   </span>
-                  <span className="DayGridEventTimeEnd">
+                  <span>
                     {' '}
                     - {adapter.format(eventProp.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                   </span>
