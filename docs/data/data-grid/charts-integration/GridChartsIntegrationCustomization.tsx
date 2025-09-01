@@ -210,7 +210,7 @@ export default function GridChartsIntegrationCustomization() {
   const apiRef = useGridApiRef();
 
   React.useEffect(() => {
-    const handleMount: GridEventListener<'rootMount'> = () => {
+    const handleColumnsChange: GridEventListener<'columnsChange'> = () => {
       const unwrappedGroupingModel = Object.keys(
         gridColumnGroupsUnwrappedModelSelector(apiRef),
       );
@@ -223,9 +223,16 @@ export default function GridChartsIntegrationCustomization() {
         'main',
         unwrappedGroupingModel.map((field) => ({ field })),
       );
+
+      if (unsubscribe) {
+        unsubscribe();
+      }
     };
 
-    return apiRef.current?.subscribeEvent('rootMount', handleMount);
+    const unsubscribe = apiRef.current?.subscribeEvent(
+      'columnsChange',
+      handleColumnsChange,
+    );
   }, [apiRef]);
 
   return (
