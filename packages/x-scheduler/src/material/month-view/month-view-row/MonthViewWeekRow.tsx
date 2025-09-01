@@ -25,15 +25,15 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const settings = useStore(store, selectors.settings);
+  const preferences = useStore(store, selectors.preferences);
 
   const today = adapter.date();
   const translations = useTranslations();
 
   const getDayList = useDayList();
   const days = React.useMemo(
-    () => getDayList({ date: week, amount: 'week', excludeWeekends: settings.hideWeekends }),
-    [getDayList, week, settings.hideWeekends],
+    () => getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }),
+    [getDayList, week, preferences.hideWeekends],
   );
 
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {

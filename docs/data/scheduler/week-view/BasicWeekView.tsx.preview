@@ -4,5 +4,5 @@
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
 >
-  <WeekView className={classes.Container} />
+  <WeekView />
 </StandaloneView>
