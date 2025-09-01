@@ -45,7 +45,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   } = forwardedProps;
 
   let content: React.ReactNode;
-
   switch (view) {
     case 'week':
       content = <WeekView />;
