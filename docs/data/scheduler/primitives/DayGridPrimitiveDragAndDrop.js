@@ -48,8 +48,8 @@ export default function DayGridPrimitiveDragAndDrop() {
         {weeks.map((week) => (
           <DayGrid.Row
             key={week[0].date.toString()}
-            start={week[0].date.startOf('week')}
-            end={week[0].date.endOf('week')}
+            start={week[0].date.startOf('day')}
+            end={week[6].date.endOf('day')}
             className={classes.Row}
           >
             {week.map((day) => (
