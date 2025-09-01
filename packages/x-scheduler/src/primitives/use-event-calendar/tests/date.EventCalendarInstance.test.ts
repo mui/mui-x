@@ -11,13 +11,11 @@ describe('Date - EventCalendarInstance', () => {
   describe('Method: goToToday', () => {
     it('should set visibleDate to startOfDay(adapter.date()) and calls onVisibleDateChange when is uncontrolled', () => {
       const onVisibleDateChange = spy();
+      const yesterday = adapter.addDays(adapter.startOfDay(adapter.date()), -1);
       const { instance, store } = EventCalendarInstance.create(
-        { ...DEFAULT_PARAMS, onVisibleDateChange },
+        { ...DEFAULT_PARAMS, onVisibleDateChange, defaultVisibleDate: yesterday },
         adapter,
       );
-
-      const yesterday = adapter.addDays(adapter.startOfDay(adapter.date()), -1);
-      store.set('visibleDate', yesterday);
 
       instance.goToToday({} as any);
 
