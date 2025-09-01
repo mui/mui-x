@@ -159,6 +159,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           >
             {daysWithEvents.map(({ day, allDayEvents }, dayIndex) => (
               <DayGridCell
+                key={day.toString()}
                 day={day}
                 allDayEvents={allDayEvents}
                 dayIndexInRow={dayIndex}

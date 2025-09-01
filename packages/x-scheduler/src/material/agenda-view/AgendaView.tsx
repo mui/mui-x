@@ -109,7 +109,6 @@ export const AgendaView = React.memo(
                       render={
                         <AgendaEvent
                           event={event}
-                          variant="compact"
                           eventResource={resourcesByIdMap.get(event.resource)}
                           ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />

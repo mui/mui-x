@@ -35,6 +35,7 @@ export default function FullEventCalendar() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsDraggable
+        defaultView="month"
       />
     </div>
   );

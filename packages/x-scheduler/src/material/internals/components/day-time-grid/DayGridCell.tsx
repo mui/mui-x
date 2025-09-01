@@ -33,7 +33,6 @@ export function DayGridCell(props: DayGridCellProps) {
 
   return (
     <DayGrid.Cell
-      key={day.toString()}
       value={day}
       className="DayTimeGridAllDayEventsCell"
       style={
@@ -83,15 +82,10 @@ export function DayGridCell(props: DayGridCellProps) {
             <DayGridEvent
               event={draggedEvent}
               eventResource={resourcesByIdMap.get(draggedEvent.resource)}
-              variant="allDay"
+              variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
               gridRow={1} // TODO: Fix
               columnSpan={diffIn(adapter, draggedEvent.end, day, 'days') + 1}
-              style={{
-                backgroundColor: 'red',
-                opacity: 1,
-                zIndex: 2,
-              }}
             />
           </div>
         )}

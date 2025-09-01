@@ -27,12 +27,12 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     eventResource,
     ariaLabelledBy,
     variant,
-    className,
+    className: classNameProp,
     onEventClick,
     id: idProp,
     gridRow,
     columnSpan = 1,
-    style,
+    style: styleProp,
     ...other
   } = props;
 
@@ -47,6 +47,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     switch (variant) {
       case 'allDay':
       case 'invisible':
+      case 'dragPlaceholder':
         return (
           <React.Fragment>
             <p
@@ -122,30 +123,48 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ampm,
   ]);
 
+  const style = {
+    '--grid-row': gridRow,
+    '--grid-column-span': columnSpan,
+    ...styleProp,
+  } as React.CSSProperties;
+
+  const className = clsx(
+    classNameProp,
+    'EventContainer',
+    'EventCard',
+    `EventCard--${variant}`,
+    getColorClassName({ resource: eventResource }),
+  );
+
+  if (variant === 'dragPlaceholder') {
+    return (
+      <div
+        ref={forwardedRef}
+        id={id}
+        className={className}
+        style={style}
+        aria-labelledby={`${ariaLabelledBy} ${id}`}
+        aria-hidden={true}
+        {...other}
+      >
+        {content}
+      </div>
+    );
+  }
+
   return (
     <DayGrid.Event
       ref={forwardedRef}
       id={id}
-      isDraggable={isDraggable}
-      className={clsx(
-        className,
-        'EventContainer',
-        'EventCard',
-        `EventCard--${variant}`,
-        getColorClassName({ resource: eventResource }),
-      )}
+      className={className}
+      style={style}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
-      eventId={eventProp.id}
       aria-hidden={variant === 'invisible'}
+      eventId={eventProp.id}
       start={eventProp.start}
       end={eventProp.end}
-      style={
-        {
-          '--grid-row': gridRow,
-          '--grid-column-span': columnSpan,
-          ...style,
-        } as React.CSSProperties
-      }
+      isDraggable={isDraggable}
       {...other}
     >
       {content}

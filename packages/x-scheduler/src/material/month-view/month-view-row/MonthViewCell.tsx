@@ -155,16 +155,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             <DayGridEvent
               event={draggedEvent}
               eventResource={resourcesByIdMap.get(draggedEvent.resource)}
-              variant="allDay"
+              variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-              style={
-                {
-                  backgroundColor: 'red',
-                  opacity: 1,
-                  zIndex: 2,
-                  '--grid-column-span': diffIn(adapter, draggedEvent.end, day, 'days') + 1,
-                } as React.CSSProperties
-              }
+              gridRow={1} // TODO: Fix
+              columnSpan={diffIn(adapter, draggedEvent.end, day, 'days') + 1}
             />
           </div>
         )}
