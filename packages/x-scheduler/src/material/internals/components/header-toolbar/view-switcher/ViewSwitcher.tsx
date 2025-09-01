@@ -51,7 +51,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
     if (dropdown.includes(view)) {
       setDropdownLabel(view);
     }
-  }, [view]);
+  }, [dropdown, view]);
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
