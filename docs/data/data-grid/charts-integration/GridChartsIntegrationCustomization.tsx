@@ -128,7 +128,7 @@ const initialState = {
 
 const getColumnName: GridChartsPanelProps['getColumnName'] = (field) => {
   if (field === 'downloads') {
-    return field;
+    return 'Downloads';
   }
   if (!field.endsWith('downloads')) {
     return undefined;

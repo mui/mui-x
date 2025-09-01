@@ -117,7 +117,7 @@ const initialState = {
 
 const getColumnName = (field) => {
   if (field === 'downloads') {
-    return field;
+    return 'Downloads';
   }
   if (!field.endsWith('downloads')) {
     return undefined;
