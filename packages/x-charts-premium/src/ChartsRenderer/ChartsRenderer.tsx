@@ -33,6 +33,20 @@ export interface ChartsRendererProps {
   ) => React.ReactNode;
 }
 
+/**
+ * A component that renders different types of charts based on the provided data and configuration.
+ * It supports column, bar, line, area and pie charts with customizable styling and formatting options.
+ * The component handles both single and multiple category scenarios, with special data processing for each case.
+ * For multiple categories, it creates grouped axes.
+ *
+ * @link https://www.mui.com/x/react-charts/data-grid-integration/
+ * @param {Array<{id: string, label: string, data: Array<string|number|null>}>} props.categories - Array of category objects containing data for chart axes
+ * @param {Array<{id: string, label: string, data: Array<number|null>}>} props.series - Array of series objects containing the numerical data to plot
+ * @param {string} props.chartType - Type of chart to render (e.g. 'bar', 'line', 'pie')
+ * @param {Object} props.configuration - Configuration object containing chart-specific options. These options are merged with default configurations defined for each chart type
+ * @param {Function} [props.onRender] - Optional callback function called before rendering to modify chart props. Receives chart type, props and component as arguments and should return a React node
+ * @returns {React.ReactNode} The rendered chart component
+ */
 function ChartsRenderer({
   categories,
   series,
