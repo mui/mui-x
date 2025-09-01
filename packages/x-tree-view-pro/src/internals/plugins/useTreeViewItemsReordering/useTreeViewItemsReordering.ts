@@ -131,8 +131,8 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   const startDraggingItem = React.useCallback(
     (itemId: string) => {
-      const isItemBeingEditing = labelSelectors.isItemBeingEdited(store.state, itemId);
-      if (isItemBeingEditing) {
+      const isItemBeingEdited = labelSelectors.isItemBeingEdited(store.state, itemId);
+      if (isItemBeingEdited) {
         return;
       }
 
