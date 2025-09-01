@@ -19,7 +19,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
 
   const axis = xAxis[inProps.axisId ?? xAxisIds[0]];
-  if ('groups' in axis && Array.isArray(axis.groups)) {
+  if (axis && 'groups' in axis && Array.isArray(axis.groups)) {
     return <ChartsGroupedXAxis {...inProps} />;
   }
 

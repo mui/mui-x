@@ -19,7 +19,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const { yAxis, yAxisIds } = useYAxes();
 
   const axis = yAxis[inProps.axisId ?? yAxisIds[0]];
-  if ('groups' in axis && Array.isArray(axis.groups)) {
+  if (axis && 'groups' in axis && Array.isArray(axis.groups)) {
     return <ChartsGroupedYAxis {...inProps} />;
   }
 
