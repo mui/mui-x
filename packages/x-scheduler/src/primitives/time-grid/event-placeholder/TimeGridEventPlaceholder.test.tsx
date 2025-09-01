@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { DayGrid } from '@mui/x-scheduler/primitives/day-grid';
+import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
-describe('<DayGrid.Event />', () => {
+describe('<TimeGrid.EventPlaceholder />', () => {
   const { render } = createSchedulerRenderer();
 
   const eventStart = DateTime.now();
   const eventEnd = eventStart.plus({ hours: 1 });
 
   describeConformance(
-    <DayGrid.Event eventId="fake-id" start={eventStart} end={eventEnd} />,
+    <TimeGrid.EventPlaceholder eventId="fake-id" start={eventStart} end={eventEnd} />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {
         return render(
-          <DayGrid.Root>
-            <DayGrid.Row start={eventStart} end={eventEnd}>
-              <DayGrid.Cell value={eventStart}>{node}</DayGrid.Cell>
-            </DayGrid.Row>
-          </DayGrid.Root>,
+          <TimeGrid.Root>
+            <TimeGrid.Column start={eventStart} end={eventEnd}>
+              {node}
+            </TimeGrid.Column>
+          </TimeGrid.Root>,
         );
       },
     }),

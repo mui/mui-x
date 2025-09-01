@@ -123,49 +123,41 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ampm,
   ]);
 
-  const style = {
-    '--grid-row': gridRow,
-    '--grid-column-span': columnSpan,
-    ...styleProp,
-  } as React.CSSProperties;
-
-  const className = clsx(
-    classNameProp,
-    'EventContainer',
-    'EventCard',
-    `EventCard--${variant}`,
-    getColorClassName({ resource: eventResource }),
-  );
+  const sharedProps = {
+    ref: forwardedRef,
+    id,
+    className: clsx(
+      classNameProp,
+      'EventContainer',
+      'EventCard',
+      `EventCard--${variant}`,
+      getColorClassName({ resource: eventResource }),
+    ),
+    style: {
+      '--grid-row': gridRow,
+      '--grid-column-span': columnSpan,
+      ...styleProp,
+    } as React.CSSProperties,
+    'aria-labelledby': `${ariaLabelledBy} ${id}`,
+    ...other,
+  };
 
   if (variant === 'dragPlaceholder') {
     return (
-      <div
-        ref={forwardedRef}
-        id={id}
-        className={className}
-        style={style}
-        aria-labelledby={`${ariaLabelledBy} ${id}`}
-        aria-hidden={true}
-        {...other}
-      >
+      <DayGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
         {content}
-      </div>
+      </DayGrid.EventPlaceholder>
     );
   }
 
   return (
     <DayGrid.Event
-      ref={forwardedRef}
-      id={id}
-      className={className}
-      style={style}
-      aria-labelledby={`${ariaLabelledBy} ${id}`}
-      aria-hidden={variant === 'invisible'}
       eventId={eventProp.id}
       start={eventProp.start}
       end={eventProp.end}
       isDraggable={isDraggable}
-      {...other}
+      aria-hidden={variant === 'invisible'}
+      {...sharedProps}
     >
       {content}
     </DayGrid.Event>
