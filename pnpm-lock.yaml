@@ -282,11 +282,11 @@ importers:
         specifier: ^1.0.4-canary.6
         version: 1.0.4-canary.6(@babel/core@7.28.3)(@babel/preset-react@7.27.1(@babel/core@7.28.3))
       '@mui/internal-bundle-size-checker':
-        specifier: ^1.0.9-canary.34
-        version: 1.0.9-canary.34(@types/node@24.3.0)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
+        specifier: ^1.0.9-canary.35
+        version: 1.0.9-canary.35(@types/node@24.3.0)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.2-canary.59
-        version: 0.0.2-canary.59(@typescript-eslint/parser@8.40.0(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.40.0(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.33.0))(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)
+        specifier: ^0.0.3-canary.0
+        version: 0.0.3-canary.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.40.0(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.33.0))(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.9
@@ -4191,12 +4191,12 @@ packages:
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.34':
-    resolution: {integrity: sha512-cXdR3AYPlYs8iLb9LCumL6vNv04kgL5yJLA3lXfCaBwXXlGk3rzEaqKXCZEEXHkFfqpoiJ2q/YIMXeFUc3FHvw==}
+  '@mui/internal-bundle-size-checker@1.0.9-canary.35':
+    resolution: {integrity: sha512-1XUeZ76JUqfZtqUJUy9x78FCx6VXHZigCyPp9i+5HBVXPSU/oiKUly2e4jZ3ani0FjT5EWXJKErs7o6aFmLxPA==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.2-canary.59':
-    resolution: {integrity: sha512-HbLivn1DdTIg5NiuSE4m3Nvo9mTU2tFxO7mvWqBMPPO4nKrLx+UbWk9Ap8U3qxdFyG3I3Jayhj++FQidC84CRw==}
+  '@mui/internal-code-infra@0.0.3-canary.0':
+    resolution: {integrity: sha512-UrRxmcpUtIw6URCwUkCVqVoihnEEbyeyWH5rqqiffKdO9miiPI0HSZE+dz/D+f7hzOy1IEnj/TStuvKO0avSGQ==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -14764,7 +14764,7 @@ snapshots:
       '@babel/core': 7.28.3
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.34(@types/node@24.3.0)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)':
+  '@mui/internal-bundle-size-checker@1.0.9-canary.35(@types/node@24.3.0)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)':
     dependencies:
       '@aws-sdk/client-s3': 3.876.0
       '@aws-sdk/credential-providers': 3.876.0
@@ -14795,7 +14795,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.2-canary.59(@typescript-eslint/parser@8.40.0(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.40.0(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.33.0))(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)':
+  '@mui/internal-code-infra@0.0.3-canary.0(@typescript-eslint/parser@8.40.0(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.40.0(eslint@9.33.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.33.0))(eslint@9.33.0)(prettier@3.6.2)(typescript@5.9.2)':
     dependencies:
       '@argos-ci/core': 4.1.1
       '@babel/cli': 7.28.3(@babel/core@7.28.3)
@@ -14811,6 +14811,7 @@ snapshots:
       '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.7(@babel/core@7.28.3)
       '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.19(@babel/core@7.28.3)
       '@next/eslint-plugin-next': 15.5.2
+      '@octokit/auth-action': 6.0.1
       '@octokit/rest': 22.0.0
       '@pnpm/find-workspace-dir': 1000.1.2
       babel-plugin-optimize-clsx: 2.6.2
