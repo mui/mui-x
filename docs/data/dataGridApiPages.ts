@@ -47,6 +47,16 @@ const dataGridApiPages: MuiPage[] = [
     title: 'FilterPanelTrigger',
   },
   {
+    pathname: '/x/api/data-grid/grid-charts-panel',
+    title: 'GridChartsPanel',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-charts-renderer-proxy',
+    title: 'GridChartsRendererProxy',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/data-grid/grid-filter-form',
     title: 'GridFilterForm',
   },
