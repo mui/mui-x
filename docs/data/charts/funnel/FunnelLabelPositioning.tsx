@@ -29,7 +29,6 @@ export default function FunnelLabelPositioning() {
             defaultValue: 'middle',
             options: [
               'auto',
-              'baseline',
               'hanging',
               'middle',
               'central',
