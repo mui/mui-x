@@ -60,27 +60,35 @@ export default function YAxisTickLabelOverflow() {
   );
 }
 
-const stringToColor = (str) => {
-  let hash = 0;
-  str.split('').forEach((char) => {
-    hash = char.charCodeAt(0) + ((hash << 5) - hash);
-  });
-  let color = '#';
-  for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += value.toString(16).padStart(2, '0');
-  }
-  return color;
-};
+const colors = [
+  '#FF3A2E', // Bright red
+  '#9C27B0', // Purple
+  '#7FDBFF', // Light blue
+  '#2958B2', // Deep blue
+  '#0F1D3A', // Dark navy
+  '#00CCAA', // Teal
+  '#8B008B', // Dark magenta
+  '#FFD700', // Gold
+  '#9932CC', // Dark orchid
+  '#556B2F', // Dark olive green
+  '#20B2AA', // Light sea green
+  '#FF1493', // Deep pink
+  '#FF0099', // Hot pink
+  '#8A2BE2', // Blue violet
+  '#FF6B1A', // Deep orange
+  '#66CC00', // Lime green
+  '#3D5A1A', // Forest green
+  '#8C4A00', // Brown
+];
 
 function AxisSizeVisualization() {
   const { left, top, height, width } = useDrawingArea();
-  const yAxes = useYAxes();
+  const axes = useYAxes();
 
   return (
     <React.Fragment>
-      {yAxes.yAxisIds.map((id, i) => {
-        const yAxis = yAxes.yAxis[id];
+      {axes.yAxisIds.map((id, i) => {
+        const yAxis = axes.yAxis[id];
         if (yAxis.position === 'none') {
           return null;
         }
@@ -99,7 +107,7 @@ function AxisSizeVisualization() {
             y={top}
             width={yAxis.width ?? 0}
             height={height}
-            fill={stringToColor(`${id}+${offset}`)}
+            fill={colors[i]}
             opacity={0.2}
           />
         );
