@@ -14,13 +14,12 @@
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build && pnpm build:update-pkg-json",
-    "build:update-pkg-json": "node ./scripts/addPackageScripts.js",
+    "build": "code-infra build-new",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "sideEffects": false,
   "packageScripts": {
-    "postinstall": "node ./esm/postinstall/index.js"
+    "postinstall": "node ./postinstall/index.js"
   },
   "repository": {
     "type": "git",
@@ -45,6 +44,6 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    "./*": "./src/*/index.{ts,tsx}"
   }
 }

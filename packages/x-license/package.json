@@ -10,7 +10,7 @@
   "homepage": "https://mui.com/x/introduction/licensing/",
   "sideEffects": [
     "./utils/licenseInfo.js",
-    "./esm/utils/licenseInfo.js"
+    "./utils/licenseInfo.mjs"
   ],
   "publishConfig": {
     "access": "public",
@@ -18,7 +18,7 @@
   },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build-new",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -46,6 +46,6 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    "./*": "./src/*/index.{ts,tsx}"
   }
 }

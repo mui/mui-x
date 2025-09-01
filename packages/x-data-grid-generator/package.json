@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build-new",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -65,6 +65,6 @@
   "exports": {
     ".": "./src/index.ts",
     "./services/static-data": "./src/services/static-data.ts",
-    "./*": "./src/*/index.ts"
+    "./*": "./src/*/index.{ts,tsx}"
   }
 }
