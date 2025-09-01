@@ -6,7 +6,6 @@ import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
-import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 /**
@@ -85,14 +84,12 @@ export const useDesktopPicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
-        <Field {...fieldProps} />
-        <PickerPopper slots={slots} slotProps={slotProps}>
-          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickerPopper>
-      </PickerFieldUIContextProvider>
+      <Field slots={slots} slotProps={slotProps} inputRef={inputRef} {...fieldProps} />
+      <PickerPopper slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          {renderCurrentView()}
+        </Layout>
+      </PickerPopper>
     </PickerProvider>
   );
 
