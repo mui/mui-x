@@ -53,7 +53,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
             <TimeGridEvent
               event={event}
               eventResource={resourcesByIdMap.get(event.resource)}
-              variant="regular"
               ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
             />
           }
@@ -63,7 +62,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         <TimeGridEvent
           event={draggedEvent}
           eventResource={resourcesByIdMap.get(draggedEvent.resource)}
-          variant="regular"
           ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
         />
       )}

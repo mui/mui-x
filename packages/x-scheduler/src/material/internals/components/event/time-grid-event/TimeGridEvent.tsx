@@ -104,7 +104,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         className,
         'EventContainer',
         'EventCard',
-        `EventCard--compact`, // Add a "variant" prop if we add support for other variants
+        `EventCard--regular`, // Add a "variant" prop if we add support for other variants
         (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
         isDraggable && 'Draggable',
         isRecurring && 'Recurrent',
