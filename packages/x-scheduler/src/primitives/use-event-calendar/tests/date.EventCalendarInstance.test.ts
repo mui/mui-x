@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { EventCalendarInstance } from '@mui/x-scheduler/primitives/use-event-calendar/EventCalendarInstance';
+import { EventCalendarInstance } from '../EventCalendarInstance';
 import { getAdapter } from './../../utils/adapter/getAdapter';
 import { CalendarView } from '../../models';
 
