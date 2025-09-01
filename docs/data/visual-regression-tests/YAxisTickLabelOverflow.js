@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
+import { useDrawingArea, useYAxes } from '@mui/x-charts/hooks';
 import { usAirportPassengersData } from './airportData';
 
 const defaultYAxis = {
@@ -53,6 +54,56 @@ export default function YAxisTickLabelOverflow() {
           valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
         },
       ]}
-    />
+    >
+      <AxisSizeVisualization />
+    </BarChartPro>
+  );
+}
+
+const stringToColor = (str) => {
+  let hash = 0;
+  str.split('').forEach((char) => {
+    hash = char.charCodeAt(0) + ((hash << 5) - hash);
+  });
+  let color = '#';
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += value.toString(16).padStart(2, '0');
+  }
+  return color;
+};
+
+function AxisSizeVisualization() {
+  const { left, top, height, width } = useDrawingArea();
+  const yAxes = useYAxes();
+
+  return (
+    <React.Fragment>
+      {yAxes.yAxisIds.map((id, i) => {
+        const yAxis = yAxes.yAxis[id];
+        if (yAxis.position === 'none') {
+          return null;
+        }
+
+        const direction = yAxis.position === 'left' ? -1 : 1;
+        const offset = yAxis.offset;
+        const start =
+          yAxis.position === 'left'
+            ? left - yAxis.width + offset * direction
+            : (left + width + offset) * direction;
+
+        return (
+          <rect
+            key={id}
+            x={start}
+            y={top}
+            width={yAxis.width ?? 0}
+            height={height}
+            fill={stringToColor(`${id}+${offset}`)}
+            opacity={0.2}
+          />
+        );
+      })}
+    </React.Fragment>
   );
 }
