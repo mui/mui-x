@@ -41,6 +41,10 @@ export function GridChartsRendererProxy({
         label,
       });
     }
+
+    return () => {
+      delete chartStateLookup[id];
+    };
   }, [id, label, setChartState, chartStateLookup]);
 
   if (!chartStateLookup[id]) {
