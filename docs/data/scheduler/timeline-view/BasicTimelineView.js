@@ -18,7 +18,6 @@ export default function BasicWeekView() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        views={['day', 'month', 'week', 'agenda', 'timeline']}
       >
         <TimelineView />
       </StandaloneView>
