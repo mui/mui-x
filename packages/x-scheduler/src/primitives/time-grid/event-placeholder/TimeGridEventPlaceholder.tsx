@@ -1,13 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridEventPlaceholderCssVars } from './TimeGridEventPlaceholderCssVars';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
-import { SchedulerValidDate } from '../../models';
 
 export const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventPlaceholder(
   componentProps: TimeGridEventPlaceholder.Props,
@@ -24,12 +22,7 @@ export const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventP
     ...elementProps
   } = componentProps;
 
-  // TODO: Expose a real `interactive` prop
-  // to control whether the event should behave like a button
-  const isInteractive = true;
-
   const ref = React.useRef<HTMLDivElement>(null);
-  const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
 
@@ -55,8 +48,8 @@ export const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventP
 
   return useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, buttonRef, ref],
-    props: [props, eventProps, elementProps, getButtonProps],
+    ref: [forwardedRef, ref],
+    props: [props, eventProps, elementProps],
   });
 });
 
@@ -64,11 +57,4 @@ export namespace TimeGridEventPlaceholder {
   export interface State extends useEvent.State {}
 
   export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {}
-
-  export interface SharedDragData {
-    id: string | number;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
-    initialCursorPositionInEventMs: number;
-  }
 }
