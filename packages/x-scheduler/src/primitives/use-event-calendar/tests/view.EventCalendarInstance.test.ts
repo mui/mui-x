@@ -9,7 +9,7 @@ const adapter = getAdapter();
 
 describe('View - EventCalendarInstance', () => {
   describe('Method: setView', () => {
-    it('uncontrolled: updates view and calls onViewChange when value changes', () => {
+    it('should update view and call onViewChange when value changes and is uncontrolled', () => {
       const onViewChange = spy();
       const { instance, store } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, onViewChange },
@@ -23,7 +23,7 @@ describe('View - EventCalendarInstance', () => {
       expect(onViewChange.lastCall.firstArg).to.equal('day');
     });
 
-    it('controlled: does NOT mutate store but calls onViewChange', () => {
+    it('should NOT mutate store but calls onViewChange when is controlled', () => {
       const onViewChange = spy();
       const { instance, store } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, view: 'week', onViewChange },
@@ -37,7 +37,7 @@ describe('View - EventCalendarInstance', () => {
       expect(onViewChange.lastCall.firstArg).to.equal('day');
     });
 
-    it('no-op when setting the same view: no state change, no callback', () => {
+    it('should do nothing if setting the same view: no state change, no callback', () => {
       const onViewChange = spy();
       const { instance, store } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, defaultView: 'month', onViewChange },
@@ -50,7 +50,7 @@ describe('View - EventCalendarInstance', () => {
       expect(onViewChange.called).to.equal(false);
     });
 
-    it('throws when switching to a view not included in the allowed views', () => {
+    it('should throw when switching to a view not included in the allowed views', () => {
       const { instance } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, views: ['day', 'agenda'], defaultView: 'day' },
         adapter,

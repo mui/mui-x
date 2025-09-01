@@ -9,7 +9,7 @@ const adapter = getAdapter();
 
 describe('Date - EventCalendarInstance', () => {
   describe('Method: goToToday', () => {
-    it('uncontrolled: sets visibleDate to startOfDay(adapter.date()) and calls onVisibleDateChange', () => {
+    it('should set visibleDate to startOfDay(adapter.date()) and calls onVisibleDateChange when is uncontrolled', () => {
       const onVisibleDateChange = spy();
       const { instance, store } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, onVisibleDateChange },
@@ -27,7 +27,7 @@ describe('Date - EventCalendarInstance', () => {
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(expected);
     });
 
-    it('controlled: does not change the state but calls onVisibleDateChange with today', () => {
+    it('should not change the state but calls onVisibleDateChange with today when is controlled', () => {
       const onVisibleDateChange = spy();
       const controlledDate = adapter.date('2025-07-01T00:00:00Z');
 
@@ -44,7 +44,7 @@ describe('Date - EventCalendarInstance', () => {
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(expected);
     });
 
-    it('no-op if already at today (no state change, no callback)', () => {
+    it('should do nothing if already at today (no state change, no callback)', () => {
       const onVisibleDateChange = spy();
       const todayStart = adapter.startOfDay(adapter.date());
 
@@ -63,7 +63,7 @@ describe('Date - EventCalendarInstance', () => {
 
   describe('Method: switchToDay', () => {
     describe('Method: switchToDay', () => {
-      it('uncontrolled: updates store and calls both callbacks when both change', () => {
+      it('should update store and calls both callbacks when both change when is uncontrolled', () => {
         const onVisibleDateChange = spy();
         const onViewChange = spy();
 
@@ -92,7 +92,7 @@ describe('Date - EventCalendarInstance', () => {
         expect(onViewChange.lastCall.firstArg).to.equal('day');
       });
 
-      it('controlled: does NOT mutate store but calls both callbacks when both change', () => {
+      it('should NOT mutate store but calls both callbacks when both change when is controlled', () => {
         const onVisibleDateChange = spy();
         const onViewChange = spy();
 
@@ -121,7 +121,7 @@ describe('Date - EventCalendarInstance', () => {
         expect(onViewChange.lastCall.firstArg).to.equal('day');
       });
 
-      it('uncontrolled: only date changes, updates date in store and calls only onVisibleDateChange', () => {
+      it('should update date in store and calls onVisibleDateChange if only date changes when is uncontrolled', () => {
         const onVisibleDateChange = spy();
         const onViewChange = spy();
 
@@ -147,7 +147,7 @@ describe('Date - EventCalendarInstance', () => {
         expect(onViewChange.called).to.equal(false);
       });
 
-      it('partially controlled: view controlled, visibleDate uncontrolled → updates date and calls only onVisibleDateChange', () => {
+      it('should update date and calls only onVisibleDateChange when is partially controlled (view controlled, visibleDate uncontrolled)', () => {
         const onVisibleDateChange = spy();
         const onViewChange = spy();
 
@@ -173,7 +173,7 @@ describe('Date - EventCalendarInstance', () => {
         expect(onViewChange.called).to.equal(false);
       });
 
-      it('partially controlled: view uncontrolled, visibleDate controlled → updates view and calls only onViewChange', () => {
+      it('should update view and calls only onViewChange when is partially controlled (view uncontrolled, visibleDate controlled)', () => {
         const onVisibleDateChange = spy();
         const onViewChange = spy();
 
@@ -199,7 +199,7 @@ describe('Date - EventCalendarInstance', () => {
         expect(onViewChange.lastCall.firstArg).to.equal('day');
       });
 
-      it('no-op when nothing changes: does not update store or call callbacks', () => {
+      it('should do nothing if nothing changes, does not update store or call callbacks', () => {
         const onVisibleDateChange = spy();
         const onViewChange = spy();
 
@@ -223,7 +223,7 @@ describe('Date - EventCalendarInstance', () => {
         expect(onViewChange.called).to.equal(false);
       });
 
-      it('throws if the view is not an allowed view', () => {
+      it('should throw if the view is not an allowed view', () => {
         const { instance } = EventCalendarInstance.create(
           { ...DEFAULT_PARAMS, views: ['week', 'month', 'agenda'] as CalendarView[] },
           adapter,

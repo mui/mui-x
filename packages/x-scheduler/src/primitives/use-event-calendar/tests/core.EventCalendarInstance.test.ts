@@ -14,10 +14,10 @@ const DEFAULT_PARAMS = { events: [] };
 
 describe('Core - EventCalendarInstance', () => {
   describe('create', () => {
-    it('initializes default state', () => {
+    it('should initialize default state', () => {
       const { store } = EventCalendarInstance.create(DEFAULT_PARAMS, adapter);
 
-      expect(store.state.view).to.equal(DEFAULT_VIEW);
+      expect(store.state.view).to.deep.equal(DEFAULT_VIEW);
       expect(store.state.views).to.deep.equal(DEFAULT_VIEWS);
       expect(store.state.resources).to.deep.equal([]);
       expect(store.state.ampm).to.equal(true);
@@ -29,7 +29,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.visibleDate).toEqualDateTime(expectedToday);
     });
 
-    it('keeps provided events array', () => {
+    it('should keep provided events array', () => {
       const events = [
         buildEvent(
           '1',
@@ -55,7 +55,7 @@ describe('Core - EventCalendarInstance', () => {
   });
 
   describe('updater', () => {
-    it('syncs partial state from new parameters (events/resources/views/flags/ampm/indicator)', () => {
+    it('should sync partial state from new parameters (events/resources/views/flags/ampm/indicator)', () => {
       const { store, updater } = EventCalendarInstance.create(DEFAULT_PARAMS, adapter);
 
       const newParams = {
@@ -88,7 +88,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.showCurrentTimeIndicator).to.equal(false);
     });
 
-    it('respects controlled `view` (updates to new value)', () => {
+    it('should respect controlled `view` (updates to new value)', () => {
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, view: 'day' },
         adapter,
@@ -99,7 +99,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.view).to.equal('month');
     });
 
-    it('respects controlled `visibleDate` (updates to new value)', () => {
+    it('should respect controlled `visibleDate` (updates to new value)', () => {
       const initial = adapter.date('2025-07-05T00:00:00Z');
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, visibleDate: initial },
@@ -112,7 +112,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.visibleDate).toEqualDateTime(next);
     });
 
-    it('does not change `view` if not included in new parameters', () => {
+    it('should not change `view` if not included in new parameters', () => {
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, view: 'month' },
         adapter,
@@ -130,7 +130,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.view).to.equal('month');
     });
 
-    it('does not change `visibleDate` if not included in new parameters', () => {
+    it('should not change `visibleDate` if not included in new parameters', () => {
       const initialVisibleDate = adapter.date('2025-07-01T00:00:00Z');
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, visibleDate: initialVisibleDate },
@@ -149,7 +149,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.visibleDate).toEqualDateTime(initialVisibleDate);
     });
 
-    it('keeps initial defaults and warns if default props change after mount', () => {
+    it('should keep initial defaults and warns if default props change after mount', () => {
       const defaultDate = adapter.date('2025-07-15T00:00:00Z');
       const defaultView = 'month';
 
@@ -177,7 +177,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.visibleDate).toEqualDateTime(defaultDate);
     });
 
-    it('keeps consistent state when switching from uncontrolled → controlled `view` (warns in dev)', () => {
+    it('should keep consistent state when switching from uncontrolled → controlled `view` (warns in dev)', () => {
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, defaultView: 'week' },
         adapter,
@@ -190,7 +190,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.view).to.equal('day');
     });
 
-    it('keeps consistent state when switching from uncontrolled → controlled `visible date` (warns in dev)', () => {
+    it('should keep consistent state when switching from uncontrolled → controlled `visible date` (warns in dev)', () => {
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, defaultVisibleDate: adapter.date('2025-07-05T00:00:00Z') },
         adapter,
@@ -206,7 +206,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.visibleDate).toEqualDateTime(newDate);
     });
 
-    it('warns and keeps current value when switching from controlled → uncontrolled `view`', () => {
+    it('should warn and keep current value when switching from controlled → uncontrolled `view`', () => {
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, view: 'day' },
         adapter,
@@ -225,7 +225,7 @@ describe('Core - EventCalendarInstance', () => {
       expect(store.state.view).to.equal('day');
     });
 
-    it('warns and keeps current value when switching from controlled → uncontrolled `visibleDate`', () => {
+    it('should warn and keep current value when switching from controlled → uncontrolled `visibleDate`', () => {
       const initial = adapter.date('2025-07-05T00:00:00Z');
       const { store, updater } = EventCalendarInstance.create(
         { ...DEFAULT_PARAMS, visibleDate: initial },
