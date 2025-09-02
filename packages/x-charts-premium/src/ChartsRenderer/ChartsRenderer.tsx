@@ -22,7 +22,7 @@ const getLegendPosition = (position: string) => {
 };
 
 export interface ChartsRendererProps {
-  categories: { id: string; label: string; data: (string | number | null)[] }[];
+  categories: { id: string; label: string; data: (string | number | Date | null)[] }[];
   series: { id: string; label: string; data: (number | null)[] }[];
   chartType: string;
   configuration: Record<string, any>;
@@ -40,7 +40,7 @@ export interface ChartsRendererProps {
  * For multiple categories, it creates grouped axes.
  *
  * @link https://www.mui.com/x/react-charts/data-grid-integration/
- * @param {Array<{id: string, label: string, data: Array<string|number|null>}>} props.categories - Array of category objects containing data for chart axes
+ * @param {Array<{id: string, label: string, data: Array<string|number|Date|null>}>} props.categories - Array of category objects containing data for chart axes
  * @param {Array<{id: string, label: string, data: Array<number|null>}>} props.series - Array of series objects containing the numerical data to plot
  * @param {string} props.chartType - Type of chart to render (e.g. 'bar', 'line', 'pie')
  * @param {Object} props.configuration - Configuration object containing chart-specific options. These options are merged with default configurations defined for each chart type
@@ -67,7 +67,8 @@ function ChartsRenderer({
         categories.map((category) => category.data[dataIndex]),
       )
     : categoryDataRaw.map((item) => {
-        const currentCount = itemCount.get(String(item)) || 1;
+        const itemValue = item instanceof Date ? item.toLocaleDateString() : String(item);
+        const currentCount = itemCount.get(itemValue) || 1;
         itemCount.set(String(item), currentCount + 1);
         return currentCount > 1 ? `${item} (${currentCount})` : item;
       });
