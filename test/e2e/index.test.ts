@@ -830,6 +830,7 @@ async function initializeEnvironment(
           await renderFixture('DatePicker/DesktopDatePickerDisabledField');
 
           const startButton = page.getByTestId('start-btn');
+          
           await startButton.focus();
           await page.keyboard.press('Tab');
 
