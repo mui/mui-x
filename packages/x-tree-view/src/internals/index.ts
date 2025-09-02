@@ -65,6 +65,7 @@ export type {
 export type {
   UseTreeViewLazyLoadingSignature,
   UseTreeViewLazyLoadingParameters,
+  UseTreeViewLazyLoadingInstance,
 } from './plugins/useTreeViewLazyLoading';
 export { lazyLoadingSelectors } from './plugins/useTreeViewLazyLoading';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';

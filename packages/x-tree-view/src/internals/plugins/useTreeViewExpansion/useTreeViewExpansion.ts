@@ -5,6 +5,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewExpansionInstance,
+  UseTreeViewExpansionPublicAPI,
   UseTreeViewExpansionSignature,
 } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
@@ -95,6 +96,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
   );
 
+  const isItemExpanded: UseTreeViewExpansionPublicAPI['isItemExpanded'] = useEventCallback(
+    (itemId) => {
+      return selectorIsItemExpanded(store.value, itemId);
+    },
+  );
+
   const expandAllSiblings = (event: React.KeyboardEvent, itemId: TreeViewItemId) => {
     const itemMeta = itemsSelectors.itemMeta(store.state, itemId);
     if (itemMeta == null) {
@@ -135,6 +142,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   return {
     publicAPI: {
       setItemExpansion,
+      isItemExpanded,
     },
     instance: {
       setItemExpansion,
