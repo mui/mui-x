@@ -4,19 +4,21 @@ import {
   useGridApiRef,
   useKeepGroupedColumnsHidden,
   GridRowClassNameParams,
+  gridRowNodeSelector,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 type Movie = ReturnType<typeof useMovieData>['rows'][number];
 
 const EXPECTED_GROSS = 2000000000;
+const ROW_HEIGHT = 52;
 
 export default function RowGroupingStyling() {
   const apiRef = useGridApiRef();
   const data = useMovieData();
 
   const getRowClassName = (params: GridRowClassNameParams<Movie>) => {
-    const node = apiRef.current?.getRowNode(params.id);
+    const node = gridRowNodeSelector(apiRef, params.id);
 
     if (!node) {
       return '';
@@ -25,21 +27,16 @@ export default function RowGroupingStyling() {
     if (node.type === 'group') {
       const childIds = node.children || [];
 
-      let hasExpectedGross = false;
-
       for (const childId of childIds) {
-        const childNode = apiRef.current?.getRowNode(childId);
+        const childNode = gridRowNodeSelector(apiRef, childId);
         if (childNode && childNode.type === 'leaf') {
           const childRow = apiRef.current?.getRow<Movie>(childId);
           if (childRow?.gross && childRow.gross > EXPECTED_GROSS) {
-            hasExpectedGross = true;
+            return 'highlighted-group';
           }
         }
       }
 
-      if (hasExpectedGross) {
-        return 'highlighted-group';
-      }
       return '';
     }
 
@@ -78,8 +75,8 @@ export default function RowGroupingStyling() {
               position: 'absolute',
               left: 0,
               width: 4,
-              height: 'calc(var(--height) * 0.8)',
-              marginTop: 'calc(var(--height) * 0.1)',
+              height: `calc(${ROW_HEIGHT}px * 0.8)`,
+              marginTop: `calc(${ROW_HEIGHT}px * 0.1)`,
               backgroundColor: 'success.main',
               borderTopRightRadius: 4,
               borderBottomRightRadius: 4,
