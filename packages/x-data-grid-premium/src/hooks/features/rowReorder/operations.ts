@@ -15,6 +15,7 @@ import type {
 } from '@mui/x-data-grid-pro';
 import {
   BaseReorderOperation,
+  rowReorderUtils,
   type ReorderOperation,
   type ReorderExecutionContext,
 } from '@mui/x-data-grid-pro/internals';
@@ -22,15 +23,6 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
-import {
-  determineOperationType,
-  calculateTargetIndex,
-  collectAllLeafDescendants,
-  getNodePathInTree,
-  removeEmptyAncestors,
-  findExistingGroupWithSameKey,
-  BatchRowUpdater,
-} from './utils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 type ReorderExecutionContextType = ReorderExecutionContext<GridPrivateApiPremium>;
@@ -115,12 +107,12 @@ export class SameParentSwapOperation extends BaseReorderOperation {
       }
     }
 
-    const operationType = determineOperationType(sourceNode, adjustedTargetNode);
+    const operationType = rowReorderUtils.determineOperationType(sourceNode, adjustedTargetNode);
     if (operationType !== 'same-parent-swap') {
       return null;
     }
 
-    const actualTargetIndex = calculateTargetIndex(
+    const actualTargetIndex = rowReorderUtils.calculateTargetIndex(
       sourceNode,
       adjustedTargetNode,
       isLastChild,
@@ -224,12 +216,12 @@ export class CrossParentLeafOperation extends BaseReorderOperation {
       }
     }
 
-    const operationType = determineOperationType(sourceNode, adjustedTargetNode);
+    const operationType = rowReorderUtils.determineOperationType(sourceNode, adjustedTargetNode);
     if (operationType !== 'cross-parent-leaf') {
       return null;
     }
 
-    const actualTargetIndex = calculateTargetIndex(
+    const actualTargetIndex = rowReorderUtils.calculateTargetIndex(
       sourceNode,
       adjustedTargetNode,
       isLastChild,
@@ -335,7 +327,11 @@ export class CrossParentLeafOperation extends BaseReorderOperation {
 
         if (updatedSourceChildren.length === 0) {
           removedGroups.add(sourceGroup.id);
-          rootLevelRemovals = removeEmptyAncestors(sourceGroup.parent!, updatedTree, removedGroups);
+          rootLevelRemovals = rowReorderUtils.removeEmptyAncestors(
+            sourceGroup.parent!,
+            updatedTree,
+            removedGroups,
+          );
         }
 
         removedGroups.forEach((groupId) => {
@@ -482,12 +478,12 @@ export class CrossParentGroupOperation extends BaseReorderOperation {
       adjustedTargetNode = prevNode as GridGroupNode;
     }
 
-    const operationType = determineOperationType(sourceNode, adjustedTargetNode);
+    const operationType = rowReorderUtils.determineOperationType(sourceNode, adjustedTargetNode);
     if (operationType !== 'cross-parent-group') {
       return null;
     }
 
-    const actualTargetIndex = calculateTargetIndex(
+    const actualTargetIndex = rowReorderUtils.calculateTargetIndex(
       sourceNode,
       adjustedTargetNode,
       isLastChild,
@@ -523,19 +519,19 @@ export class CrossParentGroupOperation extends BaseReorderOperation {
     const columnsLookup = gridColumnLookupSelector(apiRef);
     const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
-    const allLeafIds = collectAllLeafDescendants(sourceNode as GridGroupNode, tree);
+    const allLeafIds = rowReorderUtils.collectAllLeafDescendants(sourceNode as GridGroupNode, tree);
     if (allLeafIds.length === 0) {
       return;
     }
 
-    const updater = new BatchRowUpdater(processRowUpdate, onProcessRowUpdateError);
+    const updater = new rowReorderUtils.BatchRowUpdater(processRowUpdate, onProcessRowUpdateError);
 
     const groupingRules = getGroupingRules({
       sanitizedRowGroupingModel,
       columnsLookup,
     });
 
-    const targetParentPath = getNodePathInTree({ id: targetNode.parent!, tree });
+    const targetParentPath = rowReorderUtils.getNodePathInTree({ id: targetNode.parent!, tree });
 
     for (const leafId of allLeafIds) {
       const originalRow = dataRowIdToModelLookup[leafId];
@@ -610,7 +606,7 @@ export class CrossParentGroupOperation extends BaseReorderOperation {
                 const parentOfSourceParent = (updatedTree[sourceNode.parent!] as GridGroupNode)
                   .parent;
                 if (parentOfSourceParent) {
-                  rootLevelRemovals = removeEmptyAncestors(
+                  rootLevelRemovals = rowReorderUtils.removeEmptyAncestors(
                     parentOfSourceParent,
                     updatedTree,
                     removedGroups,
@@ -640,7 +636,7 @@ export class CrossParentGroupOperation extends BaseReorderOperation {
 
               const existingGroup =
                 sourceGroupNode.groupingKey !== null && sourceGroupNode.groupingField !== null
-                  ? findExistingGroupWithSameKey(
+                  ? rowReorderUtils.findExistingGroupWithSameKey(
                       targetParentNode,
                       sourceGroupNode.groupingKey,
                       sourceGroupNode.groupingField,

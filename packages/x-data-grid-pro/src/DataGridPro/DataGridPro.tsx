@@ -7,10 +7,10 @@ import {
   GridConfiguration,
   validateProps,
   useGridApiInitialization,
-  useGridRowsOverridableMethods,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -26,6 +26,7 @@ const configuration: GridConfiguration = {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
     useGridRowAriaAttributes: useGridRowAriaAttributesPro,
+    // @ts-ignore - TODO: Fix it
     useGridRowsOverridableMethods,
     useCellAggregationResult: () => null,
   },

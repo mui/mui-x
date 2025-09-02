@@ -91,5 +91,6 @@ export type {
   ReorderOperationType,
 } from '../hooks/features/rowReorder/types';
 export { commonReorderConditions } from '../hooks/features/rowReorder/commonReorderConditions';
+export * as rowReorderUtils from '../hooks/features/rowReorder/utils';
 
 export * from './propValidation';

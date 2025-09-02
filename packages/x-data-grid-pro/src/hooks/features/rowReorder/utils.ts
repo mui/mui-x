@@ -10,14 +10,12 @@ import {
   type GridKeyValue,
   type GridValidRowModel,
   type GridUpdateRowParams,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
-import {
-  type RowTreeBuilderGroupingCriterion,
-  type ReorderOperationType,
-} from '@mui/x-data-grid-pro/internals';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type ReorderOperationType } from './types';
+import { RowTreeBuilderGroupingCriterion } from '../../../utils/tree/models';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export function determineOperationType(
   sourceNode: GridTreeNode,
@@ -124,7 +122,7 @@ export function adjustTargetNode(
   targetIndex: number,
   placeholderIndex: number,
   sortedFilteredRowIds: GridRowId[],
-  apiRef: RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridPrivateApiPro>,
 ): { adjustedTargetNode: GridTreeNode; isLastChild: boolean } {
   let adjustedTargetNode: GridTreeNode = targetNode;
   let isLastChild = false;
@@ -247,7 +245,7 @@ export function removeEmptyAncestors(
 
 export function handleProcessRowUpdateError(
   error: any,
-  onProcessRowUpdateError?: DataGridPremiumProcessedProps['onProcessRowUpdateError'],
+  onProcessRowUpdateError?: DataGridProProcessedProps['onProcessRowUpdateError'],
 ): void {
   if (onProcessRowUpdateError) {
     onProcessRowUpdateError(error);
@@ -299,9 +297,9 @@ export class BatchRowUpdater {
   private pendingRowUpdates: GridValidRowModel[] = [];
 
   constructor(
-    private processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'] | undefined,
+    private processRowUpdate: DataGridProProcessedProps['processRowUpdate'] | undefined,
     private onProcessRowUpdateError:
-      | DataGridPremiumProcessedProps['onProcessRowUpdateError']
+      | DataGridProProcessedProps['onProcessRowUpdateError']
       | undefined,
   ) {}
 
