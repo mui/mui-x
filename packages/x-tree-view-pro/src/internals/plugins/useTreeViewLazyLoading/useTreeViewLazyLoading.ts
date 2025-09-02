@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   TREE_VIEW_ROOT_PARENT_ID,
   TreeViewPlugin,
@@ -194,7 +195,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   });
 
   const firstRenderRef = React.useRef(true);
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (!params.dataSource || !firstRenderRef.current) {
       return;
     }
@@ -225,7 +226,32 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         }
       }
 
-      if (!params.items.length) {
+      if (params.items.length) {
+        const newlyExpandableItems = Object.values(store.value.items.itemMetaLookup).filter(
+          (itemMeta) =>
+            !itemMeta.expandable &&
+            params.dataSource.getChildrenCount(store.value.items.itemModelLookup[itemMeta.id]) > 0,
+        );
+        if (newlyExpandableItems.length > 0) {
+          store.update((prevState) => {
+            const newItemMetaLookup = { ...prevState.items.itemMetaLookup };
+            for (const itemMeta of newlyExpandableItems) {
+              newItemMetaLookup[itemMeta.id] = {
+                ...prevState.items.itemMetaLookup[itemMeta.id],
+                expandable: true,
+              };
+            }
+
+            return {
+              ...prevState,
+              items: {
+                ...prevState.items,
+                itemMetaLookup: newItemMetaLookup,
+              },
+            };
+          });
+        }
+      } else {
         await instance.fetchItemChildren(null);
       }
       await fetchChildrenIfExpanded(selectorItemOrderedChildrenIds(store.value, null));
@@ -233,6 +259,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
     fetchAllExpandedItems();
   }, [instance, params.items, params.dataSource, store]);
+
+  if (params.dataSource) {
+    instance.preventItemUpdates();
+  }
 
   return {
     instance: {
