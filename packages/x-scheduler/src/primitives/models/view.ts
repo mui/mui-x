@@ -1,5 +1,6 @@
 import { SchedulerValidDate } from './date';
 
+// TODO: Remove "timeline" once it has its own top level component
 export type CalendarView = 'week' | 'day' | 'month' | 'agenda' | 'timeline';
 
 /**

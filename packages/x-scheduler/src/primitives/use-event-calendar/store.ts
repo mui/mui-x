@@ -27,7 +27,7 @@ export type State = {
    */
   visibleDate: SchedulerValidDate;
   /**
-   * The current view displayed in the calendar.
+   * The view displayed in the calendar.
    */
   view: CalendarView;
   /**
