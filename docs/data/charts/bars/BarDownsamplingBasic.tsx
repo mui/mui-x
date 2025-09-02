@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 // Generate large dataset with 5000 data points
-const generateLargeDataset = (size) => {
+const generateLargeDataset = (size: number) => {
   return Array.from({ length: size }, (_, i) => ({
     x: i,
     value: Math.sin(i / 50) * 100 + 200,

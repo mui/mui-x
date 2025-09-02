@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 // Generate stock price-like data
-const generateStockData = (size) => {
+const generateStockData = (size: number) => {
   let price = 100;
   return Array.from({ length: size }, (_, i) => {
     const change = (Math.random() - 0.5) * 4;
@@ -16,12 +16,15 @@ const stockData = generateStockData(5000);
 const timeAxis = Array.from({ length: 5000 }, (_, i) => i);
 
 // Custom downsampling: Preserve significant price movements
-const significantMovementDownsample = (data, targetPoints) => {
+const significantMovementDownsample = (
+  data: readonly (number | null)[],
+  targetPoints: number,
+) => {
   if (data.length <= targetPoints) {
     return [...data];
   }
 
-  const result = [];
+  const result: (number | null)[] = [];
   const threshold = 2; // Minimum price change to be significant
 
   // Always include first point
@@ -31,7 +34,7 @@ const significantMovementDownsample = (data, targetPoints) => {
   // Add points with significant changes
   for (let i = 1; i < data.length - 1; i += 1) {
     const currentValue = data[i];
-    const change = Math.abs(currentValue - lastIncluded);
+    const change = Math.abs((currentValue || 0) - (lastIncluded || 0));
 
     if (change > threshold || result.length < targetPoints / 2) {
       result.push(currentValue);
@@ -55,12 +58,15 @@ const significantMovementDownsample = (data, targetPoints) => {
 };
 
 // Custom downsampling: Time-weighted importance (recent data more important)
-const timeWeightedDownsample = (data, targetPoints) => {
+const timeWeightedDownsample = (
+  data: readonly (number | null)[],
+  targetPoints: number,
+) => {
   if (data.length <= targetPoints) {
     return [...data];
   }
 
-  const result = [];
+  const result: (number | null)[] = [];
   const totalPoints = data.length;
 
   for (let i = 0; i < targetPoints; i += 1) {

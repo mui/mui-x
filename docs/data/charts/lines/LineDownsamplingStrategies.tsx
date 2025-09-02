@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 // Generate complex signal data with various patterns
-const generateComplexSignal = (size) => {
+const generateComplexSignal = (size: number) => {
   return Array.from({ length: size }, (_, i) => {
     const t = i / 200;
     const mainSignal = Math.sin(t) * 80;

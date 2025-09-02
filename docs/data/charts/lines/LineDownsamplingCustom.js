@@ -31,7 +31,7 @@ const significantMovementDownsample = (data, targetPoints) => {
   // Add points with significant changes
   for (let i = 1; i < data.length - 1; i += 1) {
     const currentValue = data[i];
-    const change = Math.abs(currentValue - lastIncluded);
+    const change = Math.abs((currentValue || 0) - (lastIncluded || 0));
 
     if (change > threshold || result.length < targetPoints / 2) {
       result.push(currentValue);

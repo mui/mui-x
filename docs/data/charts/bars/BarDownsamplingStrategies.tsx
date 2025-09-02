@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 // Generate dataset with varying patterns to showcase different strategies
-const generateDataWithPattern = (size) => {
+const generateDataWithPattern = (size: number) => {
   return Array.from({ length: size }, (_, i) => {
     const baseValue = Math.sin(i / 100) * 50 + 60;
     const spike = i % 100 === 0 ? 50 : 0;

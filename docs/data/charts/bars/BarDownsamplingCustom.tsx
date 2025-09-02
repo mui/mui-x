@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 // Generate time series data
-const generateTimeSeriesData = (size) => {
+const generateTimeSeriesData = (size: number) => {
   const baseTime = new Date('2023-01-01').getTime();
   return Array.from({ length: size }, (_, i) => ({
     timestamp: new Date(baseTime + i * 86400000), // Daily data
@@ -13,12 +13,15 @@ const generateTimeSeriesData = (size) => {
 const timeSeriesData = generateTimeSeriesData(1000);
 
 // Custom downsampling function that prioritizes recent data
-const customDownsample = (data, targetPoints) => {
+const customDownsample = (
+  data: readonly (number | null)[],
+  targetPoints: number,
+) => {
   if (data.length <= targetPoints) {
     return [...data];
   }
 
-  const result = [];
+  const result: (number | null)[] = [];
   const totalPoints = data.length;
 
   // Take more recent points (higher weight for later indices)
@@ -34,13 +37,13 @@ const customDownsample = (data, targetPoints) => {
 };
 
 // Another custom function: keep every Nth point with some randomness
-const everyNth = (data, targetPoints) => {
+const everyNth = (data: readonly (number | null)[], targetPoints: number) => {
   if (data.length <= targetPoints) {
     return [...data];
   }
 
   const step = data.length / targetPoints;
-  const result = [];
+  const result: (number | null)[] = [];
 
   for (let i = 0; i < targetPoints; i += 1) {
     const baseIndex = Math.floor(i * step);
