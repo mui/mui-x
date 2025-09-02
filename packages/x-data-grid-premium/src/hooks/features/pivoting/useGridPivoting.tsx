@@ -5,7 +5,6 @@ import {
   GridRowModel,
   gridDataRowIdsSelector,
   gridRowIdSelector,
-  gridRowsLoadingSelector,
   gridRowsLookupSelector,
 } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -22,7 +21,7 @@ import {
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
-import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { GridPivotPanel } from '../../../components/pivotPanel';
 import type {
   GridPivotingApi,
@@ -35,11 +34,7 @@ import {
   gridPivotActiveSelector,
   gridPivotPanelOpenSelector,
 } from './gridPivotingSelectors';
-import {
-  getInitialColumns,
-  getPivotedData,
-  isPivotingAvailable as isPivotingAvailableFn,
-} from './utils';
+import { getInitialColumns, getPivotedData } from './utils';
 import { getAvailableAggregationFunctions } from '../aggregation/gridAggregationUtils';
 import { GridSidebarValue } from '../sidebar';
 
@@ -66,7 +61,7 @@ export const pivotingStateInitializer: GridStateInitializer<
       current: undefined,
     },
   };
-  if (!isPivotingAvailableFn(props)) {
+  if (props.disablePivoting) {
     return {
       ...state,
       pivoting: {
@@ -119,6 +114,7 @@ export const useGridPivoting = (
     | 'pivotingColDef'
     | 'groupingColDef'
     | 'aggregationFunctions'
+    | 'dataSource'
   >,
   originalColumnsProp: readonly GridColDef[],
   originalRowsProp: readonly GridRowModel[],
@@ -126,7 +122,7 @@ export const useGridPivoting = (
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const { exportedStateRef, nonPivotDataRef } = apiRef.current.caches.pivoting;
 
-  const isPivotingAvailable = isPivotingAvailableFn(props);
+  const isPivotingAvailable = !props.disablePivoting;
 
   apiRef.current.registerControlState({
     stateId: 'pivotModel',
@@ -185,19 +181,23 @@ export const useGridPivoting = (
           initialColumns: columns,
           // TODO: fix getPivotedData called twice in controlled mode
           propsOverrides: getPivotedData({
-            rows,
             columns,
             pivotModel,
-            apiRef: apiRef as RefObject<GridApiPremium>,
             pivotingColDef: props.pivotingColDef,
             groupingColDef: props.groupingColDef,
+            apiRef,
+            ...(!props.dataSource
+              ? {
+                  rows,
+                }
+              : {}),
           }),
         };
       }
 
       return undefined;
     },
-    [apiRef, props.pivotingColDef, props.groupingColDef, nonPivotDataRef],
+    [apiRef, props.dataSource, props.pivotingColDef, props.groupingColDef, nonPivotDataRef],
   );
 
   useOnMount(() => {
@@ -206,11 +206,6 @@ export const useGridPivoting = (
     }
 
     nonPivotDataRef.current = getInitialData();
-
-    const isLoading = gridRowsLoadingSelector(apiRef) ?? false;
-    if (isLoading) {
-      return undefined;
-    }
 
     apiRef.current.setState((state) => {
       const pivotingState = {

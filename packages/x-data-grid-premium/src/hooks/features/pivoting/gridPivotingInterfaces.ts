@@ -8,7 +8,7 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export type GridPivotingPropsOverrides = {
-  rows: DataGridPremiumProcessedProps['rows'];
+  rows?: DataGridPremiumProcessedProps['rows'];
   columns: DataGridPremiumProcessedProps['columns'];
   rowGroupingModel: NonNullable<DataGridPremiumProcessedProps['rowGroupingModel']>;
   aggregationModel: NonNullable<DataGridPremiumProcessedProps['aggregationModel']>;
