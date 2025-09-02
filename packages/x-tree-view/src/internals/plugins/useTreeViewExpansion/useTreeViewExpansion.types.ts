@@ -18,9 +18,17 @@ export interface UseTreeViewExpansionPublicAPI {
     event?: React.SyntheticEvent;
     shouldBeExpanded?: boolean;
   }) => void;
+  /**
+   * Check if an item is expanded.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is expanded, `false` otherwise.
+   */
+  isItemExpanded: (itemId: TreeViewItemId) => boolean;
 }
 
-export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublicAPI {
+export interface UseTreeViewExpansionInstance
+  // We don't expose isItemExpanded here to make sure we always use the selector internally.
+  extends Omit<UseTreeViewExpansionPublicAPI, 'isItemExpanded'> {
   /**
    * Expand all the siblings (i.e.: the items that have the same parent) of a given item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
