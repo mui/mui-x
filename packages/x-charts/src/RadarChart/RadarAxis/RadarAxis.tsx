@@ -16,11 +16,15 @@ export interface RadarAxisProps extends UseRadarAxisParams {
   /**
    * The labels text anchor or a function returning the text anchor for a given axis angle (in degree).
    */
-  textAnchor?: string | ((angle: number) => string);
+  textAnchor?:
+    | React.SVGProps<SVGTextElement>['textAnchor']
+    | ((angle: number) => React.SVGProps<SVGTextElement>['textAnchor']);
   /**
    * The labels dominant baseline or a function returning the dominant baseline for a given axis angle (in degree).
    */
-  dominantBaseline?: string | ((angle: number) => string);
+  dominantBaseline?:
+    | React.SVGProps<SVGTextElement>['dominantBaseline']
+    | ((angle: number) => React.SVGProps<SVGTextElement>['dominantBaseline']);
   /**
    * Override or extend the styles applied to the component.
    */
@@ -86,7 +90,24 @@ RadarAxis.propTypes = {
   /**
    * The labels dominant baseline or a function returning the dominant baseline for a given axis angle (in degree).
    */
-  dominantBaseline: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  dominantBaseline: PropTypes.oneOfType([
+    PropTypes.oneOf([
+      'alphabetic',
+      'auto',
+      'central',
+      'hanging',
+      'ideographic',
+      'inherit',
+      'mathematical',
+      'middle',
+      'no-change',
+      'reset-size',
+      'text-after-edge',
+      'text-before-edge',
+      'use-script',
+    ]),
+    PropTypes.func,
+  ]),
   /**
    * Defines how label align with the axis.
    * - 'horizontal': labels stay horizontal and their placement change with the axis angle.
@@ -102,7 +123,10 @@ RadarAxis.propTypes = {
   /**
    * The labels text anchor or a function returning the text anchor for a given axis angle (in degree).
    */
-  textAnchor: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  textAnchor: PropTypes.oneOfType([
+    PropTypes.oneOf(['end', 'inherit', 'middle', 'start']),
+    PropTypes.func,
+  ]),
 } as any;
 
 export { RadarAxis };

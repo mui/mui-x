@@ -17,7 +17,7 @@ export function getByDayMaps(adapter: Adapter): {
   byDayToNum: Record<ByDayCode, number>;
   numToByDay: Record<number, ByDayCode>;
 } {
-  const baseMonday = adapter.date('2025-01-06T00:00:00Z'); // ISO Monday
+  const baseMonday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
   const byDayCodes: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
   const byDayToNum = {} as Record<ByDayCode, number>;

@@ -75,5 +75,6 @@ export default defineConfig(async () => {
       ...treeViewProComponents,
     ],
     upload: !!process.env.CI,
+    comment: false,
   };
 });

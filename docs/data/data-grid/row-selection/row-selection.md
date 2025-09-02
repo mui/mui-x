@@ -1,6 +1,6 @@
 # Data Grid - Row selection
 
-<p class="description">Row selection allows the user to select and highlight a single or multiple rows that they can then take action on.</p>
+<p class="description">Row selection lets users select and highlight a single row or multiple rows that they can then take action on.</p>
 
 ## Single row selection
 

@@ -94,7 +94,7 @@ const columns: GridColDef[] = [
 
 ### Render the component
 
-With the component and utilites imported, and rows and columns defined, you're now ready to render the Data Grid as shown below:
+With the component and utilities imported, and rows and columns defined, you're now ready to render the Data Grid as shown below:
 
 {{"demo": "RenderComponent.js", "defaultCodeOpen": true, "bg": "inline"}}
 
@@ -159,7 +159,7 @@ You can customize the data generation by passing the custom options of type [`Us
 The Data Grid requires a bundler that can handle CSS imports.
 If you're using a setup that doesn't support CSS imports out of the box, follow the instructions below for your specific environment.
 
-### Webpack
+### webpack
 
 Update your config to add the `style-loader` and `css-loader`.
 
