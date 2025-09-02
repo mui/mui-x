@@ -121,7 +121,7 @@
     "danger": "^13.0.4",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
-    "esbuild": "^0.25.8",
+    "esbuild": "^0.25.9",
     "eslint": "^9.34.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
