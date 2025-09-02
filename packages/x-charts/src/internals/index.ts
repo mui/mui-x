@@ -65,6 +65,7 @@ export * from './dateHelpers';
 export * from './invertScale';
 export * from './isBandScale';
 export * from './findMinMax';
+export * from './downsample';
 
 // contexts
 export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
