@@ -4,3 +4,4 @@ export type {
   UseTreeViewExpansionParameters,
   UseTreeViewExpansionParametersWithDefaults,
 } from './useTreeViewExpansion.types';
+export { expansionSelectors } from './useTreeViewExpansion.selectors';

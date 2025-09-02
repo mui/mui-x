@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
@@ -13,12 +14,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { useSelector } from '../internals/hooks/useSelector';
-import {
-  selectorIsLazyLoadingEnabled,
-  selectorTreeItemError,
-  selectorIsItemLoading,
-} from '../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
+import { lazyLoadingSelectors } from '../internals/plugins/useTreeViewLazyLoading';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -92,15 +88,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
     props: other,
   });
-  const isLazyLoadingEnabled = useSelector(contextValue.store, selectorIsLazyLoadingEnabled);
-  const isLoading = useSelector(
-    contextValue.store,
-    isLazyLoadingEnabled ? (state) => selectorIsItemLoading(state, null) : () => false,
-  );
-  const error = useSelector(
-    contextValue.store,
-    isLazyLoadingEnabled ? (state) => selectorTreeItemError(state, null) : () => null,
-  );
+  const isLoading = useStore(contextValue.store, lazyLoadingSelectors.isItemLoading, null);
+  const error = useStore(contextValue.store, lazyLoadingSelectors.itemError, null);
 
   const classes = useUtilityClasses(props);
 
