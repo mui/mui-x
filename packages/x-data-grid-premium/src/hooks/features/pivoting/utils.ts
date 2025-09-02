@@ -24,12 +24,6 @@ interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
   children: GridColumnGroupPivoting[];
 }
 
-export const isPivotingAvailable = (
-  props: Pick<DataGridPremiumProcessedProps, 'disablePivoting'>,
-) => {
-  return !props.disablePivoting;
-};
-
 export const defaultGetPivotDerivedColumns: DataGridPremiumProcessedProps['getPivotDerivedColumns'] =
   (column, getLocaleText) => {
     if (column.type === 'date') {
@@ -106,19 +100,19 @@ function sortColumnGroups(
 }
 
 export const getPivotedData = ({
-  rows,
   columns,
   pivotModel,
-  apiRef,
   pivotingColDef,
   groupingColDef,
+  apiRef,
+  rows,
 }: {
-  rows: GridRowModel[];
   columns: Map<string, GridColDef>;
   pivotModel: GridPivotModel;
-  apiRef: RefObject<GridApiPremium>;
   pivotingColDef: DataGridPremiumProcessedProps['pivotingColDef'];
   groupingColDef: DataGridPremiumProcessedProps['groupingColDef'];
+  apiRef: RefObject<GridApiPremium>;
+  rows?: GridRowModel[];
 }): GridPivotingPropsOverrides => {
   const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
@@ -182,7 +176,7 @@ export const getPivotedData = ({
   const columnGroupingModel: GridColumnGroupPivoting[] = [];
   const columnGroupingModelLookup = new Map<string, GridColumnGroupPivoting>();
 
-  let newRows: GridRowModel[] = [];
+  let newRows: GridRowModel[] | undefined = rows ? [] : undefined;
 
   if (visibleColumns.length === 0) {
     newRows = rows;
@@ -191,7 +185,7 @@ export const getPivotedData = ({
       aggregationModel[pivotValue.field] = pivotValue.aggFunc;
       delete columnVisibilityModel[pivotValue.field];
     });
-  } else {
+  } else if (rows) {
     for (let i = 0; i < rows.length; i += 1) {
       const row = rows[i];
       const newRow = { ...row };
@@ -254,7 +248,7 @@ export const getPivotedData = ({
         }
       }
 
-      newRows.push(newRow);
+      newRows!.push(newRow);
     }
 
     sortColumnGroups(columnGroupingModel, visibleColumns);
@@ -333,8 +327,8 @@ export const getPivotedData = ({
     },
   });
 
+  const rowsProp = rows ? { rows: visibleRows.length > 0 ? newRows : [] } : {};
   return {
-    rows: visibleRows.length > 0 ? newRows : [],
     columns: pivotColumns,
     rowGroupingModel: visibleRows.map((row) => row.field),
     aggregationModel,
@@ -345,5 +339,6 @@ export const getPivotedData = ({
     headerFilters: false,
     disableAggregation: false,
     disableRowGrouping: false,
+    ...rowsProp,
   };
 };
