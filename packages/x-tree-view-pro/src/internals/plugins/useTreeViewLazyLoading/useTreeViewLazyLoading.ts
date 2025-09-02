@@ -123,7 +123,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       if (id != null) {
         nestedDataManager.setRequestSettled(id);
       }
-      instance.addItems({ items: cachedData, parentId: id, getChildrenCount });
+      instance.setItemChildren({ items: cachedData, parentId: id, getChildrenCount });
       instance.setDataSourceLoading(id, false);
       return;
     }
@@ -148,11 +148,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         response = await getTreeItems(id);
         nestedDataManager.setRequestSettled(id);
       }
-
       // save the response in the cache
       cache.set(cacheKey, response);
       // update the items in the state
-      instance.addItems({ items: response, parentId: id, getChildrenCount });
+      instance.setItemChildren({ items: response, parentId: id, getChildrenCount });
     } catch (error) {
       const childrenFetchError = error as Error;
       // set the item error in the state
@@ -226,25 +225,14 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         }
       }
 
-      if (params.items.length) {
-        instance.addItems({
-          items: params.items,
-          parentId: null,
-          getChildrenCount: params.dataSource.getChildrenCount,
-        });
-      } else {
+      if (!params.items.length) {
         await instance.fetchItemChildren(null);
       }
-
       await fetchChildrenIfExpanded(selectorItemOrderedChildrenIds(store.value, null));
     }
 
     fetchAllExpandedItems();
   }, [instance, params.items, params.dataSource, store]);
-
-  if (params.dataSource) {
-    instance.preventItemUpdates();
-  }
 
   return {
     instance: {

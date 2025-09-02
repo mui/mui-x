@@ -7,10 +7,10 @@ import {
   TreeViewItemId,
 } from '../../../models';
 
-export type AddItemsParameters<R> = {
+export type SetItemChildrenParameters<R> = {
   items: readonly R[];
   parentId: TreeViewItemId | null;
-  getChildrenCount?: (item: R) => number;
+  getChildrenCount: (item: R) => number;
 };
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
@@ -69,9 +69,9 @@ export interface UseTreeViewItemsInstance<R extends {}>
   areItemUpdatesPrevented: () => boolean;
   /**
    * Add an array of items to the tree.
-   * @param {AddItemsParameters<R>} args The items to add to the tree and information about their ancestors.
+   * @param {SetItemChildrenParameters<R>} args The items to add to the tree and information about their ancestors.
    */
-  addItems: (args: AddItemsParameters<R>) => void;
+  setItemChildren: (args: SetItemChildrenParameters<R>) => void;
   /**
    * Remove the children of an item.
    * @param {TreeViewItemId | null} parentId The id of the item to remove the children of.
