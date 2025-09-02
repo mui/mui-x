@@ -48,8 +48,7 @@ This package is not published yet.
 ### Drag and drop
 
 - Add the `isDraggable` prop to the `DayGrid.Event` part to enable the re-scheduling of the events
-- Render a `TimeGrid.EventResizeHandler` inside the `TimeGrid.Event` part to enable the resizing of the events
-- Use the `TimeGrid.useColumnPlaceholder()` to render a placeholder of the event being dragged
+- Use the `DayGrid.usePlaceholderInDay()` to render a placeholder of the event being dragged
 
 {{"demo": "DayGridPrimitiveDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
