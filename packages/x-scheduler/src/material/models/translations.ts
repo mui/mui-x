@@ -13,6 +13,16 @@ export interface SchedulerTranslations {
   other: string;
   today: string;
   week: string;
+  timeline: string;
+  time: string;
+  days: string;
+  months: string;
+  weeks: string;
+  years: string;
+
+  // Timeline toggle
+  timelineMode: string;
+  calendarMode: string;
 
   // PreferencesMenu
   preferencesMenu: string;

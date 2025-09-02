@@ -1,0 +1,36 @@
+.TimelineViewContainer {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4);
+  gap: var(--space-4);
+  height: 100%;
+}
+
+.TimelineViewContent {
+  border-radius: var(--radius-4);
+  border: 1px solid var(--border-color);
+  flex-grow: 1;
+  width: 100%;
+}
+
+.EventSubGrid {
+  display: grid;
+  grid-template-columns: minmax(100px, auto) 1fr;
+}
+
+.TimelineRow {
+  border-right: 1px solid var(--border-color);
+}
+
+.TimelineRow,
+.TimelineEventRow {
+  padding: var(--space-4);
+}
+
+.TimelineRow,
+.TimelineEventRow {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.TimelineTitleCell {
+}

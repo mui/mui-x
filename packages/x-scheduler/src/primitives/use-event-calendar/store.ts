@@ -213,6 +213,23 @@ export const selectors = {
       });
     },
   ),
+  eventsToRenderGroupedByResource: createSelector(
+    (state: State) => state.events,
+    (state: State) => state.resources,
+    (events, resources) => {
+      const groupedEvents: Record<string, CalendarEvent[]> = {};
+      events.forEach((event) => {
+        const resourceId = event.resource;
+        if (resourceId) {
+          if (!groupedEvents[resourceId]) {
+            groupedEvents[resourceId] = [];
+          }
+          groupedEvents[resourceId].push(event);
+        }
+      });
+      return groupedEvents;
+    },
+  ),
   // TODO: Add a new data structure (Map?) to avoid linear complexity here.
   getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
     state.events.find((event) => event.id === eventId),
