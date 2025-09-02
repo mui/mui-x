@@ -1,17 +1,11 @@
 import * as React from 'react';
-import BasicGauges from 'docsx/data/charts/gauge/BasicGauges';
 import ArcDesign from 'docsx/data/charts/gauge/ArcDesign';
 import CompositionExample from 'docsx/data/charts/gauge/CompositionExample';
 import BasicSparkLine from 'docsx/data/charts/sparkline/BasicSparkLine';
-import AreaSparkLine from 'docsx/data/charts/sparkline/AreaSparkLine';
+import NpmSparkLine from 'docsx/data/charts/sparkline/NpmSparkLine';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [
-  {
-    title: 'Basic Gauges',
-    ChartComponent: BasicGauges,
-    link: '/x/react-charts/gauge/#BasicGauges',
-  },
   {
     title: 'Arc Design',
     ChartComponent: ArcDesign,
@@ -23,14 +17,14 @@ const chartData = [
     link: '/x/react-charts/gauge/#CompositionExample',
   },
   {
-    title: 'Basic Sparkline',
+    title: 'Sparkline',
     ChartComponent: BasicSparkLine,
     link: '/x/react-charts/sparkline/#BasicSparkLine',
   },
   {
-    title: 'Area Sparkline',
-    ChartComponent: AreaSparkLine,
-    link: '/x/react-charts/sparkline/#AreaSparkLine',
+    title: 'Sparkline with metric',
+    ChartComponent: NpmSparkLine,
+    link: '/x/react-charts/sparkline/#NpmSparkLine'
   },
 ];
 
