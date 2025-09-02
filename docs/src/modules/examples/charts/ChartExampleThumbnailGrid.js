@@ -76,6 +76,7 @@ export function ChartThumbnailCard({ title, ChartComponent, link, aspectRatio = 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            containerType: 'inline-size',
             '& > div': {
               width: '100%',
               height: '100%',
@@ -93,8 +94,8 @@ export function ChartThumbnailCard({ title, ChartComponent, link, aspectRatio = 
 }
 
 ChartThumbnailCard.propTypes = {
-  aspectRatio: PropTypes.string,
   ChartComponent: PropTypes.elementType.isRequired,
+  aspectRatio: PropTypes.string,
   link: PropTypes.string,
   title: PropTypes.string.isRequired,
 };
