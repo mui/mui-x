@@ -108,6 +108,7 @@ const initialState = {
         chartType: 'line',
         configuration: {
           showMark: false,
+          grid: 'both',
           height: 400,
         },
       },
@@ -139,10 +140,6 @@ const onRender = (type, props, Component) => {
   if (type === 'line' || type === 'area') {
     adjustedProps = {
       ...adjustedProps,
-      grid: {
-        vertical: true,
-        horizontal: true,
-      },
       xAxis: props.xAxis.map((axis) => ({
         ...axis,
         scaleType: 'time',
