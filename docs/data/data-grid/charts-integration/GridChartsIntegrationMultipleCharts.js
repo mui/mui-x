@@ -119,7 +119,7 @@ export default function GridChartsIntegrationMultipleCharts() {
             checkboxSelection
             columnGroupHeaderHeight={35}
             experimentalFeatures={{
-              chartsIntegration: true,
+              charts: true,
             }}
           />
         </div>

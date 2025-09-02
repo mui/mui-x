@@ -68,7 +68,7 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   >,
   GridPrivateApiPremium
 > = (state, props) => {
-  if (!props.chartsIntegration || !props.experimentalFeatures?.chartsIntegration) {
+  if (!props.chartsIntegration || !props.experimentalFeatures?.charts) {
     return {
       ...state,
       chartsIntegration: {
@@ -164,7 +164,7 @@ export const useGridChartsIntegration = (
 
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable =
-    !!props.chartsIntegration && !!props.experimentalFeatures?.chartsIntegration && !!context;
+    !!props.chartsIntegration && !!props.experimentalFeatures?.charts && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const orderedFields = gridColumnFieldsSelector(apiRef);
   const aggregationModel = gridAggregationModelSelector(apiRef);
@@ -836,7 +836,7 @@ export const useGridChartsIntegration = (
   );
   useGridApiMethod(
     apiRef,
-    props.experimentalFeatures?.chartsIntegration
+    props.experimentalFeatures?.charts
       ? {
           setChartsPanelOpen,
           setActiveChartId,

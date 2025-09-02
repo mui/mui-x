@@ -56,6 +56,9 @@ export default function GridChartsPanelTrigger() {
               },
             },
           }}
+          experimentalFeatures={{
+            charts: true,
+          }}
         />
       </div>
       <GridChartsRendererProxy id="main" renderer={() => null} />

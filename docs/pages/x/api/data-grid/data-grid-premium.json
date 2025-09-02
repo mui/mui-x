@@ -107,7 +107,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ chartsIntegration?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ charts?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },

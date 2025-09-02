@@ -44,7 +44,7 @@ import {
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
-  chartsIntegration?: boolean;
+  charts?: boolean;
 }
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing

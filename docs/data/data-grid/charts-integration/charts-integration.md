@@ -11,13 +11,13 @@ Data Grid seamlessly integrates with [MUI X Charts](/x/react-charts/) for data v
 :::warning
 This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
 
-To use the feature, add `chartsIntegration` experimental flag on top of other props described below.
+To use the feature, add `charts` experimental flag on top of other props described below.
 
 ```tsx
 <DataGridPremium
   // ...other props
   experimentalFeatures={{
-    chartsIntegration: true,
+    charts: true,
   }}
 />
 ```

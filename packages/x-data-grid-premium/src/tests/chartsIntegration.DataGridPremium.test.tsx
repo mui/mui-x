@@ -140,7 +140,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
               },
             }}
             experimentalFeatures={{
-              chartsIntegration: true,
+              charts: true,
             }}
             {...props}
           />
