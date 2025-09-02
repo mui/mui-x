@@ -77,6 +77,7 @@ export function buildItemsState(parameters: BuildItemsStateParameters): State {
         parentId,
         depth,
         isItemExpandable: (item, children) => !!children && children.length > 0,
+        otherItemsMetaLookup: itemMetaLookup,
       });
 
     Object.assign(itemMetaLookup, metaLookup);
@@ -85,7 +86,7 @@ export function buildItemsState(parameters: BuildItemsStateParameters): State {
     itemChildrenIndexesLookup[parentIdWithDefault] = childrenIndexes;
 
     for (const item of itemsChildren) {
-      processSiblings(item.children || [], item.parentId, depth + 1);
+      processSiblings(item.children || [], item.id, depth + 1);
     }
   }
 
@@ -105,15 +106,15 @@ interface BuildItemsStateParameters extends Pick<BuildItemsLookupsParameters, 'i
 }
 
 export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
-  const { config, items, parentId, depth, isItemExpandable } = parameters;
+  const { config, items, parentId, depth, isItemExpandable, otherItemsMetaLookup } = parameters;
   const metaLookup: State['itemMetaLookup'] = {};
   const modelLookup: State['itemModelLookup'] = {};
   const orderedChildrenIds: string[] = [];
-  const itemsChildren: { parentId: string | null; children: TreeViewBaseItem[] }[] = [];
+  const itemsChildren: { id: string | null; children: TreeViewBaseItem[] }[] = [];
 
   const processItem = (item: TreeViewBaseItem) => {
     const id: string = config.getItemId ? config.getItemId(item) : (item as any).id;
-    checkId(id, item, {}); // TODO: Fix
+    checkId(id, item, otherItemsMetaLookup, metaLookup);
     const label = config.getItemLabel
       ? config.getItemLabel(item)
       : (item as { label: string }).label;
@@ -133,7 +134,7 @@ export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
         ? config.getItemChildren(item)
         : (item as { children?: TreeViewBaseItem[] }).children) || [];
 
-    itemsChildren.push({ parentId: id, children });
+    itemsChildren.push({ id, children });
 
     modelLookup[id] = item;
 
@@ -169,12 +170,14 @@ interface BuildItemsLookupsParameters {
   parentId: string | null;
   depth: number;
   isItemExpandable: (item: TreeViewBaseItem, children: TreeViewBaseItem[] | undefined) => boolean;
+  otherItemsMetaLookup: { [itemId: string]: TreeViewItemMeta };
 }
 
 function checkId(
   id: string | null,
   item: TreeViewBaseItem,
-  itemMetaLookup: State['itemMetaLookup'],
+  itemMetaLookup: { [itemId: string]: TreeViewItemMeta },
+  siblingsMetaLookup: { [itemId: string]: TreeViewItemMeta },
 ) {
   if (id == null) {
     throw new Error(
@@ -187,7 +190,7 @@ function checkId(
     );
   }
 
-  if (itemMetaLookup[id] != null) {
+  if (itemMetaLookup[id] != null || siblingsMetaLookup[id] != null) {
     throw new Error(
       [
         'MUI X: The Tree View component requires all items to have a unique `id` property.',

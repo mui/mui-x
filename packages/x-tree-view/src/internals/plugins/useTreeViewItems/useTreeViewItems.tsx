@@ -118,21 +118,28 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     parentId,
     getChildrenCount,
   }: SetItemChildrenParameters<TreeViewBaseItem>) => {
-    const parentDepth = parentId == null ? -1 : selectorItemDepth(store.value, parentId);
-
-    const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes } = buildItemsLookups({
-      config: itemsConfig,
-      items,
-      parentId,
-      depth: parentDepth + 1,
-      isItemExpandable: getChildrenCount ? (item) => getChildrenCount(item) > 0 : () => false,
-    });
-
-    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
     store.update((prevState) => {
+      const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+
+      const itemMetaLookup = { ...prevState.items.itemMetaLookup };
+      delete itemMetaLookup[parentIdWithDefault];
+
+      const parentDepth = parentId == null ? -1 : selectorItemDepth(store.value, parentId);
+
+      const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes } = buildItemsLookups({
+        config: itemsConfig,
+        items,
+        parentId,
+        depth: parentDepth + 1,
+        isItemExpandable: getChildrenCount ? (item) => getChildrenCount(item) > 0 : () => false,
+        otherItemsMetaLookup: itemMetaLookup,
+      });
+
+      Object.assign(itemMetaLookup, metaLookup);
+
       const lookups = {
         itemModelLookup: { ...prevState.items.itemModelLookup, ...modelLookup },
-        itemMetaLookup: { ...prevState.items.itemMetaLookup, ...metaLookup },
+        itemMetaLookup,
         itemOrderedChildrenIdsLookup: {
           ...prevState.items.itemOrderedChildrenIdsLookup,
           [parentIdWithDefault]: orderedChildrenIds,
