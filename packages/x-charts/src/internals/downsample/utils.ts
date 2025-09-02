@@ -24,10 +24,6 @@ export function getSamplingFunction(
     return downsampleConfig;
   }
 
-  if (downsampleConfig === true) {
-    return linearDownsample;
-  }
-
   const { strategy } = downsampleConfig;
 
   switch (strategy) {

@@ -27,4 +27,4 @@ export type DownsampleFunction<TValue> = (
   type: 'axis' | 'series',
 ) => TValue[];
 
-export type DownsampleProp<TValue> = boolean | DownsampleConfig | DownsampleFunction<TValue>;
+export type DownsampleProp<TValue> = DownsampleConfig | DownsampleFunction<TValue>;
