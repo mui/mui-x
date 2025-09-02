@@ -40,14 +40,13 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui-components/utils": "0.1.0",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:",
-    "react-transition-group": "catalog:",
-    "reselect": "catalog:",
-    "use-sync-external-store": "catalog:"
+    "react-transition-group": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
@@ -70,7 +69,6 @@
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
-    "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"

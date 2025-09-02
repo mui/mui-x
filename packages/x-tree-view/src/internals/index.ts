@@ -11,7 +11,6 @@ export {
   unstable_resetCleanupTracking,
   useInstanceEventHandler,
 } from './hooks/useInstanceEventHandler';
-export { useSelector } from './hooks/useSelector';
 
 export type {
   TreeViewPlugin,
@@ -30,12 +29,12 @@ export type {
 export type { TreeViewCorePluginParameters } from './corePlugins';
 
 // Plugins
-export { useTreeViewExpansion } from './plugins/useTreeViewExpansion';
+export { useTreeViewExpansion, expansionSelectors } from './plugins/useTreeViewExpansion';
 export type {
   UseTreeViewExpansionSignature,
   UseTreeViewExpansionParameters,
 } from './plugins/useTreeViewExpansion';
-export { useTreeViewSelection } from './plugins/useTreeViewSelection';
+export { useTreeViewSelection, selectionSelectors } from './plugins/useTreeViewSelection';
 export type {
   UseTreeViewSelectionSignature,
   UseTreeViewSelectionParameters,
@@ -50,51 +49,32 @@ export type { UseTreeViewKeyboardNavigationSignature } from './plugins/useTreeVi
 export {
   useTreeViewItems,
   buildSiblingIndexes,
+  itemsSelectors,
   TREE_VIEW_ROOT_PARENT_ID,
 } from './plugins/useTreeViewItems';
-export {
-  selectorItemMetaLookup,
-  selectorItemMeta,
-  selectorItemIndex,
-  selectorItemOrderedChildrenIds,
-} from './plugins/useTreeViewItems/useTreeViewItems.selectors';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
   UseTreeViewItemsState,
 } from './plugins/useTreeViewItems';
-export { useTreeViewLabel } from './plugins/useTreeViewLabel';
-export {
-  selectorIsItemBeingEdited,
-  selectorIsAnyItemBeingEdited,
-} from './plugins/useTreeViewLabel/useTreeViewLabel.selectors';
+export { useTreeViewLabel, labelSelectors } from './plugins/useTreeViewLabel';
 export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
 } from './plugins/useTreeViewLabel';
-export {
-  selectorIsItemExpanded,
-  selectorExpandedItems,
-} from './plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
-export { selectorIsItemSelected } from './plugins/useTreeViewSelection/useTreeViewSelection.selectors';
-export {
-  selectorDataSourceState,
-  selectorGetTreeItemError,
-} from './plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 export type {
   UseTreeViewLazyLoadingSignature,
+  UseTreeViewLazyLoadingParameters,
   UseTreeViewLazyLoadingInstance,
 } from './plugins/useTreeViewLazyLoading';
-export type { UseTreeViewLazyLoadingParameters } from './plugins/useTreeViewLazyLoading';
+export { lazyLoadingSelectors } from './plugins/useTreeViewLazyLoading';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
-export { createSelector } from './utils/selectors';
 export { isTargetInDescendants } from './utils/tree';
-export { TreeViewStore } from './utils/TreeViewStore';
 
 export type {
   TreeViewClasses,
