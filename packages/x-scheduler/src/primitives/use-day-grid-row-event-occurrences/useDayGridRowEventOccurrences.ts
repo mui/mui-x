@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import {
+  CalendarDayWithVisibleOccurrences,
   CalendarEventOccurrence,
   CalendarEventOccurrencesWithRowIndex,
   SchedulerValidDate,
 } from '../models';
-import { getEventDays, getEventRowIndex } from '../utils/event-utils';
+import {
+  getEventDays,
+  getEventRowIndex,
+  GetEventRowIndexParameters,
+  processDate,
+} from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurrence-utils';
 import { useEventCalendarContext } from '../utils/useEventCalendarContext';
@@ -14,21 +20,79 @@ import { selectors } from '../use-event-calendar';
 export function useDayGridRowEventOccurrences(
   parameters: useDayGridRowEventOccurrences.Parameters,
 ): useDayGridRowEventOccurrences.ReturnValue {
-  const { days, shouldOnlyRenderEventInOneCell } = parameters;
+  const adapter = useAdapter();
+  const days = useDaysWithEventOccurrences(parameters);
+
+  return React.useMemo(() => {
+    const firstDayInRow = days[0];
+    return days.map((day) => {
+      const regularEvents: CalendarEventOccurrence[] = [];
+      const allDayEvents: CalendarEventOccurrencesWithRowIndex[] = [];
+      const rowIndexLookup: GetEventRowIndexParameters['rowIndexLookup'] = {};
+
+      for (const occurrence of day.occurrences) {
+        // STEP 4.1: Process all-day events and get their position in the row
+        if (occurrence.allDay) {
+          const eventRowIndex = getEventRowIndex({
+            adapter,
+            rowIndexLookup,
+            firstDayInRow,
+            occurrence,
+            day,
+          });
+
+          allDayEvents.push({
+            ...occurrence,
+            eventRowIndex,
+          });
+
+          if (!rowIndexLookup[day.key]) {
+            rowIndexLookup[day.key] = { occurrencesRowIndex: {}, usedRowIndexes: new Set() };
+          }
+          rowIndexLookup[day.key].occurrencesRowIndex[occurrence.key] = eventRowIndex;
+          rowIndexLookup[day.key].usedRowIndexes.add(eventRowIndex);
+        } else {
+          regularEvents.push(occurrence);
+        }
+      }
+
+      return {
+        ...day,
+        regularEvents,
+        allDayEvents,
+      };
+    });
+  }, [adapter, days]);
+}
+
+export namespace useDayGridRowEventOccurrences {
+  export interface Parameters {}
+
+  export type ReturnValue = {
+    day: SchedulerValidDate;
+    regularEvents: CalendarEventOccurrence[];
+    allDayEvents: CalendarEventOccurrencesWithRowIndex[];
+  }[];
+}
+
+export function useDaysWithEventOccurrences(
+  parameters: useDaysWithVisibleEventOccurrences.Parameters,
+): useDaysWithVisibleEventOccurrences.ReturnValue {
+  const { days: daysParam, eventPlacement } = parameters;
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
   const events = useStore(store, selectors.events);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(() => {
-    const daysMap = new Map<
-      string,
-      { events: CalendarEventOccurrence[]; allDayEvents: CalendarEventOccurrencesWithRowIndex[] }
-    >();
+    const occurrencesGroupedByDay = new Map<string, CalendarEventOccurrence[]>();
+    const days = daysParam.map((date) => processDate(date, adapter));
+
     for (const day of days) {
-      const dayKey = adapter.format(day, 'keyboardDate');
-      daysMap.set(dayKey, { events: [], allDayEvents: [] });
+      occurrencesGroupedByDay.set(day.key, []);
     }
+    const start = adapter.startOfDay(days[0].value);
+    const end = adapter.endOfDay(days[days.length - 1].value);
 
     // Collect ALL event occurrences (both recurring and non-recurring)
     const visibleOccurrences: CalendarEventOccurrence[] = [];
@@ -47,12 +111,7 @@ export function useDayGridRowEventOccurrences(
       }
 
       // STEP 2-B: Non-recurring event processing, check if the event is within the visible days
-      const eventFirstDay = adapter.startOfDay(event.start);
-      const eventLastDay = adapter.endOfDay(event.end);
-      if (
-        adapter.isAfter(eventFirstDay, days[days.length - 1]) ||
-        adapter.isBefore(eventLastDay, days[0])
-      ) {
+      if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
         continue; // Skip events that are not in the visible days
       }
 
@@ -60,7 +119,7 @@ export function useDayGridRowEventOccurrences(
     }
 
     // STEP 3: Sort by the actual start date of each occurrence
-    // We sort here so that events are processed in the correct order, ensuring consistent row index assignment for all-day events
+    // We sort here so that events are processed in the correct order
     const sortedOccurrences = visibleOccurrences
       // TODO: Avoid JS Date conversion
       .map((occurrence) => ({
@@ -76,49 +135,29 @@ export function useDayGridRowEventOccurrences(
         occurrence,
         days,
         adapter,
-        shouldOnlyRenderEventInOneCell,
+        eventPlacement,
       );
 
       for (const day of eventDays) {
         const dayKey = adapter.format(day, 'keyboardDate');
-        if (!daysMap.has(dayKey)) {
-          daysMap.set(dayKey, { events: [], allDayEvents: [] });
-        }
-
-        // STEP 4.1: Process all-day events and get their position in the row
-        if (occurrence.allDay) {
-          const eventRowIndex = getEventRowIndex(occurrence, day, days, daysMap, adapter);
-
-          daysMap.get(dayKey)!.allDayEvents.push({
-            ...occurrence,
-            eventRowIndex,
-          });
-        } else {
-          daysMap.get(dayKey)!.events.push(occurrence);
-        }
+        occurrencesGroupedByDay.get(dayKey)!.push(occurrence);
       }
     }
 
     return days.map((day) => {
-      const dayKey = adapter.format(day, 'keyboardDate');
       return {
-        day,
-        events: daysMap.get(dayKey)?.events || [],
-        allDayEvents: daysMap.get(dayKey)?.allDayEvents || [],
+        ...day,
+        occurrences: occurrencesGroupedByDay.get(day.key)!,
       };
     });
-  }, [adapter, visibleResources, events, days, shouldOnlyRenderEventInOneCell]);
+  }, [adapter, daysParam, eventPlacement, events, visibleResources]);
 }
 
-export namespace useDayGridRowEventOccurrences {
+export namespace useDaysWithVisibleEventOccurrences {
   export interface Parameters {
     days: SchedulerValidDate[];
-    shouldOnlyRenderEventInOneCell: boolean;
+    eventPlacement: 'first-day' | 'every-day';
   }
 
-  export type ReturnValue = {
-    day: SchedulerValidDate;
-    events: CalendarEventOccurrence[];
-    allDayEvents: CalendarEventOccurrencesWithRowIndex[];
-  }[];
+  export type ReturnValue = CalendarDayWithVisibleOccurrences[];
 }

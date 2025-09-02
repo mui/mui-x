@@ -116,3 +116,12 @@ export interface CalendarPrimitiveEventData {
   start: SchedulerValidDate;
   end: SchedulerValidDate;
 }
+
+export interface CalendarDayWithVisibleOccurrences extends CalendarProcessedDate {
+  occurrences: CalendarEventOccurrence[];
+}
+
+export interface CalendarProcessedDate {
+  value: SchedulerValidDate;
+  key: string;
+}

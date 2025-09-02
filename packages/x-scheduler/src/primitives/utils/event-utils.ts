@@ -3,6 +3,8 @@ import {
   CalendarEvent,
   CalendarEventOccurrencesWithRowIndex,
   CalendarEventOccurrence,
+  CalendarDayWithVisibleOccurrences,
+  CalendarProcessedDate,
 } from '../models';
 import { Adapter } from './adapter/types';
 
@@ -41,41 +43,53 @@ export function isDayWithinRange(
  *  @returns 1-based row index.
  */
 export function getEventRowIndex(
-  event: CalendarEventOccurrence,
-  day: SchedulerValidDate,
-  days: SchedulerValidDate[],
-  daysMap: Map<string, { allDayEvents: CalendarEventOccurrencesWithRowIndex[] }>,
-  adapter: Adapter,
+  parameters: GetEventRowIndexParameters,
+  // occurrence: CalendarEventOccurrence,
+  // day: SchedulerValidDate,
+  // days: SchedulerValidDate[],
+  // allDayEventsRowIndexMap: { [dayKey: string]: { [occurrenceKey: string]: number } },
+  // adapter: Adapter,
 ): number {
-  const dayKey = adapter.format(day, 'keyboardDate');
-  const eventFirstDay = adapter.startOfDay(event.start);
+  const { adapter, rowIndexLookup, occurrence, day, firstDayInRow } = parameters;
+
+  const eventFirstDay = adapter.startOfDay(occurrence.start);
 
   // If the event starts before the current day, we need to find the row index of the first day of the event
   const isBeforeVisibleRange =
-    adapter.isBefore(eventFirstDay, day) && !adapter.isSameDay(days[0], day);
+    adapter.isBefore(eventFirstDay, day.value) &&
+    !adapter.isSameDay(firstDayInRow.value, day.value);
   if (isBeforeVisibleRange) {
-    const firstDayKey = adapter.format(
-      adapter.isBefore(eventFirstDay, days[0]) ? days[0] : eventFirstDay,
-      'keyboardDate',
-    );
+    const firstDayKey = adapter.isBefore(eventFirstDay, firstDayInRow.value)
+      ? firstDayInRow.key
+      : adapter.format(eventFirstDay, 'keyboardDate');
 
     // Try to find the row index from the original event placement on the first visible day
-    const existingRowIndex = daysMap
-      .get(firstDayKey)
-      ?.allDayEvents.find((currentEvent) => currentEvent.key === event.key)?.eventRowIndex;
-
+    const existingRowIndex = rowIndexLookup[firstDayKey]?.occurrencesRowIndex[occurrence.key];
     return existingRowIndex ?? 1;
   }
 
   // Otherwise, we just render the event on the first available row in the column
-  const usedIndexes = new Set(
-    daysMap.get(dayKey)?.allDayEvents.map((item) => item.eventRowIndex) ?? [],
-  );
+  const usedIndexes = rowIndexLookup[day.key]?.usedRowIndexes;
   let i = 1;
-  while (usedIndexes.has(i)) {
-    i += 1;
+  if (usedIndexes) {
+    while (usedIndexes.has(i)) {
+      i += 1;
+    }
   }
   return i;
+}
+
+export interface GetEventRowIndexParameters {
+  adapter: Adapter;
+  rowIndexLookup: {
+    [dayKey: string]: {
+      occurrencesRowIndex: { [occurrenceKey: string]: number };
+      usedRowIndexes: Set<number>;
+    };
+  };
+  occurrence: CalendarEventOccurrence;
+  day: CalendarProcessedDate;
+  firstDayInRow: CalendarProcessedDate;
 }
 
 /**
@@ -85,18 +99,24 @@ export function getEventRowIndex(
  */
 export function getEventDays(
   event: CalendarEvent,
-  days: SchedulerValidDate[],
+  days: { value: SchedulerValidDate; key: string }[],
   adapter: Adapter,
-  shouldOnlyRenderEventInOneCell: boolean,
+  eventPlacement: 'first-day' | 'every-day',
 ) {
   const eventFirstDay = adapter.startOfDay(event.start);
   const eventLastDay = adapter.endOfDay(event.end);
 
-  if (shouldOnlyRenderEventInOneCell) {
-    if (adapter.isBefore(eventFirstDay, days[0])) {
-      return [days[0]];
+  if (eventPlacement === 'first-day') {
+    if (adapter.isBefore(eventFirstDay, days[0].value)) {
+      return [days[0].value];
     }
     return [eventFirstDay];
   }
-  return days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay, adapter));
+  return days
+    .filter((day) => isDayWithinRange(day.value, eventFirstDay, eventLastDay, adapter))
+    .map((day) => day.value);
+}
+
+export function processDate(date: SchedulerValidDate, adapter: Adapter): CalendarProcessedDate {
+  return { value: date, key: adapter.format(date, 'keyboardDate') };
 }

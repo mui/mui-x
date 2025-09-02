@@ -206,7 +206,7 @@ export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): numbe
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: CalendarEvent,
-  days: SchedulerValidDate[],
+  days: { value: SchedulerValidDate; key: string }[],
   adapter: Adapter,
 ): CalendarEventOccurrence[] {
   const rule = event.rrule!;
@@ -215,8 +215,8 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const endGuard = buildEndGuard(rule, event.start, adapter);
   const durationMinutes = diffIn(adapter, event.end, event.start, 'minutes');
 
-  const rangeStart = days[0];
-  const rangeEnd = days[days.length - 1];
+  const rangeStart = days[0].value;
+  const rangeEnd = days[days.length - 1].value;
 
   const allDaySpanDays = getAllDaySpanDays(adapter, event);
 
