@@ -24,6 +24,10 @@ export interface ChartsWrapperProps {
   // eslint-disable-next-line react/no-unused-prop-types
   legendDirection?: Direction;
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: boolean;
+  /**
    * If `true`, the chart wrapper set `height: 100%`.
    * @default `false` if the `height` prop is set. And `true` otherwise.
    */
@@ -52,8 +56,16 @@ const getAlignItems = (position?: Position) => {
   return 'center';
 };
 
-const getGridTemplateAreasWithToolBar = (direction?: Direction, position?: Position) => {
+const getGridTemplateAreasWithToolBar = (
+  hideLegend: boolean,
+  direction?: Direction,
+  position?: Position,
+) => {
   if (direction === 'vertical') {
+    if (hideLegend) {
+      return `"toolbar toolbar"
+              "chart chart"`;
+    }
     if (position?.horizontal === 'start') {
       return `"toolbar toolbar"
               "legend chart"`;
@@ -72,7 +84,14 @@ const getGridTemplateAreasWithToolBar = (direction?: Direction, position?: Posit
           "chart"`;
 };
 
-const getGridTemplateAreasWithoutToolBar = (direction?: Direction, position?: Position) => {
+const getGridTemplateAreasWithoutToolBar = (
+  hideLegend: boolean,
+  direction?: Direction,
+  position?: Position,
+) => {
+  if (hideLegend) {
+    return `"chart"`;
+  }
   if (direction === 'vertical') {
     if (position?.horizontal === 'start') {
       return `"legend chart"`;
@@ -88,8 +107,11 @@ const getGridTemplateAreasWithoutToolBar = (direction?: Direction, position?: Po
           "chart"`;
 };
 
-const getTemplateColumns = (direction?: Direction, position?: Position) => {
+const getTemplateColumns = (hideLegend: boolean, direction?: Direction, position?: Position) => {
   if (direction === 'vertical') {
+    if (hideLegend) {
+      return '1fr';
+    }
     if (position?.horizontal === 'start') {
       return 'auto 1fr';
     }
@@ -98,6 +120,16 @@ const getTemplateColumns = (direction?: Direction, position?: Position) => {
   }
 
   return '100%';
+};
+
+const getTemplateRows = (hideLegend: boolean, direction?: Direction, position?: Position) => {
+  if (direction === 'vertical') {
+    if (hideLegend) {
+      return '1fr';
+    }
+    return 'auto 1fr';
+  }
+  return 'auto auto 1fr';
 };
 
 const Root = styled('div', {
@@ -115,16 +147,26 @@ const Root = styled('div', {
   ],
   flex: 1,
   display: 'grid',
-  gridTemplateColumns: getTemplateColumns(ownerState.legendDirection, ownerState.legendPosition),
-  gridTemplateRows: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : 'auto auto 1fr',
+  gridTemplateColumns: getTemplateColumns(
+    ownerState.hideLegend,
+    ownerState.legendDirection,
+    ownerState.legendPosition,
+  ),
+  gridTemplateRows: getTemplateRows(
+    ownerState.hideLegend,
+    ownerState.legendDirection,
+    ownerState.legendPosition,
+  ),
   [`&:has(.${chartsToolbarClasses.root})`]: {
     gridTemplateAreas: getGridTemplateAreasWithToolBar(
+      ownerState.hideLegend,
       ownerState.legendDirection,
       ownerState.legendPosition,
     ),
   },
   [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
     gridTemplateAreas: getGridTemplateAreasWithoutToolBar(
+      ownerState.hideLegend,
       ownerState.legendDirection,
       ownerState.legendPosition,
     ),
