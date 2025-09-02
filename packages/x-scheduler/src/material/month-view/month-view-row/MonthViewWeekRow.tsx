@@ -55,14 +55,23 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   };
 
   return (
-    <DayGrid.Row key={weekNumber} className="MonthViewRow">
-      <div
-        className="MonthViewWeekNumberCell"
-        role="rowheader"
-        aria-label={translations.weekNumberAriaLabel(weekNumber)}
-      >
-        {weekNumber}
-      </div>
+    <DayGrid.Row
+      key={weekNumber}
+      className={clsx(
+        'MonthViewRow',
+        'MonthViewRowGrid',
+        preferences.hideWeekNumber ? undefined : 'WithWeekNumber',
+      )}
+    >
+      {!preferences.hideWeekNumber && (
+        <div
+          className="MonthViewWeekNumberCell"
+          role="rowheader"
+          aria-label={translations.weekNumberAriaLabel(weekNumber)}
+        >
+          {weekNumber}
+        </div>
+      )}
       {daysWithEvents.map(({ day, events, allDayEvents }, dayIdx) => {
         const isCurrentMonth = adapter.isSameMonth(day, visibleDate);
 

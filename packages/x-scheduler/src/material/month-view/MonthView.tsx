@@ -75,8 +75,16 @@ export const MonthView = React.memo(
       >
         <EventPopoverProvider containerRef={containerRef}>
           <DayGrid.Root className="MonthViewRoot">
-            <div className="MonthViewHeader">
-              <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+            <div
+              className={clsx(
+                'MonthViewHeader',
+                'MonthViewRowGrid',
+                preferences.hideWeekNumber ? undefined : 'WithWeekNumber',
+              )}
+            >
+              {!preferences.hideWeekNumber && (
+                <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+              )}
               {getDayList({
                 date: weeks[0],
                 amount: 'week',
