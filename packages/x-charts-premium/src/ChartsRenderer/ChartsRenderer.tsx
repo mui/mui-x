@@ -7,18 +7,30 @@ import { configurationOptions } from './configuration';
 import { colorPaletteLookup } from './colors';
 
 const getLegendPosition = (position: string) => {
-  switch (position) {
-    case 'top':
-      return { vertical: 'top' as const };
-    case 'bottom':
-      return { vertical: 'bottom' as const };
-    case 'left':
-      return { horizontal: 'start' as const };
-    case 'right':
-      return { horizontal: 'end' as const };
-    default:
-      return undefined;
+  let horizontal: 'start' | 'center' | 'end' | undefined = 'center';
+  let vertical: 'top' | 'middle' | 'bottom' | undefined = 'middle';
+
+  if (position === 'none') {
+    return undefined;
   }
+
+  if (position === 'top' || position === 'topLeft' || position === 'topRight') {
+    vertical = 'top';
+  }
+
+  if (position === 'bottom' || position === 'bottomLeft' || position === 'bottomRight') {
+    vertical = 'bottom';
+  }
+
+  if (position === 'left' || position === 'topLeft' || position === 'bottomLeft') {
+    horizontal = 'start';
+  }
+
+  if (position === 'right' || position === 'topRight' || position === 'bottomRight') {
+    horizontal = 'end';
+  }
+
+  return { horizontal, vertical };
 };
 
 export interface ChartsRendererProps {
@@ -148,8 +160,11 @@ function ChartsRenderer({
       : series;
 
     const barLabel = chartConfiguration.itemLabel === 'value' ? ('value' as const) : undefined;
-    const legendPosition = getLegendPosition(chartConfiguration.legendPosition);
-
+    const legendPosition = getLegendPosition(
+      chartConfiguration.legendDirection === 'vertical'
+        ? chartConfiguration.legendPositionVertical
+        : chartConfiguration.legendPositionHorizontal,
+    );
     const props = {
       ...axisProp,
       series: seriesProp,
@@ -206,7 +221,11 @@ function ChartsRenderer({
       reverse: chartConfiguration.seriesAxisReverse,
     };
 
-    const legendPosition = getLegendPosition(chartConfiguration.legendPosition);
+    const legendPosition = getLegendPosition(
+      chartConfiguration.legendDirection === 'vertical'
+        ? chartConfiguration.legendPositionVertical
+        : chartConfiguration.legendPositionHorizontal,
+    );
     const props = {
       xAxis: [xAxisConfig],
       yAxis: [yAxisConfig],
@@ -274,7 +293,11 @@ function ChartsRenderer({
       paddingAngle: chartConfiguration.paddingAngle,
     }));
 
-    const legendPosition = getLegendPosition(chartConfiguration.pieLegendPosition);
+    const legendPosition = getLegendPosition(
+      chartConfiguration.pieLegendDirection === 'vertical'
+        ? chartConfiguration.pieLegendPositionVertical
+        : chartConfiguration.pieLegendPositionHorizontal,
+    );
     const props = {
       series: seriesProp,
       height: chartConfiguration.height,
@@ -290,7 +313,8 @@ function ChartsRenderer({
           sx: {
             overflowY: 'scroll',
             flexWrap: 'nowrap',
-            height: chartConfiguration.height,
+            maxWidth: chartConfiguration.width,
+            maxHeight: chartConfiguration.height,
           },
         },
         tooltip: {
