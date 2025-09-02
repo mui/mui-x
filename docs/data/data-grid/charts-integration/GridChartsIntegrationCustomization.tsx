@@ -19,7 +19,7 @@ import {
   configurationOptions,
   GridChartsConfigurationSection,
 } from '@mui/x-charts-premium/ChartsRenderer';
-import { downloads } from '../../../data/data-grid/charts-integration/dataset';
+import { downloads } from './dataset';
 
 const columns: GridColDef[] = [
   { field: 'id', chartable: false },
