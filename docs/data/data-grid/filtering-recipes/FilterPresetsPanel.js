@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {
   DataGridPro,
+  gridFilterModelSelector,
   GridFilterPanel,
   useGridApiContext,
+  useGridSelector,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
@@ -90,23 +92,17 @@ function CustomFilterPanel(props) {
   const [createFilterDialogOpen, setCreateFilterDialogOpen] = React.useState(false);
   const [createFilterName, setCreateFilterName] = React.useState('');
 
-  const getCurrentFilterModel = () => apiRef.current.state.filter.filterModel;
-  const hasActiveFilters = () => getCurrentFilterModel().items.length > 0;
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+  const hasActiveFilters = filterModel.items.length > 0;
 
   const handleSavePreset = () => {
-    if (!store.activePresetId) {
-      return;
-    }
-
-    const currentFilterModel = getCurrentFilterModel();
-
     setStore({
       ...store,
       presets: store.presets.map((p) =>
         p.id === store.activePresetId
           ? {
               ...p,
-              filterModel: currentFilterModel,
+              filterModel,
             }
           : p,
       ),
@@ -121,7 +117,7 @@ function CustomFilterPanel(props) {
     const newPreset = {
       id: `preset_${Date.now()}`,
       name: createFilterName.trim(),
-      filterModel: getCurrentFilterModel(),
+      filterModel,
       createdAt: new Date().toISOString(),
     };
 
@@ -303,8 +299,8 @@ function CustomFilterPanel(props) {
               required
             />
             <Alert severity="info">
-              {hasActiveFilters()
-                ? `This will save the current ${getCurrentFilterModel().items.length} active filter${getCurrentFilterModel().items.length !== 1 ? 's' : ''} as a new preset.`
+              {hasActiveFilters
+                ? `This will save the current ${filterModel.items.length} active filter${filterModel.items.length !== 1 ? 's' : ''} as a new preset.`
                 : 'This will create an empty filter preset that you can configure later.'}
             </Alert>
           </Stack>
