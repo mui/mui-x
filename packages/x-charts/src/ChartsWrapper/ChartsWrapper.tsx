@@ -26,6 +26,7 @@ export interface ChartsWrapperProps {
   /**
    * If `true`, the legend is not rendered.
    */
+  // eslint-disable-next-line react/no-unused-prop-types
   hideLegend: boolean;
   /**
    * If `true`, the chart wrapper set `height: 100%`.
@@ -122,7 +123,7 @@ const getTemplateColumns = (hideLegend: boolean, direction?: Direction, position
   return '100%';
 };
 
-const getTemplateRows = (hideLegend: boolean, direction?: Direction, position?: Position) => {
+const getTemplateRows = (hideLegend: boolean, direction?: Direction) => {
   if (direction === 'vertical') {
     if (hideLegend) {
       return '1fr';
@@ -152,11 +153,7 @@ const Root = styled('div', {
     ownerState.legendDirection,
     ownerState.legendPosition,
   ),
-  gridTemplateRows: getTemplateRows(
-    ownerState.hideLegend,
-    ownerState.legendDirection,
-    ownerState.legendPosition,
-  ),
+  gridTemplateRows: getTemplateRows(ownerState.hideLegend, ownerState.legendDirection),
   [`&:has(.${chartsToolbarClasses.root})`]: {
     gridTemplateAreas: getGridTemplateAreasWithToolBar(
       ownerState.hideLegend,
@@ -213,6 +210,10 @@ ChartsWrapper.propTypes = {
    * @default `false` if the `height` prop is set. And `true` otherwise.
    */
   extendVertically: PropTypes.bool,
+  /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: PropTypes.bool.isRequired,
   /**
    * The direction of the legend.
    * @default 'horizontal'
