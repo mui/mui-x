@@ -1,12 +1,19 @@
+import { linearDownsample } from './linear';
+
 /**
  * Average downsampling - calculates average values in each bucket
  */
 export function averageDownsample(
   data: readonly (number | null)[],
   targetPoints: number,
+  type: 'axis' | 'series',
 ): (number | null)[] {
   if (data.length <= targetPoints) {
     return [...data];
+  }
+
+  if (type === 'axis') {
+    return linearDownsample(data, targetPoints);
   }
 
   const result: (number | null)[] = [];

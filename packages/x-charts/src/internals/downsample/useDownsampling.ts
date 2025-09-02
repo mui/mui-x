@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { MakeOptional } from '@mui/x-internals/types';
 import type { AllSeriesType, AxisConfig } from '../../models';
 import type { DownsampleProp } from './types';
 import { getSamplingFunction, getTargetPoints } from './utils';
@@ -9,7 +10,7 @@ import { getSamplingFunction, getTargetPoints } from './utils';
  */
 export function useDownsampling<T extends 'line' | 'bar'>(
   series: Readonly<AllSeriesType<T>[]>,
-  axes: Readonly<AxisConfig<any, any, any>[]>,
+  axes: Readonly<MakeOptional<Readonly<AxisConfig<any, any, any>>, 'id'>[]>,
   downsample: DownsampleProp<number | null>,
 ) {
   const samplingFn = getSamplingFunction(downsample);

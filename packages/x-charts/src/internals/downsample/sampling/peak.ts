@@ -1,12 +1,19 @@
+import { linearDownsample } from './linear';
+
 /**
  * Peak downsampling - preserves local maxima and minima
  */
 export function peakDownsample(
   data: readonly (number | null)[],
   targetPoints: number,
+  type: 'axis' | 'series',
 ): (number | null)[] {
   if (data.length <= targetPoints) {
     return [...data];
+  }
+
+  if (type === 'axis') {
+    return linearDownsample(data, targetPoints);
   }
 
   const result: (number | null)[] = [];

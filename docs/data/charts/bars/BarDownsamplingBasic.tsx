@@ -9,21 +9,21 @@ const generateLargeDataset = (size: number) => {
   }));
 };
 
-const largeDataset = generateLargeDataset(500);
+const largeDataset = generateLargeDataset(300);
 const xAxisData = largeDataset.map((item) => item.x);
 const yAxisData = largeDataset.map((item) => item.value);
 
 export default function BarDownsamplingBasic() {
   return (
     <div>
-      <h3>Original Data (500 points)</h3>
+      <h3>Original Data (300 points)</h3>
       <BarChart
         width={600}
         height={180}
         series={[
           {
             data: yAxisData,
-            label: 'All 500 points',
+            label: 'All 300 points',
           },
         ]}
         xAxis={[{ data: xAxisData, scaleType: 'band' }]}

@@ -218,12 +218,6 @@ You can customize the downsampling behavior by providing a configuration object 
 
 {{"demo": "BarDownsamplingStrategies.js"}}
 
-### Custom downsampling function
-
-For advanced use cases, you can provide your own downsampling function:
-
-{{"demo": "BarDownsamplingCustom.js"}}
-
 ## Animation
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.

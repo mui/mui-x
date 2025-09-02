@@ -16,6 +16,7 @@ import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './LineChart.plugins';
+import { useDownsampling } from '../internals/downsample/useDownsampling';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -51,39 +52,54 @@ export const useLineChartProps = (props: LineChartProps) => {
     onHighlightChange,
     className,
     showToolbar,
+    downsample,
     ...other
   } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const seriesWithDefault = React.useMemo(
+  const defaultXAxis = React.useMemo(
+    () =>
+      xAxis ?? [
+        {
+          id: DEFAULT_X_AXIS_KEY,
+          scaleType: 'point',
+          data: Array.from(
+            { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+            (_, index) => index,
+          ),
+        },
+      ],
+    [xAxis, series, dataset],
+  );
+
+  const seriesWithType = React.useMemo(
     () =>
       series.map((s) => ({
         disableHighlight: !!disableLineItemHighlight,
         type: 'line' as const,
         ...s,
       })),
-    [disableLineItemHighlight, series],
+    [series, disableLineItemHighlight],
   );
+
+  // For line charts, only downsample the xAxis (data/time axis) and series
+  const { series: downsampledSeries, axes: downsampledAxes } = useDownsampling(
+    seriesWithType,
+    defaultXAxis,
+    downsample ?? false,
+  );
+
   const chartContainerProps: ChartContainerProps<'line', LineChartPluginsSignatures> = {
     ...other,
-    series: seriesWithDefault,
+    series: downsampledSeries,
     width,
     height,
     margin,
     colors,
     dataset,
-    xAxis: xAxis ?? [
-      {
-        id: DEFAULT_X_AXIS_KEY,
-        scaleType: 'point',
-        data: Array.from(
-          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-          (_, index) => index,
-        ),
-      },
-    ],
+    xAxis: downsampledAxes,
     yAxis,
     highlightedItem,
     onHighlightChange,
