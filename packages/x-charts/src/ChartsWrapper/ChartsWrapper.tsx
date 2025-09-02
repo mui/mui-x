@@ -113,7 +113,7 @@ const Root = styled('div', {
       },
     },
   ],
-  width: '100%',
+  flex: 1,
   display: 'grid',
   gridTemplateColumns: getTemplateColumns(ownerState.legendDirection, ownerState.legendPosition),
   gridTemplateRows: ownerState.legendDirection === 'vertical' ? 'auto 1fr' : 'auto auto 1fr',
