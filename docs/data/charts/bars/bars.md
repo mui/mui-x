@@ -200,8 +200,6 @@ Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 When working with large datasets, bar charts can become slow to render or visually cluttered. The `downsample` property helps optimize performance by intelligently reducing the number of data points while preserving the essential characteristics of your data.
 
-### Downsampling strategies
-
 You can customize the downsampling behavior by providing a configuration object with different strategies:
 
 - **Linear**: Evenly spaced selection (default)

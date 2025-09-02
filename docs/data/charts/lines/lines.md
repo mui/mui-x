@@ -272,8 +272,6 @@ The definition of `myGradient` is passed as a children of the chart component.
 
 When working with large datasets, line charts can become slow to render or visually cluttered. The `downsample` property helps optimize performance by intelligently reducing the number of data points while preserving the essential characteristics of your data.
 
-### Downsampling strategies
-
 You can customize the downsampling behavior by providing a configuration object with different strategies:
 
 - **Linear**: Evenly spaced selection (default)
