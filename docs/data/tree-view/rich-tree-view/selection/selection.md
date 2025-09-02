@@ -105,6 +105,32 @@ The example below demonstrates the usage of the `selectionPropagation` prop.
 This feature only works when multi selection is enabled using `props.multiSelect`.
 :::
 
+### Apply propagation on mount
+
+You can use the `useApplyPropagationToDefaultSelectedItems()` to apply the selection propagation to your `defaultSelectedItems` prop.
+
+```ts
+const defaultSelectedItems = useApplyPropagationToDefaultSelectedItems({
+  items: props.items,
+  selectionPropagation: props.selectionPropagation,
+  defaultSelectedItems: props.defaultSelectedItems,
+});
+```
+
+In the example below, only Anna, Michael, Elizabeth and William are selected in the raw data, their ancestors are added to the `defaultSelectedItems` prop by the hook:
+
+{{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
+
+:::success
+The `useApplyPropagationToDefaultSelectedItems()` must receive the following props as provided to the Rich Tree View component:
+
+- `items`
+- `selectionPropagation`
+- `getItemId` (can be skipped if not provided to Rich Tree View)
+- `getItemChildren` (can be skipped if not provided to Rih Tree View)
+
+:::
+
 ## Imperative API
 
 :::success

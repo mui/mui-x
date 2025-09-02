@@ -1,12 +1,27 @@
-import * as React from 'react';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../models';
+import { getLookupFromArray } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.utils';
 
 const defaultGetItemId = (item: any) => item.id;
 
 const defaultGetItemChildren = (item: any) => item.children;
 
-export function useApplyPropagationToDefaultSelectedItems<R extends { children?: R[] }>(
-  parameters: UseApplyPropagationToDefaultSelectedItemsParameters<R>,
+/**
+ * Applies the selection propagation rules to the default selected items.
+ *
+ * Example:
+ * ```tsx
+ * const defaultSelectedItems = useApplyPropagationToDefaultSelectedItems({
+ *   items,
+ *   selectionPropagation,
+ *   defaultSelectedItems: ['10', '11', '13', '14'],
+ * });
+ *
+ * return <RichTreeView items={items} selectionPropagation={selectionPropagation} defaultSelectedItems={defaultSelectedItems} />
+ * ```
+ */
+export function useApplyPropagationToDefaultSelectedItems(
+  parameters: UseApplyPropagationToDefaultSelectedItemsParameters<any>,
 ) {
   const {
     items: itemsParam,
@@ -16,35 +31,30 @@ export function useApplyPropagationToDefaultSelectedItems<R extends { children?:
     selectionPropagation,
   } = parameters;
 
-  return React.useMemo(() => {
-    const selectedItemsMap = new Map<string, true>();
-    for (const id of defaultSelectedItems) {
-      selectedItemsMap.set(id, true);
-    }
-    const temp = [...defaultSelectedItems];
+  return useLazyRef(() => {
+    const lookup = getLookupFromArray(defaultSelectedItems);
 
-    function walk(items: R[], isParentSelected: boolean) {
+    function walk(items: any[], isParentSelected: boolean) {
       for (const item of items) {
         const itemId = getItemId(item);
-        if (selectionPropagation.descendants && isParentSelected) {
-          temp.push(itemId);
-          selectedItemsMap.set(itemId, true);
+        let isSelected = lookup[itemId];
+
+        if (!isSelected && selectionPropagation.descendants && isParentSelected) {
+          lookup[itemId] = true;
+          isSelected = true;
         }
 
-        const isSelected = selectedItemsMap.has(itemId);
         const children = getItemChildren(item) ?? [];
-
         if (children.length > 0) {
           walk(children, isSelected);
-        }
 
-        if (!isSelected && selectionPropagation.parents && children.length > 0) {
-          const areAllChildrenSelected = children.every((childId: R) =>
-            selectedItemsMap.has(getItemId(childId)),
-          );
-          if (areAllChildrenSelected) {
-            temp.push(itemId);
-            selectedItemsMap.set(itemId, true);
+          if (!isSelected && selectionPropagation.parents) {
+            const areAllChildrenSelected = children.every(
+              (childId: any) => lookup[getItemId(childId)],
+            );
+            if (areAllChildrenSelected) {
+              lookup[itemId] = true;
+            }
           }
         }
       }
@@ -52,15 +62,8 @@ export function useApplyPropagationToDefaultSelectedItems<R extends { children?:
 
     walk(itemsParam, false);
 
-    return temp;
-  }, [
-    itemsParam,
-    getItemId,
-    getItemChildren,
-    selectionPropagation.descendants,
-    selectionPropagation.parents,
-    defaultSelectedItems,
-  ]);
+    return Object.keys(lookup);
+  }).current;
 }
 
 interface UseApplyPropagationToDefaultSelectedItemsParameters<R extends { children?: R[] }> {
