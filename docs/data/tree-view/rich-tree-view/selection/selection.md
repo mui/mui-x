@@ -127,7 +127,7 @@ The `useApplyPropagationToDefaultSelectedItems()` must receive the following pro
 - `items`
 - `selectionPropagation`
 - `getItemId` (can be skipped if not provided to Rich Tree View)
-- `getItemChildren` (can be skipped if not provided to Rih Tree View)
+- `getItemChildren` (can be skipped if not provided to Rich Tree View)
 
 :::
 
