@@ -199,8 +199,11 @@ You can customize the preferences menu using the `preferencesMenuConfig` prop:
 // will hide the menu
 preferencesMenuConfig={false}
 
-// will hide the menu item responsible for toggling the week-end visibility
+// will hide the menu item responsible for toggling the weekend visibility
 preferencesMenuConfig={{ toggleWeekendVisibility: false }}
+
+// will hide the menu item responsible for toggling the week number visibility
+preferencesMenuConfig={{ toggleWeekNumberVisibility: false }}
 ```
 
 {{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
