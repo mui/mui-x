@@ -1,27 +1,22 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import {
-  CalendarDayWithVisibleOccurrences,
   CalendarEventOccurrence,
   CalendarEventOccurrencesWithRowIndex,
+  CalendarProcessedDate,
   SchedulerValidDate,
 } from '../models';
-import {
-  getEventDays,
-  getEventRowIndex,
-  GetEventRowIndexParameters,
-  processDate,
-} from '../utils/event-utils';
+import { getEventDays, getEventRowIndex, GetEventRowIndexParameters } from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurrence-utils';
 import { useEventCalendarContext } from '../utils/useEventCalendarContext';
 import { selectors } from '../use-event-calendar';
 
-export function useDayGridRowEventOccurrences(
-  parameters: useDayGridRowEventOccurrences.Parameters,
-): useDayGridRowEventOccurrences.ReturnValue {
+export function useEventOccurrencesWithRowIndex(
+  parameters: useEventOccurrencesWithRowIndex.Parameters,
+): useEventOccurrencesWithRowIndex.ReturnValue {
   const adapter = useAdapter();
-  const days = useDaysWithEventOccurrences(parameters);
+  const { days, occurrencesMap } = parameters;
 
   return React.useMemo(() => {
     const firstDayInRow = days[0];
@@ -30,7 +25,8 @@ export function useDayGridRowEventOccurrences(
       const allDayEvents: CalendarEventOccurrencesWithRowIndex[] = [];
       const rowIndexLookup: GetEventRowIndexParameters['rowIndexLookup'] = {};
 
-      for (const occurrence of day.occurrences) {
+      const occurrences = occurrencesMap.get(day.key) ?? [];
+      for (const occurrence of occurrences) {
         // STEP 4.1: Process all-day events and get their position in the row
         if (occurrence.allDay) {
           const eventRowIndex = getEventRowIndex({
@@ -62,23 +58,27 @@ export function useDayGridRowEventOccurrences(
         allDayEvents,
       };
     });
-  }, [adapter, days]);
+  }, [adapter, days, occurrencesMap]);
 }
 
-export namespace useDayGridRowEventOccurrences {
-  export interface Parameters {}
+export namespace useEventOccurrencesWithRowIndex {
+  export interface Parameters {
+    days: CalendarProcessedDate[];
+    occurrencesMap: Map<string, CalendarEventOccurrence[]>;
+  }
 
-  export type ReturnValue = {
-    day: SchedulerValidDate;
+  export interface DayData extends CalendarProcessedDate {
     regularEvents: CalendarEventOccurrence[];
     allDayEvents: CalendarEventOccurrencesWithRowIndex[];
-  }[];
+  }
+
+  export type ReturnValue = DayData[];
 }
 
-export function useDaysWithEventOccurrences(
+export function useEventOccurrencesGroupedByDay(
   parameters: useDaysWithVisibleEventOccurrences.Parameters,
 ): useDaysWithVisibleEventOccurrences.ReturnValue {
-  const { days: daysParam, eventPlacement } = parameters;
+  const { days, eventPlacement } = parameters;
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
   const events = useStore(store, selectors.events);
@@ -86,7 +86,6 @@ export function useDaysWithEventOccurrences(
 
   return React.useMemo(() => {
     const occurrencesGroupedByDay = new Map<string, CalendarEventOccurrence[]>();
-    const days = daysParam.map((date) => processDate(date, adapter));
 
     for (const day of days) {
       occurrencesGroupedByDay.set(day.key, []);
@@ -144,20 +143,15 @@ export function useDaysWithEventOccurrences(
       }
     }
 
-    return days.map((day) => {
-      return {
-        ...day,
-        occurrences: occurrencesGroupedByDay.get(day.key)!,
-      };
-    });
-  }, [adapter, daysParam, eventPlacement, events, visibleResources]);
+    return occurrencesGroupedByDay;
+  }, [adapter, days, eventPlacement, events, visibleResources]);
 }
 
 export namespace useDaysWithVisibleEventOccurrences {
   export interface Parameters {
-    days: SchedulerValidDate[];
+    days: CalendarProcessedDate[];
     eventPlacement: 'first-day' | 'every-day';
   }
 
-  export type ReturnValue = CalendarDayWithVisibleOccurrences[];
+  export type ReturnValue = Map<string, CalendarEventOccurrence[]>;
 }

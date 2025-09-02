@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
-import { useDayGridRowEventOccurrences } from '../../../../primitives/use-day-grid-row-event-occurrences';
+import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-day-grid-row-event-occurrences';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
   SchedulerValidDate,
@@ -42,10 +42,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const { store, instance } = useEventCalendarContext();
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
-  const daysWithEvents = useDayGridRowEventOccurrences({
-    days,
-    shouldOnlyRenderEventInOneCell: false,
-  });
+  const occurrencesMap = useEventOccurrencesGroupedByDay({ days, eventPlacement: 'every-day' });
+
   const ampm = useStore(store, selectors.ampm);
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
@@ -84,7 +82,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     }
     const hasScroll = body.scrollHeight > body.clientHeight;
     allDayHeader.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
-  }, [daysWithEvents]);
+  }, [occurrencesMap]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
 
@@ -114,7 +112,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <div className="DayTimeGridHeader">
           <div className="DayTimeGridGridRow DayTimeGridHeaderRow" role="row">
             <div className="DayTimeGridAllDayEventsCell" />
-            {daysWithEvents.map(({ day }) => (
+            {days.map((day) => (
               <div
                 key={day.toString()}
                 id={`DayTimeGridHeaderCell-${day.toString()}`}

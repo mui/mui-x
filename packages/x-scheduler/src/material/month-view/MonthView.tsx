@@ -17,6 +17,8 @@ import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import './MonthView.css';
+import { useEventOccurrencesGroupedByDay } from '../../primitives/use-day-grid-row-event-occurrences';
+import { processDate } from '../../primitives/utils/event-utils';
 
 const adapter = getAdapter();
 const EVENT_HEIGHT = 22;
@@ -42,14 +44,20 @@ export const MonthView = React.memo(
 
     const getDayList = useDayList();
     const getWeekList = useWeekList();
-    const weeks = React.useMemo(
-      () =>
-        getWeekList({
-          date: adapter.startOfMonth(visibleDate),
-          amount: 'end-of-month',
-        }),
-      [getWeekList, visibleDate],
-    );
+    const { weeks, days } = React.useMemo(() => {
+      const tempWeeks = getWeekList({
+        date: adapter.startOfMonth(visibleDate),
+        amount: 'end-of-month',
+      }).map((week) =>
+        getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }).map(
+          (day) => processDate(day, adapter),
+        ),
+      );
+
+      return { weeks: tempWeeks, days: tempWeeks.flat(1) };
+    }, [getWeekList, getDayList, visibleDate, preferences.hideWeekends]);
+
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days, eventPlacement: 'every-day' });
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
@@ -91,19 +99,15 @@ export const MonthView = React.memo(
           <DayGrid.Root className="MonthViewRoot" onEventChange={handleEventChangeFromPrimitive}>
             <div className="MonthViewHeader">
               <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
-              {getDayList({
-                date: weeks[0],
-                amount: 'week',
-                excludeWeekends: preferences.hideWeekends,
-              }).map((day) => (
+              {weeks[0].map((weekDay) => (
                 <div
-                  key={day.toString()}
-                  id={`MonthViewHeaderCell-${day.toString()}`}
+                  key={weekDay.key}
+                  id={`MonthViewHeaderCell-${weekDay.key}`}
                   role="columnheader"
                   className="MonthViewHeaderCell"
-                  aria-label={adapter.format(day, 'weekday')}
+                  aria-label={adapter.format(weekDay.value, 'weekday')}
                 >
-                  {adapter.formatByString(day, 'ccc')}
+                  {adapter.formatByString(weekDay.value, 'ccc')}
                 </div>
               ))}
             </div>
@@ -112,7 +116,8 @@ export const MonthView = React.memo(
                 <MonthViewWeekRow
                   key={weekIdx}
                   maxEvents={maxEvents}
-                  week={week}
+                  days={week}
+                  occurrencesMap={occurrencesMap}
                   firstDayRef={weekIdx === 0 ? cellRef : undefined}
                 />
               ))}

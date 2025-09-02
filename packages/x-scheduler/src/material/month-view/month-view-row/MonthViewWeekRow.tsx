@@ -1,42 +1,31 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
-import { useDayList } from '../../../primitives/use-day-list/useDayList';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
-import { useEventCalendarContext } from '../../../primitives/utils/useEventCalendarContext';
-import { selectors } from '../../../primitives/use-event-calendar';
+import { useEventOccurrencesWithRowIndex } from '../../../primitives/use-day-grid-row-event-occurrences';
 import './MonthViewWeekRow.css';
 import { MonthViewCell } from './MonthViewCell';
 
 const adapter = getAdapter();
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
-  const { maxEvents, week, firstDayRef } = props;
+  const { maxEvents, days, occurrencesMap, firstDayRef } = props;
 
-  const { store } = useEventCalendarContext();
-  const preferences = useStore(store, selectors.preferences);
   const translations = useTranslations();
 
-  const getDayList = useDayList();
-  const days = React.useMemo(
-    () => getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }),
-    [getDayList, week, preferences.hideWeekends],
-  );
-
-  const daysWithEvents = useDayGridRowEventOccurrences({
+  const daysWithEvents = useEventOccurrencesWithRowIndex({
     days,
-    shouldOnlyRenderEventInOneCell: false,
+    occurrencesMap,
   });
 
-  const weekNumber = adapter.getWeekNumber(week);
+  const weekNumber = adapter.getWeekNumber(days[0].value);
 
   const { start, end } = React.useMemo(
     () => ({
-      start: days[0],
-      end: adapter.endOfDay(days[days.length - 1]),
+      start: days[0].value,
+      end: adapter.endOfDay(days[days.length - 1].value),
     }),
     [days],
   );
@@ -50,15 +39,13 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       >
         {weekNumber}
       </div>
-      {daysWithEvents.map(({ day, events, allDayEvents }, dayIdx) => (
+      {daysWithEvents.map((day, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}
-          key={day.toString()}
+          key={day.key}
           day={day}
           dayIndexInRow={dayIdx}
           rowLength={days.length}
-          events={events}
-          allDayEvents={allDayEvents}
           maxEvents={maxEvents}
         />
       ))}
