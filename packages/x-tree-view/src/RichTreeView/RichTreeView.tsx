@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
@@ -13,11 +14,7 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { useSelector } from '../internals/hooks/useSelector';
-import {
-  selectorGetTreeViewError,
-  selectorIsTreeViewLoading,
-} from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -91,8 +88,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     rootRef: ref,
     props: other,
   });
-  const isLoading = useSelector(contextValue.store, selectorIsTreeViewLoading);
-  const treeViewError = useSelector(contextValue.store, selectorGetTreeViewError);
+  const isLoading = useStore(contextValue.store, itemsSelectors.isLoading);
+  const treeViewError = useStore(contextValue.store, itemsSelectors.error);
 
   const classes = useUtilityClasses(props);
 

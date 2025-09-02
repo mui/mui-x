@@ -4,3 +4,4 @@ export type {
   UseTreeViewSelectionParameters,
   UseTreeViewSelectionParametersWithDefaults,
 } from './useTreeViewSelection.types';
+export { selectionSelectors } from './useTreeViewSelection.selectors';
