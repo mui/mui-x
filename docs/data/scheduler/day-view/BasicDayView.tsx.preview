@@ -4,5 +4,5 @@
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
 >
-  <DayView className={classes.Container} />
+  <DayView />
 </StandaloneView>

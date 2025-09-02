@@ -66,3 +66,5 @@ export class Store<State> {
     }
   }
 }
+
+export type ReadonlyStore<State> = Pick<Store<State>, 'getSnapshot' | 'subscribe' | 'state'>;

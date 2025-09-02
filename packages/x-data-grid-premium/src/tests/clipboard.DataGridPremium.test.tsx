@@ -813,7 +813,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
     });
 
-    it('should call `onProcessRowUpdateError` if `processRowUpdate` fails', async () => {
+    it('should call `onProcessRowUpdateError()` if `processRowUpdate()` fails', async () => {
       const onProcessRowUpdateError = spy();
       const error = new Error('Something went wrong');
       const { user } = render(

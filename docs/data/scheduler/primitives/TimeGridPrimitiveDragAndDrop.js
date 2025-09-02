@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
+
 import classes from './TimeGridPrimitive.module.css';
 import { initialEvents, groupEventsByDay } from './time-grid-events';
 
@@ -54,40 +55,12 @@ export default function TimeGridPrimitiveDragAndDrop() {
               ))}
             </div>
             {days.map((day) => (
-              <TimeGrid.Column
+              <TimeGridColumn
                 key={day.date.toString()}
-                start={day.date.startOf('day')}
-                end={day.date.endOf('day')}
-                className={classes.Column}
-              >
-                {day.events.map((event) => (
-                  <TimeGrid.Event
-                    key={event.id}
-                    start={event.start}
-                    end={event.end}
-                    eventId={event.id}
-                    data-resource={event.resource}
-                    className={classes.Event}
-                    isDraggable
-                  >
-                    <TimeGrid.EventResizeHandler
-                      side="start"
-                      className={classes.EventResizeHandler}
-                    />
-                    <div className={classes.EventInformation}>
-                      <div className={classes.EventStartTime}>
-                        {event.start.toFormat('hh a')}
-                      </div>
-                      <div className={classes.EventTitle}>{event.title}</div>
-                    </div>
-                    <TimeGrid.EventResizeHandler
-                      side="end"
-                      className={classes.EventResizeHandler}
-                    />
-                  </TimeGrid.Event>
-                ))}
-                <TimeGridColumnPlaceholder events={events} />
-              </TimeGrid.Column>
+                day={day.date}
+                events={day.events}
+                allEvents={events}
+              />
             ))}
           </TimeGrid.ScrollableContent>
         </div>
@@ -96,33 +69,67 @@ export default function TimeGridPrimitiveDragAndDrop() {
   );
 }
 
-function TimeGridColumnPlaceholder({ events }) {
-  const placeholder = TimeGrid.useColumnPlaceholder();
-
-  if (!placeholder) {
-    return null;
-  }
-
-  const event = events.find(
-    (calendarEvent) => calendarEvent.id === placeholder.eventId,
+function TimeGridColumn({ events, allEvents, day }) {
+  const placeholder = TimeGrid.usePlaceholderInRange(
+    day.startOf('day'),
+    day.endOf('day'),
   );
-  if (!event) {
-    return null;
-  }
+
+  const placeholderEvent =
+    placeholder == null
+      ? undefined
+      : allEvents.find((calendarEvent) => calendarEvent.id === placeholder.eventId);
 
   return (
-    <TimeGrid.Event
-      start={placeholder.start}
-      end={placeholder.end}
-      eventId={event.id}
-      data-resource={event.resource}
-      className={classes.Event}
+    <TimeGrid.Column
+      key={day.toString()}
+      start={day.startOf('day')}
+      end={day.endOf('day')}
+      className={classes.Column}
     >
-      <div className={classes.EventInformation}>
-        <div className={classes.EventStartTime}>{event.start.toFormat('hh a')}</div>
-        <div className={classes.EventTitle}>{event.title}</div>
-      </div>
-    </TimeGrid.Event>
+      {events.map((event) => (
+        <TimeGrid.Event
+          key={event.id}
+          start={event.start}
+          end={event.end}
+          eventId={event.id}
+          data-resource={event.resource}
+          className={classes.Event}
+          isDraggable
+        >
+          <TimeGrid.EventResizeHandler
+            side="start"
+            className={classes.EventResizeHandler}
+          />
+          <div className={classes.EventInformation}>
+            <div className={classes.EventStartTime}>
+              {event.start.toFormat('hh a')}
+            </div>
+            <div className={classes.EventTitle}>{event.title}</div>
+          </div>
+          <TimeGrid.EventResizeHandler
+            side="end"
+            className={classes.EventResizeHandler}
+          />
+        </TimeGrid.Event>
+      ))}
+      {placeholderEvent != null && placeholder != null && (
+        <TimeGrid.Event
+          start={placeholder.start}
+          end={placeholder.end}
+          eventId={placeholderEvent.id}
+          data-resource={placeholderEvent.resource}
+          className={classes.Event}
+        >
+          <div className={classes.EventInformation}>
+            <div className={classes.EventStartTime}>
+              {placeholder.start.toFormat('hh a')}
+            </div>
+            <div className={classes.EventTitle}>{placeholderEvent.title}</div>
+          </div>
+        </TimeGrid.Event>
+      )}
+    </TimeGrid.Column>
   );
 }
 
