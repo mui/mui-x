@@ -51,7 +51,7 @@ export default function GridChartsIntegrationBasic() {
               },
             }}
             experimentalFeatures={{
-              chartsIntegration: true,
+              charts: true,
             }}
           />
         </div>

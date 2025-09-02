@@ -102,7 +102,7 @@ export default function GridChartsIntegrationDataSource() {
             initialState={initialStateUpdated}
             aggregationFunctions={aggregationFunctions}
             experimentalFeatures={{
-              chartsIntegration: true,
+              charts: true,
             }}
           />
         </div>

@@ -117,7 +117,7 @@ export default function GridChartsIntegrationLiveData() {
               },
             }}
             experimentalFeatures={{
-              chartsIntegration: true,
+              charts: true,
             }}
           />
         </div>
