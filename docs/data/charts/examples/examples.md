@@ -5,7 +5,7 @@ githubLabel: 'scope: charts'
 packageName: '@mui/x-charts'
 ---
 
-# MUI X Charts
+# MUI X Charts
 
 <p class="description">Browse through our collection of MUI X Chart demos.</p>
 
