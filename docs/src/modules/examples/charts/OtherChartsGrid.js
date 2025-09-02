@@ -24,7 +24,7 @@ const chartData = [
   {
     title: 'Sparkline with metric',
     ChartComponent: NpmSparkLine,
-    link: '/x/react-charts/sparkline/#NpmSparkLine'
+    link: '/x/react-charts/sparkline/#NpmSparkLine',
   },
 ];
 
