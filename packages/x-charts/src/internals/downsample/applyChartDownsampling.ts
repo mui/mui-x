@@ -14,7 +14,7 @@ export function applyChartDownsampling<TAxisValue>(
   seriesData: (number | null)[][];
   axisData: TAxisValue[];
 } {
-  if (!downsample || downsample === 'none') {
+  if (!downsample) {
     return {
       seriesData: seriesData.map((data) => [...data]),
       axisData: [...axisData],

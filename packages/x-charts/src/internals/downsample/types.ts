@@ -1,5 +1,5 @@
 // Types for downsampling configuration
-export type DownsampleStrategy = 'linear' | 'peak' | 'max' | 'min' | 'average' | 'none';
+export type DownsampleStrategy = 'linear' | 'peak' | 'max' | 'min' | 'average';
 
 /**
  * Default target points for downsampling when enabled with boolean true
