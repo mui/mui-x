@@ -16,8 +16,7 @@ packageName: '@mui/x-date-pickers-pro'
 All the topics covered below are applicable to both `SingleInputTimeRangeField` and `MultiInputTimeRangeField` unless explicitly mentioned.
 :::
 
-You can render your Time Range Field with either one input using `SingleInputTimeRangeField`
-or two inputs using `MultiInputTimeRangeField` as show below.
+You can render your Time Range Field with either one input using `SingleInputTimeRangeField` or two inputs using `MultiInputTimeRangeField` as shown below.
 
 {{"demo": "BasicTimeRangeField.js"}}
 
