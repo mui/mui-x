@@ -15,6 +15,9 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
-- [Joy - Event Calendar](/x/react-scheduler/event-calendar/)
-- [Joy - Event Calendar (full screen demo)](/x/react-scheduler/full-screen-event-calendar/)
+- [Event Calendar](/x/react-scheduler/event-calendar/) ([full screen demo](/x/react-scheduler/full-screen-event-calendar/))
+- [Week View](/x/react-scheduler/week-view/)
+- [Day View](/x/react-scheduler/day-view/)
+- [Month View](/x/react-scheduler/month-view/)
+- [Agenda View](/x/react-scheduler/agenda-view/)
 - [Primitives](/x/react-scheduler/primitives/)

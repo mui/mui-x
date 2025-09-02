@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { DateTime, Info } from 'luxon';
 import {
   AdapterFormats,
@@ -482,7 +481,7 @@ export class AdapterLuxon implements Adapter<string> {
   };
 
   public getDayOfWeek = (value: DateTime) => {
-    return value.weekday;
+    return value.localWeekday ?? value.weekday;
   };
 
   public getYearRange = ([start, end]: [DateTime, DateTime]) => {

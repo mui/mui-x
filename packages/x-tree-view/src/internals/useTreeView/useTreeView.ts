@@ -20,7 +20,7 @@ import { useExtractPluginParamsFromProps } from './useExtractPluginParamsFromPro
 import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 import { TreeViewStore } from '../utils/TreeViewStore';
 
-function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
+function initializeInputApiRef<T>(inputApiRef: React.RefObject<Partial<T> | undefined>) {
   if (inputApiRef.current == null) {
     inputApiRef.current = {} as T;
   }
@@ -28,7 +28,7 @@ function initializeInputApiRef<T>(inputApiRef: React.RefObject<T | undefined>) {
 }
 
 export function useTreeViewApiInitialization<T>(
-  inputApiRef: React.RefObject<T | undefined> | undefined,
+  inputApiRef: React.RefObject<Partial<T> | undefined> | undefined,
 ): React.RefObject<T> {
   const fallbackPublicApiRef = React.useRef({}) as React.RefObject<T>;
 
