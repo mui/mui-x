@@ -7,7 +7,7 @@ packageName: '@mui/x-charts'
 
 # MUI X Charts
 
-<p class="description">Browse through our collection of MUI X Chart demos.</p>
+<p class="description">Browse through our collection of MUI X Chart demos.</p>
 
 ## Bar Charts
 
