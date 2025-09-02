@@ -3,7 +3,6 @@
   "version": "8.11.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
-  "main": "src/index.js",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
