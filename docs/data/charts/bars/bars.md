@@ -196,6 +196,34 @@ Note that `onAxisClick` can handle both bar and line series if you mix them.
 </ChartContainer>
 ```
 
+## Downsampling
+
+When working with large datasets, bar charts can become slow to render or visually cluttered. The `downsample` property helps optimize performance by intelligently reducing the number of data points while preserving the essential characteristics of your data.
+
+### Basic downsampling
+
+Set `downsample` to `true` to enable automatic downsampling with default settings (1000 target points, linear strategy):
+
+{{"demo": "BarDownsamplingBasic.js"}}
+
+### Downsampling strategies
+
+You can customize the downsampling behavior by providing a configuration object with different strategies:
+
+- **Linear**: Evenly spaced selection (default)
+- **Max**: Preserves maximum values in each bucket
+- **Min**: Preserves minimum values in each bucket
+- **Average**: Calculates average values in each bucket
+- **Peak**: Preserves local maxima and minima
+
+{{"demo": "BarDownsamplingStrategies.js"}}
+
+### Custom downsampling function
+
+For advanced use cases, you can provide your own downsampling function:
+
+{{"demo": "BarDownsamplingCustom.js"}}
+
 ## Animation
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.

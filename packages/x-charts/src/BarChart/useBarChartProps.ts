@@ -14,6 +14,7 @@ import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
+import { applyChartDownsampling } from '../internals/downsample';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -49,6 +50,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     className,
     hideLegend,
     showToolbar,
+    downsample,
     ...rest
   } = props;
 
@@ -59,18 +61,102 @@ export const useBarChartProps = (props: BarChartProps) => {
     layout === 'horizontal' ||
     (layout === undefined && series.some((item) => item.layout === 'horizontal'));
 
+  // Apply chart-level downsampling to series and axis data
+  const { seriesWithDownsampling, processedXAxis, processedYAxis } = React.useMemo(() => {
+    if (!downsample) {
+      return {
+        seriesWithDownsampling: series,
+        processedXAxis: xAxis,
+        processedYAxis: yAxis,
+      };
+    }
+
+    // Extract series data for downsampling
+    const seriesData = series.map((s) => s.data || []);
+
+    // For bar charts, we need to handle the axis that contains categorical data
+    // In vertical layout: x-axis has categories, y-axis has values
+    // In horizontal layout: y-axis has categories, x-axis has values
+
+    if (hasHorizontalSeries) {
+      // Horizontal bars: downsample y-axis data
+      const defaultYAxisData = Array.from(
+        { length: Math.max(...seriesData.map((data) => data.length)) },
+        (_, index) => index,
+      );
+      const yAxisData = yAxis?.[0]?.data || defaultYAxisData;
+
+      const { seriesData: downsampledSeriesData, axisData: downsampledAxisData } =
+        applyChartDownsampling(seriesData, yAxisData, downsample);
+
+      return {
+        seriesWithDownsampling: series.map((s, index) => ({
+          ...s,
+          data: downsampledSeriesData[index] || [],
+        })),
+        processedXAxis: xAxis,
+        processedYAxis: yAxis
+          ? yAxis.map((axis, axisIndex) => ({
+              ...axis,
+              data: axisIndex === 0 ? downsampledAxisData : axis.data,
+            }))
+          : [
+              {
+                id: DEFAULT_Y_AXIS_KEY,
+                scaleType: 'band' as const,
+                data: downsampledAxisData,
+              },
+            ],
+      };
+    }
+
+    // Vertical bars: downsample x-axis data
+    const defaultXAxisData = Array.from(
+      { length: Math.max(...seriesData.map((data) => data.length)) },
+      (_, index) => index,
+    );
+    const xAxisData = xAxis?.[0]?.data || defaultXAxisData;
+
+    const { seriesData: downsampledSeriesData, axisData: downsampledAxisData } =
+      applyChartDownsampling(seriesData, xAxisData, downsample);
+
+    return {
+      seriesWithDownsampling: series.map((s, index) => ({
+        ...s,
+        data: downsampledSeriesData[index] || [],
+      })),
+      processedXAxis: xAxis
+        ? xAxis.map((axis, axisIndex) => ({
+            ...axis,
+            data: axisIndex === 0 ? downsampledAxisData : axis.data,
+          }))
+        : [
+            {
+              id: DEFAULT_X_AXIS_KEY,
+              scaleType: 'band' as const,
+              data: downsampledAxisData,
+            },
+          ],
+      processedYAxis: yAxis,
+    };
+  }, [series, xAxis, yAxis, downsample, hasHorizontalSeries]);
+
   const defaultBandXAxis: AxisConfig<'band', number, ChartsXAxisProps>[] = React.useMemo(
     () => [
       {
         id: DEFAULT_X_AXIS_KEY,
         scaleType: 'band',
         data: Array.from(
-          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          {
+            length: Math.max(
+              ...seriesWithDownsampling.map((s) => (s.data ?? dataset ?? []).length),
+            ),
+          },
           (_, index) => index,
         ),
       },
     ],
-    [dataset, series],
+    [dataset, seriesWithDownsampling],
   );
 
   const defaultBandYAxis: AxisConfig<'band', number, ChartsYAxisProps>[] = React.useMemo(
@@ -79,26 +165,35 @@ export const useBarChartProps = (props: BarChartProps) => {
         id: DEFAULT_Y_AXIS_KEY,
         scaleType: 'band',
         data: Array.from(
-          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          {
+            length: Math.max(
+              ...seriesWithDownsampling.map((s) => (s.data ?? dataset ?? []).length),
+            ),
+          },
           (_, index) => index,
         ),
       },
     ],
-    [dataset, series],
+    [dataset, seriesWithDownsampling],
   );
 
   const seriesWithDefault = React.useMemo(
     () =>
-      series.map((s) => ({
+      seriesWithDownsampling.map((s) => ({
         type: 'bar' as const,
         ...s,
         layout: hasHorizontalSeries ? ('horizontal' as const) : ('vertical' as const),
       })),
-    [hasHorizontalSeries, series],
+    [hasHorizontalSeries, seriesWithDownsampling],
   );
 
   const defaultXAxis = hasHorizontalSeries ? undefined : defaultBandXAxis;
-  const processedXAxis = React.useMemo(() => {
+  const finalProcessedXAxis = React.useMemo(() => {
+    // Use downsampled axes if available, otherwise use original logic
+    if (processedXAxis) {
+      return processedXAxis;
+    }
+
     if (!xAxis) {
       return defaultXAxis;
     }
@@ -106,10 +201,15 @@ export const useBarChartProps = (props: BarChartProps) => {
     return hasHorizontalSeries
       ? xAxis
       : xAxis.map((axis) => ({ scaleType: 'band' as const, ...axis }));
-  }, [defaultXAxis, hasHorizontalSeries, xAxis]);
+  }, [defaultXAxis, hasHorizontalSeries, xAxis, processedXAxis]);
 
   const defaultYAxis = hasHorizontalSeries ? defaultBandYAxis : undefined;
-  const processedYAxis = React.useMemo(() => {
+  const finalProcessedYAxis = React.useMemo(() => {
+    // Use downsampled axes if available, otherwise use original logic
+    if (processedYAxis) {
+      return processedYAxis;
+    }
+
     if (!yAxis) {
       return defaultYAxis;
     }
@@ -117,7 +217,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     return hasHorizontalSeries
       ? yAxis.map((axis) => ({ scaleType: 'band' as const, ...axis }))
       : yAxis;
-  }, [defaultYAxis, hasHorizontalSeries, yAxis]);
+  }, [defaultYAxis, hasHorizontalSeries, yAxis, processedYAxis]);
 
   const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
     ...rest,
@@ -127,8 +227,8 @@ export const useBarChartProps = (props: BarChartProps) => {
     margin,
     colors,
     dataset,
-    xAxis: processedXAxis,
-    yAxis: processedYAxis,
+    xAxis: finalProcessedXAxis,
+    yAxis: finalProcessedYAxis,
     highlightedItem,
     onHighlightChange,
     disableAxisListener:

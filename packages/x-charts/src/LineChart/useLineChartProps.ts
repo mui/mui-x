@@ -16,6 +16,7 @@ import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './LineChart.plugins';
+import { applyChartDownsampling } from '../internals/downsample';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -51,35 +52,80 @@ export const useLineChartProps = (props: LineChartProps) => {
     onHighlightChange,
     className,
     showToolbar,
+    downsample,
     ...other
   } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const seriesWithDefault = React.useMemo(
-    () =>
-      series.map((s) => ({
+  // Apply chart-level downsampling to series and axis data
+  const { seriesWithDownsampling, processedXAxis } = React.useMemo(() => {
+    if (!downsample) {
+      return {
+        seriesWithDownsampling: series.map((s) => ({
+          disableHighlight: !!disableLineItemHighlight,
+          type: 'line' as const,
+          ...s,
+        })),
+        processedXAxis: xAxis,
+      };
+    }
+
+    // Extract series data for downsampling
+    const seriesData = series.map((s) => s.data || []);
+
+    // Use the first xAxis data or generate default indices
+    const defaultXAxisData = Array.from(
+      { length: Math.max(...seriesData.map((data) => data.length)) },
+      (_, index) => index,
+    );
+    const xAxisData = xAxis?.[0]?.data || defaultXAxisData;
+
+    // Apply chart-level downsampling
+    const { seriesData: downsampledSeriesData, axisData: downsampledAxisData } =
+      applyChartDownsampling(seriesData, xAxisData, downsample);
+
+    return {
+      seriesWithDownsampling: series.map((s, index) => ({
         disableHighlight: !!disableLineItemHighlight,
         type: 'line' as const,
         ...s,
+        data: downsampledSeriesData[index] || [],
       })),
-    [disableLineItemHighlight, series],
-  );
+      processedXAxis: xAxis
+        ? xAxis.map((axis, axisIndex) => ({
+            ...axis,
+            data: axisIndex === 0 ? downsampledAxisData : axis.data,
+          }))
+        : [
+            {
+              id: DEFAULT_X_AXIS_KEY,
+              scaleType: 'point' as const,
+              data: downsampledAxisData,
+            },
+          ],
+    };
+  }, [series, xAxis, downsample, disableLineItemHighlight]);
+
   const chartContainerProps: ChartContainerProps<'line', LineChartPluginsSignatures> = {
     ...other,
-    series: seriesWithDefault,
+    series: seriesWithDownsampling,
     width,
     height,
     margin,
     colors,
     dataset,
-    xAxis: xAxis ?? [
+    xAxis: processedXAxis || [
       {
         id: DEFAULT_X_AXIS_KEY,
         scaleType: 'point',
         data: Array.from(
-          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          {
+            length: Math.max(
+              ...seriesWithDownsampling.map((s) => (s.data ?? dataset ?? []).length),
+            ),
+          },
           (_, index) => index,
         ),
       },

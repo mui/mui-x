@@ -28,6 +28,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { BarChartPluginsSignatures } from './BarChart.plugins';
+import { DownsampleProp } from '../internals/downsample';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -76,6 +77,24 @@ export interface BarChartProps
    * If `true`, the legend is not rendered.
    */
   hideLegend?: boolean;
+  /**
+   * Configuration for downsampling the chart data.
+   * When specified, applies downsampling to all series and axis data consistently.
+   * This improves performance for large datasets while preserving visual characteristics.
+   *
+   * @example
+   * // Enable with default settings (1000 points, linear strategy)
+   * downsample={true}
+   *
+   * @example
+   * // Custom configuration
+   * downsample={{ targetPoints: 500, strategy: 'max' }}
+   *
+   * @example
+   * // Custom function
+   * downsample={(data, targetPoints) => customDownsampleLogic(data, targetPoints)}
+   */
+  downsample?: DownsampleProp<number | null>;
   /**
    * Overridable component slots.
    * @default {}

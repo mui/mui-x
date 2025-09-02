@@ -6,6 +6,7 @@ import { ChartSeries, DatasetElementType, DatasetType } from '../../models/serie
 import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
 import { SeriesId } from '../../models/seriesType/common';
 import { SeriesProcessor } from '../../internals/plugins/models';
+import { applyDownsample } from '../../internals/downsample';
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
@@ -56,26 +57,33 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
 
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
+      const rawData = dataKey
+        ? dataset!.map((data) => {
+            const value = data[dataKey];
+            if (typeof value !== 'number') {
+              if (process.env.NODE_ENV !== 'production') {
+                if (value !== null) {
+                  warnOnce([
+                    `MUI X Charts: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
+                    'Line plots only support numbers and null values.',
+                  ]);
+                }
+              }
+              return null;
+            }
+            return value;
+          })
+        : series[id].data!;
+
+      // Apply downsampling if configured
+      const processedData = series[id].downsample
+        ? applyDownsample(rawData, series[id].downsample!)
+        : rawData;
+
       completedSeries[id] = {
         labelMarkType: 'line',
         ...series[id],
-        data: dataKey
-          ? dataset!.map((data) => {
-              const value = data[dataKey];
-              if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production') {
-                  if (value !== null) {
-                    warnOnce([
-                      `MUI X Charts: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
-                      'Line plots only support numbers and null values.',
-                    ]);
-                  }
-                }
-                return null;
-              }
-              return value;
-            })
-          : series[id].data!,
+        data: processedData,
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
       };
     });

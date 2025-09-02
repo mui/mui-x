@@ -7,6 +7,7 @@ import {
   StackableSeriesType,
   SeriesId,
 } from './common';
+import { DownsampleProp } from '../../internals/downsample';
 
 export interface BarSeriesType
   extends CommonSeriesType<number | null>,
@@ -45,6 +46,17 @@ export interface BarSeriesType
    * @default 0px
    */
   minBarSize?: number;
+  /**
+   * Configuration for downsampling the series data when there are too many data points.
+   *
+   * - `false` or `'none'` - disables downsampling (default)
+   * - `true` - enables downsampling with default settings (1000 points, linear strategy)
+   * - `DownsampleConfig` - custom configuration with target point count and strategy
+   * - `DownsampleFunction` - custom downsampling function
+   *
+   * @default false
+   */
+  downsample?: DownsampleProp<number | null>;
 }
 
 /**
