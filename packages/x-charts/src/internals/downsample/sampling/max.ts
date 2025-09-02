@@ -38,36 +38,3 @@ export function maxDownsample(
 
   return result;
 }
-
-export function getMaxDownsampleIndices(
-  data: readonly (number | null)[],
-  targetPoints: number,
-): number[] {
-  const indices: number[] = [];
-  const bucketSize = Math.floor(data.length / targetPoints);
-
-  for (let i = 0; i < targetPoints; i += 1) {
-    const bucketStart = i * bucketSize;
-    const bucketEnd = Math.min((i + 1) * bucketSize, data.length);
-
-    if (i === targetPoints - 1) {
-      indices.push(data.length - 1);
-      continue;
-    }
-
-    let maxValue = -Infinity;
-    let maxIndex = bucketStart;
-
-    for (let j = bucketStart; j < bucketEnd; j += 1) {
-      const value = data[j];
-      if (value !== null && value > maxValue) {
-        maxValue = value;
-        maxIndex = j;
-      }
-    }
-
-    indices.push(maxIndex);
-  }
-
-  return indices;
-}

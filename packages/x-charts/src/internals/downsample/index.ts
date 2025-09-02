@@ -6,19 +6,12 @@ export type {
   DownsampleProp,
 } from './types';
 
-export { DEFAULT_TARGET_POINTS } from './types';
-
 // Export downsampling functions
-export { linearDownsample, getLinearDownsampleIndices } from './linearDownsample';
-export { peakDownsample, getPeakDownsampleIndices } from './peakDownsample';
-export { maxDownsample, getMaxDownsampleIndices } from './maxDownsample';
-export { minDownsample, getMinDownsampleIndices } from './minDownsample';
-export { averageDownsample } from './averageDownsample';
-
-// Export utility functions
-export { getDownsampleIndices } from './utils';
+export { linearDownsample } from './sampling/linear';
+export { peakDownsample } from './sampling/peak';
+export { maxDownsample } from './sampling/max';
+export { minDownsample } from './sampling/min';
+export { averageDownsample } from './sampling/average';
 
 // Export application functions
-export { applyDownsample } from './applyDownsample';
-export { applyChartDownsampling } from './applyChartDownsampling';
-export { applyDownsampleWithAxis } from './applyDownsampleWithAxis';
+export { useDownsampling } from './useDownsampling';

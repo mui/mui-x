@@ -1,36 +1,57 @@
-import type { DownsampleStrategy } from './types';
-import { getLinearDownsampleIndices } from './linearDownsample';
-import { getPeakDownsampleIndices } from './peakDownsample';
-import { getMaxDownsampleIndices } from './maxDownsample';
-import { getMinDownsampleIndices } from './minDownsample';
+import type { DownsampleFunction, DownsampleProp } from './types';
+import { linearDownsample } from './sampling/linear';
+import { averageDownsample } from './sampling/average';
+import { peakDownsample } from './sampling/peak';
+import { maxDownsample } from './sampling/max';
+import { minDownsample } from './sampling/min';
+
+/**
+ * Default target points for downsampling when enabled with boolean true
+ */
+const DEFAULT_TARGET_POINTS = 200;
 
 /**
  * Get indices for various downsampling strategies
  */
-export function getDownsampleIndices(
-  data: readonly (number | null)[],
-  targetPoints: number,
-  strategy: DownsampleStrategy,
-): number[] {
-  if (data.length <= targetPoints) {
-    return Array.from({ length: data.length }, (_, i) => i);
+export function getSamplingFunction(
+  downsampleConfig: DownsampleProp<number | null>,
+): DownsampleFunction<number | null> | null {
+  if (!downsampleConfig) {
+    return null;
   }
 
-  switch (strategy) {
-    case 'linear':
-      return getLinearDownsampleIndices(data.length, targetPoints);
-    case 'peak':
-      return getPeakDownsampleIndices(data, targetPoints);
-    case 'max':
-      return getMaxDownsampleIndices(data, targetPoints);
-    case 'min':
-      return getMinDownsampleIndices(data, targetPoints);
-    case 'average':
-      // Average doesn't preserve original indices, use linear as fallback
-      return getLinearDownsampleIndices(data.length, targetPoints);
-    case 'none':
-      return Array.from({ length: data.length }, (_, i) => i);
-    default:
-      return getLinearDownsampleIndices(data.length, targetPoints);
+  if (typeof downsampleConfig === 'function') {
+    return downsampleConfig;
   }
+
+  if (downsampleConfig === true) {
+    return linearDownsample;
+  }
+
+  const { strategy } = downsampleConfig;
+
+  switch (strategy) {
+    case 'peak':
+      return peakDownsample;
+    case 'max':
+      return maxDownsample;
+    case 'min':
+      return minDownsample;
+    case 'average':
+      return averageDownsample;
+    default:
+      return linearDownsample;
+  }
+}
+
+export function getTargetPoints(downsampleConfig: DownsampleProp<any>): number {
+  if (!downsampleConfig) {
+    return DEFAULT_TARGET_POINTS;
+  }
+
+  if (typeof downsampleConfig === 'object' && downsampleConfig !== null) {
+    return downsampleConfig.targetPoints ?? DEFAULT_TARGET_POINTS;
+  }
+
+  return DEFAULT_TARGET_POINTS;
 }
