@@ -307,7 +307,7 @@ importers:
         version: 15.5.2
       '@octokit/plugin-retry':
         specifier: ^8.0.1
-        version: 8.0.1(@octokit/core@5.2.2)
+        version: 8.0.1(@octokit/core@7.0.3)
       '@octokit/rest':
         specifier: ^22.0.0
         version: 22.0.0
@@ -15582,9 +15582,9 @@ snapshots:
       '@octokit/core': 7.0.3
       '@octokit/types': 14.1.0
 
-  '@octokit/plugin-retry@8.0.1(@octokit/core@5.2.2)':
+  '@octokit/plugin-retry@8.0.1(@octokit/core@7.0.3)':
     dependencies:
-      '@octokit/core': 5.2.2
+      '@octokit/core': 7.0.3
       '@octokit/request-error': 7.0.0
       '@octokit/types': 14.1.0
       bottleneck: 2.19.5
