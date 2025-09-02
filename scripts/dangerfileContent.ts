@@ -27,7 +27,7 @@ async function reportBundleSize() {
   const circleciBuildNumber = process.env.CIRCLE_BUILD_NUM;
 
   const { renderMarkdownReport } = await import('@mui/internal-bundle-size-checker');
-  markdownContent += await renderMarkdownReport(danger.github.pr, circleciBuildNumber, {
+  markdownContent += await renderMarkdownReport(danger.github.pr, {
     track: [
       '@mui/x-data-grid',
       '@mui/x-data-grid-pro',
@@ -40,6 +40,7 @@ async function reportBundleSize() {
       '@mui/x-tree-view',
       '@mui/x-tree-view-pro',
     ],
+    circleciBuildNumber,
   });
 
   // Use the markdown function to publish the report
