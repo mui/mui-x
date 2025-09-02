@@ -1,8 +1,8 @@
-import { GridRowId, GridTreeNode } from '@mui/x-data-grid-pro';
-import type { GridRowTreeConfig } from '@mui/x-data-grid-pro';
+import { GridRowId, GridTreeNode } from '@mui/x-data-grid';
+import type { GridRowTreeConfig } from '@mui/x-data-grid';
 import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export type DropPosition = 'above' | 'below';
 export type DragDirection = 'up' | 'down';
@@ -20,15 +20,17 @@ export interface ReorderValidationContext {
   expandedSortedRowIndexLookup: Record<GridRowId, number>;
 }
 
-export interface ReorderExecutionContext {
+export type ReorderOperationType = 'same-parent-swap' | 'cross-parent-leaf' | 'cross-parent-group';
+
+export interface ReorderExecutionContext<ApiRef extends GridPrivateApiPro = GridPrivateApiPro> {
   sourceRowId: GridRowId;
   placeholderIndex: number;
   sortedFilteredRowIds: GridRowId[];
   sortedFilteredRowIndexLookup: Record<GridRowId, number>;
   rowTree: GridRowTreeConfig;
-  apiRef: RefObject<GridPrivateApiPremium>;
-  processRowUpdate?: DataGridPremiumProcessedProps['processRowUpdate'];
-  onProcessRowUpdateError?: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
+  apiRef: RefObject<ApiRef>;
+  processRowUpdate?: DataGridProProcessedProps['processRowUpdate'];
+  onProcessRowUpdateError?: DataGridProProcessedProps['onProcessRowUpdateError'];
 }
 
 export interface ReorderOperation {
@@ -38,11 +40,3 @@ export interface ReorderOperation {
   isLastChild: boolean;
   operationType: ReorderOperationType;
 }
-
-export interface ReorderScenario {
-  name: string;
-  detectOperation: (ctx: ReorderExecutionContext) => ReorderOperation | null;
-  execute: (operation: ReorderOperation, ctx: ReorderExecutionContext) => Promise<void> | void;
-}
-
-export type ReorderOperationType = 'same-parent-swap' | 'cross-parent-leaf' | 'cross-parent-group';

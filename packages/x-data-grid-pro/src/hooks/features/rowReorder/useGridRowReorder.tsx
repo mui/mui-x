@@ -108,10 +108,9 @@ export const useGridRowReorder = (
   }, []);
 
   // TODO: remove sortModel check once row reorder is sorting compatible
-  // remove treeData check once row reorder is treeData compatible
   const isRowReorderDisabled = React.useMemo((): boolean => {
-    return !props.rowReordering || !!sortModel.length || props.treeData;
-  }, [props.rowReordering, sortModel, props.treeData]);
+    return !props.rowReordering || !!sortModel.length;
+  }, [props.rowReordering, sortModel]);
 
   const applyDropIndicator = React.useCallback(
     (targetRowId: GridRowId | null, position: 'above' | 'below' | null) => {

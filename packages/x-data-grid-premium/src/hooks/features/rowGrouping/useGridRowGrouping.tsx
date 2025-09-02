@@ -18,6 +18,7 @@ import {
   GridStrategyGroup,
   gridExpandedSortedRowIndexLookupSelector,
   RowGroupingStrategy,
+  type ReorderValidationContext,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -35,8 +36,7 @@ import {
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { rowGroupingReorderValidator } from '../rowReorder/reorderValidator';
-import { ReorderValidationContext } from '../rowReorder/types';
+import { rowGroupingReorderValidator } from '../rowReorder/rowGroupingReorderValidator';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>

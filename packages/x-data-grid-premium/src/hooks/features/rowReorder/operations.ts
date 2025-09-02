@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import {
   gridRowNodeSelector,
   gridRowTreeSelector,
@@ -12,6 +13,11 @@ import type {
   GridValidRowModel,
   GridUpdateRowParams,
 } from '@mui/x-data-grid-pro';
+import {
+  BaseReorderOperation,
+  type ReorderOperation,
+  type ReorderExecutionContext,
+} from '@mui/x-data-grid-pro/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
@@ -25,28 +31,9 @@ import {
   findExistingGroupWithSameKey,
   BatchRowUpdater,
 } from './utils';
-import type { ReorderOperation, ReorderExecutionContext } from './types';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
-/**
- * Base class for all reorder operations.
- * Provides abstract methods for operation detection and execution.
- */
-export abstract class BaseReorderOperation {
-  abstract readonly operationType: string;
-
-  /**
-   * Detects if this operation can handle the given context.
-   */
-  abstract detectOperation(ctx: ReorderExecutionContext): ReorderOperation | null;
-
-  /**
-   * Executes the detected operation.
-   */
-  abstract executeOperation(
-    operation: ReorderOperation,
-    ctx: ReorderExecutionContext,
-  ): Promise<void> | void;
-}
+type ReorderExecutionContextType = ReorderExecutionContext<GridPrivateApiPremium>;
 
 /**
  * Handles reordering of items within the same parent group.
@@ -271,7 +258,10 @@ export class CrossParentLeafOperation extends BaseReorderOperation {
     };
   }
 
-  async executeOperation(operation: ReorderOperation, ctx: ReorderExecutionContext): Promise<void> {
+  async executeOperation(
+    operation: ReorderOperation,
+    ctx: ReorderExecutionContextType,
+  ): Promise<void> {
     const { sourceNode, targetNode, isLastChild } = operation;
     const { apiRef, sourceRowId, processRowUpdate, onProcessRowUpdateError } = ctx;
 
@@ -521,7 +511,10 @@ export class CrossParentGroupOperation extends BaseReorderOperation {
     return operation;
   }
 
-  async executeOperation(operation: ReorderOperation, ctx: ReorderExecutionContext): Promise<void> {
+  async executeOperation(
+    operation: ReorderOperation,
+    ctx: ReorderExecutionContextType,
+  ): Promise<void> {
     const { sourceNode, targetNode, isLastChild } = operation;
     const { apiRef, processRowUpdate, onProcessRowUpdateError } = ctx;
 
