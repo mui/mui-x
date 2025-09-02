@@ -83,6 +83,11 @@ export interface UseTreeViewItemsInstance<R extends {}>
    * @param {TreeViewItemId} itemId The id of the item being clicked.
    */
   handleItemClick: (event: React.MouseEvent, itemId: TreeViewItemId) => void;
+  /**
+   * Mark a list of items as expandable.
+   * @param {TreeViewItemId[]} items The ids of the items to mark as expandable.
+   */
+  addExpandableItems: (items: TreeViewItemId[]) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {

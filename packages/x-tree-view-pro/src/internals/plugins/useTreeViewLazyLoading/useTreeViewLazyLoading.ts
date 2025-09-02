@@ -227,29 +227,17 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       }
 
       if (params.items.length) {
-        const newlyExpandableItems = Object.values(store.value.items.itemMetaLookup).filter(
-          (itemMeta) =>
-            !itemMeta.expandable &&
-            params.dataSource.getChildrenCount(store.value.items.itemModelLookup[itemMeta.id]) > 0,
-        );
-        if (newlyExpandableItems.length > 0) {
-          store.update((prevState) => {
-            const newItemMetaLookup = { ...prevState.items.itemMetaLookup };
-            for (const itemMeta of newlyExpandableItems) {
-              newItemMetaLookup[itemMeta.id] = {
-                ...prevState.items.itemMetaLookup[itemMeta.id],
-                expandable: true,
-              };
-            }
+        const newlyExpandableItems = Object.values(store.value.items.itemMetaLookup)
+          .filter(
+            (itemMeta) =>
+              !itemMeta.expandable &&
+              params.dataSource.getChildrenCount(store.value.items.itemModelLookup[itemMeta.id]) >
+                0,
+          )
+          .map((item) => item.id);
 
-            return {
-              ...prevState,
-              items: {
-                ...prevState.items,
-                itemMetaLookup: newItemMetaLookup,
-              },
-            };
-          });
+        if (newlyExpandableItems.length > 0) {
+          instance.addExpandableItems(newlyExpandableItems);
         }
       } else {
         await instance.fetchItemChildren(null);

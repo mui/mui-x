@@ -181,6 +181,26 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     });
   });
 
+  const addExpandableItems = useEventCallback((items: TreeViewItemId[]) => {
+    store.update((prevState) => {
+      const newItemMetaLookup = { ...prevState.items.itemMetaLookup };
+      for (const itemId of items) {
+        newItemMetaLookup[itemId] = {
+          ...prevState.items.itemMetaLookup[itemId],
+          expandable: true,
+        };
+      }
+
+      return {
+        ...prevState,
+        items: {
+          ...prevState.items,
+          itemMetaLookup: newItemMetaLookup,
+        },
+      };
+    });
+  });
+
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
       return;
@@ -232,6 +252,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       areItemUpdatesPrevented,
       setItemChildren,
       removeChildren,
+      addExpandableItems,
       handleItemClick,
     },
   };
