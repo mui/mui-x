@@ -146,11 +146,10 @@ const onRender = (type, props, Component) => {
         domainLimit: 'strict',
         valueFormatter: dateFormatter,
       })),
-      yAxis: [
-        {
-          valueFormatter: downloadsFormatter,
-        },
-      ],
+      yAxis: props.yAxis.map((axis) => ({
+        ...axis,
+        valueFormatter: downloadsFormatter,
+      })),
     };
   }
 

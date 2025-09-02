@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type {
+  GridChartsConfiguration,
   GridChartsConfigurationOptions,
   GridChartsConfigurationSection,
 } from '@mui/x-internals/types';
@@ -148,26 +149,52 @@ const getTooltipSection = (localeText: ChartsLocaleText): GridChartsConfiguratio
   },
 });
 
-const getLegendSection = (localeText: ChartsLocaleText): GridChartsConfigurationSection => ({
+const getLegendSection = (
+  localeText: ChartsLocaleText,
+  defaultDirection: 'horizontal' | 'vertical' = 'horizontal',
+  keyPrefix: string = 'legend',
+): GridChartsConfigurationSection => ({
   id: 'legend',
   label: localeText.chartConfigurationSectionLegend,
   controls: {
-    legendPosition: {
+    [`${keyPrefix}PositionHorizontal`]: {
       label: localeText.chartConfigurationLegendPosition,
       type: 'select',
       default: 'top',
       options: [
         { content: localeText.chartConfigurationOptionNone, value: 'none' },
+        { content: localeText.chartConfigurationOptionTopLeft, value: 'topLeft' },
         { content: localeText.chartConfigurationOptionTop, value: 'top' },
+        { content: localeText.chartConfigurationOptionTopRight, value: 'topRight' },
+        { content: localeText.chartConfigurationOptionBottomLeft, value: 'bottomLeft' },
         { content: localeText.chartConfigurationOptionBottom, value: 'bottom' },
-        { content: localeText.chartConfigurationOptionLeft, value: 'left' },
-        { content: localeText.chartConfigurationOptionRight, value: 'right' },
+        { content: localeText.chartConfigurationOptionBottomRight, value: 'bottomRight' },
       ],
+      isHidden: ({ configuration }: { configuration: GridChartsConfiguration }) =>
+        configuration[`${keyPrefix}Direction`] === 'vertical' ||
+        (configuration[`${keyPrefix}Direction`] === undefined && defaultDirection === 'vertical'),
     },
-    legendDirection: {
+    [`${keyPrefix}PositionVertical`]: {
+      label: localeText.chartConfigurationLegendPosition,
+      type: 'select',
+      default: 'right',
+      options: [
+        { content: localeText.chartConfigurationOptionNone, value: 'none' },
+        { content: localeText.chartConfigurationOptionTopLeft, value: 'topLeft' },
+        { content: localeText.chartConfigurationOptionLeft, value: 'left' },
+        { content: localeText.chartConfigurationOptionBottomLeft, value: 'bottomLeft' },
+        { content: localeText.chartConfigurationOptionTopRight, value: 'topRight' },
+        { content: localeText.chartConfigurationOptionRight, value: 'right' },
+        { content: localeText.chartConfigurationOptionBottomRight, value: 'bottomRight' },
+      ],
+      isHidden: ({ configuration }: { configuration: GridChartsConfiguration }) =>
+        configuration[`${keyPrefix}Direction`] === 'horizontal' ||
+        (configuration[`${keyPrefix}Direction`] === undefined && defaultDirection === 'horizontal'),
+    },
+    [`${keyPrefix}Direction`]: {
       label: localeText.chartConfigurationLegendDirection,
       type: 'select',
-      default: 'horizontal',
+      default: defaultDirection,
       options: [
         { content: localeText.chartConfigurationOptionHorizontal, value: 'horizontal' },
         { content: localeText.chartConfigurationOptionVertical, value: 'vertical' },
@@ -447,33 +474,7 @@ export const getLocalizedConfigurationOptions = (
             },
           },
         },
-        {
-          id: 'legend',
-          label: localeText.chartConfigurationSectionLegend,
-          controls: {
-            pieLegendPosition: {
-              label: localeText.chartConfigurationPieLegendPosition,
-              type: 'select',
-              default: 'right',
-              options: [
-                { content: localeText.chartConfigurationOptionNone, value: 'none' },
-                { content: localeText.chartConfigurationOptionTop, value: 'top' },
-                { content: localeText.chartConfigurationOptionBottom, value: 'bottom' },
-                { content: localeText.chartConfigurationOptionLeft, value: 'left' },
-                { content: localeText.chartConfigurationOptionRight, value: 'right' },
-              ],
-            },
-            pieLegendDirection: {
-              label: localeText.chartConfigurationPieLegendDirection,
-              type: 'select',
-              default: 'vertical',
-              options: [
-                { content: localeText.chartConfigurationOptionHorizontal, value: 'horizontal' },
-                { content: localeText.chartConfigurationOptionVertical, value: 'vertical' },
-              ],
-            },
-          },
-        },
+        getLegendSection(localeText, 'vertical', 'pieLegend'),
       ],
     },
   };

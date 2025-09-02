@@ -313,9 +313,25 @@ export interface ChartsLocaleText {
    */
   chartConfigurationOptionTop: string;
   /**
+   * Label for the "Top Left" option.
+   */
+  chartConfigurationOptionTopLeft: string;
+  /**
+   * Label for the "Top Right" option.
+   */
+  chartConfigurationOptionTopRight: string;
+  /**
    * Label for the "Bottom" option.
    */
   chartConfigurationOptionBottom: string;
+  /**
+   * Label for the "Bottom Left" option.
+   */
+  chartConfigurationOptionBottomLeft: string;
+  /**
+   * Label for the "Bottom Right" option.
+   */
+  chartConfigurationOptionBottomRight: string;
   /**
    * Label for the "Left" option.
    */
