@@ -107,14 +107,43 @@ This feature only works when multi selection is enabled using `props.multiSelect
 
 ### Apply propagation on mount
 
-You can use the `useApplyPropagationToDefaultSelectedItems()` to apply the selection propagation to your `defaultSelectedItems` prop.
+You can use the `useApplyPropagationToDefaultSelectedItems()` to apply the selection propagation to your `defaultSelectedItems` or `sectionItems` prop.
 
-```ts
+```tsx
+// Uncontrolled example
 const defaultSelectedItems = useApplyPropagationToDefaultSelectedItems({
   items: props.items,
-  selectionPropagation: props.selectionPropagation,
-  defaultSelectedItems: props.defaultSelectedItems,
+  selectionPropagation: props.selectedPropagation,
+  selectedItems: ['10', '11', '13', '14'],
 });
+
+return (
+  <RichTreeView
+    items={props.items}
+    selectionPropagation={props.selectionPropagation}
+    defaultSelectedItems={defaultSelectedItems}
+  />
+);
+```
+
+```tsx
+// Controlled example
+const initialSelectedItems = useApplyPropagationToDefaultSelectedItems({
+  items: props.items,
+  selectionPropagation: props.selectedPropagation,
+  selectedItems: ['10', '11', '13', '14'],
+});
+
+const [selectedItems, setSelectedItems] = React.useState(initialSelectedItems);
+
+return (
+  <RichTreeView
+    items={props.items}
+    selectionPropagation={props.selectionPropagation}
+    selectedItems={selectedItems}
+    onSelectedItemsChange={setSelectedItems}
+  />
+);
 ```
 
 In the example below, only Anna, Michael, Elizabeth and William are selected in the raw data, their ancestors are added to the `defaultSelectedItems` prop by the hook:

@@ -10,7 +10,7 @@ export default function SelectionPropagationMount() {
   const defaultSelectedItems = useApplyPropagationToDefaultSelectedItems({
     items: EMPLOYEES_DATASET,
     selectionPropagation,
-    defaultSelectedItems: ['10', '11', '13', '14'],
+    selectedItems: ['10', '11', '13', '14'],
   });
 
   return (

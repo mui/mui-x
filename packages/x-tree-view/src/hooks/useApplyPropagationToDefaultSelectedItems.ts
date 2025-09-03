@@ -9,15 +9,41 @@ const defaultGetItemChildren = (item: any) => item.children;
 /**
  * Applies the selection propagation rules to the default selected items.
  *
- * Example:
+ * Uncontrolled example:
  * ```tsx
  * const defaultSelectedItems = useApplyPropagationToDefaultSelectedItems({
- *   items,
- *   selectionPropagation,
- *   defaultSelectedItems: ['10', '11', '13', '14'],
+ *   items: props.items,
+ *   selectionPropagation: props.selectedPropagation,
+ *   selectedItems: ['10', '11', '13', '14'],
  * });
  *
- * return <RichTreeView items={items} selectionPropagation={selectionPropagation} defaultSelectedItems={defaultSelectedItems} />
+ * return (
+ *   <RichTreeView
+ *     items={props.items}
+ *     selectionPropagation={props.selectionPropagation}
+ *     defaultSelectedItems={defaultSelectedItems}
+ *   />
+ * );
+ * ```
+ *
+ * Controlled example:
+ * ```tsx
+ * const initialSelectedItems = useApplyPropagationToDefaultSelectedItems({
+ *   items: props.items,
+ *   selectionPropagation: props.selectedPropagation,
+ *   selectedItems: ['10', '11', '13', '14'],
+ * });
+ *
+ * const [selectedItems, setSelectedItems] = React.useState(initialSelectedItems);
+ *
+ * return (
+ *   <RichTreeView
+ *     items={props.items}
+ *     selectionPropagation={props.selectionPropagation}
+ *     selectedItems={selectedItems}
+ *     onSelectedItemsChange={setSelectedItems}
+ *   />
+ * );
  * ```
  */
 export function useApplyPropagationToDefaultSelectedItems(
@@ -27,12 +53,12 @@ export function useApplyPropagationToDefaultSelectedItems(
     items: itemsParam,
     getItemId = defaultGetItemId,
     getItemChildren = defaultGetItemChildren,
-    defaultSelectedItems,
+    selectedItems,
     selectionPropagation,
   } = parameters;
 
   return useLazyRef(() => {
-    const lookup = getLookupFromArray(defaultSelectedItems);
+    const lookup = getLookupFromArray(selectedItems);
 
     function walk(items: any[], isParentSelected: boolean) {
       for (const item of items) {
@@ -70,6 +96,6 @@ interface UseApplyPropagationToDefaultSelectedItemsParameters<R extends { childr
   items: R[];
   getItemId?: (item: R) => TreeViewItemId;
   getItemChildren?: (item: R) => R[] | undefined;
-  defaultSelectedItems: string[];
+  selectedItems: string[];
   selectionPropagation: TreeViewSelectionPropagation;
 }
