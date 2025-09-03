@@ -55,8 +55,8 @@ const baseInitialState: GridInitialState = {
   chartsIntegration: {
     charts: {
       test: {
-        categories: ['category1'],
-        series: ['amount'],
+        dimensions: ['category1'],
+        values: ['amount'],
       },
     },
   },
@@ -66,6 +66,8 @@ const configurationOptions: GridChartsConfigurationOptions = {
   type1: {
     label: 'Type 1 ',
     icon: GridChartsIcon,
+    dimensionsLabel: 'Categories',
+    valuesLabel: 'Series',
     customization: [
       {
         id: 'mainSection',
@@ -80,6 +82,8 @@ const configurationOptions: GridChartsConfigurationOptions = {
   type2: {
     label: 'Type 2',
     icon: GridChartsIcon,
+    dimensionsLabel: 'Categories',
+    valuesLabel: 'Series',
     customization: [
       {
         id: 'mainSection',
@@ -94,8 +98,10 @@ const configurationOptions: GridChartsConfigurationOptions = {
   type3: {
     label: 'Type 3',
     icon: GridChartsIcon,
-    maxCategories: 1,
-    maxSeries: 1,
+    dimensionsLabel: 'Categories',
+    valuesLabel: 'Series',
+    maxDimensions: 1,
+    maxValues: 1,
     customization: [
       {
         id: 'mainSection',
@@ -166,12 +172,12 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
     it('should partially update the context', () => {
       render(<Test />);
-      expect(integrationContext!.chartStateLookup.test.categories).to.deep.equal([]);
+      expect(integrationContext!.chartStateLookup.test.dimensions).to.deep.equal([]);
       expect(integrationContext!.chartStateLookup.test.label).to.equal(undefined);
       act(() => {
         integrationContext!.setChartState('test', { label: 'Test' });
       });
-      expect(integrationContext!.chartStateLookup.test.categories).to.deep.equal([]);
+      expect(integrationContext!.chartStateLookup.test.dimensions).to.deep.equal([]);
       expect(integrationContext!.chartStateLookup.test.label).to.equal('Test');
     });
   });
@@ -181,18 +187,18 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       it('should set the context on init', async () => {
         render(<Test initialState={baseInitialState} />);
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+          expect(integrationContext!.chartStateLookup.test.dimensions[0].id).to.equal('category1');
         });
       });
 
-      it('should not set the context on init if there are no series', () => {
+      it('should not set the context on init if there are no value datasets', () => {
         render(
           <Test
             initialState={{
               chartsIntegration: {
                 charts: {
                   test: {
-                    categories: ['category1'],
+                    dimensions: ['category1'],
                   },
                 },
               },
@@ -200,7 +206,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           />,
         );
 
-        expect(integrationContext!.chartStateLookup.test.categories).to.deep.equal([]);
+        expect(integrationContext!.chartStateLookup.test.dimensions).to.deep.equal([]);
       });
 
       it('should not add to the context hidden items', async () => {
@@ -210,8 +216,8 @@ describe('<DataGridPremium /> - Charts Integration', () => {
               chartsIntegration: {
                 charts: {
                   test: {
-                    categories: ['category1' as any, { field: 'category2', hidden: true }],
-                    series: ['amount'],
+                    dimensions: ['category1' as any, { field: 'category2', hidden: true }],
+                    values: ['amount'],
                   },
                 },
               },
@@ -220,9 +226,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         );
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
+          expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(1);
         });
-        expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+        expect(integrationContext!.chartStateLookup.test.dimensions[0].id).to.equal('category1');
       });
 
       it('should not add to the context non chartable items', () => {
@@ -232,8 +238,8 @@ describe('<DataGridPremium /> - Charts Integration', () => {
               chartsIntegration: {
                 charts: {
                   test: {
-                    categories: ['nonChartable'],
-                    series: ['amount'],
+                    dimensions: ['nonChartable'],
+                    values: ['amount'],
                   },
                 },
               },
@@ -241,7 +247,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           />,
         );
 
-        expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
+        expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
       });
 
       it('should pick the first available chart if there is no active chart', () => {
@@ -259,7 +265,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       it('should update the context when filter model changes', async () => {
         render(<Test initialState={baseInitialState} />);
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
+          expect(integrationContext!.chartStateLookup.test.dimensions[0].data.length).to.equal(
             rows.length,
           );
         });
@@ -277,14 +283,14 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(1);
+          expect(integrationContext!.chartStateLookup.test.dimensions[0].data.length).to.equal(1);
         });
       });
 
       it('should update the context when sort model changes', async () => {
         render(<Test initialState={baseInitialState} />);
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series[0].data[0]).to.equal(
+          expect(integrationContext!.chartStateLookup.test.values[0].data[0]).to.equal(
             rows[0].amount,
           );
         });
@@ -294,16 +300,16 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series[0].data[0]).to.equal(
+          expect(integrationContext!.chartStateLookup.test.values[0].data[0]).to.equal(
             rows[rows.length - 1].amount,
           );
         });
       });
 
-      it('should read to the grouped value if the active category becomes grouped', async () => {
+      it('should read to the grouped value if the active dimension becomes grouped', async () => {
         render(<Test initialState={baseInitialState} />);
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+          expect(integrationContext!.chartStateLookup.test.dimensions[0].id).to.equal('category1');
         });
 
         act(() => {
@@ -311,16 +317,16 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].data[0]).to.equal(
+          expect(integrationContext!.chartStateLookup.test.dimensions[0].data[0]).to.equal(
             rows[0].category1,
           );
         });
       });
 
-      it('should remove series if they become pivoting values', async () => {
+      it('should remove values datasets if they become pivoting values', async () => {
         render(<Test initialState={baseInitialState} />);
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series[0].id).to.equal('amount');
+          expect(integrationContext!.chartStateLookup.test.values[0].id).to.equal('amount');
         });
 
         act(() => {
@@ -333,7 +339,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+          expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
         });
       });
 
@@ -351,31 +357,31 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         render(<Test initialState={initialState} />);
 
         act(() => {
-          apiRef!.current?.updateCategories('test', [{ field: 'category1' }]);
+          apiRef!.current?.updateChartDimensionsData('test', [{ field: 'category1' }]);
         });
 
         act(() => {
-          apiRef!.current?.updateSeries('test', [{ field: 'amount' }]);
+          apiRef!.current?.updateChartValuesData('test', [{ field: 'amount' }]);
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+          expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
         });
 
         // dynamically created values columns are chartable
         act(() => {
-          apiRef!.current?.updateSeries('test', [
+          apiRef!.current?.updateChartValuesData('test', [
             { field: `${rows[0].category2}${COLUMN_GROUP_ID_SEPARATOR}amount` },
           ]);
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+          expect(integrationContext!.chartStateLookup.test.values.length).to.equal(1);
         });
 
         // remove column from pivoting
         // this will make the values reappear as regular column (not dynamically created)
-        // and the charts hook will allow that column to be used as series
+        // and the charts hook will allow that column to be used as values
         act(() => {
           apiRef!.current?.setPivotModel({
             rows: [{ field: 'category1' }],
@@ -384,99 +390,105 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           });
         });
 
-        // this clears series as well, because the column does not exist anymore
+        // this clears values as well, because the column does not exist anymore
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+          expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
         });
 
         act(() => {
-          apiRef!.current?.updateSeries('test', [{ field: 'amount' }]);
+          apiRef!.current?.updateChartValuesData('test', [{ field: 'amount' }]);
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+          expect(integrationContext!.chartStateLookup.test.values.length).to.equal(1);
         });
       });
     });
 
     describe('API', () => {
-      it('should allow updating categories and series through the API', async () => {
+      it('should allow updating dimensions and values through the API', async () => {
         render(<Test />);
 
-        expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
-        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+        expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
+        expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
 
         act(() => {
-          apiRef!.current?.updateCategories('test', [{ field: 'category1' }]);
+          apiRef!.current?.updateChartDimensionsData('test', [{ field: 'category1' }]);
         });
 
-        // categories and series are still empty. without both present, category are not added to the context
-        expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
-        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+        // dimensions and values are still empty. without both present, dimension are not added to the context
+        expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
+        expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
 
         act(() => {
-          apiRef!.current?.updateSeries('test', [{ field: 'amount' }]);
+          apiRef!.current?.updateChartValuesData('test', [{ field: 'amount' }]);
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category1');
+          expect(integrationContext!.chartStateLookup.test.dimensions[0].id).to.equal('category1');
         });
-        expect(integrationContext!.chartStateLookup.test.series[0].id).to.equal('amount');
+        expect(integrationContext!.chartStateLookup.test.values[0].id).to.equal('amount');
       });
     });
 
-    it('should not allow setting non chartable items as categories or series', () => {
+    it('should not allow setting non chartable items as dimensions or values', () => {
       render(<Test />);
 
-      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
 
       act(() => {
-        apiRef!.current?.updateCategories('test', [{ field: 'nonChartable' }]);
+        apiRef!.current?.updateChartDimensionsData('test', [{ field: 'nonChartable' }]);
       });
 
-      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
 
       act(() => {
-        apiRef!.current?.updateSeries('test', [{ field: 'nonChartable' }]);
+        apiRef!.current?.updateChartValuesData('test', [{ field: 'nonChartable' }]);
       });
 
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
     });
 
-    it('should not allow setting string columns as series without row grouping', async () => {
+    it('should not allow setting string columns as values without row grouping', async () => {
       render(<Test />);
 
-      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
 
       act(() => {
-        apiRef!.current?.updateCategories('test', [{ field: 'category1' }]);
-        apiRef!.current?.updateSeries('test', [{ field: 'amount' }, { field: 'category2' }]);
+        apiRef!.current?.updateChartDimensionsData('test', [{ field: 'category1' }]);
+        apiRef!.current?.updateChartValuesData('test', [
+          { field: 'amount' },
+          { field: 'category2' },
+        ]);
       });
 
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+        expect(integrationContext!.chartStateLookup.test.values.length).to.equal(1);
       });
     });
 
-    it('should allow setting string columns as series with row grouping', async () => {
+    it('should allow setting string columns as values with row grouping', async () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
 
-      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
 
       act(() => {
-        apiRef!.current?.updateCategories('test', [{ field: 'category1' }]);
-        apiRef!.current?.updateSeries('test', [{ field: 'amount' }, { field: 'category2' }]);
+        apiRef!.current?.updateChartDimensionsData('test', [{ field: 'category1' }]);
+        apiRef!.current?.updateChartValuesData('test', [
+          { field: 'amount' },
+          { field: 'category2' },
+        ]);
       });
 
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(2);
+        expect(integrationContext!.chartStateLookup.test.values.length).to.equal(2);
       });
     });
 
-    it('should not allow adding more categories or series than the max limit', async () => {
+    it('should not allow adding more dimensions or values than the max limit', async () => {
       render(
         <Test
           initialState={{
@@ -491,25 +503,31 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         />,
       );
 
-      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(0);
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(0);
+      expect(integrationContext!.chartStateLookup.test.values.length).to.equal(0);
 
       act(() => {
-        apiRef!.current?.updateCategories('test', [{ field: 'category1' }, { field: 'category2' }]);
+        apiRef!.current?.updateChartDimensionsData('test', [
+          { field: 'category1' },
+          { field: 'category2' },
+        ]);
       });
 
       act(() => {
-        apiRef!.current?.updateSeries('test', [{ field: 'amount' }, { field: 'category2' }]);
+        apiRef!.current?.updateChartValuesData('test', [
+          { field: 'amount' },
+          { field: 'category2' },
+        ]);
       });
 
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
+        expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(1);
       });
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+      expect(integrationContext!.chartStateLookup.test.values.length).to.equal(1);
     });
 
     describe('Other model updates', () => {
-      it('should update grouping model and column visibility model if grouped category is replaced with another field', async () => {
+      it('should update grouping model and column visibility model if grouped dimension is replaced with another field', async () => {
         const initialState = {
           ...baseInitialState,
           rowGrouping: {
@@ -522,11 +540,11 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         render(<Test initialState={initialState} />);
 
         act(() => {
-          apiRef!.current?.updateCategories('test', [{ field: 'category2' }]);
+          apiRef!.current?.updateChartDimensionsData('test', [{ field: 'category2' }]);
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category2');
+          expect(integrationContext!.chartStateLookup.test.dimensions[0].id).to.equal('category2');
         });
 
         expect(apiRef!.current?.state.rowGrouping.model).to.deep.equal(['category2']);
@@ -534,7 +552,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         expect(apiRef!.current?.state.columns.columnVisibilityModel.category2).to.equal(false);
       });
 
-      it('should update pivoting rows if chart category is replaced with active pivoting', async () => {
+      it('should update pivoting rows if chart dimension is replaced with active pivoting', async () => {
         const initialState = {
           ...baseInitialState,
           pivoting: {
@@ -549,11 +567,11 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         render(<Test initialState={initialState} />);
 
         act(() => {
-          apiRef!.current?.updateCategories('test', [{ field: 'category2' }]);
+          apiRef!.current?.updateChartDimensionsData('test', [{ field: 'category2' }]);
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.categories[0].id).to.equal('category2');
+          expect(integrationContext!.chartStateLookup.test.dimensions[0].id).to.equal('category2');
         });
 
         expect(apiRef!.current?.state.pivoting.model).to.deep.equal({
@@ -563,7 +581,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         });
       });
 
-      it('should aggregate newly added series if row grouping is enabled', async () => {
+      it('should aggregate newly added values if row grouping is enabled', async () => {
         const initialState = {
           ...baseInitialState,
           rowGrouping: {
@@ -576,11 +594,14 @@ describe('<DataGridPremium /> - Charts Integration', () => {
         render(<Test initialState={initialState} />);
 
         act(() => {
-          apiRef!.current?.updateSeries('test', (prev) => [...prev, { field: 'category2' }]);
+          apiRef!.current?.updateChartValuesData('test', (prev) => [
+            ...prev,
+            { field: 'category2' },
+          ]);
         });
 
         await waitFor(() => {
-          expect(integrationContext!.chartStateLookup.test.series[1].id).to.equal('category2');
+          expect(integrationContext!.chartStateLookup.test.values[1].id).to.equal('category2');
         });
 
         expect(apiRef!.current?.state.aggregation.model.category2).to.equal('size');
@@ -597,12 +618,12 @@ describe('<DataGridPremium /> - Charts Integration', () => {
             chartsIntegration: {
               charts: {
                 test: {
-                  categories: ['category1'],
-                  series: ['amount'],
+                  dimensions: ['category1'],
+                  values: ['amount'],
                 },
                 test2: {
-                  categories: ['category1'],
-                  series: ['amount'],
+                  dimensions: ['category1'],
+                  values: ['amount'],
                 },
               },
             },
@@ -616,12 +637,12 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
       // data is loaded for both charts
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
+        expect(integrationContext!.chartStateLookup.test.dimensions[0].data.length).to.equal(
           rows.length,
         );
       });
 
-      expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(
+      expect(integrationContext!.chartStateLookup.test2.dimensions[0].data.length).to.equal(
         rows.length,
       );
 
@@ -631,7 +652,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       });
 
       // data is still the same
-      expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(
+      expect(integrationContext!.chartStateLookup.test2.dimensions[0].data.length).to.equal(
         rows.length,
       );
 
@@ -642,10 +663,10 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
       // first chart is updated
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(0);
+        expect(integrationContext!.chartStateLookup.test.dimensions[0].data.length).to.equal(0);
       });
       // second chart is not updated
-      expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(
+      expect(integrationContext!.chartStateLookup.test2.dimensions[0].data.length).to.equal(
         rows.length,
       );
 
@@ -656,7 +677,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
       // data is updated
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(0);
+        expect(integrationContext!.chartStateLookup.test2.dimensions[0].data.length).to.equal(0);
       });
 
       // update rows again
@@ -666,11 +687,11 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
       // both charts are updated
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.categories[0].data.length).to.equal(
+        expect(integrationContext!.chartStateLookup.test.dimensions[0].data.length).to.equal(
           rows.length,
         );
       });
-      expect(integrationContext!.chartStateLookup.test2.categories[0].data.length).to.equal(
+      expect(integrationContext!.chartStateLookup.test2.dimensions[0].data.length).to.equal(
         rows.length,
       );
     });
@@ -682,7 +703,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
       expect(renderSpy.called).to.equal(true);
       await waitFor(() => {
-        expect(renderSpy.lastCall.firstArg.chartStateLookup.test.categories[0].id).to.equal(
+        expect(renderSpy.lastCall.firstArg.chartStateLookup.test.dimensions[0].id).to.equal(
           'category1',
         );
       });
@@ -734,7 +755,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       expect(integrationContext!.chartStateLookup.test.type).to.equal('type2');
     });
 
-    it('should allow categories and series selection', async () => {
+    it('should allow dimensions and values selection', async () => {
       const { user } = render(
         <Test
           initialState={{
@@ -771,13 +792,13 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           .querySelector('[data-testid="AddIcon"]')!,
       );
 
-      expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+      expect(integrationContext!.chartStateLookup.test.values.length).to.equal(1);
 
-      // click on the second menu item (Add to series)
+      // click on the second menu item (Add to Series)
       await user.click(screen.getAllByRole('menuitem')[1]);
 
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(2);
+        expect(integrationContext!.chartStateLookup.test.values.length).to.equal(2);
       });
 
       // open the menu for the remaining field
@@ -787,13 +808,13 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           .querySelector('[data-testid="AddIcon"]')!,
       );
 
-      expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(1);
+      expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(1);
 
-      // click on the first menu item (Add to categories)
+      // click on the first menu item (Add to Categories)
       await user.click(screen.getAllByRole('menuitem')[0]);
 
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.categories.length).to.equal(2);
+        expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(2);
       });
 
       // remaining column is not chartable so there should not be any other field menus
@@ -813,9 +834,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
       await user.click(hideCheckbox);
 
-      // series are back to 1
+      // values are back to 1
       await waitFor(() => {
-        expect(integrationContext!.chartStateLookup.test.series.length).to.equal(1);
+        expect(integrationContext!.chartStateLookup.test.values.length).to.equal(1);
       });
     });
 

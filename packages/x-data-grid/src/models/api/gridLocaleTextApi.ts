@@ -249,16 +249,16 @@ export interface GridLocaleText {
   chartsFieldBlocked: string;
   chartsCategories: string;
   chartsSeries: string;
-  chartsMenuAddToCategories: string;
-  chartsMenuAddToSeries: string;
+  chartsMenuAddToDimensions: (dimensionLabel: string) => string;
+  chartsMenuAddToValues: (valuesLabel: string) => string;
   chartsMenuMoveUp: string;
   chartsMenuMoveDown: string;
   chartsMenuMoveToTop: string;
   chartsMenuMoveToBottom: string;
   chartsMenuOptions: string;
   chartsMenuRemove: string;
-  chartsDragToCategories: string;
-  chartsDragToSeries: string;
+  chartsDragToDimensions: (dimensionLabel: string) => string;
+  chartsDragToValues: (valuesLabel: string) => string;
 
   // AI Assistant panel
   aiAssistantPanelTitle: string;

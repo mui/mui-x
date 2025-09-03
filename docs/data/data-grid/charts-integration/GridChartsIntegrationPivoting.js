@@ -42,7 +42,7 @@ export default function GridChartsIntegrationPivoting() {
     chartsIntegration: {
       charts: {
         main: {
-          categories: ['commodity'],
+          dimensions: ['commodity'],
           chartType: 'column',
         },
       },
@@ -66,7 +66,7 @@ export default function GridChartsIntegrationPivoting() {
 
       hasInitializedPivotingSeries.current = true;
       // pick up the first 5 dyamically created columns with quantity in the name and enable first 3
-      apiRef.current.updateSeries(
+      apiRef.current.updateChartValuesData(
         'main',
         unwrappedGroupingModel
           .filter((field) => field.endsWith('quantity'))

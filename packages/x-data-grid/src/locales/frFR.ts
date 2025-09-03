@@ -265,16 +265,18 @@ const frFRGrid: Partial<GridLocaleText> = {
   // chartsFieldBlocked: 'This field cannot be added to any section',
   chartsCategories: 'Catégories',
   chartsSeries: 'Séries',
-  chartsMenuAddToCategories: 'Ajouter aux catégories',
-  chartsMenuAddToSeries: 'Ajouter aux séries',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Ajouter aux ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Ajouter aux ${valuesLabel}`,
   chartsMenuMoveUp: 'Déplacer vers le haut',
   chartsMenuMoveDown: 'Déplacer vers le bas',
   chartsMenuMoveToTop: 'Déplacer en haut',
   chartsMenuMoveToBottom: 'Déplacer en bas',
   chartsMenuOptions: 'Options du champ',
   chartsMenuRemove: 'Supprimer',
-  chartsDragToCategories: 'Faites glisser ici pour utiliser la colonne comme catégorie',
-  chartsDragToSeries: 'Faites glisser ici pour utiliser la colonne comme série',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Faites glisser ici pour utiliser la colonne comme ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Faites glisser ici pour utiliser la colonne comme ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',

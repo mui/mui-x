@@ -7,9 +7,9 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { FieldTransferObject, DropPosition } from './GridChartsPanelDataBody';
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
 import {
-  gridChartsCategoriesSelector,
+  gridChartsDimensionsSelector,
   gridChartsIntegrationActiveChartIdSelector,
-  gridChartsSeriesSelector,
+  gridChartsValuesSelector,
 } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
@@ -17,6 +17,8 @@ interface GridChartsPanelDataFieldMenuProps {
   field: string;
   section: FieldTransferObject['section'];
   blockedSections?: string[];
+  dimensionsLabel: string;
+  valuesLabel: string;
 }
 
 type MenuAction = {
@@ -31,19 +33,19 @@ type MenuDivider = {
 };
 
 function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) {
-  const { field, section, blockedSections } = props;
+  const { field, section, blockedSections, dimensionsLabel, valuesLabel } = props;
   const rootProps = useGridRootProps();
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridPrivateApiContext();
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
-  const categories = useGridSelector(apiRef, gridChartsCategoriesSelector, activeChartId);
-  const series = useGridSelector(apiRef, gridChartsSeriesSelector, activeChartId);
+  const dimensions = useGridSelector(apiRef, gridChartsDimensionsSelector, activeChartId);
+  const values = useGridSelector(apiRef, gridChartsValuesSelector, activeChartId);
   const isAvailableField = section === null;
   const fieldIndexInModel = !isAvailableField
-    ? (section === 'categories' ? categories : series).findIndex((item) => item.field === field)
+    ? (section === 'dimensions' ? dimensions : values).findIndex((item) => item.field === field)
     : -1;
   const modelLength = !isAvailableField
-    ? (section === 'categories' ? categories : series).length
+    ? (section === 'dimensions' ? dimensions : values).length
     : 0;
   const canMoveUp = fieldIndexInModel > 0;
   const canMoveDown = !isAvailableField && fieldIndexInModel < modelLength - 1;
@@ -54,8 +56,14 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
   const menuItems = React.useMemo((): (MenuAction | MenuDivider)[] => {
     if (isAvailableField) {
       return [
-        { key: 'categories', label: apiRef.current.getLocaleText('chartsMenuAddToCategories') },
-        { key: 'series', label: apiRef.current.getLocaleText('chartsMenuAddToSeries') },
+        {
+          key: 'dimensions',
+          label: apiRef.current.getLocaleText('chartsMenuAddToDimensions')(dimensionsLabel),
+        },
+        {
+          key: 'values',
+          label: apiRef.current.getLocaleText('chartsMenuAddToValues')(valuesLabel),
+        },
       ].filter((item) => !blockedSections?.includes(item.key)) as MenuAction[];
     }
 
@@ -98,13 +106,13 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
 
     const addToSectionMenuItems: (MenuAction | MenuDivider)[] = [
       {
-        key: 'categories',
-        label: apiRef.current.getLocaleText('chartsMenuAddToCategories'),
+        key: 'dimensions',
+        label: apiRef.current.getLocaleText('chartsMenuAddToDimensions')(dimensionsLabel),
         icon: <span />,
       },
       {
-        key: 'series',
-        label: apiRef.current.getLocaleText('chartsMenuAddToSeries'),
+        key: 'values',
+        label: apiRef.current.getLocaleText('chartsMenuAddToValues')(valuesLabel),
         icon: <span />,
       },
     ].filter(
@@ -116,7 +124,17 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
     }
 
     return [...moveMenuItems, ...addToSectionMenuItems, ...removeMenuItem];
-  }, [isAvailableField, apiRef, rootProps, canMoveUp, canMoveDown, section, blockedSections]);
+  }, [
+    isAvailableField,
+    apiRef,
+    rootProps,
+    canMoveUp,
+    canMoveDown,
+    section,
+    blockedSections,
+    dimensionsLabel,
+    valuesLabel,
+  ]);
 
   if (menuItems.length === 0) {
     return null;
@@ -138,7 +156,7 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
       return;
     }
 
-    const items = section === 'categories' ? categories : series;
+    const items = section === 'dimensions' ? dimensions : values;
 
     let targetField: string | undefined;
     let targetFieldPosition: DropPosition = null;
@@ -161,8 +179,8 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
         targetField = items[modelLength - 1].field;
         targetFieldPosition = 'bottom';
         break;
-      case 'categories':
-      case 'series':
+      case 'dimensions':
+      case 'values':
       case null:
         targetSection = to;
         break;

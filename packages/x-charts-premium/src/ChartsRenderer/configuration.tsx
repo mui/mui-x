@@ -270,7 +270,7 @@ const getBarColumnCustomization = (
         label: localeText.chartConfigurationStacked,
         type: 'boolean',
         default: false,
-        isDisabled: ({ series }: { series: any[] }) => series.length < 2,
+        isDisabled: ({ values }: { values: any[] }) => values.length < 2,
       },
       itemLabel: {
         label:
@@ -325,7 +325,7 @@ const getLineAreaCustomization = (
         label: localeText.chartConfigurationStacked,
         type: 'boolean',
         default: false,
-        isDisabled: ({ series }: { series: any[] }) => series.length < 2,
+        isDisabled: ({ values }: { values: any[] }) => values.length < 2,
       },
       showMark: {
         label: localeText.chartConfigurationShowMark,
@@ -372,7 +372,7 @@ export const getLocalizedConfigurationOptions = (
     pie: {
       label: localeText.chartTypePie,
       icon: GridPieChartIcon,
-      maxCategories: 1,
+      maxDimensions: 1,
       customization: [
         {
           id: 'data',
@@ -383,7 +383,7 @@ export const getLocalizedConfigurationOptions = (
               label: localeText.chartConfigurationSeriesGap,
               type: 'number',
               default: 10,
-              isDisabled: ({ series }: { series: any[] }) => series.length < 2,
+              isDisabled: ({ values }: { values: any[] }) => values.length < 2,
               htmlAttributes: {
                 min: '0',
               },

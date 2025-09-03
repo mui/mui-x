@@ -91,8 +91,8 @@ export default function GridChartsIntegrationLiveData() {
               chartsIntegration: {
                 charts: {
                   left: {
-                    categories: ['process'],
-                    series: ['cpu'],
+                    dimensions: ['process'],
+                    values: ['cpu'],
                     chartType: 'column',
                     configuration: {
                       grid: 'horizontal',
@@ -100,8 +100,8 @@ export default function GridChartsIntegrationLiveData() {
                     },
                   },
                   right: {
-                    categories: ['process'],
-                    series: ['memory'],
+                    dimensions: ['process'],
+                    values: ['memory'],
                     chartType: 'column',
                     configuration: {
                       grid: 'horizontal',

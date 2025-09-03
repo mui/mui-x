@@ -60,8 +60,8 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   const {
     type: chartType,
     configuration,
-    categories,
-    series,
+    dimensions,
+    values,
   } = chartStateLookup[activeChartId] ?? EMPTY_CHART_INTEGRATION_CONTEXT_STATE;
 
   const handleChange = (field: string, value: any) => {
@@ -91,7 +91,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
           <GridChartsPanelCustomizePanel ownerState={rootProps}>
             {Object.entries(section.controls).map(([key, optRaw]) => {
               const opt = optRaw as GridChartsConfigurationControl;
-              const context = { configuration, categories, series };
+              const context = { configuration, dimensions, values };
               const isHidden = opt.isHidden?.(context) ?? false;
               if (isHidden) {
                 return null;

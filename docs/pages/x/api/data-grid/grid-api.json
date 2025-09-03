@@ -546,9 +546,16 @@
       "type": { "description": "(enabled: boolean) =&gt; void" },
       "required": true
     },
-    "updateCategories": {
+    "updateChartDimensionsData": {
       "type": {
-        "description": "(chartId: string, categories: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
+        "description": "(chartId: string, dimensions: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "updateChartValuesData": {
+      "type": {
+        "description": "(chartId: string, values: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
       },
       "required": true,
       "isPremiumPlan": true
@@ -560,13 +567,6 @@
     "updateRows": {
       "type": { "description": "(updates: GridRowModelUpdate[]) =&gt; void" },
       "required": true
-    },
-    "updateSeries": {
-      "type": {
-        "description": "(chartId: string, series: GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) =&gt; GridChartsIntegrationItem[])) =&gt; void"
-      },
-      "required": true,
-      "isPremiumPlan": true
     },
     "upsertFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },

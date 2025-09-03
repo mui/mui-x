@@ -51,22 +51,22 @@ const customConfiguration = {
   bar: {
     ...configurationOptions.bar,
     customization: hideColorsControl(configurationOptions.bar.customization),
-    maxCategories: 1,
+    maxDimensions: 1,
   },
   column: {
     ...configurationOptions.column,
     customization: hideColorsControl(configurationOptions.column.customization),
-    maxCategories: 1,
+    maxDimensions: 1,
   },
   line: {
     ...configurationOptions.line,
     customization: hideColorsControl(configurationOptions.line.customization),
-    maxCategories: 1,
+    maxDimensions: 1,
   },
   area: {
     ...configurationOptions.area,
     customization: hideColorsControl(configurationOptions.area.customization),
-    maxCategories: 1,
+    maxDimensions: 1,
   },
 };
 
@@ -103,8 +103,8 @@ const initialState = {
   chartsIntegration: {
     charts: {
       main: {
-        categories: ['timestamp'],
-        series: [],
+        dimensions: ['timestamp'],
+        values: [],
         chartType: 'line',
         configuration: {
           showMark: false,
@@ -200,7 +200,7 @@ export default function GridChartsIntegrationCustomization() {
       }
 
       // pick up the all major versions
-      apiRef.current?.updateSeries(
+      apiRef.current?.updateChartValuesData(
         'main',
         unwrappedGroupingModel.map((field) => ({ field })),
       );

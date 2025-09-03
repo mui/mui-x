@@ -73,8 +73,8 @@ export default function GridChartsIntegrationDataSource() {
       chartsIntegration: {
         charts: {
           main: {
-            categories: ['company'],
-            series: ['gross'],
+            dimensions: ['company'],
+            values: ['gross'],
             chartType: 'column',
           },
         },
