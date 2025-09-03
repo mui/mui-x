@@ -108,16 +108,17 @@ const getGridTemplateAreasWithoutToolBar = (
           "chart"`;
 };
 
-const getTemplateColumns = (hideLegend: boolean, direction?: Direction, position?: Position) => {
+const getTemplateColumns = (hideLegend: boolean, direction?: Direction, _?: Position) => {
   if (direction === 'vertical') {
-    if (hideLegend) {
-      return '1fr';
-    }
-    if (position?.horizontal === 'start') {
-      return 'auto 1fr';
-    }
+    return 'auto';
+    // if (hideLegend) {
+    //   return '1fr';
+    // }
+    // if (position?.horizontal === 'start') {
+    //   return 'auto 1fr';
+    // }
 
-    return '1fr auto';
+    // return '1fr auto';
   }
 
   return '100%';
