@@ -27,7 +27,7 @@ export function useRowEventOccurrences(
       const occurrences = occurrencesMap.get(day.key);
 
       // Process all-day events and get their position in the row
-      for (const occurrence of occurrences?.regular ?? []) {
+      for (const occurrence of occurrences?.allDay ?? []) {
         const eventRowIndex = getEventRowIndex({
           adapter,
           rowIndexLookup,

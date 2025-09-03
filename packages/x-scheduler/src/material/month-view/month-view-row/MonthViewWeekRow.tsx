@@ -17,6 +17,8 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const daysWithEvents = useRowEventOccurrences({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
+  console.log(daysWithEvents);
+
   const { start, end } = React.useMemo(
     () => ({
       start: days[0].value,
