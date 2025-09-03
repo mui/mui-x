@@ -15,10 +15,9 @@ import { Adapter } from './adapter/types';
 export function getEventWithLargestRowIndex(events: CalendarEventOccurrencesWithRowIndex[]) {
   return (
     events.reduce(
-      (maxEvent, event) =>
-        (event?.eventRowIndex ?? 0) > (maxEvent.eventRowIndex ?? 0) ? event : maxEvent,
-      { eventRowIndex: 0 } as CalendarEventOccurrencesWithRowIndex,
-    ).eventRowIndex || 0
+      (maxEvent, event) => ((event?.rowIndex ?? 0) > (maxEvent.rowIndex ?? 0) ? event : maxEvent),
+      { rowIndex: 0 } as CalendarEventOccurrencesWithRowIndex,
+    ).rowIndex || 0
   );
 }
 

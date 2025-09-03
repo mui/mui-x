@@ -59,7 +59,7 @@ export function DayGridCell(props: DayGridCellProps) {
                   eventResource={resourcesByIdMap.get(event.resource)}
                   variant="allDay"
                   ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                  gridRow={event.eventRowIndex}
+                  gridRow={event.rowIndex}
                   columnSpan={gridColumnSpan}
                 />
               }
@@ -72,7 +72,7 @@ export function DayGridCell(props: DayGridCellProps) {
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               aria-hidden="true"
-              gridRow={event.eventRowIndex}
+              gridRow={event.rowIndex}
             />
           );
         })}

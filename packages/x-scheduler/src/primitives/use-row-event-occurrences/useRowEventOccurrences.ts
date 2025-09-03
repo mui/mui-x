@@ -21,6 +21,7 @@ export function useRowEventOccurrences(
     return days.map((day, dayIndex) => {
       const allDayOccurrences: CalendarEventOccurrencesWithRowIndex[] = [];
       const occurrences = occurrencesMap.get(day.key);
+      rowIndexLookup[day.key] = { occurrencesRowIndex: {}, usedRowIndexes: new Set() };
 
       // Process all-day events and get their position in the row
       for (const occurrence of occurrences?.allDay ?? []) {
@@ -31,16 +32,11 @@ export function useRowEventOccurrences(
           previousDay: dayIndex === 0 ? null : days[dayIndex - 1],
         });
 
-        // console.log(occurrence.id, eventRowIndex);
-
         allDayOccurrences.push({
           ...occurrence,
-          eventRowIndex,
+          rowIndex: eventRowIndex,
         });
 
-        if (!rowIndexLookup[day.key]) {
-          rowIndexLookup[day.key] = { occurrencesRowIndex: {}, usedRowIndexes: new Set() };
-        }
         rowIndexLookup[day.key].occurrencesRowIndex[occurrence.key] = eventRowIndex;
         rowIndexLookup[day.key].usedRowIndexes.add(eventRowIndex);
       }
