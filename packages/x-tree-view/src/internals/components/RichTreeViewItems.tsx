@@ -1,15 +1,12 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
 import { TreeViewItemId } from '../../models';
-import { useSelector } from '../hooks/useSelector';
-import {
-  selectorItemMeta,
-  selectorItemOrderedChildrenIds,
-} from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { itemsSelectors, UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 import { useTreeViewContext } from '../TreeViewProvider';
 
 const RichTreeViewItemsContext = React.createContext<
@@ -22,10 +19,10 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
   itemId,
 }: WrappedTreeItemProps) {
   const renderItemForRichTreeView = React.useContext(RichTreeViewItemsContext)!;
-  const { store } = useTreeViewContext();
+  const { store } = useTreeViewContext<[UseTreeViewItemsSignature]>();
 
-  const itemMeta = useSelector(store, selectorItemMeta, itemId);
-  const children = useSelector(store, selectorItemOrderedChildrenIds, itemId);
+  const itemMeta = useStore(store, itemsSelectors.itemMeta, itemId);
+  const children = useStore(store, itemsSelectors.itemOrderedChildrenIds, itemId);
   const Item = (itemSlot ?? TreeItem) as React.JSXElementConstructor<TreeItemProps>;
 
   const { ownerState, ...itemProps } = useSlotProps({
@@ -40,11 +37,11 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
 
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { slots, slotProps } = props;
-  const { store } = useTreeViewContext();
+  const { store } = useTreeViewContext<[UseTreeViewItemsSignature]>();
 
   const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;
-  const items = useSelector(store, selectorItemOrderedChildrenIds, null);
+  const items = useStore(store, itemsSelectors.itemOrderedChildrenIds, null);
 
   const renderItem = React.useCallback(
     (itemId: TreeViewItemId) => {

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "8.10.2",
+  "version": "8.11.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Tree View components.",
   "main": "src/index.ts",
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui-components/utils": "0.1.0",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",

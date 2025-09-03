@@ -19,7 +19,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 The component is built using the `SingleInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
 
-Check-out their documentation page for more information:
+Check out their documentation page for more information:
 
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
@@ -49,7 +49,7 @@ The component is available in four variants:
   It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDateRangePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values with the keyboard in the field.
+  It renders the view inside a modal and does not let users edit values with the keyboard in the field.
 
 - The `DateRangePicker` component which renders `DesktopDateRangePicker` or `MobileDateRangePicker` depending on the device it runs on.
 

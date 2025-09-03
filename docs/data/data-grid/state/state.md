@@ -38,7 +38,7 @@ const paginationModel = gridPaginationModelSelector(apiRef);
 ```
 
 :::warning
-To make the developer experience better, selectors are typed to allow `apiRef` to reference a `null` value, but they throw an error if called before the state is initialized. Use selectors after the initialization in a `useEffect()` hook or in an event handler.
+To make the developer experience better, selectors are typed to let `apiRef` reference a `null` value, but they throw an error if called before the state is initialized. Use selectors after the initialization in a `useEffect()` hook or in an event handler.
 :::
 
 {{"demo": "DirectSelector.js", "bg": "inline"}}
