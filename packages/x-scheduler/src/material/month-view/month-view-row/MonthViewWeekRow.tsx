@@ -39,8 +39,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           ref={dayIdx === 0 ? firstDayRef : undefined}
           key={day.key}
           day={day}
-          dayIndexInRow={dayIdx}
-          rowLength={days.length}
           maxEvents={maxEvents}
         />
       ))}

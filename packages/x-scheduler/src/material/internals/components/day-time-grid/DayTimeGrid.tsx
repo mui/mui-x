@@ -163,13 +163,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
-            {daysWithEvents.map((day, dayIndex) => (
-              <DayGridCell
-                key={day.key}
-                day={day}
-                dayIndexInRow={dayIndex}
-                rowLength={days.length}
-              />
+            {daysWithEvents.map((day) => (
+              <DayGridCell key={day.key} day={day} />
             ))}
           </DayGrid.Row>
           <div className="ScrollablePlaceholder" />

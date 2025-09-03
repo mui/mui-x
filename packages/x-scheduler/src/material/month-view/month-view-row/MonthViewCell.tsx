@@ -18,7 +18,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { day, maxEvents, dayIndexInRow, rowLength } = props;
+  const { day, maxEvents } = props;
   const adapter = useAdapter();
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
@@ -90,35 +90,33 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       )}
       <div className="MonthViewCellEvents">
         {visibleAllDayEvents.map((event) => {
-          const durationInDays = diffIn(adapter, event.end, day.value, 'days') + 1;
-          const gridColumnSpan = Math.min(durationInDays, rowLength - dayIndexInRow); // Don't exceed available columns
-          const shouldRenderEvent =
-            adapter.isSameDay(event.start, day.value) || dayIndexInRow === 0;
+          if (event.placement.columnSpan > 0) {
+            return (
+              <EventPopoverTrigger
+                key={`${event.id}-${day.key}`}
+                event={event}
+                render={
+                  <DayGridEvent
+                    event={event}
+                    eventResource={resourcesByIdMap.get(event.resource)}
+                    variant="allDay"
+                    ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
+                    gridRow={event.placement.rowIndex}
+                    columnSpan={event.placement.columnSpan}
+                  />
+                }
+              />
+            );
+          }
 
-          return shouldRenderEvent ? (
-            <EventPopoverTrigger
-              key={`${event.id}-${day.key}`}
-              event={event}
-              render={
-                <DayGridEvent
-                  event={event}
-                  eventResource={resourcesByIdMap.get(event.resource)}
-                  variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                  gridRow={event.rowIndex}
-                  columnSpan={gridColumnSpan}
-                />
-              }
-            />
-          ) : (
+          return (
             <DayGridEvent
-              key={`invisible-${event.id}-${day.key}`}
+              key={`${event.id}-${day.key}`}
               event={event}
               eventResource={resourcesByIdMap.get(event.resource)}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              aria-hidden="true"
-              gridRow={event.rowIndex}
+              gridRow={event.placement.rowIndex}
             />
           );
         })}
@@ -159,6 +157,4 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 interface MonthViewCellProps {
   day: useRowEventOccurrences.DayData;
   maxEvents: number;
-  dayIndexInRow: number;
-  rowLength: number;
 }

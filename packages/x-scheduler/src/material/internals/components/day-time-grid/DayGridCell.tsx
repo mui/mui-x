@@ -14,7 +14,7 @@ import { DayGridEvent } from '../event';
 import './DayTimeGrid.css';
 
 export function DayGridCell(props: DayGridCellProps) {
-  const { day, dayIndexInRow, rowLength } = props;
+  const { day } = props;
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
   const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
@@ -44,35 +44,33 @@ export function DayGridCell(props: DayGridCellProps) {
     >
       <div className="DayTimeGridAllDayEventsCellEvents">
         {day.allDayOccurrences.map((event) => {
-          const durationInDays = diffIn(adapter, event.end, day.value, 'days') + 1;
-          const gridColumnSpan = Math.min(durationInDays, rowLength - dayIndexInRow); // Don't exceed available columns
-          const shouldRenderEvent =
-            adapter.isSameDay(event.start, day.value) || dayIndexInRow === 0;
+          if (event.placement.columnSpan > 0) {
+            return (
+              <EventPopoverTrigger
+                key={`${event.key}-${day.key}`}
+                event={event}
+                render={
+                  <DayGridEvent
+                    event={event}
+                    eventResource={resourcesByIdMap.get(event.resource)}
+                    variant="allDay"
+                    ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
+                    gridRow={event.placement.rowIndex}
+                    columnSpan={event.placement.columnSpan}
+                  />
+                }
+              />
+            );
+          }
 
-          return shouldRenderEvent ? (
-            <EventPopoverTrigger
-              key={`${event.key}-${day.key}`}
-              event={event}
-              render={
-                <DayGridEvent
-                  event={event}
-                  eventResource={resourcesByIdMap.get(event.resource)}
-                  variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                  gridRow={event.rowIndex}
-                  columnSpan={gridColumnSpan}
-                />
-              }
-            />
-          ) : (
+          return (
             <DayGridEvent
-              key={`invisible-${event.key}-${day.key}`}
+              key={`${event.key}-${day.key}`}
               event={event}
               eventResource={resourcesByIdMap.get(event.resource)}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              aria-hidden="true"
-              gridRow={event.rowIndex}
+              gridRow={event.placement.rowIndex}
             />
           );
         })}
@@ -95,6 +93,4 @@ export function DayGridCell(props: DayGridCellProps) {
 
 interface DayGridCellProps {
   day: useRowEventOccurrences.DayData;
-  dayIndexInRow: number;
-  rowLength: number;
 }

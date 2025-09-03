@@ -5,7 +5,8 @@ import {
   CalendarProcessedDate,
 } from '../models';
 import { useEventOccurrences } from '../use-event-occurrences';
-import { getEventRowIndex, GetEventRowIndexParameters } from '../utils/event-utils';
+import { getEventRowPlacement, GetEventRowPlacementParameters } from '../utils/event-utils';
+import { useAdapter } from '../utils/adapter/useAdapter';
 
 /**
  * Adds the event occurrences to each day in the row.
@@ -15,9 +16,12 @@ export function useRowEventOccurrences(
   parameters: useRowEventOccurrences.Parameters,
 ): useRowEventOccurrences.ReturnValue {
   const { days, occurrencesMap } = parameters;
+  const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const rowIndexLookup: GetEventRowIndexParameters['rowIndexLookup'] = {};
+    const rowIndexLookup: GetEventRowPlacementParameters['rowIndexLookup'] = {};
+    const rowLength = days.length;
+
     return days.map((day, dayIndex) => {
       const allDayOccurrences: CalendarEventOccurrencesWithRowIndex[] = [];
       const occurrences = occurrencesMap.get(day.key);
@@ -25,20 +29,22 @@ export function useRowEventOccurrences(
 
       // Process all-day events and get their position in the row
       for (const occurrence of occurrences?.allDay ?? []) {
-        const eventRowIndex = getEventRowIndex({
+        const placement = getEventRowPlacement({
+          adapter,
           rowIndexLookup,
           occurrence,
           day,
           previousDay: dayIndex === 0 ? null : days[dayIndex - 1],
+          daysBeforeRowEnd: rowLength - dayIndex,
         });
 
         allDayOccurrences.push({
           ...occurrence,
-          rowIndex: eventRowIndex,
+          placement,
         });
 
-        rowIndexLookup[day.key].occurrencesRowIndex[occurrence.key] = eventRowIndex;
-        rowIndexLookup[day.key].usedRowIndexes.add(eventRowIndex);
+        rowIndexLookup[day.key].occurrencesRowIndex[occurrence.key] = placement.rowIndex;
+        rowIndexLookup[day.key].usedRowIndexes.add(placement.rowIndex);
       }
 
       return {
@@ -47,7 +53,7 @@ export function useRowEventOccurrences(
         allDayOccurrences,
       };
     });
-  }, [days, occurrencesMap]);
+  }, [adapter, days, occurrencesMap]);
 }
 
 export namespace useRowEventOccurrences {

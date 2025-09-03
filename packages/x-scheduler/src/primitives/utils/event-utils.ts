@@ -6,6 +6,7 @@ import {
   CalendarProcessedDate,
 } from '../models';
 import { Adapter } from './adapter/types';
+import { diffIn } from './date-utils';
 
 /**
  *  Returns the largest `eventRowIndex` among all-day occurrences.
@@ -15,9 +16,10 @@ import { Adapter } from './adapter/types';
 export function getEventWithLargestRowIndex(events: CalendarEventOccurrencesWithRowIndex[]) {
   return (
     events.reduce(
-      (maxEvent, event) => ((event?.rowIndex ?? 0) > (maxEvent.rowIndex ?? 0) ? event : maxEvent),
-      { rowIndex: 0 } as CalendarEventOccurrencesWithRowIndex,
-    ).rowIndex || 0
+      (maxEvent, event) =>
+        event.placement.rowIndex > (maxEvent.placement.rowIndex ?? 0) ? event : maxEvent,
+      { placement: { rowIndex: 0 } } as CalendarEventOccurrencesWithRowIndex,
+    ).placement.rowIndex || 0
   );
 }
 
@@ -35,13 +37,15 @@ export function isDayWithinRange(
 }
 
 /**
- *  Computes the vertical row for an all-day occurrence on `day`.
- *  If the event started before the visible range, reuses the row chosen on the first visible day.
- *  Otherwise, assigns the first free row index in that day’s all-day stack.
+ *  Computes the row index and the column span of an all-day occurrence when rendered in a given day.
+ *  If the event is present in the previous day of the same row, reuses its row index and marks the occurrence as invisible in the current day.
+ *  Otherwise, assigns the first free row index in that day’s all-day stack and compute how many days is should span across.
  *  @returns 1-based row index.
  */
-export function getEventRowIndex(parameters: GetEventRowIndexParameters): number {
-  const { rowIndexLookup, occurrence, day, previousDay } = parameters;
+export function getEventRowPlacement(
+  parameters: GetEventRowPlacementParameters,
+): GetEventRowPlacementReturnValue {
+  const { adapter, rowIndexLookup, occurrence, day, previousDay, daysBeforeRowEnd } = parameters;
 
   // If the event is present in the previous day, we keep the same row index
   const occurrenceRowIndexInPreviousDay =
@@ -50,7 +54,7 @@ export function getEventRowIndex(parameters: GetEventRowIndexParameters): number
       : rowIndexLookup[previousDay.key]?.occurrencesRowIndex[occurrence.key];
 
   if (occurrenceRowIndexInPreviousDay != null) {
-    return occurrenceRowIndexInPreviousDay;
+    return { rowIndex: occurrenceRowIndexInPreviousDay, columnSpan: 0 };
   }
 
   // Otherwise, we just render the event on the first available row in the column
@@ -61,10 +65,16 @@ export function getEventRowIndex(parameters: GetEventRowIndexParameters): number
       i += 1;
     }
   }
-  return i;
+
+  const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
+  const columnSpan = Math.min(durationInDays, daysBeforeRowEnd); // Don't exceed available columns
+
+  return { rowIndex: i, columnSpan };
 }
 
-export interface GetEventRowIndexParameters {
+export interface GetEventRowPlacementParameters {
+  adapter: Adapter;
+  daysBeforeRowEnd: number;
   rowIndexLookup: {
     [dayKey: string]: {
       occurrencesRowIndex: { [occurrenceKey: string]: number };
@@ -74,6 +84,18 @@ export interface GetEventRowIndexParameters {
   occurrence: CalendarEventOccurrence;
   day: CalendarProcessedDate;
   previousDay: CalendarProcessedDate | null;
+}
+
+export interface GetEventRowPlacementReturnValue {
+  /**
+   * The 1-based index of the row the event should be rendered in.
+   */
+  rowIndex: number;
+  /**
+   * The number of days the event should span across.
+   * If 0, the event will be rendered as invisible.
+   */
+  columnSpan: number;
 }
 
 /**
@@ -105,8 +127,6 @@ export function processDate(date: SchedulerValidDate, adapter: Adapter): Calenda
   return {
     value: date,
     key: getDateKey(date, adapter),
-    startOfDay: adapter.startOfDay(date),
-    endOfDay: adapter.endOfDay(date),
   };
 }
 
