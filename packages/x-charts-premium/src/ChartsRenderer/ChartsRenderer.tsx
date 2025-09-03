@@ -81,7 +81,7 @@ function ChartsRenderer({
     : categoryDataRaw.map((item) => {
         const itemValue = item instanceof Date ? item.toLocaleDateString() : String(item);
         const currentCount = itemCount.get(itemValue) || 1;
-        itemCount.set(String(item), currentCount + 1);
+        itemCount.set(itemValue, currentCount + 1);
         return currentCount > 1 ? `${item} (${currentCount})` : item;
       });
 
