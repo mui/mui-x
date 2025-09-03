@@ -62,7 +62,6 @@ export function getEventRowIndex(parameters: GetEventRowIndexParameters): number
 
   // Otherwise, we just render the event on the first available row in the column
   const usedIndexes = rowIndexLookup[day.key]?.usedRowIndexes;
-  console.log(rowIndexLookup, day.key);
   let i = 1;
   if (usedIndexes) {
     while (usedIndexes.has(i)) {

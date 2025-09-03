@@ -123,8 +123,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             <div className="DayTimeGridAllDayEventsCell" />
             {days.map((day) => (
               <div
-                key={day.toString()}
-                id={`DayTimeGridHeaderCell-${day.toString()}`}
+                key={day.key}
+                id={`DayTimeGridHeaderCell-${day.key}`}
                 role="columnheader"
                 aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
                 data-current={adapter.isSameDay(day.value, now) ? '' : undefined}

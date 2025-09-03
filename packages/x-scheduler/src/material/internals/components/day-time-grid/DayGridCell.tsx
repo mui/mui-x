@@ -51,14 +51,14 @@ export function DayGridCell(props: DayGridCellProps) {
 
           return shouldRenderEvent ? (
             <EventPopoverTrigger
-              key={`${event.key}-${day.toString()}`}
+              key={`${event.key}-${day.key}`}
               event={event}
               render={
                 <DayGridEvent
                   event={event}
                   eventResource={resourcesByIdMap.get(event.resource)}
                   variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                   gridRow={event.eventRowIndex}
                   columnSpan={gridColumnSpan}
                 />
@@ -66,11 +66,11 @@ export function DayGridCell(props: DayGridCellProps) {
             />
           ) : (
             <DayGridEvent
-              key={`invisible-${event.key}-${day.toString()}`}
+              key={`invisible-${event.key}-${day.key}`}
               event={event}
               eventResource={resourcesByIdMap.get(event.resource)}
               variant="invisible"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               aria-hidden="true"
               gridRow={event.eventRowIndex}
             />
@@ -82,7 +82,7 @@ export function DayGridCell(props: DayGridCellProps) {
               event={draggedEvent}
               eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="dragPlaceholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               gridRow={1} // TODO: Fix
               columnSpan={diffIn(adapter, draggedEvent.end, day.value, 'days') + 1}
             />

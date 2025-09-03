@@ -9,6 +9,7 @@ import {
   SchedulerValidDate,
 } from '../models';
 import { diffIn, mergeDateAndTime } from './date-utils';
+import { getDateKey } from './event-utils';
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -245,7 +246,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
       ? adapter.endOfDay(adapter.addDays(occurrenceStart, allDaySpanDays - 1))
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
-    const key = `${event.id}::${adapter.format(occurrenceStart, 'keyboardDate')}`;
+    const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
 
     instances.push({
       ...event,

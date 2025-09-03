@@ -71,12 +71,12 @@ export const AgendaView = React.memo(
             return (
               <section
                 className="AgendaViewRow"
-                key={day.toString()}
-                id={`AgendaViewRow-${day.toString()}`}
+                key={day.key}
+                id={`AgendaViewRow-${day.key}`}
                 aria-labelledby={`DayHeaderCell-${day.key}`}
               >
                 <header
-                  id={`DayHeaderCell-${day.toString()}`}
+                  id={`DayHeaderCell-${day.key}`}
                   className="DayHeaderCell"
                   aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
                   data-current={adapter.isSameDay(day.value, today) ? '' : undefined}
@@ -101,7 +101,7 @@ export const AgendaView = React.memo(
                           <AgendaEvent
                             event={event}
                             eventResource={resourcesByIdMap.get(event.resource)}
-                            ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
+                            ariaLabelledBy={`DayHeaderCell-${day.key}`}
                           />
                         }
                       />
@@ -116,7 +116,7 @@ export const AgendaView = React.memo(
                           <AgendaEvent
                             event={event}
                             eventResource={resourcesByIdMap.get(event.resource)}
-                            ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
+                            ariaLabelledBy={`DayHeaderCell-${day.key}`}
                           />
                         }
                       />
