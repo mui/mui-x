@@ -5,7 +5,6 @@ import {
   CalendarProcessedDate,
 } from '../models';
 import { useEventOccurrences } from '../use-event-occurrences';
-import { useAdapter } from '../utils/adapter/useAdapter';
 import { getEventRowIndex, GetEventRowIndexParameters } from '../utils/event-utils';
 
 /**
@@ -15,26 +14,24 @@ import { getEventRowIndex, GetEventRowIndexParameters } from '../utils/event-uti
 export function useRowEventOccurrences(
   parameters: useRowEventOccurrences.Parameters,
 ): useRowEventOccurrences.ReturnValue {
-  const adapter = useAdapter();
   const { days, occurrencesMap } = parameters;
 
   return React.useMemo(() => {
-    const firstDayInRow = days[0];
-    return days.map((day) => {
+    const rowIndexLookup: GetEventRowIndexParameters['rowIndexLookup'] = {};
+    return days.map((day, dayIndex) => {
       const allDayOccurrences: CalendarEventOccurrencesWithRowIndex[] = [];
-      const rowIndexLookup: GetEventRowIndexParameters['rowIndexLookup'] = {};
-
       const occurrences = occurrencesMap.get(day.key);
 
       // Process all-day events and get their position in the row
       for (const occurrence of occurrences?.allDay ?? []) {
         const eventRowIndex = getEventRowIndex({
-          adapter,
           rowIndexLookup,
-          firstDayInRow,
           occurrence,
           day,
+          previousDay: dayIndex === 0 ? null : days[dayIndex - 1],
         });
+
+        // console.log(occurrence.id, eventRowIndex);
 
         allDayOccurrences.push({
           ...occurrence,
@@ -54,7 +51,7 @@ export function useRowEventOccurrences(
         allDayOccurrences,
       };
     });
-  }, [adapter, days, occurrencesMap]);
+  }, [days, occurrencesMap]);
 }
 
 export namespace useRowEventOccurrences {
