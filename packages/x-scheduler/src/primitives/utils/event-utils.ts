@@ -3,7 +3,6 @@ import {
   CalendarEvent,
   CalendarEventOccurrencesWithRowIndex,
   CalendarEventOccurrence,
-  CalendarDayWithVisibleOccurrences,
   CalendarProcessedDate,
 } from '../models';
 import { Adapter } from './adapter/types';
@@ -42,14 +41,7 @@ export function isDayWithinRange(
  *  Otherwise, assigns the first free row index in that day’s all-day stack.
  *  @returns 1-based row index.
  */
-export function getEventRowIndex(
-  parameters: GetEventRowIndexParameters,
-  // occurrence: CalendarEventOccurrence,
-  // day: SchedulerValidDate,
-  // days: SchedulerValidDate[],
-  // allDayEventsRowIndexMap: { [dayKey: string]: { [occurrenceKey: string]: number } },
-  // adapter: Adapter,
-): number {
+export function getEventRowIndex(parameters: GetEventRowIndexParameters): number {
   const { adapter, rowIndexLookup, occurrence, day, firstDayInRow } = parameters;
 
   const eventFirstDay = adapter.startOfDay(occurrence.start);
@@ -61,7 +53,7 @@ export function getEventRowIndex(
   if (isBeforeVisibleRange) {
     const firstDayKey = adapter.isBefore(eventFirstDay, firstDayInRow.value)
       ? firstDayInRow.key
-      : adapter.format(eventFirstDay, 'keyboardDate');
+      : getDateKey(eventFirstDay, adapter);
 
     // Try to find the row index from the original event placement on the first visible day
     const existingRowIndex = rowIndexLookup[firstDayKey]?.occurrencesRowIndex[occurrence.key];
@@ -70,6 +62,7 @@ export function getEventRowIndex(
 
   // Otherwise, we just render the event on the first available row in the column
   const usedIndexes = rowIndexLookup[day.key]?.usedRowIndexes;
+  console.log(rowIndexLookup, day.key);
   let i = 1;
   if (usedIndexes) {
     while (usedIndexes.has(i)) {
@@ -99,7 +92,7 @@ export interface GetEventRowIndexParameters {
  */
 export function getEventDays(
   event: CalendarEvent,
-  days: { value: SchedulerValidDate; key: string }[],
+  days: CalendarProcessedDate[],
   adapter: Adapter,
   eventPlacement: 'first-day' | 'every-day',
 ) {
@@ -118,5 +111,9 @@ export function getEventDays(
 }
 
 export function processDate(date: SchedulerValidDate, adapter: Adapter): CalendarProcessedDate {
-  return { value: date, key: adapter.format(date, 'keyboardDate') };
+  return { value: date, key: getDateKey(date, adapter) };
+}
+
+export function getDateKey(day: SchedulerValidDate, adapter: Adapter): string {
+  return adapter.format(day, 'keyboardDate');
 }

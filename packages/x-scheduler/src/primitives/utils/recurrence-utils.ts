@@ -4,6 +4,7 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
+  CalendarProcessedDate,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
@@ -206,7 +207,7 @@ export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): numbe
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: CalendarEvent,
-  days: { value: SchedulerValidDate; key: string }[],
+  days: CalendarProcessedDate[],
   adapter: Adapter,
 ): CalendarEventOccurrence[] {
   const rule = event.rrule!;

@@ -6,7 +6,13 @@ import {
   CalendarProcessedDate,
   SchedulerValidDate,
 } from '../models';
-import { getEventDays, getEventRowIndex, GetEventRowIndexParameters } from '../utils/event-utils';
+import {
+  getDateKey,
+  getEventDays,
+  getEventRowIndex,
+  GetEventRowIndexParameters,
+  processDate,
+} from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurrence-utils';
 import { useEventCalendarContext } from '../utils/useEventCalendarContext';
@@ -21,40 +27,36 @@ export function useEventOccurrencesWithRowIndex(
   return React.useMemo(() => {
     const firstDayInRow = days[0];
     return days.map((day) => {
-      const regularEvents: CalendarEventOccurrence[] = [];
       const allDayEvents: CalendarEventOccurrencesWithRowIndex[] = [];
       const rowIndexLookup: GetEventRowIndexParameters['rowIndexLookup'] = {};
 
-      const occurrences = occurrencesMap.get(day.key) ?? [];
-      for (const occurrence of occurrences) {
-        // STEP 4.1: Process all-day events and get their position in the row
-        if (occurrence.allDay) {
-          const eventRowIndex = getEventRowIndex({
-            adapter,
-            rowIndexLookup,
-            firstDayInRow,
-            occurrence,
-            day,
-          });
+      const occurrences = occurrencesMap.get(day.key);
 
-          allDayEvents.push({
-            ...occurrence,
-            eventRowIndex,
-          });
+      // Process all-day events and get their position in the row
+      for (const occurrence of occurrences?.regularEvents ?? []) {
+        const eventRowIndex = getEventRowIndex({
+          adapter,
+          rowIndexLookup,
+          firstDayInRow,
+          occurrence,
+          day,
+        });
 
-          if (!rowIndexLookup[day.key]) {
-            rowIndexLookup[day.key] = { occurrencesRowIndex: {}, usedRowIndexes: new Set() };
-          }
-          rowIndexLookup[day.key].occurrencesRowIndex[occurrence.key] = eventRowIndex;
-          rowIndexLookup[day.key].usedRowIndexes.add(eventRowIndex);
-        } else {
-          regularEvents.push(occurrence);
+        allDayEvents.push({
+          ...occurrence,
+          eventRowIndex,
+        });
+
+        if (!rowIndexLookup[day.key]) {
+          rowIndexLookup[day.key] = { occurrencesRowIndex: {}, usedRowIndexes: new Set() };
         }
+        rowIndexLookup[day.key].occurrencesRowIndex[occurrence.key] = eventRowIndex;
+        rowIndexLookup[day.key].usedRowIndexes.add(eventRowIndex);
       }
 
       return {
         ...day,
-        regularEvents,
+        regularEvents: occurrences?.regularEvents ?? [],
         allDayEvents,
       };
     });
@@ -64,7 +66,7 @@ export function useEventOccurrencesWithRowIndex(
 export namespace useEventOccurrencesWithRowIndex {
   export interface Parameters {
     days: CalendarProcessedDate[];
-    occurrencesMap: Map<string, CalendarEventOccurrence[]>;
+    occurrencesMap: useEventOccurrencesGroupedByDay.ReturnValue;
   }
 
   export interface DayData extends CalendarProcessedDate {
@@ -76,8 +78,8 @@ export namespace useEventOccurrencesWithRowIndex {
 }
 
 export function useEventOccurrencesGroupedByDay(
-  parameters: useDaysWithVisibleEventOccurrences.Parameters,
-): useDaysWithVisibleEventOccurrences.ReturnValue {
+  parameters: useEventOccurrencesGroupedByDay.Parameters,
+): useEventOccurrencesGroupedByDay.ReturnValue {
   const { days, eventPlacement } = parameters;
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
@@ -85,10 +87,13 @@ export function useEventOccurrencesGroupedByDay(
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(() => {
-    const occurrencesGroupedByDay = new Map<string, CalendarEventOccurrence[]>();
+    const occurrencesGroupedByDay = new Map<
+      string,
+      { allDayEvents: CalendarEventOccurrence[]; regularEvents: CalendarEventOccurrence[] }
+    >();
 
     for (const day of days) {
-      occurrencesGroupedByDay.set(day.key, []);
+      occurrencesGroupedByDay.set(day.key, { allDayEvents: [], regularEvents: [] });
     }
     const start = adapter.startOfDay(days[0].value);
     const end = adapter.endOfDay(days[days.length - 1].value);
@@ -138,8 +143,11 @@ export function useEventOccurrencesGroupedByDay(
       );
 
       for (const day of eventDays) {
-        const dayKey = adapter.format(day, 'keyboardDate');
-        occurrencesGroupedByDay.get(dayKey)!.push(occurrence);
+        const dayKey = getDateKey(day, adapter);
+        const isAllDay = !!occurrence.allDay;
+        occurrencesGroupedByDay
+          .get(dayKey)!
+          [isAllDay ? 'allDayEvents' : 'regularEvents'].push(occurrence);
       }
     }
 
@@ -147,11 +155,19 @@ export function useEventOccurrencesGroupedByDay(
   }, [adapter, days, eventPlacement, events, visibleResources]);
 }
 
-export namespace useDaysWithVisibleEventOccurrences {
+export namespace useEventOccurrencesGroupedByDay {
   export interface Parameters {
     days: CalendarProcessedDate[];
     eventPlacement: 'first-day' | 'every-day';
   }
 
-  export type ReturnValue = Map<string, CalendarEventOccurrence[]>;
+  export type ReturnValue = Map<
+    string,
+    { allDayEvents: CalendarEventOccurrence[]; regularEvents: CalendarEventOccurrence[] }
+  >;
+}
+
+export function useProcessedDateList(dates: SchedulerValidDate[]): CalendarProcessedDate[] {
+  const adapter = useAdapter();
+  return React.useMemo(() => dates.map((date) => processDate(date, adapter)), [adapter, dates]);
 }

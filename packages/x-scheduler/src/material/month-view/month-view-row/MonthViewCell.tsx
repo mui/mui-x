@@ -97,14 +97,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
           return shouldRenderEvent ? (
             <EventPopoverTrigger
-              key={`${event.id}-${day.toString()}`}
+              key={`${event.id}-${day.key}`}
               event={event}
               render={
                 <DayGridEvent
                   event={event}
                   eventResource={resourcesByIdMap.get(event.resource)}
                   variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                   style={
                     {
                       '--grid-row': (event.eventRowIndex || 0) + 1,
@@ -116,11 +116,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             />
           ) : (
             <DayGridEvent
-              key={`invisible-${event.id}-${day.toString()}`}
+              key={`invisible-${event.id}-${day.key}`}
               event={event}
               eventResource={resourcesByIdMap.get(event.resource)}
               variant="invisible"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               aria-hidden="true"
               style={
                 {
@@ -139,7 +139,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                 event={event}
                 eventResource={resourcesByIdMap.get(event.resource)}
                 variant="compact"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               />
             }
           />
@@ -153,7 +153,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               event={draggedEvent}
               eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="dragPlaceholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               gridRow={1} // TODO: Fix
               columnSpan={diffIn(adapter, draggedEvent.end, day.value, 'days') + 1}
             />

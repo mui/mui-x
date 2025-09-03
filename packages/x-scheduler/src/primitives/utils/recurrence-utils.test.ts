@@ -26,6 +26,7 @@ import {
 import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
 import { Adapter } from './adapter/types';
+import { processDate } from './event-utils';
 
 describe('recurrence-utils', () => {
   const adapter = getAdapter();
@@ -969,7 +970,7 @@ describe('recurrence-utils', () => {
 
   describe('getRecurringEventOccurrencesForVisibleDays', () => {
     const makeDays = (start: DateTime, count: number) =>
-      Array.from({ length: count }, (_, i) => adapter.addDays(start, i));
+      Array.from({ length: count }, (_, i) => processDate(adapter.addDays(start, i), adapter));
 
     const createEvent = (overrides: Partial<CalendarEvent>): CalendarEvent => ({
       id: 'base-event',
@@ -998,7 +999,7 @@ describe('recurrence-utils', () => {
       for (let i = 0; i < result.length; i += 1) {
         const occ = result[i];
         expect(adapter.format(occ.start, 'keyboardDate')).to.equal(
-          adapter.format(days[i], 'keyboardDate'),
+          adapter.format(days[i].value, 'keyboardDate'),
         );
         expect(diffIn(adapter, occ.end, occ.start, 'minutes')).to.equal(90);
         expect(occ.key).to.equal(`${event.id}::${adapter.format(occ.start, 'keyboardDate')}`);

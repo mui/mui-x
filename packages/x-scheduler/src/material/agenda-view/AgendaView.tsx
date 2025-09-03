@@ -9,6 +9,10 @@ import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
+import {
+  useEventOccurrencesGroupedByDay,
+  useProcessedDateList,
+} from '../../primitives/use-day-grid-row-event-occurrences';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import './AgendaView.css';
@@ -35,7 +39,7 @@ export const AgendaView = React.memo(
     const preferences = useStore(store, selectors.preferences);
     const getDayList = useDayList();
 
-    const days = React.useMemo(
+    const rawDays = React.useMemo(
       () =>
         getDayList({
           date: visibleDate,
@@ -44,10 +48,9 @@ export const AgendaView = React.memo(
         }),
       [getDayList, preferences.hideWeekends, visibleDate],
     );
-    const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
-      days,
-      shouldOnlyRenderEventInOneCell: false,
-    });
+    const days = useProcessedDateList(rawDays);
+    const occurrences = useEventOccurrencesGroupedByDay({ days, eventPlacement: 'every-day' });
+
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
     useInitializeView(() => ({
@@ -62,63 +65,67 @@ export const AgendaView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {daysWithEvents.map(({ day, events, allDayEvents }) => (
-            <section
-              className="AgendaViewRow"
-              key={day.toString()}
-              id={`AgendaViewRow-${day.toString()}`}
-              aria-labelledby={`DayHeaderCell-${day.day.toString()}`}
-            >
-              <header
-                id={`DayHeaderCell-${day.toString()}`}
-                className="DayHeaderCell"
-                aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(day, today) ? '' : undefined}
+          {days.map((day) => {
+            const { allDayEvents, regularEvents } = occurrences.get(day.key)!;
+
+            return (
+              <section
+                className="AgendaViewRow"
+                key={day.toString()}
+                id={`AgendaViewRow-${day.toString()}`}
+                aria-labelledby={`DayHeaderCell-${day.key}`}
               >
-                <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
-                <div className="WeekDayCell">
-                  <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
-                    {adapter.format(day, 'weekday')}
-                  </span>
-                  <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
-                    {adapter.format(day, 'month')}, {adapter.format(day, 'year')}
-                  </span>
-                </div>
-              </header>
-              <ul className="EventsList">
-                {allDayEvents.map((event) => (
-                  <li>
-                    <EventPopoverTrigger
-                      key={event.key}
-                      event={event}
-                      render={
-                        <AgendaEvent
-                          event={event}
-                          eventResource={resourcesByIdMap.get(event.resource)}
-                          ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
-                        />
-                      }
-                    />
-                  </li>
-                ))}
-                {events.map((event) => (
-                  <li>
-                    <EventPopoverTrigger
-                      key={event.key}
-                      event={event}
-                      render={
-                        <AgendaEvent
-                          event={event}
-                          eventResource={resourcesByIdMap.get(event.resource)}
-                          ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
-                        />
-                      }
-                    />
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
+                <header
+                  id={`DayHeaderCell-${day.toString()}`}
+                  className="DayHeaderCell"
+                  aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
+                  data-current={adapter.isSameDay(day.value, today) ? '' : undefined}
+                >
+                  <span className="DayNumberCell">{adapter.format(day.value, 'dayOfMonth')}</span>
+                  <div className="WeekDayCell">
+                    <span className={clsx('AgendaWeekDayNameLabel', 'LinesClamp')}>
+                      {adapter.format(day.value, 'weekday')}
+                    </span>
+                    <span className={clsx('AgendaYearAndMonthLabel', 'LinesClamp')}>
+                      {adapter.format(day.value, 'month')}, {adapter.format(day.value, 'year')}
+                    </span>
+                  </div>
+                </header>
+                <ul className="EventsList">
+                  {allDayEvents.map((event) => (
+                    <li>
+                      <EventPopoverTrigger
+                        key={event.key}
+                        event={event}
+                        render={
+                          <AgendaEvent
+                            event={event}
+                            eventResource={resourcesByIdMap.get(event.resource)}
+                            ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
+                          />
+                        }
+                      />
+                    </li>
+                  ))}
+                  {regularEvents.map((event) => (
+                    <li>
+                      <EventPopoverTrigger
+                        key={event.key}
+                        event={event}
+                        render={
+                          <AgendaEvent
+                            event={event}
+                            eventResource={resourcesByIdMap.get(event.resource)}
+                            ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
+                          />
+                        }
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
         </EventPopoverProvider>
       </div>
     );

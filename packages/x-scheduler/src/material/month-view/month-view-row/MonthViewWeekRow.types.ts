@@ -1,8 +1,9 @@
-import { CalendarEventOccurrence, CalendarProcessedDate } from '../../../primitives/models';
+import { useEventOccurrencesGroupedByDay } from '../../../primitives/use-day-grid-row-event-occurrences';
+import { CalendarProcessedDate } from '../../../primitives/models';
 
 export interface MonthViewWeekRowProps {
   maxEvents: number;
   days: CalendarProcessedDate[];
-  occurrencesMap: Map<string, CalendarEventOccurrence[]>;
+  occurrencesMap: useEventOccurrencesGroupedByDay.ReturnValue;
   firstDayRef: React.Ref<HTMLDivElement | null> | undefined;
 }
