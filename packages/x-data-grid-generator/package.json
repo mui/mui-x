@@ -3,7 +3,6 @@
   "version": "8.11.0",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
-  "main": "src/index.ts",
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
