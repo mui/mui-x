@@ -78,7 +78,23 @@ export function useEventOccurrences(
       }
     }
 
-    return occurrencesGroupedByDay;
+    return new Map([
+      ...occurrencesGroupedByDay.entries().map(
+        ([key, value]) =>
+          [
+            key,
+            value.sort((a, b) => {
+              if (a.allDay && !b.allDay) {
+                return -1;
+              }
+              if (b.allDay && !a.allDay) {
+                return 1;
+              }
+              return 0;
+            }),
+          ] as const,
+      ),
+    ]);
   }, [adapter, days, eventPlacement, events, visibleResources]);
 }
 

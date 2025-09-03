@@ -10,7 +10,6 @@ import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
-import { getEventWithLargestRowIndex } from '../../../primitives/utils/event-utils';
 import { useAddRowPlacementToEventOccurrences } from '../../../primitives/use-row-event-occurrences';
 import './MonthViewWeekRow.css';
 
@@ -43,12 +42,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const visibleEvents = day.withRowPlacement.slice(0, maxEvents);
   const hiddenCount = day.withRowPlacement.length - maxEvents;
 
-  const rowCount =
-    1 +
-    getEventWithLargestRowIndex(day.withRowPlacement) +
-    visibleEvents.length +
-    (hiddenCount > 0 ? 1 : 0);
-
   const cellNumberContent = (
     <span className="MonthViewCellNumber">
       {isFirstDayOfMonth
@@ -71,7 +64,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       )}
       style={
         {
-          '--row-count': rowCount,
+          // TODO: Fix, should be 1 + ... but the day number row takes too much space
+          '--row-count': 2 + day.rowCount + (hiddenCount > 0 ? 1 : 0),
         } as React.CSSProperties
       }
     >

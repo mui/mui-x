@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 
-import { getEventWithLargestRowIndex } from '../../../../primitives/utils/event-utils';
 import { DayGrid } from '../../../../primitives/day-grid';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
@@ -35,7 +34,7 @@ export function DayGridCell(props: DayGridCellProps) {
       className="DayTimeGridAllDayEventsCell"
       style={
         {
-          '--row-count': getEventWithLargestRowIndex(day.withRowPlacement),
+          '--row-count': day.rowCount,
         } as React.CSSProperties
       }
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}

@@ -61,6 +61,7 @@ export function useAddRowPlacementToEventOccurrences(
         ...day,
         withRowPlacement,
         withoutRowPlacement,
+        rowCount: Math.max(...rowIndexLookup[day.key].usedRowIndexes, 1),
       };
     });
   }, [adapter, days, occurrencesMap, shouldAddPlacement]);
@@ -80,6 +81,7 @@ export namespace useAddRowPlacementToEventOccurrences {
   export interface DayData extends CalendarProcessedDate {
     withRowPlacement: CalendarEventOccurrencesWithRowPlacement[];
     withoutRowPlacement: CalendarEventOccurrence[];
+    rowCount: number;
   }
 
   export type ReturnValue = DayData[];

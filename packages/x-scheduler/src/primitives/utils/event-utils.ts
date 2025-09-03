@@ -1,27 +1,11 @@
 import {
   SchedulerValidDate,
   CalendarEvent,
-  CalendarEventOccurrencesWithRowPlacement,
   CalendarEventOccurrence,
   CalendarProcessedDate,
 } from '../models';
 import { Adapter } from './adapter/types';
 import { diffIn } from './date-utils';
-
-/**
- *  Returns the largest `eventRowIndex` among all-day occurrences.
- *  Useful to know how many stacked rows are already used for a given day.
- *  @returns Highest row index found, or 0 if none.
- */
-export function getEventWithLargestRowIndex(events: CalendarEventOccurrencesWithRowPlacement[]) {
-  return (
-    events.reduce(
-      (maxEvent, event) =>
-        event.placement.rowIndex > (maxEvent.placement.rowIndex ?? 0) ? event : maxEvent,
-      { placement: { rowIndex: 0 } } as CalendarEventOccurrencesWithRowPlacement,
-    ).placement.rowIndex || 0
-  );
-}
 
 export function isDayWithinRange(
   day: SchedulerValidDate,
