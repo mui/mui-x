@@ -98,6 +98,6 @@ describe('<ChartsRenderer />', () => {
     );
 
     const props = onRenderSpy.lastCall.args[1];
-    expect(props.values[0].data).to.deep.equal([1, 2, 3]);
+    expect(props.series[0].data).to.deep.equal([1, 2, 3]);
   });
 });
