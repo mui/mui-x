@@ -107,11 +107,11 @@ This feature only works when multi selection is enabled using `props.multiSelect
 
 ### Apply propagation on mount
 
-You can use the `useApplyPropagationToDefaultSelectedItems()` to apply the selection propagation to your `defaultSelectedItems` or `sectionItems` prop.
+You can use the `useApplyPropagationToSelectedItemsOnMount()` to apply the selection propagation to your `defaultSelectedItems` or `selectedItems` prop.
 
 ```tsx
 // Uncontrolled example
-const defaultSelectedItems = useApplyPropagationToDefaultSelectedItems({
+const defaultSelectedItems = useApplyPropagationToSelectedItemsOnMount({
   items: props.items,
   selectionPropagation: props.selectedPropagation,
   selectedItems: ['10', '11', '13', '14'],
@@ -128,7 +128,7 @@ return (
 
 ```tsx
 // Controlled example
-const initialSelectedItems = useApplyPropagationToDefaultSelectedItems({
+const initialSelectedItems = useApplyPropagationToSelectedItemsOnMount({
   items: props.items,
   selectionPropagation: props.selectedPropagation,
   selectedItems: ['10', '11', '13', '14'],
@@ -151,7 +151,7 @@ In the example below, only Anna, Michael, Elizabeth and William are selected in 
 {{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
 
 :::success
-The `useApplyPropagationToDefaultSelectedItems()` must receive the following props as provided to the Rich Tree View component:
+The `useApplyPropagationToSelectedItemsOnMount()` must receive the following props as provided to the Rich Tree View component:
 
 - `items`
 - `selectionPropagation`

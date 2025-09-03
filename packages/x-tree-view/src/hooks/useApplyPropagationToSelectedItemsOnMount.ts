@@ -7,11 +7,12 @@ const defaultGetItemId = (item: any) => item.id;
 const defaultGetItemChildren = (item: any) => item.children;
 
 /**
- * Applies the selection propagation rules to the default selected items.
+ * Applies the selection propagation rules to the selected items.
+ * The value is only computed during the first render, any update of the parameters will be ignored.
  *
  * Uncontrolled example:
  * ```tsx
- * const defaultSelectedItems = useApplyPropagationToDefaultSelectedItems({
+ * const defaultSelectedItems = useApplyPropagationToSelectedItemsOnMount({
  *   items: props.items,
  *   selectionPropagation: props.selectedPropagation,
  *   selectedItems: ['10', '11', '13', '14'],
@@ -28,7 +29,7 @@ const defaultGetItemChildren = (item: any) => item.children;
  *
  * Controlled example:
  * ```tsx
- * const initialSelectedItems = useApplyPropagationToDefaultSelectedItems({
+ * const initialSelectedItems = useApplyPropagationToSelectedItemsOnMount({
  *   items: props.items,
  *   selectionPropagation: props.selectedPropagation,
  *   selectedItems: ['10', '11', '13', '14'],
@@ -46,7 +47,7 @@ const defaultGetItemChildren = (item: any) => item.children;
  * );
  * ```
  */
-export function useApplyPropagationToDefaultSelectedItems(
+export function useApplyPropagationToSelectedItemsOnMount(
   parameters: UseApplyPropagationToDefaultSelectedItemsParameters<any>,
 ) {
   const {

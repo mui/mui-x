@@ -1,12 +1,12 @@
 import { renderHook } from '@mui/internal-test-utils';
-import { useApplyPropagationToDefaultSelectedItems } from './useApplyPropagationToDefaultSelectedItems';
+import { useApplyPropagationToSelectedItemsOnMount } from './useApplyPropagationToSelectedItemsOnMount';
 
 describe('useApplyPropagationToDefaultSelectedItems', () => {
   it('should return an empty array when no item is selected (parents and descendants propagation)', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         items: [],
-        defaultSelectedItems: [],
+        selectedItems: [],
         selectionPropagation: { parents: true, descendants: true },
       }),
     );
@@ -15,9 +15,9 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should return an empty array when no item is selected (parents propagation)', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         items: [],
-        defaultSelectedItems: [],
+        selectedItems: [],
         selectionPropagation: { parents: true, descendants: false },
       }),
     );
@@ -26,9 +26,9 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should return an empty array when no item is selected (descendants propagation)', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         items: [],
-        defaultSelectedItems: [],
+        selectedItems: [],
         selectionPropagation: { parents: false, descendants: true },
       }),
     );
@@ -37,11 +37,11 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should select descendants when a parent is selected (descendants propagation)', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         items: [
           { id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }, { id: '1.1.2' }] }] },
         ],
-        defaultSelectedItems: ['1'],
+        selectedItems: ['1'],
         selectionPropagation: { parents: false, descendants: true },
       }),
     );
@@ -50,11 +50,11 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should not select descendants when a parent is selected (no descendants propagation)', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         items: [
           { id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }, { id: '1.1.2' }] }] },
         ],
-        defaultSelectedItems: ['1'],
+        selectedItems: ['1'],
         selectionPropagation: { parents: false, descendants: false },
       }),
     );
@@ -63,11 +63,11 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should select parents when all descendants are selected (parents propagation)', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         items: [
           { id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }, { id: '1.1.2' }] }] },
         ],
-        defaultSelectedItems: ['1.1.1', '1.1.2'],
+        selectedItems: ['1.1.1', '1.1.2'],
         selectionPropagation: { parents: true, descendants: false },
       }),
     );
@@ -76,11 +76,11 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should not select parents when all descendants are selected (no parents propagation)', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         items: [
           { id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }, { id: '1.1.2' }] }] },
         ],
-        defaultSelectedItems: ['1.1.1', '1.1.2'],
+        selectedItems: ['1.1.1', '1.1.2'],
         selectionPropagation: { parents: false, descendants: true },
       }),
     );
@@ -89,14 +89,14 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should select parents and descendants when all items of a given depth are selected (parents and descendants propagation)', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         items: [
           {
             id: '1',
             children: [{ id: '1.1', children: [{ id: '1.1.1' }, { id: '1.1.2' }] }, { id: '1.2' }],
           },
         ],
-        defaultSelectedItems: ['1.1', '1.2'],
+        selectedItems: ['1.1', '1.2'],
         selectionPropagation: { parents: true, descendants: true },
       }),
     );
@@ -105,7 +105,7 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should use getItemId when provided', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         getItemId: (item) => item.key,
         items: [
           {
@@ -116,7 +116,7 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
             ],
           },
         ],
-        defaultSelectedItems: ['1.1', '1.2'],
+        selectedItems: ['1.1', '1.2'],
         selectionPropagation: { parents: true, descendants: true },
       }),
     );
@@ -125,7 +125,7 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
 
   it('should use getItemChildren when provided', () => {
     const { result } = renderHook(() =>
-      useApplyPropagationToDefaultSelectedItems({
+      useApplyPropagationToSelectedItemsOnMount({
         getItemChildren: (item) => item.subItems,
         items: [
           {
@@ -133,7 +133,7 @@ describe('useApplyPropagationToDefaultSelectedItems', () => {
             subItems: [{ id: '1.1', subItems: [{ id: '1.1.1' }, { id: '1.1.2' }] }, { id: '1.2' }],
           },
         ],
-        defaultSelectedItems: ['1.1', '1.2'],
+        selectedItems: ['1.1', '1.2'],
         selectionPropagation: { parents: true, descendants: true },
       }),
     );

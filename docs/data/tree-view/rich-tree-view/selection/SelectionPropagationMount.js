@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useApplyPropagationToDefaultSelectedItems } from '@mui/x-tree-view/hooks';
+import { useApplyPropagationToSelectedItemsOnMount } from '@mui/x-tree-view/hooks';
 import { EMPLOYEES_DATASET } from '../../datasets/employees';
 
 const selectionPropagation = { parents: true, descendants: true };
 
 export default function SelectionPropagationMount() {
-  const defaultSelectedItems = useApplyPropagationToDefaultSelectedItems({
+  const defaultSelectedItems = useApplyPropagationToSelectedItemsOnMount({
     items: EMPLOYEES_DATASET,
     selectionPropagation,
     selectedItems: ['10', '11', '13', '14'],
