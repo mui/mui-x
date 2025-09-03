@@ -1,12 +1,10 @@
-import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+import { useTheme, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { BarChart, type BarLabelProps } from '@mui/x-charts/BarChart';
+import { BarChart, type BarLabelProps, type BarProps } from '@mui/x-charts/BarChart';
 import { useAnimate, useAnimateBar, useDrawingArea } from '@mui/x-charts/hooks';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
-import { styled } from '@mui/material/styles';
 import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
-import type { BarProps } from '@mui/x-charts/BarChart/AnimatedBarElement';
-import React from 'react';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const data = [
@@ -61,7 +59,7 @@ export default function ShinyBarChartHorizontal() {
     <div style={{ width: '100%' }}>
       <Typography>European countries with lowest & highest voter turnout</Typography>
       <BarChart
-        height={500}
+        height={300}
         dataset={data}
         series={[
           {

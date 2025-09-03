@@ -1,90 +1,72 @@
-import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+import { useTheme, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
-import { useAnimate } from '@mui/x-charts/hooks';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { useAnimate, useAnimateBar, useDrawingArea } from '@mui/x-charts/hooks';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
-import { styled } from '@mui/material/styles';
 import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 const data = [
   {
     country: 'Romania (2020)',
     turnout: 33.2,
-    absence: 66.8,
   },
   {
     country: 'Bulgaria (2024)',
     turnout: 33.4,
-    absence: 66.6,
   },
   {
     country: 'Albania (2021)',
     turnout: 46.3,
-    absence: 53.7,
   },
   {
     country: 'United Kingdom (2024)',
     turnout: 60.0,
-    absence: 40.0,
   },
   {
     country: 'Spain (2023)',
     turnout: 66.0,
-    absence: 34.0,
   },
   {
     country: 'France (2024)',
     turnout: 66.7,
-    absence: 33.3,
   },
   {
     country: 'Germany (2021)',
     turnout: 76.4,
-    absence: 23.6,
   },
   {
     country: 'Sweden (2022)',
     turnout: 83.8,
-    absence: 16.2,
   },
   {
     country: 'Malta (2022)',
     turnout: 85.6,
-    absence: 14.4,
   },
   {
     country: 'Turkey (2023)',
     turnout: 87.0,
-    absence: 13.0,
   },
   {
     country: 'Belgium (2024)',
     turnout: 88.5,
-    absence: 11.5,
   },
 ];
 
 export default function ShinyBarChartHorizontal() {
-  const theme = useTheme();
-
   return (
     <div style={{ width: '100%' }}>
       <Typography>European countries with lowest & highest voter turnout</Typography>
       <BarChart
-        height={500}
+        height={300}
         dataset={data}
         series={[
           {
             id: 'turnout',
             dataKey: 'turnout',
             stack: 'voter turnout',
-          },
-          {
-            id: 'absence',
-            dataKey: 'absence',
-            stack: 'voter turnout',
-            color: (theme.vars || theme).palette.text.primary,
-            xAxisId: 'regular',
+            valueFormatter: (value) => `${value}%`,
           },
         ]}
         layout="horizontal"
@@ -98,13 +80,10 @@ export default function ShinyBarChartHorizontal() {
               thresholds: [50, 85],
               colors: ['#d32f2f', '#78909c', '#1976d2'],
             },
-          },
-          {
-            id: 'regular',
-            min: 0,
-            max: 100,
+            valueFormatter: (value) => `${value}%`,
           },
         ]}
+        barLabel={(v) => `${v.value}%`}
         yAxis={[
           {
             scaleType: 'band',
@@ -112,12 +91,21 @@ export default function ShinyBarChartHorizontal() {
             width: 140,
           },
         ]}
-        sx={{
-          [`[data-series=absence] .${barElementClasses.root}`]: {
-            opacity: 0.1,
-          },
+        slots={{
+          legend: PiecewiseColorLegend,
+          barLabel: BarLabelAtBase,
+          bar: BarShadedBackground,
         }}
-        slots={{ legend: PiecewiseColorLegend, barLabel: BarLabelAtBase }}
+        sx={{
+          [`.${axisClasses.tickContainer}:nth-of-type(-n+3) .${axisClasses.tickLabel}`]:
+            {
+              fontWeight: 600,
+            },
+          [`.${axisClasses.tickContainer}:nth-last-of-type(-n+4) .${axisClasses.tickLabel}`]:
+            {
+              fontWeight: 600,
+            },
+        }}
         slotProps={{
           legend: {
             axisDirection: 'x',
@@ -133,7 +121,6 @@ export default function ShinyBarChartHorizontal() {
               }
               return 'highest turnout';
             },
-            sx: { padding: 0 },
           },
         }}
       />
@@ -141,14 +128,43 @@ export default function ShinyBarChartHorizontal() {
   );
 }
 
+export function BarShadedBackground(props) {
+  const { ownerState, skipAnimation, id, dataIndex, xOrigin, yOrigin, ...other } =
+    props;
+  const theme = useTheme();
+
+  const animatedProps = useAnimateBar(props);
+  const { width } = useDrawingArea();
+  return (
+    <React.Fragment>
+      <rect
+        {...other}
+        fill={(theme.vars || theme).palette.text.primary}
+        opacity={theme.palette.mode === 'dark' ? 0.05 : 0.1}
+        x={other.x}
+        width={width}
+      />
+      <rect
+        {...other}
+        filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+        opacity={ownerState.isFaded ? 0.3 : 1}
+        data-highlighted={ownerState.isHighlighted || undefined}
+        data-faded={ownerState.isFaded || undefined}
+        {...animatedProps}
+      />
+    </React.Fragment>
+  );
+}
+
 const Text = styled('text')(({ theme }) => ({
   ...theme?.typography?.body2,
   stroke: 'none',
-  fill: (theme.vars || theme)?.palette?.text?.primary,
+  fill: (theme.vars || theme).palette.common.white,
   transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  textAnchor: 'middle',
+  textAnchor: 'start',
   dominantBaseline: 'central',
   pointerEvents: 'none',
+  fontWeight: 600,
 }));
 
 function BarLabelAtBase(props) {
@@ -171,9 +187,9 @@ function BarLabelAtBase(props) {
   } = props;
 
   const animatedProps = useAnimate(
-    { x: x + width / 2, y: y - 8 },
+    { x: xOrigin + 8, y: y + height / 2 },
     {
-      initialProps: { x: x + width / 2, y: yOrigin },
+      initialProps: { x: xOrigin, y: y + height / 2 },
       createInterpolator: interpolateObject,
       transformProps: (p) => p,
       applyProps: (element, p) => {
@@ -184,7 +200,5 @@ function BarLabelAtBase(props) {
     },
   );
 
-  return (
-    <Text {...otherProps} fill={color} textAnchor="middle" {...animatedProps} />
-  );
+  return <Text {...otherProps} {...animatedProps} />;
 }
