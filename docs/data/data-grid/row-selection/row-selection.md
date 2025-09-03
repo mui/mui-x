@@ -66,7 +66,8 @@ The model can be either:
 ### Opting out of exclude model optimization
 
 By default, the Data Grid uses an exclude model optimization when selecting all rows (e.g., via "Select all" checkbox) for better performance with large datasets.
-If you prefer predictable behavior with explicit row IDs, you can disable this optimization:
+
+To opt out of the `exclude` model and always use `include` model and a predictable behavior with explicit row IDs, pass `disableRowSelectionExcludeModel` prop to the Data Grid.
 
 ```tsx
 <DataGrid 
@@ -75,8 +76,6 @@ If you prefer predictable behavior with explicit row IDs, you can disable this o
   // with explicit row IDs, even when selecting all rows
 />
 ```
-
-When `disableRowSelectionExcludeModel={true}`, the Data Grid will always use the include model with explicit row IDs.
 
 ## Checkbox selection
 
