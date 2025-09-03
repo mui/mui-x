@@ -9,10 +9,8 @@ import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
-import {
-  useEventOccurrencesGroupedByDay,
-  useProcessedDateList,
-} from '../../primitives/use-day-grid-row-event-occurrences';
+import { useEventOccurrences } from '../../primitives/use-event-occurrences';
+import { useProcessedDateList } from '../../primitives/use-processed-date-list';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import './AgendaView.css';
@@ -49,8 +47,7 @@ export const AgendaView = React.memo(
       [getDayList, preferences.hideWeekends, visibleDate],
     );
     const days = useProcessedDateList(rawDays);
-    const occurrences = useEventOccurrencesGroupedByDay({ days, eventPlacement: 'every-day' });
-
+    const occurrences = useEventOccurrences({ days, eventPlacement: 'every-day' });
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
     useInitializeView(() => ({
@@ -66,8 +63,7 @@ export const AgendaView = React.memo(
       >
         <EventPopoverProvider containerRef={containerRef}>
           {days.map((day) => {
-            const { allDayEvents, regularEvents } = occurrences.get(day.key)!;
-
+            const dayOccurrences = occurrences.get(day.key)!;
             return (
               <section
                 className="AgendaViewRow"
@@ -92,7 +88,7 @@ export const AgendaView = React.memo(
                   </div>
                 </header>
                 <ul className="EventsList">
-                  {allDayEvents.map((event) => (
+                  {dayOccurrences.allDay?.map((event) => (
                     <li>
                       <EventPopoverTrigger
                         key={event.key}
@@ -107,7 +103,7 @@ export const AgendaView = React.memo(
                       />
                     </li>
                   ))}
-                  {regularEvents.map((event) => (
+                  {dayOccurrences.regular?.map((event) => (
                     <li>
                       <EventPopoverTrigger
                         key={event.key}

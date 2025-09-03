@@ -4,11 +4,9 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
-import {
-  useEventOccurrencesGroupedByDay,
-  useEventOccurrencesWithRowIndex,
-  useProcessedDateList,
-} from '../../../../primitives/use-day-grid-row-event-occurrences';
+import { useEventOccurrences } from '../../../../primitives/use-event-occurrences';
+import { useRowEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
+import { useProcessedDateList } from '../../../../primitives/use-processed-date-list';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
   CalendarEvent,
@@ -25,8 +23,8 @@ import { useEventCalendarContext } from '../../../../primitives/utils/useEventCa
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
-import './DayTimeGrid.css';
 import { DayGridCell } from './DayGridCell';
+import './DayTimeGrid.css';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -52,8 +50,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const days = useProcessedDateList(daysParam);
-  const occurrencesMap = useEventOccurrencesGroupedByDay({ days, eventPlacement: 'every-day' });
-  const daysWithEvents = useEventOccurrencesWithRowIndex({ days, occurrencesMap });
+  const occurrencesMap = useEventOccurrences({ days, eventPlacement: 'every-day' });
+  const daysWithEvents = useRowEventOccurrences({ days, occurrencesMap });
 
   const { start, end } = React.useMemo(
     () => ({

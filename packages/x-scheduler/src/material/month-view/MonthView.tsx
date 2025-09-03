@@ -17,7 +17,7 @@ import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import './MonthView.css';
-import { useEventOccurrencesGroupedByDay } from '../../primitives/use-day-grid-row-event-occurrences';
+import { useEventOccurrences } from '../../primitives/use-event-occurrences';
 import { processDate } from '../../primitives/utils/event-utils';
 
 const adapter = getAdapter();
@@ -57,7 +57,7 @@ export const MonthView = React.memo(
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };
     }, [getWeekList, getDayList, visibleDate, preferences.hideWeekends]);
 
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days, eventPlacement: 'every-day' });
+    const occurrencesMap = useEventOccurrences({ days, eventPlacement: 'every-day' });
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>

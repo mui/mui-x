@@ -11,7 +11,7 @@ import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { getEventWithLargestRowIndex } from '../../../primitives/utils/event-utils';
-import { useEventOccurrencesWithRowIndex } from '../../../primitives/use-day-grid-row-event-occurrences';
+import { useRowEventOccurrences } from '../../../primitives/use-row-event-occurrences';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -40,13 +40,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     return { ...initialDraggedEvent, start: placeholder.start, end: placeholder.end };
   }, [initialDraggedEvent, placeholder]);
 
-  const visibleAllDayEvents = day.allDayEvents.slice(0, maxEvents);
-  const visibleEvents = day.regularEvents.slice(0, maxEvents - visibleAllDayEvents.length);
-  const hiddenCount = day.regularEvents.length + day.allDayEvents.length - maxEvents;
+  const visibleAllDayEvents = day.allDayOccurrences.slice(0, maxEvents);
+  const visibleEvents = day.regularOccurrences.slice(0, maxEvents - visibleAllDayEvents.length);
+  const hiddenCount = day.regularOccurrences.length + day.allDayOccurrences.length - maxEvents;
 
   const rowCount =
     1 +
-    getEventWithLargestRowIndex(day.allDayEvents) +
+    getEventWithLargestRowIndex(day.allDayOccurrences) +
     visibleEvents.length +
     (hiddenCount > 0 ? 1 : 0);
 
@@ -144,7 +144,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             }
           />
         ))}
-        {hiddenCount > 0 && day.regularEvents.length > 0 && (
+        {hiddenCount > 0 && day.regularOccurrences.length > 0 && (
           <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
         )}
         {draggedEvent != null && (
@@ -165,7 +165,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 });
 
 interface MonthViewCellProps {
-  day: useEventOccurrencesWithRowIndex.DayData;
+  day: useRowEventOccurrences.DayData;
   maxEvents: number;
   dayIndexInRow: number;
   rowLength: number;

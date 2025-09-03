@@ -8,7 +8,7 @@ import { useEventCalendarContext } from '../../../../primitives/utils/useEventCa
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
-import { useEventOccurrencesWithRowIndex } from '../../../../primitives/use-day-grid-row-event-occurrences';
+import { useRowEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
 import { EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
@@ -45,7 +45,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
       data-current={isToday ? '' : undefined}
     >
-      {day.regularEvents.map((event) => (
+      {day.regularOccurrences.map((event) => (
         <EventPopoverTrigger
           key={event.key}
           event={event}
@@ -98,7 +98,7 @@ function TimeGridCurrentTimeLabel() {
 }
 
 interface TimeGridColumnProps {
-  day: useEventOccurrencesWithRowIndex.DayData;
+  day: useRowEventOccurrences.DayData;
   isToday: boolean;
   index: number;
   showCurrentTimeIndicator: boolean;

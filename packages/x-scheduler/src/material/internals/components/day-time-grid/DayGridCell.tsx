@@ -7,7 +7,7 @@ import { DayGrid } from '../../../../primitives/day-grid';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
-import { useEventOccurrencesWithRowIndex } from '../../../../primitives/use-day-grid-row-event-occurrences';
+import { useRowEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
@@ -35,7 +35,7 @@ export function DayGridCell(props: DayGridCellProps) {
       className="DayTimeGridAllDayEventsCell"
       style={
         {
-          '--row-count': getEventWithLargestRowIndex(day.allDayEvents),
+          '--row-count': getEventWithLargestRowIndex(day.allDayOccurrences),
         } as React.CSSProperties
       }
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
@@ -43,7 +43,7 @@ export function DayGridCell(props: DayGridCellProps) {
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
     >
       <div className="DayTimeGridAllDayEventsCellEvents">
-        {day.allDayEvents.map((event) => {
+        {day.allDayOccurrences.map((event) => {
           const durationInDays = diffIn(adapter, event.end, day.value, 'days') + 1;
           const gridColumnSpan = Math.min(durationInDays, rowLength - dayIndexInRow); // Don't exceed available columns
           const shouldRenderEvent =
@@ -94,7 +94,7 @@ export function DayGridCell(props: DayGridCellProps) {
 }
 
 interface DayGridCellProps {
-  day: useEventOccurrencesWithRowIndex.DayData;
+  day: useRowEventOccurrences.DayData;
   dayIndexInRow: number;
   rowLength: number;
 }
