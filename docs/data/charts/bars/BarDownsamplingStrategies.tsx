@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
 
 // Generate dataset with varying patterns to showcase different strategies
 const generateDataWithPattern = (size: number) => {
@@ -12,19 +12,38 @@ const generateDataWithPattern = (size: number) => {
   });
 };
 
-const data = generateDataWithPattern(300);
-const xAxisData = Array.from({ length: 300 }, (_, i) => i);
-const config = {
+const length = 300;
+const data = generateDataWithPattern(length);
+const xAxisData = Array.from({ length }, (_, i) => i);
+const config: BarChartProps = {
   height: 200,
   series: [{ data }],
-  xAxis: [{ data: xAxisData, scaleType: 'band' }],
-} as const;
+  xAxis: [
+    {
+      data: xAxisData,
+      scaleType: 'band',
+      tickInterval: (v, index) => index % (700 / 50 + 1) === 0 || v === 299,
+    },
+  ],
+};
 
 export default function BarDownsamplingStrategies() {
   return (
     <div style={{ width: '100%' }}>
       <h3>Original</h3>
-      <BarChart {...config} />
+      <BarChart
+        {...config}
+        xAxis={[
+          {
+            ...config.xAxis![0],
+            tickPlacement: 'middle',
+            tickInterval: [
+              ...Array.from({ length: length / 50 + 1 }, (_, i) => i * 50),
+              length - 1,
+            ],
+          },
+        ]}
+      />
 
       <h3>Linear Strategy (Default)</h3>
       <BarChart {...config} downsample={{ targetPoints: 100, strategy: 'linear' }} />
@@ -33,7 +52,7 @@ export default function BarDownsamplingStrategies() {
       <BarChart {...config} downsample={{ targetPoints: 100, strategy: 'max' }} />
 
       <h3>Min Strategy (Preserves Valleys)</h3>
-      <BarChart {...config} downsample={{ targetPoints: 50, strategy: 'min' }} />
+      <BarChart {...config} downsample={{ targetPoints: 100, strategy: 'min' }} />
 
       <h3>Average Strategy (Smooths Data)</h3>
       <BarChart
