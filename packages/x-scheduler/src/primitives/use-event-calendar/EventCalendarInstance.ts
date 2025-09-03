@@ -14,10 +14,13 @@ import {
 import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 
-const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
-const DEFAULT_VIEW: CalendarView = 'week';
-const DEFAULT_PREFERENCES: CalendarPreferences = { hideWeekends: false, hideWeekNumber: false };
-const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
+export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
+export const DEFAULT_VIEW: CalendarView = 'week';
+export const DEFAULT_PREFERENCES: CalendarPreferences = {
+  hideWeekends: false,
+  hideWeekNumber: false,
+};
+export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
 };
@@ -167,7 +170,10 @@ export class EventCalendarInstance {
 
   private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
-    if (visibleDate !== this.store.state.visibleDate) {
+    const { adapter } = this.store.state;
+    const hasChange = !adapter.isEqual(this.store.state.visibleDate, visibleDate);
+
+    if (hasChange) {
       if (visibleDateProp === undefined) {
         this.store.set('visibleDate', visibleDate);
       }
@@ -194,10 +200,14 @@ export class EventCalendarInstance {
     }
 
     this.assertViewValidity(view);
-    if (visibleDateProp !== undefined || viewProp !== undefined) {
+
+    const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
+    const canSetView = viewProp === undefined && hasViewChange;
+
+    if (canSetVisibleDate || canSetView) {
       this.store.apply({
-        ...(visibleDateProp !== undefined ? { visibleDate } : {}),
-        ...(viewProp !== undefined ? { view } : {}),
+        ...(canSetVisibleDate ? { visibleDate } : {}),
+        ...(canSetView ? { view } : {}),
       });
     }
 
