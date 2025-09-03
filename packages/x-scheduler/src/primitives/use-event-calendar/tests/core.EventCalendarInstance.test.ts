@@ -17,16 +17,24 @@ describe('Core - EventCalendarInstance', () => {
     it('should initialize default state', () => {
       const { store } = EventCalendarInstance.create(DEFAULT_PARAMS, adapter);
 
-      expect(store.state.view).to.deep.equal(DEFAULT_VIEW);
-      expect(store.state.views).to.deep.equal(DEFAULT_VIEWS);
-      expect(store.state.resources).to.deep.equal([]);
-      expect(store.state.ampm).to.equal(true);
-      expect(store.state.showCurrentTimeIndicator).to.equal(true);
-      expect(store.state.preferences).to.deep.equal(DEFAULT_PREFERENCES);
-      expect(store.state.preferencesMenuConfig).to.deep.equal(DEFAULT_PREFERENCES_MENU_CONFIG);
+      const expectedState = {
+        adapter,
+        view: DEFAULT_VIEW,
+        views: DEFAULT_VIEWS,
+        resources: [],
+        events: [],
+        visibleResources: new Map(),
+        areEventsDraggable: false,
+        areEventsResizable: false,
+        ampm: true,
+        showCurrentTimeIndicator: true,
+        preferences: DEFAULT_PREFERENCES,
+        preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
+        viewConfig: null,
+        visibleDate: adapter.startOfDay(adapter.date()),
+      };
 
-      const expectedToday = adapter.startOfDay(adapter.date());
-      expect(store.state.visibleDate).toEqualDateTime(expectedToday);
+      expect(store.state).to.deep.equal(expectedState);
     });
 
     it('should keep provided events array', () => {
