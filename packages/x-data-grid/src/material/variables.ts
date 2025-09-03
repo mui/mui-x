@@ -142,6 +142,8 @@ function stringifyTheme(input: object | string | number | null) {
       return v.toString();
     }
     if (v !== null && typeof v === 'object') {
+      // Do not attempt to serialize React elements due to performance concerns.
+      // Fixes https://github.com/mui/mui-x/issues/19414
       if (React.isValidElement(v)) {
         return null;
       }
