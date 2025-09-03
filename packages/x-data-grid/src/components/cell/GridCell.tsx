@@ -216,6 +216,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const canManageOwnFocus =
     column.type === 'actions' &&
     'getActions' in column &&
+    typeof column.getActions === 'function' &&
     column.getActions(apiRef.current.getRowParams(rowId)).some((action) => !action.props.disabled);
   const tabIndex =
     (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParams.tabIndex : -1;
