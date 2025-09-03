@@ -11,8 +11,6 @@ _Sep 3, 2025_
 
 We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
-
 The following are all team members who have contributed to this release:
 @flaviendelangle, @JCQuintas, @mapache-salvaje, @oliviertassinari, @rita-codes, @sai6855
 
