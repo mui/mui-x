@@ -31,6 +31,8 @@ type GridChartsPanelDataFieldProps = {
   field: string;
   section: GridChartsIntegrationSection;
   blockedSections?: string[];
+  dimensionsLabel: string;
+  valuesLabel: string;
   disabled?: boolean;
   selected?: boolean;
   onChange?: (field: string, section: GridChartsIntegrationSection) => void;
@@ -261,6 +263,8 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
     field,
     section,
     blockedSections,
+    dimensionsLabel,
+    valuesLabel,
     selected,
     disabled,
     onChange,
@@ -384,7 +388,7 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
           ownerState={ownerState}
           className={classes.actionContainer}
         >
-          {isRowGroupingEnabled && section === 'series' && (
+          {isRowGroupingEnabled && section === 'values' && (
             <AggregationSelect
               aggFunc={aggregationModel[field] ?? AGGREGATION_FUNCTION_NONE}
               field={field}
@@ -394,6 +398,8 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
             field={field}
             section={section}
             blockedSections={blockedSections}
+            dimensionsLabel={dimensionsLabel}
+            valuesLabel={valuesLabel}
           />
         </GridChartsPanelDataFieldActionContainer>
       </GridChartsPanelDataFieldRoot>

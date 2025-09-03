@@ -43,8 +43,8 @@ export default function GridChartsIntegrationBasic() {
               chartsIntegration: {
                 charts: {
                   main: {
-                    categories: ['name'],
-                    series: ['salary'],
+                    dimensions: ['name'],
+                    values: ['salary'],
                     chartType: 'column',
                   },
                 },

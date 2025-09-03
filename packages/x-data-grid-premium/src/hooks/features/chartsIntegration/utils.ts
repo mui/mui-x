@@ -8,8 +8,8 @@ export const getBlockedSections = (
   rowGroupingModel: GridRowGroupingModel,
   pivotModel: GridPivotModel | undefined,
 ): string[] => {
-  // with pivoting, columns that are pivot values can only be added to the series
-  // grid columns that are pivot rows can only be added to the categories
+  // with pivoting, columns that are pivot values can only be added to the chart values
+  // grid columns that are pivot rows can only be added to the chart dimensions
   // the rest of the columns can be added anywhere
   // pivoting columns are already filtered out by the chartable columns selector
   if (pivotModel) {
@@ -22,20 +22,20 @@ export const getBlockedSections = (
     // field names in the values contain the group path. We are comparing the last part of it (the actual field name used for the value)
     const unwrappedFieldName = column.field.split(COLUMN_GROUP_ID_SEPARATOR).pop() as string;
     if (values.includes(unwrappedFieldName)) {
-      sections.push('categories');
+      sections.push('dimensions');
     }
     if (rows.includes(column.field)) {
-      sections.push('series');
+      sections.push('values');
     }
     return sections;
   }
-  // field that is already used for grouping cannot be added to the series
+  // field that is already used for grouping cannot be added to the values
   if (rowGroupingModel.length > 0) {
-    return rowGroupingModel.includes(column.field) ? ['series'] : [];
+    return rowGroupingModel.includes(column.field) ? ['values'] : [];
   }
-  // without pivoting and row grouping the only constraint is that non-number columns cannot be added to the series
+  // without pivoting and row grouping the only constraint is that non-number columns cannot be added to the values
   if (column.type !== 'number') {
-    return ['series'];
+    return ['values'];
   }
   return [];
 };

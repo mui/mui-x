@@ -53,12 +53,12 @@ export const gridChartableColumnsSelector = createSelectorMemoized(
   },
 );
 
-export const gridChartsCategoriesSelector = createSelector(
+export const gridChartsDimensionsSelector = createSelector(
   gridChartsIntegrationStateSelector,
-  (chartsIntegration, chartId) => chartsIntegration.charts[chartId]?.categories || [],
+  (chartsIntegration, chartId) => chartsIntegration.charts[chartId]?.dimensions || [],
 );
 
-export const gridChartsSeriesSelector = createSelector(
+export const gridChartsValuesSelector = createSelector(
   gridChartsIntegrationStateSelector,
-  (chartsIntegration, chartId) => chartsIntegration.charts[chartId]?.series || [],
+  (chartsIntegration, chartId) => chartsIntegration.charts[chartId]?.values || [],
 );

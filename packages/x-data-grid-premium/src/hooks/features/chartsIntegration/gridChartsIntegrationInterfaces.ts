@@ -1,7 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import type { ChartState } from '../../../models/gridChartsIntegration';
 
-export type GridChartsIntegrationSection = 'categories' | 'series' | null;
+export type GridChartsIntegrationSection = 'dimensions' | 'values' | null;
 
 export type GridChartsIntegrationItem = {
   field: GridColDef['field'];
@@ -13,8 +13,8 @@ export interface GridChartsIntegrationState {
   charts: Record<
     string,
     {
-      categories: GridChartsIntegrationItem[];
-      series: GridChartsIntegrationItem[];
+      dimensions: GridChartsIntegrationItem[];
+      values: GridChartsIntegrationItem[];
     }
   >;
 }
@@ -24,8 +24,8 @@ export interface GridChartsIntegrationInitialState {
   charts?: Record<
     string,
     {
-      categories?: GridChartsIntegrationItem[] | GridColDef['field'][];
-      series?: GridChartsIntegrationItem[] | GridColDef['field'][];
+      dimensions?: GridChartsIntegrationItem[] | GridColDef['field'][];
+      values?: GridChartsIntegrationItem[] | GridColDef['field'][];
       chartType?: ChartState['type'];
       configuration?: ChartState['configuration'];
     }
@@ -56,24 +56,24 @@ export interface GridChartsIntegrationApi {
    */
   setChartSynchronizationState: (chartId: string, synced: boolean) => void;
   /**
-   * Updates the categories selection for the charts integration.
-   * @param {string} chartId - The id of the chart to update the categories for.
-   * @param {GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[])} categories - The new categories selection or a function that returns the new categories selection.
+   * Updates the dimensions data selection for the charts integration.
+   * @param {string} chartId - The id of the chart to update the dimensions for.
+   * @param {GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[])} dimensions - The new dimensions selection or a function that returns the new dimensions selection.
    */
-  updateCategories: (
+  updateChartDimensionsData: (
     chartId: string,
-    categories:
+    dimensions:
       | GridChartsIntegrationItem[]
       | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
   ) => void;
   /**
-   * Updates the series selection for the charts integration.
-   * @param {string} chartId - The id of the chart to update the series for.
-   * @param {GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[])} series - The new series selection or a function that returns the new series selection.
+   * Updates the values data selection for the charts integration.
+   * @param {string} chartId - The id of the chart to update the values for.
+   * @param {GridChartsIntegrationItem[] | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[])} values - The new values selection or a function that returns the new values selection.
    */
-  updateSeries: (
+  updateChartValuesData: (
     chartId: string,
-    series:
+    values:
       | GridChartsIntegrationItem[]
       | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
   ) => void;

@@ -15,9 +15,9 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import { GridChartsPanelDataField } from './GridChartsPanelDataField';
 import {
   gridChartableColumnsSelector,
-  gridChartsCategoriesSelector,
+  gridChartsDimensionsSelector,
   gridChartsIntegrationActiveChartIdSelector,
-  gridChartsSeriesSelector,
+  gridChartsValuesSelector,
 } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationSelectors';
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
@@ -159,7 +159,7 @@ interface GridChartsPanelDataBodyProps {
   searchValue: string;
 }
 
-// categories and series
+// dimensions and values
 const SECTION_COUNT = 2;
 
 function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
@@ -171,30 +171,42 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
   const { chartStateLookup } = useGridChartsIntegrationContext();
-  const categories = useGridSelector(apiRef, gridChartsCategoriesSelector, activeChartId);
-  const series = useGridSelector(apiRef, gridChartsSeriesSelector, activeChartId);
+  const dimensions = useGridSelector(apiRef, gridChartsDimensionsSelector, activeChartId);
+  const values = useGridSelector(apiRef, gridChartsValuesSelector, activeChartId);
   const classes = useUtilityClasses(rootProps);
   const chartableColumns = useGridSelector(apiRef, gridChartableColumnsSelector);
+
+  const dimensionsLabel = React.useMemo(
+    () =>
+      chartStateLookup[activeChartId]?.dimensionsLabel ||
+      apiRef.current.getLocaleText('chartsCategories'),
+    [chartStateLookup, activeChartId, apiRef],
+  );
+  const valuesLabel = React.useMemo(
+    () =>
+      chartStateLookup[activeChartId]?.valuesLabel || apiRef.current.getLocaleText('chartsSeries'),
+    [chartStateLookup, activeChartId, apiRef],
+  );
 
   const fullSections = React.useMemo(() => {
     const sections: string[] = [];
 
     if (
-      chartStateLookup[activeChartId]?.maxCategories &&
-      categories.length >= chartStateLookup[activeChartId]?.maxCategories
+      chartStateLookup[activeChartId]?.maxDimensions &&
+      dimensions.length >= chartStateLookup[activeChartId]?.maxDimensions
     ) {
-      sections.push('categories');
+      sections.push('dimensions');
     }
 
     if (
-      chartStateLookup[activeChartId]?.maxSeries &&
-      series.length >= chartStateLookup[activeChartId]?.maxSeries
+      chartStateLookup[activeChartId]?.maxValues &&
+      values.length >= chartStateLookup[activeChartId]?.maxValues
     ) {
-      sections.push('series');
+      sections.push('values');
     }
 
     return sections;
-  }, [categories, series, chartStateLookup, activeChartId]);
+  }, [dimensions, values, chartStateLookup, activeChartId]);
 
   const blockedSectionsLookup = React.useMemo(
     () =>
@@ -215,8 +227,8 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const availableFields = React.useMemo(() => {
     const notUsedFields = Object.keys(chartableColumns).filter(
       (field) =>
-        !categories.some((category) => category.field === field) &&
-        !series.some((seriesItem) => seriesItem.field === field),
+        !dimensions.some((dimension) => dimension.field === field) &&
+        !values.some((value) => value.field === field),
     );
     if (searchValue) {
       return notUsedFields.filter((field) => {
@@ -233,7 +245,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
         (aBlockedSections >= SECTION_COUNT ? 1 : 0) - (bBlockedSections >= SECTION_COUNT ? 1 : 0)
       );
     });
-  }, [apiRef, searchValue, chartableColumns, categories, series, blockedSectionsLookup]);
+  }, [apiRef, searchValue, chartableColumns, dimensions, values, blockedSectionsLookup]);
 
   const [drag, setDrag] = React.useState<{
     active: boolean;
@@ -303,7 +315,9 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const handleChange = React.useCallback(
     (field: string, section: GridChartsIntegrationSection) => {
       const apiMethod =
-        section === 'categories' ? apiRef.current.updateCategories : apiRef.current.updateSeries;
+        section === 'dimensions'
+          ? apiRef.current.updateChartDimensionsData
+          : apiRef.current.updateChartValuesData;
       apiMethod(activeChartId, (currentItems) =>
         currentItems.map((item) =>
           item.field === field ? { ...item, hidden: item.hidden !== true } : item,
@@ -343,6 +357,8 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
                 section={null}
                 disabled={blockedSectionsLookup.get(field)!.length >= SECTION_COUNT}
                 blockedSections={blockedSectionsLookup.get(field)}
+                dimensionsLabel={dimensionsLabel}
+                valuesLabel={valuesLabel}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
               >
@@ -365,53 +381,55 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
-            disabled={disabledSections.has('categories')}
-            data-section="categories"
+            disabled={disabledSections.has('dimensions')}
+            data-section="dimensions"
             data-drag-over={
-              !disabledSections.has('categories') && drag.dropSection === 'categories'
+              !disabledSections.has('dimensions') && drag.dropSection === 'dimensions'
             }
           >
-            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('chartsCategories')}>
+            <CollapsibleTrigger aria-label={dimensionsLabel}>
               <GridChartsPanelDataSectionTitle
                 ownerState={rootProps}
                 className={classes.sectionTitle}
               >
-                {apiRef.current.getLocaleText('chartsCategories')}
-                {(chartStateLookup[activeChartId]?.maxCategories || categories.length > 0) && (
+                {dimensionsLabel}
+                {(chartStateLookup[activeChartId]?.maxDimensions || dimensions.length > 0) && (
                   <rootProps.slots.baseBadge
                     badgeContent={
-                      chartStateLookup[activeChartId]?.maxCategories
-                        ? `${categories.length}/${chartStateLookup[activeChartId]?.maxCategories}`
-                        : categories.length
+                      chartStateLookup[activeChartId]?.maxDimensions
+                        ? `${dimensions.length}/${chartStateLookup[activeChartId]?.maxDimensions}`
+                        : dimensions.length
                     }
                   />
                 )}
               </GridChartsPanelDataSectionTitle>
             </CollapsibleTrigger>
             <CollapsiblePanel>
-              {categories.length === 0 && (
+              {dimensions.length === 0 && (
                 <GridChartsPanelDataPlaceholder
                   ownerState={rootProps}
                   className={classes.placeholder}
                 >
-                  {apiRef.current.getLocaleText('chartsDragToCategories')}
+                  {apiRef.current.getLocaleText('chartsDragToDimensions')(dimensionsLabel)}
                 </GridChartsPanelDataPlaceholder>
               )}
-              {categories.length > 0 && (
+              {dimensions.length > 0 && (
                 <GridChartsPanelDataFieldList ownerState={rootProps} className={classes.fieldList}>
-                  {categories.map((category) => (
+                  {dimensions.map((dimension) => (
                     <GridChartsPanelDataField
-                      key={category.field}
-                      field={category.field}
-                      selected={category.hidden !== true}
+                      key={dimension.field}
+                      field={dimension.field}
+                      selected={dimension.hidden !== true}
                       onChange={handleChange}
-                      section="categories"
-                      blockedSections={blockedSectionsLookup.get(category.field)}
-                      disabled={disabledSections.has('categories')}
+                      section="dimensions"
+                      blockedSections={blockedSectionsLookup.get(dimension.field)}
+                      dimensionsLabel={dimensionsLabel}
+                      valuesLabel={valuesLabel}
+                      disabled={disabledSections.has('dimensions')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {apiRef.current.chartsIntegration.getColumnName(category.field)}
+                      {apiRef.current.chartsIntegration.getColumnName(dimension.field)}
                     </GridChartsPanelDataField>
                   ))}
                 </GridChartsPanelDataFieldList>
@@ -425,51 +443,53 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
-            disabled={disabledSections.has('series')}
-            data-section="series"
-            data-drag-over={!disabledSections.has('series') && drag.dropSection === 'series'}
+            disabled={disabledSections.has('values')}
+            data-section="values"
+            data-drag-over={!disabledSections.has('values') && drag.dropSection === 'values'}
           >
-            <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('chartsSeries')}>
+            <CollapsibleTrigger aria-label={valuesLabel}>
               <GridChartsPanelDataSectionTitle
                 ownerState={rootProps}
                 className={classes.sectionTitle}
               >
-                {apiRef.current.getLocaleText('chartsSeries')}
-                {(chartStateLookup[activeChartId]?.maxSeries || series.length > 0) && (
+                {valuesLabel}
+                {(chartStateLookup[activeChartId]?.maxValues || values.length > 0) && (
                   <rootProps.slots.baseBadge
                     badgeContent={
-                      chartStateLookup[activeChartId]?.maxSeries
-                        ? `${series.length}/${chartStateLookup[activeChartId]?.maxSeries}`
-                        : series.length
+                      chartStateLookup[activeChartId]?.maxValues
+                        ? `${values.length}/${chartStateLookup[activeChartId]?.maxValues}`
+                        : values.length
                     }
                   />
                 )}
               </GridChartsPanelDataSectionTitle>
             </CollapsibleTrigger>
             <CollapsiblePanel>
-              {series.length === 0 && (
+              {values.length === 0 && (
                 <GridChartsPanelDataPlaceholder
                   ownerState={rootProps}
                   className={classes.placeholder}
                 >
-                  {apiRef.current.getLocaleText('chartsDragToSeries')}
+                  {apiRef.current.getLocaleText('chartsDragToValues')(valuesLabel)}
                 </GridChartsPanelDataPlaceholder>
               )}
-              {series.length > 0 && (
+              {values.length > 0 && (
                 <GridChartsPanelDataFieldList ownerState={rootProps} className={classes.fieldList}>
-                  {series.map((seriesItem) => (
+                  {values.map((value) => (
                     <GridChartsPanelDataField
-                      key={seriesItem.field}
-                      field={seriesItem.field}
-                      selected={seriesItem.hidden !== true}
+                      key={value.field}
+                      field={value.field}
+                      selected={value.hidden !== true}
                       onChange={handleChange}
-                      section="series"
-                      blockedSections={blockedSectionsLookup.get(seriesItem.field)}
-                      disabled={disabledSections.has('series')}
+                      section="values"
+                      blockedSections={blockedSectionsLookup.get(value.field)}
+                      dimensionsLabel={dimensionsLabel}
+                      valuesLabel={valuesLabel}
+                      disabled={disabledSections.has('values')}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                     >
-                      {apiRef.current.chartsIntegration.getColumnName(seriesItem.field)}
+                      {apiRef.current.chartsIntegration.getColumnName(value.field)}
                     </GridChartsPanelDataField>
                   ))}
                 </GridChartsPanelDataFieldList>

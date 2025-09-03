@@ -144,7 +144,8 @@ GridChartsPanelChartSelector.propTypes = {
     PropTypes.arrayOf(
       PropTypes.oneOfType([
         PropTypes.shape({
-          categories: PropTypes.arrayOf(
+          configuration: PropTypes.object.isRequired,
+          dimensions: PropTypes.arrayOf(
             PropTypes.shape({
               data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]))
                 .isRequired,
@@ -152,13 +153,20 @@ GridChartsPanelChartSelector.propTypes = {
               label: PropTypes.string.isRequired,
             }),
           ).isRequired,
-          configuration: PropTypes.object.isRequired,
+          dimensionsLabel: PropTypes.string,
           label: PropTypes.string,
-          maxCategories: PropTypes.number,
-          maxSeries: PropTypes.number,
-          series: PropTypes.arrayOf(PropTypes.object).isRequired,
+          maxDimensions: PropTypes.number,
+          maxValues: PropTypes.number,
           synced: PropTypes.bool.isRequired,
           type: PropTypes.string.isRequired,
+          values: PropTypes.arrayOf(
+            PropTypes.shape({
+              data: PropTypes.arrayOf(PropTypes.number).isRequired,
+              id: PropTypes.string.isRequired,
+              label: PropTypes.string.isRequired,
+            }),
+          ).isRequired,
+          valuesLabel: PropTypes.string,
         }),
         PropTypes.string,
       ]).isRequired,

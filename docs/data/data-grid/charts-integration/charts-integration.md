@@ -89,8 +89,8 @@ The Grid's grouping and aggregation states are reflected in the chart.
 ## Pivoting
 
 [Pivoting](/x/react-data-grid/pivoting/) creates columns dynamically, based on the pivoting model.
-The names of those columns are determined by the values used to generate them, which makes it impossible to initialize `series` with those values.
-Use the [`updateSeries()`](/x/api/data-grid/grid-api/#grid-api-prop-updateSeries) to update the chart's series after the columns are created.
+The names of those columns are determined by the values used to generate them, which makes it impossible to initialize `values` with those values.
+Use the [`updateChartValuesData()`](/x/api/data-grid/grid-api/#grid-api-prop-updateChartValuesData) to update the chart's value datasets after the columns are created.
 
 ```tsx
 const apiRef = useGridApiRef();
@@ -101,8 +101,8 @@ React.useEffect(() => {
     const unwrappedGroupingModel = Object.keys(
       gridColumnGroupsUnwrappedModelSelector(apiRef),
     );
-    // Update chart series
-    apiRef.current?.updateSeries(
+    // Update chart value datasets
+    apiRef.current?.updateChartValuesData(
       'main',
       unwrappedGroupingModel
         .filter((field) => field.endsWith('quantity'))

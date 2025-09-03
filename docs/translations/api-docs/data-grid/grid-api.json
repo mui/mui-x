@@ -260,14 +260,16 @@
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },
     "unstable_setVirtualization": { "description": "Enable/disable virtualization." },
-    "updateCategories": {
-      "description": "Updates the categories selection for the charts integration."
+    "updateChartDimensionsData": {
+      "description": "Updates the dimensions data selection for the charts integration."
+    },
+    "updateChartValuesData": {
+      "description": "Updates the values data selection for the charts integration."
     },
     "updateColumns": {
       "description": "Updates the definition of multiple columns at the same time."
     },
     "updateRows": { "description": "Allows to update, insert and delete rows." },
-    "updateSeries": { "description": "Updates the series selection for the charts integration." },
     "upsertFilterItem": {
       "description": "Updates or inserts a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },

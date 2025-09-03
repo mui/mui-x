@@ -12,8 +12,8 @@ export type GridChartsRendererProxyRendererCallback = (
 ) => React.ReactNode;
 
 type GridChartsRendererProxyRenderer = React.ComponentType<{
-  categories: ChartState['categories'];
-  series: ChartState['series'];
+  dimensions: ChartState['dimensions'];
+  values: ChartState['values'];
   chartType: ChartState['type'];
   configuration: ChartState['configuration'];
   onRender?: GridChartsRendererProxyRendererCallback;
@@ -61,12 +61,12 @@ function GridChartsRendererProxy(props: GridChartsRendererProxyProps) {
     return null;
   }
 
-  const { categories, series, type, configuration } = chartStateLookup[id];
+  const { dimensions, values, type, configuration } = chartStateLookup[id];
 
   return (
     <Renderer
-      categories={categories}
-      series={series}
+      dimensions={dimensions}
+      values={values}
       chartType={type}
       configuration={configuration}
       onRender={onRender}

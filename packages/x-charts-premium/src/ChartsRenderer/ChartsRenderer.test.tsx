@@ -11,7 +11,7 @@ describe('<ChartsRenderer />', () => {
   it('should not render anything if the chart type is not supported', () => {
     render(
       <div data-testid="container">
-        <ChartsRenderer categories={[]} series={[]} chartType="unsupported" configuration={{}} />
+        <ChartsRenderer dimensions={[]} values={[]} chartType="unsupported" configuration={{}} />
       </div>,
     );
 
@@ -21,7 +21,7 @@ describe('<ChartsRenderer />', () => {
   it('should render a bar chart if the chart type is supported', () => {
     render(
       <div data-testid="container">
-        <ChartsRenderer categories={[]} series={[]} chartType="bar" configuration={{}} />
+        <ChartsRenderer dimensions={[]} values={[]} chartType="bar" configuration={{}} />
       </div>,
     );
 
@@ -33,8 +33,8 @@ describe('<ChartsRenderer />', () => {
     render(
       <div data-testid="container">
         <ChartsRenderer
-          categories={[]}
-          series={[]}
+          dimensions={[]}
+          values={[]}
           chartType="line"
           configuration={{}}
           onRender={onRenderSpy}
@@ -50,8 +50,8 @@ describe('<ChartsRenderer />', () => {
     render(
       <div data-testid="container">
         <ChartsRenderer
-          categories={[]}
-          series={[]}
+          dimensions={[]}
+          values={[]}
           chartType="line"
           configuration={{}}
           onRender={onRenderSpy}
@@ -68,8 +68,8 @@ describe('<ChartsRenderer />', () => {
     render(
       <div data-testid="container">
         <ChartsRenderer
-          categories={[]}
-          series={[]}
+          dimensions={[]}
+          values={[]}
           chartType="line"
           configuration={{
             colors: 'mangoFusionPalette',
@@ -83,13 +83,13 @@ describe('<ChartsRenderer />', () => {
     expect(props.colors).to.equal(colorPaletteLookup.get('mangoFusionPalette'));
   });
 
-  it('should place categories and series to the correct place in the props', () => {
+  it('should place dimensions and values to the correct place in the props', () => {
     const onRenderSpy = spy();
     render(
       <div data-testid="container">
         <ChartsRenderer
-          categories={[{ id: 'category', label: 'Category', data: ['A'] }]}
-          series={[{ id: 'series', label: 'Series', data: [1, 2, 3] }]}
+          dimensions={[{ id: 'dimension', label: 'Dimension', data: ['A'] }]}
+          values={[{ id: 'value', label: 'Value', data: [1, 2, 3] }]}
           chartType="line"
           configuration={{}}
           onRender={onRenderSpy}
@@ -98,6 +98,6 @@ describe('<ChartsRenderer />', () => {
     );
 
     const props = onRenderSpy.lastCall.args[1];
-    expect(props.series[0].data).to.deep.equal([1, 2, 3]);
+    expect(props.values[0].data).to.deep.equal([1, 2, 3]);
   });
 });

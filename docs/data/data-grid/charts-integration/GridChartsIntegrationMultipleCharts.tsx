@@ -74,20 +74,20 @@ export default function GridChartsIntegrationMultipleCharts() {
 
       // add columns dynamically created by pivoting
       // they cannot be added to the initial state because they are not available at that time and will be cleaned up by the state initializer
-      apiRef.current?.updateCategories('quantity', [
+      apiRef.current?.updateChartDimensionsData('quantity', [
         { field: 'dateCreated-quarter', hidden: false },
       ]);
-      apiRef.current?.updateSeries(
+      apiRef.current?.updateChartValuesData(
         'quantity',
         unwrappedGroupingModel
           .filter((field) => field.endsWith('quantity'))
           .slice(0, 5)
           .map((field, index) => ({ field, hidden: index >= 3 })),
       );
-      apiRef.current?.updateCategories('feeRate', [
+      apiRef.current?.updateChartDimensionsData('feeRate', [
         { field: 'dateCreated-quarter', hidden: false },
       ]);
-      apiRef.current?.updateSeries(
+      apiRef.current?.updateChartValuesData(
         'feeRate',
         unwrappedGroupingModel
           .filter((field) => field.endsWith('feeRate'))

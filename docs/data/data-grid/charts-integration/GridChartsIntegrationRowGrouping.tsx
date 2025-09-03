@@ -81,8 +81,8 @@ export default function GridChartsIntegrationRowGrouping() {
       chartsIntegration: {
         charts: {
           main: {
-            categories: ['status', 'commodity'],
-            series: ['filledQuantity', 'feeRate'],
+            dimensions: ['status', 'commodity'],
+            values: ['filledQuantity', 'feeRate'],
             chartType: 'column',
           },
         },

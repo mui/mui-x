@@ -38,8 +38,8 @@ import {
 } from './gridChartsIntegrationInterfaces';
 import {
   gridChartsPanelOpenSelector,
-  gridChartsCategoriesSelector,
-  gridChartsSeriesSelector,
+  gridChartsDimensionsSelector,
+  gridChartsValuesSelector,
   gridChartsIntegrationActiveChartIdSelector,
   gridChartableColumnsSelector,
 } from './gridChartsIntegrationSelectors';
@@ -85,30 +85,28 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
     Object.entries(props.initialState?.chartsIntegration?.charts || {}).map(([chartId, chart]) => [
       chartId,
       {
-        categories: (chart.categories || [])
-          .map((category) =>
-            typeof category === 'string' ? { field: category, hidden: false } : category,
+        dimensions: (chart.dimensions || [])
+          .map((dimension) =>
+            typeof dimension === 'string' ? { field: dimension, hidden: false } : dimension,
           )
           .filter(
-            (category) =>
-              columnsLookup[category.field]?.chartable === true &&
+            (dimension) =>
+              columnsLookup[dimension.field]?.chartable === true &&
               !isBlockedForSection(
-                columnsLookup[category.field] as GridColDef,
-                'categories',
+                columnsLookup[dimension.field] as GridColDef,
+                'dimensions',
                 rowGroupingModel,
                 pivotModel,
               ),
           ),
-        series: (chart.series || [])
-          .map((seriesItem) =>
-            typeof seriesItem === 'string' ? { field: seriesItem, hidden: false } : seriesItem,
-          )
+        values: (chart.values || [])
+          .map((value) => (typeof value === 'string' ? { field: value, hidden: false } : value))
           .filter(
-            (seriesItem) =>
-              columnsLookup[seriesItem.field]?.chartable === true &&
+            (value) =>
+              columnsLookup[value.field]?.chartable === true &&
               !isBlockedForSection(
-                columnsLookup[seriesItem.field] as GridColDef,
-                'series',
+                columnsLookup[value.field] as GridColDef,
+                'values',
                 rowGroupingModel,
                 pivotModel,
               ),
@@ -134,8 +132,8 @@ const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
 
 export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
   synced: true,
-  categories: [],
-  series: [],
+  dimensions: [],
+  values: [],
   type: '',
   configuration: {},
 };
@@ -155,8 +153,8 @@ export const useGridChartsIntegration = (
     | 'experimentalFeatures'
   >,
 ) => {
-  const visibleCategories = React.useRef<Record<string, GridColDef[]>>({});
-  const visibleSeries = React.useRef<Record<string, GridColDef[]>>({});
+  const visibleDimensions = React.useRef<Record<string, GridColDef[]>>({});
+  const visibleValues = React.useRef<Record<string, GridColDef[]>>({});
   const schema = React.useMemo(
     () => props.slotProps?.chartsPanel?.schema || {},
     [props.slotProps?.chartsPanel?.schema],
@@ -174,11 +172,11 @@ export const useGridChartsIntegration = (
   const { chartStateLookup, setChartState } = context || EMPTY_CHART_INTEGRATION_CONTEXT;
   const availableChartIds = React.useMemo(() => {
     const ids = Object.keys(chartStateLookup);
-    // cleanup visibleCategories and visibleSeries references
-    Object.keys(visibleCategories.current).forEach((chartId) => {
+    // cleanup visibleDimensions and visibleValues references
+    Object.keys(visibleDimensions.current).forEach((chartId) => {
       if (!ids.includes(chartId)) {
-        delete visibleCategories.current[chartId];
-        delete visibleSeries.current[chartId];
+        delete visibleDimensions.current[chartId];
+        delete visibleValues.current[chartId];
       }
     });
 
@@ -213,7 +211,7 @@ export const useGridChartsIntegration = (
   );
 
   // Adds aggregation function label to the column name
-  const getSeriesLabel = React.useCallback(
+  const getValueDatasetLabel = React.useCallback(
     (field: string) => {
       const customFieldName = props.slotProps?.chartsPanel?.getColumnName?.(field);
       if (customFieldName) {
@@ -246,23 +244,23 @@ export const useGridChartsIntegration = (
     changeEvent: 'activeChartIdChange',
   });
 
-  // sometimes, updates made to the chart categories and series require updating other models
-  // for example, if we are adding more than one category, we need to set the new grouping model
-  // if we are adding new series to the grouped data, we need to set the aggregation model, otherwise the values will be undefined
+  // sometimes, updates made to the chart dimensions and values require updating other models
+  // for example, if we are adding more than one dimension, we need to set the new grouping model
+  // if we are adding new value dataset to the grouped data, we need to set the aggregation model, otherwise the values will be undefined
   const updateOtherModels = React.useCallback(() => {
     const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
     if (
-      visibleCategories.current[activeChartId]?.length > 0 &&
-      // if there was row grouping or if we are adding more than one category, set the new grouping model
-      (rowGroupingModel.length > 0 || visibleCategories.current[activeChartId].length > 1) &&
-      // if row grouping model starts with categories in the same order, we don't have to do anything
-      visibleCategories.current[activeChartId].some(
+      visibleDimensions.current[activeChartId]?.length > 0 &&
+      // if there was row grouping or if we are adding more than one dimension, set the new grouping model
+      (rowGroupingModel.length > 0 || visibleDimensions.current[activeChartId].length > 1) &&
+      // if row grouping model starts with dimensions in the same order, we don't have to do anything
+      visibleDimensions.current[activeChartId].some(
         (item, index) => item.field !== rowGroupingModel[index],
       )
     ) {
       // if pivoting is enabled, then the row grouping model is driven by the pivoting rows
-      const newGroupingModel = visibleCategories.current[activeChartId].map((item) => item.field);
+      const newGroupingModel = visibleDimensions.current[activeChartId].map((item) => item.field);
       if (pivotActive) {
         apiRef.current.setPivotModel((prev) => ({
           ...prev,
@@ -278,11 +276,11 @@ export const useGridChartsIntegration = (
       }
     }
 
-    if (!pivotActive && visibleSeries.current[activeChartId] && rowGroupingModel.length > 0) {
-      // with row grouping add the aggregation model to the newly added series
+    if (!pivotActive && visibleValues.current[activeChartId] && rowGroupingModel.length > 0) {
+      // with row grouping add the aggregation model to the newly added value dataset
       const aggregatedFields = Object.keys(aggregationModel);
 
-      visibleSeries.current[activeChartId].forEach((item) => {
+      visibleValues.current[activeChartId].forEach((item) => {
         const hasAggregation = aggregatedFields.includes(item.field);
         if (!hasAggregation) {
           apiRef.current.setAggregationModel({
@@ -311,7 +309,7 @@ export const useGridChartsIntegration = (
       if (
         chartIds.length === 0 ||
         chartIds.some(
-          (chartId) => !visibleCategories.current[chartId] || !visibleSeries.current[chartId],
+          (chartId) => !visibleDimensions.current[chartId] || !visibleValues.current[chartId],
         )
       ) {
         return;
@@ -320,14 +318,14 @@ export const useGridChartsIntegration = (
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
       const rowsPerDepth = gridFilteredSortedDepthRowEntriesSelector(apiRef);
-      const defaultDepth = Math.max(0, (visibleCategories.current[activeChartId]?.length ?? 0) - 1);
+      const defaultDepth = Math.max(0, (visibleDimensions.current[activeChartId]?.length ?? 0) - 1);
       const rowsAtDefaultDepth = (rowsPerDepth[defaultDepth] ?? []).length;
 
       // keep only unique columns and transform the grouped column to carry the correct field name to get the grouped value
       const dataColumns = [
         ...new Set([
-          ...Object.values(visibleCategories.current).flat(),
-          ...Object.values(visibleSeries.current).flat(),
+          ...Object.values(visibleDimensions.current).flat(),
+          ...Object.values(visibleValues.current).flat(),
         ]),
       ].map((column) => {
         const isColumnGrouped = rowGroupingModel.includes(column.field);
@@ -364,7 +362,7 @@ export const useGridChartsIntegration = (
 
       for (let i = 0; i < rowsAtDefaultDepth; i += 1) {
         for (let j = 0; j < dataColumnsCount; j += 1) {
-          // if multiple columns are grouped, we need to get the value from the parent to properly create category groups
+          // if multiple columns are grouped, we need to get the value from the parent to properly create dimension groups
           let targetRow = rowsPerDepth[defaultDepth][i].model;
           // if we are not at the same depth as the column we are currently processing change the target to the parent at the correct depth
           for (let d = defaultDepth; d > dataColumns[j].depth; d -= 1) {
@@ -386,20 +384,20 @@ export const useGridChartsIntegration = (
 
       chartIds.forEach((chartId) => {
         setChartState(chartId, {
-          categories: visibleCategories.current[chartId].map((category) => ({
-            id: category.field,
-            label: getColumnName(category.field),
-            data: data[category.field] || [],
+          dimensions: visibleDimensions.current[chartId].map((dimension) => ({
+            id: dimension.field,
+            label: getColumnName(dimension.field),
+            data: data[dimension.field] || [],
           })),
-          series: visibleSeries.current[chartId].map((seriesItem) => ({
-            id: seriesItem.field,
-            label: getSeriesLabel(seriesItem.field),
-            data: (data[seriesItem.field] || []) as (number | null)[],
+          values: visibleValues.current[chartId].map((value) => ({
+            id: value.field,
+            label: getValueDatasetLabel(value.field),
+            data: (data[value.field] || []) as (number | null)[],
           })),
         });
       });
     },
-    [apiRef, activeChartId, orderedFields, getColumnName, getSeriesLabel, setChartState],
+    [apiRef, activeChartId, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(
@@ -418,104 +416,104 @@ export const useGridChartsIntegration = (
       const chartableColumns = gridChartableColumnsSelector(apiRef);
       const selectedFields = chartIds.reduce(
         (acc, chartId) => {
-          const series = gridChartsSeriesSelector(apiRef, chartId);
-          const categories = gridChartsCategoriesSelector(apiRef, chartId);
+          const values = gridChartsValuesSelector(apiRef, chartId);
+          const dimensions = gridChartsDimensionsSelector(apiRef, chartId);
           return {
             ...acc,
             [chartId]: {
-              series,
-              categories,
+              values,
+              dimensions,
             },
           };
         },
         {} as Record<
           string,
-          { series: GridChartsIntegrationItem[]; categories: GridChartsIntegrationItem[] }
+          { values: GridChartsIntegrationItem[]; dimensions: GridChartsIntegrationItem[] }
         >,
       );
 
-      const series: Record<string, GridChartsIntegrationItem[]> = {};
-      const categories: Record<string, GridChartsIntegrationItem[]> = {};
+      const values: Record<string, GridChartsIntegrationItem[]> = {};
+      const dimensions: Record<string, GridChartsIntegrationItem[]> = {};
 
       chartIds.forEach((chartId) => {
-        categories[chartId] = [];
-        series[chartId] = [];
+        dimensions[chartId] = [];
+        values[chartId] = [];
 
-        // loop through categories and series either through their length or to the max limit
+        // loop through dimensions and values datasets either through their length or to the max limit
         // if the current selection is greater than the max limit, the state will be updated
         const chartState = updatedChartStateLookup?.[chartId] || chartStateLookup[chartId];
-        const categoriesSize = chartState?.maxCategories
-          ? Math.min(chartState.maxCategories, selectedFields[chartId].categories.length)
-          : selectedFields[chartId].categories.length;
-        const seriesSize = chartState?.maxSeries
-          ? Math.min(chartState.maxSeries, selectedFields[chartId].series.length)
-          : selectedFields[chartId].series.length;
+        const dimensionsSize = chartState?.maxDimensions
+          ? Math.min(chartState.maxDimensions, selectedFields[chartId].dimensions.length)
+          : selectedFields[chartId].dimensions.length;
+        const valuesSize = chartState?.maxValues
+          ? Math.min(chartState.maxValues, selectedFields[chartId].values.length)
+          : selectedFields[chartId].values.length;
 
-        // sanitize selectedSeries and selectedCategories while maintaining their order
-        for (let i = 0; i < seriesSize; i += 1) {
+        // sanitize selectedDimensions and selectedValues while maintaining their order
+        for (let i = 0; i < valuesSize; i += 1) {
           if (
-            chartableColumns[selectedFields[chartId].series[i].field] &&
+            chartableColumns[selectedFields[chartId].values[i].field] &&
             !isBlockedForSection(
-              chartableColumns[selectedFields[chartId].series[i].field],
-              'series',
+              chartableColumns[selectedFields[chartId].values[i].field],
+              'values',
               rowGroupingModel,
               pivotActive ? pivotModel : undefined,
             )
           ) {
-            if (!series[chartId]) {
-              series[chartId] = [];
+            if (!values[chartId]) {
+              values[chartId] = [];
             }
-            series[chartId].push(selectedFields[chartId].series[i]);
+            values[chartId].push(selectedFields[chartId].values[i]);
           }
         }
 
-        // categories cannot contain fields that are already in series
-        for (let i = 0; i < categoriesSize; i += 1) {
-          const item = selectedFields[chartId].categories[i];
+        // dimensions cannot contain fields that are already in values
+        for (let i = 0; i < dimensionsSize; i += 1) {
+          const item = selectedFields[chartId].dimensions[i];
           if (
-            !selectedFields[chartId].series.some((seriesItem) => seriesItem.field === item.field) &&
+            !selectedFields[chartId].values.some((valueItem) => valueItem.field === item.field) &&
             chartableColumns[item.field] &&
             !isBlockedForSection(
               chartableColumns[item.field],
-              'categories',
+              'dimensions',
               rowGroupingModel,
               pivotActive ? pivotModel : undefined,
             )
           ) {
-            if (!categories[chartId]) {
-              categories[chartId] = [];
+            if (!dimensions[chartId]) {
+              dimensions[chartId] = [];
             }
-            categories[chartId].push(item);
+            dimensions[chartId].push(item);
           }
         }
 
         // we can compare the lengths, because this function is called after the state was updated.
         // different lengths will occur only if some items were removed during the checks above
         if (
-          categories[chartId] &&
-          selectedFields[chartId].categories.length !== categories[chartId].length
+          dimensions[chartId] &&
+          selectedFields[chartId].dimensions.length !== dimensions[chartId].length
         ) {
-          apiRef.current.updateCategories(chartId, categories[chartId]);
+          apiRef.current.updateChartDimensionsData(chartId, dimensions[chartId]);
         }
 
-        if (series[chartId] && selectedFields[chartId].series.length !== series[chartId].length) {
-          apiRef.current.updateSeries(chartId, series[chartId]);
+        if (values[chartId] && selectedFields[chartId].values.length !== values[chartId].length) {
+          apiRef.current.updateChartValuesData(chartId, values[chartId]);
         }
 
-        visibleCategories.current[chartId] = categories[chartId]
-          .filter((category) => category.hidden !== true)
-          .map((category) => chartableColumns[category.field]);
-        visibleSeries.current[chartId] = series[chartId]
-          .filter((seriesItem) => seriesItem.hidden !== true)
-          .map((seriesItem) => chartableColumns[seriesItem.field]);
+        visibleDimensions.current[chartId] = dimensions[chartId]
+          .filter((dimension) => dimension.hidden !== true)
+          .map((dimension) => chartableColumns[dimension.field]);
+        visibleValues.current[chartId] = values[chartId]
+          .filter((value) => value.hidden !== true)
+          .map((value) => chartableColumns[value.field]);
 
-        // we need to have both categories and series to be able to display the chart
+        // we need to have both dimensions and values to be able to display the chart
         if (
-          visibleCategories.current[chartId].length === 0 ||
-          visibleSeries.current[chartId].length === 0
+          visibleDimensions.current[chartId].length === 0 ||
+          visibleValues.current[chartId].length === 0
         ) {
-          visibleCategories.current[chartId] = [];
-          visibleSeries.current[chartId] = [];
+          visibleDimensions.current[chartId] = [];
+          visibleValues.current[chartId] = [];
         }
       });
 
@@ -552,10 +550,10 @@ export const useGridChartsIntegration = (
     [apiRef, isChartsIntegrationAvailable],
   );
 
-  const updateCategories = React.useCallback(
+  const updateChartDimensionsData = React.useCallback(
     (
       chartId: string,
-      categories:
+      dimensions:
         | GridChartsIntegrationItem[]
         | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
     ) => {
@@ -564,10 +562,10 @@ export const useGridChartsIntegration = (
       }
 
       apiRef.current.setState((state) => {
-        const newCategories =
-          typeof categories === 'function'
-            ? categories(state.chartsIntegration.charts[chartId].categories)
-            : categories;
+        const newDimensions =
+          typeof dimensions === 'function'
+            ? dimensions(state.chartsIntegration.charts[chartId].dimensions)
+            : dimensions;
         return {
           ...state,
           chartsIntegration: {
@@ -576,7 +574,7 @@ export const useGridChartsIntegration = (
               ...state.chartsIntegration.charts,
               [chartId]: {
                 ...state.chartsIntegration.charts[chartId],
-                categories: newCategories,
+                dimensions: newDimensions,
               },
             },
           },
@@ -587,10 +585,10 @@ export const useGridChartsIntegration = (
     [apiRef, isChartsIntegrationAvailable, syncedChartIds, debouncedHandleColumnDataUpdate],
   );
 
-  const updateSeries = React.useCallback(
+  const updateChartValuesData = React.useCallback(
     (
       chartId: string,
-      series:
+      values:
         | GridChartsIntegrationItem[]
         | ((prev: GridChartsIntegrationItem[]) => GridChartsIntegrationItem[]),
     ) => {
@@ -599,10 +597,10 @@ export const useGridChartsIntegration = (
       }
 
       apiRef.current.setState((state) => {
-        const newSeries =
-          typeof series === 'function'
-            ? series(state.chartsIntegration.charts[chartId].series)
-            : series;
+        const newValues =
+          typeof values === 'function'
+            ? values(state.chartsIntegration.charts[chartId].values)
+            : values;
 
         return {
           ...state,
@@ -612,7 +610,7 @@ export const useGridChartsIntegration = (
               ...state.chartsIntegration.charts,
               [chartId]: {
                 ...state.chartsIntegration.charts[chartId],
-                series: newSeries,
+                values: newValues,
               },
             },
           },
@@ -648,8 +646,10 @@ export const useGridChartsIntegration = (
 
       const stateUpdate = {
         type,
-        maxCategories: schema[type]?.maxCategories,
-        maxSeries: schema[type]?.maxSeries,
+        dimensionsLabel: schema[type]?.dimensionsLabel,
+        valuesLabel: schema[type]?.valuesLabel,
+        maxDimensions: schema[type]?.maxDimensions,
+        maxValues: schema[type]?.maxValues,
       };
 
       const updatedChartStateLookup = {
@@ -660,7 +660,7 @@ export const useGridChartsIntegration = (
         },
       };
 
-      // make sure that the new categories and series limits are applied before changing the chart type
+      // make sure that the new dimensions and values limits are applied before changing the chart type
       handleColumnDataUpdate([chartId], updatedChartStateLookup);
       setChartState(chartId, stateUpdate);
     },
@@ -708,8 +708,8 @@ export const useGridChartsIntegration = (
   >(
     (field, originSection, targetSection, targetField, placementRelativeToTargetField) => {
       const columns = gridColumnLookupSelector(apiRef);
-      const categories = gridChartsCategoriesSelector(apiRef, activeChartId);
-      const series = gridChartsSeriesSelector(apiRef, activeChartId);
+      const dimensions = gridChartsDimensionsSelector(apiRef, activeChartId);
+      const values = gridChartsValuesSelector(apiRef, activeChartId);
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
       if (targetSection) {
@@ -724,11 +724,11 @@ export const useGridChartsIntegration = (
           return;
         }
 
-        const currentTargetItems = targetSection === 'categories' ? categories : series;
+        const currentTargetItems = targetSection === 'dimensions' ? dimensions : values;
         const currentMaxItems =
-          targetSection === 'categories'
-            ? chartStateLookup[activeChartId]?.maxCategories
-            : chartStateLookup[activeChartId]?.maxSeries;
+          targetSection === 'dimensions'
+            ? chartStateLookup[activeChartId]?.maxDimensions
+            : chartStateLookup[activeChartId]?.maxValues;
 
         if (currentMaxItems && currentTargetItems.length >= currentMaxItems) {
           return;
@@ -737,8 +737,9 @@ export const useGridChartsIntegration = (
 
       let hidden: boolean | undefined;
       if (originSection) {
-        const method = originSection === 'categories' ? updateCategories : updateSeries;
-        const currentItems = originSection === 'categories' ? [...categories] : [...series];
+        const method =
+          originSection === 'dimensions' ? updateChartDimensionsData : updateChartValuesData;
+        const currentItems = originSection === 'dimensions' ? [...dimensions] : [...values];
 
         const fieldIndex = currentItems.findIndex((item) => item.field === field);
         if (fieldIndex !== -1) {
@@ -753,15 +754,16 @@ export const useGridChartsIntegration = (
       }
 
       if (targetSection) {
-        const method = targetSection === 'categories' ? updateCategories : updateSeries;
-        const currentItems = targetSection === 'categories' ? categories : series;
+        const method =
+          targetSection === 'dimensions' ? updateChartDimensionsData : updateChartValuesData;
+        const currentItems = targetSection === 'dimensions' ? dimensions : values;
         const remainingItems =
           targetSection === originSection
             ? currentItems.filter((item) => item.field !== field)
             : [...currentItems];
 
-        // with row grouping add the aggregation model to the newly added series
-        if (rowGroupingModel.length > 0 && targetSection === 'series') {
+        // with row grouping add the aggregation model to the newly added values dataset
+        if (rowGroupingModel.length > 0 && targetSection === 'values') {
           const hasAggregation = Object.keys(aggregationModel).includes(field);
           if (!hasAggregation) {
             apiRef.current.setAggregationModel({
@@ -792,8 +794,8 @@ export const useGridChartsIntegration = (
       props.dataSource,
       activeChartId,
       chartStateLookup,
-      updateCategories,
-      updateSeries,
+      updateChartDimensionsData,
+      updateChartValuesData,
       aggregationModel,
       pivotActive,
       pivotModel,
@@ -842,8 +844,8 @@ export const useGridChartsIntegration = (
           setActiveChartId,
           setChartType,
           setChartSynchronizationState,
-          updateSeries,
-          updateCategories,
+          updateChartDimensionsData,
+          updateChartValuesData,
         }
       : {},
     'public',
@@ -892,8 +894,10 @@ export const useGridChartsIntegration = (
       const chartType = props.initialState?.chartsIntegration?.charts?.[chartId]?.chartType || '';
       setChartState(chartId, {
         type: chartType,
-        maxCategories: schema[chartType]?.maxCategories,
-        maxSeries: schema[chartType]?.maxSeries,
+        maxDimensions: schema[chartType]?.maxDimensions,
+        maxValues: schema[chartType]?.maxValues,
+        dimensionsLabel: schema[chartType]?.dimensionsLabel,
+        valuesLabel: schema[chartType]?.valuesLabel,
         configuration:
           props.initialState?.chartsIntegration?.charts?.[chartId]?.configuration || {},
       });
