@@ -70,7 +70,7 @@ Internal changes.
 
 ### Docs
 
-- [docs][pickers] Fix grammar and spelling mistakes (#19300) @mapache-salvaje
+- [docs] Fix grammar and spelling mistakes on the Date and Time Pickers pages (#19300) @mapache-salvaje
 - [docs][charts] Remove wrong legend info (#19383) @JCQuintas
 
 ### Core
