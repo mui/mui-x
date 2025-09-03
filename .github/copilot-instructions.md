@@ -29,7 +29,7 @@ Always reference these instructions first and fallback to search or bash command
   - Filter by test name: `pnpm test:unit:jsdom -t "hide tooltip"`
 - **Browser tests**: `pnpm test:unit:browser` -- requires Playwright browsers installed first:
   - Install browsers: `pnpm exec playwright install` -- takes 10+ minutes. NEVER CANCEL. Set timeout to 20+ minutes.
-  - Run tests: `pnpm test:unit:browser --project "x-data-grid"`
+  - Run tests: `pnpm test:unit:browser --project "x-data-grid" --run`
 - **Regression tests**: `pnpm test:regressions:dev` -- requires packages to be built first
 - **E2E tests**: `pnpm test:e2e` -- requires packages to be built first
 - **TypeScript checking**: `pnpm typescript` or `pnpm --filter @mui/x-[package] typescript` -- takes 15 seconds per package
@@ -71,7 +71,7 @@ Always manually validate changes by testing these key scenarios:
 ### Data Grid Validation
 After making changes to data grid components:
 - Build the package: `pnpm --filter @mui/x-data-grid build`
-- Run unit tests: `pnpm test:unit:jsdom --project "x-data-grid" --run`
+- Run browser tests: `pnpm test:unit:browser --project "x-data-grid" --run`
 - Start docs and navigate to Data Grid examples: `pnpm docs:dev` → http://localhost:3001/x/react-data-grid/
 - Test basic functionality: sorting, filtering, pagination
 
@@ -79,14 +79,14 @@ After making changes to data grid components:
 After making changes to charts components:
 - Build the package: `pnpm --filter @mui/x-charts build`
 - Build vendor dependencies: `pnpm --filter @mui/x-charts-vendor build`
-- Run unit tests: `pnpm test:unit:jsdom --project "x-charts" --run`
+- Run browser tests: `pnpm test:unit:browser --project "x-charts" --run`
 - Start docs and navigate to Charts examples: `pnpm docs:dev` → http://localhost:3001/x/react-charts/
 - Test chart rendering and interactions
 
 ### Pickers Validation
 After making changes to date/time picker components:
 - Build the package: `pnpm --filter @mui/x-date-pickers build`
-- Run unit tests: `pnpm test:unit:jsdom --project "x-date-pickers" --run`
+- Run browser tests: `pnpm test:unit:browser --project "x-date-pickers" --run`
 - Start docs and navigate to Pickers examples: `pnpm docs:dev` → http://localhost:3001/x/react-date-pickers/
 - Test date selection and different picker variants
 
