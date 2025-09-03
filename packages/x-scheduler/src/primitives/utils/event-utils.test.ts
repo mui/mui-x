@@ -116,9 +116,9 @@ describe('event-utils', () => {
     });
   });
 
-  describe('getEventRowIndex', () => {
+  describe('getEventRowPlacement', () => {
     it('should return 1 for first event on a day with no existing events', () => {
-      const result = getEventRowPlacement({
+      const { rowIndex } = getEventRowPlacement({
         adapter,
         rowIndexLookup: {},
         occurrence: createEventOccurrence('1', '2024-01-15', '2024-01-15'),
@@ -127,11 +127,11 @@ describe('event-utils', () => {
         daysBeforeRowEnd: 2,
       });
 
-      expect(result).toBe(1);
+      expect(rowIndex).toBe(1);
     });
 
     it('should return next available row index when other events exist', () => {
-      const result = getEventRowPlacement({
+      const { rowIndex } = getEventRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/15/2024': {
@@ -145,11 +145,11 @@ describe('event-utils', () => {
         daysBeforeRowEnd: 2,
       });
 
-      expect(result).toBe(3);
+      expect(rowIndex).toBe(3);
     });
 
     it('should find gap in row indexes and use the lowest available', () => {
-      const result = getEventRowPlacement({
+      const { rowIndex } = getEventRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/15/2024': {
@@ -163,11 +163,11 @@ describe('event-utils', () => {
         daysBeforeRowEnd: 2,
       });
 
-      expect(result).toBe(2);
+      expect(rowIndex).toBe(2);
     });
 
     it('should return existing row index when event starts before visible range and exists in first day', () => {
-      const result = getEventRowPlacement({
+      const { rowIndex } = getEventRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/15/2024': {
@@ -186,7 +186,7 @@ describe('event-utils', () => {
         daysBeforeRowEnd: 2,
       });
 
-      expect(result).toBe(2); // Should use existing row index from first day
+      expect(rowIndex).toBe(2); // Should use existing row index from first day
     });
 
     it('should return 1 when event starts before visible range but not found in first day', () => {
@@ -214,7 +214,7 @@ describe('event-utils', () => {
 
     it('should handle event row placement correctly in all columns', () => {
       const occurrence = createEventOccurrence('3', '2024-01-15', '2024-01-16');
-      const result = getEventRowPlacement({
+      const { rowIndex } = getEventRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/14/2024': {
@@ -236,16 +236,16 @@ describe('event-utils', () => {
         daysBeforeRowEnd: 2,
       });
 
-      expect(result).toBe(2);
+      expect(rowIndex).toBe(2);
 
-      const result2 = getEventRowPlacement({
+      const { rowIndex: rowIndex2 } = getEventRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/14/2024': {
             occurrencesRowIndex: { '1': 1, '2': 3 },
             usedRowIndexes: new Set([1, 2]),
           },
-          // Add the row index returned by the 1st call to getEventRowIndex
+          // Add the row index returned by the 1st call to getEventRowPlacement
           '1/15/2024': {
             occurrencesRowIndex: { '1': 1, '3': 2 },
             usedRowIndexes: new Set([1, 2]),
@@ -261,7 +261,7 @@ describe('event-utils', () => {
         daysBeforeRowEnd: 2,
       });
 
-      expect(result2).toBe(2);
+      expect(rowIndex2).toBe(2);
     });
   });
 
