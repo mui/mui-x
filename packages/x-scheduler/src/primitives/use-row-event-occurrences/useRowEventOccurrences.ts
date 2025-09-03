@@ -1,70 +1,85 @@
 import * as React from 'react';
 import {
   CalendarEventOccurrence,
-  CalendarEventOccurrencesWithRowIndex,
+  CalendarEventOccurrencesWithRowPlacement,
   CalendarProcessedDate,
 } from '../models';
 import { useEventOccurrences } from '../use-event-occurrences';
-import { getEventRowPlacement, GetEventRowPlacementParameters } from '../utils/event-utils';
+import {
+  getEventOccurrenceRowPlacement,
+  GetEventOccurrenceRowPlacementParameters,
+} from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 
 /**
  * Adds the event occurrences to each day in the row.
  * For the all-day occurrences, it calculates their index in the row (the sub-row they should be rendering in).
  */
-export function useRowEventOccurrences(
-  parameters: useRowEventOccurrences.Parameters,
-): useRowEventOccurrences.ReturnValue {
-  const { days, occurrencesMap } = parameters;
+export function useAddRowPlacementToEventOccurrences(
+  parameters: useAddRowPlacementToEventOccurrences.Parameters,
+): useAddRowPlacementToEventOccurrences.ReturnValue {
+  const { days, occurrencesMap, shouldAddPlacement } = parameters;
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const rowIndexLookup: GetEventRowPlacementParameters['rowIndexLookup'] = {};
+    const rowIndexLookup: GetEventOccurrenceRowPlacementParameters['rowIndexLookup'] = {};
     const rowLength = days.length;
 
     return days.map((day, dayIndex) => {
-      const allDayOccurrences: CalendarEventOccurrencesWithRowIndex[] = [];
+      const withRowPlacement: CalendarEventOccurrencesWithRowPlacement[] = [];
+      const withoutRowPlacement: CalendarEventOccurrence[] = [];
       const occurrences = occurrencesMap.get(day.key);
       rowIndexLookup[day.key] = { occurrencesRowIndex: {}, usedRowIndexes: new Set() };
 
       // Process all-day events and get their position in the row
-      for (const occurrence of occurrences?.allDay ?? []) {
-        const placement = getEventRowPlacement({
-          adapter,
-          rowIndexLookup,
-          occurrence,
-          day,
-          previousDay: dayIndex === 0 ? null : days[dayIndex - 1],
-          daysBeforeRowEnd: rowLength - dayIndex,
-        });
+      for (const occurrence of occurrences ?? []) {
+        const hasPlacement = shouldAddPlacement ? shouldAddPlacement(occurrence) : true;
 
-        allDayOccurrences.push({
-          ...occurrence,
-          placement,
-        });
+        if (hasPlacement) {
+          const placement = getEventOccurrenceRowPlacement({
+            adapter,
+            rowIndexLookup,
+            occurrence,
+            day,
+            previousDay: dayIndex === 0 ? null : days[dayIndex - 1],
+            daysBeforeRowEnd: rowLength - dayIndex,
+          });
 
-        rowIndexLookup[day.key].occurrencesRowIndex[occurrence.key] = placement.rowIndex;
-        rowIndexLookup[day.key].usedRowIndexes.add(placement.rowIndex);
+          withRowPlacement.push({
+            ...occurrence,
+            placement,
+          });
+
+          rowIndexLookup[day.key].occurrencesRowIndex[occurrence.key] = placement.rowIndex;
+          rowIndexLookup[day.key].usedRowIndexes.add(placement.rowIndex);
+        } else {
+          withoutRowPlacement.push(occurrence);
+        }
       }
 
       return {
         ...day,
-        regularOccurrences: occurrences?.regular ?? [],
-        allDayOccurrences,
+        withRowPlacement,
+        withoutRowPlacement,
       };
     });
-  }, [adapter, days, occurrencesMap]);
+  }, [adapter, days, occurrencesMap, shouldAddPlacement]);
 }
 
-export namespace useRowEventOccurrences {
+export namespace useAddRowPlacementToEventOccurrences {
   export interface Parameters {
     days: CalendarProcessedDate[];
     occurrencesMap: useEventOccurrences.ReturnValue;
+    /**
+     * Whether the row placement should be computed for this event occurrence.
+     * @default () => true
+     */
+    shouldAddPlacement?: (occurrence: CalendarEventOccurrence) => boolean;
   }
 
   export interface DayData extends CalendarProcessedDate {
-    regularOccurrences: CalendarEventOccurrence[];
-    allDayOccurrences: CalendarEventOccurrencesWithRowIndex[];
+    withRowPlacement: CalendarEventOccurrencesWithRowPlacement[];
+    withoutRowPlacement: CalendarEventOccurrence[];
   }
 
   export type ReturnValue = DayData[];

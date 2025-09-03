@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon';
 import {
   CalendarEventOccurrence,
-  CalendarEventOccurrencesWithRowIndex,
+  CalendarEventOccurrencesWithRowPlacement,
 } from '@mui/x-scheduler/primitives/models';
 import {
   getEventDays,
-  getEventRowPlacement,
+  getEventOccurrenceRowPlacement,
   getEventWithLargestRowIndex,
   isDayWithinRange,
   processDate,
@@ -29,7 +29,7 @@ describe('event-utils', () => {
 
   describe('getEventWithLargestRowIndex', () => {
     it('should return the largest row index from events', () => {
-      const events: CalendarEventOccurrencesWithRowIndex[] = [
+      const events: CalendarEventOccurrencesWithRowPlacement[] = [
         {
           id: '1',
           key: '1',
@@ -64,7 +64,7 @@ describe('event-utils', () => {
     });
 
     it('should return 0 when events array is empty', () => {
-      const events: CalendarEventOccurrencesWithRowIndex[] = [];
+      const events: CalendarEventOccurrencesWithRowPlacement[] = [];
 
       const result = getEventWithLargestRowIndex(events);
 
@@ -118,7 +118,7 @@ describe('event-utils', () => {
 
   describe('getEventRowPlacement', () => {
     it('should return 1 for first event on a day with no existing events', () => {
-      const { rowIndex } = getEventRowPlacement({
+      const { rowIndex } = getEventOccurrenceRowPlacement({
         adapter,
         rowIndexLookup: {},
         occurrence: createEventOccurrence('1', '2024-01-15', '2024-01-15'),
@@ -131,7 +131,7 @@ describe('event-utils', () => {
     });
 
     it('should return next available row index when other events exist', () => {
-      const { rowIndex } = getEventRowPlacement({
+      const { rowIndex } = getEventOccurrenceRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/15/2024': {
@@ -149,7 +149,7 @@ describe('event-utils', () => {
     });
 
     it('should find gap in row indexes and use the lowest available', () => {
-      const { rowIndex } = getEventRowPlacement({
+      const { rowIndex } = getEventOccurrenceRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/15/2024': {
@@ -167,7 +167,7 @@ describe('event-utils', () => {
     });
 
     it('should return existing row index when event starts before visible range and exists in first day', () => {
-      const { rowIndex } = getEventRowPlacement({
+      const { rowIndex } = getEventOccurrenceRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/15/2024': {
@@ -190,7 +190,7 @@ describe('event-utils', () => {
     });
 
     it('should return 1 when event starts before visible range but not found in first day', () => {
-      const { rowIndex } = getEventRowPlacement({
+      const { rowIndex } = getEventOccurrenceRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/15/2024': {
@@ -214,7 +214,7 @@ describe('event-utils', () => {
 
     it('should handle event row placement correctly in all columns', () => {
       const occurrence = createEventOccurrence('3', '2024-01-15', '2024-01-16');
-      const { rowIndex } = getEventRowPlacement({
+      const { rowIndex } = getEventOccurrenceRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/14/2024': {
@@ -238,7 +238,7 @@ describe('event-utils', () => {
 
       expect(rowIndex).toBe(2);
 
-      const { rowIndex: rowIndex2 } = getEventRowPlacement({
+      const { rowIndex: rowIndex2 } = getEventOccurrenceRowPlacement({
         adapter,
         rowIndexLookup: {
           '1/14/2024': {

@@ -20,14 +20,11 @@ export function useEventOccurrences(
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(() => {
-    const occurrencesGroupedByDay = new Map<
-      string,
-      { allDay: CalendarEventOccurrence[]; regular: CalendarEventOccurrence[] }
-    >();
-
+    const occurrencesGroupedByDay: useEventOccurrences.ReturnValue = new Map();
     for (const day of days) {
-      occurrencesGroupedByDay.set(day.key, { allDay: [], regular: [] });
+      occurrencesGroupedByDay.set(day.key, []);
     }
+
     const start = adapter.startOfDay(days[0].value);
     const end = adapter.endOfDay(days[days.length - 1].value);
 
@@ -77,8 +74,7 @@ export function useEventOccurrences(
 
       for (const day of eventDays) {
         const dayKey = getDateKey(day, adapter);
-        const isAllDay = !!occurrence.allDay;
-        occurrencesGroupedByDay.get(dayKey)![isAllDay ? 'allDay' : 'regular'].push(occurrence);
+        occurrencesGroupedByDay.get(dayKey)!.push(occurrence);
       }
     }
 
@@ -92,8 +88,5 @@ export namespace useEventOccurrences {
     eventPlacement: 'first-day' | 'every-day';
   }
 
-  export type ReturnValue = Map<
-    string,
-    { allDay: CalendarEventOccurrence[]; regular: CalendarEventOccurrence[] }
-  >;
+  export type ReturnValue = Map<string, CalendarEventOccurrence[]>;
 }

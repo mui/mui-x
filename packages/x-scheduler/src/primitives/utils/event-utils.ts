@@ -1,7 +1,7 @@
 import {
   SchedulerValidDate,
   CalendarEvent,
-  CalendarEventOccurrencesWithRowIndex,
+  CalendarEventOccurrencesWithRowPlacement,
   CalendarEventOccurrence,
   CalendarProcessedDate,
 } from '../models';
@@ -13,12 +13,12 @@ import { diffIn } from './date-utils';
  *  Useful to know how many stacked rows are already used for a given day.
  *  @returns Highest row index found, or 0 if none.
  */
-export function getEventWithLargestRowIndex(events: CalendarEventOccurrencesWithRowIndex[]) {
+export function getEventWithLargestRowIndex(events: CalendarEventOccurrencesWithRowPlacement[]) {
   return (
     events.reduce(
       (maxEvent, event) =>
         event.placement.rowIndex > (maxEvent.placement.rowIndex ?? 0) ? event : maxEvent,
-      { placement: { rowIndex: 0 } } as CalendarEventOccurrencesWithRowIndex,
+      { placement: { rowIndex: 0 } } as CalendarEventOccurrencesWithRowPlacement,
     ).placement.rowIndex || 0
   );
 }
@@ -42,9 +42,9 @@ export function isDayWithinRange(
  *  Otherwise, assigns the first free row index in that day’s all-day stack and compute how many days is should span across.
  *  @returns 1-based row index.
  */
-export function getEventRowPlacement(
-  parameters: GetEventRowPlacementParameters,
-): GetEventRowPlacementReturnValue {
+export function getEventOccurrenceRowPlacement(
+  parameters: GetEventOccurrenceRowPlacementParameters,
+): GetEventOccurrenceRowPlacementReturnValue {
   const { adapter, rowIndexLookup, occurrence, day, previousDay, daysBeforeRowEnd } = parameters;
 
   // If the event is present in the previous day, we keep the same row index
@@ -72,21 +72,21 @@ export function getEventRowPlacement(
   return { rowIndex: i, columnSpan };
 }
 
-export interface GetEventRowPlacementParameters {
+export interface GetEventOccurrenceRowPlacementParameters {
   adapter: Adapter;
+  occurrence: CalendarEventOccurrence;
   daysBeforeRowEnd: number;
+  day: CalendarProcessedDate;
+  previousDay: CalendarProcessedDate | null;
   rowIndexLookup: {
     [dayKey: string]: {
       occurrencesRowIndex: { [occurrenceKey: string]: number };
       usedRowIndexes: Set<number>;
     };
   };
-  occurrence: CalendarEventOccurrence;
-  day: CalendarProcessedDate;
-  previousDay: CalendarProcessedDate | null;
 }
 
-export interface GetEventRowPlacementReturnValue {
+export interface GetEventOccurrenceRowPlacementReturnValue {
   /**
    * The 1-based index of the row the event should be rendered in.
    */

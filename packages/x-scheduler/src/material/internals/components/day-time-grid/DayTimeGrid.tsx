@@ -5,11 +5,12 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrences } from '../../../../primitives/use-event-occurrences';
-import { useRowEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
+import { useAddRowPlacementToEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
 import { useProcessedDateList } from '../../../../primitives/use-processed-date-list';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
   CalendarEvent,
+  CalendarEventOccurrence,
   CalendarPrimitiveEventData,
   CalendarProcessedDate,
 } from '../../../../primitives/models';
@@ -51,7 +52,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const days = useProcessedDateList(daysParam);
   const occurrencesMap = useEventOccurrences({ days, eventPlacement: 'every-day' });
-  const daysWithEvents = useRowEventOccurrences({ days, occurrencesMap });
+  const daysWithOccurrences = useAddRowPlacementToEventOccurrences({
+    days,
+    occurrencesMap,
+    shouldAddPlacement: shouldRenderOccurrenceInDayGrid,
+  });
 
   const { start, end } = React.useMemo(
     () => ({
@@ -163,7 +168,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
-            {daysWithEvents.map((day) => (
+            {daysWithOccurrences.map((day) => (
               <DayGridCell key={day.key} day={day} />
             ))}
           </DayGrid.Row>
@@ -194,7 +199,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {daysWithEvents.map((day, index) => (
+                {daysWithOccurrences.map((day, index) => (
                   <TimeGridColumn
                     key={day.key}
                     day={day}
@@ -211,3 +216,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     </div>
   );
 });
+
+function shouldRenderOccurrenceInDayGrid(occurrence: CalendarEventOccurrence) {
+  return !!occurrence.allDay;
+}

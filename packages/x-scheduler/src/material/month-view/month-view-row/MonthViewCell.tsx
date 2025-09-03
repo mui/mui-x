@@ -11,7 +11,7 @@ import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { getEventWithLargestRowIndex } from '../../../primitives/utils/event-utils';
-import { useRowEventOccurrences } from '../../../primitives/use-row-event-occurrences';
+import { useAddRowPlacementToEventOccurrences } from '../../../primitives/use-row-event-occurrences';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -40,13 +40,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     return { ...initialDraggedEvent, start: placeholder.start, end: placeholder.end };
   }, [initialDraggedEvent, placeholder]);
 
-  const visibleAllDayEvents = day.allDayOccurrences.slice(0, maxEvents);
-  const visibleEvents = day.regularOccurrences.slice(0, maxEvents - visibleAllDayEvents.length);
-  const hiddenCount = day.regularOccurrences.length + day.allDayOccurrences.length - maxEvents;
+  const visibleEvents = day.withRowPlacement.slice(0, maxEvents);
+  const hiddenCount = day.withRowPlacement.length - maxEvents;
 
   const rowCount =
     1 +
-    getEventWithLargestRowIndex(day.allDayOccurrences) +
+    getEventWithLargestRowIndex(day.withRowPlacement) +
     visibleEvents.length +
     (hiddenCount > 0 ? 1 : 0);
 
@@ -89,7 +88,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         cellNumberContent
       )}
       <div className="MonthViewCellEvents">
-        {visibleAllDayEvents.map((event) => {
+        {visibleEvents.map((event) => {
           if (event.placement.columnSpan > 0) {
             return (
               <EventPopoverTrigger
@@ -99,7 +98,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                   <DayGridEvent
                     event={event}
                     eventResource={resourcesByIdMap.get(event.resource)}
-                    variant="allDay"
+                    variant={event.allDay ? 'allDay' : 'compact'}
                     ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                     gridRow={event.placement.rowIndex}
                     columnSpan={event.placement.columnSpan}
@@ -120,21 +119,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             />
           );
         })}
-        {visibleEvents.map((event) => (
-          <EventPopoverTrigger
-            key={event.id}
-            event={event}
-            render={
-              <DayGridEvent
-                event={event}
-                eventResource={resourcesByIdMap.get(event.resource)}
-                variant="compact"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              />
-            }
-          />
-        ))}
-        {hiddenCount > 0 && day.regularOccurrences.length > 0 && (
+        {hiddenCount > 0 && (
           <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
         )}
         {draggedEvent != null && (
@@ -155,6 +140,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 });
 
 interface MonthViewCellProps {
-  day: useRowEventOccurrences.DayData;
+  day: useAddRowPlacementToEventOccurrences.DayData;
   maxEvents: number;
 }
