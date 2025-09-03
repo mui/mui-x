@@ -174,8 +174,8 @@ You have to import it from `@mui/x-license` instead:
   If you prefer the previous behavior where the selection model always contains explicit row IDs (even when selecting all rows), you can use the new `disableRowSelectionExcludeModel` prop:
 
   ```tsx
-  <DataGrid 
-    disableRowSelectionExcludeModel 
+  <DataGrid
+    disableRowSelectionExcludeModel
     // This disables the exclude model optimization and ensures
     // the selection model always uses type: 'include' with explicit row IDs
   />
