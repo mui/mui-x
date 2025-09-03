@@ -108,12 +108,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                   eventResource={resourcesByIdMap.get(event.resource)}
                   variant="allDay"
                   ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-                  style={
-                    {
-                      '--grid-row': (event.eventRowIndex || 0) + 1,
-                      '--grid-column-span': gridColumnSpan,
-                    } as React.CSSProperties
-                  }
+                  gridRow={event.eventRowIndex}
+                  columnSpan={gridColumnSpan}
                 />
               }
             />
@@ -125,11 +121,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
               aria-hidden="true"
-              style={
-                {
-                  '--grid-row': (event.eventRowIndex || 0) + 1,
-                } as React.CSSProperties
-              }
+              gridRow={event.eventRowIndex}
             />
           );
         })}
