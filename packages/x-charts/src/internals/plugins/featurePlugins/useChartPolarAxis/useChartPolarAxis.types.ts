@@ -83,5 +83,6 @@ export type UseChartPolarAxisSignature<SeriesType extends ChartSeriesType = Char
     defaultizedParams: UseChartPolarAxisDefaultizedParameters;
     state: UseChartPolarAxisState;
     instance: UseChartPolarAxisInstance;
-    dependencies: [UseChartInteractionSignature, UseChartSeriesSignature<SeriesType>];
+    dependencies: [UseChartSeriesSignature<SeriesType>];
+    optionalDependencies: [UseChartInteractionSignature];
   }>;

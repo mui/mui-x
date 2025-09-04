@@ -1,8 +1,4 @@
-import {
-  UseChartSeriesSignature,
-  ChartPluginSignature,
-  UseChartCartesianAxisSignature,
-} from '@mui/x-charts/internals';
+import { ChartPluginSignature } from '@mui/x-charts/internals';
 
 export interface UseChartProExportParameters {}
 
@@ -88,5 +84,4 @@ export type UseChartProExportSignature = ChartPluginSignature<{
   state: UseChartProExportState;
   publicAPI: UseChartProExportPublicApi;
   instance: UseChartProExportInstance;
-  dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
 }>;

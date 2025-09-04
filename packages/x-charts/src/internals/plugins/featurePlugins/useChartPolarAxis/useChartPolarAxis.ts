@@ -112,19 +112,19 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
       if (!event.detail.activeGestures.pan) {
         mousePosition.current.isInChart = false;
-        instance.cleanInteraction();
+        instance.cleanInteraction?.();
       }
     });
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
       if (!event.detail.activeGestures.move) {
         mousePosition.current.isInChart = false;
-        instance.cleanInteraction();
+        instance.cleanInteraction?.();
       }
     });
     const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
         mousePosition.current.isInChart = false;
-        instance.cleanInteraction();
+        instance.cleanInteraction?.();
       }
     });
 
@@ -143,14 +143,14 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
           srcEvent.clientY > svgRect.bottom
         ) {
           mousePosition.current.isInChart = false;
-          instance.cleanInteraction();
+          instance.cleanInteraction?.();
           return;
         }
 
         const svgPoint = getSVGPoint(element, srcEvent);
 
         mousePosition.current.isInChart = true;
-        instance.setPointerCoordinate(svgPoint);
+        instance.setPointerCoordinate?.(svgPoint);
         return;
       }
 
@@ -161,7 +161,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       // Test if it's in the drawing area
       if (!instance.isPointInside(svgPoint.x, svgPoint.y, event.detail.target)) {
         if (mousePosition.current.isInChart) {
-          instance?.cleanInteraction();
+          instance.cleanInteraction?.();
           mousePosition.current.isInChart = false;
         }
         return;
@@ -173,7 +173,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
 
       if (radiusSquare > maxRadius ** 2) {
         if (mousePosition.current.isInChart) {
-          instance?.cleanInteraction();
+          instance.cleanInteraction?.();
           mousePosition.current.isInChart = false;
         }
         return;

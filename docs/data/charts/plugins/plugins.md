@@ -1,0 +1,79 @@
+---
+title: Charts - Plugins
+productId: x-charts
+components: ChartContainer, ChartDataProvider
+---
+
+# Charts - Plugins
+
+<p class="description">The library relies on two system to perform data processing: the plugins and the series config.</p>
+
+:::warning
+Those information are for advanced use-cases.
+The large majority of charts should not require touching either to the plugins or the series configuration.
+:::
+
+## Plugins
+
+Plugins are function used to add features to the chart.
+They can process data, add internal state, and listen to some event.
+
+Plugins can be passed to the `<ChartContainer />` or the `<ChartDataProvider />` with the `plugins` props.
+
+:::info
+Notice that `myChartPlugins` is defined of the component.
+That's because plugins contain hooks and so their order should not be modified.
+:::
+
+```jsx
+const myChartPlugins = [useChartInteraction, useChartHighlight];
+
+function MyChart() {
+  return <ChartContainer plugins={myChartPlugins}>// ...</ChartContainer>;
+}
+```
+
+### Plugins per chart
+
+The default array of plugins can be imported from the corresponding chart folder.
+This allows you to get the exact same feature as the component while using composition.
+
+```ts
+// MIT package
+import { PIE_CHART_PLUGINS, PieChartPluginsSignatures } from '@mui/x-charts/PieChart';
+// pro package
+import { PIE_CHART_PLUGINS, PieChartPluginsSignatures } from '@mui/x-charts-pro/PieChart';
+import { PIE_CHART_PRO_PLUGINS, PieChartProPluginsSignatures } from '@mui/x-charts-pro/PieChartPro';
+
+
+function MyPieChart() {
+    return <ChartContainer plugins={PIE_CHART_PLUGINS}>
+        // ...
+    </ChartContainer>
+}
+```
+
+### Plugins list
+
+You can import plugins individually from `@mui/x-charts/plugins`.
+
+When creating your custom array of plugins, be aware that some plugins have
+
+- dependencies: plugins that need to be set before for them to work.
+- optional dependencies: plugins that need to be set before to enable some features.
+
+| Plugin                                             | Dependencies  | Optional dependency    |
+| :------------------------------------------------- | :------------ | :--------------------- |
+| `useChartCartesianAxis`                            |               | Interaction            |
+| `useChartPolarAxis`                                |               | Interaction            |
+| `useChartHighlight`                                |               |                        |
+| `useChartInteraction`                              |               |                        |
+| `useChartVoronoi`                                  | CartesianAxis | Interaction, Highlight |
+| `useChartZAxis`                                    |               |                        |
+| `useChartProExport` <span class="plan-pro"></span> |               |                        |
+| `useChartProZoom` <span class="plan-pro"></span>   | CartesianAxis |                        |
+
+### Custom plugins
+
+We discourage you from creating custom plugins.
+To simplify further development, we consider their implementation as internal, allowing ourself to break their interfaces to add or improve features.
