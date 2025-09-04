@@ -41,7 +41,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const { store, instance } = useEventCalendarContext();
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
   const color = useStore(store, selectors.eventColor, calendarEvent.id);
-  const isRecurring = Boolean(calendarEvent.rrule);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(calendarEvent.allDay));
@@ -137,7 +136,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
           <Popover.Popup finalFocus={{ current: anchor }}>
             <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
               <header className="EventPopoverHeader">
-                <Field.Root className="EventPopoverFieldRoot" name="title" disabled={isRecurring}>
+                <Field.Root className="EventPopoverFieldRoot" name="title">
                   <Field.Label className="EventPopoverTitle">
                     <Input
                       className="EventPopoverTitleInput"
@@ -161,11 +160,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
               <div className="EventPopoverMainContent">
                 <div className="EventPopoverDateTimeFields">
                   <div className="EventPopoverDateTimeFieldsStartRow">
-                    <Field.Root
-                      className="EventPopoverFieldRoot"
-                      name="startDate"
-                      disabled={isRecurring}
-                    >
+                    <Field.Root className="EventPopoverFieldRoot" name="startDate">
                       <Field.Label className="EventPopoverFormLabel">
                         {translations.startDateLabel}
                         <Input
@@ -181,11 +176,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       </Field.Label>
                     </Field.Root>
                     {!isAllDay && (
-                      <Field.Root
-                        className="EventPopoverFieldRoot"
-                        name="startTime"
-                        disabled={isRecurring}
-                      >
+                      <Field.Root className="EventPopoverFieldRoot" name="startTime">
                         <Field.Label className="EventPopoverFormLabel">
                           {translations.startTimeLabel}
                           <Input
@@ -203,11 +194,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     )}
                   </div>
                   <div className="EventPopoverDateTimeFieldsEndRow">
-                    <Field.Root
-                      className="EventPopoverFieldRoot"
-                      name="endDate"
-                      disabled={isRecurring}
-                    >
+                    <Field.Root className="EventPopoverFieldRoot" name="endDate">
                       <Field.Label className="EventPopoverFormLabel">
                         {translations.endDateLabel}
                         <Input
@@ -222,11 +209,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       </Field.Label>
                     </Field.Root>
                     {!isAllDay && (
-                      <Field.Root
-                        className="EventPopoverFieldRoot"
-                        name="endTime"
-                        disabled={isRecurring}
-                      >
+                      <Field.Root className="EventPopoverFieldRoot" name="endTime">
                         <Field.Label className="EventPopoverFormLabel">
                           {translations.endTimeLabel}
                           <Input
@@ -256,11 +239,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                   >
                     <Field.Error />
                   </Field.Root>
-                  <Field.Root
-                    className="EventPopoverFieldRoot"
-                    name="allDay"
-                    disabled={isRecurring}
-                  >
+                  <Field.Root className="EventPopoverFieldRoot" name="allDay">
                     <Field.Label className="AllDayCheckboxLabel">
                       <Checkbox.Root
                         className="AllDayCheckboxRoot"
@@ -277,11 +256,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     </Field.Label>
                   </Field.Root>
                 </div>
-                <Field.Root
-                  className="EventPopoverFieldRoot"
-                  name="recurrence"
-                  disabled={isRecurring}
-                >
+                <Field.Root className="EventPopoverFieldRoot" name="recurrence">
                   {defaultRecurrenceKey === 'custom' ? (
                     // TODO: Issue #19137 - Display the actual custom recurrence rule (e.g. "Repeats every 2 weeks on Monday")
                     <p className="EventPopoverFormLabel">{`Custom ${calendarEvent.rrule?.freq.toLowerCase()} recurrence`}</p>
@@ -326,18 +301,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
                     </Select.Root>
                   )}
                 </Field.Root>
-                {isRecurring && (
-                  <p className="EventPopoverEditDisabledNotice">
-                    {translations.editDisabledNotice}
-                  </p>
-                )}
                 <Separator className="EventPopoverSeparator" />
                 <div>
-                  <Field.Root
-                    className="EventPopoverFieldRoot"
-                    name="description"
-                    disabled={isRecurring}
-                  >
+                  <Field.Root className="EventPopoverFieldRoot" name="description">
                     <Field.Label className="EventPopoverFormLabel">
                       {translations.descriptionLabel}
                       <Input
