@@ -93,6 +93,9 @@
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled."
     },
+    "disableRowSelectionExcludeModel": {
+      "description": "If <code>true</code>, the Data Grid will not use the exclude model optimization when selecting all rows."
+    },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled."
     },

@@ -404,6 +404,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableRowGrouping: PropTypes.bool,
   /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
