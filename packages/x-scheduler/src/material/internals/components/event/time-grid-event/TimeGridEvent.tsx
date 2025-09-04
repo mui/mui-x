@@ -19,7 +19,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { event: eventProp, ariaLabelledBy, variant, className, id: idProp, ...other } = props;
+  const { event: eventProp, ariaLabelledBy, className, id: idProp, variant, ...other } = props;
 
   const id = useId(idProp);
   const { store } = useEventCalendarContext();
@@ -89,27 +89,36 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     isRecurring,
   ]);
 
+  const sharedProps = {
+    eventId: eventProp.id,
+    start: eventProp.start,
+    end: eventProp.end,
+    ref: forwardedRef,
+    id,
+    className: clsx(
+      className,
+      'EventContainer',
+      'EventCard',
+      `EventCard--${variant}`,
+      (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+      isDraggable && 'Draggable',
+      isRecurring && 'Recurrent',
+      getColorClassName(color),
+    ),
+    'aria-labelledby': `${ariaLabelledBy} ${id}`,
+    ...other,
+  };
+
+  if (variant === 'dragPlaceholder') {
+    return (
+      <TimeGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
+        {content}
+      </TimeGrid.EventPlaceholder>
+    );
+  }
+
   return (
-    <TimeGrid.Event
-      ref={forwardedRef}
-      id={id}
-      isDraggable={isDraggable}
-      className={clsx(
-        className,
-        'EventContainer',
-        'EventCard',
-        `EventCard--${variant}`,
-        (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
-        isDraggable && 'Draggable',
-        isRecurring && 'Recurrent',
-        getColorClassName(color),
-      )}
-      aria-labelledby={`${ariaLabelledBy} ${id}`}
-      eventId={eventProp.id}
-      start={eventProp.start}
-      end={eventProp.end}
-      {...other}
-    >
+    <TimeGrid.Event isDraggable={isDraggable} {...sharedProps}>
       {isResizable && <TimeGrid.EventResizeHandler side="start" className="EventResizeHandler" />}
       {content}
       {isResizable && <TimeGrid.EventResizeHandler side="end" className="EventResizeHandler" />}

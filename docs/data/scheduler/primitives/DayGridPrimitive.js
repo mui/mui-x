@@ -4,7 +4,7 @@ import { DayGrid } from '@mui/x-scheduler/primitives/day-grid';
 import { useWeekList } from '@mui/x-scheduler/primitives/use-week-list';
 import { useDayList } from '@mui/x-scheduler/primitives/use-day-list';
 import classes from './DayGridPrimitive.module.css';
-import { events } from './day-grid-events';
+import { initialEvents } from './day-grid-events';
 
 export default function DayGridPrimitive() {
   const getWeekList = useWeekList();
@@ -12,7 +12,7 @@ export default function DayGridPrimitive() {
 
   const weeks = React.useMemo(() => {
     const weeksFirstDays = getWeekList({
-      date: events[0].start.startOf('month'),
+      date: initialEvents[0].start.startOf('month'),
       amount: 'end-of-month',
     });
 
@@ -22,7 +22,7 @@ export default function DayGridPrimitive() {
       const weekDays = getDayList({ date: weekStart, amount: 'week' });
       const weekDaysWithEvents = weekDays.map((date) => ({
         date,
-        events: events.filter((event) => event.start.hasSame(date, 'day')),
+        events: initialEvents.filter((event) => event.start.hasSame(date, 'day')),
       }));
       tempWeeks.push(weekDaysWithEvents);
     }
@@ -34,13 +34,23 @@ export default function DayGridPrimitive() {
     <div className={classes.Container}>
       <DayGrid.Root className={classes.Root}>
         {weeks.map((week) => (
-          <DayGrid.Row key={week[0].date.toString()} className={classes.Row}>
+          <DayGrid.Row
+            key={week[0].date.toString()}
+            start={week[0].date.startOf('week')}
+            end={week[0].date.endOf('week')}
+            className={classes.Row}
+          >
             {week.map((day) => (
-              <DayGrid.Cell key={day.date.toString()} className={classes.Cell}>
+              <DayGrid.Cell
+                key={day.date.toString()}
+                className={classes.Cell}
+                value={day.date}
+              >
                 <span className={classes.CellLabel}>{day.date.toFormat('dd')}</span>
                 {day.events.map((event) => (
                   <DayGrid.Event
                     key={event.id}
+                    eventId={event.id}
                     start={event.start}
                     end={event.end}
                     className={classes.Event}

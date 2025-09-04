@@ -8,7 +8,7 @@ export interface Event {
   resource: string;
 }
 
-export const events: Event[] = [
+export const initialEvents: Event[] = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),

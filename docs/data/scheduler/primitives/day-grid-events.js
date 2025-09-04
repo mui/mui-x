@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-export const events = [
+export const initialEvents = [
   {
     id: '1',
     start: DateTime.fromISO('2025-05-26T07:30:00'),

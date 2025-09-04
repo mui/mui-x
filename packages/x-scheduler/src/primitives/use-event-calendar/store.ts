@@ -259,11 +259,13 @@ export const selectors = {
   isEventDraggable: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.areEventsDraggable,
-    (isEventReadOnly, areEventsDraggable) => !isEventReadOnly && areEventsDraggable,
+    (isEventReadOnly, areEventsDraggable, _event: CalendarEvent) =>
+      !isEventReadOnly && areEventsDraggable,
   ),
   isEventResizable: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.areEventsResizable,
-    (isEventReadOnly, areEventsResizable) => !isEventReadOnly && areEventsResizable,
+    (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
+      !isEventReadOnly && areEventsResizable,
   ),
 };
