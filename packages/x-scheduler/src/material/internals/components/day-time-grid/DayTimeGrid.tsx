@@ -6,7 +6,6 @@ import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrences } from '../../../../primitives/use-event-occurrences';
 import { useAddRowPlacementToEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
-import { useProcessedDateList } from '../../../../primitives/use-processed-date-list';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
   CalendarEvent,
@@ -31,7 +30,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days: daysParam, className, ...other } = props;
+  const { days, className, ...other } = props;
 
   const adapter = useAdapter();
   const translations = useTranslations();
@@ -50,7 +49,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
-  const days = useProcessedDateList(daysParam);
   const occurrencesMap = useEventOccurrences({ days, eventPlacement: 'every-day' });
   const daysWithOccurrences = useAddRowPlacementToEventOccurrences({
     days,

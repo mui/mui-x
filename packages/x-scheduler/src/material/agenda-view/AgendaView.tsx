@@ -10,7 +10,6 @@ import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { useEventOccurrences } from '../../primitives/use-event-occurrences';
-import { useProcessedDateList } from '../../primitives/use-processed-date-list';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import './AgendaView.css';
@@ -27,17 +26,14 @@ export const AgendaView = React.memo(
   ) {
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
-
     const { className, ...other } = props;
     const { store } = useEventCalendarContext();
-
     const today = adapter.date();
-
     const visibleDate = useStore(store, selectors.visibleDate);
     const preferences = useStore(store, selectors.preferences);
-    const getDayList = useDayList();
 
-    const rawDays = React.useMemo(
+    const getDayList = useDayList();
+    const days = React.useMemo(
       () =>
         getDayList({
           date: visibleDate,
@@ -46,7 +42,6 @@ export const AgendaView = React.memo(
         }),
       [getDayList, preferences.hideWeekends, visibleDate],
     );
-    const days = useProcessedDateList(rawDays);
     const occurrences = useEventOccurrences({ days, eventPlacement: 'every-day' });
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 

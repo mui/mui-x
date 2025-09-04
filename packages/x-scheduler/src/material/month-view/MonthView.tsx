@@ -16,9 +16,8 @@ import { DayGrid } from '../../primitives/day-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
-import './MonthView.css';
 import { useEventOccurrences } from '../../primitives/use-event-occurrences';
-import { processDate } from '../../primitives/utils/event-utils';
+import './MonthView.css';
 
 const adapter = getAdapter();
 const EVENT_HEIGHT = 22;
@@ -45,13 +44,12 @@ export const MonthView = React.memo(
     const getDayList = useDayList();
     const getWeekList = useWeekList();
     const { weeks, days } = React.useMemo(() => {
-      const tempWeeks = getWeekList({
+      const weekFirstDays = getWeekList({
         date: adapter.startOfMonth(visibleDate),
         amount: 'end-of-month',
-      }).map((week) =>
-        getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }).map(
-          (day) => processDate(day, adapter),
-        ),
+      });
+      const tempWeeks = weekFirstDays.map((week) =>
+        getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }),
       );
 
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };

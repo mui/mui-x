@@ -94,6 +94,11 @@ export function useEventOccurrences(
 export namespace useEventOccurrences {
   export interface Parameters {
     days: CalendarProcessedDate[];
+    /**
+     * The days a multi-day event should appear on.
+     * If "first-day", the event appears only on its starting day.
+     * If "every-day", the event appears on each day it spans.
+     */
     eventPlacement: 'first-day' | 'every-day';
   }
 
