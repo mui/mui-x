@@ -40,7 +40,6 @@ describe('<EventPopover />', () => {
     anchor,
     container: document.body,
     calendarEvent,
-    calendarEventResource: resources[1],
     onClose: () => {},
   };
 
