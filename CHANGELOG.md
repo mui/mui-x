@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.11.1
 
-_Sep 3, 2025_
+_Sep 4, 2025_
 
 We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
 
