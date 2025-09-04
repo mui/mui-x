@@ -83,9 +83,9 @@ export interface GetEventOccurrenceRowPlacementReturnValue {
 }
 
 /**
- *  Returns the list of days an event should render on.
+ *  Returns the list of days an event occurrence should be visible on.
  */
-export function getEventDays(
+export function getDaysTheOccurrenceIsVisibleOn(
   event: CalendarEvent,
   days: CalendarProcessedDate[],
   adapter: Adapter,

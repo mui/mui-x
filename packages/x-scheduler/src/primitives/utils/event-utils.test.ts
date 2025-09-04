@@ -1,12 +1,7 @@
-import { DateTime } from 'luxon';
+import { CalendarEventOccurrence } from '@mui/x-scheduler/primitives/models';
 import {
-  CalendarEventOccurrence,
-  CalendarEventOccurrencesWithRowPlacement,
-} from '@mui/x-scheduler/primitives/models';
-import {
-  getEventDays,
+  getDaysTheOccurrenceIsVisibleOn,
   getEventOccurrenceRowPlacement,
-  getEventWithLargestRowIndex,
   isDayWithinRange,
   processDate,
 } from './event-utils';
@@ -25,51 +20,6 @@ describe('event-utils', () => {
     end: adapter.date(end),
     title: `Event ${id}`,
     allDay: true,
-  });
-
-  describe('getEventWithLargestRowIndex', () => {
-    it('should return the largest row index from events', () => {
-      const events: CalendarEventOccurrencesWithRowPlacement[] = [
-        {
-          id: '1',
-          key: '1',
-          start: DateTime.fromISO('2025-05-01T09:00:00'),
-          end: DateTime.fromISO('2025-05-01T10:00:00'),
-          title: 'Meeting',
-          allDay: true,
-          placement: { rowIndex: 1, columnSpan: 2 },
-        },
-        {
-          id: '2',
-          key: '2',
-          start: DateTime.fromISO('2025-05-15T14:00:00'),
-          end: DateTime.fromISO('2025-05-15T15:00:00'),
-          title: 'Doctor Appointment',
-          allDay: true,
-          placement: { rowIndex: 3, columnSpan: 2 },
-        },
-        {
-          id: '3',
-          key: '3',
-          start: DateTime.fromISO('2025-05-20T16:00:00'),
-          end: DateTime.fromISO('2025-05-20T17:00:00'),
-          title: 'Conference Call',
-          allDay: true,
-          placement: { rowIndex: 2, columnSpan: 2 },
-        },
-      ];
-      const result = getEventWithLargestRowIndex(events);
-
-      expect(result).toBe(3);
-    });
-
-    it('should return 0 when events array is empty', () => {
-      const events: CalendarEventOccurrencesWithRowPlacement[] = [];
-
-      const result = getEventWithLargestRowIndex(events);
-
-      expect(result).toBe(0);
-    });
   });
 
   describe('isDayWithinRange', () => {
@@ -265,7 +215,7 @@ describe('event-utils', () => {
     });
   });
 
-  describe('getEventDays', () => {
+  describe('getDaysToRenderTheOccurrenceOn', () => {
     const days = [
       processDate(adapter.date('2024-01-14'), adapter),
       processDate(adapter.date('2024-01-15'), adapter),
@@ -278,7 +228,7 @@ describe('event-utils', () => {
       it('should return all days when event spans multiple days', () => {
         const event = createEventOccurrence('1', '2024-01-15T10:00:00', '2024-01-17T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'every-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(3);
         expect(result.map((day) => adapter.format(day, 'keyboardDate'))).toEqual([
@@ -291,7 +241,7 @@ describe('event-utils', () => {
       it('should return single day when event is single day', () => {
         const event = createEventOccurrence('1', '2024-01-16T10:00:00', '2024-01-16T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'every-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(1);
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/16/2024');
@@ -300,7 +250,7 @@ describe('event-utils', () => {
       it('should return empty array when event is completely outside visible range', () => {
         const event = createEventOccurrence('1', '2024-01-10T10:00:00', '2024-01-12T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'every-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(0);
       });
@@ -308,7 +258,7 @@ describe('event-utils', () => {
       it('should return empty array when event is after visible range', () => {
         const event = createEventOccurrence('1', '2024-01-20T10:00:00', '2024-01-22T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'every-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(0);
       });
@@ -316,7 +266,7 @@ describe('event-utils', () => {
       it('should handle event that partially overlaps with visible range at the beginning', () => {
         const event = createEventOccurrence('1', '2024-01-13T10:00:00', '2024-01-16T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'every-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(3);
         expect(result.map((day) => adapter.format(day, 'keyboardDate'))).toEqual([
@@ -329,7 +279,7 @@ describe('event-utils', () => {
       it('should handle event that partially overlaps with visible range at the end', () => {
         const event = createEventOccurrence('1', '2024-01-16T10:00:00', '2024-01-19T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'every-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(3);
         expect(result.map((day) => adapter.format(day, 'keyboardDate'))).toEqual([
@@ -344,7 +294,7 @@ describe('event-utils', () => {
       it('should return single day when event spans multiple days ', () => {
         const event = createEventOccurrence('1', '2024-01-15T10:00:00', '2024-01-17T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'first-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'first-day');
 
         expect(result).toHaveLength(1);
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/15/2024');
@@ -353,7 +303,7 @@ describe('event-utils', () => {
       it('should return first visible day when event starts before visible range and eventPlacement === "first-day"', () => {
         const event = createEventOccurrence('1', '2024-01-10T10:00:00', '2024-01-17T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'first-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'first-day');
 
         expect(result).toHaveLength(1);
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/14/2024');
@@ -362,7 +312,7 @@ describe('event-utils', () => {
       it('should return single day when event is single day and eventPlacement === "first-day"', () => {
         const event = createEventOccurrence('1', '2024-01-16T10:00:00', '2024-01-16T14:00:00');
 
-        const result = getEventDays(event, days, adapter, 'first-day');
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'first-day');
 
         expect(result).toHaveLength(1);
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/16/2024');

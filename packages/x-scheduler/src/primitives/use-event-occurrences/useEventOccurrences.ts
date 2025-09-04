@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { CalendarEventOccurrence, CalendarProcessedDate, SchedulerValidDate } from '../models';
-import { getDateKey, getEventDays } from '../utils/event-utils';
+import { getDateKey, getDaysTheOccurrenceIsVisibleOn } from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurrence-utils';
 import { useEventCalendarContext } from '../utils/useEventCalendarContext';
@@ -71,7 +71,7 @@ export function useEventOccurrences(
 
     // STEP 4: Add the occurrence to the days map
     for (const occurrence of sortedOccurrences) {
-      const eventDays: SchedulerValidDate[] = getEventDays(
+      const eventDays: SchedulerValidDate[] = getDaysTheOccurrenceIsVisibleOn(
         occurrence,
         days,
         adapter,
@@ -85,6 +85,7 @@ export function useEventOccurrences(
       }
     }
 
+    // STEP 5: Make sure the all-day events are before the non-all-day events
     const cleanMap: useEventOccurrences.ReturnValue = new Map();
     occurrencesGroupedByDay.forEach((value, key) => {
       cleanMap.set(key, [...value.allDay, ...value.nonAllDay]);
