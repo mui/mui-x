@@ -1,0 +1,74 @@
+.DaysHeader {
+  display: flex;
+  width: calc(var(--unit-count) * var(--days-cell-width));
+}
+
+.DayHeaderCell {
+  width: var(--days-cell-width);
+  text-align: center;
+  padding: var(--space-2);
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.DayHeaderCell:not(:last-child) {
+  border-right: 1px solid var(--border-color);
+}
+
+.WeekDay,
+.DayNumber {
+  margin: 0;
+  font-size: var(--font-size-2);
+}
+.WeekDay {
+  color: var(--secondary-text-color);
+}
+
+.DayNumber {
+  font-weight: var(--font-weight-3);
+  color: var(--default-text-color);
+}
+
+.WeekDay[data-weekend] {
+  color: var(--red-9);
+}
+
+.TimeHeader {
+  display: flex;
+  width: calc(var(--unit-count) * var(--time-cell-width));
+}
+
+.TimeHeaderCell {
+  flex-grow: 1;
+  border-right: 1px solid var(--border-color);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.DayLabel {
+  padding: var(--space-2);
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-3);
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.TimeCellsRow {
+  padding: 0 var(--space-2);
+  display: grid;
+  grid-template-columns: repeat(24, var(--time-cell-width));
+}
+
+.TimeCell {
+  padding: var(--space-2) 0;
+}
+
+.TimeLabel {
+  font-size: var(--font-size-2);
+  color: var(--secondary-text-color);
+}

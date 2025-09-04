@@ -15,6 +15,7 @@ import {
 import { Adapter } from '../utils/adapter/types';
 import { getEventDays, getEventRowIndex } from '../utils/event-utils';
 import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurrence-utils';
+import { DateTime } from 'luxon';
 
 export type State = {
   /**
@@ -151,11 +152,9 @@ export const selectors = {
         }
 
         // STEP 2-B: Non-recurring event processing, check if the event is within the visible days
-        const eventFirstDay = adapter.startOfDay(event.start);
-        const eventLastDay = adapter.endOfDay(event.end);
         if (
-          adapter.isAfter(eventFirstDay, days[days.length - 1]) ||
-          adapter.isBefore(eventLastDay, days[0])
+          adapter.isAfter(event.start, days[days.length - 1]) ||
+          adapter.isBefore(event.end, days[0])
         ) {
           continue; // Skip events that are not in the visible days
         }
@@ -215,18 +214,59 @@ export const selectors = {
   ),
   eventsToRenderGroupedByResource: createSelector(
     (state: State) => state.events,
-    (state: State) => state.resources,
-    (events, resources) => {
-      const groupedEvents: Record<string, CalendarEvent[]> = {};
-      events.forEach((event) => {
+    (state: State) => state.adapter,
+    (events, adapter, { start, end }) => {
+      const groupedEvents: Record<string, CalendarEvent[][]> = {};
+      const occupiedRows: Record<string, { start: DateTime; end: DateTime }[][]> = {};
+
+      for (const event of events) {
+        let rowIndex = 0;
         const resourceId = event.resource;
+
+        if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
+          continue;
+        }
+
         if (resourceId) {
           if (!groupedEvents[resourceId]) {
-            groupedEvents[resourceId] = [];
+            groupedEvents[resourceId] = [[]];
           }
-          groupedEvents[resourceId].push(event);
+
+          let i = 0;
+          while (i < groupedEvents[resourceId].length) {
+            if (groupedEvents[resourceId][i].length === 0) {
+              break;
+            }
+
+            let hasConflict = groupedEvents[resourceId][i].find((placedEvent) => {
+              const overlaps =
+                adapter.isBefore(event.start, placedEvent.end) &&
+                adapter.isAfter(event.end, placedEvent.start);
+
+              const sameInterval =
+                adapter.toJsDate(event.start).getTime() ===
+                  adapter.toJsDate(placedEvent.start).getTime() &&
+                adapter.toJsDate(event.end).getTime() ===
+                  adapter.toJsDate(placedEvent.end).getTime();
+
+              return overlaps || sameInterval;
+            });
+
+            if (hasConflict) {
+              i += 1;
+            } else {
+              break;
+            }
+          }
+
+          rowIndex = i;
+          if (rowIndex >= groupedEvents[resourceId].length) {
+            groupedEvents[resourceId].push([]);
+          }
+
+          groupedEvents[resourceId][rowIndex].push(event);
         }
-      });
+      }
       return groupedEvents;
     },
   ),

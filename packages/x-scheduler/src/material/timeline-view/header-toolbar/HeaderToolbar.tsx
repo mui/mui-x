@@ -5,27 +5,24 @@ import { ViewSwitcher } from './view-switcher';
 import './HeaderToolbar.css';
 import { TimelineView } from '../TimelineView.types';
 
-interface HeaderToolbarProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface HeaderToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
+  views: TimelineView[];
+  currentView: TimelineView;
+  onViewChange: (view: TimelineView, e: React.MouseEvent<HTMLElement>) => void;
+}
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, ...other } = props;
-
-  const [view, setView] = React.useState<TimelineView>('days');
-  const views: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
-
-  const handleViewChange = (view: TimelineView, _e: React.MouseEvent<HTMLElement>) => {
-    setView(view);
-  };
+  const { className, views, currentView, onViewChange, ...other } = props;
 
   return (
     <header ref={forwardedRef} className={clsx('HeaderToolbarContainer', className)} {...other}>
       <ViewSwitcher<TimelineView>
         views={views}
-        currentView={view}
-        onViewChange={handleViewChange}
+        currentView={currentView}
+        onViewChange={onViewChange}
       />
     </header>
   );
