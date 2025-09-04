@@ -42,11 +42,24 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
-})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
-  flexDirection: 'row',
-  width: '100%',
-  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-}));
+  shouldForwardProp: (prop) => prop !== 'numberOfColumns' && prop !== 'ownerState',
+})<{ ownerState: PickerOwnerState; numberOfColumns: number }>(({ theme, numberOfColumns }) => {
+  const containerMinWidth = 56 * numberOfColumns + 1;
+  return {
+    flexDirection: 'row',
+    width: '100%',
+    minWidth: 56 * numberOfColumns,
+    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+    containerType: 'inline-size',
+    display: 'grid',
+    gridTemplateColumns: `repeat(${numberOfColumns}, minmax(56px, 1fr))`,
+    [`@container (min-width: ${containerMinWidth}px)`]: {
+      '& > .MuiMultiSectionDigitalClockSection-root': {
+        scrollbarGutter: 'stable',
+      },
+    },
+  };
+});
 
 type MultiSectionDigitalClockComponent = ((
   props: MultiSectionDigitalClockProps & React.RefAttributes<HTMLDivElement>,
@@ -440,6 +453,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       role="group"
+      numberOfColumns={viewsToRender.length}
       {...other}
     >
       {viewsToRender.map((timeView) => (
