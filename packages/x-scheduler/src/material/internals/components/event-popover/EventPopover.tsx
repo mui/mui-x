@@ -180,24 +180,25 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         aria-label={translations.resourceLabel}
                       >
                         <Select.Value>
-                          {(value: string | null) => (
-                            <div className="EventPopoverSelectItemTitleWrapper">
-                              <span
-                                className={clsx(
-                                  'ResourceLegendColor',
-                                  getColorClassName(
-                                    resourcesOptions.find((option) => option.value === value)
-                                      ?.eventColor ?? DEFAULT_EVENT_COLOR,
-                                  ),
-                                )}
-                              />
-                              <span>
-                                {value
-                                  ? resourcesOptions.find((option) => option.value === value)?.label
-                                  : translations.labelNoResource}
-                              </span>
-                            </div>
-                          )}
+                          {(value: string | null) => {
+                            const selected = resourcesOptions.find(
+                              (option) => option.value === value,
+                            );
+
+                            return (
+                              <div className="EventPopoverSelectItemTitleWrapper">
+                                <span
+                                  className={clsx(
+                                    'ResourceLegendColor',
+                                    getColorClassName(selected?.eventColor ?? DEFAULT_EVENT_COLOR),
+                                  )}
+                                />
+                                <span>
+                                  {value ? selected?.label : translations.labelNoResource}
+                                </span>
+                              </div>
+                            );
+                          }}
                         </Select.Value>
                         <Select.Icon className="EventPopoverSelectIcon">
                           <ChevronDown size={14} />
