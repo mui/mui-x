@@ -46,9 +46,9 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
           keepMounted
           render={(indicatorProps, state) =>
             state.checked ? (
-              <Eye size={16} strokeWidth={2} {...indicatorProps} />
+              <Eye size={16} strokeWidth={1.5} {...indicatorProps} />
             ) : (
-              <EyeClosed size={16} strokeWidth={2} {...indicatorProps} />
+              <EyeClosed size={16} strokeWidth={1.5} {...indicatorProps} />
             )
           }
         />

@@ -1,0 +1,8 @@
+<StandaloneView
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+>
+  <TimelineView />
+</StandaloneView>
