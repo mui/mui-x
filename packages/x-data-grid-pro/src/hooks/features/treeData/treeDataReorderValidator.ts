@@ -1,12 +1,5 @@
-import { ReorderValidationContext } from './types';
-import { conditions } from './utils';
-
-interface ValidationRule {
-  name: string;
-  applies: (ctx: ReorderValidationContext) => boolean;
-  isInvalid: (ctx: ReorderValidationContext) => boolean;
-  message?: string;
-}
+import { RowReorderValidator, type ValidationRule } from '../rowReorder/reorderValidator';
+import { commonReorderConditions as conditions } from '../rowReorder/commonReorderConditions';
 
 const validationRules: ValidationRule[] = [
   // ===== Basic invalid cases =====
@@ -159,31 +152,4 @@ const validationRules: ValidationRule[] = [
   },
 ];
 
-class RowReorderValidator {
-  private rules: ValidationRule[];
-
-  constructor(rules: ValidationRule[] = validationRules) {
-    this.rules = rules;
-  }
-
-  addRule(rule: ValidationRule): void {
-    this.rules.push(rule);
-  }
-
-  removeRule(ruleName: string): void {
-    this.rules = this.rules.filter((r) => r.name !== ruleName);
-  }
-
-  validate(context: ReorderValidationContext): boolean {
-    // Check all validation rules
-    for (const rule of this.rules) {
-      if (rule.applies(context) && rule.isInvalid(context)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-}
-
-export const rowGroupingReorderValidator = new RowReorderValidator(validationRules);
+export const treeDataReorderValidator = new RowReorderValidator(validationRules);

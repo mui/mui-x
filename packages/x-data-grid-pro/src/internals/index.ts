@@ -78,4 +78,19 @@ export enum RowGroupingStrategy {
   DataSource = 'grouping-columns-data-source',
 }
 
+export { RowReorderValidator } from '../hooks/features/rowReorder/reorderValidator';
+export type { ValidationRule } from '../hooks/features/rowReorder/reorderValidator';
+export type { ReorderValidationContext } from '../hooks/features/rowReorder/types';
+export {
+  RowReorderExecutor,
+  BaseReorderOperation,
+} from '../hooks/features/rowReorder/reorderExecutor';
+export type {
+  ReorderExecutionContext,
+  ReorderOperation,
+  ReorderOperationType,
+} from '../hooks/features/rowReorder/types';
+export { commonReorderConditions } from '../hooks/features/rowReorder/commonReorderConditions';
+export * as rowReorderUtils from '../hooks/features/rowReorder/utils';
+
 export * from './propValidation';
