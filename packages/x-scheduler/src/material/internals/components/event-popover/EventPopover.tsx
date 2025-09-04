@@ -115,13 +115,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
       : `${startDateValue}T00:00`;
     const endISO = endTimeValue ? `${endDateValue}T${endTimeValue}` : `${endDateValue}T23:59`;
 
-    let start = adapter.date(startISO);
-    let end = adapter.date(endISO);
-
-    if (isAllDay) {
-      start = adapter.startOfDay(start);
-      end = adapter.endOfDay(end);
-    }
+    const start = adapter.date(startISO);
+    const end = adapter.date(endISO);
 
     setErrors({});
 
