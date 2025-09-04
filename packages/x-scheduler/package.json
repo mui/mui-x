@@ -4,7 +4,6 @@
   "private": true,
   "description": "The community edition of the Scheduler component (MUI X).",
   "author": "MUI Team",
-  "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"

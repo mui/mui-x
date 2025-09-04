@@ -3,7 +3,6 @@
   "version": "8.11.0",
   "author": "MUI Team",
   "description": "MUI X License verification.",
-  "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
