@@ -194,7 +194,10 @@ export function PickerFieldUI<
   });
   const { ownerState: endInputAdornmentOwnerState, ...endInputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: slotProps?.inputAdornment,
+    externalSlotProps: mergeSlotProps(
+      pickerFieldUIContext.slotProps.inputAdornment,
+      slotProps?.inputAdornment,
+    ),
     additionalProps: {
       position: 'end' as const,
     },

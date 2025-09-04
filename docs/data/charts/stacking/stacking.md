@@ -5,11 +5,11 @@ productId: x-charts
 
 # Charts - Stacking
 
-<p class="description">Stacking allows displaying the decomposition of values.</p>
+<p class="description">Stacking lets you display the decomposition of values.</p>
 
 ## Basics
 
-Bar and line charts allow stacking series.
+Bar and line charts let you stack series.
 To stack series together, you need to pass them a `stack` attribute.
 Series with the same `stack` value will get stacked together.
 
@@ -17,7 +17,7 @@ Series with the same `stack` value will get stacked together.
 
 ## Stacking strategy
 
-Based on D3 [stack orders](https://github.com/d3/d3-shape#stack-orders) and [stack offsets](https://github.com/d3/d3-shape#stack-offsets) you can modify how series are stacked.
+Based on D3 [stack orders](https://d3js.org/d3-shape/stack#stack_order) and [stack offsets](https://d3js.org/d3-shape/stack#stack_offset) you can modify how series are stacked.
 
 To pass those attributes, use series properties `stackOffset` (default `'diverging'` for bar and `'none'` for line) and `stackOrder` (default `'none'`).
 You can define them for only one of the series of a stack group.
@@ -37,7 +37,7 @@ To show series evolution relative to other stacked series (instead of their abso
 | `'expand'`    | Set baseline at zero and scale data to end up at 1.       |
 | `'diverging'` | Stack positive value above zero and negative value below. |
 
-The next demonstration allows testing the different `stackOffset` values.
+The next demo lets you test the different `stackOffset` values.
 
 To see how they interact with a dataset containing negative values, you can toggle "data has negative values" switch.
 When turned on, the series will have the following composition:

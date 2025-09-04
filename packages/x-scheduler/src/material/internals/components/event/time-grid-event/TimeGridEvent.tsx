@@ -1,13 +1,14 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useId } from '@base-ui-components/react/utils';
+import { useId } from '@base-ui-components/utils/useId';
+import { useStore } from '@base-ui-components/utils/store';
+import { Repeat } from 'lucide-react';
 import { TimeGridEventProps } from './TimeGridEvent.types';
-import { useSelector } from '../../../../../base-ui-copy/utils/store';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../../primitives/time-grid';
 import { getColorClassName } from '../../../utils/color-utils';
-import { selectors } from '../../../../event-calendar/store';
+import { selectors } from '../../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 import './TimeGridEvent.css';
 import '../index.css';
@@ -23,7 +24,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     eventResource,
     ariaLabelledBy,
     variant,
-    readOnly = false,
     className,
     id: idProp,
     ...other
@@ -31,9 +31,11 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const id = useId(idProp);
   const { store } = useEventCalendarContext();
-  const isDraggable = useSelector(store, selectors.isEventDraggable, { readOnly });
-  const isResizable = useSelector(store, selectors.isEventResizable, { readOnly });
-  const ampm = useSelector(store, selectors.ampm);
+
+  const isRecurring = Boolean(eventProp.rrule);
+  const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
+  const isResizable = useStore(store, selectors.isEventResizable, eventProp);
+  const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const durationMs =
@@ -57,6 +59,9 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         >
           <span className="EventTitle">{eventProp.title}</span>
           <time className="EventTime">{adapter.format(eventProp.start, timeFormat)}</time>
+          {isRecurring && (
+            <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
+          )}
         </p>
       );
     }
@@ -75,16 +80,20 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           {adapter.format(eventProp.start, timeFormat)} -{' '}
           {adapter.format(eventProp.end, timeFormat)}
         </time>
+        {isRecurring && (
+          <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
+        )}
       </React.Fragment>
     );
   }, [
-    eventProp.start,
-    eventProp.title,
-    eventProp.end,
     isBetween30and60Minutes,
     isLessThan30Minutes,
     titleLineCountRegularVariant,
+    eventProp.title,
+    eventProp.start,
+    eventProp.end,
     timeFormat,
+    isRecurring,
   ]);
 
   return (
@@ -98,6 +107,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         'EventCard',
         `EventCard--${variant}`,
         (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
+        isDraggable && 'Draggable',
+        isRecurring && 'Recurrent',
         getColorClassName({ resource: eventResource }),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}

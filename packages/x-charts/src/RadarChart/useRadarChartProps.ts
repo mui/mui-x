@@ -2,7 +2,7 @@
 import type { RadarChartProps } from './RadarChart';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { RadarGridProps } from './RadarGrid';

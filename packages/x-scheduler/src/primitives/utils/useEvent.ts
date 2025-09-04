@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { getAdapter } from './adapter/getAdapter';
+import { useAdapter } from './adapter/useAdapter';
 import { useOnEveryMinuteStart } from './useOnEveryMinuteStart';
 import { SchedulerValidDate } from '../models';
 
-const adapter = getAdapter();
-
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
+  const adapter = useAdapter();
+
   const { start, end } = parameters;
 
   const [state, setState] = React.useState<useEvent.State>(() => {

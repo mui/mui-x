@@ -20,6 +20,7 @@ import {
   isGroupingColumn,
   GridStrategyGroup,
   getRowValue,
+  RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -36,11 +37,6 @@ export {
   getRowGroupingCriteriaFromGroupingField,
   isGroupingColumn,
 };
-
-export enum RowGroupingStrategy {
-  Default = 'grouping-columns',
-  DataSource = 'grouping-columns-data-source',
-}
 
 export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string | null) => {
   if (groupingCriteria === null) {
@@ -254,6 +250,7 @@ export const getGroupingRules = ({
   sanitizedRowGroupingModel.map((field) => ({
     field,
     groupingValueGetter: columnsLookup[field]?.groupingValueGetter,
+    groupingValueSetter: columnsLookup[field]?.groupingValueSetter,
   }));
 
 /**
@@ -271,6 +268,10 @@ export const areGroupingRulesEqual = (
     const previousRule = previousValue[newRuleIndex];
 
     if (previousRule.groupingValueGetter !== newRule.groupingValueGetter) {
+      return false;
+    }
+
+    if (previousRule.groupingValueSetter !== newRule.groupingValueSetter) {
       return false;
     }
 

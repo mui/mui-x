@@ -160,10 +160,10 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      screen.getByRole('checkbox', { name: 'Pivot' });
+      screen.getByRole('switch', { name: 'Pivot' });
     });
 
-    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
       await waitFor(() => {
@@ -201,10 +201,10 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      screen.getByRole('checkbox', { name: 'Pivot' });
+      screen.getByRole('switch', { name: 'Pivot' });
     });
 
-    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
       await waitFor(() => {
@@ -242,10 +242,10 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      screen.getByRole('checkbox', { name: 'Pivot' });
+      screen.getByRole('switch', { name: 'Pivot' });
     });
 
-    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
       await waitFor(() => {
@@ -825,6 +825,66 @@ describe('<DataGridPremium /> - Pivoting', () => {
         '$125.67',
         '3,200',
         'stock',
+      ]);
+    });
+  });
+
+  it('should work with complex singleSelect values as pivot columns', async () => {
+    const apiRef = { current: null } as React.RefObject<GridApi | null>;
+
+    const columns: GridColDef[] = [
+      { field: 'id', headerName: 'ID' },
+      { field: 'ticker' },
+      {
+        field: 'country',
+        type: 'singleSelect',
+        valueOptions: [
+          { countryName: 'France', value: 'FR' },
+          { countryName: 'Germany', value: 'DE' },
+          { countryName: 'Italy', value: 'IT' },
+        ],
+        getOptionLabel: (option: { countryName: string }) => option.countryName,
+      } as GridColDef<{ countryName: string }>,
+    ];
+
+    const rows = [
+      { id: 1, ticker: 'FR1', country: { countryName: 'France', value: 'FR' } },
+      { id: 2, ticker: 'DE2', country: { countryName: 'Germany', value: 'DE' } },
+      { id: 3, ticker: 'IT3', country: { countryName: 'Italy', value: 'IT' } },
+    ];
+
+    render(
+      <div style={{ height: 600, width: 600 }}>
+        <DataGridPremium
+          rows={rows}
+          columns={columns}
+          showToolbar
+          cellSelection
+          apiRef={apiRef}
+          initialState={{
+            pivoting: {
+              enabled: true,
+              model: {
+                rows: [{ field: 'ticker' }],
+                columns: [{ field: 'country' }],
+                values: [{ field: 'id', aggFunc: 'size' }],
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+
+    await waitFor(() => {
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        'France',
+        'Germany',
+        'Italy',
+        'ticker',
+        'IDsize',
+        'IDsize',
+        'IDsize',
       ]);
     });
   });
