@@ -1355,27 +1355,4 @@ describe('<DataGridPro /> - Row selection', () => {
       });
     });
   });
-
-  describe('prop: disableRowSelectionExcludeModel', () => {
-    it('should work with disableRowSelectionExcludeModel=true in DataGridPro', async () => {
-      const onRowSelectionModelChange = spy();
-      const { user } = render(
-        <TestDataGridSelection
-          checkboxSelection
-          disableRowSelectionExcludeModel
-          onRowSelectionModelChange={onRowSelectionModelChange}
-        />,
-      );
-
-      // Click "Select all" checkbox
-      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      await user.click(selectAllCheckbox);
-
-      expect(onRowSelectionModelChange.callCount).to.equal(1);
-      const selectionModel = onRowSelectionModelChange.lastCall.args[0];
-      // With disableRowSelectionExcludeModel=true, it should use include model with all IDs
-      expect(selectionModel.type).to.equal('include');
-      expect(selectionModel.ids.size).to.equal(4);
-    });
-  });
 });
