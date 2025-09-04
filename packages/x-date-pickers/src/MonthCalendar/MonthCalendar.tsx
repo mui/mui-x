@@ -18,7 +18,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
-import { PickerOwnerState, PickerValidDate } from '../models';
+import { MuiPickersAdapter, PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
@@ -47,6 +47,14 @@ export function useMonthCalendarDefaultizedProps(
     monthsPerRow: themeProps.monthsPerRow ?? 3,
   };
 }
+
+const isSameMonth = (
+  monthA: number,
+  monthB: number | null,
+  yearA: PickerValidDate,
+  yearB: PickerValidDate | null,
+  adapter: MuiPickersAdapter,
+) => Boolean(monthA === monthB && yearB && adapter.isSameYear(yearA, yearB));
 
 const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
@@ -289,7 +297,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
         const monthNumber = adapter.getMonth(month);
         const monthText = adapter.format(month, 'monthShort');
         const monthLabel = adapter.format(month, 'month');
-        const isSelected = monthNumber === selectedMonth && adapter.isSameYear(month, value!);
+        const isSelected = isSameMonth(monthNumber, selectedMonth, month, value, adapter);
         const isDisabled = disabled || isMonthDisabled(month);
 
         return (
@@ -305,7 +313,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={
-              todayMonth === monthNumber && adapter.isSameYear(now, month) ? 'date' : undefined
+              isSameMonth(monthNumber, todayMonth, month, now, adapter) ? 'date' : undefined
             }
             aria-label={monthLabel}
             slots={slots}
