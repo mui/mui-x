@@ -185,7 +185,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                       readOnly={isEventReadOnly}
                     >
                       <Select.Trigger
-                        className="EventPopoverSelectTrigger"
+                        className="EventPopoverSelectTrigger Ghost"
                         aria-label={translations.resourceLabel}
                       >
                         <Select.Value>

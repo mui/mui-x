@@ -236,6 +236,14 @@
   outline-offset: var(--outline-focus-offset);
 }
 
+.EventPopoverSelectTrigger.Ghost {
+  border: 1px solid transparent;
+}
+
+.EventPopoverSelectTrigger.Ghost[data-popup-open] {
+  background-color: var(--event-color-4);
+}
+
 .EventPopoverSelectIcon {
   display: flex;
 }
