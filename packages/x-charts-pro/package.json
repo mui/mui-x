@@ -24,8 +24,9 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build && pnpm build:copy-files",
-    "build:copy-files": "code-infra copy-files --glob \"src/**/*.css\" --glob \"src/**/*.css:esm\"",
+    "build": "code-infra build-new && pnpm build:copy-files",
+    "build:rolldown": "rolldown -c rolldown.config.mjs",
+    "build:copy-files": "code-infra copy-files",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -71,7 +72,8 @@
     "rasterizehtml": "^1.3.1",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "catalog:"
+    "rimraf": "catalog:",
+    "rolldown": "^1.0.0-beta.34"
   },
   "engines": {
     "node": ">=14.0.0"
