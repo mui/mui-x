@@ -23,19 +23,9 @@ export function useEventOccurrences(
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(() => {
-    const occurrencesGroupedByDay = new Map<
-      string,
-      { allDay: CalendarEventOccurrence[]; nonAllDay: CalendarEventOccurrence[] }
-    >();
-    for (const day of days) {
-      occurrencesGroupedByDay.set(day.key, { allDay: [], nonAllDay: [] });
-    }
-
     const start = adapter.startOfDay(days[0].value);
     const end = adapter.endOfDay(days[days.length - 1].value);
-
-    // Collect ALL event occurrences (both recurring and non-recurring)
-    const visibleOccurrences: CalendarEventOccurrence[] = [];
+    const occurrences: CalendarEventOccurrence[] = [];
 
     for (const event of events) {
       // STEP 1: Skip events from resources that are not visible
@@ -45,8 +35,7 @@ export function useEventOccurrences(
 
       // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
       if (event.rrule) {
-        const occurrences = getRecurringEventOccurrencesForVisibleDays(event, days, adapter);
-        visibleOccurrences.push(...occurrences);
+        occurrences.push(...getRecurringEventOccurrencesForVisibleDays(event, days, adapter));
         continue;
       }
 
@@ -55,12 +44,12 @@ export function useEventOccurrences(
         continue;
       }
 
-      visibleOccurrences.push({ ...event, key: String(event.id) });
+      occurrences.push({ ...event, key: String(event.id) });
     }
 
     // STEP 3: Sort by the actual start date of each occurrence
     // We sort here so that events are processed in the correct order
-    const sortedOccurrences = visibleOccurrences
+    const sortedOccurrences = occurrences
       // TODO: Avoid JS Date conversion
       .map((occurrence) => ({
         occurrence,
@@ -69,7 +58,12 @@ export function useEventOccurrences(
       .sort((a, b) => a.timestamp - b.timestamp)
       .map((item) => item.occurrence);
 
-    // STEP 4: Add the occurrence to the days map
+    // STEP 4: Create a Map of the occurrences grouped by day
+    const occurrencesGroupedByDay = new Map<
+      string,
+      Record<'allDay' | 'nonAllDay', CalendarEventOccurrence[]>
+    >(days.map((day) => [day.key, { allDay: [], nonAllDay: [] }]));
+
     for (const occurrence of sortedOccurrences) {
       const eventDays: SchedulerValidDate[] = getDaysTheOccurrenceIsVisibleOn(
         occurrence,
