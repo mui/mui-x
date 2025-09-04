@@ -1,5 +1,6 @@
 .MonthViewContainer {
   --fixed-cell-width: 28px;
+  --grid-template-columns-month-view: repeat(auto-fit, minmax(0, 1fr));
 }
 
 .MonthViewContainer {
@@ -20,9 +21,16 @@
 }
 
 .MonthViewHeader {
-  display: grid;
-  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
   border-block-end: 1px solid var(--border-color);
+}
+
+.MonthViewRowGrid {
+  display: grid;
+  grid-template-columns: var(--grid-template-columns-month-view);
+}
+
+.MonthViewRowGrid.WithWeekNumber {
+  grid-template-columns: var(--fixed-cell-width) var(--grid-template-columns-month-view);
 }
 
 .MonthViewHeaderCell:not(:first-child) {

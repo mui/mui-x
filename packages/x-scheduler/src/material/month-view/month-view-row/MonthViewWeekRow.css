@@ -1,8 +1,3 @@
-.MonthViewRow {
-  display: grid;
-  grid-template-columns: var(--fixed-cell-width) repeat(auto-fit, minmax(0, 1fr));
-}
-
 .MonthViewRow:not(:last-child) {
   border-block-end: 1px solid var(--border-color);
 }

@@ -15,3 +15,8 @@ export async function toggleHideWeekends(user) {
   const menuItem = await screen.findByRole('menuitemcheckbox', { name: /hide weekends/i });
   await user.click(menuItem);
 }
+
+export async function toggleHideWeekNumber(user) {
+  const menuItem = await screen.findByRole('menuitemcheckbox', { name: /hide week number/i });
+  await user.click(menuItem);
+}

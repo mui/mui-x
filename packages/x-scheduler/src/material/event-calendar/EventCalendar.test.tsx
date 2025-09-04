@@ -3,7 +3,11 @@ import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
-import { openPreferencesMenu, toggleHideWeekends } from '../internals/utils/test-utils';
+import {
+  openPreferencesMenu,
+  toggleHideWeekends,
+  toggleHideWeekNumber,
+} from '../internals/utils/test-utils';
 
 describe('EventCalendar', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-26') });
@@ -102,6 +106,7 @@ describe('EventCalendar', () => {
     // Hide the weekends
     await openPreferencesMenu(user);
     await toggleHideWeekends(user);
+    await user.click(document.body);
 
     expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
     expect(screen.queryByRole('columnheader', { name: /Saturday 31/i })).to.equal(null);
@@ -109,6 +114,7 @@ describe('EventCalendar', () => {
     // Show the weekends again
     await openPreferencesMenu(user);
     await toggleHideWeekends(user);
+    await user.click(document.body);
 
     expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
@@ -124,6 +130,7 @@ describe('EventCalendar', () => {
     // Hide the weekends
     await openPreferencesMenu(user);
     await toggleHideWeekends(user);
+    await user.click(document.body);
 
     expect(screen.queryByRole('columnheader', { name: /Sunday/i })).to.equal(null);
     expect(screen.queryByRole('columnheader', { name: /Saturday/i })).to.equal(null);
@@ -131,6 +138,7 @@ describe('EventCalendar', () => {
     // Show the weekends again
     await openPreferencesMenu(user);
     await toggleHideWeekends(user);
+    await user.click(document.body);
 
     expect(screen.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
     expect(screen.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
@@ -146,6 +154,7 @@ describe('EventCalendar', () => {
     // Hide the weekends
     await openPreferencesMenu(user);
     await toggleHideWeekends(user);
+    await user.click(document.body);
 
     expect(screen.queryByLabelText(/Saturday 31/i)).to.equal(null);
     expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
@@ -153,8 +162,31 @@ describe('EventCalendar', () => {
     // Show the weekends again
     await openPreferencesMenu(user);
     await toggleHideWeekends(user);
+    await user.click(document.body);
 
     expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);
     expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+  });
+
+  it('should allow to show / hide the week number using the UI in the month view', async () => {
+    const { user } = render(<EventCalendar events={[]} defaultView="month" />);
+
+    // Week number should be visible by default
+    const findWeekHeaders = () => screen.queryAllByRole('rowheader', { name: /week/i });
+    expect(await findWeekHeaders()).to.have.lengthOf.above(0);
+
+    // Hide the week number
+    await openPreferencesMenu(user);
+    await toggleHideWeekNumber(user);
+    await user.click(document.body);
+
+    expect(await findWeekHeaders()).to.have.lengthOf(0);
+
+    // Show the week number again
+    await openPreferencesMenu(user);
+    await toggleHideWeekNumber(user);
+    await user.click(document.body);
+
+    expect(await findWeekHeaders()).to.have.lengthOf.above(0);
   });
 });
