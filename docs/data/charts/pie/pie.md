@@ -8,6 +8,34 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot,
 
 <p class="description">Pie charts express portions of a whole, using arcs or angles within a circle.</p>
 
+## Guidelines
+
+Pie charts are specifically designed to show part-to-whole relationships, making proportions and percentages immediately visible. They work best when the focus is on how individual parts contribute to a complete dataset.
+
+- **Part-to-whole visualization**: Perfect for showing how individual components make up 100% of something
+- **Proportional comparison**: Easy to see which segments are larger or smaller relative to the whole
+- **Simple categorical breakdown**: Ideal for displaying survey results, market share, budget allocation
+- **At-a-glance understanding**: Quickly communicate the relative size of different categories
+
+**When to use pie charts:**
+
+- Your data represents parts of a whole that sum to 100%
+- You have 2-7 categories (too many slices become hard to distinguish)
+- The focus is on proportions rather than exact values
+- You want to emphasize the largest or smallest segments
+- Your audience needs to quickly grasp relative sizes
+
+**Data requirements:**
+
+- Categorical data with positive numerical values
+- Values should sum to a meaningful total (100%, total budget, etc.)
+- Each category should be mutually exclusive
+- Works best when differences between segments are substantial (>5%)
+
+**Avoid pie charts when:** you have many small categories, negative values, or when precise comparison of values is needed. Consider bar charts for better precision or when you have more than 7 categories.
+
+**Use donut charts** when you want to include additional information in the center or create a more modern aesthetic while maintaining the same data relationships.
+
 ## Basics
 
 Pie charts series must contain a `data` property containing an array of objects.
