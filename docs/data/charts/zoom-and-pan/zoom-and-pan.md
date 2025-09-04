@@ -131,3 +131,93 @@ The `zoom` state is an array of objects that define the zoom state for each axis
 To synchronize zoom between multiple charts, you can control the zoom state.
 
 {{"demo": "ZoomControlled.js"}}
+
+## Zoom configuration
+
+You can have fine-grained control over which interactions are enabled and under which conditions by using the `zoomConfig` prop.
+
+### Interactions
+
+The `zoomConfig` prop allows you to specify which interactions are enabled for zooming and panning:
+
+```jsx
+<BarChartPro
+  zoomConfig={{
+    // Enable both wheel and pinch zoom
+    zoom: ['onWheel', 'onPinch'],
+    // Enable drag panning
+    pan: ['onDrag'],
+  }}
+/>
+```
+
+### Key modifiers
+
+Some interactions allow setting up required keys to be pressed to enable the interaction.
+This can be set up using the `requiredKeys` property in the interaction configuration.
+
+```jsx
+<BarChartPro
+  zoomConfig={{
+    // Only zoom when Control key is pressed
+    zoom: [{ type: 'onWheel', requiredKeys: ['Control'] }],
+    // Only pan when Shift key is pressed
+    pan: [{ type: 'onDrag', requiredKeys: ['Shift'] }],
+  }}
+/>
+```
+
+Available keys include:
+
+- Modifier keys: `'Shift'`, `'Control'`, `'Alt'`, `'Meta'`
+- `'ControlOrMeta'` which resolves to `Control` on Windows and Linux and to `Meta` on macOS.
+- Any other key can be used as well, such as `'Space'` and `'Enter'` based on `event.key` values.
+
+It is also possible to require multiple keys to be pressed simultaneously:
+
+```jsx
+<BarChartPro
+  zoomConfig={{
+    // Only pan when both Shift and Control are pressed
+    pan: [{ type: 'onDrag', requiredKeys: ['Shift', 'Control'] }],
+  }}
+/>
+```
+
+### Pointer Modes
+
+Interactions can also be restricted to specific pointer types by using the `mode` property:
+
+```jsx
+<BarChartPro
+  zoomConfig={{
+    // Only pan with touch, not mouse
+    pan: [{ type: 'onDrag', pointerMode: 'touch' }],
+  }}
+  // other props
+/>
+```
+
+Available pointer modes:
+
+- `undefined`: Allow both mouse and touch interactions (default)
+- `'mouse'`: Only allow mouse interactions
+- `'touch'`: Only allow touch interactions
+
+### Multiple interactions of the same type
+
+It is possible to define multiple interactions of the same type with different configurations.
+
+In the example below, the pan `onDrag` interaction is configured to require a specific key combination for mouse, while touch interactions don't require any key to be pressed:
+
+```jsx
+<BarChartPro
+  zoomConfig={{
+    pan: [
+      { type: 'onDrag', pointerMode: 'mouse', requiredKeys: ['ControlOrMeta'] },
+      { type: 'onDrag', pointerMode: 'touch', requiredKeys: [] },
+    ],
+  }}
+  // other props
+/>
+```

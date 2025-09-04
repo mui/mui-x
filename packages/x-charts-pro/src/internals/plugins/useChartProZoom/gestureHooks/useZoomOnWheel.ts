@@ -17,6 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { selectorZoomConfig } from '../ZoomConfig.selectors';
 
 export const useZoomOnWheel = (
   {
@@ -31,17 +32,28 @@ export const useZoomOnWheel = (
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const config = useSelector(store, selectorZoomConfig, ['onWheel' as const]);
+
+  React.useEffect(() => {
+    if (!isZoomEnabled || !config) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('zoomTurnWheel', {
+      requiredKeys: config.requiredKeys,
+    });
+  }, [config, isZoomEnabled, instance]);
 
   // Add event for chart zoom in/out
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomEnabled || !config) {
       return () => {};
     }
 
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
-    const zoomOnWheelHandler = instance.addInteractionListener('turnWheel', (event) => {
+    const zoomOnWheelHandler = instance.addInteractionListener('zoomTurnWheel', (event) => {
       const point = getSVGPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
@@ -96,5 +108,14 @@ export const useZoomOnWheel = (
       startedOutsideRef.current = false;
       rafThrottledSetZoomData.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, instance, setZoomDataCallback, store]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomEnabled,
+    optionsLookup,
+    instance,
+    setZoomDataCallback,
+    store,
+    config,
+  ]);
 };
