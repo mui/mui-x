@@ -73,6 +73,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    hideLegend: props.hideLegend ?? false,
   };
 
   const radarGrid: RadarGridProps = { divisions, shape, stripeColor };

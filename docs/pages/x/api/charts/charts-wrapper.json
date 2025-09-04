@@ -1,5 +1,6 @@
 {
   "props": {
+    "hideLegend": { "type": { "name": "bool" }, "required": true },
     "extendVertically": {
       "type": { "name": "bool" },
       "default": "`false` if the `height` prop is set. And `true` otherwise."
