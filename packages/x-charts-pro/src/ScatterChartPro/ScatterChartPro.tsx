@@ -186,6 +186,7 @@ ScatterChartPro.propTypes = {
    * @default false
    */
   disableVoronoi: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */

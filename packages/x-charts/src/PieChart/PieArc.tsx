@@ -32,6 +32,7 @@ interface PieArcOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  isFocused: boolean;
   classes?: Partial<PieArcClasses>;
 }
 
@@ -94,6 +95,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     id,
     isFaded,
     isHighlighted,
+    isFocused,
     onClick,
     cornerRadius,
     startAngle,
@@ -112,6 +114,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     color,
     isFaded,
     isHighlighted,
+    isFocused,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -140,6 +143,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       strokeLinejoin="round"
       data-highlighted={ownerState.isHighlighted || undefined}
       data-faded={ownerState.isFaded || undefined}
+      data-focused={isFocused || undefined}
       {...other}
       {...interactionProps}
       {...animatedProps}
@@ -159,6 +163,7 @@ PieArc.propTypes = {
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
+  isFocused: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,
