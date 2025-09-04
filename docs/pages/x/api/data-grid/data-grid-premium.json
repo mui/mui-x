@@ -4,6 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "activeChartId": { "type": { "name": "string" } },
     "aggregationFunctions": {
       "type": { "name": "object" },
       "default": "GRID_AGGREGATION_FUNCTIONS when `dataSource` is not provided, `{}` when `dataSource` is provided"
@@ -45,6 +46,7 @@
     "cellModesModel": { "type": { "name": "object" } },
     "cellSelection": { "type": { "name": "bool" }, "default": "false" },
     "cellSelectionModel": { "type": { "name": "object" } },
+    "chartsIntegration": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
     "checkboxSelectionVisibleOnly": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
@@ -103,7 +105,10 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ charts?: bool, warnIfFocusStateIsNotSynced?: bool }"
+      }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -268,6 +273,13 @@
       "default": "\"withModifierKey\""
     },
     "nonce": { "type": { "name": "string" } },
+    "onActiveChartIdChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(activeChartId: string) => void",
+        "describedArgs": ["activeChartId"]
+      }
+    },
     "onAggregationModelChange": {
       "type": { "name": "func" },
       "signature": {
@@ -790,6 +802,12 @@
       "class": "MuiDataGridPremium-aiAssistantPanel"
     },
     {
+      "name": "chartsPanel",
+      "description": "Component rendered when charts panel is open. Only needed when `chartsIntegration` prop is passed to the grid.\nPass `GridChartsPanel` to render the default charts panel.",
+      "default": "null",
+      "class": null
+    },
+    {
       "name": "emptyPivotOverlay",
       "description": "Component rendered when pivot mode is enabled but no rows are defined.",
       "default": "GridEmptyPivotOverlay",
@@ -1017,6 +1035,12 @@
       "class": null
     },
     {
+      "name": "baseToggleButton",
+      "description": "The custom ToggleButton component used in the grid.",
+      "default": "ToggleButton",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
@@ -1050,6 +1074,12 @@
       "name": "baseSwitch",
       "description": "The custom Switch component used in the grid.",
       "default": "Switch",
+      "class": null
+    },
+    {
+      "name": "baseTabs",
+      "description": "The custom Tabs component used in the grid.",
+      "default": "Tabs",
       "class": null
     },
     {
@@ -1471,6 +1501,72 @@
       "description": "Icon used on the toggle button of the changes list",
       "default": "GridExpandMoreIcon",
       "class": "MuiDataGridPremium-promptChangesToggleIcon"
+    },
+    {
+      "name": "chartsIcon",
+      "description": "Icon used for the charts configuration button",
+      "default": "GridChartsIcon",
+      "class": null
+    },
+    {
+      "name": "chartsSearchIcon",
+      "description": "Icon used for the search icon in the sidebar search field in the charts configuration panel",
+      "default": "GridSearchIcon",
+      "class": null
+    },
+    {
+      "name": "chartsSearchClearIcon",
+      "description": "Icon used for the clear button in the sidebar search field in the charts configuration panel",
+      "default": "GridClearIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuMoveUpIcon",
+      "description": "Icon used for the move up button in the charts configuration panel menu",
+      "default": "GridExpandLessIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuMoveDownIcon",
+      "description": "Icon used for the move down button in the charts configuration panel menu",
+      "default": "GridExpandMoreIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuMoveToTopIcon",
+      "description": "Icon used for the move to top button in the charts configuration panel menu",
+      "default": "GridMoveToTopIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuMoveToBottomIcon",
+      "description": "Icon used for the move to bottom button in the charts configuration panel menu",
+      "default": "GridMoveToBottomIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuAddIcon",
+      "description": "Icon used for the add button in the charts configuration panel menu",
+      "default": "GridAddIcon",
+      "class": null
+    },
+    {
+      "name": "chartsMenuRemoveIcon",
+      "description": "Icon used for the remove button in the charts configuration panel menu",
+      "default": "GridDeleteIcon",
+      "class": null
+    },
+    {
+      "name": "chartsSyncIcon",
+      "description": "Icon used for the sync button in the charts configuration panel when sync is enabled",
+      "default": "GridSyncIcon",
+      "class": null
+    },
+    {
+      "name": "chartsSyncDisabledIcon",
+      "description": "Icon used for the sync button in the charts configuration panel when sync is disabled",
+      "default": "GridSyncDisabledIcon",
+      "class": null
     }
   ],
   "classes": [

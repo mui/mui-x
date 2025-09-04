@@ -399,7 +399,7 @@ export const useGridPivoting = (
   const addColumnMenuButton = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (menuItems) => {
       if (isPivotingAvailable) {
-        return [...menuItems, 'columnMenuPivotItem'];
+        return [...menuItems, 'columnMenuManagePanelItem'];
       }
       return menuItems;
     },
