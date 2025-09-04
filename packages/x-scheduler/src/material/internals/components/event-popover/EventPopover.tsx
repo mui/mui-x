@@ -20,7 +20,7 @@ import {
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { CalendarEvent } from '../../../../primitives/models';
+import { CalendarEvent, CalendarResourceId } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import './EventPopover.css';
@@ -108,6 +108,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const endTimeValue = form.get('endTime');
     const recurrenceKey = form.get('recurrence') as RecurrencePresetKey;
     const rrule = recurrenceKey ? recurrencePresets[recurrenceKey] : calendarEvent.rrule;
+    const resourceValue = form.get('resource') as CalendarResourceId;
 
     const startISO = startTimeValue
       ? `${startDateValue}T${startTimeValue}`
@@ -136,6 +137,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       end,
       allDay: isAllDay,
       rrule,
+      resource: resourceValue,
     });
     onClose();
   };
@@ -195,7 +197,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                                 className={clsx(
                                   'ResourceLegendColor',
                                   getColorClassName({
-                                    resource: resourcesByIdMap.get(value ?? calendarEvent.resource),
+                                    resource: resourcesByIdMap.get(value ?? 'palette-primary'),
                                   }),
                                 )}
                               />
@@ -229,7 +231,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
                                     className={clsx(
                                       'ResourceLegendColor',
                                       getColorClassName({
-                                        resource: resourcesByIdMap.get(resource.value ?? ''),
+                                        resource: resourcesByIdMap.get(
+                                          resource.value ?? 'palette-primary',
+                                        ),
                                       }),
                                     )}
                                   />
