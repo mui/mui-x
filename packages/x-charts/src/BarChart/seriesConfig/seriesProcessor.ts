@@ -5,6 +5,7 @@ import { getStackingGroups } from '../../internals/stackSeries';
 import { DatasetElementType, DatasetType } from '../../models/seriesType/config';
 import { SeriesId } from '../../models/seriesType/common';
 import { SeriesProcessor } from '../../internals/plugins/models';
+import { applyDownsample } from '../../internals/downsample';
 
 type BarDataset = DatasetType<number | null>;
 
@@ -60,29 +61,36 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
 
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
+      const rawData = dataKey
+        ? dataset!.map((data) => {
+            const value = data[dataKey];
+            if (typeof value !== 'number') {
+              if (process.env.NODE_ENV !== 'production') {
+                if (value !== null) {
+                  warnOnce([
+                    `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
+                    'Bar plots only support numbers and null values.',
+                  ]);
+                }
+              }
+              return null;
+            }
+            return value;
+          })
+        : series[id].data!;
+
+      // Apply downsampling if configured
+      const processedData = series[id].downsample
+        ? applyDownsample(rawData, series[id].downsample!)
+        : rawData;
+
       completedSeries[id] = {
         layout: 'vertical',
         labelMarkType: 'square',
         minBarSize: 0,
         valueFormatter: series[id].valueFormatter ?? barValueFormatter,
         ...series[id],
-        data: dataKey
-          ? dataset!.map((data) => {
-              const value = data[dataKey];
-              if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production') {
-                  if (value !== null) {
-                    warnOnce([
-                      `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
-                      'Bar plots only support numbers and null values.',
-                    ]);
-                  }
-                }
-                return null;
-              }
-              return value;
-            })
-          : series[id].data!,
+        data: processedData,
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
       };
     });

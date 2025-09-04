@@ -13,6 +13,7 @@ import { LineSeriesType } from '../models/seriesType/line';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { DownsampleProp } from '../internals/downsample';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
@@ -90,6 +91,24 @@ export interface LineChartProps
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight?: boolean;
+  /**
+   * Configuration for downsampling the chart data.
+   * When specified, applies downsampling to all series and axis data consistently.
+   * This improves performance for large datasets while preserving visual characteristics.
+   *
+   * @example
+   * // Enable with default settings (1000 points, linear strategy)
+   * downsample={true}
+   *
+   * @example
+   * // Custom configuration
+   * downsample={{ targetPoints: 500, strategy: 'peak' }}
+   *
+   * @example
+   * // Custom function
+   * downsample={(data, targetPoints) => customDownsampleLogic(data, targetPoints)}
+   */
+  downsample?: DownsampleProp<number | null>;
   /**
    * Overridable component slots.
    * @default {}
