@@ -20,6 +20,7 @@ function ChartsSingleYAxis(inProps: ChartsYAxisProps) {
     tickNumber,
     positionSign,
     skipAxisRendering,
+    skipTickRendering,
     classes,
     Line,
     Tick,
@@ -98,46 +99,48 @@ function ChartsSingleYAxis(inProps: ChartsYAxisProps) {
     >
       {!disableLine && <Line y1={top} y2={top + height} className={classes.line} {...lineProps} />}
 
-      {yTicks.map((item, index) => {
-        const { offset: tickOffset, labelOffset, value } = item;
-        const xTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
-        const yTickLabel = labelOffset;
-        const skipLabel =
-          typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
+      {skipTickRendering
+        ? null
+        : yTicks.map((item, index) => {
+            const { offset: tickOffset, labelOffset, value } = item;
+            const xTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
+            const yTickLabel = labelOffset;
+            const skipLabel =
+              typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = instance.isYInside(tickOffset);
-        const tickLabel = tickLabels.get(item);
+            const showLabel = instance.isYInside(tickOffset);
+            const tickLabel = tickLabels.get(item);
 
-        if (!showLabel) {
-          return null;
-        }
+            if (!showLabel) {
+              return null;
+            }
 
-        return (
-          <g
-            key={index}
-            transform={`translate(0, ${tickOffset})`}
-            className={classes.tickContainer}
-          >
-            {!disableTicks && (
-              <Tick
-                x2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
+            return (
+              <g
+                key={index}
+                transform={`translate(0, ${tickOffset})`}
+                className={classes.tickContainer}
+              >
+                {!disableTicks && (
+                  <Tick
+                    x2={positionSign * tickSize}
+                    className={classes.tick}
+                    {...slotProps?.axisTick}
+                  />
+                )}
 
-            {tickLabel !== undefined && !skipLabel && (
-              <TickLabel
-                x={xTickLabel}
-                y={yTickLabel}
-                data-testid="ChartsYAxisTickLabel"
-                text={tickLabel}
-                {...axisTickLabelProps}
-              />
-            )}
-          </g>
-        );
-      })}
+                {tickLabel !== undefined && !skipLabel && (
+                  <TickLabel
+                    x={xTickLabel}
+                    y={yTickLabel}
+                    data-testid="ChartsYAxisTickLabel"
+                    text={tickLabel}
+                    {...axisTickLabelProps}
+                  />
+                )}
+              </g>
+            );
+          })}
       {label && isHydrated && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
