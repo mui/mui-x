@@ -12,8 +12,8 @@ import {
 import { useAdapter } from '../utils/adapter/useAdapter';
 
 /**
- * Adds the event occurrences to each day in the row.
- * For the all-day occurrences, it calculates their index in the row (the sub-row they should be rendering in).
+ * Get the event occurrences for the days in a row.
+ * It adds placement information for row rendering to each occurrence that needs it.
  */
 export function useAddRowPlacementToEventOccurrences(
   parameters: useAddRowPlacementToEventOccurrences.Parameters,
@@ -26,15 +26,13 @@ export function useAddRowPlacementToEventOccurrences(
     const rowLength = days.length;
 
     return days.map((day, dayIndex) => {
+      rowIndexLookup[day.key] = { occurrencesRowIndex: {}, usedRowIndexes: new Set() };
       const withRowPlacement: CalendarEventOccurrencesWithRowPlacement[] = [];
       const withoutRowPlacement: CalendarEventOccurrence[] = [];
-      const occurrences = occurrencesMap.get(day.key);
-      rowIndexLookup[day.key] = { occurrencesRowIndex: {}, usedRowIndexes: new Set() };
 
       // Process all-day events and get their position in the row
-      for (const occurrence of occurrences ?? []) {
+      for (const occurrence of occurrencesMap.get(day.key) ?? []) {
         const hasPlacement = shouldAddPlacement ? shouldAddPlacement(occurrence) : true;
-
         if (hasPlacement) {
           const placement = getEventOccurrenceRowPlacement({
             adapter,
@@ -69,7 +67,14 @@ export function useAddRowPlacementToEventOccurrences(
 
 export namespace useAddRowPlacementToEventOccurrences {
   export interface Parameters {
+    /**
+     * The days to add the occurrences to.
+     */
     days: CalendarProcessedDate[];
+    /**
+     * The occurrences Map as returned by `useEventOccurrences`.
+     * It should contain the occurrences for each requested day but can also contain occurrences for other days.
+     */
     occurrencesMap: useEventOccurrences.ReturnValue;
     /**
      * Whether the row placement should be computed for this event occurrence.
@@ -79,8 +84,17 @@ export namespace useAddRowPlacementToEventOccurrences {
   }
 
   export interface DayData extends CalendarProcessedDate {
+    /**
+     * Occurrences that have been augmented with row placement information.
+     */
     withRowPlacement: CalendarEventOccurrencesWithRowPlacement[];
+    /**
+     * Occurrences that do not need row placement information.
+     */
     withoutRowPlacement: CalendarEventOccurrence[];
+    /**
+     * The number of rows needed to display all the occurrences with placement for this day.
+     */
     rowCount: number;
   }
 

@@ -65,7 +65,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       style={
         {
           // TODO: Fix, should be 1 + ... but the day number row takes too much space
-          '--row-count': 2 + day.rowCount + (hiddenCount > 0 ? 1 : 0),
+          '--row-count': 2 + day.maxRowIndex + (hiddenCount > 0 ? 1 : 0),
         } as React.CSSProperties
       }
     >

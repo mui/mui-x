@@ -8,7 +8,10 @@ import { useEventCalendarContext } from '../utils/useEventCalendarContext';
 import { selectors } from '../use-event-calendar';
 
 /**
- * Retrieves all the occurrences for the given days.
+ * Gets all the event occurrences for the given days.
+ * For recurring events, it expands them to get all the occurrences that fall within the given days.
+ * It should be called once per view to get the occurrences for all the visible days in one go.
+ * The returned value is a Map where the key is the day key and the value is the list of occurrences for that day.
  */
 export function useEventOccurrences(
   parameters: useEventOccurrences.Parameters,
@@ -47,9 +50,9 @@ export function useEventOccurrences(
         continue;
       }
 
-      // STEP 2-B: Non-recurring event processing, check if the event is within the visible days
+      // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
       if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
-        continue; // Skip events that are not in the visible days
+        continue;
       }
 
       visibleOccurrences.push({ ...event, key: String(event.id) });
@@ -93,6 +96,9 @@ export function useEventOccurrences(
 
 export namespace useEventOccurrences {
   export interface Parameters {
+    /**
+     * The days to get the occurrences for.
+     */
     days: CalendarProcessedDate[];
     /**
      * The days a multi-day event should appear on.

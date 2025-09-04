@@ -83,9 +83,7 @@ export interface GetEventOccurrenceRowPlacementReturnValue {
 }
 
 /**
- *  Returns the list of visible days an event should render on.
- *  When `shouldOnlyRenderEventInOneCell` is true, collapses multi-day to a single cell
- *  (first visible day, or the event’s start if it is inside the range).
+ *  Returns the list of days an event should render on.
  */
 export function getEventDays(
   event: CalendarEvent,
@@ -94,19 +92,22 @@ export function getEventDays(
   eventPlacement: 'first-day' | 'every-day',
 ) {
   const eventFirstDay = adapter.startOfDay(event.start);
-  const eventLastDay = adapter.endOfDay(event.end);
-
   if (eventPlacement === 'first-day') {
     if (adapter.isBefore(eventFirstDay, days[0].value)) {
       return [days[0].value];
     }
     return [eventFirstDay];
   }
+
+  const eventLastDay = adapter.endOfDay(event.end);
   return days
     .filter((day) => isDayWithinRange(day.value, eventFirstDay, eventLastDay, adapter))
     .map((day) => day.value);
 }
 
+/**
+ * Creates a CalendarProcessedDate object from a date object.
+ */
 export function processDate(date: SchedulerValidDate, adapter: Adapter): CalendarProcessedDate {
   return {
     value: date,
@@ -114,6 +115,11 @@ export function processDate(date: SchedulerValidDate, adapter: Adapter): Calenda
   };
 }
 
+/**
+ * Returns a string representation of the date.
+ * It can be used as key in Maps or passed to the React `key` property when looping through days.
+ * It only contains date information, two dates representing the same day but with different time will have the same key.
+ */
 export function getDateKey(day: SchedulerValidDate, adapter: Adapter): string {
   return adapter.format(day, 'keyboardDate');
 }

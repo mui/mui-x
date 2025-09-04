@@ -86,7 +86,7 @@ export interface CalendarEventOccurrence extends CalendarEvent {
 }
 
 /**
- * Extension of an occurrence with placement for row rendering.
+ * An event occurrence with placement for row rendering.
  */
 export interface CalendarEventOccurrencesWithRowPlacement extends CalendarEventOccurrence {
   placement: GetEventOccurrenceRowPlacementReturnValue;
@@ -118,11 +118,15 @@ export interface CalendarPrimitiveEventData {
   end: SchedulerValidDate;
 }
 
-export interface CalendarDayWithVisibleOccurrences extends CalendarProcessedDate {
-  occurrences: CalendarEventOccurrence[];
-}
-
 export interface CalendarProcessedDate {
+  /**
+   * The date object.
+   */
   value: SchedulerValidDate;
+  /**
+   * String representation of the date.
+   * It can be used as key in Maps or passed to the React `key` property when looping through days.
+   * It only contains date information, two dates representing the same day but with different time will have the same key.
+   */
   key: string;
 }
