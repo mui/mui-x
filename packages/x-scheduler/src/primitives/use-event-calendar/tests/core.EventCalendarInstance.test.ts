@@ -28,6 +28,7 @@ describe('Core - EventCalendarInstance', () => {
         areEventsResizable: false,
         ampm: true,
         showCurrentTimeIndicator: true,
+        eventColor: 'jade',
         preferences: DEFAULT_PREFERENCES,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,

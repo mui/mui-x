@@ -48,7 +48,6 @@ export const AgendaView = React.memo(
       days,
       shouldOnlyRenderEventInOneCell: false,
     });
-    const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
@@ -94,7 +93,6 @@ export const AgendaView = React.memo(
                       render={
                         <AgendaEvent
                           event={event}
-                          eventResource={resourcesByIdMap.get(event.resource)}
                           ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />
                       }
@@ -109,7 +107,6 @@ export const AgendaView = React.memo(
                       render={
                         <AgendaEvent
                           event={event}
-                          eventResource={resourcesByIdMap.get(event.resource)}
                           ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />
                       }

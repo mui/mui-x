@@ -19,9 +19,8 @@ export function DayGridCell(props: DayGridCellProps) {
   const { day, allDayEvents, dayIndexInRow, rowLength } = props;
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const placeholder = DayGrid.usePlaceholderInDay(day);
-  const initialDraggedEvent = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
+  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
   const draggedEvent = React.useMemo(() => {
     if (!initialDraggedEvent || !placeholder) {
@@ -57,7 +56,6 @@ export function DayGridCell(props: DayGridCellProps) {
               render={
                 <DayGridEvent
                   event={event}
-                  eventResource={resourcesByIdMap.get(event.resource)}
                   variant="allDay"
                   ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                   gridRow={event.eventRowIndex}
@@ -69,7 +67,6 @@ export function DayGridCell(props: DayGridCellProps) {
             <DayGridEvent
               key={`invisible-${event.key}-${day.toString()}`}
               event={event}
-              eventResource={resourcesByIdMap.get(event.resource)}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
               aria-hidden="true"
@@ -81,7 +78,6 @@ export function DayGridCell(props: DayGridCellProps) {
           <div className="DayTimeGridAllDayEventContainer">
             <DayGridEvent
               event={draggedEvent}
-              eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
               gridRow={1} // TODO: Fix

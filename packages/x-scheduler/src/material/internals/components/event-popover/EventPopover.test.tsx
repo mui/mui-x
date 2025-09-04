@@ -19,7 +19,7 @@ const calendarEvent: CalendarEvent = {
 const calendarEventResource: CalendarResource = {
   id: 'r1',
   name: 'Personal',
-  color: 'cyan',
+  eventColor: 'cyan',
 };
 
 describe('<EventPopover />', () => {

@@ -27,10 +27,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
   const placeholder = DayGrid.usePlaceholderInDay(day);
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const initialDraggedEvent = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
+  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
   const isCurrentMonth = adapter.isSameMonth(day, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));
@@ -105,7 +104,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               render={
                 <DayGridEvent
                   event={event}
-                  eventResource={resourcesByIdMap.get(event.resource)}
                   variant="allDay"
                   ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                   gridRow={event.eventRowIndex}
@@ -117,7 +115,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             <DayGridEvent
               key={`invisible-${event.id}-${day.toString()}`}
               event={event}
-              eventResource={resourcesByIdMap.get(event.resource)}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
               aria-hidden="true"
@@ -132,7 +129,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             render={
               <DayGridEvent
                 event={event}
-                eventResource={resourcesByIdMap.get(event.resource)}
                 variant="compact"
                 ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
               />
@@ -146,7 +142,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           <div className="MonthViewDraggedEventContainer">
             <DayGridEvent
               event={draggedEvent}
-              eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
               gridRow={1} // TODO: Fix

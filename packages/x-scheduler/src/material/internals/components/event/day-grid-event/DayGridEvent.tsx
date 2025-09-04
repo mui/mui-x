@@ -24,7 +24,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 ) {
   const {
     event: eventProp,
-    eventResource,
     ariaLabelledBy,
     variant,
     className: classNameProp,
@@ -41,6 +40,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const { store } = useEventCalendarContext();
   const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
   const ampm = useStore(store, selectors.ampm);
+  const resource = useStore(store, selectors.resource, eventProp.resource);
+  const color = useStore(store, selectors.eventColor, eventProp.id);
   const isRecurring = Boolean(eventProp.rrule);
 
   const content = React.useMemo(() => {
@@ -75,8 +76,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               className="ResourceLegendColor"
               role="img"
               aria-label={
-                eventResource?.name
-                  ? translations.resourceAriaLabel(eventResource.name)
+                resource?.name
+                  ? translations.resourceAriaLabel(resource.name)
                   : translations.noResourceAriaLabel
               }
             />
@@ -118,7 +119,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     eventProp.start,
     eventProp.end,
     isRecurring,
-    eventResource?.name,
+    resource?.name,
     translations,
     ampm,
   ]);
@@ -131,7 +132,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       'EventContainer',
       'EventCard',
       `EventCard--${variant}`,
-      getColorClassName({ resource: eventResource }),
+      getColorClassName(color),
     ),
     style: {
       '--grid-row': gridRow,

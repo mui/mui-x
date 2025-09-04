@@ -65,7 +65,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: CalendarPrimitiveEventData) => {
       const updatedEvent: CalendarEvent = {
-        ...selectors.getEventById(store.state, data.eventId)!,
+        ...selectors.event(store.state, data.eventId)!,
         start: data.start,
         end: data.end,
       };
