@@ -22,7 +22,7 @@ export default function PiecewiseInteractiveDemo() {
           labelPosition: {
             knob: 'select',
             defaultValue: 'extremes',
-            options: ['start', 'end', 'extremes'],
+            options: ['start', 'end', 'extremes', 'inline-start', 'inline-end'],
           },
           markType: {
             knob: 'select',
