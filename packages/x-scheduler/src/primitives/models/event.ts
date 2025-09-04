@@ -1,3 +1,4 @@
+import { GetEventOccurrenceRowPlacementReturnValue } from '../utils/event-utils';
 import type { SchedulerValidDate } from './date';
 import type { CalendarResourceId } from './resource';
 
@@ -84,9 +85,11 @@ export interface CalendarEventOccurrence extends CalendarEvent {
   key: string;
 }
 
-/** Extension of an occurrence with layout information for all-day rows. */
-export interface CalendarEventOccurrenceWithPosition extends CalendarEventOccurrence {
-  eventRowIndex?: number;
+/**
+ * An event occurrence with placement for row rendering.
+ */
+export interface CalendarEventOccurrencesWithRowPlacement extends CalendarEventOccurrence {
+  placement: GetEventOccurrenceRowPlacementReturnValue;
 }
 
 export type CalendarEventId = string | number;
@@ -113,4 +116,17 @@ export interface CalendarPrimitiveEventData {
   columnId: string | null;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
+}
+
+export interface CalendarProcessedDate {
+  /**
+   * The date object.
+   */
+  value: SchedulerValidDate;
+  /**
+   * String representation of the date.
+   * It can be used as key in Maps or passed to the React `key` property when looping through days.
+   * It only contains date information, two dates representing the same day but with different time will have the same key.
+   */
+  key: string;
 }

@@ -1,24 +1,24 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerValidDate, CalendarEventOccurrence } from '../../../../primitives/models';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
-import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
+import { useAddRowPlacementToEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
 import { EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, events, isToday, showCurrentTimeIndicator, index } = props;
+  const { day, isToday, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
-  const start = React.useMemo(() => adapter.startOfDay(day), [adapter, day]);
-  const end = React.useMemo(() => adapter.endOfDay(day), [adapter, day]);
+  const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
+  const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
 
   const placeholder = TimeGrid.usePlaceholderInRange(start, end);
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
@@ -41,10 +41,10 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       start={start}
       end={end}
       className="DayTimeGridColumn"
-      data-weekend={isWeekend(adapter, day) ? '' : undefined}
+      data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
       data-current={isToday ? '' : undefined}
     >
-      {events.map((event) => (
+      {day.withoutRowPlacement.map((event) => (
         <EventPopoverTrigger
           key={event.key}
           event={event}
@@ -52,7 +52,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
             <TimeGridEvent
               event={event}
               variant="regular"
-              ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
+              ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day.value)}`}
             />
           }
         />
@@ -61,7 +61,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         <TimeGridEvent
           event={draggedEvent}
           variant="regular"
-          ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
+          ariaLabelledBy={`DayTimeGridHeaderCell-${day.key}`}
         />
       )}
       {showCurrentTimeIndicator ? (
@@ -95,8 +95,7 @@ function TimeGridCurrentTimeLabel() {
 }
 
 interface TimeGridColumnProps {
-  day: SchedulerValidDate;
-  events: CalendarEventOccurrence[];
+  day: useAddRowPlacementToEventOccurrences.DayData;
   isToday: boolean;
   index: number;
   showCurrentTimeIndicator: boolean;

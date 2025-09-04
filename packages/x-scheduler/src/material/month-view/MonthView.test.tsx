@@ -290,10 +290,9 @@ describe('<MonthView />', () => {
       const event2GridRow = event2Style.match(/--grid-row:\s*(\d+)/)?.[1];
       const event3GridRow = event3Style.match(/--grid-row:\s*(\d+)/)?.[1];
 
-      // Rows in the month view always have +1 since row 1 is occupied by the day number
-      expect(event1GridRow).to.equal('2');
-      expect(event2GridRow).to.equal('3');
-      expect(event3GridRow).to.equal('2');
+      expect(event1GridRow).to.equal('1');
+      expect(event2GridRow).to.equal('2');
+      expect(event3GridRow).to.equal('1');
     });
 
     it('should render all-day events with correct grid column span', () => {

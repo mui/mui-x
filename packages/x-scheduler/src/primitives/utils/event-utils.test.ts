@@ -1,134 +1,25 @@
-import { DateTime } from 'luxon';
-import { CalendarEventOccurrenceWithPosition } from '@mui/x-scheduler/primitives/models';
+import { CalendarEventOccurrence } from '@mui/x-scheduler/primitives/models';
 import {
-  getEventDays,
-  getEventRowIndex,
-  getEventWithLargestRowIndex,
+  getDaysTheOccurrenceIsVisibleOn,
+  getEventOccurrenceRowPlacement,
   isDayWithinRange,
+  processDate,
 } from './event-utils';
 import { getAdapter } from './adapter/getAdapter';
 
 describe('event-utils', () => {
   const adapter = getAdapter();
-  const createEvent = (
+  const createEventOccurrence = (
     id: string,
     start: string,
     end: string,
-  ): CalendarEventOccurrenceWithPosition => ({
+  ): CalendarEventOccurrence => ({
     id,
     key: id,
     start: adapter.date(start),
     end: adapter.date(end),
     title: `Event ${id}`,
     allDay: true,
-  });
-
-  describe('getEventWithLargestRowIndex', () => {
-    it('should return the largest row index from events', () => {
-      const events: CalendarEventOccurrenceWithPosition[] = [
-        {
-          id: '1',
-          key: '1',
-          start: DateTime.fromISO('2025-05-01T09:00:00'),
-          end: DateTime.fromISO('2025-05-01T10:00:00'),
-          title: 'Meeting',
-          allDay: true,
-          eventRowIndex: 1,
-        },
-        {
-          id: '2',
-          key: '2',
-          start: DateTime.fromISO('2025-05-15T14:00:00'),
-          end: DateTime.fromISO('2025-05-15T15:00:00'),
-          title: 'Doctor Appointment',
-          allDay: true,
-          eventRowIndex: 3,
-        },
-        {
-          id: '3',
-          key: '3',
-          start: DateTime.fromISO('2025-05-20T16:00:00'),
-          end: DateTime.fromISO('2025-05-20T17:00:00'),
-          title: 'Conference Call',
-          allDay: true,
-          eventRowIndex: 2,
-        },
-      ];
-      const result = getEventWithLargestRowIndex(events);
-
-      expect(result).toBe(3);
-    });
-
-    it('should return 0 when events array is empty', () => {
-      const events: CalendarEventOccurrenceWithPosition[] = [];
-
-      const result = getEventWithLargestRowIndex(events);
-
-      expect(result).toBe(0);
-    });
-
-    it('should return 0 when all events have undefined eventRowIndex', () => {
-      const eventsWithUndefinedRowIndex: CalendarEventOccurrenceWithPosition[] = [
-        {
-          id: '1',
-          key: '1',
-          start: DateTime.fromISO('2025-05-01T09:00:00'),
-          end: DateTime.fromISO('2025-05-01T10:00:00'),
-          title: 'Meeting',
-          allDay: true,
-          eventRowIndex: undefined,
-        },
-        {
-          id: '2',
-          key: '2',
-          start: DateTime.fromISO('2025-05-15T14:00:00'),
-          end: DateTime.fromISO('2025-05-15T15:00:00'),
-          title: 'Doctor Appointment',
-          allDay: true,
-          eventRowIndex: undefined,
-        },
-      ];
-
-      const result = getEventWithLargestRowIndex(eventsWithUndefinedRowIndex);
-
-      expect(result).toBe(0);
-    });
-
-    it('should handle mix of defined and undefined eventRowIndex values', () => {
-      const events: CalendarEventOccurrenceWithPosition[] = [
-        {
-          id: '1',
-          key: '1',
-          start: DateTime.fromISO('2025-05-01T09:00:00'),
-          end: DateTime.fromISO('2025-05-01T10:00:00'),
-          title: 'Meeting',
-          allDay: true,
-          eventRowIndex: undefined,
-        },
-        {
-          id: '2',
-          key: '2',
-          start: DateTime.fromISO('2025-05-15T14:00:00'),
-          end: DateTime.fromISO('2025-05-15T15:00:00'),
-          title: 'Doctor Appointment',
-          allDay: true,
-          eventRowIndex: 2,
-        },
-        {
-          id: '3',
-          key: '3',
-          start: DateTime.fromISO('2025-05-20T16:00:00'),
-          end: DateTime.fromISO('2025-05-20T17:00:00'),
-          title: 'Conference Call',
-          allDay: true,
-          eventRowIndex: undefined,
-        },
-      ];
-
-      const result = getEventWithLargestRowIndex(events);
-
-      expect(result).toBe(2);
-    });
   });
 
   describe('isDayWithinRange', () => {
@@ -175,165 +66,169 @@ describe('event-utils', () => {
     });
   });
 
-  describe('getEventRowIndex', () => {
-    const createEventWithPosition = (
-      id: string,
-      start: string,
-      end: string,
-      eventRowIndex: number,
-    ): CalendarEventOccurrenceWithPosition => ({
-      ...createEvent(id, start, end),
-      eventRowIndex,
-    });
-
+  describe('getEventRowPlacement', () => {
     it('should return 1 for first event on a day with no existing events', () => {
-      const event = createEvent('1', '2024-01-15', '2024-01-15');
-      const day = adapter.date('2024-01-15');
-      const days = [adapter.date('2024-01-15'), adapter.date('2024-01-16')];
-      const daysMap = new Map([
-        ['1/15/2024', { allDayEvents: [] }],
-        ['1/16/2024', { allDayEvents: [] }],
-      ]);
+      const { rowIndex } = getEventOccurrenceRowPlacement({
+        adapter,
+        rowIndexLookup: {},
+        occurrence: createEventOccurrence('1', '2024-01-15', '2024-01-15'),
+        day: processDate(adapter.date('2024-01-15'), adapter),
+        previousDay: null,
+        daysBeforeRowEnd: 2,
+      });
 
-      const result = getEventRowIndex(event, day, days, daysMap, adapter);
-
-      expect(result).toBe(1);
+      expect(rowIndex).toBe(1);
     });
 
     it('should return next available row index when other events exist', () => {
-      const event = createEvent('3', '2024-01-15', '2024-01-15');
-      const day = adapter.date('2024-01-15');
-      const days = [adapter.date('2024-01-15'), adapter.date('2024-01-16')];
-      const daysMap = new Map([
-        [
-          '1/15/2024',
-          {
-            allDayEvents: [
-              createEventWithPosition('1', '2024-01-15', '2024-01-15', 1),
-              createEventWithPosition('2', '2024-01-15', '2024-01-15', 2),
-            ],
+      const { rowIndex } = getEventOccurrenceRowPlacement({
+        adapter,
+        rowIndexLookup: {
+          '1/15/2024': {
+            occurrencesRowIndex: { '1': 1, '2': 2 },
+            usedRowIndexes: new Set([1, 2]),
           },
-        ],
-        ['1/16/2024', { allDayEvents: [] }],
-      ]);
+        },
+        occurrence: createEventOccurrence('3', '2024-01-15', '2024-01-15'),
+        day: processDate(adapter.date('2024-01-15'), adapter),
+        previousDay: null,
+        daysBeforeRowEnd: 2,
+      });
 
-      const result = getEventRowIndex(event, day, days, daysMap, adapter);
-
-      expect(result).toBe(3);
+      expect(rowIndex).toBe(3);
     });
 
     it('should find gap in row indexes and use the lowest available', () => {
-      const event = createEvent('4', '2024-01-15', '2024-01-15');
-      const day = adapter.date('2024-01-15');
-      const days = [adapter.date('2024-01-15'), adapter.date('2024-01-16')];
-      const daysMap = new Map([
-        [
-          '1/15/2024',
-          {
-            allDayEvents: [
-              createEventWithPosition('1', '2024-01-15', '2024-01-15', 1),
-              createEventWithPosition('2', '2024-01-15', '2024-01-15', 3),
-              createEventWithPosition('3', '2024-01-15', '2024-01-15', 4),
-            ],
+      const { rowIndex } = getEventOccurrenceRowPlacement({
+        adapter,
+        rowIndexLookup: {
+          '1/15/2024': {
+            occurrencesRowIndex: { '1': 1, '2': 3, '3': 4 },
+            usedRowIndexes: new Set([1, 3, 4]),
           },
-        ],
-      ]);
+        },
+        occurrence: createEventOccurrence('4', '2024-01-15', '2024-01-15'),
+        day: processDate(adapter.date('2024-01-15'), adapter),
+        previousDay: null,
+        daysBeforeRowEnd: 2,
+      });
 
-      const result = getEventRowIndex(event, day, days, daysMap, adapter);
-
-      expect(result).toBe(2);
+      expect(rowIndex).toBe(2);
     });
 
     it('should return existing row index when event starts before visible range and exists in first day', () => {
-      // Event starting before visible range
-      const event = createEvent('1', '2024-01-10', '2024-01-16');
-      const day = adapter.date('2024-01-16');
-      const days = [adapter.date('2024-01-15'), adapter.date('2024-01-16')];
-      const daysMap = new Map([
-        [
-          '1/15/2024',
-          {
-            allDayEvents: [createEventWithPosition('1', '2024-01-10', '2024-01-16', 2)],
+      const { rowIndex } = getEventOccurrenceRowPlacement({
+        adapter,
+        rowIndexLookup: {
+          '1/15/2024': {
+            occurrencesRowIndex: { '1': 2 },
+            usedRowIndexes: new Set([2]),
           },
-        ],
-        ['1/16/2024', { allDayEvents: [] }],
-      ]);
+          '1/16/2024': {
+            occurrencesRowIndex: {},
+            usedRowIndexes: new Set(),
+          },
+        },
+        // Event starting before visible range
+        occurrence: createEventOccurrence('1', '2024-01-10', '2024-01-16'),
+        day: processDate(adapter.date('2024-01-16'), adapter),
+        previousDay: processDate(adapter.date('2024-01-15'), adapter),
+        daysBeforeRowEnd: 2,
+      });
 
-      const result = getEventRowIndex(event, day, days, daysMap, adapter);
-
-      expect(result).toBe(2); // Should use existing row index from first day
+      expect(rowIndex).toBe(2); // Should use existing row index from first day
     });
 
     it('should return 1 when event starts before visible range but not found in first day', () => {
-      const event = createEvent('2', '2024-01-10', '2024-01-16'); // Starts before visible range
-      const day = adapter.date('2024-01-16');
-      const days = [adapter.date('2024-01-15'), adapter.date('2024-01-16')];
-      const daysMap = new Map([
-        [
-          '1/15/2024',
-          {
-            allDayEvents: [createEventWithPosition('1', '2024-01-15', '2024-01-15', 1)],
+      const { rowIndex } = getEventOccurrenceRowPlacement({
+        adapter,
+        rowIndexLookup: {
+          '1/15/2024': {
+            occurrencesRowIndex: { '1': 1 },
+            usedRowIndexes: new Set([1]),
           },
-        ],
-        ['1/16/2024', { allDayEvents: [] }],
-      ]);
+          '1/16/2024': {
+            occurrencesRowIndex: {},
+            usedRowIndexes: new Set(),
+          },
+        },
+        // Event starting before visible range
+        occurrence: createEventOccurrence('2', '2024-01-10', '2024-01-16'),
+        day: processDate(adapter.date('2024-01-16'), adapter),
+        previousDay: processDate(adapter.date('2024-01-15'), adapter),
+        daysBeforeRowEnd: 2,
+      });
 
-      const result = getEventRowIndex(event, day, days, daysMap, adapter);
-
-      expect(result).toBe(1);
+      expect(rowIndex).toBe(1);
     });
 
     it('should handle event row placement correctly in all columns', () => {
-      const event1 = createEventWithPosition('2', '2024-01-10', '2024-01-15', 1);
-      const event2 = createEvent('3', '2024-01-15', '2024-01-16');
-      const event3 = createEventWithPosition('3', '2024-01-10', '2024-01-14', 2);
-      const day = adapter.date('2024-01-15');
-      const days = [
-        adapter.date('2024-01-14'),
-        adapter.date('2024-01-15'),
-        adapter.date('2024-01-16'),
-      ];
-      const daysMap = new Map([
-        ['1/14/2024', { allDayEvents: [event1, event3] }],
-        [
-          '1/15/2024',
-          {
-            allDayEvents: [event1],
+      const occurrence = createEventOccurrence('3', '2024-01-15', '2024-01-16');
+      const { rowIndex } = getEventOccurrenceRowPlacement({
+        adapter,
+        rowIndexLookup: {
+          '1/14/2024': {
+            occurrencesRowIndex: { '1': 1, '2': 3 },
+            usedRowIndexes: new Set([1, 2]),
           },
-        ],
-        ['1/16/2024', { allDayEvents: [] }],
-      ]);
-
-      const result = getEventRowIndex(event2, day, days, daysMap, adapter);
-
-      expect(result).toBe(2);
-
-      const dayKey = adapter.format(day, 'keyboardDate');
-
-      daysMap.get(dayKey)!.allDayEvents.push({
-        ...event2,
-        eventRowIndex: result,
+          '1/15/2024': {
+            occurrencesRowIndex: { '1': 1 },
+            usedRowIndexes: new Set([1]),
+          },
+          '1/16/2024': {
+            occurrencesRowIndex: {},
+            usedRowIndexes: new Set(),
+          },
+        },
+        occurrence,
+        day: processDate(adapter.date('2024-01-15'), adapter),
+        previousDay: processDate(adapter.date('2024-01-14'), adapter),
+        daysBeforeRowEnd: 2,
       });
 
-      const result2 = getEventRowIndex(event2, adapter.date('2024-01-16'), days, daysMap, adapter);
-      expect(result2).toBe(2);
+      expect(rowIndex).toBe(2);
+
+      const { rowIndex: rowIndex2 } = getEventOccurrenceRowPlacement({
+        adapter,
+        rowIndexLookup: {
+          '1/14/2024': {
+            occurrencesRowIndex: { '1': 1, '2': 3 },
+            usedRowIndexes: new Set([1, 2]),
+          },
+          // Add the row index returned by the 1st call to getEventRowPlacement
+          '1/15/2024': {
+            occurrencesRowIndex: { '1': 1, '3': 2 },
+            usedRowIndexes: new Set([1, 2]),
+          },
+          '1/16/2024': {
+            occurrencesRowIndex: {},
+            usedRowIndexes: new Set(),
+          },
+        },
+        occurrence,
+        day: processDate(adapter.date('2024-01-16'), adapter),
+        previousDay: processDate(adapter.date('2024-01-15'), adapter),
+        daysBeforeRowEnd: 2,
+      });
+
+      expect(rowIndex2).toBe(2);
     });
   });
 
-  describe('getEventDays', () => {
+  describe('getDaysToRenderTheOccurrenceOn', () => {
     const days = [
-      adapter.date('2024-01-14'),
-      adapter.date('2024-01-15'),
-      adapter.date('2024-01-16'),
-      adapter.date('2024-01-17'),
-      adapter.date('2024-01-18'),
+      processDate(adapter.date('2024-01-14'), adapter),
+      processDate(adapter.date('2024-01-15'), adapter),
+      processDate(adapter.date('2024-01-16'), adapter),
+      processDate(adapter.date('2024-01-17'), adapter),
+      processDate(adapter.date('2024-01-18'), adapter),
     ];
 
-    describe('shouldOnlyRenderEventInOneCell is false', () => {
+    describe('eventPlacement === "every-day"', () => {
       it('should return all days when event spans multiple days', () => {
-        const event = createEvent('1', '2024-01-15T10:00:00', '2024-01-17T14:00:00');
+        const event = createEventOccurrence('1', '2024-01-15T10:00:00', '2024-01-17T14:00:00');
 
-        const result = getEventDays(event, days, adapter, false);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(3);
         expect(result.map((day) => adapter.format(day, 'keyboardDate'))).toEqual([
@@ -344,34 +239,34 @@ describe('event-utils', () => {
       });
 
       it('should return single day when event is single day', () => {
-        const event = createEvent('1', '2024-01-16T10:00:00', '2024-01-16T14:00:00');
+        const event = createEventOccurrence('1', '2024-01-16T10:00:00', '2024-01-16T14:00:00');
 
-        const result = getEventDays(event, days, adapter, false);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(1);
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/16/2024');
       });
 
       it('should return empty array when event is completely outside visible range', () => {
-        const event = createEvent('1', '2024-01-10T10:00:00', '2024-01-12T14:00:00');
+        const event = createEventOccurrence('1', '2024-01-10T10:00:00', '2024-01-12T14:00:00');
 
-        const result = getEventDays(event, days, adapter, false);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(0);
       });
 
       it('should return empty array when event is after visible range', () => {
-        const event = createEvent('1', '2024-01-20T10:00:00', '2024-01-22T14:00:00');
+        const event = createEventOccurrence('1', '2024-01-20T10:00:00', '2024-01-22T14:00:00');
 
-        const result = getEventDays(event, days, adapter, false);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(0);
       });
 
       it('should handle event that partially overlaps with visible range at the beginning', () => {
-        const event = createEvent('1', '2024-01-13T10:00:00', '2024-01-16T14:00:00');
+        const event = createEventOccurrence('1', '2024-01-13T10:00:00', '2024-01-16T14:00:00');
 
-        const result = getEventDays(event, days, adapter, false);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(3);
         expect(result.map((day) => adapter.format(day, 'keyboardDate'))).toEqual([
@@ -382,9 +277,9 @@ describe('event-utils', () => {
       });
 
       it('should handle event that partially overlaps with visible range at the end', () => {
-        const event = createEvent('1', '2024-01-16T10:00:00', '2024-01-19T14:00:00');
+        const event = createEventOccurrence('1', '2024-01-16T10:00:00', '2024-01-19T14:00:00');
 
-        const result = getEventDays(event, days, adapter, false);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'every-day');
 
         expect(result).toHaveLength(3);
         expect(result.map((day) => adapter.format(day, 'keyboardDate'))).toEqual([
@@ -395,30 +290,29 @@ describe('event-utils', () => {
       });
     });
 
-    describe('shouldOnlyRenderEventInOneCell is true', () => {
+    describe('eventPlacement === "first-day"', () => {
       it('should return single day when event spans multiple days ', () => {
-        const event = createEvent('1', '2024-01-15T10:00:00', '2024-01-17T14:00:00');
-        const shouldOnlyRenderEventInOneCell = true;
+        const event = createEventOccurrence('1', '2024-01-15T10:00:00', '2024-01-17T14:00:00');
 
-        const result = getEventDays(event, days, adapter, shouldOnlyRenderEventInOneCell);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'first-day');
 
         expect(result).toHaveLength(1);
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/15/2024');
       });
 
-      it('should return first visible day when event starts before visible range and shouldOnlyRenderEventInOneCell is true', () => {
-        const event = createEvent('1', '2024-01-10T10:00:00', '2024-01-17T14:00:00');
+      it('should return first visible day when event starts before visible range and eventPlacement === "first-day"', () => {
+        const event = createEventOccurrence('1', '2024-01-10T10:00:00', '2024-01-17T14:00:00');
 
-        const result = getEventDays(event, days, adapter, true);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'first-day');
 
         expect(result).toHaveLength(1);
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/14/2024');
       });
 
-      it('should return single day when event is single day and shouldOnlyRenderEventInOneCell is true', () => {
-        const event = createEvent('1', '2024-01-16T10:00:00', '2024-01-16T14:00:00');
+      it('should return single day when event is single day and eventPlacement === "first-day"', () => {
+        const event = createEventOccurrence('1', '2024-01-16T10:00:00', '2024-01-16T14:00:00');
 
-        const result = getEventDays(event, days, adapter, true);
+        const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'first-day');
 
         expect(result).toHaveLength(1);
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/16/2024');

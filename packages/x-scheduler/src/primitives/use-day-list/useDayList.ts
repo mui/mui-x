@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { isWeekend } from '../utils/date-utils';
-import { SchedulerValidDate } from '../models';
+import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
+import { processDate } from '../utils/event-utils';
 
 export function useDayList(): useDayList.ReturnValue {
   const adapter = useAdapter();
@@ -19,7 +20,7 @@ export function useDayList(): useDayList.ReturnValue {
       const start = adapter.startOfDay(date);
       let current = start;
       let currentDayNumber = adapter.getDayOfWeek(current);
-      const days: SchedulerValidDate[] = [];
+      const days: CalendarProcessedDate[] = [];
 
       const isDayCollectionComplete =
         typeof amount === 'number'
@@ -28,7 +29,7 @@ export function useDayList(): useDayList.ReturnValue {
 
       while (!isDayCollectionComplete()) {
         if (!excludeWeekends || !isWeekend(adapter, current)) {
-          days.push(current);
+          days.push(processDate(current, adapter));
         }
 
         const prevDayNumber = currentDayNumber;
@@ -50,7 +51,7 @@ export function useDayList(): useDayList.ReturnValue {
 }
 
 export namespace useDayList {
-  export type ReturnValue = (parameters: ReturnValueParameters) => SchedulerValidDate[];
+  export type ReturnValue = (parameters: ReturnValueParameters) => CalendarProcessedDate[];
 
   export interface ReturnValueParameters {
     /**

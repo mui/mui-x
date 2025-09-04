@@ -10,7 +10,7 @@ import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
 import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
@@ -26,18 +26,19 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     event: eventProp,
     ariaLabelledBy,
     variant,
-    className,
+    className: classNameProp,
     onEventClick,
     id: idProp,
     gridRow,
     columnSpan = 1,
-    style,
+    style: styleProp,
     ...other
   } = props;
 
   const id = useId(idProp);
   const translations = useTranslations();
   const { store } = useEventCalendarContext();
+  const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, eventProp.resource);
   const color = useStore(store, selectors.eventColor, eventProp.id);
@@ -47,6 +48,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     switch (variant) {
       case 'allDay':
       case 'invisible':
+      case 'dragPlaceholder':
         return (
           <React.Fragment>
             <p
@@ -87,10 +89,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 <span className="DayGridEventTime">{translations.allDay}</span>
               ) : (
                 <time className="DayGridEventTime">
-                  <span className="DayGridEventTimeStart">
+                  <span>
                     {adapter.format(eventProp.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                   </span>
-                  <span className="DayGridEventTimeEnd">
+                  <span>
                     {' '}
                     - {adapter.format(eventProp.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                   </span>
@@ -122,29 +124,41 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ampm,
   ]);
 
+  const sharedProps = {
+    ref: forwardedRef,
+    id,
+    className: clsx(
+      classNameProp,
+      'EventContainer',
+      'EventCard',
+      `EventCard--${variant}`,
+      getColorClassName(color),
+    ),
+    style: {
+      '--grid-row': gridRow,
+      '--grid-column-span': columnSpan,
+      ...styleProp,
+    } as React.CSSProperties,
+    'aria-labelledby': `${ariaLabelledBy} ${id}`,
+    ...other,
+  };
+
+  if (variant === 'dragPlaceholder') {
+    return (
+      <DayGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
+        {content}
+      </DayGrid.EventPlaceholder>
+    );
+  }
+
   return (
     <DayGrid.Event
-      ref={forwardedRef}
-      id={id}
-      className={clsx(
-        className,
-        'EventContainer',
-        'EventCard',
-        `EventCard--${variant}`,
-        getColorClassName(color),
-      )}
-      aria-labelledby={`${ariaLabelledBy} ${id}`}
-      aria-hidden={variant === 'invisible'}
+      eventId={eventProp.id}
       start={eventProp.start}
       end={eventProp.end}
-      style={
-        {
-          '--grid-row': gridRow,
-          '--grid-column-span': columnSpan,
-          ...style,
-        } as React.CSSProperties
-      }
-      {...other}
+      isDraggable={isDraggable}
+      aria-hidden={variant === 'invisible'}
+      {...sharedProps}
     >
       {content}
     </DayGrid.Event>

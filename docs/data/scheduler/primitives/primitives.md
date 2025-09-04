@@ -45,6 +45,13 @@ This package is not published yet.
 
 {{"demo": "DayGridPrimitive.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Drag and drop
+
+- Add the `isDraggable` prop to the `DayGrid.Event` part to enable the re-scheduling of the events
+- Use the `DayGrid.usePlaceholderInDay()` to render a placeholder of the event being dragged
+
+{{"demo": "DayGridPrimitiveDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Timeline
 
 ### Basic example

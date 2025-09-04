@@ -26,7 +26,8 @@
   --event-secondary-text: var(--secondary-text-color);
 }
 
-.EventCard--allDay {
+.EventCard--allDay,
+.EventCard--dragPlaceholder {
   --event-background: var(--allDay-accepted-bg);
   --event-primary-text: var(--allDay-accepted-primary-text);
 }
