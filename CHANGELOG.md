@@ -9,13 +9,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 4, 2025_
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 Special thanks go out to the community members for their valuable contributions:
 @sai6855
 
 The following are all team members who have contributed to this release:
-@flaviendelangle, @JCQuintas, @mapache-salvaje, @oliviertassinari
+@brijeshb42, @flaviendelangle, @JCQuintas, @mapache-salvaje, @oliviertassinari
 
 ### Data Grid
 
@@ -77,6 +77,7 @@ Internal changes.
 
 - [internal] Fix action alert (#19388) @oliviertassinari
 - [internal] Fix pnpm valelint to have 0 errors @oliviertassinari
+- [infra] Remove "main" fields from publishable packages (#19407) @brijeshb42
 
 ## 8.11.0
 
