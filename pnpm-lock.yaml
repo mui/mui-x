@@ -282,11 +282,11 @@ importers:
         specifier: ^1.0.4-canary.6
         version: 1.0.4-canary.6(@babel/core@7.28.3)(@babel/preset-react@7.27.1(@babel/core@7.28.3))
       '@mui/internal-bundle-size-checker':
-        specifier: ^1.0.9-canary.38
-        version: 1.0.9-canary.38(@types/node@24.3.0)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
+        specifier: ^1.0.9-canary.39
+        version: 1.0.9-canary.39(@types/node@24.3.0)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.1
-        version: 0.0.3-canary.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.41.0(eslint@9.34.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.34.0))(eslint@9.34.0)(prettier@3.6.2)(typescript@5.9.2)
+        specifier: ^0.0.3-canary.2
+        version: 0.0.3-canary.2(@typescript-eslint/parser@8.41.0(eslint@9.34.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.41.0(eslint@9.34.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.34.0))(eslint@9.34.0)(prettier@3.6.2)(typescript@5.9.2)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.9
@@ -4187,12 +4187,12 @@ packages:
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.38':
-    resolution: {integrity: sha512-9hqDvOezGxIztw/9FdWmg+M+jzM8fspsR/MqssBUHYUvLxYUy3P0MO3iTy/GJHkZvvL53hJTI3XD6NjSuaeIgw==}
+  '@mui/internal-bundle-size-checker@1.0.9-canary.39':
+    resolution: {integrity: sha512-emtKf5CTo4ySrGTBKKpmiFv1jCx0ZWLchrxpQCWTQ0vxKw7yZEOMkxbqipj9Hi01nPO4WeZaVVxLgJw4jfL5OQ==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.1':
-    resolution: {integrity: sha512-gr0dPyqDjI3oek/UA4fWYtLZgfHWsQ2rnJ8/1TM2m5PjdOU7QjOYt3cC11K+1e61cWI7oyzBSmKAO6Ci+1tH6A==}
+  '@mui/internal-code-infra@0.0.3-canary.2':
+    resolution: {integrity: sha512-RXS/rhIJ6UdS3C1FrWTClU9AoRa88tS8xWuAzPI/nWa6zzn5kgaV5kowNQSE6+CwfqAnuY5PwejvkC0y00Y7zw==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -14761,7 +14761,7 @@ snapshots:
       '@babel/core': 7.28.3
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@1.0.9-canary.38(@types/node@24.3.0)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)':
+  '@mui/internal-bundle-size-checker@1.0.9-canary.39(@types/node@24.3.0)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1)':
     dependencies:
       '@aws-sdk/client-s3': 3.876.0
       '@aws-sdk/credential-providers': 3.876.0
@@ -14791,7 +14791,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.41.0(eslint@9.34.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.34.0))(eslint@9.34.0)(prettier@3.6.2)(typescript@5.9.2)':
+  '@mui/internal-code-infra@0.0.3-canary.2(@typescript-eslint/parser@8.41.0(eslint@9.34.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.41.0(eslint@9.34.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.34.0))(eslint@9.34.0)(prettier@3.6.2)(typescript@5.9.2)':
     dependencies:
       '@argos-ci/core': 4.1.1
       '@babel/cli': 7.28.3(@babel/core@7.28.3)
