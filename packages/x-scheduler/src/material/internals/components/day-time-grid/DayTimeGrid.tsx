@@ -41,7 +41,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   const { store, instance } = useEventCalendarContext();
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
@@ -60,7 +59,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleEventChangeFromTimeGridPrimitive = React.useCallback(
     (data: CalendarPrimitiveEventData) => {
       const updatedEvent: CalendarEvent = {
-        ...selectors.getEventById(store.state, data.eventId)!,
+        ...selectors.event(store.state, data.eventId)!,
         start: data.start,
         end: data.end,
       };
@@ -174,7 +173,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                       render={
                         <DayGridEvent
                           event={event}
-                          eventResource={resourcesByIdMap.get(event.resource)}
                           variant="allDay"
                           ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                           gridRow={event.eventRowIndex}
@@ -186,7 +184,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     <DayGridEvent
                       key={`invisible-${event.key}-${day.toString()}`}
                       event={event}
-                      eventResource={resourcesByIdMap.get(event.resource)}
                       variant="invisible"
                       ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                       aria-hidden="true"
