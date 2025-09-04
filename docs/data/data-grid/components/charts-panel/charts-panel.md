@@ -14,7 +14,7 @@ githubLabel: 'scope: data grid'
 This component is incomplete.
 
 Currently, the Charts Panel Trigger is the only part of the Charts Panel component available.
-Future versions of the Charts component will make it possible to compose each of its parts for full customization.
+Future versions of the Charts Panel component will make it possible to compose each of its parts for full customization.
 
 :::
 
@@ -24,7 +24,7 @@ You can use the Charts Panel Trigger and [Toolbar](/x/react-data-grid/components
 
 ## Basic usage
 
-The demo below shows how to add an Charts panel trigger to a custom toolbar.
+The demo below shows how to add a Charts Panel Trigger to a custom toolbar.
 
 {{"demo": "GridChartsPanelTrigger.js", "bg": "inline", "defaultCodeOpen": false}}
 
