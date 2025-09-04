@@ -21,7 +21,7 @@ import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { CalendarEvent, CalendarResourceId } from '../../../../primitives/models';
-import { selectors } from '../../../../primitives/use-event-calendar';
+import { DEFAULT_EVENT_COLOR, selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import './EventPopover.css';
 import {
@@ -34,23 +34,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    className,
-    style,
-    container,
-    anchor,
-    calendarEvent,
-    calendarEventResource,
-    onClose,
-    ...other
-  } = props;
+  const { className, style, container, anchor, calendarEvent, onClose, ...other } = props;
 
   const adapter = useAdapter();
   const translations = useTranslations();
   const { store, instance } = useEventCalendarContext();
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
   const resources = useStore(store, selectors.resources);
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
+  const color = useStore(store, selectors.eventColor, calendarEvent.id);
   const isRecurring = Boolean(calendarEvent.rrule);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -85,10 +76,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const resourcesOptions = React.useMemo(() => {
     return [
-      { label: translations.labelNoResource, value: null },
+      { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
       ...resources.map((resource) => ({
         label: resource.name,
         value: resource.id,
+        eventColor: resource.eventColor,
       })),
     ];
   }, [resources, translations.labelNoResource]);
@@ -154,10 +146,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
           sideOffset={8}
           anchor={anchor}
           trackAnchor={false}
-          className={clsx(
-            'PopoverPositioner',
-            getColorClassName({ resource: calendarEventResource }),
-          )}
+          className={clsx('PopoverPositioner', getColorClassName(color))}
         >
           <Popover.Popup finalFocus={{ current: anchor }}>
             <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
@@ -196,14 +185,15 @@ export const EventPopover = React.forwardRef(function EventPopover(
                               <span
                                 className={clsx(
                                   'ResourceLegendColor',
-                                  getColorClassName({
-                                    resource: resourcesByIdMap.get(value ?? 'palette-primary'),
-                                  }),
+                                  getColorClassName(
+                                    resourcesOptions.find((option) => option.value === value)
+                                      ?.eventColor ?? DEFAULT_EVENT_COLOR,
+                                  ),
                                 )}
                               />
                               <span>
                                 {value
-                                  ? resourcesByIdMap.get(value)?.name
+                                  ? resourcesOptions.find((option) => option.value === value)?.label
                                   : translations.labelNoResource}
                               </span>
                             </div>
@@ -230,11 +220,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                                   <span
                                     className={clsx(
                                       'ResourceLegendColor',
-                                      getColorClassName({
-                                        resource: resourcesByIdMap.get(
-                                          resource.value ?? 'palette-primary',
-                                        ),
-                                      }),
+                                      getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
                                     )}
                                   />
                                   <Select.ItemText className="EventPopoverSelectItemText">
@@ -483,8 +469,6 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
-  const { store } = useEventCalendarContext();
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const startEditing = useEventCallback((event: React.MouseEvent, calendarEvent: CalendarEvent) => {
     setAnchor(event.currentTarget as HTMLElement);
@@ -514,7 +498,6 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
           <EventPopover
             anchor={anchor}
             calendarEvent={selectedEvent}
-            calendarEventResource={resourcesByIdMap.get(selectedEvent.resource)}
             container={containerRef.current}
             onClose={handleClose}
           />

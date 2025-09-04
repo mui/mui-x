@@ -23,12 +23,12 @@ const resources: CalendarResource[] = [
   {
     id: 'r1',
     name: 'Work',
-    color: 'blue',
+    eventColor: 'blue',
   },
   {
     id: 'r2',
     name: 'Personal',
-    color: 'cyan',
+    eventColor: 'cyan',
   },
 ];
 
