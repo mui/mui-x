@@ -72,13 +72,13 @@ export const initialEvents = [
 ];
 
 export const resources = [
-  { name: 'Violet', id: 'violet', eventColor: 'violet' },
-  { name: 'Resource B', id: 'b', eventColor: 'jade' },
-  { name: 'Resource C', id: 'c', eventColor: 'lime' },
-  { name: 'Resource D', id: 'd', eventColor: 'orange' },
-  { name: 'Resource E', id: 'e', eventColor: 'cyan' },
-  { name: 'Resource F', id: 'f', eventColor: 'pink' },
-  { name: 'Resource G', id: 'g', eventColor: 'indigo' },
-  { name: 'Resource H', id: 'h', eventColor: 'yellow' },
-  { name: 'Resource I', id: 'i', eventColor: 'blue' },
+  { name: 'violet', id: 'violet', eventColor: 'violet' },
+  { name: 'jade', id: 'b', eventColor: 'jade' },
+  { name: 'lime', id: 'c', eventColor: 'lime' },
+  { name: 'orange', id: 'd', eventColor: 'orange' },
+  { name: 'cyan', id: 'e', eventColor: 'cyan' },
+  { name: 'pink', id: 'f', eventColor: 'pink' },
+  { name: 'indigo', id: 'g', eventColor: 'indigo' },
+  { name: 'yellow', id: 'h', eventColor: 'yellow' },
+  { name: 'blue', id: 'i', eventColor: 'blue' },
 ];
