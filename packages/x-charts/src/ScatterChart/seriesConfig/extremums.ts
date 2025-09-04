@@ -2,6 +2,7 @@ import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesCo
 
 export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
+  performance.mark('ScatterChart getExtremumX-start');
 
   let min = Infinity;
   let max = -Infinity;
@@ -43,11 +44,19 @@ export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
     }
   }
 
+  performance.mark('ScatterChart getExtremumX-end');
+  performance.measure(
+    'ScatterChart getExtremumX',
+    'ScatterChart getExtremumX-start',
+    'ScatterChart getExtremumX-end',
+  );
+
   return [min, max];
 };
 
 export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
+  performance.mark('ScatterChart getExtremumY-start');
 
   let min = Infinity;
   let max = -Infinity;
@@ -88,6 +97,13 @@ export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
       }
     }
   }
+
+  performance.mark('ScatterChart getExtremumY-end');
+  performance.measure(
+    'ScatterChart getExtremumY - mark',
+    'ScatterChart getExtremumY-start',
+    'ScatterChart getExtremumY-end',
+  );
 
   return [min, max];
 };
