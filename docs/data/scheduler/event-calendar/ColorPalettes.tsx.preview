@@ -3,4 +3,5 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
+  preferences={{ hideWeekends: true }}
 />

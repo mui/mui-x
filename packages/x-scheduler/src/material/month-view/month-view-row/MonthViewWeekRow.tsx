@@ -22,7 +22,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, week, firstDayRef } = props;
 
   const { store, instance } = useEventCalendarContext();
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
   const preferences = useStore(store, selectors.preferences);
@@ -115,7 +114,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
                   render={
                     <DayGridEvent
                       event={event}
-                      eventResource={resourcesByIdMap.get(event.resource)}
                       variant="allDay"
                       ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                       gridRow={(event.eventRowIndex || 0) + 1}
@@ -127,7 +125,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
                 <DayGridEvent
                   key={`invisible-${event.id}-${day.toString()}`}
                   event={event}
-                  eventResource={resourcesByIdMap.get(event.resource)}
                   variant="invisible"
                   ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                   gridRow={(event.eventRowIndex || 0) + 1}
@@ -141,7 +138,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
                 render={
                   <DayGridEvent
                     event={event}
-                    eventResource={resourcesByIdMap.get(event.resource)}
                     variant="compact"
                     ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                   />
