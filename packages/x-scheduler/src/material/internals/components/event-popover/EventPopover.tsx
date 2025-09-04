@@ -49,6 +49,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const translations = useTranslations();
   const { store, instance } = useEventCalendarContext();
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
+  const resources = useStore(store, selectors.resources);
+  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const isRecurring = Boolean(calendarEvent.rrule);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -80,6 +82,16 @@ export const EventPopover = React.forwardRef(function EventPopover(
       value: 'yearly',
     },
   ];
+
+  const resourcesOptions = React.useMemo(() => {
+    return [
+      { label: translations.labelNoResource, value: null },
+      ...resources.map((resource) => ({
+        label: resource.name,
+        value: resource.id,
+      })),
+    ];
+  }, [resources, translations.labelNoResource]);
 
   const defaultRecurrenceKey = React.useMemo<RecurrencePresetKey | 'custom' | null>(
     () => detectRecurrenceKeyFromRule(adapter, calendarEvent.rrule, calendarEvent.start),
@@ -148,19 +160,91 @@ export const EventPopover = React.forwardRef(function EventPopover(
           <Popover.Popup finalFocus={{ current: anchor }}>
             <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
               <header className="EventPopoverHeader">
-                <Field.Root className="EventPopoverFieldRoot" name="title" disabled={isRecurring}>
-                  <Field.Label className="EventPopoverTitle">
-                    <Input
-                      className="EventPopoverTitleInput"
-                      type="text"
-                      defaultValue={calendarEvent.title}
-                      aria-label={translations.eventTitleAriaLabel}
-                      required
+                <div className="EventPopoverHeaderContent">
+                  <Field.Root className="EventPopoverFieldRoot" name="title" disabled={isRecurring}>
+                    <Field.Label className="EventPopoverTitle">
+                      <Input
+                        className="EventPopoverTitleInput"
+                        type="text"
+                        defaultValue={calendarEvent.title}
+                        aria-label={translations.eventTitleAriaLabel}
+                        required
+                        readOnly={isEventReadOnly}
+                      />
+                    </Field.Label>
+                    <Field.Error className="EventPopoverRequiredFieldError" />
+                  </Field.Root>
+                  <Field.Root
+                    className="EventPopoverFieldRoot"
+                    name="resource"
+                    disabled={isRecurring}
+                  >
+                    <Select.Root
+                      items={resourcesOptions}
+                      defaultValue={calendarEvent.resource ?? undefined}
                       readOnly={isEventReadOnly}
-                    />
-                  </Field.Label>
-                  <Field.Error className="EventPopoverRequiredFieldError" />
-                </Field.Root>
+                    >
+                      <Select.Trigger
+                        className="EventPopoverSelectTrigger"
+                        aria-label={translations.resourceLabel}
+                      >
+                        <Select.Value>
+                          {(value: string | null) => (
+                            <div className="EventPopoverSelectItemTitleWrapper">
+                              <span
+                                className={clsx(
+                                  'ResourceLegendColor',
+                                  getColorClassName({
+                                    resource: resourcesByIdMap.get(value ?? calendarEvent.resource),
+                                  }),
+                                )}
+                              />
+                              <span>
+                                {value
+                                  ? resourcesByIdMap.get(value)?.name
+                                  : translations.labelNoResource}
+                              </span>
+                            </div>
+                          )}
+                        </Select.Value>
+                        <Select.Icon className="EventPopoverSelectIcon">
+                          <ChevronDown size={14} />
+                        </Select.Icon>
+                      </Select.Trigger>
+                      <Select.Portal>
+                        <Select.Positioner
+                          alignItemWithTrigger={false}
+                          align="start"
+                          className="EventPopoverSelectPositioner"
+                        >
+                          <Select.Popup className="EventPopoverSelectPopup">
+                            {resourcesOptions.map((resource) => (
+                              <Select.Item
+                                key={resource.value}
+                                value={resource.value}
+                                className="EventPopoverSelectItem"
+                              >
+                                <div className="EventPopoverSelectItemTitleWrapper">
+                                  <span
+                                    className={clsx(
+                                      'ResourceLegendColor',
+                                      getColorClassName({
+                                        resource: resourcesByIdMap.get(resource.value ?? ''),
+                                      }),
+                                    )}
+                                  />
+                                  <Select.ItemText className="EventPopoverSelectItemText">
+                                    {resource.label}
+                                  </Select.ItemText>
+                                </div>
+                              </Select.Item>
+                            ))}
+                          </Select.Popup>
+                        </Select.Positioner>
+                      </Select.Portal>
+                    </Select.Root>
+                  </Field.Root>
+                </div>
                 <Popover.Close
                   aria-label={translations.closeButtonAriaLabel}
                   className="EventPopoverCloseButton"
@@ -312,7 +396,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         </Select.Icon>
                       </Select.Trigger>
                       <Select.Portal>
-                        <Select.Positioner className="EventPopoverSelectPositioner">
+                        <Select.Positioner
+                          alignItemWithTrigger={false}
+                          align="start"
+                          className="EventPopoverSelectPositioner"
+                        >
                           <Select.Popup className="EventPopoverSelectPopup">
                             {recurrenceOptions.map(({ label, value }) => (
                               <Select.Item
@@ -320,12 +408,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
                                 value={value}
                                 className="EventPopoverSelectItem"
                               >
-                                <Select.ItemIndicator className="EventPopoverSelectItemIndicator">
-                                  <CheckIcon
-                                    size={14}
-                                    className="EventPopoverSelectItemIndicatorIcon"
-                                  />
-                                </Select.ItemIndicator>
                                 <Select.ItemText className="EventPopoverSelectItemText">
                                   {label}
                                 </Select.ItemText>
