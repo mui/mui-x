@@ -177,7 +177,25 @@ return (
 
 ### Color palettes
 
-The Event Calendar supports several color palettes:
+The Event Calendar supports several color palettes.
+
+Event colors can be set at two levels. The effective color resolves in the following order:
+
+1. The `eventColor` assigned to the event's resource
+
+```tsx
+<EventCalendar resources={[{ id: '1', name: 'Resource 1', eventColor: 'pink' }]} />
+```
+
+2. The `eventColor` assigned to the Event Calendar
+
+```tsx
+<EventCalendar eventColor="pink" />
+```
+
+3. The default color palette, `"jade"`
+
+The following demo shows one event for each palette:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
