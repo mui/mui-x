@@ -160,10 +160,10 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      screen.getByRole('checkbox', { name: 'Pivot' });
+      screen.getByRole('switch', { name: 'Pivot' });
     });
 
-    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
       await waitFor(() => {
@@ -201,10 +201,10 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      screen.getByRole('checkbox', { name: 'Pivot' });
+      screen.getByRole('switch', { name: 'Pivot' });
     });
 
-    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
       await waitFor(() => {
@@ -242,10 +242,10 @@ describe('<DataGridPremium /> - Pivoting', () => {
     await user.click(pivotButton);
 
     await waitFor(() => {
-      screen.getByRole('checkbox', { name: 'Pivot' });
+      screen.getByRole('switch', { name: 'Pivot' });
     });
 
-    const pivotSwitch = screen.getByRole('checkbox', { name: 'Pivot' }) as HTMLInputElement;
+    const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
       await waitFor(() => {

@@ -73,6 +73,7 @@ export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
@@ -98,6 +99,7 @@ export {
 } from '../hooks/features/rows/useGridRowSpanning';
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+export { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
@@ -131,6 +133,8 @@ export {
   useGridRowSelection,
   rowSelectionStateInitializer,
 } from '../hooks/features/rowSelection/useGridRowSelection';
+export { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
+export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';

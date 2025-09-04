@@ -459,7 +459,12 @@ export const useGridRowEditing = (
       }
 
       columns
-        .filter((column) => column.editable && !!column.preProcessEditCellProps && deleteValue)
+        .filter((column) => {
+          const isCellEditable = apiRef.current.getCellParams(id, column.field).isEditable;
+          return (
+            isCellEditable && column.editable && !!column.preProcessEditCellProps && deleteValue
+          );
+        })
         .forEach((column) => {
           const field = column.field;
           const value = apiRef.current.getCellValue(id, field);
@@ -575,8 +580,8 @@ export const useGridRowEditing = (
           } else if (process.env.NODE_ENV !== 'production') {
             warnOnce(
               [
-                'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-                'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
+                'To handle the error pass a callback to the `onProcessRowUpdateError()` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
                 'For more detail, see https://mui.com/x/react-data-grid/editing/persistence/.',
               ],
               'error',

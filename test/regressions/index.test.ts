@@ -1,8 +1,8 @@
-import * as fse from 'fs-extra';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium } from '@playwright/test';
 import { major } from '@mui/material/version';
+import fs from 'node:fs/promises';
 
 const isMaterialUIv6 = major === 6;
 const isMaterialUIv7 = major === 7;
@@ -69,7 +69,7 @@ async function main() {
   routes = routes.map((route) => route.replace(baseUrl, ''));
 
   // prepare screenshots
-  await fse.emptyDir(screenshotDir);
+  await emptyDir(screenshotDir);
 
   async function navigateToTest(route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
@@ -138,7 +138,6 @@ async function main() {
           }
 
           const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
-          await fse.ensureDir(path.dirname(screenshotPath));
 
           const testcase = await page.waitForSelector(
             `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -189,7 +188,6 @@ async function main() {
     it('should position the headers matching the columns', async () => {
       const route = '/docs-data-grid-virtualization/ColumnVirtualizationGrid';
       const screenshotPath = path.resolve(screenshotDir, `.${route}ScrollLeft400px.png`);
-      await fse.ensureDir(path.dirname(screenshotPath));
 
       await navigateToTest(route);
 
@@ -216,9 +214,6 @@ async function main() {
     it('should position charts axis tooltip 8px away from the pointer', async () => {
       const route = '/docs-charts-tooltip/Interaction';
       const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
-      const itemScreenshotPath = path.resolve(screenshotDir, `.${route}ItemTooltip.png`);
-      await fse.ensureDir(path.dirname(axisScreenshotPath));
-      await fse.ensureDir(path.dirname(itemScreenshotPath));
 
       await navigateToTest(route);
 
@@ -243,7 +238,6 @@ async function main() {
     it('should export a chart as PNG', async () => {
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
-      await fse.ensureDir(path.dirname(screenshotPath));
 
       await navigateToTest(route);
 
@@ -274,7 +268,6 @@ async function main() {
       it('should take a screenshot of the data grid print preview', async () => {
         const route = '/docs-data-grid-export/ExportDefaultToolbar';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
-        await fse.ensureDir(path.dirname(screenshotPath));
 
         await navigateToTest(route);
 
@@ -302,7 +295,6 @@ async function main() {
       it('should take a screenshot of the charts print preview', async () => {
         const route = '/docs-charts-export/PrintChart';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
-        await fse.ensureDir(path.dirname(screenshotPath));
 
         await navigateToTest(route);
 
@@ -427,4 +419,15 @@ async function newTestPage(browser: Browser) {
   });
 
   return page;
+}
+
+async function emptyDir(dir: string) {
+  let items;
+  try {
+    items = await fs.readdir(dir);
+  } catch {
+    return fs.mkdir(dir, { recursive: true });
+  }
+
+  return Promise.all(items.map((item) => fs.rm(path.join(dir, item), { recursive: true })));
 }

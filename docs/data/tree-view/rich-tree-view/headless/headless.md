@@ -18,7 +18,7 @@ this page is still a _Work in Progress_ and its content is not meant to be used 
 
 ### Basic plugin
 
-A custom plugins contains 2 required elements:
+A custom plugin contains 2 required elements:
 
 1. A hook that will be executed by the `useTreeView` hook:
 
@@ -72,7 +72,10 @@ const useCustomPlugin = ({ store }) => {
     console.log(store.value.expansion.expandedItems);
 
     // Check if an item is expanded
-    const isExpanded = useSelector(selectorIsItemExpanded, 'some-item-id');
+    const isExpanded = useSelector(
+      expansionSelectors.isItemExpanded,
+      'some-item-id',
+    );
   };
 };
 ```

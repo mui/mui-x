@@ -11,6 +11,7 @@ import {
   GridDetailPanelToggleCell,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
   isGroupingColumn,
+  GridRowParams,
 } from '@mui/x-data-grid-premium';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -217,6 +218,13 @@ const profitAggregation: GridAggregationFunction<
   },
 };
 
+const aggregationFunctions = { ...GRID_AGGREGATION_FUNCTIONS, profit: profitAggregation };
+
+const getDetailPanelContent = (params: GridRowParams<Product>) => (
+  <ProductDetailPanel row={params.row} />
+);
+const getDetailPanelHeight = () => 115;
+
 function InventoryDashboard() {
   const apiRef = useGridApiRef();
 
@@ -225,11 +233,6 @@ function InventoryDashboard() {
       apiRef.current?.toggleDetailPanel(params.id);
     },
     [apiRef],
-  );
-
-  const aggregationFunctions = React.useMemo(
-    () => ({ ...GRID_AGGREGATION_FUNCTIONS, profit: profitAggregation }),
-    [],
   );
 
   return (
@@ -273,8 +276,8 @@ function InventoryDashboard() {
                   },
                 }}
                 disableRowSelectionOnClick
-                getDetailPanelContent={({ row }) => <ProductDetailPanel row={row} />}
-                getDetailPanelHeight={() => 115}
+                getDetailPanelContent={getDetailPanelContent}
+                getDetailPanelHeight={getDetailPanelHeight}
                 rowHeight={80}
                 onRowClick={onRowClick}
                 slots={{

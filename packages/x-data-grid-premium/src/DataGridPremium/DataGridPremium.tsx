@@ -30,11 +30,12 @@ import { useGridRowAriaAttributesPremium } from '../hooks/features/rows/useGridR
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
+const configuration: GridConfiguration<GridPrivateApiPremium> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPremium,
@@ -43,6 +44,7 @@ const configuration: GridConfiguration = {
       const apiRef = useGridApiContext();
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
     },
+    useGridRowsOverridableMethods,
   },
 };
 const releaseInfo = '__RELEASE_INFO__';
@@ -64,7 +66,7 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
   );
 
-  const props = useDataGridPremiumComponent(privateApiRef, initialProps);
+  const props = useDataGridPremiumComponent(privateApiRef, initialProps, configuration);
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -75,7 +77,11 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
   const sidePanel = sidebarOpen ? <Sidebar /> : null;
 
   return (
-    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
+    <GridContextProvider
+      privateApiRef={privateApiRef}
+      configuration={configuration as GridConfiguration}
+      props={props}
+    >
       <GridRoot
         className={props.className}
         style={props.style}
@@ -942,7 +948,7 @@ DataGridPremiumRaw.propTypes = {
    */
   onPreferencePanelOpen: PropTypes.func,
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,

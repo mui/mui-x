@@ -1,0 +1,13 @@
+<PieChart
+  key={key}
+  series={[{ data, arcLabel: (item) => `${item.value}` }]}
+  width={200}
+  height={200}
+  hideLegend
+  sx={{
+    [`& .${pieArcLabelClasses.root}.${pieArcLabelClasses.animate}`]: {
+      animationDuration: '2s',
+    },
+  }}
+/>
+<Button onClick={() => rerender()}>Restart Animation</Button>

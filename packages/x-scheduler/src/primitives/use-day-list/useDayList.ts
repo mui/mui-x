@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isWeekend } from '../utils/date-utils';
 import { SchedulerValidDate } from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
 
@@ -6,9 +7,9 @@ export function useDayList(): useDayList.ReturnValue {
   const adapter = useAdapter();
 
   return React.useCallback(
-    ({ date, amount }) => {
+    ({ date, amount, excludeWeekends }) => {
       if (process.env.NODE_ENV !== 'production') {
-        if (amount <= 0) {
+        if (typeof amount === 'number' && amount <= 0) {
           throw new Error(
             `useDayList: The 'amount' parameter must be a positive number, but received ${amount}.`,
           );
@@ -16,14 +17,19 @@ export function useDayList(): useDayList.ReturnValue {
       }
 
       const start = adapter.startOfDay(date);
-      const end = adapter.endOfDay(adapter.addDays(start, amount - 1));
-
       let current = start;
       let currentDayNumber = adapter.getDayOfWeek(current);
       const days: SchedulerValidDate[] = [];
 
-      while (adapter.isBefore(current, end)) {
-        days.push(current);
+      const isDayCollectionComplete =
+        typeof amount === 'number'
+          ? () => days.length >= amount
+          : () => adapter.isAfter(current, adapter.endOfDay(adapter.addDays(start, 6)));
+
+      while (!isDayCollectionComplete()) {
+        if (!excludeWeekends || !isWeekend(adapter, current)) {
+          days.push(current);
+        }
 
         const prevDayNumber = currentDayNumber;
         current = adapter.addDays(current, 1);
@@ -53,7 +59,15 @@ export namespace useDayList {
     date: SchedulerValidDate;
     /**
      * The amount of days to return.
+     * When equal to 'week', generates a 7-day range starting from `date`.
+     * The actual number of returned days may be less if `excludeWeekends` is true.
+     * When a number, generates that many consecutive days.
      */
-    amount: number;
+    amount: number | 'week';
+    /**
+     * Whether to exclude weekends (Saturday and Sunday) from the returned days.
+     * @default false
+     */
+    excludeWeekends?: boolean;
   }
 }
