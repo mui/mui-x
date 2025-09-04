@@ -22,6 +22,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     tickNumber,
     positionSign,
     skipAxisRendering,
+    skipTickRendering,
     classes,
     Line,
     Tick,
@@ -119,41 +120,43 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
-      {xTicks.map((item, index) => {
-        const { offset: tickOffset, labelOffset } = item;
-        const xTickLabel = labelOffset ?? 0;
-        const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
+      {skipTickRendering
+        ? null
+        : xTicks.map((item, index) => {
+            const { offset: tickOffset, labelOffset } = item;
+            const xTickLabel = labelOffset ?? 0;
+            const yTickLabel = positionSign * (tickSize + TICK_LABEL_GAP);
 
-        const showTick = instance.isXInside(tickOffset);
-        const tickLabel = tickLabels.get(item);
-        const showTickLabel = visibleLabels.has(item);
+            const showTick = instance.isXInside(tickOffset);
+            const tickLabel = tickLabels.get(item);
+            const showTickLabel = visibleLabels.has(item);
 
-        return (
-          <g
-            key={index}
-            transform={`translate(${tickOffset}, 0)`}
-            className={classes.tickContainer}
-          >
-            {!disableTicks && showTick && (
-              <Tick
-                y2={positionSign * tickSize}
-                className={classes.tick}
-                {...slotProps?.axisTick}
-              />
-            )}
+            return (
+              <g
+                key={index}
+                transform={`translate(${tickOffset}, 0)`}
+                className={classes.tickContainer}
+              >
+                {!disableTicks && showTick && (
+                  <Tick
+                    y2={positionSign * tickSize}
+                    className={classes.tick}
+                    {...slotProps?.axisTick}
+                  />
+                )}
 
-            {tickLabel !== undefined && showTickLabel && (
-              <TickLabel
-                x={xTickLabel}
-                y={yTickLabel}
-                data-testid="ChartsXAxisTickLabel"
-                {...axisTickLabelProps}
-                text={tickLabel}
-              />
-            )}
-          </g>
-        );
-      })}
+                {tickLabel !== undefined && showTickLabel && (
+                  <TickLabel
+                    x={xTickLabel}
+                    y={yTickLabel}
+                    data-testid="ChartsXAxisTickLabel"
+                    {...axisTickLabelProps}
+                    text={tickLabel}
+                  />
+                )}
+              </g>
+            );
+          })}
 
       {label && (
         <g className={classes.label}>
