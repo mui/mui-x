@@ -3,7 +3,6 @@
   "version": "8.5.1",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Charts components.",
-  "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
