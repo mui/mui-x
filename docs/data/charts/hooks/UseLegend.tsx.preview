@@ -1,0 +1,6 @@
+<PieChart
+  series={[{ data }]}
+  width={400}
+  height={200}
+  slots={{ legend: BasicUseLegendExample }}
+/>
