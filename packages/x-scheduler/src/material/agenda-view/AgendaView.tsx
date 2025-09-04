@@ -50,23 +50,6 @@ export const AgendaView = React.memo(
     const occurrences = useEventOccurrences({ days, eventPlacement: 'every-day' });
     const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
-    const daysWithOccurrences = React.useMemo(
-      () =>
-        days.map((day) => ({
-          ...day,
-          occurrences: occurrences.get(day.key)!.sort((a, b) => {
-            if (a.allDay && !b.allDay) {
-              return -1;
-            }
-            if (b.allDay && !a.allDay) {
-              return 1;
-            }
-            return 0;
-          }),
-        })),
-      [days, occurrences],
-    );
-
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
@@ -79,7 +62,7 @@ export const AgendaView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          {daysWithOccurrences.map((day) => (
+          {days.map((day) => (
             <section
               className="AgendaViewRow"
               key={day.key}
@@ -103,7 +86,7 @@ export const AgendaView = React.memo(
                 </div>
               </header>
               <ul className="EventsList">
-                {day.occurrences.map((event) => (
+                {occurrences.get(day.key)!.map((event) => (
                   <li>
                     <EventPopoverTrigger
                       key={event.key}

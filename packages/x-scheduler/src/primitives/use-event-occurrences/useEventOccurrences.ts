@@ -20,9 +20,12 @@ export function useEventOccurrences(
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(() => {
-    const occurrencesGroupedByDay: useEventOccurrences.ReturnValue = new Map();
+    const occurrencesGroupedByDay = new Map<
+      string,
+      { allDay: CalendarEventOccurrence[]; nonAllDay: CalendarEventOccurrence[] }
+    >();
     for (const day of days) {
-      occurrencesGroupedByDay.set(day.key, []);
+      occurrencesGroupedByDay.set(day.key, { allDay: [], nonAllDay: [] });
     }
 
     const start = adapter.startOfDay(days[0].value);
@@ -74,27 +77,17 @@ export function useEventOccurrences(
 
       for (const day of eventDays) {
         const dayKey = getDateKey(day, adapter);
-        occurrencesGroupedByDay.get(dayKey)!.push(occurrence);
+        const occurrenceType = occurrence.allDay ? 'allDay' : 'nonAllDay';
+        occurrencesGroupedByDay.get(dayKey)![occurrenceType].push(occurrence);
       }
     }
 
-    return new Map([
-      ...occurrencesGroupedByDay.entries().map(
-        ([key, value]) =>
-          [
-            key,
-            value.sort((a, b) => {
-              if (a.allDay && !b.allDay) {
-                return -1;
-              }
-              if (b.allDay && !a.allDay) {
-                return 1;
-              }
-              return 0;
-            }),
-          ] as const,
-      ),
-    ]);
+    const cleanMap: useEventOccurrences.ReturnValue = new Map();
+    occurrencesGroupedByDay.forEach((value, key) => {
+      cleanMap.set(key, [...value.allDay, ...value.nonAllDay]);
+    });
+
+    return cleanMap;
   }, [adapter, days, eventPlacement, events, visibleResources]);
 }
 
