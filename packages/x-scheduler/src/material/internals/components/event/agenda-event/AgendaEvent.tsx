@@ -23,7 +23,6 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
 ) {
   const {
     event: eventProp,
-    eventResource,
     ariaLabelledBy,
     className,
     onEventClick,
@@ -36,6 +35,8 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
   const translations = useTranslations();
   const { store } = useEventCalendarContext();
   const ampm = useStore(store, selectors.ampm);
+  const resource = useStore(store, selectors.resource, eventProp.resource);
+  const color = useStore(store, selectors.eventColor, eventProp.id);
   const isRecurring = Boolean(eventProp.rrule);
 
   return (
@@ -48,7 +49,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
         'EventContainer',
         'EventCard',
         `EventCard--compact`, // Add a "variant" prop if we add support for other variants
-        getColorClassName({ resource: eventResource }),
+        getColorClassName(color),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
@@ -58,8 +59,8 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
           className="ResourceLegendColor"
           role="img"
           aria-label={
-            eventResource?.name
-              ? translations.resourceAriaLabel(eventResource.name)
+            resource?.name
+              ? translations.resourceAriaLabel(resource.name)
               : translations.noResourceAriaLabel
           }
         />
