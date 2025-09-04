@@ -5,6 +5,80 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.11.1
+
+_Sep 4, 2025_
+
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+Special thanks go out to the community members for their valuable contributions:
+@sai6855
+
+The following are all team members who have contributed to this release:
+@brijeshb42, @flaviendelangle, @JCQuintas, @mapache-salvaje, @oliviertassinari
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.11.1`
+
+- [DataGrid] Refine types in `GridCell` component (#19384) @sai6855
+
+#### `@mui/x-data-grid-pro@8.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.11.1`.
+
+#### `@mui/x-data-grid-premium@8.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.11.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.11.1`
+
+- [pickers] Merge `slotProps` for input adornment in `PickerFieldUI` component (#19399) @sai6855
+
+#### `@mui/x-date-pickers-pro@8.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.11.1`.
+
+### Charts
+
+#### `@mui/x-charts@8.11.1`
+
+- [charts] Prevent crash and warn user on incorrect `axisId` when composing (#19397) @JCQuintas
+
+#### `@mui/x-charts-pro@8.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.11.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.11.1`
+
+- [tree view] Expose the methods to manually refetch the children of an item (#19248) @flaviendelangle
+- [tree view] Use the shared store implementation instead of the custom one (#19261) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.11.1`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.11.1`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix grammar and spelling mistakes on the Date and Time Pickers pages (#19300) @mapache-salvaje
+- [docs] Remove wrong legend info (#19383) @JCQuintas
+
+### Core
+
+- [internal] Fix action alert (#19388) @oliviertassinari
+- [internal] Fix pnpm valelint to have 0 errors @oliviertassinari
+- [infra] Remove "main" fields from publishable packages (#19407) @brijeshb42
+
 ## 8.11.0
 
 _Aug 29, 2025_
