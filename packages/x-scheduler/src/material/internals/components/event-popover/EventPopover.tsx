@@ -34,21 +34,13 @@ export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    className,
-    style,
-    container,
-    anchor,
-    calendarEvent,
-    calendarEventResource,
-    onClose,
-    ...other
-  } = props;
+  const { className, style, container, anchor, calendarEvent, onClose, ...other } = props;
 
   const adapter = useAdapter();
   const translations = useTranslations();
   const { store, instance } = useEventCalendarContext();
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
+  const color = useStore(store, selectors.eventColor, calendarEvent.id);
   const isRecurring = Boolean(calendarEvent.rrule);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -140,10 +132,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
           sideOffset={8}
           anchor={anchor}
           trackAnchor={false}
-          className={clsx(
-            'PopoverPositioner',
-            getColorClassName({ resource: calendarEventResource }),
-          )}
+          className={clsx('PopoverPositioner', getColorClassName(color))}
         >
           <Popover.Popup finalFocus={{ current: anchor }}>
             <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
@@ -397,8 +386,6 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
-  const { store } = useEventCalendarContext();
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const startEditing = useEventCallback((event: React.MouseEvent, calendarEvent: CalendarEvent) => {
     setAnchor(event.currentTarget as HTMLElement);
@@ -428,7 +415,6 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
           <EventPopover
             anchor={anchor}
             calendarEvent={selectedEvent}
-            calendarEventResource={resourcesByIdMap.get(selectedEvent.resource)}
             container={containerRef.current}
             onClose={handleClose}
           />

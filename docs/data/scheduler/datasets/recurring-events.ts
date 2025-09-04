@@ -158,8 +158,8 @@ export const initialEvents: CalendarEvent[] = [
 ];
 
 export const resources: CalendarResource[] = [
-  { name: 'Weekly Patterns', id: 'weekly', color: 'violet' },
-  { name: 'Monthly Patterns', id: 'monthly', color: 'jade' },
-  { name: 'Yearly Patterns', id: 'yearly', color: 'lime' },
-  { name: 'All-day & Spanning', id: 'allday', color: 'orange' },
+  { name: 'Weekly Patterns', id: 'weekly', eventColor: 'violet' },
+  { name: 'Monthly Patterns', id: 'monthly', eventColor: 'jade' },
+  { name: 'Yearly Patterns', id: 'yearly', eventColor: 'lime' },
+  { name: 'All-day & Spanning', id: 'allday', eventColor: 'orange' },
 ];

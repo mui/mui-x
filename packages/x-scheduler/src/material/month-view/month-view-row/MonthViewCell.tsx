@@ -22,10 +22,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
   const placeholder = DayGrid.usePlaceholderInDay(day.value);
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const initialDraggedEvent = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
+  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
@@ -65,7 +64,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       style={
         {
           // TODO: Fix, should be 1 + ... but the day number row takes too much space
-          '--row-count': 2 + day.maxRowIndex + (hiddenCount > 0 ? 1 : 0),
+          '--row-count': 2 + day.rowCount + (hiddenCount > 0 ? 1 : 0),
         } as React.CSSProperties
       }
     >
@@ -91,7 +90,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                 render={
                   <DayGridEvent
                     event={event}
-                    eventResource={resourcesByIdMap.get(event.resource)}
                     variant={event.allDay ? 'allDay' : 'compact'}
                     ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                     gridRow={event.placement.rowIndex}
@@ -106,7 +104,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             <DayGridEvent
               key={`${event.id}-${day.key}`}
               event={event}
-              eventResource={resourcesByIdMap.get(event.resource)}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               gridRow={event.placement.rowIndex}
@@ -120,7 +117,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           <div className="MonthViewDraggedEventContainer">
             <DayGridEvent
               event={draggedEvent}
-              eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               gridRow={1} // TODO: Fix

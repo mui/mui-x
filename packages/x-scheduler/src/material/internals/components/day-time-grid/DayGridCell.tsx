@@ -16,9 +16,8 @@ export function DayGridCell(props: DayGridCellProps) {
   const { day } = props;
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const placeholder = DayGrid.usePlaceholderInDay(day.value);
-  const initialDraggedEvent = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
+  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
   const draggedEvent = React.useMemo(() => {
     if (!initialDraggedEvent || !placeholder) {
@@ -34,7 +33,7 @@ export function DayGridCell(props: DayGridCellProps) {
       className="DayTimeGridAllDayEventsCell"
       style={
         {
-          '--row-count': day.maxRowIndex,
+          '--row-count': day.rowCount,
         } as React.CSSProperties
       }
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
@@ -51,7 +50,6 @@ export function DayGridCell(props: DayGridCellProps) {
                 render={
                   <DayGridEvent
                     event={event}
-                    eventResource={resourcesByIdMap.get(event.resource)}
                     variant="allDay"
                     ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                     gridRow={event.placement.rowIndex}
@@ -66,7 +64,6 @@ export function DayGridCell(props: DayGridCellProps) {
             <DayGridEvent
               key={`${event.key}-${day.key}`}
               event={event}
-              eventResource={resourcesByIdMap.get(event.resource)}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               gridRow={event.placement.rowIndex}
@@ -77,7 +74,6 @@ export function DayGridCell(props: DayGridCellProps) {
           <div className="DayTimeGridAllDayEventContainer">
             <DayGridEvent
               event={draggedEvent}
-              eventResource={resourcesByIdMap.get(draggedEvent.resource)}
               variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               gridRow={1} // TODO: Fix
