@@ -1,26 +1,36 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
+import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { EventPopover } from './EventPopover';
+
+const adapter = getAdapter();
 
 const calendarEvent: CalendarEvent = {
   id: '1',
-  start: DateTime.fromISO('2025-05-26T07:30:00'),
-  end: DateTime.fromISO('2025-05-26T08:15:00'),
+  start: adapter.date('2025-05-26T07:30:00'),
+  end: adapter.date('2025-05-26T08:15:00'),
   title: 'Running',
   description: 'Morning run',
+  resource: 'r2',
 };
 
-const calendarEventResource: CalendarResource = {
-  id: 'r1',
-  name: 'Personal',
-  color: 'cyan',
-};
+const resources: CalendarResource[] = [
+  {
+    id: 'r1',
+    name: 'Work',
+    color: 'blue',
+  },
+  {
+    id: 'r2',
+    name: 'Personal',
+    color: 'cyan',
+  },
+];
 
 describe('<EventPopover />', () => {
   const anchor = document.createElement('button');
@@ -30,7 +40,7 @@ describe('<EventPopover />', () => {
     anchor,
     container: document.body,
     calendarEvent,
-    calendarEventResource,
+    calendarEventResource: resources[1],
     onClose: () => {},
   };
 
@@ -38,7 +48,7 @@ describe('<EventPopover />', () => {
 
   it('should render the event data in the form fields', () => {
     render(
-      <StandaloneView events={[calendarEvent]}>
+      <StandaloneView events={[calendarEvent]} resources={resources}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
@@ -54,12 +64,20 @@ describe('<EventPopover />', () => {
       'aria-checked',
       'false',
     );
+    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
+    expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
+      /don't repeat/i,
+    );
   });
 
   it('should call "onEventsChange" with updated values on submit', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <StandaloneView events={[calendarEvent]} onEventsChange={onEventsChange}>
+      <StandaloneView
+        events={[calendarEvent]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+      >
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
@@ -69,13 +87,25 @@ describe('<EventPopover />', () => {
     await user.click(screen.getByRole('checkbox', { name: /all day/i }));
     await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
     await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
+    await user.click(screen.getByRole('combobox', { name: /resource/i }));
+    await user.click(await screen.findByRole('option', { name: /work/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
     const updated = onEventsChange.firstCall.firstArg[0];
-    expect(updated.title).to.equal('Running test');
-    expect(updated.rrule?.freq).to.equal('DAILY');
-    expect(updated.allDay).to.equal(true);
+
+    const expectedUpdatedEvent = {
+      id: '1',
+      title: 'Running test',
+      description: 'Morning run',
+      start: adapter.startOfDay(calendarEvent.start),
+      end: adapter.endOfDay(calendarEvent.end),
+      allDay: true,
+      rrule: { freq: 'DAILY', interval: 1 },
+      resource: 'r1',
+    };
+
+    expect(updated).to.deep.equal(expectedUpdatedEvent);
   });
 
   it('should show error if start date is after end date', async () => {
@@ -113,7 +143,7 @@ describe('<EventPopover />', () => {
 
   it('should handle read-only events', () => {
     render(
-      <StandaloneView events={[calendarEvent]}>
+      <StandaloneView events={[calendarEvent]} resources={resources}>
         <Popover.Root open>
           <EventPopover {...defaultProps} calendarEvent={{ ...calendarEvent, readOnly: true }} />
         </Popover.Root>
@@ -125,6 +155,10 @@ describe('<EventPopover />', () => {
     expect(screen.getByLabelText(/end date/i)).to.have.attribute('readonly');
     expect(screen.getByLabelText(/start time/i)).to.have.attribute('readonly');
     expect(screen.getByLabelText(/end time/i)).to.have.attribute('readonly');
+    expect(screen.getByRole('combobox', { name: /resource/i })).to.have.attribute('aria-readonly');
+    expect(screen.getByRole('combobox', { name: /recurrence/i })).to.have.attribute(
+      'aria-readonly',
+    );
     expect(screen.queryByRole('button', { name: /save changes/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: /delete event/i })).to.equal(null);
   });
