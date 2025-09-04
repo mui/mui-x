@@ -261,7 +261,6 @@
   background-color: var(--surface);
   box-shadow: var(--shadow-5);
   outline: 1px solid var(--border-color);
-  min-width: 200px;
 }
 
 .EventPopoverSelectItem {
