@@ -510,6 +510,23 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
     });
 
+    it('should render "Unpin" menu item with proper icon container for alignment', async () => {
+      const { user } = render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
+      const columnCell = $('[role="columnheader"][data-field="id"]')!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="id column menu"]')!;
+      await user.click(menuIconButton);
+      
+      const unpinMenuItem = screen.getByRole('menuitem', { name: 'Unpin' });
+      // Check that the unpin menu item has an icon container (ListItemIcon) for proper alignment
+      const listItemIcon = unpinMenuItem.querySelector('.MuiListItemIcon-root');
+      expect(listItemIcon).not.to.equal(null);
+      
+      // Check that other pinning menu items also have icon containers for comparison
+      const pinMenuItem = screen.getByRole('menuitem', { name: 'Pin to right' });
+      const pinListItemIcon = pinMenuItem.querySelector('.MuiListItemIcon-root');
+      expect(pinListItemIcon).not.to.equal(null);
+    });
+
     describe('with fake timers', () => {
       it('should not render menu items if the column has `pinnable` equals to false', async () => {
         const { user } = render(
