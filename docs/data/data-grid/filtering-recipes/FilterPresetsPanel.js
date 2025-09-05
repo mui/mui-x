@@ -172,7 +172,7 @@ function CustomFilterPanel(props) {
           }}
         >
           <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-            Saved Filters
+            Saved Filter Presets
           </Typography>
           <Stack direction="row" spacing={0.5}>
             <Tooltip title="Create new filter">
