@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
@@ -27,16 +28,12 @@ import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
-import { useSelector } from '../internals/hooks/useSelector';
-import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { selectorTreeViewId } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
-import { selectorItemExpansionTrigger } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
-import {
-  selectorIsCheckboxSelectionEnabled,
-  selectorIsItemSelectionEnabled,
-} from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import { focusSelectors } from '../internals/plugins/useTreeViewFocus';
+import { itemsSelectors } from '../internals/plugins/useTreeViewItems';
+import { idSelectors } from '../internals/corePlugins/useTreeViewId';
+import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion';
+import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -50,11 +47,11 @@ export const useTreeItem = <
   >();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const depth = useSelector(
+  const depth = useStore(
     store,
     (...params) => {
       if (typeof depthContext === 'function') {
-        return depthContext(...params);
+        return depthContext(...(params as [any, any]));
       }
 
       return depthContext;
@@ -72,13 +69,13 @@ export const useTreeItem = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
-  const treeId = useSelector(store, selectorTreeViewId);
-  const isSelectionEnabledForItem = useSelector(store, selectorIsItemSelectionEnabled, itemId);
-  const isCheckboxSelectionEnabled = useSelector(store, selectorIsCheckboxSelectionEnabled);
+  const treeId = useStore(store, idSelectors.treeId);
+  const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
+  const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const shouldBeAccessibleWithTab = useSelector(
+  const shouldBeAccessibleWithTab = useStore(
     store,
-    selectorIsItemTheDefaultFocusableItem,
+    focusSelectors.isItemTheDefaultFocusableItem,
     itemId,
   );
 
@@ -97,7 +94,7 @@ export const useTreeItem = <
 
       if (
         !status.focused &&
-        selectorCanItemBeFocused(store.value, itemId) &&
+        itemsSelectors.canItemBeFocused(store.state, itemId) &&
         event.currentTarget === event.target
       ) {
         instance.focusItem(event, itemId);
@@ -165,7 +162,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
       }
-      if (selectorItemExpansionTrigger(store.value) === 'content') {
+      if (expansionSelectors.triggerSlot(store.state) === 'content') {
         interactions.handleExpansion(event);
       }
 
@@ -193,7 +190,7 @@ export const useTreeItem = <
       if (event.defaultMuiPrevented) {
         return;
       }
-      if (selectorItemExpansionTrigger(store.value) === 'iconContainer') {
+      if (expansionSelectors.triggerSlot(store.state) === 'iconContainer') {
         interactions.handleExpansion(event);
       }
     };

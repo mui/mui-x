@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsXAxisProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
 import { ChartsSingleXAxis } from './ChartsSingleXAxis';
@@ -19,6 +20,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
 
   const axis = xAxis[inProps.axisId ?? xAxisIds[0]];
+
+  if (!axis) {
+    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    return null;
+  }
+
   if ('groups' in axis && Array.isArray(axis.groups)) {
     return <ChartsGroupedXAxis {...inProps} />;
   }

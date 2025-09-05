@@ -7,6 +7,7 @@ import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewLazyLoadingSignature } from '../internals/plugins/useTreeViewLazyLoading';
 
 export interface UseTreeItemParameters {
   /**
@@ -264,4 +265,4 @@ export type UseTreeItemMinimalPlugins = readonly [
 /**
  * Plugins that `UseTreeItem` can use if they are present, but are not required.
  */
-export type UseTreeItemOptionalPlugins = readonly [];
+export type UseTreeItemOptionalPlugins = readonly [UseTreeViewLazyLoadingSignature];
