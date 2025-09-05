@@ -14,6 +14,15 @@ In the demo below, the [`React.useSyncExternalStore` hook](https://react.dev/ref
 
 {{"demo": "FilteringLocalStorage.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Save and manage filters from the panel
+
+Create a custom filter panel by wrapping the `GridFilterPanel` component and pass it to the `slots.filterPanel` prop.
+
+In the demo below, the custom component lets users to save and manage filters, which are stored in local storage.
+For a more scalable approach, you can replace local storage with a server-side database.
+
+{{"demo": "FilterPresetsPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Quick filter outside of the grid
 
 The [Quick Filter](/x/react-data-grid/filtering/quick-filter/) component is typically used in the Data Grid's Toolbar component slot.
