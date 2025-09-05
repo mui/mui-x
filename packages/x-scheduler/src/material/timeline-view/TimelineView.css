@@ -1,7 +1,7 @@
 .TimelineViewContainer {
   --time-cell-width: 64px;
   --days-cell-width: 120px;
-  --weeks-cell-width: 120px;
+  --weeks-cell-width: 64px;
   --months-cell-width: 180px;
   --years-cell-width: 200px;
 
@@ -37,9 +37,6 @@
 .HeaderTitleRow {
   grid-column: 1;
 }
-.HeaderRow {
-  grid-column: 2;
-}
 
 .EventSubGridContainer {
   overflow-x: auto;
@@ -51,7 +48,6 @@
 }
 .EventSubGrid {
   display: grid;
-  grid-column: 2;
   grid-template-rows: subgrid;
   grid-row: 2 / -1;
 }

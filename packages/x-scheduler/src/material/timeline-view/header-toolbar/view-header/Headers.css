@@ -2,20 +2,20 @@
   display: flex;
   width: calc(var(--unit-count) * var(--days-cell-width));
 }
-
-.DayHeaderCell {
-  width: var(--days-cell-width);
-  text-align: center;
-  padding: var(--space-2);
-  box-sizing: border-box;
-
+.WeeksHeader {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  min-width: calc(var(--unit-count) * 7 * var(--weeks-cell-width));
 }
 
-.DayHeaderCell:not(:last-child) {
-  border-right: 1px solid var(--border-color);
+.WeekDayCell {
+  padding: var(--space-1);
+  text-align: center;
+}
+
+.WeekDaysRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  column-gap: var(--space-1);
 }
 
 .WeekDay,
@@ -27,26 +27,25 @@
   color: var(--secondary-text-color);
 }
 
-.DayNumber {
-  font-weight: var(--font-weight-3);
-  color: var(--default-text-color);
-}
-
 .WeekDay[data-weekend] {
   color: var(--red-9);
 }
 
-.TimeHeader {
+.DayHeaderCell {
+  width: var(--days-cell-width);
+  text-align: center;
+  padding: var(--space-2);
+  box-sizing: border-box;
+  position: relative;
+
   display: flex;
-  width: calc(var(--unit-count) * var(--time-cell-width));
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
-.TimeHeaderCell {
-  flex-grow: 1;
-  border-right: 1px solid var(--border-color);
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.DayNumber {
+  font-weight: var(--font-weight-3);
+  color: var(--default-text-color);
 }
 
 .DayLabel {
@@ -58,6 +57,18 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.TimeHeader {
+  display: flex;
+  min-width: calc(var(--unit-count) * var(--time-cell-width));
+}
+
+.TimeHeaderCell {
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .TimeCellsRow {
   padding: 0 var(--space-2);
   display: grid;
@@ -66,9 +77,33 @@
 
 .TimeCell {
   padding: var(--space-2) 0;
+  text-align: center;
 }
 
 .TimeLabel {
   font-size: var(--font-size-2);
   color: var(--secondary-text-color);
+}
+
+.DayHeaderCell:not(:last-child),
+.WeekDayCell:not(:last-child),
+.TimeHeaderCell:not(:last-child) {
+  border-right: 1px solid var(--border-color);
+}
+
+.MonthStart {
+  font-size: var(--font-size-1);
+  color: var(--secondary-text-color);
+  background: var(--gray-2);
+  height: 100%;
+  margin: 0;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+.MonthStartLabel {
+  transform: rotate(-90deg);
 }

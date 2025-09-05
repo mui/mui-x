@@ -28,8 +28,13 @@ export function DaysHeader({ start, end }) {
 
   return (
     <div className="DaysHeader">
-      {days.map((day) => (
+      {days.map((day, index) => (
         <div key={adapter.format(day, 'keyboardDate')} className="DayHeaderCell">
+          {(adapter.startOfMonth(day).hasSame(day, 'day') || index === 0) && (
+            <div className="MonthStart">
+              <p className="MonthStartLabel">{adapter.format(day, 'monthShort')}</p>
+            </div>
+          )}
           <p className="WeekDay" data-weekend={isWeekend(adapter, day) ? '' : undefined}>
             {adapter.format(day, 'weekdayShort')}
           </p>

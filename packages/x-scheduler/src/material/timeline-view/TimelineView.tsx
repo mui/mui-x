@@ -12,7 +12,7 @@ import { getColorClassName } from '../internals/utils/color-utils';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { diffIn } from '../../primitives/utils/date-utils';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { DaysHeader, TimeHeader } from './header-toolbar/view-header';
+import { DaysHeader, TimeHeader, WeeksHeader } from './header-toolbar/view-header';
 
 const adapter = getAdapter();
 
@@ -104,6 +104,7 @@ export function TimelineView(props: TimelineViewProps) {
               <Timeline.Cell className={clsx('TimelineCell', 'HeaderCell')}>
                 {view === 'days' && <DaysHeader start={start} end={end} />}
                 {view === 'time' && <TimeHeader start={start} end={end} />}
+                {view === 'weeks' && <WeeksHeader start={start} end={end} />}
               </Timeline.Cell>
             </Timeline.Row>
             <Timeline.SubGrid className="EventSubGrid">
