@@ -40,6 +40,11 @@ export interface CalendarEvent {
    * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
    */
   readOnly?: boolean;
+  /**
+   * Link to the event this one was split from.
+   * Consumers should treat it as read-only: they can persist and pass it back, but it will be ignored if invalid.
+   */
+  extractedFromId?: CalendarEventId;
 }
 
 /** Two-letter weekday codes as defined by RFC 5545 (`BYDAY`). */

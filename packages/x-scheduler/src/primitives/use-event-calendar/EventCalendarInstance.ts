@@ -11,9 +11,11 @@ import {
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
+  RRuleSpec,
 } from '../models';
 import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
+import { diffIn } from '../utils/date-utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -249,10 +251,102 @@ export class EventCalendarInstance {
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: CalendarEvent) => {
+    const prev = this.store.state.events.find((event) => event.id === calendarEvent.id);
+    if (prev?.rrule) {
+      throw new Error(
+        'Event Calendar: this event is recurring. Use updateRecurringEvent(...) instead.',
+      );
+    }
+
     const { onEventsChange } = this.parameters;
     const updatedEvents = this.store.state.events.map((ev) =>
       ev.id === calendarEvent.id ? calendarEvent : ev,
     );
+    onEventsChange?.(updatedEvents);
+  };
+
+  /**
+   * Updates a recurring event in the calendar.
+   */
+  public updateRecurringEvent = (
+    eventId: CalendarEventId,
+    occurrenceStart: SchedulerValidDate,
+    changes: Partial<CalendarEvent>,
+    scope: 'following',
+  ) => {
+    if (scope !== 'following') {
+      throw new Error(`Event Calendar: solo scope="following" está soportado por ahora.`);
+    }
+
+    const { adapter, events } = this.store.state;
+    const { onEventsChange } = this.parameters;
+
+    const original = events.find((event) => event.id === eventId);
+    if (!original) {
+      throw new Error(`Event Calendar: event not found (id="${eventId}").`);
+    }
+    if (!original.rrule) {
+      throw new Error('Event Calendar: requiere evento recurrente.');
+    }
+
+    // 1) duration in minutes
+    const durationMinutes = diffIn(adapter, original.end, original.start, 'minutes');
+
+    // 2) Old series: set UNTIL to the day before the edited occurrence (inclusive)
+    const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
+    const until = adapter.addDays(occurrenceDayStart, -1);
+
+    const oldRRule = {
+      ...original.rrule,
+      until,
+      count: undefined as unknown as number | undefined,
+    };
+
+    // If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
+    const shouldDropOldSeries = adapter.isBefore(
+      adapter.endOfDay(until),
+      adapter.startOfDay(original.start),
+    );
+
+    // 3) New series: clone + changes + clean COUNT/UNTIL
+    const stripCountUntil = (rule: typeof original.rrule) => {
+      const r = { ...rule };
+      delete (r as any).count;
+      delete (r as any).until;
+      return r;
+    };
+
+    let newRRule: RRuleSpec | undefined;
+    if (Object.prototype.hasOwnProperty.call(changes, 'rrule')) {
+      // The caller explicitly decided the value (including removing it)
+      newRRule = changes.rrule ? stripCountUntil(changes.rrule) : undefined;
+    } else {
+      // The caller did not touch rrule: inherit from the original
+      newRRule = stripCountUntil(original.rrule);
+    }
+
+    // New start/end (if no end is provided, respect the duration)
+    const newStart = changes.start ?? occurrenceStart;
+    const newEnd = changes.end ?? adapter.addMinutes(newStart, durationMinutes);
+
+    const generateId = `${original.id}::${adapter.format(newStart, 'keyboardDate')}`;
+
+    const newEvent: CalendarEvent = {
+      ...original,
+      ...changes,
+      id: generateId,
+      start: newStart,
+      end: newEnd,
+      rrule: newRRule,
+      extractedFromId: original.id,
+    };
+
+    const updatedEvents = shouldDropOldSeries
+      ? events.filter((event) => event.id !== original.id).concat(newEvent)
+      : events
+          .map((event) => (event.id === original.id ? { ...original, rrule: oldRRule } : event))
+          .concat(newEvent);
+
     onEventsChange?.(updatedEvents);
   };
 
