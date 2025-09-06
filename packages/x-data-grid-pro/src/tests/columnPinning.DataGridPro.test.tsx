@@ -510,7 +510,6 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
     });
 
-
     describe('with fake timers', () => {
       it('should not render menu items if the column has `pinnable` equals to false', async () => {
         const { user } = render(
