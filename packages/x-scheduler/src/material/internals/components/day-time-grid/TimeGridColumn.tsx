@@ -19,10 +19,9 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { store } = useEventCalendarContext();
   const start = React.useMemo(() => adapter.startOfDay(day), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day), [adapter, day]);
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
   const placeholder = TimeGrid.usePlaceholderInRange(start, end);
-  const initialDraggedEvent = useStore(store, selectors.getEventById, placeholder?.eventId ?? null);
+  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
   const draggedEvent = React.useMemo(() => {
     if (!initialDraggedEvent || !placeholder) {
@@ -52,7 +51,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
           render={
             <TimeGridEvent
               event={event}
-              eventResource={resourcesByIdMap.get(event.resource)}
               variant="regular"
               ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
             />
@@ -62,7 +60,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       {draggedEvent != null && (
         <TimeGridEvent
           event={draggedEvent}
-          eventResource={resourcesByIdMap.get(draggedEvent.resource)}
           variant="regular"
           ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
         />

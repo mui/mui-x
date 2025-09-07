@@ -1,5 +1,5 @@
 {
-  "version": "8.11.0",
+  "version": "8.11.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -77,9 +77,9 @@
     "@emotion/styled": "catalog:",
     "@inquirer/prompts": "^7.8.4",
     "@mui/icons-material": "catalog:",
-    "@mui/internal-bundle-size-checker": "^1.0.9-canary.35",
+    "@mui/internal-bundle-size-checker": "^1.0.9-canary.39",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.6",
-    "@mui/internal-code-infra": "^0.0.3-canary.0",
+    "@mui/internal-code-infra": "^0.0.3-canary.2",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
@@ -121,7 +121,7 @@
     "danger": "^13.0.4",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
-    "esbuild": "^0.25.8",
+    "esbuild": "^0.25.9",
     "eslint": "^9.34.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
@@ -172,8 +172,8 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.15.1",
   "engines": {
-    "pnpm": "10.14.0"
+    "pnpm": "10.15.1"
   }
 }
