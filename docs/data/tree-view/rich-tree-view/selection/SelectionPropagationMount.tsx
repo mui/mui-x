@@ -7,11 +7,20 @@ import { EMPLOYEES_DATASET } from '../../datasets/employees';
 const selectionPropagation = { parents: true, descendants: true };
 
 export default function SelectionPropagationMount() {
-  const defaultSelectedItems = useApplyPropagationToSelectedItemsOnMount({
+  const initialSelectedItems = useApplyPropagationToSelectedItemsOnMount({
     items: EMPLOYEES_DATASET,
     selectionPropagation,
     selectedItems: ['10', '11', '13', '14'],
   });
+
+  const [selectedItems, setSelectedItems] = React.useState(initialSelectedItems);
+
+  const handleSelectedItemsChange = (
+    event: React.SyntheticEvent | null,
+    newSelectedItems: string[],
+  ) => {
+    setSelectedItems(newSelectedItems);
+  };
 
   return (
     <Box sx={{ minHeight: 352, minWidth: 250 }}>
@@ -20,7 +29,8 @@ export default function SelectionPropagationMount() {
         checkboxSelection
         multiSelect
         selectionPropagation={selectionPropagation}
-        defaultSelectedItems={defaultSelectedItems}
+        defaultSelectedItems={selectedItems}
+        onSelectedItemsChange={handleSelectedItemsChange}
         defaultExpandedItems={['1', '8', '9', '12']}
       />
     </Box>

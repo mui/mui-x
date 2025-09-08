@@ -3,6 +3,7 @@
   checkboxSelection
   multiSelect
   selectionPropagation={selectionPropagation}
-  defaultSelectedItems={defaultSelectedItems}
+  defaultSelectedItems={selectedItems}
+  onSelectedItemsChange={handleSelectedItemsChange}
   defaultExpandedItems={['1', '8', '9', '12']}
 />
