@@ -298,35 +298,31 @@ export class EventCalendarInstance {
 
     // 2) Old series: set UNTIL to the day before the edited occurrence (inclusive)
     const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
-    const until = adapter.addDays(occurrenceDayStart, -1);
+    const untilDate = adapter.addDays(occurrenceDayStart, -1);
 
     const oldRRule = {
       ...original.rrule,
-      until,
+      until: untilDate,
       count: undefined as unknown as number | undefined,
     };
 
     // If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
     const shouldDropOldSeries = adapter.isBefore(
-      adapter.endOfDay(until),
+      adapter.endOfDay(untilDate),
       adapter.startOfDay(original.start),
     );
 
     // 3) New series: clone + changes + clean COUNT/UNTIL
-    const stripCountUntil = (rule: typeof original.rrule) => {
-      const r = { ...rule };
-      delete (r as any).count;
-      delete (r as any).until;
-      return r;
+    const cleanRRule = (rule: RRuleSpec): RRuleSpec => {
+      const { count, until, ...rest } = rule;
+      return rest;
     };
 
     let newRRule: RRuleSpec | undefined;
-    if (Object.prototype.hasOwnProperty.call(changes, 'rrule')) {
-      // The caller explicitly decided the value (including removing it)
-      newRRule = changes.rrule ? stripCountUntil(changes.rrule) : undefined;
+    if ('rrule' in changes) {
+      newRRule = changes.rrule ? cleanRRule(changes.rrule) : undefined;
     } else {
-      // The caller did not touch rrule: inherit from the original
-      newRRule = stripCountUntil(original.rrule);
+      newRRule = cleanRRule(original.rrule);
     }
 
     // New start/end (if no end is provided, respect the duration)
