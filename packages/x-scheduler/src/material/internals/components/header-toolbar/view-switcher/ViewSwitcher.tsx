@@ -83,7 +83,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
         {!!state.dropdownView && (
           <React.Fragment>
             <button
-              key={state.dropdownView}
               className="MainItem"
               onClick={handleClick}
               data-view={state.dropdownView}
