@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { useTheme, useThemeProps } from '@mui/material/styles';
+import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsXAxisProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
@@ -11,9 +11,15 @@ import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { isBandScale } from '../internals/isBandScale';
 import { isInfinity } from '../internals/isInfinity';
-import { defaultProps, useUtilityClasses, XAxisRoot } from './utilities';
+import { defaultProps, useUtilityClasses } from './utilities';
 import { useDrawingArea } from '../hooks';
 import { getStringSize } from '../internals/domUtils';
+import { AxisRoot } from '../internals/components/AxisSharedComponents';
+
+export const XAxisRoot = styled(AxisRoot, {
+  name: 'MuiChartsXAxis',
+  slot: 'Root',
+})({});
 
 /**
  * Demos:
