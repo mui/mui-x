@@ -17,7 +17,7 @@ export default function ColorPalettes() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        preferences={{ showWeekends: true }}
+        preferences={{ showWeekends: false }}
       />
     </div>
   );
