@@ -146,7 +146,7 @@ return (
 );
 ```
 
-In the example below, only Anna, Michael, Elizabeth and William are selected in the raw data, their ancestors are added to the `defaultSelectedItems` prop by the hook:
+In the example below, only Anna, Michael, Elizabeth, and William are selected in the raw data, their ancestors are added to the `defaultSelectedItems` prop by the hook:
 
 {{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
 
