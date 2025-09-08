@@ -1,13 +1,6 @@
-import { CalendarResource } from '../../../primitives/models';
+import { CalendarEventColor } from '../../../primitives/models';
 
-// TODO: Add support for event.color and props.color
-export function getColorClassName(parameters: GetColorClassNameParameters): string {
-  const { resource } = parameters;
-  const color = resource?.color ?? 'primary';
-
+// TODO: Add support for event.color
+export function getColorClassName(color: CalendarEventColor): string {
   return `palette-${color}`;
-}
-
-interface GetColorClassNameParameters {
-  resource: CalendarResource | undefined;
 }
