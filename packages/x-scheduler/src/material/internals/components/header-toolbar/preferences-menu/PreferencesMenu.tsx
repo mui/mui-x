@@ -5,7 +5,6 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { CheckIcon, Settings } from 'lucide-react';
 import { Menu } from '@base-ui-components/react/menu';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   CalendarPreferences,
   CalendarPreferencesMenuConfig,
@@ -28,11 +27,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const preferences = useStore(store, selectors.preferences);
   const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
 
-  const handleToggle = useEventCallback(
-    (key: keyof CalendarPreferences, checked: boolean, event: Event) => {
-      instance.setPreferences({ [key]: checked }, event);
-    },
-  );
+  const handleToggle = (key: keyof CalendarPreferences, checked: boolean, event: Event) => {
+    instance.setPreferences({ [key]: checked }, event);
+  };
 
   if (preferencesMenuConfig === false) {
     return null;
