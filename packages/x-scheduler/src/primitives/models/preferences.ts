@@ -1,9 +1,14 @@
 export interface CalendarPreferences {
   /**
-   * Whether weekends are hidden in the calendar.
+   * Whether weekends are shown in the calendar.
+   * @default true
+   */
+  showWeekends: boolean;
+  /**
+   * Whether the week number is shown in the calendar.
    * @default false
    */
-  hideWeekends: boolean;
+  showWeekNumber: boolean;
 }
 
 export interface CalendarPreferencesMenuConfig {
@@ -12,4 +17,9 @@ export interface CalendarPreferencesMenuConfig {
    * @default true
    */
   toggleWeekendVisibility: boolean;
+  /**
+   * Whether the menu item to toggle week number visibility is visible.
+   * @default true
+   */
+  toggleWeekNumberVisibility: boolean;
 }

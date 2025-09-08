@@ -207,7 +207,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       const beforeSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      expect(beforeSortSearchParams.get('end')).to.not.equal('9');
+      expect(beforeSortSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc'));
 
@@ -338,7 +338,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       const beforeSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is not the first page anymore
-      expect(beforeSortingSearchParams.get('end')).to.not.equal('9');
+      expect(beforeSortingSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc'));
 
@@ -359,7 +359,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is not the first page anymore
-      expect(beforeFilteringSearchParams.get('end')).to.not.equal('9');
+      expect(beforeFilteringSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => {
         apiRef.current?.setFilterModel({
