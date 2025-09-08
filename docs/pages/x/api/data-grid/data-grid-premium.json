@@ -94,6 +94,7 @@
     },
     "disablePivoting": { "type": { "name": "bool" }, "default": "false" },
     "disableRowGrouping": { "type": { "name": "bool" }, "default": "false" },
+    "disableRowSelectionExcludeModel": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
