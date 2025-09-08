@@ -63,43 +63,45 @@ const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | u
 const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
-})<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => ({
-  maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-  width: 56,
-  padding: 0,
-  overflow: 'hidden',
-  scrollbarWidth: 'thin',
-  '@media (prefers-reduced-motion: no-preference)': {
-    scrollBehavior: 'auto',
-  },
-  '@media (pointer: fine)': {
-    '&:hover': {
-      overflowY: 'auto',
+})<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => {
+  return {
+    maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
+    minWidth: 56,
+    padding: 0,
+    overflow: 'hidden',
+    scrollbarWidth: 'thin',
+    '@media (prefers-reduced-motion: no-preference)': {
+      scrollBehavior: 'auto',
     },
-  },
-  '@media (pointer: none), (pointer: coarse)': {
-    overflowY: 'auto',
-  },
-  '&:not(:first-of-type)': {
-    borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
-  '&::after': {
-    display: 'block',
-    content: '""',
-    // subtracting the height of one item, extra margin and borders to make sure the max height is correct
-    height: 'calc(100% - 40px - 6px)',
-  },
-  variants: [
-    {
-      props: { hasDigitalClockAlreadyBeenRendered: true },
-      style: {
-        '@media (prefers-reduced-motion: no-preference)': {
-          scrollBehavior: 'smooth',
-        },
+    '@media (pointer: fine)': {
+      '&:hover': {
+        overflowY: 'auto',
       },
     },
-  ],
-}));
+    '@media (pointer: none), (pointer: coarse)': {
+      overflowY: 'auto',
+    },
+    '&:not(:first-of-type)': {
+      borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
+    },
+    '&::after': {
+      display: 'block',
+      content: '""',
+      // subtracting the height of one item, extra margin and borders to make sure the max height is correct
+      height: 'calc(100% - 40px - 6px)',
+    },
+    variants: [
+      {
+        props: { hasDigitalClockAlreadyBeenRendered: true },
+        style: {
+          '@media (prefers-reduced-motion: no-preference)': {
+            scrollBehavior: 'smooth',
+          },
+        },
+      },
+    ],
+  };
+});
 
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
@@ -107,7 +109,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
 })(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',
-  width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
+  minWidth: MULTI_SECTION_CLOCK_SECTION_WIDTH,
   justifyContent: 'center',
   '&:first-of-type': {
     marginTop: 4,
