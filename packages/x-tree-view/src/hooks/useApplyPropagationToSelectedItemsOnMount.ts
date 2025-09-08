@@ -31,7 +31,7 @@ const defaultGetItemChildren = (item: any) => item.children;
  * ```tsx
  * const initialSelectedItems = useApplyPropagationToSelectedItemsOnMount({
  *   items: props.items,
- *   selectionPropagation: props.selectedPropagation,
+ *   selectionPropagation: props.selectionPropagation,
  *   selectedItems: ['10', '11', '13', '14'],
  * });
  *
