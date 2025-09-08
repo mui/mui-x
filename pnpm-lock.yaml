@@ -285,8 +285,8 @@ importers:
         specifier: ^1.0.9-canary.40
         version: 1.0.9-canary.40(@types/node@24.3.1)(rollup@4.46.2)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.4
-        version: 0.0.3-canary.4(@typescript-eslint/parser@8.42.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.42.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.35.0))(eslint@9.35.0)(prettier@3.6.2)(typescript@5.9.2)
+        specifier: ^0.0.3-canary.5
+        version: 0.0.3-canary.5(@typescript-eslint/parser@8.42.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.42.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.35.0))(eslint@9.35.0)(prettier@3.6.2)(typescript@5.9.2)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.9
@@ -4189,8 +4189,8 @@ packages:
       '@babel/core': '7'
       '@babel/preset-react': '7'
 
-  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.9':
-    resolution: {integrity: sha512-0t1oGU8iROtBImMLyCz8Oz7MZszGHF//zFZ8Js9NZ4u/EfBraC5Cj2V2P61nSR+GERBjzeJCeurtTkfc6/ZXwA==}
+  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.10':
+    resolution: {integrity: sha512-tDHS1Rw6ie50O/K+4Mf06bn0LZcJwt8i3wj2iwXVyI4f7kp8eEJUGutRu40HZlDZ6i9xb7yLNemhE8Ef1XkP4g==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@babel/core': '7'
@@ -4204,8 +4204,8 @@ packages:
     resolution: {integrity: sha512-l29raLcD3qkxtIpBzhtzoK5X6tf4N8Z7gOYHXxJpT24Mal2Jwb1dTh0nBODVVlmmcs6UEKaWUPRA5u3H+s4kKA==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.4':
-    resolution: {integrity: sha512-XXgQcq2w3oggD1LBg0kFaU5NT51kwp5LpVliPcF0vtPtga/gX2U9oNzQ8jSUNo+WuIle20Y8uaD4sYuQRXd3Lg==}
+  '@mui/internal-code-infra@0.0.3-canary.5':
+    resolution: {integrity: sha512-Dn87Jqor0IMyKz6rhL+jpk7AIzEeYbm2mdv9uoWTQ7CLLUavYZf/YT1Hy4b0YuXBYd1HoMQB2u74ggcrHM8U2g==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -14725,7 +14725,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.9(@babel/core@7.28.4)':
+  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.10(@babel/core@7.28.4)':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/helper-module-imports': 7.27.1
@@ -14768,11 +14768,12 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.4(@typescript-eslint/parser@8.42.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.42.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.35.0))(eslint@9.35.0)(prettier@3.6.2)(typescript@5.9.2)':
+  '@mui/internal-code-infra@0.0.3-canary.5(@typescript-eslint/parser@8.42.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.42.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.35.0))(eslint@9.35.0)(prettier@3.6.2)(typescript@5.9.2)':
     dependencies:
       '@argos-ci/core': 4.1.2
       '@babel/cli': 7.28.3(@babel/core@7.28.4)
       '@babel/core': 7.28.4
+      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-transform-runtime': 7.28.3(@babel/core@7.28.4)
       '@babel/preset-env': 7.28.3(@babel/core@7.28.4)
@@ -14781,7 +14782,7 @@ snapshots:
       '@eslint/compat': 1.3.2(eslint@9.35.0)
       '@eslint/js': 9.35.0
       '@mui/internal-babel-plugin-display-name': 1.0.4-canary.7(@babel/core@7.28.4)(@babel/preset-react@7.27.1(@babel/core@7.28.4))
-      '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.9(@babel/core@7.28.4)
+      '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.10(@babel/core@7.28.4)
       '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.20(@babel/core@7.28.4)
       '@next/eslint-plugin-next': 15.5.2
       '@octokit/auth-action': 6.0.1
