@@ -181,7 +181,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
       const item = itemsSelectors.itemModel(store.state, itemId);
-      const itemToMutate = { ...item }
+      const itemToMutate = { ...item };
       const newChildren = itemsSelectors.itemOrderedChildrenIds(store.state, itemId);
       if (newChildren.length > 0) {
         itemToMutate.children = newChildren.map(getItemFromItemId);
