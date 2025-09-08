@@ -16,7 +16,8 @@ export interface SchedulerTranslations {
 
   // PreferencesMenu
   preferencesMenu: string;
-  hideWeekends: string;
+  showWeekends: string;
+  showWeekNumber: string;
 
   // WeekView
   allDay: string;

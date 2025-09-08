@@ -16,7 +16,8 @@ export const enUS: SchedulerTranslations = {
 
   // Preferences menu
   preferencesMenu: 'Settings',
-  hideWeekends: 'Hide weekends',
+  showWeekends: 'Show weekends',
+  showWeekNumber: 'Show week number',
 
   // WeekView
   allDay: 'All day',
