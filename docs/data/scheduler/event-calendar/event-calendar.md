@@ -213,12 +213,21 @@ import { frFR } from '@mui/x-scheduler/material/translations/frFR';
 
 You can customize the preferences menu using the `preferencesMenuConfig` prop:
 
+Available properties:
+
+- `toggleWeekendVisibility`: show/hide the menu item that toggles weekend visibility.
+- `toggleWeekNumberVisibility`: show/hide the menu item that toggles week number visibility.
+
 ```ts
 // will hide the menu
 preferencesMenuConfig={false}
 
-// will hide the menu item responsible for toggling the week-end visibility
+// will hide the menu item responsible for toggling the weekend visibility
+// the other preferences remain visible
 preferencesMenuConfig={{ toggleWeekendVisibility: false }}
+
+// will hide the menu items for toggling weekend and week number visibility
+preferencesMenuConfig={{ toggleWeekendVisibility: false, toggleWeekNumberVisibility: false }}
 ```
 
 {{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}
