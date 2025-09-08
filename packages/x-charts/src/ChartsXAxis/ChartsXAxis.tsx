@@ -16,7 +16,7 @@ import { useDrawingArea } from '../hooks';
 import { getStringSize } from '../internals/domUtils';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 
-export const XAxisRoot = styled(AxisRoot, {
+const XAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsXAxis',
   slot: 'Root',
 })({});
