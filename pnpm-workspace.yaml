@@ -55,7 +55,7 @@ catalog:
   fast-glob: ^3.3.3
   jscodeshift: 17.3.0
   lodash: ^4.17.21
-  luxon: ^3.7.1
+  luxon: ^3.7.2
   moment: ^2.30.1
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
