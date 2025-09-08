@@ -64,7 +64,7 @@
     "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.1",
     "@babel/runtime": "catalog:",
     "@base-ui-components/react": "^1.0.0-beta.2",
-    "@base-ui-components/utils": "^0.1.0",
+    "@base-ui-components/utils": "^0.1.1",
     "@floating-ui/react": "^0.27.15",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
