@@ -11,7 +11,12 @@ export default function TreeDataReordering() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro loading={loading} rowReordering {...data} />
+      <DataGridPro
+        loading={loading}
+        rowReordering
+        disableRowSelectionOnClick
+        {...data}
+      />
     </div>
   );
 }

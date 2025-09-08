@@ -99,10 +99,6 @@ class SameParentSwapOperation extends BaseReorderOperation {
 
     targetNode = adjustedTargetNode;
 
-    if (sourceNode.type !== targetNode.type) {
-      return null;
-    }
-
     return {
       sourceNode,
       targetNode,
@@ -146,4 +142,20 @@ class SameParentSwapOperation extends BaseReorderOperation {
   }
 }
 
-export const treeDataReorderExecutor = new RowReorderExecutor([new SameParentSwapOperation()]);
+class CrossParentOperation extends BaseReorderOperation {
+  readonly operationType = 'cross-parent';
+
+  detectOperation(ctx: ReorderExecutionContext): ReorderOperation | null {
+    // TODO: Claude, implement this
+    return null;
+  }
+
+  executeOperation(operation: ReorderOperation, ctx: ReorderExecutionContext): void {
+    // TODO: Claude, implement this
+  }
+}
+
+export const treeDataReorderExecutor = new RowReorderExecutor([
+  new SameParentSwapOperation(),
+  new CrossParentOperation(),
+]);

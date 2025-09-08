@@ -1,1 +1,6 @@
-<DataGridPro loading={loading} rowReordering {...data} />
+<DataGridPro
+  loading={loading}
+  rowReordering
+  disableRowSelectionOnClick
+  {...data}
+/>
