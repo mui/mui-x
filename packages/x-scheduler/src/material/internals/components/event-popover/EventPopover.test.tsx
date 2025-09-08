@@ -7,6 +7,8 @@ import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { EventPopover } from './EventPopover';
+import { getColorClassName } from '../../utils/color-utils';
+import { DEFAULT_EVENT_COLOR } from '../../../../primitives/use-event-calendar';
 
 const adapter = getAdapter();
 
@@ -160,5 +162,72 @@ describe('<EventPopover />', () => {
     );
     expect(screen.queryByRole('button', { name: /save changes/i })).to.equal(null);
     expect(screen.queryByRole('button', { name: /delete event/i })).to.equal(null);
+  });
+
+  it('should handle a resource without an eventColor (fallback to default)', async () => {
+    const onEventsChange = spy();
+
+    const resourcesNoColor: CalendarResource[] = [
+      { id: 'r1', name: 'Work', eventColor: 'blue' },
+      { id: 'r2', name: 'Personal', eventColor: 'cyan' },
+      { id: 'r3', name: 'NoColor' },
+    ];
+
+    const eventWithNoColorResource: CalendarEvent = {
+      ...calendarEvent,
+      resource: 'r3',
+    };
+
+    render(
+      <StandaloneView
+        events={[eventWithNoColorResource]}
+        onEventsChange={onEventsChange}
+        resources={resourcesNoColor}
+      >
+        <Popover.Root open>
+          <EventPopover {...defaultProps} calendarEvent={eventWithNoColorResource} />
+        </Popover.Root>
+      </StandaloneView>,
+    );
+
+    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/NoColor/i);
+    expect(document.querySelector('.ResourceLegendColor')).to.have.class(
+      getColorClassName(DEFAULT_EVENT_COLOR),
+    );
+  });
+
+  it('should fallback to "No resource" with default color when the event has no resource', async () => {
+    const onEventsChange = spy();
+
+    const eventWithoutResource: CalendarEvent = {
+      ...calendarEvent,
+      resource: undefined,
+    };
+
+    const { user } = render(
+      <StandaloneView
+        events={[eventWithoutResource]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+      >
+        <Popover.Root open>
+          <EventPopover {...defaultProps} calendarEvent={eventWithoutResource} />
+        </Popover.Root>
+      </StandaloneView>,
+    );
+
+    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
+      /no resource/i,
+    );
+
+    expect(document.querySelector('.ResourceLegendColor')).to.have.class(
+      getColorClassName(DEFAULT_EVENT_COLOR),
+    );
+
+    await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+    expect(onEventsChange.calledOnce).to.equal(true);
+    const updated = onEventsChange.firstCall.firstArg[0];
+    expect(updated.resource).to.equal(undefined);
   });
 });
