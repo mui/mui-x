@@ -40,14 +40,4 @@ In the demo below, a `CustomFooterRowCount` component is added to the `footerRow
 
 ## Styling row groups based on child conditions
 
-Use `getRowClassName` to add a custom class to the row group and then write CSS to style it.
-
-To write a condition, use [`apiRef.current.getRowNode`](/x/api/data-grid/grid-api/#grid-api-prop-getRowNode) to check for the targeted row type and use [`apiRef.current.getRow`](/x/api/data-grid/grid-api/#grid-api-prop-getRow) to get the row data.
-
-The example below demonstrates how to style a row group when any of the child rows has a "Gross" value greater than a specific value:
-
-{{"demo": "RowGroupingStyling.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::success
-The styling method is not limited to the [`sx` prop](/x/react-data-grid/style/#using-the-sx-prop). You can use other styling solutions like plain CSS files or CSS modules.
-:::
+You can check the [styling row groups](/x/react-data-grid/style/#styling-row-groups) section for more information.

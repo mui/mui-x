@@ -5,6 +5,7 @@ import {
   useKeepGroupedColumnsHidden,
   GridRowClassNameParams,
   gridRowNodeSelector,
+  gridRowSelector,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -30,7 +31,7 @@ export default function RowGroupingStyling() {
       for (const childId of childIds) {
         const childNode = gridRowNodeSelector(apiRef, childId);
         if (childNode && childNode.type === 'leaf') {
-          const childRow = apiRef.current?.getRow<Movie>(childId);
+          const childRow = gridRowSelector(apiRef, childId) as Movie;
           if (childRow?.gross && childRow.gross > EXPECTED_GROSS) {
             return 'highlighted-group';
           }
