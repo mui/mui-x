@@ -1,14 +1,6 @@
 name: Publish packages
 
-# single workflow for both canary and stable as we can only specify a single
-# workflow file for trusted publishing
-
 on:
-  push:
-    branches:
-      - master
-  schedule:
-    - cron: '0 0 * * *' # Daily at midnight UTC
   workflow_dispatch:
     inputs:
       sha:
@@ -26,13 +18,14 @@ on:
         type: boolean
         default: true
 
-permissions:
-  contents: write # Required for pushing tags and creating releases
-  id-token: write # Required for provenance
+permissions: {}
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required for pushing tags and creating releases
+      id-token: write # Required for provenance
     environment:
       name: npm-publish
     steps:
@@ -44,6 +37,8 @@ jobs:
       - name: Prepare for publishing
         uses: mui/mui-public/.github/actions/publish-prepare@master
       - name: Publish packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Build common flags
           ARGS=""

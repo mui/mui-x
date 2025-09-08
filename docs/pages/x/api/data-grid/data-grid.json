@@ -55,6 +55,7 @@
       "type": { "name": "bool" },
       "default": "false (`!props.checkboxSelection` for MIT Data Grid)"
     },
+    "disableRowSelectionExcludeModel": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
