@@ -75,7 +75,11 @@ function MarkElement(props: MarkElementProps) {
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
+  const markIdentifier = React.useMemo(
+    () => ({ type: 'line' as const, seriesId: id, dataIndex }),
+    [id, dataIndex],
+  );
+  const interactionProps = useInteractionItemProps(markIdentifier);
 
   const ownerState = {
     id,

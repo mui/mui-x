@@ -76,7 +76,15 @@ const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
 function HeatmapItem(props: HeatmapItemProps) {
   const { seriesId, dataIndex, color, value, slotProps = {}, slots = {}, ...other } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'heatmap', seriesId, dataIndex });
+  const heatmapItemIdentifier = React.useMemo(
+    () => ({
+      type: 'heatmap' as const,
+      seriesId,
+      dataIndex,
+    }),
+    [seriesId, dataIndex],
+  );
+  const interactionProps = useInteractionItemProps(heatmapItemIdentifier);
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId,
     dataIndex,

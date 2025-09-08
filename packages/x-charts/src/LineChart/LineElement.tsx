@@ -106,7 +106,9 @@ function LineElement(props: LineElementProps) {
     onClick,
     ...other
   } = props;
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
+
+  const lineIdentifier = React.useMemo(() => ({ type: 'line' as const, seriesId: id }), [id]);
+  const interactionProps = useInteractionItemProps(lineIdentifier);
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });

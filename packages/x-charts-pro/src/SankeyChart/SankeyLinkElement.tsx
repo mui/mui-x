@@ -36,20 +36,23 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
   function SankeyLinkElement(props, ref) {
     const { link, opacity = 0.4, onClick, seriesId } = props;
 
-    const identifier: SankeyLinkIdentifierWithData = {
-      type: 'sankey',
-      seriesId,
-      subType: 'link',
-      targetId: link.target.id,
-      sourceId: link.source.id,
-      link,
-    };
+    const sankeyLinkIdentifier: SankeyLinkIdentifierWithData = React.useMemo(
+      () => ({
+        type: 'sankey' as const,
+        seriesId,
+        subType: 'link',
+        targetId: link.target.id,
+        sourceId: link.source.id,
+        link,
+      }),
+      [seriesId, link],
+    );
 
     // Add interaction props for tooltips
-    const interactionProps = useInteractionItemProps(identifier);
+    const interactionProps = useInteractionItemProps(sankeyLinkIdentifier);
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGPathElement>) => {
-      onClick?.(event, identifier);
+      onClick?.(event, sankeyLinkIdentifier);
     });
 
     if (!link.path) {

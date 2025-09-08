@@ -107,7 +107,8 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
+  const areaIdentifier = React.useMemo(() => ({ type: 'line' as const, seriesId: id }), [id]);
+  const interactionProps = useInteractionItemProps(areaIdentifier);
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });

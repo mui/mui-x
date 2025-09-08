@@ -65,7 +65,12 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   } = props;
 
   const theme = useTheme();
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
+
+  const circleMarkIdentifier = React.useMemo(
+    () => ({ type: 'line' as const, seriesId: id, dataIndex }),
+    [id, dataIndex],
+  );
+  const interactionProps = useInteractionItemProps(circleMarkIdentifier);
 
   const ownerState = {
     id,

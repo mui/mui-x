@@ -54,19 +54,21 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
 
     const labelAnchor = node.depth === 0 ? 'start' : 'end';
 
-    const identifier: SankeyNodeIdentifierWithData = {
-      type: 'sankey',
-      seriesId,
-      subType: 'node',
-      nodeId: node.id,
-      node,
-    };
-
+    const sankeyNodeIdentifier: SankeyNodeIdentifierWithData = React.useMemo(
+      () => ({
+        type: 'sankey' as const,
+        seriesId,
+        subType: 'node',
+        nodeId: node.id,
+        node,
+      }),
+      [seriesId, node],
+    );
     // Add interaction props for tooltips
-    const interactionProps = useInteractionItemProps(identifier);
+    const interactionProps = useInteractionItemProps(sankeyNodeIdentifier);
 
     const handleClick = useEventCallback((event: React.MouseEvent<SVGRectElement>) => {
-      onClick?.(event, identifier);
+      onClick?.(event, sankeyNodeIdentifier);
     });
 
     return (
