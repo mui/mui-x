@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
@@ -16,12 +16,6 @@ const calendarEvent: CalendarEvent = {
   description: 'Morning run',
 };
 
-const calendarEventResource: CalendarResource = {
-  id: 'r1',
-  name: 'Personal',
-  eventColor: 'cyan',
-};
-
 describe('<EventPopover />', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
@@ -30,7 +24,6 @@ describe('<EventPopover />', () => {
     anchor,
     container: document.body,
     calendarEvent,
-    calendarEventResource,
     onClose: () => {},
   };
 
