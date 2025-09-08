@@ -5,54 +5,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useAnimate, useAnimateBar, useDrawingArea } from '@mui/x-charts/hooks';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
-
-const data = [
-  {
-    country: 'Romania (2020)',
-    turnout: 33.2,
-  },
-  {
-    country: 'Bulgaria (2024)',
-    turnout: 33.4,
-  },
-  {
-    country: 'Albania (2021)',
-    turnout: 46.3,
-  },
-  {
-    country: 'United Kingdom (2024)',
-    turnout: 60.0,
-  },
-  {
-    country: 'Spain (2023)',
-    turnout: 66.0,
-  },
-  {
-    country: 'France (2024)',
-    turnout: 66.7,
-  },
-  {
-    country: 'Germany (2021)',
-    turnout: 76.4,
-  },
-  {
-    country: 'Sweden (2022)',
-    turnout: 83.8,
-  },
-  {
-    country: 'Malta (2022)',
-    turnout: 85.6,
-  },
-  {
-    country: 'Turkey (2023)',
-    turnout: 87.0,
-  },
-  {
-    country: 'Belgium (2024)',
-    turnout: 88.5,
-  },
-];
+import votesTurnout from '../dataset/votes.json';
 
 export default function ShinyBarChartHorizontal() {
   return (
@@ -60,7 +13,7 @@ export default function ShinyBarChartHorizontal() {
       <Typography>European countries with lowest & highest voter turnout</Typography>
       <BarChart
         height={300}
-        dataset={data}
+        dataset={votesTurnout}
         series={[
           {
             id: 'turnout',
@@ -95,16 +48,6 @@ export default function ShinyBarChartHorizontal() {
           legend: PiecewiseColorLegend,
           barLabel: BarLabelAtBase,
           bar: BarShadedBackground,
-        }}
-        sx={{
-          [`.${axisClasses.tickContainer}:nth-of-type(-n+3) .${axisClasses.tickLabel}`]:
-            {
-              fontWeight: 600,
-            },
-          [`.${axisClasses.tickContainer}:nth-last-of-type(-n+4) .${axisClasses.tickLabel}`]:
-            {
-              fontWeight: 600,
-            },
         }}
         slotProps={{
           legend: {
