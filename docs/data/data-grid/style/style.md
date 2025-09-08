@@ -70,7 +70,7 @@ To write a condition, use [`gridRowNodeSelector` and `gridRowSelector`](/x/react
 
 The example below demonstrates how to style a row group when any of the child rows has a "Gross" value greater than a specific value:
 
-{{"demo": "RowGroupingStyling.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RowGroupingStyling.js", "bg": "inline"}}
 
 :::success
 The styling method is not limited to the [`sx` prop](/x/react-data-grid/style/#using-the-sx-prop). You can use other styling solutions like plain CSS files or CSS modules.
