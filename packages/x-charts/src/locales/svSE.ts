@@ -17,5 +17,4 @@ export const svSELocaleText: ChartsLocaleText = {
   toolbarExportImage: (mimeType) => `Exportera som ${imageMimeTypes[mimeType] ?? mimeType}`,
 };
 
-
 export const svSE = getChartsLocalization(svSELocaleText);
