@@ -5,8 +5,8 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsYAxisProps } from '../models/axis';
-import { ChartsSingleYAxis } from './ChartsSingleYAxis';
-import { ChartsGroupedYAxis } from './ChartsGroupedYAxis';
+import { ChartsSingleYAxisTicks } from './ChartsSingleYAxisTicks';
+import { ChartsGroupedYAxisTicks } from './ChartsGroupedYAxisTicks';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { isInfinity } from '../internals/isInfinity';
@@ -115,9 +115,9 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const children =
     'groups' in axis && Array.isArray(axis.groups) ? (
-      <ChartsGroupedYAxis {...inProps} />
+      <ChartsGroupedYAxisTicks {...inProps} />
     ) : (
-      <ChartsSingleYAxis {...inProps} axisLabelHeight={axisLabelHeight} />
+      <ChartsSingleYAxisTicks {...inProps} axisLabelHeight={axisLabelHeight} />
     );
 
   return (

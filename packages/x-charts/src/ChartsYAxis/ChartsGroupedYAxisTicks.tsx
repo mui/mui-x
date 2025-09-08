@@ -31,7 +31,7 @@ const getGroupingConfig = (
 /**
  * @ignore - internal component.
  */
-function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
+function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
   const {
     yScale,
     defaultizedProps,
@@ -119,4 +119,4 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
   );
 }
 
-export { ChartsGroupedYAxis };
+export { ChartsGroupedYAxisTicks };

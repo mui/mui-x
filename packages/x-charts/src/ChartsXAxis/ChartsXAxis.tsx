@@ -6,8 +6,8 @@ import { useTheme, useThemeProps } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsXAxisProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
-import { ChartsSingleXAxis } from './ChartsSingleXAxis';
-import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
+import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
+import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { isBandScale } from '../internals/isBandScale';
 import { isInfinity } from '../internals/isInfinity';
@@ -99,9 +99,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const children =
     'groups' in axis && Array.isArray(axis.groups) ? (
-      <ChartsGroupedXAxis {...inProps} />
+      <ChartsGroupedXAxisTicks {...inProps} />
     ) : (
-      <ChartsSingleXAxis {...inProps} axisLabelHeight={labelHeight} />
+      <ChartsSingleXAxisTicks {...inProps} axisLabelHeight={labelHeight} />
     );
 
   const labelRefPoint = {

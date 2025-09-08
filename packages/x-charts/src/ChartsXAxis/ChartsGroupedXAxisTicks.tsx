@@ -33,7 +33,7 @@ interface ChartsGroupedXAxisProps extends ChartsXAxisProps {}
 /**
  * @ignore - internal component.
  */
-function ChartsGroupedXAxis(inProps: ChartsGroupedXAxisProps) {
+function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
   const {
     xScale,
     defaultizedProps,
@@ -121,4 +121,4 @@ function ChartsGroupedXAxis(inProps: ChartsGroupedXAxisProps) {
   );
 }
 
-export { ChartsGroupedXAxis };
+export { ChartsGroupedXAxisTicks };
