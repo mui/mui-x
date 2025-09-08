@@ -28,6 +28,7 @@ import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
+import { applyDomainLimit } from './applyDomainLimit';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -193,24 +194,30 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
 
+    // Handle domain limit function transformation
+    let finalAxisExtremums = axisExtremums;
     if (typeof domainLimit === 'function') {
       const { min, max } = domainLimit(minData, maxData);
-      axisExtremums[0] = min;
-      axisExtremums[1] = max;
+      finalAxisExtremums = [min, max];
     }
 
-    const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
+    const rawTickNumber = getTickNumber({ ...axis, range, domain: finalAxisExtremums });
     const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
-    const scale = getScale(scaleType, axisExtremums, zoomedRange);
+    const { scale: finalScale } = applyDomainLimit(
+      finalAxisExtremums,
+      domainLimit,
+      scaleType,
+      zoomedRange,
+      domainLimit === 'nice' ? rawTickNumber : undefined
+    );
 
     if (isSymlogScaleConfig(axis) && axis.constant != null) {
-      (scale as ScaleSymLog<number, number>).constant(axis.constant);
+      (finalScale as ScaleSymLog<number, number>).constant(axis.constant);
     }
 
-    const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
     const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 

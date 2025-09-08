@@ -15,6 +15,7 @@ import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
 import { getScale } from '../../../getScale';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
+import { applyDomainLimit } from './applyDomainLimit';
 
 type CreateAxisFilterMapperParams = {
   zoomMap: Map<AxisId, ZoomData>;
@@ -126,15 +127,7 @@ export function createContinuousScaleGetAxisFilter(
   let min: number | Date;
   let max: number | Date;
 
-  // Apply domain limit function if provided, similar to computeAxisValue
-  let adjustedExtrema = extrema;
-  if (typeof domainLimit === 'function') {
-    const { min: adjustedMin, max: adjustedMax } = domainLimit(extrema[0], extrema[1]);
-    adjustedExtrema = [adjustedMin, adjustedMax] as const;
-  }
-
-  const scale = getScale(scaleType ?? 'linear', adjustedExtrema, [0, 100]);
-  const finalScale = domainLimit === 'nice' ? scale.nice() : scale;
+  const { scale: finalScale } = applyDomainLimit(extrema, domainLimit, scaleType ?? 'linear', [0, 100]);
   [min, max] = finalScale.domain();
 
   min = min instanceof Date ? min.getTime() : min;
