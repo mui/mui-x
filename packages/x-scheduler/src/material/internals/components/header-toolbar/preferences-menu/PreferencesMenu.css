@@ -12,7 +12,6 @@
 }
 
 .PreferencesMenuPopup {
-  min-width: 185px;
   padding: var(--space-2);
   border-radius: var(--radius-4);
   background-color: var(--surface);
@@ -23,9 +22,9 @@
 .PreferencesMenuCheckboxItem {
   background: var(--surface);
   user-select: none;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto var(--space-4);
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-3);
