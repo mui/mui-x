@@ -31,8 +31,8 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
 
   const getDayList = useDayList();
   const days = React.useMemo(
-    () => getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }),
-    [getDayList, week, preferences.hideWeekends],
+    () => getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
+    [getDayList, week, preferences.showWeekends],
   );
 
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
@@ -54,14 +54,23 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   };
 
   return (
-    <DayGrid.Row key={weekNumber} className="MonthViewRow">
-      <div
-        className="MonthViewWeekNumberCell"
-        role="rowheader"
-        aria-label={translations.weekNumberAriaLabel(weekNumber)}
-      >
-        {weekNumber}
-      </div>
+    <DayGrid.Row
+      key={weekNumber}
+      className={clsx(
+        'MonthViewRow',
+        'MonthViewRowGrid',
+        preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+      )}
+    >
+      {preferences.showWeekNumber && (
+        <div
+          className="MonthViewWeekNumberCell"
+          role="rowheader"
+          aria-label={translations.weekNumberAriaLabel(weekNumber)}
+        >
+          {weekNumber}
+        </div>
+      )}
       {daysWithEvents.map(({ day, events, allDayEvents }, dayIdx) => {
         const isCurrentMonth = adapter.isSameMonth(day, visibleDate);
 
