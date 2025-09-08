@@ -10,6 +10,7 @@ import {
   CalendarViewConfig,
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
+  CalendarEventColor,
 } from '../models';
 import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
@@ -25,6 +26,7 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekNumberVisibility: true,
 };
 const EMPTY_ARRAY: any[] = [];
+export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
 export class EventCalendarInstance {
   private store: EventCalendarStore;
@@ -63,6 +65,7 @@ export class EventCalendarInstance {
     | 'areEventsDraggable'
     | 'areEventsResizable'
     | 'ampm'
+    | 'eventColor'
     | 'showCurrentTimeIndicator'
   > {
     return {
@@ -73,6 +76,7 @@ export class EventCalendarInstance {
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
       ampm: parameters.ampm ?? true,
+      eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
     };
   }
