@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
-import { ChartsXAxisProps } from '../models/axis';
+import { AxisScaleConfig, ChartsXAxisProps, ComputedAxis } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
@@ -33,8 +33,24 @@ const XAxisRoot = styled(AxisRoot, {
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const axis = xAxis[inProps.axisId ?? xAxisIds[0]];
+
+  if (!axis) {
+    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    return null;
+  }
+
+  return <XAxis {...inProps} axis={axis} />;
+}
+
+function XAxis({
+  axis,
+  ...inProps
+}: Omit<ChartsXAxisProps, 'axis'> & {
+  axis: ComputedAxis<keyof AxisScaleConfig, any, ChartsXAxisProps>;
+}) {
   const { scale: xScale, tickNumber, reverse, ...settings } = axis;
 
+  // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
 
   const defaultizedProps = {
@@ -79,11 +95,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     } as Partial<ChartsTextProps>,
     ownerState: {},
   });
-
-  if (!axis) {
-    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
-    return null;
-  }
 
   const domain = xScale.domain();
   const isScaleBand = isBandScale(xScale);

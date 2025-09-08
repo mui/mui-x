@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
-import { ChartsYAxisProps } from '../models/axis';
+import { AxisScaleConfig, ChartsYAxisProps, ComputedAxis } from '../models/axis';
 import { ChartsSingleYAxisTicks } from './ChartsSingleYAxisTicks';
 import { ChartsGroupedYAxisTicks } from './ChartsGroupedYAxisTicks';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
@@ -33,10 +33,29 @@ const YAxisRoot = styled(AxisRoot, {
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
   const { yAxis, yAxisIds } = useYAxes();
+
+  const axis = yAxis[inProps.axisId ?? yAxisIds[0]];
+  if (!axis) {
+    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    return null;
+  }
+
+  return <YAxis {...inProps} axis={axis} />;
+}
+
+function YAxis({
+  axis,
+  ...inProps
+}: Omit<ChartsYAxisProps, 'axis'> & {
+  axis: ComputedAxis<keyof AxisScaleConfig, any, ChartsYAxisProps>;
+}) {
+  const { yAxis, yAxisIds } = useYAxes();
   const drawingArea = useDrawingArea();
   const isHydrated = useIsHydrated();
 
   const { scale: yScale, tickNumber, reverse, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
+
+  // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
   const defaultizedProps = { ...defaultProps, ...themedProps };
   const classes = useUtilityClasses(defaultizedProps);
@@ -84,12 +103,6 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     } as Partial<ChartsTextProps>,
     ownerState: {},
   });
-
-  const axis = yAxis[inProps.axisId ?? yAxisIds[0]];
-  if (!axis) {
-    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
-    return null;
-  }
 
   const domain = yScale.domain();
   const isScaleBand = isBandScale(yScale);
