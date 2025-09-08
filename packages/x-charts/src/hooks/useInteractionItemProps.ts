@@ -28,20 +28,15 @@ export const useInteractionItemProps = (
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
-  const dataRef = React.useRef(data);
-
-  if (dataRef.current !== data) {
-    dataRef.current = data;
-  }
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
-    instance.setItemInteraction(dataRef.current);
-    instance.setHighlight(dataRef.current);
+    instance.setItemInteraction(data);
+    instance.setHighlight(data);
   });
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
-    instance.removeItemInteraction(dataRef.current);
+    instance.removeItemInteraction(data);
     instance.clearHighlight();
   });
 
