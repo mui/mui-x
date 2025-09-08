@@ -26,7 +26,8 @@ export const useGridRowsOverridableMethods = (
   const setRowIndex = React.useCallback(
     async (sourceRowId: GridRowId, targetOriginalIndex: number) => {
       if (gridRowMaximumTreeDepthSelector(apiRef) === 1) {
-        return setRowIndexPlain(sourceRowId, targetOriginalIndex);
+        setRowIndexPlain(sourceRowId, targetOriginalIndex);
+        return;
       }
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
