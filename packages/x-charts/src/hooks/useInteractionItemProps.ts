@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
@@ -27,18 +28,17 @@ export const useInteractionItemProps = (
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
-
-  const onPointerEnter = React.useCallback(() => {
+  const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
     instance.setItemInteraction(data);
     instance.setHighlight(data);
-  }, [instance, data]);
+  });
 
-  const onPointerLeave = React.useCallback(() => {
+  const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
     instance.removeItemInteraction(data);
     instance.clearHighlight();
-  }, [instance, data]);
+  });
 
   React.useEffect(() => {
     return () => {

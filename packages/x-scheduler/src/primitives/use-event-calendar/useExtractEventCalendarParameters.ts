@@ -20,6 +20,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     preferences,
     preferencesMenuConfig,
     ampm,
+    eventColor,
     showCurrentTimeIndicator,
     ...forwardedProps
   } = props;
@@ -41,6 +42,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       preferences,
       preferencesMenuConfig,
       ampm,
+      eventColor,
       showCurrentTimeIndicator,
     }),
     [
@@ -59,6 +61,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       preferences,
       preferencesMenuConfig,
       ampm,
+      eventColor,
       showCurrentTimeIndicator,
     ],
   );

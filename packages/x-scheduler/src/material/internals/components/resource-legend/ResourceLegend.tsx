@@ -10,7 +10,7 @@ import { ResourceLegendProps } from './ResourceLegend.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { selectors } from '../../../../primitives/use-event-calendar';
+import { DEFAULT_EVENT_COLOR, selectors } from '../../../../primitives/use-event-calendar';
 import { CalendarResource } from '../../../../primitives/models';
 import './ResourceLegend.css';
 
@@ -20,7 +20,12 @@ function ResourceLegendItem(props: { resource: CalendarResource }) {
 
   return (
     <label className="ResourceLegendItem">
-      <span className={clsx('ResourceLegendColor', getColorClassName({ resource }))} />
+      <span
+        className={clsx(
+          'ResourceLegendColor',
+          getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
+        )}
+      />
       <span className="ResourceLegendName">{resource.name}</span>
       <Checkbox.Root
         className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
