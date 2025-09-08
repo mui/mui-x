@@ -14,9 +14,9 @@ import type { DataGridProProcessedProps } from '../../../models/dataGridProProps
 
 export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'processRowUpdate' | 'onProcessRowUpdateError'>,
+  props: Pick<DataGridProProcessedProps, 'processRowUpdate' | 'onProcessRowUpdateError' | 'setTreeDataPath'>,
 ) => {
-  const { processRowUpdate, onProcessRowUpdateError } = props;
+  const { processRowUpdate, onProcessRowUpdateError, setTreeDataPath } = props;
 
   const setRowIndex = React.useCallback(
     async (sourceRowId: GridRowId, targetOriginalIndex: number) => {
@@ -55,11 +55,12 @@ export const useGridRowsOverridableMethods = (
         apiRef,
         processRowUpdate,
         onProcessRowUpdateError,
+        setTreeDataPath,
       };
 
       await treeDataReorderExecutor.execute(executionContext);
     },
-    [apiRef, processRowUpdate, onProcessRowUpdateError],
+    [apiRef, processRowUpdate, onProcessRowUpdateError, setTreeDataPath],
   );
 
   return {

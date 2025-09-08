@@ -31,6 +31,7 @@ export interface ReorderExecutionContext<ApiRef extends GridPrivateApiPro = Grid
   apiRef: RefObject<ApiRef>;
   processRowUpdate?: DataGridProProcessedProps['processRowUpdate'];
   onProcessRowUpdateError?: DataGridProProcessedProps['onProcessRowUpdateError'];
+  setTreeDataPath?: DataGridProProcessedProps['setTreeDataPath'];
 }
 
 export interface ReorderOperation {
