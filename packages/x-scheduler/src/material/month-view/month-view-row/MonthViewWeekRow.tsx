@@ -31,8 +31,8 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
 
   const getDayList = useDayList();
   const days = React.useMemo(
-    () => getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }),
-    [getDayList, week, preferences.hideWeekends],
+    () => getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
+    [getDayList, week, preferences.showWeekends],
   );
 
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
@@ -59,10 +59,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       className={clsx(
         'MonthViewRow',
         'MonthViewRowGrid',
-        preferences.hideWeekNumber ? undefined : 'WithWeekNumber',
+        preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
       )}
     >
-      {!preferences.hideWeekNumber && (
+      {preferences.showWeekNumber && (
         <div
           className="MonthViewWeekNumberCell"
           role="rowheader"

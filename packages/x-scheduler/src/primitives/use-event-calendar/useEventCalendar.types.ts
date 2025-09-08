@@ -88,7 +88,7 @@ export interface EventCalendarParameters {
   eventColor?: CalendarEventColor;
   /**
    * Preferences for the calendar.
-   * @default { hideWeekends: false, hideWeekNumber: false }
+   * @default { showWeekends: true, showWeekNumber: false }
    */
   preferences?: Partial<CalendarPreferences>;
   /**

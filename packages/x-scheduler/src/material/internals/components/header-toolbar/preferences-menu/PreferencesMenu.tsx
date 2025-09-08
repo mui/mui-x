@@ -42,13 +42,13 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   }[] = [
     {
       configKey: 'toggleWeekendVisibility',
-      preferenceKey: 'hideWeekends',
-      label: translations.hideWeekends,
+      preferenceKey: 'showWeekends',
+      label: translations.showWeekends,
     },
     {
       configKey: 'toggleWeekNumberVisibility',
-      preferenceKey: 'hideWeekNumber',
-      label: translations.hideWeekNumber,
+      preferenceKey: 'showWeekNumber',
+      label: translations.showWeekNumber,
     },
   ];
 

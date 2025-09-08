@@ -11,12 +11,12 @@ export async function openPreferencesMenu(user) {
   return button;
 }
 
-export async function toggleHideWeekends(user) {
-  const menuItem = await screen.findByRole('menuitemcheckbox', { name: /hide weekends/i });
+export async function toggleShowWeekends(user) {
+  const menuItem = await screen.findByRole('menuitemcheckbox', { name: /show weekends/i });
   await user.click(menuItem);
 }
 
-export async function toggleHideWeekNumber(user) {
-  const menuItem = await screen.findByRole('menuitemcheckbox', { name: /hide week number/i });
+export async function toggleShowWeekNumber(user) {
+  const menuItem = await screen.findByRole('menuitemcheckbox', { name: /show week number/i });
   await user.click(menuItem);
 }

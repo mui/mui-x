@@ -57,7 +57,7 @@ describe('<PreferencesMenu />', () => {
     expect(getPreferencesMenu()).to.equal(null);
   });
 
-  it('should hide hideWeekends option when toggleWeekendVisibility is false', async () => {
+  it('should hide showWeekends option when toggleWeekendVisibility is false', async () => {
     const { user } = render(
       <StandaloneView
         events={[]}
@@ -69,13 +69,13 @@ describe('<PreferencesMenu />', () => {
 
     await openPreferencesMenu(user);
 
-    expect(screen.queryByRole('menuitemcheckbox', { name: /hide weekends/i })).to.equal(null);
-    expect(screen.queryByRole('menuitemcheckbox', { name: /hide week number/i })).not.to.equal(
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(
       null,
     );
   });
 
-  it('should hide hideWeekNumber option when toggleWeekNumberVisibility is false', async () => {
+  it('should hide showWeekNumber option when toggleWeekNumberVisibility is false', async () => {
     const { user } = render(
       <StandaloneView
         events={[]}
@@ -87,7 +87,7 @@ describe('<PreferencesMenu />', () => {
 
     await openPreferencesMenu(user);
 
-    expect(screen.queryByRole('menuitemcheckbox', { name: /hide weekends/i })).not.to.equal(null);
-    expect(screen.queryByRole('menuitemcheckbox', { name: /hide week number/i })).to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).to.equal(null);
   });
 });

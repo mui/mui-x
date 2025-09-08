@@ -79,16 +79,16 @@ export const MonthView = React.memo(
               className={clsx(
                 'MonthViewHeader',
                 'MonthViewRowGrid',
-                preferences.hideWeekNumber ? undefined : 'WithWeekNumber',
+                preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
               )}
             >
-              {!preferences.hideWeekNumber && (
+              {preferences.showWeekNumber && (
                 <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
               )}
               {getDayList({
                 date: weeks[0],
                 amount: 'week',
-                excludeWeekends: preferences.hideWeekends,
+                excludeWeekends: !preferences.showWeekends,
               }).map((day) => (
                 <div
                   key={day.toString()}
