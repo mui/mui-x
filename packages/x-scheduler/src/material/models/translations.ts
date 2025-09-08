@@ -40,12 +40,14 @@ export interface SchedulerTranslations {
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
+  labelNoResource: string;
   recurrenceLabel: string;
   recurrenceNoRepeat: string;
   recurrenceDailyPresetLabel: string;
   recurrenceWeeklyPresetLabel: (weekday: string) => string;
   recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
   recurrenceYearlyPresetLabel: (date: string) => string;
+  resourceLabel: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;
