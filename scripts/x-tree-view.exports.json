@@ -55,6 +55,7 @@
   { "name": "TreeViewItemsReorderingAction", "kind": "TypeAlias" },
   { "name": "TreeViewSelectionPropagation", "kind": "Interface" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
+  { "name": "useApplyPropagationToSelectedItemsOnMount", "kind": "Function" },
   { "name": "useTreeItem", "kind": "Variable" },
   { "name": "UseTreeItemCheckboxSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItemContentSlotOwnProps", "kind": "Interface" },
