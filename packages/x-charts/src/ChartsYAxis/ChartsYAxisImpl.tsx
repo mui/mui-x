@@ -10,7 +10,6 @@ import { defaultProps, useUtilityClasses } from './utilities';
 import { isInfinity } from '../internals/isInfinity';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useIsHydrated } from '../hooks/useIsHydrated';
-import { useYAxes } from '../hooks';
 import { isBandScale } from '../internals/isBandScale';
 import { getStringSize } from '../internals/domUtils';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
@@ -28,19 +27,12 @@ interface ChartsYAxisImplProps extends Omit<ChartsYAxisProps, 'axis'> {
  * @ignore - internal component. Use `ChartsYAxis` instead.
  */
 export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
-  const { yAxis, yAxisIds } = useYAxes();
-  const drawingArea = useDrawingArea();
+  const { scale: yScale, tickNumber, reverse, ...settings } = axis;
   const isHydrated = useIsHydrated();
-
-  const { scale: yScale, tickNumber, reverse, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
   const defaultizedProps = { ...defaultProps, ...themedProps };
-  const classes = useUtilityClasses(defaultizedProps);
-
-  const { left, top, width, height } = drawingArea;
-  const theme = useTheme();
 
   const {
     position,
@@ -53,6 +45,10 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
     slots,
     slotProps,
   } = defaultizedProps;
+
+  const theme = useTheme();
+  const classes = useUtilityClasses(defaultizedProps);
+  const { left, top, width, height } = useDrawingArea();
 
   const positionSign = position === 'right' ? 1 : -1;
   const Line = slots?.axisLine ?? 'line';

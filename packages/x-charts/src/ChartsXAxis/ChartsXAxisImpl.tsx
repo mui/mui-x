@@ -30,11 +30,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
-
-  const defaultizedProps = {
-    ...defaultProps,
-    ...themedProps,
-  };
+  const defaultizedProps = { ...defaultProps, ...themedProps };
 
   const {
     position,
@@ -50,11 +46,9 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
 
   const theme = useTheme();
   const classes = useUtilityClasses(defaultizedProps);
-  const drawingArea = useDrawingArea();
-  const { left, top, width, height } = drawingArea;
+  const { left, top, width, height } = useDrawingArea();
 
   const positionSign = position === 'bottom' ? 1 : -1;
-
   const Line = slots?.axisLine ?? 'line';
   const Label = slots?.axisLabel ?? ChartsText;
 
