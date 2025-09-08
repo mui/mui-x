@@ -21,7 +21,7 @@ export const useGridRowsOverridableMethods = (
   props: Pick<DataGridPremiumProcessedProps, 'processRowUpdate' | 'onProcessRowUpdateError'>,
 ) => {
   const { processRowUpdate, onProcessRowUpdateError } = props;
-  const { setRowIndex: setRowIndexPlain } = useGridRowsOverridableMethodsCommunity(apiRef, props);
+  const { setRowIndex: setRowIndexPlain } = useGridRowsOverridableMethodsCommunity(apiRef);
 
   const setRowIndex = React.useCallback(
     async (sourceRowId: GridRowId, targetOriginalIndex: number) => {
