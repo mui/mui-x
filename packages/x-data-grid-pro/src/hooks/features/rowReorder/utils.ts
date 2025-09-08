@@ -99,6 +99,83 @@ export const collectAllLeafDescendants = (
   return leafIds;
 };
 
+// Recursively collect all descendant nodes (groups and leaves) from a group
+export const collectAllDescendants = (
+  groupNode: GridGroupNode,
+  tree: GridRowTreeConfig,
+): GridTreeNode[] => {
+  const descendants: GridTreeNode[] = [];
+
+  const collectFromNode = (nodeId: GridRowId) => {
+    const node = tree[nodeId];
+    if (node) {
+      descendants.push(node);
+      if (node.type === 'group') {
+        (node as GridGroupNode).children.forEach(collectFromNode);
+      }
+    }
+  };
+
+  groupNode.children.forEach(collectFromNode);
+  return descendants;
+};
+
+// Check if a node is a descendant of another node
+export const isDescendantOf = (
+  possibleDescendant: GridTreeNode,
+  ancestor: GridTreeNode,
+  tree: GridRowTreeConfig,
+): boolean => {
+  let current = possibleDescendant;
+
+  while (current && current.id !== GRID_ROOT_GROUP_ID) {
+    if (current.id === ancestor.id) {
+      return true;
+    }
+    current = tree[current.parent!];
+  }
+
+  return false;
+};
+
+// Build a simple string path to a node (for tree data paths)
+export const buildTreeDataPath = (node: GridTreeNode, tree: GridRowTreeConfig): string[] => {
+  const path: string[] = [];
+  let current = node;
+
+  while (current && current.id !== GRID_ROOT_GROUP_ID) {
+    if ((current.type === 'leaf' || current.type === 'group') && current.groupingKey !== null) {
+      path.unshift(String(current.groupingKey));
+    }
+    current = tree[current.parent!];
+  }
+
+  return path;
+};
+
+// Update depths for all descendant nodes recursively
+export const updateDescendantDepths = (
+  group: GridGroupNode,
+  tree: GridRowTreeConfig,
+  depthDiff: number,
+): void => {
+  const updateNodeDepth = (nodeId: GridRowId) => {
+    const node = tree[nodeId];
+    if (node) {
+      tree[nodeId] = {
+        ...node,
+        depth: node.depth + depthDiff,
+      };
+
+      if (node.type === 'group') {
+        (node as GridGroupNode).children.forEach(updateNodeDepth);
+      }
+    }
+  };
+
+  group.children.forEach(updateNodeDepth);
+};
+
 /**
  * Adjusts the target node based on specific reorder scenarios and constraints.
  *

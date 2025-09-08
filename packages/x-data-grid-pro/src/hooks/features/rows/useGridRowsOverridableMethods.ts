@@ -14,7 +14,10 @@ import type { DataGridProProcessedProps } from '../../../models/dataGridProProps
 
 export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'processRowUpdate' | 'onProcessRowUpdateError' | 'setTreeDataPath'>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'processRowUpdate' | 'onProcessRowUpdateError' | 'setTreeDataPath'
+  >,
 ) => {
   const { processRowUpdate, onProcessRowUpdateError, setTreeDataPath } = props;
 
