@@ -42,26 +42,26 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const [state, setState] = React.useState<{
     dropdownView: CalendarView | null;
     prevView: CalendarView;
-  }>({ dropdownView: dropdown[0], prevView: view });
+    prevViews: CalendarView[];
+  }>({ dropdownView: dropdown[0], prevView: view, prevViews: views });
 
   // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
-  React.useEffect(() => {
+  if (state.prevView !== view || state.prevViews !== views) {
     let newDropdownView: CalendarView | null;
-    if (state.prevView !== view) {
-      if (dropdown.includes(view)) {
-        newDropdownView = view;
-      } else if (state.dropdownView != null && dropdown.includes(state.dropdownView)) {
-        newDropdownView = state.dropdownView;
-      } else {
-        newDropdownView = dropdown[0] ?? null;
-      }
-
-      setState({
-        prevView: view,
-        dropdownView: newDropdownView,
-      });
+    if (dropdown.includes(view)) {
+      newDropdownView = view;
+    } else if (state.dropdownView != null && views.includes(state.dropdownView)) {
+      newDropdownView = state.dropdownView;
+    } else {
+      newDropdownView = dropdown[0] ?? null;
     }
-  }, [view, dropdown]);
+
+    setState({
+      prevView: view,
+      prevViews: views,
+      dropdownView: newDropdownView,
+    });
+  }
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
