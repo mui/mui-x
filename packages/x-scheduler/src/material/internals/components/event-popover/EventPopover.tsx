@@ -155,7 +155,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       instance.updateEvent({
         ...calendarEvent,
         ...payload,
-        ...(recurrenceModified ? { rrule } : {}),
+        rrule,
       });
     }
 
