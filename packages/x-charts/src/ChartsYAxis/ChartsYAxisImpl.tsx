@@ -98,7 +98,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
   const isScaleBand = isBandScale(yScale);
   const skipTickRendering =
     (isScaleBand && domain.length === 0) || (!isScaleBand && domain.some(isInfinity));
-  let children = null;
+  let children: React.ReactNode = null;
 
   if (!skipTickRendering) {
     children =

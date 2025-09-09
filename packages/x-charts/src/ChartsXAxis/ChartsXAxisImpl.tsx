@@ -78,7 +78,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
   const isScaleBand = isBandScale(xScale);
   const skipTickRendering =
     (isScaleBand && domain.length === 0) || (!isScaleBand && domain.some(isInfinity));
-  let children = null;
+  let children: React.ReactNode = null;
 
   if (!skipTickRendering) {
     children =
