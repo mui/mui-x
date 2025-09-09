@@ -12,7 +12,7 @@ export default function BasicTimelineView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '500px', width: '100%' }}>
+    <div style={{ width: '100%' }}>
       <StandaloneView
         events={events}
         resources={resources}

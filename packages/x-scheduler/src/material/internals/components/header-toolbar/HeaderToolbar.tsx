@@ -19,6 +19,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
   const views = useStore(store, selectors.views);
+  const view = useStore(store, selectors.view);
   const showViewSwitcher = views.length > 1;
 
   return (
@@ -32,7 +33,9 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       {...other}
     >
       <div className="PrimaryActionWrapper">
-        {showViewSwitcher && <ViewSwitcher />}
+        {showViewSwitcher && (
+          <ViewSwitcher views={views} currentView={view} onViewChange={instance.setView} />
+        )}
         <button className="Button OutlinedNeutralButton" onClick={instance.goToToday} type="button">
           {translations.today}
         </button>

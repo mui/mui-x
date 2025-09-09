@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { ViewSwitcher } from './view-switcher';
 import './HeaderToolbar.css';
 import { TimelineView } from '../TimelineView.types';
+import { ViewSwitcher } from '../../internals/components/header-toolbar/view-switcher';
 
 interface HeaderToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
   views: TimelineView[];
@@ -19,11 +19,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
 
   return (
     <header ref={forwardedRef} className={clsx('HeaderToolbarContainer', className)} {...other}>
-      <ViewSwitcher<TimelineView>
-        views={views}
-        currentView={currentView}
-        onViewChange={onViewChange}
-      />
+      <ViewSwitcher views={views} currentView={currentView} onViewChange={onViewChange} />
     </header>
   );
 });

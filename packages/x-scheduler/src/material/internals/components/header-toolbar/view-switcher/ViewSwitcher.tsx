@@ -3,23 +3,25 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Menu } from '@base-ui-components/react/menu';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useStore } from '@base-ui-components/utils/store';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
-import { selectors } from '../../../../../primitives/use-event-calendar';
+
+interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
+  views: string[];
+  currentView: string;
+  onViewChange: (view: any, event: any) => void;
+}
 
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
-  props: React.HTMLAttributes<HTMLDivElement>,
+  props: ViewSwitcherProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, ...other } = props;
+  const { className, views, onViewChange, currentView: view, ...other } = props;
 
-  const { store, instance } = useEventCalendarContext();
-  const views = useStore(store, selectors.views);
-  const view = useStore(store, selectors.view);
+  const { instance } = useEventCalendarContext();
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
@@ -29,7 +31,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
     (event: React.MouseEvent<HTMLElement>) => {
       const newView = event.currentTarget.getAttribute('data-view');
       if (newView) {
-        instance.setView(newView as CalendarView, event);
+        onViewChange(newView, event);
       }
     },
     [instance],
@@ -37,7 +39,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 
   const handleViewChange = React.useCallback(
     (newView: CalendarView, eventDetails: Menu.Root.ChangeEventDetails) => {
-      instance.setView(newView, eventDetails.event);
+      onViewChange(newView, eventDetails.event);
     },
     [instance],
   );
@@ -47,14 +49,14 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const dropdown = React.useMemo(() => (showAll ? [] : views.slice(2)), [showAll, views]);
 
   const [state, setState] = React.useState<{
-    dropdownView: CalendarView | null;
-    prevView: CalendarView;
-    prevViews: CalendarView[];
+    dropdownView: string | null;
+    prevView: string;
+    prevViews: string[];
   }>({ dropdownView: dropdown[0], prevView: view, prevViews: views });
 
   // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
   if (state.prevView !== view || state.prevViews !== views) {
-    let newDropdownView: CalendarView | null;
+    let newDropdownView: string | null;
     if (dropdown.includes(view)) {
       newDropdownView = view;
     } else if (state.dropdownView != null && views.includes(state.dropdownView)) {
