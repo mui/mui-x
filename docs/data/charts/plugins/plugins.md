@@ -68,6 +68,16 @@ For example:
 - `[useChartClosestPoint, useChartCartesianAxis]` does not work because the closest point plugin is before the cartesian one.
 - `[useChartCartesianAxis, useChartInteraction]` works with limited feature because the cartesian plugin needs to be after the interaction one to get axis interaction.
 
+| Plugin                                             | Dependencies            | Optional dependency                        |
+| :------------------------------------------------- | :---------------------- | :----------------------------------------- |
+| `useChartCartesianAxis`                            |                         | `useChartInteraction`                      |
+| `useChartPolarAxis`                                |                         | `useChartInteraction`                      |
+| `useChartHighlight`                                |                         |                                            |
+| `useChartInteraction`                              |                         |                                            |
+| `useChartClosestPoint`                             | `useChartCartesianAxis` | `useChartInteraction`, `useChartHighlight` |
+| `useChartZAxis`                                    |                         |                                            |
+| `useChartProExport` <span class="plan-pro"></span> |                         |                                            |
+| `useChartProZoom` <span class="plan-pro"></span>   | `useChartCartesianAxis` |                                            |
 
 ### Custom plugins
 
