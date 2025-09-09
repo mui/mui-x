@@ -157,8 +157,8 @@ export type UseTreeViewItemsParametersWithDefaults<R extends { children?: R[] }>
 >;
 
 interface UseTreeViewItemsEventLookup {
-  removeItem: {
-    params: { id: string };
+  updateItems: {
+    params: {};
   };
 }
 

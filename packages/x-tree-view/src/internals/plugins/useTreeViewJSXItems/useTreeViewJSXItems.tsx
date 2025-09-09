@@ -59,7 +59,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         itemMetaLookup: newItemMetaLookup,
         itemModelLookup: newItemModelLookup,
       });
-      publishTreeViewEvent(instance, 'removeItem', { id: item.id });
+      publishTreeViewEvent(instance, 'updateItems', {});
     };
   });
 

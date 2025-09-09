@@ -263,13 +263,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
           itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
         };
       }
-      Object.values(store.state.items.itemMetaLookup).forEach((item) => {
-        if (!newItems.itemMetaLookup[item.id]) {
-          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
-        }
-      });
-
       store.set('items', { ...store.state.items, ...newItems });
+      publishTreeViewEvent(instance, 'updateItems', {});
     }
   };
   const removeChildren = (parentId: string | undefined) => {
@@ -284,7 +279,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       const newMetaMap = Object.keys(store.state.items.itemMetaLookup).reduce((acc, key) => {
         const item = store.state.items.itemMetaLookup[key];
         if (item.parentId === parentId) {
-          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
           return acc;
         }
         return { ...acc, [item.id]: item };
@@ -301,6 +295,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
         itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
       });
+      publishTreeViewEvent(instance, 'updateItems', {});
     }
   };
 
@@ -318,13 +313,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemChildren: params.getItemChildren,
     });
 
-    Object.values(store.state.items.itemMetaLookup).forEach((item) => {
-      if (!newState.itemMetaLookup[item.id]) {
-        publishTreeViewEvent(instance, 'removeItem', { id: item.id });
-      }
-    });
-
     store.set('items', { ...store.state.items, ...newState });
+    publishTreeViewEvent(instance, 'updateItems', {});
   }, [
     instance,
     store,

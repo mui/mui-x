@@ -69,12 +69,24 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     setFocusedItemId(null);
   });
 
-  useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
+  useInstanceEventHandler(instance, 'updateItems', () => {
     const focusedItemId = focusSelectors.focusedItemId(store.state);
-    const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
-    if (focusedItemId === id && defaultFocusableItemId != null) {
-      innerFocusItem(null, defaultFocusableItemId);
+    if (focusedItemId == null) {
+      return;
     }
+
+    const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
+    if (!hasItemBeenRemoved) {
+      return;
+    }
+
+    const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
+    if (defaultFocusableItemId == null) {
+      setFocusedItemId(null);
+      return;
+    }
+
+    innerFocusItem(null, defaultFocusableItemId);
   });
 
   const createRootHandleFocus =
