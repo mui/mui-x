@@ -9,6 +9,7 @@ import {
 import {
   gridExpandedSortedRowIndexLookupSelector,
   useGridRowsOverridableMethods as useGridRowsOverridableMethodsCommunity,
+  useGridSelector,
 } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import { rowGroupingReorderExecutor } from '../rowReorder/reorderExecutor';
@@ -23,12 +24,10 @@ export const useGridRowsOverridableMethods = (
   const { processRowUpdate, onProcessRowUpdateError } = props;
   const { setRowIndex: setRowIndexPlain } = useGridRowsOverridableMethodsCommunity(apiRef);
 
+  const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
+
   const setRowIndex = React.useCallback(
     async (sourceRowId: GridRowId, targetOriginalIndex: number) => {
-      if (gridRowMaximumTreeDepthSelector(apiRef) === 1) {
-        setRowIndexPlain(sourceRowId, targetOriginalIndex);
-        return;
-      }
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
@@ -71,10 +70,10 @@ export const useGridRowsOverridableMethods = (
 
       await rowGroupingReorderExecutor.execute(executionContext);
     },
-    [apiRef, processRowUpdate, onProcessRowUpdateError, setRowIndexPlain],
+    [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
   return {
-    setRowIndex,
+    setRowIndex: flatTree ? setRowIndexPlain : setRowIndex,
   };
 };
