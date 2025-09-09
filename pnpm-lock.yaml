@@ -1680,8 +1680,8 @@ importers:
   packages/x-scheduler:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
-        specifier: ^1.7.4
-        version: 1.7.4
+        specifier: ^1.7.7
+        version: 1.7.7
       '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
         specifier: ^2.1.1
         version: 2.1.1
@@ -2403,8 +2403,8 @@ packages:
   '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.1':
     resolution: {integrity: sha512-VAQEb3NVLY9Q5ZgC5Eiws9Uf6xOINY9/pAZMdbOVlF90uRXEkmpYqdTL+zeyZ8U8deuqYCmXr7oWIEnxpNQVzA==}
 
-  '@atlaskit/pragmatic-drag-and-drop@1.7.4':
-    resolution: {integrity: sha512-lZHnO9BJdHPKnwB0uvVUCyDnIhL+WAHzXQ2EXX0qacogOsnvIUiCgY0BLKhBqTCWln3/f/Ox5jU54MKO6ayh9A==}
+  '@atlaskit/pragmatic-drag-and-drop@1.7.7':
+    resolution: {integrity: sha512-jX+68AoSTqO/fhCyJDTZ38Ey6/wyL2Iq+J/moanma0YyktpnoHxevjY1UNJHYp0NCburdQDZSL1ZFac1mO1osQ==}
 
   '@aws-crypto/crc32@5.2.0':
     resolution: {integrity: sha512-nLbCWqQNgUiwwtFsen1AdzAtvuLRsQS8rYgMuxCrdKf9kOssamGLuPwyTY9wyYblNr9+1XM8v6zoDTPPSIeANg==}
@@ -12409,10 +12409,10 @@ snapshots:
 
   '@atlaskit/pragmatic-drag-and-drop-auto-scroll@2.1.1':
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop': 1.7.4
+      '@atlaskit/pragmatic-drag-and-drop': 1.7.7
       '@babel/runtime': 7.28.4
 
-  '@atlaskit/pragmatic-drag-and-drop@1.7.4':
+  '@atlaskit/pragmatic-drag-and-drop@1.7.7':
     dependencies:
       '@babel/runtime': 7.28.4
       bind-event-listener: 3.0.0
