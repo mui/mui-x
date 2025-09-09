@@ -6,6 +6,8 @@ import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { spy } from 'sinon';
 import { MonthView } from '@mui/x-scheduler/material/month-view';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { EventCalendar } from '../event-calendar';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 
 const events: CalendarEvent[] = [
   {
@@ -62,6 +64,7 @@ const allDayEvents: CalendarEvent[] = [
 
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
+  const adapter = getAdapter();
 
   const standaloneDefaults = {
     events,
@@ -324,6 +327,46 @@ describe('<MonthView />', () => {
       );
 
       expect(visibleInstances).toHaveLength(2);
+    });
+  });
+
+  describe('time navigation', () => {
+    it('should go to start of previous month when clicking on the Previous Month button', async () => {
+      const onVisibleDateChange = spy();
+      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+
+      const { user } = render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          onVisibleDateChange={onVisibleDateChange}
+          view="month"
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /previous month/i }));
+      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+        adapter.addMonths(adapter.startOfMonth(visibleDate), -1),
+      );
+    });
+
+    it('should go to start of next month when clicking on the Next Month button', async () => {
+      const onVisibleDateChange = spy();
+      const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
+
+      const { user } = render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          onVisibleDateChange={onVisibleDateChange}
+          view="month"
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: /next month/i }));
+      expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
+        adapter.addMonths(adapter.startOfMonth(visibleDate), 1),
+      );
     });
   });
 });

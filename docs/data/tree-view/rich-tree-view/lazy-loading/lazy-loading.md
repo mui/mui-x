@@ -61,3 +61,31 @@ To store the updated item labels on your server use the `onItemLabelChange` call
 Changes to the label are not automatically updated in the `dataSourceCache` and will need to be updated manually. The demo below shows you how to update the cache once a label is changed so the changes are reflected in the tree.
 
 {{"demo": "LazyLoadingAndLabelEditing.js"}}
+
+## Imperative API
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <RichTreeViewPro apiRef={apiRef} items={ITEMS}>;
+```
+
+When your component first renders, `apiRef` is `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
+
+### Update the children of an item
+
+Use the `updateItemChildren()` API method to fetch the children of an item:
+
+```ts
+apiRef.current.updateItemChildren(
+  // The id of the item to update the children of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodUpdateItemChildren.js", "defaultCodeOpen": false}}

@@ -56,6 +56,11 @@ function getComponents() {
       href: '/x/react-charts/pyramid/',
       pro: true,
     },
+    {
+      title: 'Sankey Chart',
+      href: '/x/react-charts/sankey/',
+      pro: true,
+    },
   ];
 }
 

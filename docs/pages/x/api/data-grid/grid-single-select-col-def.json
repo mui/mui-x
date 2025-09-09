@@ -61,6 +61,10 @@
       "type": { "description": "GridGroupingValueGetter&lt;R&gt;" },
       "isPremiumPlan": true
     },
+    "groupingValueSetter": {
+      "type": { "description": "GridGroupingValueSetter&lt;R&gt;" },
+      "isPremiumPlan": true
+    },
     "headerAlign": { "type": { "description": "GridAlignment" } },
     "headerClassName": { "type": { "description": "GridColumnHeaderClassNamePropType" } },
     "headerName": { "type": { "description": "string" } },

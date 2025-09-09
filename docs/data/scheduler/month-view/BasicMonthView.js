@@ -7,19 +7,20 @@ import {
   defaultVisibleDate,
   resources,
 } from '../datasets/personal-agenda';
-import classes from './BasicMonthView.module.css';
 
 export default function BasicMonthView() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <StandaloneView
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-    >
-      <MonthView className={classes.Container} />
-    </StandaloneView>
+    <div style={{ height: '650px', width: '100%' }}>
+      <StandaloneView
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+      >
+        <MonthView />
+      </StandaloneView>
+    </div>
   );
 }

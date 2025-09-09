@@ -6,8 +6,7 @@
   width: 100%;
   display: flex;
   gap: var(--space-4);
-  max-height: 100vh;
-  max-height: 100dvh;
+  height: 100%;
 }
 
 .EventCalendarSidePanel {
@@ -27,7 +26,7 @@
   padding: var(--space-4) var(--space-4) var(--space-4) 0;
 }
 
-.EventCalendarMainPanel--month {
+.EventCalendarMainPanel.StretchView {
   max-height: 100%;
   height: 100dvh;
   height: 100vh;
@@ -37,6 +36,11 @@
   display: flex;
   flex: 1;
   overflow: auto;
+  max-height: fit-content;
+}
+
+.EventCalendarContent.StretchView {
+  max-height: none;
 }
 
 .EventCalendarMonthCalendarPlaceholder {
