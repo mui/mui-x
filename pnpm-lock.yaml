@@ -166,8 +166,8 @@ catalogs:
       specifier: ^4.17.21
       version: 4.17.21
     luxon:
-      specifier: ^3.7.1
-      version: 3.7.1
+      specifier: ^3.7.2
+      version: 3.7.2
     moment:
       specifier: ^2.30.1
       version: 2.30.1
@@ -715,7 +715,7 @@ importers:
         version: 4.17.21
       luxon:
         specifier: 'catalog:'
-        version: 3.7.1
+        version: 3.7.2
       lz-string:
         specifier: ^1.5.0
         version: 1.5.0
@@ -1505,7 +1505,7 @@ importers:
         version: 1.11.13
       luxon:
         specifier: 'catalog:'
-        version: 3.7.1
+        version: 3.7.2
       moment:
         specifier: 'catalog:'
         version: 2.30.1
@@ -1594,7 +1594,7 @@ importers:
         version: 1.11.13
       luxon:
         specifier: 'catalog:'
-        version: 3.7.1
+        version: 3.7.2
       moment:
         specifier: 'catalog:'
         version: 2.30.1
@@ -1730,7 +1730,7 @@ importers:
         version: 1.5.0
       luxon:
         specifier: 'catalog:'
-        version: 3.7.1
+        version: 3.7.2
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -9346,8 +9346,8 @@ packages:
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  luxon@3.7.1:
-    resolution: {integrity: sha512-RkRWjA926cTvz5rAb1BqyWkKbbjzCGchDUIKMCUvNi17j6f6j8uHGDV82Aqcqtzd+icoYpELmG3ksgGiFNNcNg==}
+  luxon@3.7.2:
+    resolution: {integrity: sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==}
     engines: {node: '>=12'}
 
   lz-string@1.5.0:
@@ -18169,7 +18169,7 @@ snapshots:
 
   cron-parser@4.9.0:
     dependencies:
-      luxon: 3.7.1
+      luxon: 3.7.2
 
   cross-env@10.0.0:
     dependencies:
@@ -20811,7 +20811,7 @@ snapshots:
     dependencies:
       react: 19.1.1
 
-  luxon@3.7.1: {}
+  luxon@3.7.2: {}
 
   lz-string@1.5.0: {}
 
