@@ -710,3 +710,76 @@ export function countYearlyOccurrencesUpToExact(
 
   return count;
 }
+
+export function applyRecurringUpdateFollowing(
+  adapter: Adapter,
+  events: CalendarEvent[],
+  originalEvent: CalendarEvent,
+  occurrenceStart: SchedulerValidDate,
+  changes: CalendarEvent,
+): CalendarEvent[] {
+  // 1) Old series: set UNTIL to the day before the edited occurrence (inclusive)
+  const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
+  const untilDate = adapter.addDays(occurrenceDayStart, -1);
+
+  const originalEventRRule = originalEvent.rrule as RRuleSpec;
+  const oldSeriesNewRRule: RRuleSpec = {
+    ...originalEventRRule,
+    until: untilDate,
+    count: undefined,
+  };
+
+  // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
+  const shouldDropOldSeries = adapter.isBefore(
+    adapter.endOfDay(untilDate),
+    adapter.startOfDay(originalEvent.start),
+  );
+
+  // 3) New series: clone + changes + clean COUNT/UNTIL
+  const cleanRRule = (rule: RRuleSpec): RRuleSpec => {
+    const { count, until, ...rest } = rule;
+    return rest;
+  };
+
+  // Decide the new rule for the "new series"
+  const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
+
+  // Cases:
+  // - hasRRuleProp && changes.rrule: user provided a new rule -> use cleaned new rule
+  // - hasRRuleProp && !changes.rrule: user explicitly wants "no recurrence" -> undefined
+  // - !hasRRuleProp: user didn't touch rrule -> inherit (cleaned) original rule
+  let newRRule: RRuleSpec | undefined;
+  if (!hasRRuleProp) {
+    // inherit
+    newRRule = cleanRRule(originalEventRRule);
+  } else if (changes.rrule) {
+    // replace
+    newRRule = cleanRRule(changes.rrule);
+  } else {
+    // remove recurrence
+    newRRule = undefined;
+  }
+
+  const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+
+  const newEvent: CalendarEvent = {
+    ...originalEvent,
+    ...changes,
+    id: newEventId,
+    start: changes.start,
+    end: changes.end,
+    rrule: newRRule,
+    extractedFromId: originalEvent.id,
+  };
+
+  // 4) Build the final events list: old series (updated or dropped) + new event
+  const updatedEvents = shouldDropOldSeries
+    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
+    : [
+        ...events.map((event) =>
+          event.id === originalEvent.id ? { ...originalEvent, rrule: oldSeriesNewRRule } : event,
+        ),
+        newEvent,
+      ];
+  return updatedEvents;
+}

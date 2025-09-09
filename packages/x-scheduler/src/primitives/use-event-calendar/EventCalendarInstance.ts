@@ -11,10 +11,10 @@ import {
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
-  RRuleSpec,
 } from '../models';
 import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
+import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -275,12 +275,8 @@ export class EventCalendarInstance {
     eventId: CalendarEventId,
     occurrenceStart: SchedulerValidDate,
     changes: CalendarEvent,
-    scope: 'following',
+    scope: 'following' | 'all' | 'only-this',
   ) => {
-    if (scope !== 'following') {
-      throw new Error(`Event Calendar: solo scope="following" está soportado por ahora.`);
-    }
-
     const { adapter, events } = this.store.state;
     const { onEventsChange } = this.parameters;
 
@@ -289,55 +285,37 @@ export class EventCalendarInstance {
       throw new Error(`Event Calendar: event not found (id="${eventId}").`);
     }
     if (!original.rrule) {
-      throw new Error('Event Calendar: requiere evento recurrente.');
+      throw new Error('Event Calendar: requires recurring event.');
     }
 
-    // 1) Old series: set UNTIL to the day before the edited occurrence (inclusive)
-    const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
-    const untilDate = adapter.addDays(occurrenceDayStart, -1);
+    let updatedEvents: CalendarEvent[] = [];
 
-    const oldRRule = {
-      ...original.rrule,
-      until: untilDate,
-      count: undefined as unknown as number | undefined,
-    };
+    switch (scope) {
+      case 'following': {
+        updatedEvents = applyRecurringUpdateFollowing(
+          adapter,
+          events,
+          original,
+          occurrenceStart,
+          changes,
+        );
+        break;
+      }
 
-    // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
-    const shouldDropOldSeries = adapter.isBefore(
-      adapter.endOfDay(untilDate),
-      adapter.startOfDay(original.start),
-    );
+      case 'all': {
+        // TODO: Issue #19441 - Allow to edit recurring series => all events.
+        throw new Error('Event Calendar: scope="all" not implemented yet.');
+      }
 
-    // 3) New series: clone + changes + clean COUNT/UNTIL
-    const cleanRRule = (rule: RRuleSpec): RRuleSpec => {
-      const { count, until, ...rest } = rule;
-      return rest;
-    };
+      case 'only-this': {
+        // TODO: Issue #19440 - Allow to edit recurring series => this event only.
+        throw new Error('Event Calendar: scope="only-this" not implemented yet.');
+      }
 
-    let newRRule: RRuleSpec | undefined;
-    if ('rrule' in changes) {
-      newRRule = changes.rrule ? cleanRRule(changes.rrule) : undefined;
-    } else {
-      newRRule = cleanRRule(original.rrule);
+      default: {
+        throw new Error(`Event Calendar: scope="${scope}" is not supported.`);
+      }
     }
-
-    const generateId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
-
-    const newEvent: CalendarEvent = {
-      ...original,
-      ...changes,
-      id: generateId,
-      start: changes.start,
-      end: changes.end,
-      rrule: newRRule,
-      extractedFromId: original.id,
-    };
-
-    const updatedEvents = shouldDropOldSeries
-      ? events.filter((event) => event.id !== original.id).concat(newEvent)
-      : events
-          .map((event) => (event.id === original.id ? { ...original, rrule: oldRRule } : event))
-          .concat(newEvent);
 
     onEventsChange?.(updatedEvents);
   };
