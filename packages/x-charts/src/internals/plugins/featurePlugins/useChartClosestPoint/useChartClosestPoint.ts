@@ -7,7 +7,7 @@ import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import { ChartPlugin } from '../../models';
 import { getValueToPositionMapper } from '../../../../hooks/useScale';
 import { SeriesId } from '../../../../models/seriesType/common';
-import { UseChartVoronoiSignature } from './useChartVoronoi.types';
+import { UseChartClosestPointSignature } from './useChartClosestPoint.types';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { useSelector } from '../../../store/useSelector';
 import {
@@ -38,7 +38,7 @@ type VoronoiSeries = {
   seriesIndexes: number[];
 };
 
-export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
+export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = ({
   svgRef,
   params,
   store,
@@ -281,18 +281,18 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   };
 };
 
-useChartVoronoi.getDefaultizedParams = ({ params }) => ({
+useChartClosestPoint.getDefaultizedParams = ({ params }) => ({
   ...params,
   disableVoronoi: params.disableVoronoi ?? !params.series.some((item) => item.type === 'scatter'),
 });
 
-useChartVoronoi.getInitialState = (params) => ({
+useChartClosestPoint.getInitialState = (params) => ({
   voronoi: {
     isVoronoiEnabled: !params.disableVoronoi,
   },
 });
 
-useChartVoronoi.params = {
+useChartClosestPoint.params = {
   disableVoronoi: true,
   voronoiMaxRadius: true,
   onItemClick: true,

@@ -21,9 +21,9 @@ export {
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 export {
-  useChartVoronoi,
-  type UseChartVoronoiSignature,
-} from '../internals/plugins/featurePlugins/useChartVoronoi';
+  useChartClosestPoint,
+  type UseChartClosestPointSignature,
+} from '../internals/plugins/featurePlugins/useChartClosestPoint';
 export {
   useChartZAxis,
   type UseChartZAxisSignature,
