@@ -65,7 +65,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
         >
           {apiRef.current.getLocaleText(label)}
         </rootProps.slots.baseMenuItem>
-        <rootProps.slots.baseMenuItem onClick={unpinColumn} iconStart="">
+        <rootProps.slots.baseMenuItem onClick={unpinColumn} iconStart={<span />}>
           {apiRef.current.getLocaleText('unpin')}
         </rootProps.slots.baseMenuItem>
       </React.Fragment>

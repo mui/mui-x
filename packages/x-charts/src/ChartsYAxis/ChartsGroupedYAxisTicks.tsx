@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
 import { ChartsYAxisProps, type AxisGroup } from '../models/axis';
-import { useDrawingArea } from '../hooks/useDrawingArea';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
-import { TICK_LABEL_GAP, YAxisRoot } from './utilities';
+import { TICK_LABEL_GAP } from './utilities';
 import { useTicksGrouped } from '../hooks/useTicksGrouped';
-import { useAxisProps } from './useAxisProps';
+import { useAxisTicksProps } from './useAxisTicksProps';
 
 const DEFAULT_GROUPING_CONFIG = {
   tickSize: 6,
@@ -32,22 +31,17 @@ const getGroupingConfig = (
 /**
  * @ignore - internal component.
  */
-function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
+function ChartsGroupedYAxisTicks(inProps: ChartsYAxisProps) {
   const {
     yScale,
     defaultizedProps,
     tickNumber,
     positionSign,
-    skipAxisRendering,
     classes,
-    Line,
     Tick,
     TickLabel,
-    Label,
     axisTickLabelProps,
-    axisLabelProps,
-    lineProps,
-  } = useAxisProps(inProps);
+  } = useAxisTicksProps(inProps);
 
   if (!isBandScale(yScale)) {
     throw new Error(
@@ -56,31 +50,18 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
   }
 
   const {
-    position,
-    disableLine,
     disableTicks,
-    label,
     tickSize,
     valueFormatter,
     slotProps,
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
-    sx,
-    offset,
-    width: axisWidth,
   } = defaultizedProps;
 
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
 
-  const drawingArea = useDrawingArea();
-  const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
-
-  const labelRefPoint = {
-    x: positionSign * axisWidth,
-    y: top + height / 2,
-  };
 
   const yTicks = useTicksGrouped({
     scale: yScale,
@@ -93,22 +74,8 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
     groups,
   });
 
-  // Skip axis rendering if no data is available
-  // - The domain is an empty array for band/point scales.
-  // - The domains contains Infinity for continuous scales.
-  // - The position is set to 'none'.
-  if (skipAxisRendering) {
-    return null;
-  }
-
   return (
-    <YAxisRoot
-      transform={`translate(${position === 'right' ? left + width + offset : left - offset}, 0)`}
-      className={classes.root}
-      sx={sx}
-    >
-      {!disableLine && <Line y1={top} y2={top + height} className={classes.line} {...lineProps} />}
-
+    <React.Fragment>
       {yTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
         const yTickLabel = labelOffset ?? 0;
@@ -148,14 +115,8 @@ function ChartsGroupedYAxis(inProps: ChartsYAxisProps) {
           </g>
         );
       })}
-
-      {label && (
-        <g className={classes.label}>
-          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
-        </g>
-      )}
-    </YAxisRoot>
+    </React.Fragment>
   );
 }
 
-export { ChartsGroupedYAxis };
+export { ChartsGroupedYAxisTicks };
