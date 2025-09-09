@@ -23,6 +23,7 @@ import {
   loadServerRows,
   processTreeDataRows,
   processRowGroupingRows,
+  processPivotingRows,
   DEFAULT_SERVER_OPTIONS,
 } from './serverUtils';
 import type { ServerOptions } from './serverUtils';
@@ -330,6 +331,25 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           rows: rows.slice().map((row) => ({ ...row, path: undefined })),
           rowCount: rootRowCount,
           ...(aggregateRow ? { aggregateRow } : {}),
+        };
+      } else if (
+        typeof params.pivotModel === 'object' &&
+        params.pivotModel.columns &&
+        params.pivotModel.rows &&
+        params.pivotModel.values
+      ) {
+        const { rows, rootRowCount, pivotColumns, aggregateRow } = await processPivotingRows(
+          dataRef.current?.rows ?? [],
+          params,
+          serverOptionsWithDefault,
+          columnsWithDefaultColDef,
+        );
+
+        getRowsResponse = {
+          rows: rows.slice(),
+          rowCount: rootRowCount,
+          pivotColumns,
+          aggregateRow,
         };
       } else {
         const { returnedRows, nextCursor, totalRowCount, aggregateRow } = await loadServerRows(
