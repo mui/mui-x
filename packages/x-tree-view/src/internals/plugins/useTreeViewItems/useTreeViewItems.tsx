@@ -8,7 +8,6 @@ import {
   UseTreeViewItemsState,
   AddItemsParameters,
 } from './useTreeViewItems.types';
-import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
@@ -264,7 +263,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         };
       }
       store.set('items', { ...store.state.items, ...newItems });
-      publishTreeViewEvent(instance, 'updateItems', {});
     }
   };
 
@@ -297,7 +295,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
       });
     }
-    publishTreeViewEvent(instance, 'updateItems', {});
   };
 
   React.useEffect(() => {
@@ -315,7 +312,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     });
 
     store.set('items', { ...store.state.items, ...newState });
-    publishTreeViewEvent(instance, 'updateItems', {});
   }, [
     instance,
     store,
