@@ -1,5 +1,5 @@
 {
-  "version": "8.11.0",
+  "version": "8.11.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -77,9 +77,9 @@
     "@emotion/styled": "catalog:",
     "@inquirer/prompts": "^7.8.4",
     "@mui/icons-material": "catalog:",
-    "@mui/internal-bundle-size-checker": "^1.0.9-canary.38",
-    "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.6",
-    "@mui/internal-code-infra": "^0.0.3-canary.1",
+    "@mui/internal-bundle-size-checker": "^1.0.9-canary.40",
+    "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.7",
+    "@mui/internal-code-infra": "^0.0.3-canary.5",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
@@ -94,7 +94,7 @@
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "catalog:",
-    "@types/node": "^24.3.0",
+    "@types/node": "^24.3.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/requestidlecallback": "^0.3.7",
@@ -115,14 +115,14 @@
     "babel-plugin-transform-replace-expressions": "^0.2.0",
     "chai-dom": "^1.12.1",
     "compression-webpack-plugin": "^11.1.0",
-    "concurrently": "^9.2.0",
+    "concurrently": "^9.2.1",
     "cpy-cli": "^5.0.0",
     "cross-env": "catalog:",
     "danger": "^13.0.4",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "esbuild": "^0.25.9",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
     "eslint-plugin-jsdoc": "^52.0.4",
@@ -174,6 +174,7 @@
   },
   "packageManager": "pnpm@10.15.1",
   "engines": {
-    "pnpm": "10.15.1"
+    "pnpm": "10.15.1",
+    "node": ">=22.18"
   }
 }

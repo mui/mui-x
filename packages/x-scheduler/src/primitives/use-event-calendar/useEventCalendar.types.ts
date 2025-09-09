@@ -7,6 +7,7 @@ import {
   CalendarView,
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
+  CalendarEventColor,
 } from '../models';
 import type { EventCalendarInstance } from './EventCalendarInstance';
 
@@ -79,15 +80,22 @@ export interface EventCalendarParameters {
    */
   showCurrentTimeIndicator?: boolean;
   /**
+   * The color palette used for all events.
+   * Can be overridden per resource using the `eventColor` property on the resource model.
+   * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
+   * @default "jade"
+   */
+  eventColor?: CalendarEventColor;
+  /**
    * Preferences for the calendar.
-   * @default { hideWeekends: false }
+   * @default { showWeekends: true, showWeekNumber: false }
    */
   preferences?: Partial<CalendarPreferences>;
   /**
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true }
    */
   preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
 }

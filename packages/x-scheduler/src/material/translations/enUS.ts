@@ -13,10 +13,21 @@ export const enUS: SchedulerTranslations = {
   other: 'Other',
   today: 'Today',
   week: 'Week',
+  timeline: 'Timeline',
+  time: 'Time',
+  days: 'Days',
+  months: 'Months',
+  weeks: 'Weeks',
+  years: 'Years',
+
+  // Timeline toggle
+  timelineMode: 'Timeline Mode',
+  calendarMode: 'Calendar Mode',
 
   // Preferences menu
   preferencesMenu: 'Settings',
-  hideWeekends: 'Hide weekends',
+  showWeekends: 'Show weekends',
+  showWeekNumber: 'Show week number',
 
   // WeekView
   allDay: 'All day',
@@ -39,12 +50,14 @@ export const enUS: SchedulerTranslations = {
   endDateLabel: 'End date',
   endTimeLabel: 'End time',
   eventTitleAriaLabel: 'Event title',
+  labelNoResource: 'No resource',
   recurrenceLabel: 'Recurrence',
   recurrenceNoRepeat: "Don't repeat",
   recurrenceDailyPresetLabel: 'Repeats daily',
   recurrenceWeeklyPresetLabel: (weekday) => `Repeats weekly on ${weekday}`,
   recurrenceMonthlyPresetLabel: (dayNumber) => `Repeats monthly on day ${dayNumber}`,
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,
+  resourceLabel: 'Resource',
   saveChanges: 'Save changes',
   startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   startDateLabel: 'Start date',

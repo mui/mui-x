@@ -8,10 +8,8 @@ import { useXAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
 import { defaultProps, useUtilityClasses } from './utilities';
-import { isBandScale } from '../internals/isBandScale';
-import { isInfinity } from '../internals/isInfinity';
 
-export const useAxisProps = (inProps: ChartsXAxisProps) => {
+export function useAxisTicksProps(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
@@ -23,7 +21,7 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
     ...themedProps,
   };
 
-  const { position, tickLabelStyle, labelStyle, slots, slotProps } = defaultizedProps;
+  const { position, tickLabelStyle, slots, slotProps } = defaultizedProps;
 
   const theme = useTheme();
   const isRtl = useRtl();
@@ -31,10 +29,8 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
 
   const positionSign = position === 'bottom' ? 1 : -1;
 
-  const Line = slots?.axisLine ?? 'line';
   const Tick = slots?.axisTick ?? 'line';
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
-  const Label = slots?.axisLabel ?? ChartsText;
 
   const defaultTextAnchor = getDefaultTextAnchor(
     (position === 'bottom' ? 0 : 180) - (tickLabelStyle?.angle ?? 0),
@@ -60,44 +56,15 @@ export const useAxisProps = (inProps: ChartsXAxisProps) => {
     ownerState: {},
   });
 
-  const axisLabelProps = useSlotProps({
-    elementType: Label,
-    externalSlotProps: slotProps?.axisLabel,
-    additionalProps: {
-      style: {
-        ...theme.typography.body1,
-        lineHeight: 1,
-        fontSize: 14,
-        textAnchor: 'middle',
-        dominantBaseline: position === 'bottom' ? 'text-after-edge' : 'text-before-edge',
-        ...labelStyle,
-      },
-    } as Partial<ChartsTextProps>,
-    ownerState: {},
-  });
-
-  const domain = xScale.domain();
-  const isScaleBand = isBandScale(xScale);
-
-  const skipAxisRendering =
-    (isScaleBand && domain.length === 0) ||
-    (!isScaleBand && domain.some(isInfinity)) ||
-    position === 'none';
-
   return {
     xScale,
     defaultizedProps,
     tickNumber,
     positionSign,
-    skipAxisRendering,
     classes,
-    Line,
     Tick,
     TickLabel,
-    Label,
     axisTickLabelProps,
-    axisLabelProps,
     reverse,
-    isRtl,
   };
-};
+}

@@ -208,6 +208,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   disableRowSelectionOnClick: boolean;
   /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: boolean;
+  /**
    * If `true`, the virtualization is disabled.
    * @default false
    */
