@@ -3,17 +3,17 @@ import {
   AxisId,
   ChartsXAxisProps,
   ChartsYAxisProps,
-  ContinuousScaleName,
+  D3ContinuousScale,
+  D3Scale,
   ScaleName,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { AxisConfig } from '../../../../models';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { getAxisExtremum } from './getAxisExtremum';
 import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
-import { getScale } from '../../../getScale';
+import { isBandScale } from '../../../isBandScale';
 
 type CreateAxisFilterMapperParams = {
   zoomMap: Map<AxisId, ZoomData>;
@@ -32,6 +32,7 @@ export function createAxisFilterMapper(params: {
 }): (
   axis: AxisConfig<ScaleName, any, ChartsXAxisProps>,
   axisIndex: number,
+  scale: D3Scale,
 ) => ExtremumFilter | null;
 export function createAxisFilterMapper(params: {
   zoomMap: Map<AxisId, ZoomData>;
@@ -42,6 +43,7 @@ export function createAxisFilterMapper(params: {
 }): (
   axis: AxisConfig<ScaleName, any, ChartsYAxisProps>,
   axisIndex: number,
+  scale: D3Scale,
 ) => ExtremumFilter | null;
 export function createAxisFilterMapper({
   zoomMap,
@@ -50,7 +52,7 @@ export function createAxisFilterMapper({
   formattedSeries,
   direction,
 }: CreateAxisFilterMapperParams) {
-  return (axis: AxisConfig, axisIndex: number): ExtremumFilter | null => {
+  return (axis: AxisConfig, axisIndex: number, scale: D3Scale): ExtremumFilter | null => {
     const zoomOption = zoomOptions[axis.id];
     if (!zoomOption || zoomOption.filterMode !== 'discard') {
       return null;
@@ -63,20 +65,11 @@ export function createAxisFilterMapper({
       return null;
     }
 
-    const scaleType = axis.scaleType;
-
-    if (scaleType === 'point' || scaleType === 'band') {
+    if (isBandScale(scale)) {
       return createDiscreteScaleGetAxisFilter(axis.data, zoom.start, zoom.end, direction);
     }
 
-    return createContinuousScaleGetAxisFilter(
-      scaleType,
-      getAxisExtremum(axis, direction, seriesConfig, axisIndex, formattedSeries),
-      zoom.start,
-      zoom.end,
-      direction,
-      axis.data,
-    );
+    return createContinuousScaleGetAxisFilter(scale, zoom.start, zoom.end, direction, axis.data);
   };
 }
 
@@ -104,8 +97,7 @@ export function createDiscreteScaleGetAxisFilter(
 }
 
 export function createContinuousScaleGetAxisFilter(
-  scaleType: ContinuousScaleName | undefined,
-  extrema: readonly [number, number],
+  scale: D3ContinuousScale,
   zoomStart: number,
   zoomEnd: number,
   direction: 'x' | 'y',
@@ -114,9 +106,7 @@ export function createContinuousScaleGetAxisFilter(
   let min: number | Date;
   let max: number | Date;
 
-  [min, max] = getScale(scaleType ?? 'linear', extrema, [0, 100])
-    .nice()
-    .domain();
+  [min, max] = scale.domain();
 
   min = min instanceof Date ? min.getTime() : min;
   max = max instanceof Date ? max.getTime() : max;

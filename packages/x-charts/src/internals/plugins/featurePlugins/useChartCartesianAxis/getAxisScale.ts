@@ -1,0 +1,198 @@
+import { AxisConfig, ChartDrawingArea, ContinuousScaleName, ScaleName } from '@mui/x-charts';
+import { scaleBand, scalePoint, type ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
+import {
+  AxisId,
+  ChartsAxisProps,
+  D3Scale,
+  DefaultedAxis,
+  isBandScaleConfig,
+  isPointScaleConfig,
+  isSymlogScaleConfig,
+} from '../../../../models/axis';
+import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
+import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { ChartSeriesConfig } from '../../models';
+import { GetZoomAxisFilters, ZoomData } from './zoom.types';
+import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { zoomScaleRange } from './zoom';
+import { getAxisDomainLimit } from './getAxisDomainLimit';
+import { getTickNumber } from '../../../ticks';
+import { getScale } from '../../../getScale';
+import { getAxisExtremum } from './getAxisExtremum';
+
+const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
+
+type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
+  drawingArea: ChartDrawingArea;
+  formattedSeries: ProcessedSeries<T>;
+  seriesConfig: ChartSeriesConfig<T>;
+  zoomMap?: Map<AxisId, ZoomData>;
+  zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
+  getFilters?: GetZoomAxisFilters;
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts?: boolean;
+};
+
+function getRange(
+  drawingArea: ChartDrawingArea,
+  axisDirection: 'x' | 'y',
+  axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
+): [number, number] {
+  const range: [number, number] =
+    axisDirection === 'x'
+      ? [drawingArea.left, drawingArea.left + drawingArea.width]
+      : [drawingArea.top + drawingArea.height, drawingArea.top];
+
+  return axis.reverse ? [range[1], range[0]] : range;
+}
+
+export function getXAxesScales<T extends ChartSeriesType>({
+  drawingArea,
+  formattedSeries,
+  axis: axes = [],
+  seriesConfig,
+  zoomMap,
+  zoomOptions,
+  getFilters,
+  preferStrictDomainInLineCharts,
+}: ComputeCommonParams<T> & {
+  axis?: DefaultedAxis[];
+}) {
+  const completeAxis: Record<AxisId, D3Scale> = {};
+
+  axes.forEach((eachAxis, axisIndex) => {
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const zoomOption = zoomOptions?.[axis.id];
+    const zoom = zoomMap?.get(axis.id);
+
+    completeAxis[axis.id] = getAxisScale(
+      axis,
+      'x',
+      zoomOption,
+      zoom,
+      drawingArea,
+      seriesConfig,
+      axisIndex,
+      formattedSeries,
+      preferStrictDomainInLineCharts,
+      getFilters,
+    );
+  });
+
+  return completeAxis;
+}
+
+export function getYAxesScales<T extends ChartSeriesType>({
+  drawingArea,
+  formattedSeries,
+  axis: axes = [],
+  seriesConfig,
+  zoomMap,
+  zoomOptions,
+  getFilters,
+  preferStrictDomainInLineCharts,
+}: ComputeCommonParams<T> & {
+  axis?: DefaultedAxis[];
+}) {
+  const completeAxis: Record<AxisId, D3Scale> = {};
+
+  axes.forEach((eachAxis, axisIndex) => {
+    const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const zoomOption = zoomOptions?.[axis.id];
+    const zoom = zoomMap?.get(axis.id);
+
+    completeAxis[axis.id] = getAxisScale(
+      axis,
+      'y',
+      zoomOption,
+      zoom,
+      drawingArea,
+      seriesConfig,
+      axisIndex,
+      formattedSeries,
+      preferStrictDomainInLineCharts,
+      getFilters,
+    );
+  });
+
+  return completeAxis;
+}
+
+function getAxisScale<T extends ChartSeriesType>(
+  axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
+  axisDirection: 'x' | 'y',
+  zoomOption: DefaultizedZoomOptions | undefined,
+  zoom: ZoomData | undefined,
+  drawingArea: ChartDrawingArea,
+  seriesConfig: ChartSeriesConfig<T>,
+  axisIndex: number,
+  formattedSeries: ProcessedSeries<T>,
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts?: boolean,
+  getFilters?: GetZoomAxisFilters,
+) {
+  const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
+  const range = getRange(drawingArea, axisDirection, axis);
+
+  const [minData, maxData] = getAxisExtremum(
+    axis,
+    axisDirection,
+    seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
+    axisIndex,
+    formattedSeries,
+    zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
+  );
+
+  if (isBandScaleConfig(axis)) {
+    const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+    // Reverse range because ordinal scales are presented from top to bottom on y-axis
+    const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
+    const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
+
+    return scaleBand(axis.data!, zoomedRange)
+      .paddingInner(categoryGapRatio)
+      .paddingOuter(categoryGapRatio / 2);
+  }
+
+  if (isPointScaleConfig(axis)) {
+    const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
+    const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
+
+    return scalePoint(axis.data!, zoomedRange);
+  }
+
+  const scaleType = axis.scaleType ?? ('linear' as const);
+
+  const domainLimit = preferStrictDomainInLineCharts
+    ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
+    : (axis.domainLimit ?? 'nice');
+
+  const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+
+  if (typeof domainLimit === 'function') {
+    const { min, max } = domainLimit(minData, maxData);
+    axisExtremums[0] = min;
+    axisExtremums[1] = max;
+  }
+
+  const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
+
+  const zoomedRange = zoomScaleRange(range, zoomRange);
+
+  const scale = getScale(scaleType as ContinuousScaleName, axisExtremums, zoomedRange);
+
+  if (isSymlogScaleConfig(axis) && axis.constant != null) {
+    (scale as ScaleSymLog<number, number>).constant(axis.constant);
+  }
+
+  const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
+  scale.tickNumber = rawTickNumber;
+  const [minDomain, maxDomain] = finalScale.domain();
+  const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
+
+  return finalScale.domain(domain) as any;
+}

@@ -13,6 +13,8 @@ import {
   DefaultedAxis,
   AxisValueFormatterContext,
   isSymlogScaleConfig,
+  D3Scale,
+  D3ContinuousScale,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -51,6 +53,7 @@ export type ComputeResult<T extends ChartsAxisProps> = {
 };
 
 type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
+  scales: Record<AxisId, D3Scale>;
   drawingArea: ChartDrawingArea;
   formattedSeries: ProcessedSeries<T>;
   seriesConfig: ChartSeriesConfig<T>;
@@ -76,6 +79,7 @@ export function computeAxisValue<T extends ChartSeriesType>(
   },
 ): ComputeResult<ChartsXAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>({
+  scales,
   drawingArea,
   formattedSeries,
   axis: allAxis,
@@ -106,10 +110,12 @@ export function computeAxisValue<T extends ChartSeriesType>({
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    let scale = scales[axis.id];
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis.reverse ?? false);
+    const filter = zoom === undefined && !zoomOption ? getFilters : undefined; // Do not apply filtering if zoom is already defined.
 
     const [minData, maxData] = getAxisExtremum(
       axis,
@@ -117,7 +123,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
       axisIndex,
       formattedSeries,
-      zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
+      filter,
     );
 
     const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
@@ -129,7 +135,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
       const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
-      const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
         offset: 0,
@@ -139,9 +144,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         triggerTooltip,
         ...axis,
         data,
-        scale: scaleBand(axis.data!, zoomedRange)
-          .paddingInner(categoryGapRatio)
-          .paddingOuter(categoryGapRatio / 2),
+        scale,
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
@@ -157,7 +160,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
     if (isPointScaleConfig(axis)) {
       const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
-      const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
       completeAxis[axis.id] = {
         offset: 0,
@@ -165,7 +167,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         triggerTooltip,
         ...axis,
         data,
-        scale: scalePoint(axis.data!, zoomedRange),
+        scale,
         tickNumber: axis.data!.length,
         colorScale:
           axis.colorMap &&
@@ -186,33 +188,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const scaleType = axis.scaleType ?? ('linear' as const);
+    const tickNumber = scaleTickNumberByRange(scale.tickNumber, zoomRange);
 
-    const domainLimit = preferStrictDomainInLineCharts
-      ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
-      : (axis.domainLimit ?? 'nice');
-
-    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
-
-    if (typeof domainLimit === 'function') {
-      const { min, max } = domainLimit(minData, maxData);
-      axisExtremums[0] = min;
-      axisExtremums[1] = max;
+    if (filter) {
+      scale = scale.copy().domain([minData, maxData]);
     }
-
-    const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
-    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
-
-    const zoomedRange = zoomScaleRange(range, zoomRange);
-
-    const scale = getScale(scaleType, axisExtremums, zoomedRange);
-
-    if (isSymlogScaleConfig(axis) && axis.constant != null) {
-      (scale as ScaleSymLog<number, number>).constant(axis.constant);
-    }
-
-    const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
-    const [minDomain, maxDomain] = finalScale.domain();
-    const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completeAxis[axis.id] = {
       offset: 0,
@@ -221,7 +201,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       ...axis,
       data,
       scaleType: scaleType as any,
-      scale: finalScale.domain(domain) as any,
+      scale,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
       valueFormatter:

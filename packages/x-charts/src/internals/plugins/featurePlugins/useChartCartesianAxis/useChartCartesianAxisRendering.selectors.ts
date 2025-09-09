@@ -16,6 +16,7 @@ import {
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
+import { getXAxesScales, getYAxesScales } from './getAxisScale';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -93,16 +94,85 @@ const selectorChartYFilter = createSelector(
     }),
 );
 
+const selectorChartXScales = createSelector(
+  [
+    selectorChartRawXAxis,
+    selectorChartDrawingArea,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorChartZoomMap,
+    selectorChartZoomOptionsLookup,
+    selectorPreferStrictDomainInLineCharts,
+  ],
+  function selectorChartXScales(
+    axis,
+    drawingArea,
+    formattedSeries,
+    seriesConfig,
+    zoomMap,
+    zoomOptions,
+    preferStrictDomainInLineCharts,
+  ) {
+    return getXAxesScales({
+      drawingArea,
+      formattedSeries,
+      axis,
+      seriesConfig,
+      zoomMap,
+      zoomOptions,
+      preferStrictDomainInLineCharts,
+    });
+  },
+);
+
+const selectorChartYScales = createSelector(
+  [
+    selectorChartRawYAxis,
+    selectorChartDrawingArea,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorChartZoomMap,
+    selectorChartZoomOptionsLookup,
+    selectorPreferStrictDomainInLineCharts,
+  ],
+  function selectorChartYScales(
+    axis,
+    drawingArea,
+    formattedSeries,
+    seriesConfig,
+    zoomMap,
+    zoomOptions,
+    preferStrictDomainInLineCharts,
+  ) {
+    return getYAxesScales({
+      drawingArea,
+      formattedSeries,
+      axis,
+      seriesConfig,
+      zoomMap,
+      zoomOptions,
+      preferStrictDomainInLineCharts,
+    });
+  },
+);
+
 export const selectorChartZoomAxisFilters = createSelector(
-  [selectorChartXFilter, selectorChartYFilter, selectorChartRawXAxis, selectorChartRawYAxis],
-  (xMapper, yMapper, xAxis, yAxis) => {
+  [
+    selectorChartXFilter,
+    selectorChartYFilter,
+    selectorChartRawXAxis,
+    selectorChartRawYAxis,
+    selectorChartXScales,
+    selectorChartYScales,
+  ],
+  (xMapper, yMapper, xAxis, yAxis, xScales, yScales) => {
     if (xMapper === undefined || yMapper === undefined) {
       // Early return if there is no zoom.
       return undefined;
     }
 
     const xFilters = xAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      const filter = xMapper(axis, index);
+      const filter = xMapper(axis, index, xScales[axis.id]);
       if (filter !== null) {
         acc[axis.id] = filter;
       }
@@ -110,7 +180,7 @@ export const selectorChartZoomAxisFilters = createSelector(
     }, {});
 
     const yFilters = yAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      const filter = yMapper(axis, index);
+      const filter = yMapper(axis, index, yScales[axis.id]);
       if (filter !== null) {
         acc[axis.id] = filter;
       }
@@ -139,6 +209,7 @@ export const selectorChartXAxis = createSelector(
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
     selectorPreferStrictDomainInLineCharts,
+    selectorChartXScales,
   ],
   (
     axis,
@@ -149,8 +220,10 @@ export const selectorChartXAxis = createSelector(
     zoomOptions,
     getFilters,
     preferStrictDomainInLineCharts,
+    scales,
   ) =>
     computeAxisValue({
+      scales,
       drawingArea,
       formattedSeries,
       axis,
@@ -173,6 +246,7 @@ export const selectorChartYAxis = createSelector(
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
     selectorPreferStrictDomainInLineCharts,
+    selectorChartYScales,
   ],
   (
     axis,
@@ -183,8 +257,10 @@ export const selectorChartYAxis = createSelector(
     zoomOptions,
     getFilters,
     preferStrictDomainInLineCharts,
+    scales,
   ) =>
     computeAxisValue({
+      scales,
       drawingArea,
       formattedSeries,
       axis,
