@@ -101,17 +101,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const startTimeValue = form.get('startTime');
     const endDateValue = form.get('endDate');
     const endTimeValue = form.get('endTime');
-    const recurrenceValue = form.get('recurrence');
+    const recurrenceValue = form.get('recurrence') as RecurrencePresetKey;
 
     const recurrenceModified =
-      defaultRecurrenceKey !== 'custom' &&
-      (recurrenceValue as RecurrencePresetKey) !== defaultRecurrenceKey;
+      defaultRecurrenceKey !== 'custom' && recurrenceValue !== defaultRecurrenceKey;
 
     // TODO: This will change after implementing the custom recurrence editing tab.
     const rrule =
-      recurrenceModified && recurrenceValue
-        ? recurrencePresets[recurrenceValue as RecurrencePresetKey]
-        : undefined;
+      recurrenceModified && recurrenceValue ? recurrencePresets[recurrenceValue] : undefined;
 
     const resourceRawValue = form.get('resource');
     const resourceValue =
