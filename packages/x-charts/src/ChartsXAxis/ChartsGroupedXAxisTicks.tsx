@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
 import { ChartsXAxisProps, type AxisGroup } from '../models/axis';
-import { useDrawingArea } from '../hooks/useDrawingArea';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
-import { TICK_LABEL_GAP, XAxisRoot } from './utilities';
+import { TICK_LABEL_GAP } from './utilities';
 import { useTicksGrouped } from '../hooks/useTicksGrouped';
-import { useAxisProps } from './useAxisProps';
+import { useAxisTicksProps } from './useAxisTicksProps';
 
 const DEFAULT_GROUPING_CONFIG = {
   tickSize: 6,
@@ -29,24 +28,22 @@ const getGroupingConfig = (
   };
 };
 
+interface ChartsGroupedXAxisProps extends ChartsXAxisProps {}
+
 /**
  * @ignore - internal component.
  */
-function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
+function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
   const {
     xScale,
     defaultizedProps,
     tickNumber,
     positionSign,
-    skipAxisRendering,
     classes,
-    Line,
     Tick,
     TickLabel,
-    Label,
     axisTickLabelProps,
-    axisLabelProps,
-  } = useAxisProps(inProps);
+  } = useAxisTicksProps(inProps);
 
   if (!isBandScale(xScale)) {
     throw new Error(
@@ -55,31 +52,18 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
   }
 
   const {
-    position,
-    disableLine,
     disableTicks,
-    label,
     tickSize,
     valueFormatter,
     slotProps,
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
-    sx,
-    offset,
-    height: axisHeight,
   } = defaultizedProps;
 
   const groups = (defaultizedProps as { groups: AxisGroup[] }).groups;
 
-  const drawingArea = useDrawingArea();
-  const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
-
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * axisHeight,
-  };
 
   const xTicks = useTicksGrouped({
     scale: xScale,
@@ -92,24 +76,8 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
     groups,
   });
 
-  // Skip axis rendering if no data is available
-  // - The domain is an empty array for band/point scales.
-  // - The domains contains Infinity for continuous scales.
-  // - The position is set to 'none'.
-  if (skipAxisRendering) {
-    return null;
-  }
-
   return (
-    <XAxisRoot
-      transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
-      className={classes.root}
-      sx={sx}
-    >
-      {!disableLine && (
-        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
-      )}
-
+    <React.Fragment>
       {xTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
@@ -149,14 +117,8 @@ function ChartsGroupedXAxis(inProps: ChartsXAxisProps) {
           </g>
         );
       })}
-
-      {label && (
-        <g className={classes.label}>
-          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
-        </g>
-      )}
-    </XAxisRoot>
+    </React.Fragment>
   );
 }
 
-export { ChartsGroupedXAxis };
+export { ChartsGroupedXAxisTicks };

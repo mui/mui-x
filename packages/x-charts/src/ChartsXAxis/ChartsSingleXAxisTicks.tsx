@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
-import { getStringSize } from '../internals/domUtils';
 import { useTicks } from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
 import { useMounted } from '../hooks/useMounted';
@@ -9,37 +9,35 @@ import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { shortenLabels } from './shortenLabels';
 import { getVisibleLabels } from './getVisibleLabels';
-import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP, XAxisRoot } from './utilities';
-import { useAxisProps } from './useAxisProps';
+import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
+import { useAxisTicksProps } from './useAxisTicksProps';
+
+interface ChartsSingleXAxisProps extends ChartsXAxisProps {
+  axisLabelHeight: number;
+}
 
 /**
  * @ignore - internal component.
  */
-function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
+function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
+  const { axisLabelHeight } = inProps;
   const {
     xScale,
     defaultizedProps,
     tickNumber,
     positionSign,
-    skipAxisRendering,
     classes,
-    Line,
     Tick,
     TickLabel,
-    Label,
     axisTickLabelProps,
-    axisLabelProps,
     reverse,
-    isRtl,
-  } = useAxisProps(inProps);
+  } = useAxisTicksProps(inProps);
 
+  const isRtl = useRtl();
   const isMounted = useMounted();
 
   const {
-    position,
-    disableLine,
     disableTicks,
-    label,
     tickSize: tickSizeProp,
     valueFormatter,
     slotProps,
@@ -48,13 +46,10 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickLabelMinGap,
-    sx,
-    offset,
     height: axisHeight,
   } = defaultizedProps;
 
   const drawingArea = useDrawingArea();
-  const { left, top, width, height } = drawingArea;
   const { instance } = useChartContext();
   const isHydrated = useIsHydrated();
 
@@ -79,24 +74,13 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     isXInside: instance.isXInside,
   });
 
-  // Skip axis rendering if no data is available
-  // - The domain is an empty array for band/point scales.
-  // - The domains contains Infinity for continuous scales.
-  // - The position is set to 'none'.
-  if (skipAxisRendering) {
-    return null;
-  }
-
-  const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
-  const labelRefPoint = {
-    x: left + width / 2,
-    y: positionSign * axisHeight,
-  };
-
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxHeight = Math.max(
     0,
-    axisHeight - (label ? labelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) - tickSize - TICK_LABEL_GAP,
+    axisHeight -
+      (axisLabelHeight > 0 ? axisLabelHeight + AXIS_LABEL_TICK_LABEL_GAP : 0) -
+      tickSize -
+      TICK_LABEL_GAP,
   );
 
   const tickLabels = isHydrated
@@ -110,15 +94,7 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
     : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 
   return (
-    <XAxisRoot
-      transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
-      className={classes.root}
-      sx={sx}
-    >
-      {!disableLine && (
-        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
-      )}
-
+    <React.Fragment>
       {xTicks.map((item, index) => {
         const { offset: tickOffset, labelOffset } = item;
         const xTickLabel = labelOffset ?? 0;
@@ -154,14 +130,8 @@ function ChartsSingleXAxis(inProps: ChartsXAxisProps) {
           </g>
         );
       })}
-
-      {label && (
-        <g className={classes.label}>
-          <Label {...labelRefPoint} {...axisLabelProps} text={label} />
-        </g>
-      )}
-    </XAxisRoot>
+    </React.Fragment>
   );
 }
 
-export { ChartsSingleXAxis };
+export { ChartsSingleXAxisTicks };
