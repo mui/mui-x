@@ -267,6 +267,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       publishTreeViewEvent(instance, 'updateItems', {});
     }
   };
+
   const removeChildren = (parentId: string | undefined) => {
     if (parentId == null) {
       store.set('items', {
@@ -295,8 +296,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
         itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
       });
-      publishTreeViewEvent(instance, 'updateItems', {});
     }
+    publishTreeViewEvent(instance, 'updateItems', {});
   };
 
   React.useEffect(() => {
