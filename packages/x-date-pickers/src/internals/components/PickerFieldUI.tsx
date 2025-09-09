@@ -61,9 +61,7 @@ export const cleanFieldResponse = <
               slotProps: {
                 ...other?.slotProps,
                 input: (ownerState: FieldOwnerState) => ({
-                  ...(typeof mergedInputProps === 'function'
-                    ? mergedInputProps(ownerState)
-                    : mergedInputProps),
+                  ...resolveComponentProps(mergedInputProps, ownerState),
                   readOnly,
                 }),
               },
@@ -112,15 +110,11 @@ export const cleanFieldResponse = <
             slotProps: {
               ...other?.slotProps,
               input: (ownerState: FieldOwnerState) => ({
-                ...(typeof mergedInputProps === 'function'
-                  ? mergedInputProps(ownerState)
-                  : mergedInputProps),
+                ...resolveComponentProps(mergedInputProps, ownerState),
                 readOnly,
               }),
               htmlInput: (ownerState: FieldOwnerState) => ({
-                ...(typeof mergedHtmlInputProps === 'function'
-                  ? mergedHtmlInputProps(ownerState)
-                  : mergedHtmlInputProps),
+                ...resolveComponentProps(mergedHtmlInputProps, ownerState),
                 inputMode,
                 onPaste,
                 onKeyDown,
@@ -269,9 +263,11 @@ export function PickerFieldUI<
   textFieldProps.ref = useForkRef(textFieldProps.ref, pickerContext?.rootRef);
 
   const additionalTextFieldInputProps: PickersTextFieldProps['InputProps'] = {};
-  const textFieldInputProps = ((materialMajor >= 6 &&
-    (textFieldProps as TextFieldProps)?.slotProps?.input) ??
-    textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined;
+  const textFieldInputProps = resolveComponentProps(
+    ((materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input) ??
+      textFieldProps.InputProps) as PickersTextFieldProps['InputProps'] | undefined,
+    ownerState,
+  );
 
   if (pickerContext) {
     additionalTextFieldInputProps.ref = pickerContext.triggerRef;
@@ -340,25 +336,20 @@ export function PickerFieldUI<
 
   const resolvedTextFieldInputProps =
     materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input
-      ? mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps)
+      ? resolveComponentProps(
+          mergeSlotProps(textFieldInputProps, additionalTextFieldInputProps),
+          ownerState,
+        )
       : {
           ...textFieldInputProps,
           ...additionalTextFieldInputProps,
         };
 
-  return (
-    <TextField
-      {...textFieldProps}
-      {...(materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.input
-        ? {
-            slotProps: {
-              ...(textFieldProps as TextFieldProps)?.slotProps,
-              input: resolvedTextFieldInputProps,
-            },
-          }
-        : { InputProps: resolvedTextFieldInputProps })}
-    />
-  );
+  // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
+  // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
+  delete (textFieldProps as TextFieldProps)?.slotProps?.input;
+
+  return <TextField {...textFieldProps} InputProps={resolvedTextFieldInputProps} />;
 }
 
 export interface ExportedPickerFieldUIProps {
