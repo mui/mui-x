@@ -22,18 +22,17 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, week, firstDayRef } = props;
 
   const { store, instance } = useEventCalendarContext();
-  const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const settings = useStore(store, selectors.settings);
+  const preferences = useStore(store, selectors.preferences);
 
   const today = adapter.date();
   const translations = useTranslations();
 
   const getDayList = useDayList();
   const days = React.useMemo(
-    () => getDayList({ date: week, amount: 'week', excludeWeekends: settings.hideWeekends }),
-    [getDayList, week, settings.hideWeekends],
+    () => getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
+    [getDayList, week, preferences.showWeekends],
   );
 
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
@@ -55,17 +54,25 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   };
 
   return (
-    <DayGrid.Row key={weekNumber} className="MonthViewRow">
-      <div
-        className="MonthViewWeekNumberCell"
-        role="rowheader"
-        aria-label={translations.weekNumberAriaLabel(weekNumber)}
-      >
-        {weekNumber}
-      </div>
+    <DayGrid.Row
+      key={weekNumber}
+      className={clsx(
+        'MonthViewRow',
+        'MonthViewRowGrid',
+        preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+      )}
+    >
+      {preferences.showWeekNumber && (
+        <div
+          className="MonthViewWeekNumberCell"
+          role="rowheader"
+          aria-label={translations.weekNumberAriaLabel(weekNumber)}
+        >
+          {weekNumber}
+        </div>
+      )}
       {daysWithEvents.map(({ day, events, allDayEvents }, dayIdx) => {
         const isCurrentMonth = adapter.isSameMonth(day, visibleDate);
-        const isToday = adapter.isSameDay(day, today);
 
         const visibleAllDayEvents = allDayEvents.slice(0, maxEvents);
         const visibleEvents = events.slice(0, maxEvents - visibleAllDayEvents.length);
@@ -79,10 +86,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           <DayGrid.Cell
             ref={dayIdx === 0 ? firstDayRef : undefined}
             key={day.toString()}
+            data-current={adapter.isSameDay(day, today) ? '' : undefined}
             className={clsx(
               'MonthViewCell',
               !isCurrentMonth && 'OtherMonth',
-              isToday && 'Today',
               isWeekend(adapter, day) && 'Weekend',
             )}
             style={
@@ -116,7 +123,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
                   render={
                     <DayGridEvent
                       event={event}
-                      eventResource={resourcesByIdMap.get(event.resource)}
                       variant="allDay"
                       ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                       gridRow={(event.eventRowIndex || 0) + 1}
@@ -128,7 +134,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
                 <DayGridEvent
                   key={`invisible-${event.id}-${day.toString()}`}
                   event={event}
-                  eventResource={resourcesByIdMap.get(event.resource)}
                   variant="invisible"
                   ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                   gridRow={(event.eventRowIndex || 0) + 1}
@@ -142,7 +147,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
                 render={
                   <DayGridEvent
                     event={event}
-                    eventResource={resourcesByIdMap.get(event.resource)}
                     variant="compact"
                     ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
                   />

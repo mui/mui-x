@@ -17,7 +17,7 @@ _See [the dedicated section](/x/react-data-grid/filtering/customization/) to lea
 ## Single and multi-filters
 
 :::warning
-The Data Grid can only filter the rows according to one criterion at the time.
+The Data Grid can only filter rows according to one criterion at a time.
 
 To use [multi-filters](/x/react-data-grid/filtering/multi-filters/), you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::

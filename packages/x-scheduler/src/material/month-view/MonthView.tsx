@@ -35,7 +35,7 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const { store } = useEventCalendarContext();
-    const settings = useStore(store, selectors.settings);
+    const preferences = useStore(store, selectors.preferences);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
 
@@ -75,12 +75,20 @@ export const MonthView = React.memo(
       >
         <EventPopoverProvider containerRef={containerRef}>
           <DayGrid.Root className="MonthViewRoot">
-            <div className="MonthViewHeader">
-              <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+            <div
+              className={clsx(
+                'MonthViewHeader',
+                'MonthViewRowGrid',
+                preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+              )}
+            >
+              {preferences.showWeekNumber && (
+                <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+              )}
               {getDayList({
                 date: weeks[0],
                 amount: 'week',
-                excludeWeekends: settings.hideWeekends,
+                excludeWeekends: !preferences.showWeekends,
               }).map((day) => (
                 <div
                   key={day.toString()}
