@@ -20,8 +20,12 @@ import {
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { CalendarEvent, RecurringUpdateChanges } from '../../../../primitives/models';
-import { selectors } from '../../../../primitives/use-event-calendar';
+import {
+  CalendarEvent,
+  RecurringUpdateChanges,
+  CalendarResourceId,
+} from '../../../../primitives/models';
+import { DEFAULT_EVENT_COLOR, selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import './EventPopover.css';
 import {
@@ -40,6 +44,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const translations = useTranslations();
   const { store, instance } = useEventCalendarContext();
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
+  const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, calendarEvent.id);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
@@ -72,6 +77,17 @@ export const EventPopover = React.forwardRef(function EventPopover(
     },
   ];
 
+  const resourcesOptions = React.useMemo(() => {
+    return [
+      { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
+      ...resources.map((resource) => ({
+        label: resource.name,
+        value: resource.id,
+        eventColor: resource.eventColor,
+      })),
+    ];
+  }, [resources, translations.labelNoResource]);
+
   const defaultRecurrenceKey = React.useMemo<RecurrencePresetKey | 'custom' | null>(
     () => detectRecurrenceKeyFromRule(adapter, calendarEvent.rrule, calendarEvent.start),
     [adapter, calendarEvent.rrule, calendarEvent.start],
@@ -96,6 +112,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
       recurrenceModified && recurrenceValue
         ? recurrencePresets[recurrenceValue as RecurrencePresetKey]
         : undefined;
+
+    const resourceRawValue = form.get('resource');
+    const resourceValue =
+      resourceRawValue === '' ? undefined : (resourceRawValue as CalendarResourceId);
 
     const startISO = startTimeValue
       ? `${startDateValue}T${startTimeValue}`
@@ -123,6 +143,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       start,
       end,
       allDay: isAllDay,
+      resource: resourceValue,
     };
 
     if (calendarEvent.rrule) {
@@ -161,19 +182,87 @@ export const EventPopover = React.forwardRef(function EventPopover(
           <Popover.Popup finalFocus={{ current: anchor }}>
             <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
               <header className="EventPopoverHeader">
-                <Field.Root className="EventPopoverFieldRoot" name="title">
-                  <Field.Label className="EventPopoverTitle">
-                    <Input
-                      className="EventPopoverTitleInput"
-                      type="text"
-                      defaultValue={calendarEvent.title}
-                      aria-label={translations.eventTitleAriaLabel}
-                      required
+                <div className="EventPopoverHeaderContent">
+                  <Field.Root className="EventPopoverFieldRoot" name="title">
+                    <Field.Label className="EventPopoverTitle">
+                      <Input
+                        className="EventPopoverTitleInput"
+                        type="text"
+                        defaultValue={calendarEvent.title}
+                        aria-label={translations.eventTitleAriaLabel}
+                        required
+                        readOnly={isEventReadOnly}
+                      />
+                    </Field.Label>
+                    <Field.Error className="EventPopoverRequiredFieldError" />
+                  </Field.Root>
+                  <Field.Root className="EventPopoverFieldRoot" name="resource">
+                    <Select.Root
+                      items={resourcesOptions}
+                      defaultValue={calendarEvent.resource}
                       readOnly={isEventReadOnly}
-                    />
-                  </Field.Label>
-                  <Field.Error className="EventPopoverRequiredFieldError" />
-                </Field.Root>
+                    >
+                      <Select.Trigger
+                        className="EventPopoverSelectTrigger Ghost"
+                        aria-label={translations.resourceLabel}
+                      >
+                        <Select.Value>
+                          {(value: string | null) => {
+                            const selected = resourcesOptions.find(
+                              (option) => option.value === value,
+                            );
+
+                            return (
+                              <div className="EventPopoverSelectItemTitleWrapper">
+                                <span
+                                  className={clsx(
+                                    'ResourceLegendColor',
+                                    getColorClassName(selected?.eventColor ?? DEFAULT_EVENT_COLOR),
+                                  )}
+                                />
+                                <span>
+                                  {value ? selected?.label : translations.labelNoResource}
+                                </span>
+                              </div>
+                            );
+                          }}
+                        </Select.Value>
+                        <Select.Icon className="EventPopoverSelectIcon">
+                          <ChevronDown size={14} />
+                        </Select.Icon>
+                      </Select.Trigger>
+                      <Select.Portal>
+                        <Select.Positioner
+                          alignItemWithTrigger={false}
+                          align="start"
+                          className="EventPopoverSelectPositioner"
+                        >
+                          <Select.Popup className="EventPopoverSelectPopup">
+                            {resourcesOptions.map((resource) => (
+                              <Select.Item
+                                key={resource.value}
+                                value={resource.value}
+                                className="EventPopoverSelectItem"
+                              >
+                                <div className="EventPopoverSelectItemTitleWrapper">
+                                  <span
+                                    className={clsx(
+                                      'ResourceLegendColor',
+                                      getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
+                                    )}
+                                  />
+                                  <Select.ItemText className="EventPopoverSelectItemText">
+                                    {resource.label}
+                                  </Select.ItemText>
+                                </div>
+                              </Select.Item>
+                            ))}
+                          </Select.Popup>
+                        </Select.Positioner>
+                      </Select.Portal>
+                    </Select.Root>
+                  </Field.Root>
+                </div>
                 <Popover.Close
                   aria-label={translations.closeButtonAriaLabel}
                   className="EventPopoverCloseButton"
@@ -301,7 +390,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         </Select.Icon>
                       </Select.Trigger>
                       <Select.Portal>
-                        <Select.Positioner className="EventPopoverSelectPositioner">
+                        <Select.Positioner
+                          alignItemWithTrigger={false}
+                          align="start"
+                          className="EventPopoverSelectPositioner"
+                        >
                           <Select.Popup className="EventPopoverSelectPopup">
                             {recurrenceOptions.map(({ label, value }) => (
                               <Select.Item
@@ -309,12 +402,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
                                 value={value}
                                 className="EventPopoverSelectItem"
                               >
-                                <Select.ItemIndicator className="EventPopoverSelectItemIndicator">
-                                  <CheckIcon
-                                    size={14}
-                                    className="EventPopoverSelectItemIndicatorIcon"
-                                  />
-                                </Select.ItemIndicator>
                                 <Select.ItemText className="EventPopoverSelectItemText">
                                   {label}
                                 </Select.ItemText>
