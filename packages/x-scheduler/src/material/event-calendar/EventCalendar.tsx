@@ -21,6 +21,17 @@ import {
 import '../index.css';
 import './EventCalendar.css';
 
+function ErrorCallout() {
+  return (
+    <div className="ErrorCallout">
+      <p>
+        <span>The Timeline view is currently only available on its own, rendered inside the </span>
+        <span className="CodeSnippet">{'<StandaloneView/>'}</span> component.
+      </p>
+    </div>
+  );
+}
+
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -47,6 +58,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       break;
     case 'agenda':
       content = <AgendaView />;
+      break;
+    case 'timeline':
+      content = <ErrorCallout />;
       break;
     default:
       content = null;
