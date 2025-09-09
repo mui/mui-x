@@ -62,11 +62,11 @@ When creating your custom array of plugins, be aware that some plugins have depe
 - dependencies: plugins that need to be set before for them to work.
 - optional dependencies: plugins that need to be set before to enable some features.
 
-For example:
+For example, the `useChartClosestPoint` has the `useChartCartesianAxis` as a dependency and the `useChartHighlight` as an optional dependency. Then
 
-- `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin is set before the one for closest point.
 - `[useChartClosestPoint, useChartCartesianAxis]` does not work because the closest point plugin is before the cartesian one.
-- `[useChartCartesianAxis, useChartInteraction]` works with limited feature because the cartesian plugin needs to be after the interaction one to get axis interaction.
+- `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin is set before the one for closest point.
+- `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited feature. The highligh plugin being after the closest point one, you will get highlight feature, but not highlight based on closest point.
 
 | Plugin                                             | Dependencies            | Optional dependency                        |
 | :------------------------------------------------- | :---------------------- | :----------------------------------------- |
@@ -74,16 +74,16 @@ For example:
 | `useChartPolarAxis`                                |                         | `useChartInteraction`                      |
 | `useChartHighlight`                                |                         |                                            |
 | `useChartInteraction`                              |                         |                                            |
-| `useChartClosestPoint`                             | `useChartCartesianAxis` | `useChartInteraction`, `useChartHighlight` |
+| `useChartClosestPoint`                             | `useChartCartesianAxis` | `useChartInteraction`,<br/>`useChartHighlight` |
 | `useChartZAxis`                                    |                         |                                            |
 | `useChartProExport` <span class="plan-pro"></span> |                         |                                            |
 | `useChartProZoom` <span class="plan-pro"></span>   | `useChartCartesianAxis` |                                            |
 
 ### Custom plugins
 
-:::warn
+:::warning
 Creating custom plugins is not encouraged.
 :::
 
 The plugin's internal implementation is not considered stable.
-It can break at any time without a breaking change.
+It can break at any time, including patch and minor versions.
