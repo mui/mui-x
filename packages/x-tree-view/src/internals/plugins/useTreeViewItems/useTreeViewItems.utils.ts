@@ -114,7 +114,13 @@ export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
 
   const processItem = (item: TreeViewBaseItem) => {
     const id: string = config.getItemId ? config.getItemId(item) : (item as any).id;
-    checkId(id, item, otherItemsMetaLookup, metaLookup);
+    checkId({
+      id,
+      parentId,
+      item,
+      itemMetaLookup: otherItemsMetaLookup,
+      siblingsMetaLookup: metaLookup,
+    });
     const label = config.getItemLabel
       ? config.getItemLabel(item)
       : (item as { label: string }).label;
@@ -173,12 +179,19 @@ interface BuildItemsLookupsParameters {
   otherItemsMetaLookup: { [itemId: string]: TreeViewItemMeta };
 }
 
-function checkId(
-  id: string | null,
-  item: TreeViewBaseItem,
-  itemMetaLookup: { [itemId: string]: TreeViewItemMeta },
-  siblingsMetaLookup: { [itemId: string]: TreeViewItemMeta },
-) {
+function checkId({
+  id,
+  parentId,
+  item,
+  itemMetaLookup,
+  siblingsMetaLookup,
+}: {
+  id: TreeViewItemId | null;
+  parentId: TreeViewItemId | null;
+  item: TreeViewBaseItem;
+  itemMetaLookup: { [itemId: string]: TreeViewItemMeta };
+  siblingsMetaLookup: { [itemId: string]: TreeViewItemMeta };
+}) {
   if (id == null) {
     throw new Error(
       [
@@ -190,7 +203,11 @@ function checkId(
     );
   }
 
-  if (itemMetaLookup[id] != null || siblingsMetaLookup[id] != null) {
+  if (
+    siblingsMetaLookup[id] != null ||
+    // Ignore items with the same parent id, because it's the same item from the previous generation.
+    (itemMetaLookup[id] != null && itemMetaLookup[id]!.parentId !== parentId)
+  ) {
     throw new Error(
       [
         'MUI X: The Tree View component requires all items to have a unique `id` property.',

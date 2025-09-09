@@ -116,7 +116,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       parentId,
       depth: parentDepth + 1,
       isItemExpandable: getChildrenCount ? (item) => getChildrenCount(item) > 0 : () => false,
-      otherItemsMetaLookup: {}, // TODO: Fix item id warning
+      otherItemsMetaLookup: itemsSelectors.itemMetaLookup(store.state),
     });
 
     const lookups = {
