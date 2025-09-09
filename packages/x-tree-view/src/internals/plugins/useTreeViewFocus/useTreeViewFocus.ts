@@ -1,5 +1,5 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { EventHandlers } from '@mui/utils/types';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';

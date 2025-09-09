@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
-import useEventCallback from '@mui/utils/useEventCallback';
-import useForkRef from '@mui/utils/useForkRef';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { TreeViewItemPlugin, TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
@@ -121,11 +121,11 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
 
   const expandable = itemHasChildren(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
-  const handleContentRef = useForkRef(pluginContentRef, contentRef);
+  const handleContentRef = useMergedRefs(pluginContentRef, contentRef);
   const treeId = useStore(store, idSelectors.treeId);
 
   // Prevent any flashing
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
     registerChild(idAttribute, itemId);
 
@@ -135,7 +135,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
     };
   }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
 
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     return instance.insertJSXItem({
       id: itemId,
       idAttribute: id,
