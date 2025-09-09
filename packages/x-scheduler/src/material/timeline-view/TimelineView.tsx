@@ -1,18 +1,17 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { DateTime } from 'luxon';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { HeaderToolbar } from './header-toolbar';
 import { TimelineView as TimelineViewType, TimelineViewProps } from './TimelineView.types';
 import { Timeline } from '../../primitives/timeline';
-import { selectors } from '../../primitives/use-event-calendar';
+import { DEFAULT_EVENT_COLOR, selectors } from '../../primitives/use-event-calendar';
 import './TimelineView.css';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { getColorClassName } from '../internals/utils/color-utils';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { diffIn } from '../../primitives/utils/date-utils';
-import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { DaysHeader, TimeHeader, WeeksHeader } from './header-toolbar/view-header';
+import { TimelineEvent } from './timeline-event';
 
 const adapter = getAdapter();
 
@@ -43,9 +42,8 @@ export function TimelineView(props: TimelineViewProps) {
   const { store } = useEventCalendarContext();
   const resources = useStore(store, selectors.resources);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const getDayList = useDayList();
 
-  // TODO replace with a view state in the store
+  // TODO replace with a view state from the store
   const [view, setView] = React.useState<TimelineViewType>('days');
   const views: TimelineViewType[] = ['time', 'days', 'weeks', 'months', 'years'];
 
@@ -54,7 +52,7 @@ export function TimelineView(props: TimelineViewProps) {
   };
 
   const start = adapter.startOfDay(visibleDate);
-  const end = getEndBoundaries(view, start);
+  const end = React.useMemo(() => getEndBoundaries(view, start), [view, start]);
 
   const eventsGroupedByResource = useStore(store, selectors.eventsToRenderGroupedByResource, {
     start,
@@ -62,6 +60,19 @@ export function TimelineView(props: TimelineViewProps) {
   });
 
   const diff = diffIn(adapter, end, start, UNIT[view]);
+
+  const header = React.useMemo(() => {
+    switch (view) {
+      case 'days':
+        return <DaysHeader start={start} end={end} />;
+      case 'time':
+        return <TimeHeader start={start} end={end} />;
+      case 'weeks':
+        return <WeeksHeader start={start} end={end} />;
+      default:
+        return null;
+    }
+  }, [view, start, end]);
 
   return (
     <div className={clsx('TimelineViewContainer', 'mui-x-scheduler', className)} {...other}>
@@ -90,7 +101,10 @@ export function TimelineView(props: TimelineViewProps) {
                 <Timeline.Row key={resource.name} className="TimelineRow">
                   <Timeline.Cell className={clsx('TimelineCell', 'TimelineTitleCell')}>
                     <span
-                      className={clsx('ResourceLegendColor', getColorClassName({ resource }))}
+                      className={clsx(
+                        'ResourceLegendColor',
+                        getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
+                      )}
                     />
 
                     {resource.name}
@@ -101,11 +115,7 @@ export function TimelineView(props: TimelineViewProps) {
           </div>
           <div className="EventSubGridContainer">
             <Timeline.Row className="HeaderRow">
-              <Timeline.Cell className={clsx('TimelineCell', 'HeaderCell')}>
-                {view === 'days' && <DaysHeader start={start} end={end} />}
-                {view === 'time' && <TimeHeader start={start} end={end} />}
-                {view === 'weeks' && <WeeksHeader start={start} end={end} />}
-              </Timeline.Cell>
+              <Timeline.Cell className={clsx('TimelineCell', 'HeaderCell')}>{header}</Timeline.Cell>
             </Timeline.Row>
             <Timeline.SubGrid className="EventSubGrid">
               {(resource) => (
@@ -122,25 +132,13 @@ export function TimelineView(props: TimelineViewProps) {
                 >
                   {eventsGroupedByResource[resource.id]?.map((row, index) =>
                     row.map((event) => (
-                      <Timeline.Event
+                      <TimelineEvent
                         key={event.id}
-                        className={clsx(
-                          className,
-                          'TimelineEvent',
-                          'LinesClamp',
-                          getColorClassName({ resource }),
-                        )}
-                        style={
-                          {
-                            '--number-of-lines': 1,
-                            '--row-index': index + 1,
-                          } as React.CSSProperties
-                        }
-                        start={event.start}
-                        end={event.end}
-                      >
-                        {event.title}
-                      </Timeline.Event>
+                        event={event}
+                        gridRow={index + 1}
+                        ariaLabelledBy=""
+                        variant="regular"
+                      />
                     )),
                   )}
                 </Timeline.EventRow>

@@ -1,0 +1,12 @@
+.TimelineEvent {
+  border-radius: var(--radius-4);
+  background-color: var(--event-color-3);
+  color: var(--event-color-12);
+  padding: var(--space-1);
+
+  width: var(--width);
+  margin-left: var(--x-position);
+
+  grid-row: var(--row-index, 1);
+  grid-column: 1;
+}
