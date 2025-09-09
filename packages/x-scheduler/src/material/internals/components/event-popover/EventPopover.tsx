@@ -149,7 +149,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
         ...(recurrenceModified ? { rrule } : {}),
       };
 
-      // TODO: Issues #19440 and #19441 - Add support for editing a single occurrence or all future occurrences.
+      // TODO: Issues #19440 and #19441 - Add support for editing a single occurrence or all occurrences.
       instance.updateRecurringEvent(calendarEvent.id, calendarEvent.start, changes, 'following');
     } else {
       instance.updateEvent({
