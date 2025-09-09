@@ -17,9 +17,13 @@ import { Adapter } from '../utils/adapter/types';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
-export const DEFAULT_PREFERENCES: CalendarPreferences = { hideWeekends: false };
+export const DEFAULT_PREFERENCES: CalendarPreferences = {
+  showWeekends: true,
+  showWeekNumber: false,
+};
 export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
+  toggleWeekNumberVisibility: true,
 };
 const EMPTY_ARRAY: any[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';

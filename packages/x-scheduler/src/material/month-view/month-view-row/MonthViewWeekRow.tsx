@@ -1,18 +1,24 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
+import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
+import { useEventCalendarContext } from '../../../primitives/utils/useEventCalendarContext';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { useAddRowPlacementToEventOccurrences } from '../../../primitives/use-row-event-occurrences';
-import './MonthViewWeekRow.css';
+import { selectors } from '../../../primitives/use-event-calendar';
 import { MonthViewCell } from './MonthViewCell';
+import './MonthViewWeekRow.css';
 
 const adapter = getAdapter();
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, days, occurrencesMap, firstDayRef } = props;
 
+  const { store } = useEventCalendarContext();
+  const preferences = useStore(store, selectors.preferences);
   const translations = useTranslations();
   const daysWithEvents = useAddRowPlacementToEventOccurrences({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
@@ -26,14 +32,25 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   );
 
   return (
-    <DayGrid.Row key={weekNumber} start={start} end={end} className="MonthViewRow">
-      <div
-        className="MonthViewWeekNumberCell"
-        role="rowheader"
-        aria-label={translations.weekNumberAriaLabel(weekNumber)}
-      >
-        {weekNumber}
-      </div>
+    <DayGrid.Row
+      key={weekNumber}
+      start={start}
+      end={end}
+      className={clsx(
+        'MonthViewRow',
+        'MonthViewRowGrid',
+        preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+      )}
+    >
+      {preferences.showWeekNumber && (
+        <div
+          className="MonthViewWeekNumberCell"
+          role="rowheader"
+          aria-label={translations.weekNumberAriaLabel(weekNumber)}
+        >
+          {weekNumber}
+        </div>
+      )}
       {daysWithEvents.map((day, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}

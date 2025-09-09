@@ -49,11 +49,11 @@ export const MonthView = React.memo(
         amount: 'end-of-month',
       });
       const tempWeeks = weekFirstDays.map((week) =>
-        getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }),
+        getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
       );
 
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };
-    }, [getWeekList, getDayList, visibleDate, preferences.hideWeekends]);
+    }, [getWeekList, getDayList, visibleDate, preferences.showWeekends]);
 
     const occurrencesMap = useEventOccurrences({ days, eventPlacement: 'every-day' });
 
@@ -95,8 +95,16 @@ export const MonthView = React.memo(
       >
         <EventPopoverProvider containerRef={containerRef}>
           <DayGrid.Root className="MonthViewRoot" onEventChange={handleEventChangeFromPrimitive}>
-            <div className="MonthViewHeader">
-              <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+            <div
+              className={clsx(
+                'MonthViewHeader',
+                'MonthViewRowGrid',
+                preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+              )}
+            >
+              {preferences.showWeekNumber && (
+                <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+              )}
               {weeks[0].map((weekDay) => (
                 <div
                   key={weekDay.key}

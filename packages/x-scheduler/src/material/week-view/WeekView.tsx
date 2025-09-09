@@ -26,9 +26,9 @@ export const WeekView = React.memo(
         getDayList({
           date: adapter.startOfWeek(visibleDate),
           amount: 'week',
-          excludeWeekends: preferences.hideWeekends,
+          excludeWeekends: !preferences.showWeekends,
         }),
-      [getDayList, visibleDate, preferences.hideWeekends],
+      [getDayList, visibleDate, preferences.showWeekends],
     );
 
     useInitializeView(() => ({
