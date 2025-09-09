@@ -1155,7 +1155,6 @@ describe('recurrence-utils', () => {
     ) => decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes);
 
     it('should return changes.rrule as is when user explicitly changed recurrence', () => {
-      // User provided a new RRULE → use it as is (including COUNT/UNTIL if any)
       const original: RRuleSpec = { freq: 'DAILY', interval: 1 };
       const newRule: RRuleSpec = { freq: 'WEEKLY', interval: 2, count: 5 };
 
@@ -1164,7 +1163,6 @@ describe('recurrence-utils', () => {
     });
 
     it('should return undefined when user explicitly removed recurrence', () => {
-      // rrule is present but user removed it (set to undefined) → non-recurring event
       const original: RRuleSpec = { freq: 'DAILY', interval: 1 };
       const res = call(original, { rrule: undefined });
       expect(res).to.equal(undefined);
