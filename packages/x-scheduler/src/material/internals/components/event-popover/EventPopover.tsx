@@ -125,7 +125,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       instance.updateRecurringEvent(
         calendarEvent.id,
         calendarEvent.start,
-        { ...payload },
+        { ...calendarEvent, ...payload },
         'following',
       );
     } else {

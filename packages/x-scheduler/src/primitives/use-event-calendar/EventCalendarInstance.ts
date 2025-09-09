@@ -15,7 +15,6 @@ import {
 } from '../models';
 import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
-import { diffIn } from '../utils/date-utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -275,7 +274,7 @@ export class EventCalendarInstance {
   public updateRecurringEvent = (
     eventId: CalendarEventId,
     occurrenceStart: SchedulerValidDate,
-    changes: Partial<CalendarEvent>,
+    changes: CalendarEvent,
     scope: 'following',
   ) => {
     if (scope !== 'following') {
@@ -293,10 +292,7 @@ export class EventCalendarInstance {
       throw new Error('Event Calendar: requiere evento recurrente.');
     }
 
-    // 1) duration in minutes
-    const durationMinutes = diffIn(adapter, original.end, original.start, 'minutes');
-
-    // 2) Old series: set UNTIL to the day before the edited occurrence (inclusive)
+    // 1) Old series: set UNTIL to the day before the edited occurrence (inclusive)
     const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
     const untilDate = adapter.addDays(occurrenceDayStart, -1);
 
@@ -306,7 +302,7 @@ export class EventCalendarInstance {
       count: undefined as unknown as number | undefined,
     };
 
-    // If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
+    // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
     const shouldDropOldSeries = adapter.isBefore(
       adapter.endOfDay(untilDate),
       adapter.startOfDay(original.start),
@@ -325,18 +321,14 @@ export class EventCalendarInstance {
       newRRule = cleanRRule(original.rrule);
     }
 
-    // New start/end (if no end is provided, respect the duration)
-    const newStart = changes.start ?? occurrenceStart;
-    const newEnd = changes.end ?? adapter.addMinutes(newStart, durationMinutes);
-
-    const generateId = `${original.id}::${adapter.format(newStart, 'keyboardDate')}`;
+    const generateId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
 
     const newEvent: CalendarEvent = {
       ...original,
       ...changes,
       id: generateId,
-      start: newStart,
-      end: newEnd,
+      start: changes.start,
+      end: changes.end,
       rrule: newRRule,
       extractedFromId: original.id,
     };
