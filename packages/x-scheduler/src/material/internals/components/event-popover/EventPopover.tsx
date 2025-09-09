@@ -128,7 +128,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
     if (calendarEvent.rrule) {
       const changes: RecurringUpdateChanges = {
         ...payload,
-        // We only spread the rrule in the changes if the user actually modified it
         ...(recurrenceModified ? { rrule } : {}),
       };
 
