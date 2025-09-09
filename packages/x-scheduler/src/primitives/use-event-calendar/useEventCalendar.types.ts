@@ -88,14 +88,14 @@ export interface EventCalendarParameters {
   eventColor?: CalendarEventColor;
   /**
    * Preferences for the calendar.
-   * @default { hideWeekends: false }
+   * @default { showWeekends: true, showWeekNumber: false }
    */
   preferences?: Partial<CalendarPreferences>;
   /**
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true }
    */
   preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
 }

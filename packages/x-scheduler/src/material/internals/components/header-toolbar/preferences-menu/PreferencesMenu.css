@@ -12,7 +12,6 @@
 }
 
 .PreferencesMenuPopup {
-  min-width: 170px;
   padding: var(--space-2);
   border-radius: var(--radius-4);
   background-color: var(--surface);
@@ -23,9 +22,9 @@
 .PreferencesMenuCheckboxItem {
   background: var(--surface);
   user-select: none;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto var(--space-4);
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-3);
@@ -48,16 +47,12 @@
   background: var(--interactive-active-bg);
 }
 
-/* Selected */
-.mui-x-scheduler .Button.PreferencesMenuButton[data-pressed],
-.PreferencesMenuCheckboxItem[data-checked] {
+.mui-x-scheduler .Button.PreferencesMenuButton[data-pressed] {
   background: var(--interactive-selected-bg);
   color: var(--interactive-selected-text);
 }
 
-/* Selected and hovered */
-.mui-x-scheduler .Button.PreferencesMenuButton[data-pressed]:hover,
-.PreferencesMenuCheckboxItem[data-checked]:hover {
+.mui-x-scheduler .Button.PreferencesMenuButton[data-pressed]:hover {
   background: var(--interactive-selected-hover-bg);
 }
 
@@ -75,15 +70,12 @@
   background: var(--interactive-focused-hover-bg);
 }
 
-/* Active and focused */
-.mui-x-scheduler .Button.PreferencesMenuButton:active:focus-visible,
-.PreferencesMenuCheckboxItem:active:focus-visible {
+.mui-x-scheduler .Button.PreferencesMenuButton:active:focus-visible {
   background: var(--interactive-active-focused-bg);
 }
 
 /* Selected and focused */
-.mui-x-scheduler .Button.PreferencesMenuButton[data-pressed]:focus-visible,
-.PreferencesMenuCheckboxItem[data-checked]:focus-visible {
+.mui-x-scheduler .Button.PreferencesMenuButton[data-pressed]:focus-visible {
   background: var(--interactive-selected-focused-bg);
   outline: var(--outline-focus);
   outline-offset: var(--outline-focus-offset);

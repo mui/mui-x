@@ -1,0 +1,9 @@
+<RichTreeView
+  items={EMPLOYEES_DATASET}
+  checkboxSelection
+  multiSelect
+  selectionPropagation={selectionPropagation}
+  defaultSelectedItems={selectedItems}
+  onSelectedItemsChange={handleSelectedItemsChange}
+  defaultExpandedItems={['1', '8', '9', '12']}
+/>
