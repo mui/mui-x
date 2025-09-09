@@ -717,54 +717,56 @@ export function countYearlyOccurrencesUpToExact(
  *
  * Rules:
  * - If user provided changes.rrule → use it as-is (preserve COUNT/UNTIL).
+ * - If changes.rrule is explicitly undefined → non-recurring one-off.
  * - If changes.rrule is omitted → inherit pattern and recompute boundaries:
  *     * original COUNT → COUNT = remaining occurrences from split day
  *     * original UNTIL → keep the same UNTIL
  *     * no boundaries → just inherit the pattern
- * - If changes.rrule is explicitly undefined → non-recurring one-off.
  */
 export function decideSplitRRule(
   adapter: Adapter,
   originalRule: RRuleSpec,
-  changesRRule: RRuleSpec | undefined,
   originalSeriesStart: SchedulerValidDate,
   splitStart: SchedulerValidDate,
-  hasRRuleProp: boolean,
+  changes: Partial<CalendarEvent>,
 ): RRuleSpec | undefined {
-  // Strip COUNT/UNTIL for a clean pattern base
+  // Normalize base pattern (drop COUNT/UNTIL)
   const { count, until, ...baseRule } = originalRule;
 
-  // Case A — user did not touch RRULE
-  if (!hasRRuleProp) {
-    const splitDayStart = adapter.startOfDay(splitStart);
+  // Detect whether user touched rrule at all
+  const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
+  const changesRRule = changes.rrule;
 
-    if (originalRule.count) {
-      // occurrences done strictly before the split day
-      const dayBefore = adapter.addDays(splitDayStart, -1);
-      const countBeforeSplit = estimateOccurrencesUpTo(
-        adapter,
-        originalRule,
-        originalSeriesStart,
-        dayBefore,
-      );
-      const remaining = Math.max(0, originalRule.count - countBeforeSplit);
-      return remaining > 0 ? { ...baseRule, count: remaining } : undefined;
-    }
-
-    if (originalRule.until) {
-      return { ...baseRule, until: originalRule.until };
-    }
-
-    return { ...baseRule };
+  // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
+  if (hasRRuleProp && changesRRule) {
+    return changesRRule;
   }
 
-  // Case B — user explicitly removed recurrence
-  if (!changesRRule) {
+  // Case B — user explicitly removed recurrence → one-off
+  if (hasRRuleProp && !changesRRule) {
     return undefined;
   }
 
-  // Case C — user provided a new RRULE → respect it (including COUNT/UNTIL)
-  return changesRRule;
+  // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
+  const splitDayStart = adapter.startOfDay(splitStart);
+
+  if (originalRule.count) {
+    const dayBefore = adapter.addDays(splitDayStart, -1);
+    const occurrencesBeforeSplit = estimateOccurrencesUpTo(
+      adapter,
+      originalRule,
+      originalSeriesStart,
+      dayBefore,
+    );
+    const remaining = Math.max(0, originalRule.count - occurrencesBeforeSplit);
+    return remaining > 0 ? { ...baseRule, count: remaining } : undefined;
+  }
+
+  if (originalRule.until) {
+    return { ...baseRule, until: originalRule.until };
+  }
+
+  return { ...baseRule };
 }
 
 export function applyRecurringUpdateFollowing(
@@ -789,16 +791,13 @@ export function applyRecurringUpdateFollowing(
   );
 
   // 3) New event: apply changes, decide RRULE for the new series
-  const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
-    changes.rrule,
     originalEvent.start,
-    changes.start,
-    hasRRuleProp,
+    occurrenceStart,
+    changes,
   );
-
   const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
 
   const newEvent: CalendarEvent = {

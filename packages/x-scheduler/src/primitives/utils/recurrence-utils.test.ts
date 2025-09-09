@@ -23,6 +23,7 @@ import {
   nthWeekdayOfMonth,
   parseMonthlyByDayOrdinalSingle,
   applyRecurringUpdateFollowing,
+  decideSplitRRule,
 } from './recurrence-utils';
 import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
@@ -1142,6 +1143,68 @@ describe('recurrence-utils', () => {
     });
   });
 
+  describe('decideSplitRRule', () => {
+    const seriesStart = adapter.date('2025-01-01T09:00:00Z'); // DTSTART
+    const splitStart = adapter.date('2025-01-06T15:00:00Z'); // "this and following" starts here
+
+    const call = (
+      originalRule: RRuleSpec,
+      changes: Partial<CalendarEvent> = {},
+      originalSeriesStart: SchedulerValidDate = seriesStart,
+      split: SchedulerValidDate = splitStart,
+    ) => decideSplitRRule(adapter, originalRule, originalSeriesStart, split, changes);
+
+    it('should return changes.rrule as is when user explicitly changed recurrence', () => {
+      // User provided a new RRULE → use it as is (including COUNT/UNTIL if any)
+      const original: RRuleSpec = { freq: 'DAILY', interval: 1 };
+      const newRule: RRuleSpec = { freq: 'WEEKLY', interval: 2, count: 5 };
+
+      const res = call(original, { rrule: newRule });
+      expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 2, count: 5 });
+    });
+
+    it('should return undefined when user explicitly removed recurrence', () => {
+      // rrule is present but user removed it (set to undefined) → non-recurring event
+      const original: RRuleSpec = { freq: 'DAILY', interval: 1 };
+      const res = call(original, { rrule: undefined });
+      expect(res).to.equal(undefined);
+    });
+
+    it('should inherit base pattern when RRULE not touched and there are no boundaries', () => {
+      const original: RRuleSpec = { freq: 'DAILY', interval: 2 };
+      const res = call(original, { title: 'New Event Title' });
+      expect(res).to.deep.equal({ freq: 'DAILY', interval: 2 });
+    });
+
+    it('should inherit base pattern and recomputes COUNT to remaining occurrences when RRULE not touched', () => {
+      // Original: daily with count 42 from Jan 01
+      // Split on Jan 06 => Jan 01..05 consumed => remaining 37 => new COUNT=37
+      const original: RRuleSpec = { freq: 'DAILY', interval: 1, count: 42 };
+
+      const dayBeforeSplit = adapter.addDays(adapter.startOfDay(splitStart), -1);
+      const consumed = estimateOccurrencesUpTo(adapter, original, seriesStart, dayBeforeSplit);
+      const remaining = (original.count as number) - consumed;
+
+      const res = call(original, { title: 'New Event Title' });
+      expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, count: remaining });
+    });
+
+    it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {
+      const originalUntil = adapter.date('2025-01-20T23:59:59Z');
+      const original: RRuleSpec = { freq: 'DAILY', interval: 1, until: originalUntil };
+
+      const res = call(original, { title: 'New Event Title' })!;
+      expect(adapter.isSameDay(res.until!, originalUntil)).to.equal(true);
+      expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, until: originalUntil });
+    });
+
+    it('should keep pattern selectors when inheriting (e.g., WEEKLY BYDAY)', () => {
+      const original: RRuleSpec = { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] };
+      const res = call(original, { title: 'New Event Title' });
+      expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] });
+    });
+  });
+
   describe('applyRecurringUpdateFollowing', () => {
     const makeRecurringEvent = (overrides: Partial<CalendarEvent> = {}): CalendarEvent => ({
       id: 'recurring',
@@ -1326,129 +1389,38 @@ describe('recurrence-utils', () => {
       expect(newSeries.rrule).to.equal(undefined);
     });
 
-    describe('Edge cases for inheriting original rule when changes.rrule is omitted', () => {
-      it("should inherit the original rule when changes.rrule is omitted and there's no count or until", () => {
-        // Original: daily from Jan 01 with count
-        const original = makeRecurringEvent({ rrule: { freq: 'DAILY', interval: 2 } });
-        const events = [original];
-        const { rrule, ...rest } = original;
+    it('should inherit the original rule when changes.rrule is omitted', () => {
+      // Original: daily from Jan 01
+      const original = makeRecurringEvent({ rrule: { freq: 'DAILY', interval: 2 } });
+      const events = [original];
+      const { rrule, ...rest } = original;
 
-        const occurrenceStart = adapter.date('2025-01-06T09:00:00Z');
-        const changes: CalendarEvent = {
-          ...rest,
-          start: adapter.date('2025-01-06T15:00:00Z'),
-          end: adapter.date('2025-01-06T16:00:00Z'),
-        };
+      const occurrenceStart = adapter.date('2025-01-06T09:00:00Z');
+      const changes: CalendarEvent = {
+        ...rest,
+        start: adapter.date('2025-01-06T15:00:00Z'),
+        end: adapter.date('2025-01-06T16:00:00Z'),
+      };
 
-        const updated = applyRecurringUpdateFollowing(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
+      const updated = applyRecurringUpdateFollowing(
+        adapter,
+        events,
+        original,
+        occurrenceStart,
+        changes,
+      );
 
-        // New series has inherited (and cleaned) rule
-        const newId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
-        const newSeries = updated.find((event) => event.id === newId)!;
-        expect(newSeries.rrule).to.deep.equal({ freq: 'DAILY', interval: 2 });
+      // New series has inherited rule
+      const newId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+      const newSeries = updated.find((event) => event.id === newId)!;
+      expect(newSeries.rrule).to.deep.equal({ freq: 'DAILY', interval: 2 });
 
-        // Original series is truncated with UNTIL = day(occurrenceStart) - 1
-        const truncated = updated.find((event) => event.id === original.id)!;
-        const expectedUntil = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
-        expect(adapter.isSameDay((truncated.rrule as RRuleSpec).until!, expectedUntil)).to.equal(
-          true,
-        );
-      });
-
-      it('should inherit original rule and recompute boundaries (COUNT) when changes.rrule is omitted', () => {
-        // Original: daily from Jan 01 with count
-        const original = makeRecurringEvent({ rrule: { freq: 'DAILY', interval: 1, count: 42 } });
-        const events = [original];
-
-        // Edit occurrence on Jan 06
-        const occurrenceStart = adapter.date('2025-01-06T09:00:00Z');
-
-        // We omit rrule in changes
-        const { rrule, ...rest } = original;
-        const changes = {
-          ...rest,
-          start: adapter.date('2025-01-06T15:00:00Z'),
-          end: adapter.date('2025-01-06T16:00:00Z'),
-        };
-
-        const updated = applyRecurringUpdateFollowing(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
-
-        // New series has inherited rule with recomputed COUNT
-        const newId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
-        const newSeries = updated.find((ev) => ev.id === newId)!;
-
-        const dayBeforeSplit = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
-        const consumed = estimateOccurrencesUpTo(
-          adapter,
-          original.rrule!,
-          original.start,
-          dayBeforeSplit,
-        );
-        // 37 occurrences remaining
-        const remaining = (original.rrule!.count as number) - consumed;
-
-        expect(newSeries.rrule).to.deep.equal({ freq: 'DAILY', interval: 1, count: remaining });
-
-        // Original series is truncated with UNTIL = day(occurrenceStart) - 1
-        const truncatedSeries = updated.find((ev) => ev.id === original.id)!;
-        const expectedUntil = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
-        expect(
-          adapter.isSameDay((truncatedSeries.rrule as RRuleSpec).until!, expectedUntil),
-        ).to.equal(true);
-      });
-
-      it('should inherit original UNTIL for the new series when splitting before UNTIL', () => {
-        // Original: daily with UNTIL Jan 20
-        const originalUntil = adapter.date('2025-01-20T23:59:59Z');
-        const original: CalendarEvent = makeRecurringEvent({
-          rrule: { freq: 'DAILY', interval: 1, until: originalUntil },
-        });
-        const events = [original];
-
-        // Split on Jan 06 → old series truncated to Jan 05, new series inherits UNTIL=Jan 20
-        const occurrenceStart = adapter.date('2025-01-06T09:00:00Z');
-
-        // changes WITHOUT rrule (omitted)
-        const { rrule, ...rest } = original;
-        const changes = {
-          ...rest,
-          start: adapter.date('2025-01-06T15:00:00Z'),
-          end: adapter.date('2025-01-06T16:00:00Z'),
-        };
-
-        const updated = applyRecurringUpdateFollowing(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
-
-        // New series inherits UNTIL (still valid after the split)
-        const newId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
-        const newSeries = updated.find((event) => event.id === newId)!;
-        const inheritedUntil = (newSeries.rrule as RRuleSpec).until!;
-        expect(adapter.isSameDay(inheritedUntil, originalUntil)).to.equal(true);
-
-        // Old series is truncated to the day before the occurrence
-        const truncated = updated.find((event) => event.id === original.id)!;
-        const expectedUntil = adapter.addDays(adapter.startOfDay(occurrenceStart), -1); // Jan 05
-        expect(adapter.isSameDay((truncated.rrule as RRuleSpec).until!, expectedUntil)).to.equal(
-          true,
-        );
-      });
+      // Original series is truncated with UNTIL = day(occurrenceStart) - 1
+      const truncated = updated.find((event) => event.id === original.id)!;
+      const expectedUntil = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
+      expect(adapter.isSameDay((truncated.rrule as RRuleSpec).until!, expectedUntil)).to.equal(
+        true,
+      );
     });
   });
 });
