@@ -40,15 +40,14 @@ export const AgendaView = React.memo(
         getDayList({
           date: visibleDate,
           amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: preferences.hideWeekends,
+          excludeWeekends: !preferences.showWeekends,
         }),
-      [getDayList, preferences.hideWeekends, visibleDate],
+      [getDayList, preferences.showWeekends, visibleDate],
     );
     const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
       days,
       shouldOnlyRenderEventInOneCell: false,
     });
-    const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
@@ -95,7 +94,6 @@ export const AgendaView = React.memo(
                         <DayGridEvent
                           event={event}
                           variant="compact"
-                          eventResource={resourcesByIdMap.get(event.resource)}
                           ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />
                       }
@@ -111,7 +109,6 @@ export const AgendaView = React.memo(
                         <DayGridEvent
                           event={event}
                           variant="compact"
-                          eventResource={resourcesByIdMap.get(event.resource)}
                           ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />
                       }

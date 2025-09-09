@@ -177,7 +177,25 @@ return (
 
 ### Color palettes
 
-The Event Calendar supports several color palettes:
+The Event Calendar supports several color palettes.
+
+Event colors can be set at two levels. The effective color resolves in the following order:
+
+1. The `eventColor` assigned to the event's resource
+
+```tsx
+<EventCalendar resources={[{ id: '1', name: 'Resource 1', eventColor: 'pink' }]} />
+```
+
+2. The `eventColor` assigned to the Event Calendar
+
+```tsx
+<EventCalendar eventColor="pink" />
+```
+
+3. The default color palette, `"jade"`
+
+The following demo shows one event for each palette:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -195,12 +213,21 @@ import { frFR } from '@mui/x-scheduler/material/translations/frFR';
 
 You can customize the preferences menu using the `preferencesMenuConfig` prop:
 
+Available properties:
+
+- `toggleWeekendVisibility`: show/hide the menu item that toggles weekend visibility.
+- `toggleWeekNumberVisibility`: show/hide the menu item that toggles week number visibility.
+
 ```ts
 // will hide the menu
 preferencesMenuConfig={false}
 
-// will hide the menu item responsible for toggling the week-end visibility
+// will hide the menu item responsible for toggling the weekend visibility
+// the other preferences remain visible
 preferencesMenuConfig={{ toggleWeekendVisibility: false }}
+
+// will hide the menu items for toggling weekend and week number visibility
+preferencesMenuConfig={{ toggleWeekendVisibility: false, toggleWeekNumberVisibility: false }}
 ```
 
 {{"demo": "PreferencesMenu.js", "bg": "inline", "defaultCodeOpen": false}}

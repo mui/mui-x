@@ -12,6 +12,6 @@ describe('<DateTimePicker />', () => {
     const { user } = render(<DateTimePicker />);
 
     await user.click(screen.getByLabelText(/Choose date/));
-    expect(screen.queryByRole('dialog')).to.not.equal(null);
+    expect(screen.queryByRole('dialog')).not.to.equal(null);
   });
 });

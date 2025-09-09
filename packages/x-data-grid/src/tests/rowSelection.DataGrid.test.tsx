@@ -1093,6 +1093,50 @@ describe('<DataGrid /> - Row selection', () => {
     });
   });
 
+  describe('prop: disableRowSelectionExcludeModel', () => {
+    it('should use include model when disableRowSelectionExcludeModel is true', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          disableRowSelectionExcludeModel
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      // Click "Select all" checkbox
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      await user.click(selectAllCheckbox);
+
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      const selectionModel = onRowSelectionModelChange.lastCall.args[0];
+      // With disableRowSelectionExcludeModel=true, it should use include model with all IDs
+      expect(selectionModel.type).to.equal('include');
+      expect(selectionModel.ids.size).to.equal(4); // 4 rows in defaultData
+      expect(Array.from(selectionModel.ids)).to.deep.equal([0, 1, 2, 3]);
+    });
+
+    it('should use exclude model by default when conditions are met', async () => {
+      const onRowSelectionModelChange = spy();
+      const { user } = render(
+        <TestDataGridSelection
+          checkboxSelection
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      // Click "Select all" checkbox
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      await user.click(selectAllCheckbox);
+
+      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      const selectionModel = onRowSelectionModelChange.lastCall.args[0];
+      // By default (disableRowSelectionExcludeModel=false), it should use exclude model with empty IDs
+      expect(selectionModel.type).to.equal('exclude');
+      expect(selectionModel.ids.size).to.equal(0);
+    });
+  });
+
   describe('performance', () => {
     it('should not rerender unrelated nodes', async () => {
       // Couldn't use <RenderCounter> because we need to track multiple components
