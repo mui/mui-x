@@ -20,7 +20,7 @@ import {
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { CalendarEvent } from '../../../../primitives/models';
+import { CalendarEvent, RecurringUpdateChanges } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import './EventPopover.css';
@@ -126,17 +126,11 @@ export const EventPopover = React.forwardRef(function EventPopover(
     };
 
     if (calendarEvent.rrule) {
-      const changes: CalendarEvent = {
-        ...calendarEvent,
+      const changes: RecurringUpdateChanges = {
         ...payload,
         // We only spread the rrule in the changes if the user actually modified it
         ...(recurrenceModified ? { rrule } : {}),
       };
-
-      // If the user did NOT change it, the spread would have dragged the original rrule: remove it to "omit" it
-      if (!recurrenceModified) {
-        delete (changes as any).rrule;
-      }
 
       // TODO: Issues #19440 and #19441 - Add support for editing a single occurrence or all future occurrences.
       instance.updateRecurringEvent(calendarEvent.id, calendarEvent.start, changes, 'following');

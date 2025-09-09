@@ -4,6 +4,7 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
+  RecurringUpdateChanges,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
@@ -740,8 +741,13 @@ export function decideSplitRRule(
     if (originalRule.count) {
       // occurrences done strictly before the split day
       const dayBefore = adapter.addDays(splitDayStart, -1);
-      const done = estimateOccurrencesUpTo(adapter, originalRule, originalSeriesStart, dayBefore);
-      const remaining = Math.max(0, originalRule.count - done);
+      const countBeforeSplit = estimateOccurrencesUpTo(
+        adapter,
+        originalRule,
+        originalSeriesStart,
+        dayBefore,
+      );
+      const remaining = Math.max(0, originalRule.count - countBeforeSplit);
       return remaining > 0 ? { ...baseRule, count: remaining } : undefined;
     }
 
@@ -766,7 +772,7 @@ export function applyRecurringUpdateFollowing(
   events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: CalendarEvent,
+  changes: RecurringUpdateChanges,
 ): CalendarEvent[] {
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);

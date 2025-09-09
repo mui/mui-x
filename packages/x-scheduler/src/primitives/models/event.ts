@@ -119,3 +119,11 @@ export interface CalendarPrimitiveEventData {
   start: SchedulerValidDate;
   end: SchedulerValidDate;
 }
+
+/**
+ * Helper type for `applyRecurringUpdateFollowing` and `updateRecurringEvent`.
+ *  It requires `start` and `end` (always needed when updating an occurrence),
+ *  and makes all other `CalendarEvent` properties optional.
+ */
+export type RecurringUpdateChanges = Required<Pick<CalendarEvent, 'start' | 'end'>> &
+  Partial<Pick<CalendarEvent, 'title' | 'description' | 'allDay' | 'resource' | 'rrule'>>;

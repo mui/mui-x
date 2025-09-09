@@ -11,6 +11,7 @@ import {
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
+  RecurringUpdateChanges,
 } from '../models';
 import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
@@ -274,7 +275,7 @@ export class EventCalendarInstance {
   public updateRecurringEvent = (
     eventId: CalendarEventId,
     occurrenceStart: SchedulerValidDate,
-    changes: CalendarEvent,
+    changes: RecurringUpdateChanges,
     scope: 'following' | 'all' | 'only-this',
   ) => {
     const { adapter, events } = this.store.state;
@@ -282,10 +283,10 @@ export class EventCalendarInstance {
 
     const original = events.find((event) => event.id === eventId);
     if (!original) {
-      throw new Error(`Event Calendar: event not found (id="${eventId}").`);
+      throw new Error(`Event Calendar: the original event was not found (id="${eventId}").`);
     }
     if (!original.rrule) {
-      throw new Error('Event Calendar: requires recurring event.');
+      throw new Error('Event Calendar: the original event is not recurring.');
     }
 
     let updatedEvents: CalendarEvent[] = [];
