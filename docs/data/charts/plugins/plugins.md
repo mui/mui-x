@@ -40,10 +40,10 @@ This allows you to get the exact same feature as the component while using compo
 
 ```ts
 // Community package
-import { PIE_CHART_PLUGINS, PieChartPluginsSignatures } from '@mui/x-charts/PieChart';
+import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from '@mui/x-charts/PieChart';
 // Pro package
-import { PIE_CHART_PLUGINS, PieChartPluginsSignatures } from '@mui/x-charts-pro/PieChart';
-import { PIE_CHART_PRO_PLUGINS, PieChartProPluginsSignatures } from '@mui/x-charts-pro/PieChartPro';
+import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from '@mui/x-charts-pro/PieChart';
+import { PIE_CHART_PRO_PLUGINS, PieChartProPluginSignatures } from '@mui/x-charts-pro/PieChartPro';
 
 
 function MyPieChart() {
