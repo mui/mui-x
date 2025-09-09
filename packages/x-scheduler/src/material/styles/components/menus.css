@@ -1,7 +1,7 @@
 .mui-x-scheduler .MenuBar,
 .mui-x-scheduler .TogglePanel {
   display: flex;
-  gap: var(--space-1);
+  gap: var(--space-05);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
   padding: var(--space-05);
