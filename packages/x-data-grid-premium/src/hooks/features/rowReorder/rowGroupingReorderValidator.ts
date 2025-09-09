@@ -1,12 +1,8 @@
-import { ReorderValidationContext } from './types';
-import { conditions } from './utils';
-
-interface ValidationRule {
-  name: string;
-  applies: (ctx: ReorderValidationContext) => boolean;
-  isInvalid: (ctx: ReorderValidationContext) => boolean;
-  message?: string;
-}
+import {
+  commonReorderConditions as conditions,
+  RowReorderValidator,
+  type ValidationRule,
+} from '@mui/x-data-grid-pro/internals';
 
 const validationRules: ValidationRule[] = [
   // ===== Basic invalid cases =====
@@ -158,32 +154,5 @@ const validationRules: ValidationRule[] = [
     message: 'Invalid depth configuration for leaf below group',
   },
 ];
-
-class RowReorderValidator {
-  private rules: ValidationRule[];
-
-  constructor(rules: ValidationRule[] = validationRules) {
-    this.rules = rules;
-  }
-
-  addRule(rule: ValidationRule): void {
-    this.rules.push(rule);
-  }
-
-  removeRule(ruleName: string): void {
-    this.rules = this.rules.filter((r) => r.name !== ruleName);
-  }
-
-  validate(context: ReorderValidationContext): boolean {
-    // Check all validation rules
-    for (const rule of this.rules) {
-      if (rule.applies(context) && rule.isInvalid(context)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-}
 
 export const rowGroupingReorderValidator = new RowReorderValidator(validationRules);
