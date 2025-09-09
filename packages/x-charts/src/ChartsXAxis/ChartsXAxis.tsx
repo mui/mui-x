@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsXAxisProps } from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
-import { ChartsSingleXAxis } from './ChartsSingleXAxis';
-import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
+import { ChartsXAxisImpl } from './ChartsXAxisImpl';
 
 /**
  * Demos:
@@ -18,7 +17,6 @@ import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
-
   const axis = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   if (!axis) {
@@ -26,11 +24,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     return null;
   }
 
-  if ('groups' in axis && Array.isArray(axis.groups)) {
-    return <ChartsGroupedXAxis {...inProps} />;
-  }
-
-  return <ChartsSingleXAxis {...inProps} />;
+  return <ChartsXAxisImpl {...inProps} axis={axis} />;
 }
 
 ChartsXAxis.propTypes = {

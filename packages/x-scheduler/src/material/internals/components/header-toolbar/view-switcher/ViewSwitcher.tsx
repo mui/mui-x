@@ -35,6 +35,13 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
     [instance],
   );
 
+  const handleViewChange = React.useCallback(
+    (newView: CalendarView, eventDetails: Menu.Root.ChangeEventDetails) => {
+      instance.setView(newView, eventDetails.event);
+    },
+    [instance],
+  );
+
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
   const dropdown = React.useMemo(() => (showAll ? [] : views.slice(2)), [showAll, views]);
@@ -106,7 +113,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
                   <Menu.Popup className="MenuPopup ">
                     <Menu.RadioGroup
                       value={view}
-                      onValueChange={instance.setView}
+                      onValueChange={handleViewChange}
                       className="RadioGroup "
                     >
                       {dropdown.map((dropdownView) => (
