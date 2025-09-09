@@ -28,13 +28,6 @@ You can disable the default filter panel using the `disableColumnFilter` prop, a
 
 {{"demo": "SimpleHeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Inline clear button
-
-By default, the **Clear filter** button is located in the header filter menu.
-To display the button in the header filter cell instead, set `slotProps.headerFilterCell.showClearIcon` to `true`:
-
-{{"demo": "HeaderFilteringInlineClearDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ## Customizing header filters
 
 You can override header filter cells individually or across the entire row.
