@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
@@ -22,8 +23,8 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
 
   const getDayList = useDayList();
   const days = React.useMemo(
-    () => getDayList({ date: week, amount: 'week', excludeWeekends: preferences.hideWeekends }),
-    [getDayList, week, preferences.hideWeekends],
+    () => getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
+    [getDayList, week, preferences.showWeekends],
   );
 
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
@@ -42,14 +43,25 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   );
 
   return (
-    <DayGrid.Row key={weekNumber} start={start} end={end} className="MonthViewRow">
-      <div
-        className="MonthViewWeekNumberCell"
-        role="rowheader"
-        aria-label={translations.weekNumberAriaLabel(weekNumber)}
-      >
-        {weekNumber}
-      </div>
+    <DayGrid.Row
+      key={weekNumber}
+      start={start}
+      end={end}
+      className={clsx(
+        'MonthViewRow',
+        'MonthViewRowGrid',
+        preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+      )}
+    >
+      {preferences.showWeekNumber && (
+        <div
+          className="MonthViewWeekNumberCell"
+          role="rowheader"
+          aria-label={translations.weekNumberAriaLabel(weekNumber)}
+        >
+          {weekNumber}
+        </div>
+      )}
       {daysWithEvents.map(({ day, events, allDayEvents }, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}

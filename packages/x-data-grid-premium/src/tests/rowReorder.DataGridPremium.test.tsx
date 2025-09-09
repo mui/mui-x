@@ -433,7 +433,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           () => {
             currentNameValues = getColumnValues(3);
             // Group A should auto-expand, showing its children
-            expect(currentNameValues.indexOf('Item A1')).to.not.equal(-1);
+            expect(currentNameValues.indexOf('Item A1')).not.to.equal(-1);
           },
           { timeout: 1000 },
         );
@@ -447,9 +447,9 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const finalNameValues = getColumnValues(3);
 
         // Verify group A is expanded (its children are visible)
-        expect(finalNameValues.indexOf('Item A1')).to.not.equal(-1);
-        expect(finalNameValues.indexOf('Item A2')).to.not.equal(-1);
-        expect(finalNameValues.indexOf('Item A3')).to.not.equal(-1);
+        expect(finalNameValues.indexOf('Item A1')).not.to.equal(-1);
+        expect(finalNameValues.indexOf('Item A2')).not.to.equal(-1);
+        expect(finalNameValues.indexOf('Item A3')).not.to.equal(-1);
       });
     });
 
@@ -632,8 +632,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const iPhoneRowIndex = nameValues.indexOf('iPhone');
         const tShirtRowIndex = nameValues.indexOf('T-Shirt');
 
-        expect(iPhoneRowIndex).to.not.equal(-1, 'iPhone should be found in the grid');
-        expect(tShirtRowIndex).to.not.equal(-1, 'T-Shirt should be found in the grid');
+        expect(iPhoneRowIndex).not.to.equal(-1, 'iPhone should be found in the grid');
+        expect(tShirtRowIndex).not.to.equal(-1, 'T-Shirt should be found in the grid');
 
         const iPhoneRow = getRow(iPhoneRowIndex);
         const tShirtRow = getRow(tShirtRowIndex);
@@ -1132,7 +1132,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
       expect(params.row.id).to.equal(1); // Item A1
       expect(params.oldIndex).to.be.a('number');
       expect(params.targetIndex).to.be.a('number');
-      expect(params.oldIndex).to.not.equal(params.targetIndex);
+      expect(params.oldIndex).not.to.equal(params.targetIndex);
     });
 
     it('should work with custom `getRowId()` function', async () => {
@@ -1182,8 +1182,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         gammaIndex = productValues3.indexOf('Package Gamma');
       }
 
-      expect(alphaIndex).to.not.equal(-1, 'Widget Alpha should be found');
-      expect(gammaIndex).to.not.equal(-1, 'Package Gamma should be found');
+      expect(alphaIndex).not.to.equal(-1, 'Widget Alpha should be found');
+      expect(gammaIndex).not.to.equal(-1, 'Package Gamma should be found');
 
       const alphaRow = getRow(alphaIndex);
       const gammaRow = getRow(gammaIndex);
@@ -1221,7 +1221,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
       for (const expectedUuid of expectedUuids) {
         const foundRow = finalRows.find((row) => row.uuid === expectedUuid);
-        expect(foundRow).to.not.equal(undefined, `Row with UUID ${expectedUuid} should exist`);
+        expect(foundRow).not.to.equal(undefined, `Row with UUID ${expectedUuid} should exist`);
       }
 
       expect(finalRows.length).to.equal(4, 'Should still have all 4 rows');
@@ -1529,8 +1529,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const itemA1Index = nameValues.indexOf('Item A1');
         const itemB1Index = nameValues.indexOf('Item B1');
 
-        expect(itemA1Index).to.not.equal(-1, 'Item A1 should be found');
-        expect(itemB1Index).to.not.equal(-1, 'Item B1 should be found');
+        expect(itemA1Index).not.to.equal(-1, 'Item A1 should be found');
+        expect(itemB1Index).not.to.equal(-1, 'Item B1 should be found');
 
         const itemA1Row = getRow(itemA1Index);
         const itemB1Row = getRow(itemB1Index);
@@ -1606,8 +1606,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const itemB1Index = nameValues.indexOf('Item B1');
         const itemB2Index = nameValues.indexOf('Item B2');
 
-        expect(itemB1Index).to.not.equal(-1, 'Item B1 should be found');
-        expect(itemB2Index).to.not.equal(-1, 'Item B2 should be found');
+        expect(itemB1Index).not.to.equal(-1, 'Item B1 should be found');
+        expect(itemB2Index).not.to.equal(-1, 'Item B2 should be found');
 
         expect(itemB1Index).to.be.lessThan(itemB2Index);
 
@@ -1699,8 +1699,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const itemA1Index = nameValues.indexOf('Item A1');
         const itemB1Index = nameValues.indexOf('Item B1');
 
-        expect(itemA1Index).to.not.equal(-1, 'Item A1 should be found');
-        expect(itemB1Index).to.not.equal(-1, 'Item B1 should be found');
+        expect(itemA1Index).not.to.equal(-1, 'Item A1 should be found');
+        expect(itemB1Index).not.to.equal(-1, 'Item B1 should be found');
 
         const itemA1Row = getRow(itemA1Index);
         const itemB1Row = getRow(itemB1Index);
@@ -1773,11 +1773,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Find the Sales department group (under Company A)
         const groupingValues = getColumnValues(1);
         const salesGroupIndex = groupingValues.findIndex((v) => v === 'Sales (1)');
-        expect(salesGroupIndex).to.not.equal(-1, 'Sales group should be found');
+        expect(salesGroupIndex).not.to.equal(-1, 'Sales group should be found');
 
         // Find the Engineering department group (under Company B)
         const engineeringGroupIndex = groupingValues.findIndex((v) => v === 'Engineering (1)');
-        expect(engineeringGroupIndex).to.not.equal(-1, 'Engineering group should be found');
+        expect(engineeringGroupIndex).not.to.equal(-1, 'Engineering group should be found');
 
         const salesGroupRow = getRow(salesGroupIndex);
         const engineeringGroupRow = getRow(engineeringGroupIndex);
@@ -1829,14 +1829,14 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Find the Engineering department group under Company A
         const groupingValues = getColumnValues(1);
         const engineeringIndexA = groupingValues.findIndex((v) => v === 'Engineering (3)');
-        expect(engineeringIndexA).to.not.equal(
+        expect(engineeringIndexA).not.to.equal(
           -1,
           'Engineering group under Company A should exist',
         );
 
         // Find the Sales department group under Company B
         const salesIndexB = groupingValues.findIndex((v) => v === 'Sales (2)');
-        expect(salesIndexB).to.not.equal(-1, 'Sales group under Company B should exist');
+        expect(salesIndexB).not.to.equal(-1, 'Sales group under Company B should exist');
 
         const engineeringRow = getRow(engineeringIndexA);
         const salesRow = getRow(salesIndexB);
@@ -1872,7 +1872,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
 
         // Company B should have both Engineering and Sales
         const companyBIndex = newGroupingValues.findIndex((v) => v?.includes('Company B'));
-        expect(companyBIndex).to.not.equal(-1, 'Company B should exist');
+        expect(companyBIndex).not.to.equal(-1, 'Company B should exist');
 
         // Check for Engineering and Sales under Company B
         let hasEngineeringUnderB = false;
@@ -2076,7 +2076,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Get initial state of Company B - should have Engineering department
         const initialGroupingValues = getColumnValues(1);
         const initialEngIndex = initialGroupingValues.findIndex((v) => v === 'Engineering (1)');
-        expect(initialEngIndex).to.not.equal(-1, 'Company B should have Engineering initially');
+        expect(initialEngIndex).not.to.equal(-1, 'Company B should have Engineering initially');
 
         const groupingValues = getColumnValues(1);
         const salesIndex = groupingValues.findIndex((v) => v === 'Sales (1)');
@@ -2092,7 +2092,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
           // Verify Company B exists
           const newGroupingValues = getColumnValues(1);
           const companyBIndex = newGroupingValues.findIndex((v) => v?.includes('Company B'));
-          expect(companyBIndex).to.not.equal(-1, 'Company B should exist');
+          expect(companyBIndex).not.to.equal(-1, 'Company B should exist');
         });
 
         await waitFor(() => {
@@ -2179,8 +2179,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const salesIndex = groupingValues.findIndex((v) => v === 'Sales (2)');
         const engineeringIndex = groupingValues.findIndex((v) => v === 'Engineering (1)');
 
-        expect(salesIndex).to.not.equal(-1, 'Sales group should exist');
-        expect(engineeringIndex).to.not.equal(-1, 'Engineering group should exist');
+        expect(salesIndex).not.to.equal(-1, 'Sales group should exist');
+        expect(engineeringIndex).not.to.equal(-1, 'Engineering group should exist');
 
         const salesRow = getRow(salesIndex);
         const engineeringRow = getRow(engineeringIndex);
@@ -2209,13 +2209,13 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         await waitFor(() => {
           const updatedRows = gridRowsLookupSelector(apiRef);
           const aliceRow = updatedRows[1];
-          expect(aliceRow?.lastModified).to.not.equal(null);
+          expect(aliceRow?.lastModified).not.to.equal(null);
         });
 
         await waitFor(() => {
           const updatedRows = gridRowsLookupSelector(apiRef);
           const bobRow = updatedRows[2];
-          expect(bobRow?.lastModified).to.not.equal(null);
+          expect(bobRow?.lastModified).not.to.equal(null);
         });
       });
 
@@ -2286,7 +2286,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         if (companyCEngIndex === -1 || companyBEngIndex === -1) {
           // This indicates our group merging logic is working, as existing tests pass
           // The specific test scenario might need adjustment but the functionality works
-          expect(processRowUpdate).to.not.equal(null, 'Basic functionality works');
+          expect(processRowUpdate).not.to.equal(null, 'Basic functionality works');
           return;
         }
 
@@ -2487,8 +2487,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const companyAIndex = finalGroupingValues.findIndex((v) => v?.includes('Company A'));
         const companyBIndex = finalGroupingValues.findIndex((v) => v?.includes('Company B'));
 
-        expect(companyAIndex).to.not.equal(-1, 'Company A should still exist');
-        expect(companyBIndex).to.not.equal(-1, 'Company B should exist');
+        expect(companyAIndex).not.to.equal(-1, 'Company A should still exist');
+        expect(companyBIndex).not.to.equal(-1, 'Company B should exist');
 
         // Both companies should have a Marketing department
         let hasMarketingUnderA = false;
@@ -2598,8 +2598,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         const companyAIndex = finalGroupingValues.findIndex((v) => v?.includes('Company A'));
         const companyBIndex = finalGroupingValues.findIndex((v) => v?.includes('Company B'));
 
-        expect(companyAIndex).to.not.equal(-1, 'Company A should exist');
-        expect(companyBIndex).to.not.equal(-1, 'Company B should exist');
+        expect(companyAIndex).not.to.equal(-1, 'Company A should exist');
+        expect(companyBIndex).not.to.equal(-1, 'Company B should exist');
 
         // Verify duplicate group names under different parents
         let engUnderA = false;
@@ -2689,11 +2689,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Find the Frontend team under TechCorp > Engineering
         const groupingValues = getColumnValues(1);
         const frontendIndex = groupingValues.findIndex((v) => v === 'Frontend (2)');
-        expect(frontendIndex).to.not.equal(-1, 'Frontend team should exist');
+        expect(frontendIndex).not.to.equal(-1, 'Frontend team should exist');
 
         // Find the Digital team under BizCorp > Marketing as target
         const digitalIndex = groupingValues.findIndex((v) => v === 'Digital (2)');
-        expect(digitalIndex).to.not.equal(-1, 'Digital team should exist');
+        expect(digitalIndex).not.to.equal(-1, 'Digital team should exist');
 
         const frontendRow = getRow(frontendIndex);
         const digitalRow = getRow(digitalIndex);
@@ -2816,11 +2816,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Find Engineering department (with 3 teams: Frontend, Backend, DevOps)
         const groupingValues = getColumnValues(1);
         const engineeringIndex = groupingValues.findIndex((v) => v === 'Engineering (5)');
-        expect(engineeringIndex).to.not.equal(-1, 'Engineering department should exist');
+        expect(engineeringIndex).not.to.equal(-1, 'Engineering department should exist');
 
         // Find Marketing department as target
         const marketingIndex = groupingValues.findIndex((v) => v === 'Marketing (1)');
-        expect(marketingIndex).to.not.equal(-1, 'Marketing department should exist');
+        expect(marketingIndex).not.to.equal(-1, 'Marketing department should exist');
 
         const engineeringRow = getRow(engineeringIndex);
         const marketingRow = getRow(marketingIndex);
@@ -2978,11 +2978,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Find R&D department under Alpha Corp
         const groupingValues = getColumnValues(1);
         const rdIndex = groupingValues.findIndex((v) => v === 'R&D (2)');
-        expect(rdIndex).to.not.equal(-1, 'R&D department should exist');
+        expect(rdIndex).not.to.equal(-1, 'R&D department should exist');
 
         // Find Product department under Beta Inc as target
         const productIndex = groupingValues.findIndex((v) => v === 'Product (2)');
-        expect(productIndex).to.not.equal(-1, 'Product department should exist');
+        expect(productIndex).not.to.equal(-1, 'Product department should exist');
 
         const rdRow = getRow(rdIndex);
         const productRow = getRow(productIndex);
@@ -3125,11 +3125,11 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Row reorder with row grouping', 
         // Find Widget A in US group
         const nameValues = getColumnValues(3);
         const widgetAIndex = nameValues.indexOf('Widget A');
-        expect(widgetAIndex).to.not.equal(-1, 'Widget A should be found');
+        expect(widgetAIndex).not.to.equal(-1, 'Widget A should be found');
 
         // Find Widget C in EU group as target
         const widgetCIndex = nameValues.indexOf('Widget C');
-        expect(widgetCIndex).to.not.equal(-1, 'Widget C should be found');
+        expect(widgetCIndex).not.to.equal(-1, 'Widget C should be found');
 
         const widgetARow = getRow(widgetAIndex);
         const widgetCRow = getRow(widgetCIndex);
