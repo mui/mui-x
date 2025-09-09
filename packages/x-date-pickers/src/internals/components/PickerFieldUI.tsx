@@ -348,6 +348,10 @@ export function PickerFieldUI<
   // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
   // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
   delete (textFieldProps as TextFieldProps)?.slotProps?.input;
+  if (fieldResponse.enableAccessibleFieldDOMStructure) {
+    // Remove the `slotProps` on `PickersTextField` as they are not supported.
+    delete (textFieldProps as TextFieldProps)?.slotProps;
+  }
 
   return <TextField {...textFieldProps} InputProps={resolvedTextFieldInputProps} />;
 }
