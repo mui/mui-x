@@ -62,16 +62,12 @@ When creating your custom array of plugins, be aware that some plugins have depe
 - dependencies: plugins that need to be set before for them to work.
 - optional dependencies: plugins that need to be set before to enable some features.
 
-| Plugin                                             | Dependencies  | Optional dependency    |
-| :------------------------------------------------- | :------------ | :--------------------- |
-| `useChartCartesianAxis`                            |               | Interaction            |
-| `useChartPolarAxis`                                |               | Interaction            |
-| `useChartHighlight`                                |               |                        |
-| `useChartInteraction`                              |               |                        |
-| `useChartVoronoi`                                  | CartesianAxis | Interaction, Highlight |
-| `useChartZAxis`                                    |               |                        |
-| `useChartProExport` <span class="plan-pro"></span> |               |                        |
-| `useChartProZoom` <span class="plan-pro"></span>   | CartesianAxis |                        |
+For example:
+
+- `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin is set before the one for closest point.
+- `[useChartClosestPoint, useChartCartesianAxis]` does not work because the closest point plugin is before the cartesian one.
+- `[useChartCartesianAxis, useChartInteraction]` works with limited feature because the cartesian plugin needs to be after the interaction one to get axis interaction.
+
 
 ### Custom plugins
 
