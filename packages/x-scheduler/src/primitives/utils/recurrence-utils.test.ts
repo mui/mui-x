@@ -1260,7 +1260,7 @@ describe('recurrence-utils', () => {
         start: adapter.date('2025-01-05T11:00:00Z'),
         end: adapter.date('2025-01-05T12:00:00Z'),
         title: 'Edited Event',
-        // rrule omitted → inherit (cleaned) from original
+        // rrule omitted → inherit from original
       };
 
       const updated = applyRecurringUpdateFollowing(
@@ -1288,7 +1288,6 @@ describe('recurrence-utils', () => {
       expect(newSeries.title).to.equal('Edited Event');
       expect(adapter.isEqual(newSeries.start, changes.start)).to.equal(true);
       expect(adapter.isEqual(newSeries.end, changes.end)).to.equal(true);
-      // rrule inherited (and cleaned): DAILY interval 1, no count/until
       expect(newSeries.rrule).to.deep.equal({ freq: 'DAILY', interval: 1 });
       expect(newSeries.extractedFromId).to.equal(original.id);
 
@@ -1312,7 +1311,7 @@ describe('recurrence-utils', () => {
         start: adapter.date('2025-01-10T12:00:00Z'),
         end: adapter.date('2025-01-10T13:00:00Z'),
         title: 'Edited First',
-        // rrule omitted → inherit (cleaned)
+        // rrule omitted → inherit
       };
 
       const updated = applyRecurringUpdateFollowing(
