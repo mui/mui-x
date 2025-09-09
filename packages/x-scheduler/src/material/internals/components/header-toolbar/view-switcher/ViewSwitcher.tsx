@@ -7,7 +7,6 @@ import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
 
 interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
   views: string[];
@@ -21,27 +20,22 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 ) {
   const { className, views, onViewChange, currentView: view, ...other } = props;
 
-  const { instance } = useEventCalendarContext();
-
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
 
-  const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      const newView = event.currentTarget.getAttribute('data-view');
-      if (newView) {
-        onViewChange(newView, event);
-      }
-    },
-    [instance],
-  );
+  const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
+    const newView = event.currentTarget.getAttribute('data-view');
+    if (newView) {
+      onViewChange(newView, event);
+    }
+  }, []);
 
   const handleViewChange = React.useCallback(
     (newView: CalendarView, eventDetails: Menu.Root.ChangeEventDetails) => {
       onViewChange(newView, eventDetails.event);
     },
-    [instance],
+    [],
   );
 
   const showAll = views.length <= 3;
