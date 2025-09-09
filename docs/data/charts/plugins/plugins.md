@@ -6,22 +6,22 @@ components: ChartContainer, ChartDataProvider
 
 # Charts - Plugins
 
-<p class="description">The library relies on two system to perform data processing: the plugins and the series config.</p>
+<p class="description">The library relies on two systems to perform data processing: the plugins and the series config.</p>
 
 :::warning
-Those information are for advanced use-cases.
-The large majority of charts should not require touching either to the plugins or the series configuration.
+This information is for advanced use-cases.
+Most charts should not require changes to either the plugins or the series configuration.
 :::
 
 ## Plugins
 
-Plugins are function used to add features to the chart.
-They can process data, add internal state, and listen to some event.
+Plugins are functions used to add features to the chart.
+They can process data, add internal state, or listen to events.
 
 Plugins can be passed to the `<ChartContainer />` or the `<ChartDataProvider />` with the `plugins` props.
 
 :::info
-Notice that `myChartPlugins` is defined of the component.
+Notice that `myChartPlugins` is defined outside of the component.
 That's because plugins contain hooks and so their order should not be modified.
 :::
 
@@ -29,7 +29,7 @@ That's because plugins contain hooks and so their order should not be modified.
 const myChartPlugins = [useChartInteraction, useChartHighlight];
 
 function MyChart() {
-  return <ChartContainer plugins={myChartPlugins}>// ...</ChartContainer>;
+  return <ChartContainer plugins={myChartPlugins}>{/* ... */}</ChartContainer>;
 }
 ```
 
@@ -39,16 +39,16 @@ The default array of plugins can be imported from the corresponding chart folder
 This allows you to get the exact same feature as the component while using composition.
 
 ```ts
-// MIT package
+// Community package
 import { PIE_CHART_PLUGINS, PieChartPluginsSignatures } from '@mui/x-charts/PieChart';
-// pro package
+// Pro package
 import { PIE_CHART_PLUGINS, PieChartPluginsSignatures } from '@mui/x-charts-pro/PieChart';
 import { PIE_CHART_PRO_PLUGINS, PieChartProPluginsSignatures } from '@mui/x-charts-pro/PieChartPro';
 
 
 function MyPieChart() {
     return <ChartContainer plugins={PIE_CHART_PLUGINS}>
-        // ...
+        {/* ... */}
     </ChartContainer>
 }
 ```
@@ -57,7 +57,7 @@ function MyPieChart() {
 
 You can import plugins individually from `@mui/x-charts/plugins`.
 
-When creating your custom array of plugins, be aware that some plugins have
+When creating your custom array of plugins, be aware that some plugins have dependencies.
 
 - dependencies: plugins that need to be set before for them to work.
 - optional dependencies: plugins that need to be set before to enable some features.
@@ -75,5 +75,9 @@ When creating your custom array of plugins, be aware that some plugins have
 
 ### Custom plugins
 
-We discourage you from creating custom plugins.
-To simplify further development, we consider their implementation as internal, allowing ourself to break their interfaces to add or improve features.
+:::warn
+Creating custom plugins is not encouraged.
+:::
+
+The plugin's internal implementation is not considered stable.
+It can break at any time without a breaking change.
