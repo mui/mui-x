@@ -24,9 +24,11 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const preferences = useStore(store, selectors.preferences);
   const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
 
-  const handleHideWeekend = useEventCallback((checked: boolean, event: Event) => {
-    instance.setPreferences({ hideWeekends: checked }, event);
-  });
+  const handleHideWeekend = useEventCallback(
+    (checked: boolean, eventDetails: Menu.Root.ChangeEventDetails) => {
+      instance.setPreferences({ hideWeekends: checked }, eventDetails.event);
+    },
+  );
 
   if (preferencesMenuConfig === false || !preferencesMenuConfig?.toggleWeekendVisibility) {
     return null;
