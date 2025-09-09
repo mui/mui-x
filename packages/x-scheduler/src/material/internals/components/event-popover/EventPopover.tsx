@@ -87,9 +87,15 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const endTimeValue = form.get('endTime');
     const recurrenceValue = form.get('recurrence');
 
-    const rrule = recurrenceValue
-      ? recurrencePresets[recurrenceValue as RecurrencePresetKey]
-      : undefined;
+    const recurrenceModified =
+      defaultRecurrenceKey !== 'custom' &&
+      (recurrenceValue as RecurrencePresetKey) !== defaultRecurrenceKey;
+
+    // TODO: This will change after implementing the custom recurrence editing tab.
+    const rrule =
+      recurrenceModified && recurrenceValue
+        ? recurrencePresets[recurrenceValue as RecurrencePresetKey]
+        : undefined;
 
     const startISO = startTimeValue
       ? `${startDateValue}T${startTimeValue}`
@@ -117,21 +123,28 @@ export const EventPopover = React.forwardRef(function EventPopover(
       start,
       end,
       allDay: isAllDay,
-      rrule,
     };
 
     if (calendarEvent.rrule) {
+      const changes: CalendarEvent = {
+        ...calendarEvent,
+        ...payload,
+        // We only spread the rrule in the changes if the user actually modified it
+        ...(recurrenceModified ? { rrule } : {}),
+      };
+
+      // If the user did NOT change it, the spread would have dragged the original rrule: remove it to "omit" it
+      if (!recurrenceModified) {
+        delete (changes as any).rrule;
+      }
+
       // TODO: Issues #19440 and #19441 - Add support for editing a single occurrence or all future occurrences.
-      instance.updateRecurringEvent(
-        calendarEvent.id,
-        calendarEvent.start,
-        { ...calendarEvent, ...payload },
-        'following',
-      );
+      instance.updateRecurringEvent(calendarEvent.id, calendarEvent.start, changes, 'following');
     } else {
       instance.updateEvent({
         ...calendarEvent,
         ...payload,
+        ...(recurrenceModified ? { rrule } : {}),
       });
     }
 
