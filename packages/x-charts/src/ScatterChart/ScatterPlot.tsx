@@ -35,7 +35,6 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
-   *
    * @default 'svg-single'
    */
   renderer?: RendererType;
