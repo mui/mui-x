@@ -113,6 +113,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     <Container className={classes.root} {...getContainerProps()} ownerState={ownerState}>
       <GridScrollArea scrollDirection="left" {...getScrollAreaProps()} />
       <GridScrollArea scrollDirection="right" {...getScrollAreaProps()} />
+      <GridScrollArea scrollDirection="up" {...getScrollAreaProps()} />
+      <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
         <TopContainer>
           {!rootProps.unstable_listView && <GridHeaders />}
