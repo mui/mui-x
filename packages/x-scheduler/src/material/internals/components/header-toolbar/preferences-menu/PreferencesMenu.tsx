@@ -76,8 +76,8 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
                 <Menu.CheckboxItem
                   key={option.configKey}
                   checked={preferences[option.preferenceKey]}
-                  onCheckedChange={(checked, event) =>
-                    handleToggle(option.preferenceKey, checked, event)
+                  onCheckedChange={(checked, eventDetails) =>
+                    handleToggle(option.preferenceKey, checked, eventDetails.event)
                   }
                   className="PreferencesMenuCheckboxItem"
                 >
