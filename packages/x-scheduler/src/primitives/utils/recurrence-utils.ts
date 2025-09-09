@@ -718,16 +718,13 @@ export function applyRecurringUpdateFollowing(
   occurrenceStart: SchedulerValidDate,
   changes: CalendarEvent,
 ): CalendarEvent[] {
-  // 1) Old series: set UNTIL to the day before the edited occurrence (inclusive)
+  // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
   const untilDate = adapter.addDays(occurrenceDayStart, -1);
 
-  const originalEventRRule = originalEvent.rrule as RRuleSpec;
-  const oldSeriesNewRRule: RRuleSpec = {
-    ...originalEventRRule,
-    until: untilDate,
-    count: undefined,
-  };
+  const originalRule = originalEvent.rrule as RRuleSpec;
+  const { count, until, ...baseRule } = originalRule;
+  const truncatedRule = { ...baseRule, until: untilDate };
 
   // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
   const shouldDropOldSeries = adapter.isBefore(
@@ -735,28 +732,18 @@ export function applyRecurringUpdateFollowing(
     adapter.startOfDay(originalEvent.start),
   );
 
-  // 3) New series: clone + changes + clean COUNT/UNTIL
-  const cleanRRule = (rule: RRuleSpec): RRuleSpec => {
-    const { count, until, ...rest } = rule;
-    return rest;
-  };
-
-  // Decide the new rule for the "new series"
+  // 3) Build the new series starting at `changes.start`
+  // - If RRULE is omitted → inherit original rule but drop COUNT/UNTIL (fresh series).
+  // - If user provided a new RRULE → use it as-is (preserve COUNT/UNTIL).
+  // - If RRULE is explicitly null/undefined → non recurring event.
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
 
-  // Cases:
-  // - hasRRuleProp && changes.rrule: user provided a new rule -> use cleaned new rule
-  // - hasRRuleProp && !changes.rrule: user explicitly wants "no recurrence" -> undefined
-  // - !hasRRuleProp: user didn't touch rrule -> inherit (cleaned) original rule
   let newRRule: RRuleSpec | undefined;
   if (!hasRRuleProp) {
-    // inherit
-    newRRule = cleanRRule(originalEventRRule);
+    newRRule = { ...baseRule };
   } else if (changes.rrule) {
-    // replace
-    newRRule = cleanRRule(changes.rrule);
+    newRRule = changes.rrule;
   } else {
-    // remove recurrence
     newRRule = undefined;
   }
 
@@ -777,7 +764,7 @@ export function applyRecurringUpdateFollowing(
     ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
     : [
         ...events.map((event) =>
-          event.id === originalEvent.id ? { ...originalEvent, rrule: oldSeriesNewRRule } : event,
+          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
         ),
         newEvent,
       ];
