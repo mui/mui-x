@@ -9,7 +9,7 @@ import { ChartContainerProps } from '../ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import { SCATTER_CHART_PLUGINS, ScatterChartPluginSignatures } from './ScatterChart.plugins';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
 
 /**
@@ -51,7 +51,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     () => series.map((s) => ({ type: 'scatter' as const, ...s })),
     [series],
   );
-  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginsSignatures> = {
+  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,
