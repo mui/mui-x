@@ -7,6 +7,46 @@
   min-width: calc(var(--unit-count) * 7 * var(--weeks-cell-width));
 }
 
+.MonthsHeader {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--months-cell-width), 1fr));
+  min-width: calc(var(--unit-count) * var(--months-cell-width));
+  grid-template-rows: auto auto;
+}
+
+.YearsHeader {
+  display: grid;
+  grid-template-columns: repeat(var(--unit-count), minmax(var(--years-cell-width), 1fr));
+  grid-template-rows: auto;
+  height: 100%;
+}
+
+.YearLabel {
+  padding: var(--space-2);
+  text-align: center;
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-3);
+}
+
+.YearLabel:not(:last-child) {
+  border-right: 1px solid var(--border-color);
+}
+
+.MonthsHeader .YearLabel {
+  grid-row: 1;
+  grid-column: var(--grid-column) / span var(--columns-span);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.MonthLabel {
+  grid-row: 2;
+  padding: var(--space-2);
+  text-align: center;
+  border-right: 1px solid var(--border-color);
+  font-size: var(--font-size-2);
+  color: var(--secondary-text-color);
+}
+
 .WeekDayCell {
   padding: var(--space-1);
   text-align: center;

@@ -10,7 +10,13 @@ import { useEventCalendarContext } from '../internals/hooks/useEventCalendarCont
 import { getColorClassName } from '../internals/utils/color-utils';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { diffIn } from '../../primitives/utils/date-utils';
-import { DaysHeader, TimeHeader, WeeksHeader } from './header-toolbar/view-header';
+import {
+  DaysHeader,
+  MonthsHeader,
+  TimeHeader,
+  WeeksHeader,
+  YearHeader,
+} from './header-toolbar/view-header';
 import { TimelineEvent } from './timeline-event';
 
 const adapter = getAdapter();
@@ -51,7 +57,7 @@ export function TimelineView(props: TimelineViewProps) {
     setView(view);
   };
 
-  const start = adapter.startOfDay(visibleDate);
+  const start = visibleDate;
   const end = React.useMemo(() => getEndBoundaries(view, start), [view, start]);
 
   const eventsGroupedByResource = useStore(store, selectors.eventsToRenderGroupedByResource, {
@@ -64,11 +70,15 @@ export function TimelineView(props: TimelineViewProps) {
   const header = React.useMemo(() => {
     switch (view) {
       case 'days':
-        return <DaysHeader start={start} end={end} />;
+        return <DaysHeader />;
       case 'time':
-        return <TimeHeader start={start} end={end} />;
+        return <TimeHeader />;
       case 'weeks':
-        return <WeeksHeader start={start} end={end} />;
+        return <WeeksHeader />;
+      case 'months':
+        return <MonthsHeader />;
+      case 'years':
+        return <YearHeader />;
       default:
         return null;
     }

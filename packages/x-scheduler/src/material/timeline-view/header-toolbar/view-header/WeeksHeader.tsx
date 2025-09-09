@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
-import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
+import { isWeekend } from '../../../../primitives/utils/date-utils';
 import { useDayList } from '../../../../primitives/use-day-list';
 import { useWeekList } from '../../../../primitives/use-week-list';
 import { selectors } from '../../../../primitives/use-event-calendar';
@@ -11,7 +11,7 @@ import { DateTime } from 'luxon';
 
 const adapter = getAdapter();
 
-export function WeeksHeader({ start, end }) {
+export function WeeksHeader() {
   const getDayList = useDayList();
   const getWeekList = useWeekList();
   const { store } = useEventCalendarContext();

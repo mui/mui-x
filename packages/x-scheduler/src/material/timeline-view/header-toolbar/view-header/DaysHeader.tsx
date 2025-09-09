@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
-import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
+import { isWeekend } from '../../../../primitives/utils/date-utils';
 import { useDayList } from '../../../../primitives/use-day-list';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../../internals/hooks/useEventCalendarContext';
@@ -9,19 +9,17 @@ import './Headers.css';
 
 const adapter = getAdapter();
 
-export function DaysHeader({ start, end }) {
+export function DaysHeader() {
   const getDayList = useDayList();
   const { store } = useEventCalendarContext();
 
   const visibleDate = useStore(store, selectors.visibleDate);
 
-  const daysDiff = diffIn(adapter, end, start, 'days');
-
   const days = React.useMemo(
     () =>
       getDayList({
         date: visibleDate,
-        amount: daysDiff,
+        amount: 21,
       }),
     [getDayList, visibleDate],
   );
