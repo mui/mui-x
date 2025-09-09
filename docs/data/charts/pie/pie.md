@@ -161,7 +161,7 @@ Here's how the Pie Chart is composed:
 ```
 
 :::info
-The `<ChartDataProvider />` get a prop [`plugins`](/x/react-charts/plugins).
+The `<ChartDataProvider />` accepts a [`plugins`](/x/react-charts/plugins) prop.
 This is done to remove cartesian-axis features which are useless for a pie chart, and interfere with the pie position.
 
 For pro users, use the `PIE_CHART_PRO_PLUGINS` instead to activate the export feature.
