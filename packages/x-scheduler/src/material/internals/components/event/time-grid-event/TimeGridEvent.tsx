@@ -19,15 +19,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    event: eventProp,
-    eventResource,
-    ariaLabelledBy,
-    variant,
-    className,
-    id: idProp,
-    ...other
-  } = props;
+  const { event: eventProp, ariaLabelledBy, variant, className, id: idProp, ...other } = props;
 
   const id = useId(idProp);
   const { store } = useEventCalendarContext();
@@ -35,6 +27,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const isRecurring = Boolean(eventProp.rrule);
   const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
   const isResizable = useStore(store, selectors.isEventResizable, eventProp);
+  const color = useStore(store, selectors.eventColor, eventProp.id);
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
@@ -109,7 +102,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
         isDraggable && 'Draggable',
         isRecurring && 'Recurrent',
-        getColorClassName({ resource: eventResource }),
+        getColorClassName(color),
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       eventId={eventProp.id}
