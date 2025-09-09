@@ -323,11 +323,6 @@ PiecewiseColorLegend.propTypes = {
    */
   labelPosition: PropTypes.oneOf(['start', 'end', 'extremes', 'inline-start', 'inline-end']),
   /**
-   * The layout of the legend items.
-   * @default 'grid'
-   */
-  layout: PropTypes.oneOf(['grid', 'inline']),
-  /**
    * The type of the mark.
    * @default 'square'
    */
