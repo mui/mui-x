@@ -6,15 +6,16 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.11.2
-<!-- generated comparing v8.11.1..master -->
+
 _Sep 10, 2025_
 
 We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@brijeshb42, @Copilot, @ludvigeriksson, @noraleonte, @romgrk
+@brijeshb42, @ludvigeriksson, @noraleonte, @romgrk
 
 The following are all team members who have contributed to this release:
 @alexfauquette, @bernardobelchior, @flaviendelangle, @Janpot, @LukasTy, @MBilalShafi, @rita-codes, @siriwatknp
@@ -23,17 +24,17 @@ The following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.11.2`
 
-- [DataGrid] Allow to opt out of row selection exclude model (#19423) @Copilot
-- [DataGrid] Fix column dropdown menu "Unpin" text alignment (#19462) @Copilot
+- [DataGrid] Allow to opt out of row selection exclude model (#19423) @MBilalShafi
+- [DataGrid] Fix column dropdown menu "Unpin" text alignment (#19462) @MBilalShafi
 - [DataGrid] Fix indeterminate select all state with exclude model (#19466) @MBilalShafi
 - [DataGrid] Fix styled API arguments error (#19460) @MBilalShafi
-- [DataGrid] perf: fix stringify() for theme objects (#19427) @romgrk
+- [DataGrid] Fix `stringify()` for theme objects (#19427) @romgrk
 
-#### `@mui/x-data-grid-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-data-grid-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@8.11.2`.
 
-#### `@mui/x-data-grid-premium@8.11.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+#### `@mui/x-data-grid-premium@8.11.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@8.11.2`, plus:
 
@@ -47,7 +48,7 @@ Same changes as in `@mui/x-data-grid-pro@8.11.2`, plus:
 - [pickers] Improve hour and minute placement in `DateTimePicker` (#19227) @MBilalShafi
 - [pickers] Use `calendarState.currentMonth` in `MonthCalendar` when available (#19073) @LukasTy
 
-#### `@mui/x-date-pickers-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-date-pickers-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@8.11.2`.
 
@@ -57,9 +58,9 @@ Same changes as in `@mui/x-date-pickers@8.11.2`.
 
 - [charts] Fix highlight regression (#19486) @alexfauquette
 - [charts] Improve code reuse in `ChartsXAxis` and `ChartsYAxis` (#19198) @bernardobelchior
-- [l10n][charts] Add svSE locale (#19489) @ludvigeriksson
+- [l10n] Add svSE locale (#19489) @ludvigeriksson
 
-#### `@mui/x-charts-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-charts-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@8.11.2`.
 
@@ -70,7 +71,7 @@ Same changes as in `@mui/x-charts@8.11.2`.
 - [TreeView] Do not mutate `props.items` in the `getItemTree` method (#19483) @flaviendelangle
 - [TreeView] Expose a new hook to apply selection propagation on the selected items (#19402) @flaviendelangle
 
-#### `@mui/x-tree-view-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-tree-view-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-tree-view@8.11.2`.
 
