@@ -19,7 +19,7 @@ import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
 import { defaultGetAggregationPosition } from '../aggregation/gridAggregationUtils';
 
-interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
+export interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
   rawHeaderName: string;
   children: GridColumnGroupPivoting[];
 }
@@ -70,15 +70,22 @@ export const getInitialColumns = (
   return initialColumns;
 };
 
-function sortColumnGroups(
+export const sortColumnGroups = (
   columnGroups: GridColumnGroupPivoting[],
   pivotModelColumns: GridPivotModel['columns'],
   depth = 0,
-) {
+) => {
   if (depth > pivotModelColumns.length - 1) {
     return;
   }
   const sort = pivotModelColumns[depth].sort;
+  if (columnGroups.length < 2) {
+    if (columnGroups[0].children) {
+      sortColumnGroups(columnGroups[0].children, pivotModelColumns, depth + 1);
+    }
+    return;
+  }
+
   columnGroups.sort((a, b) => {
     if (isLeaf(a) || isLeaf(b)) {
       return 0;
@@ -97,7 +104,7 @@ function sortColumnGroups(
       gridStringOrNumberComparator(a.rawHeaderName, b.rawHeaderName, {} as any, {} as any)
     );
   });
-}
+};
 
 export const getPivotForcedProps = (
   pivotModel: GridPivotModel,
