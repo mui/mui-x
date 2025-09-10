@@ -25,7 +25,7 @@ import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import {
   SCATTER_CHART_PRO_PLUGINS,
-  ScatterChartProPluginsSignatures,
+  ScatterChartProPluginSignatures,
 } from './ScatterChartPro.plugins';
 import {
   ChartsToolbarProSlots,
@@ -50,7 +50,7 @@ export interface ScatterChartProSlotProps
 export interface ScatterChartProProps
   extends Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
-      ChartContainerProProps<'scatter', ScatterChartProPluginsSignatures>,
+      ChartContainerProProps<'scatter', ScatterChartProPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'seriesConfig'
@@ -102,7 +102,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   } = useScatterChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'scatter',
-    ScatterChartProPluginsSignatures
+    ScatterChartProPluginSignatures
   >(
     {
       ...chartContainerProps,

@@ -16,14 +16,14 @@ import {
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
 
-export type BarChartPluginsSignatures = [
+export type BarChartPluginSignatures = [
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<'bar'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
 ];
 
-export const BAR_CHART_PLUGINS: ConvertSignaturesIntoPlugins<BarChartPluginsSignatures> = [
+export const BAR_CHART_PLUGINS: ConvertSignaturesIntoPlugins<BarChartPluginSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,

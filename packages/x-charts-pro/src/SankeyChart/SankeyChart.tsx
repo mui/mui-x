@@ -12,7 +12,7 @@ import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
-import { SANKEY_CHART_PLUGINS, type SankeyChartPluginsSignatures } from './SankeyChart.plugins';
+import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import type { SankeySeriesType } from './sankey.types';
 import { seriesConfig as sankeySeriesConfig } from './seriesConfig';
 import { SankeyTooltip } from './SankeyTooltip';
@@ -24,7 +24,7 @@ const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig }
 
 export interface SankeyChartProps
   extends Omit<
-      ChartContainerProProps<'sankey', SankeyChartPluginsSignatures>,
+      ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
       | 'plugins'
       | 'series'
       | 'slotProps'
@@ -75,7 +75,7 @@ const SankeyChart = React.forwardRef(function SankeyChart(
   const Tooltip = themedProps.slots?.tooltip ?? SankeyTooltip;
 
   return (
-    <ChartDataProviderPro<'sankey', SankeyChartPluginsSignatures>
+    <ChartDataProviderPro<'sankey', SankeyChartPluginSignatures>
       {...chartDataProviderProProps}
       seriesConfig={seriesConfig}
       plugins={SANKEY_CHART_PLUGINS}

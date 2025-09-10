@@ -1,20 +1,20 @@
 import { ChartAnyPluginSignature, ChartPublicAPI } from '@mui/x-charts/internals';
-import { HeatmapPluginsSignatures } from '../Heatmap/Heatmap.plugins';
-import { LineChartProPluginsSignatures } from '../LineChartPro/LineChartPro.plugins';
-import { ScatterChartProPluginsSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
-import { BarChartProPluginsSignatures } from '../BarChartPro/BarChartPro.plugins';
+import { HeatmapPluginSignatures } from '../Heatmap/Heatmap.plugins';
+import { LineChartProPluginSignatures } from '../LineChartPro/LineChartPro.plugins';
+import { ScatterChartProPluginSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
+import { BarChartProPluginSignatures } from '../BarChartPro/BarChartPro.plugins';
 import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
-import { FunnelChartPluginsSignatures } from '../FunnelChart/FunnelChart.plugins';
-import { RadarChartProPluginsSignatures } from '../RadarChartPro/RadarChartPro.plugins';
+import { FunnelChartPluginSignatures } from '../FunnelChart/FunnelChart.plugins';
+import { RadarChartProPluginSignatures } from '../RadarChartPro/RadarChartPro.plugins';
 import { PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
 
 export type ProPluginsPerSeriesType = {
-  heatmap: HeatmapPluginsSignatures;
-  line: LineChartProPluginsSignatures;
-  scatter: ScatterChartProPluginsSignatures;
-  bar: BarChartProPluginsSignatures;
-  funnel: FunnelChartPluginsSignatures;
-  radar: RadarChartProPluginsSignatures;
+  heatmap: HeatmapPluginSignatures;
+  line: LineChartProPluginSignatures;
+  scatter: ScatterChartProPluginSignatures;
+  bar: BarChartProPluginSignatures;
+  funnel: FunnelChartPluginSignatures;
+  radar: RadarChartProPluginSignatures;
   pie: PieChartProPluginSignatures;
   /* Special value when creating a chart using composition. */
   composition: DefaultPluginSignatures;
