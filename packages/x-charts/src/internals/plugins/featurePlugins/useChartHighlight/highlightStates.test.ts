@@ -23,7 +23,7 @@ describe('highlightStates', () => {
     const itemHighlightScope: Partial<HighlightScope> = { highlight: 'item' };
     const noHighlightScope: Partial<HighlightScope> = { highlight: 'none' };
 
-    it('should only  return true when scope.highlight is "series" and item.seriesId matches', () => {
+    it('should only return true when scope.highlight is "series" and item.seriesId matches', () => {
       expect(isSeriesHighlighted(seriesHighlightScope, itemData1, s1)).to.equal(true);
       expect(isSeriesHighlighted(seriesHighlightScope, itemData1, s2)).to.equal(false);
     });
