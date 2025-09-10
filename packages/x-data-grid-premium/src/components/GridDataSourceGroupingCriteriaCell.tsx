@@ -7,6 +7,7 @@ import {
   gridDataSourceLoadingIdSelector,
   gridRowSelector,
   vars,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
@@ -18,6 +19,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
+import { gridRowGroupingModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -50,6 +52,8 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
 
   const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
   const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingModelSelector);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
@@ -63,6 +67,11 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
   };
+
+  // Do not allow expand/collapse the last grouping criteria cell when in pivot mode
+  if (pivotActive && rowNode.depth === rowGroupingModel.length - 1) {
+    return null;
+  }
 
   const Icon = rowNode.childrenExpanded
     ? rootProps.slots.groupingCriteriaCollapseIcon
