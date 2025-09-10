@@ -23,6 +23,8 @@ import {
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
+import { sortColumnGroups } from '../pivoting/utils';
+import type { GridColumnGroupPivoting } from '../pivoting/utils';
 import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
 import type {
   GridDataSourcePremiumPrivateApi,
@@ -88,6 +90,7 @@ export const useGridDataSourcePremium = (
           throw new Error('MUI X: No `getPivotColumnDef` method provided with the dataSource.');
         }
 
+        const visiblePivotColumns = pivotModel.columns.filter((column) => !column.hidden);
         const columnDefinitions: Record<string, GridColDef> = Object.fromEntries(
           initialColumns.entries(),
         );
@@ -111,7 +114,6 @@ export const useGridDataSourcePremium = (
             throw new Error('MUI X: Last item in `pivotColumns` must be a column field.');
           }
 
-          const visiblePivotColumns = pivotModel.columns.filter((column) => !column.hidden);
           const pivotValue = pivotModel.values.find((value) => value.field === lastField);
 
           // Find the original column definition for the last field
@@ -140,7 +142,12 @@ export const useGridDataSourcePremium = (
           // Build column grouping model
           if (columnPath.length > 1) {
             const columnPathValues = columnPath.map((path, index) =>
-              typeof path === 'string' ? path : path[visiblePivotColumns[index].field],
+              typeof path === 'string'
+                ? path
+                : apiRef.current.getRowValue(
+                    path,
+                    initialColumns.get(visiblePivotColumns[index].field)!,
+                  ),
             );
 
             // Build the hierarchy for column groups
@@ -150,6 +157,7 @@ export const useGridDataSourcePremium = (
               const groupId = groupPath.join('-');
 
               let headerName = columnPath[groupPath.length - 1];
+              const rawHeaderName = columnPathValues[groupPath.length - 1];
               if (typeof headerName !== 'string') {
                 headerName = apiRef.current.getRowFormattedValue(
                   headerName,
@@ -166,6 +174,7 @@ export const useGridDataSourcePremium = (
                 const columnGroup = {
                   groupId,
                   headerName,
+                  rawHeaderName,
                   children: [],
                 };
 
@@ -191,6 +200,8 @@ export const useGridDataSourcePremium = (
             }
           }
         });
+
+        sortColumnGroups(columnGroupingModel as GridColumnGroupPivoting[], visiblePivotColumns);
 
         // Update the grid state with new columns and column grouping model
         apiRef.current.setState((state) => {
