@@ -15,8 +15,7 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
-    "build": "code-infra build --bundle cjs --buildTypes false --ignore 'src/types.ts' && pnpm copy-files",
-    "copy-files": "code-infra copy-files"
+    "build": "code-infra build --bundle cjs --buildTypes false --ignore 'src/types.ts'"
   },
   "repository": {
     "type": "git",
