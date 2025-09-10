@@ -300,8 +300,8 @@ export function PickerFieldUI<
   }
   // handle the case of showing custom `inputAdornment` for Field components
   if (
-    !textFieldProps.InputProps?.endAdornment &&
-    !textFieldProps.InputProps?.startAdornment &&
+    !additionalTextFieldInputProps?.endAdornment &&
+    !additionalTextFieldInputProps?.startAdornment &&
     pickerFieldUIContext.slots.inputAdornment
   ) {
     additionalTextFieldInputProps.endAdornment = <InputAdornment {...endInputAdornmentProps} />;
