@@ -14,7 +14,7 @@ export function applyStyles(
   element: HTMLElement | SVGElement,
   styles: Record<string, string | null>,
 ) {
-  const previousStyles = {};
+  const previousStyles: Record<string, string | null> = {};
 
   Object.entries(styles).forEach(([key, value]) => {
     const prev = element.style.getPropertyValue(key);
