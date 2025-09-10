@@ -84,7 +84,8 @@ function createOnBeforeExport(
 
     stack.style.display = 'flex';
     stack.style.flexDirection = 'column';
-    stack.style.width = 'max-content';
+    stack.style.width = 'fit-content';
+    stack.style.margin = 'auto';
 
     document.body.appendChild(stack);
 

@@ -32,9 +32,6 @@ export function printChart(
     applyStyles(svg, previousStyles);
     printDoc.body.replaceChildren(elementClone);
     printDoc.body.style.margin = '0px';
-    /* The body's parent has a width of 0, so we use fit-content to ensure that the body adjusts its width to the width
-     * of its children. */
-    printDoc.body.style.width = 'fit-content';
 
     const rootCandidate = element.getRootNode();
     const root =
@@ -54,6 +51,7 @@ export function printChart(
 
     await onBeforeExport(printWindow);
 
+    debugger;
     printWindow.contentWindow!.print();
   };
 
