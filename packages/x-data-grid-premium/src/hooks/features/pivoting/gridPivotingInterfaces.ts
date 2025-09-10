@@ -9,16 +9,16 @@ import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export type GridPivotingPropsOverrides = {
   rows?: DataGridPremiumProcessedProps['rows'];
-  columns: DataGridPremiumProcessedProps['columns'];
-  rowGroupingModel: NonNullable<DataGridPremiumProcessedProps['rowGroupingModel']>;
-  aggregationModel: NonNullable<DataGridPremiumProcessedProps['aggregationModel']>;
-  getAggregationPosition: NonNullable<DataGridPremiumProcessedProps['getAggregationPosition']>;
-  columnVisibilityModel: NonNullable<DataGridPremiumProcessedProps['columnVisibilityModel']>;
-  columnGroupingModel: NonNullable<DataGridPremiumProcessedProps['columnGroupingModel']>;
-  groupingColDef: NonNullable<DataGridPremiumProcessedProps['groupingColDef']>;
-  headerFilters: NonNullable<DataGridPremiumProcessedProps['headerFilters']>;
-  disableAggregation: NonNullable<DataGridPremiumProcessedProps['disableAggregation']>;
-  disableRowGrouping: NonNullable<DataGridPremiumProcessedProps['disableRowGrouping']>;
+  columns?: DataGridPremiumProcessedProps['columns'];
+  rowGroupingModel?: DataGridPremiumProcessedProps['rowGroupingModel'];
+  aggregationModel?: DataGridPremiumProcessedProps['aggregationModel'];
+  getAggregationPosition?: DataGridPremiumProcessedProps['getAggregationPosition'];
+  columnVisibilityModel?: DataGridPremiumProcessedProps['columnVisibilityModel'];
+  columnGroupingModel?: DataGridPremiumProcessedProps['columnGroupingModel'];
+  groupingColDef?: DataGridPremiumProcessedProps['groupingColDef'];
+  headerFilters?: DataGridPremiumProcessedProps['headerFilters'];
+  disableAggregation?: DataGridPremiumProcessedProps['disableAggregation'];
+  disableRowGrouping?: DataGridPremiumProcessedProps['disableRowGrouping'];
 };
 
 export interface GridPivotingState extends GridPivotingStatePartial {
