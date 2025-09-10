@@ -15,10 +15,10 @@ We'd like to extend a big thank you to the 13 contributors who made this release
 - 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@brijeshb42, @ludvigeriksson, @noraleonte, @romgrk
+@ludvigeriksson
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @flaviendelangle, @Janpot, @LukasTy, @MBilalShafi, @rita-codes, @siriwatknp
+@alexfauquette, @bernardobelchior, @brijeshb42, @flaviendelangle, @Janpot, @LukasTy, @MBilalShafi, @noraleonte, @rita-codes, @romgrk, @siriwatknp
 
 ### Data Grid
 
