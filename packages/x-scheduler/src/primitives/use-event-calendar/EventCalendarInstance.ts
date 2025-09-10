@@ -15,7 +15,7 @@ import {
 import {
   EventCalendarParameters,
   EventCalendarStore,
-  UpdateRecurringEventParams,
+  UpdateRecurringEventParameters,
 } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
@@ -280,7 +280,7 @@ export class EventCalendarInstance {
   /**
    * Updates a recurring event in the calendar.
    */
-  public updateRecurringEvent = (params: UpdateRecurringEventParams) => {
+  public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
     const { adapter, events } = this.store.state;
     const { onEventsChange } = this.parameters;
     const { eventId, occurrenceStart, changes, scope } = params;

@@ -121,7 +121,7 @@ export type RecurringUpdateEventScope = 'following' | 'all' | 'only-this';
 /**
  * Parameters for updating a recurring event.
  */
-export type UpdateRecurringEventParams = {
+export type UpdateRecurringEventParameters = {
   /**
    * The id of the recurring event to update.
    */
