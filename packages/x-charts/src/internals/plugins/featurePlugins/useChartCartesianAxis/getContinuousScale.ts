@@ -41,7 +41,7 @@ export function getContinuousScale<T extends ChartSeriesType>(
   const scale = getScale(scaleType, adjustedExtrema, zoomedRange);
 
   if (domainLimit === 'nice') {
-    scale.nice(tickNumber);
+    scale.nice(rawTickNumber);
   }
   if (isSymlogScaleConfig(axis) && axis.constant != null) {
     (scale as ScaleSymLog<number, number>).constant(axis.constant);
