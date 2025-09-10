@@ -14,7 +14,7 @@ import {
   CalendarEventColor,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
-import { getEventDays, getEventRowIndex } from '../utils/event-utils';
+import { getEventDays, getEventPlacement, getEventRowIndex } from '../utils/event-utils';
 import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurrence-utils';
 import { DateTime } from 'luxon';
 
@@ -225,6 +225,7 @@ export const selectors = {
 
         for (const day of eventDays) {
           const dayKey = adapter.format(day, 'keyboardDate');
+
           if (!daysMap.has(dayKey)) {
             daysMap.set(dayKey, { events: [], allDayEvents: [] });
           }
@@ -258,10 +259,8 @@ export const selectors = {
     (state: State) => state.adapter,
     (events, adapter, { start, end }) => {
       const groupedEvents: Record<string, CalendarEvent[][]> = {};
-      const occupiedRows: Record<string, { start: DateTime; end: DateTime }[][]> = {};
 
       for (const event of events) {
-        let rowIndex = 0;
         const resourceId = event.resource;
 
         if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
@@ -270,42 +269,16 @@ export const selectors = {
 
         if (resourceId) {
           if (!groupedEvents[resourceId]) {
-            groupedEvents[resourceId] = [[]];
-          }
+            groupedEvents[resourceId] = [[event]];
+          } else {
+            const rowIndex = getEventPlacement(event, groupedEvents[resourceId], adapter);
 
-          let i = 0;
-          while (i < groupedEvents[resourceId].length) {
-            if (groupedEvents[resourceId][i].length === 0) {
-              break;
+            if (rowIndex >= groupedEvents[resourceId].length) {
+              groupedEvents[resourceId].push([]);
             }
 
-            let hasConflict = groupedEvents[resourceId][i].find((placedEvent) => {
-              const overlaps =
-                adapter.isBefore(event.start, placedEvent.end) &&
-                adapter.isAfter(event.end, placedEvent.start);
-
-              const sameInterval =
-                adapter.toJsDate(event.start).getTime() ===
-                  adapter.toJsDate(placedEvent.start).getTime() &&
-                adapter.toJsDate(event.end).getTime() ===
-                  adapter.toJsDate(placedEvent.end).getTime();
-
-              return overlaps || sameInterval;
-            });
-
-            if (hasConflict) {
-              i += 1;
-            } else {
-              break;
-            }
+            groupedEvents[resourceId][rowIndex].push(event);
           }
-
-          rowIndex = i;
-          if (rowIndex >= groupedEvents[resourceId].length) {
-            groupedEvents[resourceId].push([]);
-          }
-
-          groupedEvents[resourceId][rowIndex].push(event);
         }
       }
       return groupedEvents;
