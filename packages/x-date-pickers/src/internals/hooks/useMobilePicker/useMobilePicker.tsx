@@ -84,7 +84,7 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <Field slots={slots} slotProps={slotProps} inputRef={inputRef} {...fieldProps} />
+      <Field {...fieldProps} slots={slots} slotProps={slotProps} inputRef={inputRef} />
       <PickersModalDialog slots={slots} slotProps={slotProps}>
         <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
