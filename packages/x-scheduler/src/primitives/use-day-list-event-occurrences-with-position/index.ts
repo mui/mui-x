@@ -1,1 +1,1 @@
-export * from './useDayEventOccurrencesWithPosition';
+export * from './useDayListEventOccurrencesWithPosition';

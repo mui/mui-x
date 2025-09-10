@@ -1,12 +1,5 @@
-import {
-  SchedulerValidDate,
-  CalendarEvent,
-  CalendarEventOccurrence,
-  CalendarProcessedDate,
-  CalendarEventOccurrencePosition,
-} from '../models';
+import { SchedulerValidDate, CalendarEvent, CalendarProcessedDate } from '../models';
 import { Adapter } from './adapter/types';
-import { diffIn } from './date-utils';
 
 export function isDayWithinRange(
   day: SchedulerValidDate,
@@ -19,54 +12,6 @@ export function isDayWithinRange(
     adapter.isSameDay(day, eventLastDay) ||
     (adapter.isAfter(day, eventFirstDay) && adapter.isBefore(day, eventLastDay))
   );
-}
-
-/**
- *  Computes the index and the span of an event occurrence when rendered in a list of days.
- *  If the event is present in the previous day of the same collection (e.g: same week in the Day Grid), reuses the previous day's row index and marks the occurrence as invisible for the current day.
- *  Otherwise, assigns the first free index in that day's stack and compute how many days is should span across.
- */
-export function getEventOccurrencePositionInDayList(
-  parameters: GetEventOccurrencePositionInDayListParameters,
-): CalendarEventOccurrencePosition {
-  const { adapter, indexLookup, occurrence, day, previousDay, daysBeforeCollectionEnd } =
-    parameters;
-
-  // If the event is present in the previous day, we keep the same index
-  const occurrenceIndexInPreviousDay =
-    previousDay == null ? null : indexLookup[previousDay.key]?.occurrencesIndex[occurrence.key];
-
-  if (occurrenceIndexInPreviousDay != null) {
-    return { index: occurrenceIndexInPreviousDay, span: 0 };
-  }
-
-  // Otherwise, we just set first available index
-  const usedIndexes = indexLookup[day.key]?.usedIndexes;
-  let i = 1;
-  if (usedIndexes) {
-    while (usedIndexes.has(i)) {
-      i += 1;
-    }
-  }
-
-  const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
-  const columnSpan = Math.min(durationInDays, daysBeforeCollectionEnd); // Don't go past the collection end
-
-  return { index: i, span: columnSpan };
-}
-
-export interface GetEventOccurrencePositionInDayListParameters {
-  adapter: Adapter;
-  occurrence: CalendarEventOccurrence;
-  daysBeforeCollectionEnd: number;
-  day: CalendarProcessedDate;
-  previousDay: CalendarProcessedDate | null;
-  indexLookup: {
-    [dayKey: string]: {
-      occurrencesIndex: { [occurrenceKey: string]: number };
-      usedIndexes: Set<number>;
-    };
-  };
 }
 
 /**

@@ -215,6 +215,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 });
 
+// TODO: Allow to render some multi-day events that are not all-day in the Day Grid.
 function shouldRenderOccurrenceInDayGrid(occurrence: CalendarEventOccurrence) {
   return !!occurrence.allDay;
 }

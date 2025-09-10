@@ -1,15 +1,13 @@
 import * as React from 'react';
 import {
   CalendarEventOccurrence,
+  CalendarEventOccurrencePosition,
   CalendarEventOccurrencesWithPosition,
   CalendarProcessedDate,
 } from '../models';
 import { useEventOccurrences } from '../use-event-occurrences';
-import {
-  getEventOccurrencePositionInDayList,
-  GetEventOccurrencePositionInDayListParameters,
-} from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
+import { diffIn } from '../utils/date-utils';
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -21,7 +19,12 @@ export function useDayListEventOccurrencesWithPosition(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const indexLookup: GetEventOccurrencePositionInDayListParameters['indexLookup'] = {};
+    const indexLookup: {
+      [dayKey: string]: {
+        occurrencesIndex: { [occurrenceKey: string]: number };
+        usedIndexes: Set<number>;
+      };
+    } = {};
     const collectionSize = days.length;
 
     return days.map((day, dayIndex) => {
@@ -33,14 +36,32 @@ export function useDayListEventOccurrencesWithPosition(
       for (const occurrence of occurrencesMap.get(day.key) ?? []) {
         const hasPosition = shouldAddPosition ? shouldAddPosition(occurrence) : true;
         if (hasPosition) {
-          const position = getEventOccurrencePositionInDayList({
-            adapter,
-            indexLookup,
-            occurrence,
-            day,
-            previousDay: dayIndex === 0 ? null : days[dayIndex - 1],
-            daysBeforeCollectionEnd: collectionSize - dayIndex,
-          });
+          let position: CalendarEventOccurrencePosition;
+
+          const occurrenceIndexInPreviousDay =
+            dayIndex === 0
+              ? null
+              : indexLookup[days[dayIndex - 1].key]?.occurrencesIndex[occurrence.key];
+
+          // If the event is present in the previous day, we keep the same index
+          if (occurrenceIndexInPreviousDay != null) {
+            position = { index: occurrenceIndexInPreviousDay, span: 0 };
+          }
+          // Otherwise, we find the smallest available index
+          else {
+            const usedIndexes = indexLookup[day.key]?.usedIndexes;
+            let i = 1;
+            if (usedIndexes) {
+              while (usedIndexes.has(i)) {
+                i += 1;
+              }
+            }
+
+            const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
+            const columnSpan = Math.min(durationInDays, collectionSize - dayIndex); // Don't go past the collection end
+
+            position = { index: i, span: columnSpan };
+          }
 
           withPosition.push({
             ...occurrence,
