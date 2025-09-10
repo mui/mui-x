@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 10, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -24,9 +24,9 @@ The following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.11.2`
 
-- [DataGrid] Allow to opt out of row selection exclude model (#19423) @MBilalShafi
-- [DataGrid] Fix column dropdown menu "Unpin" text alignment (#19462) @MBilalShafi
-- [DataGrid] Fix indeterminate select all state with exclude model (#19466) @MBilalShafi
+- [DataGrid] Allow opting out of the exclude row selection model (#19423) @MBilalShafi
+- [DataGrid] Fix column dropdown menu text alignment for the "Unpin" menu item (#19462) @MBilalShafi
+- [DataGrid] Fix indeterminate state for "Select all" checkbox with exclude model (#19466) @MBilalShafi
 - [DataGrid] Fix styled API arguments error (#19460) @MBilalShafi
 - [DataGrid] Fix `stringify()` for theme objects (#19427) @romgrk
 
@@ -39,6 +39,7 @@ Same changes as in `@mui/x-data-grid@8.11.2`.
 Same changes as in `@mui/x-data-grid-pro@8.11.2`, plus:
 
 - [DataGridPremium] Fallback to the regular reorder method for plain data (#19467) @MBilalShafi
+- [DataGridPremium] Fix showing `0` as total aggregation value when aggregation position is set to `null` for row groups (#19515) @cherniavskii
 
 ### Date and Time Pickers
 
@@ -58,7 +59,7 @@ Same changes as in `@mui/x-date-pickers@8.11.2`.
 
 - [charts] Fix highlight regression (#19486) @alexfauquette
 - [charts] Improve code reuse in `ChartsXAxis` and `ChartsYAxis` (#19198) @bernardobelchior
-- [l10n] Add svSE locale (#19489) @ludvigeriksson
+- [l10n] Add Swedish (sv-SE) locale (#19489) @ludvigeriksson
 
 #### `@mui/x-charts-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
