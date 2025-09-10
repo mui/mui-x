@@ -1,6 +1,6 @@
 import { Store } from '@base-ui-components/utils/store';
 import { warn } from '@base-ui-components/utils/warn';
-import { State } from './store';
+import { selectors, State } from './store';
 import {
   CalendarEvent,
   CalendarEventId,
@@ -255,8 +255,13 @@ export class EventCalendarInstance {
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: CalendarEvent) => {
-    const prev = this.store.state.events.find((event) => event.id === calendarEvent.id);
-    if (prev?.rrule) {
+    const original = selectors.event(this.store.state, calendarEvent.id);
+    if (!original) {
+      throw new Error(
+        `Event Calendar: the original event was not found (id="${calendarEvent.id}").`,
+      );
+    }
+    if (original?.rrule) {
       throw new Error(
         'Event Calendar: this event is recurring. Use updateRecurringEvent(...) instead.',
       );
@@ -281,12 +286,14 @@ export class EventCalendarInstance {
     const { adapter, events } = this.store.state;
     const { onEventsChange } = this.parameters;
 
-    const original = events.find((event) => event.id === eventId);
+    const original = selectors.event(this.store.state, eventId);
     if (!original) {
       throw new Error(`Event Calendar: the original event was not found (id="${eventId}").`);
     }
     if (!original.rrule) {
-      throw new Error('Event Calendar: the original event is not recurring.');
+      throw new Error(
+        'Event Calendar: the original event is not recurring. Use updateEvent(...) instead.',
+      );
     }
 
     let updatedEvents: CalendarEvent[] = [];
