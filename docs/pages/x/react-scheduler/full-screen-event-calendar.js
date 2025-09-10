@@ -22,6 +22,7 @@ export default function FullEventCalendar() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsDraggable
+        areEventsResizable
         defaultView="month"
         resources={resources}
       />
