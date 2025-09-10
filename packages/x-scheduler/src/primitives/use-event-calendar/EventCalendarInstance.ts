@@ -11,9 +11,12 @@ import {
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
-  RecurringUpdateChanges,
 } from '../models';
-import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
+import {
+  EventCalendarParameters,
+  EventCalendarStore,
+  UpdateRecurringEventParams,
+} from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
 
@@ -277,14 +280,10 @@ export class EventCalendarInstance {
   /**
    * Updates a recurring event in the calendar.
    */
-  public updateRecurringEvent = (
-    eventId: CalendarEventId,
-    occurrenceStart: SchedulerValidDate,
-    changes: RecurringUpdateChanges,
-    scope: 'following' | 'all' | 'only-this',
-  ) => {
+  public updateRecurringEvent = (params: UpdateRecurringEventParams) => {
     const { adapter, events } = this.store.state;
     const { onEventsChange } = this.parameters;
+    const { eventId, occurrenceStart, changes, scope } = params;
 
     const original = selectors.event(this.store.state, eventId);
     if (!original) {

@@ -22,7 +22,7 @@ import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import {
   CalendarEvent,
-  RecurringUpdateChanges,
+  RecurringUpdateEventChanges,
   CalendarResourceId,
 } from '../../../../primitives/models';
 import { DEFAULT_EVENT_COLOR, selectors } from '../../../../primitives/use-event-calendar';
@@ -144,7 +144,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     };
 
     if (calendarEvent.rrule) {
-      const changes: RecurringUpdateChanges = {
+      const changes: RecurringUpdateEventChanges = {
         ...payload,
         ...(recurrenceModified ? { rrule } : {}),
       };

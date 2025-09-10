@@ -4,7 +4,7 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
-  RecurringUpdateChanges,
+  RecurringUpdateEventChanges,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
@@ -769,12 +769,18 @@ export function decideSplitRRule(
   return { ...baseRule };
 }
 
+/**
+ * Applies a "this and following" update to a recurring series by splitting it into:
+ * - the original series truncated up to the day before the edited occurrence, and
+ * - a new series starting at the edited occurrence with the requested changes.
+ * @returns The updated list of events with the split applied.
+ */
 export function applyRecurringUpdateFollowing(
   adapter: Adapter,
   events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: RecurringUpdateChanges,
+  changes: RecurringUpdateEventChanges,
 ): CalendarEvent[] {
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);

@@ -8,6 +8,8 @@ import {
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
+  CalendarEventId,
+  RecurringUpdateEventChanges,
 } from '../models';
 import type { EventCalendarInstance } from './EventCalendarInstance';
 
@@ -110,3 +112,31 @@ export interface EventCalendarContextValue {
    */
   instance: EventCalendarInstance;
 }
+
+/**
+ * The scope of a recurring event update.
+ */
+export type RecurringUpdateEventScope = 'following' | 'all' | 'only-this';
+
+/**
+ * Parameters for updating a recurring event.
+ */
+export type UpdateRecurringEventParams = {
+  /**
+   * The id of the recurring event to update.
+   */
+  eventId: CalendarEventId;
+  /**
+   * The start date of the occurrence affected by the update.
+   */
+  occurrenceStart: SchedulerValidDate;
+  /**
+   * The changes to apply.
+   * Requires `start` and `end`, all other properties are optional.
+   */
+  changes: RecurringUpdateEventChanges;
+  /**
+   * The scope of the update.
+   */
+  scope: RecurringUpdateEventScope;
+};
