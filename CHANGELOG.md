@@ -45,8 +45,8 @@ Same changes as in `@mui/x-data-grid-pro@8.11.2`, plus:
 #### `@mui/x-date-pickers@8.11.2`
 
 - [pickers] Gracefully handle `textField.slotProps` (#18980) @LukasTy
-- [pickers] Improve hour and minute placement in `DateTimePicker` (#19227) @MBilalShafi
-- [pickers] Use `calendarState.currentMonth` in `MonthCalendar` when available (#19073) @LukasTy
+- [pickers] Improve hour and minute placement in Date Time Picker (#19227) @MBilalShafi
+- [pickers] Use `calendarState.currentMonth` in Month Calendar when available (#19073) @LukasTy
 
 #### `@mui/x-date-pickers-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -68,7 +68,7 @@ Same changes as in `@mui/x-charts@8.11.2`.
 
 #### `@mui/x-tree-view@8.11.2`
 
-- [TreeView] Do not mutate `props.items` in the `getItemTree` method (#19483) @flaviendelangle
+- [TreeView] Do not mutate `props.items` in the `getItemTree()` method (#19483) @flaviendelangle
 - [TreeView] Expose a new hook to apply selection propagation on the selected items (#19402) @flaviendelangle
 
 #### `@mui/x-tree-view-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
