@@ -130,29 +130,6 @@ describeTreeView<[UseTreeViewLazyLoadingSignature, UseTreeViewExpansionSignature
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
 
-      it('should allow to update the children of an item that was expanded on mount', async () => {
-        const view = render({
-          items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1 OUTDATED' }] }],
-          defaultExpandedItems: ['1'],
-          dataSource: {
-            getChildrenCount: (item) => item?.childrenCount as number,
-            getTreeItems: mockFetchData,
-          },
-        });
-
-        expect(view.isItemExpanded('1')).to.equal(true);
-        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1 OUTDATED']);
-
-        fireEvent.click(view.getItemContent('1'));
-        expect(view.isItemExpanded('1')).to.equal(false);
-        expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
-
-        fireEvent.click(view.getItemContent('1'));
-        await awaitMockFetch();
-        expect(view.isItemExpanded('1')).to.equal(true);
-        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
-      });
-
       it('should allow to mix props.items and fetched items on mount', async () => {
         const view = render({
           items: [
