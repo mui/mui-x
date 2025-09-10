@@ -21,7 +21,6 @@ export function useFieldSectionContentProps(
 ): UseFieldSectionContentPropsReturnValue {
   const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
-  // const id = useId();
 
   const {
     focused,
