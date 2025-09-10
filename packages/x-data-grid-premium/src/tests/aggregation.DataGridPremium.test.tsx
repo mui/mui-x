@@ -395,10 +395,12 @@ describe('<DataGridPremium /> - Aggregation', () => {
               aggregation: { model: { id: 'max' } },
             }}
             defaultGroupingExpansionDepth={-1}
-            getAggregationPosition={(group: GridGroupNode) => (group.depth === -1 ? 'footer' : null)}
+            getAggregationPosition={(group: GridGroupNode) =>
+              group.depth === -1 ? 'footer' : null
+            }
           />,
         );
-        
+
         // Should show aggregated value '5' for root group in footer,
         // not '0' due to empty values array in aggregator
         expect(getColumnValues(1)).to.deep.equal([
