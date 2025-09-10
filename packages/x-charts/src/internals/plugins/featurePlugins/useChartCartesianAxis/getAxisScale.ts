@@ -3,7 +3,8 @@ import { scaleBand, scalePoint, type ScaleSymLog } from '@mui/x-charts-vendor/d3
 import {
   AxisId,
   ChartsAxisProps,
-  D3Scale,
+  D3ContinuousScale,
+  D3DiscreteScale,
   DefaultedAxis,
   isBandScaleConfig,
   isPointScaleConfig,
@@ -60,14 +61,14 @@ export function getXAxesScales<T extends ChartSeriesType>({
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
 }) {
-  const completeAxis: Record<AxisId, D3Scale> = {};
+  const scales: Record<AxisId, ScaleDefinition> = {};
 
   axes.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
 
-    completeAxis[axis.id] = getAxisScale(
+    scales[axis.id] = getAxisScale(
       axis,
       'x',
       zoomOption,
@@ -81,7 +82,7 @@ export function getXAxesScales<T extends ChartSeriesType>({
     );
   });
 
-  return completeAxis;
+  return scales;
 }
 
 export function getYAxesScales<T extends ChartSeriesType>({
@@ -96,14 +97,14 @@ export function getYAxesScales<T extends ChartSeriesType>({
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
 }) {
-  const completeAxis: Record<AxisId, D3Scale> = {};
+  const scales: Record<AxisId, ScaleDefinition> = {};
 
   axes.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
 
-    completeAxis[axis.id] = getAxisScale(
+    scales[axis.id] = getAxisScale(
       axis,
       'y',
       zoomOption,
@@ -117,8 +118,18 @@ export function getYAxesScales<T extends ChartSeriesType>({
     );
   });
 
-  return completeAxis;
+  return scales;
 }
+
+export type ScaleDefinition =
+  | {
+      scale: D3ContinuousScale;
+      tickNumber: number;
+    }
+  | {
+      scale: D3DiscreteScale;
+      tickNumber?: never;
+    };
 
 function getAxisScale<T extends ChartSeriesType>(
   axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
@@ -134,7 +145,7 @@ function getAxisScale<T extends ChartSeriesType>(
    */
   preferStrictDomainInLineCharts?: boolean,
   getFilters?: GetZoomAxisFilters,
-) {
+): ScaleDefinition {
   const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
   const range = getRange(drawingArea, axisDirection, axis);
 
@@ -153,16 +164,18 @@ function getAxisScale<T extends ChartSeriesType>(
     const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
     const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
-    return scaleBand(axis.data!, zoomedRange)
-      .paddingInner(categoryGapRatio)
-      .paddingOuter(categoryGapRatio / 2);
+    return {
+      scale: scaleBand(axis.data!, zoomedRange)
+        .paddingInner(categoryGapRatio)
+        .paddingOuter(categoryGapRatio / 2),
+    };
   }
 
   if (isPointScaleConfig(axis)) {
     const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
     const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
 
-    return scalePoint(axis.data!, zoomedRange);
+    return { scale: scalePoint(axis.data!, zoomedRange) };
   }
 
   const scaleType = axis.scaleType ?? ('linear' as const);
@@ -171,28 +184,30 @@ function getAxisScale<T extends ChartSeriesType>(
     ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
     : (axis.domainLimit ?? 'nice');
 
-  const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+  const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
 
   if (typeof domainLimit === 'function') {
     const { min, max } = domainLimit(minData, maxData);
-    axisExtremums[0] = min;
-    axisExtremums[1] = max;
+    axisExtrema[0] = min;
+    axisExtrema[1] = max;
   }
 
-  const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
+  const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtrema });
 
   const zoomedRange = zoomScaleRange(range, zoomRange);
 
-  const scale = getScale(scaleType as ContinuousScaleName, axisExtremums, zoomedRange);
+  const scale = getScale(scaleType as ContinuousScaleName, axisExtrema, zoomedRange);
 
   if (isSymlogScaleConfig(axis) && axis.constant != null) {
     (scale as ScaleSymLog<number, number>).constant(axis.constant);
   }
 
-  const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
-  scale.tickNumber = rawTickNumber;
-  const [minDomain, maxDomain] = finalScale.domain();
-  const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
+  if (domainLimit === 'nice') {
+    scale.nice(rawTickNumber);
+  }
 
-  return finalScale.domain(domain) as any;
+  const [minDomain, maxDomain] = scale.domain();
+  scale.domain([axis.min ?? minDomain, axis.max ?? maxDomain]);
+
+  return { scale, tickNumber: rawTickNumber };
 }

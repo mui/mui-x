@@ -94,7 +94,7 @@ const selectorChartYFilter = createSelector(
     }),
 );
 
-const selectorChartXScales = createSelector(
+export const selectorChartXScales = createSelector(
   [
     selectorChartRawXAxis,
     selectorChartDrawingArea,
@@ -125,7 +125,7 @@ const selectorChartXScales = createSelector(
   },
 );
 
-const selectorChartYScales = createSelector(
+export const selectorChartYScales = createSelector(
   [
     selectorChartRawYAxis,
     selectorChartDrawingArea,
@@ -172,7 +172,7 @@ export const selectorChartZoomAxisFilters = createSelector(
     }
 
     const xFilters = xAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      const filter = xMapper(axis, index, xScales[axis.id]);
+      const filter = xMapper(axis, index, xScales[axis.id].scale);
       if (filter !== null) {
         acc[axis.id] = filter;
       }
@@ -180,7 +180,7 @@ export const selectorChartZoomAxisFilters = createSelector(
     }, {});
 
     const yFilters = yAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      const filter = yMapper(axis, index, yScales[axis.id]);
+      const filter = yMapper(axis, index, yScales[axis.id].scale);
       if (filter !== null) {
         acc[axis.id] = filter;
       }
@@ -208,20 +208,9 @@ export const selectorChartXAxis = createSelector(
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    selectorPreferStrictDomainInLineCharts,
     selectorChartXScales,
   ],
-  (
-    axis,
-    drawingArea,
-    formattedSeries,
-    seriesConfig,
-    zoomMap,
-    zoomOptions,
-    getFilters,
-    preferStrictDomainInLineCharts,
-    scales,
-  ) =>
+  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters, scales) =>
     computeAxisValue({
       scales,
       drawingArea,
@@ -232,7 +221,6 @@ export const selectorChartXAxis = createSelector(
       zoomMap,
       zoomOptions,
       getFilters,
-      preferStrictDomainInLineCharts,
     }),
 );
 
@@ -245,20 +233,9 @@ export const selectorChartYAxis = createSelector(
     selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
-    selectorPreferStrictDomainInLineCharts,
     selectorChartYScales,
   ],
-  (
-    axis,
-    drawingArea,
-    formattedSeries,
-    seriesConfig,
-    zoomMap,
-    zoomOptions,
-    getFilters,
-    preferStrictDomainInLineCharts,
-    scales,
-  ) =>
+  (axis, drawingArea, formattedSeries, seriesConfig, zoomMap, zoomOptions, getFilters, scales) =>
     computeAxisValue({
       scales,
       drawingArea,
@@ -269,7 +246,6 @@ export const selectorChartYAxis = createSelector(
       zoomMap,
       zoomOptions,
       getFilters,
-      preferStrictDomainInLineCharts,
     }),
 );
 

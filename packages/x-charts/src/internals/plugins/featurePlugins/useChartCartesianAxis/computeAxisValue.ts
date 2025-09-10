@@ -1,4 +1,3 @@
-import { scaleBand, scalePoint, ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { ScaleName } from '../../../../models';
 import {
@@ -12,16 +11,12 @@ import {
   DefaultedYAxis,
   DefaultedAxis,
   AxisValueFormatterContext,
-  isSymlogScaleConfig,
-  D3Scale,
-  D3ContinuousScale,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
+import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
-import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
@@ -29,7 +24,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import { getAxisDomainLimit } from './getAxisDomainLimit';
+import { ScaleDefinition } from './getAxisScale';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -53,17 +48,13 @@ export type ComputeResult<T extends ChartsAxisProps> = {
 };
 
 type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
-  scales: Record<AxisId, D3Scale>;
+  scales: Record<AxisId, ScaleDefinition>;
   drawingArea: ChartDrawingArea;
   formattedSeries: ProcessedSeries<T>;
   seriesConfig: ChartSeriesConfig<T>;
   zoomMap?: Map<AxisId, ZoomData>;
   zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
   getFilters?: GetZoomAxisFilters;
-  /**
-   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
-   */
-  preferStrictDomainInLineCharts?: boolean;
 };
 
 export function computeAxisValue<T extends ChartSeriesType>(
@@ -88,7 +79,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomMap,
   zoomOptions,
   getFilters,
-  preferStrictDomainInLineCharts,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -110,7 +100,8 @@ export function computeAxisValue<T extends ChartSeriesType>({
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    let scale = scales[axis.id];
+    const scaleDefinition = scales[axis.id];
+    let scale = scaleDefinition.scale;
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
@@ -149,6 +140,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
+
     if (isPointScaleConfig(axis)) {
       const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
 
@@ -178,8 +170,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
       return;
     }
 
+    const rawTickNumber = scaleDefinition.tickNumber!;
     const scaleType = axis.scaleType ?? ('linear' as const);
-    const tickNumber = scaleTickNumberByRange(scale.tickNumber, zoomRange);
+    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     if (filter) {
       const [minData, maxData] = getAxisExtremum(
@@ -190,7 +183,8 @@ export function computeAxisValue<T extends ChartSeriesType>({
         formattedSeries,
         filter,
       );
-      scale = scale.copy().domain([minData, maxData]);
+      scale = scale.copy();
+      scale.domain([minData, maxData]);
     }
 
     completeAxis[axis.id] = {

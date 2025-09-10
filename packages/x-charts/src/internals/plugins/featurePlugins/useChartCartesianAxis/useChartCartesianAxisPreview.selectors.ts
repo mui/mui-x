@@ -10,6 +10,8 @@ import {
 } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
 import {
+  selectorChartXScales,
+  selectorChartYScales,
   selectorChartZoomAxisFilters,
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
@@ -49,10 +51,20 @@ export const selectorChartPreviewComputedXAxis = createSelector(
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
     selectorChartDrawingArea,
+    selectorChartXScales,
     (_, axisId: AxisId) => axisId,
   ],
 
-  (xAxes, formattedSeries, seriesConfig, zoomOptions, getFilters, chartDrawingArea, axisId) => {
+  (
+    xAxes,
+    formattedSeries,
+    seriesConfig,
+    zoomOptions,
+    getFilters,
+    chartDrawingArea,
+    scales,
+    axisId,
+  ) => {
     const hasAxis = xAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'x' : 'y', chartDrawingArea);
 
@@ -62,6 +74,7 @@ export const selectorChartPreviewComputedXAxis = createSelector(
     ]);
 
     const computedAxes = computeAxisValue({
+      scales,
       drawingArea,
       formattedSeries,
       axis: xAxes,
@@ -88,9 +101,19 @@ export const selectorChartPreviewComputedYAxis = createSelector(
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
     selectorChartDrawingArea,
+    selectorChartYScales,
     (_, axisId: AxisId) => axisId,
   ],
-  (yAxes, formattedSeries, seriesConfig, zoomOptions, getFilters, chartDrawingArea, axisId) => {
+  (
+    yAxes,
+    formattedSeries,
+    seriesConfig,
+    zoomOptions,
+    getFilters,
+    chartDrawingArea,
+    scales,
+    axisId,
+  ) => {
     const hasAxis = yAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'y' : 'x', chartDrawingArea);
 
@@ -100,6 +123,7 @@ export const selectorChartPreviewComputedYAxis = createSelector(
     ]);
 
     const computedAxes = computeAxisValue({
+      scales,
       drawingArea,
       formattedSeries,
       axis: yAxes,
