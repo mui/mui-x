@@ -1,4 +1,3 @@
-import { GetEventOccurrencePlacementReturnValue } from '../utils/event-utils';
 import type { SchedulerValidDate } from './date';
 import type { CalendarResourceId } from './resource';
 
@@ -86,10 +85,22 @@ export interface CalendarEventOccurrence extends CalendarEvent {
 }
 
 /**
- * An event occurrence with placement for row or column rendering.
+ * An event occurrence with the position it needs to be rendered on in a row or column layout.
  */
-export interface CalendarEventOccurrencesWithPlacement extends CalendarEventOccurrence {
-  placement: GetEventOccurrencePlacementReturnValue;
+export interface CalendarEventOccurrencesWithPosition extends CalendarEventOccurrence {
+  position: CalendarEventOccurrencePosition;
+}
+
+export interface CalendarEventOccurrencePosition {
+  /**
+   * The 1-based index of the row/column the event should be rendered in.
+   */
+  index: number;
+  /**
+   * The number of days the event should span across.
+   * If 0, the event will be rendered as invisible.
+   */
+  span: number;
 }
 
 export type CalendarEventId = string | number;

@@ -16,7 +16,7 @@ import { selectors } from '../use-event-calendar';
 export function useEventOccurrences(
   parameters: useEventOccurrences.Parameters,
 ): useEventOccurrences.ReturnValue {
-  const { days, eventPlacement } = parameters;
+  const { days, renderEventIn } = parameters;
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
   const events = useStore(store, selectors.events);
@@ -69,7 +69,7 @@ export function useEventOccurrences(
         occurrence,
         days,
         adapter,
-        eventPlacement,
+        renderEventIn,
       );
 
       for (const day of eventDays) {
@@ -86,7 +86,7 @@ export function useEventOccurrences(
     });
 
     return cleanMap;
-  }, [adapter, days, eventPlacement, events, visibleResources]);
+  }, [adapter, days, renderEventIn, events, visibleResources]);
 }
 
 export namespace useEventOccurrences {
@@ -100,7 +100,7 @@ export namespace useEventOccurrences {
      * If "first-day", the event appears only on its starting day.
      * If "every-day", the event appears on each day it spans.
      */
-    eventPlacement: 'first-day' | 'every-day';
+    renderEventIn: 'first-day' | 'every-day';
   }
 
   export type ReturnValue = Map<string, CalendarEventOccurrence[]>;

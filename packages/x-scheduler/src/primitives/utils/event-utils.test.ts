@@ -1,7 +1,7 @@
 import { CalendarEventOccurrence } from '@mui/x-scheduler/primitives/models';
 import {
   getDaysTheOccurrenceIsVisibleOn,
-  getEventOccurrencePlacement,
+  getEventOccurrencePositionInDayList,
   isDayWithinRange,
   processDate,
 } from './event-utils';
@@ -66,9 +66,9 @@ describe('event-utils', () => {
     });
   });
 
-  describe('getEventRowPlacement', () => {
+  describe('getEventOccurrencePositionInDayList', () => {
     it('should return 1 for first event on a day with no existing events', () => {
-      const { index: rowIndex } = getEventOccurrencePlacement({
+      const { index } = getEventOccurrencePositionInDayList({
         adapter,
         indexLookup: {},
         occurrence: createEventOccurrence('1', '2024-01-15', '2024-01-15'),
@@ -77,11 +77,11 @@ describe('event-utils', () => {
         daysBeforeCollectionEnd: 2,
       });
 
-      expect(rowIndex).toBe(1);
+      expect(index).toBe(1);
     });
 
-    it('should return next available row index when other events exist', () => {
-      const { index: rowIndex } = getEventOccurrencePlacement({
+    it('should return next available index when other events exist', () => {
+      const { index } = getEventOccurrencePositionInDayList({
         adapter,
         indexLookup: {
           '1/15/2024': {
@@ -95,11 +95,11 @@ describe('event-utils', () => {
         daysBeforeCollectionEnd: 2,
       });
 
-      expect(rowIndex).toBe(3);
+      expect(index).toBe(3);
     });
 
-    it('should find gap in row indexes and use the lowest available', () => {
-      const { index: rowIndex } = getEventOccurrencePlacement({
+    it('should find gap in indexes and use the lowest available', () => {
+      const { index } = getEventOccurrencePositionInDayList({
         adapter,
         indexLookup: {
           '1/15/2024': {
@@ -113,11 +113,11 @@ describe('event-utils', () => {
         daysBeforeCollectionEnd: 2,
       });
 
-      expect(rowIndex).toBe(2);
+      expect(index).toBe(2);
     });
 
-    it('should return existing row index when event starts before visible range and exists in first day', () => {
-      const { index: rowIndex } = getEventOccurrencePlacement({
+    it('should return existing index when event starts before visible range and exists in first day', () => {
+      const { index } = getEventOccurrencePositionInDayList({
         adapter,
         indexLookup: {
           '1/15/2024': {
@@ -136,11 +136,11 @@ describe('event-utils', () => {
         daysBeforeCollectionEnd: 2,
       });
 
-      expect(rowIndex).toBe(2); // Should use existing row index from first day
+      expect(index).toBe(2); // Should use existing index from first day
     });
 
     it('should return 1 when event starts before visible range but not found in first day', () => {
-      const { index: rowIndex } = getEventOccurrencePlacement({
+      const { index } = getEventOccurrencePositionInDayList({
         adapter,
         indexLookup: {
           '1/15/2024': {
@@ -159,12 +159,12 @@ describe('event-utils', () => {
         daysBeforeCollectionEnd: 2,
       });
 
-      expect(rowIndex).toBe(1);
+      expect(index).toBe(1);
     });
 
-    it('should handle event row placement correctly in all columns', () => {
+    it('should handle event position correctly in all days', () => {
       const occurrence = createEventOccurrence('3', '2024-01-15', '2024-01-16');
-      const { index: rowIndex } = getEventOccurrencePlacement({
+      const { index } = getEventOccurrencePositionInDayList({
         adapter,
         indexLookup: {
           '1/14/2024': {
@@ -186,16 +186,16 @@ describe('event-utils', () => {
         daysBeforeCollectionEnd: 2,
       });
 
-      expect(rowIndex).toBe(2);
+      expect(index).toBe(2);
 
-      const { index: rowIndex2 } = getEventOccurrencePlacement({
+      const { index: index2 } = getEventOccurrencePositionInDayList({
         adapter,
         indexLookup: {
           '1/14/2024': {
             occurrencesIndex: { '1': 1, '2': 3 },
             usedIndexes: new Set([1, 2]),
           },
-          // Add the row index returned by the 1st call to getEventRowPlacement
+          // Add the index returned by the 1st call to the method
           '1/15/2024': {
             occurrencesIndex: { '1': 1, '3': 2 },
             usedIndexes: new Set([1, 2]),
@@ -211,7 +211,7 @@ describe('event-utils', () => {
         daysBeforeCollectionEnd: 2,
       });
 
-      expect(rowIndex2).toBe(2);
+      expect(index2).toBe(2);
     });
   });
 
@@ -224,7 +224,7 @@ describe('event-utils', () => {
       processDate(adapter.date('2024-01-18'), adapter),
     ];
 
-    describe('eventPlacement === "every-day"', () => {
+    describe('renderEventIn === "every-day"', () => {
       it('should return all days when event spans multiple days', () => {
         const event = createEventOccurrence('1', '2024-01-15T10:00:00', '2024-01-17T14:00:00');
 
@@ -290,7 +290,7 @@ describe('event-utils', () => {
       });
     });
 
-    describe('eventPlacement === "first-day"', () => {
+    describe('renderEventIn === "first-day"', () => {
       it('should return single day when event spans multiple days ', () => {
         const event = createEventOccurrence('1', '2024-01-15T10:00:00', '2024-01-17T14:00:00');
 
@@ -300,7 +300,7 @@ describe('event-utils', () => {
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/15/2024');
       });
 
-      it('should return first visible day when event starts before visible range and eventPlacement === "first-day"', () => {
+      it('should return first visible day when event starts before visible range and renderEventIn === "first-day"', () => {
         const event = createEventOccurrence('1', '2024-01-10T10:00:00', '2024-01-17T14:00:00');
 
         const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'first-day');
@@ -309,7 +309,7 @@ describe('event-utils', () => {
         expect(adapter.format(result[0], 'keyboardDate')).toBe('1/14/2024');
       });
 
-      it('should return single day when event is single day and eventPlacement === "first-day"', () => {
+      it('should return single day when event is single day and renderEventIn === "first-day"', () => {
         const event = createEventOccurrence('1', '2024-01-16T10:00:00', '2024-01-16T14:00:00');
 
         const result = getDaysTheOccurrenceIsVisibleOn(event, days, adapter, 'first-day');

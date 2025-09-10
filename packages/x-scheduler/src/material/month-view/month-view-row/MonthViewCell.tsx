@@ -10,7 +10,7 @@ import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
-import { useEventOccurrencesPlacement } from '../../../primitives/use-event-occurrences-placement';
+import { useDayListEventOccurrencesWithPosition } from '../../../primitives/use-day-list-event-occurrences-with-position';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -38,8 +38,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     return { ...initialDraggedEvent, start: placeholder.start, end: placeholder.end };
   }, [initialDraggedEvent, placeholder]);
 
-  const visibleEvents = day.withPlacement.slice(0, maxEvents);
-  const hiddenCount = day.withPlacement.length - maxEvents;
+  const visibleEvents = day.withPosition.slice(0, maxEvents);
+  const hiddenCount = day.withPosition.length - maxEvents;
 
   const cellNumberContent = (
     <span className="MonthViewCellNumber">
@@ -82,7 +82,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       )}
       <div className="MonthViewCellEvents">
         {visibleEvents.map((event) => {
-          if (event.placement.span > 0) {
+          if (event.position.span > 0) {
             return (
               <EventPopoverTrigger
                 key={`${event.id}-${day.key}`}
@@ -92,8 +92,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                     event={event}
                     variant={event.allDay ? 'allDay' : 'compact'}
                     ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                    gridRow={event.placement.index}
-                    columnSpan={event.placement.span}
+                    gridRow={event.position.index}
+                    columnSpan={event.position.span}
                   />
                 }
               />
@@ -106,7 +106,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               event={event}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              gridRow={event.placement.index}
+              gridRow={event.position.index}
             />
           );
         })}
@@ -130,6 +130,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 });
 
 interface MonthViewCellProps {
-  day: useEventOccurrencesPlacement.DayData;
+  day: useDayListEventOccurrencesWithPosition.DayData;
   maxEvents: number;
 }

@@ -42,7 +42,7 @@ export const AgendaView = React.memo(
         }),
       [getDayList, preferences.showWeekends, visibleDate],
     );
-    const occurrences = useEventOccurrences({ days, eventPlacement: 'every-day' });
+    const occurrences = useEventOccurrences({ days, renderEventIn: 'every-day' });
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>

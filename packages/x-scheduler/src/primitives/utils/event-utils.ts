@@ -3,6 +3,7 @@ import {
   CalendarEvent,
   CalendarEventOccurrence,
   CalendarProcessedDate,
+  CalendarEventOccurrencePosition,
 } from '../models';
 import { Adapter } from './adapter/types';
 import { diffIn } from './date-utils';
@@ -21,17 +22,17 @@ export function isDayWithinRange(
 }
 
 /**
- *  Computes the index and the span of an occurrence when rendered in a given day.
- *  For collection with multiple cells (e.g. the days in a week row), if the event is present in the previous cell of the same collection, reuses its row index and marks the occurrence as invisible in the current cell.
- *  Otherwise, assigns the first free index in that cell's stack and compute how many cells is should span across.
+ *  Computes the index and the span of an event occurrence when rendered in a list of days.
+ *  If the event is present in the previous day of the same collection (e.g: same week in the Day Grid), reuses the previous day's row index and marks the occurrence as invisible for the current day.
+ *  Otherwise, assigns the first free index in that day's stack and compute how many days is should span across.
  */
-export function getEventOccurrencePlacement(
-  parameters: GetEventOccurrencePlacementParameters,
-): GetEventOccurrencePlacementReturnValue {
+export function getEventOccurrencePositionInDayList(
+  parameters: GetEventOccurrencePositionInDayListParameters,
+): CalendarEventOccurrencePosition {
   const { adapter, indexLookup, occurrence, day, previousDay, daysBeforeCollectionEnd } =
     parameters;
 
-  // If the event is present in the previous cell, we keep the same index
+  // If the event is present in the previous day, we keep the same index
   const occurrenceIndexInPreviousDay =
     previousDay == null ? null : indexLookup[previousDay.key]?.occurrencesIndex[occurrence.key];
 
@@ -49,12 +50,12 @@ export function getEventOccurrencePlacement(
   }
 
   const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
-  const columnSpan = Math.min(durationInDays, daysBeforeCollectionEnd); // Don't exceed available columns
+  const columnSpan = Math.min(durationInDays, daysBeforeCollectionEnd); // Don't go past the collection end
 
   return { index: i, span: columnSpan };
 }
 
-export interface GetEventOccurrencePlacementParameters {
+export interface GetEventOccurrencePositionInDayListParameters {
   adapter: Adapter;
   occurrence: CalendarEventOccurrence;
   daysBeforeCollectionEnd: number;
@@ -68,18 +69,6 @@ export interface GetEventOccurrencePlacementParameters {
   };
 }
 
-export interface GetEventOccurrencePlacementReturnValue {
-  /**
-   * The 1-based index of the row/column the event should be rendered in.
-   */
-  index: number;
-  /**
-   * The number of days the event should span across.
-   * If 0, the event will be rendered as invisible.
-   */
-  span: number;
-}
-
 /**
  *  Returns the list of days an event occurrence should be visible on.
  */
@@ -87,10 +76,10 @@ export function getDaysTheOccurrenceIsVisibleOn(
   event: CalendarEvent,
   days: CalendarProcessedDate[],
   adapter: Adapter,
-  eventPlacement: 'first-day' | 'every-day',
+  renderEventIn: 'first-day' | 'every-day',
 ) {
   const eventFirstDay = adapter.startOfDay(event.start);
-  if (eventPlacement === 'first-day') {
+  if (renderEventIn === 'first-day') {
     if (adapter.isBefore(eventFirstDay, days[0].value)) {
       return [days[0].value];
     }
