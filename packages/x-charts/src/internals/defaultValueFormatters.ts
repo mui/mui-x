@@ -14,7 +14,7 @@ export function createScalarFormatter(tickNumber: number, zoomScale: D3Continuou
       const zeroSizeDomain = domain[0] === domain[1];
 
       if (zeroSizeDomain) {
-        return `${value}`;
+        return context.scale.tickFormat(1)(value);
       }
 
       return context.scale.tickFormat(tickNumber)(value);
