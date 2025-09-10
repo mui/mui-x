@@ -28,14 +28,13 @@ export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
 }) => {
   const exportAsPrint = async (options?: ChartPrintExportOptions) => {
     const chartRoot = chartRootRef.current;
-    const svg = svgRef.current;
 
-    if (chartRoot && svg) {
+    if (chartRoot) {
       const enableAnimation = instance.disableAnimation();
       try {
         // Wait for animation frame to ensure the animation finished
         await waitForAnimationFrame();
-        printChart(chartRoot, svg, options);
+        printChart(chartRoot, options);
       } catch (error) {
         console.error('MUI X Charts: Error exporting chart as print:', error);
       } finally {
