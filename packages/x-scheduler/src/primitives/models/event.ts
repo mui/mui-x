@@ -125,5 +125,5 @@ export interface CalendarPrimitiveEventData {
  *  It requires `start` and `end` (always needed when updating an occurrence),
  *  and makes all other `CalendarEvent` properties optional.
  */
-export type RecurringUpdateChanges = Required<Pick<CalendarEvent, 'start' | 'end'>> &
-  Partial<Pick<CalendarEvent, 'title' | 'description' | 'allDay' | 'resource' | 'rrule'>>;
+export type RecurringUpdateChanges = Partial<CalendarEvent> &
+  Required<Pick<CalendarEvent, 'start' | 'end'>>;
