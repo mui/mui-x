@@ -13,7 +13,6 @@ import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { getAxisExtremum } from './getAxisExtremum';
 import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
-import { getScale } from '../../../getScale';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
 import { applyDomainLimit } from './applyDomainLimit';
 
@@ -75,10 +74,7 @@ export function createAxisFilterMapper({
       return createDiscreteScaleGetAxisFilter(axis.data, zoom.start, zoom.end, direction);
     }
 
-    // Determine domain limit using the same logic as computeAxisValue
-    const domainLimit = preferStrictDomainInLineCharts
-      ? getAxisDomainLimit(axis, direction, axisIndex, formattedSeries)
-      : (axis.domainLimit ?? 'nice');
+    const domainLimit = getAxisDomainLimit(axis, direction, axisIndex, formattedSeries, preferStrictDomainInLineCharts);
 
     return createContinuousScaleGetAxisFilter(
       scaleType,
@@ -150,18 +146,18 @@ export function createContinuousScaleGetAxisFilter(
 
 export const createGetAxisFilters =
   (filters: ZoomAxisFilters): GetZoomAxisFilters =>
-  ({ currentAxisId, seriesXAxisId, seriesYAxisId, isDefaultAxis }) => {
-    return (value, dataIndex) => {
-      const axisId = currentAxisId === seriesXAxisId ? seriesYAxisId : seriesXAxisId;
+    ({ currentAxisId, seriesXAxisId, seriesYAxisId, isDefaultAxis }) => {
+      return (value, dataIndex) => {
+        const axisId = currentAxisId === seriesXAxisId ? seriesYAxisId : seriesXAxisId;
 
-      if (!axisId || isDefaultAxis) {
-        return Object.values(filters ?? {})[0]?.(value, dataIndex) ?? true;
-      }
+        if (!axisId || isDefaultAxis) {
+          return Object.values(filters ?? {})[0]?.(value, dataIndex) ?? true;
+        }
 
-      const data = [seriesYAxisId, seriesXAxisId]
-        .filter((id) => id !== currentAxisId)
-        .map((id) => filters[id ?? ''])
-        .filter(isDefined);
-      return data.every((f) => f(value, dataIndex));
+        const data = [seriesYAxisId, seriesXAxisId]
+          .filter((id) => id !== currentAxisId)
+          .map((id) => filters[id ?? ''])
+          .filter(isDefined);
+        return data.every((f) => f(value, dataIndex));
+      };
     };
-  };

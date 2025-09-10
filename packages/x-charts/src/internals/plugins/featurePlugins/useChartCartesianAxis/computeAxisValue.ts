@@ -188,9 +188,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const domainLimit = preferStrictDomainInLineCharts
-      ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
-      : (axis.domainLimit ?? 'nice');
+    const domainLimit = getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries, preferStrictDomainInLineCharts);
 
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
 
