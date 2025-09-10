@@ -465,6 +465,55 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */, '1', '1']);
     });
+
+    // Regression test for issue #18899: https://github.com/mui/mui-x/issues/18899
+    it('should correctly compute aggregation values when getAggregationPosition returns "footer" only for root group node', async () => {
+      await render(
+        <TreeDataTest
+          rows={[
+            {
+              hierarchy: ['A'],
+              value: 100, // This should be ignored and replaced with aggregated value
+            },
+            {
+              hierarchy: ['A', 'A1'],
+              value: 10,
+            },
+            {
+              hierarchy: ['A', 'A2'],
+              value: 20,
+            },
+            {
+              hierarchy: ['B'],
+              value: 200, // This should be ignored and replaced with aggregated value
+            },
+            {
+              hierarchy: ['B', 'B1'],
+              value: 5,
+            },
+            {
+              hierarchy: ['B', 'B2'],
+              value: 15,
+            },
+          ]}
+          getAggregationPosition={(groupNode) => (groupNode.depth === -1 ? 'footer' : null)}
+        />,
+      );
+
+      // Due to regression from PR #18348, when getAggregationPosition returns 'footer' 
+      // only for root group (depth === -1), aggregation values show as zero instead 
+      // of correct sums because intermediate groups don't get their values computed.
+      // Expected behavior: no inline aggregations for groups, only root footer with sum.
+      expect(getColumnValues(1)).to.deep.equal([
+        '', // Group A (no aggregation shown)
+        '10', // A1 leaf value
+        '20', // A2 leaf value  
+        '', // Group B (no aggregation shown)
+        '5', // B1 leaf value
+        '15', // B2 leaf value
+        '50', // Root footer with correct sum (10+20+5+15)
+      ]);
+    });
   });
 
   describe('Column menu', () => {
