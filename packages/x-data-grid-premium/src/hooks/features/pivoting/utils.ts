@@ -99,27 +99,56 @@ function sortColumnGroups(
   });
 }
 
-export const getPivotedData = ({
+export const getPivotForcedProps = (
+  pivotModel: GridPivotModel,
+  columns: Map<string, GridColDef>,
+  groupingColDef: DataGridPremiumProcessedProps['groupingColDef'],
+): GridPivotingPropsOverrides => {
+  const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
+
+  const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
+  for (const column of columns.values()) {
+    columnVisibilityModel[column.field] = false;
+  }
+
+  const groupingColDefOverrides = (params: GridGroupingColDefOverrideParams) => ({
+    ...(typeof groupingColDef === 'function' ? groupingColDef(params) : groupingColDef || {}),
+    ...{
+      filterable: false,
+      aggregable: false,
+      hideable: false,
+    },
+  });
+
+  return {
+    columnVisibilityModel,
+    rowGroupingModel: visibleRows.map((row) => row.field),
+    getAggregationPosition: defaultGetAggregationPosition,
+    groupingColDef: groupingColDefOverrides,
+    headerFilters: false,
+    disableAggregation: false,
+    disableRowGrouping: false,
+  };
+};
+
+export const createPivotPropsFromRows = ({
+  rows,
   columns,
   pivotModel,
   pivotingColDef,
-  groupingColDef,
   apiRef,
-  rows,
 }: {
+  rows: GridRowModel[];
   columns: Map<string, GridColDef>;
   pivotModel: GridPivotModel;
   pivotingColDef: DataGridPremiumProcessedProps['pivotingColDef'];
-  groupingColDef: DataGridPremiumProcessedProps['groupingColDef'];
   apiRef: RefObject<GridApiPremium>;
-  rows?: GridRowModel[];
 }): GridPivotingPropsOverrides => {
   const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
   const visibleValues = pivotModel.values.filter((value) => !value.hidden);
 
   let pivotColumns: GridColDef[] = [];
-  const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
   const pivotColumnsIncludedInPivotValues: GridColDef[] = [];
 
   const initialColumns = new Map<string, GridColDef>();
@@ -146,7 +175,6 @@ export const getPivotedData = ({
       } else {
         pivotColumns.push(columnToAdd);
       }
-      columnVisibilityModel[column.field] = false;
     }
   }
 
@@ -176,16 +204,15 @@ export const getPivotedData = ({
   const columnGroupingModel: GridColumnGroupPivoting[] = [];
   const columnGroupingModelLookup = new Map<string, GridColumnGroupPivoting>();
 
-  let newRows: GridRowModel[] | undefined = rows ? [] : undefined;
+  let newRows: GridRowModel[] = [];
 
   if (visibleColumns.length === 0) {
     newRows = rows;
 
     visibleValues.forEach((pivotValue) => {
       aggregationModel[pivotValue.field] = pivotValue.aggFunc;
-      delete columnVisibilityModel[pivotValue.field];
     });
-  } else if (rows) {
+  } else {
     for (let i = 0; i < rows.length; i += 1) {
       const row = rows[i];
       const newRow = { ...row };
@@ -248,7 +275,7 @@ export const getPivotedData = ({
         }
       }
 
-      newRows!.push(newRow);
+      newRows.push(newRow);
     }
 
     sortColumnGroups(columnGroupingModel, visibleColumns);
@@ -318,27 +345,10 @@ export const getPivotedData = ({
 
   createColumns(columnGroupingModel);
 
-  const groupingColDefOverrides = (params: GridGroupingColDefOverrideParams) => ({
-    ...(typeof groupingColDef === 'function' ? groupingColDef(params) : groupingColDef || {}),
-    ...{
-      filterable: false,
-      aggregable: false,
-      hideable: false,
-    },
-  });
-
-  const rowsProp = rows ? { rows: visibleRows.length > 0 ? newRows : [] } : {};
   return {
+    rows: visibleRows.length > 0 ? newRows : [],
     columns: pivotColumns,
-    rowGroupingModel: visibleRows.map((row) => row.field),
-    aggregationModel,
-    getAggregationPosition: defaultGetAggregationPosition,
-    columnVisibilityModel,
     columnGroupingModel,
-    groupingColDef: groupingColDefOverrides,
-    headerFilters: false,
-    disableAggregation: false,
-    disableRowGrouping: false,
-    ...rowsProp,
+    aggregationModel,
   };
 };
