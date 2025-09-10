@@ -4,11 +4,11 @@ import { SchedulerValidDate } from '../../models';
 
 export interface DayGridRowContext {
   /**
-   * The start date and time of the column
+   * The start date and time of the row
    */
   start: SchedulerValidDate;
   /**
-   * The end date and time of the column
+   * The end date and time of the row
    */
   end: SchedulerValidDate;
 }
