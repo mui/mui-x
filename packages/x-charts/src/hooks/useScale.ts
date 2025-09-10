@@ -1,5 +1,5 @@
 'use client';
-import { isBandScale } from '../internals/isBandScale';
+import { isDiscreteScale } from '../internals/scaleGuards';
 import { AxisId, AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
 import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
 
@@ -10,7 +10,7 @@ import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
  * @returns {(value: any) => number} A function that map value to their position
  */
 export function getValueToPositionMapper(scale: D3Scale): (value: any) => number {
-  if (isBandScale(scale)) {
+  if (isDiscreteScale(scale)) {
     return (value: any) => (scale(value) ?? 0) + scale.bandwidth() / 2;
   }
   return (value: any) => scale(value) as number;

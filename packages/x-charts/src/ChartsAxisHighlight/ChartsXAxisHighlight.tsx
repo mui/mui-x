@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { isBandScale } from '../internals/isBandScale';
+import { isDiscreteScale } from '../internals/scaleGuards';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
@@ -39,7 +39,7 @@ export default function ChartsXHighlight(props: {
     const xScale = xAxis.scale;
     const getXPosition = getValueToPositionMapper(xScale);
 
-    const isBandScaleX = type === 'band' && value !== null && isBandScale(xScale);
+    const isBandScaleX = type === 'band' && value !== null && isDiscreteScale(xScale);
 
     if (process.env.NODE_ENV !== 'production') {
       const isError = isBandScaleX && xScale(value) === undefined;
