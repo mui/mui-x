@@ -879,7 +879,7 @@ describe('<DataGridPro /> - Filter', () => {
 
     it('should control filter state when the model and the onChange are set', () => {
       function ControlCase(props: Partial<DataGridProProps>) {
-        const { rows, columns, ...others } = props;
+        const { rows, columns, ...other } = props;
         const [caseFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
         const handleFilterChange: DataGridProProps['onFilterModelChange'] = (newModel) => {
           setFilterModel(newModel);
@@ -899,7 +899,7 @@ describe('<DataGridPro /> - Filter', () => {
                   openedPanelValue: GridPreferencePanelsValue.filters,
                 },
               }}
-              {...others}
+              {...other}
             />
           </div>
         );
