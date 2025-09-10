@@ -35,6 +35,8 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
     const { label, icon, showInMenu, onClick, ...other } = props;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      event.preventDefault();
       onClick?.(event);
     };
 
@@ -56,6 +58,8 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
   const { label, icon, showInMenu, onClick, closeMenuOnClick = true, closeMenu, ...other } = props;
 
   const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
     onClick?.(event);
     if (closeMenuOnClick) {
       closeMenu?.();
