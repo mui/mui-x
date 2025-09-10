@@ -13,7 +13,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
-import { generateChangelog } from './changelogUtils.mjs';
+import { getChangelogUtils } from './changelogUtils.mjs';
 
 /**
  * Create a custom Octokit class with retry functionality
@@ -42,6 +42,8 @@ async function main(argv) {
   const octokit = new MyOctokit({
     auth: githubToken,
   });
+
+  const { generateChangelog } = getChangelogUtils(octokit);
 
   return generateChangelog({ ...rest, octokit });
 }

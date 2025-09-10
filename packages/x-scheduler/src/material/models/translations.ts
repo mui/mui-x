@@ -1,4 +1,4 @@
-import { EventCalendarView } from '../event-calendar/EventCalendar.types';
+import { CalendarView } from '../../primitives/models';
 
 export interface SchedulerTranslations {
   // ResourceLegend
@@ -13,26 +13,51 @@ export interface SchedulerTranslations {
   other: string;
   today: string;
   week: string;
+  timeline: string;
+  time: string;
+  days: string;
+  months: string;
+  weeks: string;
+  years: string;
+
+  // Timeline toggle
+  timelineMode: string;
+  calendarMode: string;
+
+  // PreferencesMenu
+  preferencesMenu: string;
+  showWeekends: string;
+  showWeekNumber: string;
 
   // WeekView
   allDay: string;
 
   // MonthView
   hiddenEvents: (hiddenEventsCount: number) => string;
-  nextTimeSpan: (timeSpan: EventCalendarView) => string;
+  nextTimeSpan: (view: CalendarView) => string;
   noResourceAriaLabel: string;
-  previousTimeSpan: (timeSpan: EventCalendarView) => string;
+  previousTimeSpan: (view: CalendarView) => string;
   resourceAriaLabel: (resourceName: string) => string;
   weekAbbreviation: string;
   weekNumberAriaLabel: (weekNumber: number) => string;
 
   // EventPopover
+  allDayLabel: string;
   closeButtonAriaLabel: string;
   deleteEvent: string;
   descriptionLabel: string;
+  editDisabledNotice: string;
   endDateLabel: string;
   endTimeLabel: string;
   eventTitleAriaLabel: string;
+  labelNoResource: string;
+  recurrenceLabel: string;
+  recurrenceNoRepeat: string;
+  recurrenceDailyPresetLabel: string;
+  recurrenceWeeklyPresetLabel: (weekday: string) => string;
+  recurrenceMonthlyPresetLabel: (dayNumber: number) => string;
+  recurrenceYearlyPresetLabel: (date: string) => string;
+  resourceLabel: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;

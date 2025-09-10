@@ -1,8 +1,12 @@
 import * as React from 'react';
 import { GridConfigurationContext } from '../../components/GridConfigurationContext';
 import { GridConfiguration } from '../../models/configuration/gridConfiguration';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 
-export const useGridConfiguration = () => {
+export const useGridConfiguration = <
+  Api extends GridPrivateApiCommon = GridPrivateApiCommunity,
+>() => {
   const configuration = React.useContext(GridConfigurationContext);
 
   if (configuration === undefined) {
@@ -15,5 +19,5 @@ export const useGridConfiguration = () => {
     );
   }
 
-  return configuration as GridConfiguration;
+  return configuration as GridConfiguration<Api>;
 };

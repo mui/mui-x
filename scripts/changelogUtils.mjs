@@ -149,22 +149,18 @@ function resolvePackagesByLabels(labels) {
 /**
  * Generates a changelog for MUI X packages
  * @param {object} options - The options for generating the changelog
- * @param {import('@octokit/rest').Octokit} options.octokit - The Octokit instance to use for GitHub API calls
  * @param {string} [options.lastRelease] - The release to compare against
  * @param {string} options.release - The release to generate the changelog for
  * @param {string} [options.nextVersion] - The version expected to be released
  * @param {boolean} [options.returnEntry] - Whether to return the changelog as a string
  * @returns {Promise<string|null>} The changelog string or null
  */
-export async function generateChangelog({
-  octokit: octokitInput,
+async function generateChangelog({
   lastRelease: lastReleaseInput,
   release = 'master',
   nextVersion,
   returnEntry = false,
 }) {
-  octokit = octokitInput;
-
   // fetch the last tag and chose the one to use for the release
   const latestTaggedVersion = await findLatestTaggedVersion();
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
@@ -280,7 +276,7 @@ export async function generateChangelog({
   const treeViewProCommits = [];
   const schedulerCommits = [];
   const schedulerProCommits = [];
-  const coreCommits = [];
+  const internalCommits = [];
   const docsCommits = [];
   const otherCommits = [];
   const codemodCommits = [];
@@ -340,8 +336,11 @@ export async function generateChangelog({
         case 'docs':
           docsCommits.push(commitItem);
           break;
-        case 'core':
-          coreCommits.push(commitItem);
+        case 'internal':
+        case 'support-infra':
+        case 'code-infra':
+        case 'docs-infra':
+          internalCommits.push(commitItem);
           break;
         case 'codemod':
           codemodCommits.push(commitItem);
@@ -366,7 +365,7 @@ export async function generateChangelog({
                   schedulerCommits.push(commitItem);
                   break;
                 default:
-                  coreCommits.push(commitItem);
+                  internalCommits.push(commitItem);
                   break;
               }
             });
@@ -585,7 +584,7 @@ ${logOtherSection({
 
 ${logOtherSection({
   sectionName: 'Core',
-  commits: coreCommits,
+  commits: internalCommits,
 })}
 
 ${logOtherSection({
@@ -610,4 +609,17 @@ ${logOtherSection({
     }
     return null;
   }
+}
+
+/**
+ * Used to pass in the octokit instance from outside the module and return ready to use functions
+ * @param {import('@octokit/rest').Octokit} octokitInstance - The Octokit instance to use for GitHub API calls
+ * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersion: (function(): Promise<string>)}}
+ */
+export function getChangelogUtils(octokitInstance) {
+  octokit = octokitInstance;
+  return {
+    generateChangelog,
+    findLatestTaggedVersion,
+  };
 }

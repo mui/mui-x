@@ -7,54 +7,42 @@ import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { selectors } from './store';
 import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { DateNavigator } from '../internals/components/date-navigator';
 import { ResourceLegend } from '../internals/components/resource-legend';
-import { useEventCalendar } from './useEventCalendar';
+import {
+  useEventCalendar,
+  selectors,
+  useExtractEventCalendarParameters,
+} from '../../primitives/use-event-calendar';
 import '../index.css';
 import './EventCalendar.css';
+
+function ErrorCallout() {
+  return (
+    <div className="ErrorCallout">
+      <p>
+        <span>The Timeline view is currently only available on its own, rendered inside the </span>
+        <span className="CodeSnippet">{'<StandaloneView/>'}</span> component.
+      </p>
+    </div>
+  );
+}
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const contextValue = useEventCalendar(parameters);
+  const view = useStore(contextValue.store, selectors.view);
   const {
-    events: eventsProp,
-    onEventsChange,
-    resources: resourcesProp,
-    view: viewProp,
-    defaultView,
-    views,
-    visibleDate: visibleDateProp,
-    defaultVisibleDate,
-    onVisibleDateChange,
-    areEventsDraggable,
-    areEventsResizable,
-    ampm,
+    // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
-    className,
     ...other
-  } = props;
-
-  const { store, contextValue } = useEventCalendar({
-    events: eventsProp,
-    onEventsChange,
-    resources: resourcesProp,
-    view: viewProp,
-    defaultView,
-    views,
-    visibleDate: visibleDateProp,
-    defaultVisibleDate,
-    onVisibleDateChange,
-    areEventsDraggable,
-    areEventsResizable,
-    ampm,
-  });
-
-  const view = useStore(store, selectors.view);
+  } = forwardedProps;
 
   let content: React.ReactNode;
   switch (view) {
@@ -70,6 +58,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     case 'agenda':
       content = <AgendaView />;
       break;
+    case 'timeline':
+      content = <ErrorCallout />;
+      break;
     default:
       content = null;
   }
@@ -78,9 +69,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     <EventCalendarContext.Provider value={contextValue}>
       <TranslationsProvider translations={translations}>
         <div
-          className={clsx(className, 'EventCalendarRoot', 'mui-x-scheduler')}
-          ref={forwardedRef}
           {...other}
+          className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
+          ref={forwardedRef}
         >
           <aside className="EventCalendarSidePanel">
             <DateNavigator />
@@ -93,16 +84,11 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
             </section>
             <ResourceLegend />
           </aside>
-          <div
-            className={clsx(
-              'EventCalendarMainPanel',
-              view === 'month' && 'EventCalendarMainPanel--month',
-            )}
-          >
+          <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
             <HeaderToolbar />
             <section
               // TODO: Add localization
-              className="EventCalendarContent"
+              className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
               aria-label="Calendar content"
             >
               {content}

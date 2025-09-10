@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Time Picker component
 components: DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DigitalClock, MultiSectionDigitalClock, TimeClock
-githubLabel: 'scope: DateTimePicker'
+githubLabel: 'component: DateTimePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
@@ -19,7 +19,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing and `DigitalClock` for the time view editing.
 
-Check-out their documentation page for more information:
+Check out their documentation page for more information:
 
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)

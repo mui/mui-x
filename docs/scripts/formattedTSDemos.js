@@ -12,7 +12,6 @@
 const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx', 'types.ts'];
 
 const fs = require('fs');
-const fse = require('fs-extra');
 const path = require('path');
 const babel = require('@babel/core');
 const prettier = require('prettier');
@@ -48,9 +47,9 @@ async function getFiles(root, excludeRoot = false) {
 
   try {
     await Promise.all(
-      (await fse.readdir(root)).map(async (name) => {
+      (await fs.promises.readdir(root)).map(async (name) => {
         const filePath = path.join(root, name);
-        const stat = await fse.stat(filePath);
+        const stat = await fs.promises.stat(filePath);
 
         if (stat.isDirectory()) {
           files.push(...(await getFiles(filePath)));
@@ -81,26 +80,41 @@ const TranspileResult = {
   Failed: 2,
 };
 
+const previewOverride = {
+  'docs/data/charts/axis/GroupedAxes.tsx': { maxLines: 30 },
+  'docs/data/charts/axis/GroupedAxesStyling.tsx': { maxLines: 30 },
+  'docs/data/charts/axis/GroupedAxesTickSize.tsx': { maxLines: 30 },
+  'docs/data/charts/axis/GroupedYAxes.tsx': { maxLines: 30 },
+  'docs/data/charts/sankey/SankeyDetailedDataStructure.tsx': { maxLines: 30 },
+};
+
 async function transpileFile(tsxPath, program, ignoreCache = false) {
   const jsPath = tsxPath.replace(/\.tsx?$/, '.js');
   try {
-    if (!ignoreCache && (await fse.exists(jsPath))) {
-      const [jsStat, tsxStat] = await Promise.all([fse.stat(jsPath), fse.stat(tsxPath)]);
-      if (jsStat.mtimeMs > tsxStat.mtimeMs) {
-        // JavaScript version is newer, skip transpiling
-        return TranspileResult.Skipped;
+    if (!ignoreCache) {
+      const ignoreNotFound = (err) => (err.code === 'ENOENT' ? null : Promise.reject(err));
+      const jsStat = await fs.promises.stat(jsPath).catch(ignoreNotFound);
+
+      if (jsStat != null) {
+        const tsxStat = await fs.promises.stat(tsxPath);
+        if (jsStat.mtimeMs > tsxStat.mtimeMs) {
+          // JavaScript version is newer, skip transpiling
+          return TranspileResult.Skipped;
+        }
       }
     }
 
-    const source = await fse.readFile(tsxPath, 'utf8');
+    const source = await fs.promises.readFile(tsxPath, 'utf8');
+    const overrides = previewOverride[path.join('docs/', tsxPath.split('docs/')[1])];
 
     const transformOptions = { ...babelConfig, filename: tsxPath };
     const enableJSXPreview = !tsxPath.includes(path.join('pages', 'premium-themes'));
     if (enableJSXPreview) {
+      const config = overrides || { maxLines: 16 };
       transformOptions.plugins = transformOptions.plugins.concat([
         [
           path.resolve(DOCS_ROOT, './src/modules/utils/babel-plugin-jsx-preview'),
-          { maxLines: 16, outputFilename: `${tsxPath}.preview` },
+          { maxLines: config.maxLines, outputFilename: `${tsxPath}.preview` },
         ],
       ]);
     }
@@ -124,7 +138,7 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     const correctedLineEndings = fixLineEndings(source, formatted);
 
     // removed blank lines change potential formatting
-    await fse.writeFile(jsPath, await prettierFormat(correctedLineEndings));
+    await fs.promises.writeFile(jsPath, await prettierFormat(correctedLineEndings));
     return TranspileResult.Success;
   } catch (err) {
     console.error('Something went wrong transpiling %s\n%s\n', tsxPath, err);
@@ -190,7 +204,7 @@ async function main(argv) {
   }
 
   tsxFiles.forEach((filePath) => {
-    fse.watchFile(filePath, { interval: 500 }, async () => {
+    fs.watchFile(filePath, { interval: 500 }, async () => {
       if ((await transpileFile(filePath, program, true)) === 0) {
         console.log('Success - %s', filePath);
       }

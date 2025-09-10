@@ -11,81 +11,54 @@ function getComponents() {
   return [
     {
       title: 'Bar Chart',
-      srcLight: '/static/x/component-illustrations/bar-light.png',
-      srcDark: '/static/x/component-illustrations/bar-dark.png',
       href: '/x/react-charts/bars/',
     },
     {
       title: 'Line Chart',
-      srcLight: '/static/x/component-illustrations/lines-light.png',
-      srcDark: '/static/x/component-illustrations/lines-dark.png',
       href: '/x/react-charts/lines/',
     },
     {
-      title: 'Pie Chart',
-      srcLight: '/static/x/component-illustrations/pie-light.png',
-      srcDark: '/static/x/component-illustrations/pie-dark.png',
+      title: 'Area Chart',
+      href: '/x/react-charts/areas-demo/',
+    },
+    {
+      title: 'Pie (Donut) Chart',
       href: '/x/react-charts/pie/',
     },
     {
       title: 'Scatter Chart',
-      srcLight: '/static/x/component-illustrations/scatter-light.png',
-      srcDark: '/static/x/component-illustrations/scatter-dark.png',
       href: '/x/react-charts/scatter/',
     },
     {
       title: 'Sparkline',
-      srcLight: '/static/x/component-illustrations/sparkline-light.png',
-      srcDark: '/static/x/component-illustrations/sparkline-dark.png',
       href: '/x/react-charts/sparkline/',
     },
     {
       title: 'Gauge',
-      srcLight: '/static/x/component-illustrations/gauge-light.png',
-      srcDark: '/static/x/component-illustrations/gauge-dark.png',
       href: '/x/react-charts/gauge/',
     },
     {
       title: 'Radar Chart',
-      srcLight: '/static/x/component-illustrations/radar-light.png',
-      srcDark: '/static/x/component-illustrations/radar-dark.png',
       href: '/x/react-charts/radar/',
     },
     {
-      title: 'Treemap',
-      srcLight: '/static/x/component-illustrations/treemap-light.png',
-      srcDark: '/static/x/component-illustrations/treemap-dark.png',
-      href: '/x/react-charts/treemap/',
-      planned: true,
-    },
-    {
       title: 'Heatmap',
-      srcLight: '/static/x/component-illustrations/heatmap-light.png',
-      srcDark: '/static/x/component-illustrations/heatmap-dark.png',
       href: '/x/react-charts/heatmap/',
       pro: true,
     },
     {
       title: 'Funnel Chart',
-      srcLight: '/static/x/component-illustrations/funnel-light.png',
-      srcDark: '/static/x/component-illustrations/funnel-dark.png',
       href: '/x/react-charts/funnel/',
       pro: true,
     },
     {
-      title: 'Sankey Chart',
-      srcLight: '/static/x/component-illustrations/sankey-light.png',
-      srcDark: '/static/x/component-illustrations/sankey-dark.png',
-      href: '/x/react-charts/sankey/',
-      planned: true,
+      title: 'Pyramid Chart',
+      href: '/x/react-charts/pyramid/',
       pro: true,
     },
     {
-      title: 'Gantt Chart',
-      srcLight: '/static/x/component-illustrations/gantt-light.png',
-      srcDark: '/static/x/component-illustrations/gantt-dark.png',
-      href: '/x/react-charts/gantt/',
-      planned: true,
+      title: 'Sankey Chart',
+      href: '/x/react-charts/sankey/',
       pro: true,
     },
   ];
@@ -109,6 +82,7 @@ export default function ChartComponentsGrid() {
                   {component.title}
                 </Link>
                 {component.pro && <span className="plan-pro" />}
+                {component.premium && <span className="plan-premium" />}
                 {component.planned && (
                   <Chip
                     label="Planned"

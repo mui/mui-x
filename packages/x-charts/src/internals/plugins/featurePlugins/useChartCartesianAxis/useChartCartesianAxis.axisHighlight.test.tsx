@@ -4,15 +4,16 @@ import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsAxisHighlight, chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import { useChartCartesianAxis } from './useChartCartesianAxis';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { useChartInteraction, UseChartInteractionSignature } from '../useChartInteraction';
 
-describe('useChartCartesianAxis - axis highlight', () => {
+// can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
+describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
   const { render } = createRenderer();
 
-  // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-  it.skipIf(isJSDOM)('should call onHighlightedAxisChange when crossing any value', async () => {
+  it('should call onHighlightedAxisChange when crossing any value', async () => {
     const onHighlightedAxisChange = spy();
     const { user } = render(
       <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
@@ -70,7 +71,7 @@ describe('useChartCartesianAxis - axis highlight', () => {
     expect(onHighlightedAxisChange.getCall(3).firstArg).to.deep.equal([]);
   });
 
-  it.skipIf(isJSDOM)('should call onHighlightedAxisChange when axis got modified', async () => {
+  it('should call onHighlightedAxisChange when axis got modified', async () => {
     const onHighlightedAxisChange = spy();
     const { user, setProps } = render(
       <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
@@ -105,80 +106,120 @@ describe('useChartCartesianAxis - axis highlight', () => {
     ]);
   });
 
-  it.skipIf(isJSDOM)(
-    'should not call onHighlightedAxisChange when axis got modified but highlighted item stay the same',
-    async () => {
-      const onHighlightedAxisChange = spy();
-      const { user, setProps } = render(
-        <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
-          plugins={[useChartCartesianAxis, useChartInteraction]}
-          xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
-          yAxis={[{ position: 'none' }]}
-          width={100}
-          height={100}
-          margin={0}
-          onHighlightedAxisChange={onHighlightedAxisChange}
-        >
-          <ChartsSurface />
-        </ChartDataProvider>,
-      );
+  it('should not call onHighlightedAxisChange when axis got modified but highlighted item stay the same', async () => {
+    const onHighlightedAxisChange = spy();
+    const { user, setProps } = render(
+      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
+        plugins={[useChartCartesianAxis, useChartInteraction]}
+        xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
+        yAxis={[{ position: 'none' }]}
+        width={100}
+        height={100}
+        margin={0}
+        onHighlightedAxisChange={onHighlightedAxisChange}
+      >
+        <ChartsSurface />
+      </ChartDataProvider>,
+    );
 
-      const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = document.querySelector<HTMLElement>('svg')!;
 
-      await user.pointer([
-        { keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } },
-      ]);
+    await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
-      await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
-      expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
-        { axisId: 'x-axis', dataIndex: 0 },
-      ]);
+    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
+    expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
+      { axisId: 'x-axis', dataIndex: 0 },
+    ]);
 
-      setProps({
-        xAxis: [{ id: 'x-axis', scaleType: 'band', data: ['A', 'B', 'C'], position: 'none' }],
-      });
+    setProps({
+      xAxis: [{ id: 'x-axis', scaleType: 'band', data: ['A', 'B', 'C'], position: 'none' }],
+    });
 
-      expect(onHighlightedAxisChange.callCount).to.equal(1);
-    },
-  );
+    expect(onHighlightedAxisChange.callCount).to.equal(1);
+  });
 
-  it.skipIf(isJSDOM)(
-    'should call onHighlightedAxisChange when highlighted axis got removed',
-    async () => {
-      const onHighlightedAxisChange = spy();
-      const { user, setProps } = render(
-        <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
-          plugins={[useChartCartesianAxis, useChartInteraction]}
-          xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
-          yAxis={[{ position: 'none' }]}
-          width={100}
-          height={100}
-          margin={0}
-          onHighlightedAxisChange={onHighlightedAxisChange}
-        >
-          <ChartsSurface />
-        </ChartDataProvider>,
-      );
+  it('should call onHighlightedAxisChange when highlighted axis got removed', async () => {
+    const onHighlightedAxisChange = spy();
+    const { user, setProps } = render(
+      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
+        plugins={[useChartCartesianAxis, useChartInteraction]}
+        xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
+        yAxis={[{ position: 'none' }]}
+        width={100}
+        height={100}
+        margin={0}
+        onHighlightedAxisChange={onHighlightedAxisChange}
+      >
+        <ChartsSurface />
+      </ChartDataProvider>,
+    );
 
-      const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = document.querySelector<HTMLElement>('svg')!;
 
-      await user.pointer([
-        { keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } },
-      ]);
+    await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
-      await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
-      expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
-        { axisId: 'x-axis', dataIndex: 0 },
-      ]);
+    await waitFor(() => expect(onHighlightedAxisChange.callCount).to.equal(1));
+    expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
+      { axisId: 'x-axis', dataIndex: 0 },
+    ]);
 
-      setProps({
-        xAxis: [{ id: 'new-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }],
-      });
+    setProps({
+      xAxis: [{ id: 'new-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }],
+    });
 
-      expect(onHighlightedAxisChange.callCount).to.equal(2);
-      expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
-        { axisId: 'new-axis', dataIndex: 0 },
-      ]);
-    },
-  );
+    expect(onHighlightedAxisChange.callCount).to.equal(2);
+    expect(onHighlightedAxisChange.lastCall.firstArg).to.deep.equal([
+      { axisId: 'new-axis', dataIndex: 0 },
+    ]);
+  });
+
+  it('should allow to highlight axes without data', async () => {
+    const { user } = render(
+      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
+        plugins={[useChartCartesianAxis, useChartInteraction]}
+        xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
+        yAxis={[{ position: 'none', min: 0, max: 100 }]}
+        width={100}
+        height={100}
+        margin={0}
+      >
+        <ChartsSurface>
+          <ChartsAxisHighlight y="line" />
+        </ChartsSurface>
+      </ChartDataProvider>,
+    );
+
+    const svg = document.querySelector<HTMLElement>('svg')!;
+
+    await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
+    await waitFor(() => {
+      const highlight = svg.getElementsByClassName(chartsAxisHighlightClasses.root);
+      expect(highlight.length).to.equal(1);
+    });
+  });
+
+  it('should allow to highlight axes with data', async () => {
+    const { user } = render(
+      <ChartDataProvider<'bar', [UseChartCartesianAxisSignature, UseChartInteractionSignature]>
+        plugins={[useChartCartesianAxis, useChartInteraction]}
+        xAxis={[{ id: 'x-axis', scaleType: 'band', data: ['A', 'B'], position: 'none' }]}
+        yAxis={[{ position: 'none', min: 0, max: 100 }]}
+        width={100}
+        height={100}
+        margin={0}
+      >
+        <ChartsSurface>
+          <ChartsAxisHighlight x="line" />
+        </ChartsSurface>
+      </ChartDataProvider>,
+    );
+
+    const svg = document.querySelector<HTMLElement>('svg')!;
+
+    await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
+    await waitFor(() => {
+      const highlight = svg.getElementsByClassName(chartsAxisHighlightClasses.root);
+      expect(highlight.length).to.equal(1);
+    });
+  });
 });

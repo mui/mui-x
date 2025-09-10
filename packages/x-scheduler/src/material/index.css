@@ -1,4 +1,7 @@
 @import './styles/index.css';
+@import './styles/colors.css';
+@import './styles/tokens.css';
+@import './styles/utils.css';
 
 html,
 body {
@@ -40,4 +43,20 @@ body {
   box-shadow: none;
   appearance: none;
   resize: none;
+}
+
+.mui-x-scheduler ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mui-x-scheduler .CodeSnippet {
+  font-family: var(--code-font-family);
+  color: var(--code-color);
+  background-color: var(--code-background);
+  padding: var(--space-05) var(--space-2);
+  border-radius: 4px;
+  font-size: var(--font-size-2);
+  border: 1px solid var(--border-color);
 }

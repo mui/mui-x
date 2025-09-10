@@ -36,6 +36,7 @@
     "react-dom": "catalog:",
     "react-router": "catalog:",
     "react-transition-group": "catalog:",
-    "tsx": "catalog:"
+    "tsx": "catalog:",
+    "vite": "catalog:"
   }
 }

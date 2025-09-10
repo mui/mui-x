@@ -71,6 +71,7 @@ export const useGridRowSelection = (
     | 'onRowSelectionModelChange'
     | 'disableMultipleRowSelection'
     | 'disableRowSelectionOnClick'
+    | 'disableRowSelectionExcludeModel'
     | 'isRowSelectable'
     | 'checkboxSelectionVisibleOnly'
     | 'pagination'
@@ -95,9 +96,12 @@ export const useGridRowSelection = (
     [props.rowSelection],
   );
 
+  const isNestedData = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 1;
+
   const applyAutoSelection =
     props.signature !== GridSignature.DataGrid &&
-    (props.rowSelectionPropagation?.parents || props.rowSelectionPropagation?.descendants);
+    (props.rowSelectionPropagation?.parents || props.rowSelectionPropagation?.descendants) &&
+    isNestedData;
 
   const propRowSelectionModel = React.useMemo(() => {
     return props.rowSelectionModel;
@@ -121,7 +125,6 @@ export const useGridRowSelection = (
 
   const canHaveMultipleSelection = isMultipleRowSelectionEnabled(props);
   const tree = useGridSelector(apiRef, gridRowTreeSelector);
-  const isNestedData = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 1;
 
   const expandMouseRowRangeSelection = React.useCallback(
     (id: GridRowId) => {
@@ -727,7 +730,8 @@ export const useGridRowSelection = (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&
         (!isNestedData || props.rowSelectionPropagation?.descendants) &&
-        !hasFilters
+        !hasFilters &&
+        !props.disableRowSelectionExcludeModel
       ) {
         apiRef.current.setRowSelectionModel(
           {
@@ -746,6 +750,7 @@ export const useGridRowSelection = (
       props.checkboxSelectionVisibleOnly,
       props.isRowSelectable,
       props.rowSelectionPropagation?.descendants,
+      props.disableRowSelectionExcludeModel,
       isNestedData,
     ],
   );

@@ -59,8 +59,7 @@ export default function ChartsXHighlight(props: {
       <React.Fragment key={`${axisId}-${value}`}>
         {isBandScaleX && xScale(value) !== undefined && (
           <ChartsAxisHighlightPath
-            // @ts-expect-error, xScale value is checked in the statement above
-            d={`M ${xScale(value) - (xScale.step() - xScale.bandwidth()) / 2} ${
+            d={`M ${xScale(value)! - (xScale.step() - xScale.bandwidth()) / 2} ${
               top
             } l ${xScale.step()} 0 l 0 ${height} l ${-xScale.step()} 0 Z`}
             className={classes.root}
