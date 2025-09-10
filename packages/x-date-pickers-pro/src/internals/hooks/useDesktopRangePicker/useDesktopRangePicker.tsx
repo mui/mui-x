@@ -83,12 +83,12 @@ export const useDesktopRangePicker = <
     <PickerProvider {...providerProps}>
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
         <Field
+          {...fieldProps}
           slots={slots}
           slotProps={slotProps}
           {...(isSingleInput && {
             inputRef,
           })}
-          {...fieldProps}
         />
         <PickerPopper slots={slots} slotProps={slotProps}>
           <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
