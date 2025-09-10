@@ -239,18 +239,23 @@ function getSectionValueText(
   switch (section.type) {
     case 'month': {
       if (section.contentType === 'digit') {
-        return adapter.format(adapter.setMonth(adapter.date(), Number(section.value) - 1), 'month');
+        const dateWithMonth = adapter.setMonth(adapter.date(), Number(section.value) - 1);
+        return adapter.isValid(dateWithMonth) ? adapter.format(dateWithMonth, 'month') : '';
       }
       const parsedDate = adapter.parse(section.value, section.format);
-      return parsedDate ? adapter.format(parsedDate, 'month') : undefined;
+      return parsedDate && adapter.isValid(parsedDate)
+        ? adapter.format(parsedDate, 'month')
+        : undefined;
     }
     case 'day':
-      return section.contentType === 'digit'
-        ? adapter.format(
-            adapter.setDate(adapter.startOfYear(adapter.date()), Number(section.value)),
-            'dayOfMonthFull',
-          )
-        : section.value;
+      if (section.contentType === 'digit') {
+        const dateWithDay = adapter.setDate(
+          adapter.startOfYear(adapter.date()),
+          Number(section.value),
+        );
+        return adapter.isValid(dateWithDay) ? adapter.format(dateWithDay, 'dayOfMonthFull') : '';
+      }
+      return section.value;
     case 'weekDay':
       // TODO: improve by providing the label of the week day
       return undefined;
