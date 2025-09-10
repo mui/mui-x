@@ -14,6 +14,7 @@ import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
+import { useDownsampling } from '../internals/downsample/useDownsampling';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -49,6 +50,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     className,
     hideLegend,
     showToolbar,
+    downsample,
     ...rest
   } = props;
 
@@ -98,6 +100,8 @@ export const useBarChartProps = (props: BarChartProps) => {
   );
 
   const defaultXAxis = hasHorizontalSeries ? undefined : defaultBandXAxis;
+  const defaultYAxis = hasHorizontalSeries ? defaultBandYAxis : undefined;
+
   const processedXAxis = React.useMemo(() => {
     if (!xAxis) {
       return defaultXAxis;
@@ -108,7 +112,6 @@ export const useBarChartProps = (props: BarChartProps) => {
       : xAxis.map((axis) => ({ scaleType: 'band' as const, ...axis }));
   }, [defaultXAxis, hasHorizontalSeries, xAxis]);
 
-  const defaultYAxis = hasHorizontalSeries ? defaultBandYAxis : undefined;
   const processedYAxis = React.useMemo(() => {
     if (!yAxis) {
       return defaultYAxis;
@@ -119,16 +122,25 @@ export const useBarChartProps = (props: BarChartProps) => {
       : yAxis;
   }, [defaultYAxis, hasHorizontalSeries, yAxis]);
 
+  const axesToDownsample = (hasHorizontalSeries ? processedYAxis : processedXAxis) ?? [];
+
+  // Apply downsampling to series and the appropriate axis
+  const { series: downsampledSeries, axes: downsampledAxes } = useDownsampling(
+    seriesWithDefault,
+    axesToDownsample,
+    downsample ?? false,
+  );
+
   const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
     ...rest,
-    series: seriesWithDefault,
+    series: downsampledSeries,
     width,
     height,
     margin,
     colors,
     dataset,
-    xAxis: processedXAxis,
-    yAxis: processedYAxis,
+    xAxis: !hasHorizontalSeries ? downsampledAxes : processedXAxis,
+    yAxis: hasHorizontalSeries ? downsampledAxes : processedYAxis,
     highlightedItem,
     onHighlightChange,
     disableAxisListener:

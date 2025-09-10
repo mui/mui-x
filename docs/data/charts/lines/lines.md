@@ -268,6 +268,20 @@ The definition of `myGradient` is passed as a children of the chart component.
 
 {{"demo": "CSSCustomization.js"}}
 
+## Downsampling
+
+When working with large datasets, line charts can become slow to render or visually cluttered. The `downsample` property helps optimize performance by intelligently reducing the number of data points while preserving the essential characteristics of your data.
+
+You can customize the downsampling behavior by providing a configuration object with different strategies:
+
+- **Linear**: Evenly spaced selection (default)
+- **Max**: Preserves maximum values in each bucket
+- **Min**: Preserves minimum values in each bucket
+- **Average**: Calculates average values in each bucket
+- **Peak**: Preserves local maxima and minima
+
+{{"demo": "LineDownsamplingStrategies.js"}}
+
 ## Animation
 
 Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
