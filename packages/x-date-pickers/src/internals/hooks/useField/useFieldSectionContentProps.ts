@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useId from '@mui/utils/useId';
 import { UseFieldStateReturnValue } from './useFieldState';
 import { FieldSection, MuiPickersAdapter, PickerManager } from '../../../models';
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
@@ -22,7 +21,6 @@ export function useFieldSectionContentProps(
 ): UseFieldSectionContentPropsReturnValue {
   const adapter = usePickerAdapter();
   const translations = usePickerTranslations();
-  const id = useId();
 
   const {
     focused,
@@ -176,7 +174,6 @@ export function useFieldSectionContentProps(
         onFocus: createFocusHandler(sectionIndex),
 
         // Aria attributes
-        'aria-labelledby': `${id}-${section.type}`,
         'aria-readonly': readOnly,
         'aria-valuenow': getSectionValueNow(section, adapter),
         'aria-valuemin': sectionBoundaries.minimum,
@@ -191,7 +188,6 @@ export function useFieldSectionContentProps(
         tabIndex: isContainerEditable || sectionIndex > 0 ? -1 : 0,
         contentEditable: !isContainerEditable && !disabled && !readOnly,
         role: 'spinbutton',
-        id: `${id}-${section.type}`,
         'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
         autoCapitalize: isEditable ? 'off' : undefined,
@@ -202,7 +198,6 @@ export function useFieldSectionContentProps(
     },
     [
       sectionsValueBoundaries,
-      id,
       isContainerEditable,
       disabled,
       readOnly,
