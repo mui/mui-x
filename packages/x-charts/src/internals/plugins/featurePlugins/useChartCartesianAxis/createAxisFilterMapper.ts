@@ -14,7 +14,7 @@ import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { getAxisExtremum } from './getAxisExtremum';
 import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
-import { getCountinuouseScale } from './getCountinuouseScale';
+import { getContinuousScale } from './getContinuousScale';
 
 type CreateAxisFilterMapperParams = {
   zoomMap: Map<AxisId, ZoomData>;
@@ -83,7 +83,7 @@ export function createAxisFilterMapper({
     );
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData] as [number, number];
 
-    const { scale: normalizedScale } = getCountinuouseScale(
+    const { scale: normalizedScale } = getContinuousScale(
       axis as Readonly<AxisConfig<ContinuousScaleName>>,
       direction,
       axisIndex,

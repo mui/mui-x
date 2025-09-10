@@ -7,7 +7,7 @@ import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { zoomScaleRange } from './zoom';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
 
-export function getCountinuouseScale<T extends ChartSeriesType>(
+export function getContinuousScale<T extends ChartSeriesType>(
   axis: Readonly<AxisConfig<ContinuousScaleName>>,
   axisDirection: 'x' | 'y',
   axisIndex: number,

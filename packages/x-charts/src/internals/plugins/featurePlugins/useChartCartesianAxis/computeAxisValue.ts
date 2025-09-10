@@ -25,7 +25,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import { getCountinuouseScale } from './getCountinuouseScale';
+import { getContinuousScale } from './getContinuousScale';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -180,7 +180,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData] as [number, number];
 
-    const { scale, scaleType, tickNumber } = getCountinuouseScale(
+    const { scale, scaleType, tickNumber } = getContinuousScale(
       axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
       axisDirection,
       axisIndex,
