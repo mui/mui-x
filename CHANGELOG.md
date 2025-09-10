@@ -9,13 +9,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 10, 2025_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@ludvigeriksson
+@ludvigeriksson, @sai6855
 
 The following are all team members who have contributed to this release:
 @alexfauquette, @bernardobelchior, @brijeshb42, @flaviendelangle, @Janpot, @LukasTy, @MBilalShafi, @noraleonte, @rita-codes, @romgrk, @siriwatknp
@@ -48,6 +48,7 @@ Same changes as in `@mui/x-data-grid-pro@8.11.2`, plus:
 - [pickers] Gracefully handle `textField.slotProps` (#18980) @LukasTy
 - [pickers] Improve hour and minute placement in Date Time Picker (#19227) @MBilalShafi
 - [pickers] Use `calendarState.currentMonth` in Month Calendar when available (#19073) @LukasTy
+- [pickers] Improve invalid value pasting into a section (#19357) @sai6855
 - [fields] Remove redundant `id` and `aria-labelledby` attributes from spinbuttons (#19523) @LukasTy
 
 #### `@mui/x-date-pickers-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
