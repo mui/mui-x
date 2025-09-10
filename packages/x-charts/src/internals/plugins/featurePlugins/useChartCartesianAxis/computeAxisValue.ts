@@ -1,6 +1,6 @@
-import { scaleBand, scalePoint, ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
-import { AxisConfig, ScaleName } from '../../../../models';
+import { AxisConfig, ContinuousScaleName, ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
   ChartsAxisProps,
@@ -12,11 +12,9 @@ import {
   DefaultedYAxis,
   DefaultedAxis,
   AxisValueFormatterContext,
-  isSymlogScaleConfig,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
-import { getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { zoomScaleRange } from './zoom';
@@ -27,8 +25,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import { getAxisDomainLimit } from './getAxisDomainLimit';
-import { applyDomainLimit } from './applyDomainLimit';
+import { getCountinuouseScale } from './getCountinuouseScale';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -181,42 +178,20 @@ export function computeAxisValue<T extends ChartSeriesType>({
       }
     }
 
-    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
-      // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
-      return;
-    }
+    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData] as [number, number];
 
-    const scaleType = axis.scaleType ?? ('linear' as const);
-
-    const domainLimit = getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries, preferStrictDomainInLineCharts);
-
-    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
-
-    // Handle domain limit function transformation
-    let finalAxisExtremums = axisExtremums;
-    if (typeof domainLimit === 'function') {
-      const { min, max } = domainLimit(minData, maxData);
-      finalAxisExtremums = [min, max];
-    }
-
-    const rawTickNumber = getTickNumber({ ...axis, range, domain: finalAxisExtremums });
-    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
-
-    const zoomedRange = zoomScaleRange(range, zoomRange);
-
-    const { scale: finalScale } = applyDomainLimit(
-      finalAxisExtremums,
-      domainLimit,
-      scaleType,
-      zoomedRange,
-      domainLimit === 'nice' ? rawTickNumber : undefined
+    const { scale, scaleType, tickNumber } = getCountinuouseScale(
+      axis as Readonly<DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>>,
+      axisDirection,
+      axisIndex,
+      axisExtremums,
+      range,
+      zoomRange,
+      formattedSeries,
+      preferStrictDomainInLineCharts,
     );
 
-    if (isSymlogScaleConfig(axis) && axis.constant != null) {
-      (finalScale as ScaleSymLog<number, number>).constant(axis.constant);
-    }
-
-    const [minDomain, maxDomain] = finalScale.domain();
+    const [minDomain, maxDomain] = scale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completeAxis[axis.id] = {
@@ -226,7 +201,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       ...axis,
       data,
       scaleType: scaleType as any,
-      scale: finalScale.domain(domain) as any,
+      scale: scale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
       valueFormatter:

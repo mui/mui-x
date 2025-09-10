@@ -4,6 +4,7 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
   ContinuousScaleName,
+  D3ContinuousScale,
   ScaleName,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
@@ -13,8 +14,7 @@ import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { getAxisExtremum } from './getAxisExtremum';
 import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
-import { getAxisDomainLimit } from './getAxisDomainLimit';
-import { applyDomainLimit } from './applyDomainLimit';
+import { getCountinuouseScale } from './getCountinuouseScale';
 
 type CreateAxisFilterMapperParams = {
   zoomMap: Map<AxisId, ZoomData>;
@@ -74,16 +74,32 @@ export function createAxisFilterMapper({
       return createDiscreteScaleGetAxisFilter(axis.data, zoom.start, zoom.end, direction);
     }
 
-    const domainLimit = getAxisDomainLimit(axis, direction, axisIndex, formattedSeries, preferStrictDomainInLineCharts);
+    const [minData, maxData] = getAxisExtremum(
+      axis,
+      direction,
+      seriesConfig,
+      axisIndex,
+      formattedSeries,
+    );
+    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData] as [number, number];
+
+    const { scale: normalizedScale } = getCountinuouseScale(
+      axis as Readonly<AxisConfig<ContinuousScaleName>>,
+      direction,
+      axisIndex,
+      axisExtremums,
+      [0, 100],
+      [0, 100],
+      formattedSeries,
+      preferStrictDomainInLineCharts,
+    );
 
     return createContinuousScaleGetAxisFilter(
-      scaleType,
-      getAxisExtremum(axis, direction, seriesConfig, axisIndex, formattedSeries),
+      normalizedScale,
       zoom.start,
       zoom.end,
       direction,
       axis.data,
-      domainLimit,
     );
   };
 }
@@ -112,19 +128,19 @@ export function createDiscreteScaleGetAxisFilter(
 }
 
 export function createContinuousScaleGetAxisFilter(
-  scaleType: ContinuousScaleName | undefined,
-  extrema: readonly [number, number],
+  /**
+   * A D3 scale that has been normalized to [0, 100] range.
+   */
+  normalizedScale: D3ContinuousScale,
   zoomStart: number,
   zoomEnd: number,
   direction: 'x' | 'y',
   axisData: AxisConfig['data'],
-  domainLimit: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number }),
 ): ExtremumFilter {
   let min: number | Date;
   let max: number | Date;
 
-  const { scale: finalScale } = applyDomainLimit(extrema, domainLimit, scaleType ?? 'linear', [0, 100]);
-  [min, max] = finalScale.domain();
+  [min, max] = normalizedScale.domain();
 
   min = min instanceof Date ? min.getTime() : min;
   max = max instanceof Date ? max.getTime() : max;
