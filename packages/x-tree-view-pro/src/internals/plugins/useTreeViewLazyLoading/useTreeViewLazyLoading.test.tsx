@@ -116,6 +116,21 @@ describeTreeView<[UseTreeViewLazyLoadingSignature, UseTreeViewExpansionSignature
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
 
+      it('should load expanded items on mount (deeper items)', async () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1' }] }],
+          defaultExpandedItems: ['1', '1-1', '1-1-1'],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        await awaitMockFetch();
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '1-1-1', '1-1-1-1']);
+      });
+
       it('should use the data from props.items on mount', () => {
         const view = render({
           items: [{ id: '1', childrenCount: 1, children: [{ id: '1-1' }] }],
