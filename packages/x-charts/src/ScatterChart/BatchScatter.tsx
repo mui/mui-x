@@ -75,7 +75,7 @@ function useCreatePaths(
 
     const tempPath = appendAtKey(temporaryPaths, fill, path);
 
-    if (tempPath != null && tempPath.length >= MAX_POINTS_PER_PATH) {
+    if (tempPath.length >= MAX_POINTS_PER_PATH) {
       appendAtKey(paths, fill, tempPath.join(''));
       temporaryPaths.delete(fill);
     }
