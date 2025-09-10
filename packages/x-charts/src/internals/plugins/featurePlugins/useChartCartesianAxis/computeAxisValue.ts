@@ -178,6 +178,10 @@ export function computeAxisValue<T extends ChartSeriesType>({
       }
     }
 
+    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+      // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
+      return;
+    }
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData] as [number, number];
 
     const { scale, scaleType, tickNumber } = getContinuousScale(
