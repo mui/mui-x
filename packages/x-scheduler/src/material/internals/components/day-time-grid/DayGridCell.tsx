@@ -6,7 +6,7 @@ import { DayGrid } from '../../../../primitives/day-grid';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
-import { useAddRowPlacementToEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
+import { useEventOccurrencesPlacement } from '../../../../primitives/use-event-occurrences-placement';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
@@ -33,7 +33,7 @@ export function DayGridCell(props: DayGridCellProps) {
       className="DayTimeGridAllDayEventsCell"
       style={
         {
-          '--row-count': day.rowCount,
+          '--row-count': day.maxConcurrentEvents,
         } as React.CSSProperties
       }
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
@@ -41,8 +41,8 @@ export function DayGridCell(props: DayGridCellProps) {
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
     >
       <div className="DayTimeGridAllDayEventsCellEvents">
-        {day.withRowPlacement.map((event) => {
-          if (event.placement.columnSpan > 0) {
+        {day.withPlacement.map((event) => {
+          if (event.placement.span > 0) {
             return (
               <EventPopoverTrigger
                 key={`${event.key}-${day.key}`}
@@ -52,8 +52,8 @@ export function DayGridCell(props: DayGridCellProps) {
                     event={event}
                     variant="allDay"
                     ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                    gridRow={event.placement.rowIndex}
-                    columnSpan={event.placement.columnSpan}
+                    gridRow={event.placement.index}
+                    columnSpan={event.placement.span}
                   />
                 }
               />
@@ -66,7 +66,7 @@ export function DayGridCell(props: DayGridCellProps) {
               event={event}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              gridRow={event.placement.rowIndex}
+              gridRow={event.placement.index}
             />
           );
         })}
@@ -87,5 +87,5 @@ export function DayGridCell(props: DayGridCellProps) {
 }
 
 interface DayGridCellProps {
-  day: useAddRowPlacementToEventOccurrences.DayData;
+  day: useEventOccurrencesPlacement.DayData;
 }

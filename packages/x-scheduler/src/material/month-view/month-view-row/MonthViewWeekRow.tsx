@@ -7,7 +7,7 @@ import { DayGrid } from '../../../primitives/day-grid';
 import { useEventCalendarContext } from '../../../primitives/utils/useEventCalendarContext';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
-import { useAddRowPlacementToEventOccurrences } from '../../../primitives/use-row-event-occurrences';
+import { useEventOccurrencesPlacement } from '../../../primitives/use-event-occurrences-placement';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { MonthViewCell } from './MonthViewCell';
 import './MonthViewWeekRow.css';
@@ -20,7 +20,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { store } = useEventCalendarContext();
   const preferences = useStore(store, selectors.preferences);
   const translations = useTranslations();
-  const daysWithEvents = useAddRowPlacementToEventOccurrences({ days, occurrencesMap });
+  const daysWithEvents = useEventOccurrencesPlacement({ days, occurrencesMap, unit: 'day' });
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
   const { start, end } = React.useMemo(

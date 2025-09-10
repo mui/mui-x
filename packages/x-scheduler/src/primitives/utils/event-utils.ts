@@ -21,28 +21,26 @@ export function isDayWithinRange(
 }
 
 /**
- *  Computes the row index and the column span of an all-day occurrence when rendered in a given day.
- *  If the event is present in the previous day of the same row, reuses its row index and marks the occurrence as invisible in the current day.
- *  Otherwise, assigns the first free row index in that day’s all-day stack and compute how many days is should span across.
- *  @returns 1-based row index.
+ *  Computes the index and the span of an occurrence when rendered in a given day.
+ *  For collection with multiple cells (e.g. the days in a week row), if the event is present in the previous cell of the same collection, reuses its row index and marks the occurrence as invisible in the current cell.
+ *  Otherwise, assigns the first free index in that cell's stack and compute how many cells is should span across.
  */
-export function getEventOccurrenceRowPlacement(
-  parameters: GetEventOccurrenceRowPlacementParameters,
-): GetEventOccurrenceRowPlacementReturnValue {
-  const { adapter, rowIndexLookup, occurrence, day, previousDay, daysBeforeRowEnd } = parameters;
+export function getEventOccurrencePlacement(
+  parameters: GetEventOccurrencePlacementParameters,
+): GetEventOccurrencePlacementReturnValue {
+  const { adapter, indexLookup, occurrence, day, previousDay, daysBeforeCollectionEnd } =
+    parameters;
 
-  // If the event is present in the previous day, we keep the same row index
-  const occurrenceRowIndexInPreviousDay =
-    previousDay == null
-      ? null
-      : rowIndexLookup[previousDay.key]?.occurrencesRowIndex[occurrence.key];
+  // If the event is present in the previous cell, we keep the same index
+  const occurrenceIndexInPreviousDay =
+    previousDay == null ? null : indexLookup[previousDay.key]?.occurrencesIndex[occurrence.key];
 
-  if (occurrenceRowIndexInPreviousDay != null) {
-    return { rowIndex: occurrenceRowIndexInPreviousDay, columnSpan: 0 };
+  if (occurrenceIndexInPreviousDay != null) {
+    return { index: occurrenceIndexInPreviousDay, span: 0 };
   }
 
-  // Otherwise, we just render the event on the first available row in the column
-  const usedIndexes = rowIndexLookup[day.key]?.usedRowIndexes;
+  // Otherwise, we just set first available index
+  const usedIndexes = indexLookup[day.key]?.usedIndexes;
   let i = 1;
   if (usedIndexes) {
     while (usedIndexes.has(i)) {
@@ -51,35 +49,35 @@ export function getEventOccurrenceRowPlacement(
   }
 
   const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
-  const columnSpan = Math.min(durationInDays, daysBeforeRowEnd); // Don't exceed available columns
+  const columnSpan = Math.min(durationInDays, daysBeforeCollectionEnd); // Don't exceed available columns
 
-  return { rowIndex: i, columnSpan };
+  return { index: i, span: columnSpan };
 }
 
-export interface GetEventOccurrenceRowPlacementParameters {
+export interface GetEventOccurrencePlacementParameters {
   adapter: Adapter;
   occurrence: CalendarEventOccurrence;
-  daysBeforeRowEnd: number;
+  daysBeforeCollectionEnd: number;
   day: CalendarProcessedDate;
   previousDay: CalendarProcessedDate | null;
-  rowIndexLookup: {
+  indexLookup: {
     [dayKey: string]: {
-      occurrencesRowIndex: { [occurrenceKey: string]: number };
-      usedRowIndexes: Set<number>;
+      occurrencesIndex: { [occurrenceKey: string]: number };
+      usedIndexes: Set<number>;
     };
   };
 }
 
-export interface GetEventOccurrenceRowPlacementReturnValue {
+export interface GetEventOccurrencePlacementReturnValue {
   /**
-   * The 1-based index of the row the event should be rendered in.
+   * The 1-based index of the row/column the event should be rendered in.
    */
-  rowIndex: number;
+  index: number;
   /**
    * The number of days the event should span across.
    * If 0, the event will be rendered as invisible.
    */
-  columnSpan: number;
+  span: number;
 }
 
 /**

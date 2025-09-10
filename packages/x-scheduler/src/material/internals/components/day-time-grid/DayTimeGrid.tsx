@@ -5,7 +5,7 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrences } from '../../../../primitives/use-event-occurrences';
-import { useAddRowPlacementToEventOccurrences } from '../../../../primitives/use-row-event-occurrences';
+import { useEventOccurrencesPlacement } from '../../../../primitives/use-event-occurrences-placement';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
   CalendarEvent,
@@ -50,10 +50,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const occurrencesMap = useEventOccurrences({ days, eventPlacement: 'every-day' });
-  const daysWithOccurrences = useAddRowPlacementToEventOccurrences({
+  const daysWithOccurrences = useEventOccurrencesPlacement({
     days,
     occurrencesMap,
     shouldAddPlacement: shouldRenderOccurrenceInDayGrid,
+    unit: 'day',
   });
 
   const { start, end } = React.useMemo(
