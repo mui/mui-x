@@ -51,7 +51,6 @@ export function printChart(
 
     await onBeforeExport(printWindow);
 
-    debugger;
     printWindow.contentWindow!.print();
   };
 

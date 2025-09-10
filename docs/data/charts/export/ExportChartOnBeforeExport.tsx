@@ -2,7 +2,6 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { legendClasses } from '@mui/x-charts/ChartsLegend';
 import { defaultOnBeforeExport } from '@mui/x-charts-pro/models';
 import { inflationData } from '../dataset/inflationRates';
 
@@ -70,15 +69,6 @@ function createOnBeforeExport(
     defaultOnBeforeExport(iframe);
     const document = iframe.contentDocument!;
 
-    // Show legend
-    const legend = document.querySelector(
-      `.${legendClasses.root}`,
-    ) as HTMLElement | null;
-
-    if (legend) {
-      legend.style.display = 'flex';
-    }
-
     const stack = document.createElement('div');
     const chart = document.body.firstElementChild!;
 
@@ -129,7 +119,6 @@ export default function ExportChartOnBeforeExport() {
             imageExportOptions: [{ type: 'image/png', onBeforeExport }],
           },
         }}
-        sx={{ [`& .${legendClasses.root}`]: { display: 'none' } }}
       />
       <Typography ref={captionRef} variant="caption">
         Source: World Bank

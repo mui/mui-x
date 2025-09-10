@@ -100,7 +100,7 @@ To add custom styles or modify the chart's appearance before exporting, use the 
 When exporting, the chart is rendered onto an iframe and then exported as an image or PDF.
 The `onBeforeExport` callback gives you access to the iframe before the export process starts.
 
-For example, you can hide the toolbar and only show the legend when exporting the chart, as shown below:
+For example, you can add the title and caption to the exported chart, as shown below:
 
 {{"demo": "ExportChartOnBeforeExport.js"}}
 
