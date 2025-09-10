@@ -75,7 +75,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     () => positions.filter((value) => value <= totalWidth).length,
     [totalWidth, positions],
   );
-  const { skeletonRowsCount, visibleColumns, showFirstRowBorder, ...rest } = props;
+  const { skeletonRowsCount, visibleColumns, showFirstRowBorder, ...other } = props;
   const allVisibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columns = React.useMemo(
     () => allVisibleColumns.slice(0, inViewportCount),
@@ -272,7 +272,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
   useGridEvent(apiRef, 'columnResize', handleColumnResize);
 
   return (
-    <SkeletonOverlay className={classes.root} {...rest} ref={handleRef}>
+    <SkeletonOverlay className={classes.root} {...other} ref={handleRef}>
       {children}
     </SkeletonOverlay>
   );

@@ -127,7 +127,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     axisHighlight,
     apiRef,
     gap,
-    ...rest
+    ...other
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
@@ -148,7 +148,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
   const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginsSignatures> = {
-    ...rest,
+    ...other,
     series: series.map((s) => ({
       type: 'funnel' as const,
       layout: isHorizontal ? 'horizontal' : 'vertical',
