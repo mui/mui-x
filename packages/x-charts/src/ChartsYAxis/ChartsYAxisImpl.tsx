@@ -79,18 +79,11 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
     ownerState: {},
   });
 
-  const domain = yScale.domain();
-  const isScaleBand = isBandScale(yScale);
-  const skipAxisRendering =
-    (isScaleBand && domain.length === 0) ||
-    (!isScaleBand && domain.some(isInfinity)) ||
-    position === 'none';
-
   // Skip axis rendering if no data is available
   // - The domain is an empty array for band/point scales.
   // - The domains contains Infinity for continuous scales.
   // - The position is set to 'none'.
-  if (skipAxisRendering) {
+  if (position === 'none') {
     return null;
   }
 
@@ -101,12 +94,20 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
 
   const axisLabelHeight = label == null ? 0 : getStringSize(label, axisLabelProps.style).height;
 
-  const children =
-    'groups' in axis && Array.isArray(axis.groups) ? (
-      <ChartsGroupedYAxisTicks {...inProps} />
-    ) : (
-      <ChartsSingleYAxisTicks {...inProps} axisLabelHeight={axisLabelHeight} />
-    );
+  const domain = yScale.domain();
+  const isScaleBand = isBandScale(yScale);
+  const skipTickRendering =
+    (isScaleBand && domain.length === 0) || (!isScaleBand && domain.some(isInfinity));
+  let children: React.ReactNode = null;
+
+  if (!skipTickRendering) {
+    children =
+      'groups' in axis && Array.isArray(axis.groups) ? (
+        <ChartsGroupedYAxisTicks {...inProps} />
+      ) : (
+        <ChartsSingleYAxisTicks {...inProps} axisLabelHeight={axisLabelHeight} />
+      );
+  }
 
   return (
     <YAxisRoot
