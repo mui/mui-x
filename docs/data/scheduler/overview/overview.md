@@ -20,4 +20,5 @@ This package is not published yet.
 - [Day View](/x/react-scheduler/day-view/)
 - [Month View](/x/react-scheduler/month-view/)
 - [Agenda View](/x/react-scheduler/agenda-view/)
+- [Timeline View](/x/react-scheduler/timeline-view/)
 - [Primitives](/x/react-scheduler/primitives/)

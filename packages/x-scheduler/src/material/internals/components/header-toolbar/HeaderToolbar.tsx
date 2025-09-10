@@ -33,7 +33,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
     >
       <div className="PrimaryActionWrapper">
         {showViewSwitcher && <ViewSwitcher />}
-        <button className="HeaderToolbarButton" onClick={instance.goToToday} type="button">
+        <button className="Button OutlinedNeutralButton" onClick={instance.goToToday} type="button">
           {translations.today}
         </button>
       </div>

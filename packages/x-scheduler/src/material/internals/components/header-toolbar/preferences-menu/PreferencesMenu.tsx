@@ -65,24 +65,24 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       <Menu.Root>
         <Menu.Trigger
           aria-label={translations.preferencesMenu}
-          className={clsx('NeutralTextButton', 'Button', 'PreferencesMenuButton')}
+          className={clsx('OutlinedNeutralButton', 'Button', 'PreferencesMenuButton')}
         >
-          <Settings size={20} strokeWidth={1.5} />
+          <Settings size={20} strokeWidth={1.5} className="SettingsIcon" />
         </Menu.Trigger>
         <Menu.Portal container={containerRef}>
-          <Menu.Positioner className="PreferencesMenuPositioner" sideOffset={4} align="end">
-            <Menu.Popup className="PreferencesMenuPopup">
+          <Menu.Positioner className="MenuPositioner" sideOffset={4} align="end">
+            <Menu.Popup className="MenuPopup">
               {visibleOptions.map((option) => (
                 <Menu.CheckboxItem
                   key={option.configKey}
                   checked={preferences[option.preferenceKey]}
-                  onCheckedChange={(checked, event) =>
-                    handleToggle(option.preferenceKey, checked, event)
+                  onCheckedChange={(checked, eventDetails) =>
+                    handleToggle(option.preferenceKey, checked, eventDetails.event)
                   }
-                  className="PreferencesMenuCheckboxItem"
+                  className="CheckboxItem"
                 >
                   <span>{option.label}</span>
-                  <Menu.CheckboxItemIndicator className="PreferencesMenuCheckboxIndicator">
+                  <Menu.CheckboxItemIndicator className="CheckboxIndicator">
                     <CheckIcon size={16} strokeWidth={1.5} />
                   </Menu.CheckboxItemIndicator>
                 </Menu.CheckboxItem>
