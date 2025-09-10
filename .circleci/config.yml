@@ -147,6 +147,8 @@ jobs:
       - run:
           name: Test JSDOM
           command: pnpm test:unit:jsdom
+      - store_test_results:
+          path: test-results
   test_browser:
     <<: *default-job
     docker:
@@ -193,6 +195,8 @@ jobs:
                   curl -Os https://uploader.codecov.io/latest/linux/codecov
                   chmod +x codecov
                   ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-browser"
+      - store_test_results:
+          path: test-results
   test_lint:
     <<: *default-job
     steps:
