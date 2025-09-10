@@ -48,6 +48,7 @@ Same changes as in `@mui/x-data-grid-pro@8.11.2`, plus:
 - [pickers] Gracefully handle `textField.slotProps` (#18980) @LukasTy
 - [pickers] Improve hour and minute placement in Date Time Picker (#19227) @MBilalShafi
 - [pickers] Use `calendarState.currentMonth` in Month Calendar when available (#19073) @LukasTy
+- [fields] Remove redundant `id` and `aria-labelledby` attributes from spinbuttons (#19523) @LukasTy
 
 #### `@mui/x-date-pickers-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -59,6 +60,8 @@ Same changes as in `@mui/x-date-pickers@8.11.2`.
 
 - [charts] Fix highlight regression (#19486) @alexfauquette
 - [charts] Improve code reuse in `ChartsXAxis` and `ChartsYAxis` (#19198) @bernardobelchior
+- [charts] Simplify params in `getRange` and `createDateFormatter` (#19517) @bernardobelchior
+- [charts] Handle domain edge cases with `filterMode: 'discard'` (#19199) @bernardobelchior
 - [l10n] Add Swedish (sv-SE) locale (#19489) @ludvigeriksson
 
 #### `@mui/x-charts-pro@8.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
