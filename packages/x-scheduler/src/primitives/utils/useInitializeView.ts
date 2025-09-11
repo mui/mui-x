@@ -21,5 +21,5 @@ export function useInitializeView(parameters: () => CalendarViewConfig) {
 
   useIsoLayoutEffect(() => {
     return instance.setViewConfig(initialParameters.current());
-  }, []);
+  }, [instance]);
 }

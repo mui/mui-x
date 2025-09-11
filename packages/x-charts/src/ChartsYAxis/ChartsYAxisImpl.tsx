@@ -10,7 +10,7 @@ import { defaultProps, useUtilityClasses } from './utilities';
 import { isInfinity } from '../internals/isInfinity';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useIsHydrated } from '../hooks/useIsHydrated';
-import { isBandScale } from '../internals/isBandScale';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { getStringSize } from '../internals/domUtils';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 
@@ -95,9 +95,8 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
   const axisLabelHeight = label == null ? 0 : getStringSize(label, axisLabelProps.style).height;
 
   const domain = yScale.domain();
-  const isScaleBand = isBandScale(yScale);
-  const skipTickRendering =
-    (isScaleBand && domain.length === 0) || (!isScaleBand && domain.some(isInfinity));
+  const isScaleOrdinal = isOrdinalScale(yScale);
+  const skipTickRendering = isScaleOrdinal ? domain.length === 0 : domain.some(isInfinity);
   let children: React.ReactNode = null;
 
   if (!skipTickRendering) {

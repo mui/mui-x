@@ -59,7 +59,7 @@ export function BasePopper(props: ChartBasePopperProps) {
     target,
     transition,
     placement,
-    ...rest
+    ...other
   } = props;
 
   const modifiers = React.useMemo(() => {
@@ -132,7 +132,7 @@ export function BasePopper(props: ChartBasePopperProps) {
       transition={transition}
       placement={placement}
       modifiers={modifiers}
-      {...rest}
+      {...other}
     >
       {content}
     </Popper>

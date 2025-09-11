@@ -135,6 +135,25 @@ You can use this attribute to target elements based on their series.
 
 {{"demo": "BarGradient.js"}}
 
+### Gradients
+
+By default, a gradient's units are set to [`objectBoundingBox`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/gradientUnits#objectboundingbox).
+When applied to a bar, the gradient stretches to fill the entire size of the bar, regardless of the bar's value.
+
+Alternatively, you can set `gradientUnits` to `userSpaceOnUse`, which stretches the gradient to fill the entire size of the chart.
+`userSpaceOnUse` means that the gradient's coordinates are relative to the SVG, meaning that a gradient with `x1="0"` and `x2="100%"` stretches across the entire width of the SVG.
+This effectively reveals the gradient depending on the bar's value, as the gradient is clipped to the bar's size.
+
+{{"demo": "BarOECDHouseholdSavings.js"}}
+
+Note that, in the example above, there are two gradients:
+
+- The series `color` property references the gradient with `gradientUnits="objectBoundingBox"`, which is applied to the tooltip, legend, and other elements that reference the series color.
+- The bar's `fill` property is overridden using CSS to reference the gradient with `gradientUnits="userSpaceOnUse"`.
+
+The first gradient is used for elements showing the whole gradient, such as tooltips and legend.
+The second one is shown in the bars themselves that display the part of the gradient that corresponds to their value.
+
 ## Labels
 
 You can display labels on the bars.
