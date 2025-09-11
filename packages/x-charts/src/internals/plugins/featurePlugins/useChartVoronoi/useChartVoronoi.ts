@@ -48,9 +48,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
   store,
   instance,
 }) => {
-  const { disableClosestPoint, voronoiMaxRadius, onItemClick } = params;
-  const disableOnItemClick = onItemClick == null;
-  const disableVoronoi = disableClosestPoint && disableOnItemClick;
+  const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
   const drawingArea = useSelector(store, selectorChartDrawingArea);
 
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
@@ -180,7 +178,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
       const dataIndex = voronoiRef.current[closestSeries.seriesId].seriesIndexes[seriesPointIndex];
 
-      const maxRadius = disableClosestPoint ? closestSeries.markerSize : voronoiMaxRadius;
+      const maxRadius = voronoiMaxRadius === 'item' ? closestSeries.markerSize : voronoiMaxRadius;
 
       if (maxRadius !== undefined) {
         const pointX = delauneyRef.current.points[2 * closestPointIndex];
@@ -259,17 +257,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
       pressHandler.cleanup();
       pressEndHandler.cleanup();
     };
-  }, [
-    svgRef,
-    yAxis,
-    xAxis,
-    voronoiMaxRadius,
-    onItemClick,
-    disableVoronoi,
-    drawingArea,
-    instance,
-    disableClosestPoint,
-  ]);
+  }, [svgRef, yAxis, xAxis, voronoiMaxRadius, onItemClick, disableVoronoi, drawingArea, instance]);
 
   // Instance implementation
   const enableVoronoiCallback = useEventCallback(() => {
@@ -302,13 +290,12 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
 
 useChartVoronoi.getDefaultizedParams = ({ params }) => ({
   ...params,
-  disableClosestPoint:
-    params.disableVoronoi ?? !params.series.some((item) => item.type === 'scatter'),
+  disableVoronoi: params.disableVoronoi ?? !params.series.some((item) => item.type === 'scatter'),
 });
 
 useChartVoronoi.getInitialState = (params) => ({
   voronoi: {
-    isVoronoiEnabled: !params.disableClosestPoint,
+    isVoronoiEnabled: !params.disableVoronoi,
   },
 });
 
