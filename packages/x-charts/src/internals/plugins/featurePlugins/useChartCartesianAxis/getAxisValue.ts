@@ -1,4 +1,4 @@
-import { isBandScale } from '../../../isBandScale';
+import { isOrdinalScale } from '../../../scaleGuards';
 import { ComputedAxis } from '../../../../models/axis';
 
 function getAsANumber(value: number | Date) {
@@ -12,7 +12,7 @@ function getAsANumber(value: number | Date) {
 export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
 
-  if (!isBandScale(scale)) {
+  if (!isOrdinalScale(scale)) {
     const value = scale.invert(pointerValue);
 
     if (axisData === undefined) {
@@ -67,7 +67,7 @@ export function getAxisValue(
 ): number | Date | null {
   const { scale, data: axisData } = axisConfig;
 
-  if (!isBandScale(scale)) {
+  if (!isOrdinalScale(scale)) {
     if (dataIndex === null) {
       return scale.invert(pointerValue);
     }

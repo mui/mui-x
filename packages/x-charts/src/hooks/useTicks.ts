@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
 import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
-import { isBandScale } from '../internals/isBandScale';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 
 export interface TickParams {
@@ -83,7 +83,7 @@ export function getTicks(
   } = options;
 
   // band scale
-  if (isBandScale(scale)) {
+  if (isOrdinalScale(scale)) {
     const domain = scale.domain();
 
     const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
