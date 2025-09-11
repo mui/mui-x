@@ -51,6 +51,10 @@ export namespace useEventOccurrences {
   export type ReturnValue = Map<string, CalendarEventOccurrence[]>;
 }
 
+/**
+ * Do not use directly, use the `useEventOccurrences` hook instead.
+ * This is only exported for testing purposes.
+ */
 export function innerGetEventOccurrences(
   adapter: Adapter,
   days: CalendarProcessedDate[],
