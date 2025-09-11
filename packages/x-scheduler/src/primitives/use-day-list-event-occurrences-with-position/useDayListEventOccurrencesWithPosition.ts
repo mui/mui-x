@@ -25,7 +25,7 @@ export function useDayListEventOccurrencesWithPosition(
         usedIndexes: Set<number>;
       };
     } = {};
-    const collectionSize = days.length;
+    const dayListSize = days.length;
 
     return days.map((day, dayIndex) => {
       indexLookup[day.key] = { occurrencesIndex: {}, usedIndexes: new Set() };
@@ -58,7 +58,7 @@ export function useDayListEventOccurrencesWithPosition(
             const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
             position = {
               index: i,
-              span: Math.min(durationInDays, collectionSize - dayIndex), // Don't go past the collection end
+              span: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
             };
           }
 
@@ -74,7 +74,7 @@ export function useDayListEventOccurrencesWithPosition(
         ...day,
         withPosition,
         withoutPosition,
-        concurrentEvents: Math.max(...indexLookup[day.key].usedIndexes, 1),
+        maxIndex: Math.max(...indexLookup[day.key].usedIndexes, 1),
       };
     });
   }, [adapter, days, occurrencesMap, shouldAddPosition]);
@@ -108,9 +108,9 @@ export namespace useDayListEventOccurrencesWithPosition {
      */
     withoutPosition: CalendarEventOccurrence[];
     /**
-     * The number of rows/columns needed to display all the occurrences with position for this collection.
+     * The biggest index an event with position has on this day.
      */
-    concurrentEvents: number;
+    maxIndex: number;
   }
 
   export type ReturnValue = DayData[];
