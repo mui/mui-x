@@ -1,14 +1,16 @@
-import { AxisConfig, ChartDrawingArea, ContinuousScaleName, ScaleName } from '@mui/x-charts';
 import { scaleBand, scalePoint, type ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
 import {
+  AxisConfig,
   AxisId,
   ChartsAxisProps,
+  ContinuousScaleName,
   D3ContinuousScale,
-  D3DiscreteScale,
+  D3OrdinalScale,
   DefaultedAxis,
   isBandScaleConfig,
   isPointScaleConfig,
   isSymlogScaleConfig,
+  ScaleName,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
@@ -20,6 +22,7 @@ import { getAxisDomainLimit } from './getAxisDomainLimit';
 import { getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { getAxisExtremum } from './getAxisExtremum';
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 
@@ -127,7 +130,7 @@ export type ScaleDefinition =
       tickNumber: number;
     }
   | {
-      scale: D3DiscreteScale;
+      scale: D3OrdinalScale;
       tickNumber?: never;
     };
 
