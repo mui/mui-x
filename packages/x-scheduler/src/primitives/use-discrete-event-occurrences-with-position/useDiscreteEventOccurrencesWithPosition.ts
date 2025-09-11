@@ -48,20 +48,20 @@ export function useDiscreteEventOccurrencesWithPosition(
   }, [adapter, end, start, occurrencesMap]);
 
   return React.useMemo(() => {
-    const occurrencesWithConflicts = occurrencesInRange.map((occurrence, index) => {
-      const conflicts = getConflictingOccurrences(occurrencesInRange, index, adapter);
-      return { occurrence, conflicts };
-    });
+    const occurrencesWithConflicts = occurrencesInRange.map((occurrence, index) => ({
+      key: occurrence.key,
+      conflicts: getConflictingOccurrences(occurrencesInRange, index, adapter),
+    }));
 
     let biggestIndex: number = 1;
     const firstIndexLookup: { [occurrenceKey: string]: number } = {};
 
-    for (const { occurrence, conflicts } of occurrencesWithConflicts) {
-      if (conflicts.before.length === 0) {
+    for (const occurrence of occurrencesWithConflicts) {
+      if (occurrence.conflicts.before.length === 0) {
         firstIndexLookup[occurrence.key] = 1;
       } else {
         const usedIndexes = new Set(
-          conflicts.before.map(
+          occurrence.conflicts.before.map(
             (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence.key],
           ),
         );
@@ -81,9 +81,9 @@ export function useDiscreteEventOccurrencesWithPosition(
       lastIndexLookup = firstIndexLookup;
     } else {
       lastIndexLookup = {};
-      for (const { occurrence, conflicts } of occurrencesWithConflicts) {
+      for (const occurrence of occurrencesWithConflicts) {
         const usedIndexes = new Set(
-          conflicts.after.map(
+          occurrence.conflicts.after.map(
             (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence.key],
           ),
         );
