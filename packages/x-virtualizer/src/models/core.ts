@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 
 export type Size = { width: number; height: number };
-export namespace Size {
-  export const EMPTY = { width: 0, height: 0 };
-
-  export function equals(a: Size, b: Size) {
-    return a.width === b.width && a.height === b.height;
-  }
-}
+export const Size = {
+  EMPTY: { width: 0, height: 0 },
+  equals: (a: Size, b: Size) => a.width === b.width && a.height === b.height,
+};
 
 export type Row = { [key: string | symbol]: any };
 export type Column = { [key: string | symbol]: any };
@@ -26,10 +23,16 @@ export type PinnedRows = {
   top: RowEntry[];
   bottom: RowEntry[];
 };
+export const PinnedRows = {
+  EMPTY: { top: [], bottom: [] } as PinnedRows,
+};
 
 export type PinnedColumns = {
   left: Column[];
   right: Column[];
+};
+export const PinnedColumns = {
+  EMPTY: { left: [], right: [] } as PinnedColumns,
 };
 
 export type FocusedCell = {

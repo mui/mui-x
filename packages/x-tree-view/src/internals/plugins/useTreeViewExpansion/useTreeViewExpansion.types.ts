@@ -18,9 +18,17 @@ export interface UseTreeViewExpansionPublicAPI {
     event?: React.SyntheticEvent;
     shouldBeExpanded?: boolean;
   }) => void;
+  /**
+   * Check if an item is expanded.
+   * @param {TreeViewItemId} itemId The id of the item to check.
+   * @returns {boolean} `true` if the item is expanded, `false` otherwise.
+   */
+  isItemExpanded: (itemId: TreeViewItemId) => boolean;
 }
 
-export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublicAPI {
+export interface UseTreeViewExpansionInstance
+  // We don't expose isItemExpanded here to make sure we always use the selector internally.
+  extends Omit<UseTreeViewExpansionPublicAPI, 'isItemExpanded'> {
   /**
    * Expand all the siblings (i.e.: the items that have the same parent) of a given item.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
@@ -28,7 +36,7 @@ export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublic
    */
   expandAllSiblings: (event: React.KeyboardEvent, itemId: TreeViewItemId) => void;
   /**
-   * APply the new expansion status of a given item.
+   * Apply the new expansion status of a given item.
    * Is used by the `setItemExpansion` method and by the `useTreeViewLazyLoading` plugin.
    * Unlike `setItemExpansion`, this method does not trigger the lazy loading.
    * @param {object} parameters The parameters of the method.
@@ -41,6 +49,10 @@ export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublic
     event: React.SyntheticEvent | null;
     shouldBeExpanded: boolean;
   }) => void;
+  /**
+   * Reset the expansion state of all items.
+   */
+  resetItemExpansion: () => void;
 }
 
 export interface UseTreeViewExpansionParameters {

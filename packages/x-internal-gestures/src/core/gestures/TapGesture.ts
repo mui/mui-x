@@ -117,6 +117,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -161,7 +162,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
 
     // Check if we have enough pointers and not too many
     if (
-      this.shouldPreventGesture(targetElement) ||
+      this.shouldPreventGesture(targetElement, event.pointerType) ||
       relevantPointers.length < this.minPointers ||
       relevantPointers.length > this.maxPointers
     ) {
