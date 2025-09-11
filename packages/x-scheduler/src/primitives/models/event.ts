@@ -85,22 +85,37 @@ export interface CalendarEventOccurrence extends CalendarEvent {
 }
 
 /**
- * An event occurrence with the position it needs to be rendered on in a row or column layout.
+ * An event occurrence with the position it needs to be rendered on a day grid.
  */
-export interface CalendarEventOccurrencesWithPosition extends CalendarEventOccurrence {
-  position: CalendarEventOccurrencePosition;
+export interface CalendarEventOccurrencesWithDayGridPosition extends CalendarEventOccurrence {
+  position: CalendarEventOccurrenceDayGridPosition;
 }
 
-export interface CalendarEventOccurrencePosition {
+export interface CalendarEventOccurrenceDayGridPosition {
   /**
-   * The 1-based index of the row/column the event should be rendered in.
+   * The 1-based index of the row the event should be rendered in.
    */
   index: number;
   /**
    * The number of days the event should span across.
    * If 0, the event will be rendered as invisible.
    */
-  span: number;
+  daySpan: number;
+}
+
+export interface CalendarEventOccurrencesWithTimePosition extends CalendarEventOccurrence {
+  position: CalendarEventOccurrenceTimePosition;
+}
+
+export interface CalendarEventOccurrenceTimePosition {
+  /**
+   * The first (1-based) index of the row / column the event should be rendered in.
+   */
+  firstIndex: number;
+  /**
+   * The last (1-based) index of the row / column the event should be rendered in.
+   */
+  lastIndex: number;
 }
 
 export type CalendarEventId = string | number;

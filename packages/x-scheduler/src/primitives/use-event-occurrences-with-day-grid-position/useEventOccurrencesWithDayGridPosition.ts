@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
   CalendarEventOccurrence,
-  CalendarEventOccurrencePosition,
-  CalendarEventOccurrencesWithPosition,
+  CalendarEventOccurrenceDayGridPosition,
+  CalendarEventOccurrencesWithDayGridPosition,
   CalendarProcessedDate,
 } from '../models';
 import { useEventOccurrences } from '../use-event-occurrences';
@@ -12,9 +12,9 @@ import { diffIn } from '../utils/date-utils';
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
  */
-export function useDayListEventOccurrencesWithPosition(
-  parameters: useDayListEventOccurrencesWithPosition.Parameters,
-): useDayListEventOccurrencesWithPosition.ReturnValue {
+export function useEventOccurrencesWithDayGridPosition(
+  parameters: useEventOccurrencesWithDayGridPosition.Parameters,
+): useEventOccurrencesWithDayGridPosition.ReturnValue {
   const { days, occurrencesMap, shouldAddPosition } = parameters;
   const adapter = useAdapter();
 
@@ -29,14 +29,13 @@ export function useDayListEventOccurrencesWithPosition(
 
     return days.map((day, dayIndex) => {
       indexLookup[day.key] = { occurrencesIndex: {}, usedIndexes: new Set() };
-      const withPosition: CalendarEventOccurrencesWithPosition[] = [];
+      const withPosition: CalendarEventOccurrencesWithDayGridPosition[] = [];
       const withoutPosition: CalendarEventOccurrence[] = [];
 
-      // Process all-day events and get their position in the row
       for (const occurrence of occurrencesMap.get(day.key) ?? []) {
         const hasPosition = shouldAddPosition ? shouldAddPosition(occurrence) : true;
         if (hasPosition) {
-          let position: CalendarEventOccurrencePosition;
+          let position: CalendarEventOccurrenceDayGridPosition;
 
           const occurrenceIndexInPreviousDay =
             dayIndex === 0
@@ -45,7 +44,7 @@ export function useDayListEventOccurrencesWithPosition(
 
           // If the event is present in the previous day, we keep the same index
           if (occurrenceIndexInPreviousDay != null) {
-            position = { index: occurrenceIndexInPreviousDay, span: 0 };
+            position = { index: occurrenceIndexInPreviousDay, daySpan: 0 };
           }
           // Otherwise, we find the smallest available index
           else {
@@ -58,7 +57,7 @@ export function useDayListEventOccurrencesWithPosition(
             const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
             position = {
               index: i,
-              span: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
+              daySpan: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
             };
           }
 
@@ -80,7 +79,7 @@ export function useDayListEventOccurrencesWithPosition(
   }, [adapter, days, occurrencesMap, shouldAddPosition]);
 }
 
-export namespace useDayListEventOccurrencesWithPosition {
+export namespace useEventOccurrencesWithDayGridPosition {
   export interface Parameters {
     /**
      * The days to add the occurrences to.
@@ -102,7 +101,7 @@ export namespace useDayListEventOccurrencesWithPosition {
     /**
      * Occurrences that have been augmented with position information.
      */
-    withPosition: CalendarEventOccurrencesWithPosition[];
+    withPosition: CalendarEventOccurrencesWithDayGridPosition[];
     /**
      * Occurrences that do not need position information.
      */

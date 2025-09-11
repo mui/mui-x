@@ -6,7 +6,7 @@ import { DayGrid } from '../../../../primitives/day-grid';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
-import { useDayListEventOccurrencesWithPosition } from '../../../../primitives/use-day-list-event-occurrences-with-position';
+import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
@@ -42,7 +42,7 @@ export function DayGridCell(props: DayGridCellProps) {
     >
       <div className="DayTimeGridAllDayEventsCellEvents">
         {day.withPosition.map((event) => {
-          if (event.position.span > 0) {
+          if (event.position.daySpan > 0) {
             return (
               <EventPopoverTrigger
                 key={event.key}
@@ -53,7 +53,7 @@ export function DayGridCell(props: DayGridCellProps) {
                     variant="allDay"
                     ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                     gridRow={event.position.index}
-                    columnSpan={event.position.span}
+                    columnSpan={event.position.daySpan}
                   />
                 }
               />
@@ -87,5 +87,5 @@ export function DayGridCell(props: DayGridCellProps) {
 }
 
 interface DayGridCellProps {
-  day: useDayListEventOccurrencesWithPosition.DayData;
+  day: useEventOccurrencesWithDayGridPosition.DayData;
 }

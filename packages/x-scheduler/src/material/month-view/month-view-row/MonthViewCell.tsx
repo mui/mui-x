@@ -10,7 +10,7 @@ import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
-import { useDayListEventOccurrencesWithPosition } from '../../../primitives/use-day-list-event-occurrences-with-position';
+import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -80,7 +80,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       )}
       <div className="MonthViewCellEvents">
         {visibleEvents.map((event) => {
-          if (event.position.span > 0) {
+          if (event.position.daySpan > 0) {
             return (
               <EventPopoverTrigger
                 key={`${event.id}-${day.key}`}
@@ -91,7 +91,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
                     variant={event.allDay ? 'allDay' : 'compact'}
                     ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                     gridRow={event.position.index}
-                    columnSpan={event.position.span}
+                    columnSpan={event.position.daySpan}
                   />
                 }
               />
@@ -128,6 +128,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 });
 
 interface MonthViewCellProps {
-  day: useDayListEventOccurrencesWithPosition.DayData;
+  day: useEventOccurrencesWithDayGridPosition.DayData;
   maxEvents: number;
 }

@@ -3,6 +3,7 @@ import { isWeekend } from '../utils/date-utils';
 import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { processDate } from '../utils/event-utils';
+import { Adapter } from '../utils/adapter/types';
 
 export function useDayList(): useDayList.ReturnValue {
   const adapter = useAdapter();
@@ -19,7 +20,6 @@ export function useDayList(): useDayList.ReturnValue {
 
       const start = adapter.startOfDay(date);
       let current = start;
-      let currentDayNumber = adapter.getDayOfWeek(current);
       const days: CalendarProcessedDate[] = [];
 
       const isDayCollectionComplete =
@@ -32,22 +32,28 @@ export function useDayList(): useDayList.ReturnValue {
           days.push(processDate(current, adapter));
         }
 
-        const prevDayNumber = currentDayNumber;
-        current = adapter.addDays(current, 1);
-        currentDayNumber = adapter.getDayOfWeek(current);
-
-        // If there is a TZ change at midnight, adding 1 day may only increase the date by 23 hours to 11pm
-        // To fix, bump the date into the next day (add 12 hours) and then revert to the start of the day
-        // See https://github.com/moment/moment/issues/4743#issuecomment-811306874 for context.
-        if (prevDayNumber === currentDayNumber) {
-          current = adapter.startOfDay(adapter.addHours(current, 12));
-        }
+        current = addOneDay(current, adapter);
       }
 
       return days;
     },
     [adapter],
   );
+}
+
+export function addOneDay(day: SchedulerValidDate, adapter: Adapter) {
+  const prevDayNumber = adapter.getDayOfWeek(day);
+  let nextDay = adapter.addDays(day, 1);
+  const nextDayNumber = adapter.getDayOfWeek(nextDay);
+
+  // If there is a TZ change at midnight, adding 1 day may only increase the date by 23 hours to 11pm
+  // To fix, bump the date into the next day (add 12 hours) and then revert to the start of the day
+  // See https://github.com/moment/moment/issues/4743#issuecomment-811306874 for context.
+  if (prevDayNumber === nextDayNumber) {
+    nextDay = adapter.startOfDay(adapter.addHours(nextDay, 12));
+  }
+
+  return nextDay;
 }
 
 export namespace useDayList {

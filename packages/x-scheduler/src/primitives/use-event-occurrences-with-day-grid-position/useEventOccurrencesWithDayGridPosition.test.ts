@@ -1,5 +1,5 @@
 import { renderHook } from '@mui/internal-test-utils';
-import { useDayListEventOccurrencesWithPosition } from './useDayListEventOccurrencesWithPosition';
+import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
 import { getAdapter } from '../utils/adapter/getAdapter';
 import { processDate } from '../utils/event-utils';
 import { CalendarEvent, CalendarEventOccurrence } from '../models';
@@ -23,7 +23,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         events,
         new Map(),
       );
-      return useDayListEventOccurrencesWithPosition({ days, occurrencesMap });
+      return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });
 
     return result.current;

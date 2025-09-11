@@ -8,7 +8,9 @@ import { useEventCalendarContext } from '../../../../primitives/utils/useEventCa
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
-import { useDayListEventOccurrencesWithPosition } from '../../../../primitives/use-day-list-event-occurrences-with-position';
+import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
+import { useDiscreteEventOccurrencesWithPosition } from '../../../../primitives/use-discrete-event-occurrences-with-position';
+import { processDate } from '../../../../primitives/utils/event-utils';
 import { EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
@@ -22,6 +24,15 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 
   const placeholder = TimeGrid.usePlaceholderInRange(start, end);
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
+
+  const { occurrences } = useDiscreteEventOccurrencesWithPosition({
+    start: processDate(start, adapter),
+    end: processDate(end, adapter),
+    areOccurrencesLimitedToASingleIndex: false,
+    occurrencesMap: new Map([[day.key, day.withoutPosition]]),
+  });
+
+  console.log(occurrences.map((el) => el.position));
 
   const draggedEvent = React.useMemo(() => {
     if (!initialDraggedEvent || !placeholder) {
@@ -95,7 +106,7 @@ function TimeGridCurrentTimeLabel() {
 }
 
 interface TimeGridColumnProps {
-  day: useDayListEventOccurrencesWithPosition.DayData;
+  day: useEventOccurrencesWithDayGridPosition.DayData;
   isToday: boolean;
   index: number;
   showCurrentTimeIndicator: boolean;

@@ -5,7 +5,7 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrences } from '../../../../primitives/use-event-occurrences';
-import { useDayListEventOccurrencesWithPosition } from '../../../../primitives/use-day-list-event-occurrences-with-position';
+import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
   CalendarEvent,
@@ -50,7 +50,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const occurrencesMap = useEventOccurrences({ days, renderEventIn: 'every-day' });
-  const daysWithOccurrences = useDayListEventOccurrencesWithPosition({
+  const daysWithOccurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
     shouldAddPosition: shouldRenderOccurrenceInDayGrid,
