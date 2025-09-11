@@ -195,6 +195,7 @@ describe('<DesktopTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
   });
+
   describe('focus behavior', () => {
     it('should close the Picker and move focus to the text field when clicking it', async () => {
       const { user } = render(

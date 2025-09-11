@@ -19,7 +19,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { MuiEvent, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { isElementInteractive } from '@mui/x-internals/isElementInteractive';
+import { isElementInteractive } from '../../utils/isElementInteractive';
 import { getPickerPopperUtilityClass, PickerPopperClasses } from './pickerPopperClasses';
 import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
 import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';

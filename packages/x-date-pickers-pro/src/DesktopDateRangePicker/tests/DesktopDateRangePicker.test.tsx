@@ -785,6 +785,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('17')).to.have.attribute('disabled');
     });
   });
+
   it('should close the Picker and move focus to the text field when clicking it', async () => {
     const { user } = render(
       <React.Fragment>

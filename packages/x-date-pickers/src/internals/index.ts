@@ -187,6 +187,7 @@ export {
 } from './utils/utils';
 export { useReduceAnimations } from './hooks/useReduceAnimations';
 export { applyDefaultViewProps } from './utils/views';
+export { isElementInteractive } from './utils/isElementInteractive';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {
