@@ -68,9 +68,10 @@ function createOnBeforeExport(
     // Apply default modification (removing the toolbar)
     defaultOnBeforeExport(iframe);
     const document = iframe.contentDocument!;
-
-    const stack = document.createElement('div');
     const chart = document.body.firstElementChild!;
+
+    // Create a vertical stack to hold the title, chart and caption
+    const stack = document.createElement('div');
 
     stack.style.display = 'flex';
     stack.style.flexDirection = 'column';
@@ -79,15 +80,18 @@ function createOnBeforeExport(
 
     document.body.appendChild(stack);
 
+    // Add title to stack
     const title = titleRef.current;
     if (title) {
       const titleClone = title.cloneNode(true) as HTMLSpanElement;
       stack.appendChild(titleClone);
     }
 
+    // Move chart to stack (after title)
     document.body.removeChild(chart);
     stack.appendChild(chart);
 
+    // Add caption to stack
     const caption = captionRef.current;
     if (caption) {
       const captionClone = caption.cloneNode(true) as HTMLSpanElement;
