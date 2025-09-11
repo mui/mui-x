@@ -49,6 +49,9 @@ Date and Time Pickers use ARIA roles and robust focus management across the inte
 ## Keyboard support
 
 Set `enableKeyboardNavigation` to `true` to enable the keyboard navigation on your charts.
+
+{{"demo": "KeyboardNavigation.js"}}
+
 This feature is currently supported by line, bar, pie, and scatter charts.
 
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
