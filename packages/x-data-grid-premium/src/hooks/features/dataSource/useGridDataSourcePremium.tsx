@@ -109,6 +109,12 @@ export const useGridDataSourcePremium = (
             return;
           }
 
+          if (columnPath.length !== visiblePivotColumns.length + 1) {
+            throw new Error(
+              `MUI X: Based on the current pivot model, each column path must have ${visiblePivotColumns.length + 1} elements.`,
+            );
+          }
+
           const lastField = columnPath[columnPath.length - 1];
           if (typeof lastField !== 'string') {
             throw new Error('MUI X: Last item in `pivotColumns` must be a column field.');
@@ -201,7 +207,9 @@ export const useGridDataSourcePremium = (
           }
         });
 
-        sortColumnGroups(columnGroupingModel as GridColumnGroupPivoting[], visiblePivotColumns);
+        if (visiblePivotColumns.length > 0) {
+          sortColumnGroups(columnGroupingModel as GridColumnGroupPivoting[], visiblePivotColumns);
+        }
 
         // Update the grid state with new columns and column grouping model
         apiRef.current.setState((state) => {

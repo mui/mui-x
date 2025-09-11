@@ -5,6 +5,7 @@ import {
   GridRowModel,
   gridDataRowIdsSelector,
   gridRowIdSelector,
+  gridRowsLoadingSelector,
   gridRowsLookupSelector,
 } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -115,12 +116,14 @@ export const useGridPivoting = (
     | 'pivotingColDef'
     | 'groupingColDef'
     | 'aggregationFunctions'
+    | 'loading'
     | 'dataSource'
   >,
   originalColumnsProp: readonly GridColDef[],
   originalRowsProp: readonly GridRowModel[],
 ) => {
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const isLoading = props.loading ?? gridRowsLoadingSelector(apiRef);
   const { exportedStateRef, nonPivotDataRef } = apiRef.current.caches.pivoting;
 
   const isPivotingAvailable = !props.disablePivoting;
@@ -189,7 +192,7 @@ export const useGridPivoting = (
         );
 
         // without data source, add more props overrides based on the data
-        if (!props.dataSource) {
+        if (!isLoading && !props.dataSource) {
           propsOverrides = {
             ...propsOverrides,
             // TODO: fix createPivotPropsFromRows called twice in controlled mode
@@ -211,7 +214,14 @@ export const useGridPivoting = (
 
       return {};
     },
-    [apiRef, props.dataSource, props.pivotingColDef, props.groupingColDef, nonPivotDataRef],
+    [
+      apiRef,
+      isLoading,
+      props.dataSource,
+      props.pivotingColDef,
+      props.groupingColDef,
+      nonPivotDataRef,
+    ],
   );
 
   useOnMount(() => {
