@@ -60,46 +60,47 @@ export const initialEvents: CalendarEvent[] = [
   // Non-recurring work events
   {
     id: 'client-call-1',
-    start: DateTime.fromISO('2025-07-03T16:00:00'),
-    end: DateTime.fromISO('2025-07-03T17:00:00'),
+    start: DateTime.fromISO('2025-07-03T12:00:00'),
+    end: DateTime.fromISO('2025-07-03T13:00:00'),
     title: 'Client Call',
     resource: 'work',
   },
   {
-    id: 'client-call-x',
-    start: DateTime.fromISO('2025-07-03T16:00:00'),
-    end: DateTime.fromISO('2025-07-03T17:00:00'),
-    title: 'Client Call 2',
-    resource: 'workout',
+    id: 'client-call-2',
+    start: DateTime.fromISO('2025-07-03T12:00:00'),
+    end: DateTime.fromISO('2025-07-03T13:00:00'),
+    title: 'Overlapping Client Call',
+    resource: 'work',
   },
   {
-    id: 'client-call-2',
+    id: 'client-call-3',
     start: DateTime.fromISO('2025-07-07T15:00:00'),
     end: DateTime.fromISO('2025-07-07T15:45:00'),
     title: 'Client Call',
     resource: 'work',
   },
   {
-    id: 'client-call-3',
+    id: 'client-call-4',
     start: DateTime.fromISO('2025-07-10T15:00:00'),
     end: DateTime.fromISO('2025-07-10T15:30:00'),
     title: 'Client Call',
     resource: 'work',
   },
   {
-    id: 'client-call-4',
+    id: 'client-call-5',
     start: DateTime.fromISO('2025-07-18T11:00:00'),
     end: DateTime.fromISO('2025-07-18T11:45:00'),
     title: 'Client Call',
     resource: 'work',
   },
   {
-    id: 'client-call-5',
+    id: 'client-call-6',
     start: DateTime.fromISO('2025-07-24T11:00:00'),
     end: DateTime.fromISO('2025-07-24T11:45:00'),
     title: 'Client Call',
     resource: 'work',
   },
+
   {
     id: 'design-review-1',
     start: DateTime.fromISO('2025-07-08T15:00:00'),
@@ -134,6 +135,14 @@ export const initialEvents: CalendarEvent[] = [
     allDay: false,
     resource: 'workout',
     rrule: { freq: 'WEEKLY', interval: 1, byDay: ['TU', 'TH'] },
+  },
+  {
+    id: 'workout-new-class',
+    start: DateTime.fromISO('2025-07-03T11:00:00'),
+    end: DateTime.fromISO('2025-07-03T14:00:00'),
+    title: 'New Gym Class',
+    allDay: false,
+    resource: 'workout',
   },
 
   // Birthday events
@@ -214,6 +223,21 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Community Workshop',
     resource: 'personal',
     rrule: { freq: 'MONTHLY', interval: 1, byDay: ['4SA'] },
+  },
+
+  {
+    id: 'dinner-2',
+    start: DateTime.fromISO('2025-06-29T19:30:00'),
+    end: DateTime.fromISO('2025-06-29T21:30:00'),
+    title: 'Dinner with Alice',
+    resource: 'personal',
+  },
+  {
+    id: 'call',
+    start: DateTime.fromISO('2025-06-29T18:50:00'),
+    end: DateTime.fromISO('2025-06-29T19:40:00'),
+    title: 'Call mom',
+    resource: 'personal',
   },
 
   // Medical events
