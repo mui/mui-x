@@ -10,7 +10,7 @@ export function isOrdinalScale<T extends { toString(): string }>(
 export function isBandScale<T extends { toString(): string }>(
   scale: D3Scale<T>,
 ): scale is ScaleBand<T> {
-  return isOrdinalScale(scale)(scale as ScaleBand<T>).paddingOuter !== undefined;
+  return isOrdinalScale(scale) && (scale as ScaleBand<T>).paddingOuter !== undefined;
 }
 
 export function isPointScale<T extends { toString(): string }>(

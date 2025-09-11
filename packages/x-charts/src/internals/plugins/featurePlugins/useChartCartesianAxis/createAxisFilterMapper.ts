@@ -1,75 +1,33 @@
 import { isDefined } from '../../../isDefined';
-import {
-  AxisId,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-  D3ContinuousScale,
-  D3Scale,
-  ScaleName,
-} from '../../../../models/axis';
-import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { AxisId, D3ContinuousScale, D3Scale } from '../../../../models/axis';
 import { AxisConfig } from '../../../../models';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
-import { isBandScale } from '../../../isBandScale';
+import { isOrdinalScale } from '../../../scaleGuards';
 
-type CreateAxisFilterMapperParams = {
-  zoomMap: Map<AxisId, ZoomData>;
-  zoomOptions: Record<AxisId, DefaultizedZoomOptions>;
-  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
-  formattedSeries: ProcessedSeries;
-  direction: 'x' | 'y';
-};
-
-export function createAxisFilterMapper(params: {
-  zoomMap: Map<AxisId, ZoomData>;
-  zoomOptions: Record<AxisId, DefaultizedZoomOptions>;
-  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
-  formattedSeries: ProcessedSeries;
-  direction: 'x';
-}): (
-  axis: AxisConfig<ScaleName, any, ChartsXAxisProps>,
-  axisIndex: number,
-  scale: D3Scale,
-) => ExtremumFilter | null;
-export function createAxisFilterMapper(params: {
-  zoomMap: Map<AxisId, ZoomData>;
-  zoomOptions: Record<AxisId, DefaultizedZoomOptions>;
-  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
-  formattedSeries: ProcessedSeries;
-  direction: 'y';
-}): (
-  axis: AxisConfig<ScaleName, any, ChartsYAxisProps>,
-  axisIndex: number,
-  scale: D3Scale,
-) => ExtremumFilter | null;
-export function createAxisFilterMapper({
-  zoomMap,
-  zoomOptions,
-  seriesConfig,
-  formattedSeries,
-  direction,
-}: CreateAxisFilterMapperParams) {
-  return (axis: AxisConfig, axisIndex: number, scale: D3Scale): ExtremumFilter | null => {
-    const zoomOption = zoomOptions[axis.id];
+export function createAxisFilterMapper(
+  zoomMap: Map<AxisId, ZoomData>,
+  zoomOptions: Record<AxisId, DefaultizedZoomOptions>,
+  direction: 'x' | 'y',
+): (axisId: AxisId, axisData: AxisConfig['data'], scale: D3Scale) => ExtremumFilter | null {
+  return (axisId: AxisId, axisData: AxisConfig['data'], scale: D3Scale): ExtremumFilter | null => {
+    const zoomOption = zoomOptions[axisId];
     if (!zoomOption || zoomOption.filterMode !== 'discard') {
       return null;
     }
 
-    const zoom = zoomMap?.get(axis.id);
+    const zoom = zoomMap?.get(axisId);
 
     if (zoom === undefined || (zoom.start <= 0 && zoom.end >= 100)) {
       // No zoom, or zoom with all data visible
       return null;
     }
 
-    if (isBandScale(scale)) {
-      return createDiscreteScaleGetAxisFilter(axis.data, zoom.start, zoom.end, direction);
+    if (isOrdinalScale(scale)) {
+      return createDiscreteScaleGetAxisFilter(axisData, zoom.start, zoom.end, direction);
     }
 
-    return createContinuousScaleGetAxisFilter(scale, zoom.start, zoom.end, direction, axis.data);
+    return createContinuousScaleGetAxisFilter(scale, zoom.start, zoom.end, direction, axisData);
   };
 }
 

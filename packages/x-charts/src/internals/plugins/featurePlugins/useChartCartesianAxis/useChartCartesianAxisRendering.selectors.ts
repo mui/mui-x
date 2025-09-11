@@ -57,41 +57,15 @@ export const selectorChartAxisZoomOptionsLookup = createSelector(
 );
 
 const selectorChartXFilter = createSelector(
-  [
-    selectorChartZoomMap,
-    selectorChartZoomOptionsLookup,
-    selectorChartSeriesConfig,
-    selectorChartSeriesProcessed,
-  ],
-  (zoomMap, zoomOptions, seriesConfig, formattedSeries) =>
-    zoomMap &&
-    zoomOptions &&
-    createAxisFilterMapper({
-      zoomMap,
-      zoomOptions,
-      seriesConfig,
-      formattedSeries,
-      direction: 'x',
-    }),
+  [selectorChartZoomMap, selectorChartZoomOptionsLookup],
+  (zoomMap, zoomOptions) =>
+    zoomMap && zoomOptions && createAxisFilterMapper(zoomMap, zoomOptions, 'x'),
 );
 
 const selectorChartYFilter = createSelector(
-  [
-    selectorChartZoomMap,
-    selectorChartZoomOptionsLookup,
-    selectorChartSeriesConfig,
-    selectorChartSeriesProcessed,
-  ],
-  (zoomMap, zoomOptions, seriesConfig, formattedSeries) =>
-    zoomMap &&
-    zoomOptions &&
-    createAxisFilterMapper({
-      zoomMap,
-      zoomOptions,
-      seriesConfig,
-      formattedSeries,
-      direction: 'y',
-    }),
+  [selectorChartZoomMap, selectorChartZoomOptionsLookup],
+  (zoomMap, zoomOptions) =>
+    zoomMap && zoomOptions && createAxisFilterMapper(zoomMap, zoomOptions, 'y'),
 );
 
 export const selectorChartXScales = createSelector(
@@ -172,7 +146,7 @@ export const selectorChartZoomAxisFilters = createSelector(
     }
 
     const xFilters = xAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      const filter = xMapper(axis, index, xScales[axis.id].scale);
+      const filter = xMapper(axis.id, axis.data, xScales[axis.id].scale);
       if (filter !== null) {
         acc[axis.id] = filter;
       }
@@ -180,7 +154,7 @@ export const selectorChartZoomAxisFilters = createSelector(
     }, {});
 
     const yFilters = yAxis?.reduce<ZoomAxisFilters>((acc, axis, index) => {
-      const filter = yMapper(axis, index, yScales[axis.id].scale);
+      const filter = yMapper(axis.id, axis.data, yScales[axis.id].scale);
       if (filter !== null) {
         acc[axis.id] = filter;
       }
