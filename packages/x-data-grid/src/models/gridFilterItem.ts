@@ -20,8 +20,31 @@ export interface GridFilterItem {
   value?: any;
   /**
    * The name of the operator we want to apply.
+   * A custom operator is supported by providing any string value.
    */
-  operator: string;
+  operator:
+    | 'contains'
+    | 'doesNotContain'
+    | 'equals'
+    | 'doesNotEqual'
+    | 'startsWith'
+    | 'endsWith'
+    | '='
+    | '!='
+    | '>'
+    | '>='
+    | '<'
+    | '<='
+    | 'is'
+    | 'not'
+    | 'after'
+    | 'onOrAfter'
+    | 'before'
+    | 'onOrBefore'
+    | 'isEmpty'
+    | 'isNotEmpty'
+    | 'isAnyOf'
+    | (string & {});
 }
 
 enum GridLogicOperator {
