@@ -111,7 +111,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       style={
         {
           '--column-index': eventProp?.placementIndex || 1,
-          '--conflict-starts-at-index': eventProp?.collisionIndex || -1,
+          '--collision-index': eventProp?.collisionIndex || -1,
         } as React.CSSProperties
       }
       {...other}
