@@ -4,7 +4,7 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
-  RecurringUpdateEventChanges,
+  RecurringEventUpdatedProperties,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
@@ -780,7 +780,7 @@ export function applyRecurringUpdateFollowing(
   events: CalendarEvent[],
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
-  changes: RecurringUpdateEventChanges,
+  changes: RecurringEventUpdatedProperties,
 ): CalendarEvent[] {
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
