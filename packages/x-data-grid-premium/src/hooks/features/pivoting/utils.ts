@@ -80,7 +80,7 @@ export const sortColumnGroups = (
   }
   const sort = pivotModelColumns[depth].sort;
   if (columnGroups.length < 2) {
-    if (columnGroups[0].children) {
+    if (columnGroups[0]?.children) {
       sortColumnGroups(columnGroups[0].children, pivotModelColumns, depth + 1);
     }
     return;
@@ -112,10 +112,17 @@ export const getPivotForcedProps = (
   groupingColDef: DataGridPremiumProcessedProps['groupingColDef'],
 ): GridPivotingPropsOverrides => {
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
+  const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
+  const visibleValues = pivotModel.values.filter((value) => !value.hidden);
 
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
   for (const column of columns.values()) {
     columnVisibilityModel[column.field] = false;
+  }
+  if (visibleColumns.length === 0) {
+    visibleValues.forEach((value) => {
+      delete columnVisibilityModel[value.field];
+    });
   }
 
   const groupingColDefOverrides = (params: GridGroupingColDefOverrideParams) => ({
