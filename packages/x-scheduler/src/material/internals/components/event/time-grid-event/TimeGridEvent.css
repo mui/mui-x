@@ -42,13 +42,12 @@
 }
 
 .EventCard--regular {
-  position: absolute;
-  left: 2px;
-  right: var(--space-3);
-  top: var(--y-position);
-  bottom: calc(100% - var(--y-position) - var(--height));
   z-index: 2;
   padding: var(--space-1) var(--space-4) var(--space-1) var(--space-3);
+  grid-column: var(--column-index) / var(--conflict-starts-at-index);
+  height: var(--height);
+  margin-block-start: calc(var(--hour-height) * 24 * var(--y-position));
+  grid-row: 1/-1;
 }
 
 .EventCard--regular.UnderHourEventCard {
@@ -59,7 +58,7 @@
 }
 
 .UnderHourEventCard {
-  margin: 0.5px 0;
+  /* margin: 0.5px 0; */
 }
 
 .UnderHourEvent .EventTitle {

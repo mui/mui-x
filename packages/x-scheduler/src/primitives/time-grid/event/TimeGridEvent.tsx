@@ -55,7 +55,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const style = React.useMemo(
     () =>
       ({
-        [TimeGridEventCssVars.yPosition]: `${position * 100}%`,
+        [TimeGridEventCssVars.yPosition]: `${position}`,
         [TimeGridEventCssVars.height]: `${duration * 100}%`,
       }) as React.CSSProperties,
     [position, duration],

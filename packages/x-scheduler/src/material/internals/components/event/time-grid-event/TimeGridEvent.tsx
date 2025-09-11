@@ -108,6 +108,12 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       eventId={eventProp.id}
       start={eventProp.start}
       end={eventProp.end}
+      style={
+        {
+          '--column-index': eventProp.eventIndex,
+          '--conflict-starts-at-index': eventProp.conflictStartsAtIndex,
+        } as React.CSSProperties
+      }
       {...other}
     >
       {isResizable && <TimeGrid.EventResizeHandler side="start" className="EventResizeHandler" />}

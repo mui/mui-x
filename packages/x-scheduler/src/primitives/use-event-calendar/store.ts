@@ -14,7 +14,7 @@ import {
   CalendarEventColor,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
-import { getEventDays, getEventRowIndex } from '../utils/event-utils';
+import { getEventDays, getEventPlacement, getEventRowIndex } from '../utils/event-utils';
 import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurrence-utils';
 
 export type State = {
@@ -168,7 +168,7 @@ export const selectors = {
     (events, visibleResources, adapter, { days, shouldOnlyRenderEventInOneCell }) => {
       const daysMap = new Map<
         string,
-        { events: CalendarEventOccurrence[]; allDayEvents: CalendarEventOccurrenceWithPosition[] }
+        { events: CalendarEventOccurrence[][]; allDayEvents: CalendarEventOccurrenceWithPosition[] }
       >();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
@@ -192,11 +192,9 @@ export const selectors = {
         }
 
         // STEP 2-B: Non-recurring event processing, check if the event is within the visible days
-        const eventFirstDay = adapter.startOfDay(event.start);
-        const eventLastDay = adapter.endOfDay(event.end);
         if (
-          adapter.isAfter(eventFirstDay, days[days.length - 1]) ||
-          adapter.isBefore(eventLastDay, days[0])
+          adapter.isAfter(event.start, days[days.length - 1]) ||
+          adapter.isBefore(event.end, days[0])
         ) {
           continue; // Skip events that are not in the visible days
         }
@@ -226,8 +224,9 @@ export const selectors = {
 
         for (const day of eventDays) {
           const dayKey = adapter.format(day, 'keyboardDate');
+
           if (!daysMap.has(dayKey)) {
-            daysMap.set(dayKey, { events: [], allDayEvents: [] });
+            daysMap.set(dayKey, { events: [[]], allDayEvents: [] });
           }
 
           // STEP 4.1: Process all-day events and get their position in the row
@@ -239,16 +238,30 @@ export const selectors = {
               eventRowIndex,
             });
           } else {
-            daysMap.get(dayKey)!.events.push(occurrence);
+            getEventPlacement(occurrence, daysMap.get(dayKey)!.events, adapter);
+
+            console.log('events matrix for day', dayKey, daysMap.get(dayKey)!.events);
+
+            // if (rowIndex >= daysMap.get(dayKey)!.events.length) {
+            //   daysMap.get(dayKey)!.events.push([]);
+            // }
+
+            // daysMap.get(dayKey)!.events[rowIndex].push({ ...occurrence, eventIndex: rowIndex + 1 });
           }
         }
       }
 
       return days.map((day) => {
         const dayKey = adapter.format(day, 'keyboardDate');
+        console.log(
+          'original: ',
+          daysMap.get(dayKey)?.events,
+          'flat:',
+          daysMap.get(dayKey)?.events.flat(),
+        );
         return {
           day,
-          events: daysMap.get(dayKey)?.events || [],
+          events: daysMap.get(dayKey)?.events.flat() || [],
           allDayEvents: daysMap.get(dayKey)?.allDayEvents || [],
         };
       });

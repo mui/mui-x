@@ -100,3 +100,60 @@ export function getEventDays(
   }
   return days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay, adapter));
 }
+export const isEventOverlapping = (
+  eventA: CalendarEvent,
+  eventB: CalendarEvent,
+  adapter: Adapter,
+) => {
+  const overlaps =
+    adapter.isBefore(eventA.start, eventB.end) && adapter.isAfter(eventA.end, eventB.start);
+
+  const sameInterval =
+    adapter.toJsDate(eventA.start).getTime() === adapter.toJsDate(eventB.start).getTime() &&
+    adapter.toJsDate(eventA.end).getTime() === adapter.toJsDate(eventB.end).getTime();
+
+  return overlaps || sameInterval;
+};
+
+export const getEventPlacement = (event, eventsMatrix, adapter) => {
+  let i = 0;
+  while (i < eventsMatrix.length) {
+    if (eventsMatrix[i].length === 0) {
+      break;
+    }
+
+    let conflictingEvents = eventsMatrix[i].filter((placedEvent, j) => {
+      const hasConflict = isEventOverlapping(placedEvent, event, adapter);
+
+      const conflictStartsAtIndex =
+        placedEvent.conflictStartsAtIndex < 0
+          ? Math.min(placedEvent.eventIndex ?? Infinity, j + 1)
+          : placedEvent.conflictStartsAtIndex;
+
+      if (hasConflict) {
+        // replace the event in eventsMatrix[i][j] with placedEvent
+        eventsMatrix[i].splice(j, 1, { ...placedEvent, conflictStartsAtIndex });
+      }
+
+      return hasConflict;
+    });
+
+    if (conflictingEvents.length > 0) {
+      console.log('conflictingEvents', conflictingEvents, eventsMatrix[i]);
+      i += 1;
+    } else {
+      console.log('no conflictingEvents', event.title, i);
+      break;
+    }
+  }
+
+  if (i >= eventsMatrix.length) {
+    eventsMatrix.push([]);
+  }
+
+  eventsMatrix[i].push({ ...event, eventIndex: i + 1, conflictStartsAtIndex: -1 });
+
+  console.log('event placed at row', i, event.title);
+
+  return i;
+};

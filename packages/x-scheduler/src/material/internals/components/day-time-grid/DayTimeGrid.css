@@ -203,10 +203,12 @@
 }
 
 .DayTimeGridColumn {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   position: relative;
-  flex: 1;
+  grid-template-rows: 1fr;
+  padding-right: var(--space-2);
+  height: calc(var(--hour-height) * 24);
 }
 
 .DayTimeGridColumn[data-weekend],

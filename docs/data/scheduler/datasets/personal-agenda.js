@@ -64,6 +64,13 @@ export const initialEvents = [
     resource: 'work',
   },
   {
+    id: 'client-call-x',
+    start: DateTime.fromISO('2025-07-03T16:00:00'),
+    end: DateTime.fromISO('2025-07-03T17:00:00'),
+    title: 'Client Call 2',
+    resource: 'workout',
+  },
+  {
     id: 'client-call-2',
     start: DateTime.fromISO('2025-07-07T15:00:00'),
     end: DateTime.fromISO('2025-07-07T15:45:00'),
