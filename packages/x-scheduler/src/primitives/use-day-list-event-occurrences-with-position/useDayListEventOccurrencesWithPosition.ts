@@ -41,7 +41,7 @@ export function useDayListEventOccurrencesWithPosition(
           const occurrenceIndexInPreviousDay =
             dayIndex === 0
               ? null
-              : indexLookup[days[dayIndex - 1].key]?.occurrencesIndex[occurrence.key];
+              : indexLookup[days[dayIndex - 1].key].occurrencesIndex[occurrence.key];
 
           // If the event is present in the previous day, we keep the same index
           if (occurrenceIndexInPreviousDay != null) {
@@ -56,18 +56,15 @@ export function useDayListEventOccurrencesWithPosition(
             }
 
             const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
-            const columnSpan = Math.min(durationInDays, collectionSize - dayIndex); // Don't go past the collection end
-
-            position = { index: i, span: columnSpan };
+            position = {
+              index: i,
+              span: Math.min(durationInDays, collectionSize - dayIndex), // Don't go past the collection end
+            };
           }
-
-          withPosition.push({
-            ...occurrence,
-            position,
-          });
 
           indexLookup[day.key].occurrencesIndex[occurrence.key] = position.index;
           indexLookup[day.key].usedIndexes.add(position.index);
+          withPosition.push({ ...occurrence, position });
         } else {
           withoutPosition.push(occurrence);
         }
