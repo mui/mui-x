@@ -190,7 +190,8 @@ describeTreeView<
         expect(canMoveItemToNewPosition.lastCall.firstArg).to.deep.equal({
           itemId: '1',
           oldPosition: { parentId: null, index: 0 },
-          newPosition: { parentId: null, index: 1 },
+          newPosition: { parentId: '2', index: 0 },
+          action: 'make-child',
         });
       });
 

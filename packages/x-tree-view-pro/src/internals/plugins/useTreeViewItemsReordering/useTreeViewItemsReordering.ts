@@ -61,7 +61,10 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         index: draggedItemIndex,
       };
 
-      const checkIfPositionIsValid = (positionAfterAction: TreeViewItemReorderPosition) => {
+      const checkIfPositionIsValid = (
+        positionAfterAction: TreeViewItemReorderPosition,
+        action: TreeViewItemsReorderingAction,
+      ) => {
         let isValid: boolean;
         // If the new position is equal to the old one, we don't want to show any dropping UI.
         if (
@@ -74,6 +77,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
             itemId: currentReorder.draggedItemId,
             oldPosition,
             newPosition: positionAfterAction,
+            action,
           });
         } else {
           isValid = true;
@@ -119,7 +123,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       const validActions: TreeViewItemItemReorderingValidActions = {};
       Object.keys(positionsAfterAction).forEach((action) => {
         const positionAfterAction = positionsAfterAction[action as TreeViewItemsReorderingAction];
-        if (positionAfterAction != null && checkIfPositionIsValid(positionAfterAction)) {
+        if (positionAfterAction != null && checkIfPositionIsValid(positionAfterAction, action as TreeViewItemsReorderingAction)) {
           validActions[action as TreeViewItemsReorderingAction] = positionAfterAction;
         }
       });
