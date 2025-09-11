@@ -13,7 +13,7 @@ import { EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, events, isToday, showCurrentTimeIndicator, index } = props;
+  const { day, events, columnsCount, isToday, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
@@ -43,6 +43,11 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       className="DayTimeGridColumn"
       data-weekend={isWeekend(adapter, day) ? '' : undefined}
       data-current={isToday ? '' : undefined}
+      style={
+        {
+          '--columns-count': columnsCount,
+        } as React.CSSProperties
+      }
     >
       {events.map((event) => (
         <EventPopoverTrigger
@@ -97,6 +102,8 @@ function TimeGridCurrentTimeLabel() {
 interface TimeGridColumnProps {
   day: SchedulerValidDate;
   events: CalendarEventOccurrence[];
+  /** The number of columns or rows in which the events are distributed */
+  columnsCount: number;
   isToday: boolean;
   index: number;
   showCurrentTimeIndicator: boolean;

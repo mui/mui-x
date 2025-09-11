@@ -74,19 +74,21 @@ export interface RRuleSpec {
   until?: SchedulerValidDate;
 }
 
+/** Extension of an occurrence with layout information for all-day rows. */
+export interface CalendarEventWithPosition extends CalendarEvent {
+  eventRowIndex?: number;
+  collisionIndex?: number;
+  placementIndex?: number;
+}
+
 /**
  *  A concrete occurrence derived from a `CalendarEvent` (recurring or single).
  */
-export interface CalendarEventOccurrence extends CalendarEvent {
+export interface CalendarEventOccurrence extends CalendarEventWithPosition {
   /**
    * Unique key that can be passed to the React `key` property when looping through events.
    */
   key: string;
-}
-
-/** Extension of an occurrence with layout information for all-day rows. */
-export interface CalendarEventOccurrenceWithPosition extends CalendarEventOccurrence {
-  eventRowIndex?: number;
 }
 
 export type CalendarEventId = string | number;

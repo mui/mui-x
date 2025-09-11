@@ -8,7 +8,6 @@ import {
   CalendarView,
   CalendarPreferences,
   CalendarEventOccurrence,
-  CalendarEventOccurrenceWithPosition,
   CalendarViewConfig,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
@@ -168,7 +167,10 @@ export const selectors = {
     (events, visibleResources, adapter, { days, shouldOnlyRenderEventInOneCell }) => {
       const daysMap = new Map<
         string,
-        { events: CalendarEventOccurrence[][]; allDayEvents: CalendarEventOccurrenceWithPosition[] }
+        {
+          events: CalendarEventOccurrence[][];
+          allDayEvents: CalendarEventOccurrence[];
+        }
       >();
       for (const day of days) {
         const dayKey = adapter.format(day, 'keyboardDate');
@@ -239,28 +241,16 @@ export const selectors = {
             });
           } else {
             getEventPlacement(occurrence, daysMap.get(dayKey)!.events, adapter);
-
-            console.log('events matrix for day', dayKey, daysMap.get(dayKey)!.events);
-
-            // if (rowIndex >= daysMap.get(dayKey)!.events.length) {
-            //   daysMap.get(dayKey)!.events.push([]);
-            // }
-
-            // daysMap.get(dayKey)!.events[rowIndex].push({ ...occurrence, eventIndex: rowIndex + 1 });
           }
         }
       }
 
       return days.map((day) => {
         const dayKey = adapter.format(day, 'keyboardDate');
-        console.log(
-          'original: ',
-          daysMap.get(dayKey)?.events,
-          'flat:',
-          daysMap.get(dayKey)?.events.flat(),
-        );
+
         return {
           day,
+          layers: daysMap.get(dayKey)?.events.length || 1,
           events: daysMap.get(dayKey)?.events.flat() || [],
           allDayEvents: daysMap.get(dayKey)?.allDayEvents || [],
         };

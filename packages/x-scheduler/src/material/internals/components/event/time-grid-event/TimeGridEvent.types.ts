@@ -1,7 +1,12 @@
+import { CalendarEventWithPosition } from '@mui/x-scheduler/primitives';
 import { EventVariant } from '../../../../models/events';
 import { EventProps } from '../Event.types';
 
 export interface TimeGridEventProps extends EventProps {
+  /**
+   * The event info to render.
+   */
+  event: CalendarEventWithPosition;
   /**
    * The variant of the event, which determines its styling.
    */

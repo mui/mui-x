@@ -224,11 +224,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {daysWithEvents.map(({ day, events }, index) => (
+                {daysWithEvents.map(({ day, layers, events }, index) => (
                   <TimeGridColumn
                     key={day.toString()}
                     day={day}
                     events={events}
+                    columnsCount={layers}
                     isToday={adapter.isSameDay(day, now)}
                     index={index}
                     showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}

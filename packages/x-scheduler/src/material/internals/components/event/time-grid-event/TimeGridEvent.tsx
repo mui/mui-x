@@ -110,8 +110,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       end={eventProp.end}
       style={
         {
-          '--column-index': eventProp.eventIndex,
-          '--conflict-starts-at-index': eventProp.conflictStartsAtIndex,
+          '--column-index': eventProp?.placementIndex || 1,
+          '--conflict-starts-at-index': eventProp?.collisionIndex || -1,
         } as React.CSSProperties
       }
       {...other}

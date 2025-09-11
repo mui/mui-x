@@ -1,9 +1,4 @@
-import {
-  SchedulerValidDate,
-  CalendarEvent,
-  CalendarEventOccurrenceWithPosition,
-  CalendarEventOccurrence,
-} from '../models';
+import { SchedulerValidDate, CalendarEvent, CalendarEventOccurrence } from '../models';
 import { Adapter } from './adapter/types';
 
 /**
@@ -11,12 +6,12 @@ import { Adapter } from './adapter/types';
  *  Useful to know how many stacked rows are already used for a given day.
  *  @returns Highest row index found, or 0 if none.
  */
-export function getEventWithLargestRowIndex(events: CalendarEventOccurrenceWithPosition[]) {
+export function getEventWithLargestRowIndex(events: CalendarEventOccurrence[]) {
   return (
     events.reduce(
       (maxEvent, event) =>
         (event?.eventRowIndex ?? 0) > (maxEvent.eventRowIndex ?? 0) ? event : maxEvent,
-      { eventRowIndex: 0 } as CalendarEventOccurrenceWithPosition,
+      { eventRowIndex: 0 } as CalendarEventOccurrence,
     ).eventRowIndex || 0
   );
 }
@@ -44,7 +39,7 @@ export function getEventRowIndex(
   event: CalendarEventOccurrence,
   day: SchedulerValidDate,
   days: SchedulerValidDate[],
-  daysMap: Map<string, { allDayEvents: CalendarEventOccurrenceWithPosition[] }>,
+  daysMap: Map<string, { allDayEvents: CalendarEventOccurrence[] }>,
   adapter: Adapter,
 ): number {
   const dayKey = adapter.format(day, 'keyboardDate');
@@ -115,34 +110,35 @@ export const isEventOverlapping = (
   return overlaps || sameInterval;
 };
 
-export const getEventPlacement = (event, eventsMatrix, adapter) => {
+export const getEventPlacement = (
+  event: CalendarEventOccurrence,
+  eventsMatrix: CalendarEventOccurrence[][],
+  adapter: Adapter,
+) => {
   let i = 0;
   while (i < eventsMatrix.length) {
     if (eventsMatrix[i].length === 0) {
       break;
     }
 
-    let conflictingEvents = eventsMatrix[i].filter((placedEvent, j) => {
+    let conflictingEvents = eventsMatrix[i].filter((placedEvent, index) => {
       const hasConflict = isEventOverlapping(placedEvent, event, adapter);
 
-      const conflictStartsAtIndex =
-        placedEvent.conflictStartsAtIndex < 0
-          ? Math.min(placedEvent.eventIndex ?? Infinity, j + 1)
-          : placedEvent.conflictStartsAtIndex;
+      const collisionIndex =
+        (placedEvent?.collisionIndex || -1) < 0
+          ? Math.min(placedEvent.placementIndex ?? Infinity, i + 1)
+          : placedEvent.collisionIndex;
 
       if (hasConflict) {
-        // replace the event in eventsMatrix[i][j] with placedEvent
-        eventsMatrix[i].splice(j, 1, { ...placedEvent, conflictStartsAtIndex });
+        eventsMatrix[i].splice(index, 1, { ...placedEvent, collisionIndex });
       }
 
       return hasConflict;
     });
 
     if (conflictingEvents.length > 0) {
-      console.log('conflictingEvents', conflictingEvents, eventsMatrix[i]);
       i += 1;
     } else {
-      console.log('no conflictingEvents', event.title, i);
       break;
     }
   }
@@ -151,9 +147,7 @@ export const getEventPlacement = (event, eventsMatrix, adapter) => {
     eventsMatrix.push([]);
   }
 
-  eventsMatrix[i].push({ ...event, eventIndex: i + 1, conflictStartsAtIndex: -1 });
-
-  console.log('event placed at row', i, event.title);
+  eventsMatrix[i].push({ ...event, placementIndex: i + 1, collisionIndex: -1 });
 
   return i;
 };
