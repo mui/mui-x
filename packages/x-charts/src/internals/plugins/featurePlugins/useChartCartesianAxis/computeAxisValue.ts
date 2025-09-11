@@ -14,7 +14,7 @@ import {
   ComputedAxis,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
-import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
+import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '../../../colorScale';
 import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
@@ -171,7 +171,10 @@ export function computeAxisValue<T extends ChartSeriesType>({
     }
 
     const rawTickNumber = scaleDefinition.tickNumber!;
-    const scaleType = axis.scaleType ?? ('linear' as const);
+    const continuousAxis = axis as Readonly<
+      DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>
+    >;
+    const scaleType = continuousAxis.scaleType ?? ('linear' as const);
     const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     if (filter) {
@@ -191,12 +194,12 @@ export function computeAxisValue<T extends ChartSeriesType>({
       offset: 0,
       height: 0,
       triggerTooltip,
-      ...axis,
+      ...continuousAxis,
       data,
       scaleType,
       scale,
       tickNumber,
-      colorScale: axis.colorMap && getColorScale(axis.colorMap),
+      colorScale: continuousAxis.colorMap && getSequentialColorScale(continuousAxis.colorMap),
       valueFormatter:
         axis.valueFormatter ??
         (createScalarFormatter(
@@ -210,7 +213,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
           value: any,
           context: AxisValueFormatterContext<TScaleName>,
         ) => string),
-    } satisfies ComputedAxis<ContinuousScaleName>;
+    } as ComputedAxis<ContinuousScaleName, any, ChartsAxisProps>;
   });
   return {
     axis: completeAxis,
