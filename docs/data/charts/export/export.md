@@ -131,7 +131,7 @@ If you want to use a custom wrapper element, you need to use the `useChartRootRe
 
 The `apiRef` prop exposes a `exportAsPrint()` method that can be used to open the browser's print dialog.
 
-The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
+The print dialog lets you print the chart or save it as a PDF, as well as configuring other settings.
 
 {{"demo": "PrintChart.js"}}
 
@@ -149,8 +149,8 @@ Follow the installation instructions [here](#image-export-pre-requisites).
 
 The function accepts an options object with the `type` property, which specifies the image format. The available formats are:
 
-- `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/);
-- `image/webp` which is only supported in some browsers.
+- `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/)
+- `image/webp` which is only supported in some browsers
 
 If the format is not supported by the browser, `exportAsImage()` falls back to `image/png`.
 

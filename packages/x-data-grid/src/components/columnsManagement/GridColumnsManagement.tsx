@@ -300,7 +300,8 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       <GridColumnsManagementScrollArea ownerState={rootProps}>
         <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
           {currentColumns.map((column) => (
-            <rootProps.slots.baseCheckbox
+            <GridColumnsManagementRow
+              as={rootProps.slots.baseCheckbox}
               key={column.field}
               className={classes.row}
               disabled={column.hideable === false || pivotActive}
@@ -455,5 +456,10 @@ const GridColumnsManagementEmptyText = styled('div', {
   alignSelf: 'center',
   font: vars.typography.font.body,
 });
+
+const GridColumnsManagementRow = styled(NotRendered<GridSlotProps['baseCheckbox']>, {
+  name: 'MuiDataGrid',
+  slot: 'ColumnsManagementRow',
+})({});
 
 export { GridColumnsManagement };

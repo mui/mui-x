@@ -66,7 +66,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 1. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
 
    :::warning
-   Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
+   Do not expose the API key to the public. Instead, keep it private, use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
 
    This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
 
@@ -87,7 +87,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    :::
 
 2. Enable the AI Assistant feature by adding the `aiAssistant` prop.
-   This adds a new button to the Toolbar that controlls the Assistant Panel open state.
+   This adds a new button to the Toolbar that controls the Assistant Panel's open state.
 3. Provide `<GridAiAssistantPanel />` as a component for the `aiAssistantPanel` slot.
    Slot is by default `null` to prevent bundling of the panel and its child components in the projects that are not using the AI Assistant feature.
 4. Provide the `onPrompt()` callback to pass the user's prompts to the service.

@@ -7,7 +7,7 @@
 
   /* Compact */
   --compact-accepted-bg: transparent;
-  --compact-circle-bg: var(--event-color-10);
+  --compact-circle-bg: var(--event-color-9);
 
   /* All Day */
   --allDay-accepted-bg: var(--event-color-5);
@@ -29,4 +29,11 @@
 .EventCard--allDay {
   --event-background: var(--allDay-accepted-bg);
   --event-primary-text: var(--allDay-accepted-primary-text);
+}
+
+.EventRecurringIcon {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  color: var(--event-secondary-text);
 }

@@ -22,7 +22,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
   describe('key version: 1', () => {
     const licenseKey =
-      '0f94d8b65161817ca5d7f7af8ac2f042T1JERVI6TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY1NDg1ODc1MzU1MCxLRVlWRVJTSU9OPTE=';
+      '65897de688b8bed993b1d6ddd0e1d548T1JERVI6MTIzLEVYUElSWT0xNzg1ODc0MDEwNzA4LEtFWVZFUlNJT049MQ==';
 
     it('should log an error when ReleaseInfo is not valid', () => {
       process.env.NODE_ENV = 'production';
@@ -53,7 +53,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         expiryDate: new Date(releaseDate.getTime() - oneDayInMS),
         planScope: 'pro',
         licenseModel: 'perpetual',
-        orderNumber: 'MUI-123',
+        orderNumber: '123',
         planVersion: 'initial',
       });
 
@@ -82,7 +82,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
   describe('key version: 2', () => {
     const licenseKeyPro = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
-      orderNumber: 'MUI-123',
+      orderNumber: '123',
       planScope: 'pro',
       licenseModel: 'subscription',
       planVersion: 'initial',
@@ -90,7 +90,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     const licenseKeyPremium = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
-      orderNumber: 'MUI-123',
+      orderNumber: '123',
       planScope: 'premium',
       licenseModel: 'subscription',
       planVersion: 'initial',
@@ -148,7 +148,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         process.env.NODE_ENV = 'production';
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
-          orderNumber: 'MUI-123',
+          orderNumber: '123',
           planScope: 'pro',
           licenseModel: 'subscription',
           planVersion: 'initial',
@@ -166,7 +166,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       it('should not validate subscription license in dev if current date is after expiry date but release date is before expiry date', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(new Date().getTime() - oneDayInMS),
-          orderNumber: 'MUI-123',
+          orderNumber: '123',
           planScope: 'pro',
           licenseModel: 'subscription',
           planVersion: 'initial',
@@ -185,7 +185,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         process.env.NODE_ENV = 'development';
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
-          orderNumber: 'MUI-123',
+          orderNumber: '123',
           planScope: 'pro',
           licenseModel: 'subscription',
           planVersion: 'initial',
@@ -203,7 +203,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       it('should validate perpetual license in dev if current date is after expiry date but release date is before expiry date', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
-          orderNumber: 'MUI-123',
+          orderNumber: '123',
           planScope: 'pro',
           licenseModel: 'perpetual',
           planVersion: 'initial',
@@ -235,7 +235,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
   describe('key version: 2.1', () => {
     const licenseKeyPro = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
-      orderNumber: 'MUI-123',
+      orderNumber: '123',
       planScope: 'pro',
       licenseModel: 'annual',
       planVersion: 'initial',
@@ -256,7 +256,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
   describe('key version: 2.2', () => {
     const proLicenseKeyInitial = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
-      orderNumber: 'MUI-123',
+      orderNumber: '123',
       planScope: 'pro',
       licenseModel: 'annual',
       planVersion: 'initial',
@@ -264,7 +264,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     const premiumLicenseKeyInitial = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
-      orderNumber: 'MUI-123',
+      orderNumber: '123',
       planScope: 'premium',
       licenseModel: 'annual',
       planVersion: 'initial',
@@ -272,7 +272,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     const proLicenseKeyQ32024 = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
-      orderNumber: 'MUI-123',
+      orderNumber: '123',
       planScope: 'pro',
       licenseModel: 'annual',
       planVersion: 'Q3-2024',

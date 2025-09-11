@@ -6,7 +6,8 @@ import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { selectors } from '../../../event-calendar/store';
+import { selectors } from '../../../../primitives/use-event-calendar';
+import { PreferencesMenu } from './preferences-menu';
 import './HeaderToolbar.css';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
@@ -30,10 +31,13 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       )}
       {...other}
     >
-      {showViewSwitcher && <ViewSwitcher />}
-      <button className="HeaderToolbarButton" onClick={instance.goToToday} type="button">
-        {translations.today}
-      </button>
+      <div className="PrimaryActionWrapper">
+        {showViewSwitcher && <ViewSwitcher />}
+        <button className="Button OutlinedNeutralButton" onClick={instance.goToToday} type="button">
+          {translations.today}
+        </button>
+      </div>
+      <PreferencesMenu />
     </header>
   );
 });

@@ -88,9 +88,9 @@
   --font-size-9: 58px;
 
   --line-height-1: 18px;
-  --line-height-2: 22px;
-  --line-height-3: 24px;
-  --line-height-4: 25px;
+  --line-height-2: 20px;
+  --line-height-3: 22px;
+  --line-height-4: 24px;
   --line-height-5: 25px;
   --line-height-6: 31px;
   --line-height-7: 38px;
@@ -111,6 +111,7 @@
   --font-weight-2: 500;
   --font-weight-3: 600;
 
+  --space-05: 2px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -390,6 +391,9 @@
   --panel: white;
   --shadow-black: 0 0% 0%;
   --shadow-tint: 215 22% 17%;
+
+  --code-background: var(--surface);
+  --code-color: var(--violet-9);
 }
 
 .mode-dark .mui-x-scheduler {
@@ -555,6 +559,9 @@
   --surface: var(--mauve-1);
   --panel: var(--mauve-1);
   --shadow-tint: 0 0% 0%;
+
+  --code-background: var(--surface);
+  --code-color: var(--violet-9);
 }
 
 body .mui-x-scheduler {

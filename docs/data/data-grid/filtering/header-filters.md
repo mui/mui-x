@@ -87,7 +87,7 @@ In the demo below, the **Rating** column uses a custom input, and you can filter
 ### Header filter row height
 
 By default, the height of the header filter row is the same as the header row (represented by `columnHeaderHeight` prop).
-You can use the the `headerFilterHeight` prop to change this:
+You can use the `headerFilterHeight` prop to change this:
 
 ```tsx
 <DataGridPro {...data} headerFilterHeight={52} />
