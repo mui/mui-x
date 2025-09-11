@@ -41,8 +41,10 @@ export interface CalendarEvent {
    */
   readOnly?: boolean;
   /**
-   * Link to the event this one was split from.
-   * Consumers should treat it as read-only: they can persist and pass it back, but it will be ignored if invalid.
+   * The id of the original event from which this event was split.
+   * If provided, it must reference an existing event in the calendar.
+   * If it does not match any existing event, the value will be ignored
+   * and no link to an original event will be created.
    */
   extractedFromId?: CalendarEventId;
 }
