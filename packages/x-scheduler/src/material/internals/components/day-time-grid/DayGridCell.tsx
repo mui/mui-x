@@ -45,7 +45,7 @@ export function DayGridCell(props: DayGridCellProps) {
           if (event.position.span > 0) {
             return (
               <EventPopoverTrigger
-                key={`${event.key}-${day.key}`}
+                key={event.key}
                 event={event}
                 render={
                   <DayGridEvent
@@ -62,7 +62,7 @@ export function DayGridCell(props: DayGridCellProps) {
 
           return (
             <DayGridEvent
-              key={`${event.key}-${day.key}`}
+              key={event.key}
               event={event}
               variant="invisible"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}

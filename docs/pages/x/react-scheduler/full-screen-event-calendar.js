@@ -19,11 +19,11 @@ export default function FullEventCalendar() {
     >
       <EventCalendar
         events={events}
+        resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsDraggable
-        defaultView="month"
-        resources={resources}
+        areEventsResizable
       />
     </div>
   );
