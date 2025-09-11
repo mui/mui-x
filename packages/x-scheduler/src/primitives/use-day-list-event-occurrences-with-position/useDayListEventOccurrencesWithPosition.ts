@@ -49,12 +49,10 @@ export function useDayListEventOccurrencesWithPosition(
           }
           // Otherwise, we find the smallest available index
           else {
-            const usedIndexes = indexLookup[day.key]?.usedIndexes;
+            const usedIndexes = indexLookup[day.key].usedIndexes;
             let i = 1;
-            if (usedIndexes) {
-              while (usedIndexes.has(i)) {
-                i += 1;
-              }
+            while (usedIndexes.has(i)) {
+              i += 1;
             }
 
             const durationInDays = diffIn(adapter, occurrence.end, day.value, 'days') + 1;
