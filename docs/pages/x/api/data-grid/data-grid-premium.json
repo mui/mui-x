@@ -59,7 +59,7 @@
     "dataSource": {
       "type": {
         "name": "shape",
-        "description": "{ getAggregatedValue?: func, getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
+        "description": "{ getAggregatedValue?: func, getChildrenCount?: func, getGroupKey?: func, getPivotColumnDef?: func, getRows: func, updateRow?: func }"
       }
     },
     "dataSourceCache": {

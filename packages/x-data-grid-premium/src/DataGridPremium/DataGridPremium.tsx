@@ -300,6 +300,7 @@ DataGridPremiumRaw.propTypes = {
     getAggregatedValue: PropTypes.func,
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
+    getPivotColumnDef: PropTypes.func,
     getRows: PropTypes.func.isRequired,
     updateRow: PropTypes.func,
   }),
