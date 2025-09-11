@@ -32,10 +32,11 @@ export interface UseChartVoronoiParameters {
    */
   disableVoronoi?: boolean;
   /**
-   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
-  voronoiMaxRadius?: number | undefined;
+  voronoiMaxRadius?: 'item' | number | undefined;
   /**
    * Callback fired when clicking close to an item.
    * This is only available for scatter plot for now.
@@ -49,10 +50,7 @@ export type UseChartVoronoiDefaultizedParameters = Pick<
   UseChartVoronoiParameters,
   'voronoiMaxRadius' | 'onItemClick'
 > & {
-  /**
-   * If true, a point is only returned if the pointer is within the radius of the point.
-   */
-  disableClosestPoint: boolean;
+  disableVoronoi: boolean;
 };
 
 export type UseChartVoronoiSignature = ChartPluginSignature<{
