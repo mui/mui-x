@@ -25,6 +25,7 @@ import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { ScaleDefinition } from './getAxisScale';
+import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 
 function getRange(
   drawingArea: ChartDrawingArea,
@@ -112,61 +113,54 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const data = axis.data ?? [];
 
-    if (isBandScaleConfig(axis)) {
-      const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-      const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
+    if (isOrdinalScale(scale)) {
       // Reverse range because ordinal scales are presented from top to bottom on y-axis
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
 
-      completeAxis[axis.id] = {
-        offset: 0,
-        height: 0,
-        categoryGapRatio,
-        barGapRatio,
-        triggerTooltip,
-        ...axis,
-        data,
-        scale,
-        tickNumber: axis.data!.length,
-        colorScale:
-          axis.colorMap &&
-          (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
-            : getColorScale(axis.colorMap)),
-      };
+      if (isBandScale(scale) && isBandScaleConfig(axis)) {
+        const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+        const barGapRatio = axis.barGapRatio ?? DEFAULT_BAR_GAP_RATIO;
+
+        completeAxis[axis.id] = {
+          offset: 0,
+          height: 0,
+          categoryGapRatio,
+          barGapRatio,
+          triggerTooltip,
+          ...axis,
+          data,
+          scale,
+          tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
+        };
+      }
+
+      if (isPointScaleConfig(axis)) {
+        completeAxis[axis.id] = {
+          offset: 0,
+          height: 0,
+          triggerTooltip,
+          ...axis,
+          data,
+          scale,
+          tickNumber: axis.data!.length,
+          colorScale:
+            axis.colorMap &&
+            (axis.colorMap.type === 'ordinal'
+              ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
+              : getColorScale(axis.colorMap)),
+        };
+      }
 
       if (isDateData(axis.data)) {
         const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
-    }
 
-    if (isPointScaleConfig(axis)) {
-      const scaleRange = axisDirection === 'y' ? [...range].reverse() : range;
-
-      completeAxis[axis.id] = {
-        offset: 0,
-        height: 0,
-        triggerTooltip,
-        ...axis,
-        data,
-        scale,
-        tickNumber: axis.data!.length,
-        colorScale:
-          axis.colorMap &&
-          (axis.colorMap.type === 'ordinal'
-            ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
-            : getColorScale(axis.colorMap)),
-      };
-
-      if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
-        completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
-      }
-    }
-
-    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
-      // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
       return;
     }
 
