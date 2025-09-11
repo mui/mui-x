@@ -10,8 +10,6 @@ import {
 } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
 import {
-  selectorChartXScales,
-  selectorChartYScales,
   selectorChartZoomAxisFilters,
   selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
