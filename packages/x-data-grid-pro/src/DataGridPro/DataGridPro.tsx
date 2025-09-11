@@ -7,6 +7,7 @@ import {
   GridConfiguration,
   validateProps,
   useGridApiInitialization,
+  useGridRowsOverridableMethods,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -25,6 +26,7 @@ const configuration: GridConfiguration = {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
     useGridRowAriaAttributes: useGridRowAriaAttributesPro,
+    useGridRowsOverridableMethods,
     useCellAggregationResult: () => null,
   },
 };
@@ -40,7 +42,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props.apiRef,
     props,
   );
-  useDataGridProComponent(privateApiRef, props);
+  useDataGridProComponent(privateApiRef, props, configuration);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -291,6 +293,11 @@ DataGridProRaw.propTypes = {
    * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: PropTypes.bool,
+  /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -761,7 +768,7 @@ DataGridProRaw.propTypes = {
    */
   onPreferencePanelOpen: PropTypes.func,
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,

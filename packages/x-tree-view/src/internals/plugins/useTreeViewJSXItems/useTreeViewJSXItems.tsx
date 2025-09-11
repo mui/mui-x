@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -18,8 +19,7 @@ import {
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
-import { useSelector } from '../../hooks/useSelector';
-import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
+import { idSelectors } from '../../corePlugins/useTreeViewId';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -28,45 +28,36 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   instance.preventItemUpdates();
 
   const insertJSXItem = useEventCallback((item: TreeViewItemMeta) => {
-    store.update((prevState) => {
-      if (prevState.items.itemMetaLookup[item.id] != null) {
-        throw new Error(
-          [
-            'MUI X: The Tree View component requires all items to have a unique `id` property.',
-            'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-            `Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
-          ].join('\n'),
-        );
-      }
+    if (store.state.items.itemMetaLookup[item.id] != null) {
+      throw new Error(
+        [
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
+          `Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
+        ].join('\n'),
+      );
+    }
 
-      return {
-        ...prevState,
-        items: {
-          ...prevState.items,
-          itemMetaLookup: { ...prevState.items.itemMetaLookup, [item.id]: item },
-          // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
-          itemModelLookup: {
-            ...prevState.items.itemModelLookup,
-            [item.id]: { id: item.id, label: item.label ?? '' },
-          },
-        },
-      };
+    store.set('items', {
+      ...store.state.items,
+      itemMetaLookup: { ...store.state.items.itemMetaLookup, [item.id]: item },
+      // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
+      itemModelLookup: {
+        ...store.state.items.itemModelLookup,
+        [item.id]: { id: item.id, label: item.label ?? '' },
+      },
     });
 
     return () => {
-      store.update((prevState) => {
-        const newItemMetaLookup = { ...prevState.items.itemMetaLookup };
-        const newItemModelLookup = { ...prevState.items.itemModelLookup };
-        delete newItemMetaLookup[item.id];
-        delete newItemModelLookup[item.id];
-        return {
-          ...prevState,
-          items: {
-            ...prevState.items,
-            itemMetaLookup: newItemMetaLookup,
-            itemModelLookup: newItemModelLookup,
-          },
-        };
+      const newItemMetaLookup = { ...store.state.items.itemMetaLookup };
+      const newItemModelLookup = { ...store.state.items.itemModelLookup };
+      delete newItemMetaLookup[item.id];
+      delete newItemModelLookup[item.id];
+
+      store.set('items', {
+        ...store.state.items,
+        itemMetaLookup: newItemMetaLookup,
+        itemModelLookup: newItemModelLookup,
       });
       publishTreeViewEvent(instance, 'removeItem', { id: item.id });
     };
@@ -75,20 +66,17 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   const setJSXItemsOrderedChildrenIds = (parentId: string | null, orderedChildrenIds: string[]) => {
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
 
-    store.update((prevState) => ({
-      ...prevState,
-      items: {
-        ...prevState.items,
-        itemOrderedChildrenIdsLookup: {
-          ...prevState.items.itemOrderedChildrenIdsLookup,
-          [parentIdWithDefault]: orderedChildrenIds,
-        },
-        itemChildrenIndexesLookup: {
-          ...prevState.items.itemChildrenIndexesLookup,
-          [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
-        },
+    store.set('items', {
+      ...store.state.items,
+      itemOrderedChildrenIdsLookup: {
+        ...store.state.items.itemOrderedChildrenIdsLookup,
+        [parentIdWithDefault]: orderedChildrenIds,
       },
-    }));
+      itemChildrenIndexesLookup: {
+        ...store.state.items.itemChildrenIndexesLookup,
+        [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
+      },
+    });
   };
 
   const mapFirstCharFromJSX = useEventCallback((itemId: string, firstChar: string) => {
@@ -134,7 +122,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
   const expandable = itemHasChildren(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useForkRef(pluginContentRef, contentRef);
-  const treeId = useSelector(store, selectorTreeViewId);
+  const treeId = useStore(store, idSelectors.treeId);
 
   // Prevent any flashing
   useEnhancedEffect(() => {

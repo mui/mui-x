@@ -1,0 +1,48 @@
+import * as React from 'react';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { screen } from '@mui/internal-test-utils';
+import { createPickerRenderer } from 'test/utils/pickers';
+
+describe('<DateField />', () => {
+  const { render } = createPickerRenderer();
+
+  describe('InputProps and slotProps behavior', () => {
+    it('should respect the `InputProps` on accessible DOM structure', () => {
+      render(<DateField enableAccessibleFieldDOMStructure InputProps={{ name: 'test-field' }} />);
+
+      expect(screen.getByRole('textbox', { hidden: true }))
+        .attribute('name')
+        .to.equal('test-field');
+    });
+
+    it('should respect the `InputProps` on non-accessible DOM structure', () => {
+      render(
+        <DateField enableAccessibleFieldDOMStructure={false} InputProps={{ name: 'test-field' }} />,
+      );
+
+      expect(screen.getByRole('textbox')).attribute('name').to.equal('test-field');
+    });
+
+    it('should respect the `slotProps.textField` on accessible DOM structure', () => {
+      render(
+        <DateField
+          enableAccessibleFieldDOMStructure
+          slotProps={{ textField: { helperText: 'field-helper' } }}
+        />,
+      );
+
+      expect(screen.getByRole('group', { description: 'field-helper' })).not.to.equal(null);
+    });
+
+    it('should respect the `slotProps.textField` on non-accessible DOM structure', () => {
+      render(
+        <DateField
+          enableAccessibleFieldDOMStructure={false}
+          slotProps={{ textField: { helperText: 'field-helper' } }}
+        />,
+      );
+
+      expect(screen.getByRole('textbox', { description: 'field-helper' })).not.to.equal(null);
+    });
+  });
+});

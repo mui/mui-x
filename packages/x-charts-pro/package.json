@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "8.10.2",
+  "version": "8.11.2",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Charts components.",
-  "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"

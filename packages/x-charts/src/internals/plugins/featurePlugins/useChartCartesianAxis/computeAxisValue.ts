@@ -1,6 +1,6 @@
 import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
-import { AxisConfig, ContinuousScaleName, ScaleName } from '../../../../models';
+import { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
   ChartsAxisProps,
@@ -30,14 +30,14 @@ import { getContinuousScale } from './getContinuousScale';
 function getRange(
   drawingArea: ChartDrawingArea,
   axisDirection: 'x' | 'y', // | 'rotation' | 'radius',
-  axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
+  reverse: boolean,
 ): [number, number] {
   const range: [number, number] =
     axisDirection === 'x'
       ? [drawingArea.left, drawingArea.left + drawingArea.width]
       : [drawingArea.top + drawingArea.height, drawingArea.top];
 
-  return axis.reverse ? [range[1], range[0]] : range;
+  return reverse ? [range[1], range[0]] : range;
 }
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
@@ -107,7 +107,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
-    const range = getRange(drawingArea, axisDirection, axis);
+    const range = getRange(drawingArea, axisDirection, axis.reverse ?? false);
 
     const [minData, maxData] = getAxisExtremum(
       axis,
@@ -149,7 +149,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, scaleRange);
+        const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
@@ -173,7 +173,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, scaleRange);
+        const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }

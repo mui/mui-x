@@ -17,7 +17,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
   <BarChart hideLegend={true} />
   <BarChart
     slotProps={{ legend: {
-      ...rest
+      ...other
     } }}
     hideLegend={true} />
   <BarChart slotProps={{ legend: {} }} />
