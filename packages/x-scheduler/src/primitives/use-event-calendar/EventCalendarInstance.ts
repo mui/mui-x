@@ -298,7 +298,7 @@ export class EventCalendarInstance {
     let updatedEvents: CalendarEvent[] = [];
 
     switch (scope) {
-      case 'following': {
+      case 'this-and-following': {
         updatedEvents = applyRecurringUpdateFollowing(
           adapter,
           events,
