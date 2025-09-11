@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { ChartsXAxisProps, type AxisGroup } from '../models/axis';
-import { isDiscreteScale } from '../internals/scaleGuards';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { TICK_LABEL_GAP } from './utilities';
 import { useTicksGrouped } from '../hooks/useTicksGrouped';
@@ -45,7 +45,7 @@ function ChartsGroupedXAxisTicks(inProps: ChartsGroupedXAxisProps) {
     axisTickLabelProps,
   } = useAxisTicksProps(inProps);
 
-  if (!isDiscreteScale(xScale)) {
+  if (!isOrdinalScale(xScale)) {
     throw new Error(
       'MUI X Charts: ChartsGroupedXAxis only supports the `band` and `point` scale types.',
     );

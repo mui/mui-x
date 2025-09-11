@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { AxisConfig, D3Scale, type AxisGroup } from '../models/axis';
-import { isDiscreteScale } from '../internals/scaleGuards';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import type { TickParams } from './useTicks';
 
 const offsetRatio = {
@@ -121,7 +121,7 @@ function mapToGrouping(
       if (isNew) {
         currentValueCount = 1;
         // Calculate tick offset
-        const tickOffset = isDiscreteScale(scale)
+        const tickOffset = isOrdinalScale(scale)
           ? scale(tickValue)! -
             (scale.step() - scale.bandwidth()) / 2 +
             offsetRatio[tickPlacement] * scale.step()

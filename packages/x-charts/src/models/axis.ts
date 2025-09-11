@@ -40,7 +40,7 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleTime<Range, Output>
   | ScaleLinear<Range, Output>;
 
-export type D3DiscreteScale<Domain extends { toString(): string } = number | Date | string> =
+export type D3OrdinalScale<Domain extends { toString(): string } = number | Date | string> =
   | ScaleBand<Domain>
   | ScalePoint<Domain>;
 
