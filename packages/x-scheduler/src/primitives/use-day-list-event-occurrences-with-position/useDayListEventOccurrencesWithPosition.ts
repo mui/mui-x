@@ -79,7 +79,7 @@ export function useDayListEventOccurrencesWithPosition(
         ...day,
         withPosition,
         withoutPosition,
-        maxConcurrentEvents: Math.max(...indexLookup[day.key].usedIndexes, 1),
+        concurrentEvents: Math.max(...indexLookup[day.key].usedIndexes, 1),
       };
     });
   }, [adapter, days, occurrencesMap, shouldAddPosition]);
@@ -115,7 +115,7 @@ export namespace useDayListEventOccurrencesWithPosition {
     /**
      * The number of rows/columns needed to display all the occurrences with position for this collection.
      */
-    maxConcurrentEvents: number;
+    concurrentEvents: number;
   }
 
   export type ReturnValue = DayData[];

@@ -49,6 +49,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     </span>
   );
 
+  // Day number header + visible events + "+x more" indicator (if any)
+  const rowCount = 1 + visibleEvents.length + (hiddenCount > 0 ? 1 : 0);
+
   return (
     <DayGrid.Cell
       ref={ref}
@@ -61,12 +64,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         isToday && 'Today',
         isWeekend(adapter, day.value) && 'Weekend',
       )}
-      style={
-        {
-          // TODO: Fix, should be 1 + ... but the day number row takes too much space
-          '--row-count': 2 + day.maxConcurrentEvents + (hiddenCount > 0 ? 1 : 0),
-        } as React.CSSProperties
-      }
+      style={{ '--row-count': rowCount } as React.CSSProperties}
     >
       {hasDayView ? (
         <button
