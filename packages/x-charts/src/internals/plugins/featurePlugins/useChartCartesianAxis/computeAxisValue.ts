@@ -1,5 +1,5 @@
 import { createScalarFormatter } from '../../../defaultValueFormatters';
-import { ScaleName } from '../../../../models';
+import { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
   ChartsAxisProps,
@@ -11,6 +11,7 @@ import {
   DefaultedYAxis,
   DefaultedAxis,
   AxisValueFormatterContext,
+  ComputedAxis,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -164,6 +165,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
       return;
     }
 
+    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+      // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
+      return;
+    }
+
     const rawTickNumber = scaleDefinition.tickNumber!;
     const scaleType = axis.scaleType ?? ('linear' as const);
     const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
@@ -187,7 +193,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       triggerTooltip,
       ...axis,
       data,
-      scaleType: scaleType as any,
+      scaleType,
       scale,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
@@ -196,7 +202,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         (createScalarFormatter(
           tickNumber,
           getScale(
-            scaleType,
+            scaleType as ContinuousScaleName,
             range.map((v) => scale.invert(v)),
             range,
           ),
@@ -204,7 +210,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
           value: any,
           context: AxisValueFormatterContext<TScaleName>,
         ) => string),
-    };
+    } satisfies ComputedAxis<ContinuousScaleName>;
   });
   return {
     axis: completeAxis,
