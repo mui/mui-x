@@ -196,7 +196,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       return undefined;
     }
 
-    function keyBoardHandler(event: KeyboardEvent) {
+    function keyboardHandler(event: KeyboardEvent) {
       switch (event.key) {
         case 'ArrowRight':
           focusNextItem();
@@ -228,10 +228,10 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
     }
 
-    element.addEventListener('keydown', keyBoardHandler);
+    element.addEventListener('keydown', keyboardHandler);
     element.addEventListener('blur', removeFocus);
     return () => {
-      element.removeEventListener('keydown', keyBoardHandler);
+      element.removeEventListener('keydown', keyboardHandler);
       element.removeEventListener('blur', removeFocus);
     };
   }, [
