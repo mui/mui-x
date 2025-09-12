@@ -59,8 +59,8 @@ const getAlignItems = (position: Position | undefined) => {
 
 const getGridTemplateAreasWithToolBar = (
   hideLegend: boolean,
-  direction?: Direction,
-  position?: Position,
+  direction: Direction | undefined,
+  position: Position | undefined,
 ) => {
   if (direction === 'vertical') {
     if (hideLegend) {
