@@ -64,8 +64,8 @@ const getGridTemplateAreasWithToolBar = (
 ) => {
   if (direction === 'vertical') {
     if (hideLegend) {
-      return `"toolbar toolbar"
-              "chart chart"`;
+      return `"toolbar"
+              "chart"`;
     }
     if (position?.horizontal === 'start') {
       return `"toolbar toolbar"
