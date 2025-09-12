@@ -37,7 +37,8 @@
   "imports": [
     "import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';",
     "import { ContinuousColorLegend } from '@mui/x-charts';",
-    "import { ContinuousColorLegend } from '@mui/x-charts-pro';"
+    "import { ContinuousColorLegend } from '@mui/x-charts-pro';",
+    "import { ContinuousColorLegend } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

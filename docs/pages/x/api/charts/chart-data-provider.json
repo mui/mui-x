@@ -27,7 +27,8 @@
   "imports": [
     "import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';",
     "import { ChartDataProvider } from '@mui/x-charts';",
-    "import { ChartDataProvider } from '@mui/x-charts-pro';"
+    "import { ChartDataProvider } from '@mui/x-charts-pro';",
+    "import { ChartDataProvider } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "spread": false,

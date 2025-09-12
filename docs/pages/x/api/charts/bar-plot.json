@@ -21,7 +21,8 @@
   "imports": [
     "import { BarPlot } from '@mui/x-charts/BarChart';",
     "import { BarPlot } from '@mui/x-charts';",
-    "import { BarPlot } from '@mui/x-charts-pro';"
+    "import { BarPlot } from '@mui/x-charts-pro';",
+    "import { BarPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
