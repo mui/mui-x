@@ -1056,11 +1056,11 @@ export const processPivotingRows = (
     }
   }
 
-  // Compute aggregate row if aggregation model is provided
+  // Compute aggregate row if pivot values are provided
   let aggregateRow: GridRowModel | undefined;
-  if (queryOptions.aggregationModel || visibleValues.length > 0) {
+  if (visibleValues.length > 0) {
     const regularAggregation = applyAggregation(
-      queryOptions.pivotModel!.values.map((value) => ({ [value.field]: value.aggFunc })) as any,
+      visibleValues.map((value) => ({ [value.field]: value.aggFunc })) as any,
       columnsWithDefaultColDef,
       filteredRowsWithGroups,
     );
