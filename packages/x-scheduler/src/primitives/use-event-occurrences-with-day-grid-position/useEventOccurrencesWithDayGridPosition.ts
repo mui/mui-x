@@ -5,7 +5,7 @@ import {
   CalendarEventOccurrenceWithDayGridPosition,
   CalendarProcessedDate,
 } from '../models';
-import { useEventOccurrences } from '../use-event-occurrences';
+import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { diffIn } from '../utils/date-utils';
 
@@ -89,7 +89,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
      * The occurrences Map as returned by `useEventOccurrences()`.
      * It should contain the occurrences for each requested day but can also contain occurrences for other days.
      */
-    occurrencesMap: useEventOccurrences.ReturnValue;
+    occurrencesMap: useEventOccurrencesGroupedByDay.ReturnValue;
     /**
      * Whether the position should be computed for this event occurrence.
      * @default () => true

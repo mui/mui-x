@@ -9,7 +9,7 @@ import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
-import { useEventOccurrences } from '../../primitives/use-event-occurrences';
+import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import './AgendaView.css';
@@ -42,7 +42,7 @@ export const AgendaView = React.memo(
         }),
       [getDayList, preferences.showWeekends, visibleDate],
     );
-    const occurrences = useEventOccurrences({ days, renderEventIn: 'every-day' });
+    const occurrences = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>

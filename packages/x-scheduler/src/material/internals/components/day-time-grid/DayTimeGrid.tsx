@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
-import { useEventOccurrences } from '../../../../primitives/use-event-occurrences';
+import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
@@ -49,7 +49,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
-  const occurrencesMap = useEventOccurrences({ days, renderEventIn: 'every-day' });
+  const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
   const daysWithOccurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,

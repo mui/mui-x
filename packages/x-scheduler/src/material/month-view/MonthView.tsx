@@ -16,7 +16,7 @@ import { DayGrid } from '../../primitives/day-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
-import { useEventOccurrences } from '../../primitives/use-event-occurrences';
+import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import './MonthView.css';
 
 const adapter = getAdapter();
@@ -55,7 +55,7 @@ export const MonthView = React.memo(
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };
     }, [getWeekList, getDayList, visibleDate, preferences.showWeekends]);
 
-    const occurrencesMap = useEventOccurrences({ days, renderEventIn: 'every-day' });
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>

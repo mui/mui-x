@@ -6,9 +6,12 @@ import {
   CalendarProcessedDate,
   SchedulerValidDate,
 } from '../models';
-import { getDateKey, getDaysTheOccurrenceIsVisibleOn } from '../utils/event-utils';
+import {
+  getDateKey,
+  getDaysTheOccurrenceIsVisibleOn,
+  getOccurrencesFromEvents,
+} from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
-import { getRecurringEventOccurrencesForVisibleDays } from '../utils/recurrence-utils';
 import { useEventCalendarContext } from '../utils/useEventCalendarContext';
 import { selectors } from '../use-event-calendar';
 import { Adapter } from '../utils/adapter/types';
@@ -19,9 +22,9 @@ import { Adapter } from '../utils/adapter/types';
  * It should be called once per view to get the occurrences for all the visible days in one go.
  * The returned value is a Map where the key is the day key and the value is the list of occurrences for that day.
  */
-export function useEventOccurrences(
-  parameters: useEventOccurrences.Parameters,
-): useEventOccurrences.ReturnValue {
+export function useEventOccurrencesGroupedByDay(
+  parameters: useEventOccurrencesGroupedByDay.Parameters,
+): useEventOccurrencesGroupedByDay.ReturnValue {
   const { days, renderEventIn } = parameters;
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
@@ -29,12 +32,13 @@ export function useEventOccurrences(
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
   return React.useMemo(
-    () => innerGetEventOccurrences(adapter, days, renderEventIn, events, visibleResources),
+    () =>
+      innerGetEventOccurrencesGroupedByDay(adapter, days, renderEventIn, events, visibleResources),
     [adapter, days, renderEventIn, events, visibleResources],
   );
 }
 
-export namespace useEventOccurrences {
+export namespace useEventOccurrencesGroupedByDay {
   export interface Parameters {
     /**
      * The days to get the occurrences for.
@@ -52,58 +56,27 @@ export namespace useEventOccurrences {
 }
 
 /**
- * Do not use directly, use the `useEventOccurrences` hook instead.
+ * Do not use directly, use the `useEventOccurrencesGroupedByDay` hook instead.
  * This is only exported for testing purposes.
  */
-export function innerGetEventOccurrences(
+export function innerGetEventOccurrencesGroupedByDay(
   adapter: Adapter,
   days: CalendarProcessedDate[],
   renderEventIn: 'first-day' | 'every-day',
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
 ): Map<string, CalendarEventOccurrence[]> {
-  const start = adapter.startOfDay(days[0].value);
-  const end = adapter.endOfDay(days[days.length - 1].value);
-  const occurrences: CalendarEventOccurrence[] = [];
-
-  for (const event of events) {
-    // STEP 1: Skip events from resources that are not visible
-    if (event.resource && visibleResources.get(event.resource) === false) {
-      continue;
-    }
-
-    // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
-    if (event.rrule) {
-      occurrences.push(...getRecurringEventOccurrencesForVisibleDays(event, days, adapter));
-      continue;
-    }
-
-    // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
-    if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
-      continue;
-    }
-
-    occurrences.push({ ...event, key: String(event.id) });
-  }
-
-  // STEP 3: Sort by the actual start date of each occurrence
-  // We sort here so that events are processed in the correct order
-  const sortedOccurrences = occurrences
-    // TODO: Avoid JS Date conversion
-    .map((occurrence) => ({
-      occurrence,
-      timestamp: adapter.toJsDate(occurrence.start).getTime(),
-    }))
-    .sort((a, b) => a.timestamp - b.timestamp)
-    .map((item) => item.occurrence);
-
   // STEP 4: Create a Map of the occurrences grouped by day
   const occurrencesGroupedByDay = new Map<
     string,
     Record<'allDay' | 'nonAllDay', CalendarEventOccurrence[]>
   >(days.map((day) => [day.key, { allDay: [], nonAllDay: [] }]));
 
-  for (const occurrence of sortedOccurrences) {
+  const start = adapter.startOfDay(days[0].value);
+  const end = adapter.endOfDay(days[days.length - 1].value);
+  const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
+
+  for (const occurrence of occurrences) {
     const eventDays: SchedulerValidDate[] = getDaysTheOccurrenceIsVisibleOn(
       occurrence,
       days,
@@ -119,7 +92,7 @@ export function innerGetEventOccurrences(
   }
 
   // STEP 5: Make sure the all-day events are before the non-all-day events
-  const cleanMap: useEventOccurrences.ReturnValue = new Map();
+  const cleanMap: useEventOccurrencesGroupedByDay.ReturnValue = new Map();
   occurrencesGroupedByDay.forEach((value, key) => {
     cleanMap.set(key, [...value.allDay, ...value.nonAllDay]);
   });
