@@ -1,4 +1,5 @@
 import * as React from 'react';
+import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer } from 'test/utils/pickers';
@@ -43,6 +44,42 @@ describe('<DateField />', () => {
       );
 
       expect(screen.getByRole('textbox', { description: 'field-helper' })).not.to.equal(null);
+    });
+  });
+
+  describe('slotProps.inputAdornment behavior', () => {
+    function CustomInputAdornment(props: InputAdornmentProps) {
+      const { children, ...other } = props;
+      return (
+        <InputAdornment {...other}>
+          <span>x</span>
+          {children}
+        </InputAdornment>
+      );
+    }
+
+    it('should respect the `slots.inputAdornment` on accessible DOM structure', () => {
+      render(
+        <DateField
+          enableAccessibleFieldDOMStructure
+          slots={{ inputAdornment: CustomInputAdornment }}
+          slotProps={{ inputAdornment: { 'aria-label': 'test-adornment-icon', role: 'figure' } }}
+        />,
+      );
+
+      expect(screen.getByRole('figure', { name: 'test-adornment-icon' })).to.have.text('x');
+    });
+
+    it('should respect the `slots.inputAdornment` on non-accessible DOM structure', () => {
+      render(
+        <DateField
+          enableAccessibleFieldDOMStructure={false}
+          slots={{ inputAdornment: CustomInputAdornment }}
+          slotProps={{ inputAdornment: { 'aria-label': 'test-adornment-icon', role: 'figure' } }}
+        />,
+      );
+
+      expect(screen.getByRole('figure', { name: 'test-adornment-icon' })).to.have.text('x');
     });
   });
 });
