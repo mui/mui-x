@@ -3,7 +3,6 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewItemsSignature, SetItemChildrenParameters } from './useTreeViewItems.types';
-import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import {
   BuildItemsLookupConfig,
@@ -131,11 +130,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         [parentIdWithDefault]: childrenIndexes,
       },
     };
-    Object.values(store.state.items.itemMetaLookup).forEach((item) => {
-      if (!lookups.itemMetaLookup[item.id]) {
-        publishTreeViewEvent(instance, 'removeItem', { id: item.id });
-      }
-    });
 
     store.set('items', { ...store.state.items, ...lookups });
   };
@@ -144,7 +138,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     const newMetaMap = Object.keys(store.state.items.itemMetaLookup).reduce((acc, key) => {
       const item = store.state.items.itemMetaLookup[key];
       if (item.parentId === parentId) {
-        publishTreeViewEvent(instance, 'removeItem', { id: item.id });
         return acc;
       }
       return { ...acc, [item.id]: item };
@@ -184,12 +177,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       disabledItemsFocusable: params.disabledItemsFocusable,
       items: params.items,
       config: itemsConfig,
-    });
-
-    Object.values(store.state.items.itemMetaLookup).forEach((item) => {
-      if (!newState.itemMetaLookup[item.id]) {
-        publishTreeViewEvent(instance, 'removeItem', { id: item.id });
-      }
     });
 
     store.set('items', { ...store.state.items, ...newState });

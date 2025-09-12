@@ -435,4 +435,54 @@ describe('<DesktopDatePicker />', () => {
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values and causing a root component re-render
     });
   });
+
+  describe('InputProps and slotProps behavior', () => {
+    it('should respect the `slotProps.textField.InputProps` on accessible DOM structure', () => {
+      render(
+        <DesktopDatePicker
+          enableAccessibleFieldDOMStructure
+          slotProps={{ textField: { InputProps: { name: 'test-field' } } }}
+        />,
+      );
+
+      expect(screen.getByRole('textbox', { hidden: true }))
+        .attribute('name')
+        .to.equal('test-field');
+    });
+
+    it('should respect the `slotProps.textField.InputProps` on non-accessible DOM structure', () => {
+      render(
+        <DesktopDatePicker
+          enableAccessibleFieldDOMStructure={false}
+          slotProps={{ textField: { InputProps: { name: 'test-field' } } }}
+        />,
+      );
+
+      expect(screen.getByRole('textbox')).attribute('name').to.equal('test-field');
+    });
+
+    it('should respect the `slotProps.textField.slotProps.input` on accessible DOM structure', () => {
+      render(
+        <DesktopDatePicker
+          enableAccessibleFieldDOMStructure
+          slotProps={{ textField: { slotProps: { input: { name: 'test-field' } } } }}
+        />,
+      );
+
+      expect(screen.getByRole('textbox', { hidden: true }))
+        .attribute('name')
+        .to.equal('test-field');
+    });
+
+    it('should respect the `slotProps.textField.slotProps.input` on non-accessible DOM structure', () => {
+      render(
+        <DesktopDatePicker
+          enableAccessibleFieldDOMStructure={false}
+          slotProps={{ textField: { slotProps: { input: { name: 'test-field' } } } }}
+        />,
+      );
+
+      expect(screen.getByRole('textbox')).attribute('name').to.equal('test-field');
+    });
+  });
 });
