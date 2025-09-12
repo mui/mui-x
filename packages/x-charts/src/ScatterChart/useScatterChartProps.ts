@@ -111,6 +111,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   return {
