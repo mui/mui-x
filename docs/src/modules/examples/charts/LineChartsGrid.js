@@ -4,9 +4,9 @@ import DashedLineChart from 'docsx/data/charts/line-demo/DashedLineChart';
 import BiaxialLineChart from 'docsx/data/charts/line-demo/BiaxialLineChart';
 import LineChartWithReferenceLines from 'docsx/data/charts/line-demo/LineChartWithReferenceLines';
 import LineChartConnectNulls from 'docsx/data/charts/line-demo/LineChartConnectNulls';
-import LiveLineChartNoSnap from 'docsx/data/charts/line-demo/LiveLineChartNoSnap';
 import LineWithUncertaintyArea from 'docsx/data/charts/line-demo/LineWithUncertaintyArea';
 import CustomLineMarks from 'docsx/data/charts/line-demo/CustomLineMarks';
+import Combining from 'docsx/data/charts/quickstart/Combining';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [
@@ -36,11 +36,6 @@ const chartData = [
     link: '/x/react-charts/line-demo/#LineChartConnectNulls',
   },
   {
-    title: 'Live Line Chart',
-    ChartComponent: LiveLineChartNoSnap,
-    link: '/x/react-charts/line-demo/#LiveLineChartNoSnap',
-  },
-  {
     title: 'Line with Uncertainty Area',
     ChartComponent: LineWithUncertaintyArea,
     link: '/x/react-charts/line-demo/#LineWithUncertaintyArea',
@@ -49,6 +44,11 @@ const chartData = [
     title: 'Custom Line Marks',
     ChartComponent: CustomLineMarks,
     link: '/x/react-charts/line-demo/#CustomLineMarks',
+  },
+  {
+    title: 'Line and Bar composed',
+    ChartComponent: Combining,
+    link: '/x/react-charts/quickstart/#Combining',
   },
 ];
 

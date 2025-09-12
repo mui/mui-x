@@ -45,8 +45,9 @@ export default function LiveLineChartNoSnap() {
   }, [running]);
 
   return (
-    <Box sx={{ width: '100%', height: 300 }}>
+    <Box sx={{ width: '100%' }}>
       <LineChart
+        height={300}
         skipAnimation
         series={[
           { data: secondData, showMark: false },

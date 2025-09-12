@@ -1,9 +1,8 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
-
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
@@ -38,12 +37,9 @@ const series = [
 
 export default function Combining() {
   return (
-    <div style={{ width: '100%' }}>
-      <Typography>Alphabet stocks</Typography>
-      <div>
+    <Box sx={{ width: '100%', height: 400 }}>
         <ChartContainer
           series={series}
-          height={400}
           xAxis={[
             {
               id: 'date',
@@ -79,7 +75,7 @@ export default function Combining() {
             }}
           />
           <ChartsYAxis
-            label="Price (USD)"
+            label="Alphabet Stock Price (USD)"
             axisId="price"
             tickLabelStyle={{ fontSize: 10 }}
           />
@@ -90,7 +86,6 @@ export default function Combining() {
           />
           <ChartsTooltip />
         </ChartContainer>
-      </div>
-    </div>
+    </Box>
   );
 }
