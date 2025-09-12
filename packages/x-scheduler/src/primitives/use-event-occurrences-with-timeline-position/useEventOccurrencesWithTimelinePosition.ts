@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
-import { Adapter } from '../utils/adapter/types';
+import { sortOccurrences } from '../utils/event-utils';
+
+// A small buffer to consider events that are very close but not really overlapping as overlapping.
+const COLLISION_BUFFER_MINUTES = 5;
 
 /**
  * Places event occurrences for a timeline UI.
@@ -13,20 +16,81 @@ export function useEventOccurrencesWithTimelinePosition(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const conflicts = occurrences.map((_occurrence, index) =>
-      getConflictingOccurrences(occurrences, index, adapter),
-    );
+    const occurrencesSortedByEndDate = sortOccurrences(occurrences, adapter, 'end');
+    const occurrencesSortedByEndDateIndexLookup: { [occurrenceKey: string]: number } = {};
+    occurrencesSortedByEndDate.forEach((occurrence, index) => {
+      occurrencesSortedByEndDateIndexLookup[occurrence.key] = index;
+    });
+
+    const conflicts: {
+      key: string;
+      conflictsBefore: Set<string>;
+      conflictsAfter: Set<string>;
+    }[] = [];
+    for (let i = 0; i < occurrences.length; i++) {
+      const occurrence = occurrences[i];
+      const conflictsBefore = new Set<string>();
+      const conflictsAfter = new Set<string>();
+
+      for (let j = i + 1; j < occurrences.length; j += 1) {
+        const occurrenceAfter = occurrences[j];
+        if (
+          adapter.isBefore(
+            adapter.addMinutes(occurrenceAfter.start, -COLLISION_BUFFER_MINUTES),
+            occurrence.end,
+          )
+        ) {
+          conflictsAfter.add(occurrenceAfter.key);
+        } else {
+          // We know that all the next occurrences will start even later, so we can stop here.
+          break;
+        }
+      }
+
+      // To find all the occurrences that conflicts with the current one because they overlap with the start of this event
+      // We need to use the list of occurrences sorted by end date
+      // On this list, we need to find the last occurrence that starts before the current event ends
+      // And then go backwards until we find occurrences that end before the current event starts
+      // All the occurrences we encounter in between are conflicting with the current event
+      let lastOccurrenceThatStartsBeforeCurrentEventEnds =
+        occurrencesSortedByEndDateIndexLookup[occurrence.key];
+      while (
+        adapter.isBefore(
+          occurrencesSortedByEndDate[lastOccurrenceThatStartsBeforeCurrentEventEnds].start,
+          occurrence.end,
+        ) &&
+        lastOccurrenceThatStartsBeforeCurrentEventEnds < occurrencesSortedByEndDate.length - 1
+      ) {
+        lastOccurrenceThatStartsBeforeCurrentEventEnds += 1;
+      }
+
+      for (let j = lastOccurrenceThatStartsBeforeCurrentEventEnds; j >= 0; j -= 1) {
+        const occurrenceBefore = occurrencesSortedByEndDate[j];
+        if (
+          adapter.isAfter(
+            adapter.addMinutes(occurrenceBefore.end, COLLISION_BUFFER_MINUTES),
+            occurrence.start,
+          )
+        ) {
+          conflictsBefore.add(occurrenceBefore.key);
+        } else if (adapter.isBefore(occurrenceBefore.end, occurrence.start)) {
+          break;
+        }
+      }
+
+      conflicts.push({ key: occurrence.key, conflictsBefore, conflictsAfter });
+    }
 
     let maxIndex: number = 1;
     const firstIndexLookup: { [occurrenceKey: string]: number } = {};
 
     for (const occurrence of conflicts) {
-      if (occurrence.conflictsBefore.length === 0) {
+      if (occurrence.conflictsBefore.size === 0) {
         firstIndexLookup[occurrence.key] = 1;
       } else {
         const usedIndexes = new Set(
-          occurrence.conflictsBefore.map(
-            (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence.key],
+          Array.from(occurrence.conflictsBefore).map(
+            (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence],
           ),
         );
         let i = 1;
@@ -45,8 +109,8 @@ export function useEventOccurrencesWithTimelinePosition(
       lastIndexLookup = {};
       for (const occurrence of conflicts) {
         const usedIndexes = new Set(
-          [...occurrence.conflictsBefore, ...occurrence.conflictsAfter].map(
-            (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence.key],
+          [...Array.from(occurrence.conflictsBefore), ...Array.from(occurrence.conflictsAfter)].map(
+            (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence],
           ),
         );
         let lastIndex = firstIndexLookup[occurrence.key];
@@ -95,52 +159,4 @@ export namespace useEventOccurrencesWithTimelinePosition {
      */
     maxIndex: number;
   }
-}
-
-// A small buffer to consider events that are very close but not really overlapping as overlapping.
-const COLLISION_BUFFER_MINUTES = 5;
-
-function getConflictingOccurrences(
-  occurrences: CalendarEventOccurrence[],
-  index: number,
-  adapter: Adapter,
-) {
-  const occurrence = occurrences[index];
-  const conflictsBefore: CalendarEventOccurrence[] = [];
-  const conflictsAfter: CalendarEventOccurrence[] = [];
-
-  for (let i = index - 1; i >= 0; i -= 1) {
-    const occurrenceBefore = occurrences[i];
-    if (
-      adapter.isAfter(
-        adapter.addMinutes(occurrenceBefore.end, COLLISION_BUFFER_MINUTES),
-        occurrence.start,
-      )
-    ) {
-      conflictsBefore.push(occurrenceBefore);
-    } else {
-      // TODO: Try to fix the following dataset (where Event 3 is not considered as conflicting with Event 1, because we break at Event 2):
-      // Event 1: 09:00 - 18:00
-      // Event 2: 09:30 - 14:00
-      // Event 3: 15:00 - 17:00
-      break;
-    }
-  }
-
-  for (let i = index + 1; i < occurrences.length; i += 1) {
-    const occurrenceAfter = occurrences[i];
-    if (
-      adapter.isBefore(
-        adapter.addMinutes(occurrenceAfter.start, -COLLISION_BUFFER_MINUTES),
-        occurrence.end,
-      )
-    ) {
-      conflictsAfter.push(occurrenceAfter);
-    } else {
-      // We know that all the next occurrences will start even later, so we can stop here.
-      break;
-    }
-  }
-
-  return { key: occurrence.key, conflictsBefore, conflictsAfter };
 }

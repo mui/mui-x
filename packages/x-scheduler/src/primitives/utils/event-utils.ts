@@ -92,12 +92,20 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
   // STEP 3: Sort by the actual start date of each occurrence
   // We sort here so that events are processed in the correct order
+  return sortOccurrences(occurrences, adapter, 'start');
+}
+
+export function sortOccurrences(
+  occurrences: CalendarEventOccurrence[],
+  adapter: Adapter,
+  edge: 'start' | 'end',
+) {
   return (
     occurrences
       // TODO: Avoid JS Date conversion
       .map((occurrence) => ({
         occurrence,
-        timestamp: adapter.toJsDate(occurrence.start).getTime(),
+        timestamp: adapter.toJsDate(occurrence[edge]).getTime(),
       }))
       .sort((a, b) => a.timestamp - b.timestamp)
       .map((item) => item.occurrence)
