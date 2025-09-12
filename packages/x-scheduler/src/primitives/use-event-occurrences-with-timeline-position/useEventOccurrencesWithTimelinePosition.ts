@@ -4,7 +4,7 @@ import { useAdapter } from '../utils/adapter/useAdapter';
 import { Adapter } from '../utils/adapter/types';
 
 /**
- * Places event occurrences for a time frame, where events can have a position spanning multiple indexes if no other event overlaps with them.
+ * Places event occurrences for a timeline UI.
  */
 export function useEventOccurrencesWithTimelinePosition(
   parameters: useEventOccurrencesWithTimelinePosition.Parameters,
