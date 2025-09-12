@@ -46,7 +46,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
     expect(result[0].maxIndex).to.equal(1);
     expect(result[0].withPosition).to.have.length(1);
-    expect(result[0].withPosition[0].position).to.deep.equal({ index: 1, span: 1 });
+    expect(result[0].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 1 });
   });
 
   it('should place the occurrences in all the concurrent indexes when in the same day', () => {
@@ -58,14 +58,14 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
     expect(result[0].maxIndex).to.equal(3);
     expect(result[0].withPosition[0].id).to.equal('A');
-    expect(result[0].withPosition[0].position).to.deep.equal({ index: 1, span: 1 });
+    expect(result[0].withPosition[0].position).to.deep.equal({ index: 1, daySpan: 1 });
     expect(result[0].withPosition[1].id).to.equal('B');
-    expect(result[0].withPosition[1].position).to.deep.equal({ index: 2, span: 1 });
+    expect(result[0].withPosition[1].position).to.deep.equal({ index: 2, daySpan: 1 });
     expect(result[0].withPosition[2].id).to.equal('C');
-    expect(result[0].withPosition[2].position).to.deep.equal({ index: 3, span: 1 });
+    expect(result[0].withPosition[2].position).to.deep.equal({ index: 3, daySpan: 1 });
   });
 
-  it('should keep the same index for multi-day events and set span=0 for all days but the first one', () => {
+  it('should keep the same index for multi-day events and set daySpan=0 for all days but the first one', () => {
     const result = testHook([
       createEventOccurrence('A', '2024-01-15', '2024-01-15'),
       createEventOccurrence('B', '2024-01-15', '2024-01-17'),
@@ -73,15 +73,15 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
     expect(result[0].maxIndex).to.equal(2);
     expect(result[0].withPosition[1].id).to.equal('B');
-    expect(result[0].withPosition[1].position).to.deep.equal({ index: 2, span: 3 });
+    expect(result[0].withPosition[1].position).to.deep.equal({ index: 2, daySpan: 3 });
 
     expect(result[1].maxIndex).to.equal(2);
     expect(result[1].withPosition[0].id).to.equal('B');
-    expect(result[1].withPosition[0].position).to.deep.equal({ index: 2, span: 0 });
+    expect(result[1].withPosition[0].position).to.deep.equal({ index: 2, daySpan: 0 });
 
     expect(result[2].maxIndex).to.equal(2);
     expect(result[2].withPosition[0].id).to.equal('B');
-    expect(result[2].withPosition[0].position).to.deep.equal({ index: 2, span: 0 });
+    expect(result[2].withPosition[0].position).to.deep.equal({ index: 2, daySpan: 0 });
   });
 
   it('should find gaps in the indexes and use the lower available', () => {
@@ -94,6 +94,6 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     // Event A is not present on day 3, so event C should use index 1 on that day instead of using index 3 below Event B
     expect(result[2].maxIndex).to.equal(2);
     expect(result[2].withPosition[1].id).to.equal('C');
-    expect(result[2].withPosition[1].position).to.deep.equal({ index: 1, span: 1 });
+    expect(result[2].withPosition[1].position).to.deep.equal({ index: 1, daySpan: 1 });
   });
 });
