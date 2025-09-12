@@ -200,7 +200,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     runItemPlugins,
     items: { disabledItemsFocusable, indentationAtItemLevel },
     selection: { disableSelection },
-    expansion: { expansionTrigger },
     treeId,
     instance,
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
@@ -232,7 +231,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     selected,
     disabled,
     editing,
-    handleExpansion,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
   } = useTreeItemState(itemId);
