@@ -131,7 +131,7 @@ const getTemplateColumns = (
 const getTemplateRows = (hideLegend: boolean, direction: Direction | undefined) => {
   if (direction === 'vertical') {
     if (hideLegend) {
-      return '1fr';
+      return 'auto';
     }
     return 'auto 1fr';
   }
