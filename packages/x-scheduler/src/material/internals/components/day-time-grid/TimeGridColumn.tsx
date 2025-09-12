@@ -41,7 +41,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       end: placeholder.end,
       readOnly: true,
       position: {
-        // TODO: Fix
+        // TODO: Apply the same firstIndex and lastIndex as the initial event if present in the column, 1 / maxIndex otherwise
         firstIndex: 1,
         lastIndex: maxIndex,
       },

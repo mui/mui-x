@@ -1,6 +1,6 @@
 /**
- * @param {object} occurrence
- * @param {string} occurrence.body - https://jsoneditoronline.org/#left=cloud.fb1a4fa30a4f475fa6887071c682e2c1
+ * @param {object} event
+ * @param {string} event.body - https://jsoneditoronline.org/#left=cloud.fb1a4fa30a4f475fa6887071c682e2c1
  */
 exports.handler = async (event) => {
   const { payload } = JSON.parse(event.body);

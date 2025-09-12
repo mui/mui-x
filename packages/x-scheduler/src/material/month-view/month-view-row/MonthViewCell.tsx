@@ -41,7 +41,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       end: placeholder.end,
       key: `dragged-${initialDraggedEvent.id}`,
       position: {
-        // TODO: Fix
+        // TODO: Apply the same index as the initial event if present in the row, 1 otherwise
         index: 1,
         daySpan: diffIn(adapter, placeholder.end, day.value, 'days') + 1,
       },

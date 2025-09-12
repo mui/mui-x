@@ -1,29 +1,15 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
-import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 
-const events = [
-  {
-    id: '1',
-    start: DateTime.fromISO('2025-07-02T09:00:00'),
-    end: DateTime.fromISO('2025-07-02T18:00:00'),
-    title: 'Event 1',
-  },
-  {
-    id: '2',
-    start: DateTime.fromISO('2025-07-02T09:30:00'),
-    end: DateTime.fromISO('2025-07-02T14:00:00'),
-    title: 'Event 2',
-  },
-  {
-    id: '3',
-    start: DateTime.fromISO('2025-07-02T15:00:00'),
-    end: DateTime.fromISO('2025-07-02T17:00:00'),
-    title: 'Event 3',
-  },
-];
+import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import {
+  initialEvents,
+  defaultVisibleDate,
+  resources,
+} from '../../../data/scheduler/datasets/personal-agenda';
 
 export default function FullEventCalendar() {
+  const [events, setEvents] = React.useState(initialEvents);
+
   return (
     <div
       style={{
@@ -33,8 +19,9 @@ export default function FullEventCalendar() {
     >
       <EventCalendar
         events={events}
-        defaultVisibleDate={events[0].start}
-        defaultView="day"
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
         areEventsDraggable
         areEventsResizable
       />
