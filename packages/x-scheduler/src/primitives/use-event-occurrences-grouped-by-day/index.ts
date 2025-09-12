@@ -1,1 +1,1 @@
-export * from './useEventOccurrences';
+export * from './useEventOccurrencesGroupedByDay';

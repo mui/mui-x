@@ -4,7 +4,6 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
-  CalendarProcessedDate,
   RecurringEventUpdatedProperties,
   RRuleSpec,
   SchedulerValidDate,
