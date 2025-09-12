@@ -177,11 +177,8 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       onMouseDown={handleMouseDown}
       ref={ref}
     >
-      { /*  eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-      <div
-        className={classes.iconContainer}
-        onClick={handleIconClick}
-      >
+      {/*  eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+      <div className={classes.iconContainer} onClick={handleIconClick}>
         {icon}
       </div>
       {checkboxSelection && (
