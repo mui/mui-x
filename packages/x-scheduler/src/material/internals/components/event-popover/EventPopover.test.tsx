@@ -94,6 +94,7 @@ describe('<EventPopover />', () => {
 
     const expectedUpdatedEvent = {
       id: '1',
+      key: '1',
       title: 'Running test',
       description: 'Morning run',
       start: adapter.setMinutes(adapter.setHours(occurrence.start, 0), 0),
