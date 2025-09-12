@@ -139,12 +139,14 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
+  const [, setRefTick] = React.useState(0);
 
   const isRenderContextReady = React.useRef(false);
 
   const renderContext = useStore(store, selectors.renderContext);
   const enabledForRows = useStore(store, selectors.enabledForRows);
   const enabledForColumns = useStore(store, selectors.enabledForColumns);
+  const rowsMeta = useStore(store, Dimensions.selectors.rowsMeta);
 
   const contentHeight = useStore(store, Dimensions.selectors.contentHeight);
 
@@ -176,23 +178,21 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: RenderContext) => {
-      if (areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
-        return;
+      if (!areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
+        store.set('virtualization', {
+          ...store.state.virtualization,
+          renderContext: nextRenderContext,
+        });
       }
-
-      const didRowsIntervalChange =
-        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
-        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
-
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        renderContext: nextRenderContext,
-      });
 
       // The lazy-loading hook is listening to `renderedRowsIntervalChange`,
       // but only does something if we already have a render context, because
       // otherwise we would call an update directly on mount
       const isReady = Dimensions.selectors.dimensions(store.state).isReady;
+      const didRowsIntervalChange =
+        nextRenderContext.firstRowIndex !== previousRowContext.current.firstRowIndex ||
+        nextRenderContext.lastRowIndex !== previousRowContext.current.lastRowIndex;
+
       if (isReady && didRowsIntervalChange) {
         previousRowContext.current = nextRenderContext;
         onRenderContextChange?.(nextRenderContext);
@@ -232,7 +232,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
     scrollPosition.current = newScroll;
 
-    const direction = isScrolling ? directionForDelta(dx, dy) : ScrollDirection.NONE;
+    const direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE;
 
     // Since previous render, we have scrolled...
     const rowScroll = Math.abs(
@@ -311,12 +311,15 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       ignoreNextScrollEvent.current = false;
       return;
     }
-
     const nextRenderContext = triggerUpdateRenderContext();
     if (nextRenderContext) {
       onScrollChange?.(scrollPosition.current, nextRenderContext);
     }
   });
+
+  const getOffsetTop = () => {
+    return rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
+  };
 
   /**
    * HACK: unstable_rowTree fixes the issue described below, but does it by tightly coupling this
@@ -525,13 +528,13 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     return size;
   }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
 
-  const verticalScrollRestoreCallback = React.useRef<Function | null>(null);
-  const onContentSizeApplied = React.useCallback(
+  const scrollRestoreCallback = React.useRef<Function | null>(null);
+  const contentNodeRef = React.useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) {
         return;
       }
-      verticalScrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
+      scrollRestoreCallback.current?.(columnsTotalWidth, contentHeight);
     },
     [columnsTotalWidth, contentHeight],
   );
@@ -558,42 +561,43 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       const scroller = refs.scroller.current;
       const { top, left } = initialState.scroll;
 
-      // On initial mount, if we have columns available, we can restore the horizontal scroll immediately, but we need to skip the resulting scroll event, otherwise we would recalculate the render context at position top=0, left=restoredValue, but the initial render context is already calculated based on the initial value of scrollPosition ref.
       const isScrollRestored = {
         top: !(top > 0),
         left: !(left > 0),
       };
+
       if (!isScrollRestored.left && columnsTotalWidth) {
         scroller.scrollLeft = left;
-        ignoreNextScrollEvent.current = true;
         isScrollRestored.left = true;
+        ignoreNextScrollEvent.current = true;
       }
 
-      // For the sake of completeness, but I'm not sure if contentHeight is ever available at this point. Maybe when virtualisation is disabled?
+      // To restore the vertical scroll, we need to wait until the rows are available in the DOM (otherwise
+      // there's nowhere to scroll). We still set the scrollTop to the initial value at this point in case
+      // there already are rows rendered in the DOM, but we only confirm `isScrollRestored.top = true` in the
+      // asynchronous callback below.
       if (!isScrollRestored.top && contentHeight) {
         scroller.scrollTop = top;
         ignoreNextScrollEvent.current = true;
-        isScrollRestored.top = true;
       }
 
-      // To restore the vertical scroll, we need to wait until the rows are available in the DOM (otherwise there's nowhere to scroll), but before paint to avoid reflows
       if (!isScrollRestored.top || !isScrollRestored.left) {
-        verticalScrollRestoreCallback.current = (
+        scrollRestoreCallback.current = (
           columnsTotalWidthCurrent: number,
           contentHeightCurrent: number,
         ) => {
           if (!isScrollRestored.left && columnsTotalWidthCurrent) {
             scroller.scrollLeft = left;
-            ignoreNextScrollEvent.current = true;
             isScrollRestored.left = true;
+            ignoreNextScrollEvent.current = true;
           }
           if (!isScrollRestored.top && contentHeightCurrent) {
             scroller.scrollTop = top;
-            ignoreNextScrollEvent.current = true;
             isScrollRestored.top = true;
+            ignoreNextScrollEvent.current = true;
           }
           if (isScrollRestored.left && isScrollRestored.top) {
-            verticalScrollRestoreCallback.current = null;
+            scrollRestoreCallback.current = null;
           }
         };
       }
@@ -602,14 +606,22 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
   useStoreEffect(store, Dimensions.selectors.dimensions, forceUpdateRenderContext);
 
+  const refSetter = (name: keyof typeof refs) => (node: HTMLDivElement | null) => {
+    if (node && refs[name].current !== node) {
+      refs[name].current = node;
+      setRefTick((tick) => tick + 1);
+    }
+  };
+
   const getters = {
     setPanels,
+    getOffsetTop,
     getRows,
     getContainerProps: () => ({
-      ref: refs.container,
+      ref: refSetter('container'),
     }),
     getScrollerProps: () => ({
-      ref: refs.scroller,
+      ref: refSetter('scroller'),
       onScroll: handleScroll,
       onWheel,
       onTouchMove,
@@ -620,16 +632,16 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
       tabIndex: platform.isFirefox ? -1 : undefined,
     }),
     getContentProps: () => ({
-      ref: onContentSizeApplied,
+      ref: contentNodeRef,
       style: contentSize,
       role: 'presentation',
     }),
     getScrollbarVerticalProps: () => ({
-      ref: refs.scrollbarVertical,
+      ref: refSetter('scrollbarVertical'),
       scrollPosition,
     }),
     getScrollbarHorizontalProps: () => ({
-      ref: refs.scrollbarHorizontal,
+      ref: refSetter('scrollbarHorizontal'),
       scrollPosition,
     }),
     getScrollAreaProps: () => ({
@@ -1015,27 +1027,6 @@ export function computeOffsetLeft(
     (columnPositions[renderContext.firstColumnIndex] ?? 0) -
     (columnPositions[pinnedLeftLength] ?? 0);
   return Math.abs(left);
-}
-
-function directionForDelta(dx: number, dy: number) {
-  if (dx === 0 && dy === 0) {
-    return ScrollDirection.NONE;
-  }
-  /* eslint-disable */
-  if (Math.abs(dy) >= Math.abs(dx)) {
-    if (dy > 0) {
-      return ScrollDirection.DOWN;
-    } else {
-      return ScrollDirection.UP;
-    }
-  } else {
-    if (dx > 0) {
-      return ScrollDirection.RIGHT;
-    } else {
-      return ScrollDirection.LEFT;
-    }
-  }
-  /* eslint-enable */
 }
 
 function bufferForDirection(

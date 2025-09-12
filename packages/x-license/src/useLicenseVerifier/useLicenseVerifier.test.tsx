@@ -55,7 +55,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       const key = generateLicense({
         expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
         licenseModel: 'perpetual',
-        orderNumber: '12345',
+        orderNumber: '123',
         planScope: 'pro',
         planVersion: 'initial',
       });
@@ -80,7 +80,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
-        orderNumber: 'MUI-123',
+        orderNumber: '123',
         planScope: 'pro',
         licenseModel: 'subscription',
         planVersion: 'initial',
@@ -157,7 +157,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
         const licenseKey = generateLicense({
           expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-          orderNumber: 'MUI-123',
+          orderNumber: '123',
           planScope,
           licenseModel: 'subscription',
           planVersion,

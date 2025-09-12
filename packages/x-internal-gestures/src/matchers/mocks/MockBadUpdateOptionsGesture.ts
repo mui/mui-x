@@ -13,7 +13,6 @@ export class MockBadUpdateOptionsGesture extends Gesture<string> {
 
   protected readonly mutableStateType!: never;
 
-  // eslint-disable-next-line class-methods-use-this
   protected resetState(): void {}
 
   public clone(overrides?: Record<string, unknown>): MockBadUpdateOptionsGesture {
@@ -24,6 +23,5 @@ export class MockBadUpdateOptionsGesture extends Gesture<string> {
   }
 
   // We remove the updateOptions implementation
-  // eslint-disable-next-line class-methods-use-this
   protected updateOptions(): void {}
 }

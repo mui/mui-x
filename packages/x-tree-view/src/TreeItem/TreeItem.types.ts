@@ -71,7 +71,11 @@ export interface TreeItemSlotProps extends TreeItemIconSlotProps {
   content?: SlotComponentProps<'div', {}, {}>;
   groupTransition?: SlotComponentPropsFromProps<TransitionProps, {}, {}>;
   iconContainer?: SlotComponentProps<'div', {}, {}>;
-  checkbox?: SlotComponentProps<'button', {}, {}>;
+  checkbox?: SlotComponentProps<
+    React.ElementType<React.HTMLAttributes<HTMLButtonElement> & { visible?: boolean }>,
+    {},
+    {}
+  >;
   label?: SlotComponentProps<'div', {}, {}>;
   labelInput?: SlotComponentProps<'input', {}, {}>;
   dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;

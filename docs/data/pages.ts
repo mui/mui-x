@@ -558,6 +558,12 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
             ],
           },
+          { pathname: '/x/react-charts/sankey', plan: 'pro', unstable: true },
+          {
+            pathname: '/x/react-charts/#planned-charts',
+            title: 'Future Components',
+            planned: true,
+          },
           {
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
@@ -619,15 +625,6 @@ const pages: MuiPage[] = [
                   },
                 ],
               },
-            ],
-          },
-          {
-            pathname: '/x/react-charts-future',
-            subheader: 'Future components',
-            children: [
-              { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
-              { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
-              { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },
             ],
           },
         ],

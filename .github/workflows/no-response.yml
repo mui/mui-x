@@ -1,4 +1,4 @@
-name: No Response
+name: No response
 
 on:
   workflow_dispatch:

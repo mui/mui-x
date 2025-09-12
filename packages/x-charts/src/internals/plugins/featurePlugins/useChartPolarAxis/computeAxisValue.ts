@@ -146,7 +146,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, range);
+        const dateFormatter = createDateFormatter(axis.data, range, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
@@ -166,7 +166,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, range);
+        const dateFormatter = createDateFormatter(axis.data, range, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
