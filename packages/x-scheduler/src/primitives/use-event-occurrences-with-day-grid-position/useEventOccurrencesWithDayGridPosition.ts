@@ -44,7 +44,7 @@ export function useEventOccurrencesWithDayGridPosition(
 
           // If the event is present in the previous day, we keep the same index
           if (occurrenceIndexInPreviousDay != null) {
-            position = { index: occurrenceIndexInPreviousDay, daySpan: 0, isInvisible: true };
+            position = { index: occurrenceIndexInPreviousDay, daySpan: 1, isInvisible: true };
           }
           // Otherwise, we find the smallest available index
           else {

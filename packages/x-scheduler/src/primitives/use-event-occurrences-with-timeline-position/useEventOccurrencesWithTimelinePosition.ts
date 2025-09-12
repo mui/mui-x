@@ -6,9 +6,9 @@ import { Adapter } from '../utils/adapter/types';
 /**
  * Places event occurrences for a time frame, where events can have a position spanning multiple indexes if no other event overlaps with them.
  */
-export function useTimeFrameEventOccurrencesWithPosition(
-  parameters: useTimeFrameEventOccurrencesWithPosition.Parameters,
-): useTimeFrameEventOccurrencesWithPosition.ReturnValue {
+export function useEventOccurrencesWithTimelinePosition(
+  parameters: useEventOccurrencesWithTimelinePosition.Parameters,
+): useEventOccurrencesWithTimelinePosition.ReturnValue {
   const { occurrences, canOccurrencesSpanAcrossMultipleIndexes } = parameters;
   const adapter = useAdapter();
 
@@ -71,7 +71,7 @@ export function useTimeFrameEventOccurrencesWithPosition(
   }, [adapter, occurrences, canOccurrencesSpanAcrossMultipleIndexes]);
 }
 
-export namespace useTimeFrameEventOccurrencesWithPosition {
+export namespace useEventOccurrencesWithTimelinePosition {
   export interface Parameters {
     /**
      * The occurrences without the position information

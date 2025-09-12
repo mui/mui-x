@@ -9,7 +9,7 @@ import { selectors } from '../../../../primitives/use-event-calendar';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
-import { useTimeFrameEventOccurrencesWithPosition } from '../../../../primitives/use-time-frame-event-occurrences-with-position';
+import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/use-event-occurrences-with-timeline-position';
 import { EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
@@ -24,7 +24,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const placeholder = TimeGrid.usePlaceholderInRange(start, end);
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
-  const { occurrences, maxIndex } = useTimeFrameEventOccurrencesWithPosition({
+  const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
     occurrences: day.withoutPosition,
     canOccurrencesSpanAcrossMultipleIndexes: true,
   });
