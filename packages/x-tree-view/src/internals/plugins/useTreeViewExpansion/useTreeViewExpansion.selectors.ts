@@ -29,7 +29,7 @@ export const expansionSelectors = {
    */
   expandedItemsMap: expandedItemMapSelector,
   /**
-   * Gets the items to render as a flat list (the descendants of an expanded item at listed as siblings of the item).
+   * Gets the items to render as a flat list (the descendants of an expanded item are listed as siblings of the item).
    */
   flatList: createSelectorMemoized(
     itemsSelectors.itemOrderedChildrenIdsLookup,
