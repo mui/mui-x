@@ -97,6 +97,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     id,
     className: clsx(
       className,
+      'TimeGridEvent',
       'EventContainer',
       'EventCard',
       `EventCard--${variant}`,
@@ -105,6 +106,10 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       isRecurring && 'Recurrent',
       getColorClassName(color),
     ),
+    style: {
+      '--first-index': occurrence.position.firstIndex,
+      '--last-index': occurrence.position.lastIndex,
+    } as React.CSSProperties,
     'aria-labelledby': `${ariaLabelledBy} ${id}`,
     ...other,
   };

@@ -9,7 +9,7 @@ import { selectors } from '../../../../primitives/use-event-calendar';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
-import { useDiscreteEventOccurrencesWithPosition } from '../../../../primitives/use-discrete-event-occurrences-with-position';
+import { useTimeFrameEventOccurrencesWithPosition } from '../../../../primitives/use-time-frame-event-occurrences-with-position';
 import { EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
@@ -24,7 +24,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const placeholder = TimeGrid.usePlaceholderInRange(start, end);
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
-  const { occurrences } = useDiscreteEventOccurrencesWithPosition({
+  const { occurrences, maxIndex } = useTimeFrameEventOccurrencesWithPosition({
     occurrences: day.withoutPosition,
     canOccurrencesSpanAcrossMultipleIndexes: true,
   });
@@ -43,10 +43,10 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       position: {
         // TODO: Fix
         firstIndex: 1,
-        lastIndex: 1,
+        lastIndex: maxIndex,
       },
     };
-  }, [initialDraggedEvent, placeholder]);
+  }, [initialDraggedEvent, placeholder, maxIndex]);
 
   return (
     <TimeGrid.Column
@@ -55,6 +55,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       className="DayTimeGridColumn"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
       data-current={isToday ? '' : undefined}
+      style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       {occurrences.map((occurrence) => (
         <EventPopoverTrigger

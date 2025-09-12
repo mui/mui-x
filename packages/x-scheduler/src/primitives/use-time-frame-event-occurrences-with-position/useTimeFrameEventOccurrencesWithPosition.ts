@@ -6,27 +6,26 @@ import { Adapter } from '../utils/adapter/types';
 /**
  * Places event occurrences for a time frame, where events can have a position spanning multiple indexes if no other event overlaps with them.
  */
-export function useDiscreteEventOccurrencesWithPosition(
-  parameters: useDiscreteEventOccurrencesWithPosition.Parameters,
-): useDiscreteEventOccurrencesWithPosition.ReturnValue {
+export function useTimeFrameEventOccurrencesWithPosition(
+  parameters: useTimeFrameEventOccurrencesWithPosition.Parameters,
+): useTimeFrameEventOccurrencesWithPosition.ReturnValue {
   const { occurrences, canOccurrencesSpanAcrossMultipleIndexes } = parameters;
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const occurrencesWithConflicts = occurrences.map((occurrence, index) => ({
-      key: occurrence.key,
-      conflicts: getConflictingOccurrences(occurrences, index, adapter),
-    }));
+    const conflicts = occurrences.map((_occurrence, index) =>
+      getConflictingOccurrences(occurrences, index, adapter),
+    );
 
     let maxIndex: number = 1;
     const firstIndexLookup: { [occurrenceKey: string]: number } = {};
 
-    for (const occurrence of occurrencesWithConflicts) {
-      if (occurrence.conflicts.before.length === 0) {
+    for (const occurrence of conflicts) {
+      if (occurrence.conflictsBefore.length === 0) {
         firstIndexLookup[occurrence.key] = 1;
       } else {
         const usedIndexes = new Set(
-          occurrence.conflicts.before.map(
+          occurrence.conflictsBefore.map(
             (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence.key],
           ),
         );
@@ -44,9 +43,9 @@ export function useDiscreteEventOccurrencesWithPosition(
     let lastIndexLookup: { [occurrenceKey: string]: number };
     if (canOccurrencesSpanAcrossMultipleIndexes) {
       lastIndexLookup = {};
-      for (const occurrence of occurrencesWithConflicts) {
+      for (const occurrence of conflicts) {
         const usedIndexes = new Set(
-          occurrence.conflicts.after.map(
+          [...occurrence.conflictsBefore, ...occurrence.conflictsAfter].map(
             (conflictingOccurrence) => firstIndexLookup[conflictingOccurrence.key],
           ),
         );
@@ -72,7 +71,7 @@ export function useDiscreteEventOccurrencesWithPosition(
   }, [adapter, occurrences, canOccurrencesSpanAcrossMultipleIndexes]);
 }
 
-export namespace useDiscreteEventOccurrencesWithPosition {
+export namespace useTimeFrameEventOccurrencesWithPosition {
   export interface Parameters {
     /**
      * The occurrences without the position information
@@ -98,31 +97,44 @@ export namespace useDiscreteEventOccurrencesWithPosition {
   }
 }
 
+const COLLISION_BUFFER_MINUTES = 15;
+
 function getConflictingOccurrences(
   occurrences: CalendarEventOccurrence[],
   index: number,
   adapter: Adapter,
 ) {
   const occurrence = occurrences[index];
-  const occurrencesBefore = occurrences.slice(0, index);
-  const occurrencesAfter = occurrences.slice(index + 1);
-  const conflictingBefore: CalendarEventOccurrence[] = [];
-  const conflictingAfter: CalendarEventOccurrence[] = [];
+  const conflictsBefore: CalendarEventOccurrence[] = [];
+  const conflictsAfter: CalendarEventOccurrence[] = [];
 
-  for (const occurrenceB of occurrencesBefore) {
-    if (adapter.isAfter(occurrenceB.end, occurrence.start)) {
-      conflictingBefore.push(occurrenceB);
+  for (let i = index - 1; i >= 0; i -= 1) {
+    const occurrenceBefore = occurrences[i];
+    if (
+      adapter.isAfter(
+        adapter.addMinutes(occurrenceBefore.end, COLLISION_BUFFER_MINUTES),
+        occurrence.start,
+      )
+    ) {
+      conflictsBefore.push(occurrenceBefore);
     } else {
       break;
     }
   }
 
-  for (const occurrenceB of occurrencesAfter) {
-    if (adapter.isBefore(occurrenceB.start, occurrence.end)) {
-      conflictingAfter.push(occurrenceB);
+  for (let i = index + 1; i < occurrences.length; i += 1) {
+    const occurrenceAfter = occurrences[i];
+    if (
+      adapter.isBefore(
+        adapter.addMinutes(occurrenceAfter.start, -COLLISION_BUFFER_MINUTES),
+        occurrence.end,
+      )
+    ) {
+      conflictsAfter.push(occurrenceAfter);
     } else {
       break;
     }
   }
-  return { before: conflictingBefore, after: conflictingAfter };
+
+  return { key: occurrence.key, conflictsBefore, conflictsAfter };
 }

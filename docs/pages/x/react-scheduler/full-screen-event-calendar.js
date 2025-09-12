@@ -37,7 +37,13 @@ export default function FullEventCalendar() {
         height: '100vh',
       }}
     >
-      <EventCalendar events={events} defaultVisibleDate={events[0].start} defaultView="day" />
+      <EventCalendar
+        events={events}
+        defaultVisibleDate={events[0].start}
+        defaultView="day"
+        areEventsDraggable
+        areEventsResizable
+      />
     </div>
   );
 }
