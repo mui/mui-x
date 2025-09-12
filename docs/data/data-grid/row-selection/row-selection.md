@@ -48,7 +48,36 @@ To keep those rows selected even when they're not visible, set the `keepNonExist
 Use the `rowSelectionModel` prop to control the selection.
 Each time this prop changes, the `onRowSelectionModelChange` callback is called with the new selection value.
 
+The row selection model has the following structure:
+
+```tsx
+const [rowSelectionModel, setRowSelectionModel] =
+  React.useState<GridRowSelectionModel>({
+    type: 'include', // or 'exclude'
+    ids: new Set<GridRowId>(['row1', 'row2']),
+  });
+```
+
+The model can be either:
+
+- **`type: 'include'`**: Only the rows with IDs in the `ids` set are selected
+- **`type: 'exclude'`**: All rows are selected except those with IDs in the `ids` set
+
 {{"demo": "ControlledSelectionGrid.js", "bg": "inline"}}
+
+### Opting out of exclude model optimization
+
+To opt out of the `exclude` model and always use `include` model and a predictable behavior with explicit row IDs, pass `disableRowSelectionExcludeModel` prop to the Data Grid.
+
+By default, the Data Grid uses an exclude model optimization when selecting all rows (e.g., via "Select all" checkbox) for better performance with large datasets.
+
+```tsx
+<DataGrid
+  disableRowSelectionExcludeModel
+  // This ensures the selection model always uses type: 'include'
+  // with explicit row IDs, even when selecting all rows
+/>
+```
 
 ## Checkbox selection
 

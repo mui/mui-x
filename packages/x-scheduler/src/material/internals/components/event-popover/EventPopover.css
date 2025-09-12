@@ -20,6 +20,12 @@
   padding: var(--space-6);
 }
 
+.EventPopoverHeaderContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
 .mui-x-scheduler .EventPopoverCloseButton {
   padding: var(--space-1);
   display: flex;
@@ -230,6 +236,14 @@
   outline-offset: var(--outline-focus-offset);
 }
 
+.EventPopoverSelectTrigger.Ghost {
+  border: 1px solid transparent;
+}
+
+.EventPopoverSelectTrigger.Ghost[data-popup-open] {
+  background-color: var(--event-color-4);
+}
+
 .EventPopoverSelectIcon {
   display: flex;
 }
@@ -255,10 +269,6 @@
   border-radius: var(--radius-3);
   font-size: var(--font-size-2);
   line-height: var(--line-height-1);
-  display: grid;
-  grid-template-columns: 14px 1fr;
-  align-items: center;
-  gap: var(--space-2);
   cursor: pointer;
   -webkit-user-select: none;
   user-select: none;
@@ -282,12 +292,10 @@
   outline-offset: var(--outline-focus-offset);
 }
 
-.EventPopoverSelectItemIndicatorIcon {
-  display: block;
-}
-
-.EventPopoverSelectItemText {
-  grid-column: 2;
+.EventPopoverSelectItemTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .EventPopoverFieldRoot[data-disabled] {

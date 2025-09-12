@@ -273,7 +273,7 @@ describe('<DataGridPro /> - Sorting', () => {
     it('should control sort state when the model and the onChange are set', () => {
       let expectedModel: GridSortModel = [];
       function ControlCase(props: Partial<DataGridProProps>) {
-        const { rows, columns, ...others } = props;
+        const { rows, columns, ...other } = props;
         const [caseSortModel, setSortModel] = React.useState<GridSortModel>([]);
         const handleSortChange: DataGridProProps['onSortModelChange'] = (newModel) => {
           setSortModel(newModel);
@@ -288,7 +288,7 @@ describe('<DataGridPro /> - Sorting', () => {
               rows={rows || baselineProps.rows}
               sortModel={caseSortModel}
               onSortModelChange={handleSortChange}
-              {...others}
+              {...other}
             />
           </div>
         );

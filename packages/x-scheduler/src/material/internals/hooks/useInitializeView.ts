@@ -21,5 +21,7 @@ export function useInitializeView(parameters: () => CalendarViewConfig) {
 
   useIsoLayoutEffect(() => {
     return instance.setViewConfig(initialParameters.current());
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

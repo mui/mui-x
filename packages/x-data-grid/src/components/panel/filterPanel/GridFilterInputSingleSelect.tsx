@@ -60,7 +60,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     clearButton,
     headerFilterMenu,
     slotProps,
-    ...others
+    ...other
   } = props;
   const filterValue = item.value ?? '';
   const id = useId();
@@ -117,7 +117,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         }}
         native={isSelectNative}
         {...rootProps.slotProps?.baseSelect}
-        {...others}
+        {...other}
         {...slotProps?.root}
       >
         {renderSingleSelectOptions({
