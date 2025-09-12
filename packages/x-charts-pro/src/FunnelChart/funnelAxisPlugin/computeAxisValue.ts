@@ -152,7 +152,7 @@ export function computeAxisValue({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, scaleRange);
+        const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }

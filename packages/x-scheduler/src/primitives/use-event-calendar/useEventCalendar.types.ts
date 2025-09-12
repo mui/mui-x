@@ -8,6 +8,8 @@ import {
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
+  CalendarEventId,
+  RecurringEventUpdatedProperties,
 } from '../models';
 import type { EventCalendarInstance } from './EventCalendarInstance';
 
@@ -88,14 +90,14 @@ export interface EventCalendarParameters {
   eventColor?: CalendarEventColor;
   /**
    * Preferences for the calendar.
-   * @default { hideWeekends: false }
+   * @default { showWeekends: true, showWeekNumber: false }
    */
   preferences?: Partial<CalendarPreferences>;
   /**
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true }
    */
   preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
 }
@@ -110,3 +112,36 @@ export interface EventCalendarContextValue {
    */
   instance: EventCalendarInstance;
 }
+
+/**
+ * The scope of a recurring event update.
+ *
+ * - `only-this`: Updates only the selected occurrence of the recurring event.
+ * - `this-and-following`: Updates the selected occurrence and all following occurrences,
+ *   but leaves the previous ones untouched.
+ * - `all`: Updates all occurrences in the recurring series, past, present, and future.
+ */
+export type RecurringUpdateEventScope = 'this-and-following' | 'all' | 'only-this';
+
+/**
+ * Parameters for updating a recurring event.
+ */
+export type UpdateRecurringEventParameters = {
+  /**
+   * The id of the recurring event to update.
+   */
+  eventId: CalendarEventId;
+  /**
+   * The start date of the occurrence affected by the update.
+   */
+  occurrenceStart: SchedulerValidDate;
+  /**
+   * The changes to apply.
+   * Requires `start` and `end`, all other properties are optional.
+   */
+  changes: RecurringEventUpdatedProperties;
+  /**
+   * The scope of the update.
+   */
+  scope: RecurringUpdateEventScope;
+};
