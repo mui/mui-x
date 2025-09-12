@@ -51,11 +51,14 @@ export default function ControlledAxisHighlight() {
         <BarChart
           {...barChartsProps}
           highlightedAxis={highlightedAxis}
+          tooltipAxis={highlightedAxis}
           onHighlightedAxisChange={(newState) => setHighlightedAxis(newState)}
+          layout="horizontal"
         />
         <LineChart
           {...lineChartsProps}
           highlightedAxis={highlightedAxis}
+          tooltipAxis={highlightedAxis}
           onHighlightedAxisChange={(newState) => setHighlightedAxis(newState)}
         />
       </Box>
@@ -68,7 +71,7 @@ const barChartsProps: BarChartProps = {
     { data: [3, 4, 1, 6, 5], label: 'series A', id: 'A' },
     { data: [4, 3, 1, 5, 8], label: 'series B', id: 'B' },
   ],
-  xAxis: [{ id: 'x-axis', scaleType: 'band', data: [0, 2, 5, 10, 20] }],
+  yAxis: [{ id: 'x-axis', scaleType: 'band', data: [0, 2, 5, 10, 20] }],
   height: 300,
 };
 
