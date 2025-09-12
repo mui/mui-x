@@ -9,6 +9,7 @@ import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { MonthView } from '../month-view';
+import { TimelineView } from '../timeline-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { DateNavigator } from '../internals/components/date-navigator';
 import { ResourceLegend } from '../internals/components/resource-legend';

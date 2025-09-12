@@ -1,0 +1,51 @@
+import * as React from 'react';
+import clsx from 'clsx';
+import { useStore } from '@base-ui-components/utils/store';
+import { useId } from '@base-ui-components/utils/useId';
+import { Timeline } from '../../../primitives/timeline';
+import { getColorClassName } from '../../internals/utils/color-utils';
+import { selectors } from '../../../primitives/use-event-calendar';
+import { TimelineEventProps } from './TimelineEvent.types';
+import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
+import './TimelineEvent.css';
+
+export const TimelineEvent = React.forwardRef(function TimelineEvent(
+  props: TimelineEventProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const {
+    event: eventProp,
+    ariaLabelledBy,
+    className,
+    onEventClick,
+    id: idProp,
+    gridRow = 1,
+    style,
+    ...other
+  } = props;
+
+  const { store } = useEventCalendarContext();
+
+  const id = useId(idProp);
+  const color = useStore(store, selectors.eventColor, eventProp.id);
+
+  return (
+    <Timeline.Event
+      ref={forwardedRef}
+      className={clsx(className, 'TimelineEvent', 'LinesClamp', getColorClassName(color))}
+      id={id}
+      aria-labelledby={`${ariaLabelledBy} ${id}`}
+      style={
+        {
+          '--number-of-lines': 1,
+          '--row-index': gridRow,
+        } as React.CSSProperties
+      }
+      start={eventProp.start}
+      end={eventProp.end}
+      {...other}
+    >
+      {eventProp.title}
+    </Timeline.Event>
+  );
+});

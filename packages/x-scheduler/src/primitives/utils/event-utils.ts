@@ -100,3 +100,39 @@ export function getEventDays(
   }
   return days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay, adapter));
 }
+
+export const isEventOverlapping = (
+  eventA: CalendarEvent,
+  eventB: CalendarEvent,
+  adapter: Adapter,
+) => {
+  const overlaps =
+    adapter.isBefore(eventA.start, eventB.end) && adapter.isAfter(eventA.end, eventB.start);
+
+  const sameInterval =
+    adapter.toJsDate(eventA.start).getTime() === adapter.toJsDate(eventB.start).getTime() &&
+    adapter.toJsDate(eventA.end).getTime() === adapter.toJsDate(eventB.end).getTime();
+
+  return overlaps || sameInterval;
+};
+
+export const getEventPlacement = (event, eventsMatrix, adapter) => {
+  let i = 0;
+  while (i < eventsMatrix.length) {
+    if (eventsMatrix[i].length === 0) {
+      break;
+    }
+
+    let hasConflict = eventsMatrix[i].find((placedEvent) =>
+      isEventOverlapping(placedEvent, event, adapter),
+    );
+
+    if (hasConflict) {
+      i += 1;
+    } else {
+      break;
+    }
+  }
+
+  return i;
+};
