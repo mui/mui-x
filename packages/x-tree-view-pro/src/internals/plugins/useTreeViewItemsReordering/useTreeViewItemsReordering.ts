@@ -1,5 +1,5 @@
 import * as React from 'react';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { TreeViewPlugin, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
@@ -249,7 +249,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     [store, params.itemChildrenIndentation],
   );
 
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     store.set('itemsReordering', {
       ...store.state.itemsReordering,
       isItemReorderable: params.itemsReordering

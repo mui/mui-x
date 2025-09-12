@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { useRtl } from '@mui/system/RtlProvider';
-import useEventCallback from '@mui/utils/useEventCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { TreeViewCancellableEvent } from '../../../models';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
