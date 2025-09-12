@@ -4,6 +4,7 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
   ContinuousScaleName,
+  D3ContinuousScale,
   ScaleName,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
@@ -13,7 +14,7 @@ import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { getAxisExtremum } from './getAxisExtremum';
 import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
-import { getScale } from '../../../getScale';
+import { getContinuousScale } from './getContinuousScale';
 
 type CreateAxisFilterMapperParams = {
   zoomMap: Map<AxisId, ZoomData>;
@@ -21,6 +22,7 @@ type CreateAxisFilterMapperParams = {
   seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
   formattedSeries: ProcessedSeries;
   direction: 'x' | 'y';
+  preferStrictDomainInLineCharts: boolean;
 };
 
 export function createAxisFilterMapper(params: {
@@ -29,6 +31,7 @@ export function createAxisFilterMapper(params: {
   seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
   formattedSeries: ProcessedSeries;
   direction: 'x';
+  preferStrictDomainInLineCharts: boolean;
 }): (
   axis: AxisConfig<ScaleName, any, ChartsXAxisProps>,
   axisIndex: number,
@@ -39,6 +42,7 @@ export function createAxisFilterMapper(params: {
   seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
   formattedSeries: ProcessedSeries;
   direction: 'y';
+  preferStrictDomainInLineCharts: boolean;
 }): (
   axis: AxisConfig<ScaleName, any, ChartsYAxisProps>,
   axisIndex: number,
@@ -49,6 +53,7 @@ export function createAxisFilterMapper({
   seriesConfig,
   formattedSeries,
   direction,
+  preferStrictDomainInLineCharts,
 }: CreateAxisFilterMapperParams) {
   return (axis: AxisConfig, axisIndex: number): ExtremumFilter | null => {
     const zoomOption = zoomOptions[axis.id];
@@ -69,9 +74,28 @@ export function createAxisFilterMapper({
       return createDiscreteScaleGetAxisFilter(axis.data, zoom.start, zoom.end, direction);
     }
 
+    const [minData, maxData] = getAxisExtremum(
+      axis,
+      direction,
+      seriesConfig,
+      axisIndex,
+      formattedSeries,
+    );
+    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData] as [number, number];
+
+    const { scale: normalizedScale } = getContinuousScale(
+      axis as Readonly<AxisConfig<ContinuousScaleName>>,
+      direction,
+      axisIndex,
+      axisExtremums,
+      [0, 100],
+      [0, 100],
+      formattedSeries,
+      preferStrictDomainInLineCharts,
+    );
+
     return createContinuousScaleGetAxisFilter(
-      scaleType,
-      getAxisExtremum(axis, direction, seriesConfig, axisIndex, formattedSeries),
+      normalizedScale,
       zoom.start,
       zoom.end,
       direction,
@@ -104,8 +128,10 @@ export function createDiscreteScaleGetAxisFilter(
 }
 
 export function createContinuousScaleGetAxisFilter(
-  scaleType: ContinuousScaleName | undefined,
-  extrema: readonly [number, number],
+  /**
+   * A D3 scale that has been normalized to [0, 100] range.
+   */
+  normalizedScale: D3ContinuousScale,
   zoomStart: number,
   zoomEnd: number,
   direction: 'x' | 'y',
@@ -114,9 +140,7 @@ export function createContinuousScaleGetAxisFilter(
   let min: number | Date;
   let max: number | Date;
 
-  [min, max] = getScale(scaleType ?? 'linear', extrema, [0, 100])
-    .nice()
-    .domain();
+  [min, max] = normalizedScale.domain();
 
   min = min instanceof Date ? min.getTime() : min;
   max = max instanceof Date ? max.getTime() : max;

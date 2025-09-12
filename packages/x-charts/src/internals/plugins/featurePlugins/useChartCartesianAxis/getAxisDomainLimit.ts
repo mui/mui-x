@@ -7,12 +7,13 @@ export const getAxisDomainLimit = <T extends CartesianChartSeriesType>(
   axisDirection: 'x' | 'y',
   axisIndex: number,
   formattedSeries: ProcessedSeries<T | 'line'>,
+  preferStrictDomainInLineCharts?: boolean,
 ): 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number }) => {
   if (axis.domainLimit !== undefined) {
     return axis.domainLimit;
   }
 
-  if (axisDirection === 'x') {
+  if (preferStrictDomainInLineCharts && axisDirection === 'x') {
     for (const seriesId of formattedSeries.line?.seriesOrder ?? []) {
       const series = formattedSeries.line!.series[seriesId];
 

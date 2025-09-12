@@ -61,8 +61,9 @@ const selectorChartXFilter = createSelector(
     selectorChartZoomOptionsLookup,
     selectorChartSeriesConfig,
     selectorChartSeriesProcessed,
+    selectorPreferStrictDomainInLineCharts,
   ],
-  (zoomMap, zoomOptions, seriesConfig, formattedSeries) =>
+  (zoomMap, zoomOptions, seriesConfig, formattedSeries, preferStrictDomainInLineCharts) =>
     zoomMap &&
     zoomOptions &&
     createAxisFilterMapper({
@@ -71,6 +72,7 @@ const selectorChartXFilter = createSelector(
       seriesConfig,
       formattedSeries,
       direction: 'x',
+      preferStrictDomainInLineCharts,
     }),
 );
 
@@ -80,8 +82,9 @@ const selectorChartYFilter = createSelector(
     selectorChartZoomOptionsLookup,
     selectorChartSeriesConfig,
     selectorChartSeriesProcessed,
+    selectorPreferStrictDomainInLineCharts,
   ],
-  (zoomMap, zoomOptions, seriesConfig, formattedSeries) =>
+  (zoomMap, zoomOptions, seriesConfig, formattedSeries, preferStrictDomainInLineCharts) =>
     zoomMap &&
     zoomOptions &&
     createAxisFilterMapper({
@@ -90,6 +93,7 @@ const selectorChartYFilter = createSelector(
       seriesConfig,
       formattedSeries,
       direction: 'y',
+      preferStrictDomainInLineCharts,
     }),
 );
 
