@@ -81,7 +81,7 @@
     "slotProps": { "description": "The props for the slots." },
     "slots": { "description": "Slots to customize charts&#39; components." },
     "voronoiMaxRadius": {
-      "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
+      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."

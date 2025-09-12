@@ -50,6 +50,9 @@ export type UseChartVoronoiDefaultizedParameters = Pick<
   UseChartVoronoiParameters,
   'voronoiMaxRadius' | 'onItemClick'
 > & {
+  /**
+   * If true, the voronoi plugin is disabled.
+   */
   disableVoronoi: boolean;
 };
 
