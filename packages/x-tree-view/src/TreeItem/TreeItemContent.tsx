@@ -181,7 +181,6 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       <div
         className={classes.iconContainer}
         onClick={handleIconClick}
-        role={handleIconClick ? 'button' : undefined}
       >
         {icon}
       </div>
