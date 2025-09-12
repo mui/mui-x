@@ -36,7 +36,7 @@ To do so, the chart computes [Voronoi cells](https://en.wikipedia.org/wiki/Voron
 
 You can define a maximal radius with the `voronoiMaxRadius` prop.
 If the distance with the pointer is larger than this radius, no item will be selected.
-Or set the `disableVoronoi` prop to `true` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
+Alternatively, set the `voronoiMaxRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
 {{"demo": "VoronoiInteraction.js"}}
 
@@ -54,7 +54,7 @@ const onItemClick = (
 
 {{"demo": "ScatterClick.js"}}
 
-If `disableVoronoi=true`, users need to click precisely on the scatter element, and the mouse event will come from this element.
+If `voronoiMaxRadius` is `item`, users need to click precisely on the scatter element, and the mouse event will come from this element.
 
 Otherwise, the click behavior will be the same as defined in the [interaction section](#interaction) and the mouse event will come from the svg component.
 
