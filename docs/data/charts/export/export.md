@@ -104,6 +104,13 @@ For example, you can add the title and caption to the exported chart, as shown b
 
 {{"demo": "ExportChartOnBeforeExport.js"}}
 
+:::info
+
+If you don't want to manually add elements to the chart export, you can create a chart through composition and include the elements you want to export as part of the chart.
+See the [Composition](#composition) section below for more information.
+
+:::
+
 ## Copy styles
 
 The styles of the page the chart belongs to are copied to the export iframe by default.
@@ -116,7 +123,7 @@ You can disable this behavior by setting the `copyStyles` property to `false` in
 
 ## Composition
 
-As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.
+As detailed in the [Composition](/x/react-charts/composition/) page, charts can alternatively be composed of more specific components to create custom visualizations.
 
 When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant is included in the export.
 As such, you need to ensure that the `ChartsWrapper` element is the root element of the chart you want to export.
