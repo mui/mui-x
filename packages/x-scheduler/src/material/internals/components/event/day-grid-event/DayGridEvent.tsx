@@ -37,7 +37,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const id = useId(idProp);
   const translations = useTranslations();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, eventProp.resource);

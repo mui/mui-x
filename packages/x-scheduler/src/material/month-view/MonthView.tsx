@@ -35,7 +35,7 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const { store, instance } = useEventCalendarContext();
+    const store = useEventCalendarContext();
     const preferences = useStore(store, selectors.preferences);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
@@ -64,9 +64,9 @@ export const MonthView = React.memo(
           end: data.end,
         };
 
-        instance.updateEvent(updatedEvent);
+        store.updateEvent(updatedEvent);
       },
-      [instance, store],
+      [store],
     );
 
     useResizeObserver(

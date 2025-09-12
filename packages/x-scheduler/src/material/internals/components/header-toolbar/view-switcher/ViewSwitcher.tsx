@@ -17,7 +17,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 ) {
   const { className, ...other } = props;
 
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const views = useStore(store, selectors.views);
   const view = useStore(store, selectors.view);
 
@@ -29,17 +29,17 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
     (event: React.MouseEvent<HTMLElement>) => {
       const newView = event.currentTarget.getAttribute('data-view');
       if (newView) {
-        instance.setView(newView as CalendarView, event);
+        store.setView(newView as CalendarView, event);
       }
     },
-    [instance],
+    [store],
   );
 
   const handleViewChange = React.useCallback(
     (newView: CalendarView, eventDetails: Menu.Root.ChangeEventDetails) => {
-      instance.setView(newView, eventDetails.event);
+      store.setView(newView, eventDetails.event);
     },
-    [instance],
+    [store],
   );
 
   const showAll = views.length <= 3;

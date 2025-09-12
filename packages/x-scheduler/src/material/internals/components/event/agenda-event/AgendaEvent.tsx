@@ -33,7 +33,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
 
   const id = useId(idProp);
   const translations = useTranslations();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, eventProp.resource);
   const color = useStore(store, selectors.eventColor, eventProp.id);

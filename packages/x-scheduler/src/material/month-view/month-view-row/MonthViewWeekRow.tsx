@@ -17,7 +17,7 @@ const adapter = getAdapter();
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, week, firstDayRef } = props;
 
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const preferences = useStore(store, selectors.preferences);
   const translations = useTranslations();
 

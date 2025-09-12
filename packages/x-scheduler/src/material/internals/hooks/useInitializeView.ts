@@ -16,11 +16,11 @@ import { useEventCalendarContext } from './useEventCalendarContext';
  * @param parameters Parameters for the view.
  */
 export function useInitializeView(parameters: () => CalendarViewConfig) {
-  const { instance } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const initialParameters = React.useRef(parameters);
 
   useIsoLayoutEffect(() => {
-    return instance.setViewConfig(initialParameters.current());
+    return store.setViewConfig(initialParameters.current());
     // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

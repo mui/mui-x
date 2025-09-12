@@ -16,7 +16,7 @@ export const WeekView = React.memo(
     props: WeekViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { store } = useEventCalendarContext();
+    const store = useEventCalendarContext();
     const visibleDate = useStore(store, selectors.visibleDate);
     const preferences = useStore(store, selectors.preferences);
     const getDayList = useDayList();

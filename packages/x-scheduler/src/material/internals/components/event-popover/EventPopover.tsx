@@ -42,7 +42,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const adapter = useAdapter();
   const translations = useTranslations();
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
   const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, calendarEvent.id);
@@ -150,14 +150,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
       };
 
       // TODO: Issues #19440 and #19441 - Add support for editing a single occurrence or all occurrences.
-      instance.updateRecurringEvent({
+      store.updateRecurringEvent({
         eventId: calendarEvent.id,
         occurrenceStart: calendarEvent.start,
         changes,
         scope: 'this-and-following',
       });
     } else {
-      instance.updateEvent({
+      store.updateEvent({
         ...calendarEvent,
         ...payload,
         rrule,
@@ -168,7 +168,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   };
 
   const handleDelete = useEventCallback(() => {
-    instance.deleteEvent(calendarEvent.id);
+    store.deleteEvent(calendarEvent.id);
     onClose();
   });
 

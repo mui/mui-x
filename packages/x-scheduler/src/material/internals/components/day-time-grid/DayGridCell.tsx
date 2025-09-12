@@ -18,7 +18,7 @@ import './DayTimeGrid.css';
 export function DayGridCell(props: DayGridCellProps) {
   const { day, allDayEvents, dayIndexInRow, rowLength } = props;
   const adapter = useAdapter();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const placeholder = DayGrid.usePlaceholderInDay(day);
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 

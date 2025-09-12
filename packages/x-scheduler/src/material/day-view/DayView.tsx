@@ -14,7 +14,7 @@ export const DayView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     const adapter = useAdapter();
-    const { store } = useEventCalendarContext();
+    const store = useEventCalendarContext();
     const visibleDate = useStore(store, selectors.visibleDate);
     const days = React.useMemo(() => [visibleDate], [visibleDate]);
 

@@ -23,12 +23,12 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const preferences = useStore(store, selectors.preferences);
   const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
 
   const handleToggle = (key: keyof CalendarPreferences, checked: boolean, event: Event) => {
-    instance.setPreferences({ [key]: checked }, event);
+    store.setPreferences({ [key]: checked }, event);
   };
 
   if (preferencesMenuConfig === false) {

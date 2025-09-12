@@ -16,7 +16,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, events, isToday, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const start = React.useMemo(() => adapter.startOfDay(day), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day), [adapter, day]);
 
@@ -75,7 +75,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 
 function TimeGridCurrentTimeLabel() {
   const adapter = useAdapter();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 

@@ -63,7 +63,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
 ) {
   const { className, ...other } = props;
   const translations = useTranslations();
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const resources = useStore(store, selectors.resources);
   const visibleResourcesList = useStore(store, selectors.visibleResourcesList);
 
@@ -75,7 +75,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
         .map((resource) => [resource.id, false]),
     );
 
-    instance.setVisibleResources(newVisibleResourcesMap);
+    store.setVisibleResources(newVisibleResourcesMap);
   });
 
   if (resources.length === 0) {
