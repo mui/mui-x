@@ -953,8 +953,3 @@ export const usUnemploymentRate = [
   { date: new Date('2025-04-01'), rate: 4.2 },
   { date: new Date('2025-05-01'), rate: 4.2 },
 ];
-
-
-
-
-
