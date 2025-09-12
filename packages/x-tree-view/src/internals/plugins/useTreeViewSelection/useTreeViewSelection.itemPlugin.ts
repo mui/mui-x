@@ -39,11 +39,10 @@ const selectorCheckboxSelectionStatus = createSelector(
 
     const shouldSelectBasedOnDescendants = selectionSelectors.propagationRules(state).parents;
     if (shouldSelectBasedOnDescendants) {
-      if (hasSelectedDescendant) {
-        if (hasUnSelectedDescendant) {
-          return 'indeterminate';
-        }
-
+      if (hasSelectedDescendant && hasUnSelectedDescendant) {
+        return 'indeterminate';
+      }
+      if (hasSelectedDescendant && !hasUnSelectedDescendant) {
         return 'checked';
       }
       return 'empty';
