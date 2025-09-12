@@ -71,7 +71,7 @@ const processItemsLookups = ({
   initialParentId = null,
   getChildrenCount,
   ignoreChildren = false,
-}: ProcessItemsLookupsParameters): Omit<State, 'loading' | 'error'> => {
+}: ProcessItemsLookupsParameters): Omit<State, 'loading' | 'error' | 'domStructure'> => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
   const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
@@ -372,6 +372,7 @@ useTreeViewItems.getInitialState = (params) => ({
     }),
     loading: false,
     error: null,
+    domStructure: 'nested',
   },
 });
 

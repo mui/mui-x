@@ -178,7 +178,7 @@ export interface UseTreeViewItemsState<R extends {}> {
     /**
      * Ordered children ids of each item.
      */
-    itemOrderedChildrenIdsLookup: { [parentItemId: string]: string[] };
+    itemOrderedChildrenIdsLookup: { [parentItemId: string]: TreeViewItemId[] };
     /**
      * Index of each child in the ordered children ids of its parent.
      */
@@ -191,6 +191,12 @@ export interface UseTreeViewItemsState<R extends {}> {
      * The error state of the tree.
      */
     error: Error | null;
+    /**
+     * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+     * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+     * Nested DOM structure is not compatible with collapse / expansion animations.
+     */
+    domStructure: 'flat' | 'nested';
   };
 }
 
