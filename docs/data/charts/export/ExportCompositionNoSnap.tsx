@@ -10,6 +10,7 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
+import Typography from '@mui/material/Typography';
 
 function CustomChartWrapper({ children }: React.PropsWithChildren) {
   const chartRootRef = useChartRootRef();
@@ -60,9 +61,10 @@ export default function ExportCompositionNoSnap() {
           },
         ]}
         yAxis={[{ width: 20 }]}
+        margin={{ bottom: 0 }}
       >
         <CustomChartWrapper>
-          <ChartsLegend direction="horizontal" />
+          <Typography variant="h6">Composite Chart</Typography>
           <ChartsSurface>
             <BarPlot />
             <LinePlot />
@@ -70,6 +72,7 @@ export default function ExportCompositionNoSnap() {
             <ChartsXAxis axisId="x-axis-id" />
             <ChartsYAxis />
           </ChartsSurface>
+          <ChartsLegend direction="horizontal" />
         </CustomChartWrapper>
       </ChartDataProviderPro>
     </Stack>

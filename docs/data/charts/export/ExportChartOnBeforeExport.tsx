@@ -2,7 +2,6 @@ import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { legendClasses } from '@mui/x-charts/ChartsLegend';
 import { defaultOnBeforeExport } from '@mui/x-charts-pro/models';
 import { inflationData } from '../dataset/inflationRates';
 
@@ -61,25 +60,58 @@ const settings = {
   grid: { horizontal: true },
 };
 
-function onBeforeExport(iframe: HTMLIFrameElement) {
-  // Apply default modification (removing the toolbar)
-  defaultOnBeforeExport(iframe);
-  const document = iframe.contentDocument!;
+function createOnBeforeExport(
+  titleRef: React.RefObject<HTMLSpanElement | null>,
+  captionRef: React.RefObject<HTMLSpanElement | null>,
+) {
+  return function onBeforeExport(iframe: HTMLIFrameElement) {
+    // Apply default modification (removing the toolbar)
+    defaultOnBeforeExport(iframe);
+    const document = iframe.contentDocument!;
+    const chart = document.body.firstElementChild!;
 
-  // Show legend
-  const legend = document.querySelector(
-    `.${legendClasses.root}`,
-  ) as HTMLElement | null;
+    // Create a vertical stack to hold the title, chart and caption
+    const stack = document.createElement('div');
 
-  if (legend) {
-    legend.style.display = 'flex';
-  }
+    stack.style.display = 'flex';
+    stack.style.flexDirection = 'column';
+    stack.style.width = 'fit-content';
+    stack.style.margin = 'auto';
+
+    document.body.appendChild(stack);
+
+    // Add title to stack
+    const title = titleRef.current;
+    if (title) {
+      const titleClone = title.cloneNode(true) as HTMLSpanElement;
+      stack.appendChild(titleClone);
+    }
+
+    // Move chart to stack (after title)
+    document.body.removeChild(chart);
+    stack.appendChild(chart);
+
+    // Add caption to stack
+    const caption = captionRef.current;
+    if (caption) {
+      const captionClone = caption.cloneNode(true) as HTMLSpanElement;
+      captionClone.style.alignSelf = 'start';
+      stack.appendChild(captionClone);
+    }
+  };
 }
 
 export default function ExportChartOnBeforeExport() {
+  const titleRef = React.useRef<HTMLSpanElement>(null);
+  const captionRef = React.useRef<HTMLSpanElement>(null);
+  const onBeforeExport = React.useMemo(
+    () => createOnBeforeExport(titleRef, captionRef),
+    [],
+  );
+
   return (
     <Stack width="100%">
-      <Typography sx={{ alignSelf: 'center', my: 1 }}>
+      <Typography ref={titleRef} sx={{ alignSelf: 'center', my: 1 }}>
         Inflation rate in France, Germany and the UK, 1960-2024
       </Typography>
       <LineChartPro
@@ -91,9 +123,10 @@ export default function ExportChartOnBeforeExport() {
             imageExportOptions: [{ type: 'image/png', onBeforeExport }],
           },
         }}
-        sx={{ [`& .${legendClasses.root}`]: { display: 'none' } }}
       />
-      <Typography variant="caption">Source: World Bank</Typography>
+      <Typography ref={captionRef} variant="caption">
+        Source: World Bank
+      </Typography>
     </Stack>
   );
 }
