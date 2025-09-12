@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import Box from '@mui/material/Box';
 
 const data1 = [
   { x: 100, y: 200, id: 1 },
@@ -27,8 +28,8 @@ const data2 = [
 
 export default function MultipleYAxesScatterChart() {
   return (
+    <Box sx={{ width: '100%', height: 300 }}>
     <ScatterChart
-      height={300}
       series={[
         {
           data: data1,
@@ -57,5 +58,6 @@ export default function MultipleYAxesScatterChart() {
         },
       }}
     />
+    </Box>
   );
 }

@@ -40,7 +40,7 @@ const chartData = [
     link: '/x/react-charts/bar-demo/#BiaxialBarChart',
   },
   {
-    title: 'Population Pyramid Bar Chart',
+    title: 'Population Pyramid',
     ChartComponent: PopulationPyramidBarChart,
     link: '/x/react-charts/bar-demo/#PopulationPyramidBarChart',
   },

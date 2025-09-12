@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
+import Box from '@mui/material/Box';
 
 const time = [
   new Date(2015, 1, 0),
@@ -19,8 +20,8 @@ const getPercents = (array: number[]) =>
 
 export default function PercentAreaChart() {
   return (
+    <Box sx={{ width: '100%', height: 300 }}>
     <LineChart
-      height={300}
       series={[
         {
           data: getPercents(a),
@@ -56,5 +57,6 @@ export default function PercentAreaChart() {
         },
       ]}
     />
+    </Box>
   );
 }
