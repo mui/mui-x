@@ -82,6 +82,7 @@ export default function PopulationPyramidBarChart() {
           {
             data: ageGroups,
             width: 60,
+            tickLabelInterval: (value, index) => index % 2 === 0,
             disableLine: true,
             disableTicks: true,
           },
