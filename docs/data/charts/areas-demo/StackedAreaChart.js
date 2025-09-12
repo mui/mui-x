@@ -20,26 +20,26 @@ export default function StackedAreaChart() {
   return (
     <Box sx={{ width: '100%', height: 300 }}>
       <LineChart
-      series={[
-        { data: uData, label: 'uv', area: true, stack: 'total', showMark: false },
-        { data: pData, label: 'pv', area: true, stack: 'total', showMark: false },
-        {
-          data: amtData,
-          label: 'amt',
-          area: true,
-          stack: 'total',
-          showMark: false,
-        },
-      ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-      yAxis={[{ width: 50 }]}
-      sx={{
-        [`& .${lineElementClasses.root}`]: {
-          display: 'none',
-        },
-      }}
-      margin={margin}
-    />
+        series={[
+          { data: uData, label: 'uv', area: true, stack: 'total', showMark: false },
+          { data: pData, label: 'pv', area: true, stack: 'total', showMark: false },
+          {
+            data: amtData,
+            label: 'amt',
+            area: true,
+            stack: 'total',
+            showMark: false,
+          },
+        ]}
+        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        yAxis={[{ width: 50 }]}
+        sx={{
+          [`& .${lineElementClasses.root}`]: {
+            display: 'none',
+          },
+        }}
+        margin={margin}
+      />
     </Box>
   );
 }

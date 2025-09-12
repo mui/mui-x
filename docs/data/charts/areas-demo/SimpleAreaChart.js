@@ -17,16 +17,16 @@ const xLabels = [
 export default function SimpleAreaChart() {
   return (
     <Box sx={{ width: '100%', height: 300 }}>
-    <LineChart
-      series={[{ data: uData, label: 'uv', area: true, showMark: false }]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-      sx={{
-        [`& .${lineElementClasses.root}`]: {
-          display: 'none',
-        },
-      }}
-      margin={margin}
-    />
-  </Box>
+      <LineChart
+        series={[{ data: uData, label: 'uv', area: true, showMark: false }]}
+        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        sx={{
+          [`& .${lineElementClasses.root}`]: {
+            display: 'none',
+          },
+        }}
+        margin={margin}
+      />
+    </Box>
   );
 }

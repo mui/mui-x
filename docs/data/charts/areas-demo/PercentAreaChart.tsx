@@ -21,42 +21,42 @@ const getPercents = (array: number[]) =>
 export default function PercentAreaChart() {
   return (
     <Box sx={{ width: '100%', height: 300 }}>
-    <LineChart
-      series={[
-        {
-          data: getPercents(a),
-          type: 'line',
-          label: 'a',
-          area: true,
-          stack: 'total',
-          showMark: false,
-        },
-        {
-          data: getPercents(b),
-          type: 'line',
-          label: 'b',
-          area: true,
-          stack: 'total',
-          showMark: false,
-        },
-        {
-          data: getPercents(c),
-          type: 'line',
-          label: 'c',
-          area: true,
-          stack: 'total',
-          showMark: false,
-        },
-      ]}
-      xAxis={[
-        {
-          scaleType: 'time',
-          data: time,
-          min: time[0].getTime(),
-          max: time[time.length - 1].getTime(),
-        },
-      ]}
-    />
+      <LineChart
+        series={[
+          {
+            data: getPercents(a),
+            type: 'line',
+            label: 'a',
+            area: true,
+            stack: 'total',
+            showMark: false,
+          },
+          {
+            data: getPercents(b),
+            type: 'line',
+            label: 'b',
+            area: true,
+            stack: 'total',
+            showMark: false,
+          },
+          {
+            data: getPercents(c),
+            type: 'line',
+            label: 'c',
+            area: true,
+            stack: 'total',
+            showMark: false,
+          },
+        ]}
+        xAxis={[
+          {
+            scaleType: 'time',
+            data: time,
+            min: time[0].getTime(),
+            max: time[time.length - 1].getTime(),
+          },
+        ]}
+      />
     </Box>
   );
 }

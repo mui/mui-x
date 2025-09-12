@@ -14,10 +14,10 @@ const data = [
 export default function SimpleScatterChart() {
   return (
     <Box sx={{ width: '100%', height: 300 }}>
-    <ScatterChart
-      series={[{ data, label: 'pv', id: 'pvId' }]}
-      xAxis={[{ min: 0 }]}
-    />
+      <ScatterChart
+        series={[{ data, label: 'pv', id: 'pvId' }]}
+        xAxis={[{ min: 0 }]}
+      />
     </Box>
   );
 }

@@ -26,21 +26,21 @@ const data2 = [
 export default function TwoLevelPieChart() {
   return (
     <Box sx={{ width: '100%', height: 300 }}>
-    <PieChart
-      series={[
-        {
-          innerRadius: 0,
-          outerRadius: 60,
-          data: data1,
-        },
-        {
-          innerRadius: 80,
-          outerRadius: 100,
-          data: data2,
-        },
-      ]}
-      hideLegend
-    />
+      <PieChart
+        series={[
+          {
+            innerRadius: 0,
+            outerRadius: 60,
+            data: data1,
+          },
+          {
+            innerRadius: 80,
+            outerRadius: 100,
+            data: data2,
+          },
+        ]}
+        hideLegend
+      />
     </Box>
   );
 }

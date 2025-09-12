@@ -38,54 +38,54 @@ const series = [
 export default function Combining() {
   return (
     <Box sx={{ width: '100%', height: 400 }}>
-        <ChartContainer
-          series={series}
-          xAxis={[
-            {
-              id: 'date',
-              data: alphabetStock.map((day) => new Date(day.date)),
-              scaleType: 'band',
-              valueFormatter: (value) => value.toLocaleDateString(),
-              height: 40,
-            },
-          ]}
-          yAxis={[
-            { id: 'price', scaleType: 'linear', position: 'left', width: 50 },
-            {
-              id: 'volume',
-              scaleType: 'linear',
-              position: 'right',
-              valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
-              width: 55,
-            },
-          ]}
-        >
-          <ChartsAxisHighlight x="line" />
-          <BarPlot />
-          <LinePlot />
-          <LineHighlightPlot />
-          <ChartsXAxis
-            label="Date"
-            axisId="date"
-            tickInterval={(value, index) => {
-              return index % 30 === 0;
-            }}
-            tickLabelStyle={{
-              fontSize: 10,
-            }}
-          />
-          <ChartsYAxis
-            label="Alphabet Stock Price (USD)"
-            axisId="price"
-            tickLabelStyle={{ fontSize: 10 }}
-          />
-          <ChartsYAxis
-            label="Volume"
-            axisId="volume"
-            tickLabelStyle={{ fontSize: 10 }}
-          />
-          <ChartsTooltip />
-        </ChartContainer>
+      <ChartContainer
+        series={series}
+        xAxis={[
+          {
+            id: 'date',
+            data: alphabetStock.map((day) => new Date(day.date)),
+            scaleType: 'band',
+            valueFormatter: (value) => value.toLocaleDateString(),
+            height: 40,
+          },
+        ]}
+        yAxis={[
+          { id: 'price', scaleType: 'linear', position: 'left', width: 50 },
+          {
+            id: 'volume',
+            scaleType: 'linear',
+            position: 'right',
+            valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
+            width: 55,
+          },
+        ]}
+      >
+        <ChartsAxisHighlight x="line" />
+        <BarPlot />
+        <LinePlot />
+        <LineHighlightPlot />
+        <ChartsXAxis
+          label="Date"
+          axisId="date"
+          tickInterval={(value, index) => {
+            return index % 30 === 0;
+          }}
+          tickLabelStyle={{
+            fontSize: 10,
+          }}
+        />
+        <ChartsYAxis
+          label="Alphabet Stock Price (USD)"
+          axisId="price"
+          tickLabelStyle={{ fontSize: 10 }}
+        />
+        <ChartsYAxis
+          label="Volume"
+          axisId="volume"
+          tickLabelStyle={{ fontSize: 10 }}
+        />
+        <ChartsTooltip />
+      </ChartContainer>
     </Box>
   );
 }
