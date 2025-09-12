@@ -994,7 +994,7 @@ describe('recurrence-utils', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart,
-        adapter.addDays(visibleStart, 5),
+        adapter.addDays(visibleStart, 4),
         adapter,
       );
       expect(result).to.have.length(5);
@@ -1020,7 +1020,7 @@ describe('recurrence-utils', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart,
-        adapter.addDays(visibleStart, 10),
+        adapter.addDays(visibleStart, 9),
         adapter,
       );
       // Jan 1..5 inclusive
@@ -1036,7 +1036,7 @@ describe('recurrence-utils', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart,
-        adapter.addDays(visibleStart, 7),
+        adapter.addDays(visibleStart, 6),
         adapter,
       );
       expect(result).to.have.length(3);
@@ -1054,7 +1054,7 @@ describe('recurrence-utils', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart,
-        adapter.addDays(visibleStart, 30),
+        adapter.addDays(visibleStart, 29),
         adapter,
       );
       // Expect Fridays at week 0, 2 and 4
@@ -1077,7 +1077,7 @@ describe('recurrence-utils', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart,
-        adapter.addDays(visibleStart, 120),
+        adapter.addDays(visibleStart, 119),
         adapter,
       );
       const daysOfMonth = result.map((o) => adapter.getDate(o.start));
@@ -1117,7 +1117,7 @@ describe('recurrence-utils', () => {
       const result = getRecurringEventOccurrencesForVisibleDays(
         event,
         visibleStart,
-        adapter.addDays(visibleStart, 5),
+        adapter.addDays(visibleStart, 4),
         adapter,
       );
       expect(result).to.have.length(1);
