@@ -134,7 +134,7 @@ export const useGridDataSourcePremium = (
          * Store the values of each column group path to be able to sort them by pivot column sort order.
          * The values are stored by the column group level which allows easier sorting by going through the column group levels in reverse order.
          */
-        const columnGroupPathValues: string[][] = [];
+        const columnGroupPathValues: { field: string; pathValues: string[] }[] = [];
 
         uniquePaths.forEach((columnPath) => {
           const columnPathValues = columnPath.map((path) => path.value);
@@ -169,7 +169,7 @@ export const useGridDataSourcePremium = (
                     initialColumns.get(visiblePivotColumns[index].field)!,
                   ),
             );
-            columnGroupPathValues.push(combinedPathValues);
+            columnGroupPathValues.push({ field: pivotFieldName, pathValues: combinedPathValues });
 
             // Build the hierarchy for column groups
             for (let i = 0; i < combinedPathValues.length - 1; i += 1) {
@@ -228,13 +228,13 @@ export const useGridDataSourcePremium = (
           columnGroupPathValues.sort((a, b) => {
             return (
               (sort === 'asc' ? 1 : -1) *
-              gridStringOrNumberComparator(a[i], b[i], {} as any, {} as any)
+              gridStringOrNumberComparator(a.pathValues[i], b.pathValues[i], {} as any, {} as any)
             );
           });
         }
 
         const sortedNewColumns = visiblePivotColumns.length
-          ? columnGroupPathValues.map((pathValue) => newColumns[pathValue[0]])
+          ? columnGroupPathValues.map((pathValue) => newColumns[pathValue.field])
           : [];
 
         // Update the grid state with new columns and column grouping model
