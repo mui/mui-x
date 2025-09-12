@@ -113,7 +113,9 @@ const innerDescribeTreeView = <TSignatures extends TreeViewAnyPluginSignature[]>
     return getUtils(result);
   };
 
-  const createRendererForComponentWithItemsProp = (TreeViewComponent: typeof RichTreeView) => {
+  const createRendererForComponentWithItemsProp = (
+    TreeViewComponent: typeof RichTreeView | typeof RichTreeViewPro,
+  ) => {
     const objectRenderer: DescribeTreeViewRenderer<TSignatures> = ({
       items: rawItems,
       withErrorBoundary,
