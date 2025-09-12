@@ -36,6 +36,10 @@ type VoronoiSeries = {
    * This takes into account removed points.
    */
   seriesIndexes: number[];
+  /**
+   * Size of the marker in pixels.
+   */
+  markerSize: number;
 };
 
 export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
@@ -110,6 +114,7 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         seriesIndexes,
         startIndex: points.length,
         endIndex: points.length + seriesPoints.length,
+        markerSize: series[seriesId].markerSize,
       };
       points = points.concat(seriesPoints);
     });
@@ -173,11 +178,13 @@ export const useChartVoronoi: ChartPlugin<UseChartVoronoiSignature> = ({
         (2 * closestPointIndex - voronoiRef.current[closestSeries.seriesId].startIndex) / 2;
       const dataIndex = voronoiRef.current[closestSeries.seriesId].seriesIndexes[seriesPointIndex];
 
-      if (voronoiMaxRadius !== undefined) {
+      const maxRadius = voronoiMaxRadius === 'item' ? closestSeries.markerSize : voronoiMaxRadius;
+
+      if (maxRadius !== undefined) {
         const pointX = delauneyRef.current.points[2 * closestPointIndex];
         const pointY = delauneyRef.current.points[2 * closestPointIndex + 1];
         const dist2 = (pointX - svgPoint.x) ** 2 + (pointY - svgPoint.y) ** 2;
-        if (dist2 > voronoiMaxRadius ** 2) {
+        if (dist2 > maxRadius ** 2) {
           // The closest point is too far to be considered.
           return 'outside-voronoi-max-radius';
         }
