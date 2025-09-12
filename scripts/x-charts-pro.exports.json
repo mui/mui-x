@@ -55,6 +55,7 @@
   { "name": "BarPlotProps", "kind": "Interface" },
   { "name": "BarPlotSlotProps", "kind": "Interface" },
   { "name": "BarPlotSlots", "kind": "Interface" },
+  { "name": "BarProps", "kind": "Interface" },
   { "name": "BarSeries", "kind": "TypeAlias" },
   { "name": "BarSeriesType", "kind": "Interface" },
   { "name": "blueberryTwilightPalette", "kind": "Variable" },
