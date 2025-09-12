@@ -17,7 +17,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, ...other } = props;
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const translations = useTranslations();
   const view = useStore(store, selectors.view);
   const visibleDate = useStore(store, selectors.visibleDate);
@@ -35,7 +35,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
       <div className="DateNavigatorButtonsContainer">
         <button
           className={clsx('NeutralTextButton', 'Button', 'DateNavigatorButton')}
-          onClick={instance.goToPreviousVisibleDate}
+          onClick={store.goToPreviousVisibleDate}
           type="button"
           aria-label={translations.previousTimeSpan(view)}
         >
@@ -43,7 +43,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         </button>
         <button
           className={clsx('NeutralTextButton', 'Button', 'DateNavigatorButton')}
-          onClick={instance.goToNextVisibleDate}
+          onClick={store.goToNextVisibleDate}
           type="button"
           aria-label={translations.nextTimeSpan(view)}
         >

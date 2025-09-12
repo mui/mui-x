@@ -38,7 +38,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
   const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
@@ -70,9 +70,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         end: data.end,
       };
 
-      instance.updateEvent(updatedEvent);
+      store.updateEvent(updatedEvent);
     },
-    [instance, store],
+    [store],
   );
 
   useIsoLayoutEffect(() => {
@@ -125,7 +125,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   <button
                     type="button"
                     className="DayTimeGridHeaderButton"
-                    onClick={(event) => instance.switchToDay(day, event)}
+                    onClick={(event) => store.switchToDay(day, event)}
                     tabIndex={0}
                   >
                     {renderHeaderContent(day)}

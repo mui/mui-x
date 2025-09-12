@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { EventCalendarInstance } from '../EventCalendarInstance';
+import { EventCalendarStore } from '../EventCalendarStore';
 import { getAdapter } from './../../utils/adapter/getAdapter';
 import { CalendarView } from '../../models';
 
@@ -7,17 +7,17 @@ const DEFAULT_PARAMS = { events: [] };
 
 const adapter = getAdapter();
 
-describe('Date - EventCalendarInstance', () => {
+describe('Date - EventCalendarStore', () => {
   describe('Method: goToToday', () => {
     it('should set visibleDate to startOfDay(adapter.date()) and calls onVisibleDateChange when is uncontrolled', () => {
       const onVisibleDateChange = spy();
       const yesterday = adapter.addDays(adapter.startOfDay(adapter.date()), -1);
-      const { instance, store } = EventCalendarInstance.create(
+      const store = EventCalendarStore.create(
         { ...DEFAULT_PARAMS, onVisibleDateChange, defaultVisibleDate: yesterday },
         adapter,
       );
 
-      instance.goToToday({} as any);
+      store.goToToday({} as any);
 
       const expected = adapter.startOfDay(adapter.date());
       expect(store.state.visibleDate).toEqualDateTime(expected);
@@ -29,12 +29,12 @@ describe('Date - EventCalendarInstance', () => {
       const onVisibleDateChange = spy();
       const controlledDate = adapter.date('2025-07-01T00:00:00Z');
 
-      const { instance, store } = EventCalendarInstance.create(
+      const store = EventCalendarStore.create(
         { ...DEFAULT_PARAMS, visibleDate: controlledDate, onVisibleDateChange },
         adapter,
       );
 
-      instance.goToToday({} as any);
+      store.goToToday({} as any);
 
       const expected = adapter.startOfDay(adapter.date());
       expect(store.state.visibleDate).toEqualDateTime(controlledDate);
@@ -46,13 +46,12 @@ describe('Date - EventCalendarInstance', () => {
       const onVisibleDateChange = spy();
       const todayStart = adapter.startOfDay(adapter.date());
 
-      const { instance, store } = EventCalendarInstance.create(
-        { ...DEFAULT_PARAMS, onVisibleDateChange },
+      const store = EventCalendarStore.create(
+        { ...DEFAULT_PARAMS, defaultVisibleDate: todayStart, onVisibleDateChange },
         adapter,
       );
 
-      store.set('visibleDate', todayStart);
-      instance.goToToday({} as any);
+      store.goToToday({} as any);
 
       expect(store.state.visibleDate).toEqualDateTime(todayStart);
       expect(onVisibleDateChange.called).to.equal(false);
@@ -68,7 +67,7 @@ describe('Date - EventCalendarInstance', () => {
         const initialDate = adapter.date('2025-08-01T00:00:00Z');
         const nextDate = adapter.date('2025-08-02T00:00:00Z');
 
-        const { instance, store } = EventCalendarInstance.create(
+        const store = EventCalendarStore.create(
           {
             ...DEFAULT_PARAMS,
             defaultView: 'week',
@@ -79,7 +78,7 @@ describe('Date - EventCalendarInstance', () => {
           adapter,
         );
 
-        instance.switchToDay(nextDate, {} as any);
+        store.switchToDay(nextDate, {} as any);
 
         expect(store.state.view).to.equal('day');
         expect(store.state.visibleDate).toEqualDateTime(nextDate);
@@ -97,7 +96,7 @@ describe('Date - EventCalendarInstance', () => {
         const initialDate = adapter.date('2025-08-01T00:00:00Z');
         const nextDate = adapter.date('2025-08-02T00:00:00Z');
 
-        const { instance, store } = EventCalendarInstance.create(
+        const store = EventCalendarStore.create(
           {
             ...DEFAULT_PARAMS,
             view: 'week',
@@ -108,7 +107,7 @@ describe('Date - EventCalendarInstance', () => {
           adapter,
         );
 
-        instance.switchToDay(nextDate, {} as any);
+        store.switchToDay(nextDate, {} as any);
 
         expect(store.state.view).to.equal('week');
         expect(store.state.visibleDate).toEqualDateTime(initialDate);
@@ -126,7 +125,7 @@ describe('Date - EventCalendarInstance', () => {
         const currentDate = adapter.date('2025-08-01T00:00:00Z');
         const nextDate = adapter.date('2025-08-02T00:00:00Z');
 
-        const { instance, store } = EventCalendarInstance.create(
+        const store = EventCalendarStore.create(
           {
             ...DEFAULT_PARAMS,
             defaultView: 'day',
@@ -137,7 +136,7 @@ describe('Date - EventCalendarInstance', () => {
           adapter,
         );
 
-        instance.switchToDay(nextDate, {} as any);
+        store.switchToDay(nextDate, {} as any);
 
         expect(store.state.view).to.equal('day');
         expect(store.state.visibleDate).toEqualDateTime(nextDate);
@@ -152,7 +151,7 @@ describe('Date - EventCalendarInstance', () => {
         const currentDate = adapter.date('2025-08-01T00:00:00Z');
         const nextDate = adapter.date('2025-08-02T00:00:00Z');
 
-        const { instance, store } = EventCalendarInstance.create(
+        const store = EventCalendarStore.create(
           {
             ...DEFAULT_PARAMS,
             view: 'day',
@@ -163,7 +162,7 @@ describe('Date - EventCalendarInstance', () => {
           adapter,
         );
 
-        instance.switchToDay(nextDate, {} as any);
+        store.switchToDay(nextDate, {} as any);
 
         expect(store.state.view).to.equal('day');
         expect(store.state.visibleDate).toEqualDateTime(nextDate);
@@ -177,7 +176,7 @@ describe('Date - EventCalendarInstance', () => {
 
         const currentDate = adapter.date('2025-08-01T00:00:00Z');
 
-        const { instance, store } = EventCalendarInstance.create(
+        const store = EventCalendarStore.create(
           {
             ...DEFAULT_PARAMS,
             defaultView: 'week',
@@ -188,7 +187,7 @@ describe('Date - EventCalendarInstance', () => {
           adapter,
         );
 
-        instance.switchToDay(currentDate, {} as any);
+        store.switchToDay(currentDate, {} as any);
 
         expect(store.state.view).to.equal('day');
         expect(store.state.visibleDate).toEqualDateTime(currentDate);
@@ -202,7 +201,7 @@ describe('Date - EventCalendarInstance', () => {
         const onViewChange = spy();
 
         const sameDate = adapter.date('2025-08-02T00:00:00Z');
-        const { instance, store } = EventCalendarInstance.create(
+        const store = EventCalendarStore.create(
           {
             ...DEFAULT_PARAMS,
             view: 'day',
@@ -213,7 +212,7 @@ describe('Date - EventCalendarInstance', () => {
           adapter,
         );
 
-        instance.switchToDay(sameDate, {} as any);
+        store.switchToDay(sameDate, {} as any);
 
         expect(store.state.view).to.equal('day');
         expect(store.state.visibleDate).toEqualDateTime(sameDate);
@@ -222,12 +221,12 @@ describe('Date - EventCalendarInstance', () => {
       });
 
       it('should throw if the view is not an allowed view', () => {
-        const { instance } = EventCalendarInstance.create(
+        const store = EventCalendarStore.create(
           { ...DEFAULT_PARAMS, views: ['week', 'month', 'agenda'] as CalendarView[] },
           adapter,
         );
         const newDate = adapter.date('2025-08-02T00:00:00Z');
-        expect(() => instance.switchToDay(newDate, {} as any)).to.throw(
+        expect(() => store.switchToDay(newDate, {} as any)).to.throw(
           /not compatible with the available views/i,
         );
       });
@@ -240,7 +239,7 @@ describe('Date - EventCalendarInstance', () => {
       const targetDate = adapter.date('2025-07-03T00:00:00Z');
       const siblingVisibleDateGetter = spy(() => targetDate);
 
-      const { instance } = EventCalendarInstance.create(
+      const store = EventCalendarStore.create(
         {
           ...DEFAULT_PARAMS,
           view: 'day',
@@ -250,8 +249,8 @@ describe('Date - EventCalendarInstance', () => {
         adapter,
       );
 
-      instance.setViewConfig({ siblingVisibleDateGetter });
-      instance.goToPreviousVisibleDate({} as any);
+      store.setViewConfig({ siblingVisibleDateGetter });
+      store.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
       expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(-1);
     });
@@ -263,7 +262,7 @@ describe('Date - EventCalendarInstance', () => {
       const targetDate = adapter.date('2025-07-03T00:00:00Z');
       const siblingVisibleDateGetter = spy(() => targetDate);
 
-      const { instance } = EventCalendarInstance.create(
+      const store = EventCalendarStore.create(
         {
           ...DEFAULT_PARAMS,
           view: 'day',
@@ -273,8 +272,8 @@ describe('Date - EventCalendarInstance', () => {
         adapter,
       );
 
-      instance.setViewConfig({ siblingVisibleDateGetter });
-      instance.goToNextVisibleDate({} as any);
+      store.setViewConfig({ siblingVisibleDateGetter });
+      store.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
       expect(siblingVisibleDateGetter.lastCall.lastArg).toEqual(1);
     });

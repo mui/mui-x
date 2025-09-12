@@ -27,7 +27,7 @@ export const AgendaView = React.memo(
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     const { className, ...other } = props;
-    const { store } = useEventCalendarContext();
+    const store = useEventCalendarContext();
 
     const today = adapter.date();
 

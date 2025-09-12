@@ -22,7 +22,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { event: eventProp, ariaLabelledBy, className, id: idProp, variant, ...other } = props;
 
   const id = useId(idProp);
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarContext();
 
   const isRecurring = Boolean(eventProp.rrule);
   const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);

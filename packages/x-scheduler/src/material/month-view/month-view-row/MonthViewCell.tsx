@@ -24,7 +24,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 ) {
   const { day, events, allDayEvents, maxEvents, dayIndexInRow, rowLength } = props;
   const adapter = useAdapter();
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarContext();
   const translations = useTranslations();
   const placeholder = DayGrid.usePlaceholderInDay(day);
   const hasDayView = useStore(store, selectors.hasDayView);
@@ -83,7 +83,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         <button
           type="button"
           className="MonthViewCellNumberButton"
-          onClick={(event) => instance.switchToDay(day, event)}
+          onClick={(event) => store.switchToDay(day, event)}
           tabIndex={0}
         >
           {cellNumberContent}
