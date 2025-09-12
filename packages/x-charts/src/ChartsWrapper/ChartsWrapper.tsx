@@ -134,7 +134,7 @@ const getTemplateRows = (hideLegend: boolean, direction: Direction | undefined) 
     }
     return 'auto 1fr';
   }
-  return 'auto auto 1fr';
+  return 'auto 1fr';
 };
 
 const Root = styled('div', {
