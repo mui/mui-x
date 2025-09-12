@@ -10,9 +10,9 @@ import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
 import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import {
-  selectorChartsVoronoiIsVoronoiEnabled,
-  UseChartVoronoiSignature,
-} from '../internals/plugins/featurePlugins/useChartVoronoi';
+  selectorChartsIsVoronoiEnabled,
+  UseChartClosestPointSignature,
+} from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
@@ -70,8 +70,8 @@ function Scatter(props: ScatterProps) {
 
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-  const store = useStore<[UseChartVoronoiSignature]>();
-  const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
+  const store = useStore<[UseChartClosestPointSignature]>();
+  const isVoronoiEnabled = useSelector(store, selectorChartsIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
