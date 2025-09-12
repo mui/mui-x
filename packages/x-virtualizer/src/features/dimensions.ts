@@ -8,6 +8,7 @@ import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
+import useTimeout from '@mui/utils/useTimeout';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
 import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 
@@ -106,6 +107,35 @@ function initializeState(params: VirtualizerParams): Dimensions.State {
   };
 }
 
+const useCallbackWhenValueHoldsForTime = (timeoutMs: number) => {
+  const timeout = useTimeout();
+  const currentValueRef = React.useRef<any>(null);
+  const callbackRef = React.useRef<((value: any) => void) | undefined>(undefined);
+
+  return useLazyRef(() => {
+    return {
+      set: <V extends any>(value: V, callback?: (value: V) => void) => {
+        if (callback) {
+          callbackRef.current = callback;
+        }
+        if (value !== currentValueRef.current) {
+          timeout.clear();
+
+          timeout.start(timeoutMs, () => {
+            timeout.clear();
+
+            // Check if the value is still the same as when this timeout was started
+            if (value === currentValueRef.current) {
+              callbackRef.current?.(value);
+            }
+          });
+        }
+        currentValueRef.current = value;
+      },
+    };
+  }).current;
+};
+
 function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
@@ -122,6 +152,9 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     onResize,
   } = params;
 
+  const skippedHasScrollYUpdateRef = React.useRef(false);
+  const { set: setHasScrollY } = useCallbackWhenValueHoldsForTime(0);
+
   const containerNode = refs.container.current;
 
   const updateDimensions = React.useCallback(() => {
@@ -131,6 +164,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
     const rootSize = selectors.rootSize(store.state);
     const rowsMeta = selectors.rowsMeta(store.state);
+    const prevDimensions = store.state.dimensions;
 
     // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
     // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
@@ -176,7 +210,26 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       const container = viewportInnerSize;
 
       const hasScrollXIfNoYScrollBar = content.width > container.width;
-      const hasScrollYIfNoXScrollBar = content.height > container.height;
+      let hasScrollYIfNoXScrollBar = content.height > container.height;
+
+      setHasScrollY(hasScrollYIfNoXScrollBar);
+
+      if (skippedHasScrollYUpdateRef.current) {
+        skippedHasScrollYUpdateRef.current = false;
+      } else {
+        // Skip the hasScrollY change for the first frame to avoid flickering
+        // eslint-disable-next-line no-lonely-if
+        if (prevDimensions.hasScrollY === false && hasScrollYIfNoXScrollBar) {
+          // @ts-ignore
+          setHasScrollY(true, (value) => {
+            if (value) {
+              updateDimensions();
+            }
+          });
+          hasScrollYIfNoXScrollBar = false;
+          skippedHasScrollYUpdateRef.current = true;
+        }
+      }
 
       if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
         hasScrollY = hasScrollYIfNoXScrollBar;
@@ -225,8 +278,6 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       bottomContainerHeight,
     };
 
-    const prevDimensions = store.state.dimensions;
-
     if (isDeepEqual(prevDimensions as any, newDimensions)) {
       return;
     }
@@ -245,6 +296,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     rightPinnedWidth,
     topPinnedHeight,
     bottomPinnedHeight,
+    setHasScrollY,
   ]);
 
   const { resizeThrottleMs } = params;
