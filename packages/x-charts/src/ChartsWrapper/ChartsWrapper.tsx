@@ -112,6 +112,7 @@ const getTemplateColumns = (
   hideLegend: boolean,
   direction: Direction | undefined,
   position: Position | undefined,
+  width: number | undefined,
 ) => {
   if (direction === 'vertical') {
     if (hideLegend) {
@@ -121,7 +122,7 @@ const getTemplateColumns = (
       return 'auto 1fr';
     }
 
-    return 'var(--chart-width,1fr) auto';
+    return `${width ? 'auto' : '1fr'} auto`;
   }
 
   return '100%';
@@ -141,9 +142,9 @@ const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
   shouldForwardProp: (prop) =>
-    shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'propsWidth',
-})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; propsWidth?: number }>(
-  ({ ownerState, propsWidth }) => ({
+    shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'width',
+})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; width?: number }>(
+  ({ ownerState, width }) => ({
     variants: [
       {
         props: { extendVertically: true },
@@ -154,11 +155,11 @@ const Root = styled('div', {
     ],
     flex: 1,
     display: 'grid',
-    '--chart-width': propsWidth ? 'auto' : '1fr',
     gridTemplateColumns: getTemplateColumns(
       ownerState.hideLegend,
       ownerState.legendDirection,
       ownerState.legendPosition,
+      width,
     ),
     gridTemplateRows: getTemplateRows(ownerState.hideLegend, ownerState.legendDirection),
     [`&:has(.${chartsToolbarClasses.root})`]: {
@@ -201,7 +202,7 @@ function ChartsWrapper(props: ChartsWrapperProps) {
       ownerState={props}
       sx={sx}
       extendVertically={extendVertically ?? propsHeight === undefined}
-      propsWidth={propsWidth}
+      width={propsWidth}
     >
       {children}
     </Root>
