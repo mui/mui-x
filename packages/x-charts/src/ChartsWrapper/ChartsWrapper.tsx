@@ -37,7 +37,7 @@ export interface ChartsWrapperProps {
   sx?: SxProps<Theme>;
 }
 
-const getJustifyItems = (position?: Position) => {
+const getJustifyItems = (position: Position|undefined) => {
   if (position?.horizontal === 'start') {
     return 'start';
   }
@@ -47,7 +47,7 @@ const getJustifyItems = (position?: Position) => {
   return 'center';
 };
 
-const getAlignItems = (position?: Position) => {
+const getAlignItems = (position: Position|undefined) => {
   if (position?.vertical === 'top') {
     return 'flex-start';
   }
@@ -87,8 +87,8 @@ const getGridTemplateAreasWithToolBar = (
 
 const getGridTemplateAreasWithoutToolBar = (
   hideLegend: boolean,
-  direction?: Direction,
-  position?: Position,
+  direction: Direction | undefined,
+  position: Position | undefined,
 ) => {
   if (hideLegend) {
     return `"chart"`;
@@ -108,23 +108,23 @@ const getGridTemplateAreasWithoutToolBar = (
           "chart"`;
 };
 
-const getTemplateColumns = (hideLegend: boolean, direction?: Direction, _?: Position) => {
+const getTemplateColumns = (hideLegend: boolean, direction: Direction|undefined, position: Position|undefined) => {
   if (direction === 'vertical') {
-    return 'auto';
-    // if (hideLegend) {
-    //   return '1fr';
-    // }
-    // if (position?.horizontal === 'start') {
-    //   return 'auto 1fr';
-    // }
+  
+    if (hideLegend) {
+      return '1fr';
+    }
+    if (position?.horizontal === 'start') {
+      return 'auto 1fr';
+    }
 
-    // return '1fr auto';
+    return 'var(--chart-width,1fr) auto';
   }
 
   return '100%';
 };
 
-const getTemplateRows = (hideLegend: boolean, direction?: Direction) => {
+const getTemplateRows = (hideLegend: boolean, direction: Direction|undefined) => {
   if (direction === 'vertical') {
     if (hideLegend) {
       return '1fr';
@@ -137,8 +137,8 @@ const getTemplateRows = (hideLegend: boolean, direction?: Direction) => {
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically',
-})<{ ownerState: ChartsWrapperProps; extendVertically: boolean }>(({ ownerState }) => ({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'propsWidth',
+})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; propsWidth?: number }>(({ ownerState, propsWidth }) => ({
   variants: [
     {
       props: { extendVertically: true },
@@ -149,6 +149,7 @@ const Root = styled('div', {
   ],
   flex: 1,
   display: 'grid',
+  '--chart-width': propsWidth ? "auto" : "1fr",
   gridTemplateColumns: getTemplateColumns(
     ownerState.hideLegend,
     ownerState.legendDirection,
@@ -186,7 +187,7 @@ function ChartsWrapper(props: ChartsWrapperProps) {
   const chartRootRef = useChartRootRef();
 
   const store = useStore();
-  const { height: propsHeight } = useSelector(store, selectorChartPropsSize);
+  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
 
   return (
     <Root
@@ -194,6 +195,7 @@ function ChartsWrapper(props: ChartsWrapperProps) {
       ownerState={props}
       sx={sx}
       extendVertically={extendVertically ?? propsHeight === undefined}
+      propsWidth={propsWidth}
     >
       {children}
     </Root>
