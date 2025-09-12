@@ -49,10 +49,21 @@ Date and Time Pickers use ARIA roles and robust focus management across the inte
 ## Keyboard support
 
 Set `enableKeyboardNavigation` to `true` to enable the keyboard navigation on your charts.
+You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
+
+```js
+components: {
+  MuiChartDataProvider: {
+    defaultProps: {
+      enableKeyboardNavigation: true
+    },
+  },
+}
+```
 
 {{"demo": "KeyboardNavigation.js"}}
 
-This feature is currently supported by line, bar, pie, and scatter charts.
+This feature is currently supported by line, bar, pie, scatter, and sparkline charts.
 
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the charts highlight a value item that can be modified with arrow navigation.
