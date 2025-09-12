@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-virtualizer",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "author": "MUI Team",
   "description": "MUI virtualization library",
   "license": "MIT",
@@ -24,8 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build && pnpm build:copy-files",
-    "build:copy-files": "code-infra copy-files",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -44,7 +43,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^2.0.9",
-    "@mui/types": "^7.4.5",
+    "@mui/types": "^7.4.6",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "^6.0.1"

@@ -72,6 +72,7 @@ globalThis.muiDocConfig = {
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
       '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',
+      '@base-ui-components/utils': 'latest',
     };
   },
   postProcessImport,
