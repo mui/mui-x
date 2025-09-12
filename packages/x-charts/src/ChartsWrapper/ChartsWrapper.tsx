@@ -37,7 +37,7 @@ export interface ChartsWrapperProps {
   sx?: SxProps<Theme>;
 }
 
-const getJustifyItems = (position: Position|undefined) => {
+const getJustifyItems = (position: Position | undefined) => {
   if (position?.horizontal === 'start') {
     return 'start';
   }
@@ -47,7 +47,7 @@ const getJustifyItems = (position: Position|undefined) => {
   return 'center';
 };
 
-const getAlignItems = (position: Position|undefined) => {
+const getAlignItems = (position: Position | undefined) => {
   if (position?.vertical === 'top') {
     return 'flex-start';
   }
@@ -108,9 +108,12 @@ const getGridTemplateAreasWithoutToolBar = (
           "chart"`;
 };
 
-const getTemplateColumns = (hideLegend: boolean, direction: Direction|undefined, position: Position|undefined) => {
+const getTemplateColumns = (
+  hideLegend: boolean,
+  direction: Direction | undefined,
+  position: Position | undefined,
+) => {
   if (direction === 'vertical') {
-  
     if (hideLegend) {
       return '1fr';
     }
@@ -124,7 +127,7 @@ const getTemplateColumns = (hideLegend: boolean, direction: Direction|undefined,
   return '100%';
 };
 
-const getTemplateRows = (hideLegend: boolean, direction: Direction|undefined) => {
+const getTemplateRows = (hideLegend: boolean, direction: Direction | undefined) => {
   if (direction === 'vertical') {
     if (hideLegend) {
       return '1fr';
@@ -137,46 +140,49 @@ const getTemplateRows = (hideLegend: boolean, direction: Direction|undefined) =>
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'propsWidth',
-})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; propsWidth?: number }>(({ ownerState, propsWidth }) => ({
-  variants: [
-    {
-      props: { extendVertically: true },
-      style: {
-        height: '100%',
+  shouldForwardProp: (prop) =>
+    shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'propsWidth',
+})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; propsWidth?: number }>(
+  ({ ownerState, propsWidth }) => ({
+    variants: [
+      {
+        props: { extendVertically: true },
+        style: {
+          height: '100%',
+        },
       },
+    ],
+    flex: 1,
+    display: 'grid',
+    '--chart-width': propsWidth ? 'auto' : '1fr',
+    gridTemplateColumns: getTemplateColumns(
+      ownerState.hideLegend,
+      ownerState.legendDirection,
+      ownerState.legendPosition,
+    ),
+    gridTemplateRows: getTemplateRows(ownerState.hideLegend, ownerState.legendDirection),
+    [`&:has(.${chartsToolbarClasses.root})`]: {
+      gridTemplateAreas: getGridTemplateAreasWithToolBar(
+        ownerState.hideLegend,
+        ownerState.legendDirection,
+        ownerState.legendPosition,
+      ),
     },
-  ],
-  flex: 1,
-  display: 'grid',
-  '--chart-width': propsWidth ? "auto" : "1fr",
-  gridTemplateColumns: getTemplateColumns(
-    ownerState.hideLegend,
-    ownerState.legendDirection,
-    ownerState.legendPosition,
-  ),
-  gridTemplateRows: getTemplateRows(ownerState.hideLegend, ownerState.legendDirection),
-  [`&:has(.${chartsToolbarClasses.root})`]: {
-    gridTemplateAreas: getGridTemplateAreasWithToolBar(
-      ownerState.hideLegend,
-      ownerState.legendDirection,
-      ownerState.legendPosition,
-    ),
-  },
-  [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
-    gridTemplateAreas: getGridTemplateAreasWithoutToolBar(
-      ownerState.hideLegend,
-      ownerState.legendDirection,
-      ownerState.legendPosition,
-    ),
-  },
-  justifyContent: 'center',
-  justifyItems: getJustifyItems(ownerState.legendPosition),
-  alignItems: getAlignItems(ownerState.legendPosition),
-  [`& > .${chartsToolbarClasses.root}`]: {
-    justifySelf: 'center',
-  },
-}));
+    [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
+      gridTemplateAreas: getGridTemplateAreasWithoutToolBar(
+        ownerState.hideLegend,
+        ownerState.legendDirection,
+        ownerState.legendPosition,
+      ),
+    },
+    justifyContent: 'center',
+    justifyItems: getJustifyItems(ownerState.legendPosition),
+    alignItems: getAlignItems(ownerState.legendPosition),
+    [`& > .${chartsToolbarClasses.root}`]: {
+      justifySelf: 'center',
+    },
+  }),
+);
 
 /**
  * Wrapper for the charts components.
