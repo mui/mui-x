@@ -38,6 +38,8 @@ export {
 export type {
   GridGetRowsParamsPremium as GridGetRowsParams,
   GridGetRowsResponsePremium as GridGetRowsResponse,
+  GridGetRowsResponsePivotColumn,
+  GridDataSourcePivotColumnGroupPath,
   GridDataSourcePremium as GridDataSource,
   GridDataSourceApiPremium as GridDataSourceApi,
   GridDataSourceApiBasePremium as GridDataSourceApiBase,
