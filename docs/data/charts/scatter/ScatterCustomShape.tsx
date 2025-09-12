@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScatterChart, ScatterMarkerProps } from '@mui/x-charts/ScatterChart';
 import { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
-import data from '../dataset/random/scatterSimson.json';
+import data from '../dataset/random/scatterParallel.json';
 
 export default function ScatterCustomShape() {
   return (

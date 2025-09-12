@@ -12,7 +12,7 @@ import { AnimatedLineProps, LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { HighlightScope } from '@mui/x-charts/context';
-import scatterDataset from '../dataset/random/scatterSimson.json';
+import scatterDataset from '../dataset/random/scatterParallel.json';
 
 const barChartsParams = {
   series: [

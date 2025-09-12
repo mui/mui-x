@@ -67,14 +67,12 @@ export default function ExportChartToolbarCustomization() {
         xAxis={[
           {
             scaleType: 'log',
-            // valueFormatter: (value: number, context) => {
-            //   console.log(value, context);
-            //   if (context.location === 'tick' && context.defaultTickLabel === '') {
-            //     return '';
-            //   }
-
-            //   return populationFormatter.format(value);
-            // },
+            valueFormatter: (value, context) => {
+              if (context.location === 'tick' && context.defaultTickLabel === '') {
+                return '';
+              }
+              return populationFormatter.format(value);
+            },
             zoom: true,
             label: 'Population',
           },

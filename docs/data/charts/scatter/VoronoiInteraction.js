@@ -5,7 +5,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import data from '../dataset/random/scatterSimson.json';
+import data from '../dataset/random/scatterParallel.json';
 
 export default function VoronoiInteraction() {
   const [voronoiMaxRadius, setVoronoiMaxRadius] = React.useState(25);

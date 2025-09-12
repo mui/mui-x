@@ -13,8 +13,6 @@ const data = [
   { id: 6, value: 10, label: 'Series G' },
 ];
 
-const itemsNumber = 8;
-
 export default function LegendDimension() {
   return (
     <ChartsUsageDemo
@@ -31,11 +29,7 @@ export default function LegendDimension() {
       }}
       renderDemo={(props) => (
         <PieChart
-          series={[
-            {
-              data: data.slice(0, itemsNumber),
-            },
-          ]}
+          series={[{ data }]}
           slotProps={{
             legend: {
               direction: props.direction,
