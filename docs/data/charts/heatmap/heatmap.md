@@ -8,6 +8,35 @@ components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent
 
 <p class="description">Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions.</p>
 
+## Guidelines
+
+Heatmaps excel at revealing patterns, correlations, and anomalies in large datasets by using color intensity to represent values across a two-dimensional grid. They transform complex numerical data into intuitive visual patterns.
+
+- **Pattern recognition**: Perfect for identifying clusters, trends, and correlations in matrix-style data
+- **Large dataset visualization**: Handle thousands of data points effectively through color encoding
+- **Comparative analysis**: Compare values across two categorical dimensions simultaneously
+- **Density and intensity mapping**: Show concentration, frequency, or intensity across geographic or categorical spaces
+
+**When to use heatmaps:**
+
+- You have data that can be organized in a matrix format (rows and columns)
+- You want to show relationships between two categorical variables
+- You need to visualize large amounts of data at once
+- Pattern detection is more important than precise individual values
+- You're analyzing correlations, time-based patterns, or geographic distributions
+
+**Data requirements:**
+
+- Two categorical or ordinal dimensions (for x and y axes)
+- One continuous numerical dimension (for color intensity)
+- Data organized in a grid or matrix structure
+- Works well with normalized or standardized values
+- Benefits from consistent data density across the grid
+
+**Choose heatmaps when:** you have matrix-style data, need to spot patterns in large datasets, want to show correlations between categorical variables, or when color coding can reveal insights not obvious in numerical tables.
+
+**Common applications:** correlation matrices, time-series patterns (hour vs. day), geographic data, user behavior analysis, and performance metrics across categories.
+
 ## Basics
 
 Heatmap charts series must contain a `data` property containing an array of 3-tuples.

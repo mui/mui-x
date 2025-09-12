@@ -8,6 +8,31 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 <p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
+## Guidelines
+
+Bar charts are ideal for comparing discrete categories or displaying changes over time with categorical data. They excel at showing:
+
+- **Categorical comparisons**: Perfect for comparing values across different categories (e.g., sales by product, population by country)
+- **Ranking and ordering**: Easy to identify which categories have the highest or lowest values
+- **Part-to-whole relationships**: When stacked, they show how individual parts contribute to a total
+- **Time series with discrete periods**: Monthly sales, yearly revenue, quarterly performance
+
+**When to use bar charts:**
+
+- You have categorical data with numerical values
+- You want to emphasize precise value comparisons
+- Your audience needs to quickly identify rankings or differences
+- You're displaying survey results, financial data, or performance metrics
+
+**Data requirements:**
+
+- One categorical dimension (x-axis for vertical bars, y-axis for horizontal bars)
+- One or more numerical dimensions for comparison
+- Works well with both positive and negative values
+- Optimal for 3-12 categories (too many categories can become cluttered)
+
+**Choose horizontal bars when:** category labels are long, you have many categories, or when the natural reading flow benefits from reading orientation.
+
 ## Basics
 
 Bar charts series should contain a `data` property containing an array of values.

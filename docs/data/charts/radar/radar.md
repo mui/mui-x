@@ -8,6 +8,35 @@ components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMa
 
 <p class="description">Radar lets you compare multivariate data in a 2D chart.</p>
 
+## Guidelines
+
+Radar charts (also known as spider or web charts) are designed for comparing multiple variables across different entities, making them ideal for multivariate analysis where you need to see patterns across several dimensions simultaneously.
+
+- **Multivariate comparison**: Perfect for comparing performance across multiple metrics (skills, ratings, characteristics)
+- **Profile visualization**: Show complete profiles or "fingerprints" of entities across various dimensions
+- **Strengths and weaknesses**: Quickly identify where entities excel or underperform across different criteria
+- **Balanced assessment**: Ideal for displaying survey results, performance evaluations, or competitive analysis
+
+**When to use radar charts:**
+
+- You have 3-8 variables to compare across different entities
+- All variables are on similar scales or can be normalized
+- You want to show overall patterns rather than precise values
+- You're comparing profiles, ratings, or performance metrics
+- The focus is on relative performance across multiple dimensions
+
+**Data requirements:**
+
+- Multiple numerical variables (metrics) for comparison
+- Variables should be on comparable scales or normalized (0-100%, 1-10 rating, etc.)
+- Works best with 3-8 metrics (too few or too many become hard to interpret)
+- Each entity should have values for all or most metrics
+- Positive values work best (negative values can be confusing on radar charts)
+
+**Choose radar charts when:** you need to compare overall profiles rather than individual metrics, you want to show balanced performance across multiple areas, or when the "shape" of the data profile is meaningful.
+
+**Avoid radar charts** for precise value comparison, when metrics have very different scales, or when you have many missing data points. Consider parallel coordinates or grouped bar charts for better precision.
+
 ## Basics
 
 Radar charts series should contain a `data` property containing an array of values.
