@@ -3,7 +3,6 @@ import { ScatterChart, ScatterMarkerProps } from '@mui/x-charts/ScatterChart';
 import { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
 import data from '../dataset/random/scatterSimson.json';
 
-
 export default function ScatterCustomShape() {
   return (
     <ScatterChart

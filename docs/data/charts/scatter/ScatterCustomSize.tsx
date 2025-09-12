@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import data from '../dataset/random/scatterSimson.json';
 
-
 export default function ScatterCustomSize() {
   return (
     <ScatterChart
