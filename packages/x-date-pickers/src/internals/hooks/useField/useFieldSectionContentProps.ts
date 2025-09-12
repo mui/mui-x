@@ -190,7 +190,9 @@ export function useFieldSectionContentProps(
         role: 'spinbutton',
         'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
-        autoCapitalize: isEditable ? 'off' : undefined,
+        // Firefox hydrates this as `'none`' instead of `'off'`. No problems in chromium with both values.
+        // For reference https://github.com/mui/mui-x/issues/19012
+        autoCapitalize: isEditable ? 'none' : undefined,
         autoCorrect: isEditable ? 'off' : undefined,
         children: section.value || section.placeholder,
         inputMode: section.contentType === 'letter' ? 'text' : 'numeric',
