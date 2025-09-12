@@ -60,15 +60,10 @@ function EditStatus(props: GridRenderEditCellParams<any, string>) {
           IconComponent = ReportProblemIcon;
         } else if (option === 'Open') {
           IconComponent = InfoIcon;
-        } else if (option === 'PartiallyFilled') {
+        } else if (option === 'Partially Filled') {
           IconComponent = AutorenewIcon;
         } else if (option === 'Filled') {
           IconComponent = DoneIcon;
-        }
-
-        let label = option;
-        if (option === 'PartiallyFilled') {
-          label = 'Partially Filled';
         }
 
         return (
@@ -76,7 +71,7 @@ function EditStatus(props: GridRenderEditCellParams<any, string>) {
             <ListItemIcon sx={{ minWidth: 36 }}>
               <IconComponent fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary={label} sx={{ overflow: 'hidden' }} />
+            <ListItemText primary={option} sx={{ overflow: 'hidden' }} />
           </MenuItem>
         );
       })}

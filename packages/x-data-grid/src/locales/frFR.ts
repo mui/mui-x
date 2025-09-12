@@ -43,6 +43,9 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
 
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
+
   // Toolbar AI Assistant button
   toolbarAssistant: 'Assistant IA',
 
@@ -128,6 +131,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -210,6 +214,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agrégation',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'Somme',
   aggregationFunctionLabelAvg: 'Moyenne',
   aggregationFunctionLabelMin: 'Minimum',
@@ -244,6 +249,34 @@ const frFRGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  chartsNoCharts: 'Aucun graphique disponible',
+  chartsChartNotSelected: 'Sélectionnez un type de graphique pour configurer ses options',
+  chartsTabChart: 'Graphique',
+  chartsTabFields: 'Champs',
+  chartsTabCustomize: 'Personnaliser',
+  chartsCloseButton: 'Fermer la configuration des graphiques',
+  chartsSyncButtonLabel: 'Synchroniser le graphique',
+  chartsSearchPlaceholder: 'Rechercher des champs',
+  chartsSearchLabel: 'Rechercher des champs',
+  chartsSearchClear: 'Effacer la recherche',
+  chartsNoFields: 'Aucun champ',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  chartsCategories: 'Catégories',
+  chartsSeries: 'Séries',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Ajouter aux ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Ajouter aux ${valuesLabel}`,
+  chartsMenuMoveUp: 'Déplacer vers le haut',
+  chartsMenuMoveDown: 'Déplacer vers le bas',
+  chartsMenuMoveToTop: 'Déplacer en haut',
+  chartsMenuMoveToBottom: 'Déplacer en bas',
+  chartsMenuOptions: 'Options du champ',
+  chartsMenuRemove: 'Supprimer',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Faites glisser ici pour utiliser la colonne comme ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Faites glisser ici pour utiliser la colonne comme ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',

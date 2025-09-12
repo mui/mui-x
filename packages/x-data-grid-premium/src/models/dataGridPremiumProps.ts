@@ -25,6 +25,7 @@ import type {
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
+import { GridPremiumSlotProps } from './gridPremiumSlotProps';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
@@ -42,7 +43,9 @@ import {
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
+  charts?: boolean;
+}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
@@ -160,6 +163,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   aiAssistant: boolean;
+  /**
+   * If `true`, the charts integration feature is enabled.
+   * @default false
+   */
+  chartsIntegration: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -177,6 +185,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
   initialState?: GridInitialStatePremium;
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps?: GridPremiumSlotProps;
   /**
    * Set the row grouping model of the grid.
    */
@@ -344,4 +356,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onSidebarOpen?: GridEventListener<'sidebarOpen'>;
+  /**
+   * The id of the active chart.
+   */
+  activeChartId?: string;
+  /**
+   * Callback fired when the active chart changes.
+   * @param {string} activeChartId The new active chart id.
+   */
+  onActiveChartIdChange?: (activeChartId: string) => void;
 }

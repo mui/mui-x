@@ -14,6 +14,9 @@
       "description": "Limit the aggregation function usable on this column.<br />By default, the column will have all the aggregation functions that are compatible with its type."
     },
     "cellClassName": { "description": "Class name added to cells in this column." },
+    "chartable": {
+      "description": "If <code>false</code>, the column will not be available for charts integration."
+    },
     "colSpan": { "description": "Number of columns a cell should span." },
     "description": {
       "description": "The tooltip text shown when the column header name is truncated."
