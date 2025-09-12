@@ -17,7 +17,7 @@ const EXPECTED_GROSS = 2000000000;
 export default function RowGroupingStyling() {
   const apiRef = useGridApiRef();
   const data = useMovieData();
-  const rowHeight = gridRowHeightSelector(apiRef);
+  const rowHeight = apiRef.current ? gridRowHeightSelector(apiRef) : 52;
   const getRowClassName = React.useCallback(
     (params: GridRowClassNameParams<Movie>) => {
       const node = gridRowNodeSelector(apiRef, params.id);
