@@ -19,7 +19,7 @@ import { isGroupingColumn } from '../rowGrouping';
 import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
 import { defaultGetAggregationPosition } from '../aggregation/gridAggregationUtils';
 
-export interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
+interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
   rawHeaderName: string;
   children: GridColumnGroupPivoting[];
 }

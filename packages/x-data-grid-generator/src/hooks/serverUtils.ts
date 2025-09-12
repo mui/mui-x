@@ -13,6 +13,7 @@ import {
   GridAggregationFunction,
   GridPivotModel,
   gridStringOrNumberComparator,
+  GridGetRowsResponsePivotColumn,
 } from '@mui/x-data-grid-premium';
 import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import { randomInt } from '../services/random-generator';
@@ -87,7 +88,7 @@ interface NestedDataRowsResponse {
 }
 
 interface PivotingDataRowsResponse extends NestedDataRowsResponse {
-  pivotColumns: (string | GridRowModel)[][];
+  pivotColumns: GridGetRowsResponsePivotColumn[];
 }
 
 declare const DISABLE_CHANCE_RANDOM: any;
@@ -834,6 +835,14 @@ export const processPivotingRows = (
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
   const visibleValues = pivotModel.values.filter((value) => !value.hidden);
 
+  if (visibleRows.length === 0) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ rows: [], rootRowCount: 0, pivotColumns: [] });
+      }, delay); // simulate network latency
+    });
+  }
+
   // Apply filtering if provided
   let filteredRows = rows;
   if (queryOptions.filterModel) {
@@ -841,41 +850,38 @@ export const processPivotingRows = (
   }
 
   // Create pivot columns based on the pivot model
-  const pivotColumns: (string | GridRowModel)[][] = [];
-  const pivotColumnKeys: string[] = [];
   const columnGroupIdSeparator = '>->';
+  const pivotColumns: GridGetRowsResponsePivotColumn[] = [];
+  const uniqueColumnGroups = new Map<string, (string | GridRowModel)[]>();
 
-  // Generate pivot column names based on column groups and values
-  if (visibleColumns.length === 0) {
-    // No column grouping, just values
-    visibleValues.forEach((pivotValue) => {
-      pivotColumnKeys.push(pivotValue.field);
-      pivotColumns.push([pivotValue.field]);
-    });
-  } else {
-    // Create column groups based on unique combinations of column values
-    const uniqueColumnGroups = new Map<string, (string | GridRowModel)[]>();
+  // Generate pivot column names based on pivot model columns
+  if (visibleColumns.length > 0 || visibleValues.length > 0) {
+    // Create column groups based on unique combinations of row values
 
     filteredRows = filteredRows.map((row) => {
       const columnGroupPath: GridRowModel[] = [];
       const updatedRow = { ...row };
 
-      for (let j = 0; j < visibleColumns.length; j += 1) {
-        const { field: colGroupField } = visibleColumns[j];
+      for (let i = 0; i < visibleColumns.length; i += 1) {
+        const { field: colGroupField } = visibleColumns[i];
         const column = columnsWithDefaultColDef.find(({ field }) => field === colGroupField);
         if (!column) {
           continue;
         }
         columnGroupPath.push({
           [colGroupField]: row[colGroupField],
-          pivotIdentifier: row[colGroupField],
         });
       }
 
       // Create pivot columns for each value field within this column group
       visibleValues.forEach((pivotValue) => {
-        const columnGroupPathValue = columnGroupPath.map((path) => path.pivotIdentifier);
-        const valueKey = `${columnGroupPathValue.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${pivotValue.field}`;
+        let valueKey = pivotValue.field;
+        if (visibleColumns.length > 0) {
+          const columnGroupPathValue = columnGroupPath.map(
+            (path, pathIndex) => path[visibleColumns[pathIndex].field],
+          );
+          valueKey = `${columnGroupPathValue.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${pivotValue.field}`;
+        }
         uniqueColumnGroups.set(valueKey, [...columnGroupPath, pivotValue.field]);
         updatedRow[valueKey] = row[pivotValue.field];
       });
@@ -883,12 +889,47 @@ export const processPivotingRows = (
       return updatedRow;
     });
 
-    // Convert to array and sort for consistent ordering
-    uniqueColumnGroups.forEach((columnGroupPath, valueKey) => {
-      pivotColumnKeys.push(valueKey);
-      pivotColumns.push(columnGroupPath);
+    // Convert uniqueColumnGroups to the pivot column structure
+    const columnGroupMap = new Map<
+      string,
+      { group: string | GridRowModel; children: Map<string, any> }
+    >();
+    uniqueColumnGroups.forEach((columnGroupPath) => {
+      let currentLevel = columnGroupMap;
+      let currentPath = '';
+
+      for (let i = 0; i < columnGroupPath.length - 1; i += 1) {
+        const groupValue = columnGroupPath[i];
+        const groupKey =
+          typeof groupValue === 'string' ? groupValue : groupValue[visibleColumns[i].field];
+        const pathKey = currentPath ? `${currentPath}-${groupKey}` : groupKey;
+
+        if (!currentLevel.has(groupKey)) {
+          currentLevel.set(groupKey, {
+            group: groupValue,
+            children: new Map(),
+          });
+        }
+
+        const group = currentLevel.get(groupKey)!;
+        currentLevel = group.children;
+        currentPath = pathKey;
+      }
     });
+
+    const convertMapToArray = (
+      map: Map<string, { group: string | GridRowModel; children: Map<string, any> }>,
+    ): GridGetRowsResponsePivotColumn[] => {
+      return Array.from(map.values()).map((group) => ({
+        group: group.group,
+        ...(group.children.size > 0 ? { children: convertMapToArray(group.children) } : {}),
+      }));
+    };
+
+    pivotColumns.push(...convertMapToArray(columnGroupMap));
   }
+
+  const pivotColumnKeys = Array.from(uniqueColumnGroups.keys());
 
   // Add paths and generate parent rows based on `visibleRows` (pivot row fields)
   const pathsToAutogenerate = new Set<string>();
