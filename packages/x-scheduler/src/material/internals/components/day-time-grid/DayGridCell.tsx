@@ -19,13 +19,23 @@ export function DayGridCell(props: DayGridCellProps) {
   const placeholder = DayGrid.usePlaceholderInDay(day.value);
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
-  const draggedEvent = React.useMemo(() => {
+  const draggedOccurrence = React.useMemo(() => {
     if (!initialDraggedEvent || !placeholder) {
       return null;
     }
 
-    return { ...initialDraggedEvent, start: placeholder.start, end: placeholder.end };
-  }, [initialDraggedEvent, placeholder]);
+    return {
+      ...initialDraggedEvent,
+      start: placeholder.start,
+      end: placeholder.end,
+      key: `dragged-${initialDraggedEvent.id}`,
+      position: {
+        // TODO: Fix
+        index: 1,
+        daySpan: diffIn(adapter, placeholder.end, day.value, 'days') + 1,
+      },
+    };
+  }, [initialDraggedEvent, placeholder, adapter, day.value]);
 
   return (
     <DayGrid.Cell
@@ -41,43 +51,38 @@ export function DayGridCell(props: DayGridCellProps) {
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
     >
       <div className="DayTimeGridAllDayEventsCellEvents">
-        {day.withPosition.map((event) => {
-          if (event.position.daySpan > 0) {
+        {day.withPosition.map((occurrence) => {
+          if (occurrence.position.isInvisible) {
             return (
-              <EventPopoverTrigger
-                key={event.key}
-                event={event}
-                render={
-                  <DayGridEvent
-                    event={event}
-                    variant="allDay"
-                    ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                    gridRow={event.position.index}
-                    columnSpan={event.position.daySpan}
-                  />
-                }
+              <DayGridEvent
+                key={occurrence.key}
+                occurrence={occurrence}
+                variant="invisible"
+                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               />
             );
           }
 
           return (
-            <DayGridEvent
-              key={event.key}
-              event={event}
-              variant="invisible"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              gridRow={event.position.index}
+            <EventPopoverTrigger
+              key={occurrence.key}
+              occurrence={occurrence}
+              render={
+                <DayGridEvent
+                  occurrence={occurrence}
+                  variant="allDay"
+                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
+                />
+              }
             />
           );
         })}
-        {draggedEvent != null && (
+        {draggedOccurrence != null && (
           <div className="DayTimeGridAllDayEventContainer">
             <DayGridEvent
-              event={draggedEvent}
+              occurrence={draggedOccurrence}
               variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              gridRow={1} // TODO: Fix
-              columnSpan={diffIn(adapter, draggedEvent.end, day.value, 'days') + 1}
             />
           </div>
         )}

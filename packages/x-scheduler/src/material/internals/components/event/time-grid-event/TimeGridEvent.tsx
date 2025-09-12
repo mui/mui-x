@@ -19,20 +19,20 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { event: eventProp, ariaLabelledBy, className, id: idProp, variant, ...other } = props;
+  const { occurrence, ariaLabelledBy, className, id: idProp, variant, ...other } = props;
 
   const id = useId(idProp);
   const { store } = useEventCalendarContext();
 
-  const isRecurring = Boolean(eventProp.rrule);
-  const isDraggable = useStore(store, selectors.isEventDraggable, eventProp);
-  const isResizable = useStore(store, selectors.isEventResizable, eventProp);
-  const color = useStore(store, selectors.eventColor, eventProp.id);
+  const isRecurring = Boolean(occurrence.rrule);
+  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence);
+  const isResizable = useStore(store, selectors.isEventResizable, occurrence);
+  const color = useStore(store, selectors.eventColor, occurrence.id);
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const durationMs =
-    adapter.toJsDate(eventProp.end).getTime() - adapter.toJsDate(eventProp.start).getTime();
+    adapter.toJsDate(occurrence.end).getTime() - adapter.toJsDate(occurrence.start).getTime();
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
@@ -50,8 +50,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           )}
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
-          <span className="EventTitle">{eventProp.title}</span>
-          <time className="EventTime">{adapter.format(eventProp.start, timeFormat)}</time>
+          <span className="EventTitle">{occurrence.title}</span>
+          <time className="EventTime">{adapter.format(occurrence.start, timeFormat)}</time>
           {isRecurring && (
             <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
           )}
@@ -64,14 +64,14 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           className={clsx('EventTitle', 'LinesClamp')}
           style={{ '--number-of-lines': titleLineCountRegularVariant } as React.CSSProperties}
         >
-          {eventProp.title}
+          {occurrence.title}
         </p>
         <time
           className={clsx('EventTime', 'LinesClamp')}
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
-          {adapter.format(eventProp.start, timeFormat)} -{' '}
-          {adapter.format(eventProp.end, timeFormat)}
+          {adapter.format(occurrence.start, timeFormat)} -{' '}
+          {adapter.format(occurrence.end, timeFormat)}
         </time>
         {isRecurring && (
           <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
@@ -82,17 +82,17 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     isBetween30and60Minutes,
     isLessThan30Minutes,
     titleLineCountRegularVariant,
-    eventProp.title,
-    eventProp.start,
-    eventProp.end,
+    occurrence.title,
+    occurrence.start,
+    occurrence.end,
     timeFormat,
     isRecurring,
   ]);
 
   const sharedProps = {
-    eventId: eventProp.id,
-    start: eventProp.start,
-    end: eventProp.end,
+    eventId: occurrence.id,
+    start: occurrence.start,
+    end: occurrence.end,
     ref: forwardedRef,
     id,
     className: clsx(

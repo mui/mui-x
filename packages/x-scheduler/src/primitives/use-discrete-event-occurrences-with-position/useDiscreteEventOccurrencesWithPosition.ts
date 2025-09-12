@@ -1,59 +1,24 @@
 import * as React from 'react';
-import {
-  CalendarEventOccurrence,
-  CalendarEventOccurrencesWithTimePosition,
-  CalendarProcessedDate,
-} from '../models';
-import { useEventOccurrences } from '../use-event-occurrences';
+import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { Adapter } from '../utils/adapter/types';
-import { addOneDay } from '../use-day-list';
-import { processDate } from '../utils/event-utils';
 
 /**
- * This hook is just an PoC of Nora's algorithm to position events in a time grid.
+ * Places event occurrences for a time frame, where events can have a position spanning multiple indexes if no other event overlaps with them.
  */
 export function useDiscreteEventOccurrencesWithPosition(
   parameters: useDiscreteEventOccurrencesWithPosition.Parameters,
 ): useDiscreteEventOccurrencesWithPosition.ReturnValue {
-  const { start, end, occurrencesMap, areOccurrencesLimitedToASingleIndex } = parameters;
+  const { occurrences, canOccurrencesSpanAcrossMultipleIndexes } = parameters;
   const adapter = useAdapter();
 
-  // TODO: Improve this logic
-  const occurrencesInRange = React.useMemo(() => {
-    const tempOccurrences: CalendarEventOccurrence[][] = [];
-
-    let day = start;
-    while (adapter.isBeforeDay(day.value, end.value) || adapter.isSameDay(day.value, end.value)) {
-      tempOccurrences.push(occurrencesMap.get(day.key) ?? []);
-      day = processDate(addOneDay(day.value, adapter), adapter);
-    }
-
-    return tempOccurrences.flatMap((dayOccurrences, dayIndex) => {
-      let matchingOccurrences = dayOccurrences;
-      if (dayIndex === 0) {
-        matchingOccurrences = matchingOccurrences.filter((occurrence) =>
-          adapter.isAfter(occurrence.end, start.value),
-        );
-      }
-
-      if (dayIndex === tempOccurrences.length - 1) {
-        matchingOccurrences = matchingOccurrences.filter((occurrence) =>
-          adapter.isBefore(occurrence.start, end.value),
-        );
-      }
-
-      return matchingOccurrences;
-    });
-  }, [adapter, end, start, occurrencesMap]);
-
   return React.useMemo(() => {
-    const occurrencesWithConflicts = occurrencesInRange.map((occurrence, index) => ({
+    const occurrencesWithConflicts = occurrences.map((occurrence, index) => ({
       key: occurrence.key,
-      conflicts: getConflictingOccurrences(occurrencesInRange, index, adapter),
+      conflicts: getConflictingOccurrences(occurrences, index, adapter),
     }));
 
-    let biggestIndex: number = 1;
+    let maxIndex: number = 1;
     const firstIndexLookup: { [occurrenceKey: string]: number } = {};
 
     for (const occurrence of occurrencesWithConflicts) {
@@ -70,16 +35,14 @@ export function useDiscreteEventOccurrencesWithPosition(
           i += 1;
         }
         firstIndexLookup[occurrence.key] = i;
-        if (i > biggestIndex) {
-          biggestIndex = i;
+        if (i > maxIndex) {
+          maxIndex = i;
         }
       }
     }
 
     let lastIndexLookup: { [occurrenceKey: string]: number };
-    if (areOccurrencesLimitedToASingleIndex) {
-      lastIndexLookup = firstIndexLookup;
-    } else {
+    if (canOccurrencesSpanAcrossMultipleIndexes) {
       lastIndexLookup = {};
       for (const occurrence of occurrencesWithConflicts) {
         const usedIndexes = new Set(
@@ -88,14 +51,16 @@ export function useDiscreteEventOccurrencesWithPosition(
           ),
         );
         let lastIndex = firstIndexLookup[occurrence.key];
-        while (!usedIndexes.has(lastIndex + 1) && lastIndex < biggestIndex) {
+        while (!usedIndexes.has(lastIndex + 1) && lastIndex < maxIndex) {
           lastIndex += 1;
         }
         lastIndexLookup[occurrence.key] = lastIndex;
       }
+    } else {
+      lastIndexLookup = firstIndexLookup;
     }
 
-    const occurrences = occurrencesInRange.map((occurrence) => ({
+    const occurrencesWithPosition = occurrences.map((occurrence) => ({
       ...occurrence,
       position: {
         firstIndex: firstIndexLookup[occurrence.key],
@@ -103,38 +68,33 @@ export function useDiscreteEventOccurrencesWithPosition(
       },
     }));
 
-    return { occurrences };
-  }, [adapter, occurrencesInRange, areOccurrencesLimitedToASingleIndex]);
+    return { occurrences: occurrencesWithPosition, maxIndex };
+  }, [adapter, occurrences, canOccurrencesSpanAcrossMultipleIndexes]);
 }
 
 export namespace useDiscreteEventOccurrencesWithPosition {
   export interface Parameters {
     /**
-     * The start of the range to add the occurrences to.
+     * The occurrences without the position information
      */
-    start: CalendarProcessedDate;
+    occurrences: CalendarEventOccurrence[];
     /**
-     * The end of the range to add the occurrences to.
+     * Whether the occurrences can span across multiple indexes.
+     * If `true`, the occurrences can span multiple indexes if no other event overlaps with them.
+     * If `false`, all occurrences will have their lastIndex equal to their firstIndex.
      */
-    end: CalendarProcessedDate;
-    /**
-     * The occurrences Map as returned by `useEventOccurrences()`.
-     * It should contain the occurrences for each requested day but can also contain occurrences for other days.
-     */
-    occurrencesMap: useEventOccurrences.ReturnValue;
-    /**
-     * Whether the occurrences are limited to a single index.
-     * If `true`, all occurrences will have their lastIndex equal to their firstIndex.
-     * If `false`, the occurrences can span multiple indexes if no other event overlaps with them.
-     */
-    areOccurrencesLimitedToASingleIndex: boolean;
+    canOccurrencesSpanAcrossMultipleIndexes: boolean;
   }
 
   export interface ReturnValue {
     /**
      * The occurrences augmented with position information
      */
-    occurrences: CalendarEventOccurrencesWithTimePosition[];
+    occurrences: CalendarEventOccurrenceWithTimePosition[];
+    /**
+     * The biggest index an event with position has on this time frame.
+     */
+    maxIndex: number;
   }
 }
 

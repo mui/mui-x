@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   CalendarEventOccurrence,
   CalendarEventOccurrenceDayGridPosition,
-  CalendarEventOccurrencesWithDayGridPosition,
+  CalendarEventOccurrenceWithDayGridPosition,
   CalendarProcessedDate,
 } from '../models';
 import { useEventOccurrences } from '../use-event-occurrences';
@@ -29,7 +29,7 @@ export function useEventOccurrencesWithDayGridPosition(
 
     return days.map((day, dayIndex) => {
       indexLookup[day.key] = { occurrencesIndex: {}, usedIndexes: new Set() };
-      const withPosition: CalendarEventOccurrencesWithDayGridPosition[] = [];
+      const withPosition: CalendarEventOccurrenceWithDayGridPosition[] = [];
       const withoutPosition: CalendarEventOccurrence[] = [];
 
       for (const occurrence of occurrencesMap.get(day.key) ?? []) {
@@ -44,7 +44,7 @@ export function useEventOccurrencesWithDayGridPosition(
 
           // If the event is present in the previous day, we keep the same index
           if (occurrenceIndexInPreviousDay != null) {
-            position = { index: occurrenceIndexInPreviousDay, daySpan: 0 };
+            position = { index: occurrenceIndexInPreviousDay, daySpan: 0, isInvisible: true };
           }
           // Otherwise, we find the smallest available index
           else {
@@ -101,7 +101,7 @@ export namespace useEventOccurrencesWithDayGridPosition {
     /**
      * Occurrences that have been augmented with position information.
      */
-    withPosition: CalendarEventOccurrencesWithDayGridPosition[];
+    withPosition: CalendarEventOccurrenceWithDayGridPosition[];
     /**
      * Occurrences that do not need position information.
      */

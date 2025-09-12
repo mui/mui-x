@@ -10,7 +10,6 @@ import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useDiscreteEventOccurrencesWithPosition } from '../../../../primitives/use-discrete-event-occurrences-with-position';
-import { processDate } from '../../../../primitives/utils/event-utils';
 import { EventPopoverTrigger } from '../event-popover';
 import './DayTimeGrid.css';
 
@@ -26,24 +25,26 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
   const { occurrences } = useDiscreteEventOccurrencesWithPosition({
-    start: processDate(start, adapter),
-    end: processDate(end, adapter),
-    areOccurrencesLimitedToASingleIndex: false,
-    occurrencesMap: new Map([[day.key, day.withoutPosition]]),
+    occurrences: day.withoutPosition,
+    canOccurrencesSpanAcrossMultipleIndexes: true,
   });
 
-  console.log(occurrences.map((el) => el.position));
-
-  const draggedEvent = React.useMemo(() => {
+  const draggedOccurrence = React.useMemo(() => {
     if (!initialDraggedEvent || !placeholder) {
       return null;
     }
 
     return {
       ...initialDraggedEvent,
+      key: `dragged-${initialDraggedEvent.id}`,
       start: placeholder.start,
       end: placeholder.end,
       readOnly: true,
+      position: {
+        // TODO: Fix
+        firstIndex: 1,
+        lastIndex: 1,
+      },
     };
   }, [initialDraggedEvent, placeholder]);
 
@@ -55,22 +56,22 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
       data-current={isToday ? '' : undefined}
     >
-      {day.withoutPosition.map((event) => (
+      {occurrences.map((occurrence) => (
         <EventPopoverTrigger
-          key={event.key}
-          event={event}
+          key={occurrence.key}
+          occurrence={occurrence}
           render={
             <TimeGridEvent
-              event={event}
+              occurrence={occurrence}
               variant="regular"
               ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day.value)}`}
             />
           }
         />
       ))}
-      {draggedEvent != null && (
+      {draggedOccurrence != null && (
         <TimeGridEvent
-          event={draggedEvent}
+          occurrence={draggedOccurrence}
           variant="regular"
           ariaLabelledBy={`DayTimeGridHeaderCell-${day.key}`}
         />

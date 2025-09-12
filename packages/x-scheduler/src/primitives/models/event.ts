@@ -87,7 +87,7 @@ export interface CalendarEventOccurrence extends CalendarEvent {
 /**
  * An event occurrence with the position it needs to be rendered on a day grid.
  */
-export interface CalendarEventOccurrencesWithDayGridPosition extends CalendarEventOccurrence {
+export interface CalendarEventOccurrenceWithDayGridPosition extends CalendarEventOccurrence {
   position: CalendarEventOccurrenceDayGridPosition;
 }
 
@@ -101,9 +101,14 @@ export interface CalendarEventOccurrenceDayGridPosition {
    * If 0, the event will be rendered as invisible.
    */
   daySpan: number;
+  /**
+   * Whether the event should be rendered as invisible.
+   * Invisible events are used to reserve space for events that started on a previous day.
+   */
+  isInvisible?: boolean;
 }
 
-export interface CalendarEventOccurrencesWithTimePosition extends CalendarEventOccurrence {
+export interface CalendarEventOccurrenceWithTimePosition extends CalendarEventOccurrence {
   position: CalendarEventOccurrenceTimePosition;
 }
 

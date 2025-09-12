@@ -30,15 +30,25 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
   const isToday = React.useMemo(() => adapter.isSameDay(day.value, adapter.date()), [adapter, day]);
 
-  const draggedEvent = React.useMemo(() => {
+  const draggedOccurrence = React.useMemo(() => {
     if (!initialDraggedEvent || !placeholder) {
       return null;
     }
 
-    return { ...initialDraggedEvent, start: placeholder.start, end: placeholder.end };
-  }, [initialDraggedEvent, placeholder]);
+    return {
+      ...initialDraggedEvent,
+      start: placeholder.start,
+      end: placeholder.end,
+      key: `dragged-${initialDraggedEvent.id}`,
+      position: {
+        // TODO: Fix
+        index: 1,
+        daySpan: diffIn(adapter, placeholder.end, day.value, 'days') + 1,
+      },
+    };
+  }, [adapter, day.value, initialDraggedEvent, placeholder]);
 
-  const visibleEvents = day.withPosition.slice(0, maxEvents);
+  const visibleOccurrences = day.withPosition.slice(0, maxEvents);
   const hiddenCount = day.withPosition.length - maxEvents;
 
   const cellNumberContent = (
@@ -50,7 +60,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   );
 
   // Day number header + visible events + "+x more" indicator (if any)
-  const rowCount = 1 + visibleEvents.length + (hiddenCount > 0 ? 1 : 0);
+  const rowCount = 1 + visibleOccurrences.length + (hiddenCount > 0 ? 1 : 0);
 
   return (
     <DayGrid.Cell
@@ -79,46 +89,41 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         cellNumberContent
       )}
       <div className="MonthViewCellEvents">
-        {visibleEvents.map((event) => {
-          if (event.position.daySpan > 0) {
+        {visibleOccurrences.map((occurrence) => {
+          if (occurrence.position.isInvisible) {
             return (
-              <EventPopoverTrigger
-                key={`${event.id}-${day.key}`}
-                event={event}
-                render={
-                  <DayGridEvent
-                    event={event}
-                    variant={event.allDay ? 'allDay' : 'compact'}
-                    ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-                    gridRow={event.position.index}
-                    columnSpan={event.position.daySpan}
-                  />
-                }
+              <DayGridEvent
+                key={occurrence.key}
+                occurrence={occurrence}
+                variant="invisible"
+                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
               />
             );
           }
 
           return (
-            <DayGridEvent
-              key={`${event.id}-${day.key}`}
-              event={event}
-              variant="invisible"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              gridRow={event.position.index}
+            <EventPopoverTrigger
+              key={occurrence.key}
+              occurrence={occurrence}
+              render={
+                <DayGridEvent
+                  occurrence={occurrence}
+                  variant={occurrence.allDay ? 'allDay' : 'compact'}
+                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
+                />
+              }
             />
           );
         })}
         {hiddenCount > 0 && (
           <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
         )}
-        {draggedEvent != null && (
+        {draggedOccurrence != null && (
           <div className="MonthViewDraggedEventContainer">
             <DayGridEvent
-              event={draggedEvent}
+              occurrence={draggedOccurrence}
               variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
-              gridRow={1} // TODO: Fix
-              columnSpan={diffIn(adapter, draggedEvent.end, day.value, 'days') + 1}
             />
           </div>
         )}

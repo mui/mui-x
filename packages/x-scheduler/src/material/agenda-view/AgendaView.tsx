@@ -80,13 +80,16 @@ export const AgendaView = React.memo(
                 </div>
               </header>
               <ul className="EventsList">
-                {occurrences.get(day.key)!.map((event) => (
+                {occurrences.get(day.key)!.map((occurrence) => (
                   <li>
                     <EventPopoverTrigger
-                      key={event.key}
-                      event={event}
+                      key={occurrence.key}
+                      occurrence={occurrence}
                       render={
-                        <AgendaEvent event={event} ariaLabelledBy={`DayHeaderCell-${day.key}`} />
+                        <AgendaEvent
+                          occurrence={occurrence}
+                          ariaLabelledBy={`DayHeaderCell-${day.key}`}
+                        />
                       }
                     />
                   </li>
