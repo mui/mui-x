@@ -31,7 +31,7 @@
     "prettier:all": "prettier --write . --ignore-path .lintignore",
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
     "size:snapshot": "pnpm -F ./test/bundle-size check",
-    "size:why": "pnpm size:snapshot --analyze --accurateBundles",
+    "size:why": "pnpm size:snapshot --analyze",
     "test": "pnpm test:unit:jsdom",
     "test:jsdom": "pnpm test:unit:jsdom",
     "test:unit": "pnpm test:unit:jsdom",
@@ -165,7 +165,6 @@
     "vitest": "catalog:",
     "vitest-fail-on-console": "^0.9.0",
     "webpack": "^5.101.3",
-    "webpack-bundle-analyzer": "catalog:",
     "webpack-cli": "^6.0.1",
     "yargs": "catalog:"
   },
