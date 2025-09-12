@@ -1,1 +1,1 @@
-export * from './useTimeFrameEventOccurrencesWithPosition';
+export * from './useEventOccurrencesWithTimelinePosition';
