@@ -157,6 +157,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
         scope: 'this-and-following',
       });
     } else {
+      // TODO: Change the signature of `updateEvent()` to accept Partial<CalendarEvent> instead of the full event.
+      // Because right now we have an occurrence, not an event, so we are storing the occurrence key in the event state.
+      // If the event and the occurrence interfaces diverge with time, this could be problematic.
       instance.updateEvent({
         ...occurrence,
         ...payload,
