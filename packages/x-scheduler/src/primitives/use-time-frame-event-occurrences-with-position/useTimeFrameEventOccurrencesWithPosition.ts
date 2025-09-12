@@ -97,7 +97,8 @@ export namespace useTimeFrameEventOccurrencesWithPosition {
   }
 }
 
-const COLLISION_BUFFER_MINUTES = 15;
+// A small buffer to consider events that are very close but not really overlapping as overlapping.
+const COLLISION_BUFFER_MINUTES = 5;
 
 function getConflictingOccurrences(
   occurrences: CalendarEventOccurrence[],
@@ -118,6 +119,10 @@ function getConflictingOccurrences(
     ) {
       conflictsBefore.push(occurrenceBefore);
     } else {
+      // TODO: Try to fix the following dataset (where Event 3 is not considered as conflicting with Event 1, because we break at Event 2):
+      // Event 1: 09:00 - 18:00
+      // Event 2: 09:30 - 14:00
+      // Event 3: 15:00 - 17:00
       break;
     }
   }
@@ -132,6 +137,7 @@ function getConflictingOccurrences(
     ) {
       conflictsAfter.push(occurrenceAfter);
     } else {
+      // We know that all the next occurrences will start even later, so we can stop here.
       break;
     }
   }
