@@ -14,6 +14,10 @@ export const gridColumnsTotalWidthSelector = createSelector(
   (dimensions) => dimensions.columnsTotalWidth,
 );
 
+/**
+ * Get the row height.
+ * @category Rows
+ */
 export const gridRowHeightSelector = createSelector(
   gridDimensionsSelector,
   (dimensions) => dimensions.rowHeight,
