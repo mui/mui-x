@@ -167,6 +167,7 @@ export {
   isDatePickerView,
   mergeDateAndTime,
   formatMeridiem,
+  resolveDateFormat,
   DATE_VIEWS,
 } from './utils/date-utils';
 export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
