@@ -49,7 +49,7 @@ export function getVisibleLabels<T extends TickItemType>(
       if (formattedValue === '') {
         return false;
       }
-      
+
       const textPosition = offset + labelOffset;
 
       if (
