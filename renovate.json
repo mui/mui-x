@@ -7,11 +7,6 @@
   },
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    },
-    {
       "groupName": "D3",
       "matchPackageNames": ["d3-*", "@types/d3-*"]
     },
