@@ -62,20 +62,6 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
 
 {{"demo": "StylingRowsGrid.js", "bg": "inline"}}
 
-## Styling row groups
-
-Use `getRowClassName` to add a custom class to the row group and then write CSS to style it.
-
-To write a condition, use [`gridRowNodeSelector` and `gridRowSelector`](/x/react-data-grid/row-definition/#selectors) to check for the targeted row type and to get the row data respectively.
-
-The example below demonstrates how to style a row group when any of the child rows has a "Gross" value greater than a specific value:
-
-{{"demo": "RowGroupingStyling.js", "bg": "inline"}}
-
-:::success
-The styling method is not limited to the [`sx` prop](/x/react-data-grid/style/#using-the-sx-prop). You can use other styling solutions like plain CSS files or CSS modules.
-:::
-
 ## Styling cells
 
 There are multiple ways to apply a custom CSS class on a cell.
@@ -197,6 +183,18 @@ Material UI v5 supports specifying different colors for light and dark mode wit
 The following demo leverages the CSS customization API to match the Ant Design specification.
 
 {{"demo": "AntDesignGrid.js", "defaultCodeOpen": false}}
+
+## Styling row groups [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+Use `getRowClassName` to add a custom class to the row group and then write CSS to style it.
+
+The example below demonstrates how to style a row group when any of the child rows has a "Gross" value greater than a specific value. The condition uses [`gridRowNodeSelector` and `gridRowSelector`](/x/react-data-grid/row-definition/#selectors) to check for the targeted row type and to get the row data respectively.
+
+{{"demo": "RowGroupingStyling.js", "bg": "inline"}}
+
+:::success
+The styling method is not limited to the [`sx` prop](/x/react-data-grid/style/#using-the-sx-prop). You can use other styling solutions like plain CSS files or CSS modules.
+:::
 
 ## API
 

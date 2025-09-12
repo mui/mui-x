@@ -5,17 +5,17 @@ import {
   useKeepGroupedColumnsHidden,
   gridRowNodeSelector,
   gridRowSelector,
+  gridRowHeightSelector,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 const EXPECTED_GROSS = 2000000000;
-const ROW_HEIGHT = 52;
 
 export default function RowGroupingStyling() {
   const apiRef = useGridApiRef();
   const data = useMovieData();
-
-  const getRowClassName = (params) => {
+  const rowHeight = gridRowHeightSelector(apiRef);
+  const getRowClassName = React.useCallback((params) => {
     const node = gridRowNodeSelector(apiRef, params.id);
 
     if (!node) {
@@ -23,9 +23,7 @@ export default function RowGroupingStyling() {
     }
 
     if (node.type === 'group') {
-      const childIds = node.children || [];
-
-      for (const childId of childIds) {
+      for (const childId of node.children) {
         const childNode = gridRowNodeSelector(apiRef, childId);
         if (childNode && childNode.type === 'leaf') {
           const childRow = gridRowSelector(apiRef, childId);
@@ -38,16 +36,14 @@ export default function RowGroupingStyling() {
       return '';
     }
 
-    if (node.parent) {
-      const row = params.row;
+    const row = params.row;
 
-      if (row.gross > EXPECTED_GROSS) {
-        return 'highlighted-child';
-      }
+    if (row.gross > EXPECTED_GROSS) {
+      return 'highlighted-child';
     }
 
     return '';
-  };
+  }, []);
 
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
@@ -73,8 +69,8 @@ export default function RowGroupingStyling() {
               position: 'absolute',
               left: 0,
               width: 4,
-              height: `calc(${ROW_HEIGHT}px * 0.8)`,
-              marginTop: `calc(${ROW_HEIGHT}px * 0.1)`,
+              height: `calc(${rowHeight}px * 0.8)`,
+              marginTop: `calc(${rowHeight}px * 0.1)`,
               backgroundColor: 'success.main',
               borderTopRightRadius: 4,
               borderBottomRightRadius: 4,
