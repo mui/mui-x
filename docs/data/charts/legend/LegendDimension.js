@@ -11,7 +11,6 @@ const data = [
   { id: 4, value: 15, label: 'Series E' },
   { id: 5, value: 20, label: 'Series F' },
   { id: 6, value: 10, label: 'Series G' },
-  { id: 7, value: 15, label: 'Series H' },
 ];
 
 const itemsNumber = 8;
