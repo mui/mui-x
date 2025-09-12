@@ -126,7 +126,7 @@ export class EventCalendarStore extends Store<State> {
 
     if (hasChange) {
       if (visibleDateProp === undefined) {
-        super.set('visibleDate', visibleDate);
+        this.set('visibleDate', visibleDate);
       }
       onVisibleDateChange?.(visibleDate, event);
     }
@@ -156,7 +156,7 @@ export class EventCalendarStore extends Store<State> {
     const canSetView = viewProp === undefined && hasViewChange;
 
     if (canSetVisibleDate || canSetView) {
-      super.apply({
+      this.apply({
         ...(canSetVisibleDate ? { visibleDate } : {}),
         ...(canSetView ? { view } : {}),
       });
@@ -180,24 +180,6 @@ export class EventCalendarStore extends Store<State> {
     }
 
     this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
-  };
-
-  public update = () => {
-    throw new Error(
-      "EventCalendarStore: Please don't use update() directly. Instead, use methods such as setView(...) or setVisibleDate(...).",
-    );
-  };
-
-  public apply = () => {
-    throw new Error(
-      "EventCalendarStore: Please don't use apply() directly. Instead, use methods such as setView(...) or setVisibleDate(...).",
-    );
-  };
-
-  public set = () => {
-    throw new Error(
-      "EventCalendarStore: Please don't use set() directly. Instead, use methods such as setView(...) or setVisibleDate(...).",
-    );
   };
 
   /**
@@ -253,7 +235,7 @@ export class EventCalendarStore extends Store<State> {
 
     updateModel('view', 'defaultView');
     updateModel('visibleDate', 'defaultVisibleDate');
-    super.apply(partialState);
+    this.apply(partialState);
   };
 
   /**
@@ -264,7 +246,7 @@ export class EventCalendarStore extends Store<State> {
     if (view !== this.state.view) {
       this.assertViewValidity(view);
       if (viewProp === undefined) {
-        super.set('view', view);
+        this.set('view', view);
       }
       onViewChange?.(view, event);
     }
@@ -382,7 +364,7 @@ export class EventCalendarStore extends Store<State> {
    */
   public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
     if (this.state.visibleResources !== visibleResources) {
-      super.set('visibleResources', visibleResources);
+      this.set('visibleResources', visibleResources);
     }
   };
 
@@ -393,7 +375,7 @@ export class EventCalendarStore extends Store<State> {
     partialPreferences: Partial<CalendarPreferences>,
     _event: React.UIEvent | Event,
   ) => {
-    super.set('preferences', {
+    this.set('preferences', {
       ...this.state.preferences,
       ...partialPreferences,
     });
@@ -404,7 +386,7 @@ export class EventCalendarStore extends Store<State> {
    * Returns the cleanup function.
    */
   public setViewConfig = (config: CalendarViewConfig) => {
-    super.set('viewConfig', config);
-    return () => super.set('viewConfig', null);
+    this.set('viewConfig', config);
+    return () => this.set('viewConfig', null);
   };
 }

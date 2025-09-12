@@ -76,7 +76,6 @@ describe('Event - EventCalendarStore', () => {
       ];
 
       const store = EventCalendarStore.create({ events, onEventsChange }, adapter);
-
       store.deleteEvent('2');
 
       expect(onEventsChange.calledOnce).to.equal(true);
