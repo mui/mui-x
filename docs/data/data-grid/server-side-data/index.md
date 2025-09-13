@@ -256,6 +256,7 @@ To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
 The Data Source supports an optional `updateRow()` method for updating data on the server.
 
 This method returns a promise that resolves when the row is updated.
+The promise must contain a row. If the update is successful it shall be the updated row, else the previous row.
 If the promise resolves, the Grid updates the row and mutates the cache.
 If there's an error, `onDataSourceError()` is triggered with the error object containing the params described in the [Error handling section](#error-handling) that follows.
 
