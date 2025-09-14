@@ -98,16 +98,20 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 export function sortOccurrences(
   occurrences: CalendarEventOccurrence[],
   adapter: Adapter,
-  edge: 'start' | 'end',
+  sortCriteria: 'start' | 'end' | 'duration',
 ) {
   return (
     occurrences
       // TODO: Avoid JS Date conversion
       .map((occurrence) => ({
         occurrence,
-        timestamp: adapter.toJsDate(occurrence[edge]).getTime(),
+        sortCriteria:
+          sortCriteria === 'duration'
+            ? adapter.toJsDate(occurrence.end).getTime() -
+              adapter.toJsDate(occurrence.start).getTime()
+            : adapter.toJsDate(occurrence[sortCriteria]).getTime(),
       }))
-      .sort((a, b) => a.timestamp - b.timestamp)
+      .sort((a, b) => a.sortCriteria - b.sortCriteria)
       .map((item) => item.occurrence)
   );
 }

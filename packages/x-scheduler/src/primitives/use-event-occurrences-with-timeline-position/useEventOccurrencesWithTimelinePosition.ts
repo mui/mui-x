@@ -16,6 +16,22 @@ export function useEventOccurrencesWithTimelinePosition(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
+    let longestOccurrence: CalendarEventOccurrence | null = null;
+    let longestOccurrenceDurationMs = 0;
+    for (const occurrence of occurrences) {
+      // TODO: Add adapter.getDurationMs method
+      const occurrenceDurationMs =
+        adapter.toJsDate(occurrence.end).getTime() - adapter.toJsDate(occurrence.start).getTime();
+      if (occurrenceDurationMs > longestOccurrenceDurationMs) {
+        longestOccurrenceDurationMs = occurrenceDurationMs;
+        longestOccurrence = occurrence;
+      }
+    }
+
+    if (longestOccurrence == null) {
+      return { occurrences: [], maxIndex: 0 };
+    }
+
     const occurrencesSortedByEndDate = sortOccurrences(occurrences, adapter, 'end');
     const occurrencesSortedByEndDateIndexLookup: { [occurrenceKey: string]: number } = {};
     occurrencesSortedByEndDate.forEach((occurrence, index) => {
@@ -47,25 +63,16 @@ export function useEventOccurrencesWithTimelinePosition(
         }
       }
 
-      // To find all the occurrences that conflicts with the current one because they overlap with the start of this event
-      // We need to use the list of occurrences sorted by end date
-      // On this list, we need to find the last occurrence that starts before the current event ends
-      // And then go backwards until we find occurrences that end before the current event starts
-      // All the occurrences we encounter in between are conflicting with the current event
-      let lastOccurrenceThatStartsBeforeCurrentEventEnds =
-        occurrencesSortedByEndDateIndexLookup[occurrence.key];
-      while (
-        adapter.isBefore(
-          occurrencesSortedByEndDate[lastOccurrenceThatStartsBeforeCurrentEventEnds].start,
-          occurrence.end,
-        ) &&
-        lastOccurrenceThatStartsBeforeCurrentEventEnds < occurrencesSortedByEndDate.length - 1
-      ) {
-        lastOccurrenceThatStartsBeforeCurrentEventEnds += 1;
-      }
+      for (let j = i - 1; j >= 0; j -= 1) {
+        const occurrenceBefore = occurrences[j];
+        const diffBetweenOccurenceBeforeStartsAndOccurenceStarts =
+          adapter.toJsDate(occurrence.start).getTime() -
+          adapter.toJsDate(occurrenceBefore.start).getTime();
+        if (diffBetweenOccurenceBeforeStartsAndOccurenceStarts > longestOccurrenceDurationMs) {
+          // We know that all the previous occurrences won't end after the start of the occurrence we are getting conflicts for, so we can stop here.
+          break;
+        }
 
-      for (let j = lastOccurrenceThatStartsBeforeCurrentEventEnds; j >= 0; j -= 1) {
-        const occurrenceBefore = occurrencesSortedByEndDate[j];
         if (
           adapter.isAfter(
             adapter.addMinutes(occurrenceBefore.end, COLLISION_BUFFER_MINUTES),
@@ -73,8 +80,6 @@ export function useEventOccurrencesWithTimelinePosition(
           )
         ) {
           conflictsBefore.add(occurrenceBefore.key);
-        } else if (adapter.isBefore(occurrenceBefore.end, occurrence.start)) {
-          break;
         }
       }
 
