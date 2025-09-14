@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from '../models';
+import {
+  CalendarEventOccurrence,
+  CalendarEventOccurrenceWithTimePosition,
+  SchedulerValidDate,
+} from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
-import { sortOccurrences } from '../utils/event-utils';
 
 // A small buffer to consider events that are very close but not really overlapping as overlapping.
 const COLLISION_BUFFER_MINUTES = 5;
@@ -18,10 +21,26 @@ export function useEventOccurrencesWithTimelinePosition(
   return React.useMemo(() => {
     let longestOccurrence: CalendarEventOccurrence | null = null;
     let longestOccurrenceDurationMs = 0;
+    const processedOccurrences: {
+      key: string;
+      start: SchedulerValidDate;
+      end: SchedulerValidDate;
+      durationMs: number;
+      startTimestamp: number;
+    }[] = [];
     for (const occurrence of occurrences) {
-      // TODO: Add adapter.getDurationMs method
-      const occurrenceDurationMs =
-        adapter.toJsDate(occurrence.end).getTime() - adapter.toJsDate(occurrence.start).getTime();
+      // TODO: Avoid JS Date conversion and add adapter.getDurationMs method
+      const startTimestamp = adapter.toJsDate(occurrence.start).getTime();
+      const occurrenceDurationMs = adapter.toJsDate(occurrence.end).getTime() - startTimestamp;
+
+      processedOccurrences.push({
+        key: occurrence.key,
+        start: occurrence.start,
+        end: occurrence.end,
+        durationMs: occurrenceDurationMs,
+        startTimestamp,
+      });
+
       if (occurrenceDurationMs > longestOccurrenceDurationMs) {
         longestOccurrenceDurationMs = occurrenceDurationMs;
         longestOccurrence = occurrence;
@@ -32,24 +51,18 @@ export function useEventOccurrencesWithTimelinePosition(
       return { occurrences: [], maxIndex: 0 };
     }
 
-    const occurrencesSortedByEndDate = sortOccurrences(occurrences, adapter, 'end');
-    const occurrencesSortedByEndDateIndexLookup: { [occurrenceKey: string]: number } = {};
-    occurrencesSortedByEndDate.forEach((occurrence, index) => {
-      occurrencesSortedByEndDateIndexLookup[occurrence.key] = index;
-    });
-
     const conflicts: {
       key: string;
       conflictsBefore: Set<string>;
       conflictsAfter: Set<string>;
     }[] = [];
-    for (let i = 0; i < occurrences.length; i++) {
-      const occurrence = occurrences[i];
+    for (let i = 0; i < processedOccurrences.length; i++) {
+      const occurrence = processedOccurrences[i];
       const conflictsBefore = new Set<string>();
       const conflictsAfter = new Set<string>();
 
-      for (let j = i + 1; j < occurrences.length; j += 1) {
-        const occurrenceAfter = occurrences[j];
+      for (let j = i + 1; j < processedOccurrences.length; j += 1) {
+        const occurrenceAfter = processedOccurrences[j];
         if (
           adapter.isBefore(
             adapter.addMinutes(occurrenceAfter.start, -COLLISION_BUFFER_MINUTES),
@@ -64,10 +77,9 @@ export function useEventOccurrencesWithTimelinePosition(
       }
 
       for (let j = i - 1; j >= 0; j -= 1) {
-        const occurrenceBefore = occurrences[j];
+        const occurrenceBefore = processedOccurrences[j];
         const diffBetweenOccurenceBeforeStartsAndOccurenceStarts =
-          adapter.toJsDate(occurrence.start).getTime() -
-          adapter.toJsDate(occurrenceBefore.start).getTime();
+          occurrence.startTimestamp - occurrenceBefore.startTimestamp;
         if (diffBetweenOccurenceBeforeStartsAndOccurenceStarts > longestOccurrenceDurationMs) {
           // We know that all the previous occurrences won't end after the start of the occurrence we are getting conflicts for, so we can stop here.
           break;
