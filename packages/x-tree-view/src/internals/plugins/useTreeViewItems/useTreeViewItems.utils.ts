@@ -98,6 +98,7 @@ export function buildItemsState(parameters: BuildItemsStateParameters): State {
     itemModelLookup,
     itemOrderedChildrenIdsLookup,
     itemChildrenIndexesLookup,
+    domStructure: 'nested',
   };
 }
 

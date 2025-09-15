@@ -8,6 +8,12 @@ const EMPTY_CHILDREN: TreeViewItemId[] = [];
 
 export const itemsSelectors = {
   /**
+   * Gets the DOM structure of the Tree View.
+   */
+  domStructure: createSelector(
+    (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.domStructure,
+  ),
+  /**
    * Checks whether the disabled items are focusable.
    */
   disabledItemFocusable: createSelector(
@@ -18,6 +24,12 @@ export const itemsSelectors = {
    */
   itemMetaLookup: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.itemMetaLookup,
+  ),
+  /**
+   * Gets the ordered children ids of all items.
+   */
+  itemOrderedChildrenIdsLookup: createSelector(
+    (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.itemOrderedChildrenIdsLookup,
   ),
   /**
    * Gets the meta-information of an item.
