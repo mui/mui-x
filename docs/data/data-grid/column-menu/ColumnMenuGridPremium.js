@@ -6,6 +6,10 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
+const groupingColDef = {
+  leafField: 'title',
+};
+
 export default function ColumnMenuGridPremium() {
   const apiRef = useGridApiRef();
   const data = useMovieData();
@@ -35,9 +39,7 @@ export default function ColumnMenuGridPremium() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        groupingColDef={{
-          leafField: 'title',
-        }}
+        groupingColDef={groupingColDef}
         initialState={initialState}
       />
     </div>

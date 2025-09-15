@@ -70,6 +70,8 @@ const rendererInterceptor = function rendererInterceptor<
 
   const finalProps = {
     ...otherProps,
+    // we control the focused view manually
+    autoFocus: false,
     focusedView: null,
     sx: [
       {

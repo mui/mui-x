@@ -59,6 +59,7 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
       tabIndex={-1}
       disabled={!hasContent}
       className={classes.root}
+      aria-expanded={isExpanded}
       aria-label={
         isExpanded
           ? apiRef.current.getLocaleText('collapseDetailPanel')

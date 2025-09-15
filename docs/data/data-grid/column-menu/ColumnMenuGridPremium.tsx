@@ -1,10 +1,16 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GridGroupingColDefOverride,
+  GridValidRowModel,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+
+const groupingColDef: GridGroupingColDefOverride<GridValidRowModel> = {
+  leafField: 'title',
+};
 
 export default function ColumnMenuGridPremium() {
   const apiRef = useGridApiRef();
@@ -35,9 +41,7 @@ export default function ColumnMenuGridPremium() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        groupingColDef={{
-          leafField: 'title',
-        }}
+        groupingColDef={groupingColDef}
         initialState={initialState}
       />
     </div>

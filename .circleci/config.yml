@@ -318,6 +318,13 @@ jobs:
       - run:
           name: Run danger on PRs
           command: pnpm danger ci --fail-on-errors
+  test_package:
+    <<: *default-job
+    steps:
+      - run:
+          name: No-op
+          command: echo "This is a no-op"
+
 workflows:
   pipeline:
     when:
@@ -357,6 +364,8 @@ workflows:
           <<: *default-context
           requires:
             - checkout
+      - test_package:
+          <<: *default-context
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]

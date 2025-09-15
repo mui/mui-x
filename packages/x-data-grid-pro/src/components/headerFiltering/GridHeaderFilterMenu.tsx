@@ -90,14 +90,14 @@ GridHeaderFilterMenu.propTypes = {
   // ----------------------------------------------------------------------
   applyFilterChanges: PropTypes.func.isRequired,
   field: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes /* @typescript-to-proptypes-ignore */.string,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
-  labelledBy: PropTypes.string.isRequired,
+  labelledBy: PropTypes /* @typescript-to-proptypes-ignore */.string,
   open: PropTypes.bool.isRequired,
   operators: PropTypes.arrayOf(
     PropTypes.shape({

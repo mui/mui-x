@@ -437,7 +437,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           items={viewTimeOptions[timeView].items}
           onChange={viewTimeOptions[timeView].onChange}
           active={view === timeView}
-          autoFocus={autoFocus ?? focusedView === timeView}
+          autoFocus={autoFocus || focusedView === timeView}
           disabled={disabled}
           readOnly={readOnly}
           slots={slots}

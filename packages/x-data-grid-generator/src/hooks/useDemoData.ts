@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
 import { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';

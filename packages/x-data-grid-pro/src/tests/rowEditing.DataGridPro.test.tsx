@@ -979,6 +979,24 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.callCount).to.equal(0);
       });
 
+      it('should call preProcessEditCellProps for editable columns only', async () => {
+        const preProcessEditCellProps1 = spy(({ props }: GridPreProcessEditCellProps) => props);
+        const preProcessEditCellProps2 = spy(({ props }: GridPreProcessEditCellProps) => props);
+        const { user } = render(
+          <TestCase
+            column1Props={{ preProcessEditCellProps: preProcessEditCellProps1 }}
+            column2Props={{ preProcessEditCellProps: preProcessEditCellProps2, editable: false }}
+          />,
+        );
+
+        const cell = getCell(0, 1);
+        await user.click(cell);
+        await user.keyboard('a');
+
+        expect(preProcessEditCellProps1.callCount).to.equal(1);
+        expect(preProcessEditCellProps2.callCount).to.equal(0);
+      });
+
       ['ctrlKey', 'metaKey'].forEach((key) => {
         it(`should not publish 'rowEditStart' if ${key} is pressed`, () => {
           render(<TestCase />);

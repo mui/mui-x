@@ -3,8 +3,14 @@ import {
   DataGridPremium,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
+  GridGroupingColDefOverride,
+  GridValidRowModel,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+
+const groupingColDef: GridGroupingColDefOverride<GridValidRowModel> = {
+  width: 250,
+};
 
 export default function ColumnAutosizingGroupedRows() {
   const data = useMovieData();
@@ -34,7 +40,7 @@ export default function ColumnAutosizingGroupedRows() {
         columns={columns}
         apiRef={apiRef}
         initialState={initialState}
-        groupingColDef={{ width: 250 }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

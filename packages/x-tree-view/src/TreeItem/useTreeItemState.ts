@@ -51,7 +51,7 @@ export function useTreeItemState(itemId: string) {
 
   const handleSelection = (event: React.MouseEvent) => {
     if (!disabled) {
-      if (!focused) {
+      if (!focused && !editing) {
         instance.focusItem(event, itemId);
       }
 

@@ -14,6 +14,7 @@ export * from './fiFI';
 export * from './frFR';
 export * from './heIL';
 export * from './huHU';
+export * from './hyAM';
 export * from './itIT';
 export * from './jaJP';
 export * from './koKR';

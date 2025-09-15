@@ -3,7 +3,5 @@
   apiRef={apiRef}
   disableRowSelectionOnClick
   initialState={initialState}
-  groupingColDef={{
-    hideDescendantCount: true,
-  }}
+  groupingColDef={groupingColDef}
 />

@@ -3,6 +3,387 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.29.9
+
+_Aug 7, 2025_
+
+We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@nusr
+
+The following are all team members who have contributed to this release:
+@cherniavskii, @mapache-salvaje, @MBilalShafi, @rita-codes
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.9`
+
+- [DataGrid] Do not call `preProcessEditCellProps()` if cell is not editable based on `isCellEditable()` (#19082) @nusr
+
+#### `@mui/x-data-grid-pro@7.29.9` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.9`, plus:
+
+- [DataGridPro] Fix row ordering not auto-scrolling when moving beyond viewport (#18718) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@7.29.9` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.9`.
+
+### Docs
+
+- [docs] Audit and revise the Data Grid Pro row docs (#18629) @mapache-salvaje
+- [docs] Fix `size` column filtering in files tree demo (#18728) @cherniavskii
+
+### Miscellaneous
+
+- Update readme publish release command V7 (#18684) @rita-codes
+
+## v7.29.8
+
+_Jul 4, 2025_
+
+We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@sai6855
+
+The following are all team members who have contributed to this release:
+@bernardobelchior, @michelengelen
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.8`
+
+- [DataGrid] Fix `apiRef` not being passed on `onCellClick` params (#17528) @sai6855
+
+#### `@mui/x-data-grid-pro@7.29.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+
+Same changes as in `@mui/x-data-grid@7.29.8`.
+
+#### `@mui/x-data-grid-premium@7.29.8` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
+
+Same changes as in `@mui/x-data-grid-pro@7.29.8`.
+
+### Miscellaneous
+
+- [infra] Add `test_package` to fix CI (#18553) @bernardobelchior
+- [infra] Aligned preparation script with master version (#18672) @michelengelen
+- [infra] Updates release script to fetch latest major version from upstream (#18649) @michelengelen
+
+## v7.29.7
+
+<!-- generated comparing v7.29.6..v7.x -->
+
+_Jun 26, 2025_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible.
+
+Special thanks go out to the community members for their valuable contributions:
+@alisasanib
+
+Following are all team members who have contributed to this release:
+@mapache-salvaje, @arminmeh, @michelengelen
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.7`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@7.29.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.7`, plus:
+
+- [DataGridPro] Fix pinned columns order in column management (#18053) @alisasanib
+
+#### `@mui/x-data-grid-premium@7.29.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.7`.
+
+### Docs
+
+- [docs] Revise the Row Grouping doc (#17494) @mapache-salvaje
+- [docs] Document `GridRenderContext` (#18501) @arminmeh
+- [docs] Prevent stale rows from appearing on sort and filter change in the lazy loading demo (#18463) @arminmeh
+
+### Miscellaneous
+
+- [infra] Add automated release PR creation script (#18450) @michelengelen
+
+## 7.29.6
+
+_Jun 6, 2025_
+
+We'd like to extend a big thank you to @arminmeh, who made this release possible.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.6`
+
+- [DataGrid] Keep pipe pre-processors execution order when callback reference changes (#18217) @arminmeh
+
+#### `@mui/x-data-grid-pro@7.29.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.6`.
+
+#### `@mui/x-data-grid-premium@7.29.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.6`.
+
+### Docs
+
+- [docs] Keep `groupingColDef` reference stable in the grid demos (#17549) @arminmeh
+
+## 7.29.5
+
+_May 29, 2025_
+
+We'd like to extend a big thank you to @cherniavskii, who made this release possible.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.5`
+
+- [DataGrid] Avoid ResizeObserver loop error (@cherniavskii) (#18005) @github-actions[bot]
+
+#### `@mui/x-data-grid-pro@7.29.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.5`.
+
+#### `@mui/x-data-grid-premium@7.29.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.5`.
+
+## 7.29.4
+
+_May 22, 2025_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community members for their valuable contributions:
+@campmarc, @whereisrmsqhs, @jyash97
+
+Following are all team members who have contributed to this release:
+@mapache-salvaje, @cherniavskii, @noraleonte.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.4`
+
+- [DataGrid] Fix `renderContext` calculation loop (#17806) @cherniavskii
+- [DataGrid] Fix column spanning jump on scroll (#17780) @cherniavskii
+- [DataGrid] Fix content rendering for large rows while using automatic page size (#17866) @campmarc
+
+#### `@mui/x-data-grid-pro@7.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.4`, plus:
+
+- [DataGridPro] Add `aria-expanded` attribute to the master detail toggle button (#17890) @whereisrmsqhs
+- [DataGridPro] Prevent text selection when reordering rows (#17920) @jyash97
+
+#### `@mui/x-data-grid-premium@7.29.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.4`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.4`
+
+- [pickers] Fix `PickersTextField` overflow (#17945) @noraleonte
+
+#### `@mui/x-date-pickers-pro@7.29.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.29.4`.
+
+### Docs
+
+- [docs] Add "upgrade to v8" callout on v7 planned pages (#17901) @mapache-salvaje
+
+## 7.29.3
+
+_May 8, 2025_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Team members who have contributed to this release:
+@arminmeh, @LukasTy, and @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.3`
+
+- [DataGrid] Ignore `preProcessEditCellProps` for non-editable columns when starting a row update (#17734) @arminmeh
+- [DataGrid] Avoid applying row selection propagation on filtered rows (#17742) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@7.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.3`.
+
+#### `@mui/x-data-grid-premium@7.29.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.3`
+
+- [DateTimePicker] Fix focus behavior on desktop variant (#17730) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.29.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.29.3`.
+
+## 7.29.2
+
+_May 1, 2025_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Armenian (hy-AM) locale on the Data Grid
+- 🌍 Improve Italian (it-IT) locale on the Date and Time Pickers
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@ArturAghakaryan, @federico-ntr.
+
+Following are all team members who have contributed to this release:
+@arminmeh, @JCQuintas, @KenanYusuf, @MBilalShafi, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.2`
+
+- [DataGrid] Fix column title truncation on touch devices (#17497) @KenanYusuf
+- [DataGrid] Fix theme `defaultProps` causing unwanted re-renders (#17530) @KenanYusuf
+- [l10n] Add Armenian (hy-AM) locale (#17422) @ArturAghakaryan
+- [l10n] Fix l10n export (#17526) @arminmeh
+
+#### `@mui/x-data-grid-pro@7.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.2`.
+
+#### `@mui/x-data-grid-premium@7.29.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.2`
+
+- [l10n] Improve Italian (it-IT) locale (#17604) @federico-ntr
+
+#### `@mui/x-date-pickers-pro@7.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.29.2`.
+
+### Docs
+
+- [docs] Fix MUI X v7 install instructions (#17537) @oliviertassinari
+- [docs] Improve data grid export docs (#17553) @MBilalShafi
+
+### Core
+
+- [core] Fix root package 7.29.1 (#17523) @JCQuintas
+
+## 7.29.1
+
+_Apr 23, 2025_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@lhilgert9
+
+Following are all team members who have contributed to this release:
+@arminmeh, @cherniavskii, @flaviendelangle, @LukasTy, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.29.1`
+
+- [DataGrid] Prevent scrollbars from showing on top (#17410) @romgrk
+
+#### `@mui/x-data-grid-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.29.1`, plus:
+
+- [DataGridPro] Avoid proptypes warnings with header filters in React 17 (#17492) @cherniavskii
+- [DataGridPro] Fix expandable rows detail content height updates (#17509) @arminmeh
+- [DataGridPro] Fix row virtualization not working in list view (#17404) @cherniavskii
+- [DataGridPro] Move locales re-export to allow proper tree shaking (#17438) @lhilgert9
+
+#### `@mui/x-data-grid-premium@7.29.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.29.1`, plus:
+
+- [DataGridPremium] Use `groupingValueGetter` for row grouping on the server (#17423) @cherniavskii
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.29.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.29.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.29.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@7.29.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.29.1`, plus:
+
+- [RichTreeViewPro] Fix drag and drop issue with label editing (#17415) @flaviendelangle
+
+### Docs
+
+- [docs] Use MUI X v7 packages in CodeSandbox and StackBlitz (#17516) @cherniavskii
+
+### Core
+
+- [core] Bump monorepo (#17437) @LukasTy
+
 ## 7.29.0
 
 _Apr 16, 2025_

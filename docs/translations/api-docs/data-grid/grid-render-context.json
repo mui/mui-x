@@ -1,0 +1,9 @@
+{
+  "interfaceDescription": "Provides the current render context range for rows and columns.<br />End index is exclusive - [firstRowIndex, lastRowIndex) and [firstColumnIndex, lastColumnIndex)",
+  "propertiesDescriptions": {
+    "firstColumnIndex": { "description": "" },
+    "firstRowIndex": { "description": "" },
+    "lastColumnIndex": { "description": "" },
+    "lastRowIndex": { "description": "" }
+  }
+}

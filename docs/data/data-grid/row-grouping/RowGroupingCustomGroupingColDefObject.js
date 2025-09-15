@@ -6,6 +6,10 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
+const groupingColDef = {
+  headerName: 'Group',
+};
+
 export default function RowGroupingCustomGroupingColDefObject() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
@@ -26,9 +30,7 @@ export default function RowGroupingCustomGroupingColDefObject() {
         apiRef={apiRef}
         disableRowSelectionOnClick
         initialState={initialState}
-        groupingColDef={{
-          headerName: 'Group',
-        }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

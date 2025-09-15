@@ -2,9 +2,13 @@
   rows={rows}
   columns={columns}
   checkboxSelection
+  rowReordering
   initialState={{
     pinnedColumns: {
-      left: [GRID_CHECKBOX_SELECTION_COL_DEF.field],
+      left: [
+        GRID_REORDER_COL_DEF.field,
+        GRID_CHECKBOX_SELECTION_COL_DEF.field,
+      ],
       right: ['actions'],
     },
   }}

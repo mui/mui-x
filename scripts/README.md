@@ -14,10 +14,28 @@ A typical release goes like this:
 
 ### Prepare the release of the packages
 
+> [!INFO]
+> You can now use the new automated release preparation script by running `pnpm release:prepare`. This script automates steps 1-5 below by:
+>
+> - Asking for the major version to update (v7.x, v6.x, etc.)
+> - Determining the new version based on the selected major version:
+>   - For non-latest major versions: patch/minor/custom
+>   - For latest major version: patch/minor/major/custom and prerelease options:
+>     - Start alpha prerelease (if no prerelease exists)
+>     - Increase alpha version or start beta (if alpha exists)
+>     - Increase beta version or go to major (if beta exists)
+> - Creating a new branch from upstream/master (for latest major) or upstream/vX.x (for older versions)
+> - Updating the root package.json and all product package versions
+> - Generating and formatting the changelog
+> - Creating a PR with all changes and a complete checklist
+>
+> This script is fully interactive and will guide you through the release process.
+
 The following steps must be proposed as a pull request.
 
-1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
-   To do so, use `pnpm release:changelog` The options are the following:
+1. Compare the last tag with the branch upon which you want to release.
+   To do so, use `pnpm release:changelog --lastRelease v7._._`.
+   The options are the following:
 
 ```bash
 pnpm release:changelog
@@ -54,7 +72,7 @@ In case of a problem, another method to generate the changelog is available at t
 
 1. Checkout the last version of the working branch
 2. `pnpm i && pnpm release:build` (make sure you have the latest dependencies installed, and build the packages)
-3. `pnpm release:publish` (release the versions on npm, you need your 2FA device)
+3. `pnpm release:publish --publish-branch v7.x` (release the versions on npm, you need your 2FA device)
 4. `pnpm release:tag` (push the newly created tag)
 
 > [!WARNING]

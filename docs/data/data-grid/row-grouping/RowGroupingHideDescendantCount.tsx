@@ -1,10 +1,16 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GridGroupingColDefOverride,
+  GridValidRowModel,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
+
+const groupingColDef: GridGroupingColDefOverride<GridValidRowModel> = {
+  hideDescendantCount: true,
+};
 
 export default function RowGroupingHideDescendantCount() {
   const data = useMovieData();
@@ -26,9 +32,7 @@ export default function RowGroupingHideDescendantCount() {
         apiRef={apiRef}
         disableRowSelectionOnClick
         initialState={initialState}
-        groupingColDef={{
-          hideDescendantCount: true,
-        }}
+        groupingColDef={groupingColDef}
       />
     </div>
   );

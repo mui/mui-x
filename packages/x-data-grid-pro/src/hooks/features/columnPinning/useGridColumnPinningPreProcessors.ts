@@ -3,7 +3,7 @@ import { RefObject } from '@mui/x-internals/types';
 import {
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
-  gridVisiblePinnedColumnDefinitionsSelector,
+  gridExistingPinnedColumnSelector,
 } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -30,13 +30,13 @@ export const useGridColumnPinningPreProcessors = (
       const savedState = apiRef.current.state;
       apiRef.current.state = { ...savedState, columns: columnsState as unknown as any };
 
-      const visibleColumns = gridVisiblePinnedColumnDefinitionsSelector(apiRef);
+      const pinnedColumns = gridExistingPinnedColumnSelector(apiRef);
 
       apiRef.current.state = savedState;
       // HACK: Ends here //
 
-      const leftPinnedColumns = visibleColumns.left.map((c) => c.field);
-      const rightPinnedColumns = visibleColumns.right.map((c) => c.field);
+      const leftPinnedColumns = pinnedColumns.left;
+      const rightPinnedColumns = pinnedColumns.right;
 
       let newOrderedFields: string[];
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];

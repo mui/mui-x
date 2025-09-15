@@ -7,7 +7,6 @@ import {
   GridRenderCellParams,
   GridGroupNode,
   GridRowId,
-  GRID_CHECKBOX_SELECTION_FIELD,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
@@ -111,12 +110,7 @@ export const useGridTreeDataPreProcessors = (
         }
         columnsState.lookup[groupingColDefField] = newGroupingColumn;
         if (prevGroupingColumn == null) {
-          const index = columnsState.orderedFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
-          columnsState.orderedFields = [
-            ...columnsState.orderedFields.slice(0, index),
-            groupingColDefField,
-            ...columnsState.orderedFields.slice(index),
-          ];
+          columnsState.orderedFields = [groupingColDefField, ...columnsState.orderedFields];
         }
       } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
         delete columnsState.lookup[groupingColDefField];

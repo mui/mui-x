@@ -4,6 +4,7 @@ import {
   GridColDef,
   GridRowsProp,
   DataGridPremiumProps,
+  GridGroupingColDefOverride,
 } from '@mui/x-data-grid-premium';
 
 interface File {
@@ -100,24 +101,15 @@ const columns: GridColDef<File>[] = [
     field: 'size',
     headerName: 'Size',
     type: 'number',
-    valueFormatter: (value) => {
+    valueGetter: (value) => {
       if (value == null) {
-        return '';
+        return 0;
       }
-      if (value < 100) {
-        return `${value} b`;
-      }
-
-      if (value < 1_000_000) {
-        return `${Math.floor(value / 100) / 10} Kb`;
-      }
-
-      if (value < 1_000_000_000) {
-        return `${Math.floor(value / 100_000) / 10} Mb`;
-      }
-
-      return `${Math.floor(value / 100_000_000) / 10} Gb`;
+      const sizeInKb = value / 1024;
+      // Round to 2 decimal places
+      return Math.round(sizeInKb * 100) / 100;
     },
+    valueFormatter: (value) => `${value} Kb`,
   },
   {
     field: 'updatedAt',
@@ -140,6 +132,11 @@ const getTreeDataPath: DataGridPremiumProps<File>['getTreeDataPath'] = (row) =>
 const getRowId: DataGridPremiumProps<File>['getRowId'] = (row) =>
   row.hierarchy.join('/');
 
+const groupingColDef: GridGroupingColDefOverride<File> = {
+  headerName: 'Files',
+  width: 350,
+};
+
 export default function AggregationTreeData() {
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -149,7 +146,7 @@ export default function AggregationTreeData() {
         columns={columns}
         getTreeDataPath={getTreeDataPath}
         getRowId={getRowId}
-        groupingColDef={{ headerName: 'Files', width: 350 }}
+        groupingColDef={groupingColDef}
         initialState={{
           aggregation: {
             model: {
