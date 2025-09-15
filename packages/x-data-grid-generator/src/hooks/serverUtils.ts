@@ -869,13 +869,19 @@ export const processPivotingRows = (
           continue;
         }
         columnGroupPath.push({
-          [colGroupField]: row[colGroupField],
+          [colGroupField]: column.valueGetter
+            ? column.valueGetter(row[colGroupField] as never, row, column, apiRef)
+            : row[colGroupField],
         });
       }
 
       // Create pivot columns for each value field within this column group
       visibleValues.forEach((pivotValue) => {
         let valueKey = pivotValue.field;
+        const column = columnsWithDefaultColDef.find(({ field }) => field === valueKey);
+        if (!column) {
+          return;
+        }
         if (visibleColumns.length > 0) {
           const columnGroupPathValue = columnGroupPath.map(
             (path, pathIndex) => path[visibleColumns[pathIndex].field],
@@ -883,7 +889,9 @@ export const processPivotingRows = (
           valueKey = `${columnGroupPathValue.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${pivotValue.field}`;
         }
         uniqueColumnGroups.set(valueKey, [...columnGroupPath, pivotValue.field]);
-        updatedRow[valueKey] = row[pivotValue.field];
+        updatedRow[valueKey] = column.valueGetter
+          ? column.valueGetter(row[pivotValue.field] as never, row, column, apiRef)
+          : row[pivotValue.field];
       });
 
       return updatedRow;

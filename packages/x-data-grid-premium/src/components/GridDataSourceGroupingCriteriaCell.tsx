@@ -42,18 +42,18 @@ interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, a
 interface GridGroupingCriteriaCellIconProps
   extends Pick<GridGroupingCriteriaCellProps, 'id' | 'field' | 'rowNode' | 'row'> {
   descendantCount: number;
+  pivotActive: boolean;
+  rowGroupingModelLength: number;
 }
 
 function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) {
   const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPremium>;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
-  const { rowNode, id, field, descendantCount } = props;
+  const { rowNode, id, field, descendantCount, pivotActive, rowGroupingModelLength } = props;
 
   const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
   const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
-  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
-  const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingModelSelector);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
@@ -69,7 +69,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   };
 
   // Do not allow expand/collapse the last grouping criteria cell when in pivot mode
-  if (pivotActive && rowNode.depth === rowGroupingModel.length - 1) {
+  if (pivotActive && rowNode.depth === rowGroupingModelLength - 1) {
     return null;
   }
 
@@ -112,6 +112,8 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const row = useGridSelector(apiRef, gridRowSelector, id);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const rowGroupingModelLength = useGridSelector(apiRef, gridRowGroupingModelSelector).length;
   const classes = useUtilityClasses(rootProps);
 
   let descendantCount = 0;
@@ -140,15 +142,19 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
             : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
-      <div className={classes.toggle}>
-        <GridGroupingCriteriaCellIcon
-          id={id}
-          field={field}
-          rowNode={rowNode}
-          row={row}
-          descendantCount={descendantCount}
-        />
-      </div>
+      {(!pivotActive || rowGroupingModelLength > 1) && (
+        <div className={classes.toggle}>
+          <GridGroupingCriteriaCellIcon
+            id={id}
+            field={field}
+            rowNode={rowNode}
+            row={row}
+            descendantCount={descendantCount}
+            pivotActive={pivotActive}
+            rowGroupingModelLength={rowGroupingModelLength}
+          />
+        </div>
+      )}
       {cellContent}
       {!hideDescendantCount && descendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({descendantCount})</span>
