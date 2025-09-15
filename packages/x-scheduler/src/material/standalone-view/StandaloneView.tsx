@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
+import { EventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import {
   EventCalendarParameters,
   useEventCalendar,
@@ -13,12 +13,12 @@ import '../index.css';
  */
 export function StandaloneView(props: StandaloneViewProps) {
   const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
-  const contextValue = useEventCalendar(parameters);
+  const store = useEventCalendar(parameters);
 
   return (
-    <EventCalendarContext.Provider value={contextValue}>
+    <EventCalendarStoreContext.Provider value={store}>
       {forwardedProps.children}
-    </EventCalendarContext.Provider>
+    </EventCalendarStoreContext.Provider>
   );
 }
 

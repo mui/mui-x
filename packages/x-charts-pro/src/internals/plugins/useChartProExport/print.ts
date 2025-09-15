@@ -18,9 +18,8 @@ export function printChart(
   printWindow.onload = async () => {
     const printDoc = printWindow.contentDocument!;
     const elementClone = element!.cloneNode(true) as HTMLElement | SVGElement;
-    const container = document.createElement('div');
-    container.appendChild(elementClone);
-    printDoc.body.innerHTML = container.innerHTML;
+    printDoc.body.replaceChildren(elementClone);
+    printDoc.body.style.margin = '0px';
 
     const rootCandidate = element.getRootNode();
     const root =

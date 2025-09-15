@@ -9,7 +9,7 @@ import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../../primitives/time-grid';
 import { getColorClassName } from '../../../utils/color-utils';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
 import './TimeGridEvent.css';
 import '../index.css';
 
@@ -22,7 +22,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const { occurrence, ariaLabelledBy, className, id: idProp, variant, ...other } = props;
 
   const id = useId(idProp);
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
 
   const isRecurring = Boolean(occurrence.rrule);
   const isDraggable = useStore(store, selectors.isEventDraggable, occurrence);

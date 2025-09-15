@@ -1,11 +1,11 @@
 import { spy } from 'sinon';
-import { EventCalendarInstance } from '../EventCalendarInstance';
+import { EventCalendarStore } from '../EventCalendarStore';
 import { getAdapter } from './../../utils/adapter/getAdapter';
 import { buildEvent } from './utils';
 
 const adapter = getAdapter();
 
-describe('Event - EventCalendarInstance', () => {
+describe('Event - EventCalendarStore', () => {
   describe('Method: updateEvent', () => {
     it('should replace matching id and emit onEventsChange with the updated events', () => {
       const onEventsChange = spy();
@@ -24,7 +24,7 @@ describe('Event - EventCalendarInstance', () => {
         ),
       ];
 
-      const { instance } = EventCalendarInstance.create({ events, onEventsChange }, adapter);
+      const store = EventCalendarStore.create({ events, onEventsChange }, adapter);
 
       const updatedEvent = buildEvent(
         '2',
@@ -37,7 +37,7 @@ describe('Event - EventCalendarInstance', () => {
         },
       );
 
-      instance.updateEvent(updatedEvent);
+      store.updateEvent(updatedEvent);
 
       expect(onEventsChange.calledOnce).to.equal(true);
       const updatedEvents = onEventsChange.lastCall.firstArg;
@@ -75,9 +75,8 @@ describe('Event - EventCalendarInstance', () => {
         ),
       ];
 
-      const { instance } = EventCalendarInstance.create({ events, onEventsChange }, adapter);
-
-      instance.deleteEvent('2');
+      const store = EventCalendarStore.create({ events, onEventsChange }, adapter);
+      store.deleteEvent('2');
 
       expect(onEventsChange.calledOnce).to.equal(true);
       const updatedEvents = onEventsChange.lastCall.firstArg;
