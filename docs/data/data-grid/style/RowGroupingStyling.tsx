@@ -48,7 +48,7 @@ export default function RowGroupingStyling() {
 
       return '';
     },
-    [],
+    [apiRef],
   );
 
   const initialState = useKeepGroupedColumnsHidden({

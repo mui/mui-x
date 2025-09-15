@@ -15,35 +15,38 @@ export default function RowGroupingStyling() {
   const apiRef = useGridApiRef();
   const data = useMovieData();
   const rowHeight = apiRef.current ? gridRowHeightSelector(apiRef) : 52;
-  const getRowClassName = React.useCallback((params) => {
-    const node = gridRowNodeSelector(apiRef, params.id);
+  const getRowClassName = React.useCallback(
+    (params) => {
+      const node = gridRowNodeSelector(apiRef, params.id);
 
-    if (!node) {
-      return '';
-    }
+      if (!node) {
+        return '';
+      }
 
-    if (node.type === 'group') {
-      for (const childId of node.children) {
-        const childNode = gridRowNodeSelector(apiRef, childId);
-        if (childNode && childNode.type === 'leaf') {
-          const childRow = gridRowSelector(apiRef, childId);
-          if (childRow?.gross && childRow.gross > EXPECTED_GROSS) {
-            return 'highlighted-group';
+      if (node.type === 'group') {
+        for (const childId of node.children) {
+          const childNode = gridRowNodeSelector(apiRef, childId);
+          if (childNode && childNode.type === 'leaf') {
+            const childRow = gridRowSelector(apiRef, childId);
+            if (childRow?.gross && childRow.gross > EXPECTED_GROSS) {
+              return 'highlighted-group';
+            }
           }
         }
+
+        return '';
+      }
+
+      const row = params.row;
+
+      if (row.gross > EXPECTED_GROSS) {
+        return 'highlighted-child';
       }
 
       return '';
-    }
-
-    const row = params.row;
-
-    if (row.gross > EXPECTED_GROSS) {
-      return 'highlighted-child';
-    }
-
-    return '';
-  }, []);
+    },
+    [apiRef],
+  );
 
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
