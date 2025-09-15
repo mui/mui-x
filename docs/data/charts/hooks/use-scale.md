@@ -8,6 +8,9 @@ productId: x-charts
 <p class="description">Access D3 scale functions for coordinate transformations.</p>
 
 The scale hooks provide access to D3 scale functions that can be used to convert data values to pixel coordinates within the chart.
+Scale hooks accept an axis id as a parameter.
+If provided, the hook returns the scale of the associated axis.
+Otherwise it returns the scale of the default axis.
 
 ## Cartesian charts
 
