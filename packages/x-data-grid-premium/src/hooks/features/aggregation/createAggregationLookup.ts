@@ -33,7 +33,7 @@ const getGroupAggregatedValue = (
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'],
   aggregatedFields: string[],
   aggregationRules: GridAggregationRules,
-  position: GridAggregationPosition,
+  position: GridAggregationPosition | null,
   applySorting: boolean,
   valueGetters: Record<string, (row: any) => any>,
   publicApi: GridApiPremium,
@@ -120,10 +120,13 @@ const getGroupAggregatedValue = (
       publicApi,
     );
 
-    groupAggregationLookup[aggregatedField] = {
-      position,
-      value,
-    };
+    // Only add to groupAggregationLookup if position is not null
+    if (position !== null) {
+      groupAggregationLookup[aggregatedField] = {
+        position,
+        value,
+      };
+    }
   }
 
   return { groupAggregationLookup, aggregatedValues };
@@ -201,29 +204,34 @@ export const createAggregationLookup = ({
 
     const position = getAggregationPosition(groupNode);
 
-    if (position !== null) {
-      if (isDataSource) {
+    if (isDataSource) {
+      if (position !== null) {
         aggregationLookup[groupNode.id] = getGroupAggregatedValueDataSource(
           groupNode.id,
           apiRef,
           aggregatedFields,
           position,
         );
-      } else if (groupNode.children.length) {
-        const result = getGroupAggregatedValue(
-          groupNode.id,
-          apiRef,
-          aggregationRowsScope,
-          aggregatedFields,
-          aggregationRules,
-          position,
-          applySorting,
-          valueGetters,
-          apiRef.current,
-          groupAggregatedValuesLookup,
-        );
+      }
+    } else if (groupNode.children.length) {
+      const result = getGroupAggregatedValue(
+        groupNode.id,
+        apiRef,
+        aggregationRowsScope,
+        aggregatedFields,
+        aggregationRules,
+        position,
+        applySorting,
+        valueGetters,
+        apiRef.current,
+        groupAggregatedValuesLookup,
+      );
+      // Always populate groupAggregatedValuesLookup for groups with children
+      // This ensures parent groups can access child aggregated values even when position is null
+      groupAggregatedValuesLookup.set(groupNode.id, result.aggregatedValues);
+      // Only set aggregationLookup if position is not null (meaning aggregation should be displayed)
+      if (position !== null) {
         aggregationLookup[groupNode.id] = result.groupAggregationLookup;
-        groupAggregatedValuesLookup.set(groupNode.id, result.aggregatedValues);
       }
     }
   };

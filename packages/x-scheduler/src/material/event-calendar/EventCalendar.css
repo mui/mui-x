@@ -53,3 +53,13 @@
   justify-content: center;
   color: var(--gray-6);
 }
+
+.ErrorCallout {
+  background-color: var(--error-2);
+  border: 1px solid var(--error-6);
+  border-radius: var(--radius-4);
+  width: 100%;
+  padding: var(--space-2);
+  color: var(--error-9);
+  font-size: var(--font-size-2);
+}
