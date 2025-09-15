@@ -6,18 +6,17 @@ import {
   GridRowClassNameParams,
   gridRowNodeSelector,
   gridRowSelector,
-  gridRowHeightSelector,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
 type Movie = ReturnType<typeof useMovieData>['rows'][number];
 
 const EXPECTED_GROSS = 2000000000;
+const ROW_HEIGHT = 52;
 
 export default function RowGroupingStyling() {
   const apiRef = useGridApiRef();
   const data = useMovieData();
-  const rowHeight = apiRef.current ? gridRowHeightSelector(apiRef) : 52;
   const getRowClassName = React.useCallback(
     (params: GridRowClassNameParams<Movie>) => {
       const node = gridRowNodeSelector(apiRef, params.id);
@@ -75,8 +74,8 @@ export default function RowGroupingStyling() {
               position: 'absolute',
               left: 0,
               width: 4,
-              height: `calc(${rowHeight}px * 0.8)`,
-              marginTop: `calc(${rowHeight}px * 0.1)`,
+              height: `calc(${ROW_HEIGHT}px * 0.8)`,
+              marginTop: `calc(${ROW_HEIGHT}px * 0.1)`,
               backgroundColor: 'success.main',
               borderTopRightRadius: 4,
               borderBottomRightRadius: 4,

@@ -292,12 +292,6 @@
   { "name": "gridRowGroupingNameSelector", "returnType": "string", "description": "" },
   { "name": "gridRowGroupingSanitizedModelSelector", "returnType": "string[]", "description": "" },
   {
-    "name": "gridRowHeightSelector",
-    "returnType": "number",
-    "category": "Rows",
-    "description": "Get the row height."
-  },
-  {
     "name": "gridRowIdSelector",
     "returnType": "GridRowId",
     "description": "Get the row id for a given row"

@@ -456,7 +456,6 @@
   { "name": "gridRowGroupingNameSelector", "kind": "Variable" },
   { "name": "GridRowHeightParams", "kind": "Interface" },
   { "name": "GridRowHeightReturnValue", "kind": "TypeAlias" },
-  { "name": "gridRowHeightSelector", "kind": "Variable" },
   { "name": "GridRowId", "kind": "TypeAlias" },
   { "name": "GridRowIdGetter", "kind": "TypeAlias" },
   { "name": "gridRowIdSelector", "kind": "Variable" },
