@@ -24,7 +24,6 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { useGridOverlays } from '../overlays/useGridOverlays';
 
 type RootProps = Pick<
   DataGridProcessedProps,
