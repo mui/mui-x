@@ -25,6 +25,7 @@ interface UpdateRowTreeParams {
   groupingName: string;
   onDuplicatePath?: GridTreePathDuplicateHandler;
   previousGroupsToFetch?: GridRowId[];
+  maxDepth?: number;
 }
 
 export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationValue => {
@@ -50,6 +51,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
       isGroupExpandedByDefault: params.isGroupExpandedByDefault,
       defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
       groupsToFetch,
+      maxDepth: params.maxDepth,
     });
   }
 
@@ -91,6 +93,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
         isGroupExpandedByDefault: params.isGroupExpandedByDefault,
         defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
         groupsToFetch,
+        maxDepth: params.maxDepth,
       });
     } else {
       updatedGroupsManager?.addAction(tree[id].parent!, 'modifyChildren');
