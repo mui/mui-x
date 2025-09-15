@@ -8,6 +8,20 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 <p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
+## Overview
+
+Bar charts are ideal for comparing discrete categories.
+They excel at visualizing differences in magnitude across categories (or a group of categories), highlight trends, and compare proportions at a glance.
+The categories can represent progressive values such as time periods, or independent groups such as products, countries, age brackets, etc.
+Here are the basic requirements to create a bar chart:
+
+- One categorical dimension (x-axis for vertical bars, y-axis for horizontal bars)
+- One or more numerical metric for length of each bar
+
+The horizontal bar chart below compares voter turnout in some European countries:
+
+{{"demo": "ShinyBarChartHorizontal.js"}}
+
 ## Basics
 
 Bar charts series should contain a `data` property containing an array of values.
