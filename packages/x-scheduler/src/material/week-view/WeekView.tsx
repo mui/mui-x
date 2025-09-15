@@ -5,8 +5,9 @@ import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { WeekViewProps } from './WeekView.types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
+import { useInitializeView } from '../../primitives/utils/useInitializeView';
 
 const adapter = getAdapter();
 
@@ -17,7 +18,7 @@ export const WeekView = React.memo(
   ) {
     const { store } = useEventCalendarContext();
     const visibleDate = useStore(store, selectors.visibleDate);
-    const settings = useStore(store, selectors.settings);
+    const preferences = useStore(store, selectors.preferences);
     const getDayList = useDayList();
 
     const days = React.useMemo(
@@ -25,10 +26,14 @@ export const WeekView = React.memo(
         getDayList({
           date: adapter.startOfWeek(visibleDate),
           amount: 'week',
-          excludeWeekends: settings.hideWeekends,
+          excludeWeekends: !preferences.showWeekends,
         }),
-      [getDayList, visibleDate, settings.hideWeekends],
+      [getDayList, visibleDate, preferences.showWeekends],
     );
+
+    useInitializeView(() => ({
+      siblingVisibleDateGetter: (date, delta) => adapter.addWeeks(adapter.startOfWeek(date), delta),
+    }));
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),

@@ -42,7 +42,7 @@ Before using fluid width, note that:
 
 ## Resizing
 
-By default, Data Grid allows all columns to be resized by dragging the right portion of the column separator.
+By default, users can resize all columns in the Data Grid by dragging the right portion of the column separator.
 
 To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
@@ -60,7 +60,8 @@ To capture changes in the width of a column there are two callbacks that are cal
 
 ## Autosizing
 
-Data Grid allows to autosize the columns' dimensions based on their content. Autosizing is enabled by default. To turn it off, pass the `disableAutosize` prop to the Data Grid.
+By default, the Data Grid automatically sets column dimensions based on their content.
+To disable this behavior, pass the `disableAutosize` prop to the Data Grid.
 
 Autosizing can be used by one of the following methods:
 

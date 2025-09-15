@@ -460,6 +460,6 @@ const GridColumnsManagementEmptyText = styled('div', {
 const GridColumnsManagementRow = styled(NotRendered<GridSlotProps['baseCheckbox']>, {
   name: 'MuiDataGrid',
   slot: 'ColumnsManagementRow',
-})();
+})({});
 
 export { GridColumnsManagement };

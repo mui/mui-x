@@ -40,6 +40,13 @@ export interface CalendarEvent {
    * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
    */
   readOnly?: boolean;
+  /**
+   * The id of the original event from which this event was split.
+   * If provided, it must reference an existing event in the calendar.
+   * If it does not match any existing event, the value will be ignored
+   * and no link to an original event will be created.
+   */
+  extractedFromId?: CalendarEventId;
 }
 
 /** Two-letter weekday codes as defined by RFC 5545 (`BYDAY`). */
@@ -84,9 +91,42 @@ export interface CalendarEventOccurrence extends CalendarEvent {
   key: string;
 }
 
-/** Extension of an occurrence with layout information for all-day rows. */
-export interface CalendarEventOccurrenceWithPosition extends CalendarEventOccurrence {
-  eventRowIndex?: number;
+/**
+ * An event occurrence with the position it needs to be rendered on a day grid.
+ */
+export interface CalendarEventOccurrenceWithDayGridPosition extends CalendarEventOccurrence {
+  position: CalendarEventOccurrenceDayGridPosition;
+}
+
+export interface CalendarEventOccurrenceDayGridPosition {
+  /**
+   * The 1-based index of the row the event should be rendered in.
+   */
+  index: number;
+  /**
+   * The number of days the event should span across.
+   */
+  daySpan: number;
+  /**
+   * Whether the event should be rendered as invisible.
+   * Invisible events are used to reserve space for events that started on a previous day.
+   */
+  isInvisible?: boolean;
+}
+
+export interface CalendarEventOccurrenceWithTimePosition extends CalendarEventOccurrence {
+  position: CalendarEventOccurrenceTimePosition;
+}
+
+export interface CalendarEventOccurrenceTimePosition {
+  /**
+   * The first (1-based) index of the row / column the event should be rendered in.
+   */
+  firstIndex: number;
+  /**
+   * The last (1-based) index of the row / column the event should be rendered in.
+   */
+  lastIndex: number;
 }
 
 export type CalendarEventId = string | number;
@@ -104,3 +144,34 @@ export type CalendarEventColor =
   | 'pink'
   | 'indigo'
   | 'blue';
+
+/**
+ * Object forwarded to the `onEventChange` handler of the Day Grid Root and Time Grid Root parts.
+ */
+export interface CalendarPrimitiveEventData {
+  eventId: string | number;
+  columnId: string | null;
+  start: SchedulerValidDate;
+  end: SchedulerValidDate;
+}
+
+export interface CalendarProcessedDate {
+  /**
+   * The date object.
+   */
+  value: SchedulerValidDate;
+  /**
+   * String representation of the date.
+   * It can be used as key in Maps or passed to the React `key` property when looping through days.
+   * It only contains date information, two dates representing the same day but with different time will have the same key.
+   */
+  key: string;
+}
+
+/**
+ * Helper type for `applyRecurringUpdateFollowing` and `updateRecurringEvent`.
+ *  It requires `start` and `end` (always needed when updating an occurrence),
+ *  and makes all other `CalendarEvent` properties optional.
+ */
+export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
+  Required<Pick<CalendarEvent, 'start' | 'end'>>;
