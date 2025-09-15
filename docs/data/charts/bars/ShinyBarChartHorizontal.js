@@ -5,12 +5,15 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useAnimate, useAnimateBar, useDrawingArea } from '@mui/x-charts/hooks';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
+import Box from '@mui/material/Box';
 import votesTurnout from '../dataset/votes.json';
 
 export default function ShinyBarChartHorizontal() {
   return (
-    <div style={{ width: '100%' }}>
-      <Typography>European countries with lowest & highest voter turnout</Typography>
+    <Box width="100%">
+      <Typography marginBottom={2}>
+        European countries with lowest & highest voter turnout
+      </Typography>
       <BarChart
         height={300}
         dataset={votesTurnout}
@@ -52,9 +55,8 @@ export default function ShinyBarChartHorizontal() {
         slotProps={{
           legend: {
             axisDirection: 'x',
-            direction: 'vertical',
             markType: 'square',
-            labelPosition: 'start',
+            labelPosition: 'inline-start',
             labelFormatter: ({ index }) => {
               if (index === 0) {
                 return 'lowest turnout';
@@ -67,7 +69,7 @@ export default function ShinyBarChartHorizontal() {
           },
         }}
       />
-    </div>
+    </Box>
   );
 }
 
