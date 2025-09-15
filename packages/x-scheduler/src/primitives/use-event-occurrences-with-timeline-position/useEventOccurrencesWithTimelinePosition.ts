@@ -145,7 +145,7 @@ function buildOccurrenceConflicts(
 
 function buildFirstIndexLookup(conflicts: OccurrenceConflicts[]) {
   let maxIndex: number = 1;
-  const firstIndexLookup: { [occurrenceKey: string]: number } = {};
+  const firstIndexLookup: OccurrenceIndexLookup = {};
 
   for (const occurrence of conflicts) {
     if (occurrence.before.size === 0) {
@@ -172,7 +172,7 @@ function buildFirstIndexLookup(conflicts: OccurrenceConflicts[]) {
 
 function buildLastIndexLookup(
   conflicts: OccurrenceConflicts[],
-  firstIndexLookup: { [occurrenceKey: string]: number },
+  firstIndexLookup: OccurrenceIndexLookup,
   maxIndex: number,
   maxColumnSpan: number,
 ) {
@@ -180,7 +180,7 @@ function buildLastIndexLookup(
     return firstIndexLookup;
   }
 
-  const lastIndexLookup: { [occurrenceKey: string]: number } = {};
+  const lastIndexLookup: OccurrenceIndexLookup = {};
   for (const occurrence of conflicts) {
     const usedIndexes = new Set(
       [...Array.from(occurrence.before), ...Array.from(occurrence.after)].map(
@@ -215,3 +215,5 @@ interface OccurrenceConflicts {
   before: Set<string>;
   after: Set<string>;
 }
+
+type OccurrenceIndexLookup = { [occurrenceKey: string]: number };
