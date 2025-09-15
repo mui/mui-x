@@ -48,8 +48,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     };
   }, [adapter, day.value, initialDraggedEvent, placeholder]);
 
-  const visibleOccurrences = day.withPosition.slice(0, maxEvents);
-  const hiddenCount = day.withPosition.length - maxEvents;
+  const visibleOccurrences =
+    day.withPosition.length > maxEvents
+      ? day.withPosition.slice(0, maxEvents - 1)
+      : day.withPosition;
+  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
   const cellNumberContent = (
     <span className="MonthViewCellNumber">

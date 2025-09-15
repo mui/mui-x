@@ -20,10 +20,10 @@ import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occu
 import './MonthView.css';
 
 const adapter = getAdapter();
-const EVENT_HEIGHT = 22;
 const CELL_PADDING = 8;
-const DAY_NUMBER_HEADER_HEIGHT = 23;
-const HIDDEN_EVENTS_HEIGHT = 18;
+const DAY_NUMBER_HEADER_HEIGHT = 18;
+const EVENT_HEIGHT = 18;
+const EVENT_GAP = 5;
 
 export const MonthView = React.memo(
   React.forwardRef(function MonthView(
@@ -77,9 +77,10 @@ export const MonthView = React.memo(
       cellRef,
       () => {
         const cellHeight = cellRef.current!.clientHeight;
-        const availableHeight =
-          cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT - HIDDEN_EVENTS_HEIGHT;
-        const maxEventsCount = Math.floor(availableHeight / EVENT_HEIGHT);
+        const eventContainerHeight = cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT;
+        const maxEventsCount = Math.floor(
+          (eventContainerHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP),
+        );
         setMaxEvents(maxEventsCount);
       },
       true,
