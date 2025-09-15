@@ -64,7 +64,16 @@ export const MonthView = React.memo(
           end: data.end,
         };
 
-        instance.updateEvent(updatedEvent);
+        if (updatedEvent.rrule) {
+          instance.updateRecurringEvent({
+            eventId: data.eventId,
+            occurrenceStart: data.originalStart,
+            changes: { start: data.start, end: data.end },
+            scope: 'this-and-following',
+          });
+        } else {
+          instance.updateEvent(updatedEvent);
+        }
       },
       [instance, store],
     );
