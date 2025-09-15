@@ -25,12 +25,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import {
-  applyDomainLimit,
-  getDomainLimit,
-  getLimitedDomain,
-  ScaleDefinition,
-} from './getAxisScale';
+import { applyDomainLimit, getDomainLimit, ScaleDefinition } from './getAxisScale';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 
 function getRange(
@@ -206,7 +201,16 @@ export function computeAxisValue<T extends ChartSeriesType>({
         formattedSeries,
         preferStrictDomainInLineCharts,
       );
-      scale.domain(getLimitedDomain([minData, maxData], domainLimit));
+
+      const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
+
+      if (typeof domainLimit === 'function') {
+        const { min, max } = domainLimit(minData, maxData);
+        axisExtrema[0] = min;
+        axisExtrema[1] = max;
+      }
+
+      scale.domain(axisExtrema);
       applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
     }
 

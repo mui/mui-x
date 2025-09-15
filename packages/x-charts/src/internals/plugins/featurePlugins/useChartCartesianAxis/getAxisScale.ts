@@ -146,7 +146,7 @@ function getAxisScale<T extends ChartSeriesType>(
   /**
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
-  preferStrictDomainInLineCharts?: boolean,
+  preferStrictDomainInLineCharts: boolean | undefined,
   getFilters?: GetZoomAxisFilters,
 ): ScaleDefinition {
   const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
@@ -191,7 +191,13 @@ function getAxisScale<T extends ChartSeriesType>(
     preferStrictDomainInLineCharts,
   );
 
-  const axisExtrema = getLimitedDomain([minData, maxData], domainLimit);
+  const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
+
+  if (typeof domainLimit === 'function') {
+    const { min, max } = domainLimit(minData, maxData);
+    axisExtrema[0] = min;
+    axisExtrema[1] = max;
+  }
 
   const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtrema });
 
@@ -220,15 +226,6 @@ export function getDomainLimit(
   return preferStrictDomainInLineCharts
     ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
     : (axis.domainLimit ?? 'nice');
-}
-
-export function getLimitedDomain(extrema: [number, number], domainLimit: DomainLimit) {
-  if (typeof domainLimit === 'function') {
-    const { min, max } = domainLimit(extrema[0], extrema[1]);
-    return [min, max];
-  }
-
-  return extrema;
 }
 
 export function applyDomainLimit(
