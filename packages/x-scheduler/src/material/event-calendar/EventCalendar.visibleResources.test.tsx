@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
@@ -77,7 +78,7 @@ describe('EventCalendar - Visible Resources', () => {
   });
 
   it('should work in controlled mode', () => {
-    const onVisibleResourcesChange = vitest.fn();
+    const onVisibleResourcesChange = spy();
     const { rerender } = render(
       <EventCalendar
         events={sampleEvents}
@@ -119,7 +120,7 @@ describe('EventCalendar - Visible Resources', () => {
   });
 
   it('should call onVisibleResourcesChange when resources are toggled in controlled mode', async () => {
-    const onVisibleResourcesChange = vitest.fn();
+    const onVisibleResourcesChange = spy();
     const { user } = render(
       <EventCalendar
         events={sampleEvents}
@@ -135,11 +136,11 @@ describe('EventCalendar - Visible Resources', () => {
     await user.click(workCheckbox);
 
     // Callback should be called with updated visible resources
-    expect(onVisibleResourcesChange).to.have.been.calledWith(['1', '3']);
+    expect(onVisibleResourcesChange.calledWith(['1', '3'])).to.equal(true);
   });
 
-  it('should not call onVisibleResourcesChange in uncontrolled mode', async () => {
-    const onVisibleResourcesChange = vitest.fn();
+  it('should call onVisibleResourcesChange in uncontrolled mode', async () => {
+    const onVisibleResourcesChange = spy();
     const { user } = render(
       <EventCalendar
         events={sampleEvents}
@@ -155,6 +156,6 @@ describe('EventCalendar - Visible Resources', () => {
     await user.click(workCheckbox);
 
     // Callback should be called even in uncontrolled mode
-    expect(onVisibleResourcesChange).to.have.been.calledWith(['1', '3']);
+    expect(onVisibleResourcesChange.calledWith(['1', '3'])).to.equal(true);
   });
 });
