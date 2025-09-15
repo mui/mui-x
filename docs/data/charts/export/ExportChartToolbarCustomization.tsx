@@ -74,7 +74,6 @@ export default function ExportChartToolbarCustomization() {
               if (context.location === 'tick' && context.defaultTickLabel === '') {
                 return '';
               }
-
               return populationFormatter.format(value);
             },
             zoom: true,

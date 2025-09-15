@@ -44,7 +44,12 @@ export function getVisibleLabels<T extends TickItemType>(
 
   return new Set(
     xTicks.filter((item, labelIndex) => {
-      const { offset, labelOffset } = item;
+      const { offset, labelOffset, formattedValue } = item;
+
+      if (formattedValue === '') {
+        return false;
+      }
+
       const textPosition = offset + labelOffset;
 
       if (

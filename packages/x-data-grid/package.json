@@ -34,8 +34,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build && pnpm build:copy-files",
-    "build:copy-files": "code-infra copy-files --glob \"src/**/*.css\" --glob \"src/**/*.css:esm\"",
+    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {

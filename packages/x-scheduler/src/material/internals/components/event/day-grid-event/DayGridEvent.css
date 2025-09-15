@@ -1,5 +1,12 @@
 @import '../../../../styles/colors.css';
 
+.EventCard {
+  &[data-dragging],
+  &[data-resizing] {
+    opacity: 0.5;
+  }
+}
+
 .DayGridEventTitle {
   margin: 0;
   color: var(--event-primary-text);
@@ -27,7 +34,8 @@
 }
 
 .EventCard--allDay,
-.EventCard--invisible {
+.EventCard--invisible,
+.EventCard--dragPlaceholder {
   container-type: inline-size;
   border-radius: var(--radius-3);
   background-color: var(--event-background);
@@ -50,6 +58,10 @@
   height: 18px;
 }
 
+.EventCard--dragPlaceholder {
+  z-index: 2;
+}
+
 .EventCard--compact .DayGridEventCardContent {
   margin: 0;
   height: var(--line-height-1);
@@ -60,7 +72,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-1) var(--space-2);
+  padding-inline: var(--space-2);
 }
 
 .EventCard--compact:active {
