@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
-import { useEventCalendarContext } from '../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
@@ -19,7 +19,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 ) {
   const { day, maxEvents } = props;
   const adapter = useAdapter();
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const translations = useTranslations();
   const placeholder = DayGrid.usePlaceholderInDay(day.value);
   const hasDayView = useStore(store, selectors.hasDayView);
@@ -83,7 +83,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         <button
           type="button"
           className="MonthViewCellNumberButton"
-          onClick={(event) => instance.switchToDay(day.value, event)}
+          onClick={(event) => store.switchToDay(day.value, event)}
           tabIndex={0}
         >
           {cellNumberContent}
