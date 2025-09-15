@@ -55,7 +55,7 @@ function TreeItemIcon(props: TreeItemIconProps) {
 
   const Icon = slots[iconName];
   const iconProps = useSlotProps({
-    elementType: Icon as React.ElementType,
+    elementType: Icon as NonNullable<typeof Icon>,
     externalSlotProps: (tempOwnerState: any) => ({
       ...resolveComponentProps(
         slotPropsFromTreeView[iconName as keyof typeof slotPropsFromTreeView],
