@@ -11,17 +11,21 @@ The `useXxxSeries` hook provides access to specific series data for a particular
 
 ## Usage
 
-It is recommended to use the specific series hooks (e.g., `useBarSeries`, `useLineSeries`) when working with a specific chart type, as their API is easier to use.
-
 ```js
 import { useBarSeries, useLineSeries } from '@mui/x-charts/hooks';
 
 function CustomComponent() {
-  const barSeries = useBarSeries();
-  const lineSeries = useLineSeries();
-  // barSeries: Object containing bar chart series data
-  // lineSeries: Object containing line chart series data
+  const barSeries = useBarSeries(); // Array of bar chart series data
+  const lineSeries = useLineSeries(); // Array of line chart series data
 }
+```
+
+You can also pick specific series by either providing the series id as a parameter, or an array of series ids to get.
+
+```js
+const barSeries = useBarSeries('id1'); //
+
+const barSeries = useBarSeries(['id1', 'id2']);
 ```
 
 - `useBarSeries` - Access bar chart series data
@@ -38,13 +42,13 @@ This example demonstrates using the `useBarSeries` hook to access specific bar c
 
 ## Advanced usage
 
-:::warning
-It is generally recommended to use the specific series hooks (e.g., `useBarSeries`, `useLineSeries`) when working with a specific chart type, as their API is easier to use.
-The `useSeries` hook is more suitable for advanced use cases where you need to work with multiple unknown chart types at once.
-:::
-
 The `useSeries` hook can be used to access all series data at once.
 In the example below, the `useSeries` hook is used to create a custom component that displays a line over each series max value.
+
+:::warning
+It is generally recommended to use the specific series hooks (for example, `useBarSeries`, `useLineSeries`) when working with a specific chart type, as their API is easier to use.
+The `useSeries` hook is more suitable for advanced use cases where you need to work with multiple unknown chart types at once.
+:::
 
 {{"demo": "UseSeries.js"}}
 
