@@ -6,7 +6,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import './DateNavigator.css';
 

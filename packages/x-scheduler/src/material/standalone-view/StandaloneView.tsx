@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { EventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import {
   EventCalendarParameters,
   useEventCalendar,
