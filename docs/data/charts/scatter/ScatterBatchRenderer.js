@@ -55,7 +55,7 @@ export default function ScatterBatchRenderer() {
         Life-cycle Carbon Intensity of Electricity Generation - 2024
       </Typography>
       <ScatterChart {...scatterChartsParams} renderer="svg-batch" />
-      <Typography variant="caption">Source: ENTSO-E, EletricityMaps.com</Typography>
+      <Typography variant="caption">Source: ENTSO-E, ElectricityMaps.com</Typography>
     </Stack>
   );
 }

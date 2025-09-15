@@ -161,7 +161,7 @@ On top of that, there's also some differences in behavior:
 - The rendering order might be different, which might cause overlapping circles to render at different depths when compared to the default rendering;
 - When `disableVoronoi` is true, `onItemClick` does not work as it requires that plugin to work.
 
-The example below uses the `renderer` prop to improve performance when rendering a dataset with 24&nbsp;000 data points.
+The example below uses the `renderer` prop to improve performance when rendering a dataset with 16&nbsp;000 data points.
 
 {{"demo": "ScatterBatchRenderer.js"}}
 
