@@ -25,7 +25,12 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import { ScaleDefinition } from './getAxisScale';
+import {
+  applyDomainLimit,
+  getDomainLimit,
+  getLimitedDomain,
+  ScaleDefinition,
+} from './getAxisScale';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 
 function getRange(
@@ -57,6 +62,10 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   zoomMap?: Map<AxisId, ZoomData>;
   zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
   getFilters?: GetZoomAxisFilters;
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts?: boolean;
 };
 
 export function computeAxisValue<T extends ChartSeriesType>(
@@ -81,6 +90,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomMap,
   zoomOptions,
   getFilters,
+  preferStrictDomainInLineCharts,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -108,7 +118,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis.reverse ?? false);
-    const filter = zoom === undefined && !zoomOption ? getFilters : undefined; // Do not apply filtering if zoom is already defined.
 
     const triggerTooltip = !axis.ignoreTooltip && axisIdsTriggeringTooltip.has(axis.id);
 
@@ -177,6 +186,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const scaleType = continuousAxis.scaleType ?? ('linear' as const);
     const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
+    const filter = zoom === undefined && !zoomOption ? getFilters : undefined; // Do not apply filtering if zoom is already defined.
     if (filter) {
       const [minData, maxData] = getAxisExtremum(
         axis,
@@ -188,6 +198,16 @@ export function computeAxisValue<T extends ChartSeriesType>({
       );
       scale = scale.copy();
       scale.domain([minData, maxData]);
+
+      const domainLimit = getDomainLimit(
+        axis,
+        axisDirection,
+        axisIndex,
+        formattedSeries,
+        preferStrictDomainInLineCharts,
+      );
+      scale.domain(getLimitedDomain([minData, maxData], domainLimit));
+      applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
     }
 
     completeAxis[axis.id] = {

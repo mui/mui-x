@@ -183,17 +183,15 @@ function getAxisScale<T extends ChartSeriesType>(
 
   const scaleType = axis.scaleType ?? ('linear' as const);
 
-  const domainLimit = preferStrictDomainInLineCharts
-    ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
-    : (axis.domainLimit ?? 'nice');
+  const domainLimit = getDomainLimit(
+    axis,
+    axisDirection,
+    axisIndex,
+    formattedSeries,
+    preferStrictDomainInLineCharts,
+  );
 
-  const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
-
-  if (typeof domainLimit === 'function') {
-    const { min, max } = domainLimit(minData, maxData);
-    axisExtrema[0] = min;
-    axisExtrema[1] = max;
-  }
+  const axisExtrema = getLimitedDomain([minData, maxData], domainLimit);
 
   const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtrema });
 
@@ -205,12 +203,44 @@ function getAxisScale<T extends ChartSeriesType>(
     (scale as ScaleSymLog<number, number>).constant(axis.constant);
   }
 
+  applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
+
+  return { scale, tickNumber: rawTickNumber };
+}
+
+type DomainLimit = 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+
+export function getDomainLimit(
+  axis: Pick<DefaultedAxis, 'id' | 'domainLimit'>,
+  axisDirection: 'x' | 'y',
+  axisIndex: number,
+  formattedSeries: ProcessedSeries,
+  preferStrictDomainInLineCharts: boolean | undefined,
+) {
+  return preferStrictDomainInLineCharts
+    ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
+    : (axis.domainLimit ?? 'nice');
+}
+
+export function getLimitedDomain(extrema: [number, number], domainLimit: DomainLimit) {
+  if (typeof domainLimit === 'function') {
+    const { min, max } = domainLimit(extrema[0], extrema[1]);
+    return [min, max];
+  }
+
+  return extrema;
+}
+
+export function applyDomainLimit(
+  scale: D3ContinuousScale,
+  axis: { min?: number | Date; max?: number | Date },
+  domainLimit: DomainLimit,
+  rawTickNumber: number,
+) {
   if (domainLimit === 'nice') {
     scale.nice(rawTickNumber);
   }
 
   const [minDomain, maxDomain] = scale.domain();
   scale.domain([axis.min ?? minDomain, axis.max ?? maxDomain]);
-
-  return { scale, tickNumber: rawTickNumber };
 }

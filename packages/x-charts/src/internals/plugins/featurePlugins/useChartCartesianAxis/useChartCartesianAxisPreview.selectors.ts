@@ -88,6 +88,7 @@ export const selectorChartPreviewComputedXAxis = createSelector(
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
     selectorChartDrawingArea,
+    selectorPreferStrictDomainInLineCharts,
     selectorChartPreviewXScales,
     (_, axisId: AxisId) => axisId,
   ],
@@ -99,6 +100,7 @@ export const selectorChartPreviewComputedXAxis = createSelector(
     zoomOptions,
     getFilters,
     chartDrawingArea,
+    preferStrictDomainInLineCharts,
     scales,
     axisId,
   ) => {
@@ -174,6 +176,7 @@ export const selectorChartPreviewComputedYAxis = createSelector(
     selectorChartZoomOptionsLookup,
     selectorChartZoomAxisFilters,
     selectorChartDrawingArea,
+    selectorPreferStrictDomainInLineCharts,
     selectorChartPreviewYScales,
     (_, axisId: AxisId) => axisId,
   ],
@@ -184,6 +187,7 @@ export const selectorChartPreviewComputedYAxis = createSelector(
     zoomOptions,
     getFilters,
     chartDrawingArea,
+    preferStrictDomainInLineCharts,
     scales,
     axisId,
   ) => {
@@ -205,6 +209,7 @@ export const selectorChartPreviewComputedYAxis = createSelector(
       zoomMap,
       zoomOptions,
       getFilters,
+      preferStrictDomainInLineCharts,
     });
 
     if (computedAxes.axis[axisId]) {
