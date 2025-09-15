@@ -6,10 +6,12 @@ import {
   CalendarResource,
   CalendarResourceId,
   CalendarView,
-  CalendarSettings,
+  CalendarPreferences,
   CalendarEventOccurrence,
   CalendarEventOccurrenceWithPosition,
   CalendarViewConfig,
+  CalendarPreferencesMenuConfig,
+  CalendarEventColor,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import { getEventDays, getEventRowIndex } from '../utils/event-utils';
@@ -59,30 +61,91 @@ export type State = {
    */
   ampm: boolean;
   /**
-   * Settings for the calendar.
+   * The color palette used for all events.
    */
-  settings: CalendarSettings;
+  eventColor: CalendarEventColor;
   /**
-   * The config of the current view.
+   * Whether the component should display the current time indicator.
+   */
+  showCurrentTimeIndicator: boolean;
+  /**
+   * Preferences for the calendar.
+   */
+  preferences: CalendarPreferences;
+  /**
+   * Config of the preferences menu.
+   * Defines which options are visible in the menu.
+   */
+  preferencesMenuConfig: CalendarPreferencesMenuConfig | false;
+  /**
+   * Config of the current view.
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
 };
 
+const eventByIdMapSelector = createSelectorMemoized(
+  (state: State) => state.events,
+  (events) => {
+    const map = new Map<CalendarEventId | null | undefined, CalendarEvent>();
+    for (const event of events) {
+      map.set(event.id, event);
+    }
+    return map;
+  },
+);
+
+const eventSelector = createSelector(
+  eventByIdMapSelector,
+  (events, eventId: CalendarEventId | null | undefined) => events.get(eventId),
+);
+
+const resourcesByIdMapSelector = createSelectorMemoized(
+  (state: State) => state.resources,
+  (resources) => {
+    const map = new Map<CalendarResourceId | null | undefined, CalendarResource>();
+    for (const resource of resources) {
+      map.set(resource.id, resource);
+    }
+    return map;
+  },
+);
+
+const resourceSelector = createSelector(
+  resourcesByIdMapSelector,
+  (resourcesByIdMap, resourceId: string | null | undefined) => resourcesByIdMap.get(resourceId),
+);
+
 // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
 const isEventReadOnlySelector = createSelector((state: State, event: CalendarEvent) => {
   // TODO: Support putting the whole calendar as readOnly.
-  return !!event.readOnly || !!event.rrule;
+  return !!event.readOnly;
 });
 
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   ampm: createSelector((state: State) => state.ampm),
+  showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
-  settings: createSelector((state: State) => state.settings),
+  preferences: createSelector((state: State) => state.preferences),
+  preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
+  resource: resourceSelector,
+  eventColor: createSelector((state: State, eventId: CalendarEventId) => {
+    const event = eventSelector(state, eventId);
+    if (!event) {
+      return state.eventColor;
+    }
+
+    const resourceColor = resourceSelector(state, event.resource)?.eventColor;
+    if (resourceColor) {
+      return resourceColor;
+    }
+
+    return state.eventColor;
+  }),
   visibleResourcesList: createSelectorMemoized(
     (state: State) => state.resources,
     (state: State) => state.visibleResources,
@@ -93,16 +156,6 @@ export const selectors = {
             !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true,
         )
         .map((resource) => resource.id),
-  ),
-  resourcesByIdMap: createSelectorMemoized(
-    (state: State) => state.resources,
-    (resources) => {
-      const map = new Map<CalendarResourceId | undefined, CalendarResource>();
-      for (const resource of resources) {
-        map.set(resource.id, resource);
-      }
-      return map;
-    },
   ),
   eventsToRenderGroupedByDay: createSelector(
     (state: State) => state.events,
@@ -201,19 +254,18 @@ export const selectors = {
       });
     },
   ),
-  // TODO: Add a new data structure (Map?) to avoid linear complexity here.
-  getEventById: createSelector((state: State, eventId: CalendarEventId | null) =>
-    state.events.find((event) => event.id === eventId),
-  ),
+  event: eventSelector,
   isEventReadOnly: isEventReadOnlySelector,
   isEventDraggable: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.areEventsDraggable,
-    (isEventReadOnly, areEventsDraggable) => !isEventReadOnly && areEventsDraggable,
+    (isEventReadOnly, areEventsDraggable, _event: CalendarEvent) =>
+      !isEventReadOnly && areEventsDraggable,
   ),
   isEventResizable: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.areEventsResizable,
-    (isEventReadOnly, areEventsResizable) => !isEventReadOnly && areEventsResizable,
+    (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
+      !isEventReadOnly && areEventsResizable,
   ),
 };

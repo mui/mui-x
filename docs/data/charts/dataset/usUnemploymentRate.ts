@@ -3,6 +3,25 @@
  * Updated: Jun 6, 2025 7:46 AM CDT
  */
 
+import { AxisValueFormatterContext } from '@mui/x-charts/models';
+
+export const dateAxisFormatter = (value: Date, context: AxisValueFormatterContext<'time'>) =>
+  value.toLocaleDateString(undefined, {
+    month:
+      // eslint-disable-next-line no-nested-ternary
+      context.location === 'tick' ? undefined : context.location === 'tooltip' ? 'long' : 'short',
+    year: 'numeric',
+  });
+
+export const percentageFormatter = (value: number | null) =>
+  value === null
+    ? ''
+    : new Intl.NumberFormat(undefined, {
+        style: 'percent',
+        minimumSignificantDigits: 1,
+        maximumSignificantDigits: 3,
+      }).format(value / 100);
+
 export const usUnemploymentRate = [
   { date: new Date('1948-01-01'), rate: 3.4 },
   { date: new Date('1948-02-01'), rate: 3.8 },

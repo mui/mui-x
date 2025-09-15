@@ -9,7 +9,7 @@ import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
-import { DayGridEvent } from '../internals/components/event/day-grid-event/DayGridEvent';
+import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
 import './AgendaView.css';
 import { useInitializeView } from '../internals/hooks/useInitializeView';
 
@@ -32,7 +32,7 @@ export const AgendaView = React.memo(
     const today = adapter.date();
 
     const visibleDate = useStore(store, selectors.visibleDate);
-    const settings = useStore(store, selectors.settings);
+    const preferences = useStore(store, selectors.preferences);
     const getDayList = useDayList();
 
     const days = React.useMemo(
@@ -40,15 +40,14 @@ export const AgendaView = React.memo(
         getDayList({
           date: visibleDate,
           amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: settings.hideWeekends,
+          excludeWeekends: !preferences.showWeekends,
         }),
-      [getDayList, settings.hideWeekends, visibleDate],
+      [getDayList, preferences.showWeekends, visibleDate],
     );
     const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
       days,
       shouldOnlyRenderEventInOneCell: false,
     });
-    const resourcesByIdMap = useStore(store, selectors.resourcesByIdMap);
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
@@ -71,8 +70,9 @@ export const AgendaView = React.memo(
             >
               <header
                 id={`DayHeaderCell-${day.toString()}`}
-                className={clsx('DayHeaderCell', adapter.isSameDay(day, today) && 'Today')}
+                className="DayHeaderCell"
                 aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
+                data-current={adapter.isSameDay(day, today) ? '' : undefined}
               >
                 <span className="DayNumberCell">{adapter.format(day, 'dayOfMonth')}</span>
                 <div className="WeekDayCell">
@@ -91,10 +91,8 @@ export const AgendaView = React.memo(
                       key={event.key}
                       event={event}
                       render={
-                        <DayGridEvent
+                        <AgendaEvent
                           event={event}
-                          variant="compact"
-                          eventResource={resourcesByIdMap.get(event.resource)}
                           ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />
                       }
@@ -107,10 +105,8 @@ export const AgendaView = React.memo(
                       key={event.key}
                       event={event}
                       render={
-                        <DayGridEvent
+                        <AgendaEvent
                           event={event}
-                          variant="compact"
-                          eventResource={resourcesByIdMap.get(event.resource)}
                           ariaLabelledBy={`DayHeaderCell-${day.toString()}`}
                         />
                       }

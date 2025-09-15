@@ -1,8 +1,10 @@
 import { Adapter } from './adapter/types';
 import {
   ByDayCode,
+  ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
+  RecurringEventUpdatedProperties,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
@@ -16,7 +18,7 @@ export function getByDayMaps(adapter: Adapter): {
   byDayToNum: Record<ByDayCode, number>;
   numToByDay: Record<number, ByDayCode>;
 } {
-  const baseMonday = adapter.date('2025-01-06T00:00:00Z'); // ISO Monday
+  const baseMonday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
   const byDayCodes: ByDayCode[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
 
   const byDayToNum = {} as Record<ByDayCode, number>;
@@ -33,20 +35,59 @@ export function getByDayMaps(adapter: Adapter): {
   return { byDayToNum, numToByDay };
 }
 
-// Validate WEEKLY BYDAY and return ByDayCode[] (or fallback)
-export function weeklyByDayCodes(
+/**
+ * Tokenizes a BYDAY value into { ord, code }.
+ * @returns { ord: number|null, code: ByDayCode }
+ * @throws if the value is invalid.
+ */
+export function tokenizeByDay(byDay: ByDayValue): { ord: number | null; code: ByDayCode } {
+  const match = String(byDay).match(/^(-?[1-5])?(MO|TU|WE|TH|FR|SA|SU)$/);
+  if (!match) {
+    throw new Error('Event Calendar: invalid BYDAY value.');
+  }
+  return { ord: match[1] ? Number(match[1]) : null, code: match[2] as ByDayCode };
+}
+
+/**
+ * Parses WEEKLY BYDAY expecting plain weekday codes (MO..SU).
+ * If `ruleByDay` is empty, returns `fallback`.
+ * @throws if any ordinal is present (e.g. 1MO, -1FR).
+ */
+export function parseWeeklyByDayPlain(
   ruleByDay: RRuleSpec['byDay'],
   fallback: ByDayCode[],
 ): ByDayCode[] {
   if (!ruleByDay?.length) {
     return fallback;
   }
-  if (!ruleByDay.every((v) => /^(MO|TU|WE|TH|FR|SA|SU)$/.test(v as string))) {
+  const parsed = ruleByDay.map(tokenizeByDay);
+  if (parsed.some((item) => item.ord !== null)) {
     throw new Error(
-      'WEEKLY expects plain BYDAY codes (MO..SU), ordinals like 1MO or -1FR are not valid.',
+      'Event Calendar: WEEKLY BYDAY must be plain MO..SU (no ordinals like 1MO, -1FR).',
     );
   }
-  return ruleByDay as ByDayCode[];
+  return parsed.map((item) => item.code);
+}
+
+/**
+ * Parses MONTHLY BYDAY expecting one ordinal entry (e.g. 2TU, -1FR).
+ * Returns normalized tokens with positive/negative ordinals.
+ * @throws if BYDAY is missing, multiple, or missing ordinal.
+ */
+export function parseMonthlyByDayOrdinalSingle(ruleByDay: RRuleSpec['byDay']): {
+  ord: number;
+  code: ByDayCode;
+} {
+  if (!ruleByDay?.length || ruleByDay.length !== 1) {
+    throw new Error(
+      'Event Calendar: MONTHLY BYDAY must contain exactly one ordinal entry (e.g. 2TU or -1FR).',
+    );
+  }
+  const { ord, code } = tokenizeByDay(ruleByDay[0]);
+  if (ord == null) {
+    throw new Error('Event Calendar: MONTHLY BYDAY must include an ordinal (e.g. 2TU or -1FR).');
+  }
+  return { ord, code };
 }
 
 export type RecurrencePresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -231,7 +272,9 @@ export function buildEndGuard(
   const hasUntil = !!rule.until;
 
   if (hasCount && hasUntil) {
-    throw new Error('RRULE invalid: COUNT and UNTIL are mutually exclusive per RFC 5545.');
+    throw new Error(
+      'Event Calendar: RRULE invalid, COUNT and UNTIL are mutually exclusive per RFC 5545.',
+    );
   }
 
   if (!hasCount && !hasUntil) {
@@ -257,6 +300,53 @@ export function buildEndGuard(
 
     return true;
   };
+}
+
+/**
+ * Returns the startOfDay for the Nth weekday in a given month.
+ * ordinal > 0 → Nth from the start (1..5). ordinal < 0 → Nth from the end (-1 = last).
+ * If that occurrence doesn't exist in the month, returns null.
+ */
+export function nthWeekdayOfMonth(
+  adapter: Adapter,
+  monthStart: SchedulerValidDate,
+  weekdayCode: ByDayCode,
+  ordinal: number,
+): SchedulerValidDate | null {
+  const { byDayToNum } = getByDayMaps(adapter);
+  const targetWeekdayNumber = byDayToNum[weekdayCode];
+
+  const totalDaysInMonth = adapter.getDaysInMonth(monthStart);
+
+  // Path A — Nth occurrence from the start of the month (ordinal > 0)
+  if (ordinal > 0) {
+    const firstDayWeekdayNumber = adapter.getDayOfWeek(monthStart);
+    const offsetToFirstTargetWeekday =
+      (((targetWeekdayNumber - firstDayWeekdayNumber) % 7) + 7) % 7;
+    const firstTargetWeekdayInMonth = adapter.addDays(monthStart, offsetToFirstTargetWeekday);
+    // Jump (ordinal - 1) whole weeks forward
+    const nthOccurrenceDate = adapter.addDays(firstTargetWeekdayInMonth, 7 * (ordinal - 1));
+
+    // If this is not in the same month, return null
+    if (adapter.getMonth(nthOccurrenceDate) !== adapter.getMonth(monthStart)) {
+      return null;
+    }
+    return adapter.startOfDay(nthOccurrenceDate);
+  }
+
+  // Path B — Nth occurrence from the end of the month (ordinal < 0)
+  const lastDayOfMonth = adapter.startOfDay(adapter.setDate(monthStart, totalDaysInMonth));
+  const lastDayWeekdayNumber = adapter.getDayOfWeek(lastDayOfMonth);
+  const offsetBackToTargetWeekday = (((lastDayWeekdayNumber - targetWeekdayNumber) % 7) + 7) % 7;
+  const lastTargetWeekdayInMonth = adapter.addDays(lastDayOfMonth, -offsetBackToTargetWeekday);
+  const weeksToMoveBack = Math.abs(ordinal) - 1;
+  const nthFromEndOccurrenceDate = adapter.addDays(lastTargetWeekdayInMonth, -7 * weeksToMoveBack);
+
+  // If this is not in the same month, return null
+  if (adapter.getMonth(nthFromEndOccurrenceDate) !== adapter.getMonth(monthStart)) {
+    return null;
+  }
+  return adapter.startOfDay(nthFromEndOccurrenceDate);
 }
 
 /**
@@ -294,7 +384,9 @@ export function matchesRecurrence(
       const { numToByDay: numToCode } = getByDayMaps(adapter);
 
       // If no BYDAY is provided in a WEEKLY rule, default to the weekday of DTSTART.
-      const byDay = weeklyByDayCodes(rule.byDay, [numToCode[adapter.getDayOfWeek(seriesStartDay)]]);
+      const byDay = parseWeeklyByDayPlain(rule.byDay, [
+        numToCode[adapter.getDayOfWeek(seriesStartDay)],
+      ]);
 
       const dateDowCode = numToCode[adapter.getDayOfWeek(candidateDay)];
       if (!byDay.includes(dateDowCode)) {
@@ -314,15 +406,23 @@ export function matchesRecurrence(
         return false;
       }
 
-      // TODO (#19128): Add support for monthly recurrence modes (BYDAY rules)
+      // If BYDAY provided, support ordinal BYDAY (Nth/last).
       if (rule.byDay?.length) {
-        // Only "same day-of-month" mode is supported right now.
-        throw new Error(
-          'MONTHLY supports only exact same date recurrence (day of month of DTSTART).',
-        );
+        if (rule.byMonthDay?.length) {
+          throw new Error(
+            'Event Calendar: For MONTHLY use either BYDAY (ordinal) or BYMONTHDAY, not both.',
+          );
+        }
+
+        const { ord, code } = parseMonthlyByDayOrdinalSingle(rule.byDay);
+        const occurrenceDate = nthWeekdayOfMonth(adapter, dateMonth, code, ord);
+        if (occurrenceDate && adapter.isSameDay(occurrenceDate, candidateDay)) {
+          return true;
+        }
+        return false;
       }
 
-      // If no BYMONTHDAY is provided in a MONTHLY rule, default to the day of month of DTSTART.
+      // Fallback: exact day-of-month (BYMONTHDAY) or default to DTSTART day
       const byMonthDay = rule.byMonthDay?.length
         ? rule.byMonthDay
         : [adapter.getDate(seriesStartDay)];
@@ -337,7 +437,9 @@ export function matchesRecurrence(
       // Only exact "same month + same day" recurrence is supported.
       // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
       if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
-        throw new Error('YEARLY supports only exact same date recurrence (month/day of DTSTART).');
+        throw new Error(
+          'Event Calendar: YEARLY supports only exact same date recurrence (month/day of DTSTART).',
+        );
       }
 
       const sameMonth = adapter.getMonth(candidateDay) === adapter.getMonth(seriesStartDay);
@@ -391,7 +493,7 @@ export function estimateOccurrencesUpTo(
     default:
       throw new Error(
         [
-          `Unknown frequency: ${rule.freq}`,
+          `Event Calendar: Unknown frequency ${rule.freq}`,
           'Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".',
         ].join('\n'),
       );
@@ -425,7 +527,7 @@ export function countWeeklyOccurrencesUpToExact(
   }
 
   const { numToByDay: numToCode } = getByDayMaps(adapter);
-  const byDay = weeklyByDayCodes(rule.byDay, [numToCode[adapter.getDayOfWeek(seriesStart)]]);
+  const byDay = parseWeeklyByDayPlain(rule.byDay, [numToCode[adapter.getDayOfWeek(seriesStart)]]);
 
   const interval = Math.max(1, rule.interval ?? 1);
 
@@ -459,10 +561,10 @@ export function countWeeklyOccurrencesUpToExact(
 }
 
 /**
- *  Exact MONTHLY occurrence count up to `date` (inclusive).
- *  Supports a single BYMONTHDAY (defaults to DTSTART day). Skips months lacking that day.
- *  Iterates months by `interval`, respecting series start and target boundaries.
- *  @throws If multiple BYMONTHDAY values are provided.
+ * Counts MONTHLY occurrences up to `date` (inclusive).
+ * Modes: BYDAY with ordinals (e.g. 2TU, -1FR; multiple allowed) OR single BYMONTHDAY (default = DTSTART day).
+ * Skips months without a match. Steps by `interval`, respecting series start and target boundaries.
+ * @throws If BYDAY is combined with BYMONTHDAY, or BYMONTHDAY has >1 value.
  */
 export function countMonthlyOccurrencesUpToExact(
   adapter: Adapter,
@@ -478,15 +580,42 @@ export function countMonthlyOccurrencesUpToExact(
 
   const interval = Math.max(1, rule.interval ?? 1);
 
-  // TODO (#19128): Add support for monthly recurrence modes (BYDAY rules)
+  // Path A: BYDAY with ordinals (e.g. 2TU, -1FR). Not mixed with BYMONTHDAY.
   if (rule.byDay?.length) {
-    // Only "same day-of-month" mode is supported right now.
-    // If a MONTHLY rule provides BYDAY (e.g., 2TU, -1FR), we intentionally IGNORE it for now.
+    if (rule.byMonthDay?.length) {
+      throw new Error(
+        'Event Calendar: MONTHLY use either BYDAY (ordinal) or BYMONTHDAY, not both.',
+      );
+    }
+
+    const { ord, code } = parseMonthlyByDayOrdinalSingle(rule.byDay);
+
+    let count = 0;
+    for (
+      let month = seriesStartMonth;
+      !adapter.isAfter(month, targetMonth);
+      month = adapter.addMonths(month, interval)
+    ) {
+      const occurrenceDate = nthWeekdayOfMonth(adapter, month, code, ord);
+      if (!occurrenceDate) {
+        continue;
+      }
+
+      if (adapter.isBeforeDay(occurrenceDate, seriesStart)) {
+        continue;
+      }
+      if (adapter.isAfterDay(occurrenceDate, date)) {
+        continue;
+      }
+
+      count += 1;
+    }
+    return count;
   }
 
-  // Guard: only a single BYMONTHDAY is supported for MONTHLY
+  // Path B: BYMONTHDAY (single mode, default to DTSTART day)
   if ((rule.byMonthDay?.length ?? 0) > 1) {
-    throw new Error('MONTHLY supports only a single BYMONTHDAY.');
+    throw new Error('Event Calendar: MONTHLY supports only a single BYMONTHDAY.');
   }
 
   // If no BYMONTHDAY is provided in a MONTHLY rule, default to the day of month of DTSTART.
@@ -543,7 +672,9 @@ export function countYearlyOccurrencesUpToExact(
   // Only the exact same calendar date is supported for YEARLY (month and day of DTSTART).
   // Any use of BYMONTH, BYMONTHDAY, or BYDAY is not allowed at the moment.
   if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
-    throw new Error('YEARLY supports only exact same date recurrence (month/day of DTSTART).');
+    throw new Error(
+      'Event Calendar: YEARLY supports only exact same date recurrence (month/day of DTSTART).',
+    );
   }
 
   const targetMonth = adapter.getMonth(seriesStart);
@@ -579,4 +710,120 @@ export function countYearlyOccurrencesUpToExact(
   }
 
   return count;
+}
+
+/**
+ * Decide the RRULE for the split (new) segment when editing "this and following".
+ *
+ * Rules:
+ * - If user provided changes.rrule → use it as-is (preserve COUNT/UNTIL).
+ * - If changes.rrule is explicitly undefined → non-recurring one-off.
+ * - If changes.rrule is omitted → inherit pattern and recompute boundaries:
+ *     * original COUNT → COUNT = remaining occurrences from split day
+ *     * original UNTIL → keep the same UNTIL
+ *     * no boundaries → just inherit the pattern
+ */
+export function decideSplitRRule(
+  adapter: Adapter,
+  originalRule: RRuleSpec,
+  originalSeriesStart: SchedulerValidDate,
+  splitStart: SchedulerValidDate,
+  changes: Partial<CalendarEvent>,
+): RRuleSpec | undefined {
+  // Normalize base pattern (drop COUNT/UNTIL)
+  const { count, until, ...baseRule } = originalRule;
+
+  // Detect whether user touched rrule at all
+  const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
+  const changesRRule = changes.rrule;
+
+  // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
+  if (hasRRuleProp && changesRRule) {
+    return changesRRule;
+  }
+
+  // Case B — user explicitly removed recurrence → one-off
+  if (hasRRuleProp && !changesRRule) {
+    return undefined;
+  }
+
+  // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
+  const splitDayStart = adapter.startOfDay(splitStart);
+
+  if (originalRule.count) {
+    const dayBefore = adapter.addDays(splitDayStart, -1);
+    const occurrencesBeforeSplit = estimateOccurrencesUpTo(
+      adapter,
+      originalRule,
+      originalSeriesStart,
+      dayBefore,
+    );
+    const remaining = Math.max(0, originalRule.count - occurrencesBeforeSplit);
+    return remaining > 0 ? { ...baseRule, count: remaining } : undefined;
+  }
+
+  if (originalRule.until) {
+    return { ...baseRule, until: originalRule.until };
+  }
+
+  return { ...baseRule };
+}
+
+/**
+ * Applies a "this and following" update to a recurring series by splitting it into:
+ * - the original series truncated up to the day before the edited occurrence, and
+ * - a new series starting at the edited occurrence with the requested changes.
+ * @returns The updated list of events with the split applied.
+ */
+export function applyRecurringUpdateFollowing(
+  adapter: Adapter,
+  events: CalendarEvent[],
+  originalEvent: CalendarEvent,
+  occurrenceStart: SchedulerValidDate,
+  changes: RecurringEventUpdatedProperties,
+): CalendarEvent[] {
+  // 1) Old series: truncate rule to end the day before the edited occurrence
+  const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
+  const untilDate = adapter.addDays(occurrenceDayStart, -1);
+
+  const originalRule = originalEvent.rrule as RRuleSpec;
+  const { count, until, ...baseRule } = originalRule;
+  const truncatedRule = { ...baseRule, until: untilDate };
+
+  // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
+  const shouldDropOldSeries = adapter.isBefore(
+    adapter.endOfDay(untilDate),
+    adapter.startOfDay(originalEvent.start),
+  );
+
+  // 3) New event: apply changes, decide RRULE for the new series
+  const newRRule = decideSplitRRule(
+    adapter,
+    originalRule,
+    originalEvent.start,
+    occurrenceStart,
+    changes,
+  );
+  const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+
+  const newEvent: CalendarEvent = {
+    ...originalEvent,
+    ...changes,
+    id: newEventId,
+    start: changes.start,
+    end: changes.end,
+    rrule: newRRule,
+    extractedFromId: originalEvent.id,
+  };
+
+  // 4) Build the final events list: old series (updated or dropped) + new event
+  const updatedEvents = shouldDropOldSeries
+    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
+    : [
+        ...events.map((event) =>
+          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
+        ),
+        newEvent,
+      ];
+  return updatedEvents;
 }
