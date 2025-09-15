@@ -37,3 +37,7 @@ By default, the row count in the footer is the number of top level rows that are
 In the demo below, a `CustomFooterRowCount` component is added to the `footerRowCount` slot. This component uses the `gridFilteredDescendantRowCountSelector` to get the number of child rows and display it alongside the number of groups.
 
 {{"demo": "RowGroupingChildRowCount.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Styling row groups based on child conditions
+
+You can check the [styling row groups](/x/react-data-grid/style/#styling-row-groups) section for more information.
