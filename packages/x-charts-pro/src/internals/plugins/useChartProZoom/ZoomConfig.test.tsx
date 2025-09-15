@@ -56,7 +56,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
           {...barChartProps}
           onZoomChange={onZoomChange}
           zoomConfig={{
-            zoom: [{ type: 'onWheel', keys: ['Control'] }],
+            zoom: [{ type: 'onWheel', requiredKeys: ['Control'] }],
           }}
         />,
         options,
@@ -103,7 +103,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
           zoomConfig={{
-            pan: [{ type: 'onDrag', keys: ['Alt'] }],
+            pan: [{ type: 'onDrag', requiredKeys: ['Alt'] }],
           }}
         />,
         options,
@@ -169,7 +169,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
           zoomConfig={{
-            pan: [{ type: 'onDrag', keys: ['Shift', 'Control'] }],
+            pan: [{ type: 'onDrag', requiredKeys: ['Shift', 'Control'] }],
           }}
         />,
         options,
@@ -239,7 +239,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
           zoomConfig={{
-            pan: [{ type: 'onDrag', mode: 'mouse' }],
+            pan: [{ type: 'onDrag', pointerMode: 'mouse' }],
           }}
         />,
         options,
