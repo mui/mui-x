@@ -12,10 +12,8 @@
 
 .MonthViewCell {
   display: grid;
-  grid-template-columns: 1fr;
   /* Setting the row heights to 18px here to make sure that even empty rows have the exact height of an all day event */
   grid-template-rows: repeat(var(--row-count), minmax(auto, 18px));
-  gap: var(--space-1);
   padding: var(--space-1);
   font-size: var(--font-size-2);
   line-height: var(--line-height-1);
@@ -99,10 +97,23 @@
   background: var(--interactive-focused-hover-bg);
 }
 
+.MonthViewCellEvents {
+  position: relative;
+  display: grid;
+  gap: var(--space-1);
+}
+
 .MonthViewMoreEvents {
   margin: 0;
   color: var(--secondary-text-color);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
   padding-inline-start: var(--space-1);
+}
+
+.MonthViewDraggedEventContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }

@@ -15,12 +15,12 @@ catalog:
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
-  '@mui/icons-material': ^7.3.1
+  '@mui/icons-material': ^7.3.2
   '@mui/internal-test-utils': ^2.0.9
-  '@mui/material': ^7.3.1
-  '@mui/stylis-plugin-rtl': ^7.3.1
-  '@mui/system': ^7.3.1
-  '@mui/utils': ^7.3.1
+  '@mui/material': ^7.3.2
+  '@mui/stylis-plugin-rtl': ^7.3.2
+  '@mui/system': ^7.3.2
+  '@mui/utils': ^7.3.2
   '@playwright/test': ^1.55.0
   '@react-spring/web': ^10.0.2
   '@types/chance': ^1.1.7
@@ -55,7 +55,7 @@ catalog:
   fast-glob: ^3.3.3
   jscodeshift: 17.3.0
   lodash: ^4.17.21
-  luxon: ^3.7.1
+  luxon: ^3.7.2
   moment: ^2.30.1
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
@@ -93,3 +93,5 @@ onlyBuiltDependencies:
   - nx
   - sharp
   - unrs-resolver
+
+engineStrict: true

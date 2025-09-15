@@ -41,7 +41,7 @@ describe('<DataGridPro /> - Row editing', () => {
 
   function TestCase(props: Partial<DataGridProProps> & { column1Props?: any; column2Props?: any }) {
     apiRef = useGridApiRef();
-    const { column1Props = {}, column2Props = {}, ...rest } = props;
+    const { column1Props = {}, column2Props = {}, ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
@@ -68,7 +68,7 @@ describe('<DataGridPro /> - Row editing', () => {
             }
             return column;
           })}
-          {...rest}
+          {...other}
         />
       </div>
     );

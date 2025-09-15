@@ -4,6 +4,7 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
+  RecurringEventUpdatedProperties,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
@@ -709,4 +710,120 @@ export function countYearlyOccurrencesUpToExact(
   }
 
   return count;
+}
+
+/**
+ * Decide the RRULE for the split (new) segment when editing "this and following".
+ *
+ * Rules:
+ * - If user provided changes.rrule → use it as-is (preserve COUNT/UNTIL).
+ * - If changes.rrule is explicitly undefined → non-recurring one-off.
+ * - If changes.rrule is omitted → inherit pattern and recompute boundaries:
+ *     * original COUNT → COUNT = remaining occurrences from split day
+ *     * original UNTIL → keep the same UNTIL
+ *     * no boundaries → just inherit the pattern
+ */
+export function decideSplitRRule(
+  adapter: Adapter,
+  originalRule: RRuleSpec,
+  originalSeriesStart: SchedulerValidDate,
+  splitStart: SchedulerValidDate,
+  changes: Partial<CalendarEvent>,
+): RRuleSpec | undefined {
+  // Normalize base pattern (drop COUNT/UNTIL)
+  const { count, until, ...baseRule } = originalRule;
+
+  // Detect whether user touched rrule at all
+  const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
+  const changesRRule = changes.rrule;
+
+  // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
+  if (hasRRuleProp && changesRRule) {
+    return changesRRule;
+  }
+
+  // Case B — user explicitly removed recurrence → one-off
+  if (hasRRuleProp && !changesRRule) {
+    return undefined;
+  }
+
+  // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
+  const splitDayStart = adapter.startOfDay(splitStart);
+
+  if (originalRule.count) {
+    const dayBefore = adapter.addDays(splitDayStart, -1);
+    const occurrencesBeforeSplit = estimateOccurrencesUpTo(
+      adapter,
+      originalRule,
+      originalSeriesStart,
+      dayBefore,
+    );
+    const remaining = Math.max(0, originalRule.count - occurrencesBeforeSplit);
+    return remaining > 0 ? { ...baseRule, count: remaining } : undefined;
+  }
+
+  if (originalRule.until) {
+    return { ...baseRule, until: originalRule.until };
+  }
+
+  return { ...baseRule };
+}
+
+/**
+ * Applies a "this and following" update to a recurring series by splitting it into:
+ * - the original series truncated up to the day before the edited occurrence, and
+ * - a new series starting at the edited occurrence with the requested changes.
+ * @returns The updated list of events with the split applied.
+ */
+export function applyRecurringUpdateFollowing(
+  adapter: Adapter,
+  events: CalendarEvent[],
+  originalEvent: CalendarEvent,
+  occurrenceStart: SchedulerValidDate,
+  changes: RecurringEventUpdatedProperties,
+): CalendarEvent[] {
+  // 1) Old series: truncate rule to end the day before the edited occurrence
+  const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
+  const untilDate = adapter.addDays(occurrenceDayStart, -1);
+
+  const originalRule = originalEvent.rrule as RRuleSpec;
+  const { count, until, ...baseRule } = originalRule;
+  const truncatedRule = { ...baseRule, until: untilDate };
+
+  // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
+  const shouldDropOldSeries = adapter.isBefore(
+    adapter.endOfDay(untilDate),
+    adapter.startOfDay(originalEvent.start),
+  );
+
+  // 3) New event: apply changes, decide RRULE for the new series
+  const newRRule = decideSplitRRule(
+    adapter,
+    originalRule,
+    originalEvent.start,
+    occurrenceStart,
+    changes,
+  );
+  const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+
+  const newEvent: CalendarEvent = {
+    ...originalEvent,
+    ...changes,
+    id: newEventId,
+    start: changes.start,
+    end: changes.end,
+    rrule: newRRule,
+    extractedFromId: originalEvent.id,
+  };
+
+  // 4) Build the final events list: old series (updated or dropped) + new event
+  const updatedEvents = shouldDropOldSeries
+    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
+    : [
+        ...events.map((event) =>
+          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
+        ),
+        newEvent,
+      ];
+  return updatedEvents;
 }
