@@ -9,5 +9,5 @@ export const selectorZoomConfig = createSelector(
 
 export const selectorPanConfig = createSelector(
   [selectorChartZoomState, (_state, interactionName: PanInteractionName) => interactionName],
-  (zoomState, interactionName) => zoomState.zoomConfig.pan[interactionName] || null,
+  (zoomState, interactionName) => zoomState.zoomConfig.pan[interactionName] ?? null,
 );
