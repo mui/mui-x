@@ -91,15 +91,17 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
   }
 
   // STEP 3: Sort by the actual start date of each occurrence
+  // If two events have the same start date, put the longest one first
   // We sort here so that events are processed in the correct order
   return (
     occurrences
       // TODO: Avoid JS Date conversion
       .map((occurrence) => ({
         occurrence,
-        sortCriteria: adapter.toJsDate(occurrence.start).getTime(),
+        start: adapter.toJsDate(occurrence.start).getTime(),
+        end: adapter.toJsDate(occurrence.end).getTime(),
       }))
-      .sort((a, b) => a.sortCriteria - b.sortCriteria)
+      .sort((a, b) => a.start - b.start || b.end - a.end)
       .map((item) => item.occurrence)
   );
 }

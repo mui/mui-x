@@ -45,7 +45,7 @@
   position: absolute;
   left: calc(2px + (100% / var(--columns-count)) * (var(--first-index) - 1));
   right: calc(
-    var(--space-3) + (100% / var(--columns-count)) * (var(--columns-count) - var(--last-index))
+    (100% * (var(--columns-count) - var(--last-index))) / var(--columns-count) + var(--space-1)
   );
   top: var(--y-position);
   bottom: calc(100% - var(--y-position) - var(--height));
