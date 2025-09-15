@@ -11,7 +11,7 @@ export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
       onPinch: { type: 'onPinch', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
-    defaultizedConfig.zoom = initializeFor(zoomConfig.zoom);
+    defaultizedConfig.zoom = initializeFor<'zoom'>(zoomConfig.zoom);
   }
 
   if (!zoomConfig?.pan) {
@@ -19,21 +19,15 @@ export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomCo
       onDrag: { type: 'onDrag', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
-    defaultizedConfig.pan = initializeFor(zoomConfig.pan);
+    defaultizedConfig.pan = initializeFor<'pan'>(zoomConfig.pan);
   }
 
   return defaultizedConfig;
 };
 
-function initializeFor(
-  zoomConfig: Exclude<ZoomConfig['zoom'], undefined>,
-): DefaultizedZoomConfig['zoom'];
-function initializeFor(
-  zoomConfig: Exclude<ZoomConfig['pan'], undefined>,
-): DefaultizedZoomConfig['pan'];
-function initializeFor(
-  zoomConfig: Exclude<ZoomConfig['zoom'], undefined> | Exclude<ZoomConfig['pan'], undefined>,
-): DefaultizedZoomConfig['zoom'] | DefaultizedZoomConfig['pan'] {
+function initializeFor<T extends 'zoom' | 'pan'>(
+  zoomConfig: Exclude<ZoomConfig[T], undefined>,
+): DefaultizedZoomConfig[T] {
   // We aggregate interactions by type
   const aggregation = zoomConfig.reduce(
     (acc, interaction) => {
