@@ -1,6 +1,6 @@
 import { Store } from '@base-ui-components/utils/store';
 import { warn } from '@base-ui-components/utils/warn';
-import { State } from './store';
+import { selectors, State } from './store';
 import {
   CalendarEvent,
   CalendarEventId,
@@ -10,17 +10,28 @@ import {
   CalendarViewConfig,
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
+  CalendarEventColor,
 } from '../models';
-import { EventCalendarParameters, EventCalendarStore } from './useEventCalendar.types';
+import {
+  EventCalendarParameters,
+  EventCalendarStore,
+  UpdateRecurringEventParameters,
+} from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
+import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
-export const DEFAULT_PREFERENCES: CalendarPreferences = { hideWeekends: false };
+export const DEFAULT_PREFERENCES: CalendarPreferences = {
+  showWeekends: true,
+  showWeekNumber: false,
+};
 export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
+  toggleWeekNumberVisibility: true,
 };
 const EMPTY_ARRAY: any[] = [];
+export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
 export class EventCalendarInstance {
   private store: EventCalendarStore;
@@ -59,6 +70,7 @@ export class EventCalendarInstance {
     | 'areEventsDraggable'
     | 'areEventsResizable'
     | 'ampm'
+    | 'eventColor'
     | 'showCurrentTimeIndicator'
   > {
     return {
@@ -69,6 +81,7 @@ export class EventCalendarInstance {
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
       ampm: parameters.ampm ?? true,
+      eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
     };
   }
@@ -245,10 +258,72 @@ export class EventCalendarInstance {
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: CalendarEvent) => {
+    const original = selectors.event(this.store.state, calendarEvent.id);
+    if (!original) {
+      throw new Error(
+        `Event Calendar: the original event was not found (id="${calendarEvent.id}").`,
+      );
+    }
+    if (original?.rrule) {
+      throw new Error(
+        'Event Calendar: this event is recurring. Use updateRecurringEvent(...) instead.',
+      );
+    }
+
     const { onEventsChange } = this.parameters;
     const updatedEvents = this.store.state.events.map((ev) =>
       ev.id === calendarEvent.id ? calendarEvent : ev,
     );
+    onEventsChange?.(updatedEvents);
+  };
+
+  /**
+   * Updates a recurring event in the calendar.
+   */
+  public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
+    const { adapter, events } = this.store.state;
+    const { onEventsChange } = this.parameters;
+    const { eventId, occurrenceStart, changes, scope } = params;
+
+    const original = selectors.event(this.store.state, eventId);
+    if (!original) {
+      throw new Error(`Event Calendar: the original event was not found (id="${eventId}").`);
+    }
+    if (!original.rrule) {
+      throw new Error(
+        'Event Calendar: the original event is not recurring. Use updateEvent(...) instead.',
+      );
+    }
+
+    let updatedEvents: CalendarEvent[] = [];
+
+    switch (scope) {
+      case 'this-and-following': {
+        updatedEvents = applyRecurringUpdateFollowing(
+          adapter,
+          events,
+          original,
+          occurrenceStart,
+          changes,
+        );
+        break;
+      }
+
+      case 'all': {
+        // TODO: Issue #19441 - Allow to edit recurring series => all events.
+        throw new Error('Event Calendar: scope="all" not implemented yet.');
+      }
+
+      case 'only-this': {
+        // TODO: Issue #19440 - Allow to edit recurring series => this event only.
+        throw new Error('Event Calendar: scope="only-this" not implemented yet.');
+      }
+
+      default: {
+        throw new Error(`Event Calendar: scope="${scope}" is not supported.`);
+      }
+    }
+
     onEventsChange?.(updatedEvents);
   };
 

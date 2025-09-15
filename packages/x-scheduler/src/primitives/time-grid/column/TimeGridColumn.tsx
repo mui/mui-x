@@ -21,7 +21,6 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     ...elementProps
   } = componentProps;
 
-  const contextRef = React.useRef<HTMLDivElement>(null);
   const { getCursorPositionInElementMs, ref: dropTargetRef } = useTimeGridColumnDropTarget({
     start,
     end,
@@ -33,14 +32,13 @@ export const TimeGridColumn = React.forwardRef(function TimeGridColumn(
     () => ({
       start,
       end,
-      ref: contextRef,
       getCursorPositionInElementMs,
     }),
-    [start, end, contextRef, getCursorPositionInElementMs],
+    [start, end, getCursorPositionInElementMs],
   );
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, contextRef, dropTargetRef],
+    ref: [forwardedRef, dropTargetRef],
     props: [props, elementProps],
   });
 

@@ -40,6 +40,13 @@ export interface CalendarEvent {
    * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
    */
   readOnly?: boolean;
+  /**
+   * The id of the original event from which this event was split.
+   * If provided, it must reference an existing event in the calendar.
+   * If it does not match any existing event, the value will be ignored
+   * and no link to an original event will be created.
+   */
+  extractedFromId?: CalendarEventId;
 }
 
 /** Two-letter weekday codes as defined by RFC 5545 (`BYDAY`). */
@@ -114,3 +121,11 @@ export interface CalendarPrimitiveEventData {
   start: SchedulerValidDate;
   end: SchedulerValidDate;
 }
+
+/**
+ * Helper type for `applyRecurringUpdateFollowing` and `updateRecurringEvent`.
+ *  It requires `start` and `end` (always needed when updating an occurrence),
+ *  and makes all other `CalendarEvent` properties optional.
+ */
+export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
+  Required<Pick<CalendarEvent, 'start' | 'end'>>;

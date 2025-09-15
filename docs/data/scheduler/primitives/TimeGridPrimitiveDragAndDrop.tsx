@@ -125,10 +125,9 @@ function TimeGridColumn({
         </TimeGrid.Event>
       ))}
       {placeholderEvent != null && placeholder != null && (
-        <TimeGrid.Event
+        <TimeGrid.EventPlaceholder
           start={placeholder.start}
           end={placeholder.end}
-          eventId={placeholderEvent.id}
           data-resource={placeholderEvent.resource}
           className={classes.Event}
         >
@@ -138,7 +137,7 @@ function TimeGridColumn({
             </div>
             <div className={classes.EventTitle}>{placeholderEvent.title}</div>
           </div>
-        </TimeGrid.Event>
+        </TimeGrid.EventPlaceholder>
       )}
     </TimeGrid.Column>
   );

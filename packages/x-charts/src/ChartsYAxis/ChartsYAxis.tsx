@@ -3,9 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { warnOnce } from '@mui/x-internals/warning';
 import { ChartsYAxisProps } from '../models/axis';
-import { useYAxes } from '../hooks/useAxis';
-import { ChartsSingleYAxis } from './ChartsSingleYAxis';
-import { ChartsGroupedYAxis } from './ChartsGroupedYAxis';
+import { useYAxes } from '../hooks';
+import { ChartsYAxisImpl } from './ChartsYAxisImpl';
 
 /**
  * Demos:
@@ -20,17 +19,12 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const { yAxis, yAxisIds } = useYAxes();
 
   const axis = yAxis[inProps.axisId ?? yAxisIds[0]];
-
   if (!axis) {
     warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
     return null;
   }
 
-  if ('groups' in axis && Array.isArray(axis.groups)) {
-    return <ChartsGroupedYAxis {...inProps} />;
-  }
-
-  return <ChartsSingleYAxis {...inProps} />;
+  return <ChartsYAxisImpl {...inProps} axis={axis} />;
 }
 
 ChartsYAxis.propTypes = {

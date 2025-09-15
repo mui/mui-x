@@ -1,6 +1,7 @@
 import { SchedulerValidDate } from './date';
 
-export type CalendarView = 'week' | 'day' | 'month' | 'agenda';
+// TODO: Remove "timeline" once it has its own top level component
+export type CalendarView = 'week' | 'day' | 'month' | 'agenda' | 'timeline';
 
 /**
  * Configuration defined by each view.

@@ -44,7 +44,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     },
   ) {
     apiRef = useGridApiRef();
-    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, ...rest } = props;
+    const { dataSetOptions: dataSetOptionsProp, shouldRequestsFail, ...other } = props;
     mockServer = useMockServer(
       dataSetOptionsProp ?? dataSetOptions,
       serverOptions,
@@ -95,7 +95,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
           pagination
           pageSizeOptions={pageSizeOptions}
           disableVirtualization
-          {...rest}
+          {...other}
         />
       </div>
     );
