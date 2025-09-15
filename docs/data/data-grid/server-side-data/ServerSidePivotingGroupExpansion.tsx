@@ -26,7 +26,7 @@ export default function ServerSidePivotingGroupExpansion() {
     initialState: initialStateMock,
     fetchRows,
   } = useMockServer({
-    rowLength: 20,
+    rowLength: 5,
     dataSet: 'Commodity',
     maxColumns: 20,
   });
