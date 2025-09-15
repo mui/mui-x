@@ -69,6 +69,9 @@ export function useEventOccurrencesWithDayGridPosition(
         }
       }
 
+      // Sort the occurrences by their index to make sure they are in the order they should be rendered in.
+      withPosition.sort((a, b) => a.position.index - b.position.index);
+
       return {
         ...day,
         withPosition,
