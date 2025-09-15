@@ -159,6 +159,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     } else {
       instance.updateEvent({
         id: occurrence.id,
+        rrule,
         ...payload,
       });
     }

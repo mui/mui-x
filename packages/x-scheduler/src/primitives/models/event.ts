@@ -105,7 +105,6 @@ export interface CalendarEventOccurrenceDayGridPosition {
   index: number;
   /**
    * The number of days the event should span across.
-   * If 0, the event will be rendered as invisible.
    */
   daySpan: number;
   /**
