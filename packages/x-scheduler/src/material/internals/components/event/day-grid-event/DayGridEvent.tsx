@@ -37,6 +37,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const translations = useTranslations();
   const { store } = useEventCalendarContext();
   const isDraggable = useStore(store, selectors.isEventDraggable, occurrence);
+  const isResizable =
+    useStore(store, selectors.isEventResizable, occurrence) && variant === 'allDay';
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, occurrence.resource);
   const color = useStore(store, selectors.eventColor, occurrence.id);
@@ -158,7 +160,13 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       aria-hidden={variant === 'invisible'}
       {...sharedProps}
     >
+      {isResizable && (
+        <DayGrid.EventResizeHandler side="start" className="DayGridEventResizeHandler" />
+      )}
       {content}
+      {isResizable && (
+        <DayGrid.EventResizeHandler side="end" className="DayGridEventResizeHandler" />
+      )}
     </DayGrid.Event>
   );
 });

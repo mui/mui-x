@@ -14,6 +14,7 @@ import { diffIn } from '../../utils/date-utils';
 import { useDayGridRowContext } from '../row/DayGridRowContext';
 import { useDayGridRootContext } from '../root/DayGridRootContext';
 import { selectors } from '../root/store';
+import { DayGridEventContext } from './DayGridEventContext';
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   componentProps: DayGridEvent.Props,
@@ -44,6 +45,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const { store } = useDayGridRootContext();
   const hasPlaceholder = useStore(store, selectors.hasPlaceholder);
   const isDragging = useStore(store, selectors.isDraggingEvent, eventId);
+  const [isResizing, setIsResizing] = React.useState(false);
 
   const props = React.useMemo(
     () => (hasPlaceholder ? { style: { pointerEvents: 'none' as const } } : {}),
@@ -51,8 +53,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   );
 
   const state: DayGridEvent.State = React.useMemo(
-    () => ({ ...eventState, dragging: isDragging }),
-    [eventState, isDragging],
+    () => ({ ...eventState, dragging: isDragging, resizing: isResizing }),
+    [eventState, isDragging, isResizing],
   );
 
   const getDraggedDay = useEventCallback((input: { clientX: number }) => {
@@ -70,6 +72,20 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     return adapter.addDays(eventStartInRow, Math.ceil(positionX * eventDayLengthInRow) - 1);
   });
 
+  const getSharedDragData: DayGridEventContext['getSharedDragData'] = useEventCallback(() => ({
+    id: eventId,
+    start,
+    end,
+  }));
+
+  const contextValue: DayGridEventContext = React.useMemo(
+    () => ({
+      setIsResizing,
+      getSharedDragData,
+    }),
+    [getSharedDragData],
+  );
+
   React.useEffect(() => {
     if (!isDraggable) {
       return;
@@ -79,24 +95,25 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     return draggable({
       element: ref.current!,
       getInitialData: ({ input }) => ({
-        type: 'event',
+        ...getSharedDragData(input),
         source: 'DayGridEvent',
-        id: eventId,
-        start,
-        end,
         draggedDay: getDraggedDay(input),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
     });
-  }, [isDraggable, start, end, eventId, getDraggedDay]);
+  }, [isDraggable, getDraggedDay, getSharedDragData]);
 
-  return useRenderElement('div', componentProps, {
+  const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef, ref],
     props: [props, eventProps, elementProps, getButtonProps],
   });
+
+  return (
+    <DayGridEventContext.Provider value={contextValue}>{element}</DayGridEventContext.Provider>
+  );
 });
 
 export namespace DayGridEvent {
@@ -105,6 +122,10 @@ export namespace DayGridEvent {
      * Whether the event is being dragged.
      */
     dragging: boolean;
+    /**
+     * Whether the event is being resized.
+     */
+    resizing: boolean;
   }
 
   export interface Props extends BaseUIComponentProps<'div', State>, useEvent.Parameters {
@@ -119,12 +140,14 @@ export namespace DayGridEvent {
     isDraggable?: boolean;
   }
 
-  export interface DragData {
-    type: 'event';
-    source: 'DayGridEvent';
+  export interface SharedDragData {
     id: string | number;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
+  }
+
+  export interface DragData extends SharedDragData {
+    source: 'DayGridEvent';
     draggedDay: SchedulerValidDate;
   }
 }
