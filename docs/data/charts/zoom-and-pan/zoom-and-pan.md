@@ -171,7 +171,7 @@ Available keys include:
 
 - Modifier keys: `'Shift'`, `'Control'`, `'Alt'`, `'Meta'`
 - `'ControlOrMeta'` which resolves to `Control` on Windows and Linux and to `Meta` on macOS.
-- Any other key can be used as well, such as `'Space'` and `'Enter'` based on `event.key` values.
+- Any other key can be used as well, such as `'Space'` and `'Enter'` based on [`event.key` values](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values).
 
 It is also possible to require multiple keys to be pressed simultaneously:
 
