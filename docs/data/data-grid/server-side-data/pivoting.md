@@ -104,7 +104,7 @@ interface GridGetRowsResponsePivotColumn {
 - `[{group: "Yes"}, {group: "No"}]` - Creates column groups with values "Yes" and "No"
 - `[{group: "2025", children: [{group: "January"}, {group: "February"}]}]` - Creates a column group with value "2025" that has column groups "January" and "February"
 - `[{group: {date: "2025-01-01"}, children: [{group: {date: "2025-01-01"}}]}]` - Creates column groups with values returned from the value formatters of the columns used for pivoting.
-  Even though, the same values are used for the different group levels, the output value for the column headers can be different if the value formatters are different for the two pivot columns used to create pivot data.
+  Even though the same values are used for the different group levels, the output value for the column headers can be different if the value formatters are different for the two pivot columns used to create pivot data.
 
 With the required props and parameters in place, server-side pivoting should now be implemented in your Data Grid, as shown in the demo below:
 
@@ -112,7 +112,7 @@ With the required props and parameters in place, server-side pivoting should now
 
 :::info
 The Data Source demos use a `useMockServer` utility function to simulate server-side data fetching.
-In a real-world scenario you would replace this with your own server-side data-fetching logic.
+In a real-world scenario, you would replace this with your own server-side data-fetching logic.
 
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
@@ -129,7 +129,7 @@ The demo below renders a custom Snackbar component to display an error message w
 ## Group expansion
 
 Group expansion with server-side pivoting works similarly to how it's described in the [client-side row grouping documentation](/x/react-data-grid/row-grouping/#group-expansion).
-The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` props in a waterfall manner.
+The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted, based on the `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` props, in a waterfall manner.
 
 The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all groups by default.
 
