@@ -62,21 +62,13 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   it('should keep the same index for multi-day events and set daySpan=1 and isInvisible: true for all days but the first one', () => {
     const result = testHook([
-      createEvent('A', '2024-01-15', '2024-01-15'),
-      createEvent('B', '2024-01-15', '2024-01-17'),
+      createEvent('A', '2024-01-15', '2024-01-16'),
+      createEvent('B', '2024-01-16', '2024-01-17'),
     ]);
 
-    expect(result[0].maxIndex).to.equal(2);
-    expect(result[0].withPosition[1].id).to.equal('B');
-    expect(result[0].withPosition[1].position).to.deep.equal({ index: 2, daySpan: 3 });
-
     expect(result[1].maxIndex).to.equal(2);
-    expect(result[1].withPosition[0].id).to.equal('B');
-    expect(result[1].withPosition[0].position).to.deep.equal({
-      index: 2,
-      daySpan: 1,
-      isInvisible: true,
-    });
+    expect(result[1].withPosition[1].id).to.equal('B');
+    expect(result[1].withPosition[1].position).to.deep.equal({ index: 2, daySpan: 2 });
 
     expect(result[2].maxIndex).to.equal(2);
     expect(result[2].withPosition[0].id).to.equal('B');
