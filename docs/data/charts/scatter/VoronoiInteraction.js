@@ -45,7 +45,7 @@ export default function VoronoiInteraction() {
         ]}
       />
       <div>
-        <Typography gutterBottom>Maximum Radius</Typography>
+        <Typography gutterBottom>Maximum radius</Typography>
         <RadioGroup onChange={(event) => setOption(event.target.value)}>
           <Stack direction="row">
             <FormControlLabel
