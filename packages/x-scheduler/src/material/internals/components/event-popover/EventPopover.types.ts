@@ -4,7 +4,7 @@ import { CalendarEventOccurrence } from '../../../../primitives/models';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
-   * The event occurrence to edit in the popover.
+   * The event occurrence to display in the popover.
    */
   occurrence: CalendarEventOccurrence;
   /**
