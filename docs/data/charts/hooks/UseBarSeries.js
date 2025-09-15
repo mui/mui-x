@@ -23,10 +23,15 @@ function BarSeriesInfo() {
   const barSeries = useBarSeries();
   const theme = useTheme();
 
-  const profit = dataset.reduce(
-    (acc, curr) => acc + (curr.revenue - curr.expenses),
-    0,
-  );
+  const revenue = barSeries
+    .find((s) => s.id === 'revenue')
+    ?.data.reduce((acc, v) => acc + (v ?? 0), 0);
+
+  const expenses = barSeries
+    .find((s) => s.id === 'expenses')
+    ?.data.reduce((acc, v) => acc + (v ?? 0), 0);
+
+  const profit = (revenue ?? 0) - (expenses ?? 0);
 
   return (
     <div
@@ -43,8 +48,8 @@ function BarSeriesInfo() {
       }}
     >
       <h4 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>Half Year Details</h4>
-      {Object.entries(barSeries).map(([seriesId, series]) => (
-        <div key={seriesId}>
+      {barSeries.map((series) => (
+        <div key={series.id}>
           <span style={{ fontWeight: 600 }}>
             {typeof series.label === 'function'
               ? series.label('legend')
@@ -76,12 +81,14 @@ export default function UseBarSeries() {
         ]}
         series={[
           {
+            id: 'revenue',
             dataKey: 'revenue',
             label: 'Revenue',
             color: '#8884d8',
             valueFormatter: inUSD,
           },
           {
+            id: 'expenses',
             dataKey: 'expenses',
             label: 'Expenses',
             color: '#82ca9d',
