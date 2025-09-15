@@ -69,6 +69,7 @@ export const MonthView = React.memo(
             eventId: data.eventId,
             occurrenceStart: data.originalStart,
             changes: { start: data.start, end: data.end },
+            // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
             scope: 'this-and-following',
           });
         } else {
