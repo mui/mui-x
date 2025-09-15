@@ -51,41 +51,47 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
   it('should zoom on wheel', async () => {
     const onZoomChange = sinon.spy();
     const { user } = render(
-      <BarChartPro {...barChartProps} onZoomChange={onZoomChange} />,
+      <BarChartPro
+        {...barChartProps}
+        onZoomChange={onZoomChange}
+        margin={{ top: 0, left: 0, right: 15, bottom: 0 }}
+        initialZoom={[{ axisId: 'x', start: 0, end: 87 }]}
+      />,
       options,
     );
-
-    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C']);
 
     const svg = document.querySelector('svg')!;
 
     await user.pointer([
       {
         target: svg,
-        coords: { x: 50, y: 50 },
+        coords: { x: 0, y: 50 },
       },
     ]);
 
+    // The minimum number of scroll iteration to show the D category
+    const count = 6;
     // scroll, we scroll exactly in the center of the svg
     // And we do it 200 times which is the lowest number to trigger a zoom where both A and D are not visible
-    for (let i = 0; i < 200; i += 1) {
-      fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
-      // Wait the animation frame
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-    }
-
-    expect(onZoomChange.callCount).to.equal(200);
-    expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
-
-    // scroll back
-    for (let i = 0; i < 200; i += 1) {
+    for (let i = 0; i < count; i += 1) {
       fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
     }
 
-    expect(onZoomChange.callCount).to.equal(400);
+    expect(onZoomChange.callCount).to.equal(count);
     expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+    // scroll back
+    for (let i = 0; i < count; i += 1) {
+      fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
+      // Wait the animation frame
+      await act(async () => new Promise((r) => requestAnimationFrame(r)));
+    }
+
+    expect(onZoomChange.callCount).to.equal(2 * count);
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
