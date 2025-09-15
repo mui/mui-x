@@ -5,7 +5,7 @@ productId: x-charts
 
 # Charts - Hooks
 
-<p class="description">MUI X Charts provides a set of hooks to access chart data and utilities for building custom components.</p>
+<p class="description">The package provides a set of hooks to access chart data and utilities for building custom components.</p>
 
 ## Available hooks
 
@@ -37,10 +37,14 @@ import { useSeries, useLegend, ... } from '@mui/x-charts-premium/hooks';
 
 ## Caveats
 
-All charts hooks require being used within a chart context. This means they should be used:
+All charts hooks require being used within a chart context.
+This means component using those hook should used as:
 
-1. **Inside chart components:** Components rendered within chart slots
-2. **Within ChartDataProvider:** When using the composition API
+1. a `slot` of a chart component
+2. a child of a chart component
+3. a child of the `<ChartDataProvider />`
+
+For example if you create a component `<CustomLegend />` that uses the `useLegend()` hook, you could use it as follow:
 
 ```jsx
 // ✅ Correct usage with chart component
@@ -55,9 +59,13 @@ All charts hooks require being used within a chart context. This means they shou
   </ChartsSurface>
   <CustomLegend /> {/* useLegend works here */}
 </ChartDataProvider>
-```
 
-```jsx
+// ✅ Correct usage with slot API
+<LineChart
+  series={[...]}
+  slots={{ legend: CustomLegend }}
+/>
+
 // ❌ Incorrect usage - outside chart context
 <div>
   <LineChart series={[...]} />
