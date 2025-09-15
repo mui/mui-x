@@ -741,11 +741,11 @@ export function computeMonthlyOrdinal(adapter: Adapter, date: SchedulerValidDate
  */
 export function realignWeeklyByDay(
   adapter: Adapter,
-  byDays: ByDayValue[],
+  byDays: ByDayCode[],
   oldRefDay: SchedulerValidDate,
   newStart: SchedulerValidDate,
-): ByDayValue[] {
-  const { numToByDay } = getByDayMaps(adapter);
+): ByDayCode[] {
+  const { numToByDay, byDayToNum } = getByDayMaps(adapter);
   const oldCode = numToByDay[adapter.getDayOfWeek(oldRefDay)];
   const newCode = numToByDay[adapter.getDayOfWeek(newStart)];
 
@@ -755,7 +755,7 @@ export function realignWeeklyByDay(
 
   const swapped = Array.from(new Set(byDays.map((d) => (d === oldCode ? newCode : d))));
 
-  swapped.sort((a, b) => numToByDay[a] - numToByDay[b]);
+  swapped.sort((a, b) => byDayToNum[a] - byDayToNum[b]);
 
   return swapped;
 }
