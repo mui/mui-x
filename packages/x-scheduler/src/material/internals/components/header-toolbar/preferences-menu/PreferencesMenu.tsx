@@ -10,7 +10,7 @@ import {
   CalendarPreferencesMenuConfig,
 } from '../../../../../primitives/models/preferences';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 import './PreferencesMenu.css';
 

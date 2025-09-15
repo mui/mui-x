@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { CalendarViewConfig } from '../../../primitives/models';
+import { CalendarViewConfig } from '../models';
 import { useEventCalendarContext } from './useEventCalendarContext';
 
 /**
@@ -21,7 +21,5 @@ export function useInitializeView(parameters: () => CalendarViewConfig) {
 
   useIsoLayoutEffect(() => {
     return instance.setViewConfig(initialParameters.current());
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [instance]);
 }

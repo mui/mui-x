@@ -6,23 +6,24 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { CalendarEvent, CalendarPrimitiveEventData } from '../../primitives/models';
+import { CalendarPrimitiveEventData } from '../../primitives/models';
+import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { MonthViewProps } from './MonthView.types';
-import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
+import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import './MonthView.css';
-import { useInitializeView } from '../internals/hooks/useInitializeView';
 
 const adapter = getAdapter();
-const EVENT_HEIGHT = 22;
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
-const HIDDEN_EVENTS_HEIGHT = 18;
+const EVENT_HEIGHT = 18;
+const EVENT_GAP = 5;
 
 export const MonthView = React.memo(
   React.forwardRef(function MonthView(
@@ -42,14 +43,19 @@ export const MonthView = React.memo(
 
     const getDayList = useDayList();
     const getWeekList = useWeekList();
-    const weeks = React.useMemo(
-      () =>
-        getWeekList({
-          date: adapter.startOfMonth(visibleDate),
-          amount: 'end-of-month',
-        }),
-      [getWeekList, visibleDate],
-    );
+    const { weeks, days } = React.useMemo(() => {
+      const weekFirstDays = getWeekList({
+        date: adapter.startOfMonth(visibleDate),
+        amount: 'end-of-month',
+      });
+      const tempWeeks = weekFirstDays.map((week) =>
+        getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
+      );
+
+      return { weeks: tempWeeks, days: tempWeeks.flat(1) };
+    }, [getWeekList, getDayList, visibleDate, preferences.showWeekends]);
+
+    const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
@@ -58,24 +64,23 @@ export const MonthView = React.memo(
 
     const handleEventChangeFromPrimitive = React.useCallback(
       (data: CalendarPrimitiveEventData) => {
-        const updatedEvent: CalendarEvent = {
-          ...selectors.event(store.state, data.eventId)!,
+        instance.updateEvent({
+          id: data.eventId,
           start: data.start,
           end: data.end,
-        };
-
-        instance.updateEvent(updatedEvent);
+        });
       },
-      [instance, store],
+      [instance],
     );
 
     useResizeObserver(
       cellRef,
       () => {
         const cellHeight = cellRef.current!.clientHeight;
-        const availableHeight =
-          cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT - HIDDEN_EVENTS_HEIGHT;
-        const maxEventsCount = Math.floor(availableHeight / EVENT_HEIGHT);
+        const eventContainerHeight = cellHeight - CELL_PADDING - DAY_NUMBER_HEADER_HEIGHT;
+        const maxEventsCount = Math.floor(
+          (eventContainerHeight + EVENT_GAP) / (EVENT_HEIGHT + EVENT_GAP),
+        );
         setMaxEvents(maxEventsCount);
       },
       true,
@@ -99,19 +104,15 @@ export const MonthView = React.memo(
               {preferences.showWeekNumber && (
                 <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
               )}
-              {getDayList({
-                date: weeks[0],
-                amount: 'week',
-                excludeWeekends: !preferences.showWeekends,
-              }).map((day) => (
+              {weeks[0].map((weekDay) => (
                 <div
-                  key={day.toString()}
-                  id={`MonthViewHeaderCell-${day.toString()}`}
+                  key={weekDay.key}
+                  id={`MonthViewHeaderCell-${weekDay.key}`}
                   role="columnheader"
                   className="MonthViewHeaderCell"
-                  aria-label={adapter.format(day, 'weekday')}
+                  aria-label={adapter.format(weekDay.value, 'weekday')}
                 >
-                  {adapter.formatByString(day, 'ccc')}
+                  {adapter.formatByString(weekDay.value, 'ccc')}
                 </div>
               ))}
             </div>
@@ -120,7 +121,8 @@ export const MonthView = React.memo(
                 <MonthViewWeekRow
                   key={weekIdx}
                   maxEvents={maxEvents}
-                  week={week}
+                  days={week}
+                  occurrencesMap={occurrencesMap}
                   firstDayRef={weekIdx === 0 ? cellRef : undefined}
                 />
               ))}
