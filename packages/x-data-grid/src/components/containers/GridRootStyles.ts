@@ -780,7 +780,6 @@ export const GridRootStyles = styled('div', {
         position: 'sticky',
         zIndex: 40, // Should be above the column separator
         right: 0,
-        zIndex: 30,
       },
     },
     [`& .${c.filler}`]: {
