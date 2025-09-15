@@ -26,7 +26,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
     occurrences: day.withoutPosition,
-    maxColumnSpan: 1,
+    maxColumnSpan: Infinity,
   });
 
   const draggedOccurrence = React.useMemo(() => {
