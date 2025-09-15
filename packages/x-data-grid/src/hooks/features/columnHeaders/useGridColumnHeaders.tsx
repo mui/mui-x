@@ -249,7 +249,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const showLeftBorder = shouldCellShowLeftBorder(
         pinnedPosition,
         indexInSection,
-        rootProps.showCellVerticalBorder,
+        rootProps.showColumnVerticalBorder,
+        rootProps.pinnedColumnsSectionSeparator,
       );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
@@ -257,6 +258,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         sectionLength,
         rootProps.showColumnVerticalBorder,
         gridHasFiller,
+        rootProps.pinnedColumnsSectionSeparator,
       );
 
       columns.push(
@@ -436,7 +438,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           showLeftBorder={shouldCellShowLeftBorder(
             pinnedPosition,
             indexInSection,
-            rootProps.showCellVerticalBorder,
+            rootProps.showColumnVerticalBorder,
+            rootProps.pinnedColumnsSectionSeparator,
           )}
           showRightBorder={shouldCellShowRightBorder(
             pinnedPosition,
@@ -444,6 +447,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             visibleColumnGroupHeader.length,
             rootProps.showColumnVerticalBorder,
             gridHasFiller,
+            rootProps.pinnedColumnsSectionSeparator,
           )}
         />
       );

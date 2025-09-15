@@ -534,6 +534,13 @@
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": { "type": { "name": "object" } },
+    "pinnedColumnsSectionSeparator": {
+      "type": {
+        "name": "enum",
+        "description": "'border'<br>&#124;&nbsp;'border+shadow'<br>&#124;&nbsp;'shadow'"
+      },
+      "default": "'border+shadow'"
+    },
     "pinnedRows": {
       "type": {
         "name": "shape",

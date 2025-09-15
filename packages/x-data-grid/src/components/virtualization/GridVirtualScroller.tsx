@@ -149,13 +149,17 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       </Scroller>
       {hasScrollX && (
         <React.Fragment>
-          <ScrollShadows position="horizontal" />
+          {rootProps.pinnedColumnsSectionSeparator?.endsWith('shadow') && (
+            <ScrollShadows position="horizontal" />
+          )}
           <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
         </React.Fragment>
       )}
       {hasScrollY && (
         <React.Fragment>
-          <ScrollShadows position="vertical" />
+          {rootProps.pinnedColumnsSectionSeparator?.endsWith('shadow') && (
+            <ScrollShadows position="vertical" />
+          )}
           <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
         </React.Fragment>
       )}

@@ -144,6 +144,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
         pinnedPosition,
         indexInSection,
         rootProps.showColumnVerticalBorder,
+        rootProps.pinnedColumnsSectionSeparator,
       );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
@@ -151,6 +152,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
         sectionLength,
         rootProps.showColumnVerticalBorder,
         gridHasFiller,
+        rootProps.pinnedColumnsSectionSeparator,
       );
 
       filters.push(

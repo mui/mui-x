@@ -903,6 +903,11 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * @default "withModifierKey"
    */
   multipleColumnsSortingMode: 'withModifierKey' | 'always';
+  /**
+   * Sets the type of separator between pinned columns and non-pinned columns.
+   * @default 'border+shadow'
+   */
+  pinnedColumnsSectionSeparator: 'border' | 'shadow' | 'border+shadow';
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {

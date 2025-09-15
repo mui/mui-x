@@ -360,6 +360,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       pinnedPosition,
       indexInSection,
       rootProps.showCellVerticalBorder,
+      rootProps.pinnedColumnsSectionSeparator,
     );
     const showRightBorder = shouldCellShowRightBorder(
       pinnedPosition,
@@ -367,6 +368,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       sectionLength,
       rootProps.showCellVerticalBorder,
       gridHasFiller,
+      rootProps.pinnedColumnsSectionSeparator,
     );
 
     return (

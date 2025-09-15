@@ -46,6 +46,14 @@ Use it together with `onPinnedColumnsChange` to track when columns are pinned an
 
 {{"demo": "ControlPinnedColumns.js", "bg": "inline"}}
 
+## Pinned columns appearance
+
+By default, the pinned columns sections are separated from non-pinned columns with a border and a shadow that appears when there is scroll.
+
+You can change the appearance by setting the [`pinnedColumnsSectionSeparator`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-pinnedColumnsSectionSeparator) prop to `'border'`, `'shadow'`, or `'border+shadow'`.
+
+{{"demo": "ColumnPinningSectionSeparator.js", "bg": "inline"}}
+
 ## Disabling column pinning
 
 Column pinning is enabled by default on the Data Grid Pro, but you can disable it for some or all columns.

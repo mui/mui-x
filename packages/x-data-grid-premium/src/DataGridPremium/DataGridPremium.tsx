@@ -1109,6 +1109,11 @@ DataGridPremiumRaw.propTypes = {
    */
   pinnedColumns: PropTypes.object,
   /**
+   * Sets the type of separator between pinned columns and non-pinned columns.
+   * @default 'border+shadow'
+   */
+  pinnedColumnsSectionSeparator: PropTypes.oneOf(['border', 'border+shadow', 'shadow']),
+  /**
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
