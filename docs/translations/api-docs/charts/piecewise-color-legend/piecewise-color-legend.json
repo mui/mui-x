@@ -20,7 +20,6 @@
       }
     },
     "labelPosition": { "description": "Where to position the labels relative to the gradient." },
-    "layout": { "description": "The layout of the legend items." },
     "markType": { "description": "The type of the mark." },
     "onItemClick": {
       "description": "Callback fired when a legend item is clicked.",

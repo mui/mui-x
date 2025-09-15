@@ -28,10 +28,6 @@
       },
       "default": "'extremes'"
     },
-    "layout": {
-      "type": { "name": "enum", "description": "'grid'<br>&#124;&nbsp;'inline'" },
-      "default": "'grid'"
-    },
     "markType": {
       "type": {
         "name": "enum",
