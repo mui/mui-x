@@ -22,7 +22,7 @@ import './MonthView.css';
 const adapter = getAdapter();
 const EVENT_HEIGHT = 22;
 const CELL_PADDING = 8;
-const DAY_NUMBER_HEADER_HEIGHT = 18;
+const DAY_NUMBER_HEADER_HEIGHT = 23;
 const HIDDEN_EVENTS_HEIGHT = 18;
 
 export const MonthView = React.memo(
