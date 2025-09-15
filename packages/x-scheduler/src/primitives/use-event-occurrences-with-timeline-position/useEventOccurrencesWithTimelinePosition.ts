@@ -7,9 +7,6 @@ import {
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { Adapter } from '../utils/adapter/types';
 
-// A small buffer to consider events that are very close but not really overlapping as overlapping.
-const COLLISION_BUFFER_MINUTES = 5;
-
 /**
  * Places event occurrences for a timeline UI.
  */
@@ -106,12 +103,7 @@ function buildOccurrenceConflicts(
 
     for (let j = i + 1; j < occurrencesProperties.length; j += 1) {
       const occurrenceA = occurrencesProperties[j];
-      if (
-        adapter.isBefore(
-          adapter.addMinutes(occurrenceA.start, -COLLISION_BUFFER_MINUTES),
-          occurrence.end,
-        )
-      ) {
+      if (adapter.isBefore(occurrenceA.start, occurrence.end)) {
         conflictsAfter.add(occurrenceA.key);
       } else {
         // We know that all the next occurrences will start even later, so we can stop here.
@@ -127,12 +119,7 @@ function buildOccurrenceConflicts(
         break;
       }
 
-      if (
-        adapter.isAfter(
-          adapter.addMinutes(occurrenceB.end, COLLISION_BUFFER_MINUTES),
-          occurrence.start,
-        )
-      ) {
+      if (adapter.isAfter(occurrenceB.end, occurrence.start)) {
         conflictsBefore.add(occurrenceB.key);
       }
     }
