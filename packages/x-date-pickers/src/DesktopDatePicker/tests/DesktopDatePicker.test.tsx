@@ -8,6 +8,7 @@ import { createPickerRenderer, adapterToUse, openPickerAsync } from 'test/utils/
 import { isJSDOM } from 'test/utils/skipIf';
 import { PickersActionBar, PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 
 describe('<DesktopDatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -483,6 +484,42 @@ describe('<DesktopDatePicker />', () => {
       );
 
       expect(screen.getByRole('textbox')).attribute('name').to.equal('test-field');
+    });
+  });
+
+  describe('slotProps.inputAdornment behavior', () => {
+    function CustomInputAdornment(props: InputAdornmentProps) {
+      const { children, ...other } = props;
+      return (
+        <InputAdornment {...other}>
+          <span>x</span>
+          {children}
+        </InputAdornment>
+      );
+    }
+
+    it('should respect the `slots.inputAdornment` on accessible DOM structure', () => {
+      render(
+        <DesktopDatePicker
+          enableAccessibleFieldDOMStructure
+          slots={{ inputAdornment: CustomInputAdornment }}
+          slotProps={{ inputAdornment: { 'aria-label': 'test-adornment-icon', role: 'figure' } }}
+        />,
+      );
+
+      expect(screen.getByRole('figure', { name: 'test-adornment-icon' })).to.have.text('x');
+    });
+
+    it('should respect the `slots.inputAdornment` on non-accessible DOM structure', () => {
+      render(
+        <DesktopDatePicker
+          enableAccessibleFieldDOMStructure={false}
+          slots={{ inputAdornment: CustomInputAdornment }}
+          slotProps={{ inputAdornment: { 'aria-label': 'test-adornment-icon', role: 'figure' } }}
+        />,
+      );
+
+      expect(screen.getByRole('figure', { name: 'test-adornment-icon' })).to.have.text('x');
     });
   });
 });
