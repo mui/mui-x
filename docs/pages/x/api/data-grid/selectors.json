@@ -298,7 +298,12 @@
   },
   { "name": "gridRowIsEditingSelector", "returnType": "boolean", "description": "" },
   { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number", "description": "" },
-  { "name": "gridRowNodeSelector", "returnType": "GridTreeNode", "description": "" },
+  {
+    "name": "gridRowNodeSelector",
+    "returnType": "GridTreeNode",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridRowSelectionCountSelector", "returnType": "number", "description": "" },
   {
     "name": "gridRowSelectionIdsSelector",
@@ -313,6 +318,12 @@
   {
     "name": "gridRowSelectionStateSelector",
     "returnType": "GridRowSelectionModel",
+    "description": ""
+  },
+  {
+    "name": "gridRowSelector",
+    "returnType": "GridValidRowModel",
+    "category": "Rows",
     "description": ""
   },
   { "name": "gridRowTreeDepthsSelector", "returnType": "GridTreeDepths", "description": "" },
