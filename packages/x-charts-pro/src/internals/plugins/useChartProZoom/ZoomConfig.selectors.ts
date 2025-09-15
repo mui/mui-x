@@ -4,7 +4,7 @@ import type { ZoomInteractionName, PanInteractionName } from './ZoomConfig.types
 
 export const selectorZoomConfig = createSelector(
   [selectorChartZoomState, (_state, interactionName: ZoomInteractionName) => interactionName],
-  (zoomState, interactionName) => zoomState.zoomConfig.zoom[interactionName] || null,
+  (zoomState, interactionName) => zoomState.zoomConfig.zoom[interactionName] ?? null,
 );
 
 export const selectorPanConfig = createSelector(
