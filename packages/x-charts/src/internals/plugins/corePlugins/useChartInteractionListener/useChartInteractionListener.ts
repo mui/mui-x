@@ -125,8 +125,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         return;
       }
 
-      // Cast to any as type is handled by UpdateZoomInteractionListeners
-      gestureManager.setGestureOptions(interaction, svg, options as any);
+      gestureManager.setGestureOptions(interaction, svg, options ?? {});
     },
     [svgRef, gestureManagerRef],
   );
