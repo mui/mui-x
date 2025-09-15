@@ -6,7 +6,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { CalendarEvent, CalendarPrimitiveEventData } from '../../primitives/models';
+import { CalendarPrimitiveEventData } from '../../primitives/models';
 import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
@@ -64,15 +64,13 @@ export const MonthView = React.memo(
 
     const handleEventChangeFromPrimitive = React.useCallback(
       (data: CalendarPrimitiveEventData) => {
-        const updatedEvent: CalendarEvent = {
-          ...selectors.event(store.state, data.eventId)!,
+        instance.updateEvent({
+          id: data.eventId,
           start: data.start,
           end: data.end,
-        };
-
-        instance.updateEvent(updatedEvent);
+        });
       },
-      [instance, store],
+      [instance],
     );
 
     useResizeObserver(

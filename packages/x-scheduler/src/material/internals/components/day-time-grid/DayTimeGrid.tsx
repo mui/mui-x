@@ -8,7 +8,6 @@ import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-even
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
-  CalendarEvent,
   CalendarEventOccurrence,
   CalendarPrimitiveEventData,
   CalendarProcessedDate,
@@ -73,15 +72,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: CalendarPrimitiveEventData) => {
-      const updatedEvent: CalendarEvent = {
-        ...selectors.event(store.state, data.eventId)!,
-        start: data.start,
-        end: data.end,
-      };
-
-      instance.updateEvent(updatedEvent);
+      instance.updateEvent({ id: data.eventId, start: data.start, end: data.end });
     },
-    [instance, store],
+    [instance],
   );
 
   useIsoLayoutEffect(() => {
