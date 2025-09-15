@@ -18,6 +18,11 @@ Pivoting performs certain computations and uses them to override corresponding p
 When pivot mode is active, the following props are ignored: `rows`, `columns`, `rowGroupingModel`, `aggregationModel`, `getAggregationPosition`, `columnVisibilityModel`, `columnGroupingModel`, `groupingColDef`, `headerFilters`, `disableRowGrouping`, and `disableAggregation`.
 :::
 
+:::info
+This document covers client-side pivoting.
+For pivoting on the server side, see [Server-side pivoting](/x/react-data-grid/server-side-data/pivoting/).
+:::
+
 ## Quick start
 
 Pivoting is enabled by default and can be accessed through the icon in the toolbar.
