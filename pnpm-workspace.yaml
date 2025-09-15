@@ -32,7 +32,7 @@ catalog:
   '@types/moment-hijri': ^2.1.4
   '@types/moment-jalaali': ^0.7.9
   '@types/prop-types': ^15.7.15
-  '@types/react': 19.1.12
+  '@types/react': 19.1.13
   '@types/react-dom': 19.1.9
   '@types/react-router': ^5.1.20
   '@types/react-transition-group': ^4.4.12
