@@ -379,7 +379,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
             {status.error && <ErrorIcon {...errorContainerProps} />}
-
             {status.loading ? (
               <LoadingIcon {...loadingContainerProps} />
             ) : (
