@@ -1,0 +1,8 @@
+<DataGridPremium
+  columns={columns}
+  dataSource={dataSource}
+  showToolbar
+  initialState={initialState}
+  aggregationFunctions={aggregationFunctions}
+  defaultGroupingExpansionDepth={-1}
+/>
