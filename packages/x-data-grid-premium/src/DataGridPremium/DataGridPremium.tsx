@@ -525,7 +525,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridColDef} column The column to generate derived columns for.
    * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
    * @returns {GridColDef[] | undefined} The derived columns.
-   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   * @default {defaultGetPivotDerivedColumns | undefined} Creates year and quarter columns for date columns if not in server side mode.
    */
   getPivotDerivedColumns: PropTypes.func,
   /**
