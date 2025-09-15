@@ -4,7 +4,7 @@ import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
-import { BarChartPro } from '@mui/x-charts-pro/BarChartPro/BarChartPro';
+import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
 describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
   const { render } = createRenderer();
