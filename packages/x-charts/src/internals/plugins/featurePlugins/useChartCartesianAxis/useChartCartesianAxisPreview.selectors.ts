@@ -122,6 +122,7 @@ export const selectorChartPreviewComputedXAxis = createSelector(
       zoomMap,
       zoomOptions,
       getFilters,
+      preferStrictDomainInLineCharts,
     });
 
     if (computedAxes.axis[axisId]) {
