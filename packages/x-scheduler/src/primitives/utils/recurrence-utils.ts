@@ -811,7 +811,7 @@ export function decideSplitRRule(
       ...realignedRule,
       byDay: realignWeeklyByDay(
         adapter,
-        baseRule.byDay,
+        baseRule.byDay as ByDayCode[],
         adapter.startOfDay(splitStart),
         changes.start,
       ),
