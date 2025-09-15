@@ -83,7 +83,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.occurrences[1].position).to.deep.equal({ firstIndex: 2, lastIndex: 2 });
   });
 
-  it('should place overlapping events in different columns (event A ends exactly when event B starts)', () => {
+  it('should place events in the same column when event A ends exactly when event B starts', () => {
     const result = testHook(
       [
         createEvent('A', '2024-01-15T10:00:00', '2024-01-15T12:00:00'),
@@ -92,12 +92,12 @@ describe('useDayListEventOccurrencesWithPosition', () => {
       1,
     );
 
-    expect(result.maxIndex).to.equal(2);
+    expect(result.maxIndex).to.equal(1);
     expect(result.occurrences).to.have.length(2);
     expect(result.occurrences[0].id).to.equal('A');
     expect(result.occurrences[0].position).to.deep.equal({ firstIndex: 1, lastIndex: 1 });
     expect(result.occurrences[1].id).to.equal('B');
-    expect(result.occurrences[1].position).to.deep.equal({ firstIndex: 2, lastIndex: 2 });
+    expect(result.occurrences[1].position).to.deep.equal({ firstIndex: 1, lastIndex: 1 });
   });
 
   it('should span non overlapping events across all the available columns when maxColumnSpan is large enough', () => {
