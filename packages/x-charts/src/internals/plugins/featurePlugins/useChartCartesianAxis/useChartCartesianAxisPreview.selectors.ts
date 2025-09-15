@@ -50,7 +50,6 @@ export const selectorChartPreviewXScales = createSelector(
     selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
-    selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorPreferStrictDomainInLineCharts,
     (_, axisId: AxisId) => axisId,
@@ -60,13 +59,17 @@ export const selectorChartPreviewXScales = createSelector(
     chartDrawingArea,
     formattedSeries,
     seriesConfig,
-    zoomMap,
     zoomOptions,
     preferStrictDomainInLineCharts,
     axisId,
   ) {
     const hasAxis = xAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'x' : 'y', chartDrawingArea);
+
+    const options = zoomOptions[axisId];
+    const zoomMap = new Map<AxisId, ZoomData>([
+      [axisId, { axisId, start: options.minStart, end: options.maxEnd }],
+    ]);
 
     return getXAxesScales({
       drawingArea,
@@ -139,7 +142,6 @@ export const selectorChartPreviewYScales = createSelector(
     selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
-    selectorChartZoomMap,
     selectorChartZoomOptionsLookup,
     selectorPreferStrictDomainInLineCharts,
     (_, axisId: AxisId) => axisId,
@@ -149,13 +151,17 @@ export const selectorChartPreviewYScales = createSelector(
     chartDrawingArea,
     formattedSeries,
     seriesConfig,
-    zoomMap,
     zoomOptions,
     preferStrictDomainInLineCharts,
     axisId,
   ) {
     const hasAxis = yAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'y' : 'x', chartDrawingArea);
+
+    const options = zoomOptions[axisId];
+    const zoomMap = new Map<AxisId, ZoomData>([
+      [axisId, { axisId, start: options.minStart, end: options.maxEnd }],
+    ]);
 
     return getYAxesScales({
       drawingArea,
