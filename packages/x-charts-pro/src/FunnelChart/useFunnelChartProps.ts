@@ -3,10 +3,11 @@ import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-
 import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import { ChartsWrapperProps, defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
+import { defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
 import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
+import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
@@ -126,7 +127,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     axisHighlight,
     apiRef,
     gap,
-    ...rest
+    ...other
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
@@ -147,7 +148,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
   const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginsSignatures> = {
-    ...rest,
+    ...other,
     series: series.map((s) => ({
       type: 'funnel' as const,
       layout: isHorizontal ? 'horizontal' : 'vertical',

@@ -7,6 +7,7 @@ import {
   GridConfiguration,
   validateProps,
   useGridApiInitialization,
+  useGridRowsOverridableMethods,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -14,8 +15,8 @@ import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
-import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
-import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
+import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
+import { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
 import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
@@ -23,8 +24,9 @@ export type { GridProSlotsComponent as GridSlots } from '../models';
 const configuration: GridConfiguration = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
-    useGridAriaAttributes,
-    useGridRowAriaAttributes,
+    useGridAriaAttributes: useGridAriaAttributesPro,
+    useGridRowAriaAttributes: useGridRowAriaAttributesPro,
+    useGridRowsOverridableMethods,
     useCellAggregationResult: () => null,
   },
 };
@@ -40,7 +42,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props.apiRef,
     props,
   );
-  useDataGridProComponent(privateApiRef, props);
+  useDataGridProComponent(privateApiRef, props, configuration);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -158,6 +160,11 @@ DataGridProRaw.propTypes = {
    * @default 150
    */
   columnBufferPx: PropTypes.number,
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  columnFilterDebounceMs: PropTypes.number,
   /**
    * Sets the height in pixels of the column group headers in the Data Grid.
    * Inherits the `columnHeaderHeight` value if not set.
@@ -286,6 +293,11 @@ DataGridProRaw.propTypes = {
    * @default false (`!props.checkboxSelection` for MIT Data Grid)
    */
   disableMultipleRowSelection: PropTypes.bool,
+  /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -756,7 +768,7 @@ DataGridProRaw.propTypes = {
    */
   onPreferencePanelOpen: PropTypes.func,
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError: PropTypes.func,

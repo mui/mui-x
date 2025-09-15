@@ -7,8 +7,8 @@
     "stripeColor": {
       "description": "Get stripe fill color. Set it to <code>null</code> to remove stripes",
       "typeDescriptions": {
-        "index": "The index of the stripe band.",
-        "string": "The color to fill the stripe."
+        "index": { "name": "index", "description": "The index of the stripe band." },
+        "string": { "name": "string", "description": "The color to fill the stripe." }
       }
     }
   },

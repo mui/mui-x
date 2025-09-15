@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { balanceSheet, addLabels } from './netflixsBalanceSheet';
@@ -30,20 +31,23 @@ export default function BarGap() {
         },
       }}
       renderDemo={(props) => (
-        <BarChart
-          dataset={balanceSheet}
-          series={series}
-          height={300}
-          xAxis={[
-            {
-              dataKey: 'year',
-              categoryGapRatio: props.categoryGapRatio,
-              barGapRatio: props.barGapRatio,
-            },
-          ]}
-          yAxis={[{ valueFormatter: (v: number) => `$ ${v / 1000000}B` }]}
-          hideLegend
-        />
+        <div style={{ width: '100%' }}>
+          <Typography>Netflix balance sheet</Typography>
+          <BarChart
+            dataset={balanceSheet}
+            series={series}
+            height={300}
+            xAxis={[
+              {
+                dataKey: 'year',
+                categoryGapRatio: props.categoryGapRatio,
+                barGapRatio: props.barGapRatio,
+              },
+            ]}
+            yAxis={[{ valueFormatter: (v: number) => `$ ${v / 1000000}B` }]}
+            hideLegend
+          />
+        </div>
       )}
       getCode={({ props }) => {
         return `import { BarChart } from '@mui/x-charts/BarChart';

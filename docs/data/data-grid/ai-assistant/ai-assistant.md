@@ -66,7 +66,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 1. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
 
    :::warning
-   Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
+   Do not expose the API key to the public. Instead, keep it private, use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
 
    This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
 
@@ -87,7 +87,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    :::
 
 2. Enable the AI Assistant feature by adding the `aiAssistant` prop.
-   This adds a new button to the Toolbar that controlls the Assistant Panel open state.
+   This adds a new button to the Toolbar that controls the Assistant Panel's open state.
 3. Provide `<GridAiAssistantPanel />` as a component for the `aiAssistantPanel` slot.
    Slot is by default `null` to prevent bundling of the panel and its child components in the projects that are not using the AI Assistant feature.
 4. Provide the `onPrompt()` callback to pass the user's prompts to the service.
@@ -113,7 +113,22 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        query,
        context,
        conversationId,
-       additionalContext,
+       { additionalContext },
+     );
+   }
+   ```
+
+   By default, MUI's prompt resolver service stores the queries made to the service to analyze potential errors and improve the service (data is never stored).
+   Enable `privateMode` to make the service only keep track of the data needed for billing, without any query related data.
+
+   ```ts
+   function processPrompt(query: string, context: string, conversationId?: string) {
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       conversationId,
+       { privateMode: true },
      );
    }
    ```
@@ -138,7 +153,7 @@ You can use a fully custom solution and apply the processing result using other 
 To replace `unstable_gridDefaultPromptResolver()` with your own solution, send a POST request to MUI's API.
 
 The body of the request requires `query` and `context` parameters.
-`conversationId` and `additionalContext` are optional.
+`conversationId` and `options` are optional.
 To keep the previous messages in the context you should pass the `conversationId` from the previous response.
 
 The API response type is `Result<PromptResponse>`.

@@ -3,6 +3,7 @@ import {
   DataGridPremium,
   GridColDef,
   GridPivotModel,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 
 const columns: GridColDef[] = [
@@ -12,8 +13,7 @@ const columns: GridColDef[] = [
     type: 'date',
     headerName: 'Transaction Date',
     width: 140,
-    valueGetter: (value) => new Date(value),
-    groupingValueGetter: (value) => value,
+    valueGetter: (value) => (value ? new Date(value) : null),
   },
   { field: 'ticker', headerName: 'Ticker' },
   {
@@ -58,8 +58,11 @@ export default function GridPivotingFinancial() {
           initialState={{
             pivoting: {
               enabled: true,
-              panelOpen: true,
               model: pivotModel,
+            },
+            sidebar: {
+              open: true,
+              value: GridSidebarValue.Pivot,
             },
           }}
           columnGroupHeaderHeight={36}

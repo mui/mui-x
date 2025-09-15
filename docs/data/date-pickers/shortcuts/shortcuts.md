@@ -64,8 +64,8 @@ In the following demonstration, it is used to get the next available week and we
 
 ### Know which shortcut has been selected
 
-The `onChange` callback receives the shortcut as a property of it's second argument.
-You can use it to know, which shortcut has been chosen:
+The `onChange` callback receives the shortcut as a property of its second argument.
+You can use it to find out which shortcut has been chosen:
 
 {{"demo": "OnChangeShortcutLabel.js", "bg": "inline"}}
 
@@ -74,13 +74,19 @@ You can use it to know, which shortcut has been chosen:
 You can change the behavior when selecting a shortcut using the `changeImportance` property:
 
 - `"accept"` (_default value_): fires `onChange`, fires `onAccept` and closes the picker.
-- `"set"`: fires `onChange` but do not fire `onAccept` and does not close the picker.
+- `"set"`: fires `onChange` but does not fire `onAccept` and does not close the picker.
 
 {{"demo": "ChangeImportance.js", "bg": "inline"}}
 
 ## Customization
 
-Like other [layout's subcomponent](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.
+Like other [layout subcomponents](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.
 Here is an example with horizontal shortcuts.
 
 {{"demo": "CustomizedRangeShortcuts.js", "bg": "inline"}}
+
+## RTL example
+
+Like other customizations, shortcuts also respect the RTL direction setting.
+
+{{"demo": "RTLShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}

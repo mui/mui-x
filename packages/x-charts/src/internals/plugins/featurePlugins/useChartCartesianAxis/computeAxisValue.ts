@@ -1,6 +1,6 @@
-import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scalePoint, ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
-import { AxisConfig, ScaleName } from '../../../../models';
+import { ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
   ChartsAxisProps,
@@ -12,6 +12,7 @@ import {
   DefaultedYAxis,
   DefaultedAxis,
   AxisValueFormatterContext,
+  isSymlogScaleConfig,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -26,18 +27,19 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
+import { getAxisDomainLimit } from './getAxisDomainLimit';
 
 function getRange(
   drawingArea: ChartDrawingArea,
   axisDirection: 'x' | 'y', // | 'rotation' | 'radius',
-  axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
+  reverse: boolean,
 ): [number, number] {
   const range: [number, number] =
     axisDirection === 'x'
       ? [drawingArea.left, drawingArea.left + drawingArea.width]
       : [drawingArea.top + drawingArea.height, drawingArea.top];
 
-  return axis.reverse ? [range[1], range[0]] : range;
+  return reverse ? [range[1], range[0]] : range;
 }
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
@@ -45,7 +47,7 @@ const DEFAULT_BAR_GAP_RATIO = 0.1;
 
 export type ComputeResult<T extends ChartsAxisProps> = {
   axis: ComputedAxisConfig<T>;
-  axisIds: string[];
+  axisIds: AxisId[];
 };
 
 type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
@@ -55,6 +57,10 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   zoomMap?: Map<AxisId, ZoomData>;
   zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
   getFilters?: GetZoomAxisFilters;
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts?: boolean;
 };
 
 export function computeAxisValue<T extends ChartSeriesType>(
@@ -78,6 +84,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomMap,
   zoomOptions,
   getFilters,
+  preferStrictDomainInLineCharts,
 }: ComputeCommonParams<T> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -102,7 +109,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
-    const range = getRange(drawingArea, axisDirection, axis);
+    const range = getRange(drawingArea, axisDirection, axis.reverse ?? false);
 
     const [minData, maxData] = getAxisExtremum(
       axis,
@@ -144,7 +151,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, scaleRange);
+        const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
@@ -168,7 +175,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, scaleRange);
+        const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
@@ -180,7 +187,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const domainLimit = axis.domainLimit ?? 'nice';
+    const domainLimit = preferStrictDomainInLineCharts
+      ? getAxisDomainLimit(axis, axisDirection, axisIndex, formattedSeries)
+      : (axis.domainLimit ?? 'nice');
 
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
 
@@ -196,6 +205,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
     const scale = getScale(scaleType, axisExtremums, zoomedRange);
+
+    if (isSymlogScaleConfig(axis) && axis.constant != null) {
+      (scale as ScaleSymLog<number, number>).constant(axis.constant);
+    }
+
     const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
     const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];

@@ -298,7 +298,12 @@
   },
   { "name": "gridRowIsEditingSelector", "returnType": "boolean", "description": "" },
   { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number", "description": "" },
-  { "name": "gridRowNodeSelector", "returnType": "GridTreeNode", "description": "" },
+  {
+    "name": "gridRowNodeSelector",
+    "returnType": "GridTreeNode",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridRowSelectionCountSelector", "returnType": "number", "description": "" },
   {
     "name": "gridRowSelectionIdsSelector",
@@ -315,6 +320,12 @@
     "returnType": "GridRowSelectionModel",
     "description": ""
   },
+  {
+    "name": "gridRowSelector",
+    "returnType": "GridValidRowModel",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridRowTreeDepthsSelector", "returnType": "GridTreeDepths", "description": "" },
   { "name": "gridRowTreeSelector", "returnType": "GridRowTreeConfig", "description": "" },
   { "name": "gridRowsLoadingSelector", "returnType": "boolean | undefined", "description": "" },
@@ -324,6 +335,13 @@
     "description": ""
   },
   { "name": "gridRowsMetaSelector", "returnType": "GridRowsMetaState", "description": "" },
+  {
+    "name": "gridSidebarContentSelector",
+    "returnType": "{ sidebarId: string | undefined; labelId: string | undefined; value: GridSidebarValue | undefined }",
+    "description": ""
+  },
+  { "name": "gridSidebarOpenSelector", "returnType": "boolean", "description": "" },
+  { "name": "gridSidebarStateSelector", "returnType": "GridSidebarState", "description": "" },
   {
     "name": "gridSortModelSelector",
     "returnType": "GridSortModel",

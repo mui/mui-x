@@ -12,6 +12,6 @@ describe('<TimePicker />', () => {
     const { user } = render(<TimePicker />);
 
     await user.click(screen.getByLabelText(/Choose time/));
-    expect(screen.queryByRole('dialog')).to.not.equal(null);
+    expect(screen.queryByRole('dialog')).not.to.equal(null);
   });
 });

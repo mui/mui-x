@@ -46,6 +46,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         .filter((page) => page.pathname.startsWith('/charts') && page.components.includes(name))
         .map((page) => {
           return {
+            filePath: page.filename,
             demoPageTitle: renderMarkdown(getTitle(page.markdownContent)),
             demoPathname: `${page.pathname.replace('/charts', '/x/react-charts')}/`,
           };

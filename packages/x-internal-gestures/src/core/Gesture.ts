@@ -3,6 +3,7 @@
  */
 
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
+import { KeyboardKey, KeyboardManager } from './KeyboardManager';
 import { PointerData, PointerManager } from './PointerManager';
 import { CustomEventListener } from './types/CustomEventListener';
 import { TargetElement } from './types/TargetElement';
@@ -45,6 +46,28 @@ export type GestureEventData<CustomData extends Record<string, unknown> = Record
   };
 
 /**
+ * Defines the types of pointers that can trigger a gesture.
+ */
+export type PointerMode = 'mouse' | 'touch' | 'pen';
+
+/**
+ * Base configuration options that can be overridden per pointer mode.
+ */
+export type BaseGestureOptions = {
+  /**
+   * Array of keyboard keys that must be pressed for the gesture to be recognized.
+   * If not provided or empty, no keyboard key requirement is applied.
+   *
+   * A special identifier `ControlOrMeta` can be used to match either Control or Meta keys,
+   * which is useful for cross-platform compatibility.
+   *
+   * @example ['Shift', 'Alt']
+   * @default [] (no key requirement)
+   */
+  requiredKeys?: KeyboardKey[];
+};
+
+/**
  * Configuration options for creating a gesture instance.
  */
 export type GestureOptions<GestureName extends string> = {
@@ -69,7 +92,31 @@ export type GestureOptions<GestureName extends string> = {
    * @default [] (no prevented gestures)
    */
   preventIf?: string[];
-};
+  /**
+   * List of pointer types that can trigger this gesture.
+   * If provided, only the specified pointer types will be able to activate the gesture.
+   *
+   * @example ['mouse', 'touch']
+   * @default [] (all pointer types allowed)
+   */
+  pointerMode?: PointerMode[];
+} & BaseGestureOptions & {
+    /**
+     * Pointer mode-specific configuration overrides.
+     * Options defined here will override any option defined in the base root options.
+     *
+     * @example
+     * ```typescript
+     * {
+     *   pointerOptions: {
+     *     mouse: { requiredKeys: ['ControlOrMeta'] },
+     *     touch: { requiredKeys: [] },
+     *   },
+     * }
+     * ```
+     */
+    pointerOptions?: Partial<Record<PointerMode, BaseGestureOptions>>;
+  };
 
 // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
 declare const _privateKey: unique symbol;
@@ -128,6 +175,27 @@ export abstract class Gesture<GestureName extends string> {
   protected preventIf: string[];
 
   /**
+   * Array of keyboard keys that must be pressed for the gesture to be recognized.
+   */
+  protected requiredKeys: KeyboardKey[];
+
+  /**
+   * KeyboardManager instance for tracking key presses
+   */
+  protected keyboardManager!: KeyboardManager;
+
+  /**
+   * List of pointer types that can trigger this gesture.
+   * If undefined, all pointer types are allowed.
+   */
+  protected pointerMode: PointerMode[];
+
+  /**
+   * Pointer mode-specific configuration overrides.
+   */
+  protected pointerOptions: Partial<Record<PointerMode, BaseGestureOptions>>;
+
+  /**
    * User-mutable data object for sharing state between gesture events
    * This object is included in all events emitted by this gesture
    */
@@ -179,6 +247,9 @@ export abstract class Gesture<GestureName extends string> {
     this.preventDefault = options.preventDefault ?? false;
     this.stopPropagation = options.stopPropagation ?? false;
     this.preventIf = options.preventIf ?? [];
+    this.requiredKeys = options.requiredKeys ?? [];
+    this.pointerMode = options.pointerMode ?? [];
+    this.pointerOptions = options.pointerOptions ?? {};
   }
 
   /**
@@ -189,10 +260,12 @@ export abstract class Gesture<GestureName extends string> {
     element: TargetElement,
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
+    keyboardManager: KeyboardManager,
   ): void {
     this.element = element;
     this.pointerManager = pointerManager;
     this.gesturesRegistry = gestureRegistry;
+    this.keyboardManager = keyboardManager;
 
     const changeOptionsEventName = `${this.name}ChangeOptions`;
     (this.element as CustomEventListener).addEventListener(
@@ -226,6 +299,33 @@ export abstract class Gesture<GestureName extends string> {
     this.preventDefault = options.preventDefault ?? this.preventDefault;
     this.stopPropagation = options.stopPropagation ?? this.stopPropagation;
     this.preventIf = options.preventIf ?? this.preventIf;
+    this.requiredKeys = options.requiredKeys ?? this.requiredKeys;
+    this.pointerMode = options.pointerMode ?? this.pointerMode;
+    this.pointerOptions = options.pointerOptions ?? this.pointerOptions;
+  }
+
+  /**
+   * Get the effective configuration for a specific pointer mode.
+   * This merges the base configuration with pointer mode-specific overrides.
+   *
+   * @param pointerType - The pointer type to get configuration for
+   * @returns The effective configuration object
+   */
+  protected getEffectiveConfig(pointerType: PointerMode): Required<BaseGestureOptions> {
+    const baseConfig = {
+      requiredKeys: this.requiredKeys,
+    };
+
+    // Apply pointer mode-specific overrides
+    const pointerModeOverrides = this.pointerOptions[pointerType];
+    if (pointerModeOverrides) {
+      return {
+        ...baseConfig,
+        ...pointerModeOverrides,
+      };
+    }
+
+    return baseConfig;
   }
 
   /**
@@ -266,7 +366,10 @@ export abstract class Gesture<GestureName extends string> {
     if (
       this.isActive ||
       this.element === event.target ||
-      this.element.contains(event.target as Node)
+      ('contains' in this.element && this.element.contains(event.target as Node)) ||
+      ('getRootNode' in this.element &&
+        this.element.getRootNode() instanceof ShadowRoot &&
+        event.composedPath().includes(this.element))
     ) {
       return this.element;
     }
@@ -291,9 +394,18 @@ export abstract class Gesture<GestureName extends string> {
    * Checks if this gesture should be prevented from activating.
    *
    * @param element - The DOM element to check against
+   * @param pointerType - The type of pointer triggering the gesture
    * @returns true if the gesture should be prevented, false otherwise
    */
-  protected shouldPreventGesture(element: TargetElement): boolean {
+  protected shouldPreventGesture(element: TargetElement, pointerType: string): boolean {
+    // Get effective configuration for this pointer type
+    const effectiveConfig = this.getEffectiveConfig(pointerType as PointerMode);
+
+    // First check if required keyboard keys are pressed
+    if (!this.keyboardManager.areKeysPressed(effectiveConfig.requiredKeys)) {
+      return true; // Prevent the gesture if required keys are not pressed
+    }
+
     if (this.preventIf.length === 0) {
       return false; // No prevention rules, allow the gesture
     }
@@ -302,6 +414,22 @@ export abstract class Gesture<GestureName extends string> {
 
     // Check if any of the gestures that would prevent this one are active
     return this.preventIf.some((gestureName) => activeGestures[gestureName]);
+  }
+
+  /**
+   * Checks if the given pointer type is allowed for this gesture based on the pointerMode setting.
+   *
+   * @param pointerType - The type of pointer to check.
+   * @returns true if the pointer type is allowed, false otherwise.
+   */
+  protected isPointerTypeAllowed(pointerType: string): boolean {
+    // If no pointer mode is specified, all pointer types are allowed
+    if (!this.pointerMode || this.pointerMode.length === 0) {
+      return true;
+    }
+
+    // Check if the pointer type is in the allowed types list
+    return this.pointerMode.includes(pointerType as PointerMode);
   }
 
   /**

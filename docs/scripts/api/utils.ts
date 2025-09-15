@@ -1,29 +1,21 @@
-import { Annotation } from 'doctrine';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
-import * as fse from 'fs-extra';
-import * as ts from 'typescript';
+import { Symbol, isPropertySignature, isExportSpecifier, TypeFormatFlags } from 'typescript';
+import fs from 'node:fs/promises';
 import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
+import { resolvePrettierConfigPath } from '../utils';
 
 export type DocumentedInterfaces = Map<string, XProjectNames[]>;
 
-export const getSymbolDescription = (symbol: ts.Symbol, project: XTypeScriptProject) =>
+export const getSymbolDescription = (symbol: Symbol, project: XTypeScriptProject) =>
   symbol
     .getDocumentationComment(project.checker)
     .flatMap((comment) => comment.text.split('\n'))
     .filter((line) => !line.startsWith('TODO'))
     .join('\n');
 
-export const getSymbolJSDocTags = (symbol: ts.Symbol) =>
+export const getSymbolJSDocTags = (symbol: Symbol) =>
   Object.fromEntries(symbol.getJsDocTags().map((tag) => [tag.name, tag]));
-
-export function getJsdocDefaultValue(jsdoc: Annotation) {
-  const defaultTag = jsdoc.tags.find((tag) => tag.title === 'default');
-  if (defaultTag === undefined) {
-    return undefined;
-  }
-  return defaultTag.description || '';
-}
 
 export function escapeCell(value: string) {
   return value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\r?\n/g, '<br />');
@@ -48,17 +40,17 @@ export const formatType = async (rawType: string) => {
   return prettifiedSignatureWithTypeName.slice(prefix.length).replace(/\n$/, '');
 };
 
-export const stringifySymbol = async (symbol: ts.Symbol, project: XTypeScriptProject) => {
+export const stringifySymbol = async (symbol: Symbol, project: XTypeScriptProject) => {
   let rawType: string;
 
   const declaration = symbol.declarations?.[0];
-  if (declaration && ts.isPropertySignature(declaration)) {
+  if (declaration && isPropertySignature(declaration)) {
     rawType = declaration.type?.getText() ?? '';
   } else {
     rawType = project.checker.typeToString(
       project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!),
       symbol.valueDeclaration,
-      ts.TypeFormatFlags.NoTruncation,
+      TypeFormatFlags.NoTruncation,
     );
   }
 
@@ -85,21 +77,18 @@ export function linkify(
   });
 }
 
-export async function writePrettifiedFile(
-  filename: string,
-  data: string,
-  project: XTypeScriptProject,
-) {
+export async function writePrettifiedFile(filename: string, data: string) {
+  const prettierConfigPath = await resolvePrettierConfigPath();
   const prettierConfig = await prettier.resolveConfig(filename, {
-    config: project.prettierConfigPath,
+    config: prettierConfigPath,
   });
   if (prettierConfig === null) {
     throw new Error(
-      `Could not resolve config for '${filename}' using prettier config path '${project.prettierConfigPath}'.`,
+      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
     );
   }
 
-  fse.writeFileSync(
+  await fs.writeFile(
     filename,
     await prettier.format(data, { ...prettierConfig, filepath: filename }),
     {
@@ -117,10 +106,10 @@ export async function writePrettifiedFile(
  * Do not go to the root definition for TypeAlias (ie: `export type XXX = YYY`)
  * Because we usually want to keep the description and tags of the aliased symbol.
  */
-export const resolveExportSpecifier = (symbol: ts.Symbol, project: XTypeScriptProject) => {
+export const resolveExportSpecifier = (symbol: Symbol, project: XTypeScriptProject) => {
   let resolvedSymbol = symbol;
 
-  while (resolvedSymbol.declarations && ts.isExportSpecifier(resolvedSymbol.declarations[0])) {
+  while (resolvedSymbol.declarations && isExportSpecifier(resolvedSymbol.declarations[0])) {
     const newResolvedSymbol = project.checker.getImmediateAliasedSymbol(resolvedSymbol);
 
     if (!newResolvedSymbol) {

@@ -20,6 +20,12 @@ To enable exporting from the chart's toolbar, you need to enable it by passing t
 
 The toolbar then renders a button that opens a menu with the export options.
 
+:::info
+By default, the exported media does not show the toolbar.
+
+You can override the `onBeforeExport` callback to customize this behavior.
+:::
+
 {{"demo": "ExportChartToolbar.js"}}
 
 :::warning
@@ -57,7 +63,6 @@ yarn add rasterizehtml
 Export behavior can be modified with [print](/x/api/charts/chart-print-export-options/) and [image export](/x/api/charts/chart-image-export-options/) options.
 
 Options can be passed to the built-in Toolbar with `slotProps.toolbar`.
-In that case, the `imageExportOptions` must be an array of objects, each representing an image type to export.
 
 Where relevant, the options are automatically shown in the toolbar. You can customize their respective behavior by passing an options object either to `slotsProps.toolbar` or to the Export trigger itself if you have a custom toolbar:
 
@@ -70,19 +75,55 @@ Where relevant, the options are automatically shown in the toolbar. You can cust
 <ChartsToolbarPrintExportTrigger options={printExportOptions} />
 ```
 
+### Export formats
+
+Using the export options, you can customize the available export formats.
+
+The print export can be disabled by setting the `disableToolbarButton` property to `true`.
+
+The image export formats can be customized by providing an array of objects to the `imageExportOptions` property. These objects must contain the `type` property, which specifies the image format.
+
+:::info
+If the browser does not support a requested image format, the export defaults to PNG.
+:::
+
 In the example below, you can toggle which export formats are available to the user.
 
 Additionally, the name of the exported file has been customized to resemble the chart's title.
 
 {{"demo": "ExportChartToolbarCustomization.js"}}
 
+### `onBeforeExport`
+
+To add custom styles or modify the chart's appearance before exporting, use the `onBeforeExport` callback.
+
+When exporting, the chart is rendered onto an iframe and then exported as an image or PDF.
+The `onBeforeExport` callback gives you access to the iframe before the export process starts.
+
+For example, you can add the title and caption to the exported chart, as shown below:
+
+{{"demo": "ExportChartOnBeforeExport.js"}}
+
 :::info
-If the browser does not support a requested image format, the export defaults to PNG.
+
+If you don't want to manually add elements to the chart export, you can create a chart through composition and include the elements you want to export as part of the chart.
+See the [Composition](#composition) section below for more information.
+
 :::
+
+## Copy styles
+
+The styles of the page the chart belongs to are copied to the export iframe by default.
+
+You can disable this behavior by setting the `copyStyles` property to `false` in the export options.
+
+```tsx
+<BarChartPro slotProps={{ toolbar: { printOptions: { copyStyles: false } } }} />
+```
 
 ## Composition
 
-As detailed in the [Composition](/x/react-charts/composition/) section, charts can alternatively be composed of more specific components to create custom visualizations.
+As detailed in the [Composition](/x/react-charts/composition/) page, charts can alternatively be composed of more specific components to create custom visualizations.
 
 When exporting a chart, the `ChartsWrapper` element is considered the root element of the chart, and every descendant is included in the export.
 As such, you need to ensure that the `ChartsWrapper` element is the root element of the chart you want to export.
@@ -97,7 +138,7 @@ If you want to use a custom wrapper element, you need to use the `useChartRootRe
 
 The `apiRef` prop exposes a `exportAsPrint()` method that can be used to open the browser's print dialog.
 
-The print dialog allows you to print the chart or save it as a PDF, as well as configuring other settings.
+The print dialog lets you print the chart or save it as a PDF, as well as configuring other settings.
 
 {{"demo": "PrintChart.js"}}
 
@@ -115,8 +156,8 @@ Follow the installation instructions [here](#image-export-pre-requisites).
 
 The function accepts an options object with the `type` property, which specifies the image format. The available formats are:
 
-- `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/);
-- `image/webp` which is only supported in some browsers.
+- `image/png` and `image/jpeg`, which are supported across all [supported platforms](/material-ui/getting-started/supported-platforms/)
+- `image/webp` which is only supported in some browsers
 
 If the format is not supported by the browser, `exportAsImage()` falls back to `image/png`.
 

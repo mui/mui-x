@@ -76,6 +76,13 @@ createTheme({
         constent: { color: 'red' },
       },
     },
+    MuiChartDataProvider: {
+      defaultProps: {
+        experimentalFeatures: { preferStrictDomainInLineCharts: true },
+        // @ts-expect-error invalid MuiChartsSurface prop
+        someRandomProp: true,
+      },
+    },
 
     // BarChart components
     MuiBarChart: {

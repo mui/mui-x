@@ -14,6 +14,7 @@
 
 import { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
 import { GesturePhase, GestureState } from '../Gesture';
+import type { KeyboardManager } from '../KeyboardManager';
 import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
 import { PointerData, PointerManager } from '../PointerManager';
 import { TargetElement } from '../types/TargetElement';
@@ -109,7 +110,10 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       threshold: this.threshold,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
+      requiredKeys: [...this.requiredKeys],
+      pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -119,8 +123,9 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     element: TargetElement,
     pointerManager: PointerManager,
     gestureRegistry: ActiveGesturesRegistry<GestureName>,
+    keyboardManager: KeyboardManager,
   ): void {
-    super.init(element, pointerManager, gestureRegistry);
+    super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
     // Add event listeners for entering and leaving elements
     // These are different from pointer events handled by PointerManager
@@ -232,7 +237,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       return;
     }
 
-    if (this.shouldPreventGesture(targetElement)) {
+    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
       if (!this.isActive) {
         return;
       }
@@ -291,6 +296,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     const domEvent = new CustomEvent(eventName, {
       bubbles: true,
       cancelable: true,
+      composed: true,
       detail: customEventData,
     });
 

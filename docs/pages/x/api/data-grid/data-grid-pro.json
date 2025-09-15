@@ -27,6 +27,7 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
+    "columnFilterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
@@ -66,6 +67,7 @@
       "type": { "name": "bool" },
       "default": "false (`!props.checkboxSelection` for MIT Data Grid)"
     },
+    "disableRowSelectionExcludeModel": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
@@ -908,6 +910,12 @@
       "name": "columnSelectorIcon",
       "description": "Icon displayed on the column menu selector tab.",
       "default": "GridColumnIcon",
+      "class": null
+    },
+    {
+      "name": "columnUnsortedIcon",
+      "description": "Icon displayed on the side of the column header title when unsorted.",
+      "default": "GridColumnUnsortedIcon",
       "class": null
     },
     {
@@ -2065,6 +2073,12 @@
       "isGlobal": false
     },
     {
+      "key": "row--beingDragged",
+      "className": "MuiDataGridPro-row--beingDragged",
+      "description": "Styles applied to the row element when it is being dragged (entire row).",
+      "isGlobal": false
+    },
+    {
       "key": "row--detailPanelExpanded",
       "className": "MuiDataGridPro-row--detailPanelExpanded",
       "description": "Styles applied to the row if its detail panel is open.",
@@ -2074,6 +2088,18 @@
       "key": "row--dragging",
       "className": "MuiDataGridPro-row--dragging",
       "description": "Styles applied to the floating special row reorder cell element when it is dragged.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropAbove",
+      "className": "MuiDataGridPro-row--dropAbove",
+      "description": "Styles applied to the row element when it is a drop target above.",
+      "isGlobal": false
+    },
+    {
+      "key": "row--dropBelow",
+      "className": "MuiDataGridPro-row--dropBelow",
+      "description": "Styles applied to the row element when it is a drop target below.",
       "isGlobal": false
     },
     {
@@ -2149,6 +2175,12 @@
       "isGlobal": false
     },
     {
+      "key": "scrollArea--down",
+      "className": "MuiDataGridPro-scrollArea--down",
+      "description": "Styles applied to the bottom scroll area element.",
+      "isGlobal": false
+    },
+    {
       "key": "scrollArea--left",
       "className": "MuiDataGridPro-scrollArea--left",
       "description": "Styles applied to the left scroll area element.",
@@ -2158,6 +2190,12 @@
       "key": "scrollArea--right",
       "className": "MuiDataGridPro-scrollArea--right",
       "description": "Styles applied to the right scroll area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollArea--up",
+      "className": "MuiDataGridPro-scrollArea--up",
+      "description": "Styles applied to the top scroll area element.",
       "isGlobal": false
     },
     {

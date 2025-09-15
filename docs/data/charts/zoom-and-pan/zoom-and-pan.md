@@ -52,13 +52,9 @@ See how the secondary axis adapts to the visible part of the primary axis in the
 
 {{"demo": "ZoomFilterMode.js"}}
 
-## Zoom slider 🧪
+## Zoom slider
 
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
-
-You can provide an overview and allow the manipulation of the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
+You can provide an overview that lets users manipulate the zoomed area by setting the `zoom.slider.enabled` property on the axis config.
 
 {{"demo": "ZoomSlider.js"}}
 
@@ -97,6 +93,19 @@ The zoom slider does not display values outside the range delimited by `minStart
 When using composition, you can render the axes' sliders by rendering the `ChartZoomSlider` component.
 
 {{"demo": "ZoomSliderComposition.js"}}
+
+## Preview
+
+When the zoom slider is enabled, you can preview the zoomed area by enabling the `zoom.slider.preview` property on the axis config.
+
+{{"demo": "ZoomSliderPreview.js"}}
+
+### Scatter marker size
+
+The size of the preview marker in scatter charts is 1px by default.
+You can customize it by setting the `zoom.slider.preview.markerSize` property on the series configuration object.
+
+{{"demo": "ZoomSliderPreviewCustomMarkerSize.js"}}
 
 ## Zoom management
 

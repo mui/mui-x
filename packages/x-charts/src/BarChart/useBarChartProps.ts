@@ -11,7 +11,7 @@ import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
 
@@ -49,7 +49,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     className,
     hideLegend,
     showToolbar,
-    ...rest
+    ...other
   } = props;
 
   const id = useId();
@@ -120,7 +120,7 @@ export const useBarChartProps = (props: BarChartProps) => {
   }, [defaultYAxis, hasHorizontalSeries, yAxis]);
 
   const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
-    ...rest,
+    ...other,
     series: seriesWithDefault,
     width,
     height,

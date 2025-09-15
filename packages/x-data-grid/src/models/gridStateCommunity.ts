@@ -19,7 +19,7 @@ import type {
   GridTabIndexState,
   GridVirtualizationState,
 } from '../hooks';
-import type { DataGridProps } from './props/DataGridProps';
+import type { DataGridProcessedProps } from './props/DataGridProps';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridEditingState } from './gridEditRowModel';
 import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
@@ -28,12 +28,13 @@ import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFi
 import type { GridColumnResizeState } from '../hooks/features/columnResize';
 import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
 import type { GridListViewState } from '../hooks/features/listView/useGridListView';
+import type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 
 /**
  * Some props are passed on the state to enable grid selectors to select
  * and react to them.
  */
-type GridStateProps = Pick<DataGridProps, 'getRowId'>;
+type GridStateProps = Pick<DataGridProcessedProps, 'getRowId' | 'listView'>;
 
 /**
  * The state of Data Grid.
@@ -63,6 +64,7 @@ export interface GridStateCommunity {
   columnResize: GridColumnResizeState;
   rowSpanning: GridRowSpanningState;
   listViewColumn: GridListViewState;
+  rowReorder: GridRowReorderState;
 }
 
 /**

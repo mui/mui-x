@@ -43,6 +43,7 @@ export default function BorderRadius() {
           { dataKey: 'high', label: 'High', layout, stack: 'stack' },
           { dataKey: 'low', label: 'Low', layout, stack: 'stack' },
         ]}
+        margin={{ left: 0 }}
         {...(layout === 'vertical' ? chartSettingsV : chartSettingsH)}
         borderRadius={radius}
       />

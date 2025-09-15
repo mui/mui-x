@@ -29,7 +29,7 @@ export default function FormatterD3() {
           tickNumber: 20,
           valueFormatter: (f, context) => {
             if (context.location === 'tick') {
-              const d3Text = context.scale.tickFormat(30, 'e')(f);
+              const d3Text = context.scale.tickFormat(context.tickNumber, 'e')(f);
 
               return d3Text;
             }

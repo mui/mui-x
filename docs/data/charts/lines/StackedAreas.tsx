@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { dataset } from './GDPperCapita';
+import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function StackedAreas() {
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <LineChart
         dataset={dataset}
         xAxis={[
@@ -12,16 +12,10 @@ export default function StackedAreas() {
             id: 'Years',
             dataKey: 'date',
             scaleType: 'time',
-            min: new Date(1990, 0, 1),
-            max: new Date(2018, 0, 1),
             valueFormatter: (date) => date.getFullYear().toString(),
           },
         ]}
-        yAxis={[
-          {
-            width: 70,
-          },
-        ]}
+        yAxis={[{ width: 70 }]}
         series={[
           {
             id: 'France',
@@ -48,7 +42,8 @@ export default function StackedAreas() {
             showMark: false,
           },
         ]}
-        height={400}
+        experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
+        height={300}
       />
     </div>
   );

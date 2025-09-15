@@ -73,7 +73,9 @@ ChartsToolbarPrintExportTrigger.propTypes = {
    *   - [Print/Export as PDF](https://mui.com/x/react-charts/export/#print-export-as-pdf)
    */
   options: PropTypes.shape({
+    copyStyles: PropTypes.bool,
     fileName: PropTypes.string,
+    onBeforeExport: PropTypes.func,
   }),
   /**
    * A function to customize the rendering of the component.

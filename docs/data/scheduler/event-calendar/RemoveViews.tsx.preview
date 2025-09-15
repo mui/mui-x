@@ -1,0 +1,7 @@
+<EventCalendar
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  views={['week', 'month']}
+/>

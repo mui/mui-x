@@ -208,6 +208,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   disableRowSelectionOnClick: boolean;
   /**
+   * If `true`, the Data Grid will not use the exclude model optimization when selecting all rows.
+   * @default false
+   */
+  disableRowSelectionExcludeModel: boolean;
+  /**
    * If `true`, the virtualization is disabled.
    * @default false
    */
@@ -228,6 +233,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default 150
    */
   filterDebounceMs: number;
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering in the columns menu.
+   * @default 150
+   */
+  columnFilterDebounceMs: number;
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
    * @default 56
@@ -826,7 +836,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   processRowUpdate?: (newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R;
   /**
-   * Callback called when `processRowUpdate` throws an error or rejects.
+   * Callback called when `processRowUpdate()` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;

@@ -102,4 +102,6 @@ export const eventList: Record<keyof GlobalEventHandlersEventMap, true> = {
   webkitanimationstart: true,
   webkittransitionend: true,
   wheel: true,
+  beforematch: true,
+  pointerrawupdate: true,
 };

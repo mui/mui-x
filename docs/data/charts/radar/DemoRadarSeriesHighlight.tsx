@@ -2,10 +2,9 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { RadarChart } from '@mui/x-charts/RadarChart';
+import { RadarChart, RadarSeries } from '@mui/x-charts/RadarChart';
 import { HighlightItemData } from '@mui/x-charts/context';
 import Box from '@mui/material/Box';
-import { RadarSeriesType } from '@mui/x-charts/models';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
@@ -21,7 +20,7 @@ export default function DemoRadarSeriesHighlight() {
     React.useState<HighlightItemData | null>(null);
   const [fillArea, setFillArea] = React.useState(false);
 
-  const withOptions = (series: Omit<RadarSeriesType, 'type'>[]) =>
+  const withOptions = (series: RadarSeries[]) =>
     series.map((item) => ({
       ...item,
       fillArea,

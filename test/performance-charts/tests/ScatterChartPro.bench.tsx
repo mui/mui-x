@@ -7,7 +7,7 @@ import { options } from '../utils/options';
 import { bench } from '../utils/bench';
 
 describe('ScatterChartPro', () => {
-  const dataLength = 50;
+  const dataLength = 1_400;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     x: i,
     y: 50 + Math.sin(i / 5) * 25,
@@ -29,11 +29,7 @@ describe('ScatterChartPro', () => {
             },
           ]}
           initialZoom={[{ axisId: 'x', start: 20, end: 70 }]}
-          series={[
-            {
-              data,
-            },
-          ]}
+          series={[{ data }]}
           width={500}
           height={300}
         />,

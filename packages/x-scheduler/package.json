@@ -4,7 +4,6 @@
   "private": true,
   "description": "The community edition of the Scheduler component (MUI X).",
   "author": "MUI Team",
-  "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -15,17 +14,23 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
-    "./joy": "./src/joy/index.ts",
-    "./joy/day-view": "./src/joy/day-view/index.ts",
-    "./joy/event-calendar": "./src/joy/event-calendar/index.ts",
-    "./joy/standalone-view": "./src/joy/standalone-view/index.ts",
-    "./joy/week-view": "./src/joy/week-view/index.ts",
-    "./joy/locales/enUS": "./src/joy/locales/enUS.ts",
-    "./joy/locales/frFR": "./src/joy/locales/frFR.ts",
+    "./material": "./src/material/index.ts",
+    "./material/agenda-view": "./src/material/agenda-view/index.ts",
+    "./material/day-view": "./src/material/day-view/index.ts",
+    "./material/event-calendar": "./src/material/event-calendar/index.ts",
+    "./material/month-view": "./src/material/month-view/index.ts",
+    "./material/standalone-view": "./src/material/standalone-view/index.ts",
+    "./material/week-view": "./src/material/week-view/index.ts",
+    "./material/timeline-view": "./src/material/timeline-view/index.ts",
+    "./material/translations/enUS": "./src/material/translations/enUS.ts",
+    "./material/translations/frFR": "./src/material/translations/frFR.ts",
     "./primitives": "./src/primitives/index.ts",
+    "./primitives/models": "./src/primitives/models/index.ts",
     "./primitives/day-grid": "./src/primitives/day-grid/index.ts",
     "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
+    "./primitives/timeline": "./src/primitives/timeline/index.ts",
     "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
+    "./primitives/use-event-calendar": "./src/primitives/use-event-calendar/index.ts",
     "./primitives/use-week-list": "./src/primitives/use-week-list/index.ts"
   },
   "sideEffects": false,
@@ -46,11 +51,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts",
+    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -59,12 +60,15 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.2",
     "@babel/runtime": "catalog:",
-    "@base-ui-components/react": "1.0.0-beta.0",
-    "@floating-ui/react": "^0.27.13",
+    "@base-ui-components/react": "^1.0.0-beta.3",
+    "@base-ui-components/utils": "^0.1.1",
+    "@floating-ui/react": "^0.27.16",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:",
-    "lucide-react": "^0.525.0",
+    "lucide-react": "^0.542.0",
     "reselect": "catalog:",
     "prop-types": "catalog:",
     "use-sync-external-store": "catalog:"

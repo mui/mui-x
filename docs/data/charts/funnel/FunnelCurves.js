@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_FunnelChart as FunnelChart } from '@mui/x-charts-pro/FunnelChart';
+import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
 import { populationByEducationLevelPercentageSeries } from './populationByEducationLevel';
@@ -50,6 +50,7 @@ export default function FunnelCurves() {
                 borderRadius: props.borderRadius,
                 layout: 'vertical',
                 variant: props.variant,
+                funnelDirection: 'increasing',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}
@@ -64,6 +65,7 @@ export default function FunnelCurves() {
                 borderRadius: props.borderRadius,
                 layout: 'horizontal',
                 variant: props.variant,
+                funnelDirection: 'increasing',
                 ...populationByEducationLevelPercentageSeries,
               },
             ]}

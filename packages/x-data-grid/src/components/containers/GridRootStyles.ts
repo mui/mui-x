@@ -150,6 +150,9 @@ export const GridRootStyles = styled('div', {
     },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
+    { [`& .${c['row--dropAbove']}`]: styles['row--dropAbove'] },
+    { [`& .${c['row--dropBelow']}`]: styles['row--dropBelow'] },
+    { [`& .${c['row--beingDragged']}`]: styles['row--beingDragged'] },
   ],
 })<{ ownerState: OwnerState }>(() => {
   const apiRef = useGridPrivateApiContext();
@@ -460,6 +463,12 @@ export const GridRootStyles = styled('div', {
         opacity: 0.5,
       },
     },
+    // Hide the column separator when the column has border and it is not resizable
+    // In this case, this column separator may block interaction with the separator from the adjacent column that is resizable
+    [`& .${c['columnHeader--withLeftBorder']} .${c['columnSeparator--sideLeft']}:not(.${c['columnSeparator--resizable']}), & .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideRight']}:not(.${c['columnSeparator--resizable']})`]:
+      {
+        display: 'none',
+      },
     [`& .${c['columnSeparator--sideLeft']}`]: {
       left: columnSeparatorOffset,
     },
@@ -607,6 +616,11 @@ export const GridRootStyles = styled('div', {
         outlineOffset: focusOutlineWidth * -1,
       },
     },
+    [`& .${c['cell--editing']}`]: {
+      '& .MuiInputBase-root': {
+        height: '100%',
+      },
+    },
     [`& .${c['row--editing']}`]: {
       boxShadow: vars.shadows.base,
     },
@@ -709,7 +723,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.rowReorderCellPlaceholder}`]: {
       display: 'none',
     },
-    [`& .${c['columnHeader--dragging']}, & .${c['row--dragging']}`]: {
+    [`& .${c['columnHeader--dragging']}`]: {
       background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
@@ -719,9 +733,12 @@ export const GridRootStyles = styled('div', {
       background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: vars.colors.interactive.disabledOpacity,
+      border: '1px solid var(--DataGrid-rowBorderColor)',
+      color: vars.colors.foreground.base,
+      transform: 'translateZ(0)',
 
       [`& .${c.rowReorderCellPlaceholder}`]: {
+        padding: '0 6px',
         display: 'flex',
       },
     },
@@ -761,6 +778,7 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
         position: 'sticky',
+        zIndex: 40, // Should be above the column separator
         right: 0,
         zIndex: 30,
       },
@@ -787,6 +805,45 @@ export const GridRootStyles = styled('div', {
       // Hide grid content
       [`& .${c.pinnedRows}`]: {
         display: 'none',
+      },
+    },
+    [`& .${c['row--dropAbove']}`]: {
+      position: 'relative',
+      '&::before': {
+        pointerEvents: 'none',
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '2px',
+        backgroundColor: vars.colors.interactive.selected,
+      },
+    },
+    [`& .${c['row--dropBelow']}`]: {
+      position: 'relative',
+      '&::after': {
+        zIndex: 100,
+        pointerEvents: 'none',
+        content: '""',
+        position: 'absolute',
+        bottom: '-2px',
+        left: 0,
+        width: '100%',
+        height: '2px',
+        backgroundColor: vars.colors.interactive.selected,
+      },
+      [`&.${c['row--lastVisible']}`]: {
+        '&::after': {
+          bottom:
+            'calc(var(--DataGrid-hasScrollY) * 0px + (1 - var(--DataGrid-hasScrollY)) * -2px)',
+        },
+      },
+    },
+    [`& .${c['row--beingDragged']}`]: {
+      color: vars.colors.foreground.disabled,
+      '&:hover': {
+        backgroundColor: 'transparent',
       },
     },
   };
