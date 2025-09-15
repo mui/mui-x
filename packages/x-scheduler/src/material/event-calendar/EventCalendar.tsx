@@ -7,7 +7,7 @@ import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { EventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { DateNavigator } from '../internals/components/date-navigator';
@@ -19,6 +19,17 @@ import {
 } from '../../primitives/use-event-calendar';
 import '../index.css';
 import './EventCalendar.css';
+
+function ErrorCallout() {
+  return (
+    <div className="ErrorCallout">
+      <p>
+        <span>The Timeline view is currently only available on its own, rendered inside the </span>
+        <span className="CodeSnippet">{'<StandaloneView/>'}</span> component.
+      </p>
+    </div>
+  );
+}
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -46,6 +57,9 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
       break;
     case 'agenda':
       content = <AgendaView />;
+      break;
+    case 'timeline':
+      content = <ErrorCallout />;
       break;
     default:
       content = null;

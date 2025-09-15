@@ -1,31 +1,37 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
 import { TreeViewItemId } from '../../models';
-import { useSelector } from '../hooks/useSelector';
-import {
-  selectorItemMeta,
-  selectorItemOrderedChildrenIds,
-} from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { itemsSelectors, UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 import { useTreeViewContext } from '../TreeViewProvider';
+import { expansionSelectors, UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 
 const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
 >(null);
 
+const EMPTY_ARRAY: any[] = [];
+const selectorNoChildren = () => EMPTY_ARRAY;
+
 const WrappedTreeItem = React.memo(function WrappedTreeItem({
   itemSlot,
   itemSlotProps,
   itemId,
+  skipChildren,
 }: WrappedTreeItemProps) {
   const renderItemForRichTreeView = React.useContext(RichTreeViewItemsContext)!;
-  const { store } = useTreeViewContext();
+  const { store } = useTreeViewContext<[UseTreeViewItemsSignature]>();
 
-  const itemMeta = useSelector(store, selectorItemMeta, itemId);
-  const children = useSelector(store, selectorItemOrderedChildrenIds, itemId);
+  const itemMeta = useStore(store, itemsSelectors.itemMeta, itemId);
+  const children = useStore(
+    store,
+    skipChildren ? selectorNoChildren : itemsSelectors.itemOrderedChildrenIds,
+    itemId,
+  );
   const Item = (itemSlot ?? TreeItem) as React.JSXElementConstructor<TreeItemProps>;
 
   const { ownerState, ...itemProps } = useSlotProps({
@@ -40,11 +46,20 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
 
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { slots, slotProps } = props;
-  const { store } = useTreeViewContext();
+  const { store } =
+    useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>();
 
   const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;
-  const items = useSelector(store, selectorItemOrderedChildrenIds, null);
+  const domStructure = useStore(store, itemsSelectors.domStructure);
+  const items = useStore(
+    store,
+    domStructure === 'flat'
+      ? (state) => expansionSelectors.flatList(state)
+      : (state) => itemsSelectors.itemOrderedChildrenIds(state, null),
+  );
+
+  const skipChildren = domStructure === 'flat';
 
   const renderItem = React.useCallback(
     (itemId: TreeViewItemId) => {
@@ -54,10 +69,11 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
           itemSlotProps={itemSlotProps}
           key={itemId}
           itemId={itemId}
+          skipChildren={skipChildren}
         />
       );
     },
-    [itemSlot, itemSlotProps],
+    [itemSlot, itemSlotProps, skipChildren],
   );
 
   return (
@@ -100,4 +116,5 @@ export interface RichTreeViewItemsProps {
 interface WrappedTreeItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {
   itemSlot: React.JSXElementConstructor<TreeItemProps> | undefined;
   itemSlotProps: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState> | undefined;
+  skipChildren: boolean;
 }

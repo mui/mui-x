@@ -184,6 +184,18 @@ The following demo leverages the CSS customization API to match the Ant Design s
 
 {{"demo": "AntDesignGrid.js", "defaultCodeOpen": false}}
 
+## Styling row groups [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+Use `getRowClassName` to add a custom class to the row group and then write CSS to style it.
+
+The example below demonstrates how to style a row group when any of the child rows has a "Gross" value greater than a specific value. The condition uses [`gridRowNodeSelector` and `gridRowSelector`](/x/react-data-grid/row-definition/#selectors) to check for the targeted row type and to get the row data respectively.
+
+{{"demo": "RowGroupingStyling.js", "bg": "inline"}}
+
+:::success
+The styling method is not limited to the [`sx` prop](/x/react-data-grid/style/#using-the-sx-prop). You can use other styling solutions like plain CSS files or CSS modules.
+:::
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

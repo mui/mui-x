@@ -121,7 +121,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
     }, [filteredSelection, selectionCandidates]);
 
     const isIndeterminate = React.useMemo(() => {
-      if (filteredSelection.ids.size === 0) {
+      if (currentSelectionSize === 0) {
         return false;
       }
       const selectionManager = createRowSelectionManager(filteredSelection);
@@ -131,7 +131,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
         }
       }
       return false;
-    }, [filteredSelection, selectionCandidates]);
+    }, [currentSelectionSize, filteredSelection, selectionCandidates]);
 
     const isChecked = currentSelectionSize > 0;
 

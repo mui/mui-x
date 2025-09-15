@@ -31,7 +31,7 @@ const MyOctokit = Octokit.plugin(retry);
  * @returns {Promise<string|null>} The changelog string or null
  */
 async function main(argv) {
-  const { githubToken, ...rest } = argv;
+  const { githubToken, ...other } = argv;
 
   if (!githubToken) {
     throw new TypeError(
@@ -45,7 +45,7 @@ async function main(argv) {
 
   const { generateChangelog } = getChangelogUtils(octokit);
 
-  return generateChangelog({ ...rest, octokit });
+  return generateChangelog({ ...other, octokit });
 }
 
 yargs(hideBin(process.argv))

@@ -5,7 +5,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { PreferencesMenu } from './preferences-menu';
 import './HeaderToolbar.css';
@@ -33,7 +33,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
     >
       <div className="PrimaryActionWrapper">
         {showViewSwitcher && <ViewSwitcher />}
-        <button className="HeaderToolbarButton" onClick={instance.goToToday} type="button">
+        <button className="Button OutlinedNeutralButton" onClick={instance.goToToday} type="button">
           {translations.today}
         </button>
       </div>

@@ -1,25 +1,11 @@
 import {
   SchedulerValidDate,
   CalendarEvent,
-  CalendarEventOccurrenceWithPosition,
+  CalendarProcessedDate,
   CalendarEventOccurrence,
 } from '../models';
 import { Adapter } from './adapter/types';
-
-/**
- *  Returns the largest `eventRowIndex` among all-day occurrences.
- *  Useful to know how many stacked rows are already used for a given day.
- *  @returns Highest row index found, or 0 if none.
- */
-export function getEventWithLargestRowIndex(events: CalendarEventOccurrenceWithPosition[]) {
-  return (
-    events.reduce(
-      (maxEvent, event) =>
-        (event?.eventRowIndex ?? 0) > (maxEvent.eventRowIndex ?? 0) ? event : maxEvent,
-      { eventRowIndex: 0 } as CalendarEventOccurrenceWithPosition,
-    ).eventRowIndex || 0
-  );
-}
+import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
 
 export function isDayWithinRange(
   day: SchedulerValidDate,
@@ -35,68 +21,95 @@ export function isDayWithinRange(
 }
 
 /**
- *  Computes the vertical row for an all-day occurrence on `day`.
- *  If the event started before the visible range, reuses the row chosen on the first visible day.
- *  Otherwise, assigns the first free row index in that day’s all-day stack.
- *  @returns 1-based row index.
+ *  Returns the list of days an event occurrence should be visible on.
  */
-export function getEventRowIndex(
-  event: CalendarEventOccurrence,
-  day: SchedulerValidDate,
-  days: SchedulerValidDate[],
-  daysMap: Map<string, { allDayEvents: CalendarEventOccurrenceWithPosition[] }>,
-  adapter: Adapter,
-): number {
-  const dayKey = adapter.format(day, 'keyboardDate');
-  const eventFirstDay = adapter.startOfDay(event.start);
-
-  // If the event starts before the current day, we need to find the row index of the first day of the event
-  const isBeforeVisibleRange =
-    adapter.isBefore(eventFirstDay, day) && !adapter.isSameDay(days[0], day);
-  if (isBeforeVisibleRange) {
-    const firstDayKey = adapter.format(
-      adapter.isBefore(eventFirstDay, days[0]) ? days[0] : eventFirstDay,
-      'keyboardDate',
-    );
-
-    // Try to find the row index from the original event placement on the first visible day
-    const existingRowIndex = daysMap
-      .get(firstDayKey)
-      ?.allDayEvents.find((currentEvent) => currentEvent.key === event.key)?.eventRowIndex;
-
-    return existingRowIndex ?? 1;
-  }
-
-  // Otherwise, we just render the event on the first available row in the column
-  const usedIndexes = new Set(
-    daysMap.get(dayKey)?.allDayEvents.map((item) => item.eventRowIndex) ?? [],
-  );
-  let i = 1;
-  while (usedIndexes.has(i)) {
-    i += 1;
-  }
-  return i;
-}
-
-/**
- *  Returns the list of visible days an event should render on.
- *  When `shouldOnlyRenderEventInOneCell` is true, collapses multi-day to a single cell
- *  (first visible day, or the event’s start if it is inside the range).
- */
-export function getEventDays(
+export function getDaysTheOccurrenceIsVisibleOn(
   event: CalendarEvent,
-  days: SchedulerValidDate[],
+  days: CalendarProcessedDate[],
   adapter: Adapter,
-  shouldOnlyRenderEventInOneCell: boolean,
+  renderEventIn: 'first-day' | 'every-day',
 ) {
   const eventFirstDay = adapter.startOfDay(event.start);
-  const eventLastDay = adapter.endOfDay(event.end);
-
-  if (shouldOnlyRenderEventInOneCell) {
-    if (adapter.isBefore(eventFirstDay, days[0])) {
-      return [days[0]];
+  if (renderEventIn === 'first-day') {
+    if (adapter.isBefore(eventFirstDay, days[0].value)) {
+      return [days[0].value];
     }
     return [eventFirstDay];
   }
-  return days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay, adapter));
+
+  const eventLastDay = adapter.endOfDay(event.end);
+  return days
+    .filter((day) => isDayWithinRange(day.value, eventFirstDay, eventLastDay, adapter))
+    .map((day) => day.value);
+}
+
+/**
+ * Creates a CalendarProcessedDate object from a date object.
+ */
+export function processDate(date: SchedulerValidDate, adapter: Adapter): CalendarProcessedDate {
+  return {
+    value: date,
+    key: getDateKey(date, adapter),
+  };
+}
+
+/**
+ * Returns a string representation of the date.
+ * It can be used as key in Maps or passed to the React `key` property when looping through days.
+ * It only contains date information, two dates representing the same day but with different time will have the same key.
+ */
+export function getDateKey(day: SchedulerValidDate, adapter: Adapter): string {
+  return adapter.format(day, 'keyboardDate');
+}
+
+/**
+ * Returns the occurrences to render in the given date range, expanding recurring events.
+ */
+export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
+  const { adapter, start, end, events, visibleResources } = parameters;
+  const occurrences: CalendarEventOccurrence[] = [];
+
+  for (const event of events) {
+    // STEP 1: Skip events from resources that are not visible
+    if (event.resource && visibleResources.get(event.resource) === false) {
+      continue;
+    }
+
+    // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
+    if (event.rrule) {
+      // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
+      occurrences.push(...getRecurringEventOccurrencesForVisibleDays(event, start, end, adapter));
+      continue;
+    }
+
+    // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
+    if (adapter.isAfter(event.start, end) || adapter.isBefore(event.end, start)) {
+      continue;
+    }
+
+    occurrences.push({ ...event, key: String(event.id) });
+  }
+
+  // STEP 3: Sort by the actual start date of each occurrence
+  // If two events have the same start date, put the longest one first
+  // We sort here so that events are processed in the correct order
+  return (
+    occurrences
+      // TODO: Avoid JS Date conversion
+      .map((occurrence) => ({
+        occurrence,
+        start: adapter.toJsDate(occurrence.start).getTime(),
+        end: adapter.toJsDate(occurrence.end).getTime(),
+      }))
+      .sort((a, b) => a.start - b.start || b.end - a.end)
+      .map((item) => item.occurrence)
+  );
+}
+
+interface GetOccurrencesFromEventsParameters {
+  adapter: Adapter;
+  start: SchedulerValidDate;
+  end: SchedulerValidDate;
+  events: CalendarEvent[];
+  visibleResources: Map<string, boolean>;
 }
