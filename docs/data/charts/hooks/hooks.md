@@ -65,7 +65,9 @@ For example if you create a component `<CustomLegend />` that uses the `useLegen
   series={[...]}
   slots={{ legend: CustomLegend }}
 />
+```
 
+```jsx
 // ❌ Incorrect usage - outside chart context
 <div>
   <LineChart series={[...]} />
