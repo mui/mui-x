@@ -4,7 +4,7 @@ import {
   LineChart,
   lineElementClasses,
 } from '@mui/x-charts/LineChart';
-import { dataset } from './GDPperCapita';
+import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function CSSCustomization() {
   return (

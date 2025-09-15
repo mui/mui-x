@@ -7,7 +7,7 @@ import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { EventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { DateNavigator } from '../internals/components/date-navigator';
@@ -66,7 +66,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   }
 
   return (
-    <EventCalendarContext.Provider value={store}>
+    <EventCalendarStoreContext.Provider value={store}>
       <TranslationsProvider translations={translations}>
         <div
           {...other}
@@ -96,6 +96,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           </div>
         </div>
       </TranslationsProvider>
-    </EventCalendarContext.Provider>
+    </EventCalendarStoreContext.Provider>
   );
 });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { EventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import {
   EventCalendarParameters,
   useEventCalendar,
@@ -16,9 +16,9 @@ export function StandaloneView(props: StandaloneViewProps) {
   const store = useEventCalendar(parameters);
 
   return (
-    <EventCalendarContext.Provider value={store}>
+    <EventCalendarStoreContext.Provider value={store}>
       {forwardedProps.children}
-    </EventCalendarContext.Provider>
+    </EventCalendarStoreContext.Provider>
   );
 }
 

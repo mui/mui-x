@@ -10,7 +10,7 @@ import {
   CalendarPreferencesMenuConfig,
 } from '../../../../../primitives/models/preferences';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 import './PreferencesMenu.css';
 
@@ -23,7 +23,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
-  const store = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const preferences = useStore(store, selectors.preferences);
   const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
 

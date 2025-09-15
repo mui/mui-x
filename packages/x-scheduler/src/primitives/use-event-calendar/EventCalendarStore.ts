@@ -255,7 +255,7 @@ export class EventCalendarStore extends Store<State> {
   /**
    * Updates an event in the calendar.
    */
-  public updateEvent = (calendarEvent: CalendarEvent) => {
+  public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
     const original = selectors.event(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(
@@ -270,7 +270,7 @@ export class EventCalendarStore extends Store<State> {
 
     const { onEventsChange } = this.parameters;
     const updatedEvents = this.state.events.map((ev) =>
-      ev.id === calendarEvent.id ? calendarEvent : ev,
+      ev.id === calendarEvent.id ? { ...ev, ...calendarEvent } : ev,
     );
     onEventsChange?.(updatedEvents);
   };
