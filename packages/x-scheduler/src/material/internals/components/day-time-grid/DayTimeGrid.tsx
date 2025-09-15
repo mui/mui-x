@@ -4,11 +4,13 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui-components/utils/store';
+import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-event-occurrences-grouped-by-day';
+import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
-  SchedulerValidDate,
-  CalendarEvent,
+  CalendarEventOccurrence,
   CalendarPrimitiveEventData,
+  CalendarProcessedDate,
 } from '../../../../primitives/models';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
@@ -16,12 +18,12 @@ import { DayGrid } from '../../../../primitives/day-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
-import './DayTimeGrid.css';
 import { DayGridCell } from './DayGridCell';
+import './DayTimeGrid.css';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -41,38 +43,38 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const { store, instance } = useEventCalendarContext();
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
-  const daysWithEvents = useStore(store, selectors.eventsToRenderGroupedByDay, {
-    days,
-    shouldOnlyRenderEventInOneCell: false,
-  });
+
   const ampm = useStore(store, selectors.ampm);
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
+  const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
+  const daysWithOccurrences = useEventOccurrencesWithDayGridPosition({
+    days,
+    occurrencesMap,
+    shouldAddPosition: shouldRenderOccurrenceInDayGrid,
+  });
+
   const { start, end } = React.useMemo(
     () => ({
-      start: days[0],
-      end: adapter.endOfDay(days[days.length - 1]),
+      start: days[0].value,
+      end: adapter.endOfDay(days[days.length - 1].value),
     }),
     [adapter, days],
   );
 
   const isTodayInView = React.useMemo(
-    () => !adapter.isBeforeDay(now, days[0]) && !adapter.isAfterDay(now, days[days.length - 1]),
+    () =>
+      !adapter.isBeforeDay(now, days[0].value) &&
+      !adapter.isAfterDay(now, days[days.length - 1].value),
     [adapter, days, now],
   );
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: CalendarPrimitiveEventData) => {
-      const updatedEvent: CalendarEvent = {
-        ...selectors.event(store.state, data.eventId)!,
-        start: data.start,
-        end: data.end,
-      };
-
-      instance.updateEvent(updatedEvent);
+      instance.updateEvent({ id: data.eventId, start: data.start, end: data.end });
     },
-    [instance, store],
+    [instance],
   );
 
   useIsoLayoutEffect(() => {
@@ -83,9 +85,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     }
     const hasScroll = body.scrollHeight > body.clientHeight;
     allDayHeader.style.setProperty('--has-scroll', hasScroll ? '1' : '0');
-  }, [daysWithEvents]);
+  }, [occurrencesMap]);
 
-  const lastIsWeekend = isWeekend(adapter, days[days.length - 1]);
+  const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 
   const shouldHideHour = (hour: number) => {
     if (!isTodayInView || !showCurrentTimeIndicator) {
@@ -95,11 +97,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     return Math.abs(diffIn(adapter, now, slotCenter, 'minutes')) <= 25;
   };
 
-  const renderHeaderContent = (day: SchedulerValidDate) => (
+  const renderHeaderContent = (day: CalendarProcessedDate) => (
     <span className="DayTimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
-      <span className="DayTimeGridHeaderDayName">{adapter.formatByString(day, 'ccc')}</span>
-      <span className="DayTimeGridHeaderDayNumber">{adapter.format(day, 'dayOfMonth')}</span>
+      <span className="DayTimeGridHeaderDayName">{adapter.formatByString(day.value, 'ccc')}</span>
+      <span className="DayTimeGridHeaderDayNumber">{adapter.format(day.value, 'dayOfMonth')}</span>
     </span>
   );
 
@@ -113,19 +115,19 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <div className="DayTimeGridHeader">
           <div className="DayTimeGridGridRow DayTimeGridHeaderRow" role="row">
             <div className="DayTimeGridAllDayEventsCell" />
-            {daysWithEvents.map(({ day }) => (
+            {days.map((day) => (
               <div
-                key={day.toString()}
-                id={`DayTimeGridHeaderCell-${day.toString()}`}
+                key={day.key}
+                id={`DayTimeGridHeaderCell-${day.key}`}
                 role="columnheader"
-                aria-label={`${adapter.format(day, 'weekday')} ${adapter.format(day, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(day, now) ? '' : undefined}
+                aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
+                data-current={adapter.isSameDay(day.value, now) ? '' : undefined}
               >
                 {hasDayView ? (
                   <button
                     type="button"
                     className="DayTimeGridHeaderButton"
-                    onClick={(event) => instance.switchToDay(day, event)}
+                    onClick={(event) => instance.switchToDay(day.value, event)}
                     tabIndex={0}
                   >
                     {renderHeaderContent(day)}
@@ -157,14 +159,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
-            {daysWithEvents.map(({ day, allDayEvents }, dayIndex) => (
-              <DayGridCell
-                key={day.toString()}
-                day={day}
-                allDayEvents={allDayEvents}
-                dayIndexInRow={dayIndex}
-                rowLength={days.length}
-              />
+            {daysWithOccurrences.map((day) => (
+              <DayGridCell key={day.key} day={day} />
             ))}
           </DayGrid.Row>
           <div className="ScrollablePlaceholder" />
@@ -194,12 +190,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {daysWithEvents.map(({ day, events }, index) => (
+                {daysWithOccurrences.map((day, index) => (
                   <TimeGridColumn
-                    key={day.toString()}
+                    key={day.key}
                     day={day}
-                    events={events}
-                    isToday={adapter.isSameDay(day, now)}
+                    isToday={adapter.isSameDay(day.value, now)}
                     index={index}
                     showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
                   />
@@ -212,3 +207,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     </div>
   );
 });
+
+// TODO: Allow to render some multi-day events that are not all-day in the Day Grid.
+function shouldRenderOccurrenceInDayGrid(occurrence: CalendarEventOccurrence) {
+  return !!occurrence.allDay;
+}

@@ -9,7 +9,7 @@ import { AgendaEventProps } from './AgendaEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
 import './AgendaEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
@@ -22,7 +22,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
-    event: eventProp,
+    occurrence,
     ariaLabelledBy,
     className,
     onEventClick,
@@ -35,9 +35,9 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
   const translations = useTranslations();
   const { store } = useEventCalendarContext();
   const ampm = useStore(store, selectors.ampm);
-  const resource = useStore(store, selectors.resource, eventProp.resource);
-  const color = useStore(store, selectors.eventColor, eventProp.id);
-  const isRecurring = Boolean(eventProp.rrule);
+  const resource = useStore(store, selectors.resource, occurrence.resource);
+  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const isRecurring = Boolean(occurrence.rrule);
 
   return (
     // TODO: Use button
@@ -68,21 +68,21 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
           className={clsx('AgendaEventCardContent', 'LinesClamp')}
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
-          {eventProp?.allDay ? (
+          {occurrence?.allDay ? (
             <span className="AgendaEventTime">{translations.allDay}</span>
           ) : (
             <time className="AgendaEventTime">
               <span>
-                {adapter.format(eventProp.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
               </span>
               <span>
                 {' '}
-                - {adapter.format(eventProp.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                - {adapter.format(occurrence.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
               </span>
             </time>
           )}
 
-          <span className="AgendaEventTitle">{eventProp.title}</span>
+          <span className="AgendaEventTitle">{occurrence.title}</span>
         </p>
         {isRecurring && (
           <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />

@@ -8,7 +8,7 @@ import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
