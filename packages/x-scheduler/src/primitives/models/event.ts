@@ -91,9 +91,42 @@ export interface CalendarEventOccurrence extends CalendarEvent {
   key: string;
 }
 
-/** Extension of an occurrence with layout information for all-day rows. */
-export interface CalendarEventOccurrenceWithPosition extends CalendarEventOccurrence {
-  eventRowIndex?: number;
+/**
+ * An event occurrence with the position it needs to be rendered on a day grid.
+ */
+export interface CalendarEventOccurrenceWithDayGridPosition extends CalendarEventOccurrence {
+  position: CalendarEventOccurrenceDayGridPosition;
+}
+
+export interface CalendarEventOccurrenceDayGridPosition {
+  /**
+   * The 1-based index of the row the event should be rendered in.
+   */
+  index: number;
+  /**
+   * The number of days the event should span across.
+   */
+  daySpan: number;
+  /**
+   * Whether the event should be rendered as invisible.
+   * Invisible events are used to reserve space for events that started on a previous day.
+   */
+  isInvisible?: boolean;
+}
+
+export interface CalendarEventOccurrenceWithTimePosition extends CalendarEventOccurrence {
+  position: CalendarEventOccurrenceTimePosition;
+}
+
+export interface CalendarEventOccurrenceTimePosition {
+  /**
+   * The first (1-based) index of the row / column the event should be rendered in.
+   */
+  firstIndex: number;
+  /**
+   * The last (1-based) index of the row / column the event should be rendered in.
+   */
+  lastIndex: number;
 }
 
 export type CalendarEventId = string | number;
@@ -120,6 +153,19 @@ export interface CalendarPrimitiveEventData {
   columnId: string | null;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
+}
+
+export interface CalendarProcessedDate {
+  /**
+   * The date object.
+   */
+  value: SchedulerValidDate;
+  /**
+   * String representation of the date.
+   * It can be used as key in Maps or passed to the React `key` property when looping through days.
+   * It only contains date information, two dates representing the same day but with different time will have the same key.
+   */
+  key: string;
 }
 
 /**
