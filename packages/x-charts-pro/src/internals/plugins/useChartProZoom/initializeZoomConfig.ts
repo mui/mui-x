@@ -56,7 +56,7 @@ function initializeFor<T extends 'zoom' | 'pan'>(
   // We then need to generate a usable config by type
   // When a gesture type is provided without options, it means we enable it for all pointer modes
   // Any interaction with a specific pointer mode should be restricted to that mode
-  const acc: DefaultizedZoomConfig['zoom'] | DefaultizedZoomConfig['pan'] = {};
+  const acc: DefaultizedZoomConfig[T] = {};
   for (const [type, config] of Object.entries(aggregation)) {
     const lastEmpty = config.findLast((item) => !item.pointerMode);
     const lastMouse = config.findLast((item) => item.pointerMode === 'mouse');
