@@ -37,28 +37,40 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
     // Resize event
     if (isDraggingDayGridEventResizeHandler(data)) {
       if (data.side === 'start') {
-        const draggedDay = mergeDateAndTime(adapter, value, data.start);
-        if (adapter.isBeforeDay(draggedDay, data.end)) {
-          return {
-            start: draggedDay,
-            end: data.end,
-            eventId: data.id,
-            columnId: null,
-          };
+        if (adapter.isAfterDay(value, data.end)) {
+          return undefined;
         }
-        return undefined;
+
+        let draggedDay: SchedulerValidDate;
+        if (adapter.isSameDay(value, data.end)) {
+          draggedDay = adapter.startOfDay(data.end);
+        } else {
+          draggedDay = mergeDateAndTime(adapter, value, data.start);
+        }
+        return {
+          start: draggedDay,
+          end: data.end,
+          eventId: data.id,
+          columnId: null,
+        };
       }
       if (data.side === 'end') {
-        const draggedDay = mergeDateAndTime(adapter, value, data.end);
-        if (adapter.isAfterDay(draggedDay, data.start)) {
-          return {
-            start: data.start,
-            end: draggedDay,
-            eventId: data.id,
-            columnId: null,
-          };
+        if (adapter.isBeforeDay(value, data.start)) {
+          return undefined;
         }
-        return undefined;
+
+        let draggedDay: SchedulerValidDate;
+        if (adapter.isSameDay(value, data.start)) {
+          draggedDay = adapter.endOfDay(data.start);
+        } else {
+          draggedDay = mergeDateAndTime(adapter, value, data.end);
+        }
+        return {
+          start: data.start,
+          end: draggedDay,
+          eventId: data.id,
+          columnId: null,
+        };
       }
     }
 
