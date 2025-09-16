@@ -77,7 +77,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       id: eventId,
       start,
       end,
-      draggedDay: columnStart,
       initialCursorPositionInEventMs: getCursorPositionInElementMs({ input, elementRef: ref }),
     }),
   );
@@ -162,7 +161,6 @@ export namespace TimeGridEvent {
     start: SchedulerValidDate;
     end: SchedulerValidDate;
     initialCursorPositionInEventMs: number;
-    draggedDay: SchedulerValidDate;
   }
 
   export interface DragData extends SharedDragData {
