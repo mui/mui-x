@@ -2,11 +2,14 @@
 import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { isDraggingDayGridEvent } from '../../utils/drag-utils';
+import {
+  isDraggingDayGridEvent,
+  isDraggingDayGridEventResizeHandler,
+} from '../../utils/drag-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useDayGridRootContext } from '../root/DayGridRootContext';
 import { SchedulerValidDate } from '../../models';
-import { diffIn } from '../../utils/date-utils';
+import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
 
 export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Parameters) {
   const { value } = parameters;
@@ -31,6 +34,34 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
       };
     }
 
+    // Resize event
+    if (isDraggingDayGridEventResizeHandler(data)) {
+      if (data.side === 'start') {
+        const draggedDay = mergeDateAndTime(adapter, value, data.start);
+        if (adapter.isBeforeDay(draggedDay, data.end)) {
+          return {
+            start: draggedDay,
+            end: data.end,
+            eventId: data.id,
+            columnId: null,
+          };
+        }
+        return undefined;
+      }
+      if (data.side === 'end') {
+        const draggedDay = mergeDateAndTime(adapter, value, data.end);
+        if (adapter.isAfterDay(draggedDay, data.start)) {
+          return {
+            start: data.start,
+            end: draggedDay,
+            eventId: data.id,
+            columnId: null,
+          };
+        }
+        return undefined;
+      }
+    }
+
     return undefined;
   });
 
@@ -41,16 +72,17 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
 
     return dropTargetForElements({
       element: ref.current,
-      canDrop: (arg) => isDraggingDayGridEvent(arg.source.data),
+      canDrop: (arg) =>
+        isDraggingDayGridEvent(arg.source.data) ||
+        isDraggingDayGridEventResizeHandler(arg.source.data),
       onDrag: ({ source: { data } }) => {
         const newPlaceholder = getEventDropData(data);
-
         if (newPlaceholder) {
           setPlaceholder(newPlaceholder);
         }
       },
       onDragStart: ({ source: { data } }) => {
-        if (isDraggingDayGridEvent(data)) {
+        if (isDraggingDayGridEvent(data) || isDraggingDayGridEventResizeHandler(data)) {
           setPlaceholder({ eventId: data.id, columnId: null, start: data.start, end: data.end });
         }
       },

@@ -16,6 +16,8 @@ import { useDayGridRootContext } from '../root/DayGridRootContext';
 import { selectors } from '../root/store';
 import { DayGridEventContext } from './DayGridEventContext';
 
+const EVENT_PROPS = { style: { pointerEvents: 'none' as const } };
+
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   componentProps: DayGridEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -47,10 +49,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const isDragging = useStore(store, selectors.isDraggingEvent, eventId);
   const [isResizing, setIsResizing] = React.useState(false);
 
-  const props = React.useMemo(
-    () => (hasPlaceholder ? { style: { pointerEvents: 'none' as const } } : {}),
-    [hasPlaceholder],
-  );
+  const props = hasPlaceholder ? EVENT_PROPS : undefined;
 
   const state: DayGridEvent.State = React.useMemo(
     () => ({ ...eventState, dragging: isDragging, resizing: isResizing }),
