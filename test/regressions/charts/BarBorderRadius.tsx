@@ -43,9 +43,7 @@ const chartSettingsV = {
 
 export default function BarBorderRadius() {
   return (
-    <div
-      style={{ display: 'grid', gap: 2, gridTemplateColumns: 'auto repeat(2, 1fr)' }}
-    >
+    <div style={{ display: 'grid', gap: 2, gridTemplateColumns: 'auto repeat(2, 1fr)' }}>
       <div />
       <Typography sx={{ justifySelf: 'center' }}>Layout: Vertical</Typography>
       <Typography sx={{ justifySelf: 'center' }}>Layout: Horizontal</Typography>
