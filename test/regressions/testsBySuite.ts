@@ -59,12 +59,12 @@ Object.keys(docsImports).forEach((path: string) => {
   });
 });
 
-const regressionsImports = import.meta.glob<React.ComponentType>('./data-grid/**/*.js', {
+const regressionsImports = import.meta.glob<React.ComponentType>('./data-grid/**/*.{js,tsx}', {
   eager: true,
   import: 'default',
 });
 Object.keys(regressionsImports).forEach((path: string) => {
-  const name = path.replace('./data-grid/', '').replace('.js', '');
+  const name = path.replace('./data-grid/', '').replace(/\.[A-z]+$/, '');
   const suite = `test-regressions-data-grid`;
 
   tests.push({
@@ -75,12 +75,12 @@ Object.keys(regressionsImports).forEach((path: string) => {
   });
 });
 
-const chartsImports = import.meta.glob<React.ComponentType>('./charts/**/*.js', {
+const chartsImports = import.meta.glob<React.ComponentType>('./charts/**/*.{js,tsx}', {
   eager: true,
   import: 'default',
 });
 Object.keys(chartsImports).forEach((path: string) => {
-  const name = path.replace('./charts/', '').replace('.js', '');
+  const name = path.replace('./charts/', '').replace(/\.[A-z]+$/, '');
   const suite = `test-regressions-charts`;
 
   tests.push({
@@ -88,6 +88,22 @@ Object.keys(chartsImports).forEach((path: string) => {
     suite,
     name,
     case: chartsImports[path],
+  });
+});
+
+const pickersImports = import.meta.glob<React.ComponentType>('./pickers/**/*.{js,tsx}', {
+  eager: true,
+  import: 'default',
+});
+Object.keys(pickersImports).forEach((path: string) => {
+  const name = path.replace('./pickers/', '').replace(/\.[A-z]+$/, '');
+  const suite = `test-regressions-pickers`;
+
+  tests.push({
+    path,
+    suite,
+    name,
+    case: pickersImports[path],
   });
 });
 
