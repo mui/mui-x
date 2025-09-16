@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
-import { useEventCalendarContext } from '../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
@@ -17,7 +17,7 @@ const adapter = getAdapter();
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, days, occurrencesMap, firstDayRef } = props;
 
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const preferences = useStore(store, selectors.preferences);
   const translations = useTranslations();
   const daysWithEvents = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });

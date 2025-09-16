@@ -1,5 +1,3 @@
-import { Store } from '@base-ui-components/utils/store';
-import { State } from './store';
 import {
   CalendarEvent,
   CalendarResource,
@@ -11,9 +9,6 @@ import {
   CalendarEventId,
   RecurringEventUpdatedProperties,
 } from '../models';
-import type { EventCalendarInstance } from './EventCalendarInstance';
-
-export type EventCalendarStore = Store<State>;
 
 export interface EventCalendarParameters {
   /**
@@ -100,17 +95,6 @@ export interface EventCalendarParameters {
    * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true }
    */
   preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
-}
-
-export interface EventCalendarContextValue {
-  /**
-   * The store that holds the state of the calendar.
-   */
-  store: Store<State>;
-  /**
-   * The instance methods to interact with the calendar.
-   */
-  instance: EventCalendarInstance;
 }
 
 /**

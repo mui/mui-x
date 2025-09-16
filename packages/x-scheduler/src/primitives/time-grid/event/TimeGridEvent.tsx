@@ -12,6 +12,7 @@ import { useEvent } from '../../utils/useEvent';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { SchedulerValidDate } from '../../models';
 import { TimeGridEventContext } from './TimeGridEventContext';
+import { useAdapter } from '../../utils/adapter/useAdapter';
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   componentProps: TimeGridEvent.Props,
@@ -34,6 +35,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // to control whether the event should behave like a button
   const isInteractive = true;
 
+  const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
   const [isResizing, setIsResizing] = React.useState(false);
@@ -79,12 +81,24 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     }),
   );
 
+  const doesEventStartBeforeColumnStart = React.useMemo(
+    () => adapter.isBefore(start, columnStart),
+    [adapter, start, columnStart],
+  );
+
+  const doesEventEndAfterColumnEnd = React.useMemo(
+    () => adapter.isAfter(end, columnEnd),
+    [adapter, end, columnEnd],
+  );
+
   const contextValue: TimeGridEventContext = React.useMemo(
     () => ({
       setIsResizing,
       getSharedDragData,
+      doesEventStartBeforeColumnStart,
+      doesEventEndAfterColumnEnd,
     }),
-    [getSharedDragData],
+    [getSharedDragData, doesEventStartBeforeColumnStart, doesEventEndAfterColumnEnd],
   );
 
   React.useEffect(() => {

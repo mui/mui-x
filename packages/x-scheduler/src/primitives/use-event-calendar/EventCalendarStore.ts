@@ -11,12 +11,9 @@ import {
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
+  CalendarResource,
 } from '../models';
-import {
-  EventCalendarParameters,
-  EventCalendarStore,
-  UpdateRecurringEventParameters,
-} from './useEventCalendar.types';
+import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
 
@@ -30,24 +27,22 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
 };
-const EMPTY_ARRAY: any[] = [];
+export const DEFAULT_RESOURCES: CalendarResource[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
-export class EventCalendarInstance {
-  private store: EventCalendarStore;
-
+export class EventCalendarStore extends Store<State> {
   private parameters: EventCalendarParameters;
 
   private initialParameters: EventCalendarParameters | null = null;
 
-  private constructor(parameters: EventCalendarParameters, store: EventCalendarStore) {
-    this.store = store;
+  private constructor(initialState: State, parameters: EventCalendarParameters) {
+    super(initialState);
     this.parameters = parameters;
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
       // Add listeners to assert the state validity (not applied in prod)
-      this.store.subscribe((state) => {
+      this.subscribe((state) => {
         this.assertViewValidity(state.view);
         return null;
       });
@@ -76,7 +71,7 @@ export class EventCalendarInstance {
     return {
       adapter,
       events: parameters.events,
-      resources: parameters.resources ?? EMPTY_ARRAY,
+      resources: parameters.resources ?? DEFAULT_RESOURCES,
       views: parameters.views ?? DEFAULT_VIEWS,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
@@ -86,8 +81,8 @@ export class EventCalendarInstance {
     };
   }
 
-  public static create(parameters: EventCalendarParameters, adapter: Adapter) {
-    const store = new Store<State>({
+  public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
+    const initialState: State = {
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
       preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
@@ -106,67 +101,14 @@ export class EventCalendarInstance {
         adapter.startOfDay(adapter.date()),
       view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
       // Store elements that should be synchronized when the parameters change.
-      ...EventCalendarInstance.getPartialStateFromParameters(parameters, adapter),
-    });
+      ...EventCalendarStore.getPartialStateFromParameters(parameters, adapter),
+    };
 
-    const instance = new EventCalendarInstance(parameters, store);
-
-    function updater(newParameters: EventCalendarParameters, newAdapter: Adapter) {
-      const partialState: Partial<State> = EventCalendarInstance.getPartialStateFromParameters(
-        newParameters,
-        newAdapter,
-      );
-
-      function updateModel(
-        controlledProp: 'view' | 'visibleDate',
-        defaultValueProp: 'defaultView' | 'defaultVisibleDate',
-      ) {
-        if (newParameters[controlledProp] !== undefined) {
-          partialState[controlledProp] = newParameters[controlledProp] as any;
-        }
-
-        if (process.env.NODE_ENV !== 'production') {
-          const defaultValue = newParameters[defaultValueProp];
-          const isControlled = newParameters[controlledProp] !== undefined;
-          const initialDefaultValue = instance.initialParameters?.[defaultValueProp];
-          const initialIsControlled = instance.initialParameters?.[controlledProp] !== undefined;
-
-          if (initialIsControlled !== isControlled) {
-            warn(
-              [
-                `Event Calendar: A component is changing the ${
-                  initialIsControlled ? '' : 'un'
-                }controlled ${controlledProp} state of Event Calendar to be ${initialIsControlled ? 'un' : ''}controlled.`,
-                'Elements should not switch from uncontrolled to controlled (or vice versa).',
-                `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-                "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-                'More info: https://fb.me/react-controlled-components',
-              ].join('\n'),
-            );
-          }
-
-          if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-            warn(
-              [
-                `Event Calendar: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
-                `To suppress this warning opt to use a controlled Event Calendar.`,
-              ].join('\n'),
-              'error',
-            );
-          }
-        }
-      }
-
-      updateModel('view', 'defaultView');
-      updateModel('visibleDate', 'defaultVisibleDate');
-      store.apply(partialState);
-    }
-
-    return { store, instance, updater, contextValue: { store, instance } };
+    return new EventCalendarStore(initialState, parameters);
   }
 
   private assertViewValidity(view: CalendarView) {
-    const views = this.store.state.views;
+    const views = this.state.views;
     if (!views.includes(view)) {
       throw new Error(
         [
@@ -179,12 +121,12 @@ export class EventCalendarInstance {
 
   private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
-    const { adapter } = this.store.state;
-    const hasChange = !adapter.isEqual(this.store.state.visibleDate, visibleDate);
+    const { adapter } = this.state;
+    const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
 
     if (hasChange) {
       if (visibleDateProp === undefined) {
-        this.store.set('visibleDate', visibleDate);
+        this.set('visibleDate', visibleDate);
       }
       onVisibleDateChange?.(visibleDate, event);
     }
@@ -202,8 +144,8 @@ export class EventCalendarInstance {
       onViewChange,
     } = this.parameters;
 
-    const hasVisibleDateChange = visibleDate !== this.store.state.visibleDate;
-    const hasViewChange = view !== this.store.state.view;
+    const hasVisibleDateChange = visibleDate !== this.state.visibleDate;
+    const hasViewChange = view !== this.state.view;
     if (!hasVisibleDateChange && !hasViewChange) {
       return;
     }
@@ -214,7 +156,7 @@ export class EventCalendarInstance {
     const canSetView = viewProp === undefined && hasViewChange;
 
     if (canSetVisibleDate || canSetView) {
-      this.store.apply({
+      this.apply({
         ...(canSetVisibleDate ? { visibleDate } : {}),
         ...(canSetView ? { view } : {}),
       });
@@ -229,7 +171,7 @@ export class EventCalendarInstance {
   };
 
   private setSiblingVisibleDate = (delta: 1 | -1, event: React.UIEvent) => {
-    const siblingVisibleDateGetter = this.store.state.viewConfig?.siblingVisibleDateGetter;
+    const siblingVisibleDateGetter = this.state.viewConfig?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
         'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
@@ -237,7 +179,63 @@ export class EventCalendarInstance {
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter(this.store.state.visibleDate, delta), event);
+    this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
+  };
+
+  /**
+   * Updates the state of the calendar based on the new parameters provided to the root component.
+   */
+  public updateStateFromParameters = (parameters: EventCalendarParameters, adapter: Adapter) => {
+    const partialState: Partial<State> = EventCalendarStore.getPartialStateFromParameters(
+      parameters,
+      adapter,
+    );
+
+    const initialParameters = this.initialParameters;
+
+    function updateModel(
+      controlledProp: 'view' | 'visibleDate',
+      defaultValueProp: 'defaultView' | 'defaultVisibleDate',
+    ) {
+      if (parameters[controlledProp] !== undefined) {
+        partialState[controlledProp] = parameters[controlledProp] as any;
+      }
+
+      if (process.env.NODE_ENV !== 'production') {
+        const defaultValue = parameters[defaultValueProp];
+        const isControlled = parameters[controlledProp] !== undefined;
+        const initialDefaultValue = initialParameters?.[defaultValueProp];
+        const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
+
+        if (initialIsControlled !== isControlled) {
+          warn(
+            [
+              `Event Calendar: A component is changing the ${
+                initialIsControlled ? '' : 'un'
+              }controlled ${controlledProp} state of Event Calendar to be ${initialIsControlled ? 'un' : ''}controlled.`,
+              'Elements should not switch from uncontrolled to controlled (or vice versa).',
+              `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
+              "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+              'More info: https://fb.me/react-controlled-components',
+            ].join('\n'),
+          );
+        }
+
+        if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
+          warn(
+            [
+              `Event Calendar: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
+              `To suppress this warning opt to use a controlled Event Calendar.`,
+            ].join('\n'),
+            'error',
+          );
+        }
+      }
+    }
+
+    updateModel('view', 'defaultView');
+    updateModel('visibleDate', 'defaultVisibleDate');
+    this.apply(partialState);
   };
 
   /**
@@ -245,10 +243,10 @@ export class EventCalendarInstance {
    */
   public setView = (view: CalendarView, event: React.UIEvent | Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
-    if (view !== this.store.state.view) {
+    if (view !== this.state.view) {
       this.assertViewValidity(view);
       if (viewProp === undefined) {
-        this.store.set('view', view);
+        this.set('view', view);
       }
       onViewChange?.(view, event);
     }
@@ -258,7 +256,7 @@ export class EventCalendarInstance {
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
-    const original = selectors.event(this.store.state, calendarEvent.id);
+    const original = selectors.event(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(
         `Event Calendar: the original event was not found (id="${calendarEvent.id}").`,
@@ -271,7 +269,7 @@ export class EventCalendarInstance {
     }
 
     const { onEventsChange } = this.parameters;
-    const updatedEvents = this.store.state.events.map((ev) =>
+    const updatedEvents = this.state.events.map((ev) =>
       ev.id === calendarEvent.id ? { ...ev, ...calendarEvent } : ev,
     );
     onEventsChange?.(updatedEvents);
@@ -281,11 +279,11 @@ export class EventCalendarInstance {
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    const { adapter, events } = this.store.state;
+    const { adapter, events } = this.state;
     const { onEventsChange } = this.parameters;
     const { eventId, occurrenceStart, changes, scope } = params;
 
-    const original = selectors.event(this.store.state, eventId);
+    const original = selectors.event(this.state, eventId);
     if (!original) {
       throw new Error(`Event Calendar: the original event was not found (id="${eventId}").`);
     }
@@ -332,7 +330,7 @@ export class EventCalendarInstance {
    */
   public deleteEvent = (eventId: CalendarEventId) => {
     const { onEventsChange } = this.parameters;
-    const updatedEvents = this.store.state.events.filter((ev) => ev.id !== eventId);
+    const updatedEvents = this.state.events.filter((ev) => ev.id !== eventId);
     onEventsChange?.(updatedEvents);
   };
 
@@ -340,7 +338,7 @@ export class EventCalendarInstance {
    * Goes to today's date without changing the view.
    */
   public goToToday = (event: React.UIEvent) => {
-    const { adapter } = this.store.state;
+    const { adapter } = this.state;
     this.setVisibleDate(adapter.startOfDay(adapter.date()), event);
   };
 
@@ -365,8 +363,8 @@ export class EventCalendarInstance {
    * Updates the visible resources.
    */
   public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
-    if (this.store.state.visibleResources !== visibleResources) {
-      this.store.set('visibleResources', visibleResources);
+    if (this.state.visibleResources !== visibleResources) {
+      this.set('visibleResources', visibleResources);
     }
   };
 
@@ -377,8 +375,8 @@ export class EventCalendarInstance {
     partialPreferences: Partial<CalendarPreferences>,
     _event: React.UIEvent | Event,
   ) => {
-    this.store.set('preferences', {
-      ...this.store.state.preferences,
+    this.set('preferences', {
+      ...this.state.preferences,
       ...partialPreferences,
     });
   };
@@ -388,7 +386,7 @@ export class EventCalendarInstance {
    * Returns the cleanup function.
    */
   public setViewConfig = (config: CalendarViewConfig) => {
-    this.store.set('viewConfig', config);
-    return () => this.store.set('viewConfig', null);
+    this.set('viewConfig', config);
+    return () => this.set('viewConfig', null);
   };
 }

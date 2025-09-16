@@ -9,7 +9,7 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { CalendarPrimitiveEventData } from '../../primitives/models';
 import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { MonthViewProps } from './MonthView.types';
-import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
@@ -36,7 +36,7 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
-    const { store, instance } = useEventCalendarContext();
+    const store = useEventCalendarStoreContext();
     const preferences = useStore(store, selectors.preferences);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
@@ -64,13 +64,13 @@ export const MonthView = React.memo(
 
     const handleEventChangeFromPrimitive = React.useCallback(
       (data: CalendarPrimitiveEventData) => {
-        instance.updateEvent({
+        store.updateEvent({
           id: data.eventId,
           start: data.start,
           end: data.end,
         });
       },
-      [instance],
+      [store],
     );
 
     useResizeObserver(
