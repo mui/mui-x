@@ -46,31 +46,13 @@ export class EventCalendarStore extends SchedulerStore<
    * Returns the properties of the state that are derived from the parameters.
    * This do not contain state properties that don't update whenever the parameters update.
    */
-  private static getPartialStateFromParameters(
+  protected static getPartialStateFromParameters(
     parameters: EventCalendarStoreParameters,
     adapter: Adapter,
-  ): Pick<
-    EventCalendarState,
-    | 'adapter'
-    | 'events'
-    | 'resources'
-    | 'views'
-    | 'areEventsDraggable'
-    | 'areEventsResizable'
-    | 'ampm'
-    | 'eventColor'
-    | 'showCurrentTimeIndicator'
-  > {
+  ) {
     return {
-      adapter,
-      events: parameters.events,
-      resources: parameters.resources ?? DEFAULT_RESOURCES,
+      ...SchedulerStore.getPartialStateFromParameters(parameters, adapter),
       views: parameters.views ?? DEFAULT_VIEWS,
-      areEventsDraggable: parameters.areEventsDraggable ?? false,
-      areEventsResizable: parameters.areEventsResizable ?? false,
-      ampm: parameters.ampm ?? true,
-      eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
-      showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
     };
   }
 
@@ -78,9 +60,9 @@ export class EventCalendarStore extends SchedulerStore<
     parameters: EventCalendarStoreParameters,
     adapter: Adapter,
   ): EventCalendarStore {
-    const initialState: State = {
+    const initialState: EventCalendarState = {
+      ...SchedulerStore.getInitialState(parameters, adapter),
       // Store elements that should not be updated when the parameters change.
-      visibleResources: new Map(),
       preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
       preferencesMenuConfig:
         parameters.preferencesMenuConfig === false
@@ -91,10 +73,6 @@ export class EventCalendarStore extends SchedulerStore<
             },
       viewConfig: null,
       // Store elements that should only be updated when their controlled prop changes.
-      visibleDate:
-        parameters.visibleDate ??
-        parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.date()),
       view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
       // Store elements that should be synchronized when the parameters change.
       ...EventCalendarStore.getPartialStateFromParameters(parameters, adapter),

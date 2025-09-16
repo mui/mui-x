@@ -1,5 +1,4 @@
 import { Store } from '@base-ui-components/utils/store';
-import { warn } from '@base-ui-components/utils/warn';
 import {
   CalendarEvent,
   CalendarEventColor,
@@ -44,23 +43,10 @@ export class SchedulerStore<
    * Returns the properties of the state that are derived from the parameters.
    * This do not contain state properties that don't update whenever the parameters update.
    */
-  private static getPartialStateFromParameters<
-    State extends SchedulerState,
-    Parameters extends SchedulerStoreParameters,
-  >(
-    parameters: Parameters,
+  protected static getPartialStateFromParameters(
+    parameters: SchedulerStoreParameters,
     adapter: Adapter,
-  ): Pick<
-    State,
-    | 'adapter'
-    | 'events'
-    | 'resources'
-    | 'areEventsDraggable'
-    | 'areEventsResizable'
-    | 'ampm'
-    | 'eventColor'
-    | 'showCurrentTimeIndicator'
-  > {
+  ) {
     return {
       adapter,
       events: parameters.events,
@@ -70,6 +56,23 @@ export class SchedulerStore<
       ampm: parameters.ampm ?? true,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
+    };
+  }
+
+  protected static getInitialState(
+    parameters: SchedulerStoreParameters,
+    adapter: Adapter,
+  ): SchedulerState {
+    return {
+      // Store elements that should not be updated when the parameters change.
+      visibleResources: new Map(),
+      // Store elements that should only be updated when their controlled prop changes.
+      visibleDate:
+        parameters.visibleDate ??
+        parameters.defaultVisibleDate ??
+        adapter.startOfDay(adapter.date()),
+      // Store elements that should be synchronized when the parameters change.
+      ...SchedulerStore.getPartialStateFromParameters(parameters, adapter),
     };
   }
 
@@ -84,62 +87,6 @@ export class SchedulerStore<
       }
       onVisibleDateChange?.(visibleDate, event);
     }
-  };
-
-  /**
-   * Updates the state of the calendar based on the new parameters provided to the root component.
-   */
-  public updateStateFromParameters = (parameters: Parameters, adapter: Adapter) => {
-    const partialState: Partial<State> = EventCalendarStore.getPartialStateFromParameters(
-      parameters,
-      adapter,
-    );
-
-    const initialParameters = this.initialParameters;
-
-    function updateModel(
-      controlledProp: 'view' | 'visibleDate',
-      defaultValueProp: 'defaultView' | 'defaultVisibleDate',
-    ) {
-      if (parameters[controlledProp] !== undefined) {
-        partialState[controlledProp] = parameters[controlledProp] as any;
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        const defaultValue = parameters[defaultValueProp];
-        const isControlled = parameters[controlledProp] !== undefined;
-        const initialDefaultValue = initialParameters?.[defaultValueProp];
-        const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
-
-        if (initialIsControlled !== isControlled) {
-          warn(
-            [
-              `Event Calendar: A component is changing the ${
-                initialIsControlled ? '' : 'un'
-              }controlled ${controlledProp} state of Event Calendar to be ${initialIsControlled ? 'un' : ''}controlled.`,
-              'Elements should not switch from uncontrolled to controlled (or vice versa).',
-              `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-              "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-              'More info: https://fb.me/react-controlled-components',
-            ].join('\n'),
-          );
-        }
-
-        if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warn(
-            [
-              `Event Calendar: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
-              `To suppress this warning opt to use a controlled Event Calendar.`,
-            ].join('\n'),
-            'error',
-          );
-        }
-      }
-    }
-
-    updateModel('view', 'defaultView');
-    updateModel('visibleDate', 'defaultVisibleDate');
-    this.apply(partialState);
   };
 
   /**
