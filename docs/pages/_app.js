@@ -39,6 +39,11 @@ function getMuiPackageVersion(packageName, commitRef) {
   return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
 
+function getCorePackageVersion(packageName) {
+  const commitRef = 'd002379fe84f47babc37f5a8ef321ccaac668ae0';
+  return `https://pkg.pr.new/mui/material-ui/@mui/${packageName}@${commitRef}`;
+}
+
 globalThis.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
@@ -57,6 +62,7 @@ globalThis.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     return {
       ...versions,
+      '@mui/utils': getCorePackageVersion('utils'),
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
       '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
       '@mui/x-data-grid-premium': getMuiPackageVersion('x-data-grid-premium', muiCommitRef),
