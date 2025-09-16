@@ -13,7 +13,7 @@ import { DayGridEvent } from '../event';
 import './DayTimeGrid.css';
 
 export function DayGridCell(props: DayGridCellProps) {
-  const { day } = props;
+  const { day, row } = props;
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const placeholder = DayGrid.usePlaceholderInDay(day.value);
@@ -24,18 +24,26 @@ export function DayGridCell(props: DayGridCellProps) {
       return null;
     }
 
+    let positionIndex = 1;
+    for (const rowDay of row.days) {
+      const found = rowDay.withPosition.find((o) => o.id === initialDraggedEvent.id);
+      if (found) {
+        positionIndex = found.position.index;
+        break;
+      }
+    }
+
     return {
       ...initialDraggedEvent,
       start: placeholder.start,
       end: placeholder.end,
       key: `dragged-${initialDraggedEvent.id}`,
       position: {
-        // TODO: Apply the same index as the initial event if present in the row, 1 otherwise
-        index: 1,
+        index: positionIndex,
         daySpan: diffIn(adapter, placeholder.end, day.value, 'days') + 1,
       },
     };
-  }, [initialDraggedEvent, placeholder, adapter, day.value]);
+  }, [initialDraggedEvent, placeholder, adapter, day.value, row.days]);
 
   return (
     <DayGrid.Cell
@@ -43,7 +51,7 @@ export function DayGridCell(props: DayGridCellProps) {
       className="DayTimeGridAllDayEventsCell"
       style={
         {
-          '--row-count': day.maxIndex,
+          '--row-count': row.maxIndex,
         } as React.CSSProperties
       }
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
@@ -93,4 +101,5 @@ export function DayGridCell(props: DayGridCellProps) {
 
 interface DayGridCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
+  row: useEventOccurrencesWithDayGridPosition.ReturnValue;
 }

@@ -17,7 +17,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { day, maxEvents } = props;
+  const { day, row, maxEvents } = props;
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
@@ -35,18 +35,26 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       return null;
     }
 
+    let positionIndex = 1;
+    for (const rowDay of row.days) {
+      const found = rowDay.withPosition.find((o) => o.id === initialDraggedEvent.id);
+      if (found) {
+        positionIndex = found.position.index;
+        break;
+      }
+    }
+
     return {
       ...initialDraggedEvent,
       start: placeholder.start,
       end: placeholder.end,
       key: `dragged-${initialDraggedEvent.id}`,
       position: {
-        // TODO: Apply the same index as the initial event if present in the row, 1 otherwise
-        index: 1,
+        index: positionIndex,
         daySpan: diffIn(adapter, placeholder.end, day.value, 'days') + 1,
       },
     };
-  }, [adapter, day.value, initialDraggedEvent, placeholder]);
+  }, [adapter, day.value, initialDraggedEvent, placeholder, row.days]);
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
@@ -62,8 +70,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     </span>
   );
 
-  // Day number header + visible events + "+x more" indicator (if any)
-  const rowCount = 1 + visibleOccurrences.length + (hiddenCount > 0 ? 1 : 0);
+  // Day number header + max events
+  const rowCount = 1 + maxEvents;
 
   return (
     <DayGrid.Cell
@@ -137,5 +145,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
 interface MonthViewCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
+  row: useEventOccurrencesWithDayGridPosition.ReturnValue;
   maxEvents: number;
 }
