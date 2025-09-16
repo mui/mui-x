@@ -90,6 +90,14 @@ export class SchedulerStore<
   };
 
   /**
+   * Goes to today's date without changing the view.
+   */
+  public goToToday = (event: React.UIEvent) => {
+    const { adapter } = this.state;
+    this.setVisibleDate(adapter.startOfDay(adapter.date()), event);
+  };
+
+  /**
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
