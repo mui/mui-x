@@ -98,3 +98,8 @@ export type AnyInteraction = {
   pointerMode?: InteractionMode;
   requiredKeys?: KeyboardKey[];
 };
+export type AnyEntry = Omit<AnyInteraction, 'pointerMode'> & {
+  mouse: { requiredKeys?: KeyboardKey[] };
+  touch: { requiredKeys?: KeyboardKey[] };
+  pointerMode?: PointerMode[];
+};

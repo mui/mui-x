@@ -1,6 +1,11 @@
 'use client';
 
-import type { ZoomConfig, DefaultizedZoomConfig, AnyInteraction } from './ZoomConfig.types';
+import type {
+  ZoomConfig,
+  DefaultizedZoomConfig,
+  AnyInteraction,
+  AnyEntry,
+} from './ZoomConfig.types';
 
 export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomConfig => {
   const defaultizedConfig: DefaultizedZoomConfig = { zoom: {}, pan: {} };
@@ -56,24 +61,27 @@ function initializeFor<T extends 'zoom' | 'pan'>(
   // We then need to generate a usable config by type
   // When a gesture type is provided without options, it means we enable it for all pointer modes
   // Any interaction with a specific pointer mode should be restricted to that mode
-  const acc: DefaultizedZoomConfig[T] = {};
+  const acc: Record<string, AnyEntry> = {};
   for (const [type, config] of Object.entries(aggregation)) {
     const lastEmpty = config.findLast((item) => !item.pointerMode);
     const lastMouse = config.findLast((item) => item.pointerMode === 'mouse');
     const lastTouch = config.findLast((item) => item.pointerMode === 'touch');
 
-    acc[type as keyof DefaultizedZoomConfig] = {
+    // Docs types complain if this is not casted as any
+    acc[type] = {
       type,
-      pointerMode: lastEmpty ? [] : Array.from(new Set(config.map((c) => c.pointerMode))),
+      pointerMode: lastEmpty
+        ? []
+        : Array.from(new Set(config.filter((c) => c.pointerMode).map((c) => c.pointerMode!))),
       requiredKeys: lastEmpty?.requiredKeys ?? [],
       mouse: lastMouse
         ? {
-            requiredKeys: lastMouse?.requiredKeys,
+            requiredKeys: lastMouse?.requiredKeys ?? [],
           }
         : {},
       touch: lastTouch
         ? {
-            requiredKeys: lastTouch?.requiredKeys,
+            requiredKeys: lastTouch?.requiredKeys ?? [],
           }
         : {},
     };
