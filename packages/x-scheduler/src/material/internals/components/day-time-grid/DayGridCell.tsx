@@ -1,13 +1,9 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
-
 import { DayGrid } from '../../../../primitives/day-grid';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
-import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
-import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { isWeekend } from '../../../../primitives/utils/date-utils';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
-import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
 import './DayTimeGrid.css';
@@ -15,35 +11,7 @@ import './DayTimeGrid.css';
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
   const adapter = useAdapter();
-  const store = useEventCalendarStoreContext();
-  const placeholder = DayGrid.usePlaceholderInDay(day.value);
-  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
-
-  const draggedOccurrence = React.useMemo(() => {
-    if (!initialDraggedEvent || !placeholder) {
-      return null;
-    }
-
-    let positionIndex = 1;
-    for (const rowDay of row.days) {
-      const found = rowDay.withPosition.find((o) => o.id === initialDraggedEvent.id);
-      if (found) {
-        positionIndex = found.position.index;
-        break;
-      }
-    }
-
-    return {
-      ...initialDraggedEvent,
-      start: placeholder.start,
-      end: placeholder.end,
-      key: `dragged-${initialDraggedEvent.id}`,
-      position: {
-        index: positionIndex,
-        daySpan: diffIn(adapter, placeholder.end, day.value, 'days') + 1,
-      },
-    };
-  }, [initialDraggedEvent, placeholder, adapter, day.value, row.days]);
+  const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
 
   return (
     <DayGrid.Cell
@@ -85,10 +53,10 @@ export function DayGridCell(props: DayGridCellProps) {
             />
           );
         })}
-        {draggedOccurrence != null && (
+        {placeholder != null && (
           <div className="DayTimeGridAllDayEventContainer">
             <DayGridEvent
-              occurrence={draggedOccurrence}
+              occurrence={placeholder}
               variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
             />

@@ -6,7 +6,7 @@ import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
 import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
+import { isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
@@ -21,40 +21,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const placeholder = DayGrid.usePlaceholderInDay(day.value);
+  const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
   const isToday = React.useMemo(() => adapter.isSameDay(day.value, adapter.date()), [adapter, day]);
-
-  const draggedOccurrence = React.useMemo(() => {
-    if (!initialDraggedEvent || !placeholder) {
-      return null;
-    }
-
-    let positionIndex = 1;
-    for (const rowDay of row.days) {
-      const found = rowDay.withPosition.find((o) => o.id === initialDraggedEvent.id);
-      if (found) {
-        positionIndex = found.position.index;
-        break;
-      }
-    }
-
-    return {
-      ...initialDraggedEvent,
-      start: placeholder.start,
-      end: placeholder.end,
-      key: `dragged-${initialDraggedEvent.id}`,
-      position: {
-        index: positionIndex,
-        daySpan: diffIn(adapter, placeholder.end, day.value, 'days') + 1,
-      },
-    };
-  }, [adapter, day.value, initialDraggedEvent, placeholder, row.days]);
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
@@ -129,10 +102,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         {hiddenCount > 0 && (
           <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
         )}
-        {draggedOccurrence != null && (
+        {placeholder != null && (
           <div className="MonthViewDraggedEventContainer">
             <DayGridEvent
-              occurrence={draggedOccurrence}
+              occurrence={placeholder}
               variant="dragPlaceholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
             />
