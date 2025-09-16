@@ -52,7 +52,6 @@ Same changes as in `@mui/x-date-pickers@8.11.3`.
 - [charts] Add bar gradient example (#19174) @bernardobelchior
 - [charts] Ignore empty tick labels in label overlap computation (#19547) @alexfauquette
 - [charts] Rename `isBandScale` to `isDiscreteScale` (#19514) @bernardobelchior
-- [charts][docs] Add `shiny` bar chart example at the top  (#19416) @JCQuintas
 
 #### `@mui/x-charts-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
