@@ -51,7 +51,6 @@ export default function RowPinningSectionSeparator() {
           rows={rows}
           pinnedRows={pinnedRows}
           pinnedRowsSectionSeparator={separator}
-          pinnedColumnsSectionSeparator="border"
         />
       </div>
     </div>
