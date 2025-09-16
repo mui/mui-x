@@ -12,6 +12,7 @@ import {
 } from '../../utils/drag-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
+import { diffIn } from '../../utils/date-utils';
 
 export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTarget.Parameters) {
   const { start, end, columnId = null } = parameters;
