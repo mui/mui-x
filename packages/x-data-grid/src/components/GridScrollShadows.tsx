@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -13,6 +14,10 @@ import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridEventListener } from '../models/events';
 import { vars } from '../constants/cssVariables';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+import {
+  gridHasScrollXSelector,
+  gridHasScrollYSelector,
+} from '../hooks/features/dimensions/gridDimensionsSelectors';
 
 interface GridScrollShadowsProps {
   position: 'vertical' | 'horizontal';
@@ -64,43 +69,48 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
   const ownerState = { classes: rootProps.classes, position };
   const ref = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridPrivateApiContext();
-  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+  const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
+  const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const initialScrollable =
     position === 'vertical'
-      ? dimensions.hasScrollY && pinnedRows?.bottom?.length > 0
-      : dimensions.hasScrollX &&
+      ? hasScrollY && pinnedRows?.bottom?.length > 0
+      : hasScrollX &&
         pinnedColumns?.right?.length !== undefined &&
         pinnedColumns?.right?.length > 0;
   const isRtl = useRtl();
 
-  const updateScrollShadowVisibility = (scrollPosition: number) => {
-    if (!ref.current) {
-      return;
-    }
-    // Math.abs to convert negative scroll position (RTL) to positive
-    const scroll = Math.abs(Math.round(scrollPosition));
-    const maxScroll = Math.round(
-      dimensions.contentSize[position === 'vertical' ? 'height' : 'width'] -
-        dimensions.viewportInnerSize[position === 'vertical' ? 'height' : 'width'],
-    );
-    const hasPinnedStart =
-      position === 'vertical'
-        ? pinnedRows?.top?.length > 0
-        : pinnedColumns?.left?.length !== undefined && pinnedColumns?.left?.length > 0;
-    const hasPinnedEnd =
-      position === 'vertical'
-        ? pinnedRows?.bottom?.length > 0
-        : pinnedColumns?.right?.length !== undefined && pinnedColumns?.right?.length > 0;
-    const scrollIsNotAtStart = isRtl ? scroll < maxScroll : scroll > 0;
-    const scrollIsNotAtEnd = isRtl ? scroll > 0 : scroll < maxScroll;
-    ref.current.style.setProperty(
-      '--hasScrollStart',
-      hasPinnedStart && scrollIsNotAtStart ? '1' : '0',
-    );
-    ref.current.style.setProperty('--hasScrollEnd', hasPinnedEnd && scrollIsNotAtEnd ? '1' : '0');
-  };
+  const updateScrollShadowVisibility = React.useCallback(
+    (scrollPosition: number) => {
+      if (!ref.current) {
+        return;
+      }
+      // Math.abs to convert negative scroll position (RTL) to positive
+      const scroll = Math.abs(Math.round(scrollPosition));
+      const dimensions = gridDimensionsSelector(apiRef);
+      const maxScroll = Math.round(
+        dimensions.contentSize[position === 'vertical' ? 'height' : 'width'] -
+          dimensions.viewportInnerSize[position === 'vertical' ? 'height' : 'width'],
+      );
+      const hasPinnedStart =
+        position === 'vertical'
+          ? pinnedRows?.top?.length > 0
+          : pinnedColumns?.left?.length !== undefined && pinnedColumns?.left?.length > 0;
+      const hasPinnedEnd =
+        position === 'vertical'
+          ? pinnedRows?.bottom?.length > 0
+          : pinnedColumns?.right?.length !== undefined && pinnedColumns?.right?.length > 0;
+      const scrollIsNotAtStart = isRtl ? scroll < maxScroll : scroll > 0;
+      const scrollIsNotAtEnd = isRtl ? scroll > 0 : scroll < maxScroll;
+      ref.current.style.setProperty(
+        '--hasScrollStart',
+        hasPinnedStart && scrollIsNotAtStart ? '1' : '0',
+      );
+      ref.current.style.setProperty('--hasScrollEnd', hasPinnedEnd && scrollIsNotAtEnd ? '1' : '0');
+    },
+    [pinnedRows, pinnedColumns, isRtl, position, apiRef],
+  );
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = (scrollParams) => {
     updateScrollShadowVisibility(scrollParams[position === 'vertical' ? 'top' : 'left']);
@@ -114,6 +124,14 @@ function GridScrollShadows(props: GridScrollShadowsProps) {
 
   useGridEvent(apiRef, 'scrollPositionChange', handleScrolling);
   useGridEvent(apiRef, 'columnResizeStop', handleColumnResizeStop);
+
+  React.useEffect(() => {
+    updateScrollShadowVisibility(
+      (position === 'horizontal'
+        ? apiRef.current.virtualScrollerRef?.current?.scrollLeft
+        : apiRef.current.virtualScrollerRef?.current?.scrollTop) ?? 0,
+    );
+  }, [updateScrollShadowVisibility, apiRef, position]);
 
   return (
     <ScrollShadow
