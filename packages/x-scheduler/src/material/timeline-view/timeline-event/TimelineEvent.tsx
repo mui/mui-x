@@ -15,7 +15,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
-    event: eventProp,
+    occurrence,
     ariaLabelledBy,
     className,
     onEventClick,
@@ -27,7 +27,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   const store = useEventCalendarStoreContext();
 
   const id = useId(idProp);
-  const color = useStore(store, selectors.eventColor, eventProp.id);
+  const color = useStore(store, selectors.eventColor, occurrence.id);
 
   return (
     <Timeline.Event
@@ -38,14 +38,14 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       style={
         {
           '--number-of-lines': 1,
-          '--row-index': eventProp.position.firstIndex,
+          '--row-index': occurrence.position.firstIndex,
         } as React.CSSProperties
       }
-      start={eventProp.start}
-      end={eventProp.end}
+      start={occurrence.start}
+      end={occurrence.end}
       {...other}
     >
-      {eventProp.title}
+      {occurrence.title}
     </Timeline.Event>
   );
 });

@@ -161,12 +161,16 @@ export const TimelineView = React.forwardRef(function TimelineView(
                     end={getEndBoundaries(view, start)}
                     style={{} as React.CSSProperties}
                   >
-                    {resourcesWithOccurrences.get(resource.id)?.map((occurrence, index) => (
+                    {resourcesWithOccurrences.get(resource.id)?.map((occurrence) => (
                       <EventPopoverTrigger
                         key={occurrence.id}
                         occurrence={occurrence}
                         render={
-                          <TimelineEvent event={occurrence} ariaLabelledBy="" variant="regular" />
+                          <TimelineEvent
+                            occurrence={occurrence}
+                            ariaLabelledBy=""
+                            variant="regular"
+                          />
                         }
                       />
                     ))}
