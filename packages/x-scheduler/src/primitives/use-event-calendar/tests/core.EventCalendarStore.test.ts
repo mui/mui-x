@@ -1,4 +1,4 @@
-import { getAdapter } from './../../utils/adapter/getAdapter';
+import { getAdapter } from '../../utils/adapter/getAdapter';
 import {
   DEFAULT_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
