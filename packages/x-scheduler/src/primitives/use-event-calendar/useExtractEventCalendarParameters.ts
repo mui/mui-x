@@ -66,7 +66,10 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     ],
   );
 
-  return { parameters, forwardedProps: forwardedProps as Omit<P, keyof EventCalendarParameters> };
+  return {
+    parameters,
+    forwardedProps: forwardedProps as Omit<P, keyof EventCalendarParameters>,
+  };
 }
 
 interface UseExtractEventCalendarParametersReturnValue<P extends EventCalendarParameters> {

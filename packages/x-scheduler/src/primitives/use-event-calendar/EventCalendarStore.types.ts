@@ -4,7 +4,7 @@ import {
   CalendarPreferencesMenuConfig,
   CalendarViewConfig,
 } from '../models';
-import { SchedulerState, SchedulerStoreParameters } from '../utils/SchedulerStore';
+import { SchedulerState, SchedulerParameters } from '../utils/SchedulerStore';
 
 export interface EventCalendarState extends SchedulerState {
   /**
@@ -31,7 +31,7 @@ export interface EventCalendarState extends SchedulerState {
   viewConfig: CalendarViewConfig | null;
 }
 
-export interface EventCalendarStoreParameters extends SchedulerStoreParameters {
+export interface EventCalendarParameters extends SchedulerParameters {
   /**
    * The view currently displayed in the calendar.
    */

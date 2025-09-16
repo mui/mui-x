@@ -9,7 +9,7 @@ import {
 } from '../../models';
 import {
   SchedulerState,
-  SchedulerStoreParameters,
+  SchedulerParameters,
   UpdateRecurringEventParameters,
 } from './SchedulerStore.types';
 import { Adapter } from '../adapter/types';
@@ -24,7 +24,7 @@ export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
  */
 export class SchedulerStore<
   State extends SchedulerState,
-  Parameters extends SchedulerStoreParameters,
+  Parameters extends SchedulerParameters,
 > extends Store<State> {
   protected parameters: Parameters;
 
@@ -44,7 +44,7 @@ export class SchedulerStore<
    * This do not contain state properties that don't update whenever the parameters update.
    */
   protected static getPartialStateFromParameters(
-    parameters: SchedulerStoreParameters,
+    parameters: SchedulerParameters,
     adapter: Adapter,
   ) {
     return {
@@ -60,7 +60,7 @@ export class SchedulerStore<
   }
 
   protected static getInitialState(
-    parameters: SchedulerStoreParameters,
+    parameters: SchedulerParameters,
     adapter: Adapter,
   ): SchedulerState {
     return {

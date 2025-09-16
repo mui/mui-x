@@ -10,7 +10,7 @@ import {
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import { SchedulerStore } from '../utils/SchedulerStore';
-import { EventCalendarState, EventCalendarStoreParameters } from './EventCalendarStore.types';
+import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -27,9 +27,9 @@ export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
 export class EventCalendarStore extends SchedulerStore<
   EventCalendarState,
-  EventCalendarStoreParameters
+  EventCalendarParameters
 > {
-  private constructor(initialState: EventCalendarState, parameters: EventCalendarStoreParameters) {
+  private constructor(initialState: EventCalendarState, parameters: EventCalendarParameters) {
     super(initialState, parameters);
 
     if (process.env.NODE_ENV !== 'production') {
@@ -47,7 +47,7 @@ export class EventCalendarStore extends SchedulerStore<
    * This do not contain state properties that don't update whenever the parameters update.
    */
   protected static getPartialStateFromParameters(
-    parameters: EventCalendarStoreParameters,
+    parameters: EventCalendarParameters,
     adapter: Adapter,
   ) {
     return {
@@ -56,10 +56,7 @@ export class EventCalendarStore extends SchedulerStore<
     };
   }
 
-  public static create(
-    parameters: EventCalendarStoreParameters,
-    adapter: Adapter,
-  ): EventCalendarStore {
+  public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
     const initialState: EventCalendarState = {
       ...SchedulerStore.getInitialState(parameters, adapter),
       // Store elements that should not be updated when the parameters change.
@@ -146,10 +143,7 @@ export class EventCalendarStore extends SchedulerStore<
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
-  public updateStateFromParameters = (
-    parameters: EventCalendarStoreParameters,
-    adapter: Adapter,
-  ) => {
+  public updateStateFromParameters = (parameters: EventCalendarParameters, adapter: Adapter) => {
     const partialState: Partial<EventCalendarState> =
       EventCalendarStore.getPartialStateFromParameters(parameters, adapter);
 

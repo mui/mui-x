@@ -54,7 +54,7 @@ export interface SchedulerState {
   showCurrentTimeIndicator: boolean;
 }
 
-export interface SchedulerStoreParameters {
+export interface SchedulerParameters {
   /**
    * The events currently available in the calendar.
    */
