@@ -49,7 +49,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     className,
     hideLegend,
     showToolbar,
-    ...rest
+    ...other
   } = props;
 
   const id = useId();
@@ -120,7 +120,7 @@ export const useBarChartProps = (props: BarChartProps) => {
   }, [defaultYAxis, hasHorizontalSeries, yAxis]);
 
   const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
-    ...rest,
+    ...other,
     series: seriesWithDefault,
     width,
     height,
@@ -186,6 +186,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   return {

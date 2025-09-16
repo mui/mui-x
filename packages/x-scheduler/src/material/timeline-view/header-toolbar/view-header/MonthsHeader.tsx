@@ -1,18 +1,17 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
-import { isWeekend } from '../../../../primitives/utils/date-utils';
-import { useDayList } from '../../../../primitives/use-day-list';
 import { useMonthList } from '../../../../primitives/use-month-list';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../internals/hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+
 import './Headers.css';
 
 const adapter = getAdapter();
 
 export function MonthsHeader() {
   const getMonthList = useMonthList();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
 
   const visibleDate = useStore(store, selectors.visibleDate);
 
@@ -22,7 +21,7 @@ export function MonthsHeader() {
         date: visibleDate,
         amount: 12,
       }),
-    [getMonthList],
+    [getMonthList, visibleDate],
   );
 
   return (

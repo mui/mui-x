@@ -31,13 +31,13 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
     apiRef,
     onNodeClick,
     onLinkClick,
-    ...rest
+    ...other
   } = props;
 
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
   const chartContainerProps: ChartContainerProProps<'sankey', SankeyChartPluginsSignatures> = {
-    ...rest,
+    ...other,
     series: [
       {
         type: 'sankey' as const,
@@ -69,6 +69,7 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    hideLegend: false,
   };
 
   return {

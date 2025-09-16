@@ -24,18 +24,21 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
 
-  const handleClick = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
-    const newView = event.currentTarget.getAttribute('data-view');
-    if (newView) {
-      onViewChange(newView, event);
-    }
-  }, []);
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      const newView = event.currentTarget.getAttribute('data-view');
+      if (newView) {
+        onViewChange(newView, event);
+      }
+    },
+    [onViewChange],
+  );
 
   const handleViewChange = React.useCallback(
     (newView: CalendarView, eventDetails: Menu.Root.ChangeEventDetails) => {
       onViewChange(newView, eventDetails.event);
     },
-    [],
+    [onViewChange],
   );
 
   const showAll = views.length <= 3;

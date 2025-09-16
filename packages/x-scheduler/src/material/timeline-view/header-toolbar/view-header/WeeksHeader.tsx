@@ -1,20 +1,20 @@
 import * as React from 'react';
+import { DateTime } from 'luxon';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
 import { useDayList } from '../../../../primitives/use-day-list';
 import { useWeekList } from '../../../../primitives/use-week-list';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../internals/hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import './Headers.css';
-import { DateTime } from 'luxon';
 
 const adapter = getAdapter();
 
 export function WeeksHeader() {
   const getDayList = useDayList();
   const getWeekList = useWeekList();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
 
   const visibleDate = useStore(store, selectors.visibleDate);
 
@@ -29,13 +29,13 @@ export function WeeksHeader() {
       const weekStart = weeksFirstDays[i];
       const weekDays = getDayList({ date: weekStart, amount: 'week' });
       const weekDaysWithEvents = weekDays.map((date) => ({
-        date,
+        date: date.value,
       }));
       tempWeeks.push(weekDaysWithEvents);
     }
 
     return tempWeeks;
-  }, [getWeekList, getDayList]);
+  }, [getWeekList, getDayList, visibleDate]);
 
   return (
     <div className="WeeksHeader">

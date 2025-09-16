@@ -8,7 +8,9 @@ import { TimelineView as TimelineViewType, TimelineViewProps } from './TimelineV
 import { Timeline } from '../../primitives/timeline';
 import { DEFAULT_EVENT_COLOR, selectors } from '../../primitives/use-event-calendar';
 import './TimelineView.css';
-import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
+import { useEventOccurrencesGroupedByResource } from '../../primitives/use-event-occurrences-grouped-by-resource';
+import { useEventOccurrencesWithTimelinePositionForMap } from '../../primitives/use-event-occurrences-with-timeline-position';
 import { getColorClassName } from '../internals/utils/color-utils';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { diffIn } from '../../primitives/utils/date-utils';
@@ -52,7 +54,7 @@ export const TimelineView = React.forwardRef(function TimelineView(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, ...other } = props;
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const resources = useStore(store, selectors.resources);
   const visibleDate = useStore(store, selectors.visibleDate);
 
@@ -70,9 +72,14 @@ export const TimelineView = React.forwardRef(function TimelineView(
   const start = visibleDate;
   const end = React.useMemo(() => getEndBoundaries(view, start), [view, start]);
 
-  const eventsGroupedByResource = useStore(store, selectors.eventsToRenderGroupedByResource, {
+  const occurrencesMap = useEventOccurrencesGroupedByResource({
     start,
     end,
+  });
+
+  const resourcesWithOccurrences = useEventOccurrencesWithTimelinePositionForMap({
+    occurrences: occurrencesMap,
+    maxColumnSpan: Infinity,
   });
 
   const diff = diffIn(adapter, end, start, UNIT[view]);
@@ -152,28 +159,17 @@ export const TimelineView = React.forwardRef(function TimelineView(
                     className="TimelineEventRow"
                     start={start}
                     end={getEndBoundaries(view, start)}
-                    style={
-                      {
-                        '--lane-count': eventsGroupedByResource[resource.id]?.length,
-                      } as React.CSSProperties
-                    }
+                    style={{} as React.CSSProperties}
                   >
-                    {eventsGroupedByResource[resource.id]?.map((row, index) =>
-                      row.map((event) => (
-                        <EventPopoverTrigger
-                          key={event.id}
-                          event={event}
-                          render={
-                            <TimelineEvent
-                              event={event}
-                              gridRow={index + 1}
-                              ariaLabelledBy=""
-                              variant="regular"
-                            />
-                          }
-                        />
-                      )),
-                    )}
+                    {resourcesWithOccurrences.get(resource.id)?.map((occurrence, index) => (
+                      <EventPopoverTrigger
+                        key={occurrence.id}
+                        occurrence={occurrence}
+                        render={
+                          <TimelineEvent event={occurrence} ariaLabelledBy="" variant="regular" />
+                        }
+                      />
+                    ))}
                   </Timeline.EventRow>
                 )}
               </Timeline.SubGrid>

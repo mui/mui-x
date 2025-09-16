@@ -4,11 +4,11 @@ import { SchedulerValidDate } from '../../models';
 
 export interface TimeGridColumnContext {
   /**
-   * The start date and time of the column
+   * The start date and time of the column.
    */
   start: SchedulerValidDate;
   /**
-   * The end date and time of the column
+   * The end date and time of the column.
    */
   end: SchedulerValidDate;
   /**

@@ -6,7 +6,7 @@ import { AxisScaleConfig, ChartsXAxisProps, ComputedAxis } from '../models/axis'
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
-import { isBandScale } from '../internals/isBandScale';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { useDrawingArea } from '../hooks';
@@ -68,30 +68,25 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
     ownerState: {},
   });
 
-  const domain = xScale.domain();
-  const isScaleBand = isBandScale(xScale);
-
-  // Skip axis rendering if no data is available
-  // - The domain is an empty array for band/point scales.
-  // - The domains contains Infinity for continuous scales.
-  // - The position is set to 'none'.
-  const skipAxisRendering =
-    (isScaleBand && domain.length === 0) ||
-    (!isScaleBand && domain.some(isInfinity)) ||
-    position === 'none';
-
-  if (skipAxisRendering) {
+  if (position === 'none') {
     return null;
   }
 
   const labelHeight = label ? getStringSize(label, axisLabelProps.style).height : 0;
 
-  const children =
-    'groups' in axis && Array.isArray(axis.groups) ? (
-      <ChartsGroupedXAxisTicks {...inProps} />
-    ) : (
-      <ChartsSingleXAxisTicks {...inProps} axisLabelHeight={labelHeight} />
-    );
+  const domain = xScale.domain();
+  const isScaleOrdinal = isOrdinalScale(xScale);
+  const skipTickRendering = isScaleOrdinal ? domain.length === 0 : domain.some(isInfinity);
+  let children: React.ReactNode = null;
+
+  if (!skipTickRendering) {
+    children =
+      'groups' in axis && Array.isArray(axis.groups) ? (
+        <ChartsGroupedXAxisTicks {...inProps} />
+      ) : (
+        <ChartsSingleXAxisTicks {...inProps} axisLabelHeight={labelHeight} />
+      );
+  }
 
   const labelRefPoint = {
     x: left + width / 2,

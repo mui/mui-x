@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
-import { useMonthList } from '../../../../primitives/use-month-list';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../internals/hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import './Headers.css';
 
@@ -25,7 +24,7 @@ const getYears = ({ date, amount }) => {
 };
 
 export function YearHeader() {
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
 
   const visibleDate = useStore(store, selectors.visibleDate);
 
@@ -33,7 +32,6 @@ export function YearHeader() {
     date: visibleDate,
     amount: 4,
   });
-  console.log(years);
 
   return (
     <div className="YearsHeader">

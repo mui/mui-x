@@ -6,7 +6,8 @@ import { Timeline } from '../../../primitives/timeline';
 import { getColorClassName } from '../../internals/utils/color-utils';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { TimelineEventProps } from './TimelineEvent.types';
-import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
+
 import './TimelineEvent.css';
 
 export const TimelineEvent = React.forwardRef(function TimelineEvent(
@@ -19,12 +20,11 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     className,
     onEventClick,
     id: idProp,
-    gridRow = 1,
     style,
     ...other
   } = props;
 
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
 
   const id = useId(idProp);
   const color = useStore(store, selectors.eventColor, eventProp.id);
@@ -38,7 +38,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       style={
         {
           '--number-of-lines': 1,
-          '--row-index': gridRow,
+          '--row-index': eventProp.position.firstIndex,
         } as React.CSSProperties
       }
       start={eventProp.start}

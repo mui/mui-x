@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { CalendarViewConfig } from '../../../primitives/models';
-import { useEventCalendarContext } from './useEventCalendarContext';
+import { CalendarViewConfig } from '../models';
+import { useEventCalendarStoreContext } from './useEventCalendarStoreContext';
 
 /**
  * Initializes the view on the event calendar.
@@ -16,10 +16,10 @@ import { useEventCalendarContext } from './useEventCalendarContext';
  * @param parameters Parameters for the view.
  */
 export function useInitializeView(parameters: () => CalendarViewConfig) {
-  const { instance } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const initialParameters = React.useRef(parameters);
 
   useIsoLayoutEffect(() => {
-    return instance.setViewConfig(initialParameters.current());
-  }, []);
+    return store.setViewConfig(initialParameters.current());
+  }, [store]);
 }

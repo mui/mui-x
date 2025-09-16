@@ -48,6 +48,10 @@
   margin-bottom: 4px;
 }
 
+.CellEvents {
+  position: relative;
+}
+
 .Event {
   margin-bottom: 4px;
   display: flex;

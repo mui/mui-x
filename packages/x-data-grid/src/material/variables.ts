@@ -123,7 +123,8 @@ function formatFont(font: React.CSSProperties | undefined) {
   if (!font) {
     return undefined;
   }
-  return `${font.fontWeight} ${font.fontSize} / ${font.lineHeight} ${font.fontFamily}`;
+  const fontSize = typeof font.fontSize === 'number' ? `${font.fontSize}px` : font.fontSize;
+  return `${font.fontWeight} ${fontSize} / ${font.lineHeight} ${font.fontFamily}`;
 }
 
 /**

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react/popover';
-import { CalendarEvent } from '../../../../primitives/models';
+import { CalendarEventOccurrence } from '../../../../primitives/models';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
-   * The event info to display in the popover.
+   * The event occurrence to display in the popover.
    */
-  calendarEvent: CalendarEvent;
+  occurrence: CalendarEventOccurrence;
   /**
    * The anchor element for the popover positioning.
    */
@@ -22,7 +22,7 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 export interface EventPopoverContextValue {
-  startEditing: (event: React.MouseEvent, calendarEvent: CalendarEvent) => void;
+  startEditing: (event: React.MouseEvent, occurrence: CalendarEventOccurrence) => void;
 }
 
 export interface EventPopoverProviderProps {
@@ -31,5 +31,5 @@ export interface EventPopoverProviderProps {
 }
 
 export interface EventPopoverTriggerProps extends Popover.Trigger.Props {
-  event: CalendarEvent;
+  occurrence: CalendarEventOccurrence;
 }
