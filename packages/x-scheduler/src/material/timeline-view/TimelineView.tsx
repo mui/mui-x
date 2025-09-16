@@ -163,7 +163,7 @@ export const TimelineView = React.forwardRef(function TimelineView(
                   >
                     {resourcesWithOccurrences.get(resource.id)?.map((occurrence) => (
                       <EventPopoverTrigger
-                        key={occurrence.id}
+                        key={occurrence.key}
                         occurrence={occurrence}
                         render={
                           <TimelineEvent
