@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.11.3
-<!-- generated comparing v8.11.2..master -->
 _Sep 16, 2025_
 
 We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
@@ -15,10 +14,10 @@ We'd like to extend a big thank you to the 11 contributors who made this release
 - 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@brijeshb42, @sai6855
+@sai6855
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @rita-codes, @siriwatknp
+@alexfauquette, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @rita-codes, @siriwatknp
 
 ### Data Grid
 
@@ -66,7 +65,8 @@ Same changes as in `@mui/x-charts@8.11.3`, plus:
 #### `@mui/x-tree-view@8.11.3`
 
 - [tree view] Stop looping through all items to publish the `removeItem` event (#19500) @flaviendelangle
-- [TreeView] Support flat DOM structure (#19350) @flaviendelangle
+- [tree view] Support flat DOM structure (#19350) @flaviendelangle
+- [tree view] Update cursor styles for disabled TreeItem (#19548) @sai6855
 
 #### `@mui/x-tree-view-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
@@ -82,17 +82,14 @@ Internal changes.
 
 - [docs] Add styling row group recipe (#19349) @siriwatknp
 - [docs] Group demos data into the dataset folder (#19549) @alexfauquette
+- [docs] Add `shiny` bar chart example at the top  (#19416) @JCQuintas
+
 
 ### Core
 
 - [code-infra] Axios update (#19577) @Janpot
 - [code-infra] Remove usage of copy-files command from code-infra (#19518) @brijeshb42
 - [internal] Fix naming to match convention @oliviertassinari
-- [internal] Fix naming to match convention @oliviertassinari
-
-### Miscellaneous
-
-- [tree-view] Update cursor styles for disabled TreeItem (#19548) @sai6855
 
 ## 8.11.2
 
