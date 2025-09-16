@@ -42,7 +42,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
 
   React.useEffect(() => {
     const domElement = ref.current;
-    if (!domElement) {
+    if (!domElement || !enabled) {
       return () => {};
     }
 
@@ -59,7 +59,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
       onDragStart: () => setIsResizing(true),
       onDrop: () => setIsResizing(false),
     });
-  }, [side, setIsResizing, getSharedDragData]);
+  }, [enabled, side, setIsResizing, getSharedDragData]);
 
   return useRenderElement('div', componentProps, {
     enabled,
