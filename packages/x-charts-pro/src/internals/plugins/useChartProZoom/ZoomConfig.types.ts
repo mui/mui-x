@@ -54,20 +54,6 @@ type AllModeProp = {
   pointerMode?: InteractionMode;
 };
 
-type NoKeysProp = {
-  /**
-   * This interaction does not support key combinations.
-   */
-  requiredKeys?: never[];
-};
-
-type NoModeProp = {
-  /**
-   * This gesture only works on a specific pointer mode. Mode has no effect.
-   */
-  pointerMode?: undefined;
-};
-
 type Unpack<T> = {
   [K in keyof T]: T[K] extends object ? Unpack<T[K]> : T[K];
 };
@@ -75,16 +61,12 @@ type Unpack<T> = {
 export type OnWheelInteraction = Unpack<
   {
     type: 'onWheel';
-  } & NoModeProp &
-    AllKeysProp
+  } & AllKeysProp
 >;
 
-export type OnPinchInteraction = Unpack<
-  {
-    type: 'onPinch';
-  } & NoModeProp &
-    NoKeysProp
->;
+export type OnPinchInteraction = Unpack<{
+  type: 'onPinch';
+}>;
 
 export type OnDragInteraction = Unpack<
   {

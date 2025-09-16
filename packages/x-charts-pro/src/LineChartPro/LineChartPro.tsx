@@ -1921,8 +1921,8 @@ LineChartPro.propTypes = {
       PropTypes.oneOfType([
         PropTypes.oneOf(['onDrag']),
         PropTypes.shape({
-          keys: PropTypes.arrayOf(PropTypes.string).isRequired,
-          mode: PropTypes.oneOf(['all', 'mouse', 'touch']),
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string.isRequired),
           type: PropTypes.oneOf(['onDrag']).isRequired,
         }),
       ]).isRequired,
@@ -1931,13 +1931,13 @@ LineChartPro.propTypes = {
       PropTypes.oneOfType([
         PropTypes.oneOf(['onPinch', 'onWheel']),
         PropTypes.shape({
-          keys: PropTypes.arrayOf(PropTypes.string).isRequired,
-          mode: PropTypes.oneOf(['all']),
+          pointerMode: PropTypes.any.isRequired,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string.isRequired),
           type: PropTypes.oneOf(['onWheel']).isRequired,
         }),
         PropTypes.shape({
-          keys: PropTypes.array,
-          mode: PropTypes.oneOf(['all']),
+          pointerMode: PropTypes.any.isRequired,
+          requiredKeys: PropTypes.any.isRequired,
           type: PropTypes.oneOf(['onPinch']).isRequired,
         }),
       ]).isRequired,
