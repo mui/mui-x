@@ -11,7 +11,6 @@ import {
 import { computeAxisValue } from './computeAxisValue';
 import {
   selectorChartZoomAxisFilters,
-  selectorChartZoomMap,
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
 import { AxisId } from '../../../../models/axis';
