@@ -9,17 +9,16 @@ title: Data Grid - Server-side pivoting
 The Data Grid Premium's pivoting feature lets users transform data by reorganizing rows and columns, creating dynamic cross-tabulations of data.
 The Grid can render pivoted data from server-side sources using the [Data Source layer](/x/react-data-grid/server-side-data/#the-solution-the-data-source-layer).
 
-:::info
-For pivoting on the client side, see [Pivoting](/x/react-data-grid/pivoting/).
-:::
-
-:::success
-If you're new to pivoting, check out the [Understanding pivoting](/x/react-data-grid/pivoting-explained/) page to learn how it works through interactive examples.
-:::
+If you're new to the concept of pivoting, check out the [Understanding pivoting](/x/react-data-grid/pivoting-explained/) page to learn how it works through interactive examples.
 
 :::warning
 Pivoting performs certain computations and uses them to override corresponding props.
 When pivot mode is active, the following props are ignored: `columns`, `rowGroupingModel`, `aggregationModel`, `getAggregationPosition`, `columnVisibilityModel`, `columnGroupingModel`, `groupingColDef`, `headerFilters`, `disableRowGrouping`, and `disableAggregation`.
+:::
+
+:::info
+This document covers server-side pivoting.
+For pivoting on the client side, see [Pivoting](/x/react-data-grid/pivoting/).
 :::
 
 ## Prerequisites
@@ -32,7 +31,7 @@ To be able to dynamically load pivoted data from the server, you must create a D
 
 To implement server-side pivoting, provide the `getPivotColumnDef()` prop to the Data Source.
 This prop customizes the column definition for pivot columns based on the pivot value and column group path.
-  This method must at least override the field name to target the row property holding the pivoted data.
+This method must at least override the field name to target the row property holding the pivoted data.
 
 ```tsx
 const customDataSource: GridDataSource = {
