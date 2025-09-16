@@ -130,7 +130,7 @@ export function useGridVirtualizer(
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
-  const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, rootProps);
+  const overlayState = useGridOverlays(apiRef, rootProps);
 
   const dimensionsParams = {
     rowHeight,
@@ -198,8 +198,7 @@ export function useGridVirtualizer(
     pinnedColumns,
 
     autoHeight,
-    disableHorizontalScroll:
-      listView || overlayType === 'noColumnsOverlay' || loadingOverlayVariant === 'skeleton',
+    disableHorizontalScroll: listView || overlayState.overlayType === 'noColumnsOverlay',
     minimalContentHeight,
     getRowHeight: React.useMemo(() => {
       if (!getRowHeight) {
