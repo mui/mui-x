@@ -23,8 +23,8 @@ export default function DayGridPrimitiveDragAndDrop() {
       const weekStart = weeksFirstDays[i];
       const weekDays = getDayList({ date: weekStart, amount: 'week' });
       const weekDaysWithEvents = weekDays.map((date) => ({
-        date,
-        events: events.filter((event) => event.start.hasSame(date, 'day')),
+        date: date.value,
+        events: events.filter((event) => event.start.hasSame(date.value, 'day')),
       }));
       tempWeeks.push(weekDaysWithEvents);
     }

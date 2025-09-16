@@ -31,6 +31,7 @@
   background-color: var(--event-background);
   cursor: pointer;
   height: fit-content;
+  position: relative;
 }
 
 .EventCard--allDay,
@@ -41,6 +42,7 @@
   background-color: var(--event-background);
   height: fit-content;
   cursor: pointer;
+  position: relative;
   z-index: 1;
   grid-row: var(--grid-row);
   grid-column: 1;
