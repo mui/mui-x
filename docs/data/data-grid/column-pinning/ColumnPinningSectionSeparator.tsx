@@ -7,9 +7,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import {
   DataGridPro,
-  GridColDef,
-  GridRowsProp,
   GridActionsCellItem,
+  type GridColDef,
+  type GridRowsProp,
+  type DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -18,10 +19,13 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
+type SectionSeparator = NonNullable<
+  DataGridProProps['pinnedColumnsSectionSeparator']
+>;
+
 export default function ColumnPinningSectionSeparator() {
-  const [separator, setSeparator] = React.useState<
-    'border' | 'shadow' | 'border+shadow'
-  >('border+shadow');
+  const [separator, setSeparator] =
+    React.useState<SectionSeparator>('border+shadow');
 
   return (
     <div style={{ width: '100%' }}>
@@ -29,9 +33,7 @@ export default function ColumnPinningSectionSeparator() {
         <RadioGroup
           row
           value={separator}
-          onChange={(event) =>
-            setSeparator(event.target.value as 'border' | 'shadow' | 'border+shadow')
-          }
+          onChange={(event) => setSeparator(event.target.value as SectionSeparator)}
           name="pinned-columns-section-separator"
         >
           <FormControlLabel
