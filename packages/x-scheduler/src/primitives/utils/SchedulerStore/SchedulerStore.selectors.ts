@@ -1,9 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
 import { CalendarEvent, CalendarEventId, CalendarResource, CalendarResourceId } from '../../models';
-import { SchedulerState } from './SchedulerStore.types';
+import { SchedulerState as State } from './SchedulerStore.types';
 
 const eventByIdMapSelector = createSelectorMemoized(
-  (state: SchedulerState) => state.events,
+  (state: State) => state.events,
   (events) => {
     const map = new Map<CalendarEventId | null | undefined, CalendarEvent>();
     for (const event of events) {
@@ -19,7 +19,7 @@ const eventSelector = createSelector(
 );
 
 const resourcesByIdMapSelector = createSelectorMemoized(
-  (state: SchedulerState) => state.resources,
+  (state: State) => state.resources,
   (resources) => {
     const map = new Map<CalendarResourceId | null | undefined, CalendarResource>();
     for (const resource of resources) {
@@ -35,22 +35,20 @@ const resourceSelector = createSelector(
 );
 
 // We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
-const isEventReadOnlySelector = createSelector((state: SchedulerState, event: CalendarEvent) => {
+const isEventReadOnlySelector = createSelector((state: State, event: CalendarEvent) => {
   // TODO: Support putting the whole calendar as readOnly.
   return !!event.readOnly;
 });
 
 export const selectors = {
-  visibleDate: createSelector((state: SchedulerState) => state.visibleDate),
-  ampm: createSelector((state: SchedulerState) => state.ampm),
-  showCurrentTimeIndicator: createSelector(
-    (state: SchedulerState) => state.showCurrentTimeIndicator,
-  ),
-  resources: createSelector((state: SchedulerState) => state.resources),
-  events: createSelector((state: SchedulerState) => state.events),
-  visibleResourcesMap: createSelector((state: SchedulerState) => state.visibleResources),
+  visibleDate: createSelector((state: State) => state.visibleDate),
+  ampm: createSelector((state: State) => state.ampm),
+  showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
+  resources: createSelector((state: State) => state.resources),
+  events: createSelector((state: State) => state.events),
+  visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   resource: resourceSelector,
-  eventColor: createSelector((state: SchedulerState, eventId: CalendarEventId) => {
+  eventColor: createSelector((state: State, eventId: CalendarEventId) => {
     const event = eventSelector(state, eventId);
     if (!event) {
       return state.eventColor;
@@ -64,8 +62,8 @@ export const selectors = {
     return state.eventColor;
   }),
   visibleResourcesList: createSelectorMemoized(
-    (state: SchedulerState) => state.resources,
-    (state: SchedulerState) => state.visibleResources,
+    (state: State) => state.resources,
+    (state: State) => state.visibleResources,
     (resources, visibleResources) =>
       resources
         .filter(
@@ -78,13 +76,13 @@ export const selectors = {
   isEventReadOnly: isEventReadOnlySelector,
   isEventDraggable: createSelector(
     isEventReadOnlySelector,
-    (state: SchedulerState) => state.areEventsDraggable,
+    (state: State) => state.areEventsDraggable,
     (isEventReadOnly, areEventsDraggable, _event: CalendarEvent) =>
       !isEventReadOnly && areEventsDraggable,
   ),
   isEventResizable: createSelector(
     isEventReadOnlySelector,
-    (state: SchedulerState) => state.areEventsResizable,
+    (state: State) => state.areEventsResizable,
     (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
       !isEventReadOnly && areEventsResizable,
   ),
