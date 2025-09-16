@@ -26,7 +26,7 @@ import {
   CalendarResourceId,
 } from '../../../../primitives/models';
 import { DEFAULT_EVENT_COLOR, selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import './EventPopover.css';
 import {
   buildRecurrencePresets,
@@ -42,7 +42,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const adapter = useAdapter();
   const translations = useTranslations();
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence);
   const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, occurrence.id);
@@ -150,14 +150,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
       };
 
       // TODO: Issues #19440 and #19441 - Add support for editing a single occurrence or all occurrences.
-      instance.updateRecurringEvent({
+      store.updateRecurringEvent({
         eventId: occurrence.id,
         occurrenceStart: occurrence.start,
         changes,
         scope: 'this-and-following',
       });
     } else {
-      instance.updateEvent({
+      store.updateEvent({
         id: occurrence.id,
         rrule,
         ...payload,
@@ -168,7 +168,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   };
 
   const handleDelete = useEventCallback(() => {
-    instance.deleteEvent(occurrence.id);
+    store.deleteEvent(occurrence.id);
     onClose();
   });
 

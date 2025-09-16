@@ -5,7 +5,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { DayGrid } from '../../../../primitives/day-grid';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
-import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverTrigger } from '../event-popover';
@@ -15,7 +15,7 @@ import './DayTimeGrid.css';
 export function DayGridCell(props: DayGridCellProps) {
   const { day } = props;
   const adapter = useAdapter();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const placeholder = DayGrid.usePlaceholderInDay(day.value);
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
