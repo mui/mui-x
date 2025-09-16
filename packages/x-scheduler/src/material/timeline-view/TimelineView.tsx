@@ -1,7 +1,9 @@
+'use client';
+
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { HeaderToolbar } from './header-toolbar';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { TimelineView as TimelineViewType, TimelineViewProps } from './TimelineView.types';
 import { Timeline } from '../../primitives/timeline';
 import { DEFAULT_EVENT_COLOR, selectors } from '../../primitives/use-event-calendar';
@@ -18,6 +20,8 @@ import {
   YearHeader,
 } from './header-toolbar/view-header';
 import { TimelineEvent } from './timeline-event';
+import { ViewSwitcher } from '../internals/components/header-toolbar/view-switcher';
+import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 
 const adapter = getAdapter();
 
@@ -43,18 +47,24 @@ const UNIT: { [key: string]: UnitType } = {
   years: 'years',
 };
 
-export function TimelineView(props: TimelineViewProps) {
+export const TimelineView = React.forwardRef(function TimelineView(
+  props: TimelineViewProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
   const { className, ...other } = props;
   const { store } = useEventCalendarContext();
   const resources = useStore(store, selectors.resources);
   const visibleDate = useStore(store, selectors.visibleDate);
 
+  const containerRef = React.useRef<HTMLElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, containerRef);
+
   // TODO replace with a view state from the store
   const [view, setView] = React.useState<TimelineViewType>('days');
   const views: TimelineViewType[] = ['time', 'days', 'weeks', 'months', 'years'];
 
-  const handleViewChange = (view: TimelineViewType, _e: React.MouseEvent<HTMLElement>) => {
-    setView(view);
+  const handleViewChange = (newView: TimelineViewType, _e: React.MouseEvent<HTMLElement>) => {
+    setView(newView);
   };
 
   const start = visibleDate;
@@ -82,81 +92,95 @@ export function TimelineView(props: TimelineViewProps) {
       default:
         return null;
     }
-  }, [view, start, end]);
+  }, [view]);
 
   return (
-    <div className={clsx('TimelineViewContainer', 'mui-x-scheduler', className)} {...other}>
-      <HeaderToolbar views={views} currentView={view} onViewChange={handleViewChange} />
-
-      <div className="TimelineViewContent">
-        <Timeline.Root
-          items={resources}
-          className="TimelineRoot"
-          style={
-            {
-              '--unit-count': diff,
-              '--unit-width': `var(--${view}-cell-width)`,
-              '--row-count': resources.length,
-            } as React.CSSProperties
-          }
-        >
-          <div className="TitleSubGridContainer">
-            <Timeline.Row className="HeaderTitleRow">
-              <Timeline.Cell className={clsx('TimelineCell', 'HeaderTitleCell')}>
-                Resource title
-              </Timeline.Cell>
-            </Timeline.Row>
-            <Timeline.SubGrid className="TitleSubGrid">
-              {(resource) => (
-                <Timeline.Row key={resource.name} className="TimelineRow">
-                  <Timeline.Cell className={clsx('TimelineCell', 'TimelineTitleCell')}>
-                    <span
-                      className={clsx(
-                        'ResourceLegendColor',
-                        getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
-                      )}
-                    />
-
-                    {resource.name}
-                  </Timeline.Cell>
-                </Timeline.Row>
-              )}
-            </Timeline.SubGrid>
-          </div>
-          <div className="EventSubGridContainer">
-            <Timeline.Row className="HeaderRow">
-              <Timeline.Cell className={clsx('TimelineCell', 'HeaderCell')}>{header}</Timeline.Cell>
-            </Timeline.Row>
-            <Timeline.SubGrid className="EventSubGrid">
-              {(resource) => (
-                <Timeline.EventRow
-                  key={resource.id}
-                  className="TimelineEventRow"
-                  start={start}
-                  end={getEndBoundaries(view, start)}
-                  style={
-                    {
-                      '--lane-count': eventsGroupedByResource[resource.id]?.length,
-                    } as React.CSSProperties
-                  }
-                >
-                  {eventsGroupedByResource[resource.id]?.map((row, index) =>
-                    row.map((event) => (
-                      <TimelineEvent
-                        key={event.id}
-                        event={event}
-                        gridRow={index + 1}
-                        ariaLabelledBy=""
-                        variant="regular"
-                      />
-                    )),
-                  )}
-                </Timeline.EventRow>
-              )}
-            </Timeline.SubGrid>
-          </div>
-        </Timeline.Root>
+    <div
+      ref={handleRef}
+      className={clsx('TimelineViewContainer', 'mui-x-scheduler', className)}
+      {...other}
+    >
+      <div className="TimelineHeaderToolbar">
+        <ViewSwitcher views={views} currentView={view} onViewChange={handleViewChange} />
       </div>
+      <EventPopoverProvider containerRef={containerRef}>
+        <div className="TimelineViewContent">
+          <Timeline.Root
+            items={resources}
+            className="TimelineRoot"
+            style={
+              {
+                '--unit-count': diff,
+                '--unit-width': `var(--${view}-cell-width)`,
+                '--row-count': resources.length,
+              } as React.CSSProperties
+            }
+          >
+            <div className="TitleSubGridContainer">
+              <Timeline.Row className="HeaderTitleRow">
+                <Timeline.Cell className={clsx('TimelineCell', 'HeaderTitleCell')}>
+                  Resource title
+                </Timeline.Cell>
+              </Timeline.Row>
+              <Timeline.SubGrid className="TitleSubGrid">
+                {(resource) => (
+                  <Timeline.Row key={resource.name} className="TimelineRow">
+                    <Timeline.Cell className={clsx('TimelineCell', 'TimelineTitleCell')}>
+                      <span
+                        className={clsx(
+                          'ResourceLegendColor',
+                          getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
+                        )}
+                      />
+
+                      {resource.name}
+                    </Timeline.Cell>
+                  </Timeline.Row>
+                )}
+              </Timeline.SubGrid>
+            </div>
+            <div className="EventSubGridContainer">
+              <Timeline.Row className="HeaderRow">
+                <Timeline.Cell className={clsx('TimelineCell', 'HeaderCell')}>
+                  {header}
+                </Timeline.Cell>
+              </Timeline.Row>
+              <Timeline.SubGrid className="EventSubGrid">
+                {(resource) => (
+                  <Timeline.EventRow
+                    key={resource.id}
+                    className="TimelineEventRow"
+                    start={start}
+                    end={getEndBoundaries(view, start)}
+                    style={
+                      {
+                        '--lane-count': eventsGroupedByResource[resource.id]?.length,
+                      } as React.CSSProperties
+                    }
+                  >
+                    {eventsGroupedByResource[resource.id]?.map((row, index) =>
+                      row.map((event) => (
+                        <EventPopoverTrigger
+                          key={event.id}
+                          event={event}
+                          render={
+                            <TimelineEvent
+                              event={event}
+                              gridRow={index + 1}
+                              ariaLabelledBy=""
+                              variant="regular"
+                            />
+                          }
+                        />
+                      )),
+                    )}
+                  </Timeline.EventRow>
+                )}
+              </Timeline.SubGrid>
+            </div>
+          </Timeline.Root>
+        </div>
+      </EventPopoverProvider>
     </div>
   );
-}
+});

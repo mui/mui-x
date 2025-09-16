@@ -10,6 +10,7 @@
   padding: var(--space-4);
   gap: var(--space-4);
   height: 100%;
+  font-size: var(--font-size-2);
 }
 
 .TimelineViewContent {
@@ -82,8 +83,11 @@
 .TimelineRow,
 .TimelineEventRow {
   padding: var(--space-4);
-  border-bottom: 1px solid var(--border-color);
   align-content: start;
+}
+.TimelineRow:not(:last-of-type),
+.TimelineEventRow:not(:last-of-type) {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .TimelineTitleCell {
@@ -108,4 +112,9 @@
   font-size: var(--font-size-2);
   align-items: flex-end;
   height: 100%;
+}
+
+.TimelineHeaderToolbar {
+  display: flex;
+  justify-content: flex-start;
 }
