@@ -106,7 +106,7 @@ The aggregated values are acquired from the parent rows using the `getAggregated
 
 ## Usage with pivoting
 
-When using server-side aggregation with pivoting, only the pivot model is needed in the data query. 
+When using server-side aggregation with pivoting, only the pivot model is needed in the data query.
 The aggregation model can be omitted since it's driven by the pivot value fields.
 The aggregated values are acquired from the parent rows using the `getAggregatedValue()` method.
 
