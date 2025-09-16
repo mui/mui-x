@@ -33,7 +33,12 @@ export default function ZoomSliderPreview() {
   return (
     <BarChartPro
       {...barSettings}
-      xAxis={[{ ...barXAxis, zoom: { slider: { enabled: true, preview: true } } }]}
+      xAxis={[
+        {
+          ...barXAxis,
+          zoom: { filterMode: 'discard', slider: { enabled: true, preview: true } },
+        },
+      ]}
       zoomData={[{ axisId: 'x', start: 10, end: 30 }]}
     />
   );
