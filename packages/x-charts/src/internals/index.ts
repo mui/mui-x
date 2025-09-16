@@ -63,7 +63,7 @@ export * from './colorScale';
 export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';
-export * from './isBandScale';
+export * from './scaleGuards';
 export * from './findMinMax';
 
 // contexts

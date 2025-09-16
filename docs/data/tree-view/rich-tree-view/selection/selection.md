@@ -105,6 +105,61 @@ The example below demonstrates the usage of the `selectionPropagation` prop.
 This feature only works when multi selection is enabled using `props.multiSelect`.
 :::
 
+### Apply propagation on mount
+
+You can use the `useApplyPropagationToSelectedItemsOnMount()` to apply the selection propagation to your `defaultSelectedItems` or `selectedItems` prop.
+
+```tsx
+// Uncontrolled example
+const defaultSelectedItems = useApplyPropagationToSelectedItemsOnMount({
+  items: props.items,
+  selectionPropagation: props.selectedPropagation,
+  selectedItems: ['10', '11', '13', '14'],
+});
+
+return (
+  <RichTreeView
+    items={props.items}
+    selectionPropagation={props.selectionPropagation}
+    defaultSelectedItems={defaultSelectedItems}
+  />
+);
+```
+
+```tsx
+// Controlled example
+const initialSelectedItems = useApplyPropagationToSelectedItemsOnMount({
+  items: props.items,
+  selectionPropagation: props.selectedPropagation,
+  selectedItems: ['10', '11', '13', '14'],
+});
+
+const [selectedItems, setSelectedItems] = React.useState(initialSelectedItems);
+
+return (
+  <RichTreeView
+    items={props.items}
+    selectionPropagation={props.selectionPropagation}
+    selectedItems={selectedItems}
+    onSelectedItemsChange={setSelectedItems}
+  />
+);
+```
+
+In the example below, only Anna, Michael, Elizabeth, and William are selected in the raw data, their ancestors are added to the `defaultSelectedItems` prop by the hook:
+
+{{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
+
+:::success
+The `useApplyPropagationToSelectedItemsOnMount()` must receive the following props as provided to the Rich Tree View component:
+
+- `items`
+- `selectionPropagation`
+- `getItemId` (can be skipped if not provided to Rich Tree View)
+- `getItemChildren` (can be skipped if not provided to Rich Tree View)
+
+:::
+
 ## Imperative API
 
 :::success

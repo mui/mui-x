@@ -43,8 +43,11 @@
 
 .EventCard--regular {
   position: absolute;
-  left: 2px;
-  right: var(--space-3);
+  left: calc(2px + ((100% - var(--space-3)) / var(--columns-count)) * (var(--first-index) - 1));
+  right: calc(
+    ((100% - var(--space-3)) * (var(--columns-count) - var(--last-index))) / var(--columns-count) +
+      var(--space-1) + var(--space-3)
+  );
   top: var(--y-position);
   bottom: calc(100% - var(--y-position) - var(--height));
   z-index: 2;
