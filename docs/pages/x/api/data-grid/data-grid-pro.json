@@ -547,6 +547,10 @@
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
     },
+    "pinnedRowsSectionSeparator": {
+      "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'border+shadow'" },
+      "default": "'border+shadow'"
+    },
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {

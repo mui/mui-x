@@ -1121,6 +1121,11 @@ DataGridPremiumRaw.propTypes = {
     top: PropTypes.arrayOf(PropTypes.object),
   }),
   /**
+   * Sets the type of separator between pinned rows and non-pinned rows.
+   * @default 'border+shadow'
+   */
+  pinnedRowsSectionSeparator: PropTypes.oneOf(['border', 'border+shadow']),
+  /**
    * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
    * @default false
    */

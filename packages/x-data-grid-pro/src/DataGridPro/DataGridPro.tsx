@@ -908,6 +908,11 @@ DataGridProRaw.propTypes = {
     top: PropTypes.arrayOf(PropTypes.object),
   }),
   /**
+   * Sets the type of separator between pinned rows and non-pinned rows.
+   * @default 'border+shadow'
+   */
+  pinnedRowsSectionSeparator: PropTypes.oneOf(['border', 'border+shadow']),
+  /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
    * @param {R} newRow Row object with the new values.

@@ -878,6 +878,9 @@
       "description": "Sets the type of separator between pinned columns and non-pinned columns."
     },
     "pinnedRows": { "description": "Rows data to pin on top or bottom." },
+    "pinnedRowsSectionSeparator": {
+      "description": "Sets the type of separator between pinned rows and non-pinned rows."
+    },
     "pivotActive": {
       "description": "If <code>true</code>, the data grid will show data in pivot mode using the <code>pivotModel</code>."
     },

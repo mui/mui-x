@@ -908,6 +908,11 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * @default 'border+shadow'
    */
   pinnedColumnsSectionSeparator: 'border' | 'shadow' | 'border+shadow';
+  /**
+   * Sets the type of separator between pinned rows and non-pinned rows.
+   * @default 'border+shadow'
+   */
+  pinnedRowsSectionSeparator: 'border' | 'border+shadow';
 }
 
 export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
