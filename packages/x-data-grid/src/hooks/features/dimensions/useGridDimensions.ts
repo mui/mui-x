@@ -38,8 +38,6 @@ type RootProps = Pick<
   | 'columnHeaderHeight'
   | 'columnGroupHeaderHeight'
   | 'headerFilterHeight'
-  | 'listView'
-  | 'slotProps'
 >;
 
 export type GridDimensionsState = GridDimensions;
