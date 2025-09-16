@@ -62,7 +62,7 @@ function initializeFor<T extends 'zoom' | 'pan'>(
     const lastMouse = config.findLast((item) => item.pointerMode === 'mouse');
     const lastTouch = config.findLast((item) => item.pointerMode === 'touch');
 
-    acc[type] = {
+    acc[type as keyof DefaultizedZoomConfig] = {
       type,
       pointerMode: lastEmpty ? [] : Array.from(new Set(config.map((c) => c.pointerMode))),
       requiredKeys: lastEmpty?.requiredKeys ?? [],
