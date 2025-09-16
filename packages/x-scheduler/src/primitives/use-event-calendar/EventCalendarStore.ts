@@ -1,10 +1,5 @@
-import { Store } from '@base-ui-components/utils/store';
 import { warn } from '@base-ui-components/utils/warn';
-import { selectors, State } from './store';
 import {
-  CalendarEvent,
-  CalendarEventId,
-  CalendarResourceId,
   CalendarPreferences,
   CalendarView,
   CalendarViewConfig,
@@ -13,9 +8,9 @@ import {
   CalendarEventColor,
   CalendarResource,
 } from '../models';
-import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
-import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
+import { SchedulerStore } from '../utils/SchedulerStore';
+import { EventCalendarState, EventCalendarStoreParameters } from './EventCalendarStore.types';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -30,14 +25,12 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
-export class EventCalendarStore extends Store<State> {
-  private parameters: EventCalendarParameters;
-
-  private initialParameters: EventCalendarParameters | null = null;
-
-  private constructor(initialState: State, parameters: EventCalendarParameters) {
-    super(initialState);
-    this.parameters = parameters;
+export class EventCalendarStore extends SchedulerStore<
+  EventCalendarState,
+  EventCalendarStoreParameters
+> {
+  private constructor(initialState: EventCalendarState, parameters: EventCalendarStoreParameters) {
+    super(initialState, parameters);
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
@@ -54,10 +47,10 @@ export class EventCalendarStore extends Store<State> {
    * This do not contain state properties that don't update whenever the parameters update.
    */
   private static getPartialStateFromParameters(
-    parameters: EventCalendarParameters,
+    parameters: EventCalendarStoreParameters,
     adapter: Adapter,
   ): Pick<
-    State,
+    EventCalendarState,
     | 'adapter'
     | 'events'
     | 'resources'
@@ -81,7 +74,10 @@ export class EventCalendarStore extends Store<State> {
     };
   }
 
-  public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
+  public static create(
+    parameters: EventCalendarStoreParameters,
+    adapter: Adapter,
+  ): EventCalendarStore {
     const initialState: State = {
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
@@ -118,19 +114,6 @@ export class EventCalendarStore extends Store<State> {
       );
     }
   }
-
-  private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
-    const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
-    const { adapter } = this.state;
-    const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
-
-    if (hasChange) {
-      if (visibleDateProp === undefined) {
-        this.set('visibleDate', visibleDate);
-      }
-      onVisibleDateChange?.(visibleDate, event);
-    }
-  };
 
   private setVisibleDateAndView = (
     visibleDate: SchedulerValidDate,
@@ -185,11 +168,12 @@ export class EventCalendarStore extends Store<State> {
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
-  public updateStateFromParameters = (parameters: EventCalendarParameters, adapter: Adapter) => {
-    const partialState: Partial<State> = EventCalendarStore.getPartialStateFromParameters(
-      parameters,
-      adapter,
-    );
+  public updateStateFromParameters = (
+    parameters: EventCalendarStoreParameters,
+    adapter: Adapter,
+  ) => {
+    const partialState: Partial<EventCalendarState> =
+      EventCalendarStore.getPartialStateFromParameters(parameters, adapter);
 
     const initialParameters = this.initialParameters;
 
@@ -253,88 +237,6 @@ export class EventCalendarStore extends Store<State> {
   };
 
   /**
-   * Updates an event in the calendar.
-   */
-  public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
-    const original = selectors.event(this.state, calendarEvent.id);
-    if (!original) {
-      throw new Error(
-        `Event Calendar: the original event was not found (id="${calendarEvent.id}").`,
-      );
-    }
-    if (original?.rrule) {
-      throw new Error(
-        'Event Calendar: this event is recurring. Use updateRecurringEvent(...) instead.',
-      );
-    }
-
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.map((ev) =>
-      ev.id === calendarEvent.id ? { ...ev, ...calendarEvent } : ev,
-    );
-    onEventsChange?.(updatedEvents);
-  };
-
-  /**
-   * Updates a recurring event in the calendar.
-   */
-  public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    const { adapter, events } = this.state;
-    const { onEventsChange } = this.parameters;
-    const { eventId, occurrenceStart, changes, scope } = params;
-
-    const original = selectors.event(this.state, eventId);
-    if (!original) {
-      throw new Error(`Event Calendar: the original event was not found (id="${eventId}").`);
-    }
-    if (!original.rrule) {
-      throw new Error(
-        'Event Calendar: the original event is not recurring. Use updateEvent(...) instead.',
-      );
-    }
-
-    let updatedEvents: CalendarEvent[] = [];
-
-    switch (scope) {
-      case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
-        break;
-      }
-
-      case 'all': {
-        // TODO: Issue #19441 - Allow to edit recurring series => all events.
-        throw new Error('Event Calendar: scope="all" not implemented yet.');
-      }
-
-      case 'only-this': {
-        // TODO: Issue #19440 - Allow to edit recurring series => this event only.
-        throw new Error('Event Calendar: scope="only-this" not implemented yet.');
-      }
-
-      default: {
-        throw new Error(`Event Calendar: scope="${scope}" is not supported.`);
-      }
-    }
-
-    onEventsChange?.(updatedEvents);
-  };
-
-  /**
-   * Deletes an event from the calendar.
-   */
-  public deleteEvent = (eventId: CalendarEventId) => {
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.filter((ev) => ev.id !== eventId);
-    onEventsChange?.(updatedEvents);
-  };
-
-  /**
    * Goes to today's date without changing the view.
    */
   public goToToday = (event: React.UIEvent) => {
@@ -357,15 +259,6 @@ export class EventCalendarStore extends Store<State> {
    */
   public switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     this.setVisibleDateAndView(visibleDate, 'day', event);
-  };
-
-  /**
-   * Updates the visible resources.
-   */
-  public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
-    if (this.state.visibleResources !== visibleResources) {
-      this.set('visibleResources', visibleResources);
-    }
   };
 
   /**

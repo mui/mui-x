@@ -1,16 +1,60 @@
 import {
   CalendarEvent,
-  CalendarResource,
-  CalendarPreferences,
-  CalendarView,
-  SchedulerValidDate,
-  CalendarPreferencesMenuConfig,
   CalendarEventColor,
   CalendarEventId,
+  CalendarResource,
+  CalendarResourceId,
   RecurringEventUpdatedProperties,
-} from '../models';
+  SchedulerValidDate,
+} from '../../models';
+import { Adapter } from '../adapter/types';
 
-export interface EventCalendarParameters {
+export interface SchedulerState {
+  /**
+   * The adapter of the date library.
+   * Not publicly exposed, is only set in state to avoid passing it to the selectors.
+   */
+  adapter: Adapter;
+  /**
+   * The date used to determine the visible date range in each view.
+   */
+  visibleDate: SchedulerValidDate;
+  /**
+   * The events available in the calendar.
+   */
+  events: CalendarEvent[];
+  /**
+   * The resources the events can be assigned to.
+   */
+  resources: CalendarResource[];
+  /**
+   * Visibility status for each resource.
+   * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
+   */
+  visibleResources: Map<CalendarResourceId, boolean>;
+  /**
+   * Whether the event can be dragged to change its start and end dates without changing the duration.
+   */
+  areEventsDraggable: boolean;
+  /**
+   * Whether the event start or end can be dragged to change its duration without changing its other date.
+   */
+  areEventsResizable: boolean;
+  /**
+   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
+   */
+  ampm: boolean;
+  /**
+   * The color palette used for all events.
+   */
+  eventColor: CalendarEventColor;
+  /**
+   * Whether the component should display the current time indicator.
+   */
+  showCurrentTimeIndicator: boolean;
+}
+
+export interface SchedulerStoreParameters {
   /**
    * The events currently available in the calendar.
    */
@@ -23,25 +67,6 @@ export interface EventCalendarParameters {
    * The resources the events can be assigned to.
    */
   resources?: CalendarResource[];
-  /**
-   * The view currently displayed in the calendar.
-   */
-  view?: CalendarView;
-  /**
-   * The view initially displayed in the calendar.
-   * To render a controlled calendar, use the `view` prop.
-   * @default "week"
-   */
-  defaultView?: CalendarView;
-  /**
-   * The views available in the calendar.
-   * @default ["week", "day", "month", "agenda"]
-   */
-  views?: CalendarView[];
-  /**
-   * Event handler called when the view changes.
-   */
-  onViewChange?: (view: CalendarView, event: React.UIEvent | Event) => void;
   /**
    * The date currently used to determine the visible date range in each view.
    */
@@ -83,18 +108,6 @@ export interface EventCalendarParameters {
    * @default "jade"
    */
   eventColor?: CalendarEventColor;
-  /**
-   * Preferences for the calendar.
-   * @default { showWeekends: true, showWeekNumber: false }
-   */
-  preferences?: Partial<CalendarPreferences>;
-  /**
-   * Config of the preferences menu.
-   * Defines which options are visible in the menu.
-   * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true }
-   */
-  preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
 }
 
 /**
