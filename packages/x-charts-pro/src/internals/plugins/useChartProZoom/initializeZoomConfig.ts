@@ -66,12 +66,16 @@ function initializeFor<T extends 'zoom' | 'pan'>(
       type,
       pointerMode: lastEmpty ? [] : Array.from(new Set(config.map((c) => c.pointerMode))),
       requiredKeys: lastEmpty?.requiredKeys ?? [],
-      mouse: {
-        requiredKeys: lastMouse?.requiredKeys,
-      },
-      touch: {
-        requiredKeys: lastTouch?.requiredKeys,
-      },
+      mouse: lastMouse
+        ? {
+            requiredKeys: lastMouse?.requiredKeys,
+          }
+        : {},
+      touch: lastTouch
+        ? {
+            requiredKeys: lastTouch?.requiredKeys,
+          }
+        : {},
     };
   }
   return acc;
