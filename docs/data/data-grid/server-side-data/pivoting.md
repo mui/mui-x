@@ -24,15 +24,14 @@ When pivot mode is active, the following props are ignored: `columns`, `rowGroup
 
 ## Prerequisites
 
-Server-side pivoting is an extension of its client-side counterpart, so we recommend reviewing [Pivoting](/x/react-data-grid/pivoting/) to understand the underlying data structures and core implementation before proceeding.
+Server-side pivoting is an extension of its client-side counterpart, so we recommend reviewing [the client-side pivoting doc](/x/react-data-grid/pivoting/) to understand the underlying data structures and core implementation before proceeding.
 
 To be able to dynamically load pivoted data from the server, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 ## Implementing server-side pivoting
 
-The Data Source requires the following props to implement pivoting:
-
-- `getPivotColumnDef()`: Customizes the column definition for pivot columns based on the pivot value and column group path.
+To implement server-side pivoting, provide the `getPivotColumnDef()` prop to the Data Source.
+This prop customizes the column definition for pivot columns based on the pivot value and column group path.
   This method must at least override the field name to target the row property holding the pivoted data.
 
 ```tsx
@@ -89,7 +88,7 @@ const getRows: async (params) => {
 ### Pivot columns structure
 
 The `pivotColumns` response defines the structure of pivot columns to be created from the pivoted data.
-Each node in the tree must have a `group` property that is either a string or a part of a row model needed to get the formatted value of the original column.
+Each node in the tree must have a `group` property that's either a string or a part of a row model needed to get the formatted value of the original column.
 `children` is a list of the next level nodes.
 
 ```tsx
@@ -99,7 +98,7 @@ interface GridGetRowsResponsePivotColumn {
 }
 ```
 
-**Structure examples:**
+#### Structure examples
 
 - `[{group: "Yes"}, {group: "No"}]` - Creates column groups with values "Yes" and "No"
 - `[{group: "2025", children: [{group: "January"}, {group: "February"}]}]` - Creates a column group with value "2025" that has column groups "January" and "February"
