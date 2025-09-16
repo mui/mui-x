@@ -410,11 +410,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
   If you need the v6 behavior (multiple selection with checkboxes), remove the `disableMultipleSelection` prop:
 
   ```tsx
-  <DataGrid
-    checkboxSelection
-    rows={rows}
-    columns={columns}
-  />
+  <DataGrid checkboxSelection rows={rows} columns={columns} />
   ```
 
 - ✅ The `unstable_` prefix has been removed from the cell selection props listed below.
