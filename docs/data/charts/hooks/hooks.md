@@ -47,6 +47,12 @@ This means a component using those hook should follow one of the below mentioned
 For example if you create a component `<CustomLegend />` that uses the `useLegend()` hook, you could use it as follow:
 
 ```jsx
+// ✅ Correct usage with slot API
+<LineChart
+  series={[...]}
+  slots={{ legend: CustomLegend }}
+/>
+
 // ✅ Correct usage with chart component
 <LineChart series={[...]}>
   <CustomLegend /> {/* useLegend works here */}
@@ -59,12 +65,6 @@ For example if you create a component `<CustomLegend />` that uses the `useLegen
   </ChartsSurface>
   <CustomLegend /> {/* useLegend works here */}
 </ChartDataProvider>
-
-// ✅ Correct usage with slot API
-<LineChart
-  series={[...]}
-  slots={{ legend: CustomLegend }}
-/>
 ```
 
 ```jsx
