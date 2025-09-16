@@ -57,35 +57,12 @@ const getAlignItems = (position: Position | undefined) => {
   return 'center';
 };
 
-const getGridTemplateAreasWithToolBar = (
-  hideLegend: boolean,
-  direction: Direction | undefined,
-  position: Position | undefined,
-) => {
-  if (direction === 'vertical') {
-    if (hideLegend) {
-      return `"toolbar"
-              "chart"`;
-    }
-    if (position?.horizontal === 'start') {
-      return `"toolbar toolbar"
-              "legend chart"`;
-    }
-    return `"toolbar toolbar"
-            "chart legend"`;
-  }
-
-  if (position?.vertical === 'bottom') {
-    return `"toolbar"
-            "chart"
-            "legend"`;
-  }
+const addToolbar = (template: string) => {
   return `"toolbar"
-          "legend"
-          "chart"`;
+          ${template}`;
 };
 
-const getGridTemplateAreasWithoutToolBar = (
+const getGridTemplateAreas = (
   hideLegend: boolean,
   direction: Direction | undefined,
   position: Position | undefined,
@@ -163,14 +140,16 @@ const Root = styled('div', {
     ),
     gridTemplateRows: getTemplateRows(ownerState.hideLegend, ownerState.legendDirection),
     [`&:has(.${chartsToolbarClasses.root})`]: {
-      gridTemplateAreas: getGridTemplateAreasWithToolBar(
-        ownerState.hideLegend,
-        ownerState.legendDirection,
-        ownerState.legendPosition,
+      gridTemplateAreas: addToolbar(
+        getGridTemplateAreas(
+          ownerState.hideLegend,
+          ownerState.legendDirection,
+          ownerState.legendPosition,
+        ),
       ),
     },
     [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
-      gridTemplateAreas: getGridTemplateAreasWithoutToolBar(
+      gridTemplateAreas: getGridTemplateAreas(
         ownerState.hideLegend,
         ownerState.legendDirection,
         ownerState.legendPosition,
