@@ -200,6 +200,10 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       hasScrollX = false;
     }
 
+    if (params.disableVerticalScroll) {
+      hasScrollY = false;
+    }
+
     const rowWidth = Math.max(
       viewportOuterSize.width,
       columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
@@ -243,6 +247,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     params.dimensions.scrollbarSize,
     params.autoHeight,
     params.disableHorizontalScroll,
+    params.disableVerticalScroll,
     onResize,
     rowHeight,
     columnsTotalWidth,

@@ -198,7 +198,10 @@ export function useGridVirtualizer(
     pinnedColumns,
 
     autoHeight,
-    disableHorizontalScroll: listView || overlayState.overlayType === 'noColumnsOverlay',
+    disableHorizontalScroll: listView,
+    disableVerticalScroll:
+      overlayState.overlayType === 'noColumnsOverlay' ||
+      overlayState.loadingOverlayVariant === 'skeleton',
     minimalContentHeight,
     getRowHeight: React.useMemo(() => {
       if (!getRowHeight) {
