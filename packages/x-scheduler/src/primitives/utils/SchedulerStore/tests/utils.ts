@@ -1,6 +1,7 @@
 import { SchedulerValidDate } from '../../../models/date';
 import { CalendarEvent } from '../../../models/event';
-import { EventCalendarStore } from '../../../use-event-calendar/EventCalendarStore';
+import { EventCalendarStore } from '../../../use-event-calendar';
+import { TimelineStore } from '../../../use-timeline';
 
 export function buildEvent(
   id: string,
@@ -22,4 +23,7 @@ export function getIds<T extends { id: string | number }>(items: T[]): Array<T['
   return items.map((item) => item.id);
 }
 
-export const storeClasses = [{ name: 'EventCalendarStore', value: EventCalendarStore }];
+export const storeClasses = [
+  { name: 'EventCalendarStore', value: EventCalendarStore },
+  { name: 'TimelineStore', value: TimelineStore },
+];
