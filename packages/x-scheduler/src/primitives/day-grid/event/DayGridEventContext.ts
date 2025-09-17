@@ -4,6 +4,14 @@ import type { DayGridEvent } from './DayGridEvent';
 
 export interface DayGridEventContext {
   /**
+   * Whether this event is starting before the row starts.
+   */
+  doesEventStartBeforeRowStart: boolean;
+  /**
+   * Whether this event is ending after the row ends.
+   */
+  doesEventEndAfterRowEnd: boolean;
+  /**
    * Sets whether the event is being resized.
    */
   setIsResizing: (isResizing: boolean) => void;

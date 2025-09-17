@@ -22,7 +22,16 @@ export const DayGridEventResizeHandler = React.forwardRef(function DayGridEventR
   } = componentProps;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const { setIsResizing, getSharedDragData } = useDayGridEventContext();
+  const {
+    setIsResizing,
+    getSharedDragData,
+    doesEventStartBeforeRowStart,
+    doesEventEndAfterRowEnd,
+  } = useDayGridEventContext();
+
+  const enabled =
+    (side === 'start' && !doesEventStartBeforeRowStart) ||
+    (side === 'end' && !doesEventEndAfterRowEnd);
 
   const props = React.useMemo(() => ({}), []);
 
@@ -33,7 +42,7 @@ export const DayGridEventResizeHandler = React.forwardRef(function DayGridEventR
 
   React.useEffect(() => {
     const domElement = ref.current;
-    if (!domElement) {
+    if (!domElement || !enabled) {
       return () => {};
     }
 
@@ -50,9 +59,10 @@ export const DayGridEventResizeHandler = React.forwardRef(function DayGridEventR
       onDragStart: () => setIsResizing(true),
       onDrop: () => setIsResizing(false),
     });
-  }, [side, setIsResizing, getSharedDragData]);
+  }, [enabled, side, setIsResizing, getSharedDragData]);
 
   return useRenderElement('div', componentProps, {
+    enabled,
     state,
     ref: [forwardedRef, ref],
     props: [props, elementProps],

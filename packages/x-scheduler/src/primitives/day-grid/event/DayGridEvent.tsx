@@ -77,12 +77,24 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     end,
   }));
 
+  const doesEventStartBeforeRowStart = React.useMemo(
+    () => adapter.isBefore(start, rowStart),
+    [adapter, start, rowStart],
+  );
+
+  const doesEventEndAfterRowEnd = React.useMemo(
+    () => adapter.isAfter(end, rowEnd),
+    [adapter, end, rowEnd],
+  );
+
   const contextValue: DayGridEventContext = React.useMemo(
     () => ({
       setIsResizing,
       getSharedDragData,
+      doesEventStartBeforeRowStart,
+      doesEventEndAfterRowEnd,
     }),
-    [getSharedDragData],
+    [getSharedDragData, doesEventStartBeforeRowStart, doesEventEndAfterRowEnd],
   );
 
   React.useEffect(() => {
