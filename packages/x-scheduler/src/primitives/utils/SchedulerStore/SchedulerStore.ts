@@ -1,4 +1,5 @@
 import { Store } from '@base-ui-components/utils/store';
+import { warn } from '@base-ui-components/utils/warn';
 import {
   CalendarEvent,
   CalendarEventColor,
@@ -25,6 +26,7 @@ export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 export class SchedulerStore<
   State extends SchedulerState,
   Parameters extends SchedulerParameters,
+  Models extends keyof Parameters & keyof State & string,
 > extends Store<State> {
   protected parameters: Parameters;
 
@@ -74,6 +76,50 @@ export class SchedulerStore<
       // Store elements that should be synchronized when the parameters change.
       ...SchedulerStore.getPartialStateFromParameters(parameters, adapter),
     };
+  }
+
+  protected updateModelFromParameters(
+    parameters: Parameters,
+    mutableNewState: Partial<State>,
+    controlledProp: Models,
+    defaultValueProp: `default${Capitalize<Models>}`,
+  ) {
+    const initialParameters = this.initialParameters;
+
+    if (parameters[controlledProp] !== undefined) {
+      mutableNewState[controlledProp] = parameters[controlledProp] as any;
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      const defaultValue = parameters[defaultValueProp as any];
+      const isControlled = parameters[controlledProp] !== undefined;
+      const initialDefaultValue = initialParameters?.[defaultValueProp as any];
+      const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
+
+      if (initialIsControlled !== isControlled) {
+        warn(
+          [
+            `Event Calendar: A component is changing the ${
+              initialIsControlled ? '' : 'un'
+            }controlled ${controlledProp} state of Event Calendar to be ${initialIsControlled ? 'un' : ''}controlled.`,
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
+            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+            'More info: https://fb.me/react-controlled-components',
+          ].join('\n'),
+        );
+      }
+
+      if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
+        warn(
+          [
+            `Event Calendar: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
+            `To suppress this warning opt to use a controlled Event Calendar.`,
+          ].join('\n'),
+          'error',
+        );
+      }
+    }
   }
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {

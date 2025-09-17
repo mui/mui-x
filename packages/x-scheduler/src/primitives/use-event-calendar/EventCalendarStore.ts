@@ -5,8 +5,6 @@ import {
   CalendarViewConfig,
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
-  CalendarEventColor,
-  CalendarResource,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import { SchedulerStore } from '../utils/SchedulerStore';
@@ -22,14 +20,13 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
 };
-export const DEFAULT_RESOURCES: CalendarResource[] = [];
-export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
 export class EventCalendarStore extends SchedulerStore<
   EventCalendarState,
-  EventCalendarParameters
+  EventCalendarParameters,
+  'visibleDate' | 'view'
 > {
-  private constructor(initialState: EventCalendarState, parameters: EventCalendarParameters) {
+  public constructor(initialState: EventCalendarState, parameters: EventCalendarParameters) {
     super(initialState, parameters);
 
     if (process.env.NODE_ENV !== 'production') {
@@ -59,7 +56,7 @@ export class EventCalendarStore extends SchedulerStore<
   public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
     const initialState: EventCalendarState = {
       ...SchedulerStore.getInitialState(parameters, adapter),
-      // Store elements that should not be updated when the parameters change.
+      ...EventCalendarStore.getPartialStateFromParameters(parameters, adapter),
       preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
       preferencesMenuConfig:
         parameters.preferencesMenuConfig === false
@@ -69,10 +66,7 @@ export class EventCalendarStore extends SchedulerStore<
               ...parameters.preferencesMenuConfig,
             },
       viewConfig: null,
-      // Store elements that should only be updated when their controlled prop changes.
       view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-      // Store elements that should be synchronized when the parameters change.
-      ...EventCalendarStore.getPartialStateFromParameters(parameters, adapter),
     };
 
     return new EventCalendarStore(initialState, parameters);
@@ -144,54 +138,17 @@ export class EventCalendarStore extends SchedulerStore<
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
   public updateStateFromParameters = (parameters: EventCalendarParameters, adapter: Adapter) => {
-    const partialState: Partial<EventCalendarState> =
+    const mutableNewState: Partial<EventCalendarState> =
       EventCalendarStore.getPartialStateFromParameters(parameters, adapter);
 
-    const initialParameters = this.initialParameters;
-
-    function updateModel(
-      controlledProp: 'view' | 'visibleDate',
-      defaultValueProp: 'defaultView' | 'defaultVisibleDate',
-    ) {
-      if (parameters[controlledProp] !== undefined) {
-        partialState[controlledProp] = parameters[controlledProp] as any;
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        const defaultValue = parameters[defaultValueProp];
-        const isControlled = parameters[controlledProp] !== undefined;
-        const initialDefaultValue = initialParameters?.[defaultValueProp];
-        const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
-
-        if (initialIsControlled !== isControlled) {
-          warn(
-            [
-              `Event Calendar: A component is changing the ${
-                initialIsControlled ? '' : 'un'
-              }controlled ${controlledProp} state of Event Calendar to be ${initialIsControlled ? 'un' : ''}controlled.`,
-              'Elements should not switch from uncontrolled to controlled (or vice versa).',
-              `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-              "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-              'More info: https://fb.me/react-controlled-components',
-            ].join('\n'),
-          );
-        }
-
-        if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warn(
-            [
-              `Event Calendar: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
-              `To suppress this warning opt to use a controlled Event Calendar.`,
-            ].join('\n'),
-            'error',
-          );
-        }
-      }
-    }
-
-    updateModel('view', 'defaultView');
-    updateModel('visibleDate', 'defaultVisibleDate');
-    this.apply(partialState);
+    this.updateModelFromParameters(parameters, mutableNewState, 'view', 'defaultView');
+    this.updateModelFromParameters(
+      parameters,
+      mutableNewState,
+      'visibleDate',
+      'defaultVisibleDate',
+    );
+    this.apply(mutableNewState);
   };
 
   /**
