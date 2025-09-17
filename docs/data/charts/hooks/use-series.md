@@ -28,13 +28,16 @@ const barSeries = useBarSeries('id1');
 const barSeries = useBarSeries(['id1', 'id2']);
 ```
 
-- `useBarSeries` - Access bar chart series data
-- `useLineSeries` - Access line chart series data
-- `useScatterSeries` - Access scatter chart series data
-- `usePieSeries` - Access pie chart series data
-- `useRadarSeries` - Access radar chart series data
-- `useHeatmapSeries` - Access heatmap chart series data
-- `useFunnelSeries` - Access funnel chart series data
+The following hooks exist to access series data specific to each chart type:
+
+- `useBarSeries`
+- `useLineSeries`
+- `useScatterSeries`
+- `usePieSeries`
+- `useRadarSeries`
+- `useHeatmapSeries`
+- `useFunnelSeries`
+- `useSankeySeries`
 
 This example demonstrates using the `useBarSeries` hook to access specific bar chart series data:
 
