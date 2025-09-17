@@ -35,7 +35,7 @@ export class SchedulerStore<
 > extends Store<State> {
   protected parameters: Parameters;
 
-  protected initialParameters: Parameters | null = null;
+  private initialParameters: Parameters | null = null;
 
   private instanceName: string;
 
