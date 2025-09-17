@@ -68,16 +68,16 @@ For example, the `useChartClosestPoint` has the `useChartCartesianAxis` as a dep
 - `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin is set before the one for closest point.
 - `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited feature. The highligh plugin being after the closest point one, you will get highlight feature, but not highlight based on closest point.
 
-| Plugin                                             | Dependencies            | Optional dependency                        |
-| :------------------------------------------------- | :---------------------- | :----------------------------------------- |
-| `useChartCartesianAxis`                            |                         | `useChartInteraction`                      |
-| `useChartPolarAxis`                                |                         | `useChartInteraction`                      |
-| `useChartHighlight`                                |                         |                                            |
-| `useChartInteraction`                              |                         |                                            |
+| Plugin                                             | Dependencies            | Optional dependency                            |
+| :------------------------------------------------- | :---------------------- | :--------------------------------------------- |
+| `useChartCartesianAxis`                            |                         | `useChartInteraction`                          |
+| `useChartPolarAxis`                                |                         | `useChartInteraction`                          |
+| `useChartHighlight`                                |                         |                                                |
+| `useChartInteraction`                              |                         |                                                |
 | `useChartClosestPoint`                             | `useChartCartesianAxis` | `useChartInteraction`,<br/>`useChartHighlight` |
-| `useChartZAxis`                                    |                         |                                            |
-| `useChartProExport` <span class="plan-pro"></span> |                         |                                            |
-| `useChartProZoom` <span class="plan-pro"></span>   | `useChartCartesianAxis` |                                            |
+| `useChartZAxis`                                    |                         |                                                |
+| `useChartProExport` <span class="plan-pro"></span> |                         |                                                |
+| `useChartProZoom` <span class="plan-pro"></span>   | `useChartCartesianAxis` |                                                |
 
 ### Custom plugins
 
