@@ -118,6 +118,7 @@ type UseDateTimePickerDefaultizedProps<Props extends BaseDateTimePickerProps> = 
 > & {
   shouldRenderTimeInASingleColumn: boolean;
   views: readonly DateOrTimeViewWithMeridiem[];
+  viewsForFormatting: readonly DateOrTimeViewWithMeridiem[];
 };
 
 export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePickerProps>(
@@ -163,6 +164,9 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
     views: defaultViews,
   });
 
+  // Keep the original views for format calculation (before filtering)
+  const viewsForFormatting = ampm ? [...defaultViews, 'meridiem'] : defaultViews;
+
   return {
     ...themeProps,
     ...validationProps,
@@ -171,6 +175,7 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
+    viewsForFormatting,
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
