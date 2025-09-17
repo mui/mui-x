@@ -13,6 +13,7 @@ import {
   SchedulerState,
   SchedulerParameters,
   UpdateRecurringEventParameters,
+  SchedulerModel,
 } from './SchedulerStore.types';
 import { Adapter } from '../adapter/types';
 import { applyRecurringUpdateFollowing } from '../recurrence-utils';
@@ -21,13 +22,16 @@ import { selectors } from './SchedulerStore.selectors';
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
+export const SCHEDULER_MODELS: SchedulerModel<SchedulerState, SchedulerParameters>[] = [
+  { controlledProp: 'visibleDate', defaultProp: 'defaultVisibleDate' },
+];
+
 /**
  * Instance shared by the Event Calendar and the Timeline components.
  */
 export class SchedulerStore<
   State extends SchedulerState,
   Parameters extends SchedulerParameters,
-  Models extends keyof Parameters & keyof State & string,
 > extends Store<State> {
   protected parameters: Parameters;
 
@@ -35,10 +39,22 @@ export class SchedulerStore<
 
   private instanceName: string;
 
-  public constructor(initialState: State, parameters: Parameters, instanceName: string) {
+  private models: SchedulerModel<State, Parameters>[];
+
+  private getAdditionalStateFromParameters: (parameters: Parameters) => Partial<State>;
+
+  public constructor(
+    initialState: State,
+    parameters: Parameters,
+    instanceName: string,
+    models: SchedulerModel<State, Parameters>[],
+    getAdditionalStateFromParameters: (parameters: Parameters) => Partial<State>,
+  ) {
     super(initialState);
     this.parameters = parameters;
     this.instanceName = instanceName;
+    this.models = models;
+    this.getAdditionalStateFromParameters = getAdditionalStateFromParameters;
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
@@ -49,10 +65,14 @@ export class SchedulerStore<
    * Returns the properties of the state that are derived from the parameters.
    * This do not contain state properties that don't update whenever the parameters update.
    */
-  protected static getPartialStateFromParameters(
-    parameters: SchedulerParameters,
+  private static getPartialStateFromParameters<
+    State extends SchedulerState,
+    Parameters extends SchedulerParameters,
+  >(
+    parameters: Parameters,
     adapter: Adapter,
-  ) {
+    getAdditionalStateFromParameters: (parameters: Parameters) => Partial<State>,
+  ): Partial<State> {
     return {
       adapter,
       events: parameters.events,
@@ -62,13 +82,18 @@ export class SchedulerStore<
       ampm: parameters.ampm ?? true,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
+      ...getAdditionalStateFromParameters(parameters),
     };
   }
 
-  protected static getInitialState(
-    parameters: SchedulerParameters,
+  protected static getInitialState<
+    State extends SchedulerState,
+    Parameters extends SchedulerParameters,
+  >(
+    parameters: Parameters,
     adapter: Adapter,
-  ): SchedulerState {
+    getAdditionalStateFromParameters: (parameters: Parameters) => Partial<SchedulerState>,
+  ): State {
     return {
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
@@ -78,47 +103,60 @@ export class SchedulerStore<
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.date()),
       // Store elements that should be synchronized when the parameters change.
-      ...SchedulerStore.getPartialStateFromParameters(parameters, adapter),
-    };
+      ...SchedulerStore.getPartialStateFromParameters(
+        parameters,
+        adapter,
+        getAdditionalStateFromParameters,
+      ),
+    } as State;
   }
 
-  protected updateModelFromParameters(
-    parameters: Parameters,
-    mutableNewState: Partial<State>,
-    controlledProp: Models,
-    defaultValueProp: `default${Capitalize<Models>}`,
-  ) {
+  /**
+   * Updates the state of the calendar based on the new parameters provided to the root component.
+   */
+  public updateStateFromParameters = (parameters: Parameters, adapter: Adapter) => {
+    const mutableNewState: Partial<State> = SchedulerStore.getPartialStateFromParameters(
+      parameters,
+      adapter,
+      this.getAdditionalStateFromParameters,
+    );
+
     const initialParameters = this.initialParameters;
 
-    if (parameters[controlledProp] !== undefined) {
-      mutableNewState[controlledProp] = parameters[controlledProp] as any;
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      const defaultValue = parameters[defaultValueProp as unknown as keyof Parameters];
-      const isControlled = parameters[controlledProp] !== undefined;
-      const initialDefaultValue =
-        initialParameters?.[defaultValueProp as unknown as keyof Parameters];
-      const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
-
-      if (initialIsControlled !== isControlled) {
-        warnOnce([
-          `Scheduler: A component is changing the ${
-            initialIsControlled ? '' : 'un'
-          }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
-          'Elements should not switch from uncontrolled to controlled (or vice versa).',
-          `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-          "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-          'More info: https://fb.me/react-controlled-components',
-        ]);
-      } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-        warnOnce([
-          `Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
-          `To suppress this warning opt to use a controlled ${this.instanceName}.`,
-        ]);
+    this.models.forEach((model) => {
+      const { controlledProp, defaultProp: defaultValueProp } = model;
+      if (parameters[controlledProp] !== undefined) {
+        mutableNewState[controlledProp] = parameters[controlledProp] as any;
       }
-    }
-  }
+
+      if (process.env.NODE_ENV !== 'production') {
+        const defaultValue = parameters[defaultValueProp as unknown as keyof Parameters];
+        const isControlled = parameters[controlledProp] !== undefined;
+        const initialDefaultValue =
+          initialParameters?.[defaultValueProp as unknown as keyof Parameters];
+        const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
+
+        if (initialIsControlled !== isControlled) {
+          warnOnce([
+            `Scheduler: A component is changing the ${
+              initialIsControlled ? '' : 'un'
+            }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
+            'Elements should not switch from uncontrolled to controlled (or vice versa).',
+            `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
+            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+            'More info: https://fb.me/react-controlled-components',
+          ]);
+        } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
+          warnOnce([
+            `Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
+            `To suppress this warning opt to use a controlled ${this.instanceName}.`,
+          ]);
+        }
+      }
+    });
+
+    this.apply(mutableNewState);
+  };
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;

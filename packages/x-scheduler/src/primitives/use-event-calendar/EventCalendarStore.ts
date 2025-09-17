@@ -7,7 +7,7 @@ import {
   CalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
-import { SchedulerStore } from '../utils/SchedulerStore';
+import { SCHEDULER_MODELS, SchedulerModel, SchedulerStore } from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
@@ -21,16 +21,31 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekNumberVisibility: true,
 };
 
+const EVENT_CALENDAR_MODELS: SchedulerModel<EventCalendarState, EventCalendarParameters>[] = [
+  ...SCHEDULER_MODELS,
+  { controlledProp: 'view', defaultProp: 'defaultView' },
+];
+
+const getAdditionalStateFromParameters = (
+  parameters: EventCalendarParameters,
+): Partial<EventCalendarState> => ({
+  views: parameters.views ?? DEFAULT_VIEWS,
+});
+
 export class EventCalendarStore extends SchedulerStore<
   EventCalendarState,
-  EventCalendarParameters,
-  'visibleDate' | 'view'
+  EventCalendarParameters
 > {
   public constructor(initialState: EventCalendarState, parameters: EventCalendarParameters) {
-    super(initialState, parameters, 'Event Calendar');
+    super(
+      initialState,
+      parameters,
+      'Event Calendar',
+      EVENT_CALENDAR_MODELS,
+      getAdditionalStateFromParameters,
+    );
 
     if (process.env.NODE_ENV !== 'production') {
-      this.initialParameters = parameters;
       // Add listeners to assert the state validity (not applied in prod)
       this.subscribe((state) => {
         this.assertViewValidity(state.view);
@@ -39,24 +54,9 @@ export class EventCalendarStore extends SchedulerStore<
     }
   }
 
-  /**
-   * Returns the properties of the state that are derived from the parameters.
-   * This do not contain state properties that don't update whenever the parameters update.
-   */
-  protected static getPartialStateFromParameters(
-    parameters: EventCalendarParameters,
-    adapter: Adapter,
-  ) {
-    return {
-      ...SchedulerStore.getPartialStateFromParameters(parameters, adapter),
-      views: parameters.views ?? DEFAULT_VIEWS,
-    };
-  }
-
   public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
     const initialState: EventCalendarState = {
-      ...SchedulerStore.getInitialState(parameters, adapter),
-      ...EventCalendarStore.getPartialStateFromParameters(parameters, adapter),
+      ...SchedulerStore.getInitialState(parameters, adapter, getAdditionalStateFromParameters),
       preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
       preferencesMenuConfig:
         parameters.preferencesMenuConfig === false
@@ -132,23 +132,6 @@ export class EventCalendarStore extends SchedulerStore<
     }
 
     this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
-  };
-
-  /**
-   * Updates the state of the calendar based on the new parameters provided to the root component.
-   */
-  public updateStateFromParameters = (parameters: EventCalendarParameters, adapter: Adapter) => {
-    const mutableNewState: Partial<EventCalendarState> =
-      EventCalendarStore.getPartialStateFromParameters(parameters, adapter);
-
-    this.updateModelFromParameters(parameters, mutableNewState, 'view', 'defaultView');
-    this.updateModelFromParameters(
-      parameters,
-      mutableNewState,
-      'visibleDate',
-      'defaultVisibleDate',
-    );
-    this.apply(mutableNewState);
   };
 
   /**

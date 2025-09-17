@@ -142,3 +142,11 @@ export type UpdateRecurringEventParameters = {
    */
   scope: RecurringUpdateEventScope;
 };
+
+export interface SchedulerModel<
+  State extends SchedulerState,
+  Parameters extends SchedulerParameters,
+> {
+  controlledProp: keyof Parameters & keyof State & string;
+  defaultProp: keyof Parameters;
+}
