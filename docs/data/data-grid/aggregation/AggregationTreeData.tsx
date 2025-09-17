@@ -109,7 +109,7 @@ const columns: GridColDef<File>[] = [
       // Round to 2 decimal places
       return Math.round(sizeInKb * 100) / 100;
     },
-    valueFormatter: (value) => `${value} Kb`,
+    valueFormatter: (value) => (value != null ? `${value ?? 0} Kb` : null),
   },
   {
     field: 'updatedAt',

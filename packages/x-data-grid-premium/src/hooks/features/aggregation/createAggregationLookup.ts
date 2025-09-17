@@ -111,14 +111,17 @@ const getGroupAggregatedValue = (
     const { aggregatedField, values } = aggregatedValues[i];
     const aggregationFunction = aggregationRules[aggregatedField]
       .aggregationFunction as GridAggregationFunction;
-    const value = aggregationFunction.apply(
-      {
-        values,
-        groupId,
-        field: aggregatedField, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
-      },
-      publicApi,
-    );
+    const value =
+      groupId === GRID_ROOT_GROUP_ID || rowIds.length > 0
+        ? aggregationFunction.apply(
+            {
+              values,
+              groupId,
+              field: aggregatedField, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
+            },
+            publicApi,
+          )
+        : null;
 
     // Only add to groupAggregationLookup if position is not null
     if (position !== null) {
