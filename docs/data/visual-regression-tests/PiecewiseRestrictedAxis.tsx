@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
+import Typography from '@mui/material/Typography';
 
 const data = [
   { x: -6, y: 14, id: 0 },
@@ -17,23 +18,29 @@ const data = [
 
 export default function MinMaxExample() {
   return (
-    <ScatterChart
-      xAxis={[{ min: -25, max: 23 }]}
-      yAxis={[
-        {
-          colorMap: {
-            type: 'piecewise',
-            thresholds: [-20, 0],
-            colors: ['red', 'blue', 'green'],
+    <React.Fragment>
+      <ScatterChart
+        xAxis={[{ min: -25, max: 23 }]}
+        yAxis={[
+          {
+            colorMap: {
+              type: 'piecewise',
+              thresholds: [-20, 0],
+              colors: ['red', 'blue', 'green'],
+            },
           },
-        },
-      ]}
-      series={[{ data }]}
-      height={300}
-      width={500}
-    >
-      <ChartsReferenceLine y={-20} lineStyle={{ stroke: 'blue' }} />
-      <ChartsReferenceLine y={0} lineStyle={{ stroke: 'green' }} />
-    </ScatterChart>
+        ]}
+        series={[{ data }]}
+        height={300}
+        width={500}
+      >
+        <ChartsReferenceLine y={-20} lineStyle={{ stroke: 'blue' }} />
+        <ChartsReferenceLine y={0} lineStyle={{ stroke: 'green' }} />
+      </ScatterChart>
+      <Typography>
+        All blue points should be above the blue line, all green points above the
+        green line.
+      </Typography>
+    </React.Fragment>
   );
 }
