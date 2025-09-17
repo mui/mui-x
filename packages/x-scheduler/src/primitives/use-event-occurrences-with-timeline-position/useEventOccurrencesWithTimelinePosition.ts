@@ -77,7 +77,9 @@ function buildOccurrenceConflicts(
     const occurrenceDurationMs = endTimestamp - startTimestamp;
 
     if (startTimestamp >= lastEndTimestamp) {
-      occurrencesBlocks.push(currentBlock);
+      if (currentBlock.occurrences.length > 0) {
+          occurrencesBlocks.push(currentBlock);
+      }
       currentBlock = getEmptyBlock();
       lastEndTimestamp = 0;
     }
