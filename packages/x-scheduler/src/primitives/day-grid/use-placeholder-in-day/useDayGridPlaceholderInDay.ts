@@ -20,14 +20,14 @@ export function useDayGridPlaceholderInDay(
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
 
   const placeholder = useStore(store, selectors.placeholderInDay, day, rowStart, rowEnd);
-  const initialDraggedEvent = useStore(
+  const draggedEvent = useStore(
     eventCalendarStore,
     eventCalendarSelectors.event,
     placeholder?.eventId ?? null,
   );
 
   return React.useMemo(() => {
-    if (!initialDraggedEvent || !placeholder) {
+    if (!draggedEvent || !placeholder) {
       return null;
     }
 
@@ -35,7 +35,7 @@ export function useDayGridPlaceholderInDay(
     for (const rowDay of row.days) {
       // TODO: Use the occurrence key once the primitive uses the Event Calendar store.
       // Right now it would match any occurrence of the same recurring event.
-      const found = rowDay.withPosition.find((o) => o.id === initialDraggedEvent.id);
+      const found = rowDay.withPosition.find((o) => o.id === draggedEvent.id);
       if (found) {
         positionIndex = found.position.index;
         break;
@@ -43,14 +43,14 @@ export function useDayGridPlaceholderInDay(
     }
 
     return {
-      ...initialDraggedEvent,
+      ...draggedEvent,
       start: placeholder.start,
       end: placeholder.end,
-      key: `dragged-${initialDraggedEvent.id}`,
+      key: `dragged-${draggedEvent.id}`,
       position: {
         index: positionIndex,
         daySpan: diffIn(adapter, placeholder.end, day, 'days') + 1,
       },
     };
-  }, [adapter, day, initialDraggedEvent, placeholder, row.days]);
+  }, [adapter, day, draggedEvent, placeholder, row.days]);
 }
