@@ -7,7 +7,7 @@ import {
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_RESOURCES } from '../../use-timeline';
+import { DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
 
 const adapter = getAdapter();
 const DEFAULT_PARAMS = { events: [] };

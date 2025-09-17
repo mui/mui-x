@@ -1,10 +1,6 @@
-import { CalendarEventColor, CalendarResource } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import { SchedulerStore } from '../utils/SchedulerStore';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
-
-export const DEFAULT_RESOURCES: CalendarResource[] = [];
-export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
 export class TimelineStore extends SchedulerStore<
   TimelineState,
