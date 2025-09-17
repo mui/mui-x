@@ -93,7 +93,7 @@ function Scatter(props: ScatterProps) {
 
   return (
     <g data-series={series.id} className={classes.root}>
-      {scatterPlotData.map((dataPoint, i) => {
+      {scatterPlotData.map((dataPoint) => {
         const isItemHighlighted = isHighlighted(dataPoint);
         const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
 

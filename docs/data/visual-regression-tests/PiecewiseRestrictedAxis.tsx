@@ -16,7 +16,7 @@ const data = [
   { x: 10, y: 7, id: 9 },
 ];
 
-export default function MinMaxExample() {
+export default function PiecewiseRestrictedAxis() {
   return (
     <React.Fragment>
       <ScatterChart
