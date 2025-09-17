@@ -10,7 +10,10 @@ import {
   UseChartInteractionSignature,
 } from './featurePlugins/useChartInteraction';
 import { UseChartPolarAxisSignature } from './featurePlugins/useChartPolarAxis';
-import { useChartClosestPoint, UseChartClosestPointSignature } from './featurePlugins/useChartClosestPoint';
+import {
+  useChartClosestPoint,
+  UseChartClosestPointSignature,
+} from './featurePlugins/useChartClosestPoint';
 import { useChartZAxis, UseChartZAxisSignature } from './featurePlugins/useChartZAxis';
 
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
