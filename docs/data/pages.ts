@@ -626,6 +626,7 @@ const pages: MuiPage[] = [
                   },
                 ],
               },
+              { pathname: '/x/react-charts/plugins', title: 'Plugins' },
             ],
           },
         ],
