@@ -61,7 +61,13 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
 
-        return { start: newStartDate, end: newEndDate, eventId: data.id, columnId };
+        return {
+          start: newStartDate,
+          end: newEndDate,
+          eventId: data.id,
+          columnId,
+          originalStart: data.start,
+        };
       }
 
       // Resize event
@@ -84,6 +90,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
             end: data.end,
             eventId: data.id,
             columnId,
+            originalStart: data.start,
           };
         }
 
@@ -106,6 +113,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           end: newEndDate,
           eventId: data.id,
           columnId,
+          originalStart: data.start,
         };
       }
 
@@ -131,7 +139,13 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       },
       onDragStart: ({ source: { data } }) => {
         if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
-          setPlaceholder({ eventId: data.id, start: data.start, end: data.end, columnId });
+          setPlaceholder({
+            eventId: data.id,
+            start: data.start,
+            end: data.end,
+            columnId,
+            originalStart: data.start,
+          });
         }
       },
       onDrop: ({ source: { data }, location }) => {

@@ -23,7 +23,7 @@ import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { BAR_CHART_PRO_PLUGINS, BarChartProPluginsSignatures } from './BarChartPro.plugins';
+import { BAR_CHART_PRO_PLUGINS, BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
   extends Omit<BarChartSlots, 'toolbar'>,
@@ -37,7 +37,7 @@ export interface BarChartProSlotProps
 export interface BarChartProProps
   extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
-      ChartContainerProProps<'bar', BarChartProPluginsSignatures>,
+      ChartContainerProProps<'bar', BarChartProPluginSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
@@ -85,7 +85,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
 
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'bar',
-    BarChartProPluginsSignatures
+    BarChartProPluginSignatures
   >(
     {
       ...chartContainerProps,
