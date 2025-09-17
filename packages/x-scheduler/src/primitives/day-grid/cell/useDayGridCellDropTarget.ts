@@ -95,6 +95,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
           end: data.end,
           eventId: data.id,
           columnId: null,
+          originalStart: data.start,
         };
       }
       if (data.side === 'end') {
@@ -113,6 +114,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
           end: draggedDay,
           eventId: data.id,
           columnId: null,
+          originalStart: data.start,
         };
       }
     }
