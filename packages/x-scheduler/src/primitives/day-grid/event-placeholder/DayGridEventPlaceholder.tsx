@@ -17,10 +17,8 @@ export const DayGridEventPlaceholder = React.forwardRef(function DayGridEventPla
     ...elementProps
   } = componentProps;
 
-  const ref = React.useRef<HTMLDivElement>(null);
-
   return useRenderElement('div', componentProps, {
-    ref: [forwardedRef, ref],
+    ref: [forwardedRef],
     props: [elementProps, EVENT_PLACEHOLDER_PROPS],
   });
 });

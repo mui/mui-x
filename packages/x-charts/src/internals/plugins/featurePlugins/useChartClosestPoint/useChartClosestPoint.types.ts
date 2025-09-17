@@ -56,7 +56,7 @@ export type UseChartVoronoiDefaultizedParameters = Pick<
   disableVoronoi: boolean;
 };
 
-export type UseChartVoronoiSignature = ChartPluginSignature<{
+export type UseChartClosestPointSignature = ChartPluginSignature<{
   instance: UseChartVoronoiInstance;
   state: UseChartVoronoiState;
   params: UseChartVoronoiParameters;
