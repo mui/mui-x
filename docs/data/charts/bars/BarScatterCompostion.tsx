@@ -13,14 +13,23 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { GDPdata } from '../dataset/gdpGrowth';
 
 const chartSetting = {
+
   xAxis: [
     {
-      label: 'Value',
+      id: 'bar',
+      label: 'GDP growth rate',
+      dataKey: '2024',
       colorMap: {
         type: 'piecewise' as const,
         thresholds: [0],
         colors: ['#ff4d4f', '#1976d2'],
       },
+    },
+    {
+      id: 'scatter',
+      label: '2010-19 Average',
+      dataKey: '2010_19',
+      color: '#FFFF00',
     },
   ],
   height: 800,
@@ -61,7 +70,8 @@ export default function BarScatterCompostion() {
             datasetKeys: { id: 'country', x: '2010_19', y: 'country' },
             label: '2010-19 Average',
             valueFormatter: scatterValueFormatter,
-            markerSize: 5,
+            markerSize: 4,
+            xAxisId: 'scatter',
           },
         ]}
         yAxis={[{ scaleType: 'band', dataKey: 'country', width: 100 }]}
@@ -73,10 +83,12 @@ export default function BarScatterCompostion() {
           <ChartsGrid vertical />
           <BarPlot />
           <ScatterPlot />
-          <ChartsXAxis />
+          <ChartsXAxis axisId="bar" />
+          <ChartsXAxis axisId="scatter" />
           <ChartsYAxis />
         </ChartsSurface>
       </ChartDataProvider>
     </Box>
   );
 }
+

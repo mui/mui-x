@@ -5,7 +5,7 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { ChartsLegend, PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -15,12 +15,20 @@ import { GDPdata } from '../dataset/gdpGrowth';
 const chartSetting = {
   xAxis: [
     {
-      label: 'Value',
+      id: 'bar',
+      label: 'GDP growth rate',
+      dataKey: '2024',
       colorMap: {
         type: 'piecewise',
         thresholds: [0],
         colors: ['#ff4d4f', '#1976d2'],
       },
+    },
+    {
+      id: 'scatter',
+      label: '2010-19 Average',
+      dataKey: '2010_19',
+      color: '#FFFF00',
     },
   ],
   height: 800,
@@ -59,19 +67,30 @@ export default function BarScatterCompostion() {
             datasetKeys: { id: 'country', x: '2010_19', y: 'country' },
             label: '2010-19 Average',
             valueFormatter: scatterValueFormatter,
-            markerSize: 5,
+            markerSize: 4,
+            xAxisId: 'scatter',
           },
         ]}
         yAxis={[{ scaleType: 'band', dataKey: 'country', width: 100 }]}
         {...chartSetting}
       >
-        <ChartsLegend />
+        <ChartsLegend slots={{ legend: PiecewiseColorLegend }} 
+                    slotProps={{
+            legend: {
+              axisDirection: 'x',
+              direction: 'horizontal',
+              markType: 'square',
+              labelPosition: 'extremes',
+              sx: { padding: 0 },
+            },
+          }} />
         <ChartsTooltip />
         <ChartsSurface>
           <ChartsGrid vertical />
           <BarPlot />
           <ScatterPlot />
-          <ChartsXAxis />
+          <ChartsXAxis axisId="bar" />
+          <ChartsXAxis axisId="scatter" />
           <ChartsYAxis />
         </ChartsSurface>
       </ChartDataProvider>
