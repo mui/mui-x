@@ -37,14 +37,14 @@ The hook returns an object with the following properties:
 
 This example shows how to use the `useDrawingArea` hook to access drawing area dimensions and position custom elements within the chart:
 
-{{"demo": "UseDrawingArea.js"}}
-
 The demo displays:
 
 - A red dashed border showing the exact drawing area boundaries
 - Corner markers at each corner of the drawing area
 - A center cross marking the middle of the drawing area
 - Real-time dimension and center point information
+
+{{"demo": "UseDrawingArea.js"}}
 
 ## Caveats
 

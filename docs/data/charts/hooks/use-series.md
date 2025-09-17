@@ -23,7 +23,7 @@ function CustomComponent() {
 You can also pick specific series by either providing the series id as a parameter, or an array of series ids to get.
 
 ```js
-const barSeries = useBarSeries('id1'); //
+const barSeries = useBarSeries('id1');
 
 const barSeries = useBarSeries(['id1', 'id2']);
 ```

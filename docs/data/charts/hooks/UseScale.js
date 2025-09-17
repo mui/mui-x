@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { useXScale, useYScale, getValueToPositionMapper } from '@mui/x-charts/hooks';
+import {
+  useXScale,
+  useYScale,
+  getValueToPositionMapper,
+  useLineSeries,
+  useXAxis,
+} from '@mui/x-charts/hooks';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 const data = [
@@ -13,6 +19,8 @@ const data = [
 function CustomDataPoints() {
   const xScale = useXScale();
   const yScale = useYScale();
+  const series = useLineSeries();
+  const xAxis = useXAxis();
 
   // Use the value-to-position mapper to handle different scale types
   const xMapper = getValueToPositionMapper(xScale);
@@ -20,28 +28,37 @@ function CustomDataPoints() {
 
   return (
     <g>
-      {data.map((point, index) => {
-        const x = xMapper(point.x);
-        const y = yMapper(point.y);
+      {series.map((s) =>
+        s.data.map((point, index) => {
+          const x = xMapper(xAxis.data?.[index]);
+          const y = yMapper(point);
 
-        return (
-          <g key={index}>
-            {/* Custom data point */}
-            <circle cx={x} cy={y} r={6} fill="red" stroke="white" strokeWidth={2} />
-            {/* Value label */}
-            <text
-              x={x}
-              y={y - 10}
-              textAnchor="middle"
-              fontSize="10"
-              fill="red"
-              fontWeight="bold"
-            >
-              ({point.x}, {point.y})
-            </text>
-          </g>
-        );
-      })}
+          return (
+            <g key={index}>
+              {/* Custom data point */}
+              <circle
+                cx={x}
+                cy={y}
+                r={6}
+                fill="red"
+                stroke="white"
+                strokeWidth={2}
+              />
+              {/* Value label */}
+              <text
+                x={x}
+                y={y - 10}
+                textAnchor="middle"
+                fontSize="10"
+                fill="red"
+                fontWeight="bold"
+              >
+                ({index + 1}, {point})
+              </text>
+            </g>
+          );
+        }),
+      )}
     </g>
   );
 }

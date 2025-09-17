@@ -39,13 +39,10 @@ function BasicUseLegendExample() {
 
 export default function UseLegend() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <PieChart
-        series={[{ data }]}
-        width={400}
-        height={200}
-        slots={{ legend: BasicUseLegendExample }}
-      />
-    </div>
+    <PieChart
+      series={[{ data }]}
+      height={200}
+      slots={{ legend: BasicUseLegendExample }}
+    />
   );
 }

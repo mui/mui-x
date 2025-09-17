@@ -76,7 +76,7 @@ export default function UseDrawingArea() {
         { x: 6, y: 7 },
       ]}
       xAxis={[{ dataKey: 'x', label: 'X Axis' }]}
-      yAxis={[{ dataKey: 'y', label: 'Y Axis' }]}
+      yAxis={[{ label: 'Y Axis' }]}
       series={[{ dataKey: 'y', label: 'Sample Data', color: '#8884d8' }]}
       height={400}
       hideLegend
