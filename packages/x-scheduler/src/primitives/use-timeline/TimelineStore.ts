@@ -8,7 +8,7 @@ export class TimelineStore extends SchedulerStore<
   'visibleDate'
 > {
   public constructor(initialState: TimelineState, parameters: TimelineParameters) {
-    super(initialState, parameters);
+    super(initialState, parameters, 'Timeline');
   }
 
   /**

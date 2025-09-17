@@ -1,5 +1,5 @@
 import { Store } from '@base-ui-components/utils/store';
-import { warn } from '@base-ui-components/utils/warn';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   CalendarEvent,
   CalendarEventColor,
@@ -32,9 +32,12 @@ export class SchedulerStore<
 
   protected initialParameters: Parameters | null = null;
 
-  public constructor(initialState: State, parameters: Parameters) {
+  private instanceName: string;
+
+  public constructor(initialState: State, parameters: Parameters, instanceName: string) {
     super(initialState);
     this.parameters = parameters;
+    this.instanceName = instanceName;
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
@@ -98,27 +101,20 @@ export class SchedulerStore<
       const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
 
       if (initialIsControlled !== isControlled) {
-        warn(
-          [
-            `Event Calendar: A component is changing the ${
-              initialIsControlled ? '' : 'un'
-            }controlled ${controlledProp} state of Event Calendar to be ${initialIsControlled ? 'un' : ''}controlled.`,
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        );
-      }
-
-      if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-        warn(
-          [
-            `Event Calendar: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
-            `To suppress this warning opt to use a controlled Event Calendar.`,
-          ].join('\n'),
-          'error',
-        );
+        warnOnce([
+          `Scheduler: A component is changing the ${
+            initialIsControlled ? '' : 'un'
+          }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
+          'Elements should not switch from uncontrolled to controlled (or vice versa).',
+          `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
+          "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+          'More info: https://fb.me/react-controlled-components',
+        ]);
+      } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
+        warnOnce([
+          `Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
+          `To suppress this warning opt to use a controlled ${this.instanceName}.`,
+        ]);
       }
     }
   }
@@ -150,14 +146,10 @@ export class SchedulerStore<
   public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
     const original = selectors.event(this.state, calendarEvent.id);
     if (!original) {
-      throw new Error(
-        `Event Calendar: the original event was not found (id="${calendarEvent.id}").`,
-      );
+      throw new Error(`Scheduler: the original event was not found (id="${calendarEvent.id}").`);
     }
     if (original?.rrule) {
-      throw new Error(
-        'Event Calendar: this event is recurring. Use updateRecurringEvent(...) instead.',
-      );
+      throw new Error('Scheduler: this event is recurring. Use updateRecurringEvent(...) instead.');
     }
 
     const { onEventsChange } = this.parameters;
@@ -177,11 +169,11 @@ export class SchedulerStore<
 
     const original = selectors.event(this.state, eventId);
     if (!original) {
-      throw new Error(`Event Calendar: the original event was not found (id="${eventId}").`);
+      throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
     }
     if (!original.rrule) {
       throw new Error(
-        'Event Calendar: the original event is not recurring. Use updateEvent(...) instead.',
+        'Scheduler: the original event is not recurring. Use updateEvent(...) instead.',
       );
     }
 
@@ -201,16 +193,16 @@ export class SchedulerStore<
 
       case 'all': {
         // TODO: Issue #19441 - Allow to edit recurring series => all events.
-        throw new Error('Event Calendar: scope="all" not implemented yet.');
+        throw new Error('Scheduler: scope="all" not implemented yet.');
       }
 
       case 'only-this': {
         // TODO: Issue #19440 - Allow to edit recurring series => this event only.
-        throw new Error('Event Calendar: scope="only-this" not implemented yet.');
+        throw new Error('Scheduler: scope="only-this" not implemented yet.');
       }
 
       default: {
-        throw new Error(`Event Calendar: scope="${scope}" is not supported.`);
+        throw new Error(`Scheduler: scope="${scope}" is not supported.`);
       }
     }
 

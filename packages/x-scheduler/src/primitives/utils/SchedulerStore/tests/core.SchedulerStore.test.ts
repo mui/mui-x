@@ -110,9 +110,7 @@ storeClasses.forEach((storeClass) => {
             },
             adapter,
           );
-        }).toWarnDev([
-          'Base UI: Event Calendar: A component is changing the default visibleDate state',
-        ]);
+        }).toWarnDev(['Scheduler: A component is changing the default visibleDate state']);
 
         expect(store.state.visibleDate).toEqualDateTime(defaultDate);
       });
@@ -126,30 +124,27 @@ storeClasses.forEach((storeClass) => {
         const newDate = adapter.date('2025-07-10T00:00:00Z');
         expect(() => {
           store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: newDate }, adapter);
-        }).toWarnDev(
-          'Base UI: Event Calendar: A component is changing the uncontrolled visibleDate state',
-        );
+        }).toWarnDev('Scheduler: A component is changing the uncontrolled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(newDate);
       });
 
       it('should warn and keep current value when switching from controlled → uncontrolled `visibleDate`', () => {
-        const initial = adapter.date('2025-07-05T00:00:00Z');
-        const store = storeClass.value.create({ ...DEFAULT_PARAMS, visibleDate: initial }, adapter);
+        const visibleDate = adapter.date('2025-07-05T00:00:00Z');
+        const store = storeClass.value.create({ ...DEFAULT_PARAMS, visibleDate }, adapter);
 
         expect(() => {
           store.updateStateFromParameters(
             {
               ...DEFAULT_PARAMS,
               resources: [{ id: 'r1', name: 'Resource 1' }],
+              visibleDate: undefined,
             },
             adapter,
           );
-        }).toWarnDev(
-          'Base UI: Event Calendar: A component is changing the controlled visibleDate state',
-        );
+        }).toWarnDev('Scheduler: A component is changing the controlled visibleDate state');
 
-        expect(store.state.visibleDate).toEqualDateTime(initial);
+        expect(store.state.visibleDate).toEqualDateTime(visibleDate);
       });
     });
   });

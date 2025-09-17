@@ -27,7 +27,7 @@ export class EventCalendarStore extends SchedulerStore<
   'visibleDate' | 'view'
 > {
   public constructor(initialState: EventCalendarState, parameters: EventCalendarParameters) {
-    super(initialState, parameters);
+    super(initialState, parameters, 'Event Calendar');
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;

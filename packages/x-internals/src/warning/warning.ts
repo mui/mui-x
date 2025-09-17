@@ -21,6 +21,8 @@ export function warnOnce(message: string | string[], gravity: 'warning' | 'error
   if (!warnedOnceCache.has(cleanMessage)) {
     warnedOnceCache.add(cleanMessage);
 
+    console.log('HEY', cleanMessage);
+
     if (gravity === 'error') {
       console.error(cleanMessage);
     } else {
