@@ -1,15 +1,15 @@
 /**
- * TapAndPanGesture - Detects tap followed by pan gestures
+ * TapAndDragGesture - Detects tap followed by drag gestures
  *
  * This gesture tracks a two-phase interaction:
  * 1. First, a tap (quick touch without movement) is detected
- * 2. Then, panning movements are tracked on the next pointer down
+ * 2. Then, drag movements are tracked on the next pointer down
  *
  * The gesture fires events when:
  * - A tap is completed (tap phase)
- * - Pan movement begins and passes threshold (panStart)
- * - Pan movement continues (pan)
- * - Pan movement ends (panEnd)
+ * - Drag movement begins and passes threshold (dragStart)
+ * - Drag movement continues (drag)
+ * - Drag movement ends (dragEnd)
  * - The gesture is canceled at any point
  */
 
@@ -21,10 +21,10 @@ import { Direction } from '../types/Direction';
 import { calculateCentroid, getDirection, isDirectionAllowed } from '../utils';
 
 /**
- * Configuration options for TapAndPanGesture
- * Extends PointerGestureOptions with tap and pan specific settings
+ * Configuration options for TapAndDragGesture
+ * Extends PointerGestureOptions with tap and drag specific settings
  */
-export type TapAndPanGestureOptions<GestureName extends string> =
+export type TapAndDragGestureOptions<GestureName extends string> =
   PointerGestureOptions<GestureName> & {
     /**
      * Maximum distance in pixels a pointer can move during the tap phase for it to still be considered a tap
@@ -33,127 +33,127 @@ export type TapAndPanGestureOptions<GestureName extends string> =
     tapMaxDistance?: number;
 
     /**
-     * Maximum time in milliseconds between the tap completion and the start of the pan
+     * Maximum time in milliseconds between the tap completion and the start of the drag
      * If exceeded, the gesture will reset and wait for a new tap
      * @default 1000
      */
-    panTimeout?: number;
+    dragTimeout?: number;
 
     /**
-     * Distance threshold in pixels for pan activation.
-     * The pan will only be recognized once the pointer has moved this many
-     * pixels from its starting position in the pan phase.
+     * Distance threshold in pixels for drag activation.
+     * The drag will only be recognized once the pointer has moved this many
+     * pixels from its starting position in the drag phase.
      * @default 0
      */
-    panThreshold?: number;
+    dragThreshold?: number;
 
     /**
-     * Optional array of allowed directions for the pan gesture
+     * Optional array of allowed directions for the drag gesture
      * If not specified, all directions are allowed
      */
-    panDirection?: Array<'up' | 'down' | 'left' | 'right'>;
+    dragDirection?: Array<'up' | 'down' | 'left' | 'right'>;
   };
 
 /**
- * Event data specific to tap and pan gesture events
+ * Event data specific to tap and drag gesture events
  * Contains information about the gesture state, position, and movement
  */
-export type TapAndPanGestureEventData<
+export type TapAndDragGestureEventData<
   CustomData extends Record<string, unknown> = Record<string, unknown>,
 > = PointerGestureEventData<CustomData> & {
   /** X coordinate of the tap */
   tapX: number;
   /** Y coordinate of the tap */
   tapY: number;
-  /** The initial centroid position when the pan began (null during tap phase) */
-  initialPanCentroid: { x: number; y: number } | null;
-  /** Horizontal distance moved in pixels from last pan event */
+  /** The initial centroid position when the drag began (null during tap phase) */
+  initialDragCentroid: { x: number; y: number } | null;
+  /** Horizontal distance moved in pixels from last drag event */
   deltaX: number;
-  /** Vertical distance moved in pixels from last pan event */
+  /** Vertical distance moved in pixels from last drag event */
   deltaY: number;
-  /** Total accumulated horizontal movement in pixels during pan */
+  /** Total accumulated horizontal movement in pixels during drag */
   totalDeltaX: number;
-  /** Total accumulated vertical movement in pixels during pan */
+  /** Total accumulated vertical movement in pixels during drag */
   totalDeltaY: number;
-  /** The direction of pan movement with vertical and horizontal components */
-  panDirection: Direction;
-  /** Horizontal velocity in pixels per second during pan */
+  /** The direction of drag movement with vertical and horizontal components */
+  dragDirection: Direction;
+  /** Horizontal velocity in pixels per second during drag */
   velocityX: number;
-  /** Vertical velocity in pixels per second during pan */
+  /** Vertical velocity in pixels per second during drag */
   velocityY: number;
-  /** Total velocity magnitude in pixels per second during pan */
+  /** Total velocity magnitude in pixels per second during drag */
   velocity: number;
 };
 
 /**
- * Type definition for the CustomEvent created by TapAndPanGesture
+ * Type definition for the CustomEvent created by TapAndDragGesture
  */
-export type TapAndPanEvent<CustomData extends Record<string, unknown> = Record<string, unknown>> =
-  CustomEvent<TapAndPanGestureEventData<CustomData>>;
+export type TapAndDragEvent<CustomData extends Record<string, unknown> = Record<string, unknown>> =
+  CustomEvent<TapAndDragGestureEventData<CustomData>>;
 
 /**
- * Represents the current phase of the TapAndPan gesture
+ * Represents the current phase of the TapAndDrag gesture
  */
-export type TapAndPanPhase = 'waitingForTap' | 'tapDetected' | 'waitingForPan' | 'panning';
+export type TapAndDragPhase = 'waitingForTap' | 'tapDetected' | 'waitingForDrag' | 'dragging';
 
 /**
- * State tracking for the TapAndPanGesture
+ * State tracking for the TapAndDragGesture
  */
-export type TapAndPanGestureState = GestureState & {
-  /** Current phase of the tap and pan gesture */
-  phase: TapAndPanPhase;
+export type TapAndDragGestureState = GestureState & {
+  /** Current phase of the tap and drag gesture */
+  phase: TapAndDragPhase;
   /** The position where the tap was detected */
   tapPosition: { x: number; y: number } | null;
-  /** The initial centroid position when the pan began */
-  panStartCentroid: { x: number; y: number } | null;
-  /** The most recent centroid position during the pan */
-  lastPanCentroid: { x: number; y: number } | null;
-  /** Whether the pan movement threshold has been reached */
-  panThresholdReached: boolean;
-  /** Total accumulated horizontal delta during pan */
+  /** The initial centroid position when the drag began */
+  dragStartCentroid: { x: number; y: number } | null;
+  /** The most recent centroid position during the drag */
+  lastDragCentroid: { x: number; y: number } | null;
+  /** Whether the drag movement threshold has been reached */
+  dragThresholdReached: boolean;
+  /** Total accumulated horizontal delta during drag */
   totalDeltaX: number;
-  /** Total accumulated vertical delta during pan */
+  /** Total accumulated vertical delta during drag */
   totalDeltaY: number;
-  /** Map of pointers that initiated the pan, used for tracking */
-  panStartPointers: Map<number, PointerData>;
-  /** The last direction of pan movement detected */
-  lastPanDirection: Direction;
-  /** The last delta movement in pixels since the last pan event */
+  /** Map of pointers that initiated the drag, used for tracking */
+  dragStartPointers: Map<number, PointerData>;
+  /** The last direction of drag movement detected */
+  lastDragDirection: Direction;
+  /** The last delta movement in pixels since the last drag event */
   lastDeltas: { x: number; y: number } | null;
-  /** Timeout ID for the pan timeout */
-  panTimeoutId: ReturnType<typeof setTimeout> | null;
+  /** Timeout ID for the drag timeout */
+  dragTimeoutId: ReturnType<typeof setTimeout> | null;
 };
 
 /**
- * TapAndPanGesture class for handling tap followed by pan interactions
+ * TapAndDragGesture class for handling tap followed by drag interactions
  *
  * This gesture first detects a tap (quick touch without significant movement),
- * then waits for a subsequent pan interaction and tracks the pan movements.
+ * then waits for a subsequent drag interaction and tracks the drag movements.
  */
-export class TapAndPanGesture<GestureName extends string> extends PointerGesture<GestureName> {
-  protected state: TapAndPanGestureState = {
+export class TapAndDragGesture<GestureName extends string> extends PointerGesture<GestureName> {
+  protected state: TapAndDragGestureState = {
     phase: 'waitingForTap',
     tapPosition: null,
-    panStartCentroid: null,
-    lastPanCentroid: null,
-    panThresholdReached: false,
+    dragStartCentroid: null,
+    lastDragCentroid: null,
+    dragThresholdReached: false,
     totalDeltaX: 0,
     totalDeltaY: 0,
-    panStartPointers: new Map(),
-    lastPanDirection: {
+    dragStartPointers: new Map(),
+    lastDragDirection: {
       vertical: null,
       horizontal: null,
       mainAxis: null,
     },
     lastDeltas: null,
-    panTimeoutId: null,
+    dragTimeoutId: null,
   };
 
   protected readonly isSinglePhase!: false;
 
-  protected readonly eventType!: TapAndPanEvent;
+  protected readonly eventType!: TapAndDragEvent;
 
-  protected readonly optionsType!: TapAndPanGestureOptions<GestureName>;
+  protected readonly optionsType!: TapAndDragGestureOptions<GestureName>;
 
   protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
 
@@ -161,12 +161,12 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
     Partial<typeof this.state>,
     | 'phase'
     | 'tapPosition'
-    | 'panStartCentroid'
-    | 'lastPanCentroid'
-    | 'panThresholdReached'
-    | 'panStartPointers'
-    | 'lastPanDirection'
-    | 'panTimeoutId'
+    | 'dragStartCentroid'
+    | 'lastDragCentroid'
+    | 'dragThresholdReached'
+    | 'dragStartPointers'
+    | 'lastDragDirection'
+    | 'dragTimeoutId'
   >;
 
   /**
@@ -175,39 +175,39 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
   private tapMaxDistance: number;
 
   /**
-   * Maximum time between tap completion and pan start
+   * Maximum time between tap completion and drag start
    */
-  private panTimeout: number;
+  private dragTimeout: number;
 
   /**
-   * Movement threshold for pan activation
+   * Movement threshold for drag activation
    */
-  private panThreshold: number;
+  private dragThreshold: number;
 
   /**
-   * Allowed directions for the pan gesture
+   * Allowed directions for the drag gesture
    */
-  private panDirection: Array<'up' | 'down' | 'left' | 'right'>;
+  private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
 
-  constructor(options: TapAndPanGestureOptions<GestureName>) {
+  constructor(options: TapAndDragGestureOptions<GestureName>) {
     super(options);
     this.tapMaxDistance = options.tapMaxDistance ?? 10;
-    this.panTimeout = options.panTimeout ?? 1000;
-    this.panThreshold = options.panThreshold ?? 0;
-    this.panDirection = options.panDirection || ['up', 'down', 'left', 'right'];
+    this.dragTimeout = options.dragTimeout ?? 1000;
+    this.dragThreshold = options.dragThreshold ?? 0;
+    this.dragDirection = options.dragDirection || ['up', 'down', 'left', 'right'];
   }
 
-  public clone(overrides?: Record<string, unknown>): TapAndPanGesture<GestureName> {
-    return new TapAndPanGesture({
+  public clone(overrides?: Record<string, unknown>): TapAndDragGesture<GestureName> {
+    return new TapAndDragGesture({
       name: this.name,
       preventDefault: this.preventDefault,
       stopPropagation: this.stopPropagation,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
       tapMaxDistance: this.tapMaxDistance,
-      panTimeout: this.panTimeout,
-      panThreshold: this.panThreshold,
-      panDirection: [...this.panDirection],
+      dragTimeout: this.dragTimeout,
+      dragThreshold: this.dragThreshold,
+      dragDirection: [...this.dragDirection],
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
@@ -218,8 +218,8 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
   }
 
   public destroy(): void {
-    if (this.state.panTimeoutId !== null) {
-      clearTimeout(this.state.panTimeoutId);
+    if (this.state.dragTimeoutId !== null) {
+      clearTimeout(this.state.dragTimeoutId);
     }
     this.resetState();
     super.destroy();
@@ -229,33 +229,33 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
     super.updateOptions(options);
 
     this.tapMaxDistance = options.tapMaxDistance ?? this.tapMaxDistance;
-    this.panTimeout = options.panTimeout ?? this.panTimeout;
-    this.panThreshold = options.panThreshold ?? this.panThreshold;
-    this.panDirection = options.panDirection || this.panDirection;
+    this.dragTimeout = options.dragTimeout ?? this.dragTimeout;
+    this.dragThreshold = options.dragThreshold ?? this.dragThreshold;
+    this.dragDirection = options.dragDirection || this.dragDirection;
   }
 
   protected resetState(): void {
-    if (this.state.panTimeoutId !== null) {
-      clearTimeout(this.state.panTimeoutId);
+    if (this.state.dragTimeoutId !== null) {
+      clearTimeout(this.state.dragTimeoutId);
     }
 
     this.isActive = false;
     this.state = {
       phase: 'waitingForTap',
       tapPosition: null,
-      panStartCentroid: null,
-      lastPanCentroid: null,
-      panThresholdReached: false,
+      dragStartCentroid: null,
+      lastDragCentroid: null,
+      dragThresholdReached: false,
       totalDeltaX: 0,
       totalDeltaY: 0,
-      panStartPointers: new Map(),
-      lastPanDirection: {
+      dragStartPointers: new Map(),
+      lastDragDirection: {
         vertical: null,
         horizontal: null,
         mainAxis: null,
       },
       lastDeltas: null,
-      panTimeoutId: null,
+      dragTimeoutId: null,
     };
   }
 
@@ -333,27 +333,27 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
         this.originalTarget = targetElement;
         break;
 
-      case 'waitingForPan':
-        // Clear the pan timeout since we're starting to pan
-        if (this.state.panTimeoutId !== null) {
-          clearTimeout(this.state.panTimeoutId);
-          this.state.panTimeoutId = null;
+      case 'waitingForDrag':
+        // Clear the drag timeout since we're starting to drag
+        if (this.state.dragTimeoutId !== null) {
+          clearTimeout(this.state.dragTimeoutId);
+          this.state.dragTimeoutId = null;
         }
 
-        // Start tracking for pan
-        this.state.panStartCentroid = calculateCentroid(relevantPointers);
-        this.state.lastPanCentroid = { ...this.state.panStartCentroid };
+        // Start tracking for drag
+        this.state.dragStartCentroid = calculateCentroid(relevantPointers);
+        this.state.lastDragCentroid = { ...this.state.dragStartCentroid };
 
-        // Store initial pointers for pan tracking
+        // Store initial pointers for drag tracking
         relevantPointers.forEach((pointer) => {
-          this.state.panStartPointers.set(pointer.pointerId, pointer);
+          this.state.dragStartPointers.set(pointer.pointerId, pointer);
         });
 
-        this.state.phase = 'panning';
+        this.state.phase = 'dragging';
         break;
 
       case 'tapDetected':
-      case 'panning':
+      case 'dragging':
         // Ignore additional pointer downs during these phases
         break;
 
@@ -386,14 +386,14 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
         }
         break;
 
-      case 'panning':
-        if (this.state.panStartCentroid && relevantPointers.length >= this.minPointers) {
-          this.processPanMovement(targetElement, relevantPointers, event);
+      case 'dragging':
+        if (this.state.dragStartCentroid && relevantPointers.length >= this.minPointers) {
+          this.processDragMovement(targetElement, relevantPointers, event);
         }
         break;
 
       case 'tapDetected':
-      case 'waitingForPan':
+      case 'waitingForDrag':
         // No movement handling needed in these phases
         break;
 
@@ -417,35 +417,35 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
           this.state.phase = 'tapDetected';
           this.fireTapEvent(targetElement, relevantPointers, event);
 
-          // Set up timeout and transition to waiting for pan
-          this.state.phase = 'waitingForPan';
-          this.state.panTimeoutId = setTimeout(() => {
+          // Set up timeout and transition to waiting for drag
+          this.state.phase = 'waitingForDrag';
+          this.state.dragTimeoutId = setTimeout(() => {
             // Timeout elapsed, reset the gesture
             this.resetState();
-          }, this.panTimeout);
+          }, this.dragTimeout);
         }
         break;
 
-      case 'panning':
-        // End the pan
-        if (this.state.panThresholdReached) {
-          // If we have fewer pointers than minimum, end the pan
+      case 'dragging':
+        // End the drag
+        if (this.state.dragThresholdReached) {
+          // If we have fewer pointers than minimum, end the drag
           const activePointers = relevantPointers.filter(
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
           );
 
           if (activePointers.length < this.minPointers) {
-            this.emitPanEvent(targetElement, 'end', relevantPointers, event);
+            this.emitDragEvent(targetElement, 'end', relevantPointers, event);
             this.resetState();
           }
         } else {
-          // Pan never reached threshold, just reset
+          // Drag never reached threshold, just reset
           this.resetState();
         }
         break;
 
       case 'tapDetected':
-      case 'waitingForPan':
+      case 'waitingForDrag':
         // No action needed for pointer up in these phases
         break;
 
@@ -455,62 +455,62 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
   }
 
   /**
-   * Process pan movement and emit appropriate events
+   * Process drag movement and emit appropriate events
    */
-  private processPanMovement(
+  private processDragMovement(
     targetElement: TargetElement,
     relevantPointers: PointerData[],
     event: PointerEvent,
   ): void {
-    if (!this.state.panStartCentroid || !this.state.lastPanCentroid) {
+    if (!this.state.dragStartCentroid || !this.state.lastDragCentroid) {
       return;
     }
 
     // Calculate current centroid
     const currentCentroid = calculateCentroid(relevantPointers);
 
-    // Calculate delta from pan start
-    const distanceDeltaX = currentCentroid.x - this.state.panStartCentroid.x;
-    const distanceDeltaY = currentCentroid.y - this.state.panStartCentroid.y;
+    // Calculate delta from drag start
+    const distanceDeltaX = currentCentroid.x - this.state.dragStartCentroid.x;
+    const distanceDeltaY = currentCentroid.y - this.state.dragStartCentroid.y;
 
-    // Calculate movement distance from pan start
+    // Calculate movement distance from drag start
     const distance = Math.sqrt(distanceDeltaX * distanceDeltaX + distanceDeltaY * distanceDeltaY);
 
     // Determine movement direction
-    const moveDirection = getDirection(this.state.lastPanCentroid, currentCentroid);
+    const moveDirection = getDirection(this.state.lastDragCentroid, currentCentroid);
 
     // Calculate change in position since last move
-    const lastDeltaX = currentCentroid.x - this.state.lastPanCentroid.x;
-    const lastDeltaY = currentCentroid.y - this.state.lastPanCentroid.y;
+    const lastDeltaX = currentCentroid.x - this.state.lastDragCentroid.x;
+    const lastDeltaY = currentCentroid.y - this.state.lastDragCentroid.y;
 
     // Check if movement passes the threshold and is in an allowed direction
     if (
-      !this.state.panThresholdReached &&
-      distance >= this.panThreshold &&
-      isDirectionAllowed(moveDirection, this.panDirection)
+      !this.state.dragThresholdReached &&
+      distance >= this.dragThreshold &&
+      isDirectionAllowed(moveDirection, this.dragDirection)
     ) {
-      this.state.panThresholdReached = true;
+      this.state.dragThresholdReached = true;
 
       // Update delta tracking
       this.state.lastDeltas = { x: lastDeltaX, y: lastDeltaY };
       this.state.totalDeltaX += lastDeltaX;
       this.state.totalDeltaY += lastDeltaY;
 
-      // Emit pan start event
-      this.emitPanEvent(targetElement, 'start', relevantPointers, event);
-    } else if (this.state.panThresholdReached) {
+      // Emit drag start event
+      this.emitDragEvent(targetElement, 'start', relevantPointers, event);
+    } else if (this.state.dragThresholdReached) {
       // Continue tracking movement
       this.state.lastDeltas = { x: lastDeltaX, y: lastDeltaY };
       this.state.totalDeltaX += lastDeltaX;
       this.state.totalDeltaY += lastDeltaY;
 
-      // Emit ongoing pan event
-      this.emitPanEvent(targetElement, 'ongoing', relevantPointers, event);
+      // Emit ongoing drag event
+      this.emitDragEvent(targetElement, 'ongoing', relevantPointers, event);
     }
 
     // Update last centroid and direction
-    this.state.lastPanCentroid = currentCentroid;
-    this.state.lastPanDirection = moveDirection;
+    this.state.lastDragCentroid = currentCentroid;
+    this.state.lastDragDirection = moveDirection;
   }
 
   /**
@@ -525,7 +525,7 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
     const activeGestures = this.gesturesRegistry.getActiveGestures(element);
 
     // Create custom event data for the tap event
-    const customEventData: TapAndPanGestureEventData = {
+    const customEventData: TapAndDragGestureEventData = {
       gestureName: this.name,
       centroid: this.state.tapPosition,
       target: event.target,
@@ -535,12 +535,12 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
       timeStamp: event.timeStamp,
       tapX: this.state.tapPosition.x,
       tapY: this.state.tapPosition.y,
-      initialPanCentroid: null, // No pan yet
+      initialDragCentroid: null, // No drag yet
       deltaX: 0,
       deltaY: 0,
       totalDeltaX: 0,
       totalDeltaY: 0,
-      panDirection: {
+      dragDirection: {
         vertical: null,
         horizontal: null,
         mainAxis: null,
@@ -574,15 +574,15 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
   }
 
   /**
-   * Emit pan-specific events with movement data
+   * Emit drag-specific events with movement data
    */
-  private emitPanEvent(
+  private emitDragEvent(
     element: TargetElement,
     phase: GesturePhase,
     pointers: PointerData[],
     event: PointerEvent,
   ): void {
-    if (!this.state.tapPosition || !this.state.panStartCentroid || !this.state.lastPanCentroid) {
+    if (!this.state.tapPosition || !this.state.dragStartCentroid || !this.state.lastDragCentroid) {
       return;
     }
 
@@ -590,7 +590,7 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
     const deltaY = this.state.lastDeltas?.y ?? 0;
 
     // Calculate velocity - time difference in seconds
-    const firstPointer = this.state.panStartPointers.values().next().value;
+    const firstPointer = this.state.dragStartPointers.values().next().value;
     const timeElapsed = firstPointer ? (event.timeStamp - firstPointer.timeStamp) / 1000 : 0;
     const velocityX = timeElapsed > 0 ? deltaX / timeElapsed : 0;
     const velocityY = timeElapsed > 0 ? deltaY / timeElapsed : 0;
@@ -600,9 +600,9 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
     const activeGestures = this.gesturesRegistry.getActiveGestures(element);
 
     // Create custom event data
-    const customEventData: TapAndPanGestureEventData = {
+    const customEventData: TapAndDragGestureEventData = {
       gestureName: this.name,
-      centroid: this.state.lastPanCentroid,
+      centroid: this.state.lastDragCentroid,
       target: event.target,
       srcEvent: event,
       phase,
@@ -610,12 +610,12 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
       timeStamp: event.timeStamp,
       tapX: this.state.tapPosition.x,
       tapY: this.state.tapPosition.y,
-      initialPanCentroid: this.state.panStartCentroid,
+      initialDragCentroid: this.state.dragStartCentroid,
       deltaX,
       deltaY,
       totalDeltaX: this.state.totalDeltaX,
       totalDeltaY: this.state.totalDeltaY,
-      panDirection: this.state.lastPanDirection,
+      dragDirection: this.state.lastDragDirection,
       velocityX,
       velocityY,
       velocity,
@@ -623,13 +623,13 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
       customData: this.customData,
     };
 
-    // Event name based on phase (panStart, pan, panEnd, panCancel)
+    // Event name based on phase (dragStart, drag, dragEnd, dragCancel)
     const phaseName =
-      phase === 'ongoing' ? 'pan' : `pan${phase.charAt(0).toUpperCase() + phase.slice(1)}`;
-    const panEventName = `${this.name}${phaseName.charAt(0).toUpperCase() + phaseName.slice(1)}`;
+      phase === 'ongoing' ? 'drag' : `drag${phase.charAt(0).toUpperCase() + phase.slice(1)}`;
+    const dragEventName = `${this.name}${phaseName.charAt(0).toUpperCase() + phaseName.slice(1)}`;
 
     // Dispatch custom event
-    const domEvent = new CustomEvent(panEventName, {
+    const domEvent = new CustomEvent(dragEventName, {
       bubbles: true,
       cancelable: true,
       composed: true,
@@ -656,9 +656,9 @@ export class TapAndPanGesture<GestureName extends string> extends PointerGesture
     pointers: PointerData[],
     event: PointerEvent,
   ): void {
-    if (this.isActive && this.state.phase === 'panning' && this.state.panThresholdReached) {
+    if (this.isActive && this.state.phase === 'dragging' && this.state.dragThresholdReached) {
       const el = element ?? this.element;
-      this.emitPanEvent(el, 'cancel', pointers, event);
+      this.emitDragEvent(el, 'cancel', pointers, event);
     }
     this.resetState();
   }

@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mouseGesture, touchGesture } from '../../testing';
 import { GestureManager } from '../GestureManager';
-import { TapAndPanGesture } from './TapAndPanGesture';
+import { TapAndDragGesture } from './TapAndDragGesture';
 
-describe('TapAndPan Gesture', () => {
+describe('TapAndDrag Gesture', () => {
   let container: HTMLElement;
   let target: HTMLElement;
   let gestureManager: GestureManager<
-    'tapAndPan',
-    TapAndPanGesture<'tapAndPan'>,
-    TapAndPanGesture<'tapAndPan'>
+    'tapAndDrag',
+    TapAndDragGesture<'tapAndDrag'>,
+    TapAndDragGesture<'tapAndDrag'>
   >;
   let events: string[];
 
@@ -25,11 +25,11 @@ describe('TapAndPan Gesture', () => {
     // Set up gesture manager
     gestureManager = new GestureManager({
       gestures: [
-        new TapAndPanGesture({
-          name: 'tapAndPan',
+        new TapAndDragGesture({
+          name: 'tapAndDrag',
           tapMaxDistance: 10,
-          panTimeout: 1000,
-          panThreshold: 0,
+          dragTimeout: 1000,
+          dragThreshold: 0,
         }),
       ],
     });
@@ -40,34 +40,32 @@ describe('TapAndPan Gesture', () => {
     target.style.height = '100px';
     container.appendChild(target);
 
-    const gestureTarget = gestureManager.registerElement('tapAndPan', target);
+    const gestureTarget = gestureManager.registerElement('tapAndDrag', target);
 
     // Add event listeners for tap and drag events
-    gestureTarget.addEventListener('tapAndPanTap', (event) => {
+    gestureTarget.addEventListener('tapAndDragTap', (event) => {
+      const detail = (event as CustomEvent).detail;
+      events.push(`tap: x: ${Math.floor(detail.tapX)} | y: ${Math.floor(detail.tapY)}`);
+    });
+
+    gestureTarget.addEventListener('tapAndDragDragStart', (event) => {
       const detail = (event as CustomEvent).detail;
       events.push(
-        `tap: x: ${Math.floor(detail.tapX)} | y: ${Math.floor(detail.tapY)}`,
+        `dragStart: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
       );
     });
-    
-    gestureTarget.addEventListener('tapAndPanPanStart', (event) => {
+
+    gestureTarget.addEventListener('tapAndDragDrag', (event) => {
       const detail = (event as CustomEvent).detail;
       events.push(
-        `dragStart: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.panDirection.horizontal, detail.panDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.panDirection.mainAxis}`,
+        `drag: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
       );
     });
-    
-    gestureTarget.addEventListener('tapAndPanPan', (event) => {
+
+    gestureTarget.addEventListener('tapAndDragDragEnd', (event) => {
       const detail = (event as CustomEvent).detail;
       events.push(
-        `drag: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.panDirection.horizontal, detail.panDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.panDirection.mainAxis}`,
-      );
-    });
-    
-    gestureTarget.addEventListener('tapAndPanPanEnd', (event) => {
-      const detail = (event as CustomEvent).detail;
-      events.push(
-        `dragEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.panDirection.horizontal, detail.panDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.panDirection.mainAxis}`,
+        `dragEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
       );
     });
   });
@@ -87,7 +85,7 @@ describe('TapAndPan Gesture', () => {
 
     // Verify tap was detected
     expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-    
+
     events = []; // Clear events for drag test
 
     // Then perform a drag
@@ -114,7 +112,7 @@ describe('TapAndPan Gesture', () => {
 
     // Verify tap was detected
     expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-    
+
     events = []; // Clear events for drag test
 
     // Then perform a drag
@@ -141,7 +139,7 @@ describe('TapAndPan Gesture', () => {
 
     // Verify tap was detected
     expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-    
+
     events = []; // Clear events for drag test
 
     // Then perform a diagonal drag
@@ -164,8 +162,8 @@ describe('TapAndPan Gesture', () => {
 
   it('should reset if drag timeout is exceeded', async () => {
     // Use short timeout for testing
-    gestureManager.setGestureOptions('tapAndPan', target, {
-      panTimeout: 100,
+    gestureManager.setGestureOptions('tapAndDrag', target, {
+      dragTimeout: 100,
     });
 
     // First perform a tap
@@ -175,7 +173,7 @@ describe('TapAndPan Gesture', () => {
 
     // Verify tap was detected
     expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-    
+
     events = []; // Clear events
 
     // Wait longer than the timeout
@@ -196,8 +194,8 @@ describe('TapAndPan Gesture', () => {
   });
 
   it('should respect drag direction constraints', async () => {
-    gestureManager.setGestureOptions('tapAndPan', target, {
-      panDirection: ['left', 'right'], // Only allow horizontal dragging
+    gestureManager.setGestureOptions('tapAndDrag', target, {
+      dragDirection: ['left', 'right'], // Only allow horizontal dragging
     });
 
     // First perform a tap
@@ -207,7 +205,7 @@ describe('TapAndPan Gesture', () => {
 
     // Verify tap was detected
     expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-    
+
     events = []; // Clear events
 
     // Test vertical drag (should not trigger events due to direction constraint)
@@ -241,7 +239,7 @@ describe('TapAndPan Gesture', () => {
   });
 
   it('should cancel if tap movement exceeds maxDistance', async () => {
-    gestureManager.setGestureOptions('tapAndPan', target, {
+    gestureManager.setGestureOptions('tapAndDrag', target, {
       tapMaxDistance: 5, // Very small threshold
     });
 
@@ -258,8 +256,8 @@ describe('TapAndPan Gesture', () => {
   });
 
   it('should handle drag threshold properly', async () => {
-    gestureManager.setGestureOptions('tapAndPan', target, {
-      panThreshold: 20, // Require 20px movement before drag activates
+    gestureManager.setGestureOptions('tapAndDrag', target, {
+      dragThreshold: 20, // Require 20px movement before drag activates
     });
 
     // First perform a tap
@@ -269,7 +267,7 @@ describe('TapAndPan Gesture', () => {
 
     // Verify tap was detected
     expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-    
+
     events = []; // Clear events
 
     // Perform a small drag that doesn't reach threshold
@@ -296,32 +294,32 @@ describe('TapAndPan Gesture', () => {
   });
 
   it('should update options', () => {
-    expect(TapAndPanGesture).toUpdateOptions({
+    expect(TapAndDragGesture).toUpdateOptions({
       preventDefault: true,
       stopPropagation: true,
       preventIf: ['move'],
       tapMaxDistance: 15,
-      panTimeout: 500,
-      panThreshold: 10,
-      panDirection: ['up', 'down'],
+      dragTimeout: 500,
+      dragThreshold: 10,
+      dragDirection: ['up', 'down'],
     });
   });
 
   it('should update state', { fails: true }, () => {
-    expect(TapAndPanGesture).toUpdateState({});
+    expect(TapAndDragGesture).toUpdateState({});
   });
 
   it('should properly clone', () => {
-    expect(TapAndPanGesture).toBeClonable({
+    expect(TapAndDragGesture).toBeClonable({
       preventDefault: true,
       stopPropagation: true,
       minPointers: 1,
       maxPointers: 1,
       preventIf: ['press'],
       tapMaxDistance: 15,
-      panTimeout: 500,
-      panThreshold: 10,
-      panDirection: ['left', 'right'],
+      dragTimeout: 500,
+      dragThreshold: 10,
+      dragDirection: ['left', 'right'],
     });
   });
 });
