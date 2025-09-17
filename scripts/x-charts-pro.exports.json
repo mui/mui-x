@@ -435,6 +435,7 @@
   { "name": "redPaletteDark", "kind": "Variable" },
   { "name": "redPaletteLight", "kind": "Variable" },
   { "name": "referenceLineClasses", "kind": "Variable" },
+  { "name": "RendererType", "kind": "TypeAlias" },
   { "name": "RotationAxis", "kind": "TypeAlias" },
   { "name": "SankeyChartProps", "kind": "Interface" },
   { "name": "SankeyChartSlotExtension", "kind": "Interface" },
