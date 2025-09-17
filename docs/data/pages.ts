@@ -615,6 +615,10 @@ const pages: MuiPage[] = [
                       { pathname: '/x/api/charts/radar-series', title: 'RadarSeries' },
                       { pathname: '/x/api/charts/scatter-series', title: 'ScatterSeries' },
                       {
+                        pathname: '/x/api/charts/legend-item-params',
+                        title: 'LegendItemParams',
+                      },
+                      {
                         pathname: '/x/api/charts/chart-image-export-options',
                         title: 'ChartImageExportOptions',
                       },

@@ -32,18 +32,7 @@ The hook returns an object with the following structure:
 }
 ```
 
-## LegendItemParams
-
-Each legend item contains the following properties:
-
-| Property   | Type                                          | Description                                  |
-| :--------- | :-------------------------------------------- | :------------------------------------------- |
-| `id`       | `string \| number`                            | The identifier of the legend element         |
-| `label`    | `string`                                      | The text label to display                    |
-| `color`    | `string`                                      | The color associated with the legend item    |
-| `markType` | `'square' \| 'circle' \| 'line' \| Component` | The type of mark to display                  |
-| `seriesId` | `string`                                      | The identifier of the series                 |
-| `itemId`   | `string \| number`                            | _(optional)_ The identifier of the pie slice |
+The [LegendItemParams](/x/api/charts/legend-item-params/) interface defines the structure of each legend item.
 
 ## Caveats
 
