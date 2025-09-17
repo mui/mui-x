@@ -115,7 +115,6 @@
     "chai-dom": "^1.12.1",
     "compression-webpack-plugin": "^11.1.0",
     "concurrently": "^9.2.1",
-    "cpy-cli": "^5.0.0",
     "cross-env": "catalog:",
     "danger": "^13.0.4",
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",

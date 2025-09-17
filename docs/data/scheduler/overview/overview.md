@@ -26,7 +26,3 @@ This package is not published yet.
 ## Timeline
 
 - [Timeline](/x/react-scheduler/timeline/)
-
-## Primitives (to be removed)
-
-- [Primitives](/x/react-scheduler/primitives/)

@@ -10,13 +10,13 @@ import {} from // useChartProExport,
 // UseChartProExportSignature,
 '../internals/plugins/useChartProExport';
 
-export type SankeyChartPluginsSignatures = [
+export type SankeyChartPluginSignatures = [
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   // UseChartProExportSignature,
 ];
 
-export const SANKEY_CHART_PLUGINS: ConvertSignaturesIntoPlugins<SankeyChartPluginsSignatures> = [
+export const SANKEY_CHART_PLUGINS: ConvertSignaturesIntoPlugins<SankeyChartPluginSignatures> = [
   useChartInteraction,
   useChartHighlight,
   // useChartProExport,
