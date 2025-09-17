@@ -1201,38 +1201,88 @@ describe('recurrence-utils', () => {
       expect(res).to.equal(undefined);
     });
 
-    it('should inherit base pattern when RRULE not touched and there are no boundaries', () => {
-      const original: RRuleSpec = { freq: 'DAILY', interval: 2 };
-      const res = call(original, { title: 'New Event Title' });
-      expect(res).to.deep.equal({ freq: 'DAILY', interval: 2 });
-    });
+    describe('should inherit base pattern when RRULE not explicitly changed', () => {
+      it('should inherit base pattern when RRULE not touched and there are no boundaries', () => {
+        const original: RRuleSpec = { freq: 'DAILY', interval: 2 };
+        const res = call(original, { title: 'New Event Title' });
+        expect(res).to.deep.equal({ freq: 'DAILY', interval: 2 });
+      });
 
-    it('should inherit base pattern and recomputes COUNT to remaining occurrences when RRULE not touched', () => {
-      // Original: daily with count 42 from Jan 01
-      // Split on Jan 06 => Jan 01..05 consumed => remaining 37 => new COUNT=37
-      const original: RRuleSpec = { freq: 'DAILY', interval: 1, count: 42 };
+      it('should inherit base pattern and recomputes COUNT to remaining occurrences when RRULE not touched', () => {
+        // Original: daily with count 42 from Jan 01
+        // Split on Jan 06 => Jan 01..05 consumed => remaining 37 => new COUNT=37
+        const original: RRuleSpec = { freq: 'DAILY', interval: 1, count: 42 };
 
-      const dayBeforeSplit = adapter.addDays(adapter.startOfDay(splitStart), -1);
-      const consumed = estimateOccurrencesUpTo(adapter, original, seriesStart, dayBeforeSplit);
-      const remaining = (original.count as number) - consumed;
+        const dayBeforeSplit = adapter.addDays(adapter.startOfDay(splitStart), -1);
+        const consumed = estimateOccurrencesUpTo(adapter, original, seriesStart, dayBeforeSplit);
+        const remaining = (original.count as number) - consumed;
 
-      const res = call(original, { title: 'New Event Title' });
-      expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, count: remaining });
-    });
+        const res = call(original, { title: 'New Event Title' });
+        expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, count: remaining });
+      });
 
-    it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {
-      const originalUntil = adapter.date('2025-01-20T23:59:59Z');
-      const original: RRuleSpec = { freq: 'DAILY', interval: 1, until: originalUntil };
+      it('should keep the original UNTIL when inheriting (untouched RRULE)', () => {
+        const originalUntil = adapter.date('2025-01-20T23:59:59Z');
+        const original: RRuleSpec = { freq: 'DAILY', interval: 1, until: originalUntil };
 
-      const res = call(original, { title: 'New Event Title' })!;
-      expect(adapter.isSameDay(res.until!, originalUntil)).to.equal(true);
-      expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, until: originalUntil });
-    });
+        const res = call(original, { title: 'New Event Title' })!;
+        expect(adapter.isSameDay(res.until!, originalUntil)).to.equal(true);
+        expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, until: originalUntil });
+      });
 
-    it('should keep pattern selectors when inheriting (e.g., WEEKLY BYDAY)', () => {
-      const original: RRuleSpec = { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] };
-      const res = call(original, { title: 'New Event Title' });
-      expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] });
+      describe('weekly realignment (BYDAY swap)', () => {
+        it('should keep pattern selectors when inheriting (e.g., WEEKLY BYDAY)', () => {
+          const original: RRuleSpec = { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] };
+          const res = call(original, { title: 'New Event Title' });
+          expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] });
+        });
+
+        it('should realign WEEKLY BYDAY when moving the day of the occurrence', () => {
+          // Expect MO,WE → TU,WE (preserve pattern, swap only the edited weekday).
+          const original: RRuleSpec = { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] };
+          const movedStart = adapter.date('2025-01-07T15:00:00Z');
+          const res = call(original, { start: movedStart });
+          expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['TU', 'WE'] });
+        });
+
+        it('should avoid duplicates when new weekday already exists (MO→TU with TU present)', () => {
+          // Expect MO,TU and moving MO → TU to result in just TU (no duplicate).
+          const original: RRuleSpec = { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU'] };
+          const movedStart = adapter.date('2025-01-07T10:00:00Z');
+          const res = call(original, { start: movedStart });
+          expect(res).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['TU'] });
+        });
+      });
+
+      describe('monthly realignment (BYMONTHDAY swap / ordinal BYDAY)', () => {
+        it('should realign to new day of month (10th → 12th) (BYMONTHDAY)', () => {
+          const original: RRuleSpec = { freq: 'MONTHLY', interval: 1, byMonthDay: [10] };
+          const movedStart = adapter.date('2025-03-12T10:00:00Z');
+          expect(call(original, { start: movedStart })).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [12],
+          });
+        });
+
+        it('should recompute ordinal+weekday (2TU → 3WE) (ordinal BYDAY)', () => {
+          const startMonth = adapter.date('2025-07-01T00:00:00Z');
+          const original: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] };
+          const thirdWed = adapter.date('2025-07-16T10:00:00Z'); // 3rd Wednesday
+          expect(
+            call(original, { start: thirdWed }, startMonth, adapter.startOfDay(thirdWed)),
+          ).to.deep.equal({ freq: 'MONTHLY', interval: 1, byDay: ['3WE'] });
+        });
+
+        it('should use -1 for last weekday of month (→ -1FR) (ordinal BYDAY)', () => {
+          const monthStart = adapter.date('2025-10-01T00:00:00Z');
+          const original: RRuleSpec = { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] };
+          const lastFri = adapter.date('2025-10-31T09:00:00Z'); // last Friday
+          expect(
+            call(original, { start: lastFri }, monthStart, adapter.startOfDay(lastFri)),
+          ).to.deep.equal({ freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] });
+        });
+      });
     });
   });
 

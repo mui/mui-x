@@ -31,7 +31,50 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         end: offset === 0 ? data.end : adapter.addDays(data.end, offset),
         eventId: data.id,
         columnId: null,
+        originalStart: data.start,
       };
+    }
+
+    // Resize event
+    if (isDraggingDayGridEventResizeHandler(data)) {
+      if (data.side === 'start') {
+        if (adapter.isAfterDay(value, data.end)) {
+          return undefined;
+        }
+
+        let draggedDay: SchedulerValidDate;
+        if (adapter.isSameDay(value, data.end)) {
+          draggedDay = adapter.startOfDay(data.end);
+        } else {
+          draggedDay = mergeDateAndTime(adapter, value, data.start);
+        }
+        return {
+          start: draggedDay,
+          end: data.end,
+          eventId: data.id,
+          columnId: null,
+          originalStart: data.start,
+        };
+      }
+      if (data.side === 'end') {
+        if (adapter.isBeforeDay(value, data.start)) {
+          return undefined;
+        }
+
+        let draggedDay: SchedulerValidDate;
+        if (adapter.isSameDay(value, data.start)) {
+          draggedDay = adapter.endOfDay(data.start);
+        } else {
+          draggedDay = mergeDateAndTime(adapter, value, data.end);
+        }
+        return {
+          start: data.start,
+          end: draggedDay,
+          eventId: data.id,
+          columnId: null,
+          originalStart: data.start,
+        };
+      }
     }
 
     // Resize event
@@ -95,7 +138,13 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
       },
       onDragStart: ({ source: { data } }) => {
         if (isDraggingDayGridEvent(data) || isDraggingDayGridEventResizeHandler(data)) {
-          setPlaceholder({ eventId: data.id, columnId: null, start: data.start, end: data.end });
+          setPlaceholder({
+            eventId: data.id,
+            columnId: null,
+            start: data.start,
+            end: data.end,
+            originalStart: data.start,
+          });
         }
       },
       onDrop: ({ source: { data } }) => {

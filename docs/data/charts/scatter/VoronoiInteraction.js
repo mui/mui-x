@@ -1,16 +1,18 @@
+/* eslint-disable no-nested-ternary */
+
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import data from '../dataset/random/scatterParallel.json';
 
 export default function VoronoiInteraction() {
+  const [option, setOption] = React.useState('numeric');
   const [voronoiMaxRadius, setVoronoiMaxRadius] = React.useState(25);
-  const [disableVoronoi, setDisableVoronoi] = React.useState(false);
-  const [undefinedRadius, setUndefinedRadius] = React.useState(true);
 
   const handleMaxRadiusChange = (event, newValue) => {
     if (typeof newValue !== 'number') {
@@ -23,8 +25,13 @@ export default function VoronoiInteraction() {
     <Stack direction="column" sx={{ width: '100%' }}>
       <ScatterChart
         height={300}
-        disableVoronoi={disableVoronoi}
-        voronoiMaxRadius={undefinedRadius ? undefined : voronoiMaxRadius}
+        voronoiMaxRadius={
+          option === 'undefined'
+            ? undefined
+            : option === 'item'
+              ? 'item'
+              : voronoiMaxRadius
+        }
         dataset={data}
         series={[
           {
@@ -38,8 +45,35 @@ export default function VoronoiInteraction() {
         ]}
       />
       <div>
+        <Typography gutterBottom>Maximum radius</Typography>
+        <RadioGroup onChange={(event) => setOption(event.target.value)}>
+          <Stack direction="row">
+            <FormControlLabel
+              checked={option === 'item'}
+              control={<Radio />}
+              label="'item'"
+              labelPlacement="end"
+              value="item"
+            />
+            <FormControlLabel
+              checked={option === 'undefined'}
+              control={<Radio />}
+              label="undefined"
+              labelPlacement="end"
+              value="undefined"
+            />
+            <FormControlLabel
+              checked={option === 'numeric'}
+              control={<Radio />}
+              label="numeric radius"
+              labelPlacement="end"
+              value="numeric"
+            />
+          </Stack>
+        </RadioGroup>
+
         <Typography id="max-radius-value" gutterBottom>
-          max radius
+          Numeric radius
         </Typography>
         <Slider
           value={voronoiMaxRadius}
@@ -48,31 +82,9 @@ export default function VoronoiInteraction() {
           min={1}
           max={100}
           aria-labelledby="max-radius-value"
-          disabled={disableVoronoi || undefinedRadius}
+          disabled={option !== 'numeric'}
         />
       </div>
-      <Stack direction="row">
-        <FormControlLabel
-          checked={disableVoronoi}
-          control={
-            <Checkbox
-              onChange={(event) => setDisableVoronoi(event.target.checked)}
-            />
-          }
-          label="disableVoronoi"
-          labelPlacement="end"
-        />
-        <FormControlLabel
-          checked={undefinedRadius}
-          control={
-            <Checkbox
-              onChange={(event) => setUndefinedRadius(event.target.checked)}
-            />
-          }
-          label="undefined radius"
-          labelPlacement="end"
-        />
-      </Stack>
     </Stack>
   );
 }
