@@ -74,8 +74,9 @@ export default function BarScatterCompostion() {
         yAxis={[{ scaleType: 'band', dataKey: 'country', width: 100 }]}
         {...chartSetting}
       >
-        <ChartsLegend slots={{ legend: PiecewiseColorLegend }} 
-                    slotProps={{
+        <ChartsLegend
+          slots={{ legend: PiecewiseColorLegend }}
+          slotProps={{
             legend: {
               axisDirection: 'x',
               direction: 'horizontal',
@@ -83,7 +84,8 @@ export default function BarScatterCompostion() {
               labelPosition: 'extremes',
               sx: { padding: 0 },
             },
-          }} />
+          }}
+        />
         <ChartsTooltip />
         <ChartsSurface>
           <ChartsGrid vertical />

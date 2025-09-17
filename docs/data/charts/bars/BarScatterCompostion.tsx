@@ -13,7 +13,6 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { GDPdata } from '../dataset/gdpGrowth';
 
 const chartSetting = {
-
   xAxis: [
     {
       id: 'bar',
@@ -91,4 +90,3 @@ export default function BarScatterCompostion() {
     </Box>
   );
 }
-
