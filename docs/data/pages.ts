@@ -615,6 +615,10 @@ const pages: MuiPage[] = [
                       { pathname: '/x/api/charts/radar-series', title: 'RadarSeries' },
                       { pathname: '/x/api/charts/scatter-series', title: 'ScatterSeries' },
                       {
+                        pathname: '/x/api/charts/legend-item-params',
+                        title: 'LegendItemParams',
+                      },
+                      {
                         pathname: '/x/api/charts/chart-image-export-options',
                         title: 'ChartImageExportOptions',
                       },
@@ -624,6 +628,17 @@ const pages: MuiPage[] = [
                       },
                     ],
                   },
+                ],
+              },
+              {
+                pathname: '/x/react-charts/hooks-group',
+                title: 'Hooks',
+                children: [
+                  { pathname: '/x/react-charts/hooks', title: 'Overview' },
+                  { pathname: '/x/react-charts/hooks/use-series', title: 'useSeries' },
+                  { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
+                  { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
+                  { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
                 ],
               },
             ],

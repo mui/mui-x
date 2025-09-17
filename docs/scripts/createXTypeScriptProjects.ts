@@ -174,6 +174,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'AxisConfig',
       'ChartImageExportOptions',
       'ChartPrintExportOptions',
+      'LegendItemParams',
     ],
   },
 ];
