@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { getAdapter } from './../../utils/adapter/getAdapter';
+import { getAdapter } from '../../utils/adapter/getAdapter';
 import { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };

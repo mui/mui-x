@@ -69,6 +69,7 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    hideLegend: false,
   };
 
   return {

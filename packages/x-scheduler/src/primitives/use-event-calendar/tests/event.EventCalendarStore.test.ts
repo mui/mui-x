@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { getAdapter } from './../../utils/adapter/getAdapter';
+import { getAdapter } from '../../utils/adapter/getAdapter';
 import { buildEvent } from './utils';
 
 const adapter = getAdapter();
