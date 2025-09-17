@@ -31,7 +31,7 @@ export default function LegendTooltipComposition() {
       height={300}
       series={[{ type: 'line', data: pData, label: 'Sales Data' }]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
-      margin={{ top: 50, right: 20, bottom: 20, left: 20 }}
+      margin={{ top: 40, right: 20, bottom: 20, left: 20 }}
     >
       <ChartsLegend />
       <ChartsTooltip />
@@ -53,7 +53,7 @@ export default function LegendTooltipComposition() {
         <ChartsYAxis />
         <LinePlot />
         <MarkPlot />
-        <ChartsAxisHighlight y="line" />
+        <ChartsAxisHighlight x="line" />
       </ChartsSurface>
     </ChartDataProvider>
   );
