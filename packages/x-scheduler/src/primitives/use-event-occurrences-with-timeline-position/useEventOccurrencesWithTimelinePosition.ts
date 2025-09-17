@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  CalendarEventOccurrence,
-  CalendarEventOccurrenceWithTimePosition,
-  SchedulerValidDate,
-} from '../models';
+import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { Adapter } from '../utils/adapter/types';
 
@@ -68,63 +64,76 @@ function buildOccurrenceConflicts(
   adapter: Adapter,
   occurrences: CalendarEventOccurrence[],
 ): OccurrenceConflicts[] {
-  let longestOccurrence: CalendarEventOccurrence | null = null;
-  let longestOccurrenceDurationMs = 0;
-  const occurrencesProperties: OccurrenceProperties[] = [];
-  for (const occurrence of occurrences) {
-    // TODO: Avoid JS Date conversion and add adapter.getDurationMs method
-    const startTimestamp = adapter.toJsDate(occurrence.start).getTime();
-    const occurrenceDurationMs = adapter.toJsDate(occurrence.end).getTime() - startTimestamp;
+  const getEmptyBlock = (): OccurrenceBlock => ({ occurrences: [], longestDurationMs: 0 });
 
-    occurrencesProperties.push({
+  const occurrencesBlocks: OccurrenceBlock[] = [];
+  let currentBlock: OccurrenceBlock = getEmptyBlock();
+  let lastEndTimestamp = 0;
+
+  for (const occurrence of occurrences) {
+    // TODO: Avoid JS Date conversion
+    const startTimestamp = adapter.toJsDate(occurrence.start).getTime();
+    const endTimestamp = adapter.toJsDate(occurrence.end).getTime();
+    const occurrenceDurationMs = endTimestamp - startTimestamp;
+
+    if (startTimestamp >= lastEndTimestamp) {
+      occurrencesBlocks.push(currentBlock);
+      currentBlock = getEmptyBlock();
+      lastEndTimestamp = 0;
+    }
+
+    currentBlock.occurrences.push({
       key: occurrence.key,
-      start: occurrence.start,
-      end: occurrence.end,
-      durationMs: occurrenceDurationMs,
       startTimestamp,
+      endTimestamp,
     });
 
-    if (occurrenceDurationMs > longestOccurrenceDurationMs) {
-      longestOccurrenceDurationMs = occurrenceDurationMs;
-      longestOccurrence = occurrence;
+    if (occurrenceDurationMs > currentBlock.longestDurationMs) {
+      currentBlock.longestDurationMs = occurrenceDurationMs;
+    }
+
+    if (endTimestamp > lastEndTimestamp) {
+      lastEndTimestamp = endTimestamp;
     }
   }
 
-  if (longestOccurrence == null) {
-    return [];
+  if (currentBlock.occurrences.length > 0) {
+    occurrencesBlocks.push(currentBlock);
   }
 
   const conflicts: OccurrenceConflicts[] = [];
 
-  for (let i = 0; i < occurrencesProperties.length; i += 1) {
-    const occurrence = occurrencesProperties[i];
-    const conflictsBefore = new Set<string>();
-    const conflictsAfter = new Set<string>();
+  for (const block of occurrencesBlocks) {
+    for (let i = 0; i < block.occurrences.length; i += 1) {
+      const occurrence = block.occurrences[i];
+      const conflictsBefore = new Set<string>();
+      const conflictsAfter = new Set<string>();
 
-    for (let j = i + 1; j < occurrencesProperties.length; j += 1) {
-      const occurrenceA = occurrencesProperties[j];
-      if (adapter.isBefore(occurrenceA.start, occurrence.end)) {
-        conflictsAfter.add(occurrenceA.key);
-      } else {
-        // We know that all the next occurrences will start even later, so we can stop here.
-        break;
+      for (let j = i + 1; j < block.occurrences.length; j += 1) {
+        const occurrenceA = block.occurrences[j];
+        if (occurrenceA.startTimestamp < occurrence.endTimestamp) {
+          conflictsAfter.add(occurrenceA.key);
+        } else {
+          // We know that all the next occurrences will start even later, so we can stop here.
+          break;
+        }
       }
+
+      for (let j = i - 1; j >= 0; j -= 1) {
+        const occurrenceB = block.occurrences[j];
+        const diffBetweenOccurrencesStart = occurrence.startTimestamp - occurrenceB.startTimestamp;
+        if (diffBetweenOccurrencesStart > block.longestDurationMs) {
+          // We know that all the previous occurrences won't end after the start of the occurrence we are getting conflicts for, so we can stop here.
+          break;
+        }
+
+        if (occurrenceB.endTimestamp > occurrence.startTimestamp) {
+          conflictsBefore.add(occurrenceB.key);
+        }
+      }
+
+      conflicts.push({ key: occurrence.key, before: conflictsBefore, after: conflictsAfter });
     }
-
-    for (let j = i - 1; j >= 0; j -= 1) {
-      const occurrenceB = occurrencesProperties[j];
-      const diffBetweenOccurrencesStart = occurrence.startTimestamp - occurrenceB.startTimestamp;
-      if (diffBetweenOccurrencesStart > longestOccurrenceDurationMs) {
-        // We know that all the previous occurrences won't end after the start of the occurrence we are getting conflicts for, so we can stop here.
-        break;
-      }
-
-      if (adapter.isAfter(occurrenceB.end, occurrence.start)) {
-        conflictsBefore.add(occurrenceB.key);
-      }
-    }
-
-    conflicts.push({ key: occurrence.key, before: conflictsBefore, after: conflictsAfter });
   }
 
   return conflicts;
@@ -189,12 +198,17 @@ function buildLastIndexLookup(
   return lastIndexLookup;
 }
 
-interface OccurrenceProperties {
-  key: string;
-  start: SchedulerValidDate;
-  end: SchedulerValidDate;
-  durationMs: number;
-  startTimestamp: number;
+/**
+ * A block of occurrences that overlap in time.
+ * The occurrences of two distinct blocks never overlap in time, their conflicts can thus be computed independently.
+ */
+interface OccurrenceBlock {
+  occurrences: {
+    key: string;
+    startTimestamp: number;
+    endTimestamp: number;
+  }[];
+  longestDurationMs: number;
 }
 
 interface OccurrenceConflicts {
