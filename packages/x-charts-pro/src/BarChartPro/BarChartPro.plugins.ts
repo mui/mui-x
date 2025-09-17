@@ -15,7 +15,7 @@ import {
 } from '../internals/plugins/useChartProExport';
 import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
-export type BarChartProPluginsSignatures = [
+export type BarChartProPluginSignatures = [
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<'bar'>,
   UseChartInteractionSignature,
@@ -24,7 +24,7 @@ export type BarChartProPluginsSignatures = [
   UseChartProExportSignature,
 ];
 
-export const BAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<BarChartProPluginsSignatures> = [
+export const BAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<BarChartProPluginSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,

@@ -15,7 +15,7 @@ import { LineHighlightPlotProps } from './LineHighlightPlot';
 import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { LINE_CHART_PLUGINS, LineChartPluginsSignatures } from './LineChart.plugins';
+import { LINE_CHART_PLUGINS, LineChartPluginSignatures } from './LineChart.plugins';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -66,7 +66,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       })),
     [disableLineItemHighlight, series],
   );
-  const chartContainerProps: ChartContainerProps<'line', LineChartPluginsSignatures> = {
+  const chartContainerProps: ChartContainerProps<'line', LineChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,
