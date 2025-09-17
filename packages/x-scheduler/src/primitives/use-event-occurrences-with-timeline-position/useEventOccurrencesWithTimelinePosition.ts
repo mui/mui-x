@@ -60,6 +60,10 @@ export namespace useEventOccurrencesWithTimelinePosition {
   }
 }
 
+/**
+ * Looks for conflicts between occurrences and build a list of conflicts for each occurrence.
+ * The provided occurrences need to be sorted by starting date-time.
+ */
 function buildOccurrenceConflicts(
   adapter: Adapter,
   occurrences: CalendarEventOccurrence[],
@@ -70,6 +74,8 @@ function buildOccurrenceConflicts(
   let currentBlock: OccurrenceBlock = getEmptyBlock();
   let lastEndTimestamp = 0;
 
+  // Group occurrences in non-overlapping blocks to reduce the number of comparisons when looking for conflicts.
+  // Computes the properties needed for each occurrence.
   for (const occurrence of occurrences) {
     // TODO: Avoid JS Date conversion
     const startTimestamp = adapter.toJsDate(occurrence.start).getTime();
@@ -78,7 +84,7 @@ function buildOccurrenceConflicts(
 
     if (startTimestamp >= lastEndTimestamp) {
       if (currentBlock.occurrences.length > 0) {
-          occurrencesBlocks.push(currentBlock);
+        occurrencesBlocks.push(currentBlock);
       }
       currentBlock = getEmptyBlock();
       lastEndTimestamp = 0;
@@ -103,8 +109,8 @@ function buildOccurrenceConflicts(
     occurrencesBlocks.push(currentBlock);
   }
 
+  // For each block, looks for conflicts between occurrences to build the conflicts list.
   const conflicts: OccurrenceConflicts[] = [];
-
   for (const block of occurrencesBlocks) {
     for (let i = 0; i < block.occurrences.length; i += 1) {
       const occurrence = block.occurrences[i];
