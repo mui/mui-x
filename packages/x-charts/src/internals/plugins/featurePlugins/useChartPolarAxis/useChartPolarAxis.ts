@@ -21,6 +21,7 @@ import {
 } from './coordinateTransformation';
 import { getAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
+import { isWithInteractionPlugin } from '../useChartInteraction/isWithInteractionPlugin';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -102,9 +103,16 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     isInChart: false,
   });
 
+  const withInteractionPlugin = isWithInteractionPlugin(instance);
+
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || element === null || params.disableAxisListener) {
+    if (
+      !isInteractionEnabled ||
+      !withInteractionPlugin ||
+      element === null ||
+      params.disableAxisListener
+    ) {
       return () => {};
     }
 
@@ -112,7 +120,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     const moveEndHandler = instance.addInteractionListener('moveEnd', (event) => {
       if (!event.detail.activeGestures.pan) {
         mousePosition.current.isInChart = false;
-        instance.cleanInteraction?.();
+        instance.cleanInteraction();
       }
     });
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
@@ -207,6 +215,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     params.disableAxisListener,
     isInteractionEnabled,
     svg2rotation,
+    withInteractionPlugin,
   ]);
 
   React.useEffect(() => {
