@@ -1,43 +1,41 @@
-import { afterAll, beforeAll, expect } from 'vitest';
+import { expect } from 'vitest';
 import { Transition } from './Transition';
 
+// Wait for the next animation frame
+const waitNextFrame = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => resolve());
+  });
+
 describe('Transition', () => {
-  beforeAll(() => {
-    vi.useFakeTimers();
-  });
-
-  afterAll(() => {
-    vi.useRealTimers();
-  });
-
   const duration = 200;
   const easingFn = (t: number) => t;
 
-  it('starts automatically on creation', () => {
+  it('starts automatically on creation', async () => {
     let ticks = 0;
     const transition = new Transition(duration, easingFn, () => {
       ticks += 1;
     });
 
     expect(ticks).to.eq(0);
-    vi.advanceTimersToNextFrame();
+    await waitNextFrame();
     expect(ticks).to.eq(1);
     transition.stop();
   });
 
-  it('stops when `stop()` is called', () => {
+  it('stops when `stop()` is called', async () => {
     let ticks = 0;
-    const transition = new Transition(duration, easingFn, () => {
+    const transition = new Transition(duration, easingFn, async () => {
       ticks += 1;
     });
 
     expect(ticks).to.eq(0);
     transition.stop();
-    vi.advanceTimersToNextFrame();
+    await waitNextFrame();
     expect(ticks).to.eq(0);
   });
 
-  it('resumes after stopping', () => {
+  it('resumes after stopping', async () => {
     let ticks = 0;
     const transition = new Transition(duration, easingFn, () => {
       ticks += 1;
@@ -47,23 +45,23 @@ describe('Transition', () => {
     transition.stop();
     transition.resume();
     expect(ticks).to.eq(0);
-    vi.advanceTimersToNextFrame();
+    await waitNextFrame();
     expect(ticks).to.eq(1);
 
     transition.stop();
   });
 
-  it('finishes when `finish()` is called', () => {
+  it('finishes when `finish()` is called', async () => {
     let ticks = 0;
     const transition = new Transition(duration, easingFn, () => {
       ticks += 1;
     });
 
-    vi.advanceTimersToNextFrame();
+    await waitNextFrame();
     expect(ticks).to.eq(1);
     transition.finish();
-    vi.advanceTimersToNextFrame();
-    vi.advanceTimersToNextFrame();
+    await waitNextFrame();
+    await waitNextFrame();
     expect(ticks).to.eq(2);
   });
 });
