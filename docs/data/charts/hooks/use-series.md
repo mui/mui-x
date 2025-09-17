@@ -7,7 +7,7 @@ productId: x-charts
 
 <p class="description">Access raw series data for all chart types.</p>
 
-The `useXxxSeries` hook provides access to specific series data for a particular chart type.
+The `use*Series` hooks provide access to specific series data for a particular chart type.
 
 ## Usage
 
