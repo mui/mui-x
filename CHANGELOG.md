@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 8.11.3
+
 _Sep 16, 2025_
 
 We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
@@ -52,6 +53,7 @@ Same changes as in `@mui/x-date-pickers@8.11.3`.
 - [charts] Add bar gradient example (#19174) @bernardobelchior
 - [charts] Ignore empty tick labels in label overlap computation (#19547) @alexfauquette
 - [charts] Rename `isBandScale` to `isDiscreteScale` (#19514) @bernardobelchior
+- [charts] Fix legend position affecting toolbar's position (#19257) @sai6855
 
 #### `@mui/x-charts-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
@@ -82,7 +84,6 @@ Internal changes.
 - [docs] Add styling row group recipe (#19349) @siriwatknp
 - [docs] Group demos data into the dataset folder (#19549) @alexfauquette
 - [docs] Add `shiny` bar chart example at the top  (#19416) @JCQuintas
-
 
 ### Core
 
