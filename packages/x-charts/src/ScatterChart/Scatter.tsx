@@ -101,7 +101,7 @@ function Scatter(props: ScatterProps) {
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
             dataIndex={dataPoint.dataIndex}
-            color={colorGetter ? colorGetter(i) : color}
+            color={colorGetter ? colorGetter(dataPoint.dataIndex) : color}
             isHighlighted={isItemHighlighted}
             isFaded={isItemFaded}
             x={dataPoint.x}
