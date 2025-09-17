@@ -37,7 +37,7 @@ import { useSeries, useLegend, ... } from '@mui/x-charts-premium/hooks';
 
 ## Caveats
 
-All charts hooks require being used within a chart context.
+All charts hooks must be used within a chart context.
 This means a component using those hook should follow one of the below mentioned structure:
 
 1. a `slot` of a chart component
