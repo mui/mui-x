@@ -72,4 +72,4 @@ This example shows how to use scale functions to position custom elements:
 
 ## Caveats
 
-These hooks require being used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+These hooks must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.

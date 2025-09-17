@@ -57,4 +57,4 @@ The `useSeries` hook is more suitable for advanced use cases where you need to w
 
 ## Caveats
 
-This hook requires being used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+This hook must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.

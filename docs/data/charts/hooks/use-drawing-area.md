@@ -44,4 +44,4 @@ The hook returns an object with the following properties:
 
 ## Caveats
 
-This hook requires being used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
+This hook must be used within a chart context. See the [hooks overview](/x/react-charts/hooks/) for more information about proper usage.
