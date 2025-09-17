@@ -1,4 +1,5 @@
 import { Store } from '@base-ui-components/utils/store';
+// TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   CalendarEvent,
