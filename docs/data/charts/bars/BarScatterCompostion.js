@@ -5,13 +5,13 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartsLegend, PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useLegend } from '@mui/x-charts/hooks';
 import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
 import { GDPdata } from '../dataset/gdpGrowth';
 
 const chartSetting = {
@@ -42,7 +42,6 @@ const scatterValueFormatter = (value) => (value ? `${value.x.toFixed(2)}%` : '')
 
 function CustomLegend() {
   const { items } = useLegend();
-
   return (
     <Box
       sx={{
@@ -53,38 +52,15 @@ function CustomLegend() {
         spacing: 5,
       }}
     >
-      {items.map((item) => {
-        const { label, color, markType, seriesId } = item;
-        return seriesId === 'bar' ? (
+      {items.map((item, index) => {
+        const { label, color, markType } = item;
+        return (
           <Box
+            key={index}
             sx={{
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-            }}
-          >
-            <ChartsLegend
-              slots={{ legend: PiecewiseColorLegend }}
-              slotProps={{
-                legend: {
-                  axisDirection: 'x',
-                  direction: 'horizontal',
-                  markType: 'square',
-                  labelPosition: 'extremes',
-                  sx: { padding: 0 },
-                },
-              }}
-            />
-            <Typography variant="caption">{`${label}`}</Typography>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              marginLeft: 3,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 0.5,
             }}
           >
             <ChartsLabelMark type={markType} color={color} />
@@ -93,6 +69,17 @@ function CustomLegend() {
         );
       })}
     </Box>
+  );
+}
+
+function Gradient(props) {
+  return (
+    <linearGradient {...props}>
+      <stop offset="0%" stopColor="#ff4d4f" />
+      <stop offset="50%" stopColor="#ff4d4f" />
+      <stop offset="50%" stopColor="#1976d2" />
+      <stop offset="100%" stopColor="#1976d2" />
+    </linearGradient>
   );
 }
 
@@ -133,7 +120,13 @@ export default function BarScatterCompostion() {
         ]}
         yAxis={[{ scaleType: 'band', dataKey: 'country', width: 100 }]}
         {...chartSetting}
+        sx={{
+          [`[data-series="bar"] .${legendClasses.mark} rect`]: {
+            fill: 'url(#diagonalGradient)',
+          },
+        }}
       >
+        <Gradient id="diagonalGradient" x1="0%" y1="50%" x2="100%" y2="50%" />
         <CustomLegend />
         <ChartsTooltip />
         <ChartsSurface>
