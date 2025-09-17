@@ -802,8 +802,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.2
       '@mui/internal-scripts':
-        specifier: ^2.0.9
-        version: 2.0.12
+        specifier: https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d
+        version: https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d
       '@types/chance':
         specifier: 'catalog:'
         version: 1.1.7
@@ -4209,11 +4209,16 @@ packages:
   '@mui/internal-docs-utils@2.0.2':
     resolution: {integrity: sha512-WWNJeYOtD1EOiuCiQGt9MLGP0P/b3Co5vvzziqyglHPD0bSKaZIIDYHKES2uZVkqqB+Ym5YnMxV7oUOrVpQzTA==}
 
+  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@7b4e85daf5ec7caf9cd02565f9c059e1f775ec9a':
+    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@7b4e85daf5ec7caf9cd02565f9c059e1f775ec9a}
+    version: 2.0.2
+
   '@mui/internal-markdown@2.0.9':
     resolution: {integrity: sha512-8sHWdNUE83iOsOY4GoGetIKJjNDzvFxjkjr1TjLpTPG3M373P/ltUMPHRx9C0MxASvYqj4tKXpioYKCWVeeY3Q==}
 
-  '@mui/internal-scripts@2.0.12':
-    resolution: {integrity: sha512-dw07Zebm675y/Gyrku0L37gDYDKYtDymlBWdlpzaZA0GJdBllaSLeZfoAsCDQYCDWZp+4DkYZPuCJ39EeanBfA==}
+  '@mui/internal-scripts@https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d':
+    resolution: {tarball: https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d}
+    version: 2.0.13
 
   '@mui/internal-test-utils@2.0.12':
     resolution: {integrity: sha512-USr96h4+2VLQsB5wGTOl933WGej1r8/5ClUcSR8Lx7kZgI+xRzP8lMaLX8QqsMWjU3DbC1Cj9o5XitwnXsyMHQ==}
@@ -14826,6 +14831,11 @@ snapshots:
       rimraf: 6.0.1
       typescript: 5.9.2
 
+  '@mui/internal-docs-utils@https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@7b4e85daf5ec7caf9cd02565f9c059e1f775ec9a':
+    dependencies:
+      rimraf: 6.0.1
+      typescript: 5.9.2
+
   '@mui/internal-markdown@2.0.9':
     dependencies:
       '@babel/runtime': 7.28.4
@@ -14833,14 +14843,14 @@ snapshots:
       marked: 16.1.2
       prismjs: 1.30.0
 
-  '@mui/internal-scripts@2.0.12':
+  '@mui/internal-scripts@https://pkg.pr.new/mui/material-ui/@mui/internal-scripts@7b4e85d':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.28.4)
       '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.28.4)
       '@babel/types': 7.28.4
-      '@mui/internal-docs-utils': 2.0.2
+      '@mui/internal-docs-utils': https://pkg.pr.new/mui/material-ui/@mui/internal-docs-utils@7b4e85daf5ec7caf9cd02565f9c059e1f775ec9a
       doctrine: 3.0.0
       lodash: 4.17.21
       typescript: 5.9.2

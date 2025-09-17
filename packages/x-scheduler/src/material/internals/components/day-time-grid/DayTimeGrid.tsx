@@ -18,7 +18,7 @@ import { DayGrid } from '../../../../primitives/day-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -40,7 +40,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
 
@@ -72,9 +72,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const handleEventChangeFromPrimitive = React.useCallback(
     (data: CalendarPrimitiveEventData) => {
-      instance.updateEvent({ id: data.eventId, start: data.start, end: data.end });
+      store.updateEvent({ id: data.eventId, start: data.start, end: data.end });
     },
-    [instance],
+    [store],
   );
 
   useIsoLayoutEffect(() => {
@@ -127,7 +127,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   <button
                     type="button"
                     className="DayTimeGridHeaderButton"
-                    onClick={(event) => instance.switchToDay(day.value, event)}
+                    onClick={(event) => store.switchToDay(day.value, event)}
                     tabIndex={0}
                   >
                     {renderHeaderContent(day)}

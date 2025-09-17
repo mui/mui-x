@@ -12,7 +12,7 @@ import {
   getOccurrencesFromEvents,
 } from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
-import { useEventCalendarContext } from '../utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../utils/useEventCalendarStoreContext';
 import { selectors } from '../use-event-calendar';
 import { Adapter } from '../utils/adapter/types';
 
@@ -27,7 +27,7 @@ export function useEventOccurrencesGroupedByDay(
 ): useEventOccurrencesGroupedByDay.ReturnValue {
   const { days, renderEventIn } = parameters;
   const adapter = useAdapter();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const events = useStore(store, selectors.events);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 

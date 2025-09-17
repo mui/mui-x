@@ -4,7 +4,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
-import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
@@ -17,7 +17,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, isToday, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
 
@@ -88,7 +88,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 
 function TimeGridCurrentTimeLabel() {
   const adapter = useAdapter();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
