@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
 const data = [
   { x: -6, y: 14, id: 0 },
@@ -18,7 +19,7 @@ const data = [
 
 export default function PiecewiseRestrictedAxis() {
   return (
-    <React.Fragment>
+    <Stack maxWidth={500}>
       <ScatterChart
         xAxis={[{ min: -25, max: 23 }]}
         yAxis={[
@@ -41,6 +42,6 @@ export default function PiecewiseRestrictedAxis() {
         All blue points should be above the blue line, all green points above the
         green line.
       </Typography>
-    </React.Fragment>
+    </Stack>
   );
 }
