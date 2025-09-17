@@ -233,6 +233,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend,
   };
   const Tooltip = slots?.tooltip ?? HeatmapTooltip;
   const Toolbar = slots?.toolbar ?? ChartsToolbarPro;

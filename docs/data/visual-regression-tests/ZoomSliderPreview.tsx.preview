@@ -1,0 +1,10 @@
+<BarChartPro
+  {...barSettings}
+  xAxis={[
+    {
+      ...barXAxis,
+      zoom: { filterMode: 'discard', slider: { enabled: true, preview: true } },
+    },
+  ]}
+  zoomData={[{ axisId: 'x', start: 10, end: 30 }]}
+/>

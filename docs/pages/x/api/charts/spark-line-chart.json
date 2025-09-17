@@ -99,7 +99,9 @@
         "returned": "string"
       }
     },
-    "voronoiMaxRadius": { "type": { "name": "number" } },
+    "voronoiMaxRadius": {
+      "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
+    },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {

@@ -186,6 +186,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   return {

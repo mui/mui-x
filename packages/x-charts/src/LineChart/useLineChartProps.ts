@@ -158,6 +158,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   return {
