@@ -30,7 +30,7 @@ export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
-export * from './plugins/featurePlugins/useChartVoronoi';
+export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
@@ -63,7 +63,7 @@ export * from './colorScale';
 export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';
-export * from './isBandScale';
+export * from './scaleGuards';
 export * from './findMinMax';
 
 // contexts

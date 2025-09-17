@@ -8,6 +8,20 @@ components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
 
 <p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
+## Overview
+
+Bar charts are ideal for comparing discrete categories.
+They excel at visualizing differences in magnitude across categories (or a group of categories), highlight trends, and compare proportions at a glance.
+The categories can represent progressive values such as time periods, or independent groups such as products, countries, age brackets, etc.
+Here are the basic requirements to create a bar chart:
+
+- One categorical dimension (x-axis for vertical bars, y-axis for horizontal bars)
+- One or more numerical metric for length of each bar
+
+The horizontal bar chart below compares voter turnout in some European countries:
+
+{{"demo": "ShinyBarChartHorizontal.js"}}
+
 ## Basics
 
 Bar charts series should contain a `data` property containing an array of values.
@@ -134,6 +148,25 @@ Each series renders a `g` element that contains a `data-series` attribute.
 You can use this attribute to target elements based on their series.
 
 {{"demo": "BarGradient.js"}}
+
+### Gradients
+
+By default, a gradient's units are set to [`objectBoundingBox`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/gradientUnits#objectboundingbox).
+When applied to a bar, the gradient stretches to fill the entire size of the bar, regardless of the bar's value.
+
+Alternatively, you can set `gradientUnits` to `userSpaceOnUse`, which stretches the gradient to fill the entire size of the chart.
+`userSpaceOnUse` means that the gradient's coordinates are relative to the SVG, meaning that a gradient with `x1="0"` and `x2="100%"` stretches across the entire width of the SVG.
+This effectively reveals the gradient depending on the bar's value, as the gradient is clipped to the bar's size.
+
+{{"demo": "BarOECDHouseholdSavings.js"}}
+
+Note that, in the example above, there are two gradients:
+
+- The series `color` property references the gradient with `gradientUnits="objectBoundingBox"`, which is applied to the tooltip, legend, and other elements that reference the series color.
+- The bar's `fill` property is overridden using CSS to reference the gradient with `gradientUnits="userSpaceOnUse"`.
+
+The first gradient is used for elements showing the whole gradient, such as tooltips and legend.
+The second one is shown in the bars themselves that display the part of the gradient that corresponds to their value.
 
 ## Labels
 
