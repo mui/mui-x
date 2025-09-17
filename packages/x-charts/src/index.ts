@@ -1,6 +1,7 @@
 export * from './constants';
 export * from './context';
 export * from './hooks';
+export * from './plugins';
 export * from './colorPalettes';
 export * from './models';
 export * from './ChartsClipPath';

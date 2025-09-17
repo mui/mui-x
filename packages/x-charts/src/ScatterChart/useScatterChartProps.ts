@@ -10,7 +10,7 @@ import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { SCATTER_CHART_PLUGINS, ScatterChartPluginSignatures } from './ScatterChart.plugins';
-import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
+import { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -68,7 +68,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick: useVoronoiOnItemClick
-      ? (onItemClick as UseChartVoronoiSignature['params']['onItemClick'])
+      ? (onItemClick as UseChartClosestPointSignature['params']['onItemClick'])
       : undefined,
     className,
     plugins: SCATTER_CHART_PLUGINS,
