@@ -31,7 +31,7 @@ import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { LINE_CHART_PRO_PLUGINS, LineChartProPluginsSignatures } from './LineChartPro.plugins';
+import { LINE_CHART_PRO_PLUGINS, LineChartProPluginSignatures } from './LineChartPro.plugins';
 
 export interface LineChartProSlots
   extends Omit<LineChartSlots, 'toolbar'>,
@@ -45,7 +45,7 @@ export interface LineChartProSlotProps
 export interface LineChartProProps
   extends Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
-      ChartContainerProProps<'line', LineChartProPluginsSignatures>,
+      ChartContainerProProps<'line', LineChartProPluginSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
     > {
   /**
@@ -94,7 +94,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   } = useLineChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'line',
-    LineChartProPluginsSignatures
+    LineChartProPluginSignatures
   >(
     {
       ...chartContainerProps,
