@@ -59,10 +59,11 @@ describe('Transition', () => {
       ticks += 1;
     });
 
-    expect(ticks).to.eq(0);
+    vi.advanceTimersToNextFrame();
+    expect(ticks).to.eq(1);
     transition.finish();
     vi.advanceTimersToNextFrame();
     vi.advanceTimersToNextFrame();
-    expect(ticks).to.eq(1);
+    expect(ticks).to.eq(2);
   });
 });
