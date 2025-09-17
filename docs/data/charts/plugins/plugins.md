@@ -66,7 +66,7 @@ For example, the `useChartClosestPoint` has the `useChartCartesianAxis` as a dep
 
 - `[useChartClosestPoint, useChartCartesianAxis]` does not work because the closest point plugin is before the cartesian one.
 - `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin is set before the one for closest point.
-- `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited feature. The highligh plugin being after the closest point one, you will get highlight feature, but not highlight based on closest point.
+- `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited feature. The highlight plugin being after the closest point one, you get the highlight feature, but not highlight based on closest point.
 
 | Plugin                                             | Dependencies            | Optional dependency                            |
 | :------------------------------------------------- | :---------------------- | :--------------------------------------------- |
