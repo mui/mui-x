@@ -21,7 +21,7 @@
     "./material/month-view": "./src/material/month-view/index.ts",
     "./material/standalone-view": "./src/material/standalone-view/index.ts",
     "./material/week-view": "./src/material/week-view/index.ts",
-    "./material/timeline-view": "./src/material/timeline-view/index.ts",
+    "./material/timeline": "./src/material/timeline/index.ts",
     "./material/translations/enUS": "./src/material/translations/enUS.ts",
     "./material/translations/frFR": "./src/material/translations/frFR.ts",
     "./primitives": "./src/primitives/index.ts",
