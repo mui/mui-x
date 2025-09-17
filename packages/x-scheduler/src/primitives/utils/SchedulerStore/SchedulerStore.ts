@@ -91,9 +91,10 @@ export class SchedulerStore<
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      const defaultValue = parameters[defaultValueProp as any];
+      const defaultValue = parameters[defaultValueProp as unknown as keyof Parameters];
       const isControlled = parameters[controlledProp] !== undefined;
-      const initialDefaultValue = initialParameters?.[defaultValueProp as any];
+      const initialDefaultValue =
+        initialParameters?.[defaultValueProp as unknown as keyof Parameters];
       const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
 
       if (initialIsControlled !== isControlled) {
