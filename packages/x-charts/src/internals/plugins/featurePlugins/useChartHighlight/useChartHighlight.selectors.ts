@@ -6,6 +6,12 @@ import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlig
 import { HighlightScope } from './highlightConfig.types';
 import { createIsHighlighted } from './createIsHighlighted';
 import { createIsFaded } from './createIsFaded';
+import {
+  getSeriesHighlightedItem,
+  getSeriesUnfadedItem,
+  isSeriesFaded,
+  isSeriesHighlighted,
+} from './highlightStates';
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
 
@@ -69,6 +75,42 @@ export const selectorChartsIsHighlighted = createSelector(
   function selectorChartsIsHighlighted(highlightScope, highlightedItem, item) {
     return createIsHighlighted(highlightScope, highlightedItem)(item);
   },
+);
+
+export const selectorChartIsSeriesHighlighted = createSelector(
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, seriesId: SeriesId) => seriesId,
+  ],
+  isSeriesHighlighted,
+);
+
+export const selectorChartIsSeriesFaded = createSelector(
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, seriesId: SeriesId) => seriesId,
+  ],
+  isSeriesFaded,
+);
+
+export const selectorChartSeriesUnfadedItem = createSelector(
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, seriesId: SeriesId) => seriesId,
+  ],
+  getSeriesUnfadedItem,
+);
+
+export const selectorChartSeriesHighlightedItem = createSelector(
+  [
+    selectorChartsHighlightScope,
+    selectorChartsHighlightedItem,
+    (_, seriesId: SeriesId) => seriesId,
+  ],
+  getSeriesHighlightedItem,
 );
 
 export const selectorChartsIsFaded = createSelector(
