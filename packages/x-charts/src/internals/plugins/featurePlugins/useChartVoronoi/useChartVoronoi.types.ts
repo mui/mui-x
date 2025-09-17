@@ -47,6 +47,7 @@ export interface UseChartVoronoiParameters {
 
 export type UseChartVoronoiDefaultizedParameters = UseChartVoronoiParameters & {
   disableVoronoi: boolean;
+  disableClosestPoint: boolean;
 };
 
 export type UseChartVoronoiSignature = ChartPluginSignature<{
