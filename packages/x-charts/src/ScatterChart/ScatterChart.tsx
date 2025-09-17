@@ -32,7 +32,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
-import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import { ScatterChartPluginSignatures } from './ScatterChart.plugins';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -60,7 +60,7 @@ export interface ScatterChartSlotProps
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
 export interface ScatterChartProps
   extends Omit<
-      ChartContainerProps<'scatter', ScatterChartPluginsSignatures>,
+      ChartContainerProps<'scatter', ScatterChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'onItemClick'
@@ -153,7 +153,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'scatter', ScatterChartPluginsSignatures> {...chartDataProviderProps}>
+    <ChartDataProvider<'scatter', ScatterChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
