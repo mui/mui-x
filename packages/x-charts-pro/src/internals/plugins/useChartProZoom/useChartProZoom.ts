@@ -19,16 +19,22 @@ import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
 import { initializeZoomConfig } from './initializeZoomConfig';
 import { initializeZoomData } from './initializeZoomData';
 
-export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
-  store,
-  instance,
-  svgRef,
-  params,
-}) => {
-  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
+export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginData) => {
+  const { store, params } = pluginData;
+  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp, zoomConfig } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+
+  React.useEffect(() => {
+    store.update((prevState) => ({
+      ...prevState,
+      zoom: {
+        ...prevState.zoom,
+        zoomConfig: initializeZoomConfig(zoomConfig),
+      },
+    }));
+  }, [store, zoomConfig]);
 
   // Manage controlled state
   React.useEffect(() => {
@@ -174,8 +180,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   }, [removeIsInteracting]);
 
   // Add events
-  const pluginData = { store, instance, svgRef };
-
   usePanOnDrag(pluginData, setZoomDataCallback);
 
   useZoomOnWheel(pluginData, setZoomDataCallback);
