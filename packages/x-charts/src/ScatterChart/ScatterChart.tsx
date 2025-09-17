@@ -32,7 +32,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
-import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import { ScatterChartPluginSignatures } from './ScatterChart.plugins';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -60,7 +60,7 @@ export interface ScatterChartSlotProps
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
 export interface ScatterChartProps
   extends Omit<
-      ChartContainerProps<'scatter', ScatterChartPluginsSignatures>,
+      ChartContainerProps<'scatter', ScatterChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'onItemClick'
@@ -69,7 +69,8 @@ export interface ScatterChartProps
       | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    Pick<ScatterPlotProps, 'renderer'> {
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
@@ -114,7 +115,9 @@ export interface ScatterChartProps
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
-  onItemClick?: ScatterPlotProps['onItemClick'] | UseChartClosestPointSignature['params']['onItemClick'];
+  onItemClick?:
+    | ScatterPlotProps['onItemClick']
+    | UseChartClosestPointSignature['params']['onItemClick'];
 }
 
 /**
@@ -152,7 +155,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'scatter', ScatterChartPluginsSignatures> {...chartDataProviderProps}>
+    <ChartDataProvider<'scatter', ScatterChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -285,6 +288,15 @@ ScatterChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The type of renderer to use for the scatter plot.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/scatter/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
    */
@@ -317,10 +329,11 @@ ScatterChart.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
-   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
-  voronoiMaxRadius: PropTypes.number,
+  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

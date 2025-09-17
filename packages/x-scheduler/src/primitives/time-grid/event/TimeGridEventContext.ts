@@ -1,24 +1,26 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
+import type { TimeGridEvent } from './TimeGridEvent';
 
 export interface TimeGridEventContext {
   /**
-   * The unique identifier of the event.
+   * Whether this event is starting before the column starts.
    */
-  eventId: string | number;
+  doesEventStartBeforeColumnStart: boolean;
   /**
-   * The start date and time of the event
+   * Whether this event is ending after the column ends.
    */
-  start: SchedulerValidDate;
-  /**
-   * The end date and time of the event
-   */
-  end: SchedulerValidDate;
+  doesEventEndAfterColumnEnd: boolean;
   /**
    * Sets whether the event is being resized.
    */
   setIsResizing: (isResizing: boolean) => void;
+  /**
+   * Gets the drag data shared by the TimeGrid.Event and TimeGrid.EventResizeHandler parts.
+   * @param {{ clientY: number }} input The input object provided by the drag and drop library for the current event.
+   * @returns {TimeGridEvent.SharedDragData} The shared drag data.
+   */
+  getSharedDragData: (input: { clientY: number }) => TimeGridEvent.SharedDragData;
 }
 
 export const TimeGridEventContext = React.createContext<TimeGridEventContext | undefined>(

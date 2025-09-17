@@ -11,13 +11,20 @@ export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <EventCalendar
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-      areEventsDraggable
-      areEventsResizable
-    />
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+      }}
+    >
+      <EventCalendar
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        areEventsDraggable
+        areEventsResizable
+      />
+    </div>
   );
 }

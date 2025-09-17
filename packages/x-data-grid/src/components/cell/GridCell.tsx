@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import clsx, { ClassValue } from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -19,7 +19,6 @@ import {
   GridCellModes,
   GridRowId,
   GridEditCellProps,
-  GridActionsColDef,
 } from '../../models';
 import {
   GridRenderEditCellParams,
@@ -161,7 +160,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const field = column.field;
 
-  const editCellState: GridEditCellProps<any> | null = useGridSelector(
+  const editCellState: GridEditCellProps | null = useGridSelector(
     apiRef,
     gridEditCellStateSelector,
     {
@@ -216,9 +215,9 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const canManageOwnFocus =
     column.type === 'actions' &&
-    (column as GridActionsColDef)
-      .getActions?.(apiRef.current.getRowParams(rowId))
-      .some((action) => !action.props.disabled);
+    'getActions' in column &&
+    typeof column.getActions === 'function' &&
+    column.getActions(apiRef.current.getRowParams(rowId)).some((action) => !action.props.disabled);
   const tabIndex =
     (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParams.tabIndex : -1;
 
@@ -235,7 +234,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       .join(' '),
   );
 
-  const classNames = [pipesClassName] as (string | undefined)[];
+  const classNames: ClassValue[] = [pipesClassName];
 
   if (column.cellClassName) {
     classNames.push(
@@ -274,7 +273,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
-      apiRef.current.publishEvent(eventName as any, params as any, event);
+      apiRef.current.publishEvent(eventName, params, event);
 
       if (onMouseUp) {
         onMouseUp(event);
@@ -286,8 +285,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const publishMouseDown = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
-      apiRef.current.publishEvent(eventName as any, params as any, event);
-
+      apiRef.current.publishEvent(eventName, params, event);
       if (onMouseDown) {
         onMouseDown(event);
       }
@@ -296,15 +294,18 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   );
 
   const publish = React.useCallback(
-    (eventName: keyof GridCellEventLookup, propHandler: any) =>
-      (event: React.SyntheticEvent<HTMLDivElement>) => {
+    (
+      eventName: keyof GridCellEventLookup,
+      propHandler: React.EventHandler<any> | undefined,
+    ): React.EventHandler<any> =>
+      (event) => {
         // The row might have been deleted during the click
         if (!apiRef.current.getRow(rowId)) {
           return;
         }
 
         const params = apiRef.current.getCellParams(rowId!, field || '');
-        apiRef.current.publishEvent(eventName, params, event as any);
+        apiRef.current.publishEvent(eventName, params, event);
 
         if (propHandler) {
           propHandler(event);
@@ -383,7 +384,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     );
   }
 
-  let handleFocus: any = other.onFocus;
+  let handleFocus = other.onFocus;
 
   if (
     process.env.NODE_ENV === 'test' &&

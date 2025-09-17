@@ -501,6 +501,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
       { pathname: '/x/react-charts/quickstart', title: 'Quickstart' },
+      { pathname: '/x/react-charts/examples', title: 'Examples' },
       {
         pathname: '/x/react-chart-components',
         subheader: 'Components',
@@ -558,6 +559,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
             ],
           },
+          { pathname: '/x/react-charts/sankey', plan: 'pro', unstable: true },
           {
             pathname: '/x/react-charts/#planned-charts',
             title: 'Future Components',

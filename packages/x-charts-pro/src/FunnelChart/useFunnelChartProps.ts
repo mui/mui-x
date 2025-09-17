@@ -8,7 +8,7 @@ import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
-import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginSignatures } from './FunnelChart.plugins';
 import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
 import { ChartContainerProProps } from '../ChartContainerPro';
@@ -127,7 +127,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     axisHighlight,
     apiRef,
     gap,
-    ...rest
+    ...other
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
@@ -147,8 +147,8 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     ? valueAxisConfig
     : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
-  const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginsSignatures> = {
-    ...rest,
+  const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginSignatures> = {
+    ...other,
     series: series.map((s) => ({
       type: 'funnel' as const,
       layout: isHorizontal ? 'horizontal' : 'vertical',
@@ -194,6 +194,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   const axisHighlightProps: ChartsAxisHighlightProps = {

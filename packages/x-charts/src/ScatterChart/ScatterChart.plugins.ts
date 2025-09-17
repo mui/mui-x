@@ -20,7 +20,7 @@ import {
   UseChartClosestPointSignature,
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 
-export type ScatterChartPluginsSignatures = [
+export type ScatterChartPluginSignatures = [
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<'scatter'>,
   UseChartInteractionSignature,
@@ -28,7 +28,7 @@ export type ScatterChartPluginsSignatures = [
   UseChartClosestPointSignature,
 ];
 
-export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginsSignatures> = [
+export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,
