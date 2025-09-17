@@ -165,7 +165,9 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
   });
 
   // Keep the original views for format calculation (before filtering)
-  const viewsForFormatting: readonly DateOrTimeViewWithMeridiem[] = ampm ? [...defaultViews, 'meridiem'] : defaultViews;
+  const viewsForFormatting: readonly DateOrTimeViewWithMeridiem[] = ampm
+    ? [...defaultViews, 'meridiem']
+    : defaultViews;
 
   return {
     ...themeProps,
