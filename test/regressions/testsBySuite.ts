@@ -7,6 +7,11 @@ export interface Test {
 
 const tests: Test[] = [];
 
+const removeExtension = (filePath: string) => {
+  const extStart = filePath.lastIndexOf('.');
+  return extStart >= 0 ? filePath.slice(0, extStart) : filePath;
+};
+
 // Also use some of the demos to avoid code duplication.
 const docsImports = import.meta.glob<React.ComponentType>(
   [
@@ -64,7 +69,7 @@ const regressionsImports = import.meta.glob<React.ComponentType>('./data-grid/**
   import: 'default',
 });
 Object.keys(regressionsImports).forEach((path: string) => {
-  const name = path.replace('./data-grid/', '').replace(/\.[A-z]+$/, '');
+  const name = removeExtension(path.replace('./data-grid/', ''));
   const suite = `test-regressions-data-grid`;
 
   tests.push({
@@ -80,7 +85,7 @@ const chartsImports = import.meta.glob<React.ComponentType>('./charts/**/*.{js,t
   import: 'default',
 });
 Object.keys(chartsImports).forEach((path: string) => {
-  const name = path.replace('./charts/', '').replace(/\.[A-z]+$/, '');
+  const name = removeExtension(path.replace('./charts/', ''));
   const suite = `test-regressions-charts`;
 
   tests.push({
@@ -96,7 +101,7 @@ const pickersImports = import.meta.glob<React.ComponentType>('./pickers/**/*.{js
   import: 'default',
 });
 Object.keys(pickersImports).forEach((path: string) => {
-  const name = path.replace('./pickers/', '').replace(/\.[A-z]+$/, '');
+  const name = removeExtension(path.replace('./pickers/', ''));
   const suite = `test-regressions-pickers`;
 
   tests.push({
