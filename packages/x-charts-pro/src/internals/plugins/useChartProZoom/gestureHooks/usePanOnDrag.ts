@@ -26,31 +26,31 @@ export const usePanOnDrag = (
   const startRef = React.useRef<readonly ZoomData[]>(null);
   const config = useSelector(store, selectorPanInteractionConfig, ['onDrag' as const]);
 
-  // Add event for chart panning
-  const isPanEnabled = React.useMemo(
+  const isPanOnDragEnabled = React.useMemo(
     () => (Object.values(optionsLookup).some((v) => v.panning) && config) || false,
     [optionsLookup, config],
   );
 
   React.useEffect(() => {
-    if (!isPanEnabled || !config) {
+    if (!isPanOnDragEnabled) {
       return;
     }
 
     instance.updateZoomInteractionListeners('zoomPan', {
-      requiredKeys: config.requiredKeys,
-      pointerMode: config.pointerMode,
+      requiredKeys: config!.requiredKeys,
+      pointerMode: config!.pointerMode,
       pointerOptions: {
-        mouse: config.mouse,
-        touch: config.touch,
+        mouse: config!.mouse,
+        touch: config!.touch,
       },
     });
-  }, [isPanEnabled, config, instance]);
+  }, [isPanOnDragEnabled, config, instance]);
 
+  // Add event for chart panning
   React.useEffect(() => {
     const element = svgRef.current;
 
-    if (element === null || !isPanEnabled || !config) {
+    if (element === null || !isPanOnDragEnabled) {
       return () => {};
     }
 
@@ -98,7 +98,7 @@ export const usePanOnDrag = (
   }, [
     instance,
     svgRef,
-    isPanEnabled,
+    isPanOnDragEnabled,
     optionsLookup,
     drawingArea.width,
     drawingArea.height,

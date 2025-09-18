@@ -29,25 +29,29 @@ export const useZoomOnWheel = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const isZoomEnabled = Object.keys(optionsLookup).length > 0;
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const config = useSelector(store, selectorZoomInteractionConfig, ['onWheel' as const]);
 
+  const isZoomOnWheelEnabled = React.useMemo(
+    () => (Object.keys(optionsLookup).length > 0 && config) || false,
+    [optionsLookup, config],
+  );
+
   React.useEffect(() => {
-    if (!isZoomEnabled || !config) {
+    if (!isZoomOnWheelEnabled) {
       return;
     }
 
     instance.updateZoomInteractionListeners('zoomTurnWheel', {
-      requiredKeys: config.requiredKeys,
+      requiredKeys: config!.requiredKeys,
     });
-  }, [config, isZoomEnabled, instance]);
+  }, [config, isZoomOnWheelEnabled, instance]);
 
   // Add event for chart zoom in/out
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled || !config) {
+    if (element === null || !isZoomOnWheelEnabled) {
       return () => {};
     }
 
@@ -111,7 +115,7 @@ export const useZoomOnWheel = (
   }, [
     svgRef,
     drawingArea,
-    isZoomEnabled,
+    isZoomOnWheelEnabled,
     optionsLookup,
     instance,
     setZoomDataCallback,
