@@ -9,7 +9,7 @@ export default function FunnelStepAndDirection() {
     curveType: 'step',
     borderRadius: 10,
     gap: 0,
-  };
+  } as const;
 
   return (
     <Stack sx={{ width: '100%' }} flexDirection={'row'}>
@@ -28,7 +28,6 @@ export default function FunnelStepAndDirection() {
           gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -43,7 +42,6 @@ export default function FunnelStepAndDirection() {
           gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -58,7 +56,6 @@ export default function FunnelStepAndDirection() {
           gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -73,7 +70,6 @@ export default function FunnelStepAndDirection() {
           gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
       </Stack>
       <Stack flex={1}>
@@ -90,7 +86,6 @@ export default function FunnelStepAndDirection() {
           ]}
           gap={config.gap}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -104,7 +99,6 @@ export default function FunnelStepAndDirection() {
           ]}
           gap={config.gap}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -118,7 +112,6 @@ export default function FunnelStepAndDirection() {
           ]}
           gap={config.gap}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -132,7 +125,6 @@ export default function FunnelStepAndDirection() {
           ]}
           gap={config.gap}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
       </Stack>
       <Stack flex={1}>
@@ -150,7 +142,6 @@ export default function FunnelStepAndDirection() {
           gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -165,7 +156,6 @@ export default function FunnelStepAndDirection() {
           gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -180,7 +170,6 @@ export default function FunnelStepAndDirection() {
           gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -195,7 +184,6 @@ export default function FunnelStepAndDirection() {
           gap={config.gap}
           categoryAxis={{ scaleType: 'linear' }}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
       </Stack>
       <Stack flex={1}>
@@ -212,7 +200,6 @@ export default function FunnelStepAndDirection() {
           ]}
           gap={config.gap}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -226,7 +213,6 @@ export default function FunnelStepAndDirection() {
           ]}
           gap={config.gap}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -240,7 +226,6 @@ export default function FunnelStepAndDirection() {
           ]}
           gap={config.gap}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
         <FunnelChart
           series={[
@@ -254,7 +239,6 @@ export default function FunnelStepAndDirection() {
           ]}
           gap={config.gap}
           height={180}
-          slotConfig={{ legend: { direction: 'vertical' } }}
         />
       </Stack>
     </Stack>
