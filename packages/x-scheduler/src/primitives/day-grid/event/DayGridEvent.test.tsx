@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { DayGrid } from '@mui/x-scheduler/primitives/day-grid';
+import { EventCalendarProvider } from '@mui/x-scheduler/primitives/event-calendar-provider';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
 describe('<DayGrid.Event />', () => {
@@ -15,11 +16,13 @@ describe('<DayGrid.Event />', () => {
       refInstanceof: window.HTMLDivElement,
       render(node) {
         return render(
-          <DayGrid.Root>
-            <DayGrid.Row start={eventStart} end={eventEnd}>
-              <DayGrid.Cell value={eventStart}>{node}</DayGrid.Cell>
-            </DayGrid.Row>
-          </DayGrid.Root>,
+          <EventCalendarProvider events={[]}>
+            <DayGrid.Root>
+              <DayGrid.Row start={eventStart} end={eventEnd}>
+                <DayGrid.Cell value={eventStart}>{node}</DayGrid.Cell>
+              </DayGrid.Row>
+            </DayGrid.Root>
+          </EventCalendarProvider>,
         );
       },
     }),
