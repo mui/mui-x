@@ -18,7 +18,7 @@ import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '
 import { PointerData } from '../PointerManager';
 import { TargetElement } from '../types/TargetElement';
 import { Direction } from '../types/Direction';
-import { calculateCentroid, getDirection, isDirectionAllowed } from '../utils';
+import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
 
 /**
  * Configuration options for TapAndDragGesture
@@ -264,7 +264,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
    */
   protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
     const pointersArray = Array.from(pointers.values());
-    console.log(this.name, event.type, this.state.phase);
 
     // Check for our forceCancel event to handle interrupted gestures
     if (event.type === 'forceCancel') {
@@ -420,10 +419,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
       case 'waitingForTap':
         if (this.isActive && this.state.tapPosition) {
           // Valid tap detected
-          this.state.phase = 'tapDetected';
-          this.fireTapEvent(targetElement, relevantPointers, event);
-
-          // Set up timeout and transition to waiting for drag
           this.state.phase = 'waitingForDrag';
           this.state.dragTimeoutId = setTimeout(() => {
             // Timeout elapsed, reset the gesture
@@ -458,7 +453,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
         }
         break;
 
-      case 'tapDetected':
       case 'waitingForDrag':
         // No action needed for pointer up in these phases
         break;
@@ -533,66 +527,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
   }
 
   /**
-   * Fire the tap event when a valid tap is detected
-   */
-  private fireTapEvent(element: TargetElement, pointers: PointerData[], event: PointerEvent): void {
-    if (!this.state.tapPosition) {
-      return;
-    }
-
-    // Get list of active gestures
-    const activeGestures = this.gesturesRegistry.getActiveGestures(element);
-
-    // Create custom event data for the tap event
-    const customEventData: TapAndDragGestureEventData = {
-      gestureName: this.name,
-      centroid: this.state.tapPosition,
-      target: event.target,
-      srcEvent: event,
-      phase: 'end', // Tap phase is complete
-      pointers,
-      timeStamp: event.timeStamp,
-      tapX: this.state.tapPosition.x,
-      tapY: this.state.tapPosition.y,
-      initialDragCentroid: null, // No drag yet
-      deltaX: 0,
-      deltaY: 0,
-      totalDeltaX: 0,
-      totalDeltaY: 0,
-      dragDirection: {
-        vertical: null,
-        horizontal: null,
-        mainAxis: null,
-      },
-      velocityX: 0,
-      velocityY: 0,
-      velocity: 0,
-      activeGestures,
-      customData: this.customData,
-    };
-
-    // Dispatch tap event
-    const tapEventName = `${this.name}Tap`;
-    const domEvent = new CustomEvent(tapEventName, {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      detail: customEventData,
-    });
-
-    element.dispatchEvent(domEvent);
-
-    // Apply preventDefault/stopPropagation if configured
-    if (this.preventDefault) {
-      event.preventDefault();
-    }
-
-    if (this.stopPropagation) {
-      event.stopPropagation();
-    }
-  }
-
-  /**
    * Emit drag-specific events with movement data
    */
   private emitDragEvent(
@@ -643,12 +577,10 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     };
 
     // Event name based on phase (dragStart, drag, dragEnd, dragCancel)
-    const phaseName =
-      phase === 'ongoing' ? 'drag' : `drag${phase.charAt(0).toUpperCase() + phase.slice(1)}`;
-    const dragEventName = `${this.name}${phaseName.charAt(0).toUpperCase() + phaseName.slice(1)}`;
+    const eventName = createEventName(this.name, phase);
 
     // Dispatch custom event
-    const domEvent = new CustomEvent(dragEventName, {
+    const domEvent = new CustomEvent(eventName, {
       bubbles: true,
       cancelable: true,
       composed: true,
