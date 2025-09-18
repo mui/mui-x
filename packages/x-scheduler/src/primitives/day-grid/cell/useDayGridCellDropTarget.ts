@@ -8,7 +8,7 @@ import {
 } from '../../utils/drag-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useDayGridRootContext } from '../root/DayGridRootContext';
-import { CalendarPrimitiveEventData, SchedulerValidDate } from '../../models';
+import { CalendarDraggedOccurrence, SchedulerValidDate } from '../../models';
 import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 
@@ -17,11 +17,11 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
 
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { updateEvent, id: gridId } = useDayGridRootContext();
+  const { dropOccurrence, id: gridId } = useDayGridRootContext();
   const ref = React.useRef<HTMLDivElement>(null);
 
   const getEventDropData = useEventCallback(
-    (data: Record<string, unknown>): CalendarPrimitiveEventData | undefined => {
+    (data: Record<string, unknown>): CalendarDraggedOccurrence | undefined => {
       if (!ref.current || gridId === undefined) {
         return undefined;
       }
@@ -166,12 +166,11 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         const newEvent = getEventDropData(data);
 
         if (newEvent) {
-          updateEvent(newEvent);
-          store.setDraggedOccurrence(null);
+          dropOccurrence(newEvent);
         }
       },
     });
-  }, [adapter, updateEvent, getEventDropData, gridId, store]);
+  }, [adapter, dropOccurrence, getEventDropData, gridId, store]);
 
   return ref;
 }

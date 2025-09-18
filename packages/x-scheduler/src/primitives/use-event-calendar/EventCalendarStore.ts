@@ -12,7 +12,7 @@ import {
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
   CalendarResource,
-  CalendarPrimitiveEventData,
+  CalendarDraggedOccurrence,
 } from '../models';
 import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
@@ -395,22 +395,29 @@ export class EventCalendarStore extends Store<State> {
   /**
    * Sets the placeholder of the event occurrence being dragged.
    */
-  public setDraggedOccurrence = (draggedOccurrence: CalendarPrimitiveEventData | null) => {
-    const { adapter, draggedOccurrence: prevDraggedOccurrence } = this.state;
+  public setDraggedOccurrence = (occurrence: CalendarDraggedOccurrence | null) => {
+    const { adapter, draggedOccurrence: previousValue } = this.state;
 
-    if (
-      draggedOccurrence != null &&
-      prevDraggedOccurrence != null &&
-      draggedOccurrence.eventId === prevDraggedOccurrence.eventId &&
-      draggedOccurrence.occurrenceKey === prevDraggedOccurrence.occurrenceKey &&
-      draggedOccurrence.gridId === prevDraggedOccurrence.gridId &&
-      adapter.isEqual(draggedOccurrence.start, prevDraggedOccurrence.start) &&
-      adapter.isEqual(draggedOccurrence.end, prevDraggedOccurrence.end) &&
-      adapter.isEqual(draggedOccurrence.originalStart, prevDraggedOccurrence.originalStart)
-    ) {
-      return;
+    // Only update if something changed.
+    if (occurrence != null && previousValue != null) {
+      for (const key in occurrence) {
+        if (!occurrence.hasOwnProperty(key)) {
+          continue;
+        }
+        const shouldCompareDates = key === 'start' || key === 'end' || key === 'originalStart';
+        if (shouldCompareDates && adapter.isEqual(occurrence[key], previousValue?.[key])) {
+          this.set('draggedOccurrence', occurrence);
+          return;
+        }
+        if (!shouldCompareDates && !Object.is(occurrence[key], previousValue?.[key])) {
+          this.set('draggedOccurrence', occurrence);
+          return;
+        }
+      }
     }
 
-    this.set('draggedOccurrence', draggedOccurrence);
+    if (occurrence !== previousValue) {
+      this.set('draggedOccurrence', occurrence);
+    }
   };
 }

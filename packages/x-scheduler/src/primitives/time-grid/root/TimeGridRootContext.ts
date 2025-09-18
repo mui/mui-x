@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import { CalendarPrimitiveEventData } from '../../models';
+import { CalendarDraggedOccurrence } from '../../models';
 
 export interface TimeGridRootContext {
   /**
-   * Updates an event.
-   * @param {CalendarPrimitiveEventData} data The data describing the updated event.
+   * Callback fired when an occurrence is dropped inside the time grid.
+   * @param {CalendarDraggedOccurrence} data The data describing the dropped occurrence.
    */
-  updateEvent: (data: CalendarPrimitiveEventData) => void;
+  dropOccurrence: (data: CalendarDraggedOccurrence) => void;
   /**
    * A unique id identifying this time grid instance.
    */

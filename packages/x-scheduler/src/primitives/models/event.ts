@@ -148,7 +148,7 @@ export type CalendarEventColor =
 /**
  * Object forwarded to the `onEventChange` handler of the Day Grid Root and Time Grid Root parts.
  */
-export interface CalendarPrimitiveEventData {
+export interface CalendarDraggedOccurrence {
   /**
    * The id of the event being changed.
    */

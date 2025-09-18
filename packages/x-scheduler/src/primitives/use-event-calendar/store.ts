@@ -10,7 +10,7 @@ import {
   CalendarViewConfig,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
-  CalendarPrimitiveEventData,
+  CalendarDraggedOccurrence,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
@@ -82,7 +82,7 @@ export type State = {
   /**
    * The placeholder of the event occurrence being dragged
    */
-  draggedOccurrence: CalendarPrimitiveEventData | null;
+  draggedOccurrence: CalendarDraggedOccurrence | null;
 };
 
 const eventByIdMapSelector = createSelectorMemoized(

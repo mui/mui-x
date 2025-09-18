@@ -1,10 +1,9 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useId } from '@base-ui-components/utils/useId';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { CalendarPrimitiveEventData } from '../../models';
+import { CalendarDraggedOccurrence } from '../../models';
 import { TimeGridRootContext } from './TimeGridRootContext';
 
 export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
@@ -16,7 +15,7 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
     className,
     render,
     // Internal props
-    onEventChange,
+    onOccurrenceDrop,
     id: idProp,
     // Props forwarded to the DOM element
     ...elementProps
@@ -25,11 +24,9 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   const id = useId(idProp);
   const props = React.useMemo(() => ({ role: 'grid', id }), [id]);
 
-  const updateEvent = useEventCallback(onEventChange);
-
   const contextValue: TimeGridRootContext = React.useMemo(
-    () => ({ updateEvent, id }),
-    [updateEvent, id],
+    () => ({ dropOccurrence: onOccurrenceDrop ?? (() => {}), id }),
+    [onOccurrenceDrop, id],
   );
 
   const element = useRenderElement('div', componentProps, {
@@ -47,9 +44,9 @@ export namespace TimeGridRoot {
 
   export interface Props extends BaseUIComponentProps<'div', State> {
     /**
-     * Event handler called when an event is changed.
-     * Provides the new event data as an argument.
+     * Event handler called when an occurrence is dropped inside the time grid.
+     * Provides the occurrence data as an argument.
      */
-    onEventChange?: (data: CalendarPrimitiveEventData) => void;
+    onOccurrenceDrop?: (data: CalendarDraggedOccurrence) => void;
   }
 }

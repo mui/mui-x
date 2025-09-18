@@ -9,7 +9,7 @@ import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/u
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import {
   CalendarEventOccurrence,
-  CalendarPrimitiveEventData,
+  CalendarDraggedOccurrence,
   CalendarProcessedDate,
 } from '../../../../primitives/models';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
@@ -70,10 +70,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     [adapter, days, now],
   );
 
-  const handleEventChangeFromPrimitive = React.useCallback(
-    (data: CalendarPrimitiveEventData) => {
+  const handleDropOccurrence = React.useCallback(
+    (data: CalendarDraggedOccurrence) => {
       const originalEvent = selectors.event(store.state, data.eventId)!;
-
       if (originalEvent.rrule) {
         store.updateRecurringEvent({
           eventId: data.eventId,
@@ -155,7 +154,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           ref={allDayHeaderWrapperRef}
           className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
           data-weekend={lastIsWeekend ? '' : undefined}
-          onEventChange={handleEventChangeFromPrimitive}
+          onOccurrenceDrop={handleDropOccurrence}
         >
           <div
             className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
@@ -177,7 +176,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           </DayGrid.Row>
           <div className="ScrollablePlaceholder" />
         </DayGrid.Root>
-        <TimeGrid.Root className="DayTimeGridRoot" onEventChange={handleEventChangeFromPrimitive}>
+        <TimeGrid.Root className="DayTimeGridRoot" onOccurrenceDrop={handleDropOccurrence}>
           <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
             <div className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">

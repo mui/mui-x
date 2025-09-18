@@ -3,7 +3,7 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { CalendarPrimitiveEventData, SchedulerValidDate } from '../../models';
+import { CalendarDraggedOccurrence, SchedulerValidDate } from '../../models';
 import {
   addRoundedOffsetToDate,
   EVENT_DRAG_PRECISION_MINUTE,
@@ -19,7 +19,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const { updateEvent, id: gridId } = useTimeGridRootContext();
+  const { dropOccurrence, id: gridId } = useTimeGridRootContext();
   const store = useEventCalendarStoreContext();
 
   // TODO: Avoid JS date conversion
@@ -45,7 +45,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
     (
       data: Record<string, unknown>,
       input: { clientY: number },
-    ): CalendarPrimitiveEventData | undefined => {
+    ): CalendarDraggedOccurrence | undefined => {
       if (gridId === undefined) {
         return undefined;
       }
@@ -164,12 +164,11 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       onDrop: ({ source: { data }, location }) => {
         const newEvent = getEventDropData(data, location.current.input);
         if (newEvent) {
-          updateEvent(newEvent);
-          store.setDraggedOccurrence(null);
+          dropOccurrence(newEvent);
         }
       },
     });
-  }, [adapter, getEventDropData, gridId, store, updateEvent]);
+  }, [adapter, getEventDropData, gridId, store, dropOccurrence]);
 
   return { getCursorPositionInElementMs, ref };
 }
