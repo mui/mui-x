@@ -191,10 +191,7 @@ function getAxisScale<T extends ChartSeriesType>(
     preferStrictDomainInLineCharts,
   );
 
-  const axisExtrema = [
-    axis.min ?? Math.min(minData, axis.max ?? Infinity),
-    axis.max ?? Math.max(maxData, axis.min ?? -Infinity),
-  ];
+  const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
 
   if (typeof domainLimit === 'function') {
     const { min, max } = domainLimit(minData, maxData);
@@ -243,4 +240,21 @@ export function applyDomainLimit(
 
   const [minDomain, maxDomain] = scale.domain();
   scale.domain([axis.min ?? minDomain, axis.max ?? maxDomain]);
+}
+
+/**
+ * Get the actual axis extrema considering the user defined min and max values.
+ * @param axisExtrema User defined axis extrema.
+ * @param minData Minimum value from the data.
+ * @param maxData Maximum value from the data.
+ */
+export function getActualAxisExtrema(
+  axisExtrema: Pick<AxisConfig, 'min' | 'max'>,
+  minData: number,
+  maxData: number,
+) {
+  return [
+    axisExtrema.min ?? Math.min(minData, axisExtrema.max ?? Infinity),
+    axisExtrema.max ?? Math.max(maxData, axisExtrema.min ?? -Infinity),
+  ];
 }
