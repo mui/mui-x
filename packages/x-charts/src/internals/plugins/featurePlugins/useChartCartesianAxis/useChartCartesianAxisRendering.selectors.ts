@@ -332,7 +332,6 @@ export const selectorChartSeriesFlatbushMap = createSelector(
         yAxisId = defaultYAxisId,
       } = validSeries.series[seriesId];
 
-      const start = performance.now();
       const flatbush = new Flatbush(data.length);
 
       const originalXScale = xAxesScaleMap[xAxisId]?.scale.copy();
@@ -349,7 +348,6 @@ export const selectorChartSeriesFlatbushMap = createSelector(
 
       flatbush.finish();
       flatbushMap.set(seriesId, flatbush);
-      performance.measure(`Flatbush for "${seriesId}"`, { start });
     });
 
     return flatbushMap;
