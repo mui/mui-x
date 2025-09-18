@@ -20,6 +20,8 @@ import { getDefaultTickNumber } from '../../../ticks';
 import { getNormalizedAxisScale, getRange, ScaleDefinition } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
+import { SeriesId } from '../../../../models/seriesType/common';
+import { Flatbush } from '../../../Flatbush';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -57,6 +59,11 @@ export const selectorChartZoomOptionsLookup = createSelector(
 export const selectorChartAxisZoomOptionsLookup = createSelector(
   [selectorChartZoomOptionsLookup, (_, axisId: AxisId) => axisId],
   (axisLookup, axisId) => axisLookup[axisId],
+);
+
+export const selectorChartAxisZoomData = createSelector(
+  [selectorChartZoomMap, (_, axisId: AxisId) => axisId],
+  (zoomMap, axisId) => zoomMap?.get(axisId),
 );
 
 const selectorChartXFilter = createSelector(
@@ -349,5 +356,74 @@ export const selectorChartRawAxis = createSelector(
     }
 
     return axis;
+  },
+);
+
+export const selectorChartDefaultXAxisId = createSelector(
+  [selectorChartRawXAxis],
+  (xAxes) => xAxes![0].id,
+);
+
+export const selectorChartDefaultYAxisId = createSelector(
+  [selectorChartRawYAxis],
+  (yAxes) => yAxes![0].id,
+);
+
+const EMPTY_MAP = new Map<SeriesId, Flatbush>();
+export const selectorChartSeriesEmptyFlatbushMap = () => EMPTY_MAP;
+
+export const selectorChartSeriesFlatbushMap = createSelector(
+  [
+    selectorChartSeriesProcessed,
+    selectorChartNormalizedXScales,
+    selectorChartNormalizedYScales,
+    selectorChartDefaultXAxisId,
+    selectorChartDefaultYAxisId,
+  ],
+  function selectChartSeriesFlatbushMap(
+    allSeries,
+    xAxesScaleMap,
+    yAxesScaleMap,
+    defaultXAxisId,
+    defaultYAxisId,
+  ) {
+    // FIXME: Do we want to support non-scatter series here?
+    const validSeries = allSeries.scatter;
+    const flatbushMap = new Map<SeriesId, Flatbush>();
+
+    if (!validSeries) {
+      return flatbushMap;
+    }
+
+    validSeries.seriesOrder.forEach((seriesId) => {
+      const {
+        data,
+        xAxisId = defaultXAxisId,
+        yAxisId = defaultYAxisId,
+      } = validSeries.series[seriesId];
+
+      const flatbush = new Flatbush(data.length);
+
+      const originalXScale = xAxesScaleMap[xAxisId]?.scale;
+      const originalYScale = yAxesScaleMap[yAxisId]?.scale;
+
+      for (const datum of data) {
+        // Add the points using a [0, 1] range so that we don't need to recreate the Flatbush structure when zooming.
+        // This doesn't happen in practice, though, because currently the scales depend on the drawing area.
+        flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
+      }
+
+      flatbush.finish();
+      flatbushMap.set(seriesId, flatbush);
+    });
+
+    return flatbushMap;
+  },
+);
+
+export const selectorChartSeriesFlatbush = createSelector(
+  [selectorChartSeriesFlatbushMap, (_, seriesId: SeriesId) => seriesId],
+  function selectChartSeriesFlatbush(flatbushMap, seriesId) {
+    return flatbushMap.get(seriesId);
   },
 );
