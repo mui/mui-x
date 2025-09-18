@@ -1,40 +1,42 @@
 'use client';
 
 import type {
-  ZoomConfig,
-  DefaultizedZoomConfig,
+  ZoomInteractionConfig,
+  DefaultizedZoomInteractionConfig,
   AnyInteraction,
   AnyEntry,
-} from './ZoomConfig.types';
+} from './ZoomInteractionConfig.types';
 
-export const initializeZoomConfig = (zoomConfig?: ZoomConfig): DefaultizedZoomConfig => {
-  const defaultizedConfig: DefaultizedZoomConfig = { zoom: {}, pan: {} };
+export const initializeZoomInteractionConfig = (
+  zoomInteractionConfig?: ZoomInteractionConfig,
+): DefaultizedZoomInteractionConfig => {
+  const defaultizedConfig: DefaultizedZoomInteractionConfig = { zoom: {}, pan: {} };
 
-  if (!zoomConfig?.zoom) {
+  if (!zoomInteractionConfig?.zoom) {
     defaultizedConfig.zoom = {
       onWheel: { type: 'onWheel', requiredKeys: [], mouse: {}, touch: {} },
       onPinch: { type: 'onPinch', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
-    defaultizedConfig.zoom = initializeFor<'zoom'>(zoomConfig.zoom);
+    defaultizedConfig.zoom = initializeFor<'zoom'>(zoomInteractionConfig.zoom);
   }
 
-  if (!zoomConfig?.pan) {
+  if (!zoomInteractionConfig?.pan) {
     defaultizedConfig.pan = {
       onDrag: { type: 'onDrag', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
-    defaultizedConfig.pan = initializeFor<'pan'>(zoomConfig.pan);
+    defaultizedConfig.pan = initializeFor<'pan'>(zoomInteractionConfig.pan);
   }
 
   return defaultizedConfig;
 };
 
 function initializeFor<T extends 'zoom' | 'pan'>(
-  zoomConfig: Exclude<ZoomConfig[T], undefined>,
-): DefaultizedZoomConfig[T] {
+  zoomInteractionConfig: Exclude<ZoomInteractionConfig[T], undefined>,
+): DefaultizedZoomInteractionConfig[T] {
   // We aggregate interactions by type
-  const aggregation = zoomConfig.reduce(
+  const aggregation = zoomInteractionConfig.reduce(
     (acc, interaction) => {
       if (typeof interaction === 'string') {
         if (!acc[interaction]) {

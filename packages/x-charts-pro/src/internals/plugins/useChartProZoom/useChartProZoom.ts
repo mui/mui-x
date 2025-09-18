@@ -16,12 +16,16 @@ import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
-import { initializeZoomConfig } from './initializeZoomConfig';
+import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 import { initializeZoomData } from './initializeZoomData';
 
 export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginData) => {
   const { store, params } = pluginData;
-  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp, zoomConfig } = params;
+  const {
+    zoomData: paramsZoomData,
+    onZoomChange: onZoomChangeProp,
+    zoomInteractionConfig,
+  } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
@@ -31,10 +35,10 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
       ...prevState,
       zoom: {
         ...prevState.zoom,
-        zoomConfig: initializeZoomConfig(zoomConfig),
+        zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
       },
     }));
-  }, [store, zoomConfig]);
+  }, [store, zoomInteractionConfig]);
 
   // Manage controlled state
   React.useEffect(() => {
@@ -226,7 +230,7 @@ useChartProZoom.params = {
   initialZoom: true,
   onZoomChange: true,
   zoomData: true,
-  zoomConfig: true,
+  zoomInteractionConfig: true,
 };
 
 useChartProZoom.getInitialState = (params) => {
@@ -245,7 +249,7 @@ useChartProZoom.getInitialState = (params) => {
       zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
-      zoomConfig: initializeZoomConfig(params.zoomConfig),
+      zoomInteractionConfig: initializeZoomInteractionConfig(params.zoomInteractionConfig),
     },
   };
 };

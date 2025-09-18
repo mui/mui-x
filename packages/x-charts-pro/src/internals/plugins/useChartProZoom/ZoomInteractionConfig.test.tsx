@@ -6,7 +6,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
-describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
+describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomInteractionConfig Keys and Modes', () => {
   const { render } = createRenderer();
 
   const barChartProps = {
@@ -55,7 +55,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
         <BarChartPro
           {...barChartProps}
           onZoomChange={onZoomChange}
-          zoomConfig={{
+          zoomInteractionConfig={{
             zoom: [{ type: 'onWheel', requiredKeys: ['Control'] }],
           }}
         />,
@@ -102,7 +102,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
-          zoomConfig={{
+          zoomInteractionConfig={{
             pan: [{ type: 'onDrag', requiredKeys: ['Alt'] }],
           }}
         />,
@@ -168,7 +168,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
-          zoomConfig={{
+          zoomInteractionConfig={{
             pan: [{ type: 'onDrag', requiredKeys: ['Shift', 'Control'] }],
           }}
         />,
@@ -238,7 +238,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
           {...barChartProps}
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
-          zoomConfig={{
+          zoomInteractionConfig={{
             pan: [{ type: 'onDrag', pointerMode: 'mouse' }],
           }}
         />,
@@ -302,7 +302,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomConfig Keys and Modes', () => {
         <BarChartPro
           {...barChartProps}
           onZoomChange={onZoomChange}
-          zoomConfig={{
+          zoomInteractionConfig={{
             zoom: ['onPinch'], // Only enable pinch zoom, disable wheel zoom
           }}
         />,

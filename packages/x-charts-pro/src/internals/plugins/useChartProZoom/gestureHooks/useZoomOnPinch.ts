@@ -17,7 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
-import { selectorZoomConfig } from '../ZoomConfig.selectors';
+import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const useZoomOnPinch = (
   {
@@ -30,7 +30,7 @@ export const useZoomOnPinch = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
-  const config = useSelector(store, selectorZoomConfig, ['onPinch' as const]);
+  const config = useSelector(store, selectorZoomInteractionConfig, ['onPinch' as const]);
 
   // Zoom on pinch
   React.useEffect(() => {

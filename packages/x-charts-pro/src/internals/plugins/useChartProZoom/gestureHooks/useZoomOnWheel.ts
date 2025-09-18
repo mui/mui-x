@@ -17,7 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
-import { selectorZoomConfig } from '../ZoomConfig.selectors';
+import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const useZoomOnWheel = (
   {
@@ -32,7 +32,7 @@ export const useZoomOnWheel = (
   const isZoomEnabled = Object.keys(optionsLookup).length > 0;
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const config = useSelector(store, selectorZoomConfig, ['onWheel' as const]);
+  const config = useSelector(store, selectorZoomInteractionConfig, ['onWheel' as const]);
 
   React.useEffect(() => {
     if (!isZoomEnabled || !config) {

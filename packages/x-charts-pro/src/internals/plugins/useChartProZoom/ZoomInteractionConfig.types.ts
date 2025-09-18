@@ -1,6 +1,6 @@
 import type { KeyboardKey, PointerMode } from '@mui/x-internal-gestures/core';
 
-export type ZoomConfig = {
+export type ZoomInteractionConfig = {
   /**
    * Defines the interactions that trigger zooming.
    * - `onWheel`: Zooms in or out when the mouse wheel is scrolled.
@@ -25,7 +25,7 @@ type Entry<T extends AnyInteraction> = {
     pointerMode?: PointerMode[];
   };
 };
-export type DefaultizedZoomConfig = {
+export type DefaultizedZoomInteractionConfig = {
   zoom: Entry<ZoomInteraction>;
   pan: Entry<PanInteraction>;
 };

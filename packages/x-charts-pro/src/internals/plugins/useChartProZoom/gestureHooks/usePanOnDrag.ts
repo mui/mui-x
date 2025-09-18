@@ -11,7 +11,7 @@ import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { PanEvent } from '@mui/x-internal-gestures/core';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
-import { selectorPanConfig } from '../ZoomConfig.selectors';
+import { selectorPanInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const usePanOnDrag = (
   {
@@ -24,7 +24,7 @@ export const usePanOnDrag = (
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
   const startRef = React.useRef<readonly ZoomData[]>(null);
-  const config = useSelector(store, selectorPanConfig, ['onDrag' as const]);
+  const config = useSelector(store, selectorPanInteractionConfig, ['onDrag' as const]);
 
   // Add event for chart panning
   const isPanEnabled = React.useMemo(
