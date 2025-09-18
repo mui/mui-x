@@ -1,0 +1,15 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "color": { "description": "The color used in the legend" },
+    "id": {
+      "description": "The identifier of the legend element.<br />Used for internal purpose such as <code>key</code> props"
+    },
+    "label": { "description": "The label displayed in the legend" },
+    "markType": { "description": "" },
+    "maxValue": { "description": "The maximum value of the category" },
+    "minValue": { "description": "The minimum value of the category" },
+    "seriesId": { "description": "The identifier of the series" },
+    "itemId": { "description": "The identifier of the pie item" }
+  }
+}
