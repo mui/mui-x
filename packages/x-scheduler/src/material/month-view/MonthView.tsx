@@ -64,11 +64,19 @@ export const MonthView = React.memo(
 
     const handleEventChangeFromPrimitive = React.useCallback(
       (data: CalendarPrimitiveEventData) => {
-        store.updateEvent({
-          id: data.eventId,
-          start: data.start,
-          end: data.end,
-        });
+        const originalEvent = selectors.event(store.state, data.eventId)!;
+
+        if (originalEvent.rrule) {
+          store.updateRecurringEvent({
+            eventId: data.eventId,
+            occurrenceStart: data.originalStart,
+            changes: { start: data.start, end: data.end },
+            // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
+            scope: 'this-and-following',
+          });
+        } else {
+          store.updateEvent({ id: data.eventId, start: data.start, end: data.end });
+        }
       },
       [store],
     );

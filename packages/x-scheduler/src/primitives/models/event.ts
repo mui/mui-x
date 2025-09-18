@@ -153,6 +153,7 @@ export interface CalendarPrimitiveEventData {
   columnId: string | null;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
+  originalStart: SchedulerValidDate;
 }
 
 export interface CalendarProcessedDate {

@@ -28,6 +28,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         end: offset === 0 ? data.end : adapter.addDays(data.end, offset),
         eventId: data.id,
         columnId: null,
+        originalStart: data.start,
       };
     }
 
@@ -51,7 +52,13 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
       },
       onDragStart: ({ source: { data } }) => {
         if (isDraggingDayGridEvent(data)) {
-          setPlaceholder({ eventId: data.id, columnId: null, start: data.start, end: data.end });
+          setPlaceholder({
+            eventId: data.id,
+            columnId: null,
+            start: data.start,
+            end: data.end,
+            originalStart: data.start,
+          });
         }
       },
       onDrop: ({ source: { data } }) => {
