@@ -10,6 +10,7 @@ import {
   selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
+import { useMemoObject } from '@mui/x-internals/useMemoObject';
 import { useEventCallback } from '@mui/material/utils';
 import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
@@ -24,30 +25,22 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   const {
     zoomData: paramsZoomData,
     onZoomChange: onZoomChangeProp,
-    zoomInteractionConfig,
+    zoomInteractionConfig: zoomInteractionConfigProp,
   } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const zoomInteractionConfig = useMemoObject(
+    initializeZoomInteractionConfig(zoomInteractionConfigProp),
+  );
 
-  // Check if fixes codspeed performance
   React.useEffect(() => {
     store.update((prevState) => {
-      // Should deep compare prevState.zoom.zoomInteractionConfig with the new initializedZoomConfig
-
-      const initializedZoomConfig = initializeZoomInteractionConfig(zoomInteractionConfig);
-      if (
-        JSON.stringify(prevState.zoom.zoomInteractionConfig) ===
-        JSON.stringify(initializedZoomConfig)
-      ) {
-        return prevState;
-      }
-
       return {
         ...prevState,
         zoom: {
           ...prevState.zoom,
-          zoomInteractionConfig: initializedZoomConfig,
+          zoomInteractionConfig,
         },
       };
     });
