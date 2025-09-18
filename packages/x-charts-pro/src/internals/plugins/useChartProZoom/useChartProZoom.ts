@@ -26,7 +26,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     store.update((prevState) => ({
       ...prevState,
       zoom: {
