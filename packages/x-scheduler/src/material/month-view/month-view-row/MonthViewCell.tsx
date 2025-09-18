@@ -97,7 +97,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         } as React.CSSProperties
       }
       onDoubleClick={onDoubleClick}
-      data-surface="day"
     >
       {hasDayView ? (
         <button

@@ -64,7 +64,6 @@ export function DayGridCell(props: DayGridCellProps) {
       role="gridcell"
       data-weekend={isWeekend(adapter, day) ? '' : undefined}
       onDoubleClick={onDoubleClick}
-      data-surface="day"
     >
       <div className="DayTimeGridAllDayEventsCellEvents">
         {allDayEvents.map((event) => {

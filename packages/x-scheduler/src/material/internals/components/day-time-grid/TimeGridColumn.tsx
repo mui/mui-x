@@ -97,7 +97,6 @@ function ColumnInteractiveLayer({
   return (
     <div
       ref={columnRef}
-      data-surface="time"
       onDoubleClick={onDoubleClick}
       className="DayTimeGridColumnInteractiveLayer"
     >
