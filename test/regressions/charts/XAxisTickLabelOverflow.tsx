@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { BarChartProps } from '@mui/x-charts/BarChart';
-import { usAirportPassengersData } from './airportData';
+import { usAirportPassengersData } from 'docsx/data/charts/dataset/airportData';
 
 const defaultXAxis = {
   dataKey: 'code',
