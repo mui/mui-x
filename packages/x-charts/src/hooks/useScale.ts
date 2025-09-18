@@ -16,6 +16,7 @@ export function getValueToPositionMapper(scale: D3Scale): (value: any) => number
 
   const domain = scale.domain();
 
+  // Fixes https://github.com/mui/mui-x/issues/18999#issuecomment-3173787401
   if (domain[0] === domain[1]) {
     return () => NaN;
   }
