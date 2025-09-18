@@ -12,6 +12,7 @@ import {
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
   CalendarResource,
+  CalendarPrimitiveEventData,
 } from '../models';
 import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
@@ -94,6 +95,7 @@ export class EventCalendarStore extends Store<State> {
               ...parameters.preferencesMenuConfig,
             },
       viewConfig: null,
+      draggedOccurrence: null,
       // Store elements that should only be updated when their controlled prop changes.
       visibleDate:
         parameters.visibleDate ??
@@ -388,5 +390,25 @@ export class EventCalendarStore extends Store<State> {
   public setViewConfig = (config: CalendarViewConfig) => {
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
+  };
+
+  /**
+   * Sets the placeholder of the event occurrence being dragged.
+   */
+  public setDraggedOccurrence = (draggedOccurrence: CalendarPrimitiveEventData | null) => {
+    const { adapter, draggedOccurrence: prevDraggedOccurrence } = this.state;
+
+    if (
+      draggedOccurrence != null &&
+      prevDraggedOccurrence != null &&
+      adapter.isEqual(draggedOccurrence.start, prevDraggedOccurrence.start) &&
+      adapter.isEqual(draggedOccurrence.end, prevDraggedOccurrence.end) &&
+      draggedOccurrence.occurrenceKey === prevDraggedOccurrence.occurrenceKey &&
+      draggedOccurrence.columnId === prevDraggedOccurrence.columnId
+    ) {
+      return;
+    }
+
+    this.set('draggedOccurrence', draggedOccurrence);
   };
 }

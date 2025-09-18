@@ -10,7 +10,7 @@ describe('<DayGrid.Event />', () => {
   const eventEnd = eventStart.plus({ hours: 1 });
 
   describeConformance(
-    <DayGrid.Event eventId="fake-id" start={eventStart} end={eventEnd} />,
+    <DayGrid.Event eventId="fake-id" occurrenceKey="fake-key" start={eventStart} end={eventEnd} />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {

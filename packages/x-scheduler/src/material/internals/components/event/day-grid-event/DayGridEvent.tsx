@@ -155,6 +155,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   return (
     <DayGrid.Event
       eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
       start={occurrence.start}
       end={occurrence.end}
       isDraggable={isDraggable}

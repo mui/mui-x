@@ -91,6 +91,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const sharedProps = {
     eventId: occurrence.id,
+    occurrenceKey: occurrence.key,
     start: occurrence.start,
     end: occurrence.end,
     ref: forwardedRef,

@@ -8,15 +8,15 @@ import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useEvent } from '../../utils/useEvent';
-import { SchedulerValidDate } from '../../models';
+import { CalendarEventId, SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { diffIn } from '../../utils/date-utils';
 import { useDayGridRowContext } from '../row/DayGridRowContext';
-import { useDayGridRootContext } from '../root/DayGridRootContext';
-import { selectors } from '../root/store';
+import { selectors } from '../../use-event-calendar/store';
 import { DayGridEventContext } from './DayGridEventContext';
+import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 
-const EVENT_PROPS = { style: { pointerEvents: 'none' as const } };
+const EVENT_PROPS_WHILE_DRAGGING = { style: { pointerEvents: 'none' as const } };
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   componentProps: DayGridEvent.Props,
@@ -30,6 +30,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     start,
     end,
     eventId,
+    occurrenceKey,
     isDraggable = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -44,12 +45,12 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
   const { state: eventState, props: eventProps } = useEvent({ start, end });
-  const { store } = useDayGridRootContext();
-  const hasPlaceholder = useStore(store, selectors.hasPlaceholder);
-  const isDragging = useStore(store, selectors.isDraggingEvent, eventId);
+  const store = useEventCalendarStoreContext();
+  const hasDraggedOccurrence = useStore(store, selectors.hasDraggedOccurrence);
+  const isDragging = useStore(store, selectors.isDraggingOccurrence, occurrenceKey);
   const [isResizing, setIsResizing] = React.useState(false);
 
-  const props = hasPlaceholder ? EVENT_PROPS : undefined;
+  const props = hasDraggedOccurrence ? EVENT_PROPS_WHILE_DRAGGING : undefined;
 
   const state: DayGridEvent.State = React.useMemo(
     () => ({ ...eventState, dragging: isDragging, resizing: isResizing }),
@@ -72,7 +73,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   });
 
   const getSharedDragData: DayGridEventContext['getSharedDragData'] = useEventCallback(() => ({
-    id: eventId,
+    eventId,
+    occurrenceKey,
     start,
     end,
   }));
@@ -145,6 +147,10 @@ export namespace DayGridEvent {
      */
     eventId: string | number;
     /**
+     * The unique identifier of the event occurrence.
+     */
+    occurrenceKey: string;
+    /**
      * Whether the event can be dragged to change its start and end dates without changing the duration.
      * @default false
      */
@@ -152,7 +158,8 @@ export namespace DayGridEvent {
   }
 
   export interface SharedDragData {
-    id: string | number;
+    eventId: CalendarEventId;
+    occurrenceKey: string;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }

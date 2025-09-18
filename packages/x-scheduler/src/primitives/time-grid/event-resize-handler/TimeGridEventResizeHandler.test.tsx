@@ -15,7 +15,12 @@ describe('<TimeGrid.EventResizeHandler />', () => {
       return render(
         <TimeGrid.Root>
           <TimeGrid.Column start={eventStart} end={eventEnd}>
-            <TimeGrid.Event eventId="fake-id" start={eventStart} end={eventEnd}>
+            <TimeGrid.Event
+              eventId="fake-id"
+              occurrenceKey="fake-key"
+              start={eventStart}
+              end={eventEnd}
+            >
               {node}
             </TimeGrid.Event>
           </TimeGrid.Column>

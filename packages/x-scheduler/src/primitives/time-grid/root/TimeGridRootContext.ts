@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { CalendarPrimitiveEventData } from '../../models';
-import { TimeGridRootStore } from './store';
 
 export interface TimeGridRootContext {
   /**
@@ -10,14 +9,9 @@ export interface TimeGridRootContext {
    */
   updateEvent: (data: CalendarPrimitiveEventData) => void;
   /**
-   * Sets the placeholder for the currently dragged event.
-   * @param {CalendarPrimitiveEventData | null} placeholder The placeholder data or null to clear it.
+   * A unique id identifying this time grid instance.
    */
-  setPlaceholder: (placeholder: CalendarPrimitiveEventData | null) => void;
-  /**
-   * The store that holds the state of the Time Grid.
-   */
-  store: TimeGridRootStore;
+  id: string | undefined;
 }
 
 export const TimeGridRootContext = React.createContext<TimeGridRootContext | undefined>(undefined);

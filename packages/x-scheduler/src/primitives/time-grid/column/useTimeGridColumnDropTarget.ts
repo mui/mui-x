@@ -12,13 +12,15 @@ import {
 } from '../../utils/drag-utils';
 import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
+import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 
 export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTarget.Parameters) {
   const { start, end, columnId = null } = parameters;
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const { updateEvent, setPlaceholder } = useTimeGridRootContext();
+  const { updateEvent, id: gridId } = useTimeGridRootContext();
+  const store = useEventCalendarStoreContext();
 
   // TODO: Avoid JS date conversion
   const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
@@ -44,6 +46,10 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       data: Record<string, unknown>,
       input: { clientY: number },
     ): CalendarPrimitiveEventData | undefined => {
+      if (gridId === undefined) {
+        return undefined;
+      }
+
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
       // Move event
@@ -64,7 +70,9 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
         return {
           start: newStartDate,
           end: newEndDate,
-          eventId: data.id,
+          eventId: data.eventId,
+          occurrenceKey: data.occurrenceKey,
+          gridId,
           columnId,
           originalStart: data.start,
         };
@@ -88,7 +96,9 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           return {
             start: newStartDate,
             end: data.end,
-            eventId: data.id,
+            eventId: data.eventId,
+            occurrenceKey: data.occurrenceKey,
+            gridId,
             columnId,
             originalStart: data.start,
           };
@@ -111,7 +121,9 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
         return {
           start: data.start,
           end: newEndDate,
-          eventId: data.id,
+          eventId: data.eventId,
+          occurrenceKey: data.occurrenceKey,
+          gridId,
           columnId,
           originalStart: data.start,
         };
@@ -134,13 +146,18 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       onDrag: ({ source: { data }, location }) => {
         const newPlaceholder = getEventDropData(data, location.current.input);
         if (newPlaceholder) {
-          setPlaceholder(newPlaceholder);
+          store.setDraggedOccurrence(newPlaceholder);
         }
       },
       onDragStart: ({ source: { data } }) => {
-        if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
-          setPlaceholder({
-            eventId: data.id,
+        if (
+          gridId !== undefined &&
+          (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data))
+        ) {
+          store.setDraggedOccurrence({
+            eventId: data.eventId,
+            occurrenceKey: data.occurrenceKey,
+            gridId,
             start: data.start,
             end: data.end,
             columnId,
@@ -152,11 +169,11 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
         const newEvent = getEventDropData(data, location.current.input);
         if (newEvent) {
           updateEvent(newEvent);
-          setPlaceholder(null);
+          store.setDraggedOccurrence(null);
         }
       },
     });
-  }, [adapter, getEventDropData, setPlaceholder, columnId, updateEvent]);
+  }, [adapter, getEventDropData, gridId, store, columnId, updateEvent]);
 
   return { getCursorPositionInElementMs, ref };
 }

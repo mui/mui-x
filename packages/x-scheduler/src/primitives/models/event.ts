@@ -149,10 +149,12 @@ export type CalendarEventColor =
  * Object forwarded to the `onEventChange` handler of the Day Grid Root and Time Grid Root parts.
  */
 export interface CalendarPrimitiveEventData {
-  eventId: string | number;
+  eventId: CalendarEventId;
+  occurrenceKey: string;
   columnId: string | null;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
+  gridId: string;
   originalStart: SchedulerValidDate;
 }
 

@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { CalendarPrimitiveEventData } from '../../models';
-import { DayGridRootStore } from './store';
 
 export interface DayGridRootContext {
   /**
@@ -10,14 +9,9 @@ export interface DayGridRootContext {
    */
   updateEvent: (data: CalendarPrimitiveEventData) => void;
   /**
-   * Sets the placeholder for the currently dragged event.
-   * @param {CalendarPrimitiveEventData | null} placeholder The placeholder data or null to clear it.
+   * A unique id identifying this day grid instance.
    */
-  setPlaceholder: (placeholder: CalendarPrimitiveEventData | null) => void;
-  /**
-   * The store that holds the state of the Day Grid.
-   */
-  store: DayGridRootStore;
+  id: string | undefined;
 }
 
 export const DayGridRootContext = React.createContext<DayGridRootContext | undefined>(undefined);

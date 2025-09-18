@@ -26,6 +26,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     start,
     end,
     eventId,
+    occurrenceKey,
     isDraggable = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -74,7 +75,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const getSharedDragData: TimeGridEventContext['getSharedDragData'] = useEventCallback(
     (input) => ({
-      id: eventId,
+      eventId,
+      occurrenceKey,
       start,
       end,
       initialCursorPositionInEventMs: getCursorPositionInElementMs({ input, elementRef: ref }),
@@ -150,6 +152,10 @@ export namespace TimeGridEvent {
      */
     eventId: string | number;
     /**
+     * The unique identifier of the event occurrence.
+     */
+    occurrenceKey: string;
+    /**
      * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
      */
@@ -157,7 +163,8 @@ export namespace TimeGridEvent {
   }
 
   export interface SharedDragData {
-    id: string | number;
+    eventId: string | number;
+    occurrenceKey: string;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
     initialCursorPositionInEventMs: number;

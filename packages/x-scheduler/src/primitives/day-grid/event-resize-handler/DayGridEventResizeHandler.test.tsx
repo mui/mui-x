@@ -16,7 +16,12 @@ describe('<DayGridGrid.EventResizeHandler />', () => {
         <DayGrid.Root>
           <DayGrid.Row start={eventStart} end={eventEnd}>
             <DayGrid.Cell value={eventStart}>
-              <DayGrid.Event eventId="fake-id" start={eventStart} end={eventEnd}>
+              <DayGrid.Event
+                eventId="fake-id"
+                occurrenceKey="fake-key"
+                start={eventStart}
+                end={eventEnd}
+              >
                 {node}
               </DayGrid.Event>
             </DayGrid.Cell>

@@ -1,48 +1,36 @@
 'use client';
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
-import { Store } from '@base-ui-components/utils/store';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useId } from '@base-ui-components/utils/useId';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { CalendarPrimitiveEventData } from '../../models';
 import { TimeGridRootContext } from './TimeGridRootContext';
-import { useAdapter } from '../../utils/adapter/useAdapter';
-import { State } from './store';
-import { useSetPlaceholder } from '../../utils/useSetPlaceholder';
 
 export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   componentProps: TimeGridRoot.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const adapter = useAdapter();
-
   const {
     // Rendering props
     className,
     render,
     // Internal props
     onEventChange,
+    id: idProp,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const store = useRefWithInit(() => new Store<State>({ placeholder: null, adapter })).current;
-  const setPlaceholder = useSetPlaceholder(store);
-
-  const props = React.useMemo(() => ({ role: 'grid' }), []);
+  const id = useId(idProp);
+  const props = React.useMemo(() => ({ role: 'grid', id }), [id]);
 
   const updateEvent = useEventCallback(onEventChange);
 
   const contextValue: TimeGridRootContext = React.useMemo(
-    () => ({ updateEvent, setPlaceholder, store }),
-    [updateEvent, setPlaceholder, store],
+    () => ({ updateEvent, id }),
+    [updateEvent, id],
   );
-
-  useIsoLayoutEffect(() => {
-    store.apply({ adapter });
-  }, [store, adapter]);
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],

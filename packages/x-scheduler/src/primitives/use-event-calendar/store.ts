@@ -10,6 +10,7 @@ import {
   CalendarViewConfig,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
+  CalendarPrimitiveEventData,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
@@ -78,6 +79,10 @@ export type State = {
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
+  /**
+   * The placeholder of the event occurrence being dragged
+   */
+  draggedOccurrence: CalendarPrimitiveEventData | null;
 };
 
 const eventByIdMapSelector = createSelectorMemoized(
@@ -169,5 +174,58 @@ export const selectors = {
     (state: State) => state.areEventsResizable,
     (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
       !isEventReadOnly && areEventsResizable,
+  ),
+  hasDraggedOccurrence: createSelector((state: State) => state.draggedOccurrence !== null),
+  isDraggingOccurrence: createSelector(
+    (state: State, occurrenceKey: string) =>
+      state.draggedOccurrence?.occurrenceKey === occurrenceKey,
+  ),
+  draggedOccurrenceToRenderInDayCell: createSelector(
+    (
+      state: State,
+      day: SchedulerValidDate,
+      rowStart: SchedulerValidDate,
+      gridId: string | undefined,
+    ) => {
+      if (state.draggedOccurrence === null || state.draggedOccurrence.gridId !== gridId) {
+        return null;
+      }
+
+      if (state.adapter.isSameDay(day, state.draggedOccurrence.start)) {
+        return state.draggedOccurrence;
+      }
+
+      if (
+        state.adapter.isSameDay(day, rowStart) &&
+        state.adapter.isWithinRange(rowStart, [
+          state.draggedOccurrence.start,
+          state.draggedOccurrence.end,
+        ])
+      ) {
+        return state.draggedOccurrence;
+      }
+
+      return null;
+    },
+  ),
+  draggedOccurrenceToRenderInTimeRange: createSelector(
+    (
+      state: State,
+      start: SchedulerValidDate,
+      end: SchedulerValidDate,
+      gridId: string | undefined,
+    ) => {
+      if (state.draggedOccurrence === null || state.draggedOccurrence.gridId !== gridId) {
+        return null;
+      }
+      if (
+        state.adapter.isBefore(state.draggedOccurrence.end, start) ||
+        state.adapter.isAfter(state.draggedOccurrence.start, end)
+      ) {
+        return null;
+      }
+
+      return state.draggedOccurrence;
+    },
   ),
 };
