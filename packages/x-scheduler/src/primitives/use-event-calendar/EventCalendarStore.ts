@@ -401,10 +401,12 @@ export class EventCalendarStore extends Store<State> {
     if (
       draggedOccurrence != null &&
       prevDraggedOccurrence != null &&
+      draggedOccurrence.eventId === prevDraggedOccurrence.eventId &&
+      draggedOccurrence.occurrenceKey === prevDraggedOccurrence.occurrenceKey &&
+      draggedOccurrence.gridId === prevDraggedOccurrence.gridId &&
       adapter.isEqual(draggedOccurrence.start, prevDraggedOccurrence.start) &&
       adapter.isEqual(draggedOccurrence.end, prevDraggedOccurrence.end) &&
-      draggedOccurrence.occurrenceKey === prevDraggedOccurrence.occurrenceKey &&
-      draggedOccurrence.columnId === prevDraggedOccurrence.columnId
+      adapter.isEqual(draggedOccurrence.originalStart, prevDraggedOccurrence.originalStart)
     ) {
       return;
     }

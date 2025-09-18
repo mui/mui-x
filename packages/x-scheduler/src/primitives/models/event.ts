@@ -151,9 +151,9 @@ export type CalendarEventColor =
 export interface CalendarPrimitiveEventData {
   eventId: CalendarEventId;
   occurrenceKey: string;
+  gridId: string;
   start: SchedulerValidDate;
   end: SchedulerValidDate;
-  gridId: string;
   originalStart: SchedulerValidDate;
 }
 
