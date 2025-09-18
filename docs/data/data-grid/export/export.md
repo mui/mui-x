@@ -496,7 +496,7 @@ For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#c
 
 ### Server-side export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-To export server-side data through the DataGrid, use [`updateRows()`](/x/react-data-grid/row-updates/#the-updaterows-method) to temporary set server-side data to the DataGrid and then call one of export functions.
+To export server-side data through the DataGrid, use [`updateRows()`](/x/react-data-grid/row-updates/#the-updaterows-method) to temporary set the data before calling one of export functions.
 Finally, reset the rows back to the original version.
 
 The example below demonstrates the CSV export with server-side data.
