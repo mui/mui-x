@@ -1,3 +1,5 @@
+# Instructions for AI pair programmer
+
 ## Testing
 
 There are two main types of test in this repository: unit tests and browser tests. Both use the same files.
