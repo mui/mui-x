@@ -45,9 +45,16 @@ const ChartsSurfaceStyles = styled('svg', {
   touchAction: 'pan-y',
   userSelect: 'none',
   gridArea: 'chart',
-  '&[data-has-focused-item=true]': {
-    // Move the focus outline responsibility to children
-    outline: 'none',
+  '&:focus': {
+    outline: 'none', // By default don't show focus on the SVG container
+  },
+  '&:focus-visible': {
+    // Show focus outline on the SVG container only when using keyboard navigation
+    outline: 'auto',
+    '&[data-has-focused-item=true]': {
+      // But not if the chart has a focused children item
+      outline: 'none',
+    },
   },
   '& [data-focused=true]': {
     outline: 'auto',
