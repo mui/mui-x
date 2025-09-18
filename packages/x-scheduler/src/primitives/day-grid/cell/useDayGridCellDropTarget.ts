@@ -133,7 +133,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
 
   React.useEffect(() => {
     if (!ref.current) {
-      return () => {};
+      return undefined;
     }
 
     return dropTargetForElements({

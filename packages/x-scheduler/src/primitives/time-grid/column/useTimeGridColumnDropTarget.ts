@@ -132,7 +132,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
   React.useEffect(() => {
     if (!ref.current) {
-      return () => {};
+      return undefined;
     }
 
     return dropTargetForElements({
