@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import Typography from '@mui/material/Typography';
 
 const dataset = [
@@ -19,13 +19,11 @@ const dataset = [
 const seriesH = [
   { dataKey: 'high', label: 'High', layout: 'horizontal', stack: 'stack' },
   { dataKey: 'low', label: 'Low', layout: 'horizontal', stack: 'stack' },
-];
-
+] satisfies BarChartProps['series'];
 const seriesV = [
   { dataKey: 'high', label: 'High', stack: 'stack' },
   { dataKey: 'low', label: 'Low', stack: 'stack' },
-];
-
+] satisfies BarChartProps['series'];
 const chartSettingsH = {
   margin: { left: 32 },
   dataset,
@@ -34,20 +32,18 @@ const chartSettingsH = {
   series: seriesH,
   yAxis: [{ scaleType: 'band', dataKey: 'order', width: 12 }],
   hideLegend: true,
-};
+} satisfies BarChartProps;
 const chartSettingsV = {
   ...chartSettingsH,
   margin: { left: 0 },
   xAxis: [{ dataKey: 'order', height: 8 }],
   yAxis: undefined,
   series: seriesV,
-};
+} satisfies BarChartProps;
 
 export default function BarBorderRadius() {
   return (
-    <div
-      style={{ display: 'grid', gap: 2, gridTemplateColumns: 'auto repeat(2, 1fr)' }}
-    >
+    <div style={{ display: 'grid', gap: 2, gridTemplateColumns: 'auto repeat(2, 1fr)' }}>
       <div />
       <Typography sx={{ justifySelf: 'center' }}>Layout: Vertical</Typography>
       <Typography sx={{ justifySelf: 'center' }}>Layout: Horizontal</Typography>

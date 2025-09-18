@@ -16,7 +16,7 @@ describe('ScatterChartPro', () => {
   const xData = data.map((d) => d.x);
 
   bench(
-    'ScatterChartPro with big data amount',
+    'ScatterChartPro with big data amount (single renderer)',
     async () => {
       const { findByText } = render(
         <ScatterChartPro
@@ -43,7 +43,7 @@ describe('ScatterChartPro', () => {
   );
 
   bench(
-    'ScatterChartPro with big data amount and zoomed in',
+    'ScatterChartPro with big data amount and zoomed in (single renderer)',
     async () => {
       const { findByText } = render(
         <ScatterChartPro
@@ -75,7 +75,7 @@ describe('ScatterChartPro', () => {
 
   describe('using renderer="svg-batch"', () => {
     bench(
-      'ScatterChartPro with big data amount',
+      'ScatterChartPro with big data amount (batch renderer)',
       async () => {
         const { findByText } = render(
           <ScatterChartPro
@@ -103,7 +103,7 @@ describe('ScatterChartPro', () => {
     );
 
     bench(
-      'ScatterChartPro with big data amount and zoomed in',
+      'ScatterChartPro with big data amount and zoomed in (batch renderer)',
       async () => {
         const { findByText } = render(
           <ScatterChartPro

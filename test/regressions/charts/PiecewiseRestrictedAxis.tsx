@@ -39,8 +39,7 @@ export default function PiecewiseRestrictedAxis() {
         <ChartsReferenceLine y={0} lineStyle={{ stroke: 'green' }} />
       </ScatterChart>
       <Typography>
-        All blue points should be above the blue line, all green points above the
-        green line.
+        All blue points should be above the blue line, all green points above the green line.
       </Typography>
     </Stack>
   );
