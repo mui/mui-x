@@ -11,7 +11,7 @@ storeClasses.forEach((storeClass) => {
   describe(`Resource - ${storeClass.name}`, () => {
     describe('Method: setVisibleResources', () => {
       it('should set only when reference changes', () => {
-        const store = storeClass.value.create(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
 
         const resourcesMap = new Map<CalendarResourceId, boolean>([['r1', true]]);
         store.setVisibleResources(resourcesMap);

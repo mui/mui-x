@@ -7,7 +7,7 @@ import { TimelineParameters } from './TimelineStore.types';
 
 export function useTimeline(parameters: TimelineParameters): TimelineStore {
   const adapter = useAdapter();
-  const store = useRefWithInit(() => TimelineStore.create(parameters, adapter)).current;
+  const store = useRefWithInit(() => new TimelineStore(parameters, adapter)).current;
 
   useIsoLayoutEffect(
     () => store.updateStateFromParameters(parameters, adapter),

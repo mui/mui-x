@@ -23,8 +23,4 @@ export class TimelineStore extends SchedulerStore<TimelineState, TimelineParamet
   public constructor(parameters: TimelineParameters, adapter: Adapter) {
     super(parameters, adapter, 'Timeline', mapper);
   }
-
-  public static create(parameters: TimelineParameters, adapter: Adapter): TimelineStore {
-    return new TimelineStore(parameters, adapter);
-  }
 }

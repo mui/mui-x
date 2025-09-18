@@ -7,7 +7,7 @@ import { EventCalendarParameters } from './EventCalendarStore.types';
 
 export function useEventCalendar(parameters: EventCalendarParameters): EventCalendarStore {
   const adapter = useAdapter();
-  const store = useRefWithInit(() => EventCalendarStore.create(parameters, adapter)).current;
+  const store = useRefWithInit(() => new EventCalendarStore(parameters, adapter)).current;
 
   useIsoLayoutEffect(
     () => store.updateStateFromParameters(parameters, adapter),

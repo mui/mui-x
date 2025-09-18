@@ -24,6 +24,6 @@ export function getIds<T extends { id: string | number }>(items: T[]): Array<T['
 }
 
 export const storeClasses = [
-  { name: 'EventCalendarStore', value: EventCalendarStore },
-  { name: 'TimelineStore', value: TimelineStore },
+  { name: 'EventCalendarStore', Value: EventCalendarStore },
+  { name: 'TimelineStore', Value: TimelineStore },
 ];

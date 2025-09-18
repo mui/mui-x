@@ -12,7 +12,7 @@ storeClasses.forEach((storeClass) => {
       it('should set visibleDate to startOfDay(adapter.date()) and calls onVisibleDateChange when is uncontrolled', () => {
         const onVisibleDateChange = spy();
         const yesterday = adapter.addDays(adapter.startOfDay(adapter.date()), -1);
-        const store = storeClass.value.create(
+        const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, onVisibleDateChange, defaultVisibleDate: yesterday },
           adapter,
         );
@@ -29,7 +29,7 @@ storeClasses.forEach((storeClass) => {
         const onVisibleDateChange = spy();
         const controlledDate = adapter.date('2025-07-01T00:00:00Z');
 
-        const store = storeClass.value.create(
+        const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, visibleDate: controlledDate, onVisibleDateChange },
           adapter,
         );
@@ -46,7 +46,7 @@ storeClasses.forEach((storeClass) => {
         const onVisibleDateChange = spy();
         const todayStart = adapter.startOfDay(adapter.date());
 
-        const store = storeClass.value.create(
+        const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, defaultVisibleDate: todayStart, onVisibleDateChange },
           adapter,
         );

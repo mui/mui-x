@@ -23,7 +23,7 @@ storeClasses.forEach((storeClass) => {
           ),
         ];
 
-        const store = storeClass.value.create({ events }, adapter);
+        const store = new storeClass.Value({ events }, adapter);
 
         expect(store.state.events).to.have.length(2);
         expect(store.state.events[0].title).to.equal('Event 1');
@@ -34,7 +34,7 @@ storeClasses.forEach((storeClass) => {
 
     describe('updater', () => {
       it('should sync partial state from new parameters (events/resources/flags/ampm/indicator)', () => {
-        const store = storeClass.value.create(DEFAULT_PARAMS, adapter);
+        const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
 
         const newParams = {
           events: [
@@ -66,7 +66,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should respect controlled `visibleDate` (updates to new value)', () => {
         const initial = adapter.date('2025-07-05T00:00:00Z');
-        const store = storeClass.value.create({ ...DEFAULT_PARAMS, visibleDate: initial }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate: initial }, adapter);
 
         const next = adapter.date('2025-07-10T00:00:00Z');
         store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: next }, adapter);
@@ -76,7 +76,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should not change `visibleDate` if not included in new parameters', () => {
         const initialVisibleDate = adapter.date('2025-07-01T00:00:00Z');
-        const store = storeClass.value.create(
+        const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, visibleDate: initialVisibleDate },
           adapter,
         );
@@ -96,7 +96,7 @@ storeClasses.forEach((storeClass) => {
       it('should keep initial defaults and warns if default props change after mount', () => {
         const defaultDate = adapter.date('2025-07-15T00:00:00Z');
 
-        const store = storeClass.value.create(
+        const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, defaultVisibleDate: defaultDate },
           adapter,
         );
@@ -116,7 +116,7 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should keep consistent state when switching from uncontrolled → controlled `visible date` (warns in dev)', () => {
-        const store = storeClass.value.create(
+        const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, defaultVisibleDate: adapter.date('2025-07-05T00:00:00Z') },
           adapter,
         );
@@ -131,7 +131,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should warn and keep current value when switching from controlled → uncontrolled `visibleDate`', () => {
         const visibleDate = adapter.date('2025-07-05T00:00:00Z');
-        const store = storeClass.value.create({ ...DEFAULT_PARAMS, visibleDate }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleDate }, adapter);
 
         expect(() => {
           store.updateStateFromParameters(

@@ -15,7 +15,7 @@ const DEFAULT_PARAMS = { events: [] };
 describe('Core - EventCalendarStore', () => {
   describe('create', () => {
     it('should initialize default state', () => {
-      const store = EventCalendarStore.create(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
       const expectedState = {
         adapter,
@@ -41,7 +41,7 @@ describe('Core - EventCalendarStore', () => {
 
   describe('updater', () => {
     it('should sync partial state from new parameters (views)', () => {
-      const store = EventCalendarStore.create(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
       const newParams = {
         events: DEFAULT_PARAMS.events,
@@ -53,7 +53,7 @@ describe('Core - EventCalendarStore', () => {
     });
 
     it('should respect controlled `view` (updates to new value)', () => {
-      const store = EventCalendarStore.create({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
 
       store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'month' }, adapter);
 
@@ -61,7 +61,7 @@ describe('Core - EventCalendarStore', () => {
     });
 
     it('should not change `view` if not included in new parameters', () => {
-      const store = EventCalendarStore.create({ ...DEFAULT_PARAMS, view: 'month' }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'month' }, adapter);
 
       store.updateStateFromParameters(
         {
@@ -77,7 +77,7 @@ describe('Core - EventCalendarStore', () => {
 
     it('should keep initial defaults and warns if default props change after mount', () => {
       const defaultView = 'month';
-      const store = EventCalendarStore.create({ ...DEFAULT_PARAMS, defaultView }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, defaultView }, adapter);
 
       expect(() => {
         store.updateStateFromParameters(
@@ -94,7 +94,7 @@ describe('Core - EventCalendarStore', () => {
     });
 
     it('should keep consistent state when switching from uncontrolled → controlled `view` (warns in dev)', () => {
-      const store = EventCalendarStore.create({ ...DEFAULT_PARAMS, defaultView: 'week' }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, defaultView: 'week' }, adapter);
 
       expect(() => {
         store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
@@ -104,7 +104,7 @@ describe('Core - EventCalendarStore', () => {
     });
 
     it('should warn and keep current value when switching from controlled → uncontrolled `view`', () => {
-      const store = EventCalendarStore.create({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
 
       expect(() => {
         store.updateStateFromParameters(

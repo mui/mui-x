@@ -24,7 +24,7 @@ storeClasses.forEach((storeClass) => {
           ),
         ];
 
-        const store = storeClass.value.create({ events, onEventsChange }, adapter);
+        const store = new storeClass.Value({ events, onEventsChange }, adapter);
 
         const updatedEvent = buildEvent(
           '2',
@@ -75,7 +75,7 @@ storeClasses.forEach((storeClass) => {
           ),
         ];
 
-        const store = storeClass.value.create({ events, onEventsChange }, adapter);
+        const store = new storeClass.Value({ events, onEventsChange }, adapter);
         store.deleteEvent('2');
 
         expect(onEventsChange.calledOnce).to.equal(true);

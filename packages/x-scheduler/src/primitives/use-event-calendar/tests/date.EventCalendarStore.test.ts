@@ -16,7 +16,7 @@ describe('Date - EventCalendarStore', () => {
       const initialDate = adapter.date('2025-08-01T00:00:00Z');
       const nextDate = adapter.date('2025-08-02T00:00:00Z');
 
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           defaultView: 'week',
@@ -45,7 +45,7 @@ describe('Date - EventCalendarStore', () => {
       const initialDate = adapter.date('2025-08-01T00:00:00Z');
       const nextDate = adapter.date('2025-08-02T00:00:00Z');
 
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           view: 'week',
@@ -74,7 +74,7 @@ describe('Date - EventCalendarStore', () => {
       const currentDate = adapter.date('2025-08-01T00:00:00Z');
       const nextDate = adapter.date('2025-08-02T00:00:00Z');
 
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           defaultView: 'day',
@@ -100,7 +100,7 @@ describe('Date - EventCalendarStore', () => {
       const currentDate = adapter.date('2025-08-01T00:00:00Z');
       const nextDate = adapter.date('2025-08-02T00:00:00Z');
 
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           view: 'day',
@@ -125,7 +125,7 @@ describe('Date - EventCalendarStore', () => {
 
       const currentDate = adapter.date('2025-08-01T00:00:00Z');
 
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           defaultView: 'week',
@@ -150,7 +150,7 @@ describe('Date - EventCalendarStore', () => {
       const onViewChange = spy();
 
       const sameDate = adapter.date('2025-08-02T00:00:00Z');
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           view: 'day',
@@ -170,7 +170,7 @@ describe('Date - EventCalendarStore', () => {
     });
 
     it('should throw if the view is not an allowed view', () => {
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         { ...DEFAULT_PARAMS, views: ['week', 'month', 'agenda'] as CalendarView[] },
         adapter,
       );
@@ -187,7 +187,7 @@ describe('Date - EventCalendarStore', () => {
       const targetDate = adapter.date('2025-07-03T00:00:00Z');
       const siblingVisibleDateGetter = spy(() => targetDate);
 
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           view: 'day',
@@ -210,7 +210,7 @@ describe('Date - EventCalendarStore', () => {
       const targetDate = adapter.date('2025-07-03T00:00:00Z');
       const siblingVisibleDateGetter = spy(() => targetDate);
 
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         {
           ...DEFAULT_PARAMS,
           view: 'day',

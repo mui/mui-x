@@ -67,10 +67,6 @@ export class EventCalendarStore extends SchedulerStore<
     }
   }
 
-  public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
-    return new EventCalendarStore(parameters, adapter);
-  }
-
   private assertViewValidity(view: CalendarView) {
     const views = this.state.views;
     if (!views.includes(view)) {
