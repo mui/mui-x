@@ -252,9 +252,17 @@ export function getActualAxisExtrema(
   axisExtrema: Pick<AxisConfig, 'min' | 'max'>,
   minData: number,
   maxData: number,
-) {
-  return [
-    axisExtrema.min ?? Math.min(minData, axisExtrema.max ?? Infinity),
-    axisExtrema.max ?? Math.max(maxData, axisExtrema.min ?? -Infinity),
-  ];
+): [number | Date, number | Date] {
+  let min: number | Date = minData;
+  let max: number | Date = maxData;
+
+  if (axisExtrema.max != null && axisExtrema.max.valueOf() < minData) {
+    min = axisExtrema.max;
+  }
+
+  if (axisExtrema.min != null && axisExtrema.min.valueOf() > minData) {
+    max = axisExtrema.min;
+  }
+
+  return [axisExtrema.min ?? min, axisExtrema.max ?? max];
 }
