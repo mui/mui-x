@@ -17,7 +17,7 @@ import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { useLazySelectorEffect } from '../../utils/useLazySelectorEffect';
-import { isWithInteractionPlugin } from '../useChartInteraction/isWithInteractionPlugin';
+import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
@@ -121,11 +121,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     !onHighlightedAxisChange,
   );
 
-  const withInteractionPlugin = isWithInteractionPlugin(instance);
+  const hasInteractionPlugin = checkHasInteractionPlugin(instance);
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (!isInteractionEnabled || !withInteractionPlugin || !element || params.disableAxisListener) {
+    if (!isInteractionEnabled || !hasInteractionPlugin || !element || params.disableAxisListener) {
       return () => {};
     }
 
@@ -190,7 +190,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     instance,
     params.disableAxisListener,
     isInteractionEnabled,
-    withInteractionPlugin,
+    hasInteractionPlugin,
   ]);
 
   React.useEffect(() => {

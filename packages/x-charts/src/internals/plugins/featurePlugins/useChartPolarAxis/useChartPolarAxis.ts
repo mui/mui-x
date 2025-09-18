@@ -21,7 +21,7 @@ import {
 } from './coordinateTransformation';
 import { getAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
-import { isWithInteractionPlugin } from '../useChartInteraction/isWithInteractionPlugin';
+import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -103,13 +103,13 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     isInChart: false,
   });
 
-  const withInteractionPlugin = isWithInteractionPlugin(instance);
+  const hasInteractionPlugin = checkHasInteractionPlugin(instance);
 
   React.useEffect(() => {
     const element = svgRef.current;
     if (
       !isInteractionEnabled ||
-      !withInteractionPlugin ||
+      !hasInteractionPlugin ||
       element === null ||
       params.disableAxisListener
     ) {
@@ -215,7 +215,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
     params.disableAxisListener,
     isInteractionEnabled,
     svg2rotation,
-    withInteractionPlugin,
+    hasInteractionPlugin,
   ]);
 
   React.useEffect(() => {
