@@ -19,12 +19,8 @@ import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
 import { initializeZoomConfig } from './initializeZoomConfig';
 import { initializeZoomData } from './initializeZoomData';
 
-export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
-  store,
-  params,
-  svgRef,
-  instance,
-}) => {
+export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginData) => {
+  const { store, params } = pluginData;
   const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp, zoomConfig } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
@@ -183,7 +179,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     };
   }, [removeIsInteracting]);
 
-  const pluginData = { store, svgRef, instance };
   // Add events
   usePanOnDrag(pluginData, setZoomDataCallback);
 
