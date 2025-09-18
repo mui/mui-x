@@ -149,11 +149,30 @@ export type CalendarEventColor =
  * Object forwarded to the `onEventChange` handler of the Day Grid Root and Time Grid Root parts.
  */
 export interface CalendarPrimitiveEventData {
+  /**
+   * The id of the event being changed.
+   */
   eventId: CalendarEventId;
+  /**
+   * The key of the event occurrence being changed.
+   */
   occurrenceKey: string;
+  /**
+   * A unique id to identify the grid the event is being changed from.
+   * This is useful to make sure to only render the placeholder in the grid the event is being dragged to.
+   */
   gridId: string;
+  /**
+   * The new start date and time of the event occurrence.
+   */
   start: SchedulerValidDate;
+  /**
+   * The new end date and time of the event occurrence.
+   */
   end: SchedulerValidDate;
+  /**
+   * The start date and time of the event occurrence before the change.
+   */
   originalStart: SchedulerValidDate;
 }
 
