@@ -248,7 +248,7 @@ export class Flatbush {
    * @param {number} maxX
    * @param {number} maxY
    * @param {(index: number) => boolean} [filterFn] An optional function for filtering the results.
-   * @returns {number[]} An array of indices of items intersecting or touching the given bounding box.
+   * @returns {number[]} An array containing the index, the x coordinate and the y coordinate of the points intersecting or touching the given bounding box.
    */
   search(
     minX: number,
@@ -291,6 +291,7 @@ export class Flatbush {
         if (nodeIndex >= this.numItems * 4) {
           queue.push(index); // node; add it to the search queue
         } else if (filterFn === undefined || filterFn(index)) {
+          results.push(index);
           results.push(this._boxes[pos]); // leaf item
           results.push(this._boxes[pos + 1]);
         }

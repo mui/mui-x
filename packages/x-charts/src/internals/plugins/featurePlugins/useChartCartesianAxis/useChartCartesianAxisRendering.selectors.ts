@@ -305,7 +305,6 @@ export const selectorChartSeriesEmptyFlatbushMap = (
 export const selectorChartSeriesFlatbushMap = createSelector(
   [
     selectorChartSeriesProcessed,
-    // TODO: I don't think we can use this, we need to normalize the range to [0,1]
     selectorChartXScales,
     selectorChartYScales,
     selectorChartDefaultXAxisId,
@@ -336,12 +335,16 @@ export const selectorChartSeriesFlatbushMap = createSelector(
       const start = performance.now();
       const flatbush = new Flatbush(data.length);
 
-      const originalXScale = xAxesScaleMap[xAxisId];
-      const originalYScale = yAxesScaleMap[yAxisId];
+      const originalXScale = xAxesScaleMap[xAxisId]?.scale.copy();
+      const originalYScale = yAxesScaleMap[yAxisId]?.scale.copy();
+      // TODO: Ideally this would be done earlier in the process so that `selectorChartXScales` and `selectorChartYScales` could return scales already in [0, 1].
+      //       This could potentially remove the need for this selector to indirectly depend on the drawing area.
+      originalXScale.range([0, 1]);
+      originalYScale.range([0, 1]);
 
       for (const datum of data) {
         // Add the points using a [0, 1]. This makes it so that we don't need to recreate the Flatbush structure when zooming.
-        flatbush.add(originalXScale.scale(datum.x)!, originalYScale.scale(datum.y)!);
+        flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
       }
 
       flatbush.finish();
