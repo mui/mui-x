@@ -42,30 +42,25 @@ describe('TapAndDrag Gesture', () => {
 
     const gestureTarget = gestureManager.registerElement('tapAndDrag', target);
 
-    // Add event listeners for tap and drag events
-    gestureTarget.addEventListener('tapAndDragTap', (event) => {
-      const detail = (event as CustomEvent).detail;
-      events.push(`tap: x: ${Math.floor(detail.tapX)} | y: ${Math.floor(detail.tapY)}`);
-    });
-
-    gestureTarget.addEventListener('tapAndDragDragStart', (event) => {
+    // Add event listeners
+    gestureTarget.addEventListener('tapAndDragStart', (event) => {
       const detail = (event as CustomEvent).detail;
       events.push(
-        `dragStart: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
+        `tapAndDragStart: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
       );
     });
 
-    gestureTarget.addEventListener('tapAndDragDrag', (event) => {
+    gestureTarget.addEventListener('tapAndDrag', (event) => {
       const detail = (event as CustomEvent).detail;
       events.push(
-        `drag: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
+        `tapAndDrag: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
       );
     });
 
-    gestureTarget.addEventListener('tapAndDragDragEnd', (event) => {
+    gestureTarget.addEventListener('tapAndDragEnd', (event) => {
       const detail = (event as CustomEvent).detail;
       events.push(
-        `dragEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
+        `tapAndDragEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
       );
     });
   });
@@ -83,10 +78,7 @@ describe('TapAndDrag Gesture', () => {
       target,
     });
 
-    // Verify tap was detected
-    expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-
-    events = []; // Clear events for drag test
+    expect(events).toStrictEqual([]);
 
     // Then perform a drag
     await mouseGesture.pan({
@@ -97,10 +89,10 @@ describe('TapAndDrag Gesture', () => {
     });
 
     expect(events).toStrictEqual([
-      `dragStart: deltaX: 25 | deltaY: 0 | direction: null | mainAxis: null`,
-      `drag: deltaX: 25 | deltaY: 0 | direction: null | mainAxis: null`,
-      `drag: deltaX: 50 | deltaY: 0 | direction: right | mainAxis: horizontal`,
-      `dragEnd: deltaX: 50 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `tapAndDragStart: deltaX: 25 | deltaY: 0 | direction: null | mainAxis: null`,
+      `tapAndDrag: deltaX: 25 | deltaY: 0 | direction: null | mainAxis: null`,
+      `tapAndDrag: deltaX: 50 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `tapAndDragEnd: deltaX: 50 | deltaY: 0 | direction: right | mainAxis: horizontal`,
     ]);
   });
 
@@ -110,10 +102,7 @@ describe('TapAndDrag Gesture', () => {
       target,
     });
 
-    // Verify tap was detected
-    expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-
-    events = []; // Clear events for drag test
+    expect(events).toStrictEqual([]);
 
     // Then perform a drag
     await touchGesture.pan({
@@ -124,10 +113,10 @@ describe('TapAndDrag Gesture', () => {
     });
 
     expect(events).toStrictEqual([
-      `dragStart: deltaX: 0 | deltaY: 25 | direction: null | mainAxis: null`,
-      `drag: deltaX: 0 | deltaY: 25 | direction: null | mainAxis: null`,
-      `drag: deltaX: 0 | deltaY: 50 | direction: down | mainAxis: vertical`,
-      `dragEnd: deltaX: 0 | deltaY: 50 | direction: down | mainAxis: vertical`,
+      `tapAndDragStart: deltaX: 0 | deltaY: 25 | direction: null | mainAxis: null`,
+      `tapAndDrag: deltaX: 0 | deltaY: 25 | direction: null | mainAxis: null`,
+      `tapAndDrag: deltaX: 0 | deltaY: 50 | direction: down | mainAxis: vertical`,
+      `tapAndDragEnd: deltaX: 0 | deltaY: 50 | direction: down | mainAxis: vertical`,
     ]);
   });
 
@@ -137,12 +126,8 @@ describe('TapAndDrag Gesture', () => {
       target,
     });
 
-    // Verify tap was detected
-    expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
+    expect(events).toStrictEqual([]);
 
-    events = []; // Clear events for drag test
-
-    // Then perform a diagonal drag
     await touchGesture.pan({
       target,
       angle: 45, // Diagonal drag (down-right)
@@ -153,10 +138,10 @@ describe('TapAndDrag Gesture', () => {
     // cos(45°) = 0.707, sin(45°) = 0.707
     // Expecting approximately 35 for both deltaX and deltaY
     expect(events).toStrictEqual([
-      `dragStart: deltaX: 17 | deltaY: 17 | direction: null | mainAxis: null`,
-      `drag: deltaX: 17 | deltaY: 17 | direction: null | mainAxis: null`,
-      `drag: deltaX: 35 | deltaY: 35 | direction: right down | mainAxis: diagonal`,
-      `dragEnd: deltaX: 35 | deltaY: 35 | direction: right down | mainAxis: diagonal`,
+      `tapAndDragStart: deltaX: 17 | deltaY: 17 | direction: null | mainAxis: null`,
+      `tapAndDrag: deltaX: 17 | deltaY: 17 | direction: null | mainAxis: null`,
+      `tapAndDrag: deltaX: 35 | deltaY: 35 | direction: right down | mainAxis: diagonal`,
+      `tapAndDragEnd: deltaX: 35 | deltaY: 35 | direction: right down | mainAxis: diagonal`,
     ]);
   });
 
@@ -171,10 +156,7 @@ describe('TapAndDrag Gesture', () => {
       target,
     });
 
-    // Verify tap was detected
-    expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-
-    events = []; // Clear events
+    expect(events).toStrictEqual([]);
 
     // Wait longer than the timeout
     await new Promise<void>((resolve) => {
@@ -203,10 +185,7 @@ describe('TapAndDrag Gesture', () => {
       target,
     });
 
-    // Verify tap was detected
-    expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-
-    events = []; // Clear events
+    expect(events).toStrictEqual([]);
 
     // Test vertical drag (should not trigger events due to direction constraint)
     await touchGesture.pan({
@@ -224,7 +203,7 @@ describe('TapAndDrag Gesture', () => {
       target,
     });
 
-    events = []; // Clear tap event
+    expect(events).toStrictEqual([]);
 
     // Test horizontal drag (should trigger events)
     await touchGesture.pan({
@@ -265,10 +244,7 @@ describe('TapAndDrag Gesture', () => {
       target,
     });
 
-    // Verify tap was detected
-    expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-
-    events = []; // Clear events for drag test
+    expect(events).toStrictEqual([]);
 
     // Immediately start dragging without delay (simulating fast user interaction)
     await mouseGesture.pan({
@@ -280,7 +256,7 @@ describe('TapAndDrag Gesture', () => {
 
     // Should have drag events
     expect(events.length).toBeGreaterThan(0);
-    expect(events[0]).toContain('dragStart');
+    expect(events[0]).toContain('tapAndDragStart');
   });
 
   it('should handle drag threshold properly', async () => {
@@ -293,10 +269,7 @@ describe('TapAndDrag Gesture', () => {
       target,
     });
 
-    // Verify tap was detected
-    expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
-
-    events = []; // Clear events
+    expect(events).toStrictEqual([]);
 
     // Perform a small drag that doesn't reach threshold
     await touchGesture.pan({
