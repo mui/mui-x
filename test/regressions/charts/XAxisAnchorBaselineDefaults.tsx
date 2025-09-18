@@ -1,45 +1,11 @@
 import * as React from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 
-const defaultXAxis = { dataKey: 'code', height: 45 };
+const defaultXAxis = { dataKey: 'code', height: 45 } as const;
 
 const degrees = [-180, -135, -90, -45, 0, 45, 90, 135, 180];
 
-const xAxes = degrees
-  .map((angle) => ({
-    ...defaultXAxis,
-    position: 'bottom',
-    id: `angle${angle}`,
-    tickLabelStyle: { angle },
-  }))
-  .concat(
-    degrees.map((angle) => ({
-      ...defaultXAxis,
-      id: `top-angle${angle}`,
-      position: 'top',
-      tickLabelStyle: { angle },
-    })),
-  );
-
-export default function XAxisAnchorBaselineDefaults() {
-  return (
-    <BarChart
-      xAxis={xAxes}
-      // Other props
-      width={600}
-      height={900}
-      dataset={usAirportPassengers}
-      series={[{ dataKey: '2022', label: '2022' }]}
-      hideLegend
-      yAxis={[
-        {
-          valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,
-          width: 60,
-        },
-      ]}
-    />
-  );
-}
+type AxisPosition = NonNullable<BarChartProps['xAxis']>[number]['position'];
 
 const usAirportPassengers = [
   {
@@ -143,3 +109,39 @@ const usAirportPassengers = [
     2022: 13751197,
   },
 ];
+
+const xAxes = degrees
+  .map((angle) => ({
+    ...defaultXAxis,
+    position: 'bottom' as AxisPosition,
+    id: `angle${angle}`,
+    tickLabelStyle: { angle },
+  }))
+  .concat(
+    degrees.map((angle) => ({
+      ...defaultXAxis,
+      id: `top-angle${angle}`,
+      position: 'top',
+      tickLabelStyle: { angle },
+    })),
+  ) satisfies BarChartProps['xAxis'];
+
+export default function XAxisAnchorBaselineDefaults() {
+  return (
+    <BarChart
+      xAxis={xAxes}
+      // Other props
+      width={600}
+      height={900}
+      dataset={usAirportPassengers}
+      series={[{ dataKey: '2022', label: '2022' }]}
+      hideLegend
+      yAxis={[
+        {
+          valueFormatter: (value: number) => `${(value / 1000).toLocaleString()}k`,
+          width: 60,
+        },
+      ]}
+    />
+  );
+}
