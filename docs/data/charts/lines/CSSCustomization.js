@@ -36,6 +36,7 @@ export default function CSSCustomization() {
       series={[
         {
           id: 'France',
+          label: 'France',
           dataKey: 'fr',
           stack: 'total',
           area: true,
@@ -43,6 +44,7 @@ export default function CSSCustomization() {
         },
         {
           id: 'Germany',
+          label: 'Germany',
           dataKey: 'dl',
           stack: 'total',
           area: true,
@@ -50,6 +52,7 @@ export default function CSSCustomization() {
         },
         {
           id: 'United Kingdom',
+          label: 'United Kingdom',
           dataKey: 'gb',
           stack: 'total',
           area: true,
