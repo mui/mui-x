@@ -132,17 +132,17 @@ To synchronize zoom between multiple charts, you can control the zoom state.
 
 {{"demo": "ZoomControlled.js"}}
 
-## Zoom configuration
+## Zoom interactions configuration
 
-You can have fine-grained control over which interactions are enabled and under which conditions by using the `zoomConfig` prop.
+You can have fine-grained control over which interactions are enabled and under which conditions by using the `zoomInteractionConfig` prop.
 
 ### Interactions
 
-The `zoomConfig` prop allows you to specify which interactions are enabled for zooming and panning:
+The `zoomInteractionConfig` prop allows you to specify which interactions are enabled for zooming and panning:
 
 ```jsx
 <BarChartPro
-  zoomConfig={{
+  zoomInteractionConfig={{
     // Enable both wheel and pinch zoom
     zoom: ['onWheel', 'onPinch'],
     // Enable drag panning
@@ -158,7 +158,7 @@ This can be set up using the `requiredKeys` property in the interaction configur
 
 ```jsx
 <BarChartPro
-  zoomConfig={{
+  zoomInteractionConfig={{
     // Only zoom when Control key is pressed
     zoom: [{ type: 'onWheel', requiredKeys: ['Control'] }],
     // Only pan when Shift key is pressed
@@ -177,7 +177,7 @@ It is also possible to require multiple keys to be pressed simultaneously:
 
 ```jsx
 <BarChartPro
-  zoomConfig={{
+  zoomInteractionConfig={{
     // Only pan when both Shift and Control are pressed
     pan: [{ type: 'onDrag', requiredKeys: ['Shift', 'Control'] }],
   }}
@@ -190,7 +190,7 @@ Interactions can also be restricted to specific pointer types by using the `mode
 
 ```jsx
 <BarChartPro
-  zoomConfig={{
+  zoomInteractionConfig={{
     // Only pan with touch, not mouse
     pan: [{ type: 'onDrag', pointerMode: 'touch' }],
   }}
@@ -212,7 +212,7 @@ In the example below, the pan `onDrag` interaction is configured to require a sp
 
 ```jsx
 <BarChartPro
-  zoomConfig={{
+  zoomInteractionConfig={{
     pan: [
       { type: 'onDrag', pointerMode: 'mouse', requiredKeys: ['ControlOrMeta'] },
       { type: 'onDrag', pointerMode: 'touch', requiredKeys: [] },
