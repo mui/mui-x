@@ -30,14 +30,27 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
 
+  // Check if fixes codspeed performance
   React.useEffect(() => {
-    store.update((prevState) => ({
-      ...prevState,
-      zoom: {
-        ...prevState.zoom,
-        zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
-      },
-    }));
+    store.update((prevState) => {
+      // Should deep compare prevState.zoom.zoomInteractionConfig with the new initializedZoomConfig
+
+      const initializedZoomConfig = initializeZoomInteractionConfig(zoomInteractionConfig);
+      if (
+        JSON.stringify(prevState.zoom.zoomInteractionConfig) ===
+        JSON.stringify(initializedZoomConfig)
+      ) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          zoomInteractionConfig: initializedZoomConfig,
+        },
+      };
+    });
   }, [store, zoomInteractionConfig]);
 
   // Manage controlled state
