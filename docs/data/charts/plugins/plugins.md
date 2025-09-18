@@ -15,7 +15,7 @@ Most charts should not require changes to either the plugins or the series confi
 
 ## Plugins
 
-Plugins are functions used to add features to the chart.
+Plugins are functions that add features to the chart.
 They can process data, add internal state, or listen to events.
 
 Plugins can be passed to the `<ChartContainer />` or the `<ChartDataProvider />` with the `plugins` props.
