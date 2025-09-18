@@ -69,7 +69,6 @@ function initializeFor<T extends 'zoom' | 'pan'>(
     const lastMouse = config.findLast((item) => item.pointerMode === 'mouse');
     const lastTouch = config.findLast((item) => item.pointerMode === 'touch');
 
-    // Docs types complain if this is not casted as any
     acc[type] = {
       type,
       pointerMode: lastEmpty
