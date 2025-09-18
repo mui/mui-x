@@ -26,22 +26,14 @@ type UseCreateDraftOnDoubleClickOptions = {
       end: SchedulerValidDate;
       allDay: boolean;
     },
-    options: {
-      onClose: () => void;
-      onDraftChange: (d: {
-        start: SchedulerValidDate;
-        end: SchedulerValidDate;
-        allDay?: boolean;
-      }) => void;
-    },
   ) => void;
   computeInitialRange: ComputeInitialRange;
   lockSurface?: Surface;
 };
 
 export function useCreateDraftOnDoubleClick(opts: UseCreateDraftOnDoubleClickOptions) {
-  const { adapter, startEditing, computeInitialRange, lockSurface } = opts;
-  const { startDraft, updateDraft, clearDraft } = useSchedulerDraft();
+  const { startEditing, computeInitialRange, lockSurface } = opts;
+  const { startDraft } = useSchedulerDraft();
 
   const handle = useEventCallback((event: React.MouseEvent) => {
     if (event.target !== event.currentTarget) {
@@ -59,33 +51,17 @@ export function useCreateDraftOnDoubleClick(opts: UseCreateDraftOnDoubleClickOpt
       end,
       allDay,
       surface: surfaceToUse,
+      lockSurface,
     });
 
     // 2) Open popover and sync form changes with draft
-    startEditing(
-      event,
-      {
-        id: CREATE_PLACEHOLDER_ID,
-        title: '',
-        start,
-        end,
-        allDay,
-      },
-      {
-        onClose: clearDraft,
-        onDraftChange: ({ start: nextS, end: nextE, allDay: ad = allDay }) => {
-          const nextStart = ad ? adapter.startOfDay(nextS) : nextS;
-          const nextEnd = ad ? adapter.endOfDay(nextE) : nextE;
-
-          updateDraft({
-            start: nextStart,
-            end: nextEnd,
-            allDay: ad,
-            surface: lockSurface ?? (ad ? 'day' : 'time'),
-          });
-        },
-      },
-    );
+    startEditing(event, {
+      id: CREATE_PLACEHOLDER_ID,
+      title: '',
+      start,
+      end,
+      allDay,
+    });
   });
 
   return handle;

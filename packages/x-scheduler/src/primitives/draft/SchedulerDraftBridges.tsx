@@ -8,14 +8,24 @@ export function TimeGridDraftBridge() {
   const { registerSurface } = useSchedulerDraft();
   const { setPlaceholder } = useTimeGridRootContext();
 
+  const setRef = React.useRef(setPlaceholder);
   React.useEffect(() => {
-    const unregister = registerSurface('time', {
-      setPlaceholder: ({ id, start, end }) =>
-        setPlaceholder?.({ eventId: id, columnId: null, start, end }),
-      clearPlaceholder: () => setPlaceholder?.(null),
-    });
+    setRef.current = setPlaceholder;
+  }, [setPlaceholder]);
+
+  const api = React.useMemo(
+    () => ({
+      setPlaceholder: ({ id, start, end }: any) =>
+        setRef.current?.({ eventId: id, columnId: null, start, end }),
+      clearPlaceholder: () => setRef.current?.(null),
+    }),
+    [],
+  );
+
+  React.useEffect(() => {
+    const unregister = registerSurface('time', api);
     return unregister;
-  }, [registerSurface, setPlaceholder]);
+  }, [registerSurface, api]);
 
   return null;
 }
@@ -24,19 +34,24 @@ export function DayGridDraftBridge() {
   const { registerSurface } = useSchedulerDraft();
   const { setPlaceholder } = useDayGridRootContext();
 
+  const setRef = React.useRef(setPlaceholder);
   React.useEffect(() => {
-    const unregister = registerSurface('day', {
-      setPlaceholder: ({ id, start, end }) =>
-        setPlaceholder?.({
-          eventId: id,
-          columnId: null,
-          start,
-          end,
-        }),
-      clearPlaceholder: () => setPlaceholder?.(null),
-    });
+    setRef.current = setPlaceholder;
+  }, [setPlaceholder]);
+
+  const api = React.useMemo(
+    () => ({
+      setPlaceholder: ({ id, start, end }: any) =>
+        setRef.current?.({ eventId: id, columnId: null, start, end }),
+      clearPlaceholder: () => setRef.current?.(null),
+    }),
+    [],
+  );
+
+  React.useEffect(() => {
+    const unregister = registerSurface('day', api);
     return unregister;
-  }, [registerSurface, setPlaceholder]);
+  }, [registerSurface, api]);
 
   return null;
 }

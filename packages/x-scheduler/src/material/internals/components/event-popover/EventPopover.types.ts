@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Popover } from '@base-ui-components/react/popover';
-import { CalendarEvent, SchedulerValidDate } from '../../../../primitives/models';
+import { CalendarEvent } from '../../../../primitives/models';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -19,29 +19,10 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
    * Handles the close action of the popover.
    */
   onClose: () => void;
-  /**
-   * Handles the draft change of the event being edited.
-   */
-  onDraftChange?: (next: {
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
-    allDay?: boolean;
-  }) => void;
 }
 
 export interface EventPopoverContextValue {
-  startEditing: (
-    event: React.MouseEvent,
-    calendarEvent: CalendarEvent,
-    options?: {
-      onClose?: () => void;
-      onDraftChange?: (next: {
-        start: SchedulerValidDate;
-        end: SchedulerValidDate;
-        allDay?: boolean;
-      }) => void;
-    },
-  ) => void;
+  startEditing: (event: React.MouseEvent, calendarEvent: CalendarEvent) => void;
 }
 
 export interface EventPopoverProviderProps {

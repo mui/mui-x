@@ -5,14 +5,13 @@ import type { SchedulerValidDate } from '../models';
 
 type Surface = 'time' | 'day';
 
-type Unregister = () => void;
-
 type DraftState = {
   id: string | null;
   start: SchedulerValidDate | null;
   end: SchedulerValidDate | null;
   allDay: boolean;
   surface: Surface | null;
+  lockSurface: Surface | null;
 };
 
 type SurfaceAPI = {
@@ -33,6 +32,7 @@ type DraftContextValue = {
     end: SchedulerValidDate;
     surface: Surface;
     allDay?: boolean;
+    lockSurface?: Surface;
   }) => void;
   updateDraft: (next: {
     start?: SchedulerValidDate;
@@ -41,7 +41,7 @@ type DraftContextValue = {
     surface?: Surface;
   }) => void;
   clearDraft: () => void;
-  registerSurface: (surface: Surface, api: SurfaceAPI) => void;
+  registerSurface: (surface: Surface, api: SurfaceAPI) => () => void;
 };
 
 const SchedulerDraftContext = React.createContext<DraftContextValue | undefined>(undefined);
@@ -65,17 +65,17 @@ export function SchedulerDraftProvider(props: { children: React.ReactNode }) {
     end: null,
     allDay: false,
     surface: null,
+    lockSurface: null,
   });
 
   // API that registers surfaces (day grid, time grid) use to communicate with the draft
   const apisRef = React.useRef<Partial<Record<Surface, SurfaceAPI>>>({});
 
-  const registerSurface = useEventCallback((surface: Surface, api: SurfaceAPI): Unregister => {
+  const registerSurface = useEventCallback((surface: Surface, api: SurfaceAPI) => {
     apisRef.current[surface] = api;
+
     return () => {
-      const current = apisRef.current[surface];
-      // avoid unregistering if another api has been registered in the meantime
-      if (current === api) {
+      if (apisRef.current[surface] === api) {
         delete apisRef.current[surface];
       }
     };
@@ -94,6 +94,7 @@ export function SchedulerDraftProvider(props: { children: React.ReactNode }) {
       end: SchedulerValidDate;
       surface: Surface;
       allDay?: boolean;
+      lockSurface?: Surface;
     }) => {
       clearAllPlaceholders();
       setDraft({
@@ -102,6 +103,7 @@ export function SchedulerDraftProvider(props: { children: React.ReactNode }) {
         end: init.end,
         allDay: Boolean(init.allDay),
         surface: init.surface,
+        lockSurface: init.lockSurface ?? null,
       });
       apisRef.current[init.surface]?.setPlaceholder({
         id: init.id,
@@ -124,12 +126,18 @@ export function SchedulerDraftProvider(props: { children: React.ReactNode }) {
           return prev;
         }
 
+        const nextAllDay = next.allDay ?? prev.allDay;
+
+        const desiredSurface: Surface =
+          prev.lockSurface ?? next.surface ?? (nextAllDay ? 'day' : 'time');
+
         const updated: DraftState = {
           id: prev.id,
           start: next.start ?? prev.start!,
           end: next.end ?? prev.end!,
           allDay: next.allDay ?? prev.allDay,
-          surface: next.surface ?? prev.surface!,
+          surface: desiredSurface,
+          lockSurface: prev.lockSurface,
         };
 
         // change surface, it clears the previous placeholder and sets a new one
@@ -160,7 +168,7 @@ export function SchedulerDraftProvider(props: { children: React.ReactNode }) {
 
   const clearDraft = useEventCallback(() => {
     clearAllPlaceholders();
-    setDraft({ id: null, start: null, end: null, allDay: false, surface: null });
+    setDraft({ id: null, start: null, end: null, allDay: false, surface: null, lockSurface: null });
   });
 
   const value = React.useMemo<DraftContextValue>(
