@@ -255,6 +255,34 @@ describe('TapAndDrag Gesture', () => {
     expect(events.length).toBe(0);
   });
 
+  it('should handle rapid tap and drag interaction', async () => {
+    // Clear events
+    events = [];
+
+    // Simulate very rapid tap-and-drag (like user doing it quickly)
+    // Tap first
+    await mouseGesture.tap({
+      target,
+    });
+
+    // Verify tap was detected
+    expect(events).toStrictEqual([`tap: x: 50 | y: 50`]);
+
+    events = []; // Clear events for drag test
+
+    // Immediately start dragging without delay (simulating fast user interaction)
+    await mouseGesture.pan({
+      target,
+      angle: 0, // Horizontal drag (right)
+      distance: 50,
+      steps: 2,
+    });
+
+    // Should have drag events
+    expect(events.length).toBeGreaterThan(0);
+    expect(events[0]).toContain('dragStart');
+  });
+
   it('should handle drag threshold properly', async () => {
     gestureManager.setGestureOptions('tapAndDrag', target, {
       dragThreshold: 20, // Require 20px movement before drag activates
