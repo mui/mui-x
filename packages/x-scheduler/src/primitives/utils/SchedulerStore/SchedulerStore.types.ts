@@ -143,10 +143,27 @@ export type UpdateRecurringEventParameters = {
   scope: RecurringUpdateEventScope;
 };
 
-export interface SchedulerModel<
+export interface SchedulerParametersToStateMapper<
   State extends SchedulerState,
   Parameters extends SchedulerParameters,
 > {
-  controlledProp: keyof Parameters & keyof State & string;
-  defaultProp: keyof Parameters;
+  getInitialState: (
+    schedulerInitialState: SchedulerState,
+    parameters: Parameters,
+    adapter: Adapter,
+  ) => State;
+  updateStateFromParameters: (
+    newState: Partial<SchedulerState>,
+    parameters: Parameters,
+    updateModel: SchedulerModelUpdater<State, Parameters>,
+  ) => Partial<State>;
 }
+
+export type SchedulerModelUpdater<
+  State extends SchedulerState,
+  Parameters extends SchedulerParameters,
+> = (
+  newState: Partial<State>,
+  controlledProp: keyof Parameters & keyof State & string,
+  defaultProp: keyof Parameters,
+) => void;

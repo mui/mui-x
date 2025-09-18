@@ -7,7 +7,7 @@ import {
   CalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
-import { SCHEDULER_MODELS, SchedulerModel, SchedulerStore } from '../utils/SchedulerStore';
+import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
@@ -21,29 +21,42 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekNumberVisibility: true,
 };
 
-const EVENT_CALENDAR_MODELS: SchedulerModel<EventCalendarState, EventCalendarParameters>[] = [
-  ...SCHEDULER_MODELS,
-  { controlledProp: 'view', defaultProp: 'defaultView' },
-];
-
-const getAdditionalStateFromParameters = (
-  parameters: EventCalendarParameters,
-): Partial<EventCalendarState> => ({
+const deriveStateFromParameters = (parameters: EventCalendarParameters) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
+
+const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendarParameters> = {
+  getInitialState: (schedulerInitialState, parameters) => ({
+    ...schedulerInitialState,
+    ...deriveStateFromParameters(parameters),
+    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
+    preferencesMenuConfig:
+      parameters.preferencesMenuConfig === false
+        ? parameters.preferencesMenuConfig
+        : {
+            ...DEFAULT_PREFERENCES_MENU_CONFIG,
+            ...parameters.preferencesMenuConfig,
+          },
+    viewConfig: null,
+    view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+  }),
+  updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+    const newState = {
+      ...newSchedulerState,
+      ...deriveStateFromParameters(parameters),
+    };
+
+    updateModel(newState, 'view', 'defaultView');
+    return newState;
+  },
+};
 
 export class EventCalendarStore extends SchedulerStore<
   EventCalendarState,
   EventCalendarParameters
 > {
-  public constructor(initialState: EventCalendarState, parameters: EventCalendarParameters) {
-    super(
-      initialState,
-      parameters,
-      'Event Calendar',
-      EVENT_CALENDAR_MODELS,
-      getAdditionalStateFromParameters,
-    );
+  public constructor(parameters: EventCalendarParameters, adapter: Adapter) {
+    super(parameters, adapter, 'Event Calendar', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
       // Add listeners to assert the state validity (not applied in prod)
@@ -55,21 +68,7 @@ export class EventCalendarStore extends SchedulerStore<
   }
 
   public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
-    const initialState: EventCalendarState = {
-      ...SchedulerStore.getInitialState(parameters, adapter, getAdditionalStateFromParameters),
-      preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
-      preferencesMenuConfig:
-        parameters.preferencesMenuConfig === false
-          ? parameters.preferencesMenuConfig
-          : {
-              ...DEFAULT_PREFERENCES_MENU_CONFIG,
-              ...parameters.preferencesMenuConfig,
-            },
-      viewConfig: null,
-      view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-    };
-
-    return new EventCalendarStore(initialState, parameters);
+    return new EventCalendarStore(parameters, adapter);
   }
 
   private assertViewValidity(view: CalendarView) {
