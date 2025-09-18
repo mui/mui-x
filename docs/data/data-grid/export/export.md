@@ -492,6 +492,23 @@ If you want to keep the formulas working, you can set the `escapeFormulas` optio
 The clipboard export lets you copy the content of the Data Grid to the clipboard.
 For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#clipboard-copy) docs.
 
+## Recipes
+
+### Server-side export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+To export server-side data through the DataGrid, use [`updateRows()`](/x/react-data-grid/row-updates/#the-updaterows-method) to temporary set server-side data to the DataGrid and then call one of export functions.
+Finally, reset the rows back to the original version.
+
+The example below demonstrates the CSV export with server-side data.
+
+{{"demo": "ExportServerSideData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+The exported data respects the filtered and sorted rows based on user adjustments.
+
+Try changing the sort order or hide any column and then click export again to see the difference.
+:::
+
 ## apiRef
 
 The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the export feature.
