@@ -27,7 +27,7 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { BarChartPluginsSignatures } from './BarChart.plugins';
+import { BarChartPluginSignatures } from './BarChart.plugins';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -49,7 +49,7 @@ export interface BarChartSlotProps
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 export interface BarChartProps
   extends Omit<
-      ChartContainerProps<'bar', BarChartPluginsSignatures>,
+      ChartContainerProps<'bar', BarChartPluginSignatures>,
       'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
@@ -136,7 +136,7 @@ const BarChart = React.forwardRef(function BarChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'bar', BarChartPluginsSignatures> {...chartDataProviderProps}>
+    <ChartDataProvider<'bar', BarChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -380,7 +380,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -402,7 +401,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['band']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -461,7 +459,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -483,7 +480,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['point']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -533,7 +529,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -548,7 +543,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['log']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -599,7 +593,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -614,7 +607,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['symlog']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -664,7 +656,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -679,7 +670,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['pow']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -729,7 +719,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -744,7 +733,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['sqrt']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -794,7 +782,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -809,7 +796,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['time']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -859,7 +845,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -874,7 +859,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['utc']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -924,7 +908,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -939,7 +922,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['linear']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1009,7 +991,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -1030,7 +1011,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['band']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1089,7 +1069,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -1110,7 +1089,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['point']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1160,7 +1138,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1174,7 +1151,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['log']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1225,7 +1201,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1239,7 +1214,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['symlog']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1289,7 +1263,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1303,7 +1276,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['pow']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1353,7 +1325,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1367,7 +1338,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['sqrt']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1417,7 +1387,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1431,7 +1400,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['time']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1481,7 +1449,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1495,7 +1462,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['utc']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1545,7 +1511,6 @@ BarChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
@@ -1559,7 +1524,6 @@ BarChart.propTypes = {
         scaleType: PropTypes.oneOf(['linear']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),

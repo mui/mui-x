@@ -40,6 +40,10 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleTime<Range, Output>
   | ScaleLinear<Range, Output>;
 
+export type D3OrdinalScale<Domain extends { toString(): string } = number | Date | string> =
+  | ScaleBand<Domain>
+  | ScalePoint<Domain>;
+
 export interface ChartsAxisSlots {
   /**
    * Custom component for the axis main line.
@@ -87,11 +91,6 @@ export interface ChartsAxisProps extends TickParams {
    */
   disableTicks?: boolean;
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill?: string;
-  /**
    * The style applied to ticks text.
    */
   tickLabelStyle?: ChartsTextProps['style'];
@@ -110,11 +109,6 @@ export interface ChartsAxisProps extends TickParams {
    * The label of the axis.
    */
   label?: string;
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke?: string;
   /**
    * The size of the ticks.
    * @default 6

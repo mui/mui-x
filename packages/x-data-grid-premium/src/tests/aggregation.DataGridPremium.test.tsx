@@ -384,6 +384,37 @@ describe('<DataGridPremium /> - Aggregation', () => {
           expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '3', '4', '', '5']);
         });
       });
+
+      it('should aggregate correctly when getAggregationPosition returns footer only for root group', async () => {
+        // This test covers the regression where aggregators receive empty arrays
+        // when getAggregationPosition returns 'footer' only for the root group (depth === -1)
+        await render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              aggregation: { model: { id: 'max' } },
+            }}
+            defaultGroupingExpansionDepth={-1}
+            getAggregationPosition={(group: GridGroupNode) =>
+              group.depth === -1 ? 'footer' : null
+            }
+          />,
+        );
+
+        // Should show aggregated value '5' for root group in footer,
+        // not '0' due to empty values array in aggregator
+        expect(getColumnValues(1)).to.deep.equal([
+          '',
+          '0',
+          '1',
+          '2',
+          '3',
+          '4',
+          '',
+          '5',
+          '5' /* Agg root - should be 5, not 0 */,
+        ]);
+      });
     });
   });
 

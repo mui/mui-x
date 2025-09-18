@@ -525,10 +525,11 @@ SparkLineChart.propTypes = {
    */
   valueFormatter: PropTypes.func,
   /**
-   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
-  voronoiMaxRadius: PropTypes.number,
+  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -575,7 +576,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       groups: PropTypes.arrayOf(
         PropTypes.shape({
           getValue: PropTypes.func.isRequired,
@@ -597,7 +597,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['band']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -654,7 +653,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       groups: PropTypes.arrayOf(
         PropTypes.shape({
           getValue: PropTypes.func.isRequired,
@@ -676,7 +674,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['point']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -724,7 +721,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -739,7 +735,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['log']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -788,7 +783,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -803,7 +797,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['symlog']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -851,7 +844,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -866,7 +858,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['pow']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -914,7 +905,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -929,7 +919,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['sqrt']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -977,7 +966,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -992,7 +980,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['time']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1040,7 +1027,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -1055,7 +1041,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1103,7 +1088,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -1118,7 +1102,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['linear']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1183,7 +1166,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       groups: PropTypes.arrayOf(
         PropTypes.shape({
           getValue: PropTypes.func.isRequired,
@@ -1204,7 +1186,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['band']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1261,7 +1242,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       groups: PropTypes.arrayOf(
         PropTypes.shape({
           getValue: PropTypes.func.isRequired,
@@ -1282,7 +1262,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['point']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1330,7 +1309,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -1344,7 +1322,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['log']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1393,7 +1370,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -1407,7 +1383,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['symlog']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1455,7 +1430,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -1469,7 +1443,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['pow']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1517,7 +1490,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -1531,7 +1503,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['sqrt']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1579,7 +1550,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -1593,7 +1563,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['time']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1641,7 +1610,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -1655,7 +1623,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -1703,7 +1670,6 @@ SparkLineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       ignoreTooltip: PropTypes.bool,
@@ -1717,7 +1683,6 @@ SparkLineChart.propTypes = {
       scaleType: PropTypes.oneOf(['linear']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,

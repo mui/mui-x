@@ -9,16 +9,19 @@ describe('<DayGrid.Event />', () => {
   const eventStart = DateTime.now();
   const eventEnd = eventStart.plus({ hours: 1 });
 
-  describeConformance(<DayGrid.Event start={eventStart} end={eventEnd} />, () => ({
-    refInstanceof: window.HTMLDivElement,
-    render(node) {
-      return render(
-        <DayGrid.Root>
-          <DayGrid.Row>
-            <DayGrid.Cell>{node}</DayGrid.Cell>
-          </DayGrid.Row>
-        </DayGrid.Root>,
-      );
-    },
-  }));
+  describeConformance(
+    <DayGrid.Event eventId="fake-id" start={eventStart} end={eventEnd} />,
+    () => ({
+      refInstanceof: window.HTMLDivElement,
+      render(node) {
+        return render(
+          <DayGrid.Root>
+            <DayGrid.Row start={eventStart} end={eventEnd}>
+              <DayGrid.Cell value={eventStart}>{node}</DayGrid.Cell>
+            </DayGrid.Row>
+          </DayGrid.Root>,
+        );
+      },
+    }),
+  );
 });

@@ -15,7 +15,7 @@ Removing the visible `focus` state hurts the accessibility of the grid.
 
 ## Remove drag handle for columns that are not resizeable
 
-In the MUI Data Grid, each column has a resize handle that allows users to adjust the width of the column.
+In the MUI Data Grid, each column has a resize handle that lets users adjust the width of the column.
 However, there might be cases where you want to disable this feature for certain columns.
 
 To hide the drag handles on columns that are not resizable, you can use the resizable property in the GridColDef object.

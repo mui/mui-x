@@ -44,6 +44,7 @@ const ChartsSurfaceStyles = styled('svg', {
   // For example, prevent page scroll & zoom.
   touchAction: 'pan-y',
   userSelect: 'none',
+  gridArea: 'chart',
   '&[data-has-focused-item=true]': {
     // Move the focus outline responsibility to children
     outline: 'none',

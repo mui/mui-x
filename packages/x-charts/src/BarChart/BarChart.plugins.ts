@@ -20,7 +20,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
 
-export type BarChartPluginsSignatures = [
+export type BarChartPluginSignatures = [
   UseChartZAxisSignature,
   UseChartCartesianAxisSignature<'bar'>,
   UseChartInteractionSignature,
@@ -28,7 +28,7 @@ export type BarChartPluginsSignatures = [
   UseChartKeyboardNavigationSignature,
 ];
 
-export const BAR_CHART_PLUGINS: ConvertSignaturesIntoPlugins<BarChartPluginsSignatures> = [
+export const BAR_CHART_PLUGINS: ConvertSignaturesIntoPlugins<BarChartPluginSignatures> = [
   useChartZAxis,
   useChartCartesianAxis,
   useChartInteraction,

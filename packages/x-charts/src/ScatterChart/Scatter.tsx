@@ -10,9 +10,9 @@ import { useSelector } from '../internals/store/useSelector';
 import { D3Scale } from '../models/axis';
 import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import {
-  selectorChartsVoronoiIsVoronoiEnabled,
-  UseChartVoronoiSignature,
-} from '../internals/plugins/featurePlugins/useChartVoronoi';
+  selectorChartsIsVoronoiEnabled,
+  UseChartClosestPointSignature,
+} from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
@@ -71,8 +71,8 @@ function Scatter(props: ScatterProps) {
 
   const { instance } =
     useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-  const store = useStore<[UseChartVoronoiSignature]>();
-  const isVoronoiEnabled = useSelector(store, selectorChartsVoronoiIsVoronoiEnabled);
+  const store = useStore<[UseChartClosestPointSignature]>();
+  const isVoronoiEnabled = useSelector(store, selectorChartsIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
@@ -95,7 +95,7 @@ function Scatter(props: ScatterProps) {
 
   return (
     <g data-series={series.id} className={classes.root}>
-      {scatterPlotData.map((dataPoint, i) => {
+      {scatterPlotData.map((dataPoint) => {
         const isItemHighlighted = isHighlighted(dataPoint);
         const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
         const isItemFocused = isFocused({
@@ -107,7 +107,7 @@ function Scatter(props: ScatterProps) {
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
             dataIndex={dataPoint.dataIndex}
-            color={colorGetter ? colorGetter(i) : color}
+            color={colorGetter ? colorGetter(dataPoint.dataIndex) : color}
             isHighlighted={isItemHighlighted}
             isFaded={isItemFaded}
             x={dataPoint.x}
