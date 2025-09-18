@@ -9,9 +9,7 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { useLegend } from '@mui/x-charts/hooks';
-import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
-import { legendClasses } from '@mui/x-charts/ChartsLegend';
+import { legendClasses, ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { GDPdata } from '../dataset/gdpGrowth';
 
 const chartSetting = {
@@ -40,41 +38,9 @@ const valueFormatter = (value) => (value ? `${value.toFixed(2)}%` : '');
 
 const scatterValueFormatter = (value) => (value ? `${value.x.toFixed(2)}%` : '');
 
-function CustomLegend() {
-  const { items } = useLegend();
+function Gradient() {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 2,
-        spacing: 5,
-      }}
-    >
-      {items.map((item, index) => {
-        const { label, color, markType } = item;
-        return (
-          <Box
-            key={index}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            <ChartsLabelMark type={markType} color={color} />
-            <Typography variant="caption">{`${label}`}</Typography>
-          </Box>
-        );
-      })}
-    </Box>
-  );
-}
-
-function Gradient(props) {
-  return (
-    <linearGradient {...props}>
+    <linearGradient id="diagonalGradient" x1="0%" y1="50%" x2="100%" y2="50%">
       <stop offset="0%" stopColor="#ff4d4f" />
       <stop offset="50%" stopColor="#ff4d4f" />
       <stop offset="50%" stopColor="#1976d2" />
@@ -120,16 +86,17 @@ export default function BarScatterCompostion() {
         ]}
         yAxis={[{ scaleType: 'band', dataKey: 'country', width: 100 }]}
         {...chartSetting}
-        sx={{
-          [`[data-series="bar"] .${legendClasses.mark} rect`]: {
-            fill: 'url(#diagonalGradient)',
-          },
-        }}
       >
-        <Gradient id="diagonalGradient" x1="0%" y1="50%" x2="100%" y2="50%" />
-        <CustomLegend />
+        <ChartsLegend
+          sx={{
+            [`[data-series="bar"] .${legendClasses.mark} rect`]: {
+              fill: 'url(#diagonalGradient)',
+            },
+          }}
+        />
         <ChartsTooltip />
         <ChartsSurface>
+          <Gradient />
           <ChartsGrid vertical />
           <BarPlot />
           <ScatterPlot />
