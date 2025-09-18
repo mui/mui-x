@@ -15,6 +15,11 @@ import {
   selectorChartSeriesHighlightedItem,
   UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import {
+  selectorChartAxisZoomData,
+  selectorChartSeriesFlatbush,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface BatchScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -43,6 +48,68 @@ function appendAtKey(map: Map<string, string[]>, key: string, value: string) {
 
 function createPath(x: number, y: number, markerSize: number) {
   return `M${x - markerSize} ${y} a${markerSize} ${markerSize} 0 1 1 0 ${ALMOST_ZERO}`;
+}
+
+function useCreatePathsFlatbush(
+  series: DefaultizedScatterSeriesType,
+  xScale: D3Scale,
+  yScale: D3Scale,
+  color: string,
+  colorGetter?: ColorGetter<'scatter'>,
+) {
+  performance.mark('useCreatePathsFlatbush-start');
+  const { store } = useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+  const flatbush = useSelector(store, selectorChartSeriesFlatbush, [series.id]);
+  const xAxisZoom = useSelector(store, selectorChartAxisZoomData, [
+    series.xAxisId ?? 'defaultized-x-axis-0',
+  ]);
+  const yAxisZoom = useSelector(store, selectorChartAxisZoomData, [
+    series.yAxisId ?? 'defaultized-y-axis-0',
+  ]);
+  const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
+  const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
+  const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
+  const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
+  const fx = xScale.range()[1] - xScale.range()[0];
+  const fy = yScale.range()[1] - yScale.range()[0];
+  const xMin = xScale.range()[0];
+  const yMin = yScale.range()[0];
+
+  const paths = new Map<string, string[]>();
+  const temporaryPaths = new Map<string, string[]>();
+
+  const points = flatbush?.search(xZoomStart, yZoomStart, xZoomEnd, yZoomEnd) ?? [];
+
+  for (let i = 0; i < points.length; i += 3) {
+    const index = points[i];
+    const x = xMin + fx * points[i + 1];
+    const y = yMin + fy * points[i + 2];
+
+    const fill = colorGetter ? colorGetter(index) : color;
+    const path = createPath(x, y, series.markerSize);
+
+    const tempPath = appendAtKey(temporaryPaths, fill, path);
+
+    if (tempPath.length >= MAX_POINTS_PER_PATH) {
+      appendAtKey(paths, fill, tempPath.join(''));
+      temporaryPaths.delete(fill);
+    }
+  }
+
+  for (const [fill, tempPath] of temporaryPaths.entries()) {
+    if (tempPath.length > 0) {
+      appendAtKey(paths, fill, tempPath.join(''));
+    }
+  }
+
+  performance.mark('useCreatePathsFlatbush-end');
+  performance.measure(
+    'useCreatePathsFlatbush',
+    'useCreatePathsFlatbush-start',
+    'useCreatePathsFlatbush-end',
+  );
+
+  return paths;
 }
 
 function useCreatePaths(
@@ -101,7 +168,7 @@ export interface BatchScatterPathsProps {
 
 function BatchScatterPaths(props: BatchScatterPathsProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize } = props;
-  const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
+  const paths = useCreatePathsFlatbush(series, xScale, yScale, color, colorGetter);
 
   const children: React.ReactNode[] = [];
 
