@@ -34,9 +34,9 @@ export function useDayGridPlaceholderInDay(
 
     let positionIndex = 1;
     for (const rowDay of row.days) {
-      // TODO: Use the occurrence key once the primitive uses the Event Calendar store.
-      // Right now it would match any occurrence of the same recurring event.
-      const found = rowDay.withPosition.find((o) => o.id === originalEvent.id);
+      const found = rowDay.withPosition.find(
+        (occurrence) => occurrence.key === rawDraggedOccurrence.occurrenceKey,
+      );
       if (found) {
         positionIndex = found.position.index;
         break;
@@ -45,9 +45,9 @@ export function useDayGridPlaceholderInDay(
 
     return {
       ...originalEvent,
+      key: `dragged-${rawDraggedOccurrence.occurrenceKey}`,
       start: day,
       end: adapter.isAfter(rawDraggedOccurrence.end, rowEnd) ? rowEnd : rawDraggedOccurrence.end,
-      key: `dragged-${rawDraggedOccurrence.occurrenceKey}`,
       position: {
         index: positionIndex,
         daySpan: diffIn(adapter, rawDraggedOccurrence.end, day, 'days') + 1,

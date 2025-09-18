@@ -101,7 +101,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       'TimeGridEvent',
       'EventContainer',
       'EventCard',
-      `EventCard--${variant}`,
+      // TODO: Make sure we can use EventCard--dragPlaceholder without broken styles
+      'EventCard--regular',
       (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
       isDraggable && 'Draggable',
       isRecurring && 'Recurrent',
