@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { XAxis } from '@mui/x-charts/models';
 import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
-import { countryData } from '../charts/dataset/countryData';
-import { shareOfRenewables } from '../charts/dataset/shareOfRenewables';
+import { shareOfRenewables } from 'docsx/data/charts/dataset/shareOfRenewables';
+import { countryData } from 'docsx/data/charts/dataset/countryData';
 
 const percentageFormatter = new Intl.NumberFormat(undefined, {
   style: 'percent',
