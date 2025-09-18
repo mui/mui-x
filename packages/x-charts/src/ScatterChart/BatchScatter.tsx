@@ -52,12 +52,12 @@ function createPath(x: number, y: number, markerSize: number) {
 
 function useCreatePathsFlatbush(
   series: DefaultizedScatterSeriesType,
+  markerSize: number,
   xScale: D3Scale,
   yScale: D3Scale,
   color: string,
   colorGetter?: ColorGetter<'scatter'>,
 ) {
-  performance.mark('useCreatePathsFlatbush-start');
   const { store } = useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
   const flatbush = useSelector(store, selectorChartSeriesFlatbush, [series.id]);
   const xAxisZoom = useSelector(store, selectorChartAxisZoomData, [
@@ -86,59 +86,7 @@ function useCreatePathsFlatbush(
     const y = yMin + fy * points[i + 2];
 
     const fill = colorGetter ? colorGetter(index) : color;
-    const path = createPath(x, y, series.markerSize);
-
-    const tempPath = appendAtKey(temporaryPaths, fill, path);
-
-    if (tempPath.length >= MAX_POINTS_PER_PATH) {
-      appendAtKey(paths, fill, tempPath.join(''));
-      temporaryPaths.delete(fill);
-    }
-  }
-
-  for (const [fill, tempPath] of temporaryPaths.entries()) {
-    if (tempPath.length > 0) {
-      appendAtKey(paths, fill, tempPath.join(''));
-    }
-  }
-
-  performance.mark('useCreatePathsFlatbush-end');
-  performance.measure(
-    'useCreatePathsFlatbush',
-    'useCreatePathsFlatbush-start',
-    'useCreatePathsFlatbush-end',
-  );
-
-  return paths;
-}
-
-function useCreatePaths(
-  seriesData: DefaultizedScatterSeriesType['data'],
-  markerSize: number,
-  xScale: D3Scale,
-  yScale: D3Scale,
-  color: string,
-  colorGetter?: ColorGetter<'scatter'>,
-) {
-  const { instance } = useChartContext();
-  const getXPosition = getValueToPositionMapper(xScale);
-  const getYPosition = getValueToPositionMapper(yScale);
-
-  const paths = new Map<string, string[]>();
-  const temporaryPaths = new Map<string, string[]>();
-
-  for (let i = 0; i < seriesData.length; i += 1) {
-    const scatterPoint = seriesData[i];
-
-    const x = getXPosition(scatterPoint.x);
-    const y = getYPosition(scatterPoint.y);
-
-    if (!instance.isPointInside(x, y)) {
-      continue;
-    }
-
     const path = createPath(x, y, markerSize);
-    const fill = colorGetter ? colorGetter(i) : color;
 
     const tempPath = appendAtKey(temporaryPaths, fill, path);
 
@@ -168,7 +116,7 @@ export interface BatchScatterPathsProps {
 
 function BatchScatterPaths(props: BatchScatterPathsProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize } = props;
-  const paths = useCreatePathsFlatbush(series, xScale, yScale, color, colorGetter);
+  const paths = useCreatePathsFlatbush(series, markerSize, xScale, yScale, color, colorGetter);
 
   const children: React.ReactNode[] = [];
 
