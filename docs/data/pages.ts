@@ -641,6 +641,7 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
                 ],
               },
+              { pathname: '/x/react-charts/plugins', title: 'Plugins' },
             ],
           },
         ],
