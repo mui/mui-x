@@ -1,21 +1,23 @@
+# Instructions for AI pair programmer
+
 ## Testing
 
 There are two main types of test in this repository: unit tests and browser tests. Both use the same files.
 
 To run tests:
 
-- `browser tests`: `pnpm run test:browser`
-- `unit tests`: `pnpm run test:unit`
+- `browser tests`: `pnpm test:browser`
+- `unit tests`: `pnpm test:unit`
 
 The following options work in both environments:
 
 - Always use the `--run` flag to skip watch mode.
 - Always use `--project <project-name>` to run tests only for a specific project. The project names are defined by the folder names in the `packages` directory. Additionally you can use `<partial-project-name>*` to run tests for multiple projects that match the partial name.
-  - For example: `pnpm run test:unit --run --project 'x-charts*'`
+  - For example: `pnpm test:unit --run --project 'x-charts*'`
 - To test a single file, you can append the file name to the command.
-  - For example: `pnpm run test:unit --run --project 'x-charts' ChartsSurface.test.tsx`
+  - For example: `pnpm test:unit --run --project 'x-charts' ChartsSurface.test.tsx`
 - To test a single test, you can use use the `-t` flag followed by a regex that matches the test name. Always add the file name as well to avoid running all tests in the repo.
-  - For example: `pnpm run test:unit --run --project 'x-charts' -t 'renders the surface' ChartsSurface.test.tsx`
+  - For example: `pnpm test:unit --run --project 'x-charts' -t 'renders the surface' ChartsSurface.test.tsx`
 
 ### Ensuring a test only runs in a specific environment
 
