@@ -209,6 +209,9 @@
 .DayTimeGridColumn {
   display: flex;
   flex-direction: column;
+}
+
+.DayTimeGridColumnInteractiveLayer {
   position: relative;
   flex: 1;
 }

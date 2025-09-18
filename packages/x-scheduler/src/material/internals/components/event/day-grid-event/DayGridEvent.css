@@ -35,7 +35,8 @@
 
 .EventCard--allDay,
 .EventCard--invisible,
-.EventCard--dragPlaceholder {
+.EventCard--dragPlaceholder,
+.EventCard--createPlaceholder {
   container-type: inline-size;
   border-radius: var(--radius-3);
   background-color: var(--event-background);
@@ -60,6 +61,15 @@
 
 .EventCard--dragPlaceholder {
   z-index: 2;
+}
+
+.EventCard--createPlaceholder {
+  min-height: 18px;
+  background-color: var(--event-color-4);
+  border: 1px solid var(--event-color-9);
+  z-index: 2;
+  height: auto;
+  position: absolute;
 }
 
 .EventCard--compact .DayGridEventCardContent {

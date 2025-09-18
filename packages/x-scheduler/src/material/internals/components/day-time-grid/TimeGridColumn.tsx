@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
+import { useTimeGridColumnContext } from '../../../../primitives/time-grid/column/TimeGridColumnContext';
 import { SchedulerValidDate, CalendarEventOccurrence } from '../../../../primitives/models';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
@@ -10,17 +11,74 @@ import { selectors } from '../../../../primitives/use-event-calendar';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import { EventPopoverTrigger } from '../event-popover';
+import { useEventPopover } from '../event-popover/EventPopoverContext';
+import { CREATE_PLACEHOLDER_ID } from '../../../../primitives/utils/event-utils';
+import { useCreateDraftOnDoubleClick } from '../../../../primitives/draft/useCreateDraftOnDoubleClick';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, events, isToday, showCurrentTimeIndicator, index } = props;
+  const adapter = useAdapter();
+  return (
+    <TimeGrid.Column
+      start={adapter.startOfDay(day)}
+      end={adapter.endOfDay(day)}
+      className="DayTimeGridColumn"
+      data-weekend={isWeekend(adapter, day) ? '' : undefined}
+      data-current={isToday ? '' : undefined}
+    >
+      <ColumnInteractiveLayer
+        day={day}
+        events={events}
+        showCurrentTimeIndicator={showCurrentTimeIndicator}
+        index={index}
+      />
+    </TimeGrid.Column>
+  );
+}
 
+function ColumnInteractiveLayer({
+  day,
+  events,
+  showCurrentTimeIndicator,
+  index,
+}: {
+  day: SchedulerValidDate;
+  events: CalendarEventOccurrence[];
+  showCurrentTimeIndicator: boolean;
+  index: number;
+}) {
   const adapter = useAdapter();
   const { store } = useEventCalendarContext();
-  const start = React.useMemo(() => adapter.startOfDay(day), [adapter, day]);
-  const end = React.useMemo(() => adapter.endOfDay(day), [adapter, day]);
-
+  const { start, end, getCursorPositionInElementMs } = useTimeGridColumnContext();
+  const { startEditing } = useEventPopover();
+  const columnRef = React.useRef<HTMLDivElement | null>(null);
   const placeholder = TimeGrid.usePlaceholderInRange(start, end);
+
+  const onDoubleClick = useCreateDraftOnDoubleClick({
+    adapter,
+    startEditing,
+    computeInitialRange: (event) => {
+      const offsetMs = getCursorPositionInElementMs({
+        input: { clientY: event.clientY },
+        elementRef: columnRef,
+      });
+
+      const offsetMin = Math.floor(offsetMs / 60000);
+      const anchor = adapter.addMinutes(start, offsetMin);
+
+      // snap to 30 minutes
+      const roundedStart = adapter.addMinutes(anchor, -(adapter.getMinutes(anchor) % 30));
+
+      return {
+        start: roundedStart,
+        end: adapter.addMinutes(roundedStart, 30),
+        allDay: false,
+        surface: 'time',
+      };
+    },
+  });
+
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
 
   const draggedEvent = React.useMemo(() => {
@@ -37,12 +95,11 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   }, [initialDraggedEvent, placeholder]);
 
   return (
-    <TimeGrid.Column
-      start={start}
-      end={end}
-      className="DayTimeGridColumn"
-      data-weekend={isWeekend(adapter, day) ? '' : undefined}
-      data-current={isToday ? '' : undefined}
+    <div
+      ref={columnRef}
+      data-surface="time"
+      onDoubleClick={onDoubleClick}
+      className="DayTimeGridColumnInteractiveLayer"
     >
       {events.map((event) => (
         <EventPopoverTrigger
@@ -64,12 +121,25 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
           ariaLabelledBy={`DayTimeGridHeaderCell-${day.day.toString()}`}
         />
       )}
+      {placeholder && (
+        <TimeGridEvent
+          variant="createPlaceholder"
+          event={{
+            id: CREATE_PLACEHOLDER_ID,
+            title: '',
+            start: placeholder.start,
+            end: placeholder.end,
+            allDay: false,
+          }}
+          ariaLabelledBy={`DayTimeGridHeaderCell-${adapter.getDate(day)}`}
+        />
+      )}
       {showCurrentTimeIndicator ? (
         <TimeGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
           {index === 0 && <TimeGridCurrentTimeLabel />}
         </TimeGrid.CurrentTimeIndicator>
       ) : null}
-    </TimeGrid.Column>
+    </div>
   );
 }
 

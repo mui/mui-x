@@ -3,6 +3,7 @@ import {
   CalendarEvent,
   CalendarEventOccurrenceWithPosition,
   CalendarEventOccurrence,
+  CalendarEventId,
 } from '../models';
 import { Adapter } from './adapter/types';
 
@@ -100,3 +101,10 @@ export function getEventDays(
   }
   return days.filter((day) => isDayWithinRange(day, eventFirstDay, eventLastDay, adapter));
 }
+
+/**
+ * Returns true if the event is a "create draft" event.
+ * These events have a specific ID and are used to represent an event being created.
+ */
+export const CREATE_PLACEHOLDER_ID = 'create-event-id';
+export const isCreateDraft = (id: CalendarEventId) => id === CREATE_PLACEHOLDER_ID;

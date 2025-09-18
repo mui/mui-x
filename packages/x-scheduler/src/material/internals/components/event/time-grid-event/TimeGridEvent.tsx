@@ -90,7 +90,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   ]);
 
   const sharedProps = {
-    eventId: eventProp.id,
     start: eventProp.start,
     end: eventProp.end,
     ref: forwardedRef,
@@ -109,16 +108,17 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     ...other,
   };
 
-  if (variant === 'dragPlaceholder') {
+  if (variant === 'dragPlaceholder' || variant === 'createPlaceholder') {
+    const placeholderContent = variant === 'dragPlaceholder' ? content : null;
     return (
       <TimeGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
-        {content}
+        {placeholderContent}
       </TimeGrid.EventPlaceholder>
     );
   }
 
   return (
-    <TimeGrid.Event isDraggable={isDraggable} {...sharedProps}>
+    <TimeGrid.Event isDraggable={isDraggable} eventId={eventProp.id} {...sharedProps}>
       {isResizable && <TimeGrid.EventResizeHandler side="start" className="EventResizeHandler" />}
       {content}
       {isResizable && <TimeGrid.EventResizeHandler side="end" className="EventResizeHandler" />}

@@ -20,8 +20,12 @@ import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
-import './DayTimeGrid.css';
 import { DayGridCell } from './DayGridCell';
+import {
+  DayGridDraftBridge,
+  TimeGridDraftBridge,
+} from '../../../../primitives/draft/SchedulerDraftBridges';
+import './DayTimeGrid.css';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -143,6 +147,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           data-weekend={lastIsWeekend ? '' : undefined}
           onEventChange={handleEventChangeFromPrimitive}
         >
+          <DayGridDraftBridge />
           <div
             className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
             id="DayTimeGridAllDayEventsHeaderCell"
@@ -170,6 +175,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           <div className="ScrollablePlaceholder" />
         </DayGrid.Root>
         <TimeGrid.Root className="DayTimeGridRoot" onEventChange={handleEventChangeFromPrimitive}>
+          <TimeGridDraftBridge />
           <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
             <div className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">

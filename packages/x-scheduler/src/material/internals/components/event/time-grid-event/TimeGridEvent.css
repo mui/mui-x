@@ -102,6 +102,17 @@
   pointer-events: none;
 }
 
+.EventCard--createPlaceholder {
+  position: absolute;
+  left: 2px;
+  right: var(--space-3);
+  top: var(--y-position);
+  bottom: calc(100% - var(--y-position) - var(--height));
+  background-color: var(--event-color-4);
+  border: 1px solid var(--event-color-9);
+  z-index: 2;
+}
+
 .EventResizeHandler {
   position: absolute;
   height: 4px;

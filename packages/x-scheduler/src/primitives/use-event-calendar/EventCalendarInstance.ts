@@ -255,6 +255,22 @@ export class EventCalendarInstance {
   };
 
   /**
+   * Creates a new event in the calendar.
+   */
+  public createEvent = (calendarEvent: CalendarEvent) => {
+    const existing = selectors.event(this.store.state, calendarEvent.id);
+    if (existing) {
+      throw new Error(
+        `Event Calendar: an event with id="${calendarEvent.id}" already exists. Use updateEvent(...) instead.`,
+      );
+    }
+
+    const { onEventsChange } = this.parameters;
+    const updatedEvents = [...this.store.state.events, calendarEvent];
+    onEventsChange?.(updatedEvents);
+  };
+
+  /**
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: CalendarEvent) => {

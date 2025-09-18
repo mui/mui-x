@@ -4,7 +4,7 @@ export interface DayGridEventProps extends EventProps {
   /**
    * The variant of the event, which determines its styling.
    */
-  variant: 'compact' | 'allDay' | 'invisible' | 'dragPlaceholder';
+  variant: 'compact' | 'allDay' | 'invisible' | 'dragPlaceholder' | 'createPlaceholder';
   /**
    * The index of the row the event should be placed on.
    */

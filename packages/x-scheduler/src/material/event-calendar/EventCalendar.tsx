@@ -17,6 +17,7 @@ import {
   selectors,
   useExtractEventCalendarParameters,
 } from '../../primitives/use-event-calendar';
+import { SchedulerDraftProvider } from '../../primitives/draft/SchedulerDraftContext';
 import '../index.css';
 import './EventCalendar.css';
 
@@ -68,33 +69,35 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   return (
     <EventCalendarContext.Provider value={contextValue}>
       <TranslationsProvider translations={translations}>
-        <div
-          {...other}
-          className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
-          ref={forwardedRef}
-        >
-          <aside className="EventCalendarSidePanel">
-            <DateNavigator />
-            <section
-              className="EventCalendarMonthCalendarPlaceholder"
-              // TODO: Add localization
-              aria-label="Month calendar"
-            >
-              Month Calendar
-            </section>
-            <ResourceLegend />
-          </aside>
-          <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
-            <HeaderToolbar />
-            <section
-              // TODO: Add localization
-              className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
-              aria-label="Calendar content"
-            >
-              {content}
-            </section>
+        <SchedulerDraftProvider>
+          <div
+            {...other}
+            className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
+            ref={forwardedRef}
+          >
+            <aside className="EventCalendarSidePanel">
+              <DateNavigator />
+              <section
+                className="EventCalendarMonthCalendarPlaceholder"
+                // TODO: Add localization
+                aria-label="Month calendar"
+              >
+                Month Calendar
+              </section>
+              <ResourceLegend />
+            </aside>
+            <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
+              <HeaderToolbar />
+              <section
+                // TODO: Add localization
+                className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
+                aria-label="Calendar content"
+              >
+                {content}
+              </section>
+            </div>
           </div>
-        </div>
+        </SchedulerDraftProvider>
       </TranslationsProvider>
     </EventCalendarContext.Provider>
   );

@@ -15,7 +15,13 @@ import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
-import { getEventWithLargestRowIndex } from '../../../primitives/utils/event-utils';
+import {
+  getEventWithLargestRowIndex,
+  CREATE_PLACEHOLDER_ID,
+} from '../../../primitives/utils/event-utils';
+import { useEventPopover } from '../../internals/components/event-popover/EventPopoverContext';
+// import { useSchedulerDraft } from '../../../primitives/draft';
+import { useCreateDraftOnDoubleClick } from '../../../primitives/draft/useCreateDraftOnDoubleClick';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -27,6 +33,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const { store, instance } = useEventCalendarContext();
   const translations = useTranslations();
   const placeholder = DayGrid.usePlaceholderInDay(day);
+  const { startEditing } = useEventPopover();
+  // const { startDraft, updateDraft, clearDraft } = useSchedulerDraft();
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
   const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
@@ -61,6 +69,65 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     </span>
   );
 
+  // const handleCreateAt = React.useCallback(
+  //   (event: React.MouseEvent) => {
+  //     // evita que dispare al hacer dblclick sobre botones/childs (como el día)
+  //     if (event.target !== event.currentTarget) {
+  //       return;
+  //     }
+
+  //     const dayStart = adapter.startOfDay(day);
+  //     const dayEnd = adapter.endOfDay(day);
+
+  //     // 1) inicia draft en superficie 'day'
+  //     startDraft({
+  //       id: CREATE_PLACEHOLDER_ID,
+  //       start: dayStart,
+  //       end: dayEnd,
+  //       surface: 'day',
+  //     });
+
+  //     // 2) abre popover
+  //     const draftEvent = {
+  //       id: CREATE_PLACEHOLDER_ID,
+  //       title: '',
+  //       start: dayStart,
+  //       end: dayEnd,
+  //     } as const;
+
+  //     startEditing(event, draftEvent, {
+  //       onClose: clearDraft,
+  //       onDraftChange: ({ start, end, allDay }) => {
+  //         const nextStart = allDay ? adapter.startOfDay(start) : start;
+  //         const nextEnd = allDay ? adapter.endOfDay(end) : end;
+
+  //         updateDraft({
+  //           start: nextStart,
+  //           end: nextEnd,
+  //           allDay,
+  //           surface: 'day',
+  //         });
+  //       },
+  //     });
+  //   },
+  //   [adapter, day, startDraft, startEditing, updateDraft, clearDraft],
+  // );
+
+  const onDoubleClick = useCreateDraftOnDoubleClick({
+    adapter,
+    startEditing,
+    // En Month: por defecto all-day del día clicado.
+    // Si quieres permitir crear “timed” en Month, usa una tecla modificadora.
+    computeInitialRange: () => {
+      const dayStart = adapter.startOfDay(day);
+      const dayEnd = adapter.endOfDay(day);
+
+      return { start: dayStart, end: dayEnd, allDay: false, surface: 'day' };
+    },
+    // Normaliza all-day a 00:00–23:59
+    lockSurface: 'day',
+  });
+
   return (
     <DayGrid.Cell
       ref={ref}
@@ -78,6 +145,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           '--row-count': rowCount,
         } as React.CSSProperties
       }
+      onDoubleClick={onDoubleClick}
+      data-surface="day"
     >
       {hasDayView ? (
         <button
@@ -148,6 +217,20 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
               columnSpan={diffIn(adapter, draggedEvent.end, day, 'days') + 1}
             />
           </div>
+        )}
+        {placeholder && (
+          <DayGridEvent
+            event={{
+              id: CREATE_PLACEHOLDER_ID,
+              title: '',
+              start: placeholder.start,
+              end: placeholder.end,
+            }}
+            variant="createPlaceholder"
+            ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
+            gridRow={1} // TODO: Fix
+            columnSpan={diffIn(adapter, placeholder.end, day, 'days') + 1}
+          />
         )}
       </div>
     </DayGrid.Cell>

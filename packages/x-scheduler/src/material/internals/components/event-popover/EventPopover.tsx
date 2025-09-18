@@ -24,6 +24,7 @@ import {
   CalendarEvent,
   RecurringEventUpdatedProperties,
   CalendarResourceId,
+  SchedulerValidDate,
 } from '../../../../primitives/models';
 import { DEFAULT_EVENT_COLOR, selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
@@ -33,12 +34,15 @@ import {
   detectRecurrenceKeyFromRule,
   RecurrencePresetKey,
 } from '../../../../primitives/utils/recurrence-utils';
+import { EventPopoverContext, useEventPopover } from './EventPopoverContext';
+import { isCreateDraft } from '../../../../primitives/utils/event-utils';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, style, container, anchor, calendarEvent, onClose, ...other } = props;
+  const { className, style, container, anchor, calendarEvent, onClose, onDraftChange, ...other } =
+    props;
 
   const adapter = useAdapter();
   const translations = useTranslations();
@@ -46,6 +50,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, calendarEvent);
   const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, calendarEvent.id);
+  const isCreateMode = isCreateDraft(calendarEvent.id);
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(calendarEvent.allDay));
@@ -91,6 +97,36 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const defaultRecurrenceKey = React.useMemo<RecurrencePresetKey | 'custom' | null>(
     () => detectRecurrenceKeyFromRule(adapter, calendarEvent.rrule, calendarEvent.start),
     [adapter, calendarEvent.rrule, calendarEvent.start],
+  );
+
+  const emitDraftChange = React.useCallback(
+    (event) => {
+      if (!isCreateMode || !onDraftChange) {
+        return;
+      }
+
+      const formEl = event?.currentTarget?.form ?? formRef.current;
+      if (!formEl) {
+        return;
+      }
+
+      const form = new FormData(formEl);
+      const startDateValue = form.get('startDate') as string;
+      const startTimeValue = (form.get('startTime') as string) || null;
+      const endDateValue = form.get('endDate') as string;
+      const endTimeValue = (form.get('endTime') as string) || null;
+
+      const startISO = startTimeValue
+        ? `${startDateValue}T${startTimeValue}`
+        : `${startDateValue}T00:00`;
+      const endISO = endTimeValue ? `${endDateValue}T${endTimeValue}` : `${endDateValue}T23:59`;
+
+      const nextStart = adapter.date(startISO);
+      const nextEnd = adapter.date(endISO);
+
+      onDraftChange({ start: nextStart, end: nextEnd, allDay: isAllDay });
+    },
+    [isCreateMode, onDraftChange, adapter, isAllDay],
   );
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -143,6 +179,13 @@ export const EventPopover = React.forwardRef(function EventPopover(
       resource: resourceValue,
     };
 
+    if (isCreateMode) {
+      const id = crypto.randomUUID();
+      instance.createEvent({ ...payload, id, rrule });
+      onClose();
+      return;
+    }
+
     if (calendarEvent.rrule) {
       const changes: RecurringEventUpdatedProperties = {
         ...payload,
@@ -172,6 +215,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
     onClose();
   });
 
+  React.useEffect(() => {
+    emitDraftChange({});
+  }, [isAllDay, emitDraftChange]);
+
   return (
     <div ref={forwardedRef} className={className} {...other}>
       <Popover.Portal container={container}>
@@ -182,7 +229,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
           className={clsx('PopoverPositioner', getColorClassName(color))}
         >
           <Popover.Popup finalFocus={{ current: anchor }}>
-            <Form errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
+            <Form ref={formRef} errors={errors} onClearErrors={setErrors} onSubmit={handleSubmit}>
               <header className="EventPopoverHeader">
                 <div className="EventPopoverHeaderContent">
                   <Field.Root className="EventPopoverFieldRoot" name="title">
@@ -286,6 +333,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             adapter.formatByString(calendarEvent.start, 'yyyy-MM-dd') ?? ''
                           }
                           aria-describedby="startDate-error"
+                          onChange={emitDraftChange}
                           required
                           readOnly={isEventReadOnly}
                         />
@@ -302,6 +350,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                               adapter.formatByString(calendarEvent.start, 'HH:mm') ?? ''
                             }
                             aria-describedby="startTime-error"
+                            onChange={emitDraftChange}
                             required
                             readOnly={isEventReadOnly}
                           />
@@ -319,6 +368,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           defaultValue={
                             adapter.formatByString(calendarEvent.end, 'yyyy-MM-dd') ?? ''
                           }
+                          onChange={emitDraftChange}
                           required
                           readOnly={isEventReadOnly}
                         />
@@ -332,6 +382,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             className="EventPopoverInput"
                             type="time"
                             defaultValue={adapter.formatByString(calendarEvent.end, 'HH:mm') ?? ''}
+                            onChange={emitDraftChange}
                             required
                             readOnly={isEventReadOnly}
                           />
@@ -361,7 +412,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         className="AllDayCheckboxRoot"
                         id="enable-all-day-checkbox"
                         checked={isAllDay}
-                        onCheckedChange={setIsAllDay}
+                        onCheckedChange={(value, event) => {
+                          setIsAllDay(Boolean(value));
+                          emitDraftChange(event);
+                        }}
                         readOnly={isEventReadOnly}
                       >
                         <Checkbox.Indicator className="AllDayCheckboxIndicator">
@@ -437,13 +491,15 @@ export const EventPopover = React.forwardRef(function EventPopover(
               <Separator className="EventPopoverSeparator" />
               {!isEventReadOnly && (
                 <div className="EventPopoverActions">
-                  <button
-                    className={clsx('SecondaryErrorButton', 'Button')}
-                    type="button"
-                    onClick={handleDelete}
-                  >
-                    {translations.deleteEvent}
-                  </button>
+                  {!isCreateMode && (
+                    <button
+                      className={clsx('SecondaryErrorButton', 'Button')}
+                      type="button"
+                      onClick={handleDelete}
+                    >
+                      {translations.deleteEvent}
+                    </button>
+                  )}
                   <button className={clsx('NeutralButton', 'Button')} type="submit">
                     {translations.saveChanges}
                   </button>
@@ -457,21 +513,28 @@ export const EventPopover = React.forwardRef(function EventPopover(
   );
 });
 
-const EventPopoverContext = React.createContext<EventPopoverContextValue>({
-  startEditing: () => {},
-});
-
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   const [selectedEvent, setSelectedEvent] = React.useState<CalendarEvent | null>(null);
+  const onCloseRef = React.useRef<(() => void) | null>(null);
+  const onDraftChangeRef = React.useRef<
+    ((d: { start: SchedulerValidDate; end: SchedulerValidDate; allDay?: boolean }) => void) | null
+  >(null);
 
-  const startEditing = useEventCallback((event: React.MouseEvent, calendarEvent: CalendarEvent) => {
-    setAnchor(event.currentTarget as HTMLElement);
-    setSelectedEvent(calendarEvent);
-    setIsPopoverOpen(true);
-  });
+  const startEditing = useEventCallback(
+    (event: React.MouseEvent, calendarEvent: CalendarEvent, options) => {
+      onCloseRef.current?.();
+      onCloseRef.current = null;
+
+      setAnchor(event.currentTarget as HTMLElement);
+      setSelectedEvent(calendarEvent);
+      onCloseRef.current = options?.onClose ?? null;
+      onDraftChangeRef.current = options?.onDraftChange ?? null;
+      setIsPopoverOpen(true);
+    },
+  );
 
   const handleClose = useEventCallback(() => {
     if (!isPopoverOpen) {
@@ -480,7 +543,16 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
     setIsPopoverOpen(false);
     setAnchor(null);
     setSelectedEvent(null);
+    onCloseRef.current?.();
+    onCloseRef.current = null;
+    onDraftChangeRef.current = null;
   });
+
+  const forwardDraftChange = useEventCallback(
+    (d: { start: SchedulerValidDate; end: SchedulerValidDate; allDay?: boolean }) => {
+      onDraftChangeRef.current?.(d);
+    },
+  );
 
   const contextValue = React.useMemo<EventPopoverContextValue>(
     () => ({ startEditing }),
@@ -497,6 +569,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
             calendarEvent={selectedEvent}
             container={containerRef.current}
             onClose={handleClose}
+            onDraftChange={forwardDraftChange}
           />
         )}
       </Popover.Root>
@@ -506,7 +579,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
 
 export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   const { event: calendarEvent, ...other } = props;
-  const { startEditing } = React.useContext(EventPopoverContext);
+  const { startEditing } = useEventPopover();
 
   return (
     <Popover.Trigger
