@@ -15,7 +15,7 @@ import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 
 export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTarget.Parameters) {
-  const { start, end, columnId = null } = parameters;
+  const { start, end } = parameters;
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
@@ -73,7 +73,6 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           eventId: data.eventId,
           occurrenceKey: data.occurrenceKey,
           gridId,
-          columnId,
           originalStart: data.start,
         };
       }
@@ -99,7 +98,6 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
             gridId,
-            columnId,
             originalStart: data.start,
           };
         }
@@ -124,7 +122,6 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           eventId: data.eventId,
           occurrenceKey: data.occurrenceKey,
           gridId,
-          columnId,
           originalStart: data.start,
         };
       }
@@ -160,7 +157,6 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
             gridId,
             start: data.start,
             end: data.end,
-            columnId,
             originalStart: data.start,
           });
         }
@@ -173,7 +169,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
         }
       },
     });
-  }, [adapter, getEventDropData, gridId, store, columnId, updateEvent]);
+  }, [adapter, getEventDropData, gridId, store, updateEvent]);
 
   return { getCursorPositionInElementMs, ref };
 }
@@ -188,12 +184,6 @@ export namespace useTimeGridColumnDropTarget {
      * The data and time at which the column ends.
      */
     end: SchedulerValidDate;
-    /**
-     * A unique identifier for the column.
-     * This is used to identify the column when dragging events if several columns represent the same time range.
-     * @default null
-     */
-    columnId?: string;
   }
 
   export interface ReturnValue

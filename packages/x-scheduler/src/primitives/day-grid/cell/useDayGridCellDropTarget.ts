@@ -34,7 +34,6 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
           end: offset === 0 ? data.end : adapter.addDays(data.end, offset),
           eventId: data.eventId,
           occurrenceKey: data.occurrenceKey,
-          columnId: null,
           gridId,
           originalStart: data.start,
         };
@@ -58,7 +57,6 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             end: data.end,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            columnId: null,
             gridId,
             originalStart: data.start,
           };
@@ -79,7 +77,6 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             end: draggedDay,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            columnId: null,
             gridId,
             originalStart: data.start,
           };
@@ -104,7 +101,6 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             end: data.end,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            columnId: null,
             gridId,
             originalStart: data.start,
           };
@@ -125,7 +121,6 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             end: draggedDay,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            columnId: null,
             gridId,
             originalStart: data.start,
           };
@@ -160,7 +155,6 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
           store.setDraggedOccurrence({
             occurrenceKey: data.occurrenceKey,
             eventId: data.eventId,
-            columnId: null,
             start: data.start,
             end: data.end,
             originalStart: data.start,
