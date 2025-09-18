@@ -115,8 +115,9 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
+      onDrop: () => store.setDraggedOccurrence(null),
     });
-  }, [isDraggable, getDraggedDay, getSharedDragData]);
+  }, [isDraggable, getDraggedDay, getSharedDragData, store]);
 
   const element = useRenderElement('div', componentProps, {
     state,
