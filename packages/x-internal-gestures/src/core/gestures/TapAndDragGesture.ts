@@ -264,6 +264,7 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
    */
   protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
     const pointersArray = Array.from(pointers.values());
+    console.log(this.name, event.type, this.state.phase);
 
     // Check for our forceCancel event to handle interrupted gestures
     if (event.type === 'forceCancel') {
@@ -350,6 +351,11 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
         });
 
         this.state.phase = 'dragging';
+
+        // Reset totals for new drag sequence
+        this.state.totalDeltaX = 0;
+        this.state.totalDeltaY = 0;
+        this.state.dragThresholdReached = false;
         break;
 
       case 'tapDetected':
@@ -439,8 +445,16 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
             this.resetState();
           }
         } else {
-          // Drag never reached threshold, just reset
-          this.resetState();
+          // Drag never reached threshold, go back to waiting for drag
+          this.state.phase = 'waitingForDrag';
+          this.state.dragStartCentroid = null;
+          this.state.lastDragCentroid = null;
+          this.state.dragThresholdReached = false;
+          this.state.totalDeltaX = 0;
+          this.state.totalDeltaY = 0;
+          this.state.dragStartPointers.clear();
+          this.state.lastDeltas = null;
+          // Keep the drag timeout active to allow another attempt
         }
         break;
 
@@ -491,18 +505,23 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     ) {
       this.state.dragThresholdReached = true;
 
-      // Update delta tracking
+      // For the first drag event, use total distance from start
+      this.state.totalDeltaX = distanceDeltaX;
+      this.state.totalDeltaY = distanceDeltaY;
       this.state.lastDeltas = { x: lastDeltaX, y: lastDeltaY };
-      this.state.totalDeltaX += lastDeltaX;
-      this.state.totalDeltaY += lastDeltaY;
 
       // Emit drag start event
       this.emitDragEvent(targetElement, 'start', relevantPointers, event);
+
+      // Also emit the first drag event immediately if there's actual movement
+      if (lastDeltaX !== 0 || lastDeltaY !== 0) {
+        this.emitDragEvent(targetElement, 'ongoing', relevantPointers, event);
+      }
     } else if (this.state.dragThresholdReached) {
-      // Continue tracking movement
+      // Continue tracking movement - update totals to current position from start
+      this.state.totalDeltaX = distanceDeltaX;
+      this.state.totalDeltaY = distanceDeltaY;
       this.state.lastDeltas = { x: lastDeltaX, y: lastDeltaY };
-      this.state.totalDeltaX += lastDeltaX;
-      this.state.totalDeltaY += lastDeltaY;
 
       // Emit ongoing drag event
       this.emitDragEvent(targetElement, 'ongoing', relevantPointers, event);

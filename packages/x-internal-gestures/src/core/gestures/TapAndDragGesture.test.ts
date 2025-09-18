@@ -153,10 +153,10 @@ describe('TapAndDrag Gesture', () => {
     // cos(45°) = 0.707, sin(45°) = 0.707
     // Expecting approximately 35 for both deltaX and deltaY
     expect(events).toStrictEqual([
-      `dragStart: deltaX: 18 | deltaY: 18 | direction: null | mainAxis: null`,
-      `drag: deltaX: 18 | deltaY: 18 | direction: null | mainAxis: null`,
-      `drag: deltaX: 36 | deltaY: 36 | direction: right down | mainAxis: diagonal`,
-      `dragEnd: deltaX: 36 | deltaY: 36 | direction: right down | mainAxis: diagonal`,
+      `dragStart: deltaX: 17 | deltaY: 17 | direction: null | mainAxis: null`,
+      `drag: deltaX: 17 | deltaY: 17 | direction: null | mainAxis: null`,
+      `drag: deltaX: 35 | deltaY: 35 | direction: right down | mainAxis: diagonal`,
+      `dragEnd: deltaX: 35 | deltaY: 35 | direction: right down | mainAxis: diagonal`,
     ]);
   });
 
