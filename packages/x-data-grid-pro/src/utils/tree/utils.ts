@@ -53,8 +53,13 @@ export const getNodePathInTree = ({
 export const checkGroupChildrenExpansion = (
   node: GridGroupNode,
   defaultGroupingExpansionDepth: number,
+  maxDepth?: number,
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'],
 ) => {
+  if (maxDepth !== undefined && node.depth >= maxDepth) {
+    return false;
+  }
+
   let childrenExpanded: boolean;
   if (node.id === GRID_ROOT_GROUP_ID) {
     childrenExpanded = true;
@@ -71,11 +76,13 @@ export const checkGroupChildrenExpansion = (
 export const updateGroupDefaultExpansion = (
   node: GridGroupNode,
   defaultGroupingExpansionDepth: number,
+  maxDepth?: number,
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'],
 ) => {
   const childrenExpanded = checkGroupChildrenExpansion(
     node,
     defaultGroupingExpansionDepth,
+    maxDepth,
     isGroupExpandedByDefault,
   );
   node.childrenExpanded = childrenExpanded;

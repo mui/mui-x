@@ -9,13 +9,16 @@ title: Data Grid - Pivoting
 The Data Grid Premium's pivoting feature lets users transform the data in their grid by reorganizing rows and columns, creating dynamic cross-tabulations of data.
 This makes it possible to analyze data from different angles and gain insights that would be difficult to see in the default grid view.
 
-:::success
-If you're new to pivoting, check out the [Understanding pivoting](/x/react-data-grid/pivoting-explained/) page to learn how it works through interactive examples.
-:::
+If you're new to the concept of pivoting, check out the [Understanding pivoting](/x/react-data-grid/pivoting-explained/) page to learn how it works through interactive examples.
 
 :::warning
 Pivoting performs certain computations and uses them to override corresponding props.
 When pivot mode is active, the following props are ignored: `rows`, `columns`, `rowGroupingModel`, `aggregationModel`, `getAggregationPosition`, `columnVisibilityModel`, `columnGroupingModel`, `groupingColDef`, `headerFilters`, `disableRowGrouping`, and `disableAggregation`.
+:::
+
+:::info
+This document covers client-side pivoting.
+For pivoting on the server side, see [Server-side pivoting](/x/react-data-grid/server-side-data/pivoting/).
 :::
 
 ## Quick start
