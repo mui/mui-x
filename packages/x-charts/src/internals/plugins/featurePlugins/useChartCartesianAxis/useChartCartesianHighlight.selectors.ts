@@ -10,7 +10,10 @@ import {
 import { ChartState } from '../../models/chart';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ComputeResult } from './computeAxisValue';
-import { selectorChartsKeyboardXAxisIndex, selectorChartsKeyboardYAxisIndex } from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
+import {
+  selectorChartsKeyboardXAxisIndex,
+  selectorChartsKeyboardYAxisIndex,
+} from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
 
 const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
@@ -52,10 +55,9 @@ const selectAxisHighlightWithValue = (
   controlledAxisItems: AxisItemIdentifier[] | undefined,
   keyboardAxisItems: AxisItemIdentifier[] | undefined,
 ) => {
-
-  const computedAnswer = (controlledAxisItems ?? keyboardAxisItems)
+  const computedAnswer = controlledAxisItems ?? keyboardAxisItems;
   if (computedAnswer !== undefined) {
-    return (computedAnswer)
+    return computedAnswer
       .map((item) => ({
         ...item,
         value: axis.axis[item.axisId]?.data?.[item.dataIndex],
@@ -73,7 +75,7 @@ export const selectorChartsHighlightXAxisValue = createSelector(
     selectorChartsInteractionXAxisValue,
     selectorChartXAxis,
     selectorChartControlledCartesianAxisHighlight,
-    selectorChartsKeyboardXAxisIndex
+    selectorChartsKeyboardXAxisIndex,
   ],
   selectAxisHighlightWithValue,
 );
@@ -84,7 +86,7 @@ export const selectorChartsHighlightYAxisValue = createSelector(
     selectorChartsInteractionYAxisValue,
     selectorChartYAxis,
     selectorChartControlledCartesianAxisHighlight,
-    selectorChartsKeyboardYAxisIndex
+    selectorChartsKeyboardYAxisIndex,
   ],
   selectAxisHighlightWithValue,
 );

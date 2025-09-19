@@ -1,7 +1,10 @@
 import { ChartOptionalRootSelector, createSelector } from '../../utils/selectors';
 import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import { ProcessedSeries, selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
-import { selectorChartXAxis, selectorChartYAxis } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import {
+  selectorChartXAxis,
+  selectorChartYAxis,
+} from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { SeriesId } from '../../../../models/seriesType/common';
@@ -40,7 +43,7 @@ export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
  * Selectors to override highlight behavior.
  */
 
-const noop: AxisItemIdentifier[] = []
+const noop: AxisItemIdentifier[] = [];
 
 const selectAxisHighlight = <T extends ChartSeriesType>(
   type: T | undefined,
@@ -53,18 +56,18 @@ const selectAxisHighlight = <T extends ChartSeriesType>(
     return noop;
   }
 
-  const seriesConfig = series[type]?.series[seriesId]
+  const seriesConfig = series[type]?.series[seriesId];
   if (!seriesConfig) {
     return noop;
   }
 
-  let axisId: AxisId | false | undefined = ('xAxisId' in seriesConfig && seriesConfig.xAxisId)
+  let axisId: AxisId | false | undefined = 'xAxisId' in seriesConfig && seriesConfig.xAxisId;
 
   if (axisId === undefined || axisId === false) {
-    axisId = axis.axisIds[0]
+    axisId = axis.axisIds[0];
   }
 
-  return [{ axisId, dataIndex }]
+  return [{ axisId, dataIndex }];
 };
 
 export const selectorChartsKeyboardXAxisIndex = createSelector(
@@ -77,7 +80,6 @@ export const selectorChartsKeyboardXAxisIndex = createSelector(
   ],
   selectAxisHighlight,
 );
-
 
 export const selectorChartsKeyboardYAxisIndex = createSelector(
   [
