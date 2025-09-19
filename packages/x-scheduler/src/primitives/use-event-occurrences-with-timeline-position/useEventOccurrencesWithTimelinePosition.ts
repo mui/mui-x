@@ -3,6 +3,44 @@ import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { Adapter } from '../utils/adapter/types';
 
+export function useEventOccurrencesWithTimelinePositionForMap(
+  parameters: useEventOccurrencesWithTimelinePosition.MapParameters,
+) {
+  const { occurrences: occurrencesMap, maxColumnSpan } = parameters;
+  const adapter = useAdapter();
+
+  return React.useMemo(() => {
+    const newOccurrencesMap = new Map<string, CalendarEventOccurrenceWithTimePosition[]>();
+
+    for (const resourceId of occurrencesMap.keys()) {
+      const occurrences = occurrencesMap.get(resourceId) || [];
+
+      const conflicts = buildOccurrenceConflicts(adapter, occurrences);
+
+      const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
+
+      const lastIndexLookup = buildLastIndexLookup(
+        conflicts,
+        firstIndexLookup,
+        maxIndex,
+        maxColumnSpan,
+      );
+
+      const occurrencesWithPosition = occurrences.map((occurrence) => ({
+        ...occurrence,
+        position: {
+          firstIndex: firstIndexLookup[occurrence.key],
+          lastIndex: lastIndexLookup[occurrence.key],
+        },
+      }));
+
+      newOccurrencesMap.set(resourceId, occurrencesWithPosition);
+    }
+
+    return newOccurrencesMap;
+  }, [adapter, occurrencesMap, maxColumnSpan]);
+}
+
 /**
  * Places event occurrences for a timeline UI.
  */
@@ -42,6 +80,16 @@ export namespace useEventOccurrencesWithTimelinePosition {
      * The occurrences without the position information
      */
     occurrences: CalendarEventOccurrence[];
+    /**
+     * Maximum amount of columns an event can span across.
+     */
+    maxColumnSpan: number;
+  }
+  export interface MapParameters {
+    /**
+     * The occurrences without the position information
+     */
+    occurrences: Map<string, CalendarEventOccurrence[]>;
     /**
      * Maximum amount of columns an event can span across.
      */
