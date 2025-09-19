@@ -98,10 +98,19 @@ export function calculateSankeyLayout(
       return l.source === link.source.id && l.target === link.target.id;
     });
 
+    // Resolve color - handle 'source' and 'target' keywords
+    let resolvedColor = originalLink?.color ?? linkColor;
+
+    if (resolvedColor === 'source') {
+      resolvedColor = link.source.color ?? linkColor;
+    } else if (resolvedColor === 'target') {
+      resolvedColor = link.target.color ?? linkColor;
+    }
+
     return {
       ...originalLink,
       ...link,
-      color: originalLink?.color ?? linkColor,
+      color: resolvedColor,
       path: improvedNaiveSankeyLinkPathHorizontal(link, curveCorrection),
     };
   });
