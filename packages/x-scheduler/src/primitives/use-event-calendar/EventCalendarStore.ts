@@ -256,7 +256,7 @@ export class EventCalendarStore extends Store<State> {
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: CalendarEvent) => {
-    const existing = selectors.event(this.store.state, calendarEvent.id);
+    const existing = selectors.event(this.state, calendarEvent.id);
     if (existing) {
       throw new Error(
         `Event Calendar: an event with id="${calendarEvent.id}" already exists. Use updateEvent(...) instead.`,
@@ -264,7 +264,7 @@ export class EventCalendarStore extends Store<State> {
     }
 
     const { onEventsChange } = this.parameters;
-    const updatedEvents = [...this.store.state.events, calendarEvent];
+    const updatedEvents = [...this.state.events, calendarEvent];
     onEventsChange?.(updatedEvents);
   };
 
