@@ -5,6 +5,10 @@
   &[data-resizing] {
     opacity: 0.5;
   }
+
+  &:hover .EventResizeHandler {
+    opacity: 1;
+  }
 }
 
 .DayGridEventTitle {
@@ -111,5 +115,23 @@
   .DayGridEventTitle {
     margin-inline-start: var(--space-1);
     padding-inline-end: var(--space-3);
+  }
+}
+
+.DayGridEventResizeHandler {
+  position: absolute;
+  width: 4px;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  cursor: ew-resize;
+  opacity: 0;
+
+  &[data-start] {
+    left: 0;
+  }
+
+  &[data-end] {
+    right: 0;
   }
 }

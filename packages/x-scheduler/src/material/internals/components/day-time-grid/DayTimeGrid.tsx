@@ -49,7 +49,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
-  const daysWithOccurrences = useEventOccurrencesWithDayGridPosition({
+  const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
     shouldAddPosition: shouldRenderOccurrenceInDayGrid,
@@ -171,8 +171,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
-            {daysWithOccurrences.map((day) => (
-              <DayGridCell key={day.key} day={day} />
+            {occurrences.days.map((day) => (
+              <DayGridCell key={day.key} day={day} row={occurrences} />
             ))}
           </DayGrid.Row>
           <div className="ScrollablePlaceholder" />
@@ -202,7 +202,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {daysWithOccurrences.map((day, index) => (
+                {occurrences.days.map((day, index) => (
                   <TimeGridColumn
                     key={day.key}
                     day={day}

@@ -2,11 +2,14 @@
 import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { isDraggingDayGridEvent } from '../../utils/drag-utils';
+import {
+  isDraggingDayGridEvent,
+  isDraggingDayGridEventResizeHandler,
+} from '../../utils/drag-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useDayGridRootContext } from '../root/DayGridRootContext';
 import { SchedulerValidDate } from '../../models';
-import { diffIn } from '../../utils/date-utils';
+import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
 
 export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Parameters) {
   const { value } = parameters;
@@ -32,6 +35,90 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
       };
     }
 
+    // Resize event
+    if (isDraggingDayGridEventResizeHandler(data)) {
+      if (data.side === 'start') {
+        if (adapter.isAfterDay(value, data.end)) {
+          return undefined;
+        }
+
+        let draggedDay: SchedulerValidDate;
+        if (adapter.isSameDay(value, data.end)) {
+          draggedDay = adapter.startOfDay(data.end);
+        } else {
+          draggedDay = mergeDateAndTime(adapter, value, data.start);
+        }
+        return {
+          start: draggedDay,
+          end: data.end,
+          eventId: data.id,
+          columnId: null,
+          originalStart: data.start,
+        };
+      }
+      if (data.side === 'end') {
+        if (adapter.isBeforeDay(value, data.start)) {
+          return undefined;
+        }
+
+        let draggedDay: SchedulerValidDate;
+        if (adapter.isSameDay(value, data.start)) {
+          draggedDay = adapter.endOfDay(data.start);
+        } else {
+          draggedDay = mergeDateAndTime(adapter, value, data.end);
+        }
+        return {
+          start: data.start,
+          end: draggedDay,
+          eventId: data.id,
+          columnId: null,
+          originalStart: data.start,
+        };
+      }
+    }
+
+    // Resize event
+    if (isDraggingDayGridEventResizeHandler(data)) {
+      if (data.side === 'start') {
+        if (adapter.isAfterDay(value, data.end)) {
+          return undefined;
+        }
+
+        let draggedDay: SchedulerValidDate;
+        if (adapter.isSameDay(value, data.end)) {
+          draggedDay = adapter.startOfDay(data.end);
+        } else {
+          draggedDay = mergeDateAndTime(adapter, value, data.start);
+        }
+        return {
+          start: draggedDay,
+          end: data.end,
+          eventId: data.id,
+          columnId: null,
+          originalStart: data.start,
+        };
+      }
+      if (data.side === 'end') {
+        if (adapter.isBeforeDay(value, data.start)) {
+          return undefined;
+        }
+
+        let draggedDay: SchedulerValidDate;
+        if (adapter.isSameDay(value, data.start)) {
+          draggedDay = adapter.endOfDay(data.start);
+        } else {
+          draggedDay = mergeDateAndTime(adapter, value, data.end);
+        }
+        return {
+          start: data.start,
+          end: draggedDay,
+          eventId: data.id,
+          columnId: null,
+          originalStart: data.start,
+        };
+      }
+    }
+
     return undefined;
   });
 
@@ -42,16 +129,17 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
 
     return dropTargetForElements({
       element: ref.current,
-      canDrop: (arg) => isDraggingDayGridEvent(arg.source.data),
+      canDrop: (arg) =>
+        isDraggingDayGridEvent(arg.source.data) ||
+        isDraggingDayGridEventResizeHandler(arg.source.data),
       onDrag: ({ source: { data } }) => {
         const newPlaceholder = getEventDropData(data);
-
         if (newPlaceholder) {
           setPlaceholder(newPlaceholder);
         }
       },
       onDragStart: ({ source: { data } }) => {
-        if (isDraggingDayGridEvent(data)) {
+        if (isDraggingDayGridEvent(data) || isDraggingDayGridEventResizeHandler(data)) {
           setPlaceholder({
             eventId: data.id,
             columnId: null,

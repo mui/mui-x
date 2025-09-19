@@ -124,6 +124,7 @@ export const selectors = {
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
+  isDayView: createSelector((state: State) => state.view === 'day'),
   preferences: createSelector((state: State) => state.preferences),
   preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
