@@ -67,7 +67,7 @@ export * from './scaleGuards';
 export * from './findMinMax';
 
 // contexts
-export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
+export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
 export * from '../context/ChartProvider';
 export * from '../context/ChartsSlotsContext';
 
