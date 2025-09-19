@@ -171,7 +171,7 @@ export default defineConfig(
       'react-hooks/exhaustive-deps': [
         'error',
         {
-          additionalHooks: 'useEffectAfterFirstRender',
+          additionalHooks: '(useEnhancedEffect|useIsoLayoutEffect|useEffectAfterFirstRender)',
         },
       ],
     },
