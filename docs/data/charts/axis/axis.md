@@ -42,10 +42,10 @@ Axis definition object has a `data` property which expects an array of value coh
 
 | scaleType                              | Description                                             | Number | Date | String |
 | :------------------------------------- | :------------------------------------------------------ | :----: | :--: | :----: |
-| `'band'`                               | Splits the axis in equal bands                          |   ✅   |  ✅  |   ✅   |
-| `'point'`                              | Splits the axis in equally spaced points                |   ✅   |  ✅  |   ✅   |
-| `'linear'` `'log'` `'symlog'` `'sqrt'` | Maps numerical values to the available space            |   ✅   |  ❌  |   ❌   |
-| `'time'` `'utc'`                       | Maps JavaScript `Date()` objects to the available space |   ❌   |  ✅  |   ❌   |
+| `'band'`                               | Splits the axis in equal bands.                          |   ✅   |  ✅  |   ✅   |
+| `'point'`                              | Splits the axis in equally spaced points.                |   ✅   |  ✅  |   ✅   |
+| `'linear'` `'log'` `'symlog'` `'sqrt'` | Maps numerical values to the available space.            |   ✅   |  ❌  |   ❌   |
+| `'time'` `'utc'`                       | Maps JavaScript `Date()` objects to the available space. |   ❌   |  ✅  |   ❌   |
 
 Some series types also require specific axis attributes:
 
