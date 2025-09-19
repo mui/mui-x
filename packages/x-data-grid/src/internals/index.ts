@@ -133,7 +133,10 @@ export {
   useGridRowSelection,
   rowSelectionStateInitializer,
 } from '../hooks/features/rowSelection/useGridRowSelection';
-export { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
+export {
+  gridIsRowDragActiveSelector,
+  gridRowDropPositionSelector,
+} from '../hooks/features/rowReorder/gridRowReorderSelector';
 export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';

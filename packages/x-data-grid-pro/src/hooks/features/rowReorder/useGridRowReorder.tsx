@@ -427,20 +427,6 @@ export const useGridRowReorder = (
       const dragDirection = previousReorderState.current.dragDirection;
       previousReorderState.current = EMPTY_REORDER_STATE;
 
-      // Clear visual indicators and dragged state
-      applyDraggedState(dragRowId, false);
-      apiRef.current.setState((state) => ({
-        ...state,
-        rowReorder: {
-          isActive: false,
-          draggedRowId: null,
-          dropTarget: {
-            rowId: null,
-            position: null,
-          },
-        },
-      }));
-
       // Check if the row was dropped outside the grid.
       if (!event.dataTransfer || event.dataTransfer.dropEffect === 'none') {
         // Reset drop target state
@@ -451,6 +437,19 @@ export const useGridRowReorder = (
         };
         originRowIndex.current = null;
         setDragRowId('');
+        // Clear visual indicators and dragged state
+        applyDraggedState(dragRowId, false);
+        apiRef.current.setState((state) => ({
+          ...state,
+          rowReorder: {
+            isActive: false,
+            draggedRowId: null,
+            dropTarget: {
+              rowId: null,
+              position: null,
+            },
+          },
+        }));
         return;
       }
       if (dropTarget.current.targetRowIndex !== null && dropTarget.current.targetRowId !== null) {
@@ -470,6 +469,7 @@ export const useGridRowReorder = (
 
         if (validatedIndex !== -1) {
           applyRowAnimation(() => {
+            // TODO: Make this use `await` to wait for promises to execute before emitting the event and clearing the state
             apiRef.current.setRowIndex(dragRowId, validatedIndex);
 
             // Emit the rowOrderChange event only once when the reordering stops.
@@ -478,6 +478,20 @@ export const useGridRowReorder = (
               targetIndex: validatedIndex,
               oldIndex: sourceRowIndex,
             };
+
+            // Clear visual indicators and dragged state
+            applyDraggedState(dragRowId, false);
+            apiRef.current.setState((state) => ({
+              ...state,
+              rowReorder: {
+                isActive: false,
+                draggedRowId: null,
+                dropTarget: {
+                  rowId: null,
+                  position: null,
+                },
+              },
+            }));
 
             apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
           });

@@ -24,6 +24,7 @@ export type ReorderOperationType = 'same-parent-swap' | 'cross-parent-leaf' | 'c
 
 export interface ReorderExecutionContext<ApiRef extends GridPrivateApiPro = GridPrivateApiPro> {
   sourceRowId: GridRowId;
+  dropPosition: DropPosition;
   placeholderIndex: number;
   sortedFilteredRowIds: GridRowId[];
   sortedFilteredRowIndexLookup: Record<GridRowId, number>;

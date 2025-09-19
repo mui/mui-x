@@ -5,7 +5,10 @@ import {
   gridExpandedSortedRowIdsSelector,
   gridRowNodeSelector,
 } from '@mui/x-data-grid';
-import { gridExpandedSortedRowIndexLookupSelector } from '@mui/x-data-grid/internals';
+import {
+  gridExpandedSortedRowIndexLookupSelector,
+  gridRowDropPositionSelector,
+} from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import type { ReorderExecutionContext } from '../rowReorder/types';
 import { treeDataReorderExecutor } from '../treeData/treeDataReorderExecutor';
@@ -26,6 +29,8 @@ export const useGridRowsOverridableMethods = (
       const sortedFilteredRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
+
+      const dropPosition = gridRowDropPositionSelector(apiRef, sourceRowId)!;
 
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
 
@@ -51,6 +56,7 @@ export const useGridRowsOverridableMethods = (
 
       const executionContext: ReorderExecutionContext = {
         sourceRowId,
+        dropPosition,
         placeholderIndex: targetOriginalIndex,
         sortedFilteredRowIds,
         sortedFilteredRowIndexLookup,

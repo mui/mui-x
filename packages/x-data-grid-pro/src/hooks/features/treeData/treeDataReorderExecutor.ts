@@ -366,7 +366,7 @@ class CrossParentGroupOperation extends BaseReorderOperation {
     if (!setTreeDataPath) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce(
-          'MUI X: Cross-parent reordering requires setTreeDataPath prop to update row data paths.',
+          'MUI X: Cross-parent reordering requires `setTreeDataPath()` prop to update row data paths.',
           'warning',
         );
       }
