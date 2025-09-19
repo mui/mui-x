@@ -97,7 +97,7 @@ const columns = [
       // Round to 2 decimal places
       return Math.round(sizeInKb * 100) / 100;
     },
-    valueFormatter: (value) => (value != null ? `${value ?? 0} Kb` : null),
+    valueFormatter: (value) => `${value} Kb`,
   },
   {
     field: 'updatedAt',
@@ -132,6 +132,7 @@ export default function AggregationTreeData() {
         columns={columns}
         getTreeDataPath={getTreeDataPath}
         getRowId={getRowId}
+        aggregationRowsScope="all"
         groupingColDef={groupingColDef}
         initialState={{
           aggregation: {
