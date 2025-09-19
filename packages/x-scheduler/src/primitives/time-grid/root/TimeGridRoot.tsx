@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useId } from '@base-ui-components/utils/useId';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { CalendarDraggedOccurrence } from '../../models';
 import { TimeGridRootContext } from './TimeGridRootContext';
 
 export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
