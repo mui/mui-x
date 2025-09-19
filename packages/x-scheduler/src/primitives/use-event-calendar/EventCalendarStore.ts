@@ -17,6 +17,7 @@ import {
 import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
+import { shouldUpdateDraggedOccurrence } from './EventCalendarStore.utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -395,31 +396,10 @@ export class EventCalendarStore extends Store<State> {
   /**
    * Sets the placeholder of the event occurrence being dragged.
    */
-  public setDraggedOccurrence = (occurrence: CalendarDraggedOccurrence | null) => {
-    const { adapter, draggedOccurrence: previousValue } = this.state;
-
-    // Only update if something changed.
-    if (occurrence != null && previousValue != null) {
-      for (const key in occurrence) {
-        if (key === 'start' || key === 'end' || key === 'originalStart') {
-          if (!adapter.isEqual(occurrence[key], previousValue[key])) {
-            this.set('draggedOccurrence', occurrence);
-            return;
-          }
-        } else if (
-          !Object.is(
-            occurrence[key as keyof CalendarDraggedOccurrence],
-            previousValue?.[key as keyof CalendarDraggedOccurrence],
-          )
-        ) {
-          this.set('draggedOccurrence', occurrence);
-          return;
-        }
-      }
-    }
-
-    if (occurrence !== previousValue) {
-      this.set('draggedOccurrence', occurrence);
+  public setDraggedOccurrence = (newDraggedOccurrence: CalendarDraggedOccurrence | null) => {
+    const { adapter, draggedOccurrence: previous } = this.state;
+    if (shouldUpdateDraggedOccurrence(adapter, previous, newDraggedOccurrence)) {
+      this.set('draggedOccurrence', newDraggedOccurrence);
     }
   };
 }
