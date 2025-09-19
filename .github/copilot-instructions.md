@@ -3,6 +3,7 @@
 ## Testing
 
 We use [Vitest](https://vitest.dev/api/) as our test runner.
+We use [chai](https://www.chaijs.com/guide/styles/#expect) as our assertion library.
 There are two main types of test in this repository: unit tests and browser tests. Both use the same files.
 
 To run tests:
