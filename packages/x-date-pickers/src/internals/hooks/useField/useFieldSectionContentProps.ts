@@ -185,7 +185,7 @@ export function useFieldSectionContentProps(
         'aria-disabled': disabled,
 
         // Other
-        tabIndex: isContainerEditable || sectionIndex > 0 ? -1 : 0,
+        tabIndex: !isEditable || isContainerEditable || sectionIndex > 0 ? -1 : 0,
         contentEditable: !isContainerEditable && !disabled && !readOnly,
         role: 'spinbutton',
         'data-range-position': (section as FieldRangeSection).dateName || undefined,
