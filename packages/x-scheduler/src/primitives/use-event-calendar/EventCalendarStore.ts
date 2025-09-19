@@ -333,18 +333,19 @@ export class EventCalendarStore extends Store<State> {
    * Updates the dates of an event occurrence.
    */
   public updateEventOccurrenceDates(data: CalendarDraggedOccurrence) {
-    const originalEvent = selectors.event(this.state, data.eventId)!;
-    if (originalEvent.rrule) {
-      this.updateRecurringEvent({
-        eventId: data.eventId,
-        occurrenceStart: data.originalStart,
-        changes: { start: data.start, end: data.end },
+    const { eventId, start, end, originalStart } = data;
+
+    if (selectors.event(this.state, eventId)?.rrule) {
+      return this.updateRecurringEvent({
+        eventId,
+        occurrenceStart: originalStart,
+        changes: { start, end },
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
         scope: 'this-and-following',
       });
-    } else {
-      this.updateEvent({ id: data.eventId, start: data.start, end: data.end });
     }
+
+    return this.updateEvent({ id: data.eventId, start: data.start, end: data.end });
   }
 
   /**
