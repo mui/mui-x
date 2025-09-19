@@ -34,8 +34,8 @@ We use multiple formatters and scripts to ensure the code is consistent. Some of
 
 To format the code, run:
 
-- `pnpm prettier:all` should always be run
-- `pnpm eslint` should always be run
+- `pnpm prettier` should be run if you want to format the code using prettier
+- `pnpm eslint` should be run to get more info on linting errors
 - `pnpm proptypes` should be run when editing React components
 - `pnpm docs:api` should be run when editing React components or TypeScript types/interfaces
 - `pnpm docs:typescript:formatted` should be run when creating or editing the docs examples using typescript
