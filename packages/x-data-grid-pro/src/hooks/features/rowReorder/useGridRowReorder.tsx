@@ -479,7 +479,6 @@ export const useGridRowReorder = (
               oldIndex: sourceRowIndex,
             };
 
-            // Clear visual indicators and dragged state
             applyDraggedState(dragRowId, false);
             apiRef.current.setState((state) => ({
               ...state,
@@ -495,6 +494,15 @@ export const useGridRowReorder = (
 
             apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
           });
+        } else {
+          applyDraggedState(dragRowId, false);
+          apiRef.current.setState((state) => ({
+            ...state,
+            rowReorder: {
+              ...state.rowReorder,
+              dropTarget: { rowId: null, position: null },
+            },
+          }));
         }
       }
 

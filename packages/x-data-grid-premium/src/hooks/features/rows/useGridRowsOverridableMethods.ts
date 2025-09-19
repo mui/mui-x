@@ -59,6 +59,8 @@ export const useGridRowsOverridableMethods = (
 
       const executionContext: ReorderExecutionContext = {
         sourceRowId,
+        // TODO: Use the correct drop position here
+        dropPosition: 'below',
         placeholderIndex: targetOriginalIndex,
         sortedFilteredRowIds,
         sortedFilteredRowIndexLookup,

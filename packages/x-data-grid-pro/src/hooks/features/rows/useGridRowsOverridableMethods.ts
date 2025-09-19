@@ -8,6 +8,7 @@ import {
 import {
   gridExpandedSortedRowIndexLookupSelector,
   gridRowDropPositionSelector,
+  gridRowDropTargetRowIdSelector,
 } from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import type { ReorderExecutionContext } from '../rowReorder/types';
@@ -30,7 +31,13 @@ export const useGridRowsOverridableMethods = (
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
 
-      const dropPosition = gridRowDropPositionSelector(apiRef, sourceRowId)!;
+      const targetRowId = gridRowDropTargetRowIdSelector(apiRef);
+
+      if (!targetRowId) {
+        throw new Error(`MUI X: No target row id found.`);
+      }
+
+      const dropPosition = gridRowDropPositionSelector(apiRef, targetRowId)!;
 
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
 

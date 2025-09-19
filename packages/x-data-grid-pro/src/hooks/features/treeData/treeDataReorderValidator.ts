@@ -54,6 +54,25 @@ const validationRules: ValidationRule[] = [
     isInvalid: conditions.targetGroupCollapsed,
     message: 'Cannot drop below collapsed group',
   },
+  {
+    name: 'drop-on-leaf-descendant-check',
+    applies: (ctx) =>
+      ctx.dropPosition === 'over' &&
+      ctx.targetNode.type === 'leaf' &&
+      ctx.sourceNode.type === 'group',
+    isInvalid: (ctx) => {
+      // Prevent dropping a group over one of its own descendant leaves
+      let currentNode = ctx.targetNode;
+      while (currentNode.parent) {
+        currentNode = ctx.rowTree[currentNode.parent];
+        if (currentNode.id === ctx.sourceNode.id) {
+          return true;
+        }
+      }
+      return false;
+    },
+    message: 'Cannot drop group over one of its descendant leaves',
+  },
 ];
 
 export const treeDataReorderValidator = new RowReorderValidator(validationRules);

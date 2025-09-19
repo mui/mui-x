@@ -136,6 +136,7 @@ export {
 export {
   gridIsRowDragActiveSelector,
   gridRowDropPositionSelector,
+  gridRowDropTargetRowIdSelector,
 } from '../hooks/features/rowReorder/gridRowReorderSelector';
 export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';

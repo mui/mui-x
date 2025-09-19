@@ -20,7 +20,11 @@ export interface ReorderValidationContext {
   expandedSortedRowIndexLookup: Record<GridRowId, number>;
 }
 
-export type ReorderOperationType = 'same-parent-swap' | 'cross-parent-leaf' | 'cross-parent-group';
+export type ReorderOperationType =
+  | 'same-parent-swap'
+  | 'cross-parent-leaf'
+  | 'cross-parent-group'
+  | 'drop-on-leaf';
 
 export interface ReorderExecutionContext<ApiRef extends GridPrivateApiPro = GridPrivateApiPro> {
   sourceRowId: GridRowId;

@@ -17,6 +17,11 @@ export const gridRowDropTargetSelector = createSelector(
   (rowReorder) => rowReorder?.dropTarget ?? { rowId: null, position: null },
 );
 
+export const gridRowDropTargetRowIdSelector = createSelector(
+  gridRowDropTargetSelector,
+  (dropTarget) => dropTarget.rowId ?? null,
+);
+
 // Selector for a specific row's drop position
 export const gridRowDropPositionSelector = createSelector(
   gridRowDropTargetSelector,
