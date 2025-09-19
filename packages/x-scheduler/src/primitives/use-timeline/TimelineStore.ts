@@ -10,7 +10,7 @@ const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters
     ...deriveStateFromParameters(parameters),
   }),
   updateStateFromParameters: (newSchedulerState, parameters) => {
-    const newState = {
+    const newState: Partial<TimelineState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
     };

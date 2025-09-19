@@ -48,10 +48,7 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
     ],
   );
 
-  return {
-    parameters,
-    forwardedProps: forwardedProps as Omit<P, keyof TimelineParameters>,
-  };
+  return { parameters, forwardedProps: forwardedProps as Omit<P, keyof TimelineParameters> };
 }
 
 interface UseExtractTimelineParametersReturnValue<P extends TimelineParameters> {

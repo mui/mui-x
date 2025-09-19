@@ -143,15 +143,25 @@ export type UpdateRecurringEventParameters = {
   scope: RecurringUpdateEventScope;
 };
 
+/**
+ * Mapper between a Scheduler instance's state and parameters.
+ * Used by classes extending `SchedulerStore` to manage the state based on the parameters.
+ */
 export interface SchedulerParametersToStateMapper<
   State extends SchedulerState,
   Parameters extends SchedulerParameters,
 > {
+  /**
+   * Gets the initial state of the store based on the initial parameters.
+   */
   getInitialState: (
     schedulerInitialState: SchedulerState,
     parameters: Parameters,
     adapter: Adapter,
   ) => State;
+  /**
+   * Updates the state based on the new parameters.
+   */
   updateStateFromParameters: (
     newState: Partial<SchedulerState>,
     parameters: Parameters,

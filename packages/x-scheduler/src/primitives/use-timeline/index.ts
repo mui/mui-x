@@ -2,4 +2,4 @@ export * from './useTimeline';
 export * from './TimelineStore.types';
 export * from './useExtractTimelineParameters';
 export * from './TimelineStore';
-export { selectors } from './TimelineStore.selectors';
+export * from './TimelineStore.selectors';
