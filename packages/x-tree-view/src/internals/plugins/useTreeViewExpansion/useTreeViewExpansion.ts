@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
-import useEventCallback from '@mui/utils/useEventCallback';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewExpansionInstance,
@@ -26,7 +26,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     defaultValue: params.defaultExpandedItems,
   });
 
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     const newExpansionTrigger = getExpansionTrigger({
       isItemEditable: params.isItemEditable,
       expansionTrigger: params.expansionTrigger,
@@ -132,7 +132,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   /**
    * Update the controlled model when the `expandedItems` prop changes.
    */
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     const expandedItems = params.expandedItems;
     if (expandedItems !== undefined) {
       store.set('expansion', { ...store.state.expansion, expandedItems });
