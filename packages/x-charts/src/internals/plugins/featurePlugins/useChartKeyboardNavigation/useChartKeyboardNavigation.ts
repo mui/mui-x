@@ -20,6 +20,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       let { type, seriesId } = state.keyboardNavigation.item ?? {};
       if (
         type === undefined ||
+        // @ts-ignore sankey is not in MIT version
         type === 'sankey' ||
         seriesId === undefined ||
         !seriesHasData(state.series.processedSeries, type, seriesId)
@@ -59,6 +60,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       let { type, seriesId } = state.keyboardNavigation.item ?? {};
       if (
         type === undefined ||
+        // @ts-ignore sankey is not in MIT version
         type === 'sankey' ||
         seriesId === undefined ||
         !seriesHasData(state.series.processedSeries, type, seriesId)

@@ -135,6 +135,7 @@ export function seriesHasData(
   type: ChartSeriesType,
   seriesId: SeriesId,
 ) {
+  // @ts-ignore snakey is not in MIT version
   if (type === 'sankey') {
     return false;
   }
