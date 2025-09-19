@@ -12,10 +12,12 @@ import {
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
   CalendarResource,
+  CalendarDraggedOccurrence,
 } from '../models';
 import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
+import { shouldUpdateDraggedOccurrence } from './EventCalendarStore.utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -94,6 +96,7 @@ export class EventCalendarStore extends Store<State> {
               ...parameters.preferencesMenuConfig,
             },
       viewConfig: null,
+      draggedOccurrence: null,
       // Store elements that should only be updated when their controlled prop changes.
       visibleDate:
         parameters.visibleDate ??
@@ -325,6 +328,26 @@ export class EventCalendarStore extends Store<State> {
     onEventsChange?.(updatedEvents);
   };
 
+  // TODO: Once several scopes are supported, add a way to render a UI to choose the scope.
+  /**
+   * Updates the dates of an event occurrence.
+   */
+  public updateEventOccurrenceDates(data: CalendarDraggedOccurrence) {
+    const { eventId, start, end, originalStart } = data;
+
+    if (selectors.event(this.state, eventId)?.rrule) {
+      return this.updateRecurringEvent({
+        eventId,
+        occurrenceStart: originalStart,
+        changes: { start, end },
+        // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
+        scope: 'this-and-following',
+      });
+    }
+
+    return this.updateEvent({ id: data.eventId, start: data.start, end: data.end });
+  }
+
   /**
    * Deletes an event from the calendar.
    */
@@ -388,5 +411,15 @@ export class EventCalendarStore extends Store<State> {
   public setViewConfig = (config: CalendarViewConfig) => {
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
+  };
+
+  /**
+   * Sets the placeholder of the event occurrence being dragged.
+   */
+  public setDraggedOccurrence = (newDraggedOccurrence: CalendarDraggedOccurrence | null) => {
+    const { adapter, draggedOccurrence: previous } = this.state;
+    if (shouldUpdateDraggedOccurrence(adapter, previous, newDraggedOccurrence)) {
+      this.set('draggedOccurrence', newDraggedOccurrence);
+    }
   };
 }

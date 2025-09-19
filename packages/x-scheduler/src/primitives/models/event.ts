@@ -146,13 +146,34 @@ export type CalendarEventColor =
   | 'blue';
 
 /**
- * Object forwarded to the `onEventChange` handler of the Day Grid Root and Time Grid Root parts.
+ * Object representing a dragged event occurrence.
+ * It is used to generate the placeholder when dragging an event and well as to update the event when it is dropped.
  */
-export interface CalendarPrimitiveEventData {
-  eventId: string | number;
-  columnId: string | null;
+export interface CalendarDraggedOccurrence {
+  /**
+   * The id of the event being changed.
+   */
+  eventId: CalendarEventId;
+  /**
+   * The key of the event occurrence being changed.
+   */
+  occurrenceKey: string;
+  /**
+   * A unique id to identify the grid the event is being changed from.
+   * This is useful to make sure to only render the placeholder in the grid the event is being dragged to.
+   */
+  gridId: string;
+  /**
+   * The new start date and time of the event occurrence.
+   */
   start: SchedulerValidDate;
+  /**
+   * The new end date and time of the event occurrence.
+   */
   end: SchedulerValidDate;
+  /**
+   * The start date and time of the event occurrence before the change.
+   */
   originalStart: SchedulerValidDate;
 }
 

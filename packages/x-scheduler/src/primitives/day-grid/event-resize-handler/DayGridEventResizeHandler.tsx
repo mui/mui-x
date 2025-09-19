@@ -4,11 +4,11 @@ import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { useTimeGridEventContext } from '../event/TimeGridEventContext';
-import type { TimeGridEvent } from '../event/TimeGridEvent';
+import { useDayGridEventContext } from '../event/DayGridEventContext';
+import type { DayGridEvent } from '../event/DayGridEvent';
 
-export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEventResizeHandler(
-  componentProps: TimeGridEventResizeHandler.Props,
+export const DayGridEventResizeHandler = React.forwardRef(function DayGridEventResizeHandler(
+  componentProps: DayGridEventResizeHandler.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -25,17 +25,17 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
   const {
     setIsResizing,
     getSharedDragData,
-    doesEventStartBeforeColumnStart,
-    doesEventEndAfterColumnEnd,
-  } = useTimeGridEventContext();
+    doesEventStartBeforeRowStart,
+    doesEventEndAfterRowEnd,
+  } = useDayGridEventContext();
 
   const enabled =
-    (side === 'start' && !doesEventStartBeforeColumnStart) ||
-    (side === 'end' && !doesEventEndAfterColumnEnd);
+    (side === 'start' && !doesEventStartBeforeRowStart) ||
+    (side === 'end' && !doesEventEndAfterRowEnd);
 
   const props = React.useMemo(() => ({}), []);
 
-  const state: TimeGridEventResizeHandler.State = React.useMemo(
+  const state: DayGridEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
     [side],
   );
@@ -50,7 +50,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
       element: domElement,
       getInitialData: ({ input }) => ({
         ...getSharedDragData(input),
-        source: 'TimeGridEventResizeHandler',
+        source: 'DayGridEventResizeHandler',
         side,
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
@@ -69,7 +69,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
   });
 });
 
-export namespace TimeGridEventResizeHandler {
+export namespace DayGridEventResizeHandler {
   export interface State {
     /**
      * Whether the resize handler is targeting the start date of the event.
@@ -88,8 +88,8 @@ export namespace TimeGridEventResizeHandler {
     side: 'start' | 'end';
   }
 
-  export interface DragData extends TimeGridEvent.SharedDragData {
-    source: 'TimeGridEventResizeHandler';
+  export interface DragData extends DayGridEvent.SharedDragData {
+    source: 'DayGridEventResizeHandler';
     side: 'start' | 'end';
   }
 }

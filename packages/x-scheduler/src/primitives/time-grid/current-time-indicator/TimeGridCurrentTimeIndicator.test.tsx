@@ -1,22 +1,21 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
-import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler/primitives/event-calendar-provider';
+import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
-describe('<TimeGrid.EventPlaceholder />', () => {
+describe('<TimeGrid.CurrentTimeIndicator />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = DateTime.now();
-  const eventEnd = eventStart.plus({ hours: 1 });
+  const day = DateTime.now();
 
-  describeConformance(<TimeGrid.EventPlaceholder start={eventStart} end={eventEnd} />, () => ({
+  describeConformance(<TimeGrid.CurrentTimeIndicator />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
         <EventCalendarProvider events={[]}>
           <TimeGrid.Root>
-            <TimeGrid.Column start={eventStart} end={eventEnd}>
+            <TimeGrid.Column start={day.startOf('day')} end={day.endOf('day')}>
               {node}
             </TimeGrid.Column>
           </TimeGrid.Root>
