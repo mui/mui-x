@@ -497,7 +497,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */, '1', '1']);
     });
 
-    it('should not apply filtering on the aggregated values', async () => {
+    it('should not apply filtering on the aggregated values for aggregationRowsScope = "filtered"', async () => {
       await render(
         <TreeDataTest
           rows={[
@@ -527,6 +527,39 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       expect(getColumnValues(1)).to.deep.equal([]);
+    });
+
+    it('should not apply filtering on the aggregated values for aggregationRowsScope = "filtered"', async () => {
+      await render(
+        <TreeDataTest
+          aggregationRowsScope="all"
+          rows={[
+            {
+              hierarchy: ['A'],
+            },
+            {
+              hierarchy: ['A', 'A'],
+            },
+            {
+              hierarchy: ['A', 'A', 'A'],
+              value: 1,
+            },
+            {
+              hierarchy: ['A', 'A', 'B'],
+              value: 1,
+            },
+          ]}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */, '1', '1']);
+      await act(async () =>
+        apiRef.current?.setFilterModel({
+          items: [{ field: 'value', operator: '=', value: 2 }],
+        }),
+      );
+
+      expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */]);
     });
   });
 
