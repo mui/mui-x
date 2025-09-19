@@ -1,16 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import {
-  CalendarEvent,
-  CalendarEventOccurrence,
-  CalendarProcessedDate,
-  SchedulerValidDate,
-} from '../models';
-import {
-  getDateKey,
-  getDaysTheOccurrenceIsVisibleOn,
-  getOccurrencesFromEvents,
-} from '../utils/event-utils';
+import { CalendarEvent, CalendarEventOccurrence, CalendarProcessedDate } from '../models';
+import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../utils/useEventCalendarStoreContext';
 import { selectors } from '../use-event-calendar';
