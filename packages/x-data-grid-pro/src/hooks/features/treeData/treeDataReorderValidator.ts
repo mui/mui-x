@@ -9,6 +9,12 @@ const validationRules: ValidationRule[] = [
     message: 'Source and target are the same',
   },
   {
+    name: 'over-position',
+    applies: (ctx) => ctx.dropPosition === 'over',
+    isInvalid: (ctx) => ctx.targetNode.type !== 'leaf',
+    message: 'Cannot drop over a non leaf node',
+  },
+  {
     name: 'adjacent-position',
     applies: (ctx) => conditions.isAdjacentPosition(ctx),
     isInvalid: () => true,

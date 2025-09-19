@@ -4,7 +4,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
-export type DropPosition = 'above' | 'below';
+export type DropPosition = 'above' | 'below' | 'over';
 export type DragDirection = 'up' | 'down';
 
 export interface ReorderValidationContext {
