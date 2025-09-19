@@ -16,7 +16,7 @@ export function TimeGridDraftBridge() {
   const api = React.useMemo(
     () => ({
       setPlaceholder: ({ id, start, end }: any) =>
-        setRef.current?.({ eventId: id, columnId: null, start, end }),
+        setRef.current?.({ eventId: id, columnId: null, start, end, originalStart: start }),
       clearPlaceholder: () => setRef.current?.(null),
     }),
     [],
@@ -42,7 +42,7 @@ export function DayGridDraftBridge() {
   const api = React.useMemo(
     () => ({
       setPlaceholder: ({ id, start, end }: any) =>
-        setRef.current?.({ eventId: id, columnId: null, start, end }),
+        setRef.current?.({ eventId: id, columnId: null, start, end, originalStart: start }),
       clearPlaceholder: () => setRef.current?.(null),
     }),
     [],
