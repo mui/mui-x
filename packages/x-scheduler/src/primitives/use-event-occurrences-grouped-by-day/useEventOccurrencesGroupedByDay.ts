@@ -1,16 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import {
-  CalendarEvent,
-  CalendarEventOccurrence,
-  CalendarProcessedDate,
-  SchedulerValidDate,
-} from '../models';
-import {
-  getDateKey,
-  getDaysTheOccurrenceIsVisibleOn,
-  getOccurrencesFromEvents,
-} from '../utils/event-utils';
+import { CalendarEvent, CalendarEventOccurrence, CalendarProcessedDate } from '../models';
+import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../utils/useEventCalendarStoreContext';
 import { selectors } from '../use-event-calendar';
@@ -77,15 +68,8 @@ export function innerGetEventOccurrencesGroupedByDay(
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
 
   for (const occurrence of occurrences) {
-    const eventDays: SchedulerValidDate[] = getDaysTheOccurrenceIsVisibleOn(
-      occurrence,
-      days,
-      adapter,
-      renderEventIn,
-    );
-
-    for (const day of eventDays) {
-      const dayKey = getDateKey(day, adapter);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter, renderEventIn);
+    for (const dayKey of eventDays) {
       const occurrenceType = occurrence.allDay ? 'allDay' : 'nonAllDay';
       occurrencesGroupedByDay.get(dayKey)![occurrenceType].push(occurrence);
     }
