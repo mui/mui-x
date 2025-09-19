@@ -24,19 +24,19 @@ import type {
   DataGridProSharedPropsWithoutDefaultValue,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
-import { GridApiPro } from './gridApiPro';
+import type { GridApiPro } from './gridApiPro';
 import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import { GridInitialStatePro } from './gridStatePro';
-import { GridProSlotsComponent } from './gridProSlotsComponent';
+import type { GridInitialStatePro } from './gridStatePro';
+import type { GridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
-import {
+import type {
   GridDataSourcePro as GridDataSource,
   GridGetRowsParamsPro as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
-import type { ReorderValidationContext } from '../hooks/features/rowReorder/types';
+import type { ReorderValidationContext } from '../hooks/features/rowReorder/reorderValidationTypes';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 

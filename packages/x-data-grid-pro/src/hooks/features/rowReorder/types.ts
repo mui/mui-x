@@ -1,24 +1,14 @@
-import { GridRowId, GridTreeNode } from '@mui/x-data-grid';
-import type { GridRowTreeConfig } from '@mui/x-data-grid';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { GridRowId, GridTreeNode, GridRowTreeConfig } from '@mui/x-data-grid';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { DropPosition } from './reorderValidationTypes';
 
-export type DropPosition = 'above' | 'below' | 'over';
-export type DragDirection = 'up' | 'down';
-
-export interface ReorderValidationContext {
-  sourceNode: GridTreeNode;
-  targetNode: GridTreeNode;
-  prevNode: GridTreeNode | null;
-  nextNode: GridTreeNode | null;
-  rowTree: Record<GridRowId, GridTreeNode>;
-  dropPosition: DropPosition;
-  dragDirection: DragDirection;
-  targetRowIndex: number;
-  sourceRowIndex: number;
-  expandedSortedRowIndexLookup: Record<GridRowId, number>;
-}
+export type {
+  DropPosition,
+  DragDirection,
+  ReorderValidationContext,
+} from './reorderValidationTypes';
 
 export type ReorderOperationType =
   | 'same-parent-swap'
