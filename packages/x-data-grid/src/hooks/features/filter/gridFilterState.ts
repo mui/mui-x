@@ -1,6 +1,7 @@
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
-import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
+import { GridRowId, GridRowModel, GridValidRowModel } from '../../../models/gridRows';
+import { GridColDef } from '../../../models/colDef';
 
 export type GridFilterItemResult = { [key: Required<GridFilterItem>['id']]: boolean };
 export type GridQuickFilterValueResult = { [key: string]: boolean };
@@ -65,6 +66,7 @@ export type GridAggregatedFilterItemApplier = (
 export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any;
 }
 
 export type GridFilteringMethodValue = Omit<GridFilterState, 'filterModel'>;

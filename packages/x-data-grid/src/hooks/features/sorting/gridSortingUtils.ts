@@ -53,13 +53,19 @@ export const mergeStateWithSortModel =
 const isDesc = (direction: GridSortDirection) => direction === 'desc';
 
 /**
+ * @name sortValueGetter
+ * @param {GridRowId} id The id of the row.
+ * @param {string} field The field to sort by.
+ *
  * Transform an item of the sorting model into a method comparing two rows.
  * @param {GridSortItem} sortItem The sort item we want to apply.
+ * @param {Function} sortValueGetter A function to get the value to sort by.
  * @param {RefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridParsedSortItem | null} The parsed sort item. Returns `null` is the sort item is not valid.
  */
 const parseSortItem = (
   sortItem: GridSortItem,
+  sortValueGetter: (id: GridRowId, field: string) => any,
   apiRef: RefObject<GridApiCommunity>,
 ): GridParsedSortItem | null => {
   const column = apiRef.current.getColumn(sortItem.field);
@@ -84,7 +90,7 @@ const parseSortItem = (
     id,
     field: column.field,
     rowNode: gridRowNodeSelector(apiRef, id),
-    value: apiRef.current.getCellValue(id, column.field),
+    value: sortValueGetter(id, column.field),
     api: apiRef.current,
   });
 
@@ -130,15 +136,17 @@ const compareRows = (
 /**
  * Generates a method to easily sort a list of rows according to the current sort model.
  * @param {GridSortModel} sortModel The model with which we want to sort the rows.
+ * @param {Function} sortValueGetter A function to get the value to sort by.
  * @param {RefObject<GridApiCommunity>} apiRef The API of the grid.
  * @returns {GridSortingModelApplier | null} A method that generates a list of sorted row ids from a list of rows according to the current sort model. If `null`, we consider that the rows should remain in the order there were provided.
  */
 export const buildAggregatedSortingApplier = (
   sortModel: GridSortModel,
+  sortValueGetter: (id: GridRowId, field: string) => any,
   apiRef: RefObject<GridApiCommunity>,
 ): GridSortingModelApplier | null => {
   const comparatorList = sortModel
-    .map((item) => parseSortItem(item, apiRef))
+    .map((item) => parseSortItem(item, sortValueGetter, apiRef))
     .filter((comparator): comparator is GridSortingFieldComparator => !!comparator);
 
   if (comparatorList.length === 0) {

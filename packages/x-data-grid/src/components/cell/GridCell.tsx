@@ -173,6 +173,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const cellAggregationResult = config.hooks.useCellAggregationResult(rowId, field);
   const cellMode: GridCellModes = editCellState ? GridCellModes.Edit : GridCellModes.View;
 
+  const { value: forcedValue, formattedValue: forcedFormattedValue } = cellAggregationResult || {};
   const cellParams: GridCellParams<any, any, any, any> = apiRef.current.getCellParamsForRow<
     any,
     any,
@@ -190,15 +191,10 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
       const focus = gridFocusCellSelector(apiRef);
       return focus?.id === rowId && focus.field === field;
     }),
+    value: forcedValue,
+    formattedValue: forcedFormattedValue,
   });
   cellParams.api = apiRef.current;
-
-  if (cellAggregationResult) {
-    cellParams.value = cellAggregationResult.value;
-    cellParams.formattedValue = column.valueFormatter
-      ? column.valueFormatter(cellParams.value as never, row, column, apiRef)
-      : cellParams.value;
-  }
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {

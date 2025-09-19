@@ -103,7 +103,7 @@ const columns: GridColDef<File>[] = [
     type: 'number',
     valueGetter: (value) => {
       if (value == null) {
-        return 0;
+        return null;
       }
       const sizeInKb = value / 1024;
       // Round to 2 decimal places
@@ -146,6 +146,7 @@ export default function AggregationTreeData() {
         columns={columns}
         getTreeDataPath={getTreeDataPath}
         getRowId={getRowId}
+        aggregationRowsScope="all"
         groupingColDef={groupingColDef}
         initialState={{
           aggregation: {

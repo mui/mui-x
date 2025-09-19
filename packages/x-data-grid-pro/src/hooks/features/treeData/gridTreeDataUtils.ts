@@ -4,6 +4,8 @@ import {
   GridTreeNode,
   GridFilterState,
   GridFilterModel,
+  GridRowModel,
+  GridColDef,
 } from '@mui/x-data-grid';
 import {
   GridAggregatedFilterItemApplier,
@@ -17,6 +19,7 @@ interface FilterRowTreeFromTreeDataParams {
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any;
   apiRef: RefObject<GridPrivateApiPro>;
 }
 
@@ -63,6 +66,7 @@ export const filterRowTreeFromTreeData = (
         [filterResults.passingFilterItems],
         [filterResults.passingQuickFilterValues],
         params.filterModel,
+        params.filterValueGetter,
         params.apiRef,
         filterCache,
       );
