@@ -191,8 +191,8 @@ class CrossParentLeafOperation extends BaseReorderOperation {
     if (!setTreeDataPath) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce(
-          'MUI X: Cross-parent reordering requires setTreeDataPath prop to update row data paths. ' +
-            'Please provide a setTreeDataPath function to enable this feature.',
+          'MUI X: Cross-parent reordering requires `setTreeDataPath()` prop to update row data paths. ' +
+            'Please provide a `setTreeDataPath()` function to enable this feature.',
           'warning',
         );
       }
@@ -356,8 +356,8 @@ class DropOnLeafOperation extends BaseReorderOperation {
     if (!setTreeDataPath) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce(
-          'MUI X: Drop on leaf reordering requires setTreeDataPath prop to update row data paths. ' +
-            'Please provide a setTreeDataPath function to enable this feature.',
+          'MUI X: Drop on leaf reordering requires `setTreeDataPath()` prop to update row data paths. ' +
+            'Please provide a `setTreeDataPath()` function to enable this feature.',
           'warning',
         );
       }
