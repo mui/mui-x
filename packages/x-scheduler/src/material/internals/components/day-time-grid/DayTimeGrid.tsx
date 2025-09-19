@@ -7,11 +7,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
-import {
-  CalendarEventOccurrence,
-  CalendarDraggedOccurrence,
-  CalendarProcessedDate,
-} from '../../../../primitives/models';
+import { CalendarEventOccurrence, CalendarProcessedDate } from '../../../../primitives/models';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayGrid } from '../../../../primitives/day-grid';
@@ -68,24 +64,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       !adapter.isBeforeDay(now, days[0].value) &&
       !adapter.isAfterDay(now, days[days.length - 1].value),
     [adapter, days, now],
-  );
-
-  const handleDropOccurrence = React.useCallback(
-    (data: CalendarDraggedOccurrence) => {
-      const originalEvent = selectors.event(store.state, data.eventId)!;
-      if (originalEvent.rrule) {
-        store.updateRecurringEvent({
-          eventId: data.eventId,
-          occurrenceStart: data.originalStart,
-          changes: { start: data.start, end: data.end },
-          // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
-          scope: 'this-and-following',
-        });
-      } else {
-        store.updateEvent({ id: data.eventId, start: data.start, end: data.end });
-      }
-    },
-    [store],
   );
 
   useIsoLayoutEffect(() => {
@@ -154,7 +132,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           ref={allDayHeaderWrapperRef}
           className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
           data-weekend={lastIsWeekend ? '' : undefined}
-          onOccurrenceDrop={handleDropOccurrence}
         >
           <div
             className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
@@ -176,7 +153,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           </DayGrid.Row>
           <div className="ScrollablePlaceholder" />
         </DayGrid.Root>
-        <TimeGrid.Root className="DayTimeGridRoot" onOccurrenceDrop={handleDropOccurrence}>
+        <TimeGrid.Root className="DayTimeGridRoot">
           <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
             <div className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">

@@ -15,7 +15,6 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
     className,
     render,
     // Internal props
-    onOccurrenceDrop,
     id: idProp,
     // Props forwarded to the DOM element
     ...elementProps
@@ -24,10 +23,7 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   const id = useId(idProp);
   const props = React.useMemo(() => ({ role: 'grid', id }), [id]);
 
-  const contextValue: TimeGridRootContext = React.useMemo(
-    () => ({ dropOccurrence: onOccurrenceDrop ?? (() => {}), id }),
-    [onOccurrenceDrop, id],
-  );
+  const contextValue: TimeGridRootContext = React.useMemo(() => ({ id }), [id]);
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
@@ -42,11 +38,5 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
 export namespace TimeGridRoot {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {
-    /**
-     * Event handler called when an occurrence is dropped inside the time grid.
-     * Provides the occurrence data as an argument.
-     */
-    onOccurrenceDrop?: (data: CalendarDraggedOccurrence) => void;
-  }
+  export interface Props extends BaseUIComponentProps<'div', State> {}
 }

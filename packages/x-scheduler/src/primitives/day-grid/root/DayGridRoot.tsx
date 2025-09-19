@@ -3,7 +3,6 @@ import { useId } from '@base-ui-components/utils/useId';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { DayGridRootContext } from './DayGridRootContext';
-import { CalendarDraggedOccurrence } from '../../models/event';
 
 export const DayGridRoot = React.forwardRef(function DayGridRoot(
   componentProps: DayGridRoot.Props,
@@ -14,7 +13,6 @@ export const DayGridRoot = React.forwardRef(function DayGridRoot(
     className,
     render,
     // Internal props
-    onOccurrenceDrop,
     id: idProp,
     // Props forwarded to the DOM element
     ...elementProps
@@ -23,10 +21,7 @@ export const DayGridRoot = React.forwardRef(function DayGridRoot(
   const id = useId(idProp);
   const props = React.useMemo(() => ({ role: 'grid', id }), [id]);
 
-  const contextValue: DayGridRootContext = React.useMemo(
-    () => ({ dropOccurrence: onOccurrenceDrop ?? (() => {}), id }),
-    [onOccurrenceDrop, id],
-  );
+  const contextValue: DayGridRootContext = React.useMemo(() => ({ id }), [id]);
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
@@ -39,11 +34,5 @@ export const DayGridRoot = React.forwardRef(function DayGridRoot(
 export namespace DayGridRoot {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {
-    /**
-     * Event handler called when an occurrence is dropped inside the day grid.
-     * Provides the occurrence data as an argument.
-     */
-    onOccurrenceDrop?: (data: CalendarDraggedOccurrence) => void;
-  }
+  export interface Props extends BaseUIComponentProps<'div', State> {}
 }

@@ -328,6 +328,25 @@ export class EventCalendarStore extends Store<State> {
     onEventsChange?.(updatedEvents);
   };
 
+  // TODO: Once several scopes are supported, add a way to render a UI to choose the scope.
+  /**
+   * Updates the dates of an event occurrence.
+   */
+  public updateEventOccurrenceDates(data: CalendarDraggedOccurrence) {
+    const originalEvent = selectors.event(this.state, data.eventId)!;
+    if (originalEvent.rrule) {
+      this.updateRecurringEvent({
+        eventId: data.eventId,
+        occurrenceStart: data.originalStart,
+        changes: { start: data.start, end: data.end },
+        // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
+        scope: 'this-and-following',
+      });
+    } else {
+      this.updateEvent({ id: data.eventId, start: data.start, end: data.end });
+    }
+  }
+
   /**
    * Deletes an event from the calendar.
    */

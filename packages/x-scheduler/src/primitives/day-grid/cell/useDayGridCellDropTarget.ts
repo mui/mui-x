@@ -17,7 +17,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
 
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { dropOccurrence, id: gridId } = useDayGridRootContext();
+  const { id: gridId } = useDayGridRootContext();
   const ref = React.useRef<HTMLDivElement>(null);
 
   const getEventDropData = useEventCallback(
@@ -166,11 +166,11 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         const newEvent = getEventDropData(data);
 
         if (newEvent) {
-          dropOccurrence(newEvent);
+          store.updateEventOccurrenceDates(newEvent);
         }
       },
     });
-  }, [adapter, dropOccurrence, getEventDropData, gridId, store]);
+  }, [adapter, getEventDropData, gridId, store]);
 
   return ref;
 }

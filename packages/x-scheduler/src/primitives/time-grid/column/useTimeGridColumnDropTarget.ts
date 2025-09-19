@@ -19,7 +19,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const { dropOccurrence, id: gridId } = useTimeGridRootContext();
+  const { id: gridId } = useTimeGridRootContext();
   const store = useEventCalendarStoreContext();
 
   // TODO: Avoid JS date conversion
@@ -164,11 +164,11 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       onDrop: ({ source: { data }, location }) => {
         const newEvent = getEventDropData(data, location.current.input);
         if (newEvent) {
-          dropOccurrence(newEvent);
+          store.updateEventOccurrenceDates(newEvent);
         }
       },
     });
-  }, [adapter, getEventDropData, gridId, store, dropOccurrence]);
+  }, [adapter, getEventDropData, gridId, store]);
 
   return { getCursorPositionInElementMs, ref };
 }

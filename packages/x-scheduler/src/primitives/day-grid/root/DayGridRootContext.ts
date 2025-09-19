@@ -1,13 +1,7 @@
 'use client';
 import * as React from 'react';
-import { CalendarDraggedOccurrence } from '../../models';
 
 export interface DayGridRootContext {
-  /**
-   * Callback fired when an occurrence is dropped inside the day grid.
-   * @param {CalendarDraggedOccurrence} data The data describing the dropped occurrence.
-   */
-  dropOccurrence: (data: CalendarDraggedOccurrence) => void;
   /**
    * A unique id identifying this day grid instance.
    */
