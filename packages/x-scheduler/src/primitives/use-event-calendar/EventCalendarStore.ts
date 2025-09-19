@@ -401,15 +401,12 @@ export class EventCalendarStore extends Store<State> {
     // Only update if something changed.
     if (occurrence != null && previousValue != null) {
       for (const key in occurrence) {
-        if (!occurrence.hasOwnProperty(key)) {
-          continue;
-        }
-        const shouldCompareDates = key === 'start' || key === 'end' || key === 'originalStart';
-        if (shouldCompareDates && adapter.isEqual(occurrence[key], previousValue?.[key])) {
-          this.set('draggedOccurrence', occurrence);
-          return;
-        }
-        if (!shouldCompareDates && !Object.is(occurrence[key], previousValue?.[key])) {
+        if (key === 'start' || key === 'end' || key === 'originalStart') {
+          if (!adapter.isEqual(occurrence[key], previousValue[key])) {
+            this.set('draggedOccurrence', occurrence);
+            return;
+          }
+        } else if (!Object.is(occurrence[key], previousValue?.[key])) {
           this.set('draggedOccurrence', occurrence);
           return;
         }
