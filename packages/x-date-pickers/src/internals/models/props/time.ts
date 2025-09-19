@@ -62,6 +62,12 @@ export interface DigitalTimePickerProps
    * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
   timeSteps?: TimeStepOptions;
+  /**
+   * Whether the time picker should render in a single column layout.
+   * This is computed based on thresholdToRenderTimeInASingleColumn and timeSteps.
+   * @internal
+   */
+  shouldRenderTimeInASingleColumn?: boolean;
 }
 
 interface DigitalClockOnlyBaseProps {
