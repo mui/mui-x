@@ -26,11 +26,29 @@ const GridRowDragAndDropOverlayRoot = styled('div', {
   zIndex: 1,
 
   ...(action === 'above' && {
-    borderTop: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+    '&::before': {
+      pointerEvents: 'none',
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: '2px',
+      backgroundColor: (theme.vars || theme).palette.primary.main,
+    },
   }),
 
   ...(action === 'below' && {
-    borderBottom: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+    '&::after': {
+      pointerEvents: 'none',
+      content: '""',
+      position: 'absolute',
+      bottom: '-2px',
+      left: 0,
+      right: 0,
+      height: '2px',
+      backgroundColor: (theme.vars || theme).palette.primary.main,
+    },
   }),
 
   ...(action === 'over' && {
