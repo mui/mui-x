@@ -98,7 +98,6 @@ export function calculateSankeyLayout(
       return l.source === link.source.id && l.target === link.target.id;
     });
 
-    // Resolve color - handle 'source' and 'target' keywords
     let resolvedColor = originalLink?.color ?? linkColor;
 
     if (resolvedColor === 'source') {
