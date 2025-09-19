@@ -406,7 +406,12 @@ export class EventCalendarStore extends Store<State> {
             this.set('draggedOccurrence', occurrence);
             return;
           }
-        } else if (!Object.is(occurrence[key], previousValue?.[key])) {
+        } else if (
+          !Object.is(
+            occurrence[key as keyof CalendarDraggedOccurrence],
+            previousValue?.[key as keyof CalendarDraggedOccurrence],
+          )
+        ) {
           this.set('draggedOccurrence', occurrence);
           return;
         }
