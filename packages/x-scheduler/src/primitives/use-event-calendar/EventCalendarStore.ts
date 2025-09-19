@@ -16,6 +16,7 @@ import {
 import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
+import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -39,6 +40,44 @@ export class EventCalendarStore extends Store<State> {
     super(initialState);
     this.parameters = parameters;
 
+    this.storeEffect(
+      (state) => ({
+        adapter: state.adapter,
+        events: selectors.events(state),
+        visibleResourcesMap: selectors.visibleResourcesMap(state),
+        viewConfig: state.viewConfig,
+        visibleDate: selectors.visibleDate(state),
+        showWeekends: state.preferences.showWeekends,
+      }),
+      (prev, next) => {
+        if (next.viewConfig == null) {
+          return;
+        }
+
+        if (
+          prev.adapter !== next.adapter ||
+          prev.events !== next.events ||
+          prev.visibleResourcesMap !== next.visibleResourcesMap ||
+          prev.viewConfig !== next.viewConfig // Should never happen
+        ) {
+          const occurrences = innerGetEventOccurrencesGroupedByDay(
+            next.adapter,
+            next.viewConfig.getVisibleDays({
+              adapter: next.adapter,
+              visibleDate: next.visibleDate,
+              showWeekends: next.showWeekends,
+            }),
+            next.viewConfig.renderEventIn,
+            next.events,
+            next.visibleResourcesMap,
+          );
+
+          // TODO: Remove setTimeout once the state handles nested updates
+          setTimeout(() => this.set('tempEventOccurrencesMap', occurrences), 0);
+        }
+      },
+    );
+
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
       // Add listeners to assert the state validity (not applied in prod)
@@ -47,6 +86,18 @@ export class EventCalendarStore extends Store<State> {
         return null;
       });
     }
+  }
+
+  private storeEffect<Value>(
+    selector: (state: State) => Value,
+    effect: (previous: Value, next: Value) => void,
+  ) {
+    let previousState = selector(this.state);
+    this.subscribe((state) => {
+      const nextState = selector(state);
+      effect(previousState, nextState);
+      previousState = nextState;
+    });
   }
 
   /**
@@ -85,6 +136,7 @@ export class EventCalendarStore extends Store<State> {
     const initialState: State = {
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
+      tempEventOccurrencesMap: new Map(),
       preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
       preferencesMenuConfig:
         parameters.preferencesMenuConfig === false
@@ -179,7 +231,14 @@ export class EventCalendarStore extends Store<State> {
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
+    this.setVisibleDate(
+      siblingVisibleDateGetter({
+        adapter: this.state.adapter,
+        date: this.state.visibleDate,
+        delta,
+      }),
+      event,
+    );
   };
 
   /**

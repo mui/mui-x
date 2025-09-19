@@ -4,26 +4,40 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { CalendarPrimitiveEventData } from '../../primitives/models';
+import {
+  CalendarPrimitiveEventData,
+  CalendarProcessedDate,
+  CalendarViewConfig,
+} from '../../primitives/models';
 import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../primitives/use-event-calendar';
-import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
-import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
+import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
+import { getDayList } from '../../primitives/utils/date-utils';
 import './MonthView.css';
 
-const adapter = getAdapter();
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 5;
+
+const viewConfig: CalendarViewConfig = {
+  renderEventIn: 'every-day',
+  siblingVisibleDateGetter: ({ adapter, date, delta }) =>
+    adapter.addWeeks(adapter.startOfWeek(date), delta),
+  getVisibleDays: ({ adapter, visibleDate, showWeekends }) =>
+    getDayList({
+      adapter,
+      showWeekends,
+      firstDay: adapter.startOfMonth(visibleDate),
+      lastDay: adapter.endOfMonth(visibleDate),
+    }),
+};
 
 export const MonthView = React.memo(
   React.forwardRef(function MonthView(
@@ -31,36 +45,35 @@ export const MonthView = React.memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     const { className, ...other } = props;
+
+    const adapter = useAdapter();
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
-
     const store = useEventCalendarStoreContext();
     const preferences = useStore(store, selectors.preferences);
-    const visibleDate = useStore(store, selectors.visibleDate);
+    const occurrencesMap = useStore(store, selectors.occurrencesByDayMap);
     const translations = useTranslations();
+    const { days } = useInitializeView(viewConfig);
 
-    const getDayList = useDayList();
-    const getWeekList = useWeekList();
-    const { weeks, days } = React.useMemo(() => {
-      const weekFirstDays = getWeekList({
-        date: adapter.startOfMonth(visibleDate),
-        amount: 'end-of-month',
-      });
-      const tempWeeks = weekFirstDays.map((week) =>
-        getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
-      );
-
-      return { weeks: tempWeeks, days: tempWeeks.flat(1) };
-    }, [getWeekList, getDayList, visibleDate, preferences.showWeekends]);
-
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
-
-    useInitializeView(() => ({
-      siblingVisibleDateGetter: (date, delta) =>
-        adapter.addMonths(adapter.startOfMonth(date), delta),
-    }));
+    const weeks = React.useMemo(() => {
+      const tempWeeks: CalendarProcessedDate[][] = [];
+      let lastDayWeekNumber: number | null = null;
+      for (let i = 0; i < days.length; i += 1) {
+        const lastWeek = tempWeeks[tempWeeks.length - 1];
+        const day = days[i];
+        const dayWeekNumber = adapter.getWeekNumber(day.value);
+        const isNewWeek = lastDayWeekNumber !== dayWeekNumber;
+        if (isNewWeek) {
+          lastDayWeekNumber = dayWeekNumber;
+          tempWeeks.push([day]);
+        } else {
+          lastWeek.push(day);
+        }
+      }
+      return tempWeeks;
+    }, [adapter, days]);
 
     const handleEventChangeFromPrimitive = React.useCallback(
       (data: CalendarPrimitiveEventData) => {
