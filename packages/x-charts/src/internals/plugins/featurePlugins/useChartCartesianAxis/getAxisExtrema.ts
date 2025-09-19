@@ -10,7 +10,6 @@ import { GetZoomAxisFilters } from './zoom.types';
 import { isCartesianSeriesType } from '../../../isCartesian';
 
 const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(
-  acc: CartesianExtremumGetterResult,
   chartType: TSeriesType,
   axis: AxisConfig,
   axisDirection: 'x' | 'y',
@@ -25,47 +24,46 @@ const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(
       : seriesConfig[chartType].yExtremumGetter;
   const series = formattedSeries[chartType]?.series ?? {};
 
-  const [minChartTypeData, maxChartTypeData] = (getter as CartesianExtremumGetter<TSeriesType>)?.({
-    series,
-    axis,
-    axisIndex,
-    isDefaultAxis: axisIndex === 0,
-    getFilters,
-  }) ?? [Infinity, -Infinity];
-
-  const [minData, maxData] = acc;
-
-  return [Math.min(minChartTypeData, minData), Math.max(maxChartTypeData, maxData)];
+  return (
+    (getter as CartesianExtremumGetter<TSeriesType>)?.({
+      series,
+      axis,
+      axisIndex,
+      isDefaultAxis: axisIndex === 0,
+      getFilters,
+    }) ?? [Infinity, -Infinity]
+  );
 };
 
-export const getAxisExtremum = <T extends CartesianChartSeriesType>(
+export function getAxisExtrema<T extends CartesianChartSeriesType>(
   axis: AxisConfig,
   axisDirection: 'x' | 'y',
   seriesConfig: ChartSeriesConfig<T>,
   axisIndex: number,
   formattedSeries: ProcessedSeries<T>,
   getFilters?: GetZoomAxisFilters,
-): [number, number] => {
-  const charTypes = Object.keys(seriesConfig).filter(isCartesianSeriesType);
+): [number, number] {
+  const cartesianChartTypes = Object.keys(seriesConfig).filter(isCartesianSeriesType);
 
-  const extremums = charTypes.reduce<CartesianExtremumGetterResult>(
-    (acc, charType) =>
-      axisExtremumCallback(
-        acc,
-        charType as T,
-        axis,
-        axisDirection,
-        seriesConfig,
-        axisIndex,
-        formattedSeries,
-        getFilters,
-      ),
-    [Infinity, -Infinity],
-  );
+  let extrema: [number, number] = [Infinity, -Infinity];
 
-  if (Number.isNaN(extremums[0]) || Number.isNaN(extremums[1])) {
+  for (const chartType of cartesianChartTypes) {
+    const [min, max] = axisExtremumCallback<T>(
+      chartType as T,
+      axis,
+      axisDirection,
+      seriesConfig,
+      axisIndex,
+      formattedSeries,
+      getFilters,
+    );
+
+    extrema = [Math.min(extrema[0], min), Math.max(extrema[1], max)];
+  }
+
+  if (Number.isNaN(extrema[0]) || Number.isNaN(extrema[1])) {
     return [Infinity, -Infinity];
   }
 
-  return extremums;
-};
+  return extrema;
+}

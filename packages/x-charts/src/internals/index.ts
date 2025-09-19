@@ -30,6 +30,7 @@ export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
+export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
@@ -67,7 +68,7 @@ export * from './scaleGuards';
 export * from './findMinMax';
 
 // contexts
-export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
+export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
 export * from '../context/ChartProvider';
 export * from '../context/ChartsSlotsContext';
 
