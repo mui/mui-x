@@ -111,7 +111,7 @@ type RequiredAPI = Dimensions.API & AbstractAPI;
 function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: RequiredAPI) {
   const {
     refs,
-    dimensions: { rowHeight, columnsTotalWidth },
+    dimensions: { rowHeight, columnsTotalWidth = 0 },
     virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
     colspan,
     initialState,
