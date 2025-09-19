@@ -91,7 +91,7 @@ const columns = [
     type: 'number',
     valueGetter: (value) => {
       if (value == null) {
-        return 0;
+        return null;
       }
       const sizeInKb = value / 1024;
       // Round to 2 decimal places

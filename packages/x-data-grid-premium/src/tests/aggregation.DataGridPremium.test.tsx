@@ -529,7 +529,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(1)).to.deep.equal([]);
     });
 
-    it('should not apply filtering on the aggregated values for aggregationRowsScope = "filtered"', async () => {
+    it('should apply filtering on the aggregated values for aggregationRowsScope = "all"', async () => {
       await render(
         <TreeDataTest
           aggregationRowsScope="all"
