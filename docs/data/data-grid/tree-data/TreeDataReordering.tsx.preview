@@ -3,4 +3,6 @@
   rowReordering
   disableRowSelectionOnClick
   {...data}
+  getTreeDataPath={getTreeDataPath}
+  setTreeDataPath={setTreeDataPath}
 />
