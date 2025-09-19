@@ -69,11 +69,11 @@
   padding: var(--space-6);
 }
 
-.EventPopoverMainContent > :not(:first-child):not(.EventPopoverSeparator) {
+.EventPopoverMainContent > :not(:first-child, .EventPopoverSeparator) {
   margin-block-start: var(--space-5);
 }
 
-.EventPopoverMainContent > :not(:last-child):not(.EventPopoverSeparator) {
+.EventPopoverMainContent > :not(:last-child, .EventPopoverSeparator) {
   margin-block-end: var(--space-5);
 }
 
@@ -131,6 +131,7 @@
   display: flex;
   gap: var(--space-2);
 }
+
 .EventPopoverDateTimeFieldsStartRow > :first-child,
 .EventPopoverDateTimeFieldsEndRow > :first-child {
   flex: 1.5 1 0%;
@@ -166,6 +167,7 @@
   color: var(--secondary-text-color);
   font-size: var(--font-size-1);
 }
+
 .AllDayCheckboxRoot {
   box-sizing: border-box;
   display: flex;
@@ -195,6 +197,7 @@
 
   &[data-disabled] {
     cursor: var(--cursor-disabled);
+
     &[data-checked] {
       background-color: var(--disabled-text-color);
     }

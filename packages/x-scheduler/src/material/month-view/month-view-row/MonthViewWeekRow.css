@@ -10,8 +10,37 @@
   color: var(--secondary-text-color);
 }
 
+.MonthViewCellNumberButton {
+  width: fit-content;
+  align-self: flex-end;
+  border-radius: var(--radius-4);
+}
+
+/* Hovered */
+.MonthViewCellNumberButton:hover {
+  background: var(--interactive-hover-bg);
+}
+
+/* Active */
+.MonthViewCellNumberButton:active {
+  background: var(--interactive-active-bg);
+}
+
+/* Focused */
+.MonthViewCellNumberButton:focus-visible {
+  background: var(--interactive-focused-bg);
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+/* Focused and hovered */
+.MonthViewCellNumberButton:focus-visible:hover {
+  background: var(--interactive-focused-hover-bg);
+}
+
 .MonthViewCell {
   display: grid;
+
   /* Setting the row heights to 18px here to make sure that even empty rows have the exact height of an all day event */
   grid-template-rows: repeat(var(--row-count), minmax(auto, 18px));
   gap: var(--space-1);
@@ -33,6 +62,7 @@
 .MonthViewCell[data-current] {
   background-color: var(--primary-2);
 }
+
 .MonthViewCellNumber,
 .MonthViewCellNumberButton {
   grid-row: 1;
@@ -68,34 +98,6 @@
 /* Today and active */
 .MonthViewCell[data-current] > .MonthViewCellNumberButton:active {
   background: var(--primary-7);
-}
-
-.MonthViewCellNumberButton {
-  width: fit-content;
-  align-self: flex-end;
-  border-radius: var(--radius-4);
-}
-
-/* Hovered */
-.MonthViewCellNumberButton:hover {
-  background: var(--interactive-hover-bg);
-}
-
-/* Active */
-.MonthViewCellNumberButton:active {
-  background: var(--interactive-active-bg);
-}
-
-/* Focused */
-.MonthViewCellNumberButton:focus-visible {
-  background: var(--interactive-focused-bg);
-  outline: var(--outline-focus);
-  outline-offset: var(--outline-focus-offset);
-}
-
-/* Focused and hovered */
-.MonthViewCellNumberButton:focus-visible:hover {
-  background: var(--interactive-focused-hover-bg);
 }
 
 .MonthViewCellEvents {

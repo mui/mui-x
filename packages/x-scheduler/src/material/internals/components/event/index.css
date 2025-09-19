@@ -1,4 +1,5 @@
 .EventContainer {
+
   /* Regular */
   --regular-accepted-bg: var(--event-color-3);
   --regular-line-bg: var(--event-color-12);

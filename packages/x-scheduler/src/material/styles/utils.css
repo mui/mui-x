@@ -5,6 +5,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+
   word-break: break-word;
   overflow-wrap: break-word;
 }
