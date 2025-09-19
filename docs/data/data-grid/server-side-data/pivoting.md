@@ -29,9 +29,9 @@ To be able to dynamically load pivoted data from the server, you must create a D
 
 ## Implementing server-side pivoting
 
-To implement server-side pivoting, provide the `getPivotColumnDef()` prop to the Data Source.
-This prop customizes the column definition for pivot columns based on the pivot value and column group path.
-This method must at least override the field name to target the row property holding the pivoted data.
+To implement server-side pivoting, add the `getPivotColumnDef()` method to the Data Source.
+This method customizes the column definition for pivot columns based on the pivot value and column group path.
+It must at least override the field name to target the row property holding the pivoted data.
 
 ```tsx
 const customDataSource: GridDataSource = {
@@ -53,7 +53,7 @@ const customDataSource: GridDataSource = {
 };
 ```
 
-In addition to the standard `getRows()` parameters, the `getRows()` callback receives a `pivotModel` parameter when pivoting is active.
+In addition to the standard `getRows()` parameters, the `getRows()` callback receives the [`pivotModel`](/x/react-data-grid/pivoting/#pivot-model) parameter when pivoting is active.
 This corresponds to the current pivot configuration and contains the visible rows, columns, and values from the pivot model.
 Use `pivotModel` on the server to pivot the data for each `getRows()` call.
 
