@@ -77,6 +77,7 @@ This function receives the numeric value and a context object that provides info
 
 The context object contains:
 
+- `location`: either `'tooltip'` or `'label'` to indicate where the formatted value will be used
 - `type`: either `'node'` or `'link'` to indicate what is being formatted
 - `nodeId`: for nodes, the ID of the node being formatted
 - `sourceId` and `targetId`: for links, the IDs of the source and target nodes
