@@ -264,6 +264,15 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         gridHasFiller,
       );
 
+      const style = pinnedPosition
+        ? ({
+            '--unstable_pinnedColumnLayer':
+              pinnedPosition === PinnedColumnPosition.LEFT
+                ? Math.max(45 - i, 40)
+                : Math.min(35 + i, 40),
+          } as React.CSSProperties)
+        : undefined;
+
       columns.push(
         <GridColumnHeaderItem
           key={colDef.field}
@@ -286,6 +295,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           isSiblingFocused={isSiblingFocused}
           showLeftBorder={showLeftBorder}
           showRightBorder={showRightBorder}
+          style={style}
           {...other}
         />,
       );
