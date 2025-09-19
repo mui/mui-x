@@ -11,7 +11,6 @@
   --event-color-10: var(--primary-10);
   --event-color-11: var(--primary-11);
   --event-color-12: var(--primary-12);
-
   --event-color-4-rgb: var(--primary-4-rgb);
 }
 
@@ -28,7 +27,6 @@
   --event-color-10: var(--mauve-10);
   --event-color-11: var(--mauve-11);
   --event-color-12: var(--mauve-12);
-
   --event-color-4-rgb: var(--mauve-4-rgb);
 }
 
@@ -45,7 +43,6 @@
   --event-color-10: var(--violet-10);
   --event-color-11: var(--violet-11);
   --event-color-12: var(--violet-12);
-
   --event-color-4-rgb: var(--violet-4-rgb);
 }
 
@@ -62,7 +59,6 @@
   --event-color-10: var(--cyan-10);
   --event-color-11: var(--cyan-11);
   --event-color-12: var(--cyan-12);
-
   --event-color-4-rgb: var(--cyan-4-rgb);
 }
 
@@ -79,7 +75,6 @@
   --event-color-10: var(--jade-10);
   --event-color-11: var(--jade-11);
   --event-color-12: var(--jade-12);
-
   --event-color-4-rgb: var(--jade-4-rgb);
 }
 
@@ -96,7 +91,6 @@
   --event-color-10: var(--red-10);
   --event-color-11: var(--red-11);
   --event-color-12: var(--red-12);
-
   --event-color-4-rgb: var(--red-4-rgb);
 }
 
@@ -113,7 +107,6 @@
   --event-color-10: var(--pink-10);
   --event-color-11: var(--pink-11);
   --event-color-12: var(--pink-12);
-
   --event-color-4-rgb: var(--pink-4-rgb);
 }
 
@@ -130,9 +123,9 @@
   --event-color-10: var(--orange-10);
   --event-color-11: var(--orange-11);
   --event-color-12: var(--orange-12);
-
   --event-color-4-rgb: var(--orange-4-rgb);
 }
+
 .palette-yellow {
   --event-color-1: var(--yellow-1);
   --event-color-2: var(--yellow-2);
@@ -146,9 +139,9 @@
   --event-color-10: var(--yellow-10);
   --event-color-11: var(--yellow-11);
   --event-color-12: var(--yellow-12);
-
   --event-color-4-rgb: var(--yellow-4-rgb);
 }
+
 .palette-lime {
   --event-color-1: var(--lime-1);
   --event-color-2: var(--lime-2);
@@ -162,9 +155,9 @@
   --event-color-10: var(--lime-10);
   --event-color-11: var(--lime-11);
   --event-color-12: var(--lime-12);
-
   --event-color-4-rgb: var(--lime-4-rgb);
 }
+
 .palette-blue {
   --event-color-1: var(--blue-1);
   --event-color-2: var(--blue-2);
@@ -178,9 +171,9 @@
   --event-color-10: var(--blue-10);
   --event-color-11: var(--blue-11);
   --event-color-12: var(--blue-12);
-
   --event-color-4-rgb: var(--blue-4-rgb);
 }
+
 .palette-indigo {
   --event-color-1: var(--indigo-1);
   --event-color-2: var(--indigo-2);
@@ -194,6 +187,5 @@
   --event-color-10: var(--indigo-10);
   --event-color-11: var(--indigo-11);
   --event-color-12: var(--indigo-12);
-
   --event-color-4-rgb: var(--indigo-4-rgb);
 }
