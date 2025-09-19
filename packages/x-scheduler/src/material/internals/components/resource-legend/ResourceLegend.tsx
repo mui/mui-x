@@ -10,8 +10,9 @@ import { ResourceLegendProps } from './ResourceLegend.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
-import { DEFAULT_EVENT_COLOR, selectors } from '../../../../primitives/use-event-calendar';
+import { selectors } from '../../../../primitives/use-event-calendar';
 import { CalendarResource } from '../../../../primitives/models';
+import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
 import './ResourceLegend.css';
 
 function ResourceLegendItem(props: { resource: CalendarResource }) {

@@ -1,5 +1,5 @@
 export * from './useEventCalendar';
-export * from './useEventCalendar.types';
+export * from './EventCalendarStore.types';
 export * from './useExtractEventCalendarParameters';
 export * from './EventCalendarStore';
-export { selectors } from './store';
+export * from './EventCalendarStore.selectors';

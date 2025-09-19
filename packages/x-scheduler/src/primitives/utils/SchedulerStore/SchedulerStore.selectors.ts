@@ -1,84 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import {
-  SchedulerValidDate,
-  CalendarEvent,
-  CalendarEventId,
-  CalendarResource,
-  CalendarResourceId,
-  CalendarView,
-  CalendarPreferences,
-  CalendarViewConfig,
-  CalendarPreferencesMenuConfig,
-  CalendarEventColor,
-} from '../models';
-import { Adapter } from '../utils/adapter/types';
-
-export type State = {
-  /**
-   * The adapter of the date library.
-   * Not publicly exposed, is only set in state to avoid passing it to the selectors.
-   */
-  adapter: Adapter;
-  /**
-   * The date used to determine the visible date range in each view.
-   */
-  visibleDate: SchedulerValidDate;
-  /**
-   * The view displayed in the calendar.
-   */
-  view: CalendarView;
-  /**
-   * The views available in the calendar.
-   */
-  views: CalendarView[];
-  /**
-   * The events available in the calendar.
-   */
-  events: CalendarEvent[];
-  /**
-   * The resources the events can be assigned to.
-   */
-  resources: CalendarResource[];
-  /**
-   * Visibility status for each resource.
-   * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
-   */
-  visibleResources: Map<CalendarResourceId, boolean>;
-  /**
-   * Whether the event can be dragged to change its start and end dates without changing the duration.
-   */
-  areEventsDraggable: boolean;
-  /**
-   * Whether the event start or end can be dragged to change its duration without changing its other date.
-   */
-  areEventsResizable: boolean;
-  /**
-   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
-   */
-  ampm: boolean;
-  /**
-   * The color palette used for all events.
-   */
-  eventColor: CalendarEventColor;
-  /**
-   * Whether the component should display the current time indicator.
-   */
-  showCurrentTimeIndicator: boolean;
-  /**
-   * Preferences for the calendar.
-   */
-  preferences: CalendarPreferences;
-  /**
-   * Config of the preferences menu.
-   * Defines which options are visible in the menu.
-   */
-  preferencesMenuConfig: CalendarPreferencesMenuConfig | false;
-  /**
-   * Config of the current view.
-   * Should not be used in selectors, only in event handlers.
-   */
-  viewConfig: CalendarViewConfig | null;
-};
+import { CalendarEvent, CalendarEventId, CalendarResource, CalendarResourceId } from '../../models';
+import { SchedulerState as State } from './SchedulerStore.types';
 
 const eventByIdMapSelector = createSelectorMemoized(
   (state: State) => state.events,
@@ -122,11 +44,6 @@ export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   ampm: createSelector((state: State) => state.ampm),
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
-  view: createSelector((state: State) => state.view),
-  views: createSelector((state: State) => state.views),
-  preferences: createSelector((state: State) => state.preferences),
-  preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
-  hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
   events: createSelector((state: State) => state.events),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),

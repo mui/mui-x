@@ -13,16 +13,11 @@ export const enUS: SchedulerTranslations = {
   other: 'Other',
   today: 'Today',
   week: 'Week',
-  timeline: 'Timeline',
   time: 'Time',
   days: 'Days',
   months: 'Months',
   weeks: 'Weeks',
   years: 'Years',
-
-  // Timeline toggle
-  timelineMode: 'Timeline Mode',
-  calendarMode: 'Calendar Mode',
 
   // Preferences menu
   preferencesMenu: 'Settings',
