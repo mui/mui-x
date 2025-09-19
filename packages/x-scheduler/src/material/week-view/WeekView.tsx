@@ -1,41 +1,30 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
-import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { WeekViewProps } from './WeekView.types';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../primitives/use-event-calendar';
 import { useInitializeView } from '../../primitives/utils/useInitializeView';
+import { getDayList } from '../../primitives/utils/date-utils';
+import { CalendarViewConfig } from '../../primitives/models';
 
-const adapter = getAdapter();
+const viewConfig: CalendarViewConfig = {
+  renderEventIn: 'every-day',
+  siblingVisibleDateGetter: ({ adapter, date, delta }) =>
+    adapter.addWeeks(adapter.startOfWeek(date), delta),
+  getVisibleDays: ({ adapter, visibleDate, showWeekends }) =>
+    getDayList({
+      adapter,
+      showWeekends,
+      firstDay: adapter.startOfWeek(visibleDate),
+      lastDay: adapter.endOfWeek(visibleDate),
+    }),
+};
 
 export const WeekView = React.memo(
   React.forwardRef(function WeekView(
     props: WeekViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const store = useEventCalendarStoreContext();
-    const visibleDate = useStore(store, selectors.visibleDate);
-    const preferences = useStore(store, selectors.preferences);
-    const getDayList = useDayList();
-
-    const days = React.useMemo(
-      () =>
-        getDayList({
-          date: adapter.startOfWeek(visibleDate),
-          amount: 'week',
-          excludeWeekends: !preferences.showWeekends,
-        }),
-      [getDayList, visibleDate, preferences.showWeekends],
-    );
-
-    useInitializeView(() => ({
-      siblingVisibleDateGetter: (date, delta) => adapter.addWeeks(adapter.startOfWeek(date), delta),
-      visibleDays: days,
-      renderEventIn: 'every-day',
-    }));
+    const { days } = useInitializeView(viewConfig);
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),

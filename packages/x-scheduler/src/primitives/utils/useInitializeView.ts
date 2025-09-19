@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useStore } from '@base-ui-components/utils/store';
 import { CalendarViewConfig } from '../models';
 import { useEventCalendarStoreContext } from './useEventCalendarStoreContext';
+import { selectors } from '../use-event-calendar';
+import { useAdapter } from './adapter/useAdapter';
 
 /**
  * Initializes the view on the event calendar.
@@ -15,11 +18,25 @@ import { useEventCalendarStoreContext } from './useEventCalendarStoreContext';
  * ```
  * @param parameters Parameters for the view.
  */
-export function useInitializeView(parameters: () => CalendarViewConfig) {
+export function useInitializeView(parameters: CalendarViewConfig) {
+  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const initialParameters = React.useRef(parameters);
+  const visibleDate = useStore(store, selectors.visibleDate);
+  const preferences = useStore(store, selectors.preferences);
 
+  const initialParameters = React.useRef(parameters);
   useIsoLayoutEffect(() => {
-    return store.setViewConfig(initialParameters.current());
+    return store.setViewConfig(initialParameters.current);
   }, [store]);
+
+  return React.useMemo(
+    () => ({
+      days: initialParameters.current.getVisibleDays({
+        adapter,
+        visibleDate,
+        showWeekends: preferences.showWeekNumber,
+      }),
+    }),
+    [adapter, visibleDate, preferences.showWeekNumber],
+  );
 }

@@ -10,6 +10,7 @@ import {
   CalendarViewConfig,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
+  CalendarEventOccurrence,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
@@ -78,6 +79,10 @@ export type State = {
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
+  /**
+   * TODO: Write JSDoc
+   */
+  tempEventOccurrencesMap: Map<string, CalendarEventOccurrence[]>;
 };
 
 const eventByIdMapSelector = createSelectorMemoized(
@@ -129,6 +134,7 @@ export const selectors = {
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
   events: createSelector((state: State) => state.events),
+  occurrencesByDayMap: createSelector((state: State) => state.tempEventOccurrencesMap),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   resource: resourceSelector,
   eventColor: createSelector((state: State, eventId: CalendarEventId) => {

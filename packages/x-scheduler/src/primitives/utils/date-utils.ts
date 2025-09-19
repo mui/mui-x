@@ -1,5 +1,6 @@
-import { SchedulerValidDate } from '../models';
+import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 import { Adapter } from './adapter/types';
+import { processDate } from './event-utils';
 
 export function mergeDateAndTime(
   adapter: Adapter,
@@ -81,4 +82,37 @@ export function diffIn(
     default:
       return 0;
   }
+}
+
+export function getDayList(parameters: GetDayListParameters): CalendarProcessedDate[] {
+  const { adapter, firstDay, lastDay, showWeekends } = parameters;
+  let current = firstDay;
+  let currentDayNumber = adapter.getDayOfWeek(current);
+  const days: SchedulerValidDate[] = [];
+
+  while (adapter.isBeforeDay(current, lastDay)) {
+    if (showWeekends || !isWeekend(adapter, current)) {
+      days.push(current);
+    }
+
+    const prevDayNumber = currentDayNumber;
+    current = adapter.addDays(current, 1);
+    currentDayNumber = adapter.getDayOfWeek(current);
+
+    // If there is a TZ change at midnight, adding 1 day may only increase the date by 23 hours to 11pm
+    // To fix, bump the date into the next day (add 12 hours) and then revert to the start of the day
+    // See https://github.com/moment/moment/issues/4743#issuecomment-811306874 for context.
+    if (prevDayNumber === currentDayNumber) {
+      current = adapter.startOfDay(adapter.addHours(current, 12));
+    }
+  }
+
+  return days.map((day) => processDate(day, adapter));
+}
+
+interface GetDayListParameters {
+  adapter: Adapter;
+  firstDay: SchedulerValidDate;
+  lastDay: SchedulerValidDate;
+  showWeekends: boolean;
 }

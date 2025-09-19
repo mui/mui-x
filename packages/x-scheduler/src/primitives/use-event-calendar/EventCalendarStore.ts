@@ -12,7 +12,6 @@ import {
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
   CalendarResource,
-  CalendarProcessedDate,
 } from '../models';
 import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
@@ -41,30 +40,40 @@ export class EventCalendarStore extends Store<State> {
     super(initialState);
     this.parameters = parameters;
 
-    const EMPTY_DAYS: CalendarProcessedDate[] = [];
     this.storeEffect(
       (state) => ({
         adapter: state.adapter,
         events: selectors.events(state),
         visibleResourcesMap: selectors.visibleResourcesMap(state),
-        days: state.viewConfig?.visibleDays ?? EMPTY_DAYS,
-        renderEventIn: state.viewConfig?.renderEventIn ?? 'every-day',
+        viewConfig: state.viewConfig,
+        visibleDate: state.visibleDate,
+        showWeekends: state.preferences.showWeekends,
       }),
       (prev, next) => {
+        if (next.viewConfig == null) {
+          return;
+        }
+
         if (
           prev.adapter !== next.adapter ||
           prev.events !== next.events ||
           prev.visibleResourcesMap !== next.visibleResourcesMap ||
-          prev.days !== next.days
+          prev.viewConfig !== next.viewConfig // Should never happen
         ) {
           const occurrences = innerGetEventOccurrencesGroupedByDay(
             next.adapter,
-            next.days,
-            next.renderEventIn,
+            next.viewConfig.getVisibleDays({
+              adapter: next.adapter,
+              visibleDate: next.visibleDate,
+              showWeekends: next.showWeekends,
+            }),
+            next.viewConfig.renderEventIn,
             next.events,
             next.visibleResourcesMap,
           );
-          console.log('New occurrences', occurrences);
+
+          // TODO: Remove setTimeout once the state handles nested updates
+          setTimeout(() => this.set('tempEventOccurrencesMap', occurrences), 0);
         }
       },
     );
@@ -127,6 +136,7 @@ export class EventCalendarStore extends Store<State> {
     const initialState: State = {
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
+      tempEventOccurrencesMap: new Map(),
       preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
       preferencesMenuConfig:
         parameters.preferencesMenuConfig === false
@@ -221,7 +231,14 @@ export class EventCalendarStore extends Store<State> {
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
+    this.setVisibleDate(
+      siblingVisibleDateGetter({
+        adapter: this.state.adapter,
+        date: this.state.visibleDate,
+        delta,
+      }),
+      event,
+    );
   };
 
   /**

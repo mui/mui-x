@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
 import {
   CalendarEvent,
   CalendarEventOccurrence,
@@ -11,9 +9,6 @@ import {
   getDaysTheOccurrenceIsVisibleOn,
   getOccurrencesFromEvents,
 } from '../utils/event-utils';
-import { useAdapter } from '../utils/adapter/useAdapter';
-import { useEventCalendarStoreContext } from '../utils/useEventCalendarStoreContext';
-import { selectors } from '../use-event-calendar';
 import { Adapter } from '../utils/adapter/types';
 
 /**
@@ -21,43 +16,6 @@ import { Adapter } from '../utils/adapter/types';
  * For recurring events, it expands them to get all the occurrences that fall within the given days.
  * It should be called once per view to get the occurrences for all the visible days in one go.
  * The returned value is a Map where the key is the day key and the value is the list of occurrences for that day.
- */
-export function useEventOccurrencesGroupedByDay(
-  parameters: useEventOccurrencesGroupedByDay.Parameters,
-): useEventOccurrencesGroupedByDay.ReturnValue {
-  const { days, renderEventIn } = parameters;
-  const adapter = useAdapter();
-  const store = useEventCalendarStoreContext();
-  const events = useStore(store, selectors.events);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
-
-  return React.useMemo(
-    () =>
-      innerGetEventOccurrencesGroupedByDay(adapter, days, renderEventIn, events, visibleResources),
-    [adapter, days, renderEventIn, events, visibleResources],
-  );
-}
-
-export namespace useEventOccurrencesGroupedByDay {
-  export interface Parameters {
-    /**
-     * The days to get the occurrences for.
-     */
-    days: CalendarProcessedDate[];
-    /**
-     * The days a multi-day event should appear on.
-     * If "first-day", the event appears only on its starting day.
-     * If "every-day", the event appears on each day it spans.
-     */
-    renderEventIn: 'first-day' | 'every-day';
-  }
-
-  export type ReturnValue = Map<string, CalendarEventOccurrence[]>;
-}
-
-/**
- * Do not use directly, use the `useEventOccurrencesGroupedByDay` hook instead.
- * This is only exported for testing purposes.
  */
 export function innerGetEventOccurrencesGroupedByDay(
   adapter: Adapter,
