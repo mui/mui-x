@@ -46,7 +46,7 @@ export class EventCalendarStore extends Store<State> {
         events: selectors.events(state),
         visibleResourcesMap: selectors.visibleResourcesMap(state),
         viewConfig: state.viewConfig,
-        visibleDate: state.visibleDate,
+        visibleDate: selectors.visibleDate(state),
         showWeekends: state.preferences.showWeekends,
       }),
       (prev, next) => {
