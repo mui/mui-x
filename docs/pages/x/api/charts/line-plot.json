@@ -19,7 +19,8 @@
   "imports": [
     "import { LinePlot } from '@mui/x-charts/LineChart';",
     "import { LinePlot } from '@mui/x-charts';",
-    "import { LinePlot } from '@mui/x-charts-pro';"
+    "import { LinePlot } from '@mui/x-charts-pro';",
+    "import { LinePlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
