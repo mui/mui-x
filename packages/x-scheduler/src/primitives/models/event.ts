@@ -146,7 +146,8 @@ export type CalendarEventColor =
   | 'blue';
 
 /**
- * Object forwarded to the `onEventChange` handler of the Day Grid Root and Time Grid Root parts.
+ * Object representing a dragged event occurrence.
+ * It is used to generate the placeholder when dragging an event and well as to update the event when it is dropped.
  */
 export interface CalendarDraggedOccurrence {
   /**
