@@ -168,6 +168,12 @@ export default defineConfig(
       // migration rules
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-require-imports': 'off',
+      'react-hooks/exhaustive-deps': [
+        'error',
+        {
+          additionalHooks: 'useEffectAfterFirstRender',
+        },
+      ],
     },
   },
   // Test start

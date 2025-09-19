@@ -10,6 +10,7 @@ import {
   selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
 import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
@@ -30,13 +31,14 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
 
-  React.useEffect(() => {
+  useEffectAfterFirstRender(() => {
     store.update((prevState) => {
-      prevState.zoom.zoomInteractionConfig = initializeZoomInteractionConfig(zoomInteractionConfig);
-
       return {
         ...prevState,
-        zoom: prevState.zoom,
+        zoom: {
+          ...prevState.zoom,
+          zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
+        },
       };
     });
   }, [store, zoomInteractionConfig]);
