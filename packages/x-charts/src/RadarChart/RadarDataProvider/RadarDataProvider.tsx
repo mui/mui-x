@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartProviderProps } from '../../context/ChartProvider/ChartProvider.types';
-import { RADAR_PLUGINS, RadarChartPluginsSignatures } from '../RadarChart.plugins';
+import { RADAR_PLUGINS, RadarChartPluginSignatures } from '../RadarChart.plugins';
 import { RadarSeriesType } from '../../models/seriesType/radar';
 import { ChartsRadiusAxisProps, ChartsRotationAxisProps, PolarAxisConfig } from '../../models/axis';
 import { ChartDataProvider, ChartDataProviderProps } from '../../ChartDataProvider';
@@ -16,7 +16,7 @@ const DEFAULT_RADAR_MARGIN = { top: 30, bottom: 30, left: 50, right: 50 };
 
 export type RadarSeries = MakeOptional<RadarSeriesType, 'type'>;
 export type RadarDataProviderProps<
-  TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginsSignatures,
+  TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginSignatures,
 > = Omit<
   ChartDataProviderProps<'radar', TSignatures>,
   'series' | 'rotationAxis' | 'radiusAxis' | 'dataset' | 'experimentalFeatures'
@@ -38,7 +38,7 @@ export type RadarDataProviderProps<
 };
 
 function RadarDataProvider<
-  TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginsSignatures,
+  TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginSignatures,
 >(props: RadarDataProviderProps<TSignatures>) {
   const {
     series,

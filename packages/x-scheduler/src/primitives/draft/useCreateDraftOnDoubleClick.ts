@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { SchedulerValidDate } from '../models';
+import { CalendarEventOccurrence, SchedulerValidDate } from '../models';
 import { useSchedulerDraft } from './SchedulerDraftContext';
 import { CREATE_PLACEHOLDER_ID } from '../utils/event-utils';
 import { Adapter } from '../utils/adapter/types';
@@ -17,16 +17,7 @@ export type ComputeInitialRange = (event: React.MouseEvent) => {
 
 type UseCreateDraftOnDoubleClickOptions = {
   adapter: Adapter;
-  startEditing: (
-    event: React.MouseEvent,
-    draftEvent: {
-      id: string;
-      title: string;
-      start: SchedulerValidDate;
-      end: SchedulerValidDate;
-      allDay: boolean;
-    },
-  ) => void;
+  startEditing: (event: React.MouseEvent, occurrence: CalendarEventOccurrence) => void;
   computeInitialRange: ComputeInitialRange;
   lockSurface?: Surface;
 };
@@ -56,6 +47,7 @@ export function useCreateDraftOnDoubleClick(opts: UseCreateDraftOnDoubleClickOpt
 
     // 2) Open popover and sync form changes with draft
     startEditing(event, {
+      key: CREATE_PLACEHOLDER_ID,
       id: CREATE_PLACEHOLDER_ID,
       title: '',
       start,

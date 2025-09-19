@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler/primitives/models';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
@@ -12,8 +12,9 @@ import { DEFAULT_EVENT_COLOR } from '../../../../primitives/use-event-calendar';
 
 const adapter = getAdapter();
 
-const calendarEvent: CalendarEvent = {
+const occurrence: CalendarEventOccurrence = {
   id: '1',
+  key: '1',
   start: adapter.date('2025-05-26T07:30:00'),
   end: adapter.date('2025-05-26T08:15:00'),
   title: 'Running',
@@ -41,7 +42,7 @@ describe('<EventPopover />', () => {
   const defaultProps = {
     anchor,
     container: document.body,
-    calendarEvent,
+    occurrence,
     onClose: () => {},
   };
 
@@ -49,7 +50,7 @@ describe('<EventPopover />', () => {
 
   it('should render the event data in the form fields', () => {
     render(
-      <StandaloneView events={[calendarEvent]} resources={resources}>
+      <StandaloneView events={[occurrence]} resources={resources}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
@@ -74,11 +75,7 @@ describe('<EventPopover />', () => {
   it('should call "onEventsChange" with updated values on submit', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <StandaloneView
-        events={[calendarEvent]}
-        onEventsChange={onEventsChange}
-        resources={resources}
-      >
+      <StandaloneView events={[occurrence]} onEventsChange={onEventsChange} resources={resources}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
@@ -97,10 +94,11 @@ describe('<EventPopover />', () => {
 
     const expectedUpdatedEvent = {
       id: '1',
+      key: '1',
       title: 'Running test',
       description: 'Morning run',
-      start: adapter.setMinutes(adapter.setHours(calendarEvent.start, 0), 0),
-      end: adapter.setMinutes(adapter.setHours(calendarEvent.end, 23), 59),
+      start: adapter.setMinutes(adapter.setHours(occurrence.start, 0), 0),
+      end: adapter.setMinutes(adapter.setHours(occurrence.end, 23), 59),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
@@ -111,7 +109,7 @@ describe('<EventPopover />', () => {
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
-      <StandaloneView events={[calendarEvent]}>
+      <StandaloneView events={[occurrence]}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
@@ -131,7 +129,7 @@ describe('<EventPopover />', () => {
   it('should call "onEventsChange" with the updated values when delete button is clicked', async () => {
     const onEventsChange = spy();
     const { user } = render(
-      <StandaloneView events={[calendarEvent]} onEventsChange={onEventsChange}>
+      <StandaloneView events={[occurrence]} onEventsChange={onEventsChange}>
         <Popover.Root open>
           <EventPopover {...defaultProps} />
         </Popover.Root>
@@ -144,9 +142,9 @@ describe('<EventPopover />', () => {
 
   it('should handle read-only events', () => {
     render(
-      <StandaloneView events={[calendarEvent]} resources={resources}>
+      <StandaloneView events={[occurrence]} resources={resources}>
         <Popover.Root open>
-          <EventPopover {...defaultProps} calendarEvent={{ ...calendarEvent, readOnly: true }} />
+          <EventPopover {...defaultProps} occurrence={{ ...occurrence, readOnly: true }} />
         </Popover.Root>
       </StandaloneView>,
     );
@@ -173,19 +171,19 @@ describe('<EventPopover />', () => {
       { id: 'r3', name: 'NoColor' },
     ];
 
-    const eventWithNoColorResource: CalendarEvent = {
-      ...calendarEvent,
+    const occurrenceWithNoColorResource: CalendarEventOccurrence = {
+      ...occurrence,
       resource: 'r3',
     };
 
     render(
       <StandaloneView
-        events={[eventWithNoColorResource]}
+        events={[occurrenceWithNoColorResource]}
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
       >
         <Popover.Root open>
-          <EventPopover {...defaultProps} calendarEvent={eventWithNoColorResource} />
+          <EventPopover {...defaultProps} occurrence={occurrenceWithNoColorResource} />
         </Popover.Root>
       </StandaloneView>,
     );
@@ -199,19 +197,19 @@ describe('<EventPopover />', () => {
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
     const onEventsChange = spy();
 
-    const eventWithoutResource: CalendarEvent = {
-      ...calendarEvent,
+    const occurrenceWithoutResource: CalendarEventOccurrence = {
+      ...occurrence,
       resource: undefined,
     };
 
     const { user } = render(
       <StandaloneView
-        events={[eventWithoutResource]}
+        events={[occurrenceWithoutResource]}
         onEventsChange={onEventsChange}
         resources={resources}
       >
         <Popover.Root open>
-          <EventPopover {...defaultProps} calendarEvent={eventWithoutResource} />
+          <EventPopover {...defaultProps} occurrence={occurrenceWithoutResource} />
         </Popover.Root>
       </StandaloneView>,
     );
