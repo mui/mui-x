@@ -114,23 +114,21 @@ To change the icon used for the toggle, you can provide a different component fo
 />
 ```
 
-You can also completely override the toggle component by adding another column to your set with `field: GRID_DETAIL_PANEL_TOGGLE_FIELD`.
-This prevents the Data Grid from adding the default toggle column.
-Then you can add a new toggle component using [`renderCell()`](/x/react-data-grid/column-definition/#rendering-cells) as you would for any other column:
+To customize the toggle component, you can pass a custom component to the `detailPanelsToggle` slot.
 
 ```tsx
 <DataGridPro
-  columns={[
-    {
-      field: GRID_DETAIL_PANEL_TOGGLE_FIELD,
-      renderCell: (params) => <CustomDetailPanelToggle {...params} />,
-    },
-  ]}
+  slots={{
+    detailPanelsToggle: CustomDetailPanelsToggle,
+  }}
 />
 ```
 
-Because the `field` is the only property defined, it's up to you to configure any additional options (such as filtering, sorting, or disabling the column menu).
-If you'd rather set up the toggle with basic options preconfigured, you can spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column, as shown below:
+Since only the field is defined in the default configuration, you can customize additional options (such as filtering, sorting, or disabling the column menu) as needed.
+
+If you prefer to start with a predefined setup, you can spread `GRID_DETAIL_PANEL_TOGGLE_COL_DEF` when defining the column, as shown below:
+
+You can replace just the toggle button by providing a custom component to the `detailPanelsToggle` slot. Alternatively, you can override the entire cell content by using the renderCell property.
 
 ```tsx
 <DataGridPro
