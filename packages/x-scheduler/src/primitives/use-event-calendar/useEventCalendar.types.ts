@@ -1,6 +1,7 @@
 import {
   CalendarEvent,
   CalendarResource,
+  CalendarResourceId,
   CalendarPreferences,
   CalendarView,
   SchedulerValidDate,
@@ -23,6 +24,20 @@ export interface EventCalendarParameters {
    * The resources the events can be assigned to.
    */
   resources?: CalendarResource[];
+  /**
+   * The resources that are currently visible in the calendar.
+   */
+  visibleResources?: CalendarResourceId[];
+  /**
+   * The resources that are initially visible in the calendar.
+   * To render a controlled calendar, use the `visibleResources` prop.
+   * @default all resources are visible
+   */
+  defaultVisibleResources?: CalendarResourceId[];
+  /**
+   * Event handler called when the visible resources change.
+   */
+  onVisibleResourcesChange?: (visibleResources: CalendarResourceId[]) => void;
   /**
    * The view currently displayed in the calendar.
    */

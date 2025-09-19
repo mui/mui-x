@@ -50,6 +50,40 @@ export class EventCalendarStore extends Store<State> {
   }
 
   /**
+   * Converts an array of visible resource IDs to the internal Map format.
+   * Resources not in the array are marked as hidden.
+   */
+  private static convertVisibleResourcesArrayToMap(
+    visibleResourceIds: CalendarResourceId[],
+    allResources: CalendarResource[],
+  ): Map<CalendarResourceId, boolean> {
+    const visibleResourcesSet = new Set(visibleResourceIds);
+    const visibleResourcesMap = new Map<CalendarResourceId, boolean>();
+    
+    for (const resource of allResources) {
+      if (!visibleResourcesSet.has(resource.id)) {
+        visibleResourcesMap.set(resource.id, false);
+      }
+    }
+    
+    return visibleResourcesMap;
+  }
+
+  /**
+   * Converts the internal Map format to an array of visible resource IDs.
+   */
+  private static convertVisibleResourcesMapToArray(
+    visibleResourcesMap: Map<CalendarResourceId, boolean>,
+    allResources: CalendarResource[],
+  ): CalendarResourceId[] {
+    return allResources
+      .filter((resource) => 
+        !visibleResourcesMap.has(resource.id) || visibleResourcesMap.get(resource.id) === true
+      )
+      .map((resource) => resource.id);
+  }
+
+  /**
    * Returns the properties of the state that are derived from the parameters.
    * This do not contain state properties that don't update whenever the parameters update.
    */
@@ -82,9 +116,30 @@ export class EventCalendarStore extends Store<State> {
   }
 
   public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
+    const resources = parameters.resources ?? DEFAULT_RESOURCES;
+    
+    // Initialize visible resources from props
+    let initialVisibleResourcesMap: Map<CalendarResourceId, boolean>;
+    if (parameters.visibleResources !== undefined) {
+      // Controlled mode
+      initialVisibleResourcesMap = EventCalendarStore.convertVisibleResourcesArrayToMap(
+        parameters.visibleResources,
+        resources,
+      );
+    } else if (parameters.defaultVisibleResources !== undefined) {
+      // Uncontrolled mode with default value
+      initialVisibleResourcesMap = EventCalendarStore.convertVisibleResourcesArrayToMap(
+        parameters.defaultVisibleResources,
+        resources,
+      );
+    } else {
+      // Uncontrolled mode with all resources visible by default
+      initialVisibleResourcesMap = new Map();
+    }
+
     const initialState: State = {
       // Store elements that should not be updated when the parameters change.
-      visibleResources: new Map(),
+      visibleResources: initialVisibleResourcesMap,
       preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
       preferencesMenuConfig:
         parameters.preferencesMenuConfig === false
@@ -194,11 +249,20 @@ export class EventCalendarStore extends Store<State> {
     const initialParameters = this.initialParameters;
 
     function updateModel(
-      controlledProp: 'view' | 'visibleDate',
-      defaultValueProp: 'defaultView' | 'defaultVisibleDate',
+      controlledProp: 'view' | 'visibleDate' | 'visibleResources',
+      defaultValueProp: 'defaultView' | 'defaultVisibleDate' | 'defaultVisibleResources',
     ) {
       if (parameters[controlledProp] !== undefined) {
-        partialState[controlledProp] = parameters[controlledProp] as any;
+        if (controlledProp === 'visibleResources') {
+          // Convert array to Map format for visible resources
+          const resources = parameters.resources ?? DEFAULT_RESOURCES;
+          partialState[controlledProp] = EventCalendarStore.convertVisibleResourcesArrayToMap(
+            parameters[controlledProp] as CalendarResourceId[],
+            resources,
+          ) as any;
+        } else {
+          partialState[controlledProp] = parameters[controlledProp] as any;
+        }
       }
 
       if (process.env.NODE_ENV !== 'production') {
@@ -235,6 +299,7 @@ export class EventCalendarStore extends Store<State> {
 
     updateModel('view', 'defaultView');
     updateModel('visibleDate', 'defaultVisibleDate');
+    updateModel('visibleResources', 'defaultVisibleResources');
     this.apply(partialState);
   };
 
@@ -363,8 +428,21 @@ export class EventCalendarStore extends Store<State> {
    * Updates the visible resources.
    */
   public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
-    if (this.state.visibleResources !== visibleResources) {
-      this.set('visibleResources', visibleResources);
+    const { visibleResources: visibleResourcesProp, onVisibleResourcesChange } = this.parameters;
+    const hasChange = this.state.visibleResources !== visibleResources;
+
+    if (hasChange) {
+      if (visibleResourcesProp === undefined) {
+        this.set('visibleResources', visibleResources);
+      }
+      
+      if (onVisibleResourcesChange) {
+        const visibleResourcesArray = EventCalendarStore.convertVisibleResourcesMapToArray(
+          visibleResources,
+          this.state.resources,
+        );
+        onVisibleResourcesChange(visibleResourcesArray);
+      }
     }
   };
 
