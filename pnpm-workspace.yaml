@@ -3,7 +3,6 @@ packages:
   - docs
   - test
   - test/*
-  - bundle-size
 
 catalog:
   '@babel/core': ^7.28.0
