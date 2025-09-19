@@ -7,7 +7,9 @@ There are two main types of test in this repository: unit tests and browser test
 To run tests:
 
 - `browser tests`: `pnpm test:browser`
+  - Browser tests are enabled for any package that has a `vitest.config.browser.mts` in its root
 - `unit tests`: `pnpm test:unit`
+  - Unit tests are enabled for any package that has a `vitest.config.jsdom.mts` in its root
 
 The following options work in both environments:
 
