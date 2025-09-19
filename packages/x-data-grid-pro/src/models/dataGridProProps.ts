@@ -7,6 +7,7 @@ import {
   GridRowId,
   GridValidRowModel,
   GridGroupNode,
+  GridTreeNode,
   GridFeatureMode,
   GridListViewColDef,
   GridGetRowsError,
@@ -287,4 +288,12 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridGetRowsError | GridUpdateRowError} error The data source error object.
    */
   onDataSourceError?: (error: GridGetRowsError<GridGetRowsParams> | GridUpdateRowError) => void;
+  /**
+   * Determines if a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable?: (params: { row: R; rowNode: GridTreeNode }) => boolean;
 }

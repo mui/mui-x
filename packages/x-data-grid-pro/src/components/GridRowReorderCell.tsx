@@ -51,11 +51,29 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const listenerNodeRef = React.useRef<HTMLDivElement>(null);
 
+  const isRowReorderable = rootProps.isRowReorderable;
   // TODO: remove sortModel check once row reorder is compatible
-  const isDraggable = React.useMemo(
-    () => !!rootProps.rowReordering && !sortModel.length && Object.keys(editRowsState).length === 0,
-    [rootProps.rowReordering, sortModel, editRowsState],
-  );
+  const isDraggable = React.useMemo(() => {
+    const baseCondition =
+      !!rootProps.rowReordering && !sortModel.length && Object.keys(editRowsState).length === 0;
+
+    if (!baseCondition) {
+      return false;
+    }
+
+    if (isRowReorderable) {
+      return isRowReorderable({ row: params.row, rowNode: params.rowNode });
+    }
+
+    return true;
+  }, [
+    rootProps.rowReordering,
+    isRowReorderable,
+    sortModel,
+    editRowsState,
+    params.row,
+    params.rowNode,
+  ]);
 
   const ownerState = { isDraggable, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
