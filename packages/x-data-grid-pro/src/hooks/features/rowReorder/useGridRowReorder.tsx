@@ -51,6 +51,18 @@ interface DropTarget {
   dropPosition: 'above' | 'below' | 'over' | null;
 }
 
+interface TimeoutInfo {
+  rowId: GridRowId | null;
+  clientX?: number;
+  clientY?: number;
+}
+
+const TIMEOUT_CLEAR_BUFFER_PX = 5;
+
+const EMPTY_TIMEOUT_INFO: TimeoutInfo = {
+  rowId: null,
+};
+
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
@@ -91,7 +103,7 @@ export const useGridRowReorder = (
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
   const sortedRowIndexLookup = useGridSelector(apiRef, gridExpandedSortedRowIndexLookupSelector);
-  const timeoutRowId = React.useRef<GridRowId>('');
+  const timeoutInfoRef = React.useRef<TimeoutInfo>(EMPTY_TIMEOUT_INFO);
   const timeout = useTimeout();
   const previousReorderState = React.useRef<ReorderStateProps>(EMPTY_REORDER_STATE);
   const dropTarget = React.useRef<DropTarget>({
@@ -224,9 +236,9 @@ export const useGridRowReorder = (
         return;
       }
 
-      if (timeoutRowId.current) {
+      if (timeoutInfoRef.current) {
         timeout.clear();
-        timeoutRowId.current = '';
+        timeoutInfoRef.current = EMPTY_TIMEOUT_INFO;
       }
 
       logger.debug(`Start dragging row ${params.id}`);
@@ -298,31 +310,44 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
-      if (timeoutRowId.current && timeoutRowId.current !== params.id) {
+      if (
+        timeoutInfoRef.current &&
+        (timeoutInfoRef.current.rowId !== params.id ||
+          // Avoid accidental opening of node when the user is moving over a row
+          event.clientY > timeoutInfoRef.current.clientY! + TIMEOUT_CLEAR_BUFFER_PX ||
+          event.clientY < timeoutInfoRef.current.clientY! - TIMEOUT_CLEAR_BUFFER_PX ||
+          event.clientX > timeoutInfoRef.current.clientX! + TIMEOUT_CLEAR_BUFFER_PX ||
+          event.clientX < timeoutInfoRef.current.clientX! - TIMEOUT_CLEAR_BUFFER_PX)
+      ) {
         timeout.clear();
-        timeoutRowId.current = '';
+        timeoutInfoRef.current = EMPTY_TIMEOUT_INFO;
       }
+
+      // Calculate drop position using new logic
+      const dropPosition = calculateDropPosition(relativeY, targetRect.height);
 
       if (
         targetNode.type === 'group' &&
-        targetNode.depth < sourceNode.depth &&
         !targetNode.childrenExpanded &&
-        !timeoutRowId.current
+        !timeoutInfoRef.current.rowId &&
+        targetNode.id !== sourceNode.id &&
+        (dropPosition === 'over' || targetNode.depth < sourceNode.depth)
       ) {
         timeout.start(500, () => {
           const rowNode = gridRowNodeSelector(apiRef, params.id) as GridGroupNode;
           // TODO: Handle `dataSource` case with https://github.com/mui/mui-x/issues/18947
           apiRef.current.setRowChildrenExpansion(params.id, !rowNode.childrenExpanded);
         });
-        timeoutRowId.current = params.id;
+        timeoutInfoRef.current = {
+          rowId: params.id,
+          clientY: event.clientY,
+          clientX: event.clientX,
+        };
         return;
       }
 
       const targetRowIndex = sortedRowIndexLookup[params.id];
       const sourceRowIndex = sortedRowIndexLookup[dragRowId];
-
-      // Calculate drop position using new logic
-      const dropPosition = calculateDropPosition(relativeY, targetRect.height);
 
       const currentReorderState: ReorderStateProps = {
         dragDirection: targetRowIndex < sourceRowIndex ? 'up' : 'down',
@@ -411,9 +436,9 @@ export const useGridRowReorder = (
         return;
       }
 
-      if (timeoutRowId.current) {
+      if (timeoutInfoRef.current) {
         timeout.clear();
-        timeoutRowId.current = '';
+        timeoutInfoRef.current = EMPTY_TIMEOUT_INFO;
       }
 
       logger.debug('End dragging row');
