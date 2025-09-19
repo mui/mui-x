@@ -4,10 +4,10 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 
 const data = {
   nodes: [
-    { id: 'Input', label: 'Input', color: '#4fc3f7' },
-    { id: 'ProcessA', label: 'Process A', color: '#66bb6a' },
-    { id: 'ProcessB', label: 'Process B', color: '#ff7043' },
-    { id: 'Output', label: 'Output', color: '#ab47bc' },
+    { id: 'Input', label: 'Input' },
+    { id: 'ProcessA', label: 'Process A' },
+    { id: 'ProcessB', label: 'Process B' },
+    { id: 'Output', label: 'Output' },
   ],
   links: [
     { source: 'Input', target: 'ProcessA', value: 30 },
@@ -30,7 +30,7 @@ export default function SankeyLinkKeywordColors() {
       }}
       renderDemo={(props) => {
         const linkColor =
-          props.linkColorMode === 'default' ? '#90a4ae' : props.linkColorMode;
+          props.linkColorMode === 'default' ? undefined : props.linkColorMode;
 
         return (
           <SankeyChart
@@ -59,7 +59,7 @@ export default function SankeyLinkKeywordColors() {
   series={{
     data,
     linkOptions: {
-      color: '${linkColor}',
+      color: ${linkColor ? `'${linkColor}'` : 'undefined'},
       opacity: 0.6,
     },
   }}
