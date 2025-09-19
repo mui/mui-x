@@ -40,20 +40,17 @@ Those demos use the defaultized values.
 The axis type is specified by its property `scaleType`.
 Axis definition object has a `data` property which expects an array of value coherent with the `scaleType`, as shown in the table below:
 
-| `scaleType` | Description                                                   | Common usage                           | Expected array data type    |
-| :---------- | :------------------------------------------------------------ | :------------------------------------- | :-------------------------- |
-| `'band'`    | Split the axis in equal bands                                 | Bar charts, categorical data           | String or numerical values  |
-| `'point'`   | Split the axis in equally spaced points                       | Line charts on categories              | String or numerical values  |
-| `'linear'`  | Map numerical values linearly to the available space          | Standard numerical data                | Numerical values            |
-| `'log'`     | Map numerical values using logarithmic scale                  | Data with large range                  | Numerical values            |
-| `'sqrt'`    | Map numerical values using square root scale                  | Data that needs variance stabilization | Numerical values            |
-| `'time'`    | Map JavaScript `Date()` objects to the available space        | Time series data                       | JavaScript `Date()` objects |
-| `'utc'`     | Map JavaScript `Date()` objects in UTC to the available space | Time series data in UTC                | JavaScript `Date()` objects |
+| scaleType                              | Description                                             | Number | Date | String |
+| :------------------------------------- | :------------------------------------------------------ | :----: | :--: | :----: |
+| `'band'`                               | Splits the axis in equal bands                          |   ✅   |  ✅  |   ✅   |
+| `'point'`                              | Splits the axis in equally spaced points                |   ✅   |  ✅  |   ✅   |
+| `'linear'` `'log'` `'symlog'` `'sqrt'` | Maps numerical values to the available space            |   ✅   |  ❌  |   ❌   |
+| `'time'` `'utc'`                       | Maps JavaScript `Date()` objects to the available space |   ❌   |  ✅  |   ❌   |
 
 Some series types also require specific axis attributes:
 
-- line plots require an `xAxis` to have `data` provided
-- bar plots require an `xAxis` with `scaleType='band'` and some `data` provided.
+- In line charts, the `xAxis` must have a `data` array so each y-value maps to a specific x-value for proper chart rendering.
+- In bar charts, the axis that represents categories (x-axis for vertical bars or y-axis for horizontal bars) must use `scaleType: 'band'`.
 
 ### Axis formatter
 
