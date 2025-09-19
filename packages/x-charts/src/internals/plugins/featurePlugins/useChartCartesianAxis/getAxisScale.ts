@@ -21,7 +21,7 @@ import { zoomScaleRange } from './zoom';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
 import { getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
-import { getAxisExtremum } from './getAxisExtremum';
+import { getAxisExtrema } from './getAxisExtrema';
 import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
@@ -152,7 +152,7 @@ function getAxisScale<T extends ChartSeriesType>(
   const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
   const range = getRange(drawingArea, axisDirection, axis);
 
-  const [minData, maxData] = getAxisExtremum(
+  const [minData, maxData] = getAxisExtrema(
     axis,
     axisDirection,
     seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
