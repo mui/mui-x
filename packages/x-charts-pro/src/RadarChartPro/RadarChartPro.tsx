@@ -19,7 +19,7 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginsSignatures } from './RadarChartPro.plugins';
+import { RADAR_CHART_PRO_PLUGINS, RadarChartProPluginSignatures } from './RadarChartPro.plugins';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
   ChartsToolbarProSlotProps,
@@ -39,7 +39,7 @@ export interface RadarChartProSlotProps
 export interface RadarChartProProps
   extends Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
-      RadarDataProviderProps<RadarChartProPluginsSignatures>,
+      RadarDataProviderProps<RadarChartProPluginSignatures>,
       'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
@@ -82,15 +82,15 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
-  const radarDataProviderProProps: RadarDataProviderProps<RadarChartProPluginsSignatures> = {
+  const radarDataProviderProProps: RadarDataProviderProps<RadarChartProPluginSignatures> = {
     ...radarDataProviderProps,
     apiRef:
-      radarDataProviderProps.apiRef as RadarDataProviderProps<RadarChartProPluginsSignatures>['apiRef'],
+      radarDataProviderProps.apiRef as RadarDataProviderProps<RadarChartProPluginSignatures>['apiRef'],
     plugins: RADAR_CHART_PRO_PLUGINS,
   };
 
   return (
-    <RadarDataProvider<RadarChartProPluginsSignatures> {...radarDataProviderProProps}>
+    <RadarDataProvider<RadarChartProPluginSignatures> {...radarDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
