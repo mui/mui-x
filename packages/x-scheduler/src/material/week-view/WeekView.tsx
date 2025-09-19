@@ -33,6 +33,8 @@ export const WeekView = React.memo(
 
     useInitializeView(() => ({
       siblingVisibleDateGetter: (date, delta) => adapter.addWeeks(adapter.startOfWeek(date), delta),
+      visibleDays: days,
+      renderEventIn: 'every-day',
     }));
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;

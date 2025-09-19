@@ -1,4 +1,5 @@
 import { SchedulerValidDate } from './date';
+import { CalendarProcessedDate } from './event';
 
 // TODO: Remove "timeline" once it has its own top level component
 export type CalendarView = 'week' | 'day' | 'month' | 'agenda' | 'timeline';
@@ -9,4 +10,7 @@ export type CalendarView = 'week' | 'day' | 'month' | 'agenda' | 'timeline';
  */
 export interface CalendarViewConfig {
   siblingVisibleDateGetter: (date: SchedulerValidDate, delta: 1 | -1) => SchedulerValidDate;
+  renderEventIn: 'every-day';
+  // TODO: Support updates
+  visibleDays: CalendarProcessedDate[];
 }

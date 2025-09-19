@@ -12,10 +12,12 @@ import {
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
   CalendarResource,
+  CalendarProcessedDate,
 } from '../models';
 import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
+import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -39,6 +41,34 @@ export class EventCalendarStore extends Store<State> {
     super(initialState);
     this.parameters = parameters;
 
+    const EMPTY_DAYS: CalendarProcessedDate[] = [];
+    this.storeEffect(
+      (state) => ({
+        adapter: state.adapter,
+        events: selectors.events(state),
+        visibleResourcesMap: selectors.visibleResourcesMap(state),
+        days: state.viewConfig?.visibleDays ?? EMPTY_DAYS,
+        renderEventIn: state.viewConfig?.renderEventIn ?? 'every-day',
+      }),
+      (prev, next) => {
+        if (
+          prev.adapter !== next.adapter ||
+          prev.events !== next.events ||
+          prev.visibleResourcesMap !== next.visibleResourcesMap ||
+          prev.days !== next.days
+        ) {
+          const occurrences = innerGetEventOccurrencesGroupedByDay(
+            next.adapter,
+            next.days,
+            next.renderEventIn,
+            next.events,
+            next.visibleResourcesMap,
+          );
+          console.log('New occurrences', occurrences);
+        }
+      },
+    );
+
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
       // Add listeners to assert the state validity (not applied in prod)
@@ -47,6 +77,18 @@ export class EventCalendarStore extends Store<State> {
         return null;
       });
     }
+  }
+
+  private storeEffect<Value>(
+    selector: (state: State) => Value,
+    effect: (previous: Value, next: Value) => void,
+  ) {
+    let previousState = selector(this.state);
+    this.subscribe((state) => {
+      const nextState = selector(state);
+      effect(previousState, nextState);
+      previousState = nextState;
+    });
   }
 
   /**
