@@ -40,8 +40,8 @@ Those demos use the defaultized values.
 The axis type is specified by its property `scaleType`.
 Axis definition object has a `data` property which expects an array of value coherent with the `scaleType`, as shown in the table below:
 
-| scaleType                              | Description                                             | Number | Date | String |
-| :------------------------------------- | :------------------------------------------------------ | :----: | :--: | :----: |
+| scaleType                              | Description                                              | Number | Date | String |
+| :------------------------------------- | :------------------------------------------------------- | :----: | :--: | :----: |
 | `'band'`                               | Splits the axis in equal bands.                          |   ✅   |  ✅  |   ✅   |
 | `'point'`                              | Splits the axis in equally spaced points.                |   ✅   |  ✅  |   ✅   |
 | `'linear'` `'log'` `'symlog'` `'sqrt'` | Maps numerical values to the available space.            |   ✅   |  ❌  |   ❌   |
