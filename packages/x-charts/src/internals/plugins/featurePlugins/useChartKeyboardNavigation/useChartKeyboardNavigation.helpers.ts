@@ -11,7 +11,7 @@ export function getNextSeriesWithData(
   type?: ChartSeriesType,
   seriesId?: SeriesId,
 ): {
-  type: ChartSeriesType;
+  type: Exclude<ChartSeriesType, 'sankey'>;
   seriesId: SeriesId;
 } | null {
   const startingTypeIndex =
@@ -20,7 +20,10 @@ export function getNextSeriesWithData(
     type !== undefined && seriesId !== undefined && series[type] && series[type].series[seriesId]
       ? series[type].seriesOrder.indexOf(seriesId)
       : -1;
-  const typesAvailable = Object.keys(series) as (keyof typeof series)[];
+  const typesAvailable = Object.keys(series).filter((t) => t !== 'sankey') as Exclude<
+    ChartSeriesType,
+    'sankey'
+  >[];
 
   // Loop over all series types starting with the current seriesType
   for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {
@@ -71,7 +74,7 @@ export function getPreviousSeriesWithData(
   type?: ChartSeriesType,
   seriesId?: SeriesId,
 ): {
-  type: ChartSeriesType;
+  type: Exclude<ChartSeriesType, 'sankey'>;
   seriesId: SeriesId;
 } | null {
   const startingTypeIndex =
@@ -81,7 +84,10 @@ export function getPreviousSeriesWithData(
       ? series[type].seriesOrder.indexOf(seriesId)
       : 1;
 
-  const typesAvailable = Object.keys(series) as (keyof typeof series)[];
+  const typesAvailable = Object.keys(series).filter((t) => t !== 'sankey') as Exclude<
+    ChartSeriesType,
+    'sankey'
+  >[];
 
   // Loop over all series types starting with the current seriesType
   for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {
@@ -129,6 +135,9 @@ export function seriesHasData(
   type: ChartSeriesType,
   seriesId: SeriesId,
 ) {
+  if (type === 'sankey') {
+    return false;
+  }
   const data = series[type]?.series[seriesId]?.data;
   return data && data.length > 0;
 }
