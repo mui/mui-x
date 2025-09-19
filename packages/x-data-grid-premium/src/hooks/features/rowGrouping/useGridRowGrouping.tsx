@@ -73,6 +73,7 @@ export const useGridRowGrouping = (
     | 'slots'
     | 'dataSource'
     | 'treeData'
+    | 'isValidRowReorder'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -291,6 +292,7 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
+  const isValidRowReorder = props.isValidRowReorder;
   const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
     (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
       if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || props.treeData) {
@@ -332,12 +334,21 @@ export const useGridRowGrouping = (
       };
 
       // Check if the reorder is valid
-      if (rowGroupingReorderValidator.validate(context)) {
+      let isValid;
+      if (isValidRowReorder) {
+        // User override completely replaces internal validation
+        isValid = isValidRowReorder(context);
+      } else {
+        // Use default internal validation
+        isValid = rowGroupingReorderValidator.validate(context);
+      }
+
+      if (isValid) {
         return dropPosition === 'below' ? targetRowIndex + 1 : targetRowIndex;
       }
       return -1;
     },
-    [apiRef, props.treeData],
+    [apiRef, props.treeData, isValidRowReorder],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);

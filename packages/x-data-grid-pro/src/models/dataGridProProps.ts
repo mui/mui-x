@@ -36,6 +36,7 @@ import {
   GridDataSourcePro as GridDataSource,
   GridGetRowsParamsPro as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
+import type { ReorderValidationContext } from '../hooks/features/rowReorder/types';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -296,4 +297,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @returns {boolean} A boolean indicating if the row is reorderable.
    */
   isRowReorderable?: (params: { row: R; rowNode: GridTreeNode }) => boolean;
+  /**
+   * Determines if a row reorder operation is valid.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation is valid.
+   */
+  isValidRowReorder?: (context: ReorderValidationContext) => boolean;
 }

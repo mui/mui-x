@@ -20,7 +20,7 @@ import { treeDataReorderValidator } from './treeDataReorderValidator';
 
 export const useGridTreeData = (
   apiRef: RefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'treeData' | 'dataSource'>,
+  props: Pick<DataGridProProcessedProps, 'treeData' | 'dataSource' | 'isValidRowReorder'>,
 ) => {
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
@@ -45,6 +45,7 @@ export const useGridTreeData = (
     [apiRef, props.dataSource],
   );
 
+  const isValidRowReorder = props.isValidRowReorder;
   const getTreeDataRowReorderTargetIndex = React.useCallback<
     GridPipeProcessor<'getRowReorderTargetIndex'>
   >(
@@ -88,12 +89,21 @@ export const useGridTreeData = (
       };
 
       // Check if the reorder is valid
-      if (treeDataReorderValidator.validate(context)) {
+      let isValid;
+      if (isValidRowReorder) {
+        // User override completely replaces internal validation
+        isValid = isValidRowReorder(context);
+      } else {
+        // Use default internal validation
+        isValid = treeDataReorderValidator.validate(context);
+      }
+
+      if (isValid) {
         return dropPosition === 'below' ? targetRowIndex + 1 : targetRowIndex;
       }
       return -1;
     },
-    [apiRef, props.treeData],
+    [apiRef, props.treeData, isValidRowReorder],
   );
 
   useGridRegisterPipeProcessor(

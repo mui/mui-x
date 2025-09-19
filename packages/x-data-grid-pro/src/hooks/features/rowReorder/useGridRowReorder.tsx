@@ -16,6 +16,8 @@ import {
   gridRowMaximumTreeDepthSelector,
   type GridGroupNode,
   useGridApiMethod,
+  gridExpandedSortedRowIdsSelector,
+  gridRowTreeSelector,
 } from '@mui/x-data-grid';
 import {
   gridEditRowsStateSelector,
@@ -28,6 +30,7 @@ import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangePara
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
+import type { ReorderValidationContext } from './types';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -91,7 +94,12 @@ export const useGridRowReorder = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'rowReordering' | 'onRowOrderChange' | 'classes' | 'treeData' | 'dataSource'
+    | 'rowReordering'
+    | 'onRowOrderChange'
+    | 'classes'
+    | 'treeData'
+    | 'dataSource'
+    | 'isValidRowReorder'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
@@ -551,6 +559,7 @@ export const useGridRowReorder = (
     ],
   );
 
+  const isValidRowReorder = props.isValidRowReorder;
   const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
     (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
       if (gridRowMaximumTreeDepthSelector(apiRef) > 1) {
@@ -559,6 +568,39 @@ export const useGridRowReorder = (
 
       const targetRowIndex = sortedRowIndexLookup[targetRowId];
       const sourceRowIndex = sortedRowIndexLookup[sourceRowId];
+
+      // Create context for validation if user provided custom validator
+      if (isValidRowReorder) {
+        const expandedSortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
+        const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
+        const rowTree = gridRowTreeSelector(apiRef);
+
+        const sourceNode = rowTree[sourceRowId];
+        const targetNode = rowTree[targetRowId];
+        const prevNode =
+          targetRowIndex > 0 ? rowTree[expandedSortedRowIds[targetRowIndex - 1]] : null;
+        const nextNode =
+          targetRowIndex < expandedSortedRowIds.length - 1
+            ? rowTree[expandedSortedRowIds[targetRowIndex + 1]]
+            : null;
+
+        const context: ReorderValidationContext = {
+          sourceNode,
+          targetNode,
+          prevNode,
+          nextNode,
+          rowTree,
+          dropPosition,
+          dragDirection,
+          targetRowIndex,
+          sourceRowIndex,
+          expandedSortedRowIndexLookup,
+        };
+
+        if (!isValidRowReorder(context)) {
+          return -1;
+        }
+      }
 
       // Check if this drop would result in no actual movement
       const isAdjacentNode =
@@ -578,7 +620,7 @@ export const useGridRowReorder = (
       }
       return finalTargetIndex;
     },
-    [apiRef, sortedRowIndexLookup],
+    [apiRef, sortedRowIndexLookup, isValidRowReorder],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);
