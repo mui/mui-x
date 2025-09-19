@@ -17,50 +17,6 @@ describe('event-utils', () => {
     allDay: true,
   });
 
-  describe('isDayWithinRange', () => {
-    const eventFirstDay = adapter.date('2024-01-15');
-    const eventLastDay = adapter.date('2024-01-17');
-    it('should return true when day is same as event first day', () => {
-      const day = adapter.date('2024-01-15');
-
-      const result = isDayWithinRange(day, eventFirstDay, eventLastDay, adapter);
-
-      expect(result).toBe(true);
-    });
-
-    it('should return true when day is same as event last day', () => {
-      const day = adapter.date('2024-01-17');
-
-      const result = isDayWithinRange(day, eventFirstDay, eventLastDay, adapter);
-
-      expect(result).toBe(true);
-    });
-
-    it('should return true when day is between event first and last day', () => {
-      const day = adapter.date('2024-01-16');
-
-      const result = isDayWithinRange(day, eventFirstDay, eventLastDay, adapter);
-
-      expect(result).toBe(true);
-    });
-
-    it('should return false when day is before event first day', () => {
-      const day = adapter.date('2024-01-14');
-
-      const result = isDayWithinRange(day, eventFirstDay, eventLastDay, adapter);
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false when day is after event last day', () => {
-      const day = adapter.date('2024-01-18');
-
-      const result = isDayWithinRange(day, eventFirstDay, eventLastDay, adapter);
-
-      expect(result).toBe(false);
-    });
-  });
-
   describe('getDaysTheOccurrenceIsVisibleOn', () => {
     const days = [
       processDate(adapter.date('2024-01-14'), adapter),

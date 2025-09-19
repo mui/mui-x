@@ -77,15 +77,8 @@ export function innerGetEventOccurrencesGroupedByDay(
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
 
   for (const occurrence of occurrences) {
-    const eventDays: SchedulerValidDate[] = getDaysTheOccurrenceIsVisibleOn(
-      occurrence,
-      days,
-      adapter,
-      renderEventIn,
-    );
-
-    for (const day of eventDays) {
-      const dayKey = getDateKey(day, adapter);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter, renderEventIn);
+    for (const dayKey of eventDays) {
       const occurrenceType = occurrence.allDay ? 'allDay' : 'nonAllDay';
       occurrencesGroupedByDay.get(dayKey)![occurrenceType].push(occurrence);
     }
