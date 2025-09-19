@@ -57,3 +57,5 @@ export function innerGetEventOccurrencesGroupedByDay(
 
   return cleanMap;
 }
+
+export type OccurrencesGroupedByDayMap = Map<string, CalendarEventOccurrence[]>;
