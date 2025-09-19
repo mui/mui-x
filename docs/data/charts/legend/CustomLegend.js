@@ -40,7 +40,7 @@ function DashedLine({ color, className }) {
 function MyCustomLegend() {
   const { items } = useLegend();
   return (
-    <Stack direction="column" alignSelf={'flex-start'} marginLeft={9}>
+    <Stack direction="column" justifySelf={'start'} marginLeft={9}>
       {items.map((item) => {
         const { label, id, color, seriesId, markType } = item;
         return (

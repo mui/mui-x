@@ -1,5 +1,4 @@
 /* eslint-disable no-promise-executor-return */
-/* eslint-disable no-await-in-loop */
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -90,30 +89,24 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     await user.pointer([
       {
         target: svg,
-        coords: { x: 50, y: 50 },
+        coords: { x: 80, y: 50 },
       },
     ]);
 
-    // scroll, we scroll exactly in the center of the svg
-    // This will leave only x2 and y20 visible
-    for (let i = 0; i < 200; i += 1) {
-      fireEvent.wheel(svg, { deltaY: -1, clientX: 50, clientY: 50 });
-      // Wait the animation frame
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-    }
+    // scroll, we scroll exactly in the center of the chart
+    // This will leave only x=2 and y=20 ticks visible
+    fireEvent.wheel(svg, { deltaY: -100, clientX: 80, clientY: 50 });
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(200);
+    expect(onZoomChange.callCount).to.equal(1);
     expect(getAxisTickValues('x')).to.deep.equal(['2']);
     expect(getAxisTickValues('y')).to.deep.equal(['20']);
 
     // scroll back
-    for (let i = 0; i < 200; i += 1) {
-      fireEvent.wheel(svg, { deltaY: 1, clientX: 50, clientY: 50 });
-      // Wait the animation frame
-      await act(async () => new Promise((r) => requestAnimationFrame(r)));
-    }
+    fireEvent.wheel(svg, { deltaY: 100, clientX: 80, clientY: 50 });
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(400);
+    expect(onZoomChange.callCount).to.equal(2);
     expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
     expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
   });

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { RadarChartPluginsSignatures } from './RadarChart.plugins';
+import { RadarChartPluginSignatures } from './RadarChart.plugins';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -96,7 +96,7 @@ const RadarChart = React.forwardRef(function RadarChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <RadarDataProvider<RadarChartPluginsSignatures> {...radarDataProviderProps}>
+    <RadarDataProvider<RadarChartPluginSignatures> {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
