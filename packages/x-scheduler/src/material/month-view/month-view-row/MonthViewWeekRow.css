@@ -10,6 +10,12 @@
   color: var(--secondary-text-color);
 }
 
+.MonthViewCellNumber,
+.MonthViewCellNumberButton {
+  grid-row: 1;
+  justify-self: end;
+}
+
 .MonthViewCellNumberButton {
   width: fit-content;
   align-self: flex-end;
@@ -61,12 +67,6 @@
 
 .MonthViewCell[data-current] {
   background-color: var(--primary-2);
-}
-
-.MonthViewCellNumber,
-.MonthViewCellNumberButton {
-  grid-row: 1;
-  justify-self: end;
 }
 
 .MonthViewCell[data-current] .MonthViewCellNumber {

@@ -68,6 +68,8 @@
 
 .DayTimeGridAllDayEventsCell {
   padding: var(--space-1);
+
+  /* stylelint-disable-next-line declaration-property-value-no-unknown */
   scrollbar-color: initial initial;
   background-color: var(--surface);
 }
