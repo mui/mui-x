@@ -43,22 +43,20 @@ export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
  * Selectors to override highlight behavior.
  */
 
-const noop: AxisItemIdentifier[] = [];
-
 const selectAxisHighlight = <T extends ChartSeriesType>(
   type: T | undefined,
   seriesId: SeriesId | undefined,
   dataIndex: number | undefined,
   axis: ComputeResult<ChartsAxisProps>,
   series: ProcessedSeries<T>,
-) => {
+): AxisItemIdentifier[] | undefined => {
   if (type === undefined || seriesId === undefined || dataIndex === undefined) {
-    return noop;
+    return undefined;
   }
 
   const seriesConfig = series[type]?.series[seriesId];
   if (!seriesConfig) {
-    return noop;
+    return undefined;
   }
 
   let axisId: AxisId | false | undefined = 'xAxisId' in seriesConfig && seriesConfig.xAxisId;
