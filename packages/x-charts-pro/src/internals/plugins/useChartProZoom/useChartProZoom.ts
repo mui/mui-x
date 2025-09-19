@@ -17,6 +17,7 @@ import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
+import { useZoomOnTapAndDrag } from './gestureHooks/useZoomOnTapAndDrag';
 
 // It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 export function initializeZoomData(
@@ -207,6 +208,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   useZoomOnWheel(pluginData, setZoomDataCallback);
 
   useZoomOnPinch(pluginData, setZoomDataCallback);
+
+  useZoomOnTapAndDrag(pluginData, setZoomDataCallback);
 
   const zoom = React.useCallback(
     (step: number) => {

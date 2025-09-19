@@ -6,6 +6,7 @@ import {
   PanGesture,
   PinchGesture,
   PressGesture,
+  TapAndDragGesture,
   TapGesture,
   TurnWheelGesture,
 } from '@mui/x-internal-gestures/core';
@@ -36,7 +37,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         }),
         new MoveGesture({
           name: 'move',
-          preventIf: ['pan', 'pinch'], // Prevent move gesture when pan is active
+          preventIf: ['pan', 'pinch'],
         }),
         new PinchGesture({
           name: 'pinch',
@@ -58,10 +59,19 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           duration: 50,
           maxDistance: 10,
         }),
+        new TapAndDragGesture({
+          name: 'tapAndDrag',
+          tapMaxDistance: 10,
+          dragThreshold: 10,
+          dragTimeout: 1000,
+        }),
       ],
     });
 
-    gestureManager.registerElement(['pan', 'move', 'pinch', 'turnWheel', 'tap', 'quickPress'], svg);
+    gestureManager.registerElement(
+      ['pan', 'move', 'pinch', 'turnWheel', 'tap', 'quickPress', 'tapAndDrag'],
+      svg,
+    );
 
     return () => {
       // Cleanup gesture manager

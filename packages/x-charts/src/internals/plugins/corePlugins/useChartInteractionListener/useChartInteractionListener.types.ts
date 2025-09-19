@@ -5,6 +5,7 @@ import {
   PressEvent,
   TapEvent,
   TurnWheelEvent,
+  type TapAndDragEvent,
 } from '@mui/x-internal-gestures/core';
 import { ChartPluginSignature } from '../../models';
 
@@ -54,6 +55,11 @@ export type AddInteractionListener = {
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
     interaction: 'quickPress' | 'quickPressEnd',
     callback: (event: PressEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): InteractionListenerResult;
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'tapAndDrag' | 'tapAndDragStart' | 'tapAndDragEnd',
+    callback: (event: TapAndDragEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
 };
