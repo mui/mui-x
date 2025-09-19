@@ -8,16 +8,6 @@ const EMPTY_CHILDREN: TreeViewItemId[] = [];
 
 export const itemsSelectors = {
   /**
-   * Gets the loading state for the Tree View.
-   */
-  isLoading: createSelector(
-    (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.loading,
-  ),
-  /**
-   * Gets the error state for the Tree View.
-   */
-  error: createSelector((state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.error),
-  /**
    * Gets the DOM structure of the Tree View.
    */
   domStructure: createSelector(
