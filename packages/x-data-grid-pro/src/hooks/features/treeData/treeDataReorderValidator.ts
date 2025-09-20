@@ -22,7 +22,7 @@ const validationRules: ValidationRule[] = [
   },
   {
     name: 'group-to-leaf',
-    applies: conditions.isGroupToLeaf,
+    applies: (ctx) => conditions.isGroupToLeaf(ctx) || conditions.isGroupToGroup(ctx),
     isInvalid: (ctx) => {
       // check if the target is a descendent of the source
       // 1. Direct child case
