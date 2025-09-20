@@ -23,10 +23,10 @@ export default function TreeDataReordering() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
+        {...data}
         loading={loading}
         rowReordering
         disableRowSelectionOnClick
-        {...data}
         getTreeDataPath={getTreeDataPath}
         setTreeDataPath={setTreeDataPath}
       />
