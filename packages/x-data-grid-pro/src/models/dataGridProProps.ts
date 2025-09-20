@@ -298,9 +298,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   isRowReorderable?: (params: { row: R; rowNode: GridTreeNode }) => boolean;
   /**
-   * Determines if a row reorder operation is valid.
+   * Allows to disable certain row reorder operations based on the context.
+   * The internal validation is still applied which allows maximum supported use-cases.
+   * Use `isValidRowReorder()` to omit some of the default validation rules.
    * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
-   * @returns {boolean} A boolean indicating if the reorder operation is valid.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
    */
   isValidRowReorder?: (context: ReorderValidationContext) => boolean;
 }

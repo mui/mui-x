@@ -325,7 +325,7 @@
       }
     },
     "isValidRowReorder": {
-      "description": "Determines if a row reorder operation is valid.",
+      "description": "Allows to disable certain row reorder operations based on the context. The internal validation is still applied which allows maximum supported use-cases. Use <code>isValidRowReorder()</code> to omit some of the default validation rules.",
       "typeDescriptions": {
         "context": {
           "name": "context",
@@ -333,7 +333,7 @@
         },
         "boolean": {
           "name": "boolean",
-          "description": "A boolean indicating if the reorder operation is valid."
+          "description": "A boolean indicating if the reorder operation should go through."
         }
       }
     },

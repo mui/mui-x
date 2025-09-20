@@ -573,7 +573,17 @@ export const useGridRowReorder = (
       const targetRowIndex = sortedRowIndexLookup[targetRowId];
       const sourceRowIndex = sortedRowIndexLookup[sourceRowId];
 
-      // Create context for validation if user provided custom validator
+      // Apply internal validation: check if this drop would result in no actual movement
+      const isAdjacentNode =
+        (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) || // dragging to immediately below (above next row)
+        (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1); // dragging to immediately above (below previous row)
+
+      if (isAdjacentNode || sourceRowIndex === targetRowIndex) {
+        // Return -1 to prevent actual movement (indicators handled separately)
+        return -1;
+      }
+
+      // Internal validation passed, now apply additional user validation if provided
       if (isValidRowReorder) {
         const expandedSortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
         const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
@@ -604,16 +614,6 @@ export const useGridRowReorder = (
         if (!isValidRowReorder(context)) {
           return -1;
         }
-      }
-
-      // Check if this drop would result in no actual movement
-      const isAdjacentNode =
-        (dropPosition === 'above' && targetRowIndex === sourceRowIndex + 1) || // dragging to immediately below (above next row)
-        (dropPosition === 'below' && targetRowIndex === sourceRowIndex - 1); // dragging to immediately above (below previous row)
-
-      if (isAdjacentNode || sourceRowIndex === targetRowIndex) {
-        // Return -1 to prevent actual movement (indicators handled separately)
-        return -1;
       }
 
       let finalTargetIndex;

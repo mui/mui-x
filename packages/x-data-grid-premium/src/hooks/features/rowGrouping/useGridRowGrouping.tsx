@@ -333,14 +333,13 @@ export const useGridRowGrouping = (
         expandedSortedRowIndexLookup,
       };
 
-      // Check if the reorder is valid
-      let isValid;
-      if (isValidRowReorder) {
-        // User override completely replaces internal validation
+      // First apply internal validation
+      let isValid = rowGroupingReorderValidator.validate(context);
+
+      // If internal validation passes AND user provided additional validation
+      if (isValid && isValidRowReorder) {
+        // Apply additional user restrictions
         isValid = isValidRowReorder(context);
-      } else {
-        // Use default internal validation
-        isValid = rowGroupingReorderValidator.validate(context);
       }
 
       if (isValid) {

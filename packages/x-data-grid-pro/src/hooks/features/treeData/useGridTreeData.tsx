@@ -88,14 +88,13 @@ export const useGridTreeData = (
         expandedSortedRowIndexLookup,
       };
 
-      // Check if the reorder is valid
-      let isValid;
-      if (isValidRowReorder) {
-        // User override completely replaces internal validation
+      // First apply internal validation
+      let isValid = treeDataReorderValidator.validate(context);
+
+      // If internal validation passes AND user provided additional validation
+      if (isValid && isValidRowReorder) {
+        // Apply additional user restrictions
         isValid = isValidRowReorder(context);
-      } else {
-        // Use default internal validation
-        isValid = treeDataReorderValidator.validate(context);
       }
 
       if (isValid) {
