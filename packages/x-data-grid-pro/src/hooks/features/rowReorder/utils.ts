@@ -17,6 +17,34 @@ import { RowTreeBuilderGroupingCriterion } from '../../../utils/tree/models';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
+/**
+ * Finds the closest cell element from the given event target.
+ * If the target itself is a cell, returns it.
+ * Otherwise, searches for the closest parent with 'cell' in its className.
+ * @param target - The event target to start searching from
+ * @returns The cell element or the original target if no cell is found
+ */
+export function findCellElement(target: EventTarget | null): Element {
+  const element = target as Element;
+  if (!element) {
+    return element;
+  }
+
+  // Check if the target itself is a cell
+  if (
+    element instanceof Element &&
+    element.className &&
+    typeof element.className === 'string' &&
+    element.className.includes('cell')
+  ) {
+    return element;
+  }
+
+  // Try to find the closest cell parent
+  const cellElement = element.closest('[class*="cell"]');
+  return cellElement || element;
+}
+
 export function determineOperationType(
   sourceNode: GridTreeNode,
   targetNode: GridTreeNode,

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { MuiEvent, RefObject } from '@mui/x-internals/types';
 import useTimeout from '@mui/utils/useTimeout';
 import composeClasses from '@mui/utils/composeClasses';
 import {
@@ -31,6 +31,7 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 import type { ReorderValidationContext } from './types';
+import { findCellElement } from './utils';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -132,11 +133,18 @@ export const useGridRowReorder = (
   }, [props.rowReordering, sortModel]);
 
   const calculateDropPosition = React.useCallback(
-    (relativeY: number, rowHeight: number): 'above' | 'below' | 'over' => {
+    (event: MuiEvent<React.DragEvent<HTMLElement>>): 'above' | 'below' | 'over' => {
+      // For tree data, we need to find the cell element to avoid flickerings on top 20% selection
+      const targetElement = props.treeData
+        ? findCellElement(event.target)
+        : (event.target as Element);
+      const targetRect = targetElement.getBoundingClientRect();
+      const relativeY = Math.floor(event.clientY - targetRect.top);
+
       if (props.treeData) {
         // For tree data: top 20% = above, middle 60% = over, bottom 20% = below
-        const topThreshold = rowHeight * 0.2;
-        const bottomThreshold = rowHeight * 0.8;
+        const topThreshold = targetRect.height * 0.2;
+        const bottomThreshold = targetRect.height * 0.8;
 
         if (relativeY < topThreshold) {
           return 'above';
@@ -147,7 +155,7 @@ export const useGridRowReorder = (
         return 'over';
       }
       // For flat data and row grouping: split at midpoint
-      const midPoint = rowHeight / 2;
+      const midPoint = targetRect.height / 2;
       return relativeY < midPoint ? 'above' : 'below';
     },
     [props.treeData],
@@ -308,10 +316,6 @@ export const useGridRowReorder = (
         return;
       }
 
-      // Find the relative 'y' mouse position based on the event.target
-      const targetRect = (event.target as Element).getBoundingClientRect();
-      const relativeY = Math.floor(event.clientY - targetRect.top);
-
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.
@@ -332,7 +336,7 @@ export const useGridRowReorder = (
       }
 
       // Calculate drop position using new logic
-      const dropPosition = calculateDropPosition(relativeY, targetRect.height);
+      const dropPosition = calculateDropPosition(event);
 
       if (
         targetNode.type === 'group' &&
