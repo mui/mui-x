@@ -375,7 +375,7 @@ export function handleProcessRowUpdateError(
  *
  * @example
  * ```tsx
- * const updater = new BatchRowUpdater(processRowUpdate, onError);
+ * const updater = new BatchRowUpdater(apiRef, processRowUpdate, onError);
  *
  * // Queue multiple updates
  * updater.queueUpdate('row1', originalRow1, newRow1);
@@ -402,6 +402,7 @@ export class BatchRowUpdater {
   private pendingRowUpdates: GridValidRowModel[] = [];
 
   constructor(
+    private apiRef: RefObject<GridPrivateApiPro>,
     private processRowUpdate: DataGridProProcessedProps['processRowUpdate'] | undefined,
     private onProcessRowUpdateError:
       | DataGridProProcessedProps['onProcessRowUpdateError']
@@ -460,7 +461,10 @@ export class BatchRowUpdater {
       });
     });
 
+    this.apiRef.current.setLoading(true);
     await Promise.all(promises);
+
+    this.apiRef.current.setLoading(false);
 
     return {
       successful: Array.from(this.successfulRowIds),

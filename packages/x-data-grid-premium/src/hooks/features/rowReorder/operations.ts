@@ -524,7 +524,11 @@ export class CrossParentGroupOperation extends BaseReorderOperation {
       return;
     }
 
-    const updater = new rowReorderUtils.BatchRowUpdater(processRowUpdate, onProcessRowUpdateError);
+    const updater = new rowReorderUtils.BatchRowUpdater(
+      apiRef,
+      processRowUpdate,
+      onProcessRowUpdateError,
+    );
 
     const groupingRules = getGroupingRules({
       sanitizedRowGroupingModel,

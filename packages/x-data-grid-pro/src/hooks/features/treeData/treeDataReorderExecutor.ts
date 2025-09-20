@@ -258,6 +258,7 @@ class CrossParentLeafOperation extends BaseReorderOperation {
     // Process row update if needed
     if (processRowUpdate) {
       try {
+        apiRef.current.setLoading(true);
         const processedRow = await processRowUpdate(updatedRow, originalRow, {
           rowId: sourceNode.id,
           previousRow: originalRow,
@@ -267,6 +268,8 @@ class CrossParentLeafOperation extends BaseReorderOperation {
       } catch (error) {
         handleProcessRowUpdateError(error, onProcessRowUpdateError);
         return;
+      } finally {
+        apiRef.current.setLoading(false);
       }
     }
 
@@ -414,6 +417,7 @@ class DropOnLeafOperation extends BaseReorderOperation {
       // Process row update if needed
       if (processRowUpdate) {
         try {
+          apiRef.current.setLoading(true);
           const processedRow = await processRowUpdate(updatedRow, originalRow, {
             rowId: sourceNode.id,
             previousRow: originalRow,
@@ -423,6 +427,8 @@ class DropOnLeafOperation extends BaseReorderOperation {
         } catch (error) {
           handleProcessRowUpdateError(error, onProcessRowUpdateError);
           return;
+        } finally {
+          apiRef.current.setLoading(false);
         }
       }
 
@@ -438,7 +444,7 @@ class DropOnLeafOperation extends BaseReorderOperation {
       const sourceDepth = sourceBasePath.length;
 
       // Use BatchRowUpdater for efficient batch processing
-      const updater = new BatchRowUpdater(processRowUpdate, onProcessRowUpdateError);
+      const updater = new BatchRowUpdater(apiRef, processRowUpdate, onProcessRowUpdateError);
 
       // Queue all row updates for batch processing
       for (const node of nodesToUpdate) {
@@ -635,7 +641,7 @@ class CrossParentGroupOperation extends BaseReorderOperation {
     const sourceDepth = sourceBasePath.length;
 
     // Use BatchRowUpdater for efficient batch processing
-    const updater = new BatchRowUpdater(processRowUpdate, onProcessRowUpdateError);
+    const updater = new BatchRowUpdater(apiRef, processRowUpdate, onProcessRowUpdateError);
 
     // Queue all row updates for batch processing
     for (const node of nodesToUpdate) {

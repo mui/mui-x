@@ -70,7 +70,7 @@ export const useGridRowsOverridableMethods = (
         onProcessRowUpdateError,
       };
 
-      await rowGroupingReorderExecutor.execute(executionContext);
+      return rowGroupingReorderExecutor.execute(executionContext);
     },
     [apiRef, processRowUpdate, onProcessRowUpdateError],
   );

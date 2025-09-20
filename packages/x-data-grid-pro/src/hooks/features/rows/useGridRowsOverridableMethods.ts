@@ -74,7 +74,7 @@ export const useGridRowsOverridableMethods = (
         setTreeDataPath,
       };
 
-      await treeDataReorderExecutor.execute(executionContext);
+      return treeDataReorderExecutor.execute(executionContext);
     },
     [apiRef, processRowUpdate, onProcessRowUpdateError, setTreeDataPath],
   );

@@ -180,7 +180,7 @@ export const useGridRowReorder = (
   );
 
   const applyRowAnimation = React.useCallback(
-    (callback: () => void) => {
+    async (callback: () => void | Promise<void>) => {
       const rootElement = apiRef.current.rootElementRef?.current;
       if (!rootElement) {
         return;
@@ -201,7 +201,11 @@ export const useGridRowReorder = (
         }
       });
 
-      callback();
+      // Execute callback and wait if it's async
+      const result = callback();
+      if (result && typeof result.then === 'function') {
+        await result;
+      }
 
       // Use `requestAnimationFrame` to ensure DOM has updated
       requestAnimationFrame(() => {
@@ -441,7 +445,7 @@ export const useGridRowReorder = (
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
-    (_, event): void => {
+    async (_, event): Promise<void> => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef);
       if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
@@ -505,17 +509,40 @@ export const useGridRowReorder = (
         );
 
         if (validatedIndex !== -1) {
-          applyRowAnimation(() => {
-            // TODO: Make this use `await` to wait for promises to execute before emitting the event and clearing the state
-            apiRef.current.setRowIndex(dragRowId, validatedIndex);
+          try {
+            await applyRowAnimation(async () => {
+              // Wait for setRowIndex to complete (if it returns a Promise)
+              const result = apiRef.current.setRowIndex(dragRowId, validatedIndex);
 
-            // Emit the rowOrderChange event only once when the reordering stops.
-            const rowOrderChangeParams: GridRowOrderChangeParams = {
-              row: apiRef.current.getRow(dragRowId)!,
-              targetIndex: validatedIndex,
-              oldIndex: sourceRowIndex,
-            };
+              // Handle both sync and async cases
+              if (result && typeof result.then === 'function') {
+                await result;
+              }
 
+              // Only emit event and clear state after successful reorder
+              const rowOrderChangeParams: GridRowOrderChangeParams = {
+                row: apiRef.current.getRow(dragRowId)!,
+                targetIndex: validatedIndex,
+                oldIndex: sourceRowIndex,
+              };
+
+              applyDraggedState(dragRowId, false);
+              apiRef.current.setState((state) => ({
+                ...state,
+                rowReorder: {
+                  isActive: false,
+                  draggedRowId: null,
+                  dropTarget: {
+                    rowId: null,
+                    position: null,
+                  },
+                },
+              }));
+
+              apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
+            });
+          } catch (error) {
+            // Handle error: reset visual state but don't publish success event
             applyDraggedState(dragRowId, false);
             apiRef.current.setState((state) => ({
               ...state,
@@ -528,9 +555,7 @@ export const useGridRowReorder = (
                 },
               },
             }));
-
-            apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
-          });
+          }
         } else {
           applyDraggedState(dragRowId, false);
           apiRef.current.setState((state) => ({
