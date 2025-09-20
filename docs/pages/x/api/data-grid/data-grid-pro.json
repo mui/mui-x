@@ -187,11 +187,27 @@
         "returned": "boolean"
       }
     },
+    "isRowReorderable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: object, params.row: R, params.rowNode: GridTreeNode) => boolean",
+        "describedArgs": ["params", "params.row", "params.rowNode"],
+        "returned": "boolean"
+      }
+    },
     "isRowSelectable": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(params: GridRowParams) => boolean",
         "describedArgs": ["params"],
+        "returned": "boolean"
+      }
+    },
+    "isValidRowReorder": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(context: ReorderValidationContext) => boolean",
+        "describedArgs": ["context"],
         "returned": "boolean"
       }
     },
@@ -582,6 +598,7 @@
     "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
+    "setTreeDataPath": { "type": { "name": "func" } },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
