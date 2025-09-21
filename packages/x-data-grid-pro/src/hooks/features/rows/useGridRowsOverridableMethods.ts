@@ -4,11 +4,14 @@ import {
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowNodeSelector,
+  useGridSelector,
+  gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid';
 import {
   gridExpandedSortedRowIndexLookupSelector,
   gridRowDropPositionSelector,
   gridRowDropTargetRowIdSelector,
+  useGridRowsOverridableMethodsCommunity,
 } from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import type { ReorderExecutionContext } from '../rowReorder/types';
@@ -24,6 +27,9 @@ export const useGridRowsOverridableMethods = (
   >,
 ) => {
   const { processRowUpdate, onProcessRowUpdateError, setTreeDataPath } = props;
+  const { setRowIndex: setRowIndexFlat } = useGridRowsOverridableMethodsCommunity(apiRef);
+
+  const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
   const setRowIndex = React.useCallback(
     async (sourceRowId: GridRowId, targetOriginalIndex: number) => {
@@ -80,6 +86,6 @@ export const useGridRowsOverridableMethods = (
   );
 
   return {
-    setRowIndex,
+    setRowIndex: flatTree ? setRowIndexFlat : setRowIndex,
   };
 };

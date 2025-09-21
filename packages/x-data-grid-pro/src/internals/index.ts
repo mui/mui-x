@@ -31,6 +31,7 @@ export {
   useGridRowReorder,
   rowReorderStateInitializer,
 } from '../hooks/features/rowReorder/useGridRowReorder';
+export { useGridRowsOverridableMethods as useGridRowsOverridableMethodsPro } from '../hooks/features/rows/useGridRowsOverridableMethods';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 export type { GridRowReorderPrivateApi } from '../models/gridRowReorderApi';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';

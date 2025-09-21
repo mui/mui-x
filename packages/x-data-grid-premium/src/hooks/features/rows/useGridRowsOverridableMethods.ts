@@ -8,7 +8,8 @@ import {
 } from '@mui/x-data-grid-pro';
 import {
   gridExpandedSortedRowIndexLookupSelector,
-  useGridRowsOverridableMethods as useGridRowsOverridableMethodsCommunity,
+  useGridRowsOverridableMethodsCommunity,
+  useGridRowsOverridableMethodsPro,
   useGridSelector,
   type ReorderExecutionContext,
 } from '@mui/x-data-grid-pro/internals';
@@ -19,10 +20,14 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 
 export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'processRowUpdate' | 'onProcessRowUpdateError'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    'processRowUpdate' | 'onProcessRowUpdateError' | 'treeData'
+  >,
 ) => {
   const { processRowUpdate, onProcessRowUpdateError } = props;
   const { setRowIndex: setRowIndexPlain } = useGridRowsOverridableMethodsCommunity(apiRef);
+  const { setRowIndex: setRowIndexTreeData } = useGridRowsOverridableMethodsPro(apiRef, props);
 
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
@@ -75,7 +80,19 @@ export const useGridRowsOverridableMethods = (
     [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
+  if (flatTree) {
+    return {
+      setRowIndex: setRowIndexPlain,
+    };
+  }
+
+  if (props.treeData) {
+    return {
+      setRowIndex: setRowIndexTreeData,
+    };
+  }
+
   return {
-    setRowIndex: flatTree ? setRowIndexPlain : setRowIndex,
+    setRowIndex,
   };
 };
