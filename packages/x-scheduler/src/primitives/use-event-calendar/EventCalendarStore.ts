@@ -14,7 +14,11 @@ import {
   CalendarResource,
   CalendarPlaceholderOccurrence,
 } from '../models';
-import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
+import {
+  EventCalendarParameters,
+  RecurringUpdateEventScope,
+  UpdateRecurringEventParameters,
+} from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
 import { shouldUpdatePlaceholderOccurrence } from './EventCalendarStore.utils';
@@ -332,16 +336,26 @@ export class EventCalendarStore extends Store<State> {
   /**
    * Updates the dates of an event occurrence.
    */
-  public updateEventOccurrenceDates(data: CalendarPlaceholderOccurrence) {
+  public async updateEventOccurrenceDates(
+    data: CalendarPlaceholderOccurrence,
+    chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
+  ) {
     const { eventId, start, end, originalStart } = data;
 
     if (selectors.event(this.state, eventId)?.rrule) {
+      let scope: RecurringUpdateEventScope;
+      if (chooseRecurringEventScope) {
+        // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
+        scope = await chooseRecurringEventScope();
+      } else {
+        scope = 'this-and-following';
+      }
+
       return this.updateRecurringEvent({
         eventId,
         occurrenceStart: originalStart,
         changes: { start, end },
-        // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
-        scope: 'this-and-following',
+        scope,
       });
     }
 
