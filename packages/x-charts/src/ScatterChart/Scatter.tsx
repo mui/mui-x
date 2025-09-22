@@ -3,7 +3,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
-import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
+import {
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
+  ScatterValueType,
+} from '../models/seriesType/scatter';
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
@@ -16,11 +20,12 @@ import {
 import { ScatterMarker } from './ScatterMarker';
 import { ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { ScatterClasses, useUtilityClasses } from './scatterClasses';
-import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
 import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useIsItemFocusedGetter } from '../hooks/useIsItemFocusedGetter';
+import { SeriesId } from '../models/seriesType/common';
+import { selectorChartAxisZoomData, selectorChartSeriesFlatbush } from '../internals';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -78,7 +83,7 @@ function Scatter(props: ScatterProps) {
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
   const isFocused = useIsItemFocusedGetter();
 
-  const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
+  const scatterPlotData = useScatterPlotData(series, xScale, yScale);
 
   const Marker = slots?.marker ?? ScatterMarker;
   const { ownerState, ...markerProps } = useSlotProps({
@@ -133,6 +138,68 @@ function Scatter(props: ScatterProps) {
       })}
     </g>
   );
+}
+
+function useScatterPlotData(
+  series: DefaultizedScatterSeriesType,
+  xScale: D3Scale,
+  yScale: D3Scale,
+) {
+  const { store } = useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+  const flatbush = useSelector(store, selectorChartSeriesFlatbush, [series.id]);
+  const xAxisZoom = useSelector(store, selectorChartAxisZoomData, [
+    series.xAxisId ?? 'defaultized-x-axis-0',
+  ]);
+  const yAxisZoom = useSelector(store, selectorChartAxisZoomData, [
+    series.yAxisId ?? 'defaultized-y-axis-0',
+  ]);
+  const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
+  const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
+  const yZoomStart = (yAxisZoom?.start ?? 0) / 100;
+  const yZoomEnd = (yAxisZoom?.end ?? 100) / 100;
+  const fx = xScale.range()[1] - xScale.range()[0];
+  const fy = yScale.range()[1] - yScale.range()[0];
+  const xMin = xScale.range()[0];
+  const yMin = yScale.range()[0];
+
+  return React.useMemo(() => {
+    const points = flatbush?.search(xZoomStart, yZoomStart, xZoomEnd, yZoomEnd) ?? [];
+
+    const temp: (ScatterValueType & {
+      dataIndex: number;
+      seriesId: SeriesId;
+      type: 'scatter';
+    })[] = [];
+
+    for (let i = 0; i < points.length; i += 3) {
+      const index = points[i];
+      const x = xMin + fx * points[i + 1];
+      const y = yMin + fy * points[i + 2];
+
+      temp.push({
+        x,
+        y,
+        id: series.data[index].id,
+        seriesId: series.id,
+        type: 'scatter',
+        dataIndex: index,
+      });
+    }
+
+    return temp;
+  }, [
+    flatbush,
+    xZoomStart,
+    yZoomStart,
+    xZoomEnd,
+    yZoomEnd,
+    xMin,
+    fx,
+    yMin,
+    fy,
+    series.data,
+    series.id,
+  ]);
 }
 
 Scatter.propTypes = {
