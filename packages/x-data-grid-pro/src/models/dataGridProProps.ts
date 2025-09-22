@@ -7,7 +7,6 @@ import {
   GridRowId,
   GridValidRowModel,
   GridGroupNode,
-  GridTreeNode,
   GridFeatureMode,
   GridListViewColDef,
   GridGetRowsError,
@@ -37,6 +36,7 @@ import type {
   GridGetRowsParamsPro as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
 import type { ReorderValidationContext } from '../hooks/features/rowReorder/reorderValidationTypes';
+import type { IsRowReorderableParams } from '../hooks/features/rowReorder';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
@@ -296,7 +296,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
    * @returns {boolean} A boolean indicating if the row is reorderable.
    */
-  isRowReorderable?: (params: { row: R; rowNode: GridTreeNode }) => boolean;
+  isRowReorderable?: (params: IsRowReorderableParams) => boolean;
   /**
    * Allows to disable certain row reorder operations based on the context.
    * The internal validation is still applied which allows maximum supported use-cases.

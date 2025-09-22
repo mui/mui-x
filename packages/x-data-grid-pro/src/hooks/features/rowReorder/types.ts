@@ -4,11 +4,7 @@ import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import type { DropPosition } from './reorderValidationTypes';
 
-export type {
-  DropPosition,
-  DragDirection,
-  ReorderValidationContext,
-} from './reorderValidationTypes';
+export type { DropPosition, DragDirection } from './reorderValidationTypes';
 
 export type ReorderOperationType =
   | 'same-parent-swap'

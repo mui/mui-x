@@ -9,6 +9,7 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
+  type ReorderValidationContext,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -18,7 +19,6 @@ import {
   GridStrategyGroup,
   gridExpandedSortedRowIndexLookupSelector,
   RowGroupingStrategy,
-  type ReorderValidationContext,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {

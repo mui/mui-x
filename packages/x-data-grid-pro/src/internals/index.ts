@@ -81,7 +81,6 @@ export enum RowGroupingStrategy {
 
 export { RowReorderValidator } from '../hooks/features/rowReorder/reorderValidator';
 export type { ValidationRule } from '../hooks/features/rowReorder/reorderValidator';
-export type { ReorderValidationContext } from '../hooks/features/rowReorder/types';
 export {
   RowReorderExecutor,
   BaseReorderOperation,

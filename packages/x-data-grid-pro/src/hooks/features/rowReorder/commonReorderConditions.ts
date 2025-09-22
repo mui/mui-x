@@ -1,5 +1,5 @@
 import type { GridGroupNode } from '@mui/x-data-grid-pro';
-import type { ReorderValidationContext as Ctx } from './types';
+import type { ReorderValidationContext as Ctx } from './reorderValidationTypes';
 
 /**
  * Reusable validation conditions for row reordering validation
