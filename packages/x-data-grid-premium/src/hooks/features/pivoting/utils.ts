@@ -24,28 +24,29 @@ interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
   children: GridColumnGroupPivoting[];
 }
 
-export const defaultGetPivotDerivedColumns: DataGridPremiumProcessedProps['getPivotDerivedColumns'] =
-  (column, getLocaleText) => {
-    if (column.type === 'date') {
-      const field = column.field;
-      return [
-        {
-          // String column type to avoid formatting the value as 2,025 instead of 2025
-          field: `${field}-year`,
-          headerName: `${column.headerName} ${getLocaleText('pivotYearColumnHeaderName')}`,
-          valueGetter: (value, row) => new Date(row[field]).getFullYear(),
-        },
+export const defaultGetPivotDerivedColumns: NonNullable<
+  DataGridPremiumProcessedProps['getPivotDerivedColumns']
+> = (column, getLocaleText) => {
+  if (column.type === 'date') {
+    const field = column.field;
+    return [
+      {
+        // String column type to avoid formatting the value as 2,025 instead of 2025
+        field: `${field}-year`,
+        headerName: `${column.headerName} ${getLocaleText('pivotYearColumnHeaderName')}`,
+        valueGetter: (value, row) => new Date(row[field]).getFullYear(),
+      },
 
-        {
-          field: `${field}-quarter`,
-          headerName: `${column.headerName} ${getLocaleText('pivotQuarterColumnHeaderName')}`,
-          valueGetter: (value, row) => `Q${Math.floor(new Date(row[field]).getMonth() / 3) + 1}`,
-        },
-      ];
-    }
+      {
+        field: `${field}-quarter`,
+        headerName: `${column.headerName} ${getLocaleText('pivotQuarterColumnHeaderName')}`,
+        valueGetter: (value, row) => `Q${Math.floor(new Date(row[field]).getMonth() / 3) + 1}`,
+      },
+    ];
+  }
 
-    return undefined;
-  };
+  return undefined;
+};
 
 export const getInitialColumns = (
   originalColumns: DataGridPremiumProcessedProps['columns'],
