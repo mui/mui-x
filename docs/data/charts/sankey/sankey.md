@@ -45,6 +45,17 @@ Default styles can be applied to all links using the `linkOptions` prop:
 
 {{"demo": "SankeyLinkStyling.js"}}
 
+### Link color keywords
+
+Link colors can use special keyword values to automatically inherit colors from their connected nodes:
+
+- `'source'` - The link inherits the color of its source node
+- `'target'` - The link inherits the color of its target node
+
+This feature works for both individual link colors and the default link color in `linkOptions`:
+
+{{"demo": "SankeyLinkKeywordColors.js"}}
+
 ### Node alignment
 
 The node alignment determines how nodes are positioned within the Sankey chart. The layout follows these principles:
