@@ -82,6 +82,9 @@ The context object contains:
 - `nodeId`: for nodes, the ID of the node being formatted
 - `sourceId` and `targetId`: for links, the IDs of the source and target nodes
 
+In the following demo, the value formatter adds relevant units to the values.
+And when pointer is on top of a node, it display "total" to the tooltip.
+
 {{"demo": "SankeyValueFormatter.js"}}
 
 ## Sorting
