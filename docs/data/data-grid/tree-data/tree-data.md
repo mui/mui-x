@@ -182,7 +182,7 @@ To enable this feature with row grouping, pass the `rowReordering` prop to the D
 ```
 
 :::warning
-In order for the cross parent operations to work where there will be a change in the path, you need to pass the `setTreeDataPath()` prop, that works reverse to how `getTreeDataPath()` works.
+In order for the cross parent operations to work where there will be a change in the path, you need to pass the `setTreeDataPath()` prop, that works reverse to how [`getTreeDataPath()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-getTreeDataPath) works.
 :::
 
 {{"demo": "TreeDataReordering.js", "bg": "inline", "defaultCodeOpen": false}}
