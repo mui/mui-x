@@ -46,7 +46,9 @@ test('indexes a bunch of rectangles', () => {
 
   const len = index._boxes.length;
   expect(index._boxes.length + index._indices.length).to.eq(540);
-  expect(Array.from(index._boxes.subarray(len - 4, len))).to.deep.eq([0, 1, 96, 95]);
+  expect(Array.from((index._boxes as unknown as Float64Array).subarray(len - 4, len))).to.deep.eq([
+    0, 1, 96, 95,
+  ]);
   expect(index._indices[len / 4 - 1]).to.eq(400);
 });
 
@@ -86,7 +88,7 @@ test('skips sorting less than nodeSize number of rectangles', () => {
 
   expect(Array.from(index._indices)).to.deep.eq(expectedIndices);
   expect(len).to.eq((numItems + 1) * 4);
-  expect(Array.from(index._boxes.subarray(len - 4, len))).to.deep.eq([
+  expect(Array.from((index._boxes as unknown as Float64Array).subarray(len - 4, len))).to.deep.eq([
     rootXMin,
     rootYMin,
     rootXMax,
