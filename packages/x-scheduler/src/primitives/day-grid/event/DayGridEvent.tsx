@@ -128,10 +128,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   return (
     <DayGridEventContext.Provider value={contextValue}>{element}</DayGridEventContext.Provider>
   );
-
-  return (
-    <DayGridEventContext.Provider value={contextValue}>{element}</DayGridEventContext.Provider>
-  );
 });
 
 export namespace DayGridEvent {
