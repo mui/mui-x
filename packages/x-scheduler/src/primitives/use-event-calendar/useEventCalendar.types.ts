@@ -10,15 +10,21 @@ import {
   RecurringEventUpdatedProperties,
 } from '../models';
 
-export interface EventCalendarParameters {
+export interface EventCalendarParameters<EventModel extends {}> {
   /**
    * The events currently available in the calendar.
    */
-  events: CalendarEvent[];
+  events: EventModel[];
   /**
    * Callback fired when some event of the calendar change.
    */
-  onEventsChange?: (value: CalendarEvent[]) => void;
+  onEventsChange?: (value: EventModel[]) => void;
+  /**
+   * The structure of the event model.
+   * It defines how to read and write the properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure?: CalendarEventModelStructure<EventModel>;
   /**
    * The resources the events can be assigned to.
    */
@@ -128,4 +134,11 @@ export type UpdateRecurringEventParameters = {
    * The scope of the update.
    */
   scope: RecurringUpdateEventScope;
+};
+
+export type CalendarEventModelStructure<EventModel extends {}> = {
+  [key in keyof CalendarEvent]?: {
+    getter: (event: EventModel) => CalendarEvent[key];
+    setter: (event: EventModel, value: CalendarEvent[key]) => EventModel;
+  };
 };

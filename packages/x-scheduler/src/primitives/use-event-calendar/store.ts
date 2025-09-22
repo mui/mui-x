@@ -12,6 +12,7 @@ import {
   CalendarEventColor,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
+import { CalendarEventModelStructure } from './useEventCalendar.types';
 
 export type State = {
   /**
@@ -35,6 +36,12 @@ export type State = {
    * The events available in the calendar.
    */
   events: CalendarEvent[];
+  /**
+   * The structure of the event model.
+   * It defines how to read and write the properties of the event model.
+   * If not provided, the event model is assumed to match the `CalendarEvent` interface.
+   */
+  eventModelStructure: CalendarEventModelStructure<any>;
   /**
    * The resources the events can be assigned to.
    */

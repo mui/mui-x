@@ -13,9 +13,14 @@ import {
   CalendarEventColor,
   CalendarResource,
 } from '../models';
-import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
+import {
+  CalendarEventModelStructure,
+  EventCalendarParameters,
+  UpdateRecurringEventParameters,
+} from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
+import { getCalendarEventFromModel } from './EventCalendarStore.utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -29,13 +34,14 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
 };
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
+export const DEFAULT_EVENT_MODEL_STRUCTURE: CalendarEventModelStructure<any> = {};
 
-export class EventCalendarStore extends Store<State> {
-  private parameters: EventCalendarParameters;
+export class EventCalendarStore<EventModel extends {}> extends Store<State> {
+  private parameters: EventCalendarParameters<EventModel>;
 
-  private initialParameters: EventCalendarParameters | null = null;
+  private initialParameters: EventCalendarParameters<EventModel> | null = null;
 
-  private constructor(initialState: State, parameters: EventCalendarParameters) {
+  private constructor(initialState: State, parameters: EventCalendarParameters<EventModel>) {
     super(initialState);
     this.parameters = parameters;
 
@@ -53,13 +59,14 @@ export class EventCalendarStore extends Store<State> {
    * Returns the properties of the state that are derived from the parameters.
    * This do not contain state properties that don't update whenever the parameters update.
    */
-  private static getPartialStateFromParameters(
-    parameters: EventCalendarParameters,
+  private static getPartialStateFromParameters<EventModel extends {}>(
+    parameters: EventCalendarParameters<EventModel>,
     adapter: Adapter,
   ): Pick<
     State,
     | 'adapter'
     | 'events'
+    | 'eventModelStructure'
     | 'resources'
     | 'views'
     | 'areEventsDraggable'
@@ -68,9 +75,16 @@ export class EventCalendarStore extends Store<State> {
     | 'eventColor'
     | 'showCurrentTimeIndicator'
   > {
+    const events = parameters.eventModelStructure
+      ? parameters.events.map((event) =>
+          getCalendarEventFromModel(event, parameters.eventModelStructure!),
+        )
+      : (parameters.events as unknown as CalendarEvent[]);
+
     return {
       adapter,
-      events: parameters.events,
+      events,
+      eventModelStructure: parameters.eventModelStructure ?? DEFAULT_EVENT_MODEL_STRUCTURE,
       resources: parameters.resources ?? DEFAULT_RESOURCES,
       views: parameters.views ?? DEFAULT_VIEWS,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
@@ -81,7 +95,10 @@ export class EventCalendarStore extends Store<State> {
     };
   }
 
-  public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
+  public static create<EventModel extends {}>(
+    parameters: EventCalendarParameters<EventModel>,
+    adapter: Adapter,
+  ): EventCalendarStore<EventModel> {
     const initialState: State = {
       // Store elements that should not be updated when the parameters change.
       visibleResources: new Map(),
@@ -185,7 +202,10 @@ export class EventCalendarStore extends Store<State> {
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
-  public updateStateFromParameters = (parameters: EventCalendarParameters, adapter: Adapter) => {
+  public updateStateFromParameters = (
+    parameters: EventCalendarParameters<EventModel>,
+    adapter: Adapter,
+  ) => {
     const partialState: Partial<State> = EventCalendarStore.getPartialStateFromParameters(
       parameters,
       adapter,
