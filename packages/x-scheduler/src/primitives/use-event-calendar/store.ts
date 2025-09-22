@@ -14,7 +14,7 @@ import {
 import { Adapter } from '../utils/adapter/types';
 import { CalendarEventModelStructure } from './useEventCalendar.types';
 
-export type State = {
+export type State<EventModel extends {} = any> = {
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -33,9 +33,17 @@ export type State = {
    */
   views: CalendarView[];
   /**
-   * The events available in the calendar.
+   * The IDs of the events available in the calendar.
    */
-  events: CalendarEvent[];
+  eventIds: CalendarEventId[];
+  /**
+   * A lookup to get the event model as provided to props.events from its ID.
+   */
+  eventModelLookup: Map<CalendarEventId, EventModel>;
+  /**
+   * A lookup to get the processed event from its ID.
+   */
+  calendarEventLookup: Map<CalendarEventId, CalendarEvent>;
   /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.
@@ -87,20 +95,8 @@ export type State = {
   viewConfig: CalendarViewConfig | null;
 };
 
-const eventByIdMapSelector = createSelectorMemoized(
-  (state: State) => state.events,
-  (events) => {
-    const map = new Map<CalendarEventId | null | undefined, CalendarEvent>();
-    for (const event of events) {
-      map.set(event.id, event);
-    }
-    return map;
-  },
-);
-
-const eventSelector = createSelector(
-  eventByIdMapSelector,
-  (events, eventId: CalendarEventId | null | undefined) => events.get(eventId),
+const eventSelector = createSelector((state: State, eventId: CalendarEventId | null | undefined) =>
+  eventId == null ? null : state.calendarProcessedEventLookup.get(eventId),
 );
 
 const resourcesByIdMapSelector = createSelectorMemoized(
@@ -135,7 +131,7 @@ export const selectors = {
   preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   resources: createSelector((state: State) => state.resources),
-  events: createSelector((state: State) => state.events),
+  // events: createSelector((state: State) => state.events),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
   resource: resourceSelector,
   eventColor: createSelector((state: State, eventId: CalendarEventId) => {

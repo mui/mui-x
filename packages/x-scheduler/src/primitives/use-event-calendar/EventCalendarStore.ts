@@ -20,7 +20,10 @@ import {
 } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
-import { getCalendarEventFromModel } from './EventCalendarStore.utils';
+import {
+  getCalendarEventFromModel,
+  getUpdatedModelFromPartialCalendarEvent,
+} from './EventCalendarStore.utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -65,7 +68,9 @@ export class EventCalendarStore<EventModel extends {}> extends Store<State> {
   ): Pick<
     State,
     | 'adapter'
-    | 'events'
+    | 'eventIds'
+    | 'eventModelLookup'
+    | 'calendarEventLookup'
     | 'eventModelStructure'
     | 'resources'
     | 'views'
@@ -75,16 +80,24 @@ export class EventCalendarStore<EventModel extends {}> extends Store<State> {
     | 'eventColor'
     | 'showCurrentTimeIndicator'
   > {
-    const events = parameters.eventModelStructure
-      ? parameters.events.map((event) =>
-          getCalendarEventFromModel(event, parameters.eventModelStructure!),
-        )
-      : (parameters.events as unknown as CalendarEvent[]);
+    // TODO: Only process events if parameters.events or parameters.eventModelStructure changed.
+    const eventModelStructure = parameters.eventModelStructure ?? DEFAULT_EVENT_MODEL_STRUCTURE;
+    const eventIds: CalendarEventId[] = [];
+    const eventModelLookup = new Map<CalendarEventId, EventModel>();
+    const calendarEventLookup = new Map<CalendarEventId, CalendarEvent>();
+    for (const event of parameters.events) {
+      const processedEvent = getCalendarEventFromModel(event, eventModelStructure);
+      eventIds.push(processedEvent.id);
+      eventModelLookup.set(processedEvent.id, event);
+      calendarEventLookup.set(processedEvent.id, processedEvent);
+    }
 
     return {
       adapter,
-      events,
-      eventModelStructure: parameters.eventModelStructure ?? DEFAULT_EVENT_MODEL_STRUCTURE,
+      eventIds,
+      eventModelLookup,
+      calendarEventLookup,
+      eventModelStructure,
       resources: parameters.resources ?? DEFAULT_RESOURCES,
       views: parameters.views ?? DEFAULT_VIEWS,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
@@ -289,8 +302,15 @@ export class EventCalendarStore<EventModel extends {}> extends Store<State> {
     }
 
     const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.map((ev) =>
-      ev.id === calendarEvent.id ? { ...ev, ...calendarEvent } : ev,
+
+    const updatedEvents = this.state.eventIds.map((id) =>
+      id === calendarEvent.id
+        ? getUpdatedModelFromPartialCalendarEvent(
+            this.state.eventModelLookup.get(id),
+            calendarEvent,
+            this.state.eventModelStructure,
+          )
+        : this.state.eventModelLookup.get(id),
     );
     onEventsChange?.(updatedEvents);
   };
@@ -350,7 +370,9 @@ export class EventCalendarStore<EventModel extends {}> extends Store<State> {
    */
   public deleteEvent = (eventId: CalendarEventId) => {
     const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.filter((ev) => ev.id !== eventId);
+    const updatedEvents = this.state.eventIds
+      .filter((id) => id !== eventId)
+      .map((id) => this.state.eventModelLookup.get(id)!);
     onEventsChange?.(updatedEvents);
   };
 
