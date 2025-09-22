@@ -28,6 +28,14 @@ type TypedArrayConstructor =
 
 export class Flatbush {
   _queue: FlatQueue<number>;
+  _boxes: TypedArrayConstructor;
+  _indices: Uint16Array | Uint32Array;
+  data: ArrayBufferLike;
+  numItems: number;
+  nodeSize: number;
+  _levelBounds: number[];
+  byteOffset: number;
+
   /**
    * Recreate a Flatbush index from raw `ArrayBuffer` or `SharedArrayBuffer` data.
    * @param {ArrayBufferLike} data
