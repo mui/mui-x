@@ -74,9 +74,7 @@
       "isPremiumPlan": true
     },
     "getCellValue": {
-      "type": {
-        "description": "&lt;V extends any = any&gt;(id: GridRowId, field: string) =&gt; V"
-      },
+      "type": { "description": "&lt;V = any&gt;(id: GridRowId, field: string) =&gt; V" },
       "required": true
     },
     "getColumn": {

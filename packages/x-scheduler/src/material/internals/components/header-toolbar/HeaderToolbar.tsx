@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useStore } from '@base-ui-components/utils/store';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../hooks/useEventCalendarContext';
-import { useSelector } from '../../../../base-ui-copy/utils/store';
-import { selectors } from '../../../event-calendar/store';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { selectors } from '../../../../primitives/use-event-calendar';
+import { PreferencesMenu } from './preferences-menu';
 import './HeaderToolbar.css';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
@@ -15,9 +16,9 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
 ) {
   const { className, ...other } = props;
 
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const views = useSelector(store, selectors.views);
+  const views = useStore(store, selectors.views);
   const showViewSwitcher = views.length > 1;
 
   return (
@@ -30,10 +31,13 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       )}
       {...other}
     >
-      {showViewSwitcher && <ViewSwitcher />}
-      <button className="HeaderToolbarButton" onClick={instance.goToToday} type="button">
-        {translations.today}
-      </button>
+      <div className="PrimaryActionWrapper">
+        {showViewSwitcher && <ViewSwitcher />}
+        <button className="Button OutlinedNeutralButton" onClick={store.goToToday} type="button">
+          {translations.today}
+        </button>
+      </div>
+      <PreferencesMenu />
     </header>
   );
 });

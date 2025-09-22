@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui-components/utils/store';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { WeekViewProps } from './WeekView.types';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import { useEventCalendarContext } from '../internals/hooks/useEventCalendarContext';
-import { useSelector } from '../../base-ui-copy/utils/store';
-import { selectors } from '../event-calendar/store';
+import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
+import { selectors } from '../../primitives/use-event-calendar';
+import { useInitializeView } from '../../primitives/utils/useInitializeView';
 
 const adapter = getAdapter();
 
@@ -15,15 +16,24 @@ export const WeekView = React.memo(
     props: WeekViewProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const { store } = useEventCalendarContext();
-    const visibleDate = useSelector(store, selectors.visibleDate);
-
+    const store = useEventCalendarStoreContext();
+    const visibleDate = useStore(store, selectors.visibleDate);
+    const preferences = useStore(store, selectors.preferences);
     const getDayList = useDayList();
 
     const days = React.useMemo(
-      () => getDayList({ date: adapter.startOfWeek(visibleDate), amount: 7 }),
-      [getDayList, visibleDate],
+      () =>
+        getDayList({
+          date: adapter.startOfWeek(visibleDate),
+          amount: 'week',
+          excludeWeekends: !preferences.showWeekends,
+        }),
+      [getDayList, visibleDate, preferences.showWeekends],
     );
+
+    useInitializeView(() => ({
+      siblingVisibleDateGetter: (date, delta) => adapter.addWeeks(adapter.startOfWeek(date), delta),
+    }));
 
     return <DayTimeGrid ref={forwardedRef} days={days} {...props} />;
   }),

@@ -134,6 +134,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsTooltipContainer',
   },
   {
+    pathname: '/x/api/charts/charts-wrapper',
+    title: 'ChartsWrapper',
+  },
+  {
     pathname: '/x/api/charts/charts-x-axis',
     title: 'ChartsXAxis',
   },
@@ -255,6 +259,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'PiePlot',
   },
   {
+    pathname: '/x/api/charts/radar-axis',
+    title: 'RadarAxis',
+  },
+  {
     pathname: '/x/api/charts/radar-axis-highlight',
     title: 'RadarAxisHighlight',
   },
@@ -286,6 +294,26 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radar-series-plot',
     title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/sankey-chart',
+    title: 'SankeyChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-plot',
+    title: 'SankeyPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip',
+    title: 'SankeyTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip-content',
+    title: 'SankeyTooltipContent',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/scatter',

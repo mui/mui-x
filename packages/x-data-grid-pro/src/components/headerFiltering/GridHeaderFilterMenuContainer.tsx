@@ -32,7 +32,7 @@ function GridHeaderFilterMenuContainer(props: {
     disabled = false,
     showClearItem,
     clearFilterItem,
-    ...others
+    ...other
   } = props;
 
   const buttonId = useId();
@@ -89,7 +89,7 @@ function GridHeaderFilterMenuContainer(props: {
         id={menuId!}
         clearFilterItem={clearFilterItem}
         showClearItem={showClearItem}
-        {...others}
+        {...other}
       />
     </React.Fragment>
   );

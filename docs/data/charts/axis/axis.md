@@ -18,7 +18,7 @@ It's responsible for the mapping between your data and element positions.
 You can define custom axes by using `xAxis` and `yAxis` props.
 Those props expect an array of objects.
 
-Here is a demonstration with two lines with the same data.
+Here is a demo with two lines with the same data.
 But one uses a linear, and the other a log axis.
 Each axis definition is identified by its property `id`.
 Then each series specifies the axis they use with the `xAxisId` and `yAxisId` properties.
@@ -31,32 +31,26 @@ Or customized axes.
 
 If you do not provide a `xAxisId` or `yAxisId`, the series will use the first axis defined.
 
-That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
-Those demonstrations use the defaultized values.
+That's why in most of the demos with single x and y axis you will not see definitions of axis `id`, `xAxisId`, or `yAxisId`.
+Those demos use the defaultized values.
 :::
 
-### Axis type
+### Axis type and data
 
-The axis type is specified by its property `scaleType` which expect one of the following values:
+The axis type is specified by its property `scaleType`.
+Axis definition object has a `data` property which expects an array of value coherent with the `scaleType`, as shown in the table below:
 
-- `'band'`: Split the axis in equal band. Mostly used for bar charts.
-- `'point'`: Split the axis in equally spaced points. Mostly used for line charts on categories.
-- `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
-- `'time'`, `'utc'`: Map JavaScript `Date()` object to the space available for the chart.
-
-### Axis data
-
-The axis definition object also includes a `data` property.
-Which expects an array of value coherent with the `scaleType`:
-
-- For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
-- For `'time'` or `'utc'` it should contain `Date()` objects
-- For `'band'` or `'point'` it can contain `string`, or numerical values
+| scaleType                              | Description                                              | Number | Date | String |
+| :------------------------------------- | :------------------------------------------------------- | :----: | :--: | :----: |
+| `'band'`                               | Splits the axis in equal bands.                          |   ✅   |  ✅  |   ✅   |
+| `'point'`                              | Splits the axis in equally spaced points.                |   ✅   |  ✅  |   ✅   |
+| `'linear'` `'log'` `'symlog'` `'sqrt'` | Maps numerical values to the available space.            |   ✅   |  ❌  |   ❌   |
+| `'time'` `'utc'`                       | Maps JavaScript `Date()` objects to the available space. |   ❌   |  ✅  |   ❌   |
 
 Some series types also require specific axis attributes:
 
-- line plots require an `xAxis` to have `data` provided
-- bar plots require an `xAxis` with `scaleType="band"` and some `data` provided.
+- In line charts, the `xAxis` must have a `data` array so each y-value maps to a specific x-value for proper chart rendering.
+- In bar charts, the axis that represents categories (x-axis for vertical bars or y-axis for horizontal bars) must use `scaleType: 'band'`.
 
 ### Axis formatter
 
@@ -78,21 +72,7 @@ For example, it is common that an axis with a log scale has ticks that are not l
 The default tick formatter achieves this by rendering an empty string for ticks that should not show labels.
 If you want to customize the formatting, but want to keep the default behavior for ticks without labels, you can check that `context.defaultTickLabel` property is different from the empty string.
 
-```js
-<ScatterChart
-  xAxis={[
-    {
-      valueFormatter: (value, context) => {
-        if (context.location === 'tick' && context.defaultTickLabel === '') {
-          return '';
-        }
-
-        return `${value}€`;
-      },
-    },
-  ]}
-/>
-```
+{{"demo": "TicksWithoutLabels.js"}}
 
 #### Using the D3 formatter
 
@@ -240,11 +220,42 @@ If two or more axes share the same `position`, they are displayed in the order t
 
 {{"demo": "MultipleAxes.js"}}
 
-### Grouped Axes
+## Grouped Axes
 
-You can group axes together by rendering more than one axis on the same side.
+To group `band` or `point` axes together, provide a `groups` property in the axis definition.
+This property expects an array of objects with a `getValue` function.
+This feature is available for both x- and y-axes.
+
+The `getValue` function receives the axis data value and should return a group name.
+Each group name will be used as is, overriding any `valueFormatter` for the axis.
+Groups are displayed in the order they are defined in the `groups` array.
+
+### X-axis grouping
+
+In the next demo, the x-axis is grouped by month, quarter, and year.
 
 {{"demo": "GroupedAxes.js"}}
+
+### Y-axis grouping
+
+In the following demo, the y-axis is grouped by category and subcategory.
+
+{{"demo": "GroupedYAxes.js"}}
+
+### Tick size
+
+The tick size can be customized for each group.
+To do so, you can provide a `tickSize` property in the `groups` array, the `tickSize` also affects the tick label position.
+Each item in the array corresponds to a group defined in the `getValue` function.
+
+{{"demo": "GroupedAxesTickSize.js"}}
+
+### Grouped axes styling
+
+In order to target a specific group, the `data-group-index` attribute can be used as a selector.
+The example below has a yellow tick color for the last group and blue text for the first group.
+
+{{"demo": "GroupedAxesStyling.js"}}
 
 ## Axis customization
 
@@ -264,7 +275,7 @@ To avoid this, you can use the `margin` prop to increase the space between the c
 
 ### Rendering
 
-Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
+Axes rendering can be further customized. Below is an interactive demo of the axis props.
 
 {{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
@@ -291,7 +302,7 @@ You can also configure the values at which the scale switches from linear to log
 
 If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
 
-It will provide all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>` components as children.
+It will provide all the scaling properties to its children, and lets you use `<XAxis/>` and `<YAxis/>` components as children.
 Those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
 
 You can choose their position with `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.

@@ -1,6 +1,7 @@
 export * from './constants';
 export * from './context';
 export * from './hooks';
+export * from './plugins';
 export * from './colorPalettes';
 export * from './models';
 export * from './ChartsClipPath';
@@ -27,3 +28,7 @@ export { ChartContainer } from './ChartContainer';
 export type { ChartContainerProps } from './ChartContainer';
 export * from './ChartDataProvider';
 export * from './Toolbar';
+export * from './ChartsWrapper';
+
+// Locales should be imported from `@mui/x-charts/locales`
+// export * from './locales';

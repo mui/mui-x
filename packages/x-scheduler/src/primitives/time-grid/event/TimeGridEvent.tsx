@@ -2,16 +2,17 @@
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { TimeGridEventCssVars } from './TimeGridEventCssVars';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useEvent } from '../../utils/useEvent';
-import { useEventPosition } from '../../utils/useEventPosition';
+import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { SchedulerValidDate } from '../../models';
-import { getCursorPositionRelativeToElement } from '../../utils/drag-utils';
 import { TimeGridEventContext } from './TimeGridEventContext';
+import { useAdapter } from '../../utils/adapter/useAdapter';
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   componentProps: TimeGridEvent.Props,
@@ -34,14 +35,19 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // to control whether the event should behave like a button
   const isInteractive = true;
 
+  const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
-  const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
+  const {
+    start: columnStart,
+    end: columnEnd,
+    getCursorPositionInElementMs,
+  } = useTimeGridColumnContext();
 
-  const { position, duration } = useEventPosition({
+  const { position, duration } = useElementPositionInCollection({
     start,
     end,
     collectionStart: columnStart,
@@ -66,14 +72,33 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     [eventState, isDragging, isResizing],
   );
 
-  const contextValue: TimeGridEventContext = React.useMemo(
-    () => ({
-      eventId,
+  const getSharedDragData: TimeGridEventContext['getSharedDragData'] = useEventCallback(
+    (input) => ({
+      id: eventId,
       start,
       end,
-      setIsResizing,
+      initialCursorPositionInEventMs: getCursorPositionInElementMs({ input, elementRef: ref }),
     }),
-    [eventId, start, end],
+  );
+
+  const doesEventStartBeforeColumnStart = React.useMemo(
+    () => adapter.isBefore(start, columnStart),
+    [adapter, start, columnStart],
+  );
+
+  const doesEventEndAfterColumnEnd = React.useMemo(
+    () => adapter.isAfter(end, columnEnd),
+    [adapter, end, columnEnd],
+  );
+
+  const contextValue: TimeGridEventContext = React.useMemo(
+    () => ({
+      setIsResizing,
+      getSharedDragData,
+      doesEventStartBeforeColumnStart,
+      doesEventEndAfterColumnEnd,
+    }),
+    [getSharedDragData, doesEventStartBeforeColumnStart, doesEventEndAfterColumnEnd],
   );
 
   React.useEffect(() => {
@@ -85,12 +110,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     return draggable({
       element: ref.current!,
       getInitialData: ({ input }) => ({
-        type: 'event',
+        ...getSharedDragData(input),
         source: 'TimeGridEvent',
-        id: eventId,
-        start,
-        end,
-        position: getCursorPositionRelativeToElement({ ref, input }),
       }),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
@@ -98,7 +119,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
-  }, [isDraggable, start, end, eventId]);
+  }, [getSharedDragData, isDraggable]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -129,21 +150,20 @@ export namespace TimeGridEvent {
      */
     eventId: string | number;
     /**
-     * Whether the event can be dragged to change its start and end dates without changing the duration.
+     * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
      */
     isDraggable?: boolean;
-    /**
-     * Whether the event start or end can be dragged to change its duration without changing this other date.
-     */
-    isResizable?: boolean;
   }
 
-  export interface DragData {
-    source: 'TimeGridEvent';
+  export interface SharedDragData {
     id: string | number;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
-    position: { y: number };
+    initialCursorPositionInEventMs: number;
+  }
+
+  export interface DragData extends SharedDragData {
+    source: 'TimeGridEvent';
   }
 }

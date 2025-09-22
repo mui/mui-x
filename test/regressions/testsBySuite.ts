@@ -7,6 +7,11 @@ export interface Test {
 
 const tests: Test[] = [];
 
+const removeExtension = (filePath: string) => {
+  const extStart = filePath.lastIndexOf('.');
+  return extStart >= 0 ? filePath.slice(0, extStart) : filePath;
+};
+
 // Also use some of the demos to avoid code duplication.
 const docsImports = import.meta.glob<React.ComponentType>(
   [
@@ -24,9 +29,18 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/date-pickers/date-calendar/DateCalendarServerRequest', // Has random behavior (TODO: Use seeded random)
     '!docsx/data/charts/tooltip/Custom*', // Composition example
     '!docsx/data/charts/tooltip/Item*', // Composition example
+    '!docsx/data/charts/tooltip/AxisFormatter',
+    '!docsx/data/charts/tooltip/Formatting',
+    '!docsx/data/charts/tooltip/SeriesFormatter',
+    '!docsx/data/charts/tooltip/TooltipStyle',
     '!docsx/data/data-grid/server-side-data/useNestedPagination',
     '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
+
+    // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
+    '!docsx/data/migration/migration-pickers-v5/MobileKeyboardView',
+    '!docsx/data/migration/migration-data-grid-v4/CoreV5WithCoreV4',
+    //
   ],
   { eager: true, import: 'default' },
 );
@@ -50,12 +64,12 @@ Object.keys(docsImports).forEach((path: string) => {
   });
 });
 
-const regressionsImports = import.meta.glob<React.ComponentType>('./data-grid/**/*.js', {
+const regressionsImports = import.meta.glob<React.ComponentType>('./data-grid/**/*.{js,tsx}', {
   eager: true,
   import: 'default',
 });
 Object.keys(regressionsImports).forEach((path: string) => {
-  const name = path.replace('./data-grid/', '').replace('.js', '');
+  const name = removeExtension(path.replace('./data-grid/', ''));
   const suite = `test-regressions-data-grid`;
 
   tests.push({
@@ -66,12 +80,12 @@ Object.keys(regressionsImports).forEach((path: string) => {
   });
 });
 
-const chartsImports = import.meta.glob<React.ComponentType>('./charts/**/*.js', {
+const chartsImports = import.meta.glob<React.ComponentType>('./charts/**/*.{js,tsx}', {
   eager: true,
   import: 'default',
 });
 Object.keys(chartsImports).forEach((path: string) => {
-  const name = path.replace('./charts/', '').replace('.js', '');
+  const name = removeExtension(path.replace('./charts/', ''));
   const suite = `test-regressions-charts`;
 
   tests.push({
@@ -79,6 +93,22 @@ Object.keys(chartsImports).forEach((path: string) => {
     suite,
     name,
     case: chartsImports[path],
+  });
+});
+
+const pickersImports = import.meta.glob<React.ComponentType>('./pickers/**/*.{js,tsx}', {
+  eager: true,
+  import: 'default',
+});
+Object.keys(pickersImports).forEach((path: string) => {
+  const name = removeExtension(path.replace('./pickers/', ''));
+  const suite = `test-regressions-pickers`;
+
+  tests.push({
+    path,
+    suite,
+    name,
+    case: pickersImports[path],
   });
 });
 

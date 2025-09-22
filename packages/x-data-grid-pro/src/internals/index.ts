@@ -27,8 +27,12 @@ export {
 export { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 export { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
 
-export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
+export {
+  useGridRowReorder,
+  rowReorderStateInitializer,
+} from '../hooks/features/rowReorder/useGridRowReorder';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+export type { GridRowReorderPrivateApi } from '../models/gridRowReorderApi';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 export {
@@ -68,5 +72,10 @@ export {
   skipFiltering,
   getParentPath,
 } from '../hooks/features/serverSideTreeData/utils';
+
+export enum RowGroupingStrategy {
+  Default = 'grouping-columns',
+  DataSource = 'grouping-columns-data-source',
+}
 
 export * from './propValidation';

@@ -312,14 +312,11 @@ const applyAggregation = (
       return;
     }
     const values = rows.map((row) => row[field]);
-    aggregateValues[`${field}Aggregate`] = aggregationFunction.apply(
-      {
-        values,
-        field,
-        groupId,
-      },
-      null as any, // we can't use apiRef here, and as long as we don't use advanced aggregation functions that depend on it, we're clear
-    );
+    aggregateValues[`${field}Aggregate`] = aggregationFunction.apply({
+      values,
+      field,
+      groupId,
+    });
   });
   return aggregateValues;
 };
@@ -442,7 +439,7 @@ const getTreeDataFilteredRows: GetTreeDataFilteredRows = (
   columnsWithDefaultColDef,
 ): GridValidRowModel[] => {
   let filteredRows = [...rows];
-  if (filterModel && filterModel.quickFilterValues?.length! > 0) {
+  if (filterModel?.quickFilterValues && filterModel.quickFilterValues.length > 0) {
     filteredRows = getQuicklyFilteredRows(rows, filterModel, columnsWithDefaultColDef);
   }
   if ((filterModel?.items.length ?? 0) > 0) {

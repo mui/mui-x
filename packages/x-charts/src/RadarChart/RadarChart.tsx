@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { RadarChartPluginsSignatures } from './RadarChart.plugins';
+import { RadarChartPluginSignatures } from './RadarChart.plugins';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -12,7 +12,7 @@ import {
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartsWrapper, ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import { ChartsWrapper, ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarGrid, RadarGridProps } from './RadarGrid';
 import { RadarDataProvider, RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlotProps } from './RadarSeriesPlot';
@@ -53,7 +53,6 @@ export interface RadarChartProps
    * @default false
    */
   showToolbar?: boolean;
-
   /**
    * Overridable component slots.
    * @default {}
@@ -97,7 +96,7 @@ const RadarChart = React.forwardRef(function RadarChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <RadarDataProvider<RadarChartPluginsSignatures> {...radarDataProviderProps}>
+    <RadarDataProvider<RadarChartPluginSignatures> {...radarDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}

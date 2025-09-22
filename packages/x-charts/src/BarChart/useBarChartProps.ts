@@ -11,9 +11,9 @@ import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
+import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
-import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
+import { BAR_CHART_PLUGINS, BarChartPluginSignatures } from './BarChart.plugins';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -49,7 +49,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     className,
     hideLegend,
     showToolbar,
-    ...rest
+    ...other
   } = props;
 
   const id = useId();
@@ -119,8 +119,8 @@ export const useBarChartProps = (props: BarChartProps) => {
       : yAxis;
   }, [defaultYAxis, hasHorizontalSeries, yAxis]);
 
-  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
-    ...rest,
+  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginSignatures> = {
+    ...other,
     series: seriesWithDefault,
     width,
     height,
@@ -186,6 +186,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   return {

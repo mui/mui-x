@@ -104,6 +104,12 @@ The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all group
 
 {{"demo": "ServerSideRowGroupingGroupExpansion.js", "bg": "inline"}}
 
+## Reorder row grouping rows
+
+:::warning
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/18947) to help us prioritize it. Please don't hesitate to leave a comment or add some additional information.
+:::
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

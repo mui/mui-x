@@ -67,10 +67,12 @@ import {
 } from '../hooks/features/listView/useGridListView';
 import { propsStateInitializer } from '../hooks/core/useGridProps';
 import { useGridDataSource } from '../hooks/features/dataSource/useGridDataSource';
+import { GridConfiguration } from '../models/configuration/gridConfiguration';
 
 export const useDataGridComponent = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
+  configuration: GridConfiguration,
 ) => {
   useGridInitialization<GridPrivateApiCommunity>(apiRef, props);
 
@@ -107,7 +109,7 @@ export const useDataGridComponent = (
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
+  useGridRows(apiRef, props, configuration);
   useGridRowSpanning(apiRef, props);
   useGridParamsApi(apiRef, props);
   useGridColumnSpanning(apiRef);

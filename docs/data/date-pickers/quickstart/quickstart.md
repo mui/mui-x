@@ -128,7 +128,7 @@ const theme = createTheme({
 ### Date value types
 
 The Date and Time Pickers are compatible with several date libraries that each use different formats to represent their dates.
-To correctly type all date-related props, the adapters override a global type named `PickerValidDate` to allow for the formatting of their corresponding libraries.
+To correctly type all date-related props, the adapters override a global type named `PickerValidDate` to let users format their corresponding libraries.
 As a result, TypeScript will throw an error if you try to pass the wrong kind of value to the date library.
 
 To determine whether your adapter is set up correctly, you can import the `PickerValidDate` type from `@mui/x-date-pickers/models` and check its current value.

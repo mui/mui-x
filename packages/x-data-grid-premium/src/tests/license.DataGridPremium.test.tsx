@@ -11,7 +11,7 @@ describe('<DataGridPremium /> - License', () => {
     LicenseInfo.setLicenseKey(
       generateLicense({
         expiryDate: addYears(new Date(), 1),
-        orderNumber: 'Test',
+        orderNumber: '123',
         licenseModel: 'subscription',
         planScope: 'pro',
         planVersion: 'initial',
