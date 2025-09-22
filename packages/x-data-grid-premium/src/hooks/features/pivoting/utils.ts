@@ -71,7 +71,7 @@ export const getInitialColumns = (
   return initialColumns;
 };
 
-export const sortColumnGroups = (
+const sortColumnGroups = (
   columnGroups: GridColumnGroupPivoting[],
   pivotModelColumns: GridPivotModel['columns'],
   depth = 0,
