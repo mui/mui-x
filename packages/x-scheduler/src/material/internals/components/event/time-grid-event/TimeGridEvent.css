@@ -28,11 +28,11 @@
   line-height: var(--line-height-1);
 }
 
-.EventCard[role='button'].Draggable {
+.EventCard.Draggable {
   cursor: grab;
 }
 
-.EventCard[role='button'].Recurrent {
+.EventCard.Recurrent {
   background: repeating-linear-gradient(
     -45deg,
     rgba(var(--event-color-4-rgb), 0.5) 0 12px,

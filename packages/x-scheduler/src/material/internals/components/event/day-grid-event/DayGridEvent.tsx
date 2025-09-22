@@ -49,7 +49,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     switch (variant) {
       case 'allDay':
       case 'invisible':
-      case 'dragPlaceholder':
+      case 'placeholder':
         return (
           <React.Fragment>
             <p
@@ -144,7 +144,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ...other,
   };
 
-  if (variant === 'dragPlaceholder') {
+  if (variant === 'placeholder') {
     return (
       <DayGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
         {content}
@@ -155,6 +155,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   return (
     <DayGrid.Event
       eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
       start={occurrence.start}
       end={occurrence.end}
       isDraggable={isDraggable}

@@ -112,7 +112,7 @@
   padding-inline-start: var(--space-1);
 }
 
-.MonthViewDraggedEventContainer {
+.MonthViewPlaceholderEventContainer {
   position: absolute;
   top: 0;
   left: 0;

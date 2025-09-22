@@ -43,7 +43,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
   React.useEffect(() => {
     const domElement = ref.current;
     if (!domElement || !enabled) {
-      return () => {};
+      return undefined;
     }
 
     return draggable({

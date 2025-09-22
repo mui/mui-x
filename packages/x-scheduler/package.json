@@ -25,6 +25,7 @@
     "./material/translations/enUS": "./src/material/translations/enUS.ts",
     "./material/translations/frFR": "./src/material/translations/frFR.ts",
     "./primitives": "./src/primitives/index.ts",
+    "./primitives/event-calendar-provider": "./src/primitives/event-calendar-provider/index.ts",
     "./primitives/models": "./src/primitives/models/index.ts",
     "./primitives/day-grid": "./src/primitives/day-grid/index.ts",
     "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
