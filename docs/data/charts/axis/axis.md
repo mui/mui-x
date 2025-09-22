@@ -30,29 +30,22 @@ If you don't provide `xAxisId` or `yAxisId` then the series uses the first axis 
 This is why you won't see definitions of `id`, `xAxisId`, or `yAxisId` in most demos in the Charts docs—they rely on the default values.
 :::
 
-## Axis type
+### Axis type and data
 
-Use the `scaleType` property to specify the axis type.
-This property expects one of the following values:
+The axis type is specified by its property `scaleType`.
+Axis definition object has a `data` property which expects an array of value coherent with the `scaleType`, as shown in the table below:
 
-- `'band'`: Split the axis into equal bands. Mostly used for bar charts.
-- `'point'`: Split the axis into equally spaced points. Mostly used for line charts with categories.
-- `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
-- `'time'`, `'utc'`: Map JavaScript `Date()` objects to the space available for the chart.
-
-## Axis data
-
-Use the `data` property to define the axis domain.
-This property expects an array of values that correspond to the chosen `scaleType`:
-
-- For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
-- For `'time'` or `'utc'` it should contain `Date()` objects
-- For `'band'` or `'point'` it can contain strings or numerical values
+| scaleType                              | Description                                              | Number | Date | String |
+| :------------------------------------- | :------------------------------------------------------- | :----: | :--: | :----: |
+| `'band'`                               | Splits the axis in equal bands.                          |   ✅   |  ✅  |   ✅   |
+| `'point'`                              | Splits the axis in equally spaced points.                |   ✅   |  ✅  |   ✅   |
+| `'linear'` `'log'` `'symlog'` `'sqrt'` | Maps numerical values to the available space.            |   ✅   |  ❌  |   ❌   |
+| `'time'` `'utc'`                       | Maps JavaScript `Date()` objects to the available space. |   ❌   |  ✅  |   ❌   |
 
 Some series types also require specific axis attributes:
 
-- Line plots require the `data` property for the `xAxis`
-- Bar plots require the `data` property for the `xAxis` when `scaleType="band"`
+- In line charts, the `xAxis` must have a `data` array so each y-value maps to a specific x-value for proper chart rendering.
+- In bar charts, the axis that represents categories (x-axis for vertical bars or y-axis for horizontal bars) must use `scaleType: 'band'`.
 
 ## Axis formatter
 

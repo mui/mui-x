@@ -18,7 +18,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const { updateEvent, setPlaceholder } = useTimeGridRootContext();
+  const { store, updateEvent, setPlaceholder } = useTimeGridRootContext();
 
   // TODO: Avoid JS date conversion
   const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
@@ -61,7 +61,13 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
 
-        return { start: newStartDate, end: newEndDate, eventId: data.id, columnId };
+        return {
+          start: newStartDate,
+          end: newEndDate,
+          eventId: data.id,
+          columnId,
+          originalStart: data.start,
+        };
       }
 
       // Resize event
@@ -84,6 +90,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
             end: data.end,
             eventId: data.id,
             columnId,
+            originalStart: data.start,
           };
         }
 
@@ -106,6 +113,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           end: newEndDate,
           eventId: data.id,
           columnId,
+          originalStart: data.start,
         };
       }
 
@@ -131,18 +139,24 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       },
       onDragStart: ({ source: { data } }) => {
         if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
-          setPlaceholder({ eventId: data.id, start: data.start, end: data.end, columnId });
+          setPlaceholder({
+            eventId: data.id,
+            start: data.start,
+            end: data.end,
+            columnId,
+            originalStart: data.start,
+          });
         }
       },
       onDrop: ({ source: { data }, location }) => {
-        const newEvent = getEventDropData(data, location.current.input);
+        const newEvent = getEventDropData(data, location.current.input) ?? store.state.placeholder;
         if (newEvent) {
           updateEvent(newEvent);
           setPlaceholder(null);
         }
       },
     });
-  }, [adapter, getEventDropData, setPlaceholder, columnId, updateEvent]);
+  }, [adapter, store, getEventDropData, setPlaceholder, columnId, updateEvent]);
 
   return { getCursorPositionInElementMs, ref };
 }

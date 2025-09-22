@@ -48,7 +48,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   function TestDataSourceLazyLoader(
     props: Partial<DataGridProProps> & { mockServerRowCount?: number },
   ) {
-    const { mockServerRowCount, ...rest } = props;
+    const { mockServerRowCount, ...other } = props;
     apiRef = useGridApiRef();
     mockServer = useMockServer(
       { rowLength: mockServerRowCount ?? 100, maxColumns: 1 },
@@ -97,7 +97,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
           scrollEndThreshold={scrollEndThreshold}
           rowHeight={rowHeight}
           columnHeaderHeight={columnHeaderHeight}
-          {...rest}
+          {...other}
         />
       </div>
     );

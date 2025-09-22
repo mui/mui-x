@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "8.11.1",
+  "version": "8.11.3",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Tree View components.",
   "license": "MIT",
@@ -28,8 +28,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build && pnpm build:copy-files",
-    "build:copy-files": "code-infra copy-files",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {

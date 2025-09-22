@@ -10,7 +10,7 @@ import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
 import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
@@ -23,37 +23,40 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
-    event: eventProp,
+    occurrence,
     ariaLabelledBy,
     variant,
-    className,
+    className: classNameProp,
     onEventClick,
     id: idProp,
-    gridRow,
-    columnSpan = 1,
-    style,
+    style: styleProp,
     ...other
   } = props;
 
   const id = useId(idProp);
   const translations = useTranslations();
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
+  const isDayView = useStore(store, selectors.isDayView);
+  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence) && !isDayView;
+  const isResizable =
+    useStore(store, selectors.isEventResizable, occurrence) && variant === 'allDay' && !isDayView;
   const ampm = useStore(store, selectors.ampm);
-  const resource = useStore(store, selectors.resource, eventProp.resource);
-  const color = useStore(store, selectors.eventColor, eventProp.id);
-  const isRecurring = Boolean(eventProp.rrule);
+  const resource = useStore(store, selectors.resource, occurrence.resource);
+  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const isRecurring = Boolean(occurrence.rrule);
 
   const content = React.useMemo(() => {
     switch (variant) {
       case 'allDay':
       case 'invisible':
+      case 'dragPlaceholder':
         return (
           <React.Fragment>
             <p
               className={clsx('DayGridEventTitle', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {eventProp.title}
+              {occurrence.title}
             </p>
             {isRecurring && (
               <Repeat
@@ -83,21 +86,21 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               className={clsx('DayGridEventCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {eventProp?.allDay ? (
+              {occurrence?.allDay ? (
                 <span className="DayGridEventTime">{translations.allDay}</span>
               ) : (
                 <time className="DayGridEventTime">
-                  <span className="DayGridEventTimeStart">
-                    {adapter.format(eventProp.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                  <span>
+                    {adapter.format(occurrence.start, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                   </span>
-                  <span className="DayGridEventTimeEnd">
+                  <span>
                     {' '}
-                    - {adapter.format(eventProp.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
+                    - {adapter.format(occurrence.end, ampm ? 'hoursMinutes12h' : 'hoursMinutes24h')}
                   </span>
                 </time>
               )}
 
-              <span className="DayGridEventTitle">{eventProp.title}</span>
+              <span className="DayGridEventTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
               <Repeat
@@ -112,41 +115,59 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     }
   }, [
     variant,
-    eventProp.title,
-    eventProp?.allDay,
-    eventProp.start,
-    eventProp.end,
+    occurrence.title,
+    occurrence?.allDay,
+    occurrence.start,
+    occurrence.end,
     isRecurring,
     resource?.name,
     translations,
     ampm,
   ]);
 
+  const sharedProps = {
+    ref: forwardedRef,
+    id,
+    className: clsx(
+      classNameProp,
+      'EventContainer',
+      'EventCard',
+      `EventCard--${variant}`,
+      getColorClassName(color),
+    ),
+    style: {
+      '--grid-row': occurrence.position.index,
+      '--grid-column-span': occurrence.position.daySpan,
+      ...styleProp,
+    } as React.CSSProperties,
+    'aria-labelledby': `${ariaLabelledBy} ${id}`,
+    ...other,
+  };
+
+  if (variant === 'dragPlaceholder') {
+    return (
+      <DayGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
+        {content}
+      </DayGrid.EventPlaceholder>
+    );
+  }
+
   return (
     <DayGrid.Event
-      ref={forwardedRef}
-      id={id}
-      className={clsx(
-        className,
-        'EventContainer',
-        'EventCard',
-        `EventCard--${variant}`,
-        getColorClassName(color),
-      )}
-      aria-labelledby={`${ariaLabelledBy} ${id}`}
+      eventId={occurrence.id}
+      start={occurrence.start}
+      end={occurrence.end}
+      isDraggable={isDraggable}
       aria-hidden={variant === 'invisible'}
-      start={eventProp.start}
-      end={eventProp.end}
-      style={
-        {
-          '--grid-row': gridRow,
-          '--grid-column-span': columnSpan,
-          ...style,
-        } as React.CSSProperties
-      }
-      {...other}
+      {...sharedProps}
     >
+      {isResizable && (
+        <DayGrid.EventResizeHandler side="start" className="DayGridEventResizeHandler" />
+      )}
       {content}
+      {isResizable && (
+        <DayGrid.EventResizeHandler side="end" className="DayGridEventResizeHandler" />
+      )}
     </DayGrid.Event>
   );
 });

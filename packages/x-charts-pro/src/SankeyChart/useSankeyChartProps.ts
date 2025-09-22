@@ -4,7 +4,7 @@ import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import type { SankeyChartProps } from './SankeyChart';
 import type { ChartContainerProProps } from '../ChartContainerPro';
-import { SANKEY_CHART_PLUGINS, type SankeyChartPluginsSignatures } from './SankeyChart.plugins';
+import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 /**
  * A helper function that extracts SankeyChartProps from the input props
@@ -31,13 +31,13 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
     apiRef,
     onNodeClick,
     onLinkClick,
-    ...rest
+    ...other
   } = props;
 
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
-  const chartContainerProps: ChartContainerProProps<'sankey', SankeyChartPluginsSignatures> = {
-    ...rest,
+  const chartContainerProps: ChartContainerProProps<'sankey', SankeyChartPluginSignatures> = {
+    ...other,
     series: [
       {
         type: 'sankey' as const,
@@ -69,6 +69,7 @@ export const useSankeyChartProps = (props: SankeyChartProps) => {
 
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
+    hideLegend: false,
   };
 
   return {
