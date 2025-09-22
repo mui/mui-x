@@ -10,6 +10,7 @@ export const GRID_ACTIONS_COL_DEF: GridColTypeDef = {
   filterable: false,
   // @ts-ignore
   aggregable: false,
+  chartable: false,
   width: 100,
   display: 'flex',
   align: 'center',
