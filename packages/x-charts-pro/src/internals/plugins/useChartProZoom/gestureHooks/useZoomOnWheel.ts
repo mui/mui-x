@@ -120,6 +120,5 @@ export const useZoomOnWheel = (
     instance,
     setZoomDataCallback,
     store,
-    config,
   ]);
 };

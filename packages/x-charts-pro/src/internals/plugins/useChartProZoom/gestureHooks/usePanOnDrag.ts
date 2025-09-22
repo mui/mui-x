@@ -105,6 +105,5 @@ export const usePanOnDrag = (
     setZoomDataCallback,
     store,
     startRef,
-    config,
   ]);
 };

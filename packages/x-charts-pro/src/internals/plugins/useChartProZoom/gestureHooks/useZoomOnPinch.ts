@@ -103,6 +103,5 @@ export const useZoomOnPinch = (
     store,
     instance,
     setZoomDataCallback,
-    config,
   ]);
 };
