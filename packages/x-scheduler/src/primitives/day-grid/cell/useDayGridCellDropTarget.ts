@@ -15,7 +15,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
   const { value } = parameters;
 
   const adapter = useAdapter();
-  const { updateEvent, setPlaceholder } = useDayGridRootContext();
+  const { store, updateEvent, setPlaceholder } = useDayGridRootContext();
   const ref = React.useRef<HTMLDivElement>(null);
 
   const getEventDropData = useEventCallback((data: Record<string, unknown>) => {
@@ -108,15 +108,14 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         }
       },
       onDrop: ({ source: { data } }) => {
-        const newEvent = getEventDropData(data);
-
+        const newEvent = getEventDropData(data) ?? store.state.placeholder;
         if (newEvent) {
           updateEvent(newEvent);
           setPlaceholder(null);
         }
       },
     });
-  }, [adapter, updateEvent, setPlaceholder, getEventDropData]);
+  }, [adapter, store, updateEvent, setPlaceholder, getEventDropData]);
 
   return ref;
 }
