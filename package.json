@@ -128,7 +128,7 @@
     "execa": "^9.6.0",
     "fast-glob": "catalog:",
     "format-util": "^1.0.5",
-    "fs-extra": "^11.3.1",
+    "fs-extra": "^11.3.2",
     "glob-gitignore": "^1.0.15",
     "globby": "^14.1.0",
     "html-webpack-plugin": "^5.6.4",
