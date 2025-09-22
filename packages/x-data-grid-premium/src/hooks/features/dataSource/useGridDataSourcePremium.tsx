@@ -141,7 +141,7 @@ export const useGridDataSourcePremium = (
           visiblePivotValues.forEach((pivotValue) => {
             // Find the original column definition for the last field
             const originalColumn = initialColumns.get(pivotValue.field);
-            // get the overrides defined from the data source definition});
+            // get the overrides defined from the data source definition
             const overrides = getPivotColumnDef(pivotValue.field, columnPath, columnDefinitions);
 
             // Create new column definition based on original column
@@ -183,6 +183,9 @@ export const useGridDataSourcePremium = (
                   headerName,
                   initialColumns.get(currentField)!,
                 );
+              }
+              if (typeof headerName === 'number') {
+                headerName = String(headerName);
               }
               if (typeof headerName !== 'string') {
                 throw new Error(
