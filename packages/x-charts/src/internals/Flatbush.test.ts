@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle,no-plusplus */
-import test from 'node:test';
-import assert from 'node:assert/strict';
+import { expect, test } from 'vitest';
 import { Flatbush } from './Flatbush';
 
 const data = [
@@ -56,9 +55,9 @@ test('indexes a bunch of rectangles', () => {
   const index = createIndex();
 
   const len = index._boxes.length;
-  assert.equal(index._boxes.length + index._indices.length, 540);
-  assert.deepEqual(Array.from(index._boxes.subarray(len - 4, len)), [0, 1, 96, 95]);
-  assert.deepEqual(index._indices[len / 4 - 1], 400);
+  expect(index._boxes.length + index._indices.length).to.eq(540);
+  expect(Array.from(index._boxes.subarray(len - 4, len))).to.deep.eq([0, 1, 96, 95]);
+  expect(index._indices[len / 4 - 1]).to.eq(400);
 });
 
 test('skips sorting less than nodeSize number of rectangles', () => {
@@ -95,9 +94,9 @@ test('skips sorting less than nodeSize number of rectangles', () => {
 
   const len = index._boxes.length;
 
-  assert.deepEqual(Array.from(index._indices), expectedIndices);
-  assert.equal(len, (numItems + 1) * 4);
-  assert.deepEqual(Array.from(index._boxes.subarray(len - 4, len)), [
+  expect(Array.from(index._indices)).to.deep.eq(expectedIndices);
+  expect(len).to.eq((numItems + 1) * 4);
+  expect(Array.from(index._boxes.subarray(len - 4, len))).to.deep.eq([
     rootXMin,
     rootYMin,
     rootXMax,
@@ -118,8 +117,7 @@ test('performs bbox search', () => {
     results.push(data[4 * ids[i] + 3]);
   }
 
-  assert.deepEqual(
-    results.sort(compare),
+  expect(results.sort(compare)).to.deep.eq(
     [57, 59, 58, 59, 48, 53, 52, 56, 40, 42, 43, 43, 43, 41, 47, 43].sort(compare),
   );
 });
@@ -128,7 +126,7 @@ test('reconstructs an index from array buffer', () => {
   const index = createIndex();
   const index2 = Flatbush.from(index.data);
 
-  assert.deepEqual(index, index2);
+  expect(index).to.deep.eq(index2);
 });
 
 test('throws an error when reconstructing an index from array buffer if not 8-byte aligned', () => {
@@ -138,9 +136,7 @@ test('throws an error when reconstructing an index from array buffer if not 8-by
   const newView = new Uint8Array(newArrayBuffer, byteOffset);
   newView.set(new Uint8Array(index.data));
 
-  assert.throws(() => {
-    Flatbush.from(newArrayBuffer, byteOffset);
-  });
+  expect(() => Flatbush.from(newArrayBuffer, byteOffset)).to.throw();
 });
 
 test('reconstructs an index from a Uint8Array', () => {
@@ -152,51 +148,51 @@ test('reconstructs an index from a Uint8Array', () => {
 
   const index2 = Flatbush.from(newArrayBuffer, byteOffset);
 
-  assert.deepEqual(index._boxes, index2._boxes);
-  assert.deepEqual(index._indices, index2._indices);
-  assert.equal(index.numItems, index2.numItems);
-  assert.equal(index.nodeSize, index2.nodeSize);
-  assert.deepEqual(index._levelBounds, index2._levelBounds);
-  assert.notEqual(index.byteOffset, index2.byteOffset);
+  expect(index._boxes).to.deep.eq(index2._boxes);
+  expect(index._indices).to.deep.eq(index2._indices);
+  expect(index.numItems).to.eq(index2.numItems);
+  expect(index.nodeSize).to.eq(index2.nodeSize);
+  expect(index._levelBounds).to.deep.eq(index2._levelBounds);
+  expect(index.byteOffset).not.to.eq(index2.byteOffset);
 });
 
 test('defaults to adding a point when not providing maxX/maxY', () => {
   const index = new Flatbush(1);
   index.add(10, 10);
   index.finish();
-  assert.deepEqual(index.search(0, 0, 20, 20), [0, 10, 10]);
+  expect(index.search(0, 0, 20, 20)).to.deep.eq([0, 10, 10]);
 });
 
 test('throws an error if added less items than the index size', () => {
-  assert.throws(() => {
+  expect(() => {
     const index = new Flatbush(data.length / 4);
     index.finish();
-  });
+  }).to.throw();
 });
 
 test('throws an error if searching before indexing', () => {
-  assert.throws(() => {
+  expect(() => {
     const index = new Flatbush(data.length / 4);
     index.search(0, 0, 20, 20);
-  });
+  }).to.throw();
 });
 
 test('does not freeze on numItems = 0', { timeout: 100 }, () => {
-  assert.throws(() => {
+  expect(() => {
     new Flatbush(0); // eslint-disable-line
-  });
+  }).to.throw();
 });
 
 test('performs a k-nearest-neighbors query', () => {
   const index = createIndex();
   const ids = index.neighbors(50, 50, 3);
-  assert.deepEqual(ids.sort(compare), [31, 6, 75].sort(compare));
+  expect(ids.sort(compare)).to.deep.eq([31, 6, 75].sort(compare));
 });
 
 test('k-nearest-neighbors query accepts maxDistance', () => {
   const index = createIndex();
   const ids = index.neighbors(50, 50, Infinity, () => 12 ** 2);
-  assert.deepEqual(ids.sort(compare), [6, 29, 31, 75, 85].sort(compare));
+  expect(ids.sort(compare)).to.deep.eq([6, 29, 31, 75, 85].sort(compare));
 });
 
 test('k-nearest-neighbors query accepts filterFn', () => {
@@ -210,13 +206,13 @@ test('k-nearest-neighbors query accepts filterFn', () => {
     Infinity,
     (i) => i % 2 === 0,
   );
-  assert.deepEqual(ids.sort(compare), [6, 16, 18, 24, 54, 80].sort(compare));
+  expect(ids.sort(compare)).to.deep.eq([6, 16, 18, 24, 54, 80].sort(compare));
 });
 
 test('performs a k-nearest-neighbors query with all items', () => {
   const index = createIndex();
   const ids = index.neighbors(50, 50);
-  assert.deepEqual(ids.length, data.length >> 2);
+  expect(ids.length).to.eq(data.length >> 2);
 });
 
 test('returns index of newly-added rectangle', () => {
@@ -230,19 +226,19 @@ test('returns index of newly-added rectangle', () => {
   }
 
   const expectedSequence = Array.from(Array(count), (v, i) => i);
-  assert.deepEqual(ids, expectedSequence);
+  expect(ids).to.deep.eq(expectedSequence);
 });
 
 test('creates an index using SharedArrayBuffer', () => {
   const index = createIndexSharedArrayBuffer();
-  assert(index.data instanceof SharedArrayBuffer);
+  expect(index.data).to.be.instanceof(SharedArrayBuffer);
 });
 
 test('reconstructs an index from SharedArrayBuffer', () => {
   const index = createIndexSharedArrayBuffer();
   const index2 = Flatbush.from(index.data);
 
-  assert.deepEqual(index, index2);
+  expect(index).to.deep.eq(index2);
 });
 
 test('quicksort should work with an inbalanced dataset', () => {
@@ -268,9 +264,9 @@ test('quicksort should work with an inbalanced dataset', () => {
 
   index.finish();
 
-  assert.doesNotThrow(() => {
+  expect(() => {
     index.search(-100, -1, 15000, 1);
-  });
+  }).not.to.throw();
 });
 
 function compare(a: number, b: number) {
