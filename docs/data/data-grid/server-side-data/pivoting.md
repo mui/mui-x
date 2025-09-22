@@ -98,8 +98,8 @@ Open the Info section of your browser console to see the requests being made and
 ### Pivot columns structure
 
 The `pivotColumns` response defines the structure of pivot columns to be created for the pivoted data.
-Each node in the tree must have a `group` property that's either a string (for the formatting on the server) or a part of a row model (for the formatting on the client using [`valueGetter()`](/x/react-data-grid/column-definition/#value-getter) and [`valueFormatter()`](/x/react-data-grid/column-definition/#value-formatter) from the column definition).
-`children` is a list of the next level nodes.
+Each node in the tree must have a `group` property that's either a string (for formatting on the server) or a part of a row model (for formatting on the client using [`valueGetter()`](/x/react-data-grid/column-definition/#value-getter) and [`valueFormatter()`](/x/react-data-grid/column-definition/#value-formatter) from the column definition).
+`children` is a list of the next-level nodes.
 
 ```tsx
 interface GridGetRowsResponsePivotColumn {
@@ -129,7 +129,7 @@ interface GridGetRowsResponsePivotColumn {
   };
   ```
 
-  Creates a column group with value "2025" that has column groups "Q1" and "Q2"
+  Creates a column group with the value "2025" that has column groups "Q1" and "Q2"
 
 - `[{group: {date: "2025-01-01"}, children: [{group: {date: "2025-01-01"}}]}]`, in combination with
 
@@ -155,10 +155,10 @@ interface GridGetRowsResponsePivotColumn {
   };
   ```
 
-  Creates a column group with value "2025" that has column group "Q1".
-  Even though the same values are used for the different group levels, the output value for the column headers can be different if the value formatters are different for the two pivot columns used to create pivot data.
+  Creates a column group with the value "2025" that has column group "Q1".
+  Even though the same values are used for the different group levels, the output value for the column headers can be different if the value formatters are different for the two pivot columns used to create the pivot data.
 
-Each node in the last level of the pivot column structure gets all pivot value columns to complete the column structure of the Data Grid.
+Each node in the last level of the pivot column structure gets all pivot value columns to complete the Data Grid's column structure.
 
 The demo below returns a static response to demonstrate different ways of creating the column structure from the `pivotColumns` response.
 
