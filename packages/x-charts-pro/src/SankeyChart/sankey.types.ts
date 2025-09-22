@@ -53,9 +53,13 @@ export interface SankeyLink {
   data?: any;
 
   /**
-   * Optional color override for the link
+   * Optional color override for the link.
+   * Can be a color string, or a keyword:
+   * - 'source': Use the color of the source node
+   * - 'target': Use the color of the target node
+   * @default 'source'
    */
-  color?: string;
+  color?: string | 'source' | 'target';
 }
 
 export type SankeyNodeOptions = {
@@ -95,9 +99,13 @@ export type SankeyNodeOptions = {
 
 export type SankeyLinkOptions = {
   /**
-   * Default color for links without specified colors
+   * Default color for links without specified colors.
+   * Can be a color string, or a keyword:
+   * - 'source': Use the color of the source node
+   * - 'target': Use the color of the target node
+   * @default 'source'
    */
-  color?: string;
+  color?: string | 'source' | 'target';
   /**
    * Opacity of the links (0-1)
    */
