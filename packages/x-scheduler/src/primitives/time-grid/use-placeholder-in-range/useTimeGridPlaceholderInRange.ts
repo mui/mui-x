@@ -11,21 +11,21 @@ export function useTimeGridPlaceholderInRange(
   const { start, end, occurrences, maxIndex } = parameters;
   const store = useEventCalendarStoreContext();
 
-  const rawDraggedOccurrence = useStore(
+  const rawPlaceholder = useStore(
     store,
     selectors.occurrencePlaceholderToRenderInTimeRange,
     start,
     end,
   );
-  const originalEvent = useStore(store, selectors.event, rawDraggedOccurrence?.eventId ?? null);
+  const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
 
   return React.useMemo(() => {
-    if (!originalEvent || !rawDraggedOccurrence) {
+    if (!originalEvent || !rawPlaceholder) {
       return null;
     }
 
     const position = occurrences.find(
-      (occurrence) => occurrence.key === rawDraggedOccurrence.occurrenceKey,
+      (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
     )?.position ?? {
       firstIndex: 1,
       lastIndex: maxIndex,
@@ -33,12 +33,12 @@ export function useTimeGridPlaceholderInRange(
 
     return {
       ...originalEvent,
-      key: `placeholder-${rawDraggedOccurrence.occurrenceKey}`,
-      start: rawDraggedOccurrence.start,
-      end: rawDraggedOccurrence.end,
+      key: `placeholder-${rawPlaceholder.occurrenceKey}`,
+      start: rawPlaceholder.start,
+      end: rawPlaceholder.end,
       position,
     };
-  }, [originalEvent, rawDraggedOccurrence, occurrences, maxIndex]);
+  }, [originalEvent, rawPlaceholder, occurrences, maxIndex]);
 }
 
 export namespace useTimeGridPlaceholderInRange {

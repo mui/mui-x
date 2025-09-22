@@ -16,23 +16,23 @@ export function useDayGridPlaceholderInDay(
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
 
-  const rawDraggedOccurrence = useStore(
+  const rawPlaceholder = useStore(
     store,
     selectors.occurrencePlaceholderToRenderInDayCell,
     day,
     rowStart,
   );
-  const originalEvent = useStore(store, selectors.event, rawDraggedOccurrence?.eventId ?? null);
+  const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
 
   return React.useMemo(() => {
-    if (!originalEvent || !rawDraggedOccurrence) {
+    if (!originalEvent || !rawPlaceholder) {
       return null;
     }
 
     let positionIndex = 1;
     for (const rowDay of row.days) {
       const found = rowDay.withPosition.find(
-        (occurrence) => occurrence.key === rawDraggedOccurrence.occurrenceKey,
+        (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
       );
       if (found) {
         positionIndex = found.position.index;
@@ -42,13 +42,13 @@ export function useDayGridPlaceholderInDay(
 
     return {
       ...originalEvent,
-      key: `placeholder-${rawDraggedOccurrence.occurrenceKey}`,
+      key: `placeholder-${rawPlaceholder.occurrenceKey}`,
       start: day,
-      end: adapter.isAfter(rawDraggedOccurrence.end, rowEnd) ? rowEnd : rawDraggedOccurrence.end,
+      end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
       position: {
         index: positionIndex,
-        daySpan: diffIn(adapter, rawDraggedOccurrence.end, day, 'days') + 1,
+        daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
       },
     };
-  }, [adapter, day, originalEvent, rawDraggedOccurrence, row.days, rowEnd]);
+  }, [adapter, day, originalEvent, rawPlaceholder, row.days, rowEnd]);
 }
