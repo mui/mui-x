@@ -113,10 +113,10 @@ const getTemplateRows = (
   if (hideLegend) {
     return '1fr';
   }
-  if (position?.vertical === 'top') {
-    return `auto ${height ? 'auto' : '1fr'}`;
+  if (position?.vertical === 'bottom') {
+    return '1fr auto';
   }
-  return '1fr auto';
+  return `auto 1fr`;
 };
 
 const Root = styled('div', {
