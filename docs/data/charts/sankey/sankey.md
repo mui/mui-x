@@ -141,13 +141,15 @@ You can highlight nodes and links by hovering over them or by controlling the hi
 
 The highlighting behavior is controlled by the `highlightScope` property in the series configuration:
 
-- `highlight`: Can be `'none'`, `'node'`, `'link'`, or `'chain'`
+- `highlight`: Can be `'none'`, `'node'`, `'link'`, `'node-and-links'`, `'link-and-nodes'`, or `'chain'`
+  - The `'node'` option highlights only the hovered node.
+  - The `'link'` option highlights only the hovered link.
+  - The `'node-and-links'` option highlights all links connected to the hovered node.
+  - The `'link-and-nodes'` option highlights the hovered link and its source and target
   - The `'chain'` option highlights all ancestors of a node or link, providing a comprehensive view of the flow.
 - `fade`: Can be `'none'` or `'global'`
 
 You can also control highlighting externally using the `highlightedItem` and `onHighlightChange` props.
-
-{{"demo": "SankeyHighlight.js"}}
 
 ## Tooltip
 
