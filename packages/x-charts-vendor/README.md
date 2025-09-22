@@ -13,7 +13,6 @@ To help provide an easy path to folks still using CommonJS in their Node.js appl
 ## Main difference with victory-vendor
 
 Victory is using the `d3-voronoi` which is an archived project.
-Our chart library reuses `robust-predicates` which is ESM only.
 
 ## Packages
 
@@ -26,7 +25,6 @@ We presently provide the following top-level libraries:
 - d3-shape
 - d3-time
 - d3-timer
-- robust-predicates
 
 This is the total list of top and transitive libraries we vendor:
 
@@ -42,7 +40,6 @@ This is the total list of top and transitive libraries we vendor:
 - d3-time-format
 - d3-timer
 - internmap
-- robust-predicates
 
 ## How to add a new package
 

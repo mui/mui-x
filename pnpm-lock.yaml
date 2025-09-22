@@ -1113,9 +1113,6 @@ importers:
       d3-timer:
         specifier: ^3.0.1
         version: 3.0.1
-      robust-predicates:
-        specifier: ^3.0.2
-        version: 3.0.2
     devDependencies:
       '@babel/plugin-transform-runtime':
         specifier: 'catalog:'
@@ -10804,9 +10801,6 @@ packages:
     resolution: {integrity: sha512-9dkvaxAsk/xNXSJzMgFqqMCuFgt2+KsOFek3TMLfo8NCPfWpBmqwyNn5Y+NX56QUYfCtsyhF3ayiboEoUmJk/A==}
     engines: {node: 20 || >=22}
     hasBin: true
-
-  robust-predicates@3.0.2:
-    resolution: {integrity: sha512-IXgzBWvWQwE6PrDI05OvmXUIruQTcoMDzRsOd5CDvHCVLcLHMTSYvOK5Cm46kWqlV3yAbuSpBZdJ5oP5OUoStg==}
 
   rollup-plugin-visualizer@6.0.3:
     resolution: {integrity: sha512-ZU41GwrkDcCpVoffviuM9Clwjy5fcUxlz0oMoTXTYsK+tcIFzbdacnrr2n8TXcHxbGKKXtOdjxM2HUS4HjkwIw==}
@@ -22493,8 +22487,6 @@ snapshots:
     dependencies:
       glob: 11.0.3
       package-json-from-dist: 1.0.1
-
-  robust-predicates@3.0.2: {}
 
   rollup-plugin-visualizer@6.0.3(rollup@4.50.1):
     dependencies:
