@@ -1,4 +1,4 @@
-import { CalendarPlaceholderOccurrence } from '../models';
+import { CalendarOccurrencePlaceholder } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
 /**
@@ -6,8 +6,8 @@ import { Adapter } from '../utils/adapter/types';
  */
 export function shouldUpdatePlaceholderOccurrence(
   adapter: Adapter,
-  previous: CalendarPlaceholderOccurrence | null,
-  next: CalendarPlaceholderOccurrence | null,
+  previous: CalendarOccurrencePlaceholder | null,
+  next: CalendarOccurrencePlaceholder | null,
 ): boolean {
   if (next == null || previous == null) {
     return next !== previous;
@@ -20,8 +20,8 @@ export function shouldUpdatePlaceholderOccurrence(
       }
     } else if (
       !Object.is(
-        next[key as keyof CalendarPlaceholderOccurrence],
-        previous?.[key as keyof CalendarPlaceholderOccurrence],
+        next[key as keyof CalendarOccurrencePlaceholder],
+        previous?.[key as keyof CalendarOccurrencePlaceholder],
       )
     ) {
       return true;

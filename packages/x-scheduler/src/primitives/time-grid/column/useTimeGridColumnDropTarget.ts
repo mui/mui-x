@@ -3,7 +3,7 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { CalendarPlaceholderOccurrence, SchedulerValidDate } from '../../models';
+import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
 import {
   addRoundedOffsetToDate,
   EVENT_DRAG_PRECISION_MINUTE,
@@ -44,7 +44,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
     (
       data: Record<string, unknown>,
       input: { clientY: number },
-    ): CalendarPlaceholderOccurrence | undefined => {
+    ): CalendarOccurrencePlaceholder | undefined => {
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
       // Move event

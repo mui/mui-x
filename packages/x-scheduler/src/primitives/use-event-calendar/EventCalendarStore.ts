@@ -12,7 +12,7 @@ import {
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
   CalendarResource,
-  CalendarPlaceholderOccurrence,
+  CalendarOccurrencePlaceholder,
 } from '../models';
 import {
   EventCalendarParameters,
@@ -336,10 +336,15 @@ export class EventCalendarStore extends Store<State> {
    * Applies the data from the placeholder occurrence to the event it represents.
    */
   public async applyOccurrencePlaceholder(
-    data: CalendarPlaceholderOccurrence,
+    data: CalendarOccurrencePlaceholder,
     chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
   ) {
     const { eventId, start, end, originalStart } = data;
+
+    if (eventId == null || originalStart == null) {
+      // TODO: Create a new event.
+      return undefined;
+    }
 
     if (selectors.event(this.state, eventId)?.rrule) {
       let scope: RecurringUpdateEventScope;
@@ -358,7 +363,7 @@ export class EventCalendarStore extends Store<State> {
       });
     }
 
-    return this.updateEvent({ id: data.eventId, start: data.start, end: data.end });
+    return this.updateEvent({ id: eventId, start, end });
   }
 
   /**
@@ -429,7 +434,7 @@ export class EventCalendarStore extends Store<State> {
   /**
    * Sets the placeholder occurrence to render while creating a new event or dragging an existing event occurrence.
    */
-  public setPlaceholderOccurrence = (newDraftOccurrence: CalendarPlaceholderOccurrence | null) => {
+  public setPlaceholderOccurrence = (newDraftOccurrence: CalendarOccurrencePlaceholder | null) => {
     const { adapter, placeholderOccurrence: previous } = this.state;
     if (shouldUpdatePlaceholderOccurrence(adapter, previous, newDraftOccurrence)) {
       this.set('placeholderOccurrence', newDraftOccurrence);

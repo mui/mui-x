@@ -10,7 +10,7 @@ import {
   CalendarViewConfig,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
-  CalendarPlaceholderOccurrence,
+  CalendarOccurrencePlaceholder,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
@@ -82,7 +82,7 @@ export type State = {
   /**
    * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
-  placeholderOccurrence: CalendarPlaceholderOccurrence | null;
+  placeholderOccurrence: CalendarOccurrencePlaceholder | null;
 };
 
 const eventByIdMapSelector = createSelectorMemoized(

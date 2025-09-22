@@ -146,18 +146,20 @@ export type CalendarEventColor =
   | 'blue';
 
 /**
- * Object representing a placeholder event occurrence.
- * It is used to generate the placeholder when creating a new event or when dragging an event occurrence.
+ * Object representing the placeholder of an event occurrence.
+ * It is used when creating a new event or when dragging an event occurrence.
  */
-export interface CalendarPlaceholderOccurrence {
+export interface CalendarOccurrencePlaceholder {
   /**
    * The id of the event being changed.
+   * It can be null when creating a new event.
    */
-  eventId: CalendarEventId;
+  eventId: CalendarEventId | null;
   /**
    * The key of the event occurrence being changed.
+   * It can be null when creating a new event.
    */
-  occurrenceKey: string;
+  occurrenceKey: string | null;
   /**
    * The type of surface the draft should be rendered on.
    * This is useful to make sure the placeholder is only rendered in the correct grid.
@@ -173,8 +175,9 @@ export interface CalendarPlaceholderOccurrence {
   end: SchedulerValidDate;
   /**
    * The start date and time of the event occurrence before the change.
+   * It can be null when creating a new event.
    */
-  originalStart: SchedulerValidDate;
+  originalStart: SchedulerValidDate | null;
 }
 
 export interface CalendarProcessedDate {

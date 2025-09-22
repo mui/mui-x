@@ -7,7 +7,7 @@ import {
   isDraggingDayGridEventResizeHandler,
 } from '../../utils/drag-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { CalendarPlaceholderOccurrence, SchedulerValidDate } from '../../models';
+import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
 import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 import { selectors } from '../../use-event-calendar/store';
@@ -20,7 +20,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
   const ref = React.useRef<HTMLDivElement>(null);
 
   const getEventDropData = useEventCallback(
-    (data: Record<string, unknown>): CalendarPlaceholderOccurrence | undefined => {
+    (data: Record<string, unknown>): CalendarOccurrencePlaceholder | undefined => {
       if (!ref.current) {
         return undefined;
       }
