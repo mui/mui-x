@@ -85,8 +85,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
           continue;
         }
 
-        const start = performance.now();
-
         const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
         const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
 
@@ -116,8 +114,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
           svgPoint.y,
           maxRadius,
         )[0];
-
-        performance.measure('useChartVoronoi-getClosestPoint', { start });
 
         if (closestPointIndex === undefined) {
           continue;
