@@ -259,7 +259,10 @@ export const createXTypeScriptProjects = () => {
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src/components'],
-        files: ['src/DataGridPremium/DataGridPremium.tsx'],
+        files: [
+          'src/DataGridPremium/DataGridPremium.tsx',
+          'src/context/GridChartsRendererProxy.tsx',
+        ],
       }),
       getComponentsWithApiDoc: getComponentPaths({
         files: ['src/DataGridPremium/DataGridPremium.tsx'],

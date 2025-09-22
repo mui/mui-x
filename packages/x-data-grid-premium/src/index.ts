@@ -16,6 +16,7 @@ export * from './DataGridPremium';
 export * from './hooks';
 export * from './models';
 export * from './components';
+export * from './context';
 
 export { GridColumnHeaders } from '@mui/x-data-grid-pro';
 export type { GridColumnHeadersProps } from '@mui/x-data-grid-pro';

@@ -4,9 +4,9 @@ import {
   useGridSelector,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
-import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;

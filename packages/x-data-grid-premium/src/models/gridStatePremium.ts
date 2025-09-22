@@ -13,14 +13,18 @@ import type {
   GridPivotingInitialState,
   GridPivotingState,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import {
+import type {
   GridAiAssistantInitialState,
   GridAiAssistantState,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
-import {
+import type {
   GridSidebarInitialState,
   GridSidebarState,
 } from '../hooks/features/sidebar/gridSidebarState';
+import type {
+  GridChartsIntegrationState,
+  GridChartsIntegrationInitialState,
+} from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 
 /**
  * The state of Data Grid Premium.
@@ -32,6 +36,7 @@ export interface GridStatePremium extends GridStatePro {
   pivoting: GridPivotingState;
   aiAssistant: GridAiAssistantState;
   sidebar: GridSidebarState;
+  chartsIntegration: GridChartsIntegrationState;
 }
 
 /**
@@ -44,4 +49,5 @@ export interface GridInitialStatePremium extends GridInitialStatePro {
   pivoting?: GridPivotingInitialState;
   aiAssistant?: GridAiAssistantInitialState;
   sidebar?: GridSidebarInitialState;
+  chartsIntegration?: GridChartsIntegrationInitialState;
 }

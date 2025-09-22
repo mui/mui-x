@@ -41,10 +41,13 @@ export * from '@mui/x-charts-pro/ChartZoomSlider';
 export * from '@mui/x-charts-pro/ChartsToolbarPro';
 
 // Premium utilities
+export * from './colorPalettes';
 export * from './constants';
 export * from './hooks';
 export * from './context';
 export * from './models';
 // Locales should be imported from `@mui/x-charts-premium/locales`
 // export * from './locales';
-export * from './colorPalettes';
+
+// Premium components
+export * from './ChartsRenderer';
