@@ -298,9 +298,7 @@ export const selectorChartDefaultYAxisId = createSelector(
 );
 
 const EMPTY_MAP = new Map<SeriesId, Flatbush>();
-export const selectorChartSeriesEmptyFlatbushMap = (
-  _: ChartState<[], [UseChartCartesianAxisSignature]>,
-) => EMPTY_MAP;
+export const selectorChartSeriesEmptyFlatbushMap = () => EMPTY_MAP;
 
 export const selectorChartSeriesFlatbushMap = createSelector(
   [
@@ -342,7 +340,8 @@ export const selectorChartSeriesFlatbushMap = createSelector(
       originalYScale.range([0, 1]);
 
       for (const datum of data) {
-        // Add the points using a [0, 1]. This makes it so that we don't need to recreate the Flatbush structure when zooming.
+        // Add the points using a [0, 1] range so that we don't need to recreate the Flatbush structure when zooming.
+        // This doesn't happen in practice, though, because currently the scales depend on the drawing area.
         flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
       }
 
