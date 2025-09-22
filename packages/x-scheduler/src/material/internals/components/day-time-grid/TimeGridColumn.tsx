@@ -50,7 +50,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       {placeholder != null && (
         <TimeGridEvent
           occurrence={placeholder}
-          variant="dragPlaceholder"
+          variant="placeholder"
           ariaLabelledBy={`DayTimeGridHeaderCell-${day.key}`}
         />
       )}

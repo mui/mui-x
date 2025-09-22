@@ -1,13 +1,13 @@
-import { CalendarDraggedOccurrence } from '../models';
+import { CalendarPlaceholderOccurrence } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
 /**
- * Determines if the dragged occurrence has changed in a meaningful way that requires updating the store.
+ * Determines if the placeholder occurrence has changed in a meaningful way that requires updating the store.
  */
-export function shouldUpdateDraggedOccurrence(
+export function shouldUpdatePlaceholderOccurrence(
   adapter: Adapter,
-  previous: CalendarDraggedOccurrence | null,
-  next: CalendarDraggedOccurrence | null,
+  previous: CalendarPlaceholderOccurrence | null,
+  next: CalendarPlaceholderOccurrence | null,
 ): boolean {
   if (next == null || previous == null) {
     return next !== previous;
@@ -20,8 +20,8 @@ export function shouldUpdateDraggedOccurrence(
       }
     } else if (
       !Object.is(
-        next[key as keyof CalendarDraggedOccurrence],
-        previous?.[key as keyof CalendarDraggedOccurrence],
+        next[key as keyof CalendarPlaceholderOccurrence],
+        previous?.[key as keyof CalendarPlaceholderOccurrence],
       )
     ) {
       return true;

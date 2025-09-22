@@ -7,8 +7,7 @@ import {
   isDraggingDayGridEventResizeHandler,
 } from '../../utils/drag-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { useDayGridRootContext } from '../root/DayGridRootContext';
-import { CalendarDraggedOccurrence, SchedulerValidDate } from '../../models';
+import { CalendarPlaceholderOccurrence, SchedulerValidDate } from '../../models';
 import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 
@@ -17,12 +16,11 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
 
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { id: gridId } = useDayGridRootContext();
   const ref = React.useRef<HTMLDivElement>(null);
 
   const getEventDropData = useEventCallback(
-    (data: Record<string, unknown>): CalendarDraggedOccurrence | undefined => {
-      if (!ref.current || gridId === undefined) {
+    (data: Record<string, unknown>): CalendarPlaceholderOccurrence | undefined => {
+      if (!ref.current) {
         return undefined;
       }
 
@@ -34,7 +32,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
           end: offset === 0 ? data.end : adapter.addDays(data.end, offset),
           eventId: data.eventId,
           occurrenceKey: data.occurrenceKey,
-          gridId,
+          surfaceType: 'day-grid',
           originalStart: data.start,
         };
       }
@@ -57,7 +55,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             end: data.end,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            gridId,
+            surfaceType: 'day-grid',
             originalStart: data.start,
           };
         }
@@ -77,7 +75,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             end: draggedDay,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            gridId,
+            surfaceType: 'day-grid',
             originalStart: data.start,
           };
         }
@@ -101,7 +99,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             end: data.end,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            gridId,
+            surfaceType: 'day-grid',
             originalStart: data.start,
           };
         }
@@ -121,7 +119,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             end: draggedDay,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            gridId,
+            surfaceType: 'day-grid',
             originalStart: data.start,
           };
         }
@@ -144,21 +142,18 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
       onDrag: ({ source: { data } }) => {
         const newPlaceholder = getEventDropData(data);
         if (newPlaceholder) {
-          store.setDraggedOccurrence(newPlaceholder);
+          store.setPlaceholderOccurrence(newPlaceholder);
         }
       },
       onDragStart: ({ source: { data } }) => {
-        if (
-          gridId !== undefined &&
-          (isDraggingDayGridEvent(data) || isDraggingDayGridEventResizeHandler(data))
-        ) {
-          store.setDraggedOccurrence({
+        if (isDraggingDayGridEvent(data) || isDraggingDayGridEventResizeHandler(data)) {
+          store.setPlaceholderOccurrence({
             occurrenceKey: data.occurrenceKey,
             eventId: data.eventId,
             start: data.start,
             end: data.end,
             originalStart: data.start,
-            gridId,
+            surfaceType: 'day-grid',
           });
         }
       },
@@ -170,7 +165,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         }
       },
     });
-  }, [adapter, getEventDropData, gridId, store]);
+  }, [adapter, getEventDropData, store]);
 
   return ref;
 }

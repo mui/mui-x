@@ -3,14 +3,13 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { CalendarDraggedOccurrence, SchedulerValidDate } from '../../models';
+import { CalendarPlaceholderOccurrence, SchedulerValidDate } from '../../models';
 import {
   addRoundedOffsetToDate,
   EVENT_DRAG_PRECISION_MINUTE,
   isDraggingTimeGridEvent,
   isDraggingTimeGridEventResizeHandler,
 } from '../../utils/drag-utils';
-import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 
@@ -19,7 +18,6 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const { id: gridId } = useTimeGridRootContext();
   const store = useEventCalendarStoreContext();
 
   // TODO: Avoid JS date conversion
@@ -45,11 +43,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
     (
       data: Record<string, unknown>,
       input: { clientY: number },
-    ): CalendarDraggedOccurrence | undefined => {
-      if (gridId === undefined) {
-        return undefined;
-      }
-
+    ): CalendarPlaceholderOccurrence | undefined => {
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
       // Move event
@@ -72,7 +66,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           end: newEndDate,
           eventId: data.eventId,
           occurrenceKey: data.occurrenceKey,
-          gridId,
+          surfaceType: 'time-grid',
           originalStart: data.start,
         };
       }
@@ -97,7 +91,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
             end: data.end,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            gridId,
+            surfaceType: 'time-grid',
             originalStart: data.start,
           };
         }
@@ -121,7 +115,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           end: newEndDate,
           eventId: data.eventId,
           occurrenceKey: data.occurrenceKey,
-          gridId,
+          surfaceType: 'time-grid',
           originalStart: data.start,
         };
       }
@@ -143,18 +137,15 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       onDrag: ({ source: { data }, location }) => {
         const newPlaceholder = getEventDropData(data, location.current.input);
         if (newPlaceholder) {
-          store.setDraggedOccurrence(newPlaceholder);
+          store.setPlaceholderOccurrence(newPlaceholder);
         }
       },
       onDragStart: ({ source: { data } }) => {
-        if (
-          gridId !== undefined &&
-          (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data))
-        ) {
-          store.setDraggedOccurrence({
+        if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
+          store.setPlaceholderOccurrence({
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
-            gridId,
+            surfaceType: 'time-grid',
             start: data.start,
             end: data.end,
             originalStart: data.start,
@@ -168,7 +159,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
         }
       },
     });
-  }, [adapter, getEventDropData, gridId, store]);
+  }, [adapter, getEventDropData, store]);
 
   return { getCursorPositionInElementMs, ref };
 }

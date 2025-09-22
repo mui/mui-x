@@ -146,10 +146,10 @@ export type CalendarEventColor =
   | 'blue';
 
 /**
- * Object representing a dragged event occurrence.
- * It is used to generate the placeholder when dragging an event and well as to update the event when it is dropped.
+ * Object representing a placeholder event occurrence.
+ * It is used to generate the placeholder when creating a new event or when dragging an event occurrence.
  */
-export interface CalendarDraggedOccurrence {
+export interface CalendarPlaceholderOccurrence {
   /**
    * The id of the event being changed.
    */
@@ -159,10 +159,10 @@ export interface CalendarDraggedOccurrence {
    */
   occurrenceKey: string;
   /**
-   * A unique id to identify the grid the event is being changed from.
+   * The type of surface the draft should be rendered on.
    * This is useful to make sure to only render the placeholder in the grid the event is being dragged to.
    */
-  gridId: string;
+  surfaceType: 'day-grid' | 'time-grid';
   /**
    * The new start date and time of the event occurrence.
    */

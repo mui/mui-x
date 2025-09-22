@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useId } from '@base-ui-components/utils/useId';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { TimeGridRootContext } from './TimeGridRootContext';
 
 export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   componentProps: TimeGridRoot.Props,
@@ -22,16 +21,10 @@ export const TimeGridRoot = React.forwardRef(function TimeGridRoot(
   const id = useId(idProp);
   const props = React.useMemo(() => ({ role: 'grid', id }), [id]);
 
-  const contextValue: TimeGridRootContext = React.useMemo(() => ({ id }), [id]);
-
-  const element = useRenderElement('div', componentProps, {
+  return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
     props: [props, elementProps],
   });
-
-  return (
-    <TimeGridRootContext.Provider value={contextValue}>{element}</TimeGridRootContext.Provider>
-  );
 });
 
 export namespace TimeGridRoot {

@@ -7,7 +7,6 @@ import { useDayGridRowContext } from '../row/DayGridRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { diffIn } from '../../utils/date-utils';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { useDayGridRootContext } from '../root/DayGridRootContext';
 
 export function useDayGridPlaceholderInDay(
   day: SchedulerValidDate,
@@ -15,15 +14,14 @@ export function useDayGridPlaceholderInDay(
 ): CalendarEventOccurrenceWithDayGridPosition | null {
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { id: gridId } = useDayGridRootContext();
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
 
   const rawDraggedOccurrence = useStore(
     store,
-    selectors.draggedOccurrenceToRenderInDayCell,
+    selectors.placeholderOccurrenceToRenderInDayCell,
     day,
     rowStart,
-    gridId,
+    'day-grid',
   );
   const originalEvent = useStore(store, selectors.event, rawDraggedOccurrence?.eventId ?? null);
 
@@ -45,7 +43,7 @@ export function useDayGridPlaceholderInDay(
 
     return {
       ...originalEvent,
-      key: `dragged-${rawDraggedOccurrence.occurrenceKey}`,
+      key: `placeholder-${rawDraggedOccurrence.occurrenceKey}`,
       start: day,
       end: adapter.isAfter(rawDraggedOccurrence.end, rowEnd) ? rowEnd : rawDraggedOccurrence.end,
       position: {

@@ -3,7 +3,6 @@ import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 import { selectors } from '../../use-event-calendar';
-import { useTimeGridRootContext } from '../root/TimeGridRootContext';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 
 export function useTimeGridPlaceholderInRange(
@@ -11,14 +10,13 @@ export function useTimeGridPlaceholderInRange(
 ): useTimeGridPlaceholderInRange.ReturnValue {
   const { start, end, occurrences, maxIndex } = parameters;
   const store = useEventCalendarStoreContext();
-  const { id: gridId } = useTimeGridRootContext();
 
   const rawDraggedOccurrence = useStore(
     store,
-    selectors.draggedOccurrenceToRenderInTimeRange,
+    selectors.placeholderOccurrenceToRenderInTimeRange,
     start,
     end,
-    gridId,
+    'time-grid',
   );
   const originalEvent = useStore(store, selectors.event, rawDraggedOccurrence?.eventId ?? null);
 
@@ -36,7 +34,7 @@ export function useTimeGridPlaceholderInRange(
 
     return {
       ...originalEvent,
-      key: `dragged-${rawDraggedOccurrence.occurrenceKey}`,
+      key: `placeholder-${rawDraggedOccurrence.occurrenceKey}`,
       start: rawDraggedOccurrence.start,
       end: rawDraggedOccurrence.end,
       position,

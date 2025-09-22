@@ -46,11 +46,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
   const { state: eventState, props: eventProps } = useEvent({ start, end });
   const store = useEventCalendarStoreContext();
-  const hasDraggedOccurrence = useStore(store, selectors.hasDraggedOccurrence);
-  const isDragging = useStore(store, selectors.isDraggingOccurrence, occurrenceKey);
+  const hasPlaceholderOccurrence = useStore(store, selectors.hasPlaceholderOccurrence);
+  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
   const [isResizing, setIsResizing] = React.useState(false);
 
-  const props = hasDraggedOccurrence ? EVENT_PROPS_WHILE_DRAGGING : undefined;
+  const props = hasPlaceholderOccurrence ? EVENT_PROPS_WHILE_DRAGGING : undefined;
 
   const state: DayGridEvent.State = React.useMemo(
     () => ({ ...eventState, dragging: isDragging, resizing: isResizing }),
@@ -115,7 +115,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDrop: () => store.setDraggedOccurrence(null),
+      onDrop: () => store.setPlaceholderOccurrence(null),
     });
   }, [isDraggable, getDraggedDay, getSharedDragData, store]);
 

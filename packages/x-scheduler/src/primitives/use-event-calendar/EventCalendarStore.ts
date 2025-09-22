@@ -12,12 +12,12 @@ import {
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
   CalendarResource,
-  CalendarDraggedOccurrence,
+  CalendarPlaceholderOccurrence,
 } from '../models';
 import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
-import { shouldUpdateDraggedOccurrence } from './EventCalendarStore.utils';
+import { shouldUpdatePlaceholderOccurrence } from './EventCalendarStore.utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -96,7 +96,7 @@ export class EventCalendarStore extends Store<State> {
               ...parameters.preferencesMenuConfig,
             },
       viewConfig: null,
-      draggedOccurrence: null,
+      placeholderOccurrence: null,
       // Store elements that should only be updated when their controlled prop changes.
       visibleDate:
         parameters.visibleDate ??
@@ -332,7 +332,7 @@ export class EventCalendarStore extends Store<State> {
   /**
    * Updates the dates of an event occurrence.
    */
-  public updateEventOccurrenceDates(data: CalendarDraggedOccurrence) {
+  public updateEventOccurrenceDates(data: CalendarPlaceholderOccurrence) {
     const { eventId, start, end, originalStart } = data;
 
     if (selectors.event(this.state, eventId)?.rrule) {
@@ -414,12 +414,12 @@ export class EventCalendarStore extends Store<State> {
   };
 
   /**
-   * Sets the placeholder of the event occurrence being dragged.
+   * Sets the placeholder occurrence to render while creating a new event or dragging an existing event occurrence.
    */
-  public setDraggedOccurrence = (newDraggedOccurrence: CalendarDraggedOccurrence | null) => {
-    const { adapter, draggedOccurrence: previous } = this.state;
-    if (shouldUpdateDraggedOccurrence(adapter, previous, newDraggedOccurrence)) {
-      this.set('draggedOccurrence', newDraggedOccurrence);
+  public setPlaceholderOccurrence = (newDraftOccurrence: CalendarPlaceholderOccurrence | null) => {
+    const { adapter, placeholderOccurrence: previous } = this.state;
+    if (shouldUpdatePlaceholderOccurrence(adapter, previous, newDraftOccurrence)) {
+      this.set('placeholderOccurrence', newDraftOccurrence);
     }
   };
 }

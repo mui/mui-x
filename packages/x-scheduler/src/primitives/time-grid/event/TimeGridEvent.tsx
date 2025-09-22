@@ -42,7 +42,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
   const store = useEventCalendarStoreContext();
-  const isDragging = useStore(store, selectors.isDraggingOccurrence, occurrenceKey);
+  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
@@ -122,7 +122,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDrop: () => store.setDraggedOccurrence(null),
+      onDrop: () => store.setPlaceholderOccurrence(null),
     });
   }, [getSharedDragData, isDraggable, store]);
 

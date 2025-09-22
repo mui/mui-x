@@ -10,7 +10,7 @@ import {
   CalendarViewConfig,
   CalendarPreferencesMenuConfig,
   CalendarEventColor,
-  CalendarDraggedOccurrence,
+  CalendarPlaceholderOccurrence,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
@@ -80,9 +80,9 @@ export type State = {
    */
   viewConfig: CalendarViewConfig | null;
   /**
-   * The placeholder of the event occurrence being dragged
+   * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
-  draggedOccurrence: CalendarDraggedOccurrence | null;
+  placeholderOccurrence: CalendarPlaceholderOccurrence | null;
 };
 
 const eventByIdMapSelector = createSelectorMemoized(
@@ -175,57 +175,63 @@ export const selectors = {
     (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
       !isEventReadOnly && areEventsResizable,
   ),
-  hasDraggedOccurrence: createSelector((state: State) => state.draggedOccurrence !== null),
-  isDraggingOccurrence: createSelector(
+  hasPlaceholderOccurrence: createSelector((state: State) => state.placeholderOccurrence !== null),
+  isOccurrenceMatchingThePlaceholder: createSelector(
     (state: State, occurrenceKey: string) =>
-      state.draggedOccurrence?.occurrenceKey === occurrenceKey,
+      state.placeholderOccurrence?.occurrenceKey === occurrenceKey,
   ),
-  draggedOccurrenceToRenderInDayCell: createSelector(
+  placeholderOccurrenceToRenderInDayCell: createSelector(
     (
       state: State,
       day: SchedulerValidDate,
       rowStart: SchedulerValidDate,
       gridId: string | undefined,
     ) => {
-      if (state.draggedOccurrence === null || state.draggedOccurrence.gridId !== gridId) {
+      if (
+        state.placeholderOccurrence === null ||
+        state.placeholderOccurrence.surfaceType !== gridId
+      ) {
         return null;
       }
 
-      if (state.adapter.isSameDay(day, state.draggedOccurrence.start)) {
-        return state.draggedOccurrence;
+      if (state.adapter.isSameDay(day, state.placeholderOccurrence.start)) {
+        return state.placeholderOccurrence;
       }
 
       if (
         state.adapter.isSameDay(day, rowStart) &&
         state.adapter.isWithinRange(rowStart, [
-          state.draggedOccurrence.start,
-          state.draggedOccurrence.end,
+          state.placeholderOccurrence.start,
+          state.placeholderOccurrence.end,
         ])
       ) {
-        return state.draggedOccurrence;
+        return state.placeholderOccurrence;
       }
 
       return null;
     },
   ),
-  draggedOccurrenceToRenderInTimeRange: createSelector(
+  placeholderOccurrenceToRenderInTimeRange: createSelector(
     (
       state: State,
       start: SchedulerValidDate,
       end: SchedulerValidDate,
       gridId: string | undefined,
     ) => {
-      if (state.draggedOccurrence === null || state.draggedOccurrence.gridId !== gridId) {
+      if (
+        state.placeholderOccurrence === null ||
+        state.placeholderOccurrence.surfaceType !== gridId
+      ) {
         return null;
       }
       if (
-        state.adapter.isBefore(state.draggedOccurrence.end, start) ||
-        state.adapter.isAfter(state.draggedOccurrence.start, end)
+        state.adapter.isBefore(state.placeholderOccurrence.end, start) ||
+        state.adapter.isAfter(state.placeholderOccurrence.start, end)
       ) {
         return null;
       }
 
-      return state.draggedOccurrence;
+      return state.placeholderOccurrence;
     },
   ),
 };

@@ -101,7 +101,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       'TimeGridEvent',
       'EventContainer',
       'EventCard',
-      // TODO: Make sure we can use EventCard--dragPlaceholder without broken styles
+      // TODO: Make sure we can use EventCard--placeholder without broken styles
       'EventCard--regular',
       (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
       isDraggable && 'Draggable',
@@ -116,7 +116,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     ...other,
   };
 
-  if (variant === 'dragPlaceholder') {
+  if (variant === 'placeholder') {
     return (
       <TimeGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
         {content}
