@@ -1,7 +1,6 @@
 // TODO: Add typeOverloads when available
 // import './typeOverloads/modules';
-// eslint-disable-next-line no-restricted-imports
-import '@mui/x-charts-pro/typeOverloads/modules';
+import '@mui/x-charts-pro/typeOverloads';
 
 // exports from MIT package
 export * from '@mui/x-charts/ChartsClipPath';
@@ -41,10 +40,13 @@ export * from '@mui/x-charts-pro/ChartZoomSlider';
 export * from '@mui/x-charts-pro/ChartsToolbarPro';
 
 // Premium utilities
+export * from './colorPalettes';
 export * from './constants';
 export * from './hooks';
 export * from './context';
 export * from './models';
 // Locales should be imported from `@mui/x-charts-premium/locales`
 // export * from './locales';
-export * from './colorPalettes';
+
+// Premium components
+export * from './ChartsRenderer';
