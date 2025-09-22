@@ -97,18 +97,26 @@ const getTemplateColumns = (
     return `${width ? 'auto' : '1fr'} auto`;
   }
 
-  return '100%';
+  return 'auto';
 };
 
-const getTemplateRows = (hideLegend: boolean, direction: Direction | undefined) => {
+const getTemplateRows = (
+  hideLegend: boolean,
+  direction: Direction | undefined,
+  position: Position | undefined,
+  height: number | undefined,
+) => {
   if (direction === 'vertical') {
-    return '100%';
+    return 'auto';
   }
   // horizontal
   if (hideLegend) {
-    return 'auto';
+    return '1fr';
   }
-  return 'auto 1fr';
+  if (position?.vertical === 'top') {
+    return `auto ${height ? 'auto' : '1fr'}`;
+  }
+  return '1fr auto';
 };
 
 const Root = styled('div', {
@@ -116,49 +124,58 @@ const Root = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'width',
-})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; width?: number }>(
-  ({ ownerState, width }) => ({
-    variants: [
-      {
-        props: { extendVertically: true },
-        style: {
-          height: '100%',
-        },
-      },
-    ],
-    flex: 1,
-    display: 'grid',
-    gridTemplateColumns: getTemplateColumns(
+})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; width?: number; height?: number }>(
+  ({ ownerState, width, height }) => {
+    const gridTemplateColumns = getTemplateColumns(
       ownerState.hideLegend,
       ownerState.legendDirection,
       ownerState.legendPosition,
       width,
-    ),
-    gridTemplateRows: getTemplateRows(ownerState.hideLegend, ownerState.legendDirection),
-    [`&:has(.${chartsToolbarClasses.root})`]: {
-      // Add a row for toolbar if there is one.
-      gridTemplateRows: `auto ${getTemplateRows(ownerState.hideLegend, ownerState.legendDirection)}`,
-      gridTemplateAreas: `"toolbar"
-        ${getGridTemplateAreas(
-          ownerState.hideLegend,
-          ownerState.legendDirection,
-          ownerState.legendPosition,
-        )}`,
-    },
-    [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
-      gridTemplateAreas: getGridTemplateAreas(
-        ownerState.hideLegend,
-        ownerState.legendDirection,
-        ownerState.legendPosition,
-      ),
-    },
-    justifyContent: 'center',
-    justifyItems: getJustifyItems(ownerState.legendPosition),
-    alignItems: getAlignItems(ownerState.legendPosition),
-    [`& > .${chartsToolbarClasses.root}`]: {
-      justifySelf: 'center',
-    },
-  }),
+    );
+    const gridTemplateRows = getTemplateRows(
+      ownerState.hideLegend,
+      ownerState.legendDirection,
+      ownerState.legendPosition,
+      height,
+    );
+    const gridTemplateAreas = getGridTemplateAreas(
+      ownerState.hideLegend,
+      ownerState.legendDirection,
+      ownerState.legendPosition,
+    );
+    return {
+      variants: [
+        {
+          props: { extendVertically: true },
+          style: {
+            height: '100%',
+          },
+        },
+      ],
+      flex: 1,
+      display: 'grid',
+      gridTemplateColumns,
+      gridTemplateRows,
+      [`&:has(.${chartsToolbarClasses.root})`]: {
+        // Add a row for toolbar if there is one.
+        gridTemplateRows: `auto ${gridTemplateRows}`,
+        gridTemplateAreas: `"${gridTemplateColumns
+          .split(' ')
+          .map(() => 'toolbar')
+          .join(' ')}"
+        ${gridTemplateAreas}`,
+      },
+      [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
+        gridTemplateAreas,
+      },
+      justifyContent: 'center',
+      justifyItems: getJustifyItems(ownerState.legendPosition),
+      alignItems: getAlignItems(ownerState.legendPosition),
+      [`& > .${chartsToolbarClasses.root}`]: {
+        justifySelf: 'center',
+      },
+    };
+  },
 );
 
 /**
@@ -179,6 +196,7 @@ function ChartsWrapper(props: ChartsWrapperProps) {
       sx={sx}
       extendVertically={extendVertically ?? propsHeight === undefined}
       width={propsWidth}
+      height={propsHeight}
     >
       {children}
     </Root>
