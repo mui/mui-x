@@ -79,11 +79,11 @@ export function useEventOccurrencesWithDayGridPosition(
       };
     });
 
+    const usedIndexes = Object.values(indexLookup).flatMap((day) => Array.from(day.usedIndexes));
+
     return {
       days: processedDays,
-      maxIndex: Math.max(
-        ...Object.values(indexLookup).flatMap((day) => Array.from(day.usedIndexes)),
-      ),
+      maxIndex: usedIndexes.length === 0 ? 1 : Math.max(...usedIndexes),
     };
   }, [adapter, days, occurrencesMap, shouldAddPosition]);
 }
