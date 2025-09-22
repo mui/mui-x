@@ -124,9 +124,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   return (
     <TimeGrid.Event isDraggable={isDraggable} {...sharedProps}>
-      {isResizable && <TimeGrid.EventResizeHandler side="start" className="EventResizeHandler" />}
+      {isResizable && (
+        <TimeGrid.EventResizeHandler side="start" className="TimeGridEventResizeHandler" />
+      )}
       {content}
-      {isResizable && <TimeGrid.EventResizeHandler side="end" className="EventResizeHandler" />}
+      {isResizable && (
+        <TimeGrid.EventResizeHandler side="end" className="TimeGridEventResizeHandler" />
+      )}
     </TimeGrid.Event>
   );
 });

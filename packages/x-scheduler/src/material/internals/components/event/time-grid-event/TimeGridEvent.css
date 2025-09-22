@@ -105,7 +105,7 @@
   pointer-events: none;
 }
 
-.EventResizeHandler {
+.TimeGridEventResizeHandler {
   position: absolute;
   height: 4px;
   left: 0;
