@@ -4,7 +4,7 @@ import { DayGrid } from '@mui/x-scheduler/primitives/day-grid';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler/primitives/event-calendar-provider';
 
-describe('<DayGridGrid.EventResizeHandler />', () => {
+describe('<DayGrid.EventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
   const eventStart = DateTime.now();

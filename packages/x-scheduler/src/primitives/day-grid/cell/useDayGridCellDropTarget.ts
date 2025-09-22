@@ -44,58 +44,14 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
             return undefined;
           }
 
-          let draggedDay: SchedulerValidDate;
+          let newStart: SchedulerValidDate;
           if (adapter.isSameDay(value, data.end)) {
-            draggedDay = adapter.startOfDay(data.end);
+            newStart = adapter.startOfDay(data.end);
           } else {
-            draggedDay = mergeDateAndTime(adapter, value, data.start);
+            newStart = mergeDateAndTime(adapter, value, data.start);
           }
           return {
-            start: draggedDay,
-            end: data.end,
-            eventId: data.eventId,
-            occurrenceKey: data.occurrenceKey,
-            surfaceType: 'day-grid',
-            originalStart: data.start,
-          };
-        }
-        if (data.side === 'end') {
-          if (adapter.isBeforeDay(value, data.start)) {
-            return undefined;
-          }
-
-          let draggedDay: SchedulerValidDate;
-          if (adapter.isSameDay(value, data.start)) {
-            draggedDay = adapter.endOfDay(data.start);
-          } else {
-            draggedDay = mergeDateAndTime(adapter, value, data.end);
-          }
-          return {
-            start: data.start,
-            end: draggedDay,
-            eventId: data.eventId,
-            occurrenceKey: data.occurrenceKey,
-            surfaceType: 'day-grid',
-            originalStart: data.start,
-          };
-        }
-      }
-
-      // Resize event
-      if (isDraggingDayGridEventResizeHandler(data)) {
-        if (data.side === 'start') {
-          if (adapter.isAfterDay(value, data.end)) {
-            return undefined;
-          }
-
-          let draggedDay: SchedulerValidDate;
-          if (adapter.isSameDay(value, data.end)) {
-            draggedDay = adapter.startOfDay(data.end);
-          } else {
-            draggedDay = mergeDateAndTime(adapter, value, data.start);
-          }
-          return {
-            start: draggedDay,
+            start: newStart,
             end: data.end,
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,

@@ -26,8 +26,7 @@ export default defineConfig(async () => {
   const [
     chartsComponents,
     chartsProComponents,
-    // TODO: CHARTS-PREMIUM: uncomment when premium is available
-    // chartsPremiumComponents,
+    chartsPremiumComponents,
     datePickersComponents,
     datePickersProComponents,
     treeViewComponents,
@@ -35,8 +34,7 @@ export default defineConfig(async () => {
   ] = await Promise.all([
     findComponents('x-charts', '@mui/x-charts'),
     findComponents('x-charts-pro', '@mui/x-charts-pro'),
-    // TODO: CHARTS-PREMIUM: uncomment when premium is available
-    // findComponents('x-charts-premium', '@mui/x-charts-premium'),
+    findComponents('x-charts-premium', '@mui/x-charts-premium'),
     findComponents('x-date-pickers', '@mui/x-date-pickers'),
     findComponents('x-date-pickers-pro', '@mui/x-date-pickers-pro'),
     findComponents('x-tree-view', '@mui/x-tree-view'),
@@ -56,9 +54,8 @@ export default defineConfig(async () => {
       ...chartsComponents,
       '@mui/x-charts-pro',
       ...chartsProComponents,
-      // TODO: CHARTS-PREMIUM: uncomment when premium is available
-      // '@mui/x-charts-premium',
-      // ...chartsPremiumComponents,
+      '@mui/x-charts-premium',
+      ...chartsPremiumComponents,
       '@mui/x-date-pickers',
       ...datePickersComponents.filter(
         (component) =>
