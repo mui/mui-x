@@ -3,17 +3,17 @@ import type { KeyboardKey, PointerMode } from '@mui/x-internal-gestures/core';
 export type ZoomInteractionConfig = {
   /**
    * Defines the interactions that trigger zooming.
-   * - `onWheel`: Zooms in or out when the mouse wheel is scrolled.
-   * - `onPinch`: Zooms in or out when a pinch gesture is detected.
+   * - `wheel`: Zooms in or out when the mouse wheel is scrolled.
+   * - `pinch`: Zooms in or out when a pinch gesture is detected.
    *
-   * @default ['onWheel', 'onPinch']
+   * @default ['wheel', 'pinch']
    */
   zoom?: (ZoomInteraction | ZoomInteraction['type'])[];
   /**
    * Defines the interactions that trigger panning.
-   * - `onDrag`: Pans the chart when dragged with the mouse.
+   * - `drag`: Pans the chart when dragged with the mouse.
    *
-   * @default ['onDrag']
+   * @default ['drag']
    */
   pan?: (PanInteraction | PanInteraction['type'])[];
 };
@@ -30,8 +30,8 @@ export type DefaultizedZoomInteractionConfig = {
   pan: Entry<PanInteraction>;
 };
 
-export type ZoomInteraction = OnWheelInteraction | OnPinchInteraction;
-export type PanInteraction = OnDragInteraction;
+export type ZoomInteraction = WheelInteraction | PinchInteraction;
+export type PanInteraction = DragInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
 export type PanInteractionName = PanInteraction['type'];
@@ -72,23 +72,23 @@ type Unpack<T> = {
   [K in keyof T]: T[K] extends object ? Unpack<T[K]> : T[K];
 };
 
-export type OnWheelInteraction = Unpack<
+export type WheelInteraction = Unpack<
   {
-    type: 'onWheel';
+    type: 'wheel';
   } & NoModeProp &
     AllKeysProp
 >;
 
-export type OnPinchInteraction = Unpack<
+export type PinchInteraction = Unpack<
   {
-    type: 'onPinch';
+    type: 'pinch';
   } & NoModeProp &
     NoKeysProp
 >;
 
-export type OnDragInteraction = Unpack<
+export type DragInteraction = Unpack<
   {
-    type: 'onDrag';
+    type: 'drag';
   } & AllModeProp &
     AllKeysProp
 >;

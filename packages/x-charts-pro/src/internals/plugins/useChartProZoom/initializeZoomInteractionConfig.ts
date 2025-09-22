@@ -14,8 +14,8 @@ export const initializeZoomInteractionConfig = (
 
   if (!zoomInteractionConfig?.zoom) {
     defaultizedConfig.zoom = {
-      onWheel: { type: 'onWheel', requiredKeys: [], mouse: {}, touch: {} },
-      onPinch: { type: 'onPinch', requiredKeys: [], mouse: {}, touch: {} },
+      wheel: { type: 'wheel', requiredKeys: [], mouse: {}, touch: {} },
+      pinch: { type: 'pinch', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
     defaultizedConfig.zoom = initializeFor<'zoom'>(zoomInteractionConfig.zoom);
@@ -23,7 +23,7 @@ export const initializeZoomInteractionConfig = (
 
   if (!zoomInteractionConfig?.pan) {
     defaultizedConfig.pan = {
-      onDrag: { type: 'onDrag', requiredKeys: [], mouse: {}, touch: {} },
+      drag: { type: 'drag', requiredKeys: [], mouse: {}, touch: {} },
     };
   } else {
     defaultizedConfig.pan = initializeFor<'pan'>(zoomInteractionConfig.pan);

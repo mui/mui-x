@@ -144,9 +144,9 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 <BarChartPro
   zoomInteractionConfig={{
     // Enable both wheel and pinch zoom
-    zoom: ['onWheel', 'onPinch'],
+    zoom: ['wheel', 'pinch'],
     // Enable drag panning
-    pan: ['onDrag'],
+    pan: ['drag'],
   }}
 />
 ```
@@ -160,9 +160,9 @@ This can be set up using the `requiredKeys` property in the interaction configur
 <BarChartPro
   zoomInteractionConfig={{
     // Only zoom when Control key is pressed
-    zoom: [{ type: 'onWheel', requiredKeys: ['Control'] }],
+    zoom: [{ type: 'wheel', requiredKeys: ['Control'] }],
     // Only pan when Shift key is pressed
-    pan: [{ type: 'onDrag', requiredKeys: ['Shift'] }],
+    pan: [{ type: 'drag', requiredKeys: ['Shift'] }],
   }}
 />
 ```
@@ -179,7 +179,7 @@ It is also possible to require multiple keys to be pressed simultaneously:
 <BarChartPro
   zoomInteractionConfig={{
     // Only pan when both Shift and Control are pressed
-    pan: [{ type: 'onDrag', requiredKeys: ['Shift', 'Control'] }],
+    pan: [{ type: 'drag', requiredKeys: ['Shift', 'Control'] }],
   }}
 />
 ```
@@ -192,7 +192,7 @@ Interactions can also be restricted to specific pointer types by using the `mode
 <BarChartPro
   zoomInteractionConfig={{
     // Only pan with touch, not mouse
-    pan: [{ type: 'onDrag', pointerMode: 'touch' }],
+    pan: [{ type: 'drag', pointerMode: 'touch' }],
   }}
   // other props
 />
@@ -208,14 +208,14 @@ Available pointer modes:
 
 It is possible to define multiple interactions of the same type with different configurations.
 
-In the example below, the pan `onDrag` interaction is configured to require a specific key combination for mouse, while touch interactions don't require any key to be pressed:
+In the example below, the pan `drag` interaction is configured to require a specific key combination for mouse, while touch interactions don't require any key to be pressed:
 
 ```jsx
 <BarChartPro
   zoomInteractionConfig={{
     pan: [
-      { type: 'onDrag', pointerMode: 'mouse', requiredKeys: ['ControlOrMeta'] },
-      { type: 'onDrag', pointerMode: 'touch', requiredKeys: [] },
+      { type: 'drag', pointerMode: 'mouse', requiredKeys: ['ControlOrMeta'] },
+      { type: 'drag', pointerMode: 'touch', requiredKeys: [] },
     ],
   }}
   // other props

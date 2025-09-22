@@ -1929,26 +1929,26 @@ LineChartPro.propTypes = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['onDrag']),
+        PropTypes.oneOf(['drag']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['onDrag']).isRequired,
+          type: PropTypes.oneOf(['drag']).isRequired,
         }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['onPinch', 'onWheel']),
+        PropTypes.oneOf(['pinch', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.any,
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['onWheel']).isRequired,
+          type: PropTypes.oneOf(['wheel']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.any,
           requiredKeys: PropTypes.array,
-          type: PropTypes.oneOf(['onPinch']).isRequired,
+          type: PropTypes.oneOf(['pinch']).isRequired,
         }),
       ]).isRequired,
     ),

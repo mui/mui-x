@@ -56,7 +56,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomInteractionConfig Keys and Modes
           {...barChartProps}
           onZoomChange={onZoomChange}
           zoomInteractionConfig={{
-            zoom: [{ type: 'onWheel', requiredKeys: ['Control'] }],
+            zoom: [{ type: 'wheel', requiredKeys: ['Control'] }],
           }}
         />,
         options,
@@ -103,7 +103,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomInteractionConfig Keys and Modes
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
           zoomInteractionConfig={{
-            pan: [{ type: 'onDrag', requiredKeys: ['Alt'] }],
+            pan: [{ type: 'drag', requiredKeys: ['Alt'] }],
           }}
         />,
         options,
@@ -169,7 +169,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomInteractionConfig Keys and Modes
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
           zoomInteractionConfig={{
-            pan: [{ type: 'onDrag', requiredKeys: ['Shift', 'Control'] }],
+            pan: [{ type: 'drag', requiredKeys: ['Shift', 'Control'] }],
           }}
         />,
         options,
@@ -239,7 +239,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomInteractionConfig Keys and Modes
           initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
           onZoomChange={onZoomChange}
           zoomInteractionConfig={{
-            pan: [{ type: 'onDrag', pointerMode: 'mouse' }],
+            pan: [{ type: 'drag', pointerMode: 'mouse' }],
           }}
         />,
         options,
@@ -303,7 +303,7 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomInteractionConfig Keys and Modes
           {...barChartProps}
           onZoomChange={onZoomChange}
           zoomInteractionConfig={{
-            zoom: ['onPinch'], // Only enable pinch zoom, disable wheel zoom
+            zoom: ['pinch'], // Only enable pinch zoom, disable wheel zoom
           }}
         />,
         options,
