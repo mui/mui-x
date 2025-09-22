@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle,no-plusplus */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Flatbush } from './Flatbush';
@@ -248,7 +249,7 @@ test('quicksort should work with an inbalanced dataset', () => {
   const n = 15000;
   const index = new Flatbush(2 * n);
 
-  function linspace(start, stop, num, endpoint = true) {
+  function linspace(start: number, stop: number, num: number, endpoint = true) {
     const div = endpoint ? num - 1 : num;
     const step = (stop - start) / div;
     return Array.from({ length: num }, (_, i) => start + step * i);
@@ -272,6 +273,6 @@ test('quicksort should work with an inbalanced dataset', () => {
   });
 });
 
-function compare(a, b) {
+function compare(a: number, b: number) {
   return a - b;
 }

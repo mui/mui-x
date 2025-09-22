@@ -75,7 +75,7 @@ export class Flatbush {
     numItems: number,
     nodeSize: number = 16,
     ArrayType: TypedArrayConstructor = Float64Array,
-    ArrayBufferType: ArrayBufferConstructor = ArrayBuffer,
+    ArrayBufferType: ArrayBufferConstructor | SharedArrayBufferConstructor = ArrayBuffer,
     data?: ArrayBufferLike,
     byteOffset = 0,
   ) {
@@ -317,10 +317,10 @@ export class Flatbush {
     x,
     y,
     maxResults = Infinity,
-    maxDistSqFn: (dx: number, dy: number) => number = () => Infinity,
-    maxDistSqX: number = Infinity,
-    maxDistSqY: number = Infinity,
-    filterFn,
+    maxDistSqFn?: (dx: number, dy: number) => number = () => Infinity,
+    maxDistSqX?: number = Infinity,
+    maxDistSqY?: number = Infinity,
+    filterFn?: (index: number) => boolean,
     sqDistFn = sqDist,
   ) {
     if (this._pos !== this._boxes.length) {
