@@ -1321,7 +1321,7 @@ DataGridPremiumRaw.propTypes = {
    * Updates the tree path in a row model.
    * Used when reordering rows across different parents in tree data.
    * @template R
-   * @param {readonly string[]} path The new path for the row.
+   * @param {string[]} path The new path for the row.
    * @param {R} row The row model to update.
    * @returns {R} The updated row model with the new path.
    */

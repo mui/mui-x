@@ -786,7 +786,12 @@
       "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called. If combined with <code>lazyLoading</code>, it defines the area where the next data request is triggered."
     },
     "setTreeDataPath": {
-      "description": "Updates the tree path in a row model. Used when reordering rows across different parents in tree data."
+      "description": "Updates the tree path in a row model. Used when reordering rows across different parents in tree data.",
+      "typeDescriptions": {
+        "path": { "name": "path", "description": "The new path for the row." },
+        "row": { "name": "row", "description": "The row model to update." },
+        "R": { "name": "R", "description": "The updated row model with the new path." }
+      }
     },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between cells."

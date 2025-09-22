@@ -598,7 +598,14 @@
     "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
-    "setTreeDataPath": { "type": { "name": "func" } },
+    "setTreeDataPath": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(path: Array<string>, row: R) => R",
+        "describedArgs": ["path", "row"],
+        "returned": "R"
+      }
+    },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
