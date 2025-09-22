@@ -11,7 +11,7 @@ import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
  *  Returns the key of the days an event occurrence should be visible on.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
-  event: CalendarEvent,
+  event: CalendarEventOccurrence,
   days: CalendarProcessedDate[],
   adapter: Adapter,
   renderEventIn: 'first-day' | 'every-day',
