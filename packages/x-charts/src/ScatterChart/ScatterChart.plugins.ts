@@ -19,6 +19,10 @@ import {
   useChartClosestPoint,
   UseChartClosestPointSignature,
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import {
+  useChartKeyboardNavigation,
+  UseChartKeyboardNavigationSignature,
+} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 export type ScatterChartPluginSignatures = [
   UseChartZAxisSignature,
@@ -26,6 +30,7 @@ export type ScatterChartPluginSignatures = [
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartClosestPointSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
 export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginSignatures> = [
@@ -34,4 +39,5 @@ export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPlu
   useChartInteraction,
   useChartHighlight,
   useChartClosestPoint,
+  useChartKeyboardNavigation,
 ];

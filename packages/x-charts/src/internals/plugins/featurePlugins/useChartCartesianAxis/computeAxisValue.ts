@@ -18,7 +18,7 @@ import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '..
 import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
-import { getAxisExtremum } from './getAxisExtremum';
+import { getAxisExtrema } from './getAxisExtrema';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
@@ -183,7 +183,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const filter = zoom === undefined && !zoomOption ? getFilters : undefined; // Do not apply filtering if zoom is already defined.
     if (filter) {
-      const [minData, maxData] = getAxisExtremum(
+      const [minData, maxData] = getAxisExtrema(
         axis,
         axisDirection,
         seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,

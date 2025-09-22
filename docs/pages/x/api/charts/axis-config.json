@@ -1,6 +1,7 @@
 {
   "name": "AxisConfig",
   "imports": [
+    "import { AxisConfig } from '@mui/x-charts-premium'",
     "import { AxisConfig } from '@mui/x-charts-pro'",
     "import { AxisConfig } from '@mui/x-charts'"
   ],

@@ -1,7 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-export const idIDGrid: GridLocaleText = {
+export const idIDGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Tidak ad abaris',
   noResultsOverlayLabel: 'Tidak ada hasil yang ditemukan.',
@@ -41,6 +41,9 @@ export const idIDGrid: GridLocaleText = {
 
   // Toolbar pivot button
   toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'Asisten AI',
@@ -127,6 +130,7 @@ export const idIDGrid: GridLocaleText = {
   columnMenuSortAsc: 'Urutkan menaik',
   columnMenuSortDesc: 'Urutkan menurun',
   columnMenuManagePivot: 'Kelola pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} filter aktif`,
@@ -206,6 +210,7 @@ export const idIDGrid: GridLocaleText = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregasi',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'jumlah',
   aggregationFunctionLabelAvg: 'rata-rata',
   aggregationFunctionLabelMin: 'min',
@@ -240,6 +245,32 @@ export const idIDGrid: GridLocaleText = {
   pivotDragToValues: 'Seret ke sini untuk membuat nilai',
   pivotYearColumnHeaderName: '(Tahun)',
   pivotQuarterColumnHeaderName: '(Kuartal)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'Asisten AI',

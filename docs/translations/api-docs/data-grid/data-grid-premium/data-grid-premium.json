@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "activeChartId": { "description": "The id of the active chart." },
     "aggregationFunctions": { "description": "Aggregation functions available on the grid." },
     "aggregationModel": { "description": "Set the aggregation model of the grid." },
     "aggregationRowsScope": {
@@ -35,6 +36,9 @@
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "cellSelection": { "description": "If <code>true</code>, the cell selection mode is enabled." },
     "cellSelectionModel": { "description": "Set the cell selection model of the grid." },
+    "chartsIntegration": {
+      "description": "If <code>true</code>, the charts integration feature is enabled."
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },
@@ -340,6 +344,12 @@
     },
     "nonce": {
       "description": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>."
+    },
+    "onActiveChartIdChange": {
+      "description": "Callback fired when the active chart changes.",
+      "typeDescriptions": {
+        "activeChartId": { "name": "activeChartId", "description": "The new active chart id." }
+      }
     },
     "onAggregationModelChange": {
       "description": "Callback fired when the row grouping model changes.",
@@ -1813,12 +1823,26 @@
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseSkeleton": "The custom Skeleton component used in the grid.",
     "baseSwitch": "The custom Switch component used in the grid.",
+    "baseTabs": "The custom Tabs component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
+    "baseToggleButton": "The custom ToggleButton component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
     "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
+    "chartsIcon": "Icon used for the charts configuration button",
+    "chartsMenuAddIcon": "Icon used for the add button in the charts configuration panel menu",
+    "chartsMenuMoveDownIcon": "Icon used for the move down button in the charts configuration panel menu",
+    "chartsMenuMoveToBottomIcon": "Icon used for the move to bottom button in the charts configuration panel menu",
+    "chartsMenuMoveToTopIcon": "Icon used for the move to top button in the charts configuration panel menu",
+    "chartsMenuMoveUpIcon": "Icon used for the move up button in the charts configuration panel menu",
+    "chartsMenuRemoveIcon": "Icon used for the remove button in the charts configuration panel menu",
+    "chartsPanel": "Component rendered when charts panel is open. Only needed when <code>chartsIntegration</code> prop is passed to the grid. Pass <code>GridChartsPanel</code> to render the default charts panel.",
+    "chartsSearchClearIcon": "Icon used for the clear button in the sidebar search field in the charts configuration panel",
+    "chartsSearchIcon": "Icon used for the search icon in the sidebar search field in the charts configuration panel",
+    "chartsSyncDisabledIcon": "Icon used for the sync button in the charts configuration panel when sync is disabled",
+    "chartsSyncIcon": "Icon used for the sync button in the charts configuration panel when sync is enabled",
     "collapsibleIcon": "Icon displayed in the collapsible to indicate if it is open or closed.",
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
