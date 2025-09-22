@@ -97,7 +97,7 @@ const getTemplateColumns = (
     return `${width ? 'auto' : '1fr'} auto`;
   }
 
-  return 'auto';
+  return '1fr';
 };
 
 const getTemplateRows = (
@@ -107,7 +107,7 @@ const getTemplateRows = (
   height: number | undefined,
 ) => {
   if (direction === 'vertical') {
-    return 'auto';
+    return '1fr';
   }
   // horizontal
   if (hideLegend) {
