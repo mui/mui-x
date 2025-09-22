@@ -53,19 +53,19 @@ export default function BarBorderRadius() {
         return (
           <React.Fragment key={title}>
             <p>{title}</p>
-            <div style={{ height: 300, border: '1px solid black', width: 300 }}>
+            <div style={{ height: 200, border: '1px solid black', width: 200 }}>
               <BarChartPro {...chartSettings} slotProps={slotProps} showToolbar hideLegend />
             </div>
-            <div style={{ height: 300, border: '1px solid black', width: 300 }}>
+            <div style={{ height: 200, border: '1px solid black', width: 200 }}>
               <BarChartPro {...chartSettings} slotProps={slotProps} showToolbar />
             </div>
-            <div style={{ height: 300, border: '1px solid black', width: 300 }}>
+            <div style={{ height: 200, border: '1px solid black', width: 200 }}>
               <BarChartPro {...chartSettings} slotProps={slotProps} />
             </div>
-            <div style={{ height: 300, border: '1px solid black', width: 300 }}>
+            <div style={{ height: 200, border: '1px solid black', width: 200 }}>
               <BarChartPro {...chartSettings} slotProps={slotProps} hideLegend />
             </div>
-            <div style={{ height: 300, border: '1px solid black', width: 300 }}>
+            <div style={{ height: 200, border: '1px solid black', width: 200 }}>
               <BarChartPro {...chartSettingsWithoutLabel} slotProps={slotProps} showToolbar />
             </div>
           </React.Fragment>
