@@ -53,7 +53,7 @@ const customDataSource: GridDataSource = {
 };
 ```
 
-In addition to the standard `getRows()` parameters, the `getRows()` callback receives the [`pivotModel`](/x/react-data-grid/pivoting/#pivot-model) parameter when pivoting is active.
+In addition to the standard parameters, the `getRows()` callback receives the [`pivotModel`](/x/react-data-grid/pivoting/#pivot-model) parameter when pivoting is active.
 This corresponds to the current pivot configuration and contains the visible rows, columns, and values from the pivot model.
 Use `pivotModel` on the server to pivot the data for each `getRows()` call.
 
@@ -84,10 +84,21 @@ const getRows: async (params) => {
 }
 ```
 
+With the required props and parameters in place, server-side pivoting should now be implemented in your Data Grid, as shown in the demo below:
+
+{{"demo": "ServerSidePivotingDataGrid.js", "bg": "inline"}}
+
+:::info
+The Data Source demos use a `useMockServer` utility function to simulate server-side data fetching.
+In a real-world scenario, you would replace this with your own server-side data-fetching logic.
+
+Open the Info section of your browser console to see the requests being made and the data being fetched in response.
+:::
+
 ### Pivot columns structure
 
-The `pivotColumns` response defines the structure of pivot columns to be created from the pivoted data.
-Each node in the tree must have a `group` property that's either a string or a part of a row model needed to get the formatted value of the original column.
+The `pivotColumns` response defines the structure of pivot columns to be created for the pivoted data.
+Each node in the tree must have a `group` property that's either a string (for the formatting on the server) or a part of a row model (for the formatting on the client using [`valueGetter()`](/x/react-data-grid/column-definition/#value-getter) and [`valueFormatter()`](/x/react-data-grid/column-definition/#value-formatter) from the column definition).
 `children` is a list of the next level nodes.
 
 ```tsx
@@ -100,20 +111,58 @@ interface GridGetRowsResponsePivotColumn {
 #### Structure examples
 
 - `[{group: "Yes"}, {group: "No"}]` - Creates column groups with values "Yes" and "No"
-- `[{group: "2025", children: [{group: "January"}, {group: "February"}]}]` - Creates a column group with value "2025" that has column groups "January" and "February"
-- `[{group: {date: "2025-01-01"}, children: [{group: {date: "2025-01-01"}}]}]` - Creates column groups with values returned from the value formatters of the columns used for pivoting.
+- `[{group: "2025", children: [{group: {quarter: "2025-01-01"}}, {group: {quarter: "2025-04-01"}}]}]`, in combination with
+
+  ```tsx
+  const columns = [
+    {
+      field: 'quarter',
+      valueGetter: (value) => `Q${Math.floor(new Date(value).getMonth() / 3) + 1}`,
+      // ...other properties
+    },
+    // ...other column definitions
+  ];
+
+  const pivotModel = {
+    columns: [{ field: 'year' }, { field: 'quarter' }],
+    // ...rest of the pivot model
+  };
+  ```
+
+  Creates a column group with value "2025" that has column groups "Q1" and "Q2"
+
+- `[{group: {date: "2025-01-01"}, children: [{group: {date: "2025-01-01"}}]}]`, in combination with
+
+  ```tsx
+  const columns = [
+    {
+      field: 'year',
+      valueGetter: (value, row) => new Date(row.date).getFullYear(),
+      // ...other properties
+    },
+    {
+      field: 'quarter',
+      valueGetter: (value, row) =>
+        `Q${Math.floor(new Date(row.date).getMonth() / 3) + 1}`,
+      // ...other properties
+    },
+    // ...other column definitions
+  ];
+
+  const pivotModel = {
+    columns: [{ field: 'year' }, { field: 'quarter' }],
+    // ...rest of the pivot model
+  };
+  ```
+
+  Creates a column group with value "2025" that has column group "Q1".
   Even though the same values are used for the different group levels, the output value for the column headers can be different if the value formatters are different for the two pivot columns used to create pivot data.
 
-With the required props and parameters in place, server-side pivoting should now be implemented in your Data Grid, as shown in the demo below:
+Each node in the last level of the pivot column structure gets all pivot value columns to complete the column structure of the Data Grid.
 
-{{"demo": "ServerSidePivotingDataGrid.js", "bg": "inline"}}
+The demo below returns a static response to demonstrate different ways of creating the column structure from the `pivotColumns` response.
 
-:::info
-The Data Source demos use a `useMockServer` utility function to simulate server-side data fetching.
-In a real-world scenario, you would replace this with your own server-side data-fetching logic.
-
-Open the Info section of your browser console to see the requests being made and the data being fetched in response.
-:::
+{{"demo": "ServerSidePivotingColumnStructure.js", "bg": "inline"}}
 
 ## Error handling
 
