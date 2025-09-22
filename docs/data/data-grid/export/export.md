@@ -496,17 +496,17 @@ For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#c
 
 ### Server-side export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-To export server-side data through the DataGrid, use [`updateRows()`](/x/react-data-grid/row-updates/#the-updaterows-method) to temporary set the data before calling one of export functions.
-Finally, reset the rows back to the original version.
+To export server-side data from the DataGrid, use [`updateRows()`](/x/react-data-grid/row-updates/#the-updaterows-method) to temporarily load all data before calling an export function.
+After the export completes, restore the rows to their original state.
 
-The example below demonstrates the CSV export with server-side data.
+The following example shows how to export CSV data from a server-side data source.
 
 {{"demo": "ExportServerSideData.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-The exported data respects the filtered and sorted rows based on user adjustments.
+The exported data includes any filters and sorting that users have applied.
 
-Try changing the sort order or hide any column and then click export again to see the difference.
+Try changing the sort order or hiding columns, then click export to see how it affects the output.
 :::
 
 ## apiRef
