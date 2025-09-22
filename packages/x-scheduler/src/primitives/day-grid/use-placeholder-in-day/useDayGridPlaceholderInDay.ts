@@ -18,10 +18,9 @@ export function useDayGridPlaceholderInDay(
 
   const rawDraggedOccurrence = useStore(
     store,
-    selectors.placeholderOccurrenceToRenderInDayCell,
+    selectors.occurrencePlaceholderToRenderInDayCell,
     day,
     rowStart,
-    'day-grid',
   );
   const originalEvent = useStore(store, selectors.event, rawDraggedOccurrence?.eventId ?? null);
 

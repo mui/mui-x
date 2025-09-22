@@ -21,7 +21,7 @@ import {
 } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
 import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
-import { shouldUpdatePlaceholderOccurrence } from './EventCalendarStore.utils';
+import { shouldUpdateOccurrencePlaceholder } from './EventCalendarStore.utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -100,7 +100,7 @@ export class EventCalendarStore extends Store<State> {
               ...parameters.preferencesMenuConfig,
             },
       viewConfig: null,
-      placeholderOccurrence: null,
+      occurrencePlaceholder: null,
       // Store elements that should only be updated when their controlled prop changes.
       visibleDate:
         parameters.visibleDate ??
@@ -432,12 +432,12 @@ export class EventCalendarStore extends Store<State> {
   };
 
   /**
-   * Sets the placeholder occurrence to render while creating a new event or dragging an existing event occurrence.
+   * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
    */
-  public setPlaceholderOccurrence = (newDraftOccurrence: CalendarOccurrencePlaceholder | null) => {
-    const { adapter, placeholderOccurrence: previous } = this.state;
-    if (shouldUpdatePlaceholderOccurrence(adapter, previous, newDraftOccurrence)) {
-      this.set('placeholderOccurrence', newDraftOccurrence);
+  public setOccurrencePlaceholder = (newPlaceholder: CalendarOccurrencePlaceholder | null) => {
+    const { adapter, occurrencePlaceholder: previous } = this.state;
+    if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
+      this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
 }

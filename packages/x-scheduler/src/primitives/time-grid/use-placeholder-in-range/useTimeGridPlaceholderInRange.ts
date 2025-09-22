@@ -13,10 +13,9 @@ export function useTimeGridPlaceholderInRange(
 
   const rawDraggedOccurrence = useStore(
     store,
-    selectors.placeholderOccurrenceToRenderInTimeRange,
+    selectors.occurrencePlaceholderToRenderInTimeRange,
     start,
     end,
-    'time-grid',
   );
   const originalEvent = useStore(store, selectors.event, rawDraggedOccurrence?.eventId ?? null);
 

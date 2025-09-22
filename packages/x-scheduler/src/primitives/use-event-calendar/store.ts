@@ -82,7 +82,7 @@ export type State = {
   /**
    * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
-  placeholderOccurrence: CalendarOccurrencePlaceholder | null;
+  occurrencePlaceholder: CalendarOccurrencePlaceholder | null;
 };
 
 const eventByIdMapSelector = createSelectorMemoized(
@@ -175,64 +175,54 @@ export const selectors = {
     (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
       !isEventReadOnly && areEventsResizable,
   ),
-  placeholderOccurrence: createSelector((state: State) => state.placeholderOccurrence),
-  hasPlaceholderOccurrence: createSelector((state: State) => state.placeholderOccurrence !== null),
+  occurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder),
+  hasOccurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder !== null),
   isOccurrenceMatchingThePlaceholder: createSelector(
     (state: State, occurrenceKey: string) =>
-      state.placeholderOccurrence?.occurrenceKey === occurrenceKey,
+      state.occurrencePlaceholder?.occurrenceKey === occurrenceKey,
   ),
-  placeholderOccurrenceToRenderInDayCell: createSelector(
-    (
-      state: State,
-      day: SchedulerValidDate,
-      rowStart: SchedulerValidDate,
-      surfaceType: 'day-grid' | 'time-grid',
-    ) => {
+  occurrencePlaceholderToRenderInDayCell: createSelector(
+    (state: State, day: SchedulerValidDate, rowStart: SchedulerValidDate) => {
       if (
-        state.placeholderOccurrence === null ||
-        state.placeholderOccurrence.surfaceType !== surfaceType
+        state.occurrencePlaceholder === null ||
+        state.occurrencePlaceholder.surfaceType !== 'day-grid'
       ) {
         return null;
       }
 
-      if (state.adapter.isSameDay(day, state.placeholderOccurrence.start)) {
-        return state.placeholderOccurrence;
+      if (state.adapter.isSameDay(day, state.occurrencePlaceholder.start)) {
+        return state.occurrencePlaceholder;
       }
 
       if (
         state.adapter.isSameDay(day, rowStart) &&
         state.adapter.isWithinRange(rowStart, [
-          state.placeholderOccurrence.start,
-          state.placeholderOccurrence.end,
+          state.occurrencePlaceholder.start,
+          state.occurrencePlaceholder.end,
         ])
       ) {
-        return state.placeholderOccurrence;
+        return state.occurrencePlaceholder;
       }
 
       return null;
     },
   ),
-  placeholderOccurrenceToRenderInTimeRange: createSelector(
-    (
-      state: State,
-      start: SchedulerValidDate,
-      end: SchedulerValidDate,
-      surfaceType: 'day-grid' | 'time-grid',
-    ) => {
+  occurrencePlaceholderToRenderInTimeRange: createSelector(
+    (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
       if (
-        state.placeholderOccurrence === null ||
-        state.placeholderOccurrence.surfaceType !== surfaceType
+        state.occurrencePlaceholder === null ||
+        state.occurrencePlaceholder.surfaceType !== 'time-grid'
       ) {
         return null;
       }
       if (
-        state.adapter.isBefore(state.placeholderOccurrence.end, start) ||
-        state.adapter.isAfter(state.placeholderOccurrence.start, end)
+        state.adapter.isBefore(state.occurrencePlaceholder.end, start) ||
+        state.adapter.isAfter(state.occurrencePlaceholder.start, end)
       ) {
         return null;
       }
 
-      return state.placeholderOccurrence;
+      return state.occurrencePlaceholder;
     },
   ),
 };

@@ -2,9 +2,9 @@ import { CalendarOccurrencePlaceholder } from '../models';
 import { Adapter } from '../utils/adapter/types';
 
 /**
- * Determines if the placeholder occurrence has changed in a meaningful way that requires updating the store.
+ * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
  */
-export function shouldUpdatePlaceholderOccurrence(
+export function shouldUpdateOccurrencePlaceholder(
   adapter: Adapter,
   previous: CalendarOccurrencePlaceholder | null,
   next: CalendarOccurrencePlaceholder | null,

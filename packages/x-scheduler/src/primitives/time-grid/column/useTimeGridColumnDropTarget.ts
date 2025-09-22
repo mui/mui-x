@@ -138,12 +138,12 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       onDrag: ({ source: { data }, location }) => {
         const newPlaceholder = getEventDropData(data, location.current.input);
         if (newPlaceholder) {
-          store.setPlaceholderOccurrence(newPlaceholder);
+          store.setOccurrencePlaceholder(newPlaceholder);
         }
       },
       onDragStart: ({ source: { data } }) => {
         if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
-          store.setPlaceholderOccurrence({
+          store.setOccurrencePlaceholder({
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,
             surfaceType: 'time-grid',
@@ -156,7 +156,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       onDrop: ({ source: { data }, location }) => {
         const newEvent =
           getEventDropData(data, location.current.input) ??
-          selectors.placeholderOccurrence(store.state);
+          selectors.occurrencePlaceholder(store.state);
         if (newEvent) {
           store.applyOccurrencePlaceholder(newEvent);
         }

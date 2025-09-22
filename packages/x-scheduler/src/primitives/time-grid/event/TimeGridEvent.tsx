@@ -122,7 +122,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDrop: () => store.setPlaceholderOccurrence(null),
+      onDrop: () => store.setOccurrencePlaceholder(null),
     });
   }, [getSharedDragData, isDraggable, store]);
 

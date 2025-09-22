@@ -99,12 +99,12 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
       onDrag: ({ source: { data } }) => {
         const newPlaceholder = getEventDropData(data);
         if (newPlaceholder) {
-          store.setPlaceholderOccurrence(newPlaceholder);
+          store.setOccurrencePlaceholder(newPlaceholder);
         }
       },
       onDragStart: ({ source: { data } }) => {
         if (isDraggingDayGridEvent(data) || isDraggingDayGridEventResizeHandler(data)) {
-          store.setPlaceholderOccurrence({
+          store.setOccurrencePlaceholder({
             occurrenceKey: data.occurrenceKey,
             eventId: data.eventId,
             start: data.start,
@@ -115,7 +115,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         }
       },
       onDrop: ({ source: { data } }) => {
-        const newEvent = getEventDropData(data) ?? selectors.placeholderOccurrence(store.state);
+        const newEvent = getEventDropData(data) ?? selectors.occurrencePlaceholder(store.state);
         if (newEvent) {
           store.applyOccurrencePlaceholder(newEvent);
         }
