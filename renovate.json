@@ -26,7 +26,7 @@
     },
     {
       "groupName": "date-fns-v2",
-      "matchPackageNames": ["date-fns-v2"],
+      "matchDepNames": ["date-fns-v2"],
       "allowedVersions": "< 3.0.0"
     },
     {
