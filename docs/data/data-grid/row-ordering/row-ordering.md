@@ -85,14 +85,45 @@ This approach can also be used to change the location of the toggle column.
 For now, row reordering is disabled if sorting is applied to the Data Grid.
 :::
 
-## Row reordering with tree data 🚧
+## Disable reordering of specific rows
+
+To disable reordering of specific rows, you can pass a callback to the `isRowReorderable()` prop.
+This callback is called with `row` and `rowNode` objects to allow disabling rows based on multiple criteria.
+
+```tsx
+<DataGridPro isRowReorderable={isRowReorderable} />
+```
+
+The demo below shows how to disable reordering of specific rows based on the row model.
+
+{{"demo": "RowReorderingDisabled.js", "bg": "inline"}}
+
+## Disable specific reorder operations
+
+Sometimes, the information provided by the source row isn't enough to determine if a reorder operation is valid.
+In these cases, you can pass a callback to the `isValidRowReorder()` prop.
+
+This callback is fired _during_ the drag operation so it provides information about the dragged row and potential row where it is being dropped.
+It is called with a `ReorderValidationContext` object to allow disabling specific reorder operations based on the context.
+
+The demo below prohibits reordering certain rows under the same parent and only allows cross-parent operations.
+
+{{"demo": "RowReorderingValidation.js", "bg": "inline"}}
 
 :::warning
-This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/7774) to help us prioritize it.
-Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
+The row reorder feature has an internal validation ruleset that makes sure that only the supported use-cases are allowed.
+So the `isValidRowReorder()` callback should only be used to omit some of the supported use-cases, not adding new ones.
 :::
 
-With this feature, users would be able to reorder rows in use cases that also involve tree data and/or row grouping.
+:::info
+The above demo uses row grouping to demonstrate the concept. You can check more about this in the [Row grouping—Drag-and-drop group reordering](/x/react-data-grid/row-grouping/#drag-and-drop-group-reordering) documentation section.
+:::
+
+## Row reordering with tree data
+
+This feature allows users to reorder rows within tree data to adjust the order of groups and their contents directly in the grid.
+
+For more details, see [Tree data—Drag-and-drop tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering).
 
 ## Row reordering with row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 

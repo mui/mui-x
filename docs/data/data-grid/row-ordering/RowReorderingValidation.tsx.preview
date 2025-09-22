@@ -1,0 +1,7 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  initialState={initialState}
+  rowReordering
+  isValidRowReorder={isValidRowReorder}
+/>
