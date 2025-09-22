@@ -6,6 +6,7 @@ import {
   DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
+import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
 import { deg2rad } from '../../internals/angleConversion';
 
 export interface AnimatedObject {
@@ -22,6 +23,7 @@ export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObj
   dataIndex: number;
   isFaded: boolean;
   isHighlighted: boolean;
+  isFocused: boolean;
 }
 
 export function useTransformData(
@@ -44,6 +46,7 @@ export function useTransformData(
   } = series;
 
   const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
+  const isItemFocused = useIsItemFocusedGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
@@ -54,6 +57,7 @@ export function useTransformData(
         };
         const isHighlighted = isItemHighlighted(currentItem);
         const isFaded = !isHighlighted && isItemFaded(currentItem);
+        const isFocused = isItemFocused({ seriesType: 'pie', seriesId, dataIndex: itemIndex });
 
         const attributesOverride = {
           additionalRadius: 0,
@@ -82,6 +86,7 @@ export function useTransformData(
           dataIndex: itemIndex,
           isFaded,
           isHighlighted,
+          isFocused,
           paddingAngle,
           innerRadius,
           outerRadius,
@@ -100,6 +105,7 @@ export function useTransformData(
       highlighted,
       isItemFaded,
       isItemHighlighted,
+      isItemFocused,
       seriesId,
     ],
   );
