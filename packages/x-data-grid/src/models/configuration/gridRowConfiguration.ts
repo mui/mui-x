@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { GridTreeNode, GridRowId } from '../gridRows';
-import { DataGridProcessedProps } from '../props/DataGridProps';
 
 /**
  * Get the ARIA attributes for a row
