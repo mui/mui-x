@@ -13,8 +13,9 @@ export interface CalendarResource {
    */
   name: string;
   /**
-   * The color palette to use.
-   * @default "mauve"
+   * The color palette used for events assigned to this resource.
+   * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
+   * @default "jade"
    */
-  color?: CalendarEventColor;
+  eventColor?: CalendarEventColor;
 }

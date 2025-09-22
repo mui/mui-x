@@ -19,7 +19,7 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 The component is built using the `TimeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
 
-Check-out their documentation page for more information:
+Check out their documentation page for more information:
 
 - [Time Field](/x/react-date-pickers/time-field/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)

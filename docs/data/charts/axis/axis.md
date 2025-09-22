@@ -272,7 +272,7 @@ To avoid this, you can use the `margin` prop to increase the space between the c
 
 ### Rendering
 
-Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
+Axes rendering can be further customized. Below is an interactive demo of the axis props.
 
 {{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
@@ -299,7 +299,7 @@ You can also configure the values at which the scale switches from linear to log
 
 If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
 
-It will provide all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>` components as children.
+It will provide all the scaling properties to its children, and lets you use `<XAxis/>` and `<YAxis/>` components as children.
 Those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
 
 You can choose their position with `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.

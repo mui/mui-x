@@ -165,6 +165,9 @@ export default defineConfig(
       'react/jsx-no-duplicate-props': ['warn', { ignoreCase: false }],
       // TODO move to @mui/internal-code-infra/eslint, these are false positive
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
+      // migration rules
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
   // Test start
@@ -412,9 +415,12 @@ export default defineConfig(
 
   {
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071
-    ignores: ['packages/x-scheduler/**/*', 'packages/x-virtualizer/**/*'],
+    files: [
+      `packages/x-scheduler/src/**/*.${EXTENSION_TS}`,
+      `packages/x-virtualizer/src/**/*.${EXTENSION_TS}`,
+    ],
     rules: {
-      '@typescript-eslint/no-namespace': 'error',
+      '@typescript-eslint/no-namespace': 'off',
     },
   },
 );
