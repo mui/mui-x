@@ -49,7 +49,7 @@
     "rimraf": "^6.0.1"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=22.18.0"
   },
   "exports": {
     ".": "./src/index.ts",
