@@ -57,6 +57,7 @@ export interface SankeyLink {
    * Can be a color string, or a keyword:
    * - 'source': Use the color of the source node
    * - 'target': Use the color of the target node
+   * @default 'source'
    */
   color?: string | 'source' | 'target';
 }
@@ -102,6 +103,7 @@ export type SankeyLinkOptions = {
    * Can be a color string, or a keyword:
    * - 'source': Use the color of the source node
    * - 'target': Use the color of the target node
+   * @default 'source'
    */
   color?: string | 'source' | 'target';
   /**

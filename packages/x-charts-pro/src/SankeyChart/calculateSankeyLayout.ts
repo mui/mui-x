@@ -36,7 +36,7 @@ export function calculateSankeyLayout(
   } = nodeOptions ?? {};
 
   const {
-    color: linkColor = (theme.vars || theme).palette.text.disabled,
+    color: linkColor = 'source',
     sort: linkSort = null,
     curveCorrection = 10,
   } = linkOptions ?? {};
