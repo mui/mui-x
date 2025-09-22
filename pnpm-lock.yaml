@@ -435,8 +435,8 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5
       fs-extra:
-        specifier: ^11.3.1
-        version: 11.3.1
+        specifier: ^11.3.2
+        version: 11.3.2
       glob-gitignore:
         specifier: ^1.0.15
         version: 1.0.15
@@ -8165,8 +8165,8 @@ packages:
   fs-constants@1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
 
-  fs-extra@11.3.1:
-    resolution: {integrity: sha512-eXvGGwZ5CL17ZSwHWd3bbgk7UUpF6IFHtP57NYYakPvHOs8GDgDe5KJI36jIJzDkJ6eJjuzRA8eBQb6SkKue0g==}
+  fs-extra@11.3.2:
+    resolution: {integrity: sha512-Xr9F6z6up6Ws+NjzMCZc6WXg2YFRlrLP9NQDO3VQrWrfiojdhS56TzueT88ze0uBdCTwEIhQ3ptnmKeWGFAe0A==}
     engines: {node: '>=14.14'}
 
   fs-minipass@2.1.0:
@@ -14585,7 +14585,7 @@ snapshots:
       cosmiconfig: 9.0.0(typescript@5.9.2)
       dedent: 1.5.3(babel-plugin-macros@3.1.0)
       execa: 5.0.0
-      fs-extra: 11.3.1
+      fs-extra: 11.3.2
       get-stream: 6.0.0
       git-url-parse: 14.0.0
       glob-parent: 6.0.2
@@ -14859,7 +14859,7 @@ snapshots:
       chai-dom: 1.12.1(chai@5.2.1)
       dom-accessibility-api: 0.7.0
       format-util: 1.0.5
-      fs-extra: 11.3.1
+      fs-extra: 11.3.2
       jsdom: 26.1.0
       lodash: 4.17.21
       mocha: 11.7.1
@@ -19514,7 +19514,7 @@ snapshots:
 
   fs-constants@1.0.0: {}
 
-  fs-extra@11.3.1:
+  fs-extra@11.3.2:
     dependencies:
       graceful-fs: 4.2.11
       jsonfile: 6.1.0
@@ -20580,7 +20580,7 @@ snapshots:
       dedent: 1.5.3(babel-plugin-macros@3.1.0)
       envinfo: 7.13.0
       execa: 5.0.0
-      fs-extra: 11.3.1
+      fs-extra: 11.3.2
       get-port: 5.1.1
       get-stream: 6.0.0
       git-url-parse: 14.0.0
