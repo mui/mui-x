@@ -63,7 +63,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
     function getClosestPoint(
       event: MouseEvent,
-      type: 'hover' | 'click',
     ):
       | { seriesId: SeriesId; dataIndex: number }
       | 'outside-chart'
@@ -83,10 +82,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const flatbush = flatbushMap.get(seriesId);
 
         if (!flatbush) {
-          continue;
-        }
-
-        if (type === 'hover' && aSeries.disableHover) {
           continue;
         }
 
@@ -171,7 +166,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     });
 
     const gestureHandler = (event: CustomEvent<PointerGestureEventData>) => {
-      const closestPoint = getClosestPoint(event.detail.srcEvent, 'hover');
+      const closestPoint = getClosestPoint(event.detail.srcEvent);
 
       if (closestPoint === 'outside-chart') {
         instance.cleanInteraction?.();
@@ -194,7 +189,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     };
 
     const tapHandler = instance.addInteractionListener('tap', (event) => {
-      const closestPoint = getClosestPoint(event.detail.srcEvent, 'click');
+      const closestPoint = getClosestPoint(event.detail.srcEvent);
 
       if (typeof closestPoint !== 'string' && onItemClick) {
         const { seriesId, dataIndex } = closestPoint;
