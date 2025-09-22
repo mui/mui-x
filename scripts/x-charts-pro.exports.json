@@ -485,6 +485,7 @@
   { "name": "SankeyTooltip", "kind": "Function" },
   { "name": "SankeyTooltipContent", "kind": "Function" },
   { "name": "SankeyTooltipProps", "kind": "Interface" },
+  { "name": "SankeyValueFormatterContext", "kind": "TypeAlias" },
   { "name": "ScaleName", "kind": "TypeAlias" },
   { "name": "Scatter", "kind": "Function" },
   { "name": "SCATTER_CHART_PLUGINS", "kind": "Variable" },

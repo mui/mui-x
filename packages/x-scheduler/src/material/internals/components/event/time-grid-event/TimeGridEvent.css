@@ -122,3 +122,21 @@
   background: var(--regular-line-bg);
   pointer-events: none;
 }
+
+.TimeGridEventResizeHandler {
+  position: absolute;
+  height: 4px;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  cursor: ns-resize;
+  opacity: 0;
+
+  &[data-start] {
+    top: 0;
+  }
+
+  &[data-end] {
+    bottom: 0;
+  }
+}

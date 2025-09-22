@@ -18,7 +18,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const { updateEvent, setPlaceholder } = useTimeGridRootContext();
+  const { store, updateEvent, setPlaceholder } = useTimeGridRootContext();
 
   // TODO: Avoid JS date conversion
   const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
@@ -149,14 +149,14 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
         }
       },
       onDrop: ({ source: { data }, location }) => {
-        const newEvent = getEventDropData(data, location.current.input);
+        const newEvent = getEventDropData(data, location.current.input) ?? store.state.placeholder;
         if (newEvent) {
           updateEvent(newEvent);
           setPlaceholder(null);
         }
       },
     });
-  }, [adapter, getEventDropData, setPlaceholder, columnId, updateEvent]);
+  }, [adapter, store, getEventDropData, setPlaceholder, columnId, updateEvent]);
 
   return { getCursorPositionInElementMs, ref };
 }
