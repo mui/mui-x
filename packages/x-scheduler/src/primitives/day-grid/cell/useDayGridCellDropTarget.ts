@@ -10,6 +10,7 @@ import { useAdapter } from '../../utils/adapter/useAdapter';
 import { CalendarPlaceholderOccurrence, SchedulerValidDate } from '../../models';
 import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { selectors } from '../../use-event-calendar/store';
 
 export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Parameters) {
   const { value } = parameters;
@@ -114,8 +115,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
         }
       },
       onDrop: ({ source: { data } }) => {
-        const newEvent = getEventDropData(data);
-
+        const newEvent = getEventDropData(data) ?? selectors.placeholderOccurrence(store.state);
         if (newEvent) {
           store.updateEventOccurrenceDates(newEvent);
         }

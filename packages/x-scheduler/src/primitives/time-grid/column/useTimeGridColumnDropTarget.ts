@@ -12,6 +12,7 @@ import {
 } from '../../utils/drag-utils';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { selectors } from '../../use-event-calendar';
 
 export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTarget.Parameters) {
   const { start, end } = parameters;
@@ -153,7 +154,9 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
         }
       },
       onDrop: ({ source: { data }, location }) => {
-        const newEvent = getEventDropData(data, location.current.input);
+        const newEvent =
+          getEventDropData(data, location.current.input) ??
+          selectors.placeholderOccurrence(store.state);
         if (newEvent) {
           store.updateEventOccurrenceDates(newEvent);
         }

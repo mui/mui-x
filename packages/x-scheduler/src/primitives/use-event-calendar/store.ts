@@ -175,6 +175,7 @@ export const selectors = {
     (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
       !isEventReadOnly && areEventsResizable,
   ),
+  placeholderOccurrence: createSelector((state: State) => state.placeholderOccurrence),
   hasPlaceholderOccurrence: createSelector((state: State) => state.placeholderOccurrence !== null),
   isOccurrenceMatchingThePlaceholder: createSelector(
     (state: State, occurrenceKey: string) =>
