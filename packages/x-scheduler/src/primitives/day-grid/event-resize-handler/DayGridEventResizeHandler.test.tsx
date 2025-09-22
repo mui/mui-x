@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { DayGrid } from '@mui/x-scheduler/primitives/day-grid';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
-describe('<DayGridGrid.EventResizeHandler />', () => {
+describe('<DayGrid.EventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
   const eventStart = DateTime.now();
