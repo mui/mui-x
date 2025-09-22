@@ -117,7 +117,7 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
       onDrop: ({ source: { data } }) => {
         const newEvent = getEventDropData(data) ?? selectors.placeholderOccurrence(store.state);
         if (newEvent) {
-          store.updateEventOccurrenceDates(newEvent);
+          store.applyOccurrencePlaceholder(newEvent);
         }
       },
     });

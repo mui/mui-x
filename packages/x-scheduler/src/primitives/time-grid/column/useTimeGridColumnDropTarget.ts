@@ -158,7 +158,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
           getEventDropData(data, location.current.input) ??
           selectors.placeholderOccurrence(store.state);
         if (newEvent) {
-          store.updateEventOccurrenceDates(newEvent);
+          store.applyOccurrencePlaceholder(newEvent);
         }
       },
     });

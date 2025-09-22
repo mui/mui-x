@@ -332,11 +332,10 @@ export class EventCalendarStore extends Store<State> {
     onEventsChange?.(updatedEvents);
   };
 
-  // TODO: Once several scopes are supported, add a way to render a UI to choose the scope.
   /**
-   * Updates the dates of an event occurrence.
+   * Applies the data from the placeholder occurrence to the event it represents.
    */
-  public async updateEventOccurrenceDates(
+  public async applyOccurrencePlaceholder(
     data: CalendarPlaceholderOccurrence,
     chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
   ) {
