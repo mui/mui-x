@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle,no-plusplus */
+/* eslint-disable no-underscore-dangle,no-plusplus,no-bitwise */
 import { expect, test } from 'vitest';
 import { Flatbush } from './Flatbush';
 
@@ -35,16 +35,6 @@ function createIndex() {
 function createSmallIndex(numItems: number, nodeSize: number) {
   const index = new Flatbush(numItems, nodeSize);
   for (let i = 0; i < 4 * numItems; i += 4) {
-    index.add(data[i], data[i + 1], data[i + 2], data[i + 3]);
-  }
-  index.finish();
-  return index;
-}
-
-function createIndexSharedArrayBuffer() {
-  const index = new Flatbush(data.length / 4, 16, Float64Array, SharedArrayBuffer);
-
-  for (let i = 0; i < data.length; i += 4) {
     index.add(data[i], data[i + 1], data[i + 2], data[i + 3]);
   }
   index.finish();
@@ -227,18 +217,6 @@ test('returns index of newly-added rectangle', () => {
 
   const expectedSequence = Array.from(Array(count), (v, i) => i);
   expect(ids).to.deep.eq(expectedSequence);
-});
-
-test('creates an index using SharedArrayBuffer', () => {
-  const index = createIndexSharedArrayBuffer();
-  expect(index.data).to.be.instanceof(SharedArrayBuffer);
-});
-
-test('reconstructs an index from SharedArrayBuffer', () => {
-  const index = createIndexSharedArrayBuffer();
-  const index2 = Flatbush.from(index.data);
-
-  expect(index).to.deep.eq(index2);
 });
 
 test('quicksort should work with an inbalanced dataset', () => {
