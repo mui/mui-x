@@ -5,7 +5,7 @@ import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
   GridRoot,
   GridContextProvider,
-  GridValidRowModel,
+  type GridValidRowModel,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import {
@@ -13,7 +13,7 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
-  GridConfiguration,
+  type GridConfiguration,
   useGridApiInitialization,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
@@ -35,7 +35,7 @@ import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration<GridPrivateApiPremium> = {
+const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPremium,
@@ -66,7 +66,11 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
   );
 
-  const props = useDataGridPremiumComponent(privateApiRef, initialProps, configuration);
+  const props = useDataGridPremiumComponent(
+    privateApiRef,
+    initialProps,
+    configuration as GridConfiguration,
+  );
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {

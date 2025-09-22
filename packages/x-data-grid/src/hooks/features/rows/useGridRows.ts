@@ -105,7 +105,10 @@ export const useGridRows = (
   const timeout = useTimeout();
 
   // Get overridable methods from configuration
-  const { setRowIndex } = configuration.hooks.useGridRowsOverridableMethods(apiRef, props);
+  const { setRowIndex } = configuration.hooks.useGridRowsOverridableMethods(
+    apiRef,
+    props as DataGridProcessedProps,
+  );
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => {

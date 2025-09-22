@@ -21,13 +21,10 @@ export interface GridRowAriaAttributesInternalHook {
 /**
  * Overridable row methods interface, these methods could be overriden in a higher plan package.
  */
-export interface GridRowsOverridableMethodsInternalHook<Api> {
+export interface GridRowsOverridableMethodsInternalHook<Api, Props> {
   useGridRowsOverridableMethods: (
     apiRef: RefObject<Api>,
-    props: Pick<
-      DataGridProcessedProps,
-      'processRowUpdate' | 'onProcessRowUpdateError' | 'dataSource'
-    >,
+    props: Props,
   ) => {
     setRowIndex: (rowId: GridRowId, targetIndex: number) => void;
   };
