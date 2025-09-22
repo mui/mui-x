@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import type { SchedulerValidDate } from '../models';
+import type { CalendarPrimitiveEventData, SchedulerValidDate } from '../models';
 
 type Surface = 'time' | 'day';
 
@@ -15,12 +15,7 @@ type DraftState = {
 };
 
 type SurfaceAPI = {
-  setPlaceholder: (ph: {
-    id: string;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
-    allDay?: boolean;
-  }) => void;
+  setPlaceholder: (placeholder: CalendarPrimitiveEventData | null) => void;
   clearPlaceholder: () => void;
 };
 
@@ -106,10 +101,11 @@ export function SchedulerDraftProvider(props: { children: React.ReactNode }) {
         lockSurface: init.lockSurface ?? null,
       });
       apisRef.current[init.surface]?.setPlaceholder({
-        id: init.id,
+        eventId: init.id,
         start: init.start,
         end: init.end,
-        allDay: init.allDay,
+        columnId: null,
+        originalStart: init.start,
       });
     },
   );
@@ -146,18 +142,20 @@ export function SchedulerDraftProvider(props: { children: React.ReactNode }) {
             apisRef.current[prev.surface!]?.clearPlaceholder();
           }
           apisRef.current[updated.surface!]?.setPlaceholder({
-            id: updated.id!,
+            eventId: updated.id!,
             start: updated.start!,
             end: updated.end!,
-            allDay: updated.allDay,
+            columnId: null,
+            originalStart: updated.start!,
           });
         } else {
           // same surface, just update the existing placeholder
           apisRef.current[updated.surface!]?.setPlaceholder({
-            id: updated.id!,
+            eventId: updated.id!,
             start: updated.start!,
             end: updated.end!,
-            allDay: updated.allDay,
+            columnId: null,
+            originalStart: updated.start!,
           });
         }
 

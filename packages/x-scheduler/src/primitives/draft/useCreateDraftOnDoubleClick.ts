@@ -45,7 +45,7 @@ export function useCreateDraftOnDoubleClick(opts: UseCreateDraftOnDoubleClickOpt
       lockSurface,
     });
 
-    // 2) Open popover and sync form changes with draft
+    // 2) Open popover
     startEditing(event, {
       key: CREATE_PLACEHOLDER_ID,
       id: CREATE_PLACEHOLDER_ID,
