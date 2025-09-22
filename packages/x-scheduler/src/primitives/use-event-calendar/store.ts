@@ -185,11 +185,11 @@ export const selectors = {
       state: State,
       day: SchedulerValidDate,
       rowStart: SchedulerValidDate,
-      gridId: string | undefined,
+      surfaceType: 'day-grid' | 'time-grid',
     ) => {
       if (
         state.placeholderOccurrence === null ||
-        state.placeholderOccurrence.surfaceType !== gridId
+        state.placeholderOccurrence.surfaceType !== surfaceType
       ) {
         return null;
       }
@@ -216,11 +216,11 @@ export const selectors = {
       state: State,
       start: SchedulerValidDate,
       end: SchedulerValidDate,
-      gridId: string | undefined,
+      surfaceType: 'day-grid' | 'time-grid',
     ) => {
       if (
         state.placeholderOccurrence === null ||
-        state.placeholderOccurrence.surfaceType !== gridId
+        state.placeholderOccurrence.surfaceType !== surfaceType
       ) {
         return null;
       }

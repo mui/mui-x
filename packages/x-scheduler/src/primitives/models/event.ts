@@ -160,7 +160,7 @@ export interface CalendarPlaceholderOccurrence {
   occurrenceKey: string;
   /**
    * The type of surface the draft should be rendered on.
-   * This is useful to make sure to only render the placeholder in the grid the event is being dragged to.
+   * This is useful to make sure the placeholder is only rendered in the correct grid.
    */
   surfaceType: 'day-grid' | 'time-grid';
   /**
