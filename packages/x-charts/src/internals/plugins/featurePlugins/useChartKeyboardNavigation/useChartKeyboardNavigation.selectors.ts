@@ -49,7 +49,7 @@ const selectAxisHighlight = <T extends ChartSeriesType>(
   dataIndex: number | undefined,
   axis: ComputeResult<ChartsAxisProps>,
   series: ProcessedSeries<T>,
-): AxisItemIdentifier[] | undefined => {
+): AxisItemIdentifier | undefined => {
   if (type === undefined || seriesId === undefined || dataIndex === undefined) {
     return undefined;
   }
@@ -65,7 +65,7 @@ const selectAxisHighlight = <T extends ChartSeriesType>(
     axisId = axis.axisIds[0];
   }
 
-  return [{ axisId, dataIndex }];
+  return { axisId, dataIndex };
 };
 
 export const selectorChartsKeyboardXAxisIndex = createSelector(
