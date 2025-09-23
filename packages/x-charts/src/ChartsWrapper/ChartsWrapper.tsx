@@ -86,7 +86,7 @@ const getTemplateColumns = (
   horizontalPosition: Position['horizontal'] = 'end',
   width: number | undefined = undefined,
 ) => {
-  const drawingAreaColumn = width ? `${width}px` : '1fr';
+  const drawingAreaColumn = width ? 'auto' : '1fr';
   if (direction === 'horizontal') {
     return drawingAreaColumn;
   }
@@ -103,7 +103,7 @@ const getTemplateRows = (
   verticalPosition: Position['vertical'] = 'top',
   height: number | undefined = undefined,
 ) => {
-  const drawingAreaRow = height ? `${height}px` : '1fr';
+  const drawingAreaRow = height ? 'auto' : '1fr';
   if (direction === 'vertical') {
     return drawingAreaRow;
   }
