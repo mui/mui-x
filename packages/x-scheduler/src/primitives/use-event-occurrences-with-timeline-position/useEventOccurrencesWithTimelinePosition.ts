@@ -3,6 +3,29 @@ import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { Adapter } from '../utils/adapter/types';
 
+const innerOccurrencesWithTimelinePosition = (adapter, occurrences, maxColumnSpan) => {
+  const conflicts = buildOccurrenceConflicts(adapter, occurrences);
+
+  const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
+
+  const lastIndexLookup = buildLastIndexLookup(
+    conflicts,
+    firstIndexLookup,
+    maxIndex,
+    maxColumnSpan,
+  );
+
+  const occurrencesWithPosition = occurrences.map((occurrence) => ({
+    ...occurrence,
+    position: {
+      firstIndex: firstIndexLookup[occurrence.key],
+      lastIndex: lastIndexLookup[occurrence.key],
+    },
+  }));
+
+  return { occurrences: occurrencesWithPosition, maxIndex };
+};
+
 export function useEventOccurrencesWithTimelinePositionForMap(
   parameters: useEventOccurrencesWithTimelinePosition.MapParameters,
 ) {
@@ -15,26 +38,13 @@ export function useEventOccurrencesWithTimelinePositionForMap(
     for (const resourceId of occurrencesMap.keys()) {
       const occurrences = occurrencesMap.get(resourceId) || [];
 
-      const conflicts = buildOccurrenceConflicts(adapter, occurrences);
-
-      const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
-
-      const lastIndexLookup = buildLastIndexLookup(
-        conflicts,
-        firstIndexLookup,
-        maxIndex,
+      const occurrencesWithPosition = innerOccurrencesWithTimelinePosition(
+        adapter,
+        occurrences,
         maxColumnSpan,
       );
 
-      const occurrencesWithPosition = occurrences.map((occurrence) => ({
-        ...occurrence,
-        position: {
-          firstIndex: firstIndexLookup[occurrence.key],
-          lastIndex: lastIndexLookup[occurrence.key],
-        },
-      }));
-
-      newOccurrencesMap.set(resourceId, occurrencesWithPosition);
+      newOccurrencesMap.set(resourceId, occurrencesWithPosition.occurrences);
     }
 
     return newOccurrencesMap;
@@ -51,26 +61,7 @@ export function useEventOccurrencesWithTimelinePosition(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const conflicts = buildOccurrenceConflicts(adapter, occurrences);
-
-    const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
-
-    const lastIndexLookup = buildLastIndexLookup(
-      conflicts,
-      firstIndexLookup,
-      maxIndex,
-      maxColumnSpan,
-    );
-
-    const occurrencesWithPosition = occurrences.map((occurrence) => ({
-      ...occurrence,
-      position: {
-        firstIndex: firstIndexLookup[occurrence.key],
-        lastIndex: lastIndexLookup[occurrence.key],
-      },
-    }));
-
-    return { occurrences: occurrencesWithPosition, maxIndex };
+    return innerOccurrencesWithTimelinePosition(adapter, occurrences, maxColumnSpan);
   }, [adapter, occurrences, maxColumnSpan]);
 }
 
