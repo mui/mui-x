@@ -122,7 +122,7 @@ If you use composition you can pass these as props to the `<ChartsGrid />` compo
 <BarChart grid={{ vertical: true }}>
 
 <ChartContainer>
-  <ChartsGrid vertical >
+  <ChartsGrid vertical />
 </ChartContainer>
 ```
 
