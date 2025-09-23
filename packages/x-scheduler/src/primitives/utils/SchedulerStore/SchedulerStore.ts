@@ -238,6 +238,9 @@ export class SchedulerStore<
     data: CalendarOccurrencePlaceholder,
     chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
   ) {
+    // TODO: Try to do a single state update.
+    this.setOccurrencePlaceholder(null);
+
     const { eventId, start, end, originalStart } = data;
 
     if (eventId == null || originalStart == null) {
