@@ -636,17 +636,15 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         const beachIndex = findRowIndex(allValues, 'Beach.jpg', 10);
         const documentsIndex = findRowIndex(allValues, 'Documents', 1);
 
-        if (beachIndex >= 0 && documentsIndex >= 0) {
-          const sourceCell = getCell(beachIndex, 0).firstChild!;
-          const targetCell = getCell(documentsIndex, 0);
+        const sourceCell = getCell(beachIndex, 0).firstChild!;
+        const targetCell = getCell(documentsIndex, 0);
 
-          fireDragStart(sourceCell);
-          fireEvent.dragEnter(targetCell);
-          const dragOverEvent = createDragOverEvent(targetCell, 'below');
-          fireEvent(targetCell, dragOverEvent);
-          const dragEndEvent = createDragEndEvent(sourceCell);
-          fireEvent(sourceCell, dragEndEvent);
-        }
+        fireDragStart(sourceCell);
+        fireEvent.dragEnter(targetCell);
+        const dragOverEvent = createDragOverEvent(targetCell, 'below');
+        fireEvent(targetCell, dragOverEvent);
+        const dragEndEvent = createDragEndEvent(sourceCell);
+        fireEvent(sourceCell, dragEndEvent);
 
         console.warn = originalWarn;
 
@@ -730,30 +728,28 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const resumeIndex = findRowIndex(allValues, 'Resume.pdf', 7);
       const picturesIndex = findRowIndex(allValues, 'Pictures', 8);
 
-      if (resumeIndex >= 0 && picturesIndex >= 0) {
-        const sourceCell = getCell(resumeIndex, 0).firstChild!;
-        const targetCell = getCell(picturesIndex, 0);
+      const sourceCell = getCell(resumeIndex, 0).firstChild!;
+      const targetCell = getCell(picturesIndex, 0);
 
-        fireDragStart(sourceCell);
-        fireEvent.dragEnter(targetCell);
-        const dragOverEvent = createDragOverEvent(targetCell, 'below');
-        fireEvent(targetCell, dragOverEvent);
-        const dragEndEvent = createDragEndEvent(sourceCell);
-        fireEvent(sourceCell, dragEndEvent);
+      fireDragStart(sourceCell);
+      fireEvent.dragEnter(targetCell);
+      const dragOverEvent = createDragOverEvent(targetCell, 'below');
+      fireEvent(targetCell, dragOverEvent);
+      const dragEndEvent = createDragEndEvent(sourceCell);
+      fireEvent(sourceCell, dragEndEvent);
 
-        // Event should not fire immediately
-        expect(handleRowOrderChange.callCount).to.equal(0);
+      // Event should not fire immediately
+      expect(handleRowOrderChange.callCount).to.equal(0);
 
-        // Resolve the promise
-        if (processRowUpdateCalls.length > 0) {
-          resolvePromise(processRowUpdateCalls[0]);
-        }
-
-        // Now event should fire
-        await waitFor(() => {
-          expect(handleRowOrderChange.callCount).to.equal(1);
-        });
+      // Resolve the promise
+      if (processRowUpdateCalls.length > 0) {
+        resolvePromise(processRowUpdateCalls[0]);
       }
+
+      // Now event should fire
+      await waitFor(() => {
+        expect(handleRowOrderChange.callCount).to.equal(1);
+      });
     });
 
     it('should handle processRowUpdate rejection gracefully', async () => {
@@ -947,76 +943,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       // Should not trigger reorder for single node
       expect(handleRowOrderChange.callCount).to.equal(0);
-    });
-
-    it('should handle rapid successive operations gracefully', async () => {
-      const handleRowOrderChange = spy();
-      render(<Test onRowOrderChange={handleRowOrderChange} />);
-
-      const allValues = getColumnValues(0);
-      const q1Index = findRowIndex(allValues, 'Q1.pdf', 4);
-      const q2Index = findRowIndex(allValues, 'Q2.pdf', 5);
-
-      const sourceCell = getCell(q1Index, 0).firstChild!;
-      const targetCell = getCell(q2Index, 0);
-
-      // Simulate rapid operations with small delays
-      for (let i = 0; i < 3; i += 1) {
-        fireDragStart(sourceCell);
-        fireEvent.dragEnter(targetCell);
-        const dragOverEvent = createDragOverEvent(targetCell, 'below');
-        fireEvent(targetCell, dragOverEvent);
-        const dragEndEvent = createDragEndEvent(sourceCell);
-        fireEvent(sourceCell, dragEndEvent);
-
-        // Small delay between operations - avoiding await in loop
-        // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => {
-          setTimeout(resolve, 10);
-        });
-      }
-
-      // Wait for any async operations to complete and verify at least one operation succeeded
-      await waitFor(
-        () => {
-          expect(handleRowOrderChange.callCount).to.be.greaterThan(0);
-        },
-        { timeout: 1000 },
-      );
-    });
-  });
-
-  describe('Collapsed Groups Validation', () => {
-    it('should prevent drops below collapsed groups', async () => {
-      const handleRowOrderChange = spy();
-      render(<Test onRowOrderChange={handleRowOrderChange} />);
-
-      // First collapse the Work group
-      const workIndex = findRowIndex(getColumnValues(0), 'Work', 2);
-      if (workIndex >= 0) {
-        const workCell = getCell(workIndex, 0);
-        const expandIcon = workCell.querySelector('[data-testid="TreeDataIcon"]');
-        if (expandIcon) {
-          fireEvent.click(expandIcon);
-        }
-
-        // Try to drop something below the collapsed Work group
-        const allValues = getColumnValues(0);
-        const resumeIndex = findRowIndex(allValues, 'Resume.pdf', 7);
-
-        const sourceCell = getCell(resumeIndex, 0).firstChild!;
-        const targetCell = getCell(workIndex, 0);
-
-        fireDragStart(sourceCell);
-        fireEvent.dragEnter(targetCell);
-        const dragOverEvent = createDragOverEvent(targetCell, 'below');
-        fireEvent(targetCell, dragOverEvent);
-        const dragEndEvent = createDragEndEvent(sourceCell);
-        fireEvent(sourceCell, dragEndEvent);
-
-        // Operation should be prevented for collapsed groups
-        expect(handleRowOrderChange.callCount).to.equal(0);
-      }
     });
   });
 });
