@@ -74,7 +74,8 @@ const selectAxisHighlightWithValue = (
   };
   const keyboardValue =
     keyboardAxisItem && axis.axis[keyboardAxisItem.axisId]?.data?.[keyboardAxisItem.dataIndex];
-  const keyboardHighlight = keyboardValue != null && { ...keyboardAxisItem, value: keyboardValue };
+  const keyboardHighlight = keyboardAxisItem &&
+    keyboardValue != null && { ...keyboardAxisItem, value: keyboardValue };
 
   if (lastInteractionUpdate === 'pointer') {
     if (pointerHighlight) {
