@@ -8,6 +8,7 @@ import {
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
+  RecurringEventUpdatedProperties,
   SchedulerValidDate,
 } from '../../models';
 import {
@@ -241,14 +242,26 @@ export class SchedulerStore<
     // TODO: Try to do a single state update.
     this.setOccurrencePlaceholder(null);
 
-    const { eventId, start, end, originalStart } = data;
+    const { eventId, start, end, originalStart, surfaceType } = data;
 
     if (eventId == null || originalStart == null) {
       // TODO: Create a new event.
       return undefined;
     }
 
-    if (selectors.event(this.state, eventId)?.rrule) {
+    const modelBefore = selectors.event(this.state, eventId);
+    if (!modelBefore) {
+      throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+    }
+
+    const changes: RecurringEventUpdatedProperties = { start, end };
+    if (surfaceType === 'time-grid' && modelBefore.allDay) {
+      changes.allDay = false;
+    } else if (surfaceType === 'day-grid' && !modelBefore.allDay) {
+      changes.allDay = true;
+    }
+
+    if (modelBefore.rrule) {
       let scope: RecurringUpdateEventScope;
       if (chooseRecurringEventScope) {
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
@@ -260,12 +273,12 @@ export class SchedulerStore<
       return this.updateRecurringEvent({
         eventId,
         occurrenceStart: originalStart,
-        changes: { start, end },
+        changes,
         scope,
       });
     }
 
-    return this.updateEvent({ id: eventId, start, end });
+    return this.updateEvent({ id: eventId, ...changes });
   }
 
   /**
