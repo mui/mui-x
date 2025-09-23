@@ -43,7 +43,7 @@ export const DayGridEventResizeHandler = React.forwardRef(function DayGridEventR
   React.useEffect(() => {
     const domElement = ref.current;
     if (!domElement || !enabled) {
-      return () => {};
+      return undefined;
     }
 
     return draggable({

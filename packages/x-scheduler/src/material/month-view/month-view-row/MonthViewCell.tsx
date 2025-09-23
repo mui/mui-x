@@ -103,10 +103,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
         )}
         {placeholder != null && (
-          <div className="MonthViewDraggedEventContainer">
+          <div className="MonthViewPlaceholderEventContainer">
             <DayGridEvent
               occurrence={placeholder}
-              variant="dragPlaceholder"
+              variant="placeholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
             />
           </div>
