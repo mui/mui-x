@@ -282,8 +282,8 @@ importers:
         specifier: ^1.0.4-canary.7
         version: 1.0.4-canary.7(@babel/core@7.28.4)(@babel/preset-react@7.27.1(@babel/core@7.28.4))
       '@mui/internal-bundle-size-checker':
-        specifier: https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@376392f
-        version: https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@376392f(@types/node@24.5.2)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
+        specifier: https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@fa23498
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@fa23498(@types/node@24.5.2)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
       '@mui/internal-code-infra':
         specifier: ^0.0.3-canary.11
         version: 0.0.3-canary.11(@typescript-eslint/parser@8.44.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.0(eslint@9.35.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.35.0))(eslint@9.35.0)(prettier@3.6.2)(typescript@5.9.2)
@@ -4195,8 +4195,8 @@ packages:
     peerDependencies:
       '@babel/core': '7'
 
-  '@mui/internal-bundle-size-checker@https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@376392f':
-    resolution: {tarball: https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@376392f}
+  '@mui/internal-bundle-size-checker@https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@fa23498':
+    resolution: {tarball: https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@fa23498}
     version: 1.0.7
     hasBin: true
 
@@ -14679,7 +14679,7 @@ snapshots:
       '@babel/core': 7.28.4
       resolve: 1.22.10
 
-  '@mui/internal-bundle-size-checker@https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@376392f(@types/node@24.5.2)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)':
+  '@mui/internal-bundle-size-checker@https://pkg.pr.new/mui/mui-public/@mui/internal-bundle-size-checker@fa23498(@types/node@24.5.2)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)':
     dependencies:
       '@aws-sdk/client-s3': 3.894.0
       '@aws-sdk/credential-providers': 3.894.0
