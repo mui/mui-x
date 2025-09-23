@@ -3,7 +3,11 @@ import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { Adapter } from '../utils/adapter/types';
 
-const innerOccurrencesWithTimelinePosition = (adapter, occurrences, maxColumnSpan) => {
+const innerOccurrencesWithTimelinePosition = (
+  adapter: Adapter,
+  occurrences: CalendarEventOccurrence[],
+  maxColumnSpan: number,
+) => {
   const conflicts = buildOccurrenceConflicts(adapter, occurrences);
 
   const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
