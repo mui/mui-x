@@ -57,7 +57,7 @@ export function DayGridCell(props: DayGridCellProps) {
           <div className="DayTimeGridAllDayEventContainer">
             <DayGridEvent
               occurrence={placeholder}
-              variant="dragPlaceholder"
+              variant="placeholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
             />
           </div>

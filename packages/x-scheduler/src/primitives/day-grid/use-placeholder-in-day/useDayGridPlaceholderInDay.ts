@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithDayGridPosition, SchedulerValidDate } from '../../models';
-import { useDayGridRootContext } from '../root/DayGridRootContext';
-import { selectors } from '../root/store';
-import { selectors as eventCalendarSelectors } from '../../use-event-calendar';
+import { selectors } from '../../use-event-calendar';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 import { useDayGridRowContext } from '../row/DayGridRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
@@ -15,27 +13,27 @@ export function useDayGridPlaceholderInDay(
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
 ): CalendarEventOccurrenceWithDayGridPosition | null {
   const adapter = useAdapter();
-  const { store } = useDayGridRootContext();
-  const eventCalendarStore = useEventCalendarStoreContext();
+  const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
 
-  const placeholder = useStore(store, selectors.placeholderInDay, day, rowStart, rowEnd);
-  const draggedEvent = useStore(
-    eventCalendarStore,
-    eventCalendarSelectors.event,
-    placeholder?.eventId ?? null,
+  const rawPlaceholder = useStore(
+    store,
+    selectors.occurrencePlaceholderToRenderInDayCell,
+    day,
+    rowStart,
   );
+  const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
 
   return React.useMemo(() => {
-    if (!draggedEvent || !placeholder) {
+    if (!originalEvent || !rawPlaceholder) {
       return null;
     }
 
     let positionIndex = 1;
     for (const rowDay of row.days) {
-      // TODO: Use the occurrence key once the primitive uses the Event Calendar store.
-      // Right now it would match any occurrence of the same recurring event.
-      const found = rowDay.withPosition.find((o) => o.id === draggedEvent.id);
+      const found = rowDay.withPosition.find(
+        (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
+      );
       if (found) {
         positionIndex = found.position.index;
         break;
@@ -43,14 +41,14 @@ export function useDayGridPlaceholderInDay(
     }
 
     return {
-      ...draggedEvent,
-      start: placeholder.start,
-      end: placeholder.end,
-      key: `dragged-${draggedEvent.id}`,
+      ...originalEvent,
+      key: `placeholder-${rawPlaceholder.occurrenceKey}`,
+      start: day,
+      end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
       position: {
         index: positionIndex,
-        daySpan: diffIn(adapter, placeholder.end, day, 'days') + 1,
+        daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
       },
     };
-  }, [adapter, day, draggedEvent, placeholder, row.days]);
+  }, [adapter, day, originalEvent, rawPlaceholder, row.days, rowEnd]);
 }
