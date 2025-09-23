@@ -48,7 +48,6 @@
   grid-template-rows: 1fr auto;
   width: 100%;
   height: 100%;
-
   > *:not(:last-child) {
     border-right: 1px solid var(--border-color);
   }
@@ -68,7 +67,6 @@
 
 .DayTimeGridAllDayEventsCell {
   padding: var(--space-1);
-
   /* stylelint-disable-next-line declaration-property-value-no-unknown */
   scrollbar-color: initial initial;
   background-color: var(--surface);
@@ -78,7 +76,6 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
-
   /* Setting the row heights to 18px here to make sure that even empty rows have the exact height of an all day event */
   grid-template-rows: repeat(var(--row-count), minmax(auto, 18px));
   gap: var(--space-1);
@@ -87,7 +84,6 @@
 .DayTimeGridAllDayEventsGrid[data-weekend][style*='--has-scroll: 1'] .ScrollablePlaceholder {
   scrollbar-color: var(--weekend-background) var(--weekend-background);
 }
-
 /* Webkit (Chrome, Safari, Edge) */
 .DayTimeGridAllDayEventsGrid[style*='--has-scroll: 1'] .ScrollablePlaceholder::-webkit-scrollbar {
   background: transparent;
@@ -262,7 +258,6 @@
   right: 0;
   display: grid;
   grid-template-columns: 1fr;
-
   /* Setting the row heights to 18px here to make sure that even empty rows have the exact height of an all day event */
   grid-template-rows: repeat(var(--row-count), minmax(auto, 18px));
   gap: var(--space-1);

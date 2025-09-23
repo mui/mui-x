@@ -15,6 +15,7 @@
   --gray-10: var(--mauve-10);
   --gray-11: var(--mauve-11);
   --gray-12: var(--mauve-12);
+
   --primary-1: var(--violet-1);
   --primary-2: var(--violet-2);
   --primary-3: var(--violet-3);
@@ -28,6 +29,7 @@
   --primary-10: var(--violet-10);
   --primary-11: var(--violet-11);
   --primary-12: var(--violet-12);
+
   --secondary-1: var(--cyan-1);
   --secondary-2: var(--cyan-2);
   --secondary-3: var(--cyan-3);
@@ -40,6 +42,7 @@
   --secondary-10: var(--cyan-10);
   --secondary-11: var(--cyan-11);
   --secondary-12: var(--cyan-12);
+
   --success-1: var(--jade-1);
   --success-2: var(--jade-2);
   --success-3: var(--jade-3);
@@ -52,6 +55,7 @@
   --success-10: var(--jade-10);
   --success-11: var(--jade-11);
   --success-12: var(--jade-12);
+
   --error-1: var(--red-1);
   --error-2: var(--red-2);
   --error-2-rgba-20: rgb(var(--red-2-rgb), 0.2);
@@ -72,6 +76,7 @@
   --font-family-3:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
     monospace;
+
   --font-size-1: 12px;
   --font-size-2: 14px;
   --font-size-3: 16px;
@@ -81,6 +86,7 @@
   --font-size-7: 36px;
   --font-size-8: 46px;
   --font-size-9: 58px;
+
   --line-height-1: 18px;
   --line-height-2: 20px;
   --line-height-3: 22px;
@@ -90,6 +96,7 @@
   --line-height-7: 38px;
   --line-height-8: 48px;
   --line-height-9: 56px;
+
   --letter-spacing-1: 0.025em;
   --letter-spacing-2: 0.02em;
   --letter-spacing-3: 0.016em;
@@ -99,9 +106,11 @@
   --letter-spacing-7: -0.021em;
   --letter-spacing-8: -0.038em;
   --letter-spacing-9: -0.036em;
+
   --font-weight-1: 400;
   --font-weight-2: 500;
   --font-weight-3: 600;
+
   --space-05: 2px;
   --space-1: 4px;
   --space-2: 8px;
@@ -113,6 +122,7 @@
   --space-8: 40px;
   --space-9: 48px;
   --space-10: 64px;
+
   --radius-1: 2px;
   --radius-2: 3px;
   --radius-3: 4px;
@@ -122,26 +132,33 @@
   --radius-7: 16px;
   --radius-pill: 9999px;
   --radius-circle: 50%;
+
   --duration-1: 25ms;
   --duration-2: 50ms;
   --duration-3: 100ms;
+
   --shadow-1:
     0 1px 1px 0 hsl(0deg 0 0 / 0.05), 0 2px 1px -1px hsl(0deg 0 0 / 0.05),
     0 1px 3px 0 hsl(0deg 0 0 / 0.05);
+
   --shadow-4:
     0 1px 1px 0px hsl(var(--shadow-tint) / 5%), 0 1px 3px 0px hsl(var(--shadow-tint) / 5%),
     0 4px 8px 0px hsl(var(--shadow-tint) / 5%);
+
   --shadow-5:
     0 1px 1px 0px hsl(var(--shadow-tint) / 5%), 0 2px 6px -1px hsl(var(--shadow-tint) / 5%),
     0 6px 12px -3px hsl(var(--shadow-tint) / 5%), 0 8px 16px -4px hsl(var(--shadow-tint) / 5%);
+
   --shadow-6:
     0 1px 1px 0px hsl(var(--shadow-tint) / 5%), 0 2px 4px -1px hsl(var(--shadow-tint) / 5%),
     0 4px 8px -2px hsl(var(--shadow-tint) / 5%), 0 12px 32px -6px hsl(var(--shadow-tint) / 12%),
     0 20px 48px -10px hsl(var(--shadow-tint) / 5%);
+
   --shadow-9:
     hsl(var(--shadow-tint) / 15%) 0px 10px 32px, hsl(var(--shadow-black) / 5%) 0px 1px 1px,
     hsl(var(--shadow-tint) / 8%) 0px 4px 6px, hsl(var(--shadow-tint) / 10%) 0px 1px 1px,
     hsl(var(--shadow-tint) / 10%) 0 24px 68px;
+
   --cursor-button: default;
   --cursor-disabled: not-allowed;
 
@@ -169,7 +186,6 @@
   --default-text-color: var(--gray-12);
   --secondary-text-color: var(--gray-11);
   --disabled-text-color: var(--gray-8);
-
   color: var(--default-text-color);
 
   /* Font */
@@ -180,20 +196,24 @@
   --default-line-height: 1.5;
   --default-letter-spacing: 0.016em;
   --default-font-weight: var(--font-weight-1);
+
   --heading-font-family: var(--default-font-family);
   --heading-font-size-adjust: 1;
   --heading-font-style: normal;
   --heading-letter-spacing: 0em;
+
   --strong-font-family: var(--default-font-family);
   --strong-font-size-adjust: 1;
   --strong-font-style: inherit;
   --strong-font-weight: var(--font-weight-3);
   --strong-letter-spacing: 0em;
+
   --em-font-family: 'Times New Roman', 'Times', serif;
   --em-font-size-adjust: 1.18;
   --em-font-style: italic;
   --em-font-weight: inherit;
   --em-letter-spacing: -0.025em;
+
   --code-font-family:
     SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   --code-font-size-adjust: 0.84;
@@ -220,7 +240,9 @@
   --mauve-10: #84828e;
   --mauve-11: #65636d;
   --mauve-12: #211f26;
+
   --mauve-12-1: #1a191b;
+
   --violet-1: #fdfcfe;
   --violet-2: #faf8ff;
   --violet-3: #f4f0fe;
@@ -234,6 +256,7 @@
   --violet-10: #654dc4;
   --violet-11: #3d317c;
   --violet-12: #2f265f;
+
   --indigo-1: #fdfdfe;
   --indigo-2: #f7f9ff;
   --indigo-3: #edf2fe;
@@ -247,6 +270,7 @@
   --indigo-10: #2b4fca;
   --indigo-11: #1f3a93;
   --indigo-12: #1f2d5c;
+
   --blue-1: #fafdfe;
   --blue-2: #edf6fd;
   --blue-3: #daedfb;
@@ -260,6 +284,7 @@
   --blue-10: #0f66a9;
   --blue-11: #0b4f83;
   --blue-12: #093353;
+
   --cyan-1: #fafdfe;
   --cyan-2: #f2fafb;
   --cyan-3: #def7f9;
@@ -273,6 +298,7 @@
   --cyan-10: #107d98;
   --cyan-11: #135a6c;
   --cyan-12: #0d3c48;
+
   --jade-1: #fbfefd;
   --jade-2: #f4fbf7;
   --jade-3: #e6f7ed;
@@ -286,6 +312,7 @@
   --jade-10: #26997b;
   --jade-11: #208368;
   --jade-12: #1d3b31;
+
   --lime-1: #fdfdf7;
   --lime-2: #f8f9e7;
   --lime-3: #f4f4d6;
@@ -299,6 +326,7 @@
   --lime-10: #9fa055;
   --lime-11: #74753e;
   --lime-12: #434323;
+
   --yellow-1: #fffdf5;
   --yellow-2: #fff9e5;
   --yellow-3: #fff5d6;
@@ -312,6 +340,7 @@
   --yellow-10: #e5ac00;
   --yellow-11: #996600;
   --yellow-12: #5c3d00;
+
   --orange-1: #fffcfa;
   --orange-2: #fff5ed;
   --orange-3: #ffe8d6;
@@ -325,6 +354,7 @@
   --orange-10: #ef5f00;
   --orange-11: #cc4e00;
   --orange-12: #582d1d;
+
   --red-1: #fffcfc;
   --red-2: #fff7f7;
   --red-3: #feebec;
@@ -338,6 +368,7 @@
   --red-10: #dc3e42;
   --red-11: #ce2c31;
   --red-12: #641723;
+
   --pink-1: #fefbfd;
   --pink-2: #fcedf6;
   --pink-3: #fbe0f0;
@@ -355,10 +386,12 @@
   /* Aliases */
   --border-color: var(--mauve-3);
   --weekend-background: var(--mauve-2);
+
   --surface: white;
   --panel: white;
   --shadow-black: 0 0% 0%;
   --shadow-tint: 215 22% 17%;
+
   --code-background: var(--surface);
   --code-color: var(--violet-9);
 }
@@ -382,6 +415,7 @@ body .mui-x-scheduler {
   --mauve-10: #7c7a85;
   --mauve-11: #b5b2bc;
   --mauve-12: #eeeef0;
+
   --violet-1: #14121f;
   --violet-2: #1b1525;
   --violet-3: #291f43;
@@ -395,6 +429,7 @@ body .mui-x-scheduler {
   --violet-10: #7d66d9;
   --violet-11: #baa7ff;
   --violet-12: #e2ddfe;
+
   --indigo-1: #11131f;
   --indigo-2: #141726;
   --indigo-3: #182449;
@@ -408,6 +443,7 @@ body .mui-x-scheduler {
   --indigo-10: #5472e4;
   --indigo-11: #9eb1ff;
   --indigo-12: #d6e1ff;
+
   --blue-1: #01121e;
   --blue-2: #011727;
   --blue-3: #02233b;
@@ -421,6 +457,7 @@ body .mui-x-scheduler {
   --blue-10: #2794e7;
   --blue-11: #47a3eb;
   --blue-12: #acd6f6;
+
   --cyan-1: #0b161a;
   --cyan-2: #101b20;
   --cyan-3: #082c36;
@@ -434,6 +471,7 @@ body .mui-x-scheduler {
   --cyan-10: #23afd0;
   --cyan-11: #4ccce6;
   --cyan-12: #b6ecf7;
+
   --jade-1: #0d1512;
   --jade-2: #121c18;
   --jade-3: #0f2e22;
@@ -447,6 +485,7 @@ body .mui-x-scheduler {
   --jade-10: #27b08b;
   --jade-11: #1fd8a4;
   --jade-12: #adf0d4;
+
   --lime-1: #14140b;
   --lime-2: #1b1b0e;
   --lime-3: #222211;
@@ -460,6 +499,7 @@ body .mui-x-scheduler {
   --lime-10: #afb069;
   --lime-11: #cbcc85;
   --lime-12: #dddeb0;
+
   --yellow-1: #1f1400;
   --yellow-2: #291b00;
   --yellow-3: #332200;
@@ -473,6 +513,7 @@ body .mui-x-scheduler {
   --yellow-10: #ffcd29;
   --yellow-11: #ffd95c;
   --yellow-12: #fff1c2;
+
   --orange-1: #17120e;
   --orange-2: #1e160f;
   --orange-3: #331e0b;
@@ -486,6 +527,7 @@ body .mui-x-scheduler {
   --orange-10: #ff801f;
   --orange-11: #ffa057;
   --orange-12: #ffe0c2;
+
   --red-1: #191111;
   --red-2: #201314;
   --red-3: #3b1219;
@@ -499,6 +541,7 @@ body .mui-x-scheduler {
   --red-10: #ec5d5e;
   --red-11: #ff9592;
   --red-12: #ffd1d9;
+
   --pink-1: #1f0416;
   --pink-2: #2d0620;
   --pink-3: #43052e;
@@ -516,9 +559,11 @@ body .mui-x-scheduler {
   /* Aliases */
   --border-color: var(--mauve-4);
   --weekend-background: var(--mauve-2);
+
   --surface: var(--mauve-1);
   --panel: var(--mauve-1);
   --shadow-tint: 0 0% 0%;
+
   --code-background: var(--surface);
   --code-color: var(--violet-9);
 }

@@ -51,7 +51,6 @@
   grid-row: var(--grid-row);
   grid-column: 1;
   padding: 0 var(--space-1);
-
   /* calculate the column spanning accounting for the spaces between columns and the borders */
   width: calc(
     var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * var(--space-1) +
