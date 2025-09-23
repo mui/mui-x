@@ -613,6 +613,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   };
 
+  // Legacy API, cannot change without a breaking change in the grid (GridDetailPanels, etc)
   const getters = {
     setPanels,
     getOffsetTop,
