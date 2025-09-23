@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, createEvent, waitFor, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   DataGridPro,
