@@ -23,7 +23,7 @@ export const TimeGridScrollableContent = React.forwardRef(function TimeGridScrol
     // For now, it causes the following error in JSDOM:
     // "Auto scrolling has been attached to an element that appears not to be scrollable"
     if (!ref.current || process.env.NODE_ENV === 'test') {
-      return () => {};
+      return undefined;
     }
 
     return autoScrollForElements({

@@ -3,7 +3,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { CalendarEvent, CalendarEventOccurrence, SchedulerValidDate } from '../models';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
-import { useEventCalendarStoreContext } from '../utils/useEventCalendarStoreContext';
+import { useTimelineStoreContext } from '../utils/useTimelineStoreContext';
 import { selectors } from '../use-event-calendar';
 import { Adapter } from '../utils/adapter/types';
 
@@ -12,7 +12,7 @@ export function useEventOccurrencesGroupedByResource(
 ): useEventOccurrencesGroupedByResource.ReturnValue {
   const { start, end } = parameters;
   const adapter = useAdapter();
-  const store = useEventCalendarStoreContext();
+  const store = useTimelineStoreContext();
   const events = useStore(store, selectors.events);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 

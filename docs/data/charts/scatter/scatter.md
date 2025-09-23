@@ -36,7 +36,7 @@ To do so, the chart computes [Voronoi cells](https://en.wikipedia.org/wiki/Voron
 
 You can define a maximal radius with the `voronoiMaxRadius` prop.
 If the distance with the pointer is larger than this radius, no item will be selected.
-Or set the `disableVoronoi` prop to `true` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
+Alternatively, set the `voronoiMaxRadius` prop to `item` to trigger interactions only when hovering exactly over an element instead of Voronoi cells.
 
 {{"demo": "VoronoiInteraction.js"}}
 
@@ -54,7 +54,7 @@ const onItemClick = (
 
 {{"demo": "ScatterClick.js"}}
 
-If `disableVoronoi=true`, users need to click precisely on the scatter element, and the mouse event will come from this element.
+If `voronoiMaxRadius` is `item`, users need to click precisely on the scatter element, and the mouse event will come from this element.
 
 Otherwise, the click behavior will be the same as defined in the [interaction section](#interaction) and the mouse event will come from the svg component.
 
@@ -144,6 +144,26 @@ This hook returns the order of the series and information about the series thems
 See [Custom components](/x/react-charts/components/) to learn how to further customize your charts.
 
 {{"demo": "CustomScatter.js"}}
+
+## Performance
+
+Scatter charts can have a lot of data points, which can impact performance. The default rendering of scatter points uses SVG `circle` elements, which can be slow for a large number of points.
+
+To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the circles more efficiently.
+However, this comes with the following limitations:
+
+- CSS styling of single `circle` elements is no longer possible;
+- Overriding the `marker` slot is not supported;
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible.
+
+On top of that, there's also some differences in behavior:
+
+- The rendering order might be different, which might cause overlapping circles to render at different depths when compared to the default rendering;
+- When `disableVoronoi` is true, `onItemClick` does not work as it requires that plugin to work.
+
+The example below uses the `renderer` prop to improve performance when rendering a dataset with 16,000 data points.
+
+{{"demo": "ScatterBatchRenderer.js"}}
 
 ## Composition
 

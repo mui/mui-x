@@ -75,6 +75,9 @@
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
     },
+    "renderer": {
+      "description": "The type of renderer to use for the scatter plot. - <code>svg-single</code>: Renders every scatter item in a <code>&lt;circle /&gt;</code> element. - <code>svg-batch</code>: Batch renders scatter items in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/scatter/#performance\">https://mui.com/x/react-charts/scatter/#performance</a>"
+    },
     "series": {
       "description": "The series to display in the scatter chart. An array of <a href='/x/api/charts/scatter-series/'>ScatterSeries</a> objects."
     },
@@ -85,7 +88,7 @@
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "voronoiMaxRadius": {
-      "description": "Defines the maximal distance between a scatter point and the pointer that triggers the interaction. If <code>undefined</code>, the radius is assumed to be infinite."
+      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."

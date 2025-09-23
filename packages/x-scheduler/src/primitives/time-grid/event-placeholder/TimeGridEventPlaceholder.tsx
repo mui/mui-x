@@ -22,8 +22,6 @@ export const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventP
     ...elementProps
   } = componentProps;
 
-  const ref = React.useRef<HTMLDivElement>(null);
-
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
 
   const { position, duration } = useElementPositionInCollection({
@@ -48,7 +46,7 @@ export const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventP
 
   return useRenderElement('div', componentProps, {
     state,
-    ref: [forwardedRef, ref],
+    ref: [forwardedRef],
     props: [props, eventProps, elementProps],
   });
 });

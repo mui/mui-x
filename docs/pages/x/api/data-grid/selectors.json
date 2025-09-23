@@ -82,7 +82,12 @@
     "category": "Visible Columns",
     "description": "Get the summed width of all the visible columns."
   },
-  { "name": "gridDataRowIdsSelector", "returnType": "GridRowId[]", "description": "" },
+  {
+    "name": "gridDataRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridDensityFactorSelector", "returnType": "number", "description": "" },
   { "name": "gridDensitySelector", "returnType": "GridDensity", "description": "" },
   {

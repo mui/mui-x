@@ -37,7 +37,7 @@ import { HeatmapPlot } from './HeatmapPlot';
 import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
 import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
-import { HEATMAP_PLUGINS, HeatmapPluginsSignatures } from './Heatmap.plugins';
+import { HEATMAP_PLUGINS, HeatmapPluginSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
@@ -75,7 +75,7 @@ export interface HeatmapSlotProps
 export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 export interface HeatmapProps
   extends Omit<
-      ChartContainerProProps<'heatmap', HeatmapPluginsSignatures>,
+      ChartContainerProProps<'heatmap', HeatmapPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'xAxis'
@@ -239,7 +239,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Toolbar = slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro<'heatmap', HeatmapPluginsSignatures>
+    <ChartDataProviderPro<'heatmap', HeatmapPluginSignatures>
       apiRef={apiRef}
       seriesConfig={seriesConfig}
       series={series.map((s) => ({

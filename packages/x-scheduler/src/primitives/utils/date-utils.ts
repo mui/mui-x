@@ -23,23 +23,6 @@ export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean 
   return formattedValue === sunday || formattedValue === saturday;
 }
 
-// TODO: Issue #19137 - This function will be used to support monthly recurrence mode with BYDAY rules
-// export function getWeekInfoInMonth(adapter: Adapter, date: SchedulerValidDate) {
-//   const startOfMonth = adapter.startOfMonth(date);
-//   const endOfMonth = adapter.endOfMonth(date);
-
-//   const startOfFirstWeek = adapter.startOfWeek(startOfMonth);
-//   const startOfTargetDay = adapter.startOfDay(date);
-
-//   const daysDiff = diffIn(adapter, startOfTargetDay, startOfFirstWeek, 'days');
-//   const weekNumber = Math.floor(daysDiff / 7) + 1;
-
-//   const endOfTargetWeek = adapter.endOfWeek(date);
-//   const isLastWeek = adapter.isSameDay(adapter.endOfWeek(endOfMonth), endOfTargetWeek);
-
-//   return { weekNumber, isLastWeek };
-// }
-
 /**
  * Differences in units.
  * TODO: move to adapter methods for DST/zone safety.

@@ -17,36 +17,13 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, isToday, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
-  const store = useEventCalendarStoreContext();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
-
-  const placeholder = TimeGrid.usePlaceholderInRange(start, end);
-  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
-
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
     occurrences: day.withoutPosition,
     maxColumnSpan: Infinity,
   });
-
-  const draggedOccurrence = React.useMemo(() => {
-    if (!initialDraggedEvent || !placeholder) {
-      return null;
-    }
-
-    return {
-      ...initialDraggedEvent,
-      key: `dragged-${initialDraggedEvent.id}`,
-      start: placeholder.start,
-      end: placeholder.end,
-      readOnly: true,
-      position: {
-        // TODO: Apply the same firstIndex and lastIndex as the initial event if present in the column, 1 / maxIndex otherwise
-        firstIndex: 1,
-        lastIndex: maxIndex,
-      },
-    };
-  }, [initialDraggedEvent, placeholder, maxIndex]);
+  const placeholder = TimeGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
 
   return (
     <TimeGrid.Column
@@ -70,10 +47,10 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
           }
         />
       ))}
-      {draggedOccurrence != null && (
+      {placeholder != null && (
         <TimeGridEvent
-          occurrence={draggedOccurrence}
-          variant="regular"
+          occurrence={placeholder}
+          variant="placeholder"
           ariaLabelledBy={`DayTimeGridHeaderCell-${day.key}`}
         />
       )}

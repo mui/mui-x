@@ -101,9 +101,10 @@ describe('useAnimate', () => {
     }
 
     const { rerender } = render(<TestComponent width={2000} />);
+    expect(callCount()).to.be.equal(0);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(reactMajor > 18 ? 3 : 2);
+    expect(callCount()).to.be.equal(1);
 
     const lastIncreasingCall = lastCallWidth();
     // Should be animating from 1000 to 2000
@@ -148,18 +149,20 @@ describe('useAnimate', () => {
     }
 
     const { rerender } = render(<TestComponent width={2000} />);
+    expect(callCount()).to.be.equal(0);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(reactMajor > 18 ? 3 : 2);
+    expect(callCount()).to.be.equal(1);
 
     // Should be animating from 1000 to 2000
     expect(lastCallWidth()).to.be.greaterThan(1000);
     expect(lastCallWidth()).to.be.lessThan(2000);
 
     rerender(<TestComponent width={0} skipAnimation />);
+    expect(callCount()).to.be.equal(1);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(reactMajor > 18 ? 5 : 4);
+    expect(callCount()).to.be.equal(2);
 
     // Should jump to 0 immediately after first call
     expect(lastCallWidth()).to.equal(0);
@@ -212,23 +215,26 @@ describe('useAnimate', () => {
     }
 
     const { rerender } = render(<TestComponent width={1000} skip={false} />);
+    expect(callCount()).to.be.equal(0);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(reactMajor > 18 ? 3 : 2);
+    expect(callCount()).to.be.equal(1);
     expect(lastCallWidth()).to.be.greaterThan(0);
     expect(lastCallWidth()).to.be.lessThan(1000);
 
     rerender(<TestComponent width={2000} skip />);
+    expect(callCount()).to.be.equal(1);
 
     // Transition finishes immediately
     await waitNextFrame();
-    expect(callCount()).to.be.equal(reactMajor > 18 ? 5 : 4);
+    expect(callCount()).to.be.equal(2);
     expect(lastCallWidth()).to.equal(2000);
 
     rerender(<TestComponent width={1000} skip={false} />);
+    expect(callCount()).to.be.equal(2);
 
     await waitNextFrame();
-    expect(callCount()).to.be.equal(reactMajor > 18 ? 7 : 6);
+    expect(callCount()).to.be.equal(3);
     expect(lastCallWidth()).to.be.lessThan(2000);
     expect(lastCallWidth()).to.be.greaterThan(1000);
   });

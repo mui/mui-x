@@ -4,7 +4,8 @@
   "imports": [
     "import { LineHighlightElement } from '@mui/x-charts/LineChart';",
     "import { LineHighlightElement } from '@mui/x-charts';",
-    "import { LineHighlightElement } from '@mui/x-charts-pro';"
+    "import { LineHighlightElement } from '@mui/x-charts-pro';",
+    "import { LineHighlightElement } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

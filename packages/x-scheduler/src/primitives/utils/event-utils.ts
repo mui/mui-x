@@ -7,40 +7,34 @@ import {
 import { Adapter } from './adapter/types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
 
-export function isDayWithinRange(
-  day: SchedulerValidDate,
-  eventFirstDay: SchedulerValidDate,
-  eventLastDay: SchedulerValidDate,
-  adapter: Adapter,
-) {
-  return (
-    adapter.isSameDay(day, eventFirstDay) ||
-    adapter.isSameDay(day, eventLastDay) ||
-    (adapter.isAfter(day, eventFirstDay) && adapter.isBefore(day, eventLastDay))
-  );
-}
-
 /**
- *  Returns the list of days an event occurrence should be visible on.
+ *  Returns the key of the days an event occurrence should be visible on.
  */
 export function getDaysTheOccurrenceIsVisibleOn(
-  event: CalendarEvent,
+  event: CalendarEventOccurrence,
   days: CalendarProcessedDate[],
   adapter: Adapter,
   renderEventIn: 'first-day' | 'every-day',
 ) {
-  const eventFirstDay = adapter.startOfDay(event.start);
-  if (renderEventIn === 'first-day') {
-    if (adapter.isBefore(eventFirstDay, days[0].value)) {
-      return [days[0].value];
+  const dayKeys: string[] = [];
+  for (const day of days) {
+    // If the day is before the event start, skip to the next day
+    if (adapter.isBeforeDay(day.value, event.start)) {
+      continue;
     }
-    return [eventFirstDay];
-  }
 
-  const eventLastDay = adapter.endOfDay(event.end);
-  return days
-    .filter((day) => isDayWithinRange(day.value, eventFirstDay, eventLastDay, adapter))
-    .map((day) => day.value);
+    // If the day is after the event end, break as the days are sorted by start date
+    if (adapter.isAfterDay(day.value, event.end)) {
+      break;
+    }
+    dayKeys.push(day.key);
+
+    // If the event should only be rendered on its first day, break after the first match
+    if (renderEventIn === 'first-day') {
+      break;
+    }
+  }
+  return dayKeys;
 }
 
 /**
