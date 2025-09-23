@@ -79,7 +79,7 @@
     "@mui/icons-material": "catalog:",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.7",
     "@mui/internal-bundle-size-checker": "^1.0.9-canary.41",
-    "@mui/internal-code-infra": "https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@e50ef17b5a028b5525c57a1847c4dc685e091d09",
+    "@mui/internal-code-infra": "https://pkg.pr.new/mui/mui-public/@mui/internal-code-infra@63a3ddd",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
