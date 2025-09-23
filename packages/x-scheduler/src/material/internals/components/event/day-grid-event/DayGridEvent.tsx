@@ -37,9 +37,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
   const isDayView = useStore(store, selectors.isDayView);
-  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence) && !isDayView;
+  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence.id) && !isDayView;
   const isResizable =
-    useStore(store, selectors.isEventResizable, occurrence) && variant === 'allDay' && !isDayView;
+    useStore(store, selectors.isEventResizable, occurrence.id) &&
+    variant === 'allDay' &&
+    !isDayView;
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, occurrence.resource);
   const color = useStore(store, selectors.eventColor, occurrence.id);

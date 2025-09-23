@@ -12,7 +12,7 @@ import { CalendarEventId, SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { diffIn } from '../../utils/date-utils';
 import { useDayGridRowContext } from '../row/DayGridRowContext';
-import { selectors } from '../../use-event-calendar/store';
+import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
 import { DayGridEventContext } from './DayGridEventContext';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 

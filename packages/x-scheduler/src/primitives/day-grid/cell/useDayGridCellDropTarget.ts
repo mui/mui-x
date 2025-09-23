@@ -10,7 +10,7 @@ import { useAdapter } from '../../utils/adapter/useAdapter';
 import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
 import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
-import { selectors } from '../../use-event-calendar/store';
+import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
 
 export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Parameters) {
   const { value } = parameters;
