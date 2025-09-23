@@ -44,7 +44,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence);
+  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
   const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, occurrence.id);
 

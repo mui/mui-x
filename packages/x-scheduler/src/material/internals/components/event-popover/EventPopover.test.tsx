@@ -141,10 +141,11 @@ describe('<EventPopover />', () => {
   });
 
   it('should handle read-only events', () => {
+    const readOnlyOccurrence = { ...occurrence, readOnly: true };
     render(
-      <StandaloneView events={[occurrence]} resources={resources}>
+      <StandaloneView events={[readOnlyOccurrence]} resources={resources}>
         <Popover.Root open>
-          <EventPopover {...defaultProps} occurrence={{ ...occurrence, readOnly: true }} />
+          <EventPopover {...defaultProps} occurrence={readOnlyOccurrence} />
         </Popover.Root>
       </StandaloneView>,
     );

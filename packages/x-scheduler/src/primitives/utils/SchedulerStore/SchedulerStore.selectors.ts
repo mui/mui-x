@@ -34,10 +34,13 @@ const resourceSelector = createSelector(
   (resourcesByIdMap, resourceId: string | null | undefined) => resourcesByIdMap.get(resourceId),
 );
 
-const isEventReadOnlySelector = createSelector(eventSelector, (event) => {
-  // TODO: Support putting the whole calendar as readOnly.
-  return !!event?.readOnly;
-});
+const isEventReadOnlySelector = createSelector(
+  eventSelector,
+  (event, _eventId: CalendarEventId) => {
+    // TODO: Support putting the whole calendar as readOnly.
+    return !!event?.readOnly;
+  },
+);
 
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
