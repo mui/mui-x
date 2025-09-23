@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { DataGridPro, GridRowModel } from '@mui/x-data-grid-pro';
+import { DataGridPro, type DataGridProProps } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function getTreeDataPath(row: GridRowModel) {
+const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => {
   return row.path;
-}
+};
 
-function setTreeDataPath(path: readonly string[], row: GridRowModel) {
+const setTreeDataPath: DataGridProProps['setTreeDataPath'] = (path, row) => {
   return {
     ...row,
     path,
   };
-}
+};
 
 export default function TreeDataReordering() {
   const { data, loading } = useDemoData({

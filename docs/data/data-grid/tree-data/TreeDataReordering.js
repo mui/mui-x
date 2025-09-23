@@ -2,16 +2,16 @@ import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function getTreeDataPath(row) {
+const getTreeDataPath = (row) => {
   return row.path;
-}
+};
 
-function setTreeDataPath(path, row) {
+const setTreeDataPath = (path, row) => {
   return {
     ...row,
     path,
   };
-}
+};
 
 export default function TreeDataReordering() {
   const { data, loading } = useDemoData({
