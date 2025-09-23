@@ -227,7 +227,7 @@ In the following demo, the y-axis is grouped by category and subcategory.
 
 ### Tick size
 
-You can customize the tick size for each group by providing a `tickSize` property in the `groups` array. 
+You can customize the tick size for each group by providing a `tickSize` property in the `groups` array.
 The `tickSize` also affects the tick label position.
 Each item in the array corresponds to a group defined in the `getValue` function.
 
