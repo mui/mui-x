@@ -7,6 +7,14 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { styled } from '@mui/material/styles';
 
+// Convert hex color to rgba with opacity
+const hexToRgba = (hex, alpha) => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
 // https://www.kaggle.com/datasets/vinicius150987/titanic3
 const titanicData = [
   { Class: '1st', Survived: 'No', Count: 122 },
@@ -28,7 +36,7 @@ const classColors = {
   '1st': '#fa938e',
   '2nd': '#98bf45',
   '3rd': '#51cbcf',
-  'Crew': '#d397ff'
+  Crew: '#d397ff',
 };
 
 const classData = classes.map((pClass) => {
@@ -51,7 +59,7 @@ const classSurvivalData = classes.flatMap((pClass) => {
   }
   const classTotal = classItem.value;
   const baseColor = classColors[pClass];
-  
+
   return titanicData
     .filter((item) => item.Class === pClass)
     .sort((a, b) => (a.Survived > b.Survived ? 1 : -1))
@@ -64,57 +72,52 @@ const classSurvivalData = classes.flatMap((pClass) => {
     }));
 });
 
-  // Create a simplified dataset that groups all classes together for Yes/No
-  const survivalData = [
-    {
-      id: 'Yes',
-      label: 'Survived',
-      value: titanicData
-        .filter(item => item.Survived === 'Yes')
-        .reduce((sum, item) => sum + item.Count, 0),
-      color: classColors['3rd'],
-    },
-    {
-      id: 'No',
-      label: 'Did not survive',
-      value: titanicData
-        .filter(item => item.Survived === 'No')
-        .reduce((sum, item) => sum + item.Count, 0),
-        color: classColors['1st'],
-    },
-  ];
+// Create a simplified dataset that groups all classes together for Yes/No
+const survivalData = [
+  {
+    id: 'Yes',
+    label: 'Survived',
+    value: titanicData
+      .filter((item) => item.Survived === 'Yes')
+      .reduce((sum, item) => sum + item.Count, 0),
+    color: classColors['3rd'],
+  },
+  {
+    id: 'No',
+    label: 'Did not survive',
+    value: titanicData
+      .filter((item) => item.Survived === 'No')
+      .reduce((sum, item) => sum + item.Count, 0),
+    color: classColors['1st'],
+  },
+];
 
-  // Create dataset for class distribution by survival status (Yes first, then No)
-  const survivalClassData = [...titanicData]
-    .sort((a) => (a.Survived === 'Yes' ? -1 : 1))
-    .map(item => {
-      const baseColor = survivalData.find(d => d.id === item.Survived)?.color;
-      // Different opacity based on class
-      const opacityMap = {
-        '1st': 0.9,
-        '2nd': 0.7,
-        '3rd': 0.5,
-        'Crew': 0.3
-      };
-      
-      // Convert hex color to rgba with opacity
-      const hexToRgba = (hex, alpha) => {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-      };
-      
-      return {
-        id: `${item.Class}-${item.Survived}`,
-        label: item.Class,
-        value: item.Count,
-        percentage: (item.Count / 
-          (item.Survived === 'Yes' ? survivalData[0].value : survivalData[1].value)
-        ) * 100,
-        color: hexToRgba(baseColor, opacityMap[item.Class])
-      };
-    });
+// Create dataset for class distribution by survival status (Yes first, then No)
+const survivalClassData = [...titanicData]
+  .sort((a) => (a.Survived === 'Yes' ? -1 : 1))
+  .map((item) => {
+    const baseColor = survivalData.find((d) => d.id === item.Survived)?.color;
+    // Different opacity based on class
+    const opacityMap = {
+      '1st': 0.9,
+      '2nd': 0.7,
+      '3rd': 0.5,
+      Crew: 0.3,
+    };
+
+    return {
+      id: `${item.Class}-${item.Survived}`,
+      label: item.Class,
+      value: item.Count,
+      percentage:
+        (item.Count /
+          (item.Survived === 'Yes'
+            ? survivalData[0].value
+            : survivalData[1].value)) *
+        100,
+      color: hexToRgba(baseColor, opacityMap[item.Class]),
+    };
+  });
 
 const StyledText = styled('text')(({ theme }) => ({
   fill: theme.palette.text.primary,
@@ -149,16 +152,16 @@ export default function TitanicPie() {
       <Typography variant="h5" gutterBottom>
         Titanic survival statistics
       </Typography>
-        <ToggleButtonGroup
-          color="primary"
-          size="small"
-          value={view}
-          exclusive
-          onChange={handleViewChange}
-        >
-          <ToggleButton value="class">View by Class</ToggleButton>
-          <ToggleButton value="survival">View by Survival</ToggleButton>
-        </ToggleButtonGroup>
+      <ToggleButtonGroup
+        color="primary"
+        size="small"
+        value={view}
+        exclusive
+        onChange={handleViewChange}
+      >
+        <ToggleButton value="class">View by Class</ToggleButton>
+        <ToggleButton value="survival">View by Survival</ToggleButton>
+      </ToggleButtonGroup>
       <Box sx={{ display: 'flex', justifyContent: 'center', height: 400 }}>
         {view === 'class' ? (
           <PieChart
@@ -203,7 +206,9 @@ export default function TitanicPie() {
                 outerRadius,
                 data: survivalData,
                 arcLabel: (item) => {
-                  const percentage = (item.value / titanicData.reduce((sum, i) => sum + i.Count, 0)) * 100;
+                  const percentage =
+                    (item.value / titanicData.reduce((sum, i) => sum + i.Count, 0)) *
+                    100;
                   return `${item.id} (${percentage.toFixed(0)}%)`;
                 },
                 arcLabelMinAngle: 20,
