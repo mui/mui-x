@@ -122,24 +122,3 @@ export const isEventOverlapping = (
 
   return overlaps || sameInterval;
 };
-
-export const getEventPlacement = (event, eventsMatrix, adapter) => {
-  let i = 0;
-  while (i < eventsMatrix.length) {
-    if (eventsMatrix[i].length === 0) {
-      break;
-    }
-
-    let hasConflict = eventsMatrix[i].find((placedEvent) =>
-      isEventOverlapping(placedEvent, event, adapter),
-    );
-
-    if (hasConflict) {
-      i += 1;
-    } else {
-      break;
-    }
-  }
-
-  return i;
-};
