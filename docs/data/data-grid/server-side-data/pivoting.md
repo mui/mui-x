@@ -111,7 +111,7 @@ interface GridGetRowsResponsePivotColumn {
 #### Structure examples
 
 - `[{group: "Yes"}, {group: "No"}]` - Creates column groups with values "Yes" and "No"
-- `[{group: "2025", children: [{group: {quarter: "2025-01-01"}}, {group: {quarter: "2025-04-01"}}]}]`, in combination with
+- `[{group: "2025", children: [{group: {quarter: "2025-01-01"}}, {group: {quarter: "2025-04-01"}}]}]`, along with the snippet below, creates a column group with the value "2025" that has column groups "Q1" and "Q2":
 
   ```tsx
   const columns = [
@@ -129,9 +129,7 @@ interface GridGetRowsResponsePivotColumn {
   };
   ```
 
-  Creates a column group with the value "2025" that has column groups "Q1" and "Q2"
-
-- `[{group: {date: "2025-01-01"}, children: [{group: {date: "2025-01-01"}}]}]`, in combination with
+- `[{group: {date: "2025-01-01"}, children: [{group: {date: "2025-01-01"}}]}]`, along with the snippet below, creates a column group with the value "2025" that has column group "Q1":
 
   ```tsx
   const columns = [
@@ -155,7 +153,6 @@ interface GridGetRowsResponsePivotColumn {
   };
   ```
 
-  Creates a column group with the value "2025" that has column group "Q1".
   Even though the same values are used for the different group levels, the output value for the column headers can be different if the value formatters are different for the two pivot columns used to create the pivot data.
 
 Each node in the last level of the pivot column structure gets all pivot value columns to complete the Data Grid's column structure.
