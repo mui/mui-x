@@ -40,10 +40,9 @@ const resourceSelector = createSelector(
   (resourcesByIdMap, resourceId: string | null | undefined) => resourcesByIdMap.get(resourceId),
 );
 
-// We don't pass the eventId to be able to pass events with properties not stored in state for the drag and drop.
-const isEventReadOnlySelector = createSelector((state: State, event: CalendarEvent) => {
+const isEventReadOnlySelector = createSelector(eventSelector, (event) => {
   // TODO: Support putting the whole calendar as readOnly.
-  return !!event.readOnly;
+  return !!event?.readOnly;
 });
 
 export const selectors = {
@@ -83,13 +82,13 @@ export const selectors = {
   isEventDraggable: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.areEventsDraggable,
-    (isEventReadOnly, areEventsDraggable, _event: CalendarEvent) =>
+    (isEventReadOnly, areEventsDraggable, _eventId: CalendarEventId) =>
       !isEventReadOnly && areEventsDraggable,
   ),
   isEventResizable: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.areEventsResizable,
-    (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
+    (isEventReadOnly, areEventsResizable, _eventId: CalendarEventId) =>
       !isEventReadOnly && areEventsResizable,
   ),
   occurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder),
