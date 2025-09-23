@@ -4,7 +4,8 @@
   "imports": [
     "import { AnimatedLine } from '@mui/x-charts/LineChart';",
     "import { AnimatedLine } from '@mui/x-charts';",
-    "import { AnimatedLine } from '@mui/x-charts-pro';"
+    "import { AnimatedLine } from '@mui/x-charts-pro';",
+    "import { AnimatedLine } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "muiName": "MuiAnimatedLine",
