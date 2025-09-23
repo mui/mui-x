@@ -8,7 +8,7 @@ import './Headers.css';
 
 const adapter = getAdapter();
 
-const getYears = ({ date, amount }) => {
+const getYears = (date: SchedulerValidDate, amount: number) => {
   const end = adapter.startOfYear(adapter.addYears(date, amount));
 
   let current = date;
@@ -28,10 +28,7 @@ export function YearHeader() {
 
   const visibleDate = useStore(store, selectors.visibleDate);
 
-  const years = getYears({
-    date: visibleDate,
-    amount: 4,
-  });
+  const years = getYears(visibleDate, 4);
 
   return (
     <div className="YearsHeader">

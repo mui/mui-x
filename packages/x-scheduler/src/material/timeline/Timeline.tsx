@@ -24,7 +24,7 @@ export const Timeline = React.forwardRef(function Timeline(
   const [view, setView] = React.useState<TimelineView>('days');
   const views: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
 
-  const handleViewChange = (newView: TimelineView, _e: React.MouseEvent<HTMLElement>) => {
+  const handleViewChange = (newView: TimelineView, _event: React.MouseEvent<HTMLElement>) => {
     setView(newView);
   };
 
@@ -37,7 +37,7 @@ export const Timeline = React.forwardRef(function Timeline(
         {...other}
       >
         <div className="TimelineHeaderToolbar">
-          <ViewSwitcher views={views} currentView={view} onViewChange={handleViewChange} />
+          <ViewSwitcher views={views} currentView={view} onViewChange={handleViewChange as any} />
         </div>
         <TimelineContent view={view} />
       </div>

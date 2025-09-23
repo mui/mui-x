@@ -19,11 +19,13 @@ import {
 import { useEventOccurrencesGroupedByResource } from '../../../primitives/use-event-occurrences-grouped-by-resource';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { diffIn } from '../../..//primitives/utils/date-utils';
+import { SchedulerValidDate } from '../../../primitives';
 import { TimelineContentProps } from './TimelineContent.types';
+import { TimelineView } from '../Timeline.types';
 
 const adapter = getAdapter();
 
-const getEndBoundaries = (view, start) => {
+const getEndBoundaries = (view: TimelineView, start: SchedulerValidDate) => {
   const endBoundaries = {
     time: adapter.addHours(start, 72),
     days: adapter.addDays(start, 21),

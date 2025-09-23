@@ -19,7 +19,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
 
   return (
     <header ref={forwardedRef} className={clsx('HeaderToolbarContainer', className)} {...other}>
-      <ViewSwitcher views={views} currentView={currentView} onViewChange={onViewChange} />
+      <ViewSwitcher views={views} currentView={currentView} onViewChange={onViewChange as any} />
     </header>
   );
 });

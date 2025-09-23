@@ -5,17 +5,17 @@ import { Menu } from '@base-ui-components/react/menu';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
-import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
+import { ViewSwitcherTranslations } from '../../../../models/translations';
 
-interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
-  views: string[];
-  currentView: string;
-  onViewChange: (view: any, event: any) => void;
+interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
+  views: T[];
+  currentView: T;
+  onViewChange: (view: T, event: Event | React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
-  props: ViewSwitcherProps,
+export const ViewSwitcher = React.forwardRef(function ViewSwitcher<T extends string>(
+  props: ViewSwitcherProps<T>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, views, onViewChange, currentView: view, ...other } = props;
@@ -25,8 +25,8 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const translations = useTranslations();
 
   const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      const newView = event.currentTarget.getAttribute('data-view');
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      const newView = (event.currentTarget as HTMLElement).getAttribute('data-view') as T;
       if (newView) {
         onViewChange(newView, event);
       }
@@ -35,7 +35,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   );
 
   const handleViewChange = React.useCallback(
-    (newView: CalendarView, eventDetails: Menu.Root.ChangeEventDetails) => {
+    (newView: T, eventDetails: Menu.Root.ChangeEventDetails) => {
       onViewChange(newView, eventDetails.event);
     },
     [onViewChange],
@@ -46,14 +46,14 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const dropdown = React.useMemo(() => (showAll ? [] : views.slice(2)), [showAll, views]);
 
   const [state, setState] = React.useState<{
-    dropdownView: string | null;
-    prevView: string;
-    prevViews: string[];
+    dropdownView: T | null;
+    prevView: T | null;
+    prevViews: T[];
   }>({ dropdownView: dropdown[0], prevView: view, prevViews: views });
 
   // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
   if (state.prevView !== view || state.prevViews !== views) {
-    let newDropdownView: string | null;
+    let newDropdownView: T | null;
     if (dropdown.includes(view)) {
       newDropdownView = view;
     } else if (state.dropdownView != null && views.includes(state.dropdownView)) {
@@ -82,7 +82,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             data-pressed={view === visibleView || undefined}
             aria-pressed={view === visibleView}
           >
-            {translations[visibleView]}
+            {translations[visibleView as keyof ViewSwitcherTranslations]}
           </button>
         ))}
 
@@ -96,7 +96,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
               data-pressed={view === state.dropdownView || undefined}
               aria-pressed={view === state.dropdownView}
             >
-              {translations[state.dropdownView]}
+              {translations[state.dropdownView as keyof ViewSwitcherTranslations]}
             </button>
             <Menu.Root>
               <Menu.Trigger className="MainItem" data-view="other" aria-label="Show more views">
@@ -122,7 +122,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
                           value={dropdownView}
                           closeOnClick
                         >
-                          {translations[dropdownView]}
+                          {translations[dropdownView as keyof ViewSwitcherTranslations]}
                         </Menu.RadioItem>
                       ))}
                     </Menu.RadioGroup>

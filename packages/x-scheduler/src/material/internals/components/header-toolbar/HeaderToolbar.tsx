@@ -34,7 +34,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
     >
       <div className="PrimaryActionWrapper">
         {showViewSwitcher && (
-          <ViewSwitcher views={views} currentView={view} onViewChange={store.setView} />
+          <ViewSwitcher views={views} currentView={view} onViewChange={store.setView as any} />
         )}
         <button className="Button OutlinedNeutralButton" onClick={store.goToToday} type="button">
           {translations.today}
