@@ -6,7 +6,6 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { CalendarPrimitiveEventData } from '../../primitives/models';
 import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
@@ -62,25 +61,6 @@ export const MonthView = React.memo(
         adapter.addMonths(adapter.startOfMonth(date), delta),
     }));
 
-    const handleEventChangeFromPrimitive = React.useCallback(
-      (data: CalendarPrimitiveEventData) => {
-        const originalEvent = selectors.event(store.state, data.eventId)!;
-
-        if (originalEvent.rrule) {
-          store.updateRecurringEvent({
-            eventId: data.eventId,
-            occurrenceStart: data.originalStart,
-            changes: { start: data.start, end: data.end },
-            // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
-            scope: 'this-and-following',
-          });
-        } else {
-          store.updateEvent({ id: data.eventId, start: data.start, end: data.end });
-        }
-      },
-      [store],
-    );
-
     useResizeObserver(
       cellRef,
       () => {
@@ -101,7 +81,7 @@ export const MonthView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          <DayGrid.Root className="MonthViewRoot" onEventChange={handleEventChangeFromPrimitive}>
+          <DayGrid.Root className="MonthViewRoot">
             <div
               className={clsx(
                 'MonthViewHeader',

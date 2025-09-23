@@ -7,6 +7,7 @@ import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugi
 import { FunnelChartPluginSignatures } from '../FunnelChart/FunnelChart.plugins';
 import { RadarChartProPluginSignatures } from '../RadarChartPro/RadarChartPro.plugins';
 import { PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
+import { SankeyChartPluginSignatures } from '../SankeyChart/SankeyChart.plugins';
 
 export type ProPluginsPerSeriesType = {
   heatmap: HeatmapPluginSignatures;
@@ -16,6 +17,7 @@ export type ProPluginsPerSeriesType = {
   funnel: FunnelChartPluginSignatures;
   radar: RadarChartProPluginSignatures;
   pie: PieChartProPluginSignatures;
+  sankey: SankeyChartPluginSignatures;
   /* Special value when creating a chart using composition. */
   composition: DefaultPluginSignatures;
 };

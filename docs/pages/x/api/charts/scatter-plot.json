@@ -22,7 +22,8 @@
   "imports": [
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
     "import { ScatterPlot } from '@mui/x-charts';",
-    "import { ScatterPlot } from '@mui/x-charts-pro';"
+    "import { ScatterPlot } from '@mui/x-charts-pro';",
+    "import { ScatterPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
