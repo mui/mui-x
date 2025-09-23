@@ -33,7 +33,7 @@ This is why you won't see definitions of `id`, `xAxisId`, or `yAxisId` in most d
 ### Axis type and data
 
 The axis type is specified by its property `scaleType`.
-Axis definition object has a `data` property which expects an array of value coherent with the `scaleType`, as shown in the table below:
+The axis definition object has a `data` property which expects an array of values corresponding to the `scaleType`, as shown in the table below:
 
 | scaleType                              | Description                                              | Number | Date | String |
 | :------------------------------------- | :------------------------------------------------------- | :----: | :--: | :----: |
@@ -77,7 +77,7 @@ You can use the D3 [`tickFormat(tickNumber, specifier)`](https://d3js.org/d3-sca
 
 ## Axis subdomain
 
-By default, the axis domain is computed so that all of your data is visible.
+By default, the axis domain is computed so that all data is visible.
 To show a specific range of values, you can provide the `min` and/or `max` properties to the axis definition:
 
 ```js
@@ -135,31 +135,27 @@ If you use composition you can pass these as props to the `<ChartsGrid />` compo
 Use the `tickNumber` property to customize the number of ticks.
 
 :::info
-This number is not the exact number of ticks displayed.
+This number does _not_ necessarily represent the exact number of ticks that will be displayed.
+This is because D3 automatically places ticks to optimize for human readability, and it will round up or down from the provided `tickNumber` as needed to accomplish this.
 
-Thanks to d3, ticks are placed to be human-readable.
-For example, ticks for time axes will be placed on special values (years, days, half-days, ...).
-
-If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might choose to render ticks on the 4 years, instead of putting 5 ticks on some months.
+For example, if you set `tickNumber=5` but there are only four years to display on the axis, the component will render four total ticks (one for each year) instead of trying to divide four years into five.
 :::
 
-As a helper, you can also provide `tickMinStep` and `tickMaxStep` which will compute `tickNumber` such that the step between two ticks respect those min/max values.
+To better control how the ticks render, you can also provide `tickMinStep` and `tickMaxStep`, which compute `tickNumber` so that the step between two ticks respects the minimum and maximum values.
 
-Here the top axis has a `tickMinStep` of half a day, and the bottom axis a `tickMinStep` of a full day.
+In the demo below, the top axis has a `tickMinStep` of half a day, and the bottom axis has a `tickMinStep` of a full day.
 
 {{"demo": "TickNumber.js"}}
 
 ### Fixed tick position
 
 If you want more control over the tick position, you can use the `tickInterval` property.
-
 This property accepts an array of values that define where ticks will be placed.
 
 For axes with the`'point'` scale type, the `tickInterval` property can be a filtering function of the type `(value, index) => boolean`.
 
-In the next demo, both axes are with `scaleType='point'`.
-The top axis displays the default behavior.
-It shows a tick for each point.
+In the demo below, both axes are set to `scaleType='point'`.
+The top axis demonstrates the default behavior with a tick for each point.
 The bottom axis uses a filtering function to only display a tick at the beginning of a day.
 
 {{"demo": "TickPosition.js"}}
@@ -168,49 +164,46 @@ The bottom axis uses a filtering function to only display a tick at the beginnin
 
 You can use the `tickLabelInterval` property to only display labels on a specific subset of ticks.
 This is a filtering function in the `(value, index) => boolean` form.
-
-For example `tickLabelInterval: (value, index) => index % 2 === 0` will show the label every two ticks.
+For example, `tickLabelInterval: (value, index) => index % 2 === 0` will show the label every two ticks.
 
 :::warning
 The `value` and `index` arguments are those of the ticks, not the axis data.
 :::
 
-By default, ticks are filtered such that their labels do not overlap.
-You can override this behavior with `tickLabelInterval: () => true` which forces showing the tick label for each tick.
+By default, ticks are filtered so that their labels don't overlap.
+You can override this behavior with `tickLabelInterval: () => true` which forces the tick label to be shown for each tick.
 
-In this example, the top axis is a reference for the default behavior.
-Notice that tick labels do not overflow.
-
-At the bottom, you can see one tick for the beginning and the middle of the day but the tick label is only displayed for the beginning of the day.
+In the example below, the top axis is a reference for the default behavior: tick labels don't overflow.
+At the bottom, you can see one tick for the beginning and the middle of the day, but the tick label is only displayed for the beginning of the day.
 
 {{"demo": "TickLabelPosition.js"}}
 
 ## Position
 
-The axis position can be customized with the `position` property of the axis configuration.
-Its value can be:
+You can customize axis positioning with the `position` property of the axis configuration.
+This property expects the following values:
 
-- `'top'` or `'bottom'` for the x-axis.
-- `'left'` or `'right'` for the y-axis.
-- `'none'` to hide the axis.
+- `'top'` or `'bottom'` for the x-axis
+- `'left'` or `'right'` for the y-axis
+- `'none'` to hide the axis
 
 {{"demo": "ModifyAxisPosition.js"}}
 
 ### Hiding axes
 
 To hide an axis, set its `position` to `'none'`.
-The axis is still computed and used for the scaling.
+Note that the axis is still computed and used for scaling.
 
 {{"demo": "HidingAxis.js"}}
 
-### Multiple axes on the same side
+### Multiple axes on one side
 
-You can display multiple axes on the same side.
-If two or more axes share the same `position`, they are displayed in the order they are defined from closest to the chart to farthest.
+You can display multiple axes on one side.
+If two or more axes share the same `position`, they're displayed in the order they're defined from closest to farthest away from the chart.
 
 {{"demo": "MultipleAxes.js"}}
 
-## Grouped Axes
+## Grouped axes
 
 To group `band` or `point` axes together, provide a `groups` property in the axis definition.
 This property expects an array of objects with a `getValue` function.
