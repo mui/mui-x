@@ -210,12 +210,12 @@ This property expects an array of objects with a `getValue` function.
 This feature is available for both x- and y-axes.
 
 The `getValue` function receives the axis data value and should return a group name.
-Each group name will be used as is, overriding any `valueFormatter` for the axis.
-Groups are displayed in the order they are defined in the `groups` array.
+Each group name is used as-is, overriding any `valueFormatter` for the axis.
+Groups are displayed in the order they're defined in the `groups` array.
 
 ### X-axis grouping
 
-In the next demo, the x-axis is grouped by month, quarter, and year.
+In the demo below, the x-axis is grouped by month, quarter, and year.
 
 {{"demo": "GroupedAxes.js"}}
 
@@ -227,79 +227,74 @@ In the following demo, the y-axis is grouped by category and subcategory.
 
 ### Tick size
 
-The tick size can be customized for each group.
-To do so, you can provide a `tickSize` property in the `groups` array, the `tickSize` also affects the tick label position.
+You can customize the tick size for each group by providing a `tickSize` property in the `groups` array. 
+The `tickSize` also affects the tick label position.
 Each item in the array corresponds to a group defined in the `getValue` function.
 
 {{"demo": "GroupedAxesTickSize.js"}}
 
-### Grouped axes styling
+### Styling grouped axes
 
-In order to target a specific group, the `data-group-index` attribute can be used as a selector.
+To target a specific group, use the `data-group-index` attribute as a selector.
 The example below has a yellow tick color for the last group and blue text for the first group.
 
 {{"demo": "GroupedAxesStyling.js"}}
 
 ## Axis customization
 
-You can further customize the axis rendering besides the axis definition.
+Beyond the axis definition, there are several other ways to further customize how axes are rendered:
 
 ### Fixing tick label overflow issues
 
-When your tick labels are too long, they are clipped to avoid overflowing.
-If you would like to reduce clipping due to overflow, you can [apply an angle to the tick labels](/x/react-charts/axis/#text-customization) or [increase the axis size](/x/react-charts/styling/#placement) to accommodate them.
+When your tick labels are too long, they're clipped to avoid overflowing.
+To reduce clipping due to overflow, you can [apply an angle to the tick labels](/x/react-charts/axis/#text-customization) or [increase the axis size](/x/react-charts/styling/#placement) to accommodate them.
+In the demo below, the size of the x- and y-axes is modified to increase the space available for tick labels.
 
-In the following demo, the size of the x- and y-axes is modified to increase the space available for tick labels.
-
-The first and last tick labels may bleed into the margin. If that margin is not enough to display the label, it might be clipped.
+The first and last tick labels may bleed into the margin, and if that margin is not enough to display the label, it might be clipped.
 To avoid this, you can use the `margin` prop to increase the space between the chart and the edge of the container.
 
 {{"demo": "MarginAndLabelPosition.js"}}
 
 ### Rendering
 
-Axes rendering can be further customized. Below is an interactive demo of the axis props.
+The demo below illustrates all of the axis props available to customize rendering:
 
 {{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ### Text customization
 
-To customize the text elements (ticks label and the axis label) use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
+To customize the text elements (tick labels and axis labels), use the `tickLabelStyle` and `labelStyle` properties of the axis configuration.
 
-When not set, the default values for the properties `textAnchor` and `dominantBaseline` depend on the value of the `angle` property.
-You can test below how the value of `angle` influences them.
+When not set, the default values for the `textAnchor` and `dominantBaseline` properties depend on the value of the `angle` property.
+You can test how these values behave and relate to one another in the demo below:
 
 {{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Symlog scale
 
-A log scale cannot plot zero since the logarithm of zero is undefined.
-
-To overcome this, you can use a symlog scale, which uses a linear scale for values close to zero and a logarithmic scale for the remaining ones.
-
-You can also configure the values at which the scale switches from linear to logarithmic with the `constant` property, which defaults to 1.
+A log scale cannot plot zero because log(0) is undefined.
+To overcome this, you can use a symlog scale, which uses a linear scale for values close to zero and a logarithmic scale for the rest.
+You can customize the value where the scale switches from linear to logarithmic using the `constant` property, which defaults to 1.
 
 {{"demo": "SymlogScale.js"}}
 
 ## Composition
 
-If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
+If you're using composition, you must provide the axis settings in the `<ChartContainer />` using the `xAxis` and `yAxis` props.
+This provides all the scaling properties to its children, and lets you use the `<XAxis/>` and `<YAxis/>` components as children.
 
-It will provide all the scaling properties to its children, and lets you use `<XAxis/>` and `<YAxis/>` components as children.
-Those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
-
-You can choose their position with `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
-Other props are similar to the ones defined in the [previous section](/x/react-charts/axis/#rendering).
+In turn, those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
+You can choose their position with the `position` prop which accepts `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
+The props described in the [rendering playground above](/x/react-charts/axis/#rendering) are also available.
 
 {{"demo": "AxisWithComposition.js"}}
 
 ### Reference line
 
-The `<ChartsReferenceLine />` component add a reference line to the charts.
-You can provide an `x` or `y` prop to get a vertical or horizontal line respectively at this value.
+Use the `<ChartsReferenceLine />` component to add a reference line to a chart.
+You can provide an `x` or a `y` prop for a vertical or horizontal line, respectively, at this value.
 
-You can add a `label` to this reference line.
-It can be placed with `labelAlign` prop which accepts `'start'`, `'middle'`, and `'end'` values.
-Elements can be styled with `lineStyle` and `labelStyle` props.
+You can also add a `label` to this reference line, and position it using the `labelAlign` prop which accepts `'start'`, `'middle'`, and `'end'` values.
+Elements can be styled with the `lineStyle` and `labelStyle` props.
 
 {{"demo": "ReferenceLine.js"}}
