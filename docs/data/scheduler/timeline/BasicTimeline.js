@@ -2,19 +2,19 @@ import * as React from 'react';
 
 import { Timeline } from '@mui/x-scheduler/material/timeline';
 import {
-  initialEvents,
   defaultVisibleDate,
-  resources,
-} from '../datasets/personal-agenda';
+  timelineEvents,
+  timelineResources,
+} from '../datasets/timeline-events';
 
 export default function BasicTimeline() {
-  const [events, setEvents] = React.useState(initialEvents);
+  const [events, setEvents] = React.useState(timelineEvents);
 
   return (
     <div style={{ height: '500px', width: '100%' }}>
       <Timeline
         events={events}
-        resources={resources}
+        resources={timelineResources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
       />
