@@ -2,6 +2,7 @@ import {
   CalendarEvent,
   CalendarEventColor,
   CalendarEventId,
+  CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
   RecurringEventUpdatedProperties,
@@ -52,6 +53,10 @@ export interface SchedulerState {
    * Whether the component should display the current time indicator.
    */
   showCurrentTimeIndicator: boolean;
+  /**
+   * The placeholder occurrence of the event being created or the event occurrences being dragged
+   */
+  occurrencePlaceholder: CalendarOccurrencePlaceholder | null;
 }
 
 export interface SchedulerParameters {

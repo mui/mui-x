@@ -9,4 +9,5 @@ export const selectors = {
   preferences: createSelector((state: State) => state.preferences),
   preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
+  isDayView: createSelector((state: State) => state.view === 'day'),
 };

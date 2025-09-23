@@ -32,6 +32,7 @@ describe('Core - EventCalendarStore', () => {
         preferences: DEFAULT_PREFERENCES,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         viewConfig: null,
+        occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
       };
 

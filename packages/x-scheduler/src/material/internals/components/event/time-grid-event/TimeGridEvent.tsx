@@ -91,6 +91,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const sharedProps = {
     eventId: occurrence.id,
+    occurrenceKey: occurrence.key,
     start: occurrence.start,
     end: occurrence.end,
     ref: forwardedRef,
@@ -100,7 +101,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       'TimeGridEvent',
       'EventContainer',
       'EventCard',
-      `EventCard--${variant}`,
+      // TODO: Make sure we can use EventCard--placeholder without broken styles
+      'EventCard--regular',
       (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
       isDraggable && 'Draggable',
       isRecurring && 'Recurrent',
@@ -114,7 +116,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     ...other,
   };
 
-  if (variant === 'dragPlaceholder') {
+  if (variant === 'placeholder') {
     return (
       <TimeGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
         {content}
@@ -124,9 +126,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   return (
     <TimeGrid.Event isDraggable={isDraggable} {...sharedProps}>
-      {isResizable && <TimeGrid.EventResizeHandler side="start" className="EventResizeHandler" />}
+      {isResizable && (
+        <TimeGrid.EventResizeHandler side="start" className="TimeGridEventResizeHandler" />
+      )}
       {content}
-      {isResizable && <TimeGrid.EventResizeHandler side="end" className="EventResizeHandler" />}
+      {isResizable && (
+        <TimeGrid.EventResizeHandler side="end" className="TimeGridEventResizeHandler" />
+      )}
     </TimeGrid.Event>
   );
 });

@@ -35,28 +35,22 @@ That's why in most of the demos with single x and y axis you will not see defini
 Those demos use the defaultized values.
 :::
 
-### Axis type
+### Axis type and data
 
-The axis type is specified by its property `scaleType` which expect one of the following values:
+The axis type is specified by its property `scaleType`.
+Axis definition object has a `data` property which expects an array of value coherent with the `scaleType`, as shown in the table below:
 
-- `'band'`: Split the axis in equal band. Mostly used for bar charts.
-- `'point'`: Split the axis in equally spaced points. Mostly used for line charts on categories.
-- `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
-- `'time'`, `'utc'`: Map JavaScript `Date()` object to the space available for the chart.
-
-### Axis data
-
-The axis definition object also includes a `data` property.
-Which expects an array of value coherent with the `scaleType`:
-
-- For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
-- For `'time'` or `'utc'` it should contain `Date()` objects
-- For `'band'` or `'point'` it can contain `string`, or numerical values
+| scaleType                              | Description                                              | Number | Date | String |
+| :------------------------------------- | :------------------------------------------------------- | :----: | :--: | :----: |
+| `'band'`                               | Splits the axis in equal bands.                          |   ✅   |  ✅  |   ✅   |
+| `'point'`                              | Splits the axis in equally spaced points.                |   ✅   |  ✅  |   ✅   |
+| `'linear'` `'log'` `'symlog'` `'sqrt'` | Maps numerical values to the available space.            |   ✅   |  ❌  |   ❌   |
+| `'time'` `'utc'`                       | Maps JavaScript `Date()` objects to the available space. |   ❌   |  ✅  |   ❌   |
 
 Some series types also require specific axis attributes:
 
-- line plots require an `xAxis` to have `data` provided
-- bar plots require an `xAxis` with `scaleType="band"` and some `data` provided.
+- In line charts, the `xAxis` must have a `data` array so each y-value maps to a specific x-value for proper chart rendering.
+- In bar charts, the axis that represents categories (x-axis for vertical bars or y-axis for horizontal bars) must use `scaleType: 'band'`.
 
 ### Axis formatter
 

@@ -35,6 +35,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import { LineChartPluginSignatures } from './LineChart.plugins';
 import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
+import { FocusedMark } from './FocusedMark';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -176,6 +177,7 @@ const LineChart = React.forwardRef(function LineChart(
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
+          <FocusedMark />
           <ChartsAxis {...chartsAxisProps} />
           <g data-drawing-container>
             {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
@@ -230,6 +232,7 @@ LineChart.propTypes = {
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */

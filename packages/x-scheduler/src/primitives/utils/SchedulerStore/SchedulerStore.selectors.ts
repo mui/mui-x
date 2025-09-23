@@ -1,5 +1,11 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { CalendarEvent, CalendarEventId, CalendarResource, CalendarResourceId } from '../../models';
+import {
+  CalendarEvent,
+  CalendarEventId,
+  CalendarResource,
+  CalendarResourceId,
+  SchedulerValidDate,
+} from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
 
 const eventByIdMapSelector = createSelectorMemoized(
@@ -85,5 +91,55 @@ export const selectors = {
     (state: State) => state.areEventsResizable,
     (isEventReadOnly, areEventsResizable, _event: CalendarEvent) =>
       !isEventReadOnly && areEventsResizable,
+  ),
+  occurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder),
+  hasOccurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder !== null),
+  isOccurrenceMatchingThePlaceholder: createSelector(
+    (state: State, occurrenceKey: string) =>
+      state.occurrencePlaceholder?.occurrenceKey === occurrenceKey,
+  ),
+  occurrencePlaceholderToRenderInDayCell: createSelector(
+    (state: State, day: SchedulerValidDate, rowStart: SchedulerValidDate) => {
+      if (
+        state.occurrencePlaceholder === null ||
+        state.occurrencePlaceholder.surfaceType !== 'day-grid'
+      ) {
+        return null;
+      }
+
+      if (state.adapter.isSameDay(day, state.occurrencePlaceholder.start)) {
+        return state.occurrencePlaceholder;
+      }
+
+      if (
+        state.adapter.isSameDay(day, rowStart) &&
+        state.adapter.isWithinRange(rowStart, [
+          state.occurrencePlaceholder.start,
+          state.occurrencePlaceholder.end,
+        ])
+      ) {
+        return state.occurrencePlaceholder;
+      }
+
+      return null;
+    },
+  ),
+  occurrencePlaceholderToRenderInTimeRange: createSelector(
+    (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
+      if (
+        state.occurrencePlaceholder === null ||
+        state.occurrencePlaceholder.surfaceType !== 'time-grid'
+      ) {
+        return null;
+      }
+      if (
+        state.adapter.isBefore(state.occurrencePlaceholder.end, start) ||
+        state.adapter.isAfter(state.occurrencePlaceholder.start, end)
+      ) {
+        return null;
+      }
+
+      return state.occurrencePlaceholder;
+    },
   ),
 };

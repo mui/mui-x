@@ -5,6 +5,7 @@ import {
   CalendarEvent,
   CalendarEventColor,
   CalendarEventId,
+  CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
   SchedulerValidDate,
@@ -15,10 +16,12 @@ import {
   UpdateRecurringEventParameters,
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
+  RecurringUpdateEventScope,
 } from './SchedulerStore.types';
 import { Adapter } from '../adapter/types';
 import { applyRecurringUpdateFollowing } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
+import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
@@ -47,6 +50,7 @@ export class SchedulerStore<
     const schedulerInitialState: SchedulerState = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       adapter,
+      occurrencePlaceholder: null,
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
@@ -228,6 +232,40 @@ export class SchedulerStore<
   };
 
   /**
+   * Applies the data from the placeholder occurrence to the event it represents.
+   */
+  public async applyOccurrencePlaceholder(
+    data: CalendarOccurrencePlaceholder,
+    chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
+  ) {
+    const { eventId, start, end, originalStart } = data;
+
+    if (eventId == null || originalStart == null) {
+      // TODO: Create a new event.
+      return undefined;
+    }
+
+    if (selectors.event(this.state, eventId)?.rrule) {
+      let scope: RecurringUpdateEventScope;
+      if (chooseRecurringEventScope) {
+        // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
+        scope = await chooseRecurringEventScope();
+      } else {
+        scope = 'this-and-following';
+      }
+
+      return this.updateRecurringEvent({
+        eventId,
+        occurrenceStart: originalStart,
+        changes: { start, end },
+        scope,
+      });
+    }
+
+    return this.updateEvent({ id: eventId, start, end });
+  }
+
+  /**
    * Deletes an event from the calendar.
    */
   public deleteEvent = (eventId: CalendarEventId) => {
@@ -242,6 +280,16 @@ export class SchedulerStore<
   public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
     if (this.state.visibleResources !== visibleResources) {
       this.set('visibleResources', visibleResources);
+    }
+  };
+
+  /**
+   * Sets the occurrence placeholder to render while creating a new event or dragging an existing event occurrence.
+   */
+  public setOccurrencePlaceholder = (newPlaceholder: CalendarOccurrencePlaceholder | null) => {
+    const { adapter, occurrencePlaceholder: previous } = this.state;
+    if (shouldUpdateOccurrencePlaceholder(adapter, previous, newPlaceholder)) {
+      this.set('occurrencePlaceholder', newPlaceholder);
     }
   };
 }

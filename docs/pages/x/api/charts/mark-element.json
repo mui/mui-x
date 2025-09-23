@@ -16,7 +16,8 @@
   "imports": [
     "import { MarkElement } from '@mui/x-charts/LineChart';",
     "import { MarkElement } from '@mui/x-charts';",
-    "import { MarkElement } from '@mui/x-charts-pro';"
+    "import { MarkElement } from '@mui/x-charts-pro';",
+    "import { MarkElement } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {
