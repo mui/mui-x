@@ -408,6 +408,7 @@
   { "name": "GridNoColumnsOverlay", "kind": "Variable" },
   { "name": "GridNoRowsOverlay", "kind": "Variable" },
   { "name": "gridNumberComparator", "kind": "Variable" },
+  { "name": "gridOrderedDataRowsSelector", "kind": "Variable" },
   { "name": "GridOverlay", "kind": "Variable" },
   { "name": "GridOverlayProps", "kind": "TypeAlias" },
   { "name": "gridPageCountSelector", "kind": "Variable" },
