@@ -11,7 +11,7 @@ import {
 } from '../../../../../primitives/models/preferences';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../../../../primitives/use-event-calendar';
+import { preferencesSelectors } from '../../../../../primitives/use-event-calendar';
 import './PreferencesMenu.css';
 
 export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
@@ -24,8 +24,8 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const preferences = useStore(store, selectors.preferences);
-  const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
+  const preferences = useStore(store, preferencesSelectors.preferences);
+  const preferencesMenuConfig = useStore(store, preferencesSelectors.preferencesMenuConfig);
 
   const handleToggle = (key: keyof CalendarPreferences, checked: boolean, event: Event) => {
     store.setPreferences({ [key]: checked }, event);

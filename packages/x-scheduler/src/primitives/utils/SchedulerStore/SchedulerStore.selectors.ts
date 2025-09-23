@@ -42,15 +42,27 @@ const isEventReadOnlySelector = createSelector(
   },
 );
 
-export const selectors = {
-  visibleDate: createSelector((state: State) => state.visibleDate),
-  ampm: createSelector((state: State) => state.ampm),
-  showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
-  resources: createSelector((state: State) => state.resources),
-  events: createSelector((state: State) => state.events),
-  visibleResourcesMap: createSelector((state: State) => state.visibleResources),
-  resource: resourceSelector,
-  eventColor: createSelector((state: State, eventId: CalendarEventId) => {
+export const resourceSelectors = {
+  allResources: createSelector((state: State) => state.resources),
+  model: resourceSelector,
+  visibleMap: createSelector((state: State) => state.visibleResources),
+  visibleList: createSelectorMemoized(
+    (state: State) => state.resources,
+    (state: State) => state.visibleResources,
+    (resources, visibleResources) =>
+      resources
+        .filter(
+          (resource) =>
+            !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true,
+        )
+        .map((resource) => resource.id),
+  ),
+};
+
+export const eventSelectors = {
+  allEvents: createSelector((state: State) => state.events),
+  model: eventSelector,
+  color: createSelector((state: State, eventId: CalendarEventId) => {
     const event = eventSelector(state, eventId);
     if (!event) {
       return state.eventColor;
@@ -63,35 +75,32 @@ export const selectors = {
 
     return state.eventColor;
   }),
-  visibleResourcesList: createSelectorMemoized(
-    (state: State) => state.resources,
-    (state: State) => state.visibleResources,
-    (resources, visibleResources) =>
-      resources
-        .filter(
-          (resource) =>
-            !visibleResources.has(resource.id) || visibleResources.get(resource.id) === true,
-        )
-        .map((resource) => resource.id),
-  ),
-  event: eventSelector,
-  isEventReadOnly: isEventReadOnlySelector,
-  isEventDraggable: createSelector(
+  isReadOnly: isEventReadOnlySelector,
+  isDraggable: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.areEventsDraggable,
     (isEventReadOnly, areEventsDraggable, _eventId: CalendarEventId) =>
       !isEventReadOnly && areEventsDraggable,
   ),
-  isEventResizable: createSelector(
+  isResizable: createSelector(
     isEventReadOnlySelector,
     (state: State) => state.areEventsResizable,
     (isEventReadOnly, areEventsResizable, _eventId: CalendarEventId) =>
       !isEventReadOnly && areEventsResizable,
   ),
-  occurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder),
-  hasOccurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder !== null),
-  isOccurrenceMatchingThePlaceholder: createSelector(
+};
+
+export const occurrencePlaceholderSelectors = {
+  value: createSelector((state: State) => state.occurrencePlaceholder),
+  isDefined: createSelector((state: State) => state.occurrencePlaceholder !== null),
+  isMatching: createSelector(
     (state: State, occurrenceKey: string) =>
       state.occurrencePlaceholder?.occurrenceKey === occurrenceKey,
   ),
+};
+
+export const otherSelectors = {
+  visibleDate: createSelector((state: State) => state.visibleDate),
+  ampm: createSelector((state: State) => state.ampm),
+  showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
 };

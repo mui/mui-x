@@ -15,7 +15,8 @@ import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../../../primitives/use-event-calendar';
+import { viewSelectors } from '../../../../primitives/use-event-calendar';
+import { otherSelectors } from '../../../../primitives/utils/SchedulerStore';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
@@ -37,11 +38,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   const store = useEventCalendarStoreContext();
-  const visibleDate = useStore(store, selectors.visibleDate);
-  const hasDayView = useStore(store, selectors.hasDayView);
+  const visibleDate = useStore(store, otherSelectors.visibleDate);
+  const hasDayView = useStore(store, viewSelectors.hasDayView);
 
-  const ampm = useStore(store, selectors.ampm);
-  const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
+  const ampm = useStore(store, otherSelectors.ampm);
+  const showCurrentTimeIndicator = useStore(store, otherSelectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });

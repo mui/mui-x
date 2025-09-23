@@ -8,7 +8,7 @@ import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { TimeGrid } from '../../../../../primitives/time-grid';
 import { getColorClassName } from '../../../utils/color-utils';
-import { selectors } from '../../../../../primitives/use-event-calendar';
+import { eventSelectors, otherSelectors } from '../../../../../primitives/utils/SchedulerStore';
 import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
 import './TimeGridEvent.css';
 import '../index.css';
@@ -25,10 +25,10 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const store = useEventCalendarStoreContext();
 
   const isRecurring = Boolean(occurrence.rrule);
-  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence.id);
-  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id);
-  const color = useStore(store, selectors.eventColor, occurrence.id);
-  const ampm = useStore(store, selectors.ampm);
+  const isDraggable = useStore(store, eventSelectors.isDraggable, occurrence.id);
+  const isResizable = useStore(store, eventSelectors.isResizable, occurrence.id);
+  const color = useStore(store, eventSelectors.color, occurrence.id);
+  const ampm = useStore(store, otherSelectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const durationMs =

@@ -4,8 +4,8 @@ import { CalendarEvent, CalendarEventOccurrence, CalendarProcessedDate } from '.
 import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../utils/useEventCalendarStoreContext';
-import { selectors } from '../use-event-calendar';
 import { Adapter } from '../utils/adapter/types';
+import { eventSelectors, resourceSelectors } from '../utils/SchedulerStore';
 
 /**
  * Gets all the event occurrences for the given days.
@@ -19,8 +19,8 @@ export function useEventOccurrencesGroupedByDay(
   const { days, renderEventIn } = parameters;
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const events = useStore(store, selectors.events);
-  const visibleResources = useStore(store, selectors.visibleResourcesMap);
+  const events = useStore(store, eventSelectors.allEvents);
+  const visibleResources = useStore(store, resourceSelectors.visibleMap);
 
   return React.useMemo(
     () =>

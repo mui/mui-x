@@ -9,7 +9,8 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../primitives/use-event-calendar';
+import { preferencesSelectors } from '../../primitives/use-event-calendar';
+import { otherSelectors } from '../../primitives/utils/SchedulerStore';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
 import { DayGrid } from '../../primitives/day-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
@@ -36,8 +37,9 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const store = useEventCalendarStoreContext();
-    const preferences = useStore(store, selectors.preferences);
-    const visibleDate = useStore(store, selectors.visibleDate);
+    const showWeekends = useStore(store, preferencesSelectors.showWeekends);
+    const showWeekNumber = useStore(store, preferencesSelectors.showWeekNumber);
+    const visibleDate = useStore(store, otherSelectors.visibleDate);
     const translations = useTranslations();
 
     const getDayList = useDayList();
@@ -48,11 +50,11 @@ export const MonthView = React.memo(
         amount: 'end-of-month',
       });
       const tempWeeks = weekFirstDays.map((week) =>
-        getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
+        getDayList({ date: week, amount: 'week', excludeWeekends: !showWeekends }),
       );
 
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };
-    }, [getWeekList, getDayList, visibleDate, preferences.showWeekends]);
+    }, [getWeekList, getDayList, visibleDate, showWeekends]);
 
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
@@ -86,10 +88,10 @@ export const MonthView = React.memo(
               className={clsx(
                 'MonthViewHeader',
                 'MonthViewRowGrid',
-                preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+                showWeekNumber ? 'WithWeekNumber' : undefined,
               )}
             >
-              {preferences.showWeekNumber && (
+              {showWeekNumber && (
                 <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
               )}
               {weeks[0].map((weekDay) => (

@@ -8,7 +8,11 @@ import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { AgendaEventProps } from './AgendaEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { selectors } from '../../../../../primitives/use-event-calendar';
+import {
+  eventSelectors,
+  otherSelectors,
+  resourceSelectors,
+} from '../../../../../primitives/utils/SchedulerStore';
 import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
 import './AgendaEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
@@ -34,9 +38,9 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
   const id = useId(idProp);
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const ampm = useStore(store, selectors.ampm);
-  const resource = useStore(store, selectors.resource, occurrence.resource);
-  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const ampm = useStore(store, otherSelectors.ampm);
+  const resource = useStore(store, resourceSelectors.model, occurrence.resource);
+  const color = useStore(store, eventSelectors.color, occurrence.id);
   const isRecurring = Boolean(occurrence.rrule);
 
   return (

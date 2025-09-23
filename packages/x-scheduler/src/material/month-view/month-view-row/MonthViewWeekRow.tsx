@@ -8,7 +8,7 @@ import { useEventCalendarStoreContext } from '../../../primitives/utils/useEvent
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
-import { selectors } from '../../../primitives/use-event-calendar';
+import { preferencesSelectors } from '../../../primitives/use-event-calendar';
 import { MonthViewCell } from './MonthViewCell';
 import './MonthViewWeekRow.css';
 
@@ -18,7 +18,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, days, occurrencesMap, firstDayRef } = props;
 
   const store = useEventCalendarStoreContext();
-  const preferences = useStore(store, selectors.preferences);
+  const showWeekNumber = useStore(store, preferencesSelectors.showWeekNumber);
   const translations = useTranslations();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
@@ -39,10 +39,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       className={clsx(
         'MonthViewRow',
         'MonthViewRowGrid',
-        preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+        showWeekNumber ? 'WithWeekNumber' : undefined,
       )}
     >
-      {preferences.showWeekNumber && (
+      {showWeekNumber && (
         <div
           className="MonthViewWeekNumberCell"
           role="rowheader"

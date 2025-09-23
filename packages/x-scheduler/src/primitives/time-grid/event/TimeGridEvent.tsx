@@ -15,7 +15,7 @@ import { SchedulerValidDate } from '../../models';
 import { TimeGridEventContext } from './TimeGridEventContext';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
-import { selectors } from '../../use-event-calendar';
+import { occurrencePlaceholderSelectors } from '../../utils/SchedulerStore';
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   componentProps: TimeGridEvent.Props,
@@ -42,7 +42,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
   const store = useEventCalendarStoreContext();
-  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
+  const isDragging = useStore(store, occurrencePlaceholderSelectors.isMatching, occurrenceKey);
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 

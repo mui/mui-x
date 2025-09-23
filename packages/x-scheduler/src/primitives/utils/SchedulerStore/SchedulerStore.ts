@@ -20,7 +20,7 @@ import {
 } from './SchedulerStore.types';
 import { Adapter } from '../adapter/types';
 import { applyRecurringUpdateFollowing } from '../recurrence-utils';
-import { selectors } from './SchedulerStore.selectors';
+import { eventSelectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
@@ -166,7 +166,7 @@ export class SchedulerStore<
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
-    const original = selectors.event(this.state, calendarEvent.id);
+    const original = eventSelectors.model(this.state, calendarEvent.id);
     if (!original) {
       throw new Error(`Scheduler: the original event was not found (id="${calendarEvent.id}").`);
     }
@@ -189,7 +189,7 @@ export class SchedulerStore<
     const { onEventsChange } = this.parameters;
     const { eventId, occurrenceStart, changes, scope } = params;
 
-    const original = selectors.event(this.state, eventId);
+    const original = eventSelectors.model(this.state, eventId);
     if (!original) {
       throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
     }
@@ -248,7 +248,7 @@ export class SchedulerStore<
       return undefined;
     }
 
-    if (selectors.event(this.state, eventId)?.rrule) {
+    if (eventSelectors.model(this.state, eventId)?.rrule) {
       let scope: RecurringUpdateEventScope;
       if (chooseRecurringEventScope) {
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.

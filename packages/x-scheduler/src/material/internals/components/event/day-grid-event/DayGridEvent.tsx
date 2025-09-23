@@ -9,7 +9,12 @@ import { DayGrid } from '../../../../../primitives/day-grid';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { selectors } from '../../../../../primitives/use-event-calendar';
+import { viewSelectors } from '../../../../../primitives/use-event-calendar';
+import {
+  eventSelectors,
+  otherSelectors,
+  resourceSelectors,
+} from '../../../../../primitives/utils/SchedulerStore';
 import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
 import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
@@ -36,15 +41,15 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const id = useId(idProp);
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const isDayView = useStore(store, selectors.isDayView);
-  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence.id) && !isDayView;
+  const isDayView = useStore(store, viewSelectors.isDayView);
+  const isDraggable = useStore(store, eventSelectors.isDraggable, occurrence.id) && !isDayView;
   const isResizable =
-    useStore(store, selectors.isEventResizable, occurrence.id) &&
+    useStore(store, eventSelectors.isResizable, occurrence.id) &&
     variant === 'allDay' &&
     !isDayView;
-  const ampm = useStore(store, selectors.ampm);
-  const resource = useStore(store, selectors.resource, occurrence.resource);
-  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const ampm = useStore(store, otherSelectors.ampm);
+  const resource = useStore(store, resourceSelectors.model, occurrence.resource);
+  const color = useStore(store, eventSelectors.color, occurrence.id);
   const isRecurring = Boolean(occurrence.rrule);
 
   const content = React.useMemo(() => {

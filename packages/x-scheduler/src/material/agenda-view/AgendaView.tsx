@@ -8,7 +8,8 @@ import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
 import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../primitives/use-event-calendar';
+import { preferencesSelectors } from '../../primitives/use-event-calendar';
+import { otherSelectors } from '../../primitives/utils/SchedulerStore';
 import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
@@ -29,8 +30,8 @@ export const AgendaView = React.memo(
     const { className, ...other } = props;
     const store = useEventCalendarStoreContext();
     const today = adapter.date();
-    const visibleDate = useStore(store, selectors.visibleDate);
-    const preferences = useStore(store, selectors.preferences);
+    const visibleDate = useStore(store, otherSelectors.visibleDate);
+    const showWeekends = useStore(store, preferencesSelectors.showWeekends);
 
     const getDayList = useDayList();
     const days = React.useMemo(
@@ -38,9 +39,9 @@ export const AgendaView = React.memo(
         getDayList({
           date: visibleDate,
           amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: !preferences.showWeekends,
+          excludeWeekends: !showWeekends,
         }),
-      [getDayList, preferences.showWeekends, visibleDate],
+      [getDayList, showWeekends, visibleDate],
     );
     const occurrences = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
