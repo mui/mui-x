@@ -196,27 +196,35 @@ export function computeAxisValue<T extends ChartSeriesType>({
         formattedSeries,
         filter,
       );
+      console.log(scale.domain(), [minData, maxData]);
       scale = scale.copy();
-      scale.domain([minData, maxData]);
 
-      const domainLimit = getDomainLimit(
-        axis,
-        axisDirection,
-        axisIndex,
-        formattedSeries,
-        preferStrictDomainInLineCharts,
-      );
+      const domain = scale.domain();
+      const scaleRange = scale.range();
+      const rangeRange = Math.abs(scaleRange[1] - scaleRange[0]);
+      // TODO: Needs to handle min/max data being zero, and apply the same logic to minData
+      scale.range([scaleRange[0], scaleRange[0] - (rangeRange * domain[1].valueOf()) / maxData]);
 
-      const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
+      // scale.domain([minData, maxData]);
 
-      if (typeof domainLimit === 'function') {
-        const { min, max } = domainLimit(minData, maxData);
-        axisExtrema[0] = min;
-        axisExtrema[1] = max;
-      }
+      // const domainLimit = getDomainLimit(
+      //  axis,
+      //  axisDirection,
+      //  axisIndex,
+      //  formattedSeries,
+      //  preferStrictDomainInLineCharts,
+      // );
 
-      scale.domain(axisExtrema);
-      applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
+      // const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
+
+      // if (typeof domainLimit === 'function') {
+      //  const { min, max } = domainLimit(minData, maxData);
+      //  axisExtrema[0] = min;
+      //  axisExtrema[1] = max;
+      // }
+
+      // scale.domain(axisExtrema);
+      // applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
     }
 
     completeAxis[axis.id] = {
