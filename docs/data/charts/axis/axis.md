@@ -257,7 +257,7 @@ To avoid this, you can use the `margin` prop to increase the space between the c
 
 ### Rendering
 
-The demo below illustrates all of the axis props available to customize rendering:
+The demo below illustrates all of the props available to customize axis rendering:
 
 {{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "playground"}}
 
