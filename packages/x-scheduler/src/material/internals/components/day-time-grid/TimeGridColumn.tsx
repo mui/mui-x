@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
+import { CalendarEventOccurrenceWithTimePosition } from '../../../../primitives';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
@@ -11,6 +12,9 @@ import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMi
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/use-event-occurrences-with-timeline-position';
 import { EventPopoverTrigger } from '../event-popover';
+import { useTimeGridColumnContext } from '../../../../primitives/time-grid/column/TimeGridColumnContext';
+import { SchedulerValidDate } from '../../../../primitives/models/date';
+import { useEventPopover } from '../event-popover/EventPopoverContext';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
@@ -23,7 +27,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
     occurrences: day.withoutPosition,
     maxColumnSpan: Infinity,
   });
-  const placeholder = TimeGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
 
   return (
     <TimeGrid.Column
@@ -33,6 +36,93 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
       data-current={isToday ? '' : undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
+    >
+      <ColumnInteractiveLayer
+        day={day}
+        start={start}
+        end={end}
+        showCurrentTimeIndicator={showCurrentTimeIndicator}
+        index={index}
+        occurrences={occurrences}
+        maxIndex={maxIndex}
+      />
+    </TimeGrid.Column>
+  );
+}
+
+function ColumnInteractiveLayer({
+  day,
+  start,
+  end,
+  showCurrentTimeIndicator,
+  index,
+  occurrences,
+  maxIndex,
+}: {
+  day: useEventOccurrencesWithDayGridPosition.DayData;
+  start: SchedulerValidDate;
+  end: SchedulerValidDate;
+  showCurrentTimeIndicator: boolean;
+  index: number;
+  occurrences: CalendarEventOccurrenceWithTimePosition[];
+  maxIndex: number;
+}) {
+  const adapter = useAdapter();
+
+  const { getCursorPositionInElementMs } = useTimeGridColumnContext();
+  const placeholder = TimeGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
+  const store = useEventCalendarStoreContext();
+  const columnRef = React.useRef<HTMLDivElement | null>(null);
+  const { startEditing } = useEventPopover();
+  const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
+
+  const computeInitialRange = (event) => {
+    const offsetMs = getCursorPositionInElementMs({
+      input: { clientY: event.clientY },
+      elementRef: columnRef,
+    });
+
+    const offsetMin = Math.floor(offsetMs / 60000);
+    const anchor = adapter.addMinutes(start, offsetMin);
+
+    // snap to 30 minutes
+    const roundedStart = adapter.addMinutes(anchor, -(adapter.getMinutes(anchor) % 30));
+
+    return {
+      start: roundedStart,
+      end: adapter.addMinutes(roundedStart, 30),
+    };
+  };
+
+  const onDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const startDraft = computeInitialRange(event).start;
+    const endDraft = computeInitialRange(event).end;
+    store.setOccurrencePlaceholder({
+      eventId: null,
+      occurrenceKey: null,
+      surfaceType: 'time-grid',
+      start: startDraft,
+      end: endDraft,
+      originalStart: null,
+    });
+  };
+
+  React.useEffect(() => {
+    if (!placeholder || !rawPlaceholder) {
+      return;
+    }
+
+    if (rawPlaceholder.eventId !== null) {
+      return;
+    }
+    startEditing({ currentTarget: columnRef.current } as unknown as React.MouseEvent, placeholder);
+  }, [placeholder, rawPlaceholder, startEditing]);
+
+  return (
+    <div
+      className="DayTimeGridColumnInteractiveLayer"
+      ref={columnRef}
+      onDoubleClick={onDoubleClick}
     >
       {occurrences.map((occurrence) => (
         <EventPopoverTrigger
@@ -59,7 +149,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
           {index === 0 && <TimeGridCurrentTimeLabel />}
         </TimeGrid.CurrentTimeIndicator>
       ) : null}
-    </TimeGrid.Column>
+    </div>
   );
 }
 

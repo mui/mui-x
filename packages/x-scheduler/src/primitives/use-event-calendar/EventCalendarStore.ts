@@ -260,6 +260,24 @@ export class EventCalendarStore extends Store<State> {
   };
 
   /**
+   * Creates a new event in the calendar.
+   */
+  public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
+    const existing = selectors.event(this.state, calendarEvent.id);
+    if (existing) {
+      throw new Error(
+        `Event Calendar: an event with id="${calendarEvent.id}" already exists. Use updateEvent(...) instead.`,
+      );
+    }
+
+    const { onEventsChange } = this.parameters;
+    const updatedEvents = [...this.state.events, calendarEvent];
+    onEventsChange?.(updatedEvents);
+
+    return calendarEvent;
+  };
+
+  /**
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
@@ -342,8 +360,12 @@ export class EventCalendarStore extends Store<State> {
     const { eventId, start, end, originalStart } = data;
 
     if (eventId == null || originalStart == null) {
-      // TODO: Create a new event.
-      return undefined;
+      return this.createEvent({
+        id: crypto.randomUUID(),
+        title: '',
+        start,
+        end,
+      });
     }
 
     if (selectors.event(this.state, eventId)?.rrule) {
