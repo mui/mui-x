@@ -82,41 +82,36 @@ const getGridTemplateAreas = (
 
 const getTemplateColumns = (
   hideLegend: boolean,
-  direction: Direction | undefined,
-  position: Position | undefined,
-  width: number | undefined,
+  direction: Direction = 'horizontal',
+  horizontalPosition: Position['horizontal'] = 'end',
+  width: number | undefined = undefined,
 ) => {
-  if (direction === 'vertical') {
-    if (hideLegend) {
-      return '1fr';
-    }
-    if (position?.horizontal === 'start') {
-      return 'auto 1fr';
-    }
-
-    return `${width ? 'auto' : '1fr'} auto`;
+  const drawingAreaColumn = width ? `${width}px` : '1fr';
+  if (direction === 'horizontal') {
+    return drawingAreaColumn;
   }
 
-  return '1fr';
+  if (hideLegend) {
+    return drawingAreaColumn;
+  }
+  return horizontalPosition === 'start' ? `auto ${drawingAreaColumn}` : `${drawingAreaColumn} auto`;
 };
 
 const getTemplateRows = (
   hideLegend: boolean,
-  direction: Direction | undefined,
-  position: Position | undefined,
-  height: number | undefined,
+  direction: Direction = 'horizontal',
+  verticalPosition: Position['vertical'] = 'top',
+  height: number | undefined = undefined,
 ) => {
+  const drawingAreaRow = height ? `${height}px` : '1fr';
   if (direction === 'vertical') {
-    return '1fr';
+    return drawingAreaRow;
   }
-  // horizontal
+
   if (hideLegend) {
-    return '1fr';
+    return drawingAreaRow;
   }
-  if (position?.vertical === 'bottom') {
-    return '1fr auto';
-  }
-  return `auto 1fr`;
+  return verticalPosition === 'bottom' ? `${drawingAreaRow} auto` : `auto ${drawingAreaRow}`;
 };
 
 const Root = styled('div', {
@@ -129,13 +124,13 @@ const Root = styled('div', {
     const gridTemplateColumns = getTemplateColumns(
       ownerState.hideLegend,
       ownerState.legendDirection,
-      ownerState.legendPosition,
+      ownerState.legendPosition?.horizontal,
       width,
     );
     const gridTemplateRows = getTemplateRows(
       ownerState.hideLegend,
       ownerState.legendDirection,
-      ownerState.legendPosition,
+      ownerState.legendPosition?.vertical,
       height,
     );
     const gridTemplateAreas = getGridTemplateAreas(
