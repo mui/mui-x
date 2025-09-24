@@ -1,0 +1,13 @@
+<ChartContainer
+  dataset={usUnemploymentRate}
+  xAxis={xAxis}
+  yAxis={yAxis}
+  series={series}
+  height={300}
+>
+  <RectBackground />
+  <ChartsGrid />
+  <LinePlot />
+  <ChartsXAxis />
+  <ChartsYAxis />
+</ChartContainer>
