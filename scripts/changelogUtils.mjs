@@ -117,6 +117,7 @@ async function findLatestTaggedVersionForMajor(major) {
   const { data: tags } = await octokit.rest.repos.listTags({
     owner: ORG,
     repo: REPO,
+    per_page: 100,
   });
   if (major) {
     const filteredTags = tags.filter((tag) => tag.name.startsWith(`v${major}.`));
