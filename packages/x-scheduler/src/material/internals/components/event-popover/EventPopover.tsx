@@ -51,8 +51,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
 
-  const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd') ?? '';
-  const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm') ?? '';
+  const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
+  const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(occurrence.allDay));
