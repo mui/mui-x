@@ -71,8 +71,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   function computeRange(next: typeof when, nextIsAllDay = isAllDay) {
     if (nextIsAllDay) {
-      const newStart = adapter.startOfDay(adapter.date(`${next.startDate}T00:00`));
-      const newEnd = adapter.endOfDay(adapter.date(`${next.endDate}T00:00`));
+      const newStart = adapter.startOfDay(adapter.date(next.startDate));
+      const newEnd = adapter.endOfDay(adapter.date(next.endDate));
       return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
     }
     // fallback values
