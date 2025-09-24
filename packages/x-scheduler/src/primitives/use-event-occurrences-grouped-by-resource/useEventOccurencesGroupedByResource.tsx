@@ -16,10 +16,19 @@ export function useEventOccurrencesGroupedByResource(
   const events = useStore(store, selectors.events);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
-  return React.useMemo(
-    () => innerGetEventOccurrencesGroupedByResource(adapter, events, visibleResources, start, end),
-    [adapter, events, visibleResources, start, end],
-  );
+  return React.useMemo(() => {
+    const occurrencesGroupedByResource = innerGetEventOccurrencesGroupedByResource(
+      adapter,
+      events,
+      visibleResources,
+      start,
+      end,
+    );
+    return Array.from(occurrencesGroupedByResource.entries()).map(([resourceId, occurrences]) => ({
+      resourceId,
+      occurrences,
+    }));
+  }, [adapter, events, visibleResources, start, end]);
 }
 
 export namespace useEventOccurrencesGroupedByResource {
@@ -28,7 +37,7 @@ export namespace useEventOccurrencesGroupedByResource {
     end: SchedulerValidDate;
   }
 
-  export type ReturnValue = Map<string, CalendarEventOccurrence[]>;
+  export type ReturnValue = { resourceId: string; occurrences: CalendarEventOccurrence[] }[];
 }
 
 /**

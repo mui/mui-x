@@ -10,19 +10,13 @@ export default function TimelineEventRow({ start, end, occurrences }: TimelineEv
     occurrences,
     maxSpan: 1,
   });
-
   return (
-    <TimelinePrimitive.EventRow
-      className="TimelineEventRow"
-      start={start}
-      end={end}
-      style={{} as React.CSSProperties}
-    >
+    <TimelinePrimitive.EventRow className="TimelineEventRow" start={start} end={end}>
       {occurrencesWithPosition.occurrences.map((occurrence) => (
         <TimelineEvent
           key={occurrence.key}
           occurrence={occurrence}
-          ariaLabelledBy=""
+          ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
           variant="regular"
         />
       ))}

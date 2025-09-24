@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useMonthList } from '../../../../primitives/use-month-list';
 import { selectors } from '../../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
 
 import './Headers.css';
 
-const adapter = getAdapter();
-
 export function MonthsHeader() {
+  const adapter = useAdapter();
   const getMonthList = useMonthList();
   const store = useTimelineStoreContext();
 
@@ -27,9 +26,10 @@ export function MonthsHeader() {
   return (
     <div className="MonthsHeader">
       {months.map((month, index) => {
-        const monthNumber = adapter.getMonth(month);
+        const monthNumber = adapter.getMonth(month.value);
+
         return (
-          <React.Fragment key={`${adapter.format(month, 'monthShort')}-${adapter.getYear(month)}`}>
+          <React.Fragment key={month.key}>
             {(monthNumber === 0 || index === 0) && (
               <div
                 className="YearLabel"
@@ -40,10 +40,10 @@ export function MonthsHeader() {
                   } as React.CSSProperties
                 }
               >
-                {adapter.getYear(month)}
+                {adapter.getYear(month.value)}
               </div>
             )}
-            <div className="MonthLabel">{adapter.format(month, 'monthShort')}</div>
+            <div className="MonthLabel">{adapter.format(month.value, 'monthShort')}</div>
           </React.Fragment>
         );
       })}

@@ -9,7 +9,7 @@ import { Adapter } from '../utils/adapter/types';
 export function useEventOccurrencesWithTimelinePosition(
   parameters: useEventOccurrencesWithTimelinePosition.Parameters,
 ): useEventOccurrencesWithTimelinePosition.ReturnValue {
-  const { occurrences, maxSpan = 1 } = parameters;
+  const { occurrences, maxSpan } = parameters;
   const adapter = useAdapter();
 
   return React.useMemo(() => {
@@ -40,7 +40,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
     /**
      * Maximum amount of columns an event can span across.
      */
-    maxSpan?: number;
+    maxSpan: number;
   }
 
   export interface ReturnValue {

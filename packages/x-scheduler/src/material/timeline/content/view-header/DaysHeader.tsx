@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
 import { useDayList } from '../../../../primitives/use-day-list';
 import { selectors } from '../../../../primitives/use-timeline';
@@ -8,9 +8,8 @@ import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelin
 
 import './Headers.css';
 
-const adapter = getAdapter();
-
 export function DaysHeader() {
+  const adapter = useAdapter();
   const getDayList = useDayList();
   const store = useTimelineStoreContext();
 
@@ -28,7 +27,7 @@ export function DaysHeader() {
   return (
     <div className="DaysHeader">
       {days.map((day, index) => (
-        <div key={adapter.format(day.value, 'keyboardDate')} className="DayHeaderCell">
+        <div key={day.key} className="DayHeaderCell">
           {(adapter.startOfMonth(day.value).hasSame(day.value, 'day') || index === 0) && (
             <div className="MonthStart">
               <p className="MonthStartLabel">{adapter.format(day.value, 'monthShort')}</p>

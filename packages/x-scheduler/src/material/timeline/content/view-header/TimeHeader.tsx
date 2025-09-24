@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useDayList } from '../../../../primitives/use-day-list';
 import { selectors } from '../../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
 
 import './Headers.css';
 
-const adapter = getAdapter();
-
 export function TimeHeader() {
+  const adapter = useAdapter();
   const getDayList = useDayList();
   const store = useTimelineStoreContext();
 
@@ -30,9 +29,10 @@ export function TimeHeader() {
   return (
     <div className="TimeHeader">
       {days.map((day) => (
-        <div key={adapter.format(day.value, 'keyboardDate')} className="TimeHeaderCell">
+        <div key={day.key} className="TimeHeaderCell">
           <div className="DayLabel">{adapter.format(day.value, 'normalDateWithWeekday')}</div>
           <div className="TimeCellsRow">
+            {/* TODO: Make sure it works across DST */}
             {Array.from({ length: 24 }, (_, hour) => (
               <div
                 key={hour}

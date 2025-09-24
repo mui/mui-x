@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { SchedulerValidDate } from '../models';
+import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 import { useAdapter } from '../utils/adapter/useAdapter';
+import { processDate } from '../utils/event-utils';
 
 export function useMonthList(): useMonthList.ReturnValue {
   const adapter = useAdapter();
@@ -30,14 +31,14 @@ export function useMonthList(): useMonthList.ReturnValue {
         current = adapter.addMonths(current, 1);
       }
 
-      return months;
+      return months.map((month) => processDate(month, adapter));
     },
     [adapter],
   );
 }
 
 export namespace useMonthList {
-  export type ReturnValue = (parameters: ReturnValueParameters) => SchedulerValidDate[];
+  export type ReturnValue = (parameters: ReturnValueParameters) => CalendarProcessedDate[];
 
   export interface ReturnValueParameters {
     /**

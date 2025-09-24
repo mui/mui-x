@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { Adapter } from '../../../../primitives/utils/adapter/types';
 import { selectors } from '../../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import './Headers.css';
 
-const adapter = getAdapter();
-
-const getYears = (date: SchedulerValidDate, amount: number) => {
+const getYears = (adapter: Adapter, date: SchedulerValidDate, amount: number) => {
   const end = adapter.startOfYear(adapter.addYears(date, amount));
 
   let current = date;
@@ -24,11 +23,12 @@ const getYears = (date: SchedulerValidDate, amount: number) => {
 };
 
 export function YearHeader() {
+  const adapter = useAdapter();
   const store = useTimelineStoreContext();
 
   const visibleDate = useStore(store, selectors.visibleDate);
 
-  const years = getYears(visibleDate, 4);
+  const years = getYears(adapter, visibleDate, 4);
 
   return (
     <div className="YearsHeader">

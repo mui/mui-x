@@ -29,13 +29,6 @@ export const Timeline = React.forwardRef(function Timeline(
   const view = useStore(store, selectors.view);
   const views = useStore(store, selectors.views);
 
-  const handleViewChange = (
-    newView: TimelineView,
-    event: Event | React.MouseEvent<HTMLElement>,
-  ) => {
-    store.setView(newView, event);
-  };
-
   return (
     <TimelineStoreContext.Provider value={store}>
       <div
@@ -44,7 +37,7 @@ export const Timeline = React.forwardRef(function Timeline(
         {...forwardedProps}
       >
         <div className="TimelineHeaderToolbar">
-          <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={handleViewChange} />
+          <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={store.setView} />
         </div>
         <TimelineContent />
       </div>
