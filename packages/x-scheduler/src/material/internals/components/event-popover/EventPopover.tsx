@@ -216,7 +216,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
       description: (form.get('description') as string).trim(),
       allDay: isAllDay,
       resource: resourceValue,
-      // ...(rrule ? { rrule } : {}),
     };
 
     const doSubmit = async () => {
