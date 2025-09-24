@@ -77,6 +77,7 @@ const RootElement = styled('ul', {
     marginBlock: theme.spacing(1),
     marginInline: theme.spacing(1),
     width: 'fit-content',
+    gridArea: 'legend',
     [`button.${classes.item}`]: {
       // Reset button styles
       background: 'none',
