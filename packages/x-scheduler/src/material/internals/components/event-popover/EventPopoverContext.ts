@@ -6,7 +6,7 @@ export const EventPopoverContext = React.createContext<EventPopoverContextValue>
   startEditing: () => {},
 });
 
-export function useEventPopover(): EventPopoverContextValue {
+export function useEventPopoverContext(): EventPopoverContextValue {
   const context = React.useContext(EventPopoverContext);
   if (context === undefined) {
     throw new Error(

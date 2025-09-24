@@ -11,7 +11,7 @@ import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEv
 import { selectors } from '../../../../primitives/use-event-calendar';
 
 import './DayTimeGrid.css';
-import { useEventPopover } from '../event-popover/EventPopoverContext';
+import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
@@ -21,7 +21,7 @@ export function DayGridCell(props: DayGridCellProps) {
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const isCreation = useStore(store, selectors.isCreatingNewEventInDayGridCell, day.value);
 
-  const { startEditing } = useEventPopover();
+  const { startEditing } = useEventPopoverContext();
 
   const onDoubleClick = () => {
     store.setOccurrencePlaceholder({

@@ -14,7 +14,7 @@ import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/
 import { EventPopoverTrigger } from '../event-popover';
 import { useTimeGridColumnContext } from '../../../../primitives/time-grid/column/TimeGridColumnContext';
 import { SchedulerValidDate } from '../../../../primitives/models/date';
-import { useEventPopover } from '../event-popover/EventPopoverContext';
+import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
@@ -73,7 +73,7 @@ function ColumnInteractiveLayer({
   const placeholder = TimeGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const store = useEventCalendarStoreContext();
   const columnRef = React.useRef<HTMLDivElement | null>(null);
-  const { startEditing } = useEventPopover();
+  const { startEditing } = useEventPopoverContext();
   const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {

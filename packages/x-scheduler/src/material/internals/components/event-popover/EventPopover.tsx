@@ -34,7 +34,7 @@ import {
   detectRecurrenceKeyFromRule,
   RecurrencePresetKey,
 } from '../../../../primitives/utils/recurrence-utils';
-import { EventPopoverContext, useEventPopover } from './EventPopoverContext';
+import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
 import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
 
 export const EventPopover = React.forwardRef(function EventPopover(
@@ -580,7 +580,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
 
 export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   const { occurrence, ...other } = props;
-  const { startEditing } = useEventPopover();
+  const { startEditing } = useEventPopoverContext();
 
   return (
     <Popover.Trigger

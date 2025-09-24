@@ -12,7 +12,7 @@ import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
-import { useEventPopover } from '../../internals/components/event-popover/EventPopoverContext';
+import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopoverContext';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -31,7 +31,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
-  const { startEditing } = useEventPopover();
+  const { startEditing } = useEventPopoverContext();
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
