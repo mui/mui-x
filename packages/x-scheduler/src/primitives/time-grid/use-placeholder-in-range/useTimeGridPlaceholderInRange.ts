@@ -34,8 +34,8 @@ export function useTimeGridPlaceholderInRange(
     // Creation mode
     if (!originalEvent) {
       return {
-        id: 'create-placeholder',
-        key: 'create-placeholder',
+        id: `placeholder-${rawPlaceholder.occurrenceKey}`,
+        key: `placeholder-${rawPlaceholder.occurrenceKey}`,
         title: '',
         start: rawPlaceholder.start,
         end: rawPlaceholder.end,
