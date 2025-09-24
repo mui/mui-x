@@ -31,7 +31,7 @@ import {
   getActualAxisExtrema,
   getDomainLimit,
   ScaleDefinition,
-} from './getAxisScale';
+  } from './getAxisScale';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 
 function getRange(
@@ -197,7 +197,32 @@ export function computeAxisValue<T extends ChartSeriesType>({
         formattedSeries,
         filter,
       );
-      [minData, maxData] = nice(minData, maxData, rawTickNumber);
+
+      const domainLimit = getDomainLimit(
+        axis,
+        axisDirection,
+        axisIndex,
+        formattedSeries,
+        preferStrictDomainInLineCharts,
+      );
+
+      const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
+
+      if (typeof domainLimit === 'function') {
+        const { min, max } = domainLimit(minData, maxData);
+        axisExtrema[0] = min;
+        axisExtrema[1] = max;
+      }
+
+      if (domainLimit === 'nice') {
+        [minData, maxData] = nice(
+          axisExtrema[0].valueOf(),
+          axisExtrema[1].valueOf(),
+          rawTickNumber,
+        );
+      }
+
+      [minData, maxData] = [axis.min?.valueOf() ?? minData, axis.max?.valueOf() ?? maxData];
 
       const domain = scale.domain();
       const scaleRange = scale.range();
@@ -210,57 +235,15 @@ export function computeAxisValue<T extends ChartSeriesType>({
       const startRatio = startDiff / (startDiff + endDiff) || 0;
       const endRatio = endDiff / (startDiff + endDiff) || 0;
 
-      if (spanRatio !== 1) {
-        const newRange = [
-          scaleRange[0].valueOf() + rangeSpan * startRatio * (spanRatio - 1),
-          scaleRange[1].valueOf() - rangeSpan * endRatio * (spanRatio - 1),
-        ];
+      const newRange = [
+        scaleRange[0].valueOf() + rangeSpan * startRatio * (spanRatio - 1),
+        scaleRange[1].valueOf() - rangeSpan * endRatio * (spanRatio - 1),
+      ];
 
-        console.log({
-          scaleRange,
-          newRange,
-          spanRatio,
-          startRatio,
-          endRatio,
-          startDiff,
-          endDiff,
-          minData,
-          maxData,
-        });
-
-        // TODO: Needs to handle min/max data being zero, and apply the same logic to minData
-        scale = scale.copy();
-        scale.range(newRange);
-        const newZoomRange = [0, (1 / spanRatio) * 100];
-        tickNumber = scaleTickNumberByRange(rawTickNumber, newZoomRange);
-        console.log({
-          newZoomRange,
-          tickNumber,
-          rawTickNumber,
-          spanRatio: domainSpan / extremaSpan,
-        });
-      }
-
-      // scale.domain([minData, maxData]);
-
-      // const domainLimit = getDomainLimit(
-      //  axis,
-      //  axisDirection,
-      //  axisIndex,
-      //  formattedSeries,
-      //  preferStrictDomainInLineCharts,
-      // );
-
-      // const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
-
-      // if (typeof domainLimit === 'function') {
-      //  const { min, max } = domainLimit(minData, maxData);
-      //  axisExtrema[0] = min;
-      //  axisExtrema[1] = max;
-      // }
-
-      // scale.domain(axisExtrema);
-      // applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
+      scale = scale.copy();
+      scale.range(newRange);
+      const newZoomRange = [0, (1 / spanRatio) * 100];
+      tickNumber = scaleTickNumberByRange(rawTickNumber, newZoomRange);
     }
 
     completeAxis[axis.id] = {
