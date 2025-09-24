@@ -43,8 +43,8 @@ export function useDayGridPlaceholderInDay(
     // Creation mode
     if (!originalEvent) {
       return {
-        id: `create-placeholder`,
-        key: `create-placeholder`,
+        id: 'create-placeholder',
+        key: 'create-placeholder',
         title: '',
         allDay: true,
         start: day,

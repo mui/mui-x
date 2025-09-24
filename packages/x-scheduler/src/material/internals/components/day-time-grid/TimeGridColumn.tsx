@@ -112,7 +112,9 @@ function ColumnInteractiveLayer({
       return;
     }
 
-    if (rawPlaceholder.eventId !== null) {
+    const isCreation = rawPlaceholder.eventId == null && rawPlaceholder.surfaceType === 'time-grid';
+
+    if (!isCreation) {
       return;
     }
     startEditing({ currentTarget: columnRef.current } as unknown as React.MouseEvent, placeholder);
