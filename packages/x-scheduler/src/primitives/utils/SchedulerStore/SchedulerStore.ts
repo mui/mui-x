@@ -17,20 +17,19 @@ import {
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   RecurringUpdateEventScope,
-  SchedulerEventModelStructure,
 } from './SchedulerStore.types';
 import { Adapter } from '../adapter/types';
 import { applyRecurringUpdateFollowing } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import {
+  buildEventLookups,
   getCalendarEventFromModel,
-  getUpdatedModelFromPartialCalendarEvent,
+  getUpdatedEventModelFromPartialCalendarEvent,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
-export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
 
 /**
  * Instance shared by the Event Calendar and the Timeline components.
@@ -85,24 +84,10 @@ export class SchedulerStore<
     parameters: SchedulerParameters<EventModel>,
     adapter: Adapter,
   ) {
-    // TODO: Only process events if parameters.events or parameters.eventModelStructure changed.
-    const eventModelStructure = parameters.eventModelStructure ?? DEFAULT_EVENT_MODEL_STRUCTURE;
-    const eventIds: CalendarEventId[] = [];
-    const eventModelLookup = new Map<CalendarEventId, EventModel>();
-    const calendarEventLookup = new Map<CalendarEventId, CalendarEvent>();
-    for (const event of parameters.events) {
-      const processedEvent = getCalendarEventFromModel(event, eventModelStructure);
-      eventIds.push(processedEvent.id);
-      eventModelLookup.set(processedEvent.id, event);
-      calendarEventLookup.set(processedEvent.id, processedEvent);
-    }
-
     return {
       adapter,
-      eventIds,
-      eventModelLookup,
-      calendarEventLookup,
-      eventModelStructure,
+      // TODO: Only process events if parameters.events or parameters.eventModelStructure changed.
+      ...buildEventLookups(parameters),
       resources: parameters.resources ?? DEFAULT_RESOURCES,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
@@ -202,7 +187,7 @@ export class SchedulerStore<
     const { onEventsChange } = this.parameters;
     const updatedEvents = this.state.eventIds.map((id) =>
       id === calendarEvent.id
-        ? getUpdatedModelFromPartialCalendarEvent(
+        ? getUpdatedEventModelFromPartialCalendarEvent(
             this.state.eventModelLookup.get(id)!,
             calendarEvent,
             this.state.eventModelStructure,
@@ -216,7 +201,6 @@ export class SchedulerStore<
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    const { adapter, events } = this.state;
     const { onEventsChange } = this.parameters;
     const { eventId, occurrenceStart, changes, scope } = params;
 
@@ -230,13 +214,12 @@ export class SchedulerStore<
       );
     }
 
-    let updatedEvents: CalendarEvent[] = [];
+    let updatedEvents: EventModel[] = [];
 
     switch (scope) {
       case 'this-and-following': {
         updatedEvents = applyRecurringUpdateFollowing(
-          adapter,
-          events,
+          this.state,
           original,
           occurrenceStart,
           changes,

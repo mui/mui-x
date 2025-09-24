@@ -206,6 +206,6 @@ export type SchedulerModelUpdater<
 export type SchedulerEventModelStructure<EventModel extends {}> = {
   [key in keyof CalendarEvent]?: {
     getter: (event: EventModel) => CalendarEvent[key];
-    setter: (event: EventModel, value: CalendarEvent[key]) => EventModel;
+    setter: (event: EventModel | Partial<EventModel>, value: CalendarEvent[key]) => EventModel;
   };
 };

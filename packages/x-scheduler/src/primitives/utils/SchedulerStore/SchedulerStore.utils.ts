@@ -1,6 +1,12 @@
-import { CalendarEvent, CalendarOccurrencePlaceholder } from '../../models';
+import { CalendarEvent, CalendarEventId, CalendarOccurrencePlaceholder } from '../../models';
 import { Adapter } from '../adapter/types';
-import { SchedulerEventModelStructure } from './SchedulerStore.types';
+import {
+  SchedulerEventModelStructure,
+  SchedulerParameters,
+  SchedulerState,
+} from './SchedulerStore.types';
+
+export const DEFAULT_EVENT_MODEL_STRUCTURE: SchedulerEventModelStructure<any> = {};
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
@@ -65,27 +71,73 @@ export function getCalendarEventFromModel<EventModel extends {}>(
   return processedEvent;
 }
 
-export function getUpdatedModelFromPartialCalendarEvent<EventModel extends {}>(
+export function getUpdatedEventModelFromPartialCalendarEvent<EventModel extends {}>(
   event: EventModel,
   changes: Partial<CalendarEvent>,
   eventModelStructure: SchedulerEventModelStructure<EventModel>,
 ): EventModel {
-  const updatedEvent = { ...event };
+  const updatedEventModel = { ...event };
   for (const key in changes) {
     if (changes.hasOwnProperty(key)) {
       const typedKey = key as keyof CalendarEvent;
       if (eventModelStructure[typedKey]) {
         const setter = eventModelStructure[typedKey]?.setter as AnySetter<EventModel>;
         if (setter) {
-          updatedEvent[typedKey] = setter(event, changes[typedKey]) as EventModel;
+          updatedEventModel[typedKey] = setter(updatedEventModel, changes[typedKey]) as EventModel;
         } else {
-          (updatedEvent as any)[key] = changes[typedKey];
+          (updatedEventModel as any)[key] = changes[typedKey];
         }
       }
     }
   }
 
-  return updatedEvent;
+  return updatedEventModel;
 }
 
-type AnySetter<EventModel extends {}> = ((event: EventModel, value: any) => EventModel) | undefined;
+export function createEventModel<EventModel extends {}>(
+  event: CalendarEvent,
+  eventModelStructure: SchedulerEventModelStructure<EventModel>,
+): EventModel {
+  const eventModel: Partial<EventModel> = {};
+  for (const key in event) {
+    if (event.hasOwnProperty(key)) {
+      const typedKey = key as keyof CalendarEvent;
+      if (eventModelStructure[typedKey]) {
+        // TODO: Run properties without setters before the ones with setters
+        const setter = eventModelStructure[typedKey]?.setter as AnySetter<EventModel>;
+        if (setter) {
+          eventModel[typedKey] = setter(eventModel, event[typedKey]) as EventModel;
+        } else {
+          (eventModel as any)[key] = event[typedKey];
+        }
+      }
+    }
+  }
+
+  return eventModel as EventModel;
+}
+
+type AnySetter<EventModel extends {}> =
+  | ((event: EventModel | Partial<EventModel>, value: any) => EventModel)
+  | undefined;
+
+export function buildEventLookups<EventModel extends {}>(
+  parameters: Pick<SchedulerParameters<EventModel>, 'events' | 'eventModelStructure'>,
+): Pick<
+  SchedulerState<EventModel>,
+  'eventModelStructure' | 'eventIds' | 'eventModelLookup' | 'calendarEventLookup'
+> {
+  const { events, eventModelStructure = DEFAULT_EVENT_MODEL_STRUCTURE } = parameters;
+
+  const eventIds: CalendarEventId[] = [];
+  const eventModelLookup = new Map<CalendarEventId, EventModel>();
+  const calendarEventLookup = new Map<CalendarEventId, CalendarEvent>();
+  for (const event of events) {
+    const processedEvent = getCalendarEventFromModel(event, eventModelStructure);
+    eventIds.push(processedEvent.id);
+    eventModelLookup.set(processedEvent.id, event);
+    calendarEventLookup.set(processedEvent.id, processedEvent);
+  }
+
+  return { eventModelStructure, eventIds, eventModelLookup, calendarEventLookup };
+}

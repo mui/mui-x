@@ -28,6 +28,7 @@ import {
 import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
 import { Adapter } from './adapter/types';
+import { buildEventLookups } from './SchedulerStore/SchedulerStore.utils';
 
 describe('recurrence-utils', () => {
   const adapter = getAdapter();
@@ -1307,7 +1308,7 @@ describe('recurrence-utils', () => {
     it('should set extractedFromId for the new series', () => {
       // Original: daily from Jan 01
       const original = makeRecurringEvent();
-      const events = [original];
+      const state = { ...buildEventLookups({ events: [original] }), adapter };
 
       const occurrenceStart = adapter.date('2025-01-07T09:00:00Z');
       const changes: CalendarEvent = {
@@ -1316,9 +1317,8 @@ describe('recurrence-utils', () => {
         end: adapter.date('2025-01-07T11:00:00Z'),
       };
 
-      const updated = applyRecurringUpdateFollowing(
-        adapter,
-        events,
+      const updated = applyRecurringUpdateFollowing<CalendarEvent>(
+        state,
         original,
         occurrenceStart,
         changes,
@@ -1333,7 +1333,7 @@ describe('recurrence-utils', () => {
     it('should truncate the original series at the day before the edited occurrence and appends the new series', () => {
       // Original: daily from Jan 01
       const original = makeRecurringEvent();
-      const events = [original, makeOtherEvent()];
+      const state = { ...buildEventLookups({ events: [original] }), adapter };
 
       // Edit an occurrence on Jan 05
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z');
@@ -1346,13 +1346,7 @@ describe('recurrence-utils', () => {
         // rrule omitted → inherit from original
       };
 
-      const updated = applyRecurringUpdateFollowing(
-        adapter,
-        events,
-        original,
-        occurrenceStart,
-        changes,
-      );
+      const updated = applyRecurringUpdateFollowing(state, original, occurrenceStart, changes);
 
       // Original remains but with truncated rule, new series appended, other event unchanged
       expect(updated).to.have.length(3);
@@ -1385,7 +1379,7 @@ describe('recurrence-utils', () => {
         start: adapter.date('2025-01-10T09:00:00Z'),
         end: adapter.date('2025-01-10T10:00:00Z'),
       });
-      const events = [makeOtherEvent(), original];
+      const state = { ...buildEventLookups({ events: [makeOtherEvent(), original] }), adapter };
 
       // occurrenceStart same calendar day as DTSTART → shouldDropOldSeries = true
       const occurrenceStart = adapter.date('2025-01-10T09:00:00Z');
@@ -1397,13 +1391,7 @@ describe('recurrence-utils', () => {
         // rrule omitted → inherit
       };
 
-      const updated = applyRecurringUpdateFollowing(
-        adapter,
-        events,
-        original,
-        occurrenceStart,
-        changes,
-      );
+      const updated = applyRecurringUpdateFollowing(state, original, occurrenceStart, changes);
 
       // Original removed, new series added, other keeps
       expect(updated.map((event) => event.id)).to.not.include(original.id);
@@ -1415,7 +1403,7 @@ describe('recurrence-utils', () => {
     it('should use provided changes.rrule for the new series', () => {
       // Original: daily from Jan 01
       const original = makeRecurringEvent();
-      const events = [original];
+      const state = { ...buildEventLookups({ events: [original] }), adapter };
 
       const occurrenceStart = adapter.date('2025-01-03T09:00:00Z');
       const changes: CalendarEvent = {
@@ -1429,13 +1417,7 @@ describe('recurrence-utils', () => {
         },
       };
 
-      const updated = applyRecurringUpdateFollowing(
-        adapter,
-        events,
-        original,
-        occurrenceStart,
-        changes,
-      );
+      const updated = applyRecurringUpdateFollowing(state, original, occurrenceStart, changes);
 
       const newId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
       const newSeries = updated.find((event) => event.id === newId)!;
@@ -1445,7 +1427,7 @@ describe('recurrence-utils', () => {
     it('should remove recurrence for the new series when changes.rrule is explicitly undefined', () => {
       // Original: daily from Jan 01
       const original = makeRecurringEvent();
-      const events = [original];
+      const state = { ...buildEventLookups({ events: [original] }), adapter };
 
       const occurrenceStart = adapter.date('2025-01-04T09:00:00Z');
 
@@ -1456,13 +1438,7 @@ describe('recurrence-utils', () => {
         rrule: undefined,
       };
 
-      const updated = applyRecurringUpdateFollowing(
-        adapter,
-        events,
-        original,
-        occurrenceStart,
-        changes,
-      );
+      const updated = applyRecurringUpdateFollowing(state, original, occurrenceStart, changes);
 
       const newId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
       const newSeries = updated.find((event) => event.id === newId)!;
@@ -1472,7 +1448,7 @@ describe('recurrence-utils', () => {
     it('should inherit the original rule when changes.rrule is omitted', () => {
       // Original: daily from Jan 01
       const original = makeRecurringEvent({ rrule: { freq: 'DAILY', interval: 2 } });
-      const events = [original];
+      const state = { ...buildEventLookups({ events: [original] }), adapter };
       const { rrule, ...rest } = original;
 
       const occurrenceStart = adapter.date('2025-01-06T09:00:00Z');
@@ -1482,13 +1458,7 @@ describe('recurrence-utils', () => {
         end: adapter.date('2025-01-06T16:00:00Z'),
       };
 
-      const updated = applyRecurringUpdateFollowing(
-        adapter,
-        events,
-        original,
-        occurrenceStart,
-        changes,
-      );
+      const updated = applyRecurringUpdateFollowing(state, original, occurrenceStart, changes);
 
       // New series has inherited rule
       const newId = `${original.id}::${adapter.format(changes.start, 'keyboardDate')}`;
