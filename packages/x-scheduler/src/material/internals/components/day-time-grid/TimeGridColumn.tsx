@@ -15,7 +15,10 @@ import { EventPopoverTrigger } from '../event-popover';
 import { useGetDateFromPositionInColumn } from '../../../../primitives/time-grid/column/useGetDateFromPositionInColumn';
 import { SchedulerValidDate } from '../../../../primitives/models/date';
 import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
-import { EVENT_CREATION_PRECISION_MINUTE } from '../../../../primitives/utils/event-utils';
+import {
+  EVENT_CREATION_DEFAULT_LENGTH,
+  EVENT_CREATION_PRECISION_MINUTE,
+} from '../../../../primitives/utils/event-utils';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
@@ -85,7 +88,7 @@ function ColumnInteractiveLayer({
 
     return {
       start: startDateFromPosition,
-      end: adapter.addMinutes(startDateFromPosition, 30),
+      end: adapter.addMinutes(startDateFromPosition, EVENT_CREATION_DEFAULT_LENGTH),
     };
   };
 
