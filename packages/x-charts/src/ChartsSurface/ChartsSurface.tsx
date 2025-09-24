@@ -57,7 +57,9 @@ const ChartsSurfaceStyles = styled('svg', {
     },
   },
   '& [data-focused=true]': {
-    outline: 'auto',
+    '&:not(.MuiPieArc-root)': {
+      outline: 'auto',
+    },
   },
 }));
 

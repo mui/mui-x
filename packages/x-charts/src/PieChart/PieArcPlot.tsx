@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useTheme } from '@mui/material/styles';
+import { useFocusedItem } from '../hooks/useFocusedItem';
 import { PieArc, PieArcProps } from './PieArc';
 import {
   ComputedPieRadius,
@@ -74,6 +76,8 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...other
   } = props;
 
+  const theme = useTheme();
+
   const transformedData = useTransformData({
     innerRadius,
     outerRadius,
@@ -90,6 +94,9 @@ function PieArcPlot(props: PieArcPlotProps) {
   }
 
   const Arc = slots?.pieArc ?? PieArc;
+
+  const { dataIndex: focusedIndex = -1 } = useFocusedItem() ?? {};
+  const focusedItem = focusedIndex !== -1 ? transformedData[focusedIndex] : null;
 
   return (
     <g {...other}>
@@ -118,6 +125,25 @@ function PieArcPlot(props: PieArcPlotProps) {
           {...slotProps?.pieArc}
         />
       ))}
+      {/* Render the focus indicator last, so it can align nicely over all arcs */}
+      {focusedItem && (
+        <Arc
+          key={focusedItem.dataIndex}
+          startAngle={focusedItem.startAngle}
+          endAngle={focusedItem.endAngle}
+          paddingAngle={focusedItem.paddingAngle}
+          innerRadius={focusedItem.innerRadius}
+          color={focusedItem.color}
+          outerRadius={focusedItem.outerRadius}
+          cornerRadius={focusedItem.cornerRadius}
+          skipAnimation
+          stroke={(theme.vars ?? theme).palette.text.primary}
+          id={id}
+          isFocusedIndicator
+          dataIndex={focusedIndex}
+          strokeWidth={2}
+        />
+      )}
     </g>
   );
 }

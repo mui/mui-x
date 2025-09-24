@@ -66,9 +66,9 @@ const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
-})<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
+})<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
   // Got to move stroke to an element prop instead of style.
-  stroke: (theme.vars || theme).palette.background.paper,
+  stroke: ownerState.stroke ?? (theme.vars || theme).palette.background.paper,
   transitionProperty: 'opacity, fill, filter',
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -85,6 +85,7 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
     startAngle: number;
     /** @default false */
     skipAnimation: boolean;
+    stroke?: string;
   };
 
 const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
@@ -104,6 +105,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     outerRadius,
     paddingAngle,
     skipAnimation,
+    stroke,
     ...other
   } = props;
 
@@ -115,6 +117,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     isFaded,
     isHighlighted,
     isFocused,
+    stroke,
   };
   const classes = useUtilityClasses(ownerState);
 
