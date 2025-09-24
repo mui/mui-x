@@ -67,8 +67,6 @@ export const EventPopover = React.forwardRef(function EventPopover(
     };
   });
 
-  const occurrenceKey = rawPlaceholder?.occurrenceKey ?? occurrence.key ?? `draft-${Date.now()}`;
-
   function computeRange(next: typeof when, nextIsAllDay = isAllDay) {
     if (nextIsAllDay) {
       const newStart = adapter.startOfDay(adapter.date(next.startDate));
@@ -97,7 +95,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
     store.setOccurrencePlaceholder({
       eventId: null,
-      occurrenceKey,
+      occurrenceKey: rawPlaceholder.occurrenceKey,
       surfaceType: surfaceTypeToUse,
       start,
       end,

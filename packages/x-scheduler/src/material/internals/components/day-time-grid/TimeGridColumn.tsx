@@ -99,7 +99,7 @@ function ColumnInteractiveLayer({
     const endDraft = computeInitialRange(event).end;
     store.setOccurrencePlaceholder({
       eventId: null,
-      occurrenceKey: null,
+      occurrenceKey: 'create-placeholder',
       surfaceType: 'time-grid',
       start: startDraft,
       end: endDraft,
