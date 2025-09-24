@@ -47,14 +47,17 @@ const titanicData: TitanicDatum[] = [
 
 const classes: ClassType[] = ['1st', '2nd', '3rd', 'Crew'];
 
-const totalCount = titanicData.reduce((acc: number, item: TitanicDatum) => acc + item.Count, 0);
+const totalCount = titanicData.reduce(
+  (acc: number, item: TitanicDatum) => acc + item.Count,
+  0,
+);
 
 // Define colors for each class
 const classColors: Record<ClassType, string> = {
   '1st': '#fa938e',
   '2nd': '#98bf45',
   '3rd': '#51cbcf',
-  'Crew': '#d397ff',
+  Crew: '#d397ff',
 };
 
 // Different opacity based on class
@@ -62,7 +65,7 @@ const opacityMap: Record<ClassType, number> = {
   '1st': 0.9,
   '2nd': 0.7,
   '3rd': 0.5,
-  'Crew': 0.3,
+  Crew: 0.3,
 };
 
 const classData: ChartDatum[] = classes.map((pClass: ClassType) => {
@@ -129,7 +132,9 @@ const survivalData: ChartDatum[] = [
 const survivalClassData: ChartDatum[] = [...titanicData]
   .sort((a: TitanicDatum) => (a.Survived === 'Yes' ? -1 : 1))
   .map((item: TitanicDatum) => {
-    const baseColor = survivalData.find((d: ChartDatum) => d.id === item.Survived)?.color || '#000000';
+    const baseColor =
+      survivalData.find((d: ChartDatum) => d.id === item.Survived)?.color ||
+      '#000000';
     return {
       id: `${item.Class}-${item.Survived}`,
       label: `${item.Class} class:`,
@@ -170,7 +175,7 @@ export default function TitanicPie(): React.ReactElement {
   const [view, setView] = React.useState<ViewType>('class');
   const handleViewChange = (
     event: React.MouseEvent<HTMLElement>,
-    newView: ViewType | null
+    newView: ViewType | null,
   ) => {
     if (newView !== null) {
       setView(newView);
@@ -203,7 +208,8 @@ export default function TitanicPie(): React.ReactElement {
                 innerRadius,
                 outerRadius: middleRadius,
                 data: classData,
-                arcLabel: (item) => `${item.id} (${(item as any).percentage.toFixed(0)}%)`,
+                arcLabel: (item) =>
+                  `${item.id} (${(item as any).percentage.toFixed(0)}%)`,
                 valueFormatter: ({ value }) =>
                   `${value} out of ${totalCount} (${((value / totalCount) * 100).toFixed(0)}%)`,
                 highlightScope: { fade: 'global', highlight: 'item' },
@@ -214,7 +220,8 @@ export default function TitanicPie(): React.ReactElement {
                 innerRadius: middleRadius,
                 outerRadius: middleRadius + 20,
                 data: classSurvivalData,
-                arcLabel: (item) => `${item.label} (${(item as any).percentage.toFixed(0)}%)`,
+                arcLabel: (item) =>
+                  `${item.label} (${(item as any).percentage.toFixed(0)}%)`,
                 valueFormatter: ({ value }) =>
                   `${value} out of ${totalCount} (${((value / totalCount) * 100).toFixed(0)}%)`,
                 arcLabelRadius: 160,
@@ -239,7 +246,8 @@ export default function TitanicPie(): React.ReactElement {
                 innerRadius,
                 outerRadius: middleRadius,
                 data: survivalData,
-                arcLabel: (item) => `${item.id} (${(item as any).percentage.toFixed(0)}%)`,
+                arcLabel: (item) =>
+                  `${item.id} (${(item as any).percentage.toFixed(0)}%)`,
                 valueFormatter: ({ value }) =>
                   `${value} out of ${totalCount} (${((value / totalCount) * 100).toFixed(0)}%)`,
                 highlightScope: { fade: 'global', highlight: 'item' },
