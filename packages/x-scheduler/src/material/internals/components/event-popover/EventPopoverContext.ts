@@ -10,7 +10,7 @@ export function useEventPopoverContext(): EventPopoverContextValue {
   const context = React.useContext(EventPopoverContext);
   if (context === undefined) {
     throw new Error(
-      'Scheduler: `EventPopoverContext` is missing. Wrap your tree with <EventPopoverProvider>.',
+      'Scheduler: `EventPopoverContext` is missing. useEventPopoverContext() must be placed within <EventPopoverProvider />..',
     );
   }
   return context;
