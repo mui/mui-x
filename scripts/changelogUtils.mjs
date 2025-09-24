@@ -113,18 +113,26 @@ function parseTags(commitMessage) {
  * @returns {Promise<string>} The latest tagged version
  */
 async function findLatestTaggedVersionForMajor(major) {
-  // fetch tags from the GitHub API and return the last one
-  const { data: tags } = await octokit.rest.repos.listTags({
+  // Fetch all tags from the GitHub API (pagination > 100) and return the last one after optional filtering
+  const tags = await octokit.paginate(octokit.rest.repos.listTags, {
     owner: ORG,
     repo: REPO,
     per_page: 100,
   });
-  if (major) {
-    const filteredTags = tags.filter((tag) => tag.name.startsWith(`v${major}.`));
+
+  if (!tags || tags.length === 0) {
+    throw new Error('No tags found in repository');
+  }
+
+  if (major !== undefined && major !== null) {
+    const majorStr = String(major);
+    const filteredTags = tags.filter((tag) => tag.name && tag.name.startsWith(`v${majorStr}.`));
     if (filteredTags.length > 0) {
+      // GitHub returns tags in reverse chronological order, so first is the latest
       return filteredTags[0].name.trim();
     }
   }
+
   return tags[0].name.trim();
 }
 
