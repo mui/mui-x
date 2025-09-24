@@ -37,6 +37,26 @@ export interface ChartsWrapperProps {
   sx?: SxProps<Theme>;
 }
 
+const getJustifyItems = (position: Position | undefined) => {
+  if (position?.horizontal === 'start') {
+    return 'start';
+  }
+  if (position?.horizontal === 'end') {
+    return 'end';
+  }
+  return 'center';
+};
+
+const getAlignItems = (position: Position | undefined) => {
+  if (position?.vertical === 'top') {
+    return 'flex-start';
+  }
+  if (position?.vertical === 'bottom') {
+    return 'flex-end';
+  }
+  return 'center';
+};
+
 const getGridTemplateAreas = (
   hideLegend: boolean,
   direction: Direction | undefined,
@@ -143,7 +163,11 @@ const Root = styled('div', {
       },
       [`& .${chartsToolbarClasses.root}`]: {
         gridArea: 'toolbar',
+        justifySelf: 'center',
       },
+      justifyContent: 'center',
+      justifyItems: getJustifyItems(ownerState.legendPosition),
+      alignItems: getAlignItems(ownerState.legendPosition),
     };
   },
 );
