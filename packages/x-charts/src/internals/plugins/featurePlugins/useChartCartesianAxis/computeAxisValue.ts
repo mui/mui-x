@@ -237,8 +237,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
       scale = scale.copy();
       scale.range(newRange);
-      const newZoomRange = [0, (1 / spanRatio) * 100];
-      tickNumber = scaleTickNumberByRange(rawTickNumber, newZoomRange);
+      tickNumber = rawTickNumber * spanRatio;
     }
 
     completeAxis[axis.id] = {
