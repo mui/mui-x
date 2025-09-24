@@ -49,12 +49,12 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const { state, props: eventProps } = useEvent({ start, end });
+  const { state } = useEvent({ start, end });
 
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef],
-    props: [props, eventProps, elementProps, getButtonProps],
+    props: [props, elementProps, getButtonProps],
   });
 });
 
