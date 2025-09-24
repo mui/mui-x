@@ -33,6 +33,7 @@ interface PieArcOwnerState {
   isFaded: boolean;
   isHighlighted: boolean;
   isFocused: boolean;
+  stroke?: string;
   classes?: Partial<PieArcClasses>;
 }
 
