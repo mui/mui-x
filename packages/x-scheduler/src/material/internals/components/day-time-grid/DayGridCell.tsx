@@ -38,7 +38,8 @@ export function DayGridCell(props: DayGridCellProps) {
       return;
     }
 
-    if (rawPlaceholder.eventId !== null) {
+    const isCreation = rawPlaceholder.eventId == null && rawPlaceholder.surfaceType === 'day-grid';
+    if (!isCreation) {
       return;
     }
     startEditing({ currentTarget: cellRef.current } as unknown as React.MouseEvent, {
