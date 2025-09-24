@@ -96,6 +96,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       start,
       end,
       originalStart: null,
+      lockSurfaceType: rawPlaceholder.lockSurfaceType,
     });
   }
 
