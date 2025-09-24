@@ -76,7 +76,7 @@ function ColumnInteractiveLayer({
   const { startEditing } = useEventPopover();
   const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
 
-  const computeInitialRange = (event) => {
+  const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {
     const offsetMs = getCursorPositionInElementMs({
       input: { clientY: event.clientY },
       elementRef: columnRef,
