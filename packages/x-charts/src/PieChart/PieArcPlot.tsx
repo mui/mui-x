@@ -141,7 +141,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           id={id}
           isFocusedIndicator
           dataIndex={focusedIndex}
-          strokeWidth={2}
+          strokeWidth={3}
         />
       )}
     </g>
