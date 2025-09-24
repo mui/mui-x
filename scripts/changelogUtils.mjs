@@ -109,14 +109,21 @@ function parseTags(commitMessage) {
 
 /**
  * Find the latest tagged version from GitHub
+ * @param {number} major - The major version to find the latest tagged version for
  * @returns {Promise<string>} The latest tagged version
  */
-async function findLatestTaggedVersion() {
+async function findLatestTaggedVersionForMajor(major) {
   // fetch tags from the GitHub API and return the last one
   const { data: tags } = await octokit.rest.repos.listTags({
     owner: ORG,
     repo: REPO,
   });
+  if (major) {
+    const filteredTags = tags.filter((tag) => tag.name.startsWith(`v${major}.`));
+    if (filteredTags.length > 0) {
+      return filteredTags[0].name.trim();
+    }
+  }
   return tags[0].name.trim();
 }
 
@@ -162,7 +169,7 @@ async function generateChangelog({
   returnEntry = false,
 }) {
   // fetch the last tag and chose the one to use for the release
-  const latestTaggedVersion = await findLatestTaggedVersion();
+  const latestTaggedVersion = await findLatestTaggedVersionForMajor();
   const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
@@ -614,12 +621,12 @@ ${logOtherSection({
 /**
  * Used to pass in the octokit instance from outside the module and return ready to use functions
  * @param {import('@octokit/rest').Octokit} octokitInstance - The Octokit instance to use for GitHub API calls
- * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersion: (function(): Promise<string>)}}
+ * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersionForMajor: (function(): Promise<string>)}}
  */
 export function getChangelogUtils(octokitInstance) {
   octokit = octokitInstance;
   return {
     generateChangelog,
-    findLatestTaggedVersion,
+    findLatestTaggedVersionForMajor,
   };
 }
