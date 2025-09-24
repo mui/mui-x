@@ -12,9 +12,10 @@ import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMi
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/use-event-occurrences-with-timeline-position';
 import { EventPopoverTrigger } from '../event-popover';
-import { useTimeGridColumnContext } from '../../../../primitives/time-grid/column/TimeGridColumnContext';
+import { useGetDateFromPositionInColumn } from '../../../../primitives/time-grid/column/useGetDateFromPositionInColumn';
 import { SchedulerValidDate } from '../../../../primitives/models/date';
 import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
+import { EVENT_CREATION_PRECISION_MINUTE } from '../../../../primitives/utils/event-utils';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
@@ -69,28 +70,22 @@ function ColumnInteractiveLayer({
 }) {
   const adapter = useAdapter();
 
-  const { getCursorPositionInElementMs } = useTimeGridColumnContext();
   const placeholder = TimeGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
   const store = useEventCalendarStoreContext();
   const columnRef = React.useRef<HTMLDivElement | null>(null);
+  const getDateFromPosition = useGetDateFromPositionInColumn({
+    elementRef: columnRef,
+    snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
+  });
   const { startEditing } = useEventPopoverContext();
   const isCreation = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {
-    const offsetMs = getCursorPositionInElementMs({
-      input: { clientY: event.clientY },
-      elementRef: columnRef,
-    });
-
-    const offsetMin = Math.floor(offsetMs / 60000);
-    const anchor = adapter.addMinutes(start, offsetMin);
-
-    // snap to 30 minutes
-    const roundedStart = adapter.addMinutes(anchor, -(adapter.getMinutes(anchor) % 30));
+    const startDateFromPosition = getDateFromPosition(event.clientY);
 
     return {
-      start: roundedStart,
-      end: adapter.addMinutes(roundedStart, 30),
+      start: startDateFromPosition,
+      end: adapter.addMinutes(startDateFromPosition, 30),
     };
   };
 

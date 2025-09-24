@@ -7,6 +7,8 @@ import {
 import { Adapter } from './adapter/types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
 
+export const EVENT_CREATION_PRECISION_MINUTE = 30;
+
 /**
  *  Returns the key of the days an event occurrence should be visible on.
  */
