@@ -3,17 +3,20 @@ import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   DataGridPremiumProps,
+  gridClasses,
   GridColDef,
   GridPivotModel,
   type GridApi,
 } from '@mui/x-data-grid-premium';
 import {
+  $$,
   getCell,
   getColumnHeadersTextContent,
   getColumnValues,
   getRowValues,
   sleep,
 } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 const ROWS = [
   {
@@ -885,6 +888,58 @@ describe('<DataGridPremium /> - Pivoting', () => {
         'IDsize',
         'IDsize',
         'IDsize',
+      ]);
+    });
+  });
+
+  it('should not hide the pivot column on double click on the column separator', async () => {
+    const onColumnWidthChange = spy();
+
+    const { user } = render(
+      <Test
+        initialState={{
+          pivoting: {
+            enabled: true,
+            model: {
+              rows: [{ field: 'ticker' }],
+              columns: [{ field: 'date-year' }],
+              values: [{ field: 'volume', aggFunc: 'sum' }],
+            },
+          },
+        }}
+        onColumnWidthChange={onColumnWidthChange}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        '2024',
+        '2023',
+        'Ticker',
+        'Volumesum',
+        'Volumesum',
+      ]);
+    });
+
+    const separators = $$(`.${gridClasses['columnSeparator--resizable']}`);
+
+    expect(onColumnWidthChange.callCount).to.equal(0);
+
+    await user.dblClick(separators[1]);
+
+    expect(onColumnWidthChange.callCount).to.equal(1);
+    expect(onColumnWidthChange.args[0][0].width).to.equal(50);
+    expect(onColumnWidthChange.args[0][0].colDef.field).to.equal('2024>->volume');
+
+    await waitFor(() => {
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        '2024',
+        '2023',
+        'Ticker',
+        'Volumesum',
+        'Volumesum',
       ]);
     });
   });
