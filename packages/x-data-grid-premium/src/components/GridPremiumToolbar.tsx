@@ -7,6 +7,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
 import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
+import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
@@ -21,6 +22,17 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
             <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarPivot')}>
               <ToolbarButton {...triggerProps} color={state.active ? 'primary' : 'default'}>
                 <rootProps.slots.pivotIcon fontSize="small" />
+              </ToolbarButton>
+            </rootProps.slots.baseTooltip>
+          )}
+        />
+      )}
+      {rootProps.experimentalFeatures?.charts && rootProps.chartsIntegration && (
+        <ChartsPanelTrigger
+          render={(triggerProps) => (
+            <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarCharts')}>
+              <ToolbarButton {...triggerProps} color="default">
+                <rootProps.slots.chartsIcon fontSize="small" />
               </ToolbarButton>
             </rootProps.slots.baseTooltip>
           )}

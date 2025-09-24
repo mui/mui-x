@@ -3,6 +3,7 @@ import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStore } from '@base-ui-components/utils/store';
 import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
@@ -13,6 +14,8 @@ import { useElementPositionInCollection } from '../../utils/useElementPositionIn
 import { SchedulerValidDate } from '../../models';
 import { TimeGridEventContext } from './TimeGridEventContext';
 import { useAdapter } from '../../utils/adapter/useAdapter';
+import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { selectors } from '../../use-event-calendar';
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   componentProps: TimeGridEvent.Props,
@@ -26,6 +29,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     start,
     end,
     eventId,
+    occurrenceKey,
     isDraggable = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -37,7 +41,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = React.useState(false);
+  const store = useEventCalendarStoreContext();
+  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
   const [isResizing, setIsResizing] = React.useState(false);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
 
@@ -72,14 +77,20 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     [eventState, isDragging, isResizing],
   );
 
-  const getSharedDragData: TimeGridEventContext['getSharedDragData'] = useEventCallback(
-    (input) => ({
-      id: eventId,
+  const getSharedDragData: TimeGridEventContext['getSharedDragData'] = useEventCallback((input) => {
+    const offsetBeforeColumnStart = Math.max(
+      adapter.toJsDate(columnStart).getTime() - adapter.toJsDate(start).getTime(),
+      0,
+    );
+    const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
+    return {
+      eventId,
+      occurrenceKey,
       start,
       end,
-      initialCursorPositionInEventMs: getCursorPositionInElementMs({ input, elementRef: ref }),
-    }),
-  );
+      initialCursorPositionInEventMs: offsetBeforeColumnStart + offsetInsideColumn,
+    };
+  });
 
   const doesEventStartBeforeColumnStart = React.useMemo(
     () => adapter.isBefore(start, columnStart),
@@ -116,10 +127,9 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDragStart: () => setIsDragging(true),
-      onDrop: () => setIsDragging(false),
+      onDrop: () => store.setOccurrencePlaceholder(null),
     });
-  }, [getSharedDragData, isDraggable]);
+  }, [getSharedDragData, isDraggable, store]);
 
   const element = useRenderElement('div', componentProps, {
     state,
@@ -150,6 +160,10 @@ export namespace TimeGridEvent {
      */
     eventId: string | number;
     /**
+     * The unique identifier of the event occurrence.
+     */
+    occurrenceKey: string;
+    /**
      * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
      */
@@ -157,7 +171,8 @@ export namespace TimeGridEvent {
   }
 
   export interface SharedDragData {
-    id: string | number;
+    eventId: string | number;
+    occurrenceKey: string;
     start: SchedulerValidDate;
     end: SchedulerValidDate;
     initialCursorPositionInEventMs: number;

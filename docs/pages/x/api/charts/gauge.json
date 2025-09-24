@@ -34,7 +34,8 @@
   "imports": [
     "import { Gauge } from '@mui/x-charts/Gauge';",
     "import { Gauge } from '@mui/x-charts';",
-    "import { Gauge } from '@mui/x-charts-pro';"
+    "import { Gauge } from '@mui/x-charts-pro';",
+    "import { Gauge } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {
