@@ -4,6 +4,8 @@ import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
+  gridColumnGroupsLookupSelector,
+  gridColumnGroupsUnwrappedModelSelector,
   gridRowIdSelector,
   gridRowNodeSelector,
   gridRowTreeSelector,
@@ -193,8 +195,8 @@ export const useGridChartsIntegration = (
       }
 
       const columns = gridColumnLookupSelector(apiRef);
-      const columnGroupPath = apiRef.current.getColumnGroupPath(field);
-      const columnGroupLookup = apiRef.current.getAllGroupDetails();
+      const columnGroupPath = gridColumnGroupsUnwrappedModelSelector(apiRef)[field] ?? [];
+      const columnGroupLookup = gridColumnGroupsLookupSelector(apiRef);
 
       const column = columns[field];
 
