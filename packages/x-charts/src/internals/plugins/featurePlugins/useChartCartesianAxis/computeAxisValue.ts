@@ -26,12 +26,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import {
-  applyDomainLimit,
-  getActualAxisExtrema,
-  getDomainLimit,
-  ScaleDefinition,
-  } from './getAxisScale';
+import { getDomainLimit, ScaleDefinition } from './getAxisScale';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 
 function getRange(
