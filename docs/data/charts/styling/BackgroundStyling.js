@@ -13,7 +13,7 @@ import {
   usUnemploymentRate,
 } from '../dataset/usUnemploymentRate';
 
-function RectBackground() {
+function Background() {
   const drawingArea = useDrawingArea();
   const theme = useTheme();
   return (
@@ -36,8 +36,8 @@ export default function BackgroundStyling() {
       series={series}
       height={300}
     >
-      <RectBackground />
-      <ChartsGrid />
+      <Background />
+      <ChartsGrid vertical horizontal />
       <LinePlot />
       <ChartsXAxis />
       <ChartsYAxis />

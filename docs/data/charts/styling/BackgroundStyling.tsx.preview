@@ -5,8 +5,8 @@
   series={series}
   height={300}
 >
-  <RectBackground />
-  <ChartsGrid />
+  <Background />
+  <ChartsGrid vertical horizontal />
   <LinePlot />
   <ChartsXAxis />
   <ChartsYAxis />
