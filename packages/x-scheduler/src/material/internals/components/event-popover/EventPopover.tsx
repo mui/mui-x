@@ -71,7 +71,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     if (nextIsAllDay) {
       const newStart = adapter.startOfDay(adapter.date(next.startDate));
       const newEnd = adapter.endOfDay(adapter.date(next.endDate));
-      return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
+      return { start: newStart, end: newEnd, surfaceType: 'day-grid' };
     }
     // fallback values
     const startTime = next.startTime || '12:00';
@@ -80,7 +80,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const newStart = adapter.date(`${next.startDate}T${startTime}`);
     const newEnd = adapter.date(`${next.endDate}T${endTime}`);
 
-    return { start: newStart, end: newEnd, surfaceType: 'time-grid' as const };
+    return { start: newStart, end: newEnd, surfaceType: 'time-grid' };
   }
 
   function pushPlaceholder(next: typeof when, nextIsAllDay = isAllDay) {
