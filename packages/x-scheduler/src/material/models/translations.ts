@@ -1,6 +1,11 @@
 import { CalendarView } from '../../primitives/models';
 
-export interface ViewSwitcherTranslations {
+export interface SchedulerTranslations {
+  // ResourceLegend
+  hideEventsLabel: (resourceName: string) => string;
+  resourceLegendSectionLabel: string;
+  showEventsLabel: (resourceName: string) => string;
+
   // ViewSwitcher
   agenda: string;
   day: string;
@@ -13,13 +18,6 @@ export interface ViewSwitcherTranslations {
   months: string;
   weeks: string;
   years: string;
-}
-
-export interface SchedulerTranslations extends ViewSwitcherTranslations {
-  // ResourceLegend
-  hideEventsLabel: (resourceName: string) => string;
-  resourceLegendSectionLabel: string;
-  showEventsLabel: (resourceName: string) => string;
 
   // PreferencesMenu
   preferencesMenu: string;

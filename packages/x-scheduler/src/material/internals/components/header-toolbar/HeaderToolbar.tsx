@@ -7,6 +7,7 @@ import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../../../primitives/use-event-calendar';
+import { CalendarView } from '../../../../primitives/models/view';
 import { PreferencesMenu } from './preferences-menu';
 import './HeaderToolbar.css';
 
@@ -34,7 +35,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
     >
       <div className="PrimaryActionWrapper">
         {showViewSwitcher && (
-          <ViewSwitcher views={views} currentView={view} onViewChange={store.setView as any} />
+          <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
         )}
         <button className="Button OutlinedNeutralButton" onClick={store.goToToday} type="button">
           {translations.today}

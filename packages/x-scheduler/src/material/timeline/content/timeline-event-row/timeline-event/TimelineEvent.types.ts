@@ -1,5 +1,5 @@
-import { EventProps } from '../../../internals/components/event/Event.types';
-import { CalendarEventOccurrenceWithTimePosition } from '../../../../primitives/models';
+import { EventProps } from '../../../../internals/components/event/Event.types';
+import { CalendarEventOccurrenceWithTimePosition } from '../../../../../primitives/models';
 
 export interface TimelineEventProps extends EventProps {
   /**

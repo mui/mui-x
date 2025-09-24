@@ -107,18 +107,3 @@ interface GetOccurrencesFromEventsParameters {
   events: CalendarEvent[];
   visibleResources: Map<string, boolean>;
 }
-
-export const isEventOverlapping = (
-  eventA: CalendarEvent,
-  eventB: CalendarEvent,
-  adapter: Adapter,
-) => {
-  const overlaps =
-    adapter.isBefore(eventA.start, eventB.end) && adapter.isAfter(eventA.end, eventB.start);
-
-  const sameInterval =
-    adapter.toJsDate(eventA.start).getTime() === adapter.toJsDate(eventB.start).getTime() &&
-    adapter.toJsDate(eventA.end).getTime() === adapter.toJsDate(eventB.end).getTime();
-
-  return overlaps || sameInterval;
-};

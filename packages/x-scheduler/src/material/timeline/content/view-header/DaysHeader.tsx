@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
-import { isWeekend } from '../../../../../primitives/utils/date-utils';
-import { useDayList } from '../../../../../primitives/use-day-list';
-import { selectors } from '../../../../../primitives/use-timeline';
-import { useTimelineStoreContext } from '../../../../../primitives/utils/useTimelineStoreContext';
+import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { isWeekend } from '../../../../primitives/utils/date-utils';
+import { useDayList } from '../../../../primitives/use-day-list';
+import { selectors } from '../../../../primitives/use-timeline';
+import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
 
 import './Headers.css';
 

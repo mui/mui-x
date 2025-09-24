@@ -5,23 +5,15 @@ import { useStore } from '@base-ui-components/utils/store';
 import { getColorClassName } from '../../internals/utils/color-utils';
 import { DEFAULT_EVENT_COLOR } from '../../../primitives/utils/SchedulerStore';
 import { Timeline as TimelinePrimitive } from '../../../primitives/timeline';
-import { TimelineEvent } from './timeline-event';
 import { selectors } from '../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../primitives/utils/useTimelineStoreContext';
-import { useEventOccurrencesWithTimelinePositionForMap } from '../../../primitives/use-event-occurrences-with-timeline-position';
-import {
-  DaysHeader,
-  MonthsHeader,
-  TimeHeader,
-  WeeksHeader,
-  YearHeader,
-} from './header-toolbar/view-header';
+import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearHeader } from './view-header';
 import { useEventOccurrencesGroupedByResource } from '../../../primitives/use-event-occurrences-grouped-by-resource';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { diffIn } from '../../..//primitives/utils/date-utils';
-import { SchedulerValidDate } from '../../../primitives';
+import { SchedulerValidDate, TimelineView } from '../../../primitives';
 import { TimelineContentProps } from './TimelineContent.types';
-import { TimelineView } from '../Timeline.types';
+import TimelineEventRow from './timeline-event-row/TimelineEventRow';
 
 const adapter = getAdapter();
 
@@ -51,10 +43,11 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   props: TimelineContentProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { view = 'days', className, ...other } = props;
+  const { className, ...other } = props;
   const store = useTimelineStoreContext();
   const resources = useStore(store, selectors.resources);
   const visibleDate = useStore(store, selectors.visibleDate);
+  const view = useStore(store, selectors.view);
 
   const start = visibleDate;
   const end = React.useMemo(() => getEndBoundaries(view, start), [view, start]);
@@ -62,10 +55,6 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   const occurrencesMap = useEventOccurrencesGroupedByResource({
     start,
     end,
-  });
-  const resourcesWithOccurrences = useEventOccurrencesWithTimelinePositionForMap({
-    occurrences: occurrencesMap,
-    maxColumnSpan: Infinity,
   });
 
   const diff = diffIn(adapter, end, start, UNIT[view]);
@@ -86,6 +75,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
         return null;
     }
   }, [view]);
+
   return (
     <div className="TimelineViewContent" ref={forwardedRef} {...other}>
       <TimelinePrimitive.Root
@@ -129,24 +119,14 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
             </TimelinePrimitive.Cell>
           </TimelinePrimitive.Row>
           <TimelinePrimitive.SubGrid className="EventSubGrid">
-            {(resource) => (
-              <TimelinePrimitive.EventRow
-                key={resource.id}
-                className="TimelineEventRow"
+            {Array.from(occurrencesMap.entries())?.map(([resourceId, occurrences]) => (
+              <TimelineEventRow
+                key={resourceId}
                 start={start}
-                end={getEndBoundaries(view, start)}
-                style={{} as React.CSSProperties}
-              >
-                {resourcesWithOccurrences.get(resource.id)?.map((occurrence) => (
-                  <TimelineEvent
-                    key={occurrence.key}
-                    occurrence={occurrence}
-                    ariaLabelledBy=""
-                    variant="regular"
-                  />
-                ))}
-              </TimelinePrimitive.EventRow>
-            )}
+                end={end}
+                occurrences={occurrences}
+              />
+            ))}
           </TimelinePrimitive.SubGrid>
         </div>
       </TimelinePrimitive.Root>

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
-import { selectors } from '../../../../../primitives/use-timeline';
-import { useTimelineStoreContext } from '../../../../../primitives/utils/useTimelineStoreContext';
-import { SchedulerValidDate } from '../../../../../primitives/models';
+import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { selectors } from '../../../../primitives/use-timeline';
+import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
+import { SchedulerValidDate } from '../../../../primitives/models';
 import './Headers.css';
 
 const adapter = getAdapter();

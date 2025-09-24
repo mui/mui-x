@@ -6,19 +6,24 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { ChevronDown } from 'lucide-react';
 import { Menubar } from '@base-ui-components/react/menubar';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { ViewSwitcherTranslations } from '../../../../models/translations';
+import { TimelineView, CalendarView } from '../../../../../primitives';
 
-interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
+export interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   views: T[];
-  currentView: T;
-  onViewChange: (view: T, event: Event | React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  view: T;
+  onViewChange: (view: T, event: Event | React.MouseEvent<HTMLElement>) => void;
 }
 
-export const ViewSwitcher = React.forwardRef(function ViewSwitcher<T extends string>(
-  props: ViewSwitcherProps<T>,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { className, views, onViewChange, currentView: view, ...other } = props;
+type ViewSwitcherComponent = <T extends string>(
+  props: ViewSwitcherProps<T> & {
+    ref?: React.ForwardedRef<HTMLDivElement>;
+  },
+) => React.ReactElement | null;
+
+export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
+  T extends TimelineView | CalendarView,
+>(props: ViewSwitcherProps<T>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+  const { className, views, onViewChange, view, ...other } = props;
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
@@ -82,7 +87,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<T extends str
             data-pressed={view === visibleView || undefined}
             aria-pressed={view === visibleView}
           >
-            {translations[visibleView as keyof ViewSwitcherTranslations]}
+            {translations[visibleView]}
           </button>
         ))}
 
@@ -96,7 +101,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<T extends str
               data-pressed={view === state.dropdownView || undefined}
               aria-pressed={view === state.dropdownView}
             >
-              {translations[state.dropdownView as keyof ViewSwitcherTranslations]}
+              {translations[state.dropdownView]}
             </button>
             <Menu.Root>
               <Menu.Trigger className="MainItem" data-view="other" aria-label="Show more views">
@@ -122,7 +127,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<T extends str
                           value={dropdownView}
                           closeOnClick
                         >
-                          {translations[dropdownView as keyof ViewSwitcherTranslations]}
+                          {translations[dropdownView]}
                         </Menu.RadioItem>
                       ))}
                     </Menu.RadioGroup>
@@ -135,4 +140,4 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<T extends str
       </Menubar>
     </div>
   );
-});
+}) as ViewSwitcherComponent;

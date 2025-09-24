@@ -1,6 +1,6 @@
 <Timeline
   events={events}
-  resources={timelineResources}
+  resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
 />

@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 const START = defaultVisibleDate.startOf('week');
 
-export const timelineEvents = [
+export const initialEvents = [
   // Project
   {
     id: 'meeting-1',
@@ -74,7 +74,7 @@ export const timelineEvents = [
   },
 ];
 
-export const timelineResources = [
+export const resources = [
   { name: 'Project', id: 'project', eventColor: 'orange' },
   { name: 'IT', id: 'it', eventColor: 'cyan' },
   { name: 'Design', id: 'design', eventColor: 'pink' },

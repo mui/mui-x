@@ -32,7 +32,7 @@ export namespace useEventOccurrencesGroupedByResource {
 }
 
 /**
- * Do not use directly, use the `useEventOccurrencesGroupedByDay` hook instead.
+ * Do not use directly, use the `useEventOccurrencesGroupedByResource` hook instead.
  * This is only exported for testing purposes.
  */
 export function innerGetEventOccurrencesGroupedByResource(
@@ -42,9 +42,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   start: SchedulerValidDate,
   end: SchedulerValidDate,
 ): Map<string, CalendarEventOccurrence[]> {
-  const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>(
-    Array.from(visibleResources.keys()).map((resourceId) => [resourceId, []]),
-  );
+  const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>();
 
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
 

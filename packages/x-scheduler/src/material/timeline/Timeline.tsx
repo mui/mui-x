@@ -1,10 +1,16 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useStore } from '@base-ui-components/utils/store';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useExtractTimelineParameters, useTimeline } from '../../primitives/use-timeline';
+import {
+  selectors,
+  useExtractTimelineParameters,
+  useTimeline,
+} from '../../primitives/use-timeline';
 import { TimelineStoreContext } from '../../primitives/utils/useTimelineStoreContext';
-import { TimelineProps, TimelineView } from './Timeline.types';
+import { TimelineView } from '../../primitives/models/view';
+import { TimelineProps } from './Timeline.types';
 import { ViewSwitcher } from '../internals/components/header-toolbar/view-switcher';
 import { TimelineContent } from './content';
 import '../index.css';
@@ -14,18 +20,20 @@ export const Timeline = React.forwardRef(function Timeline(
   props: TimelineProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { parameters, forwardedProps, ...other } = useExtractTimelineParameters(props);
+  const { parameters, forwardedProps } = useExtractTimelineParameters(props);
   const store = useTimeline(parameters);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  // TODO replace with a view state from the store
-  const [view, setView] = React.useState<TimelineView>('days');
-  const views: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
+  const view = useStore(store, selectors.view);
+  const views = useStore(store, selectors.views);
 
-  const handleViewChange = (newView: TimelineView, _event: React.MouseEvent<HTMLElement>) => {
-    setView(newView);
+  const handleViewChange = (
+    newView: TimelineView,
+    event: Event | React.MouseEvent<HTMLElement>,
+  ) => {
+    store.setView(newView, event);
   };
 
   return (
@@ -34,12 +42,11 @@ export const Timeline = React.forwardRef(function Timeline(
         ref={handleRef}
         className={clsx('TimelineViewContainer', 'mui-x-scheduler', forwardedProps.className)}
         {...forwardedProps}
-        {...other}
       >
         <div className="TimelineHeaderToolbar">
-          <ViewSwitcher views={views} currentView={view} onViewChange={handleViewChange as any} />
+          <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={handleViewChange} />
         </div>
-        <TimelineContent view={view} />
+        <TimelineContent />
       </div>
     </TimelineStoreContext.Provider>
   );
