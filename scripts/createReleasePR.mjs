@@ -859,7 +859,7 @@ async function main({ githubToken }) {
       auth: githubToken,
     });
 
-    const { findLatestTaggedVersion, generateChangelog: generator } = getChangelogUtils(octokit);
+    const { findLatestTaggedVersionForMajor, generateChangelog: generator } = getChangelogUtils(octokit);
 
     // Find the upstream remote
     const upstreamRemote = await findMuiXRemote();
@@ -891,7 +891,7 @@ async function main({ githubToken }) {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
-    const latestTag = await findLatestTaggedVersion();
+    const latestTag = await findLatestTaggedVersionForMajor(majorVersion);
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
