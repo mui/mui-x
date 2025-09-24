@@ -61,6 +61,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       start: adapter.startOfDay(day.value),
       end: adapter.endOfDay(day.value),
       originalStart: null,
+      lockSurfaceType: true,
     });
   };
 

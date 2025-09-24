@@ -91,10 +91,14 @@ export const EventPopover = React.forwardRef(function EventPopover(
     }
 
     const { start, end, surfaceType } = computeRange(next, nextIsAllDay);
+    const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
+      ? rawPlaceholder.surfaceType
+      : surfaceType;
+
     store.setOccurrencePlaceholder({
       eventId: null,
       occurrenceKey,
-      surfaceType,
+      surfaceType: surfaceTypeToUse,
       start,
       end,
       originalStart: null,
