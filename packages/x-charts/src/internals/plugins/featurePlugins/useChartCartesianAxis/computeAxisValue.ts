@@ -198,7 +198,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
         filter,
       );
       [minData, maxData] = nice(minData, maxData, rawTickNumber);
-      scale = scale.copy();
 
       const domain = scale.domain();
       const scaleRange = scale.range();
@@ -206,12 +205,41 @@ export function computeAxisValue<T extends ChartSeriesType>({
       const domainSpan = Math.abs(domain[1].valueOf() - domain[0].valueOf());
       const extremaSpan = Math.abs(maxData - minData);
       const spanRatio = domainSpan / extremaSpan;
+      const startDiff = Math.abs(domain[0].valueOf() - minData);
+      const endDiff = Math.abs(domain[1].valueOf() - maxData);
+      const startRatio = startDiff / (startDiff + endDiff) || 0;
+      const endRatio = endDiff / (startDiff + endDiff) || 0;
 
-      // TODO: Needs to handle min/max data being zero, and apply the same logic to minData
-      scale.range([scaleRange[0], scaleRange[0] - rangeSpan * spanRatio]);
-      const newZoomRange = [0, (1 / spanRatio) * 100];
-      tickNumber = scaleTickNumberByRange(rawTickNumber, newZoomRange);
-      console.log({ newZoomRange, tickNumber, rawTickNumber, spanRatio: domainSpan / extremaSpan });
+      if (spanRatio !== 1) {
+        const newRange = [
+          scaleRange[0].valueOf() + rangeSpan * startRatio * (spanRatio - 1),
+          scaleRange[1].valueOf() - rangeSpan * endRatio * (spanRatio - 1),
+        ];
+
+        console.log({
+          scaleRange,
+          newRange,
+          spanRatio,
+          startRatio,
+          endRatio,
+          startDiff,
+          endDiff,
+          minData,
+          maxData,
+        });
+
+        // TODO: Needs to handle min/max data being zero, and apply the same logic to minData
+        scale = scale.copy();
+        scale.range(newRange);
+        const newZoomRange = [0, (1 / spanRatio) * 100];
+        tickNumber = scaleTickNumberByRange(rawTickNumber, newZoomRange);
+        console.log({
+          newZoomRange,
+          tickNumber,
+          rawTickNumber,
+          spanRatio: domainSpan / extremaSpan,
+        });
+      }
 
       // scale.domain([minData, maxData]);
 
