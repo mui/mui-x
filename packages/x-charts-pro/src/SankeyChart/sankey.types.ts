@@ -179,6 +179,18 @@ export interface SankeySeriesType {
    * @default 6
    */
   iterations?: number;
+
+  /**
+   * Formatter used to render values in tooltip or other data display.
+   * @param {number} value The value to render.
+   * @param {SankeyValueFormatterContext} context The rendering context of the value.
+   * @param {'node' | 'link'} context.type The type of element being formatted.
+   * @param {SankeyNodeId} [context.nodeId] For nodes: the node ID. For links: undefined.
+   * @param {SankeyNodeId} [context.sourceId] For links: the source node ID. For nodes: undefined.
+   * @param {SankeyNodeId} [context.targetId] For links: the target node ID. For nodes: undefined.
+   * @returns {string | null} The formatted value to display.
+   */
+  valueFormatter?: (value: number, context: SankeyValueFormatterContext) => string | null;
 }
 
 /**
@@ -213,7 +225,7 @@ export interface SankeyLayout {
 }
 
 export interface DefaultizedSankeySeriesType
-  extends DefaultizedProps<Omit<SankeySeriesType, 'data'>, 'id'> {
+  extends DefaultizedProps<Omit<SankeySeriesType, 'data'>, 'id' | 'valueFormatter'> {
   data: {
     nodes: Map<SankeyNodeId, SankeyNode>;
     links: readonly SankeyLink[];
@@ -275,3 +287,37 @@ export type SankeyItemIdentifier = SankeyNodeIdentifier | SankeyLinkIdentifier;
 export type SankeyItemIdentifierWithData =
   | SankeyNodeIdentifierWithData
   | SankeyLinkIdentifierWithData;
+
+export type SankeyValueFormatterContext =
+  | {
+      /**
+       * Where the value will be displayed
+       */
+      location: 'tooltip' | 'label';
+      /**
+       * Can be 'node' or 'link'
+       */
+      type: 'node';
+      /**
+       * The id of the node
+       */
+      nodeId: SankeyNodeId;
+    }
+  | {
+      /**
+       * Where the value will be displayed
+       */
+      location: 'tooltip' | 'label';
+      /**
+       * Can be 'node' or 'link'
+       */
+      type: 'link';
+      /**
+       * The id of the source node
+       */
+      sourceId: SankeyNodeId;
+      /**
+       * The id of the target node
+       */
+      targetId: SankeyNodeId;
+    };

@@ -45,7 +45,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   };
 
-  const focusItem = useEventCallback((event: React.SyntheticEvent, itemId: string) => {
+  const focusItem = useEventCallback((event: React.SyntheticEvent | null, itemId: string) => {
     // If we receive an itemId, and it is visible, the focus will be set to it
     if (isItemVisible(itemId)) {
       innerFocusItem(event, itemId);

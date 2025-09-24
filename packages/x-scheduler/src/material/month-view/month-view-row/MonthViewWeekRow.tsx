@@ -20,7 +20,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const store = useEventCalendarStoreContext();
   const preferences = useStore(store, selectors.preferences);
   const translations = useTranslations();
-  const daysWithEvents = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
+  const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
   const { start, end } = React.useMemo(
@@ -51,12 +51,13 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           {weekNumber}
         </div>
       )}
-      {daysWithEvents.map((day, dayIdx) => (
+      {occurrences.days.map((day, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}
           key={day.key}
           day={day}
           maxEvents={maxEvents}
+          row={occurrences}
         />
       ))}
     </DayGrid.Row>

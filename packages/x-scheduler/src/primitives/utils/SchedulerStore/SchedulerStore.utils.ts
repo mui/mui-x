@@ -1,5 +1,36 @@
-import { CalendarEvent } from '../models';
-import { CalendarEventModelStructure } from './useEventCalendar.types';
+import { CalendarEvent, CalendarOccurrencePlaceholder } from '../../models';
+import { Adapter } from '../adapter/types';
+import { SchedulerEventModelStructure } from './SchedulerStore.types';
+
+/**
+ * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
+ */
+export function shouldUpdateOccurrencePlaceholder(
+  adapter: Adapter,
+  previous: CalendarOccurrencePlaceholder | null,
+  next: CalendarOccurrencePlaceholder | null,
+): boolean {
+  if (next == null || previous == null) {
+    return next !== previous;
+  }
+
+  for (const key in next) {
+    if (key === 'start' || key === 'end' || key === 'originalStart') {
+      if (!adapter.isEqual(next[key], previous[key])) {
+        return true;
+      }
+    } else if (
+      !Object.is(
+        next[key as keyof CalendarOccurrencePlaceholder],
+        previous?.[key as keyof CalendarOccurrencePlaceholder],
+      )
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 const EVENT_PROPERTIES_LOOKUP: { [P in keyof CalendarEvent]-?: true } = {
   id: true,
@@ -18,7 +49,7 @@ const EVENT_PROPERTIES = Object.keys(EVENT_PROPERTIES_LOOKUP) as (keyof Calendar
 
 export function getCalendarEventFromModel<EventModel extends {}>(
   event: EventModel,
-  eventModelStructure: CalendarEventModelStructure<EventModel>,
+  eventModelStructure: SchedulerEventModelStructure<EventModel>,
 ): CalendarEvent {
   const processedEvent = {} as CalendarEvent;
 
@@ -37,7 +68,7 @@ export function getCalendarEventFromModel<EventModel extends {}>(
 export function getUpdatedModelFromPartialCalendarEvent<EventModel extends {}>(
   event: EventModel,
   changes: Partial<CalendarEvent>,
-  eventModelStructure: CalendarEventModelStructure<EventModel>,
+  eventModelStructure: SchedulerEventModelStructure<EventModel>,
 ): EventModel {
   const updatedEvent = { ...event };
   for (const key in changes) {

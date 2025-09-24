@@ -98,6 +98,10 @@ With the component and utilities imported, and rows and columns defined, you're 
 
 {{"demo": "RenderComponent.js", "defaultCodeOpen": true, "bg": "inline"}}
 
+:::warning
+You must set [intrinsic dimensions](/x/react-data-grid/layout/) on the Data Grid's parent container.
+:::
+
 ## TypeScript
 
 ### Theme augmentation

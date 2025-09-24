@@ -81,6 +81,23 @@ Higher values create plumper links, while lower values create thinner connection
 
 {{"demo": "SankeyCurveCorrection.js"}}
 
+## Value formatting
+
+You can customize how values are displayed in tooltips and labels using the `valueFormatter` prop.
+This function receives the numeric value and a context object that provides information about what type of element is being formatted.
+
+The context object contains:
+
+- `location`: either `'tooltip'` or `'label'` to indicate where the formatted value is used
+- `type`: either `'node'` or `'link'` to indicate what is being formatted
+- `nodeId`: for nodes, the ID of the node being formatted
+- `sourceId` and `targetId`: for links, the IDs of the source and target nodes
+
+In the following demo, the value formatter adds relevant units to the values.
+And when pointer is on top of a node, it display "total" to the tooltip.
+
+{{"demo": "SankeyValueFormatter.js"}}
+
 ## Sorting
 
 Nodes are displayed in the same order as they are defined in the `nodes` array.

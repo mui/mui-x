@@ -27,7 +27,7 @@
 }
 
 .EventCard--allDay,
-.EventCard--dragPlaceholder {
+.EventCard--placeholder {
   --event-background: var(--allDay-accepted-bg);
   --event-primary-text: var(--allDay-accepted-primary-text);
 }
