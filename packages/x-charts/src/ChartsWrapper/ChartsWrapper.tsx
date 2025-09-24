@@ -57,11 +57,6 @@ const getAlignItems = (position: Position | undefined) => {
   return 'center';
 };
 
-const addToolbar = (template: string) => {
-  return `"toolbar"
-          ${template}`;
-};
-
 const getGridTemplateAreas = (
   hideLegend: boolean,
   direction: Direction | undefined,
@@ -87,32 +82,35 @@ const getGridTemplateAreas = (
 
 const getTemplateColumns = (
   hideLegend: boolean,
-  direction: Direction | undefined,
-  position: Position | undefined,
-  width: number | undefined,
+  direction: Direction = 'horizontal',
+  horizontalPosition: Position['horizontal'] = 'end',
+  width: number | undefined = undefined,
 ) => {
-  if (direction === 'vertical') {
-    if (hideLegend) {
-      return '1fr';
-    }
-    if (position?.horizontal === 'start') {
-      return 'auto 1fr';
-    }
-
-    return `${width ? 'auto' : '1fr'} auto`;
+  const drawingAreaColumn = width ? 'auto' : '1fr';
+  if (direction === 'horizontal') {
+    return drawingAreaColumn;
   }
 
-  return '100%';
+  if (hideLegend) {
+    return drawingAreaColumn;
+  }
+  return horizontalPosition === 'start' ? `auto ${drawingAreaColumn}` : `${drawingAreaColumn} auto`;
 };
 
-const getTemplateRows = (hideLegend: boolean, direction: Direction | undefined) => {
+const getTemplateRows = (
+  hideLegend: boolean,
+  direction: Direction = 'horizontal',
+  verticalPosition: Position['vertical'] = 'top',
+) => {
+  const drawingAreaRow = '1fr';
   if (direction === 'vertical') {
-    if (hideLegend) {
-      return 'auto';
-    }
-    return 'auto 1fr';
+    return drawingAreaRow;
   }
-  return 'auto 1fr';
+
+  if (hideLegend) {
+    return drawingAreaRow;
+  }
+  return verticalPosition === 'bottom' ? `${drawingAreaRow} auto` : `auto ${drawingAreaRow}`;
 };
 
 const Root = styled('div', {
@@ -120,8 +118,27 @@ const Root = styled('div', {
   slot: 'Root',
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'width',
-})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; width?: number }>(
-  ({ ownerState, width }) => ({
+})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; width?: number }>(({
+  ownerState,
+  width,
+}) => {
+  const gridTemplateColumns = getTemplateColumns(
+    ownerState.hideLegend,
+    ownerState.legendDirection,
+    ownerState.legendPosition?.horizontal,
+    width,
+  );
+  const gridTemplateRows = getTemplateRows(
+    ownerState.hideLegend,
+    ownerState.legendDirection,
+    ownerState.legendPosition?.vertical,
+  );
+  const gridTemplateAreas = getGridTemplateAreas(
+    ownerState.hideLegend,
+    ownerState.legendDirection,
+    ownerState.legendPosition,
+  );
+  return {
     variants: [
       {
         props: { extendVertically: true },
@@ -132,37 +149,27 @@ const Root = styled('div', {
     ],
     flex: 1,
     display: 'grid',
-    gridTemplateColumns: getTemplateColumns(
-      ownerState.hideLegend,
-      ownerState.legendDirection,
-      ownerState.legendPosition,
-      width,
-    ),
-    gridTemplateRows: getTemplateRows(ownerState.hideLegend, ownerState.legendDirection),
+    gridTemplateColumns,
+    gridTemplateRows,
+    gridTemplateAreas,
     [`&:has(.${chartsToolbarClasses.root})`]: {
-      gridTemplateAreas: addToolbar(
-        getGridTemplateAreas(
-          ownerState.hideLegend,
-          ownerState.legendDirection,
-          ownerState.legendPosition,
-        ),
-      ),
+      // Add a row for toolbar if there is one.
+      gridTemplateRows: `auto ${gridTemplateRows}`,
+      gridTemplateAreas: `"${gridTemplateColumns
+        .split(' ')
+        .map(() => 'toolbar')
+        .join(' ')}"
+        ${gridTemplateAreas}`,
     },
-    [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
-      gridTemplateAreas: getGridTemplateAreas(
-        ownerState.hideLegend,
-        ownerState.legendDirection,
-        ownerState.legendPosition,
-      ),
+    [`& .${chartsToolbarClasses.root}`]: {
+      gridArea: 'toolbar',
+      justifySelf: 'center',
     },
     justifyContent: 'center',
     justifyItems: getJustifyItems(ownerState.legendPosition),
     alignItems: getAlignItems(ownerState.legendPosition),
-    [`& > .${chartsToolbarClasses.root}`]: {
-      justifySelf: 'center',
-    },
-  }),
-);
+  };
+});
 
 /**
  * Wrapper for the charts components.
