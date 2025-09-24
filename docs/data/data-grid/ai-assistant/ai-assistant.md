@@ -139,6 +139,29 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI Assistant.
    - Provide access to the row data with `allowAiAssistantDataSampling` prop – since this uses real data, it may lead to better processing results.
 
+6. Provide `userId` reference to be able track spend and limit the users.
+   The MUI Service support `metadata` property where you could store the user identification reference of your customers to easily track and manage usage.
+
+   ::warning
+   The `metadata` object would store only `userId` property. If you interested in storing more data, please [contact our support team](mailto:support@mui.com).
+   ::
+
+   ```ts
+   function processPrompt(query: string, context: string, conversationId?: string) {
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       conversationId,
+       {
+         metadata: {
+           userId: 'example-user-reference',
+         },
+       },
+     );
+   }
+   ```
+
 ### With a custom service
 
 The Data Grid exposes elements of the AI Assistant feature so you can build your own prompt processing service:
