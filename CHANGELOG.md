@@ -12,7 +12,7 @@ _Sep 25, 2025_
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌨️ Charts keyboard navigation
-- ⚡️ Charts: Add new `BatchScatter` (opt-in high-performance renderer for scatter charts)
+- ⚡️ Charts: Add new `BatchScatter` component that can optionally replace Scatter for large datasets
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 - 🧰 Codemod requires Node >=20.19
