@@ -23,7 +23,7 @@ export function DayGridCell(props: DayGridCellProps) {
 
   const { startEditing } = useEventPopoverContext();
 
-  const onDoubleClick = () => {
+  const handleDoubleClick = () => {
     store.setOccurrencePlaceholder({
       eventId: null,
       occurrenceKey: 'create-placeholder',
@@ -54,7 +54,7 @@ export function DayGridCell(props: DayGridCellProps) {
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
-      onDoubleClick={onDoubleClick}
+      onDoubleClick={handleDoubleClick}
     >
       <div className="DayTimeGridAllDayEventsCellEvents">
         {day.withPosition.map((occurrence) => {

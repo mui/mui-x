@@ -54,7 +54,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Day number header + max events
   const rowCount = 1 + maxEvents;
 
-  const onDoubleClick = () => {
+  const handleDoubleClick = () => {
     store.setOccurrencePlaceholder({
       eventId: null,
       occurrenceKey: 'create-placeholder',
@@ -86,7 +86,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         isWeekend(adapter, day.value) && 'Weekend',
       )}
       style={{ '--row-count': rowCount } as React.CSSProperties}
-      onDoubleClick={onDoubleClick}
+      onDoubleClick={handleDoubleClick}
     >
       {hasDayView ? (
         <button

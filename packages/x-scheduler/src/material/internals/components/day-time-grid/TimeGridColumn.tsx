@@ -94,7 +94,7 @@ function ColumnInteractiveLayer({
     };
   };
 
-  const onDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
       eventId: null,
@@ -117,7 +117,7 @@ function ColumnInteractiveLayer({
     <div
       className="DayTimeGridColumnInteractiveLayer"
       ref={columnRef}
-      onDoubleClick={onDoubleClick}
+      onDoubleClick={handleDoubleClick}
     >
       {occurrences.map((occurrence) => (
         <EventPopoverTrigger
