@@ -3,7 +3,6 @@
 
 import { DateTime } from 'luxon';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
-import { weekdays } from 'moment';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 
