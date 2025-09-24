@@ -23,8 +23,8 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
   const ref = React.useRef<HTMLDivElement>(null);
 
   const getEventDropData = useEventCallback(
-    (data: Record<string, unknown>): CalendarOccurrencePlaceholder | undefined => {
-      if (!ref.current || !isValidDropTarget(data)) {
+    (data: any): CalendarOccurrencePlaceholder | undefined => {
+      if (!isValidDropTarget(data)) {
         return undefined;
       }
 
