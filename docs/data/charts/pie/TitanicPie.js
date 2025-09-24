@@ -39,13 +39,21 @@ const classColors = {
   Crew: '#d397ff',
 };
 
+// Different opacity based on class
+const opacityMap = {
+  '1st': 0.9,
+  '2nd': 0.7,
+  '3rd': 0.5,
+  Crew: 0.3,
+};
+
 const classData = classes.map((pClass) => {
   const classTotal = titanicData
     .filter((item) => item.Class === pClass)
     .reduce((acc, item) => acc + item.Count, 0);
   return {
     id: pClass,
-    label: `${pClass} Class`,
+    label: `${pClass} Class:`,
     value: classTotal,
     percentage: (classTotal / totalCount) * 100,
     color: classColors[pClass],
@@ -53,19 +61,14 @@ const classData = classes.map((pClass) => {
 });
 
 const classSurvivalData = classes.flatMap((pClass) => {
-  const classItem = classData.find((d) => d.id === pClass);
-  if (!classItem) {
-    throw new Error(`No data found for class: ${pClass}`);
-  }
-  const classTotal = classItem.value;
+  const classTotal = classData.find((d) => d.id === pClass).value;
   const baseColor = classColors[pClass];
-
   return titanicData
     .filter((item) => item.Class === pClass)
     .sort((a, b) => (a.Survived > b.Survived ? 1 : -1))
     .map((item) => ({
       id: `${pClass}-${item.Survived}`,
-      label: `${pClass} - ${item.Survived}`,
+      label: `${item.Survived}`,
       value: item.Count,
       percentage: (item.Count / classTotal) * 100,
       color: item.Survived === 'Yes' ? baseColor : `${baseColor}80`, // 80 is 50% opacity for 'No'
@@ -76,18 +79,30 @@ const classSurvivalData = classes.flatMap((pClass) => {
 const survivalData = [
   {
     id: 'Yes',
-    label: 'Survived',
+    label: 'Survived:',
     value: titanicData
       .filter((item) => item.Survived === 'Yes')
       .reduce((sum, item) => sum + item.Count, 0),
+    percentage:
+      (titanicData
+        .filter((item) => item.Survived === 'Yes')
+        .reduce((sum, item) => sum + item.Count, 0) /
+        totalCount) *
+      100,
     color: classColors['3rd'],
   },
   {
     id: 'No',
-    label: 'Did not survive',
+    label: 'Did not survive:',
     value: titanicData
       .filter((item) => item.Survived === 'No')
       .reduce((sum, item) => sum + item.Count, 0),
+    percentage:
+      (titanicData
+        .filter((item) => item.Survived === 'No')
+        .reduce((sum, item) => sum + item.Count, 0) /
+        totalCount) *
+      100,
     color: classColors['1st'],
   },
 ];
@@ -97,17 +112,9 @@ const survivalClassData = [...titanicData]
   .sort((a) => (a.Survived === 'Yes' ? -1 : 1))
   .map((item) => {
     const baseColor = survivalData.find((d) => d.id === item.Survived)?.color;
-    // Different opacity based on class
-    const opacityMap = {
-      '1st': 0.9,
-      '2nd': 0.7,
-      '3rd': 0.5,
-      Crew: 0.3,
-    };
-
     return {
       id: `${item.Class}-${item.Survived}`,
-      label: item.Class,
+      label: `${item.Class} class:`,
       value: item.Count,
       percentage:
         (item.Count /
@@ -137,7 +144,6 @@ function PieCenterLabel({ children }) {
 
 export default function TitanicPie() {
   const [view, setView] = React.useState('class');
-
   const handleViewChange = (event, newView) => {
     if (newView !== null) {
       setView(newView);
@@ -145,7 +151,7 @@ export default function TitanicPie() {
   };
 
   const innerRadius = 50;
-  const outerRadius = 120;
+  const middleRadius = 120;
 
   return (
     <Box sx={{ width: '100%', textAlign: 'center' }}>
@@ -168,33 +174,34 @@ export default function TitanicPie() {
             series={[
               {
                 innerRadius,
-                outerRadius,
+                outerRadius: middleRadius,
                 data: classData,
                 arcLabel: (item) => `${item.id} (${item.percentage.toFixed(0)}%)`,
-                arcLabelMinAngle: 20,
+                valueFormatter: ({ value }) =>
+                  `${value} out of ${totalCount} (${((value / totalCount) * 100).toFixed(0)}%)`,
                 highlightScope: { fade: 'global', highlight: 'item' },
                 highlighted: { additionalRadius: 2 },
+                cornerRadius: 3,
               },
               {
-                innerRadius: outerRadius,
-                outerRadius: outerRadius + 20,
+                innerRadius: middleRadius,
+                outerRadius: middleRadius + 20,
                 data: classSurvivalData,
-                arcLabel: (item) => {
-                  const survived = item.label.split(' - ')[1];
-                  return `${survived} (${item.percentage.toFixed(0)}%)`;
-                },
-                arcLabelMinAngle: 15,
+                arcLabel: (item) => `${item.label} (${item.percentage.toFixed(0)}%)`,
+                valueFormatter: ({ value }) =>
+                  `${value} out of ${totalCount} (${((value / totalCount) * 100).toFixed(0)}%)`,
                 arcLabelRadius: 160,
                 highlightScope: { fade: 'global', highlight: 'item' },
                 highlighted: { additionalRadius: 2 },
+                cornerRadius: 3,
               },
             ]}
             sx={{
               [`& .${pieArcLabelClasses.root}`]: {
-                fontSize: '14px',
+                fontSize: '12px',
               },
             }}
-            hideLegend={true}
+            hideLegend
           >
             <PieCenterLabel>Class</PieCenterLabel>
           </PieChart>
@@ -203,37 +210,35 @@ export default function TitanicPie() {
             series={[
               {
                 innerRadius,
-                outerRadius,
+                outerRadius: middleRadius,
                 data: survivalData,
-                arcLabel: (item) => {
-                  const percentage =
-                    (item.value / titanicData.reduce((sum, i) => sum + i.Count, 0)) *
-                    100;
-                  return `${item.id} (${percentage.toFixed(0)}%)`;
-                },
-                arcLabelMinAngle: 20,
+                arcLabel: (item) => `${item.id} (${item.percentage.toFixed(0)}%)`,
+                valueFormatter: ({ value }) =>
+                  `${value} out of ${totalCount} (${((value / totalCount) * 100).toFixed(0)}%)`,
                 highlightScope: { fade: 'global', highlight: 'item' },
                 highlighted: { additionalRadius: 2 },
+                cornerRadius: 3,
               },
               {
-                innerRadius: outerRadius,
-                outerRadius: outerRadius + 20,
+                innerRadius: middleRadius,
+                outerRadius: middleRadius + 20,
                 data: survivalClassData,
-                arcLabel: (item) => {
-                  return `${item.label} (${item.percentage.toFixed(0)}%)`;
-                },
-                arcLabelMinAngle: 15,
+                arcLabel: (item) =>
+                  `${item.id.split('-')[0]} (${item.percentage.toFixed(0)}%)`,
                 arcLabelRadius: 160,
+                valueFormatter: ({ value }) =>
+                  `${value} out of ${totalCount} (${((value / totalCount) * 100).toFixed(0)}%)`,
                 highlightScope: { fade: 'global', highlight: 'item' },
                 highlighted: { additionalRadius: 2 },
+                cornerRadius: 3,
               },
             ]}
             sx={{
               [`& .${pieArcLabelClasses.root}`]: {
-                fontSize: '14px',
+                fontSize: '12px',
               },
             }}
-            hideLegend={true}
+            hideLegend
           >
             <PieCenterLabel>Survived</PieCenterLabel>
           </PieChart>
