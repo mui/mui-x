@@ -144,14 +144,6 @@ export class EventCalendarStore extends SchedulerStore<
   };
 
   /**
-   * Goes to today's date without changing the view.
-   */
-  public goToToday = (event: React.UIEvent) => {
-    const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.date()), event);
-  };
-
-  /**
    * Goes to the previous visible date span based on the current view.
    */
   public goToPreviousVisibleDate = (event: React.UIEvent) => this.setSiblingVisibleDate(-1, event);
