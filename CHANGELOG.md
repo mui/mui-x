@@ -146,11 +146,11 @@ The following are all team members who have contributed to this release:
 - [DataGrid] Fix numeric font size not being applied (#19552) @cherniavskii
 - [DataGrid] Improve `operator` types to display literal values (#19529) @siriwatknp
 
-#### `@mui/x-data-grid-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
 Same changes as in `@mui/x-data-grid@8.11.3`.
 
-#### `@mui/x-data-grid-premium@8.11.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.11.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")
 
 Same changes as in `@mui/x-data-grid-pro@8.11.3`.
 
@@ -160,7 +160,7 @@ Same changes as in `@mui/x-data-grid-pro@8.11.3`.
 
 - [pickers] Refactor `slots` and `slotProps` propagation strategy (#18867) @LukasTy
 
-#### `@mui/x-date-pickers-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
 Same changes as in `@mui/x-date-pickers@8.11.3`.
 
@@ -202,7 +202,7 @@ Internal changes.
 
 - [docs] Add styling row group recipe (#19349) @siriwatknp
 - [docs] Group demos data into the dataset folder (#19549) @alexfauquette
-- [docs] Add `shiny` bar chart example at the top (#19416) @JCQuintas
+- [docs] Add `shiny` bar chart example at the top  (#19416) @JCQuintas
 
 ### Core
 
