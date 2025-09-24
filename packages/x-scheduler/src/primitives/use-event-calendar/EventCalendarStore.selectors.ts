@@ -55,4 +55,23 @@ export const selectors = {
       return state.occurrencePlaceholder;
     },
   ),
+  isCreatingNewEventInDayGridCell: createSelector((state: State, day: SchedulerValidDate) => {
+    const ph = state.occurrencePlaceholder;
+    if (!ph || ph.surfaceType !== 'day-grid' || ph.eventId != null) {
+      return false;
+    }
+    return state.adapter.isSameDay(day, ph.start);
+  }),
+  isCreatingNewEventInTimeRange: createSelector(
+    (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
+      const ph = state.occurrencePlaceholder;
+      if (!ph || ph.surfaceType !== 'time-grid' || ph.eventId != null) {
+        return false;
+      }
+      if (state.adapter.isBefore(ph.end, start) || state.adapter.isAfter(ph.start, end)) {
+        return false;
+      }
+      return true;
+    },
+  ),
 };

@@ -19,7 +19,8 @@ export function DayGridCell(props: DayGridCellProps) {
   const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
   const store = useEventCalendarStoreContext();
   const cellRef = React.useRef<HTMLDivElement | null>(null);
-  const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
+  const isCreationHere = useStore(store, selectors.isCreatingNewEventInDayGridCell, day.value);
+
   const { startEditing } = useEventPopover();
 
   const onDoubleClick = () => {
@@ -34,16 +35,11 @@ export function DayGridCell(props: DayGridCellProps) {
   };
 
   React.useEffect(() => {
-    if (!placeholder || !rawPlaceholder) {
+    if (!isCreationHere || !placeholder || !cellRef.current) {
       return;
     }
-
-    const isCreation = rawPlaceholder.eventId == null && rawPlaceholder.surfaceType === 'day-grid';
-    if (!isCreation) {
-      return;
-    }
-    startEditing(cellRef.current!, placeholder);
-  }, [placeholder, rawPlaceholder, startEditing]);
+    startEditing(cellRef.current, placeholder);
+  }, [isCreationHere, placeholder, startEditing]);
 
   return (
     <DayGrid.Cell

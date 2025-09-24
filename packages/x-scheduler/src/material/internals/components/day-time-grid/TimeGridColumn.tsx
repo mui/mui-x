@@ -74,7 +74,7 @@ function ColumnInteractiveLayer({
   const store = useEventCalendarStoreContext();
   const columnRef = React.useRef<HTMLDivElement | null>(null);
   const { startEditing } = useEventPopover();
-  const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
+  const isCreationHere = useStore(store, selectors.isCreatingNewEventInTimeRange, start, end);
 
   const computeInitialRange = (event: React.MouseEvent<HTMLDivElement>) => {
     const offsetMs = getCursorPositionInElementMs({
@@ -108,17 +108,11 @@ function ColumnInteractiveLayer({
   };
 
   React.useEffect(() => {
-    if (!placeholder || !rawPlaceholder) {
+    if (!isCreationHere || !placeholder || !columnRef.current) {
       return;
     }
-
-    const isCreation = rawPlaceholder.eventId == null && rawPlaceholder.surfaceType === 'time-grid';
-
-    if (!isCreation) {
-      return;
-    }
-    startEditing(columnRef.current!, placeholder);
-  }, [placeholder, rawPlaceholder, startEditing]);
+    startEditing(columnRef.current, placeholder);
+  }, [isCreationHere, placeholder, startEditing]);
 
   return (
     <div

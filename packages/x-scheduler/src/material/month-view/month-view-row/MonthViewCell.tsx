@@ -26,7 +26,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
+  const isCreationHere = useStore(store, selectors.isCreatingNewEventInDayGridCell, day.value);
+
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
@@ -66,20 +67,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   };
 
   React.useEffect(() => {
-    if (!placeholder || !rawPlaceholder) {
+    if (!isCreationHere || !placeholder || !cellRef.current) {
       return;
     }
-
-    const isCreation = rawPlaceholder.eventId == null && rawPlaceholder.surfaceType === 'day-grid';
-
-    if (!isCreation) {
-      return;
-    }
-    startEditing(cellRef.current!, {
-      ...placeholder,
-      allDay: true,
-    });
-  }, [placeholder, rawPlaceholder, ref, startEditing]);
+    startEditing(cellRef.current, placeholder);
+  }, [isCreationHere, placeholder, startEditing]);
 
   return (
     <DayGrid.Cell
