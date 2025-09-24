@@ -4,7 +4,7 @@
 
 :::error
 The Data Grid has no intrinsic dimensions: you must set the dimensions using one of the approaches below or else it may not display correctly.
-By default, the Data Grid fills the space of its parent container, so that container must have intrinsic dimensions. 
+By default, the Data Grid fills the space of its parent container, so that container must have intrinsic dimensions.
 In other words, if the container has no child elements, then it still must have non-zero dimensions.
 :::
 
