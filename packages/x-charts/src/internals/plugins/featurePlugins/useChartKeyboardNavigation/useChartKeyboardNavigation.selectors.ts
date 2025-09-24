@@ -43,30 +43,35 @@ export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
  * Selectors to override highlight behavior.
  */
 
-const selectAxisHighlight = <T extends ChartSeriesType>(
-  type: T | undefined,
-  seriesId: SeriesId | undefined,
-  dataIndex: number | undefined,
-  axis: ComputeResult<ChartsAxisProps>,
-  series: ProcessedSeries<T>,
-): AxisItemIdentifier | undefined => {
-  if (type === undefined || seriesId === undefined || dataIndex === undefined) {
-    return undefined;
-  }
+const createSelectAxisHighlight =
+  (direction: 'x' | 'y') =>
+  <T extends ChartSeriesType>(
+    type: T | undefined,
+    seriesId: SeriesId | undefined,
+    dataIndex: number | undefined,
+    axis: ComputeResult<ChartsAxisProps>,
+    series: ProcessedSeries<T>,
+  ): AxisItemIdentifier | undefined => {
+    if (type === undefined || seriesId === undefined || dataIndex === undefined) {
+      return undefined;
+    }
 
-  const seriesConfig = series[type]?.series[seriesId];
-  if (!seriesConfig) {
-    return undefined;
-  }
+    const seriesConfig = series[type]?.series[seriesId];
+    if (!seriesConfig) {
+      return undefined;
+    }
 
-  let axisId: AxisId | false | undefined = 'xAxisId' in seriesConfig && seriesConfig.xAxisId;
+    let axisId: AxisId | false | undefined =
+      direction === 'x'
+        ? 'xAxisId' in seriesConfig && seriesConfig.xAxisId
+        : 'yAxisId' in seriesConfig && seriesConfig.yAxisId;
 
-  if (axisId === undefined || axisId === false) {
-    axisId = axis.axisIds[0];
-  }
+    if (axisId === undefined || axisId === false) {
+      axisId = axis.axisIds[0];
+    }
 
-  return { axisId, dataIndex };
-};
+    return { axisId, dataIndex };
+  };
 
 export const selectorChartsKeyboardXAxisIndex = createSelector(
   [
@@ -76,7 +81,7 @@ export const selectorChartsKeyboardXAxisIndex = createSelector(
     selectorChartXAxis,
     selectorChartSeriesProcessed,
   ],
-  selectAxisHighlight,
+  createSelectAxisHighlight('x'),
 );
 
 export const selectorChartsKeyboardYAxisIndex = createSelector(
@@ -87,5 +92,5 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
     selectorChartYAxis,
     selectorChartSeriesProcessed,
   ],
-  selectAxisHighlight,
+  createSelectAxisHighlight('y'),
 );
