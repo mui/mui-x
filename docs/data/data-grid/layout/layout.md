@@ -3,8 +3,9 @@
 <p class="description">The Data Grid offers multiple layout modes.</p>
 
 :::error
-The Data Grid has no intrinsic dimensions and **you are required to set dimensions using one of the approaches below** or it might fail to display correctly.
-By default, the Data Grid will fill the space of its parent container so its container should have intrinsic dimensions — in other words, if the container had no child element, it should still have non-zero dimensions.
+The Data Grid has no intrinsic dimensions: you must set the dimensions using one of the approaches below or else it may not display correctly.
+By default, the Data Grid fills the space of its parent container, so that container must have intrinsic dimensions. 
+In other words, if the container has no child elements, then it still must have non-zero dimensions.
 :::
 
 ## Flex parent container
