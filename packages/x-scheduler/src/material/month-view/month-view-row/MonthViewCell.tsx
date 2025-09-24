@@ -75,7 +75,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     if (!isCreation) {
       return;
     }
-    startEditing({ currentTarget: cellRef.current } as unknown as React.MouseEvent, {
+    startEditing(cellRef.current!, {
       ...placeholder,
       allDay: true,
     });

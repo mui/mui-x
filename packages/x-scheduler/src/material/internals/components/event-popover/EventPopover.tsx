@@ -538,8 +538,8 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
     React.useState<CalendarEventOccurrence | null>(null);
 
   const startEditing = useEventCallback(
-    (event: React.MouseEvent, occurrence: CalendarEventOccurrence) => {
-      setAnchor(event.currentTarget as HTMLElement);
+    (anchorElement: HTMLElement, occurrence: CalendarEventOccurrence) => {
+      setAnchor(anchorElement);
       setSelectedOccurrence(occurrence);
       setIsPopoverOpen(true);
     },
@@ -584,7 +584,7 @@ export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   return (
     <Popover.Trigger
       nativeButton={false}
-      onClick={(event) => startEditing(event, occurrence)}
+      onClick={(event) => startEditing(event.currentTarget, occurrence)}
       {...other}
     />
   );

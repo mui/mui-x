@@ -117,7 +117,7 @@ function ColumnInteractiveLayer({
     if (!isCreation) {
       return;
     }
-    startEditing({ currentTarget: columnRef.current } as unknown as React.MouseEvent, placeholder);
+    startEditing(columnRef.current!, placeholder);
   }, [placeholder, rawPlaceholder, startEditing]);
 
   return (
