@@ -8,7 +8,6 @@ import {
   UseTreeViewItemsState,
   AddItemsParameters,
 } from './useTreeViewItems.types';
-import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
@@ -72,7 +71,7 @@ const processItemsLookups = ({
   initialParentId = null,
   getChildrenCount,
   ignoreChildren = false,
-}: ProcessItemsLookupsParameters): Omit<State, 'loading' | 'error'> => {
+}: ProcessItemsLookupsParameters): Omit<State, 'loading' | 'error' | 'domStructure'> => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
   const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
@@ -181,14 +180,15 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
       const item = itemsSelectors.itemModel(store.state, itemId);
+      const itemToMutate = { ...item };
       const newChildren = itemsSelectors.itemOrderedChildrenIds(store.state, itemId);
       if (newChildren.length > 0) {
-        item.children = newChildren.map(getItemFromItemId);
+        itemToMutate.children = newChildren.map(getItemFromItemId);
       } else {
-        delete item.children;
+        delete itemToMutate.children;
       }
 
-      return item;
+      return itemToMutate;
     };
 
     return itemsSelectors.itemOrderedChildrenIds(store.state, null).map(getItemFromItemId);
@@ -262,15 +262,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
           itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
         };
       }
-      Object.values(store.state.items.itemMetaLookup).forEach((item) => {
-        if (!newItems.itemMetaLookup[item.id]) {
-          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
-        }
-      });
-
       store.set('items', { ...store.state.items, ...newItems });
     }
   };
+
   const removeChildren = (parentId: string | undefined) => {
     if (parentId == null) {
       store.set('items', {
@@ -283,7 +278,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       const newMetaMap = Object.keys(store.state.items.itemMetaLookup).reduce((acc, key) => {
         const item = store.state.items.itemMetaLookup[key];
         if (item.parentId === parentId) {
-          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
           return acc;
         }
         return { ...acc, [item.id]: item };
@@ -315,12 +309,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemId: params.getItemId,
       getItemLabel: params.getItemLabel,
       getItemChildren: params.getItemChildren,
-    });
-
-    Object.values(store.state.items.itemMetaLookup).forEach((item) => {
-      if (!newState.itemMetaLookup[item.id]) {
-        publishTreeViewEvent(instance, 'removeItem', { id: item.id });
-      }
     });
 
     store.set('items', { ...store.state.items, ...newState });
@@ -384,6 +372,7 @@ useTreeViewItems.getInitialState = (params) => ({
     }),
     loading: false,
     error: null,
+    domStructure: 'nested',
   },
 });
 

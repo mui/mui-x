@@ -234,7 +234,7 @@ It must be rendered inside the Data Provider to get access to the data, but outs
   <ChartsSurface>{/* SVG components */}</ChartsSurface>
 </ChartDataProvider>
 
-// ❌ Wrong
+// ❌ Incorrect
 <ChartContainer>
   <ChartsLegend />
 </ChartContainer>
@@ -247,6 +247,8 @@ See [HTML components](/x/react-charts/components/#html-components) documentation
 ### Interaction
 
 You can also add interactive elements such as `<ChartsAxisHighlight />` and `<ChartsTooltip />`.
+
+{{"demo": "LegendTooltipComposition.js" }}
 
 :::info
 By default, the container listens to mouse events to keep track of where the mouse is located on the chart.

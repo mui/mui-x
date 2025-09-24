@@ -33,8 +33,9 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { LineChartPluginsSignatures } from './LineChart.plugins';
+import { LineChartPluginSignatures } from './LineChart.plugins';
 import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
+import { FocusedMark } from './FocusedMark';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -62,7 +63,7 @@ export interface LineChartSlotProps
 export type LineSeries = MakeOptional<LineSeriesType, 'type'>;
 export interface LineChartProps
   extends Omit<
-      ChartContainerProps<'line', LineChartPluginsSignatures>,
+      ChartContainerProps<'line', LineChartPluginSignatures>,
       'series' | 'plugins' | 'zAxis'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
@@ -164,7 +165,7 @@ const LineChart = React.forwardRef(function LineChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'line', LineChartPluginsSignatures> {...chartDataProviderProps}>
+    <ChartDataProvider<'line', LineChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -176,6 +177,7 @@ const LineChart = React.forwardRef(function LineChart(
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
+          <FocusedMark />
           <ChartsAxis {...chartsAxisProps} />
           <g data-drawing-container>
             {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
@@ -230,6 +232,7 @@ LineChart.propTypes = {
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */

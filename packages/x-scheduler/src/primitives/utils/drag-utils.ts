@@ -1,4 +1,6 @@
 import { SchedulerValidDate } from '../models';
+import type { DayGridEvent } from '../day-grid/event';
+import type { DayGridEventResizeHandler } from '../day-grid/event-resize-handler';
 import type { TimeGridEvent } from '../time-grid/event';
 import type { TimeGridEventResizeHandler } from '../time-grid/event-resize-handler';
 import { Adapter } from './adapter/types';
@@ -14,6 +16,16 @@ export function isDraggingTimeGridEventResizeHandler(
   data: any,
 ): data is TimeGridEventResizeHandler.DragData {
   return data.source === 'TimeGridEventResizeHandler';
+}
+
+export function isDraggingDayGridEvent(data: any): data is DayGridEvent.DragData {
+  return data.source === 'DayGridEvent';
+}
+
+export function isDraggingDayGridEventResizeHandler(
+  data: any,
+): data is DayGridEventResizeHandler.DragData {
+  return data.source === 'DayGridEventResizeHandler';
 }
 
 export function addRoundedOffsetToDate(

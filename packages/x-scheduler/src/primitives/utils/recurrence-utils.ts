@@ -4,10 +4,12 @@ import {
   ByDayValue,
   CalendarEvent,
   CalendarEventOccurrence,
+  RecurringEventUpdatedProperties,
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
 import { diffIn, mergeDateAndTime } from './date-utils';
+import { getDateKey } from './event-utils';
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -206,7 +208,8 @@ export function getAllDaySpanDays(adapter: Adapter, event: CalendarEvent): numbe
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: CalendarEvent,
-  days: SchedulerValidDate[],
+  start: SchedulerValidDate,
+  end: SchedulerValidDate,
   adapter: Adapter,
 ): CalendarEventOccurrence[] {
   const rule = event.rrule!;
@@ -215,16 +218,12 @@ export function getRecurringEventOccurrencesForVisibleDays(
   const endGuard = buildEndGuard(rule, event.start, adapter);
   const durationMinutes = diffIn(adapter, event.end, event.start, 'minutes');
 
-  const rangeStart = days[0];
-  const rangeEnd = days[days.length - 1];
-
   const allDaySpanDays = getAllDaySpanDays(adapter, event);
-
-  const scanStart = adapter.addDays(rangeStart, -(allDaySpanDays - 1));
+  const scanStart = adapter.addDays(start, -(allDaySpanDays - 1));
 
   for (
     let day = adapter.startOfDay(scanStart);
-    !adapter.isAfter(day, rangeEnd);
+    !adapter.isAfter(day, end);
     day = adapter.addDays(day, 1)
   ) {
     // The series is still active on that day
@@ -244,7 +243,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
       ? adapter.endOfDay(adapter.addDays(occurrenceStart, allDaySpanDays - 1))
       : adapter.addMinutes(occurrenceStart, durationMinutes);
 
-    const key = `${event.id}::${adapter.format(occurrenceStart, 'keyboardDate')}`;
+    const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
 
     instances.push({
       ...event,
@@ -709,4 +708,204 @@ export function countYearlyOccurrencesUpToExact(
   }
 
   return count;
+}
+
+/**
+ * Computes the ordinal for a MONTHLY BYDAY rule for a given date.
+ * @returns {number} - The ordinal: -1 for last, otherwise 1..5.
+ */
+export function computeMonthlyOrdinal(adapter: Adapter, date: SchedulerValidDate): number {
+  const monthStart = adapter.startOfMonth(date);
+  const { numToByDay } = getByDayMaps(adapter);
+  const code = numToByDay[adapter.getDayOfWeek(date)];
+
+  // Is it the last same-weekday of the month? (-1)
+  const lastSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, -1)!;
+  if (adapter.isSameDay(adapter.startOfDay(date), lastSameWeekday)) {
+    return -1;
+  }
+
+  // First same-weekday of the month (1..5)
+  const firstSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, 1)!;
+  const daysDiff = diffIn(adapter, adapter.startOfDay(date), firstSameWeekday, 'days');
+  return Math.floor(daysDiff / 7) + 1;
+}
+
+/**
+ * Realigns a WEEKLY BYDAY pattern when splitting “this and following”.
+ * Swaps the weekday of the edited occurrence (oldRefDay) with the weekday of the new
+ * series start (newStart), preserving the rest of the pattern and avoiding duplicates.
+ * @returns {ByDayValue[]} - The realigned BYDAY list (deduplicated).
+ */
+export function realignWeeklyByDay(
+  adapter: Adapter,
+  byDays: ByDayCode[],
+  oldRefDay: SchedulerValidDate,
+  newStart: SchedulerValidDate,
+): ByDayCode[] {
+  const { numToByDay, byDayToNum } = getByDayMaps(adapter);
+  const oldCode = numToByDay[adapter.getDayOfWeek(oldRefDay)];
+  const newCode = numToByDay[adapter.getDayOfWeek(newStart)];
+
+  if (oldCode === newCode) {
+    return byDays;
+  }
+
+  const swapped = Array.from(new Set(byDays.map((d) => (d === oldCode ? newCode : d))));
+
+  swapped.sort((a, b) => byDayToNum[a] - byDayToNum[b]);
+
+  return swapped;
+}
+
+/**
+ * Decide the RRULE for the split (new) segment when editing "this and following".
+ *
+ * Rules:
+ * - If user provided changes.rrule → use it as-is (preserve COUNT/UNTIL).
+ * - If changes.rrule is explicitly undefined → non-recurring one-off.
+ * - If changes.rrule is omitted → inherit pattern and recompute boundaries:
+ *   * WEEKLY: if `changes.start` is provided, realign BYDAY by swapping the weekday of the
+ *     edited occurrence with the weekday of the new start (dedupe if needed).
+ *   * MONTHLY:
+ *       - If BYMONTHDAY is present: set it to the day of `changes.start`.
+ *       - If BYDAY (ordinal) is present: recompute `{ord}{code}` using `computeMonthlyOrdinal`
+ *         and the weekday of `changes.start`.
+ *   * Boundaries:
+ *       - If original had COUNT: set COUNT = remaining occurrences from the split day.
+ *       - If original had UNTIL: keep the same UNTIL.
+ */
+export function decideSplitRRule(
+  adapter: Adapter,
+  originalRule: RRuleSpec,
+  originalSeriesStart: SchedulerValidDate,
+  splitStart: SchedulerValidDate,
+  changes: Partial<CalendarEvent>,
+): RRuleSpec | undefined {
+  // Normalize base pattern (drop COUNT/UNTIL)
+  const { count, until, ...baseRule } = originalRule;
+
+  // Detect whether user touched rrule at all
+  const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
+  const changesRRule = changes.rrule;
+
+  // Case A — user provided a new RRULE → respect it (including COUNT/UNTIL)
+  if (hasRRuleProp && changesRRule) {
+    return changesRRule;
+  }
+
+  // Case B — user explicitly removed recurrence → one-off
+  if (hasRRuleProp && !changesRRule) {
+    return undefined;
+  }
+
+  // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
+  let realignedRule: Omit<RRuleSpec, 'count' | 'until'> = { ...baseRule };
+  const splitDayStart = adapter.startOfDay(splitStart);
+
+  // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
+  if (originalRule.freq === 'WEEKLY' && baseRule.byDay?.length && changes.start) {
+    realignedRule = {
+      ...realignedRule,
+      byDay: realignWeeklyByDay(
+        adapter,
+        baseRule.byDay as ByDayCode[],
+        adapter.startOfDay(splitStart),
+        changes.start,
+      ),
+    };
+  }
+  // Freq MONTHLY realignment
+  if (originalRule.freq === 'MONTHLY' && changes.start) {
+    // A) BYMONTHDAY → set to the new calendar day
+    if (baseRule.byMonthDay?.length) {
+      realignedRule = { ...realignedRule, byMonthDay: [adapter.getDate(changes.start)] };
+    }
+
+    // B) Ordinal BYDAY → recompute ordinal + weekday for the new date
+    if (baseRule.byDay?.length) {
+      const { numToByDay } = getByDayMaps(adapter);
+      const code = numToByDay[adapter.getDayOfWeek(changes.start)];
+      const ord = computeMonthlyOrdinal(adapter, changes.start);
+      realignedRule = { ...realignedRule, byDay: [`${ord}${code}` as ByDayValue] };
+    }
+  }
+
+  // Recalculate COUNT: original minus prior occurrences.
+  if (originalRule.count) {
+    const dayBefore = adapter.addDays(splitDayStart, -1);
+    const occurrencesBeforeSplit = estimateOccurrencesUpTo(
+      adapter,
+      originalRule,
+      originalSeriesStart,
+      dayBefore,
+    );
+    const remaining = Math.max(0, originalRule.count - occurrencesBeforeSplit);
+    return remaining > 0 ? { ...realignedRule, count: remaining } : undefined;
+  }
+
+  if (originalRule.until) {
+    return { ...realignedRule, until: originalRule.until };
+  }
+
+  return { ...realignedRule };
+}
+
+/**
+ * Applies a "this and following" update to a recurring series by splitting it into:
+ * - the original series truncated up to the day before the edited occurrence, and
+ * - a new series starting at the edited occurrence with the requested changes.
+ * @returns The updated list of events with the split applied.
+ */
+export function applyRecurringUpdateFollowing(
+  adapter: Adapter,
+  events: CalendarEvent[],
+  originalEvent: CalendarEvent,
+  occurrenceStart: SchedulerValidDate,
+  changes: RecurringEventUpdatedProperties,
+): CalendarEvent[] {
+  // 1) Old series: truncate rule to end the day before the edited occurrence
+  const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
+  const untilDate = adapter.addDays(occurrenceDayStart, -1);
+
+  const originalRule = originalEvent.rrule as RRuleSpec;
+  const { count, until, ...baseRule } = originalRule;
+  const truncatedRule = { ...baseRule, until: untilDate };
+
+  // 2) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it
+  const shouldDropOldSeries = adapter.isBefore(
+    adapter.endOfDay(untilDate),
+    adapter.startOfDay(originalEvent.start),
+  );
+
+  // 3) New event: apply changes, decide RRULE for the new series
+  const newRRule = decideSplitRRule(
+    adapter,
+    originalRule,
+    originalEvent.start,
+    occurrenceStart,
+    changes,
+  );
+  const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
+
+  const newEvent: CalendarEvent = {
+    ...originalEvent,
+    ...changes,
+    id: newEventId,
+    start: changes.start,
+    end: changes.end,
+    rrule: newRRule,
+    extractedFromId: originalEvent.id,
+  };
+
+  // 4) Build the final events list: old series (updated or dropped) + new event
+  const updatedEvents = shouldDropOldSeries
+    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
+    : [
+        ...events.map((event) =>
+          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
+        ),
+        newEvent,
+      ];
+  return updatedEvents;
 }

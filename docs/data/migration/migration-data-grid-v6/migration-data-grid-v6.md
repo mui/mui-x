@@ -386,6 +386,33 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Selection
 
+- The interaction between `checkboxSelection` and `disableMultipleSelection` props has been fixed to work as expected. Previously, enabling checkboxes would override the multiple selection restriction.
+
+  ```tsx
+  // v6 behavior: Multiple rows could be selected despite disableMultipleSelection
+  <DataGrid
+    checkboxSelection
+    disableMultipleSelection
+    rows={rows}
+    columns={columns}
+  />
+
+  // v7 behavior: Checkboxes act as radio buttons, only one row selectable
+  // Header checkbox is disabled to prevent "select all" functionality
+  <DataGrid
+    checkboxSelection
+    disableMultipleSelection
+    rows={rows}
+    columns={columns}
+  />
+  ```
+
+  If you need the v6 behavior (multiple selection with checkboxes), remove the `disableMultipleSelection` prop:
+
+  ```tsx
+  <DataGrid checkboxSelection rows={rows} columns={columns} />
+  ```
+
 - ✅ The `unstable_` prefix has been removed from the cell selection props listed below.
 
   | Old name                              | New name                     |

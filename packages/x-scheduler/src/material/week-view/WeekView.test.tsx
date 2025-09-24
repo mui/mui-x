@@ -228,7 +228,7 @@ describe('<WeekView />', () => {
       expect(indicators.length).to.equal(7);
 
       const todayColumn = document.querySelector('.DayTimeGridColumn[data-current]');
-      expect(todayColumn).to.not.equal(null);
+      expect(todayColumn).not.to.equal(null);
     });
 
     it("doesn't render the current time indicator if today is not in view", () => {
