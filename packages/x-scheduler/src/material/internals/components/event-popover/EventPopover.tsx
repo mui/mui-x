@@ -23,6 +23,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import {
   CalendarEventOccurrence,
   CalendarResourceId,
+  RecurringEventUpdatedProperties,
   SchedulerValidDate,
 } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
@@ -213,24 +214,30 @@ export const EventPopover = React.forwardRef(function EventPopover(
       description: (form.get('description') as string).trim(),
       allDay: isAllDay,
       resource: resourceValue,
-      ...(rrule ? { rrule } : {}),
+      // ...(rrule ? { rrule } : {}),
     };
 
     const doSubmit = async () => {
       if (rawPlaceholder && rawPlaceholder.eventId == null) {
         const result = await store.applyOccurrencePlaceholder(rawPlaceholder);
         if (result?.id) {
-          store.updateEvent({ id: result.id, ...metaChanges, start, end });
+          store.updateEvent({ id: result.id, ...metaChanges, start, end, rrule });
         }
       } else if (occurrence.rrule) {
+        const changes: RecurringEventUpdatedProperties = {
+          ...metaChanges,
+          start,
+          end,
+          ...(recurrenceModified ? { rrule } : {}),
+        };
         store.updateRecurringEvent({
           eventId: occurrence.id,
           occurrenceStart: occurrence.start,
-          changes: { ...metaChanges, start, end },
+          changes,
           scope: 'this-and-following',
         });
       } else {
-        store.updateEvent({ id: occurrence.id, ...metaChanges, start, end });
+        store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
       }
     };
 
