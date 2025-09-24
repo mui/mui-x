@@ -32,7 +32,8 @@ const toTest: {
   },
 ];
 
-const SVG_SIZE = 100;
+const COL_WIDTH = 150;
+const ROW_HEIGHT = 200;
 
 export default function BarBorderRadius() {
   return (
@@ -56,19 +57,19 @@ export default function BarBorderRadius() {
         return (
           <React.Fragment key={title}>
             <p>{title}</p>
-            <div style={{ height: SVG_SIZE, border: '1px solid black', width: SVG_SIZE }}>
+            <div style={{ height: ROW_HEIGHT, border: '1px solid black', width: COL_WIDTH }}>
               <BarChartPro {...chartSettings} slotProps={slotProps} showToolbar hideLegend />
             </div>
-            <div style={{ height: SVG_SIZE, border: '1px solid black', width: SVG_SIZE }}>
+            <div style={{ height: ROW_HEIGHT, border: '1px solid black', width: COL_WIDTH }}>
               <BarChartPro {...chartSettings} slotProps={slotProps} showToolbar />
             </div>
-            <div style={{ height: SVG_SIZE, border: '1px solid black', width: SVG_SIZE }}>
+            <div style={{ height: ROW_HEIGHT, border: '1px solid black', width: COL_WIDTH }}>
               <BarChartPro {...chartSettings} slotProps={slotProps} />
             </div>
-            <div style={{ height: SVG_SIZE, border: '1px solid black', width: SVG_SIZE }}>
+            <div style={{ height: ROW_HEIGHT, border: '1px solid black', width: COL_WIDTH }}>
               <BarChartPro {...chartSettings} slotProps={slotProps} hideLegend />
             </div>
-            <div style={{ height: SVG_SIZE, border: '1px solid black', width: SVG_SIZE }}>
+            <div style={{ height: ROW_HEIGHT, border: '1px solid black', width: COL_WIDTH }}>
               <BarChartPro {...chartSettingsWithoutLabel} slotProps={slotProps} showToolbar />
             </div>
           </React.Fragment>
