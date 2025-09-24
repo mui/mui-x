@@ -5,9 +5,9 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Timeline View
+# Scheduler - Timeline
 
-<p class="description">The Timeline View component lets users manage events in a timeline layout.</p>
+<p class="description">The Timeline component lets users manage events in a timeline layout.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
@@ -17,4 +17,4 @@ This package is not published yet.
 
 ## Basic example
 
-{{"demo": "BasicTimelineView.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "BasicTimeline.js", "bg": "inline", "defaultCodeOpen": false}}

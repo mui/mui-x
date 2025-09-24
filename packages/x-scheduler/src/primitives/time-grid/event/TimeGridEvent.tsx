@@ -77,15 +77,20 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     [eventState, isDragging, isResizing],
   );
 
-  const getSharedDragData: TimeGridEventContext['getSharedDragData'] = useEventCallback(
-    (input) => ({
+  const getSharedDragData: TimeGridEventContext['getSharedDragData'] = useEventCallback((input) => {
+    const offsetBeforeColumnStart = Math.max(
+      adapter.toJsDate(columnStart).getTime() - adapter.toJsDate(start).getTime(),
+      0,
+    );
+    const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
+    return {
       eventId,
       occurrenceKey,
       start,
       end,
-      initialCursorPositionInEventMs: getCursorPositionInElementMs({ input, elementRef: ref }),
-    }),
-  );
+      initialCursorPositionInEventMs: offsetBeforeColumnStart + offsetInsideColumn,
+    };
+  });
 
   const doesEventStartBeforeColumnStart = React.useMemo(
     () => adapter.isBefore(start, columnStart),

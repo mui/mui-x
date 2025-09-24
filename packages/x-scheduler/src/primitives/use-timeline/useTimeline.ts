@@ -2,12 +2,12 @@
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { useAdapter } from '../utils/adapter/useAdapter';
-import { EventCalendarStore } from './EventCalendarStore';
-import { EventCalendarParameters } from './EventCalendarStore.types';
+import { TimelineStore } from './TimelineStore';
+import { TimelineParameters } from './TimelineStore.types';
 
-export function useEventCalendar(parameters: EventCalendarParameters): EventCalendarStore {
+export function useTimeline(parameters: TimelineParameters): TimelineStore {
   const adapter = useAdapter();
-  const store = useRefWithInit(() => new EventCalendarStore(parameters, adapter)).current;
+  const store = useRefWithInit(() => new TimelineStore(parameters, adapter)).current;
 
   useIsoLayoutEffect(
     () => store.updateStateFromParameters(parameters, adapter),

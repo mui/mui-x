@@ -25,8 +25,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const store = useEventCalendarStoreContext();
 
   const isRecurring = Boolean(occurrence.rrule);
-  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence);
-  const isResizable = useStore(store, selectors.isEventResizable, occurrence);
+  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence.id);
+  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id);
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';

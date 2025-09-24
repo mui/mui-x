@@ -1,5 +1,5 @@
-import { CalendarOccurrencePlaceholder } from '../models';
-import { Adapter } from '../utils/adapter/types';
+import { CalendarOccurrencePlaceholder } from '../../models';
+import { Adapter } from '../adapter/types';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.

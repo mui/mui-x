@@ -95,20 +95,22 @@ export default function ExportServerSideData() {
   }, [pageInfo?.totalRowCount]);
 
   return (
-    <DataGridPro
-      {...data}
-      loading={isLoading}
-      rows={rows}
-      rowCount={rowCount}
-      pagination
-      paginationModel={paginationModel}
-      pageSizeOptions={[5]}
-      paginationMode="server"
-      onPaginationModelChange={setPaginationModel}
-      showToolbar
-      slots={{
-        toolbar: CustomToolbar,
-      }}
-    />
+    <div style={{ height: 450, width: '100%' }}>
+      <DataGridPro
+        {...data}
+        loading={isLoading}
+        rows={rows}
+        rowCount={rowCount}
+        pagination
+        paginationModel={paginationModel}
+        pageSizeOptions={[5]}
+        paginationMode="server"
+        onPaginationModelChange={setPaginationModel}
+        showToolbar
+        slots={{
+          toolbar: CustomToolbar,
+        }}
+      />
+    </div>
   );
 }
