@@ -100,7 +100,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
     });
   }
 
-  const onChangeField =
+  const handleChangeDateOrTimeField =
     (field: keyof typeof when) =>
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const value = event.currentTarget.value;
@@ -358,7 +358,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           className="EventPopoverInput"
                           type="date"
                           value={when.startDate}
-                          onChange={onChangeField('startDate')}
+                          onChange={handleChangeDateOrTimeField('startDate')}
                           aria-describedby="startDate-error"
                           required
                           readOnly={isEventReadOnly}
@@ -373,7 +373,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             className="EventPopoverInput"
                             type="time"
                             value={when.startTime}
-                            onChange={onChangeField('startTime')}
+                            onChange={handleChangeDateOrTimeField('startTime')}
                             aria-describedby="startTime-error"
                             required
                             readOnly={isEventReadOnly}
@@ -390,7 +390,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           className="EventPopoverInput"
                           type="date"
                           value={when.endDate}
-                          onChange={onChangeField('endDate')}
+                          onChange={handleChangeDateOrTimeField('endDate')}
                           required
                           readOnly={isEventReadOnly}
                         />
@@ -404,7 +404,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                             className="EventPopoverInput"
                             type="time"
                             value={when.endTime}
-                            onChange={onChangeField('endTime')}
+                            onChange={handleChangeDateOrTimeField('endTime')}
                             required
                             readOnly={isEventReadOnly}
                           />
