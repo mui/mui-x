@@ -56,7 +56,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const onDoubleClick = () => {
     store.setOccurrencePlaceholder({
       eventId: null,
-      occurrenceKey: 'draft-placeholder',
+      occurrenceKey: 'create-placeholder',
       surfaceType: 'day-grid',
       start: adapter.startOfDay(day.value),
       end: adapter.endOfDay(day.value),
