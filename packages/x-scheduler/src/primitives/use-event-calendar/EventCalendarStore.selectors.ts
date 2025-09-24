@@ -56,19 +56,22 @@ export const selectors = {
     },
   ),
   isCreatingNewEventInDayGridCell: createSelector((state: State, day: SchedulerValidDate) => {
-    const ph = state.occurrencePlaceholder;
-    if (!ph || ph.surfaceType !== 'day-grid' || ph.eventId != null) {
+    const placeholder = state.occurrencePlaceholder;
+    if (!placeholder || placeholder.surfaceType !== 'day-grid' || placeholder.eventId != null) {
       return false;
     }
-    return state.adapter.isSameDay(day, ph.start);
+    return state.adapter.isSameDay(day, placeholder.start);
   }),
   isCreatingNewEventInTimeRange: createSelector(
     (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
-      const ph = state.occurrencePlaceholder;
-      if (!ph || ph.surfaceType !== 'time-grid' || ph.eventId != null) {
+      const placeholder = state.occurrencePlaceholder;
+      if (!placeholder || placeholder.surfaceType !== 'time-grid' || placeholder.eventId != null) {
         return false;
       }
-      if (state.adapter.isBefore(ph.end, start) || state.adapter.isAfter(ph.start, end)) {
+      if (
+        state.adapter.isBefore(placeholder.end, start) ||
+        state.adapter.isAfter(placeholder.start, end)
+      ) {
         return false;
       }
       return true;
