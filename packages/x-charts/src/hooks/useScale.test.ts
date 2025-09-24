@@ -18,12 +18,20 @@ describe('getValueToPositionMapper', () => {
     expect(mapper(5)).toBeCloseTo(0.5);
   });
 
-  it('returns a function that returns NaN for continuous scales whose domain has zero size', () => {
+  it('returns a function that returns NaN for continuous scales whose domain has zero size and the value is outside the domain', () => {
     const scale = scaleLinear([10, 10], [0, 1]);
 
     const mapper = getValueToPositionMapper(scale);
 
-    expect(mapper(10)).toBeNaN();
+    expect(mapper(11)).toBeNaN();
     expect(mapper(5)).toBeNaN();
+  });
+
+  it('returns a function that returns applies the scale for continuous scales whose domain has zero size and the value is inside the domain', () => {
+    const scale = scaleLinear([10, 10], [0, 1]);
+
+    const mapper = getValueToPositionMapper(scale);
+
+    expect(mapper(10)).to.eq(0.5);
   });
 });
