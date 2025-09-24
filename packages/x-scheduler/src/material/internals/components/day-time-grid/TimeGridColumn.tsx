@@ -95,14 +95,13 @@ function ColumnInteractiveLayer({
   };
 
   const onDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    const startDraft = computeInitialRange(event).start;
-    const endDraft = computeInitialRange(event).end;
+    const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
       eventId: null,
       occurrenceKey: 'create-placeholder',
       surfaceType: 'time-grid',
-      start: startDraft,
-      end: endDraft,
+      start: draftRange.start,
+      end: draftRange.end,
       originalStart: null,
     });
   };
