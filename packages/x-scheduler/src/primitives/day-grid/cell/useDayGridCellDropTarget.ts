@@ -83,7 +83,12 @@ export function useDayGridCellDropTarget(parameters: useDayGridCellDropTarget.Pa
 
       // Move a Time Grid Event into the Day Grid
       if (data.source === 'TimeGridEvent') {
-        const offset = diffIn(adapter, value, data.start, 'days');
+        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
+        const cursorDate = adapter.addSeconds(
+          data.start,
+          data.initialCursorPositionInEventMs / 1000,
+        );
+        const offset = diffIn(adapter, value, cursorDate, 'days');
         return createDropData(
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
