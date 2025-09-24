@@ -174,7 +174,7 @@ Same changes as in `@mui/x-date-pickers@8.11.3`.
 - [charts] Rename `isBandScale` to `isDiscreteScale` (#19514) @bernardobelchior
 - [charts] Fix legend position affecting toolbar's position (#19257) @sai6855
 
-#### `@mui/x-charts-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
 Same changes as in `@mui/x-charts@8.11.3`, plus:
 
@@ -188,7 +188,7 @@ Same changes as in `@mui/x-charts@8.11.3`, plus:
 - [tree view] Support flat DOM structure (#19350) @flaviendelangle
 - [tree view] Update cursor styles for disabled TreeItem (#19548) @sai6855
 
-#### `@mui/x-tree-view-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.11.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
 Same changes as in `@mui/x-tree-view@8.11.3`.
 
