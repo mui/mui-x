@@ -115,7 +115,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
       });
     };
 
-  const handleToggleAllDay = (checked) => {
+  const handleToggleAllDay = (checked: boolean) => {
     if (isEventReadOnly) {
       return;
     }
