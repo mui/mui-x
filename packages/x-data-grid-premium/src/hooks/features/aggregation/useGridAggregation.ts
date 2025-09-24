@@ -103,7 +103,7 @@ export const useGridAggregation = (
         !!props.dataSource,
       );
       const aggregatedFields = Object.keys(aggregationRules);
-      const currentAggregationLookup = gridAggregationLookupSelector(apiRef);
+      const currentAggregationLookup = gridAggregationLookupSelector(apiRef) || {};
       const needsSorting = shouldApplySorting(aggregationRules, aggregatedFields);
       if (reason === 'sort' && !needsSorting) {
         // no need to re-apply aggregation on `sortedRowsSet` if sorting is not needed
