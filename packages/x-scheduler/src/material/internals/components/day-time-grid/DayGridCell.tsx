@@ -42,10 +42,7 @@ export function DayGridCell(props: DayGridCellProps) {
     if (!isCreation) {
       return;
     }
-    startEditing({ currentTarget: cellRef.current } as unknown as React.MouseEvent, {
-      ...placeholder,
-      allDay: true,
-    });
+    startEditing({ currentTarget: cellRef.current } as unknown as React.MouseEvent, placeholder);
   }, [placeholder, rawPlaceholder, startEditing]);
 
   return (
