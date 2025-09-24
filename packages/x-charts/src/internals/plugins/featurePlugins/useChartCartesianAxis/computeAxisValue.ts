@@ -202,12 +202,16 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
       const domain = scale.domain();
       const scaleRange = scale.range();
-      const rangeRange = Math.abs(scaleRange[1] - scaleRange[0]);
+      const rangeSpan = Math.abs(scaleRange[1] - scaleRange[0]);
+      const domainSpan = Math.abs(domain[1].valueOf() - domain[0].valueOf());
+      const extremaSpan = Math.abs(maxData - minData);
+      const spanRatio = domainSpan / extremaSpan;
+
       // TODO: Needs to handle min/max data being zero, and apply the same logic to minData
-      scale.range([scaleRange[0], scaleRange[0] - (rangeRange * domain[1].valueOf()) / maxData]);
-      const newZoomRange = [0, (maxData / domain[1].valueOf()) * 100];
+      scale.range([scaleRange[0], scaleRange[0] - rangeSpan * spanRatio]);
+      const newZoomRange = [0, (1 / spanRatio) * 100];
       tickNumber = scaleTickNumberByRange(rawTickNumber, newZoomRange);
-      console.log({ newZoomRange, tickNumber, rawTickNumber });
+      console.log({ newZoomRange, tickNumber, rawTickNumber, spanRatio: domainSpan / extremaSpan });
 
       // scale.domain([minData, maxData]);
 
