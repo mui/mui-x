@@ -56,16 +56,12 @@ export const EventPopover = React.forwardRef(function EventPopover(
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(occurrence.allDay));
-  const [when, setWhen] = React.useState(() => {
-    const baseStart = rawPlaceholder?.start ?? occurrence.start;
-    const baseEnd = rawPlaceholder?.end ?? occurrence.end;
-    return {
-      startDate: fmtDate(baseStart),
-      endDate: fmtDate(baseEnd),
-      startTime: fmtTime(baseStart),
-      endTime: fmtTime(baseEnd),
-    };
-  });
+  const [when, setWhen] = React.useState(() => ({
+    startDate: fmtDate(occurrence.start),
+    endDate: fmtDate(occurrence.end),
+    startTime: fmtTime(occurrence.start),
+    endTime: fmtTime(occurrence.end),
+  }));
 
   function computeRange(next: typeof when, nextIsAllDay = isAllDay) {
     if (nextIsAllDay) {
