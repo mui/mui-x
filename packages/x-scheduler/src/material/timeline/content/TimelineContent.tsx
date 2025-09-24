@@ -31,7 +31,7 @@ const getEndBoundaries = (view: TimelineView, start: SchedulerValidDate) => {
 
 type UnitType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
-const UNIT: { [key: string]: UnitType } = {
+const UNIT: Record<TimelineView, UnitType> = {
   time: 'hours',
   days: 'days',
   weeks: 'weeks',
