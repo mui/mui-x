@@ -1,3 +1,4 @@
+import { nice } from '@mui/x-charts-vendor/d3-array';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
@@ -184,11 +185,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
       DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>
     >;
     const scaleType = continuousAxis.scaleType ?? ('linear' as const);
-    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
+    let tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     const filter = zoom === undefined && !zoomOption ? getFilters : undefined; // Do not apply filtering if zoom is already defined.
     if (filter) {
-      const [minData, maxData] = getAxisExtrema(
+      let [minData, maxData] = getAxisExtrema(
         axis,
         axisDirection,
         seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
@@ -196,7 +197,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         formattedSeries,
         filter,
       );
-      console.log(scale.domain(), [minData, maxData]);
+      [minData, maxData] = nice(minData, maxData, rawTickNumber);
       scale = scale.copy();
 
       const domain = scale.domain();
@@ -204,6 +205,9 @@ export function computeAxisValue<T extends ChartSeriesType>({
       const rangeRange = Math.abs(scaleRange[1] - scaleRange[0]);
       // TODO: Needs to handle min/max data being zero, and apply the same logic to minData
       scale.range([scaleRange[0], scaleRange[0] - (rangeRange * domain[1].valueOf()) / maxData]);
+      const newZoomRange = [0, (maxData / domain[1].valueOf()) * 100];
+      tickNumber = scaleTickNumberByRange(rawTickNumber, newZoomRange);
+      console.log({ newZoomRange, tickNumber, rawTickNumber });
 
       // scale.domain([minData, maxData]);
 
