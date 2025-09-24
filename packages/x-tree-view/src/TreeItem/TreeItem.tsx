@@ -200,7 +200,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     runItemPlugins,
     items: { disabledItemsFocusable, indentationAtItemLevel },
     selection: { disableSelection },
-    expansion: { expansionTrigger },
     treeId,
     instance,
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
@@ -232,7 +231,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     selected,
     disabled,
     editing,
-    handleExpansion,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
   } = useTreeItemState(itemId);
@@ -304,11 +302,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
     className: classes.groupTransition,
   });
 
-  const handleIconContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (expansionTrigger === 'iconContainer') {
-      handleExpansion(event);
-    }
-  };
   const ExpansionIcon = expanded ? slots.collapseIcon : slots.expandIcon;
   const { ownerState: expansionIconOwnerState, ...expansionIconProps } = useSlotProps({
     elementType: ExpansionIcon,
@@ -325,9 +318,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
         ...resolveComponentProps(contextIcons.slotProps.expandIcon, tempOwnerState),
         ...resolveComponentProps(inSlotProps?.expandIcon, tempOwnerState),
       };
-    },
-    additionalProps: {
-      onClick: handleIconContainerClick,
     },
   });
   const expansionIcon =

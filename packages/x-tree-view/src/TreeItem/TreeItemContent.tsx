@@ -136,6 +136,20 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     }
   };
 
+  // If we click on the expansion icon and expansionTrigger is "iconContainer", we expand or collapse the tree item.
+  const handleIconClick =
+    expansionIcon != null && icon === expansionIcon && expansionTrigger === 'iconContainer'
+      ? (event: React.MouseEvent<HTMLDivElement>) => {
+          if (
+            expansionIcon != null &&
+            icon === expansionIcon &&
+            expansionTrigger === 'iconContainer'
+          ) {
+            handleExpansion(event);
+          }
+        }
+      : undefined;
+
   const handleLabelDoubleClick = (event: React.MouseEvent & TreeViewCancellableEvent) => {
     if (event.defaultMuiPrevented) {
       return;
@@ -163,7 +177,10 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       onMouseDown={handleMouseDown}
       ref={ref}
     >
-      <div className={classes.iconContainer}>{icon}</div>
+      {/*  eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+      <div className={classes.iconContainer} onClick={handleIconClick}>
+        {icon}
+      </div>
       {checkboxSelection && (
         <Checkbox
           className={classes.checkbox}
