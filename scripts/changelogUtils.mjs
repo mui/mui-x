@@ -124,7 +124,7 @@ async function findLatestTaggedVersionForMajor(major) {
     throw new Error('No tags found in repository');
   }
 
-  if (major !== undefined && major !== null) {
+  if (major != null) {
     const majorStr = String(major);
     const filteredTags = tags.filter((tag) => tag.name && tag.name.startsWith(`v${majorStr}.`));
     if (filteredTags.length > 0) {
