@@ -37,26 +37,6 @@ export interface ChartsWrapperProps {
   sx?: SxProps<Theme>;
 }
 
-const getJustifyItems = (position: Position | undefined) => {
-  if (position?.horizontal === 'start') {
-    return 'start';
-  }
-  if (position?.horizontal === 'end') {
-    return 'end';
-  }
-  return 'center';
-};
-
-const getAlignItems = (position: Position | undefined) => {
-  if (position?.vertical === 'top') {
-    return 'flex-start';
-  }
-  if (position?.vertical === 'bottom') {
-    return 'flex-end';
-  }
-  return 'center';
-};
-
 const getGridTemplateAreas = (
   hideLegend: boolean,
   direction: Direction | undefined,
@@ -151,6 +131,7 @@ const Root = styled('div', {
       display: 'grid',
       gridTemplateColumns,
       gridTemplateRows,
+      gridTemplateAreas,
       [`&:has(.${chartsToolbarClasses.root})`]: {
         // Add a row for toolbar if there is one.
         gridTemplateRows: `auto ${gridTemplateRows}`,
@@ -160,14 +141,8 @@ const Root = styled('div', {
           .join(' ')}"
         ${gridTemplateAreas}`,
       },
-      [`&:not(:has(.${chartsToolbarClasses.root}))`]: {
-        gridTemplateAreas,
-      },
-      justifyContent: 'center',
-      justifyItems: getJustifyItems(ownerState.legendPosition),
-      alignItems: getAlignItems(ownerState.legendPosition),
-      [`& > .${chartsToolbarClasses.root}`]: {
-        justifySelf: 'center',
+      [`& .${chartsToolbarClasses.root}`]: {
+        gridArea: 'toolbar',
       },
     };
   },
