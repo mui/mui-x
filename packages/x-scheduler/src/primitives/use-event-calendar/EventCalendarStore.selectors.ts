@@ -63,18 +63,20 @@ export const selectors = {
     return state.adapter.isSameDay(day, placeholder.start);
   }),
   isCreatingNewEventInTimeRange: createSelector(
-    (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
+    (state: State, dayStart: SchedulerValidDate, dayEnd: SchedulerValidDate) => {
       const placeholder = state.occurrencePlaceholder;
       if (!placeholder || placeholder.surfaceType !== 'time-grid' || placeholder.eventId != null) {
         return false;
       }
-      if (
-        state.adapter.isBefore(placeholder.end, start) ||
-        state.adapter.isAfter(placeholder.start, end)
-      ) {
+
+      if (!state.adapter.isSameDay(placeholder.start, dayStart)) {
         return false;
       }
-      return true;
+
+      const startsBeforeEnd = state.adapter.isBefore(placeholder.start, dayEnd);
+      const endsAfterStart = state.adapter.isAfter(placeholder.end, dayStart);
+
+      return startsBeforeEnd && endsAfterStart;
     },
   ),
 };
