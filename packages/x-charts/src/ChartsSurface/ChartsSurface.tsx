@@ -57,7 +57,8 @@ const ChartsSurfaceStyles = styled('svg', {
     },
   },
   '& [data-focused=true]': {
-    '&:not(.MuiPieArc-root)': {
+    // Pie arc has a special outline.
+    [`&:not(.${pieArcClasses.root})`]: {
       outline: 'auto',
     },
   },
