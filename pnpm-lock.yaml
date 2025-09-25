@@ -7,22 +7,22 @@ settings:
 catalogs:
   default:
     '@babel/core':
-      specifier: ^7.28.0
+      specifier: ^7.28.4
       version: 7.28.4
     '@babel/plugin-transform-react-constant-elements':
       specifier: ^7.27.1
       version: 7.27.1
     '@babel/plugin-transform-runtime':
-      specifier: ^7.28.0
+      specifier: ^7.28.3
       version: 7.28.3
     '@babel/preset-typescript':
       specifier: ^7.27.1
       version: 7.27.1
     '@babel/runtime':
-      specifier: ^7.28.2
+      specifier: ^7.28.4
       version: 7.28.4
     '@babel/traverse':
-      specifier: ^7.28.0
+      specifier: ^7.28.4
       version: 7.28.4
     '@emotion/cache':
       specifier: ^11.14.0
@@ -243,7 +243,7 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       '@babel/cli':
-        specifier: ^7.28.0
+        specifier: ^7.28.3
         version: 7.28.3(@babel/core@7.28.4)
       '@babel/core':
         specifier: 'catalog:'
@@ -252,8 +252,8 @@ importers:
         specifier: ^7.27.1
         version: 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-transform-object-rest-spread':
-        specifier: ^7.28.0
-        version: 7.28.0(@babel/core@7.28.4)
+        specifier: ^7.28.4
+        version: 7.28.4(@babel/core@7.28.4)
       '@babel/plugin-transform-react-constant-elements':
         specifier: 'catalog:'
         version: 7.27.1(@babel/core@7.28.4)
@@ -261,7 +261,7 @@ importers:
         specifier: 'catalog:'
         version: 7.28.4
       '@babel/types':
-        specifier: ^7.28.2
+        specifier: ^7.28.4
         version: 7.28.4
       '@emotion/cache':
         specifier: 'catalog:'
@@ -2961,8 +2961,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-object-rest-spread@7.28.0':
-    resolution: {integrity: sha512-9VNGikXxzu5eCiQjdE4IZn8sb9q7Xsk5EXLDBKUYg1e/Tve8/05+KJEtcxGxAgCY5t/BpKQM+JEL/yT4tvgiUA==}
+  '@babel/plugin-transform-object-rest-spread@7.28.4':
+    resolution: {integrity: sha512-373KA2HQzKhQCYiRVIRr+3MjpCObqzDlyrM6u4I201wL8Mp2wHf7uB8GhDwis03k2ti8Zr65Zyyqs1xOxUF/Ew==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -13390,7 +13390,7 @@ snapshots:
       '@babel/core': 7.28.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-transform-object-rest-spread@7.28.0(@babel/core@7.28.4)':
+  '@babel/plugin-transform-object-rest-spread@7.28.4(@babel/core@7.28.4)':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/helper-compilation-targets': 7.27.2
@@ -13630,7 +13630,7 @@ snapshots:
       '@babel/plugin-transform-new-target': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-transform-nullish-coalescing-operator': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-transform-numeric-separator': 7.27.1(@babel/core@7.28.4)
-      '@babel/plugin-transform-object-rest-spread': 7.28.0(@babel/core@7.28.4)
+      '@babel/plugin-transform-object-rest-spread': 7.28.4(@babel/core@7.28.4)
       '@babel/plugin-transform-object-super': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-transform-optional-catch-binding': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-transform-optional-chaining': 7.27.1(@babel/core@7.28.4)
