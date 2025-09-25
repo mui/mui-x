@@ -178,6 +178,11 @@ export interface CalendarOccurrencePlaceholder {
    * It can be null when creating a new event.
    */
   originalStart: SchedulerValidDate | null;
+  /**
+   * Whether to lock the surface type of the placeholder.
+   * When true, the surfaceType will not be updated when editing the placeholder.
+   */
+  lockSurfaceType?: boolean;
 }
 
 export interface CalendarProcessedDate {

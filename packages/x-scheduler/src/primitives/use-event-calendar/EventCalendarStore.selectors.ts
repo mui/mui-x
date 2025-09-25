@@ -97,4 +97,28 @@ export const selectors = {
       return state.occurrencePlaceholder;
     },
   ),
+  isCreatingNewEventInDayGridCell: createSelector((state: State, day: SchedulerValidDate) => {
+    const placeholder = state.occurrencePlaceholder;
+    if (placeholder?.surfaceType !== 'day-grid' || placeholder.eventId != null) {
+      return false;
+    }
+    return state.adapter.isSameDay(day, placeholder.start);
+  }),
+  isCreatingNewEventInTimeRange: createSelector(
+    (state: State, dayStart: SchedulerValidDate, dayEnd: SchedulerValidDate) => {
+      const placeholder = state.occurrencePlaceholder;
+      if (placeholder?.surfaceType !== 'time-grid' || placeholder.eventId != null) {
+        return false;
+      }
+
+      if (!state.adapter.isSameDay(placeholder.start, dayStart)) {
+        return false;
+      }
+
+      const startsBeforeEnd = state.adapter.isBefore(placeholder.start, dayEnd);
+      const endsAfterStart = state.adapter.isAfter(placeholder.end, dayStart);
+
+      return startsBeforeEnd && endsAfterStart;
+    },
+  ),
 };
