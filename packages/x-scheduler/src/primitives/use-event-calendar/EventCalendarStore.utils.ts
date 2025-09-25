@@ -47,7 +47,7 @@ function syncEventOccurrencesMap(store: EventCalendarStore) {
         );
       },
     ),
-    (previous, next) => {
+    (_previous, next) => {
       if (next == null) {
         return;
       }
