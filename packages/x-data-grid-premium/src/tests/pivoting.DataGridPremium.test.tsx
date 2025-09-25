@@ -915,15 +915,10 @@ describe('<DataGridPremium /> - Pivoting', () => {
         />,
       );
 
+      const columnHeaders = ['', '2024', '2023', 'Ticker', 'Volumesum', 'Volumesum'];
+
       await waitFor(() => {
-        expect(getColumnHeadersTextContent()).to.deep.equal([
-          '',
-          '2024',
-          '2023',
-          'Ticker',
-          'Volumesum',
-          'Volumesum',
-        ]);
+        expect(getColumnHeadersTextContent()).to.deep.equal(columnHeaders);
       });
 
       const separators = $$(`.${gridClasses['columnSeparator--resizable']}`);
@@ -938,14 +933,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
       expect(getColumnHeaderCell(1).offsetWidth).to.equal(68);
 
       await waitFor(() => {
-        expect(getColumnHeadersTextContent()).to.deep.equal([
-          '',
-          '2024',
-          '2023',
-          'Ticker',
-          'Volumesum',
-          'Volumesum',
-        ]);
+        expect(getColumnHeadersTextContent()).to.deep.equal(columnHeaders);
       });
     },
   );
