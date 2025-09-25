@@ -302,12 +302,6 @@ async function generateChangelog({
     .filter((item) => !prsLabelsMap[item.sha]?.some((label) => excludeLabels.includes(label.name)))
     .filter((item) => !excludeTitleTags.some((tag) => item.commit.message.includes(tag)))
     .forEach((commitItem) => {
-      if (
-        commitItem.commit.message.includes('premium') &&
-        commitItem.commit.message.includes('charts')
-      ) {
-        console.log(commitItem);
-      }
       const tag = parseTags(commitItem.commit.message);
       // for now we use only one parsed tag
       const firstTag = tag.split(',')[0];
