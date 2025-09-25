@@ -10,21 +10,14 @@ import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import {
-  AxisConfig,
-  AxisId,
-  ChartsAxisProps,
-  DefaultedAxis,
-  ScaleName,
-} from '../../../../models/axis';
+import { AxisId, ChartsAxisProps, DefaultedAxis, ScaleName } from '../../../../models/axis';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
 import { getDefaultTickNumber } from '../../../ticks';
-import { getNormalizedAxisScale, ScaleDefinition } from './getAxisScale';
-import { ChartDrawingArea } from '../../../../hooks';
+import { getNormalizedAxisScale, getRange, ScaleDefinition } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
 
@@ -161,19 +154,6 @@ export const selectorChartNormalizedYScales = createSelector(
     return scales;
   },
 );
-
-function getRange(
-  drawingArea: ChartDrawingArea,
-  axisDirection: 'x' | 'y',
-  axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
-): [number, number] {
-  const range: [number, number] =
-    axisDirection === 'x'
-      ? [drawingArea.left, drawingArea.left + drawingArea.width]
-      : [drawingArea.top + drawingArea.height, drawingArea.top];
-
-  return axis.reverse ? [range[1], range[0]] : range;
-}
 
 export const selectorChartXScales = createSelector(
   [

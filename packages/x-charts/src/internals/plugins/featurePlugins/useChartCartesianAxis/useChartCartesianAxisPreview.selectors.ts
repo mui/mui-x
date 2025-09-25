@@ -10,17 +10,19 @@ import {
 } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
 import {
+  selectorChartNormalizedXScales,
+  selectorChartNormalizedYScales,
   selectorChartZoomAxisFilters,
   selectorChartZoomOptionsLookup,
-  selectorDefaultXAxisTickNumber,
-  selectorDefaultYAxisTickNumber,
 } from './useChartCartesianAxisRendering.selectors';
-import { AxisId } from '../../../../models/axis';
+import { AxisId, ChartsAxisProps, DefaultedAxis, ScaleName } from '../../../../models/axis';
 import { ZoomData } from './zoom.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
-import { getXAxesScales, getYAxesScales } from './getAxisScale';
+import { getRange, ScaleDefinition } from './getAxisScale';
+import { zoomScaleRange } from './zoom';
+import { isOrdinalScale } from '../../../scaleGuards';
 
 function createPreviewDrawingArea(
   axisDirection: 'x' | 'y',
@@ -49,40 +51,37 @@ export const selectorChartPreviewXScales = createSelector(
   [
     selectorChartRawXAxis,
     selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
-    selectorPreferStrictDomainInLineCharts,
-    selectorDefaultXAxisTickNumber,
+    selectorChartNormalizedXScales,
     (_, axisId: AxisId) => axisId,
   ],
   function selectorChartPreviewXScales(
     xAxes,
     chartDrawingArea,
-    formattedSeries,
-    seriesConfig,
     zoomOptions,
-    preferStrictDomainInLineCharts,
-    defaultTickNumber,
+    normalizedXScales,
     axisId,
   ) {
     const hasAxis = xAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'x' : 'y', chartDrawingArea);
-
     const options = zoomOptions[axisId];
-    const zoomMap = new Map<AxisId, ZoomData>([
-      [axisId, { axisId, start: options.minStart, end: options.maxEnd }],
-    ]);
 
-    return getXAxesScales({
-      drawingArea,
-      formattedSeries,
-      axis: xAxes,
-      seriesConfig,
-      zoomMap,
-      preferStrictDomainInLineCharts,
-      defaultTickNumber,
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    xAxes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      const normalizedScaleDefinition = normalizedXScales[axis.id];
+      const scale = normalizedScaleDefinition.scale.copy();
+      const range = getRange(drawingArea, 'x', axis);
+      const zoomedRange = zoomScaleRange(range, [options.minStart, options.maxEnd]);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = { ...normalizedScaleDefinition, scale } as ScaleDefinition;
     });
+
+    return scales;
   },
 );
 
@@ -143,40 +142,42 @@ export const selectorChartPreviewYScales = createSelector(
   [
     selectorChartRawYAxis,
     selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
-    selectorPreferStrictDomainInLineCharts,
-    selectorDefaultYAxisTickNumber,
+    selectorChartNormalizedYScales,
     (_, axisId: AxisId) => axisId,
   ],
   function selectorChartPreviewYScales(
     yAxes,
     chartDrawingArea,
-    formattedSeries,
-    seriesConfig,
     zoomOptions,
-    preferStrictDomainInLineCharts,
-    defaultTickNumber,
+    normalizedYScales,
     axisId,
   ) {
     const hasAxis = yAxes?.some((axis) => axis.id === axisId);
     const drawingArea = createPreviewDrawingArea(hasAxis ? 'y' : 'x', chartDrawingArea);
-
     const options = zoomOptions[axisId];
-    const zoomMap = new Map<AxisId, ZoomData>([
-      [axisId, { axisId, start: options.minStart, end: options.maxEnd }],
-    ]);
 
-    return getYAxesScales({
-      drawingArea,
-      formattedSeries,
-      axis: yAxes,
-      seriesConfig,
-      zoomMap,
-      preferStrictDomainInLineCharts,
-      defaultTickNumber,
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    yAxes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      const normalizedScaleDefinition = normalizedYScales[axis.id];
+      const scale = normalizedScaleDefinition.scale.copy();
+      let range = getRange(drawingArea, 'y', axis);
+
+      if (isOrdinalScale(scale)) {
+        range = range.reverse() as [number, number];
+      }
+
+      const zoomedRange = zoomScaleRange(range, [options.minStart, options.maxEnd]);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = { ...normalizedScaleDefinition, scale } as ScaleDefinition;
     });
+
+    return scales;
   },
 );
 
