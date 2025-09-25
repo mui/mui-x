@@ -107,3 +107,12 @@ interface GetOccurrencesFromEventsParameters {
   events: CalendarEvent[];
   visibleResources: Map<string, boolean>;
 }
+
+// TODO: Allow to render some multi-day events that are not all-day in the Day Grid.
+export function isMultiDayEvent(event: CalendarEvent | CalendarEventOccurrence) {
+  if (event.allDay) {
+    return true;
+  }
+
+  return false;
+}
