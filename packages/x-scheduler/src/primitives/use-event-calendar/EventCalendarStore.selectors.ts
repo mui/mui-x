@@ -15,19 +15,8 @@ export const selectors = {
     schedulerSelectors.isEventReadOnly,
     (state: State) => state.areEventsDraggable,
     (state: State) => state.view,
-    (
-      isEventReadOnly,
-      areEventsDraggable,
-      view,
-      _eventId: CalendarEventId,
-      surfaceType: EventSurfaceType,
-    ) => {
+    (isEventReadOnly, areEventsDraggable, _eventId: CalendarEventId) => {
       if (isEventReadOnly || !areEventsDraggable) {
-        return false;
-      }
-
-      // There is only one day cell in the day view
-      if (surfaceType === 'day-grid' && view === 'day') {
         return false;
       }
 
