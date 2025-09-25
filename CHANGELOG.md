@@ -121,7 +121,7 @@ Same changes as in `@mui/x-tree-view@8.12.0`.
 - [code-infra] Update `DEFAULT_TIMESTAMP` format to ISO 8601 (#19624) @Janpot
 - [code-infra] Update `findLatestTaggedVersion` to filter tags based on major version (#19693) @michelengelen
 - [docs-infra] Ensure `create-playground` script only runs if target file is absent (#19603) @michelengelen
-- [docs-infra] Add Prakharas a codeowner of the docs (#19679) @alexfauquette
+- [docs-infra] Add @prakhargupta1 as a codeowner of the docs (#19679) @alexfauquette
 
 ### Miscellaneous
 
