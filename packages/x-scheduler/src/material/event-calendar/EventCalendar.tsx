@@ -14,8 +14,8 @@ import { DateNavigator } from '../internals/components/date-navigator';
 import { ResourceLegend } from '../internals/components/resource-legend';
 import {
   useEventCalendar,
-  selectors,
   useExtractEventCalendarParameters,
+  viewSelectors,
 } from '../../primitives/use-event-calendar';
 import '../index.css';
 import './EventCalendar.css';
@@ -26,7 +26,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 ) {
   const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
   const store = useEventCalendar(parameters);
-  const view = useStore(store, selectors.view);
+  const view = useStore(store, viewSelectors.view);
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,

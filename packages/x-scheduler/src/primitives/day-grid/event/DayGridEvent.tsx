@@ -12,7 +12,7 @@ import { CalendarEventId, SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { diffIn } from '../../utils/date-utils';
 import { useDayGridRowContext } from '../row/DayGridRowContext';
-import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
+import { occurrencePlaceholderSelectors } from '../../utils/SchedulerStore';
 import { DayGridEventContext } from './DayGridEventContext';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 
@@ -46,8 +46,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
   const { state: eventState } = useEvent({ start, end });
   const store = useEventCalendarStoreContext();
-  const hasPlaceholder = useStore(store, selectors.hasOccurrencePlaceholder);
-  const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
+  const hasPlaceholder = useStore(store, occurrencePlaceholderSelectors.isDefined);
+  const isDragging = useStore(store, occurrencePlaceholderSelectors.isMatching, occurrenceKey);
   const [isResizing, setIsResizing] = React.useState(false);
 
   const props = hasPlaceholder ? EVENT_PROPS_WHILE_DRAGGING : undefined;

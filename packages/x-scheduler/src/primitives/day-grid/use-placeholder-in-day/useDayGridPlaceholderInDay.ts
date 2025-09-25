@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithDayGridPosition, SchedulerValidDate } from '../../models';
-import { selectors } from '../../use-event-calendar';
+import { occurrencePlaceholderInViewSelectors } from '../../use-event-calendar';
+import { eventSelectors } from '../../utils/SchedulerStore';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 import { useDayGridRowContext } from '../row/DayGridRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
@@ -18,11 +19,11 @@ export function useDayGridPlaceholderInDay(
 
   const rawPlaceholder = useStore(
     store,
-    selectors.occurrencePlaceholderToRenderInDayCell,
+    occurrencePlaceholderInViewSelectors.inDayCell,
     day,
     rowStart,
   );
-  const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
+  const originalEvent = useStore(store, eventSelectors.model, rawPlaceholder?.eventId ?? null);
 
   return React.useMemo(() => {
     if (!originalEvent || !rawPlaceholder) {

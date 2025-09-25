@@ -12,7 +12,7 @@ import {
 } from '../../utils/drag-utils';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
-import { selectors } from '../../use-event-calendar';
+import { occurrencePlaceholderSelectors } from '../../utils/SchedulerStore';
 
 export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTarget.Parameters) {
   const { start, end } = parameters;
@@ -156,7 +156,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       onDrop: ({ source: { data }, location }) => {
         const newEvent =
           getEventDropData(data, location.current.input) ??
-          selectors.occurrencePlaceholder(store.state);
+          occurrencePlaceholderSelectors.value(store.state);
         if (newEvent) {
           store.applyOccurrencePlaceholder(newEvent);
         }

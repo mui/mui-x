@@ -9,7 +9,8 @@ import { DayGridEvent } from '../../internals/components/event/day-grid-event/Da
 import { isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
-import { selectors } from '../../../primitives/use-event-calendar';
+import { viewSelectors } from '../../../primitives/use-event-calendar';
+import { otherSelectors } from '../../../primitives/utils/SchedulerStore';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
 import './MonthViewWeekRow.css';
 
@@ -22,8 +23,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
   const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
-  const hasDayView = useStore(store, selectors.hasDayView);
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const hasDayView = useStore(store, viewSelectors.hasDayView);
+  const visibleDate = useStore(store, otherSelectors.visibleDate);
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));

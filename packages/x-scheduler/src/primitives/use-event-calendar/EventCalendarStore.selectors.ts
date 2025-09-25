@@ -1,17 +1,23 @@
 import { createSelector } from '@base-ui-components/utils/store';
-import { selectors as schedulerSelectors } from '../utils/SchedulerStore';
 import { EventCalendarState as State } from './EventCalendarStore.types';
 import { SchedulerValidDate } from '../models';
 
-export const selectors = {
-  ...schedulerSelectors,
+export const viewSelectors = {
   view: createSelector((state: State) => state.view),
   views: createSelector((state: State) => state.views),
-  preferences: createSelector((state: State) => state.preferences),
-  preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   isDayView: createSelector((state: State) => state.view === 'day'),
-  occurrencePlaceholderToRenderInDayCell: createSelector(
+};
+
+export const preferencesSelectors = {
+  preferences: createSelector((state: State) => state.preferences),
+  showWeekends: createSelector((state: State) => state.preferences.showWeekends),
+  showWeekNumber: createSelector((state: State) => state.preferences.showWeekNumber),
+  preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
+};
+
+export const occurrencePlaceholderInViewSelectors = {
+  inDayCell: createSelector(
     (state: State, day: SchedulerValidDate, rowStart: SchedulerValidDate) => {
       if (
         state.occurrencePlaceholder === null ||
@@ -37,7 +43,7 @@ export const selectors = {
       return null;
     },
   ),
-  occurrencePlaceholderToRenderInTimeRange: createSelector(
+  inTimeColumn: createSelector(
     (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
       if (
         state.occurrencePlaceholder === null ||

@@ -7,7 +7,8 @@ import { DateNavigatorProps } from './DateNavigator.types';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../../../primitives/use-event-calendar';
+import { viewSelectors } from '../../../../primitives/use-event-calendar';
+import { otherSelectors } from '../../../../primitives/utils/SchedulerStore';
 import './DateNavigator.css';
 
 const adapter = getAdapter();
@@ -19,8 +20,8 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const { className, ...other } = props;
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const view = useStore(store, selectors.view);
-  const visibleDate = useStore(store, selectors.visibleDate);
+  const view = useStore(store, viewSelectors.view);
+  const visibleDate = useStore(store, otherSelectors.visibleDate);
 
   return (
     <header

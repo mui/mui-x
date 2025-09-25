@@ -4,7 +4,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { DayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../primitives/use-event-calendar';
+import { otherSelectors } from '../../primitives/utils/SchedulerStore';
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { processDate } from '../../primitives/utils/event-utils';
@@ -16,7 +16,7 @@ export const DayView = React.memo(
   ) {
     const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
-    const visibleDate = useStore(store, selectors.visibleDate);
+    const visibleDate = useStore(store, otherSelectors.visibleDate);
     const days = React.useMemo(() => [processDate(visibleDate, adapter)], [adapter, visibleDate]);
 
     useInitializeView(() => ({

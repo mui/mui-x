@@ -25,7 +25,6 @@ import {
   RecurringEventUpdatedProperties,
   CalendarResourceId,
 } from '../../../../primitives/models';
-import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import './EventPopover.css';
 import {
@@ -33,7 +32,11 @@ import {
   detectRecurrenceKeyFromRule,
   RecurrencePresetKey,
 } from '../../../../primitives/utils/recurrence-utils';
-import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
+import {
+  DEFAULT_EVENT_COLOR,
+  eventSelectors,
+  resourceSelectors,
+} from '../../../../primitives/utils/SchedulerStore';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -44,9 +47,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
-  const resources = useStore(store, selectors.resources);
-  const color = useStore(store, selectors.eventColor, occurrence.id);
+  const isEventReadOnly = useStore(store, eventSelectors.isReadOnly, occurrence.id);
+  const resources = useStore(store, resourceSelectors.allResources);
+  const color = useStore(store, eventSelectors.color, occurrence.id);
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(occurrence.allDay));

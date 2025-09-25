@@ -9,7 +9,7 @@ import { Menubar } from '@base-ui-components/react/menubar';
 import { CalendarView } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../../../../primitives/use-event-calendar';
+import { viewSelectors } from '../../../../../primitives/use-event-calendar';
 
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   props: React.HTMLAttributes<HTMLDivElement>,
@@ -18,8 +18,8 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const { className, ...other } = props;
 
   const store = useEventCalendarStoreContext();
-  const views = useStore(store, selectors.views);
-  const view = useStore(store, selectors.view);
+  const views = useStore(store, viewSelectors.views);
+  const view = useStore(store, viewSelectors.view);
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);

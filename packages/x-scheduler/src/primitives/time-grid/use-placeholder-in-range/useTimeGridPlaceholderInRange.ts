@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
-import { selectors } from '../../use-event-calendar';
+import { occurrencePlaceholderInViewSelectors } from '../../use-event-calendar';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
+import { eventSelectors } from '../../utils/SchedulerStore';
 
 export function useTimeGridPlaceholderInRange(
   parameters: useTimeGridPlaceholderInRange.Parameters,
@@ -13,11 +14,11 @@ export function useTimeGridPlaceholderInRange(
 
   const rawPlaceholder = useStore(
     store,
-    selectors.occurrencePlaceholderToRenderInTimeRange,
+    occurrencePlaceholderInViewSelectors.inTimeColumn,
     start,
     end,
   );
-  const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
+  const originalEvent = useStore(store, eventSelectors.model, rawPlaceholder?.eventId ?? null);
 
   return React.useMemo(() => {
     if (!originalEvent || !rawPlaceholder) {
