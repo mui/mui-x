@@ -34,6 +34,7 @@ type GetAxesScalesParams<T extends ChartSeriesType = ChartSeriesType> = {
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
   preferStrictDomainInLineCharts?: boolean;
+  defaultTickNumber: number;
 };
 
 function getRange(
@@ -56,6 +57,7 @@ export function getXAxesScales<T extends ChartSeriesType>({
   seriesConfig,
   zoomMap,
   preferStrictDomainInLineCharts,
+  defaultTickNumber,
 }: GetAxesScalesParams<T> & {
   axis?: DefaultedAxis[];
 }) {
@@ -74,6 +76,7 @@ export function getXAxesScales<T extends ChartSeriesType>({
       axisIndex,
       formattedSeries,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     );
   });
 
@@ -87,6 +90,7 @@ export function getYAxesScales<T extends ChartSeriesType>({
   seriesConfig,
   zoomMap,
   preferStrictDomainInLineCharts,
+  defaultTickNumber,
 }: GetAxesScalesParams<T> & {
   axis?: DefaultedAxis[];
 }) {
@@ -105,6 +109,7 @@ export function getYAxesScales<T extends ChartSeriesType>({
       axisIndex,
       formattedSeries,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     );
   });
 
@@ -133,6 +138,7 @@ function getAxisScale<T extends ChartSeriesType>(
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
   preferStrictDomainInLineCharts: boolean | undefined,
+  defaultTickNumber: number,
 ): ScaleDefinition {
   const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
   const range = getRange(drawingArea, axisDirection, axis);
@@ -182,11 +188,77 @@ function getAxisScale<T extends ChartSeriesType>(
     axisExtrema[1] = max;
   }
 
-  const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtrema });
+  const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
 
   const zoomedRange = zoomScaleRange(range, zoomRange);
 
   const scale = getScale(scaleType as ContinuousScaleName, axisExtrema, zoomedRange);
+
+  if (isSymlogScaleConfig(axis) && axis.constant != null) {
+    (scale as ScaleSymLog<number, number>).constant(axis.constant);
+  }
+
+  applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
+
+  return { scale, tickNumber: rawTickNumber };
+}
+
+export function getNormalizedAxisScale<T extends ChartSeriesType>(
+  axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
+  axisDirection: 'x' | 'y',
+  seriesConfig: ChartSeriesConfig<T>,
+  axisIndex: number,
+  formattedSeries: ProcessedSeries<T>,
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts: boolean | undefined,
+  defaultTickNumber: number,
+): ScaleDefinition {
+  const range = [0, 1];
+
+  if (isBandScaleConfig(axis)) {
+    const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+
+    return {
+      scale: scaleBand(axis.data!, range)
+        .paddingInner(categoryGapRatio)
+        .paddingOuter(categoryGapRatio / 2),
+    };
+  }
+
+  if (isPointScaleConfig(axis)) {
+    return { scale: scalePoint(axis.data!, range) };
+  }
+
+  const scaleType = axis.scaleType ?? ('linear' as const);
+
+  const domainLimit = getDomainLimit(
+    axis,
+    axisDirection,
+    axisIndex,
+    formattedSeries,
+    preferStrictDomainInLineCharts,
+  );
+
+  const [minData, maxData] = getAxisExtrema(
+    axis,
+    axisDirection,
+    seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
+    axisIndex,
+    formattedSeries,
+  );
+  const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
+
+  if (typeof domainLimit === 'function') {
+    const { min, max } = domainLimit(minData, maxData);
+    axisExtrema[0] = min;
+    axisExtrema[1] = max;
+  }
+
+  const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
+
+  const scale = getScale(scaleType as ContinuousScaleName, axisExtrema, range);
 
   if (isSymlogScaleConfig(axis) && axis.constant != null) {
     (scale as ScaleSymLog<number, number>).constant(axis.constant);

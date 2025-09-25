@@ -19,6 +19,7 @@ import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
 import { getXAxesScales, getYAxesScales } from './getAxisScale';
+import { getDefaultTickNumber } from '../../../ticks';
 
 function createPreviewDrawingArea(
   axisDirection: 'x' | 'y',
@@ -77,6 +78,7 @@ export const selectorChartPreviewXScales = createSelector(
       seriesConfig,
       zoomMap,
       preferStrictDomainInLineCharts,
+      defaultTickNumber: getDefaultTickNumber(drawingArea.width),
     });
   },
 );
@@ -168,6 +170,7 @@ export const selectorChartPreviewYScales = createSelector(
       seriesConfig,
       zoomMap,
       preferStrictDomainInLineCharts,
+      defaultTickNumber: getDefaultTickNumber(drawingArea.height),
     });
   },
 );

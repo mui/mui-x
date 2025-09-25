@@ -188,7 +188,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       axisExtremums[1] = max;
     }
 
-    const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
+    const rawTickNumber = getTickNumber(axis, axisExtremums, defaultTickNumber);
     const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
     const scale = getScale(scaleType, axisExtremums, range);
