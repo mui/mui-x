@@ -339,6 +339,15 @@ export function PickerFieldUI<
           ...additionalTextFieldInputProps,
         };
 
+  // We need to resolve the `inputProps` since we are messing with those props in this component.
+  textFieldProps.inputProps =
+    materialMajor >= 6 && (textFieldProps as TextFieldProps)?.slotProps?.htmlInput
+      ? resolveComponentProps(
+          (textFieldProps as TextFieldProps).slotProps!.htmlInput as any,
+          ownerState,
+        )
+      : textFieldProps.inputProps;
+
   // Remove the `input` slotProps to avoid them overriding the manually resolved `InputProps`.
   // Relevant on `materialMajor >= 6` since `slotProps` would take precedence.
   delete (textFieldProps as TextFieldProps)?.slotProps?.input;
