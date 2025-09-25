@@ -77,6 +77,7 @@ Same changes as in `@mui/x-date-pickers@8.12.0`.
 - [charts] Refactor `getAxisExtremum` (#19627) @bernardobelchior
 - [charts] Remove unused code path from `getAxisScale` (#19673) @bernardobelchior
 - [charts] Make new hideLegend prop on ChartWrapper optional (#19694) @thomas-mcdonald
+- [charts] Fix chart crash in test environment (#19711) @JCQuintas
 
 #### `@mui/x-charts-pro@8.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
