@@ -203,6 +203,72 @@ function getAxisScale<T extends ChartSeriesType>(
   return { scale, tickNumber: rawTickNumber };
 }
 
+export function getNormalizedAxisScale<T extends ChartSeriesType>(
+  axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
+  axisDirection: 'x' | 'y',
+  seriesConfig: ChartSeriesConfig<T>,
+  axisIndex: number,
+  formattedSeries: ProcessedSeries<T>,
+  /**
+   * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
+   */
+  preferStrictDomainInLineCharts: boolean | undefined,
+  defaultTickNumber: number,
+): ScaleDefinition {
+  const range = [0, 1];
+
+  if (isBandScaleConfig(axis)) {
+    const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+
+    return {
+      scale: scaleBand(axis.data!, range)
+        .paddingInner(categoryGapRatio)
+        .paddingOuter(categoryGapRatio / 2),
+    };
+  }
+
+  if (isPointScaleConfig(axis)) {
+    return { scale: scalePoint(axis.data!, range) };
+  }
+
+  const scaleType = axis.scaleType ?? ('linear' as const);
+
+  const domainLimit = getDomainLimit(
+    axis,
+    axisDirection,
+    axisIndex,
+    formattedSeries,
+    preferStrictDomainInLineCharts,
+  );
+
+  const [minData, maxData] = getAxisExtrema(
+    axis,
+    axisDirection,
+    seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
+    axisIndex,
+    formattedSeries,
+  );
+  const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
+
+  if (typeof domainLimit === 'function') {
+    const { min, max } = domainLimit(minData, maxData);
+    axisExtrema[0] = min;
+    axisExtrema[1] = max;
+  }
+
+  const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
+
+  const scale = getScale(scaleType as ContinuousScaleName, axisExtrema, range);
+
+  if (isSymlogScaleConfig(axis) && axis.constant != null) {
+    (scale as ScaleSymLog<number, number>).constant(axis.constant);
+  }
+
+  applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
+
+  return { scale, tickNumber: rawTickNumber };
+}
+
 type DomainLimit = 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
 
 export function getDomainLimit(

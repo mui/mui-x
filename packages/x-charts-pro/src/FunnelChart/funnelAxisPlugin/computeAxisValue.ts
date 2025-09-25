@@ -194,7 +194,7 @@ export function computeAxisValue({
     const rawTickNumber = getTickNumber(
       axis,
       axisExtremums,
-      getDefaultTickNumber(Math.abs(range[1] - range[0])),
+      getDefaultTickNumber(axisDirection === 'x' ? drawingArea.width : drawingArea.height),
     );
     const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
