@@ -15,13 +15,13 @@ The following is the team member who have contributed to this release:
 
 ### Tree View
 
-#### `@mui/x-tree-view@7.29.2`
+#### `@mui/x-tree-view@7.29.10`
 
 - [tree view] Fix the expansion toggle on icon container with old DOM structure (#19546) @flaviendelangle
 
-#### `@mui/x-tree-view-pro@7.29.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
+#### `@mui/x-tree-view-pro@7.29.10` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")
 
-Same changes as in `@mui/x-tree-view@7.29.2`.
+Same changes as in `@mui/x-tree-view@7.29.10`.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
