@@ -12,8 +12,11 @@ _Sep 25, 2025_
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🤝 Grid-Charts integration
-  <img width="875" height="818" alt="Screenshot 2025-09-25 at 15 03 40" src="https://github.com/user-attachments/assets/98f55ab0-7d23-4b81-99fc-19a5fd825d01" />
+
+  <img width="500" alt="Screenshot 2025-09-25 at 15 03 40" src="https://github.com/user-attachments/assets/98f55ab0-7d23-4b81-99fc-19a5fd825d01" />
+
   👉 [🎥 Watch the full video](https://github.com/user-attachments/assets/28f1848e-dc85-4077-8756-a3e88afd4e54)
+
 - ⌨️ Charts keyboard navigation
 - ⚡️ Charts: Add new `renderer="svg-batch"` prop to Scatter charts that provides improved performance for large datasets
 - 🐞 Bugfixes
