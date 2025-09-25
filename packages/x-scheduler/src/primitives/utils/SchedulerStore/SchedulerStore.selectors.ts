@@ -76,18 +76,6 @@ export const selectors = {
   ),
   event: eventSelector,
   isEventReadOnly: isEventReadOnlySelector,
-  isEventDraggable: createSelector(
-    isEventReadOnlySelector,
-    (state: State) => state.areEventsDraggable,
-    (isEventReadOnly, areEventsDraggable, _eventId: CalendarEventId) =>
-      !isEventReadOnly && areEventsDraggable,
-  ),
-  isEventResizable: createSelector(
-    isEventReadOnlySelector,
-    (state: State) => state.areEventsResizable,
-    (isEventReadOnly, areEventsResizable, _eventId: CalendarEventId) =>
-      !isEventReadOnly && areEventsResizable,
-  ),
   occurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder),
   hasOccurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder !== null),
   isOccurrenceMatchingThePlaceholder: createSelector(

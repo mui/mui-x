@@ -6,7 +6,7 @@ import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
-import { CalendarEventOccurrence, CalendarProcessedDate } from '../../../../primitives/models';
+import { CalendarProcessedDate } from '../../../../primitives/models';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayGrid } from '../../../../primitives/day-grid';
@@ -14,6 +14,7 @@ import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { isMultiDayEvent } from '../../../../primitives/utils/event-utils';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -47,7 +48,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
-    shouldAddPosition: shouldRenderOccurrenceInDayGrid,
+    shouldAddPosition: isMultiDayEvent,
   });
 
   const { start, end } = React.useMemo(
@@ -194,8 +195,3 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     </div>
   );
 });
-
-// TODO: Allow to render some multi-day events that are not all-day in the Day Grid.
-function shouldRenderOccurrenceInDayGrid(occurrence: CalendarEventOccurrence) {
-  return !!occurrence.allDay;
-}
