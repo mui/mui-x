@@ -172,8 +172,8 @@ export function useGridColumns(
       if (gridPivotActiveSelector(apiRef)) {
         const nonPivotColumns: GridColDef[] = [];
         const pivotColumns: GridColDef[] = [];
+        const pivotInitialColumns = gridPivotInitialColumnsSelector(apiRef);
         columns.forEach((column) => {
-          const pivotInitialColumns = gridPivotInitialColumnsSelector(apiRef);
           const isNonPivotColumn = pivotInitialColumns.has(column.field);
           if (isNonPivotColumn) {
             nonPivotColumns.push(column);
