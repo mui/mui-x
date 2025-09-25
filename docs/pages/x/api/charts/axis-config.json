@@ -18,7 +18,7 @@
     "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
     "domainLimit": {
       "type": {
-        "description": "'nice' | 'strict' | ((min: number, max: number) =&gt; { min: number; max: number })"
+        "description": "'nice' | 'strict' | ((min: NumberValue, max: NumberValue) =&gt; { min: NumberValue; max: NumberValue })"
       }
     },
     "height": { "type": { "description": "number" }, "default": "30" },
@@ -26,8 +26,8 @@
     "ignoreTooltip": { "type": { "description": "boolean" } },
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
-    "max": { "type": { "description": "number | Date" } },
-    "min": { "type": { "description": "number | Date" } },
+    "max": { "type": { "description": "NumberValue" } },
+    "min": { "type": { "description": "NumberValue" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
     "position": { "type": { "description": "'top' | 'bottom' | 'none'" } },
     "reverse": { "type": { "description": "boolean" } },
