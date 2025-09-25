@@ -545,7 +545,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
     if (!isPopoverOpen) {
       return;
     }
-    store.setOccurrencePlaceholder?.(null);
+    store.setOccurrencePlaceholder(null);
     setIsPopoverOpen(false);
     setAnchor(null);
     setSelectedOccurrence(null);
