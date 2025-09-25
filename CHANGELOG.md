@@ -53,6 +53,7 @@ Same changes as in `@mui/x-data-grid-pro@8.12.0`, plus:
 #### `@mui/x-date-pickers@8.12.0`
 
 - [pickers] Ensure reference value is not updated for invalid values (#19635) @michelengelen
+- [pickers] Fix `slotProps.textField.slotProps.htmlInput` resolution (#19713) @LukasTy
 - [pickers] Preserve time format when using single column layout on Time Range Picker (#19626) @sai6855
 - [pickers] Preserve time format when using single column layout on Date Time Picker and Date Time Range Picker (#19608) @sai6855
 
