@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { DataGrid, GridDataSource } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
-export default function ServerSideDataSourceCursorPagination() {
+export default function ServerSideCursorDataSource() {
   const { columns, initialState, fetchRows } = useMockServer(
     {},
     { useCursorPagination: true },
   );
 
-  const dataSource: GridDataSource = React.useMemo(
+  const dataSource = React.useMemo(
     () => ({
       getRows: async (params) => {
         const cursor = await params.getCursor();
@@ -24,7 +24,9 @@ export default function ServerSideDataSourceCursorPagination() {
         return {
           rows: getRowsResponse.rows,
           rowCount: getRowsResponse.rowCount,
-          pageInfo: getRowsResponse.pageInfo,
+          pageInfo: {
+            nextCursor: getRowsResponse.pageInfo?.nextCursor,
+          },
         };
       },
     }),
