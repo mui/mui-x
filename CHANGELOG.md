@@ -18,7 +18,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 - 🧰 Codemod requires Node >=20.19
 
 `@mui/x-codemod` minimum supported Node version is `20.19`.
-This was only the case due to using the v18 `yargs` package; this only explicitly aligns with it. (#18979)
+This was only the case due to using the v18 `yargs` package; this now explicitly aligns with it. (#18979)
 
 Special thanks go out to the community members for their valuable contributions:
 @deade1e, @sai6855
@@ -46,8 +46,8 @@ Same changes as in `@mui/x-data-grid-pro@8.12.0`.
 
 - [pickers] Ensure reference value is not updated for invalid values (#19635) @michelengelen
 - [pickers] Fix `apiRef.current.isItemExpanded()` method (#19619) @flaviendelangle
-- [pickers] Preserve time format when using single column layout on `TimeRangePicker` (#19626) @sai6855
-- [pickers] Preserve time format when using single column layout on `DateTimePicker` and `DateTimeRangePicker` (#19608) @sai6855
+- [pickers] Preserve time format when using single column layout on Time Range Picker (#19626) @sai6855
+- [pickers] Preserve time format when using single column layout on Date Time Picker and Date Time Range Picker (#19608) @sai6855
 
 #### `@mui/x-date-pickers-pro@8.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
