@@ -21,7 +21,6 @@ const ToolbarRoot = styled('div', {
   boxSizing: 'border-box',
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: 4,
-  gridArea: 'toolbar',
 }));
 
 export interface ToolbarProps extends React.ComponentProps<'div'> {

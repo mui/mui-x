@@ -57,11 +57,34 @@ export function useGridParamsApi(
   );
 
   const getCellParamsForRow = React.useCallback<GridParamsPrivateApi['getCellParamsForRow']>(
-    (id, field, row, { cellMode, colDef, hasFocus, rowNode, tabIndex }) => {
-      const rawValue = row[field];
-      const value = colDef?.valueGetter
-        ? colDef.valueGetter(rawValue as never, row, colDef, apiRef)
-        : rawValue;
+    (
+      id,
+      field,
+      row,
+      {
+        cellMode,
+        colDef,
+        hasFocus,
+        rowNode,
+        tabIndex,
+        value: forcedValue,
+        formattedValue: forcedFormattedValue,
+      },
+    ) => {
+      let value = row[field];
+
+      if (forcedValue !== undefined) {
+        value = forcedValue;
+      } else if (colDef?.valueGetter) {
+        value = colDef.valueGetter(value as never, row, colDef, apiRef);
+      }
+
+      let formattedValue = value;
+      if (forcedFormattedValue !== undefined) {
+        formattedValue = forcedFormattedValue;
+      } else if (colDef?.valueFormatter) {
+        formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
+      }
 
       const params: GridCellParams<any, any, any, any> = {
         id,
@@ -73,13 +96,10 @@ export function useGridParamsApi(
         hasFocus,
         tabIndex,
         value,
-        formattedValue: value,
+        formattedValue,
         isEditable: false,
         api: apiRef.current,
       };
-      if (colDef && colDef.valueFormatter) {
-        params.formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
-      }
       params.isEditable = colDef && apiRef.current.isCellEditable(params);
 
       return params;
