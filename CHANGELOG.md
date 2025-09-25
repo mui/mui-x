@@ -11,6 +11,7 @@ _Sep 25, 2025_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
+- 🤝 Grid-Charts integration
 - ⌨️ Charts keyboard navigation
 - ⚡️ Charts: Add new `renderer="svg-batch"` prop to Scatter charts that provides improved performance for large datasets
 - 🐞 Bugfixes
@@ -129,6 +130,8 @@ Same changes as in `@mui/x-tree-view@8.12.0`.
 - [code-infra] Remove renovate automerge (#19501) @Janpot
 - [code-infra] Update `DEFAULT_TIMESTAMP` format to ISO 8601 (#19624) @Janpot
 - [code-infra] Update `findLatestTaggedVersion` to filter tags based on major version (#19693) @michelengelen
+- [code-infra] Fix changelog generation for charts premium (#19701) @JCQuintas
+- [code-infra] Run prettier on `createReleasePR.mjs` (#19702) @bernardobelchior
 - [code-infra] Make `x-charts-premium` releasable (#18959) @JCQuintas
 - [docs-infra] Ensure `create-playground` script only runs if target file is absent (#19603) @michelengelen
 - [docs-infra] Add @prakhargupta1 as a codeowner of the docs (#19679) @alexfauquette
