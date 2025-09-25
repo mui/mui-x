@@ -46,6 +46,7 @@ Same changes as in `@mui/x-data-grid-pro@8.12.0`, plus:
 - [DataGridPremium] Disable aggregation on the grouping column by default (#19692) @arminmeh
 - [DataGridPremium] Do not rely on the group separation constant to retrieve the column name for the charts panel (#19677) @arminmeh
 - [DataGridPremium] Fix stale aggregation state (#19690) @arminmeh
+- [DataGridPremium] Fix pivot column being hidden on autosizing (#19699) @cherniavskii
 
 ### Date and Time Pickers
 
