@@ -311,13 +311,13 @@ const ptBRGrid: Partial<GridLocaleText> = {
     `Agregar ${column} (${aggregation})`,
   promptChangeFilterLabel: (column: string, operator: string, value: string) => {
     if (operator === 'is any of') {
-      return `${column} é um dos: ${value}`;
+      return `${column} é um destes: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
   promptChangeFilterDescription: (column: string, operator: string, value: string) => {
     if (operator === 'is any of') {
-      return `Filtrar onde ${column} é um dos: ${value}`;
+      return `Filtrar onde ${column} é um destes: ${value}`;
     }
     return `Filtrar onde ${column} ${operator} ${value}`;
   },
