@@ -75,7 +75,6 @@ export const selectorChartXScales = createSelector(
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomMap,
-    selectorChartZoomOptionsLookup,
     selectorPreferStrictDomainInLineCharts,
   ],
   function selectorChartXScales(
@@ -84,7 +83,6 @@ export const selectorChartXScales = createSelector(
     formattedSeries,
     seriesConfig,
     zoomMap,
-    zoomOptions,
     preferStrictDomainInLineCharts,
   ) {
     return getXAxesScales({
@@ -93,7 +91,6 @@ export const selectorChartXScales = createSelector(
       axis,
       seriesConfig,
       zoomMap,
-      zoomOptions,
       preferStrictDomainInLineCharts,
     });
   },
@@ -106,7 +103,6 @@ export const selectorChartYScales = createSelector(
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
     selectorChartZoomMap,
-    selectorChartZoomOptionsLookup,
     selectorPreferStrictDomainInLineCharts,
   ],
   function selectorChartYScales(
@@ -115,7 +111,6 @@ export const selectorChartYScales = createSelector(
     formattedSeries,
     seriesConfig,
     zoomMap,
-    zoomOptions,
     preferStrictDomainInLineCharts,
   ) {
     return getYAxesScales({
@@ -124,7 +119,6 @@ export const selectorChartYScales = createSelector(
       axis,
       seriesConfig,
       zoomMap,
-      zoomOptions,
       preferStrictDomainInLineCharts,
     });
   },
