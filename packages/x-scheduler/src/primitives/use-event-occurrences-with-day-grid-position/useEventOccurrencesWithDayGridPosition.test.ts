@@ -3,7 +3,7 @@ import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWit
 import { getAdapter } from '../utils/adapter/getAdapter';
 import { processDate } from '../utils/event-utils';
 import { CalendarEvent } from '../models';
-import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
+import { getEventOccurrencesGroupedByDay } from '../use-event-calendar/EventCalendarStore.utils';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const adapter = getAdapter();
@@ -16,7 +16,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   function testHook(events: CalendarEvent[]) {
     const { result } = renderHook(() => {
-      const occurrencesMap = innerGetEventOccurrencesGroupedByDay(
+      const occurrencesMap = getEventOccurrencesGroupedByDay(
         adapter,
         days,
         'every-day',

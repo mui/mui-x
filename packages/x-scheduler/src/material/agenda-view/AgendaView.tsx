@@ -9,7 +9,7 @@ import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCal
 import { selectors } from '../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
-import { CalendarViewConfig } from '../../primitives/models';
+import { CalendarViewConfig } from '../../primiti../../primitives/get-event-occurrences-grouped-by-day
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { getDayList } from '../../primitives/utils/date-utils';
 import './AgendaView.css';
