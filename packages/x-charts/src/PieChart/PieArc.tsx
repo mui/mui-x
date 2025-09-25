@@ -5,6 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { useTheme } from '@mui/material/styles';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
@@ -67,13 +68,11 @@ const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
-})<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
-  // Got to move stroke to an element prop instead of style.
-  stroke: ownerState.stroke ?? (theme.vars || theme).palette.background.paper,
+})<{ ownerState: PieArcOwnerState }>({
   transitionProperty: 'opacity, fill, filter',
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
-}));
+});
 
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
@@ -86,7 +85,6 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
     startAngle: number;
     /** @default false */
     skipAnimation: boolean;
-    stroke?: string;
   };
 
 const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
@@ -106,9 +104,12 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     outerRadius,
     paddingAngle,
     skipAnimation,
-    stroke,
+    stroke: strokeProp,
     ...other
   } = props;
+
+  const theme = useTheme();
+  const stroke = strokeProp ?? (theme.vars || theme).palette.background.paper;
 
   const ownerState = {
     id,
@@ -118,7 +119,6 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     isFaded,
     isHighlighted,
     isFocused,
-    stroke,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -143,11 +143,11 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       fill={ownerState.color}
       opacity={ownerState.isFaded ? 0.3 : 1}
       filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      stroke={stroke}
       strokeWidth={1}
       strokeLinejoin="round"
       data-highlighted={ownerState.isHighlighted || undefined}
       data-faded={ownerState.isFaded || undefined}
-      data-focused={isFocused || undefined}
       {...other}
       {...interactionProps}
       {...animatedProps}
