@@ -59,6 +59,10 @@ export function getEventOccurrencesGroupedByDay(
   return cleanMap;
 }
 
+/**
+ * Makes sure the event occurrences map is always in sync with the store state.
+ */
+// TODO: Support partial updates of the map when only the visible days change.
 function syncEventOccurrencesMap(store: EventCalendarStore) {
   runStoreEffect(
     store,
