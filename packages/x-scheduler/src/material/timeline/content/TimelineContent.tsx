@@ -15,6 +15,7 @@ import { diffIn } from '../../..//primitives/utils/date-utils';
 import { SchedulerValidDate, TimelineView } from '../../../primitives';
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineEventRow from './timeline-event-row/TimelineEventRow';
+import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';
 
 const getEndBoundaries = (adapter: Adapter, view: TimelineView, start: SchedulerValidDate) => {
   const endBoundaries = {
@@ -53,7 +54,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   const start = visibleDate;
   const end = React.useMemo(() => getEndBoundaries(adapter, view, start), [adapter, view, start]);
 
-  const occurrencesMap = useEventOccurrencesGroupedByResource({
+  const resourcesWithOccurrences = useEventOccurrencesGroupedByResource({
     start,
     end,
   });
@@ -80,7 +81,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   return (
     <div className="TimelineViewContent" ref={forwardedRef} {...other}>
       <TimelinePrimitive.Root
-        items={resources}
+        items={resourcesWithOccurrences}
         className="TimelineRoot"
         style={
           {
@@ -97,23 +98,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
             </TimelinePrimitive.Cell>
           </TimelinePrimitive.Row>
           <TimelinePrimitive.SubGrid className="TitleSubGrid">
-            {(resource) => (
-              <TimelinePrimitive.Row key={resource.name} className="TimelineRow">
-                <TimelinePrimitive.Cell
-                  className={clsx('TimelineCell', 'TimelineTitleCell')}
-                  id={`TimelineTitleCell-${resource.id}`}
-                >
-                  <span
-                    className={clsx(
-                      'ResourceLegendColor',
-                      getColorClassName(resource.eventColor ?? DEFAULT_EVENT_COLOR),
-                    )}
-                  />
-
-                  {resource.name}
-                </TimelinePrimitive.Cell>
-              </TimelinePrimitive.Row>
-            )}
+            {({ resourceId }) => <TimelineTitleCell key={resourceId} resourceId={resourceId} />}
           </TimelinePrimitive.SubGrid>
         </div>
         <div className="EventSubGridContainer">
@@ -123,14 +108,14 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
             </TimelinePrimitive.Cell>
           </TimelinePrimitive.Row>
           <TimelinePrimitive.SubGrid className="EventSubGrid">
-            {occurrencesMap?.map(({ resourceId, occurrences }) => (
+            {({ resourceId, occurrences }) => (
               <TimelineEventRow
                 key={resourceId}
                 start={start}
                 end={end}
                 occurrences={occurrences}
               />
-            ))}
+            )}
           </TimelinePrimitive.SubGrid>
         </div>
       </TimelinePrimitive.Root>

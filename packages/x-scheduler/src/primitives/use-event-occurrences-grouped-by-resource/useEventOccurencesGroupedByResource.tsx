@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { CalendarEvent, CalendarEventOccurrence, SchedulerValidDate } from '../models';
+import {
+  CalendarEvent,
+  CalendarEventOccurrence,
+  CalendarResource,
+  SchedulerValidDate,
+} from '../models';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { useTimelineStoreContext } from '../utils/useTimelineStoreContext';
-import { selectors } from '../use-event-calendar';
+import { selectors } from '../use-timeline';
 import { Adapter } from '../utils/adapter/types';
 
 export function useEventOccurrencesGroupedByResource(
@@ -16,19 +21,10 @@ export function useEventOccurrencesGroupedByResource(
   const events = useStore(store, selectors.events);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
 
-  return React.useMemo(() => {
-    const occurrencesGroupedByResource = innerGetEventOccurrencesGroupedByResource(
-      adapter,
-      events,
-      visibleResources,
-      start,
-      end,
-    );
-    return Array.from(occurrencesGroupedByResource.entries()).map(([resourceId, occurrences]) => ({
-      resourceId,
-      occurrences,
-    }));
-  }, [adapter, events, visibleResources, start, end]);
+  return React.useMemo(
+    () => innerGetEventOccurrencesGroupedByResource(adapter, events, visibleResources, start, end),
+    [adapter, events, visibleResources, start, end],
+  );
 }
 
 export namespace useEventOccurrencesGroupedByResource {
@@ -37,7 +33,10 @@ export namespace useEventOccurrencesGroupedByResource {
     end: SchedulerValidDate;
   }
 
-  export type ReturnValue = { resourceId: string; occurrences: CalendarEventOccurrence[] }[];
+  export type ReturnValue = {
+    resourceId: string;
+    occurrences: CalendarEventOccurrence[];
+  }[];
 }
 
 /**
@@ -50,7 +49,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   visibleResources: Map<string, boolean>,
   start: SchedulerValidDate,
   end: SchedulerValidDate,
-): Map<string, CalendarEventOccurrence[]> {
+): { resourceId: string; occurrences: CalendarEventOccurrence[] }[] {
   const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>();
 
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
@@ -70,5 +69,8 @@ export function innerGetEventOccurrencesGroupedByResource(
     }
   }
 
-  return occurrencesGroupedByResource;
+  return Array.from(occurrencesGroupedByResource.entries()).map(([resourceId, occurrences]) => ({
+    resourceId,
+    occurrences,
+  }));
 }
