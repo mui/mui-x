@@ -15,6 +15,7 @@ import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { isMultiDayEvent } from '../../../../primitives/utils/event-utils';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -196,7 +197,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 });
 
-// TODO: Allow to render some multi-day events that are not all-day in the Day Grid.
 function shouldRenderOccurrenceInDayGrid(occurrence: CalendarEventOccurrence) {
-  return !!occurrence.allDay;
+  return isMultiDayEvent(occurrence);
 }
