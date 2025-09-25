@@ -18,10 +18,7 @@ export const TimelineRow = React.forwardRef(function TimelineRow(
   // TODO: Add aria-rowindex using Composite.
   const props = React.useMemo(() => ({ role: 'row' }), []);
 
-  const state: TimelineRow.State = React.useMemo(() => ({}), []);
-
   return useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
