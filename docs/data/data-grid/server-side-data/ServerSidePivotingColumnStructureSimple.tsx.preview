@@ -1,0 +1,13 @@
+<DataGridPremium
+  columns={columns}
+  dataSource={dataSource}
+  hideFooter
+  columnGroupHeaderHeight={36}
+  pivotActive
+  pivotModel={pivotModel}
+  aggregationFunctions={aggregationFunctions}
+  disableColumnMenu
+  disableColumnSorting
+  disableColumnFilter
+  disableColumnPinning
+/>
