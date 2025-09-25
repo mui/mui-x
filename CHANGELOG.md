@@ -5,6 +5,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.12.1
+
+_Sep 25, 2025_
+
+Release highlight ✨:
+
+- 🐞 Hotfix for Grid-Charts integration issue with aggregated values
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.12.1`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.12.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.12.1`.
+
+#### `@mui/x-data-grid-premium@8.12.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.12.1`, plus:
+
+- [DataGridPremium] Collect aggregated values properly for the charts integration context (#19714) @arminmeh
+
 ## 8.12.0
 
 _Sep 25, 2025_
@@ -15,7 +39,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 
 ![Grid x Charts](https://github.com/user-attachments/assets/0817c36f-f87f-4688-8f30-fa0db638ca8c)
 
-  👉 [🎥 Watch the full video](https://github.com/user-attachments/assets/28f1848e-dc85-4077-8756-a3e88afd4e54)
+👉 [🎥 Watch the full video](https://github.com/user-attachments/assets/28f1848e-dc85-4077-8756-a3e88afd4e54)
 
 - ⌨️ Charts keyboard navigation
 - ⚡️ Charts: Add new `renderer="svg-batch"` prop to Scatter charts that provides improved performance for large datasets
