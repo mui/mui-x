@@ -34,7 +34,7 @@ async function reportBundleSize() {
       '@mui/x-data-grid-premium',
       '@mui/x-charts',
       '@mui/x-charts-pro',
-      // '@mui/x-charts-premium',
+      '@mui/x-charts-premium',
       '@mui/x-date-pickers',
       '@mui/x-date-pickers-pro',
       '@mui/x-tree-view',

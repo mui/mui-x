@@ -859,7 +859,8 @@ async function main({ githubToken }) {
       auth: githubToken,
     });
 
-    const { findLatestTaggedVersionForMajor, generateChangelog: generator } = getChangelogUtils(octokit);
+    const { findLatestTaggedVersionForMajor, generateChangelog: generator } =
+      getChangelogUtils(octokit);
 
     // Find the upstream remote
     const upstreamRemote = await findMuiXRemote();
