@@ -12,7 +12,7 @@ _Sep 25, 2025_
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌨️ Charts keyboard navigation
-- ⚡️ Charts: Add new `BatchScatter` component that can optionally replace `Scatter` for large datasets
+- ⚡️ Charts: Add new `renderer="svg-batch"` prop to Scatter charts that provides improved performance for large datasets
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 - 🧰 Codemod requires Node >=20.19
@@ -67,6 +67,7 @@ Same changes as in `@mui/x-date-pickers@8.12.0`.
 - [charts] Fix zoom discard inconsistency (#19535) @bernardobelchior
 - [charts] Introduce keyboard navigation (#19155) @alexfauquette
 - [charts] Refactor `getAxisExtremum` (#19627) @bernardobelchior
+- [charts] Remove unused code path from `getAxisScale` (#19673) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
