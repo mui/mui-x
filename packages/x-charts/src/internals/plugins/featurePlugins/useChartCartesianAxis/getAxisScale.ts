@@ -1,4 +1,4 @@
-import { scaleBand, scalePoint, type ScaleSymLog } from '@mui/x-charts-vendor/d3-scale';
+import { scaleBand, scalePoint, type ScaleSymLog, NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import {
   AxisConfig,
   AxisId,
@@ -113,13 +113,13 @@ export function getYAxesScales<T extends ChartSeriesType>({
 
 export type ScaleDefinition =
   | {
-      scale: D3ContinuousScale;
-      tickNumber: number;
-    }
+    scale: D3ContinuousScale;
+    tickNumber: number;
+  }
   | {
-      scale: D3OrdinalScale;
-      tickNumber?: never;
-    };
+    scale: D3OrdinalScale;
+    tickNumber?: never;
+  };
 
 function getAxisScale<T extends ChartSeriesType>(
   axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
@@ -197,7 +197,7 @@ function getAxisScale<T extends ChartSeriesType>(
   return { scale, tickNumber: rawTickNumber };
 }
 
-type DomainLimit = 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+type DomainLimit = 'nice' | 'strict' | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
 
 export function getDomainLimit(
   axis: Pick<DefaultedAxis, 'id' | 'domainLimit'>,
@@ -213,7 +213,7 @@ export function getDomainLimit(
 
 export function applyDomainLimit(
   scale: D3ContinuousScale,
-  axis: { min?: number | Date; max?: number | Date },
+  axis: { min?: NumberValue; max?: NumberValue },
   domainLimit: DomainLimit,
   rawTickNumber: number,
 ) {
@@ -235,9 +235,9 @@ export function getActualAxisExtrema(
   axisExtrema: Pick<AxisConfig, 'min' | 'max'>,
   minData: number,
   maxData: number,
-): [number | Date, number | Date] {
-  let min: number | Date = minData;
-  let max: number | Date = maxData;
+): [NumberValue, NumberValue] {
+  let min: NumberValue = minData;
+  let max: NumberValue = maxData;
 
   if (axisExtrema.max != null && axisExtrema.max.valueOf() < minData) {
     min = axisExtrema.max;
