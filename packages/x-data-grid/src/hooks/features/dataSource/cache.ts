@@ -85,4 +85,8 @@ export class GridDataSourceCacheDefault {
     this.cache = {};
     this.cacheKeys.clear();
   }
+
+  size() {
+    return Object.keys(this.cache).length;
+  }
 }

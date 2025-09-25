@@ -168,7 +168,7 @@ In a real-world scenario you would replace this with your own server-side data-f
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
-### With the cursor-based Data Source
+### With the cursor pagination
 
 The `getRows()` **must** return the `pageInfo.nextCursor` value in its response to be used for cursor navigation.
 
