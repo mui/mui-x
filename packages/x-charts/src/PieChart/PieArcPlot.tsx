@@ -89,7 +89,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
 
-  const { dataIndex: focusedIndex = -1 } = useFocusedItem();
+  const { dataIndex: focusedIndex = -1 } = useFocusedItem() ?? {};
   const focusedItem = focusedIndex !== -1 ? transformedData[focusedIndex] : null;
 
   if (data.length === 0) {
