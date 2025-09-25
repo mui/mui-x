@@ -139,7 +139,6 @@ function PieArcPlot(props: PieArcPlotProps) {
           skipAnimation
           stroke={(theme.vars ?? theme).palette.text.primary}
           id={id}
-          isFocusedIndicator
           dataIndex={focusedIndex}
           strokeWidth={3}
         />
