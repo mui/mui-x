@@ -1,4 +1,4 @@
-// Recurring Events Dataset
+// All-day Events Dataset
 // Non-realistic set focused on edge cases of all-day events positioning.
 
 import { DateTime } from 'luxon';
