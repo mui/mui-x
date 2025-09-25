@@ -200,3 +200,5 @@ export interface CalendarProcessedDate {
  */
 export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
   Required<Pick<CalendarEvent, 'start' | 'end'>>;
+
+export type OccurrencesGroupedByDayMap = Map<string, CalendarEventOccurrence[]>;

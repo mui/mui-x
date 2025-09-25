@@ -7,7 +7,6 @@ import { getDayList } from '../../primitives/utils/date-utils';
 import { CalendarViewConfig } from '../../primitives/models';
 
 const viewConfig: CalendarViewConfig = {
-  renderEventIn: 'every-day',
   siblingVisibleDateGetter: ({ adapter, date, delta }) =>
     adapter.addWeeks(adapter.startOfWeek(date), delta),
   getVisibleDays: ({ adapter, visibleDate, showWeekends }) =>

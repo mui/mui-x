@@ -1,5 +1,4 @@
-import { OccurrencesGroupedByDayMap } from '../..../../../primitives/get-event-occurrences-grouped-by-day
-import { CalendarProcessedDate } from '../../../primitives/models';
+import { CalendarProcessedDate, OccurrencesGroupedByDayMap } from '../../../primitives/models';
 
 export interface MonthViewWeekRowProps {
   maxEvents: number;

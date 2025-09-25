@@ -9,7 +9,7 @@ import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCal
 import { selectors } from '../../primitives/use-event-calendar';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { AgendaEvent } from '../internals/components/event/agenda-event/AgendaEvent';
-import { CalendarViewConfig } from '../../primiti../../primitives/get-event-occurrences-grouped-by-day
+import { CalendarViewConfig } from '../../primitives/models/view';
 import { useAdapter } from '../../primitives/utils/adapter/useAdapter';
 import { getDayList } from '../../primitives/utils/date-utils';
 import './AgendaView.css';
@@ -18,7 +18,6 @@ import './AgendaView.css';
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 const viewConfig: CalendarViewConfig = {
-  renderEventIn: 'every-day',
   siblingVisibleDateGetter: ({ adapter, date, delta }) =>
     adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
   getVisibleDays: ({ adapter, visibleDate, showWeekends }) =>

@@ -10,7 +10,6 @@ export type CalendarView = 'week' | 'day' | 'month' | 'agenda';
  */
 export interface CalendarViewConfig {
   siblingVisibleDateGetter: (parameters: SiblingVisibleDateGetterParameters) => SchedulerValidDate;
-  renderEventIn: 'every-day';
   // TODO: Support updates
   getVisibleDays: (parameters: GetVisibleDaysParameters) => CalendarProcessedDate[];
 }

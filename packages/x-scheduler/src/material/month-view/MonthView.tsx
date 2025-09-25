@@ -23,7 +23,6 @@ const EVENT_HEIGHT = 18;
 const EVENT_GAP = 5;
 
 const viewConfig: CalendarViewConfig = {
-  renderEventIn: 'every-day',
   siblingVisibleDateGetter: ({ adapter, date, delta }) =>
     adapter.addWeeks(adapter.startOfWeek(date), delta),
   getVisibleDays: ({ adapter, visibleDate, showWeekends }) =>

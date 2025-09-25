@@ -28,7 +28,6 @@ function runStoreEffect<State, Value>(
 export function getEventOccurrencesGroupedByDay(
   adapter: Adapter,
   days: CalendarProcessedDate[],
-  renderEventIn: 'first-day' | 'every-day',
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
 ): Map<string, CalendarEventOccurrence[]> {
@@ -43,7 +42,7 @@ export function getEventOccurrencesGroupedByDay(
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
 
   for (const occurrence of occurrences) {
-    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter, renderEventIn);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter, 'every-day');
     for (const dayKey of eventDays) {
       const occurrenceType = occurrence.allDay ? 'allDay' : 'nonAllDay';
       occurrencesGroupedByDay.get(dayKey)![occurrenceType].push(occurrence);
@@ -84,13 +83,7 @@ function syncEventOccurrencesMap(store: EventCalendarStore) {
           showWeekends,
         });
 
-        return getEventOccurrencesGroupedByDay(
-          adapter,
-          visibleDays,
-          viewConfig.renderEventIn,
-          events,
-          visibleResourcesMap,
-        );
+        return getEventOccurrencesGroupedByDay(adapter, visibleDays, events, visibleResourcesMap);
       },
     ),
     (_previous, next) => {

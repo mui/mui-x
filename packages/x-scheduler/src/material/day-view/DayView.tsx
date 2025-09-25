@@ -7,7 +7,6 @@ import { processDate } from '../../primitives/utils/event-utils';
 import { CalendarViewConfig } from '../../primitives/models';
 
 const viewConfig: CalendarViewConfig = {
-  renderEventIn: 'every-day',
   siblingVisibleDateGetter: ({ adapter, date, delta }) => adapter.addDays(date, delta),
   getVisibleDays: ({ adapter, visibleDate }) => [processDate(visibleDate, adapter)],
 };

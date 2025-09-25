@@ -4,8 +4,8 @@ import {
   CalendarEventOccurrenceDayGridPosition,
   CalendarEventOccurrenceWithDayGridPosition,
   CalendarProcessedDate,
+  OccurrencesGroupedByDayMap,
 } from '../models';
-import { OccurrencesGroupedByDayMap } from '../us../get-event-occurrences-grouped-by-day
 import { useAdapter } from '../utils/adapter/useAdapter';
 import { diffIn } from '../utils/date-utils';
 
