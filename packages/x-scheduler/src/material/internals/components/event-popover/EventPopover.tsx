@@ -215,31 +215,26 @@ export const EventPopover = React.forwardRef(function EventPopover(
       resource: resourceValue,
     };
 
-    const doSubmit = async () => {
-      if (rawPlaceholder && rawPlaceholder.eventId == null) {
-        const result = await store.applyOccurrencePlaceholder(rawPlaceholder);
-        if (result?.id) {
-          store.updateEvent({ id: result.id, ...metaChanges, start, end, rrule });
-        }
-      } else if (occurrence.rrule) {
-        const changes: RecurringEventUpdatedProperties = {
-          ...metaChanges,
-          start,
-          end,
-          ...(recurrenceModified ? { rrule } : {}),
-        };
-        store.updateRecurringEvent({
-          eventId: occurrence.id,
-          occurrenceStart: occurrence.start,
-          changes,
-          scope: 'this-and-following',
-        });
-      } else {
-        store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
-      }
-    };
+    if (rawPlaceholder && rawPlaceholder.eventId == null) {
+      store.createEvent({ id: crypto.randomUUID(), ...metaChanges, start, end, rrule });
+    } else if (occurrence.rrule) {
+      const changes: RecurringEventUpdatedProperties = {
+        ...metaChanges,
+        start,
+        end,
+        ...(recurrenceModified ? { rrule } : {}),
+      };
+      store.updateRecurringEvent({
+        eventId: occurrence.id,
+        occurrenceStart: occurrence.start,
+        changes,
+        scope: 'this-and-following',
+      });
+    } else {
+      store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
+    }
 
-    await doSubmit().finally(onClose);
+    onClose();
   };
 
   const handleDelete = useEventCallback(() => {

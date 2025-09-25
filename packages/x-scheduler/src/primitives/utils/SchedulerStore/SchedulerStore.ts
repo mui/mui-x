@@ -262,12 +262,7 @@ export class SchedulerStore<
     const { eventId, start, end, originalStart } = data;
 
     if (eventId == null || originalStart == null) {
-      return this.createEvent({
-        id: crypto.randomUUID(),
-        title: '',
-        start,
-        end,
-      });
+      return undefined;
     }
 
     if (selectors.event(this.state, eventId)?.rrule) {
