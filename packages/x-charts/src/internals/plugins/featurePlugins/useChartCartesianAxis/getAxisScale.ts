@@ -1,4 +1,9 @@
-import { scaleBand, scalePoint, type ScaleSymLog, NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import {
+  scaleBand,
+  scalePoint,
+  type ScaleSymLog,
+  NumberValue,
+} from '@mui/x-charts-vendor/d3-scale';
 import {
   AxisConfig,
   AxisId,
@@ -113,13 +118,13 @@ export function getYAxesScales<T extends ChartSeriesType>({
 
 export type ScaleDefinition =
   | {
-    scale: D3ContinuousScale;
-    tickNumber: number;
-  }
+      scale: D3ContinuousScale;
+      tickNumber: number;
+    }
   | {
-    scale: D3OrdinalScale;
-    tickNumber?: never;
-  };
+      scale: D3OrdinalScale;
+      tickNumber?: never;
+    };
 
 function getAxisScale<T extends ChartSeriesType>(
   axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
@@ -197,7 +202,10 @@ function getAxisScale<T extends ChartSeriesType>(
   return { scale, tickNumber: rawTickNumber };
 }
 
-type DomainLimit = 'nice' | 'strict' | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
+type DomainLimit =
+  | 'nice'
+  | 'strict'
+  | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
 
 export function getDomainLimit(
   axis: Pick<DefaultedAxis, 'id' | 'domainLimit'>,
