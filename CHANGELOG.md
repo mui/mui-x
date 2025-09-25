@@ -21,7 +21,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 This was only the case due to using the v18 `yargs` package; this now explicitly aligns with it. (#18979)
 
 Special thanks go out to the community members for their valuable contributions:
-@deade1e, @sai6855
+@deade1e, @sai6855, @thomas-mcdonald
 
 The following are all team members who have contributed to this release:
 @alexfauquette, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @LukasTy, @michelengelen, @prakhargupta1, @rita-codes, @siriwatknp, @arminmeh, @romgrk
@@ -38,7 +38,9 @@ Same changes as in `@mui/x-data-grid@8.12.0`.
 
 #### `@mui/x-data-grid-premium@8.12.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.12.0`.
+Same changes as in `@mui/x-data-grid-pro@8.12.0`, plus:
+
+- [charts-premium] Grid-Charts integration (#18021) @arminmeh
 
 ### Date and Time Pickers
 
@@ -68,6 +70,7 @@ Same changes as in `@mui/x-date-pickers@8.12.0`.
 - [charts] Introduce keyboard navigation (#19155) @alexfauquette
 - [charts] Refactor `getAxisExtremum` (#19627) @bernardobelchior
 - [charts] Remove unused code path from `getAxisScale` (#19673) @bernardobelchior
+- [charts] Make new hideLegend prop on ChartWrapper optional (#19694) @thomas-mcdonald
 
 #### `@mui/x-charts-pro@8.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -80,7 +83,9 @@ Same changes as in `@mui/x-charts@8.12.0`, plus:
 
 #### `@mui/x-charts-premium@8.12.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@8.12.0`.
+Same changes as in `@mui/x-charts-pro@8.12.0`, plus:
+
+- [charts-premium] Grid-Charts integration (#18021) @arminmeh
 
 ### Tree View
 
@@ -120,6 +125,7 @@ Same changes as in `@mui/x-tree-view@8.12.0`.
 - [code-infra] Remove renovate automerge (#19501) @Janpot
 - [code-infra] Update `DEFAULT_TIMESTAMP` format to ISO 8601 (#19624) @Janpot
 - [code-infra] Update `findLatestTaggedVersion` to filter tags based on major version (#19693) @michelengelen
+- [code-infra] Make `x-charts-premium` releasable (#18959) @JCQuintas
 - [docs-infra] Ensure `create-playground` script only runs if target file is absent (#19603) @michelengelen
 - [docs-infra] Add @prakhargupta1 as a codeowner of the docs (#19679) @alexfauquette
 
