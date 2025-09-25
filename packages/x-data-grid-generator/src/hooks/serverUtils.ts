@@ -868,11 +868,15 @@ export const processPivotingRows = (
         if (!column) {
           continue;
         }
-        columnGroupPath.push({
-          [colGroupField]: column.valueGetter
-            ? column.valueGetter(row[colGroupField] as never, row, column, apiRef)
-            : row[colGroupField],
-        });
+        if (!column.valueGetter && !column.valueFormatter) {
+          columnGroupPath.push(row[colGroupField]);
+        } else {
+          columnGroupPath.push({
+            [colGroupField]: column.valueGetter
+              ? column.valueGetter(row[colGroupField] as never, row, column, apiRef)
+              : row[colGroupField],
+          });
+        }
       }
 
       // Create pivot columns for each value field within this column group
