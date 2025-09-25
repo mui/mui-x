@@ -52,7 +52,10 @@ import {
   getAggregationFunctionLabel,
   getAvailableAggregationFunctions,
 } from '../aggregation/gridAggregationUtils';
-import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
+import {
+  gridAggregationModelSelector,
+  gridCellAggregationResultSelector,
+} from '../aggregation/gridAggregationSelectors';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 
@@ -373,10 +376,12 @@ export const useGridChartsIntegration = (
             targetRow = gridRowNodeSelector(apiRef, rowTree[rowId]!.parent!);
           }
 
-          const value: string | { label: string } | null = apiRef.current.getRowValue(
-            targetRow,
-            dataColumns[j],
-          );
+          const value: string | { label: string } | null =
+            gridCellAggregationResultSelector(apiRef, {
+              id: gridRowIdSelector(apiRef, targetRow),
+              field: dataColumns[j].field,
+            })?.value ?? apiRef.current.getRowValue(targetRow, dataColumns[j]);
+
           if (value !== null) {
             data[dataColumns[j].dataFieldName].push(
               typeof value === 'object' && 'label' in value ? value.label : value,
