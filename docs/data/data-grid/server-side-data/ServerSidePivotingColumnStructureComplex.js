@@ -1,12 +1,7 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridPivotModel,
-  GridDataSource,
-  GridColDef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium } from '@mui/x-data-grid-premium';
 
-const columns: GridColDef[] = [
+const columns = [
   { field: 'id' },
   { field: 'group', headerName: 'Group' },
   { field: 'region' },
@@ -18,7 +13,7 @@ const columns: GridColDef[] = [
   { field: 'quantity', headerName: 'Quantity', type: 'number' },
 ];
 
-const pivotModel: GridPivotModel = {
+const pivotModel = {
   rows: [{ field: 'group' }],
   columns: [{ field: 'region' }, { field: 'year' }],
   values: [{ field: 'quantity', aggFunc: 'sum' }],
@@ -97,8 +92,8 @@ const rows = [
   },
 ];
 
-export default function ServerSidePivotingColumnStructure() {
-  const dataSource: GridDataSource = React.useMemo(
+export default function ServerSidePivotingColumnStructureComplex() {
+  const dataSource = React.useMemo(
     () => ({
       getRows: async () => {
         return {
@@ -119,9 +114,13 @@ export default function ServerSidePivotingColumnStructure() {
       getAggregatedValue: (row, field) => row[field],
       getPivotColumnDef: (field, columnGroupPath) => ({
         field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value.date,
-          )
+          .map((path) => {
+            if (typeof path.value === 'string') {
+              return path.value;
+            }
+            // year is a derived column that gets its value via `valueGetter()` using the `date` property
+            return path.field === 'year' ? path.value.date : path.value[path.field];
+          })
           .concat(field)
           .join('>->'),
       }),

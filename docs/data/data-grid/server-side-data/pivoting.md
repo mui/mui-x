@@ -157,9 +157,22 @@ interface GridGetRowsResponsePivotColumn {
 
 Each node in the last level of the pivot column structure gets all pivot value columns to complete the Data Grid's column structure.
 
-The demo below returns a static response to demonstrate different ways of creating the column structure from the `pivotColumns` response.
+The demo below returns a static response to demonstrate how the column structure is created from the `pivotColumns` response.
 
-{{"demo": "ServerSidePivotingColumnStructure.js", "bg": "inline"}}
+In this case, all groups are strings formatted on the server.
+Pivot data is retrieved from fields whose names are constructed by combining the group values and pivot value field name.
+
+{{"demo": "ServerSidePivotingColumnStructureSimple.js", "bg": "inline"}}
+
+The following demo formats year column groups on the client side.
+
+In this case, the `pivotColumns` response returns an object for each year that needs to be created.
+Each object contains a `date` property because `year` is a derived column that gets its value via `valueGetter()` using that `date` property.
+
+The Data Grid runs `valueGetter()` on the `year` field and uses the result as a label for the second level column group.
+Since the formatted value is not known on the server, rows contain pivot data in fields whose names are created using the raw value of the column group.
+
+{{"demo": "ServerSidePivotingColumnStructureComplex.js", "bg": "inline"}}
 
 ## Error handling
 
