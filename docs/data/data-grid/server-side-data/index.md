@@ -170,9 +170,9 @@ Open the Info section of your browser console to see the requests being made and
 
 ### With the cursor-based Data Source
 
-The Data Source also supports cursor-based pagination. The `getRows()` method receives a `getCursor()` function in its parameters, which returns a promise that resolves to the cursor needed for the request.
-
 The `getRows()` **must** return the `pageInfo.nextCursor` value in its response to be used for cursor navigation.
+
+The cursor can be retrieved from `getCursor()` method of the `getRows()` parameters, which returns a promise that resolves the last cursor.
 
 {{"demo": "ServerSideCursorDataSource.js", "bg": "inline"}}
 
