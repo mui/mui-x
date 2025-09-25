@@ -113,11 +113,15 @@ import {
   aiAssistantStateInitializer,
 } from '../hooks/features/aiAssistant/useGridAiAssistant';
 import { useGridSidebar, sidebarStateInitializer } from '../hooks/features/sidebar/useGridSidebar';
+import {
+  chartsIntegrationStateInitializer,
+  useGridChartsIntegration,
+} from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
   inProps: DataGridPremiumProcessedProps,
-  configuration: GridConfiguration<GridPrivateApiPremium>,
+  configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumProcessedProps>,
 ) => {
   const pivotPropsOverrides = useGridSelector(apiRef, gridPivotPropsOverridesSelector);
 
@@ -196,6 +200,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
+  useGridInitializeState(chartsIntegrationStateInitializer, apiRef, props);
 
   useGridVirtualizer(apiRef, props);
   useGridSidebar(apiRef, props);
@@ -220,8 +225,8 @@ export const useDataGridPremiumComponent = (
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
-  useGridSorting(apiRef, props);
+  useGridFilter(apiRef, props, configuration as GridConfiguration);
+  useGridSorting(apiRef, props, configuration as GridConfiguration);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
@@ -245,6 +250,7 @@ export const useDataGridPremiumComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
   useGridAiAssistant(apiRef, props);
+  useGridChartsIntegration(apiRef, props);
   useGridPivotingExportState(apiRef);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.

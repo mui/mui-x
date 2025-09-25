@@ -27,7 +27,7 @@ export function useEventOccurrencesWithDayGridPosition(
     } = {};
     const dayListSize = days.length;
 
-    return days.map((day, dayIndex) => {
+    const processedDays = days.map((day, dayIndex) => {
       indexLookup[day.key] = { occurrencesIndex: {}, usedIndexes: new Set() };
       const withPosition: CalendarEventOccurrenceWithDayGridPosition[] = [];
       const withoutPosition: CalendarEventOccurrence[] = [];
@@ -76,9 +76,15 @@ export function useEventOccurrencesWithDayGridPosition(
         ...day,
         withPosition,
         withoutPosition,
-        maxIndex: Math.max(...indexLookup[day.key].usedIndexes, 1),
       };
     });
+
+    const usedIndexes = Object.values(indexLookup).flatMap((day) => Array.from(day.usedIndexes));
+
+    return {
+      days: processedDays,
+      maxIndex: usedIndexes.length === 0 ? 1 : Math.max(...usedIndexes),
+    };
   }, [adapter, days, occurrencesMap, shouldAddPosition]);
 }
 
@@ -109,11 +115,16 @@ export namespace useEventOccurrencesWithDayGridPosition {
      * Occurrences that do not need position information.
      */
     withoutPosition: CalendarEventOccurrence[];
+  }
+
+  export type ReturnValue = {
+    /**
+     * The occurrences of each day.
+     */
+    days: DayData[];
     /**
      * The biggest index an event with position has on this day.
      */
     maxIndex: number;
-  }
-
-  export type ReturnValue = DayData[];
+  };
 }

@@ -25,7 +25,7 @@ import {
   RecurringEventUpdatedProperties,
   CalendarResourceId,
 } from '../../../../primitives/models';
-import { DEFAULT_EVENT_COLOR, selectors } from '../../../../primitives/use-event-calendar';
+import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
 import './EventPopover.css';
 import {
@@ -33,6 +33,7 @@ import {
   detectRecurrenceKeyFromRule,
   RecurrencePresetKey,
 } from '../../../../primitives/utils/recurrence-utils';
+import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -43,7 +44,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence);
+  const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
   const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, occurrence.id);
 

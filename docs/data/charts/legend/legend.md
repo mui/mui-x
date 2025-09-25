@@ -42,6 +42,9 @@ It can also be moved with the `position: { vertical, horizontal }` property whic
 
 By default, the legend is placed above the charts.
 
+The position management relies on a [grid-template](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template).
+If you create a custom legend component, you need to set the CSS property `grid-area` to `'legend'` to get your component correctly placed.
+
 :::warning
 The `position` property is only available in the `slotProps`, but not in the `<ChartsLegend />` props.
 In the second case, you are free to place the legend where you want.

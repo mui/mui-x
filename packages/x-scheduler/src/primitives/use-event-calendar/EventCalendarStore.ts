@@ -1,22 +1,15 @@
-import { Store } from '@base-ui-components/utils/store';
 import { warn } from '@base-ui-components/utils/warn';
-import { selectors, State } from './store';
 import {
-  CalendarEvent,
-  CalendarEventId,
-  CalendarResourceId,
   CalendarPreferences,
   CalendarView,
   CalendarViewConfig,
   SchedulerValidDate,
   CalendarPreferencesMenuConfig,
-  CalendarEventColor,
-  CalendarResource,
 } from '../models';
-import { EventCalendarParameters, UpdateRecurringEventParameters } from './useEventCalendar.types';
 import { Adapter } from '../utils/adapter/types';
-import { applyRecurringUpdateFollowing } from '../utils/recurrence-utils';
-import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
+import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
+import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+import { runEventCalendarStoreEffects } from './EventCalendarStore.utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -28,135 +21,53 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
 };
-export const DEFAULT_RESOURCES: CalendarResource[] = [];
-export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
 
-export class EventCalendarStore extends Store<State> {
-  private parameters: EventCalendarParameters;
+const deriveStateFromParameters = (parameters: EventCalendarParameters) => ({
+  views: parameters.views ?? DEFAULT_VIEWS,
+});
 
-  private initialParameters: EventCalendarParameters | null = null;
+const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendarParameters> = {
+  getInitialState: (schedulerInitialState, parameters) => ({
+    ...schedulerInitialState,
+    ...deriveStateFromParameters(parameters),
+    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
+    preferencesMenuConfig:
+      parameters.preferencesMenuConfig === false
+        ? parameters.preferencesMenuConfig
+        : {
+            ...DEFAULT_PREFERENCES_MENU_CONFIG,
+            ...parameters.preferencesMenuConfig,
+          },
+    viewConfig: null,
+    view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+  }),
+  updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+    const newState: Partial<EventCalendarState> = {
+      ...newSchedulerState,
+      ...deriveStateFromParameters(parameters),
+    };
 
-  private constructor(initialState: State, parameters: EventCalendarParameters) {
-    super(initialState);
-    this.parameters = parameters;
+    updateModel(newState, 'view', 'defaultView');
+    return newState;
+  },
+};
 
-    this.storeEffect(
-      (state) => ({
-        adapter: state.adapter,
-        events: selectors.events(state),
-        visibleResourcesMap: selectors.visibleResourcesMap(state),
-        viewConfig: state.viewConfig,
-        visibleDate: selectors.visibleDate(state),
-        showWeekends: state.preferences.showWeekends,
-      }),
-      (prev, next) => {
-        if (next.viewConfig == null) {
-          return;
-        }
-
-        if (
-          prev.adapter !== next.adapter ||
-          prev.events !== next.events ||
-          prev.visibleResourcesMap !== next.visibleResourcesMap ||
-          prev.viewConfig !== next.viewConfig // Should never happen
-        ) {
-          const occurrences = innerGetEventOccurrencesGroupedByDay(
-            next.adapter,
-            next.viewConfig.getVisibleDays({
-              adapter: next.adapter,
-              visibleDate: next.visibleDate,
-              showWeekends: next.showWeekends,
-            }),
-            next.viewConfig.renderEventIn,
-            next.events,
-            next.visibleResourcesMap,
-          );
-
-          // TODO: Remove setTimeout once the state handles nested updates
-          setTimeout(() => this.set('tempEventOccurrencesMap', occurrences), 0);
-        }
-      },
-    );
+export class EventCalendarStore extends SchedulerStore<
+  EventCalendarState,
+  EventCalendarParameters
+> {
+  public constructor(parameters: EventCalendarParameters, adapter: Adapter) {
+    super(parameters, adapter, 'Event Calendar', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
-      this.initialParameters = parameters;
       // Add listeners to assert the state validity (not applied in prod)
       this.subscribe((state) => {
         this.assertViewValidity(state.view);
         return null;
       });
     }
-  }
 
-  private storeEffect<Value>(
-    selector: (state: State) => Value,
-    effect: (previous: Value, next: Value) => void,
-  ) {
-    let previousState = selector(this.state);
-    this.subscribe((state) => {
-      const nextState = selector(state);
-      effect(previousState, nextState);
-      previousState = nextState;
-    });
-  }
-
-  /**
-   * Returns the properties of the state that are derived from the parameters.
-   * This do not contain state properties that don't update whenever the parameters update.
-   */
-  private static getPartialStateFromParameters(
-    parameters: EventCalendarParameters,
-    adapter: Adapter,
-  ): Pick<
-    State,
-    | 'adapter'
-    | 'events'
-    | 'resources'
-    | 'views'
-    | 'areEventsDraggable'
-    | 'areEventsResizable'
-    | 'ampm'
-    | 'eventColor'
-    | 'showCurrentTimeIndicator'
-  > {
-    return {
-      adapter,
-      events: parameters.events,
-      resources: parameters.resources ?? DEFAULT_RESOURCES,
-      views: parameters.views ?? DEFAULT_VIEWS,
-      areEventsDraggable: parameters.areEventsDraggable ?? false,
-      areEventsResizable: parameters.areEventsResizable ?? false,
-      ampm: parameters.ampm ?? true,
-      eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
-      showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
-    };
-  }
-
-  public static create(parameters: EventCalendarParameters, adapter: Adapter): EventCalendarStore {
-    const initialState: State = {
-      // Store elements that should not be updated when the parameters change.
-      visibleResources: new Map(),
-      tempEventOccurrencesMap: new Map(),
-      preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
-      preferencesMenuConfig:
-        parameters.preferencesMenuConfig === false
-          ? parameters.preferencesMenuConfig
-          : {
-              ...DEFAULT_PREFERENCES_MENU_CONFIG,
-              ...parameters.preferencesMenuConfig,
-            },
-      viewConfig: null,
-      // Store elements that should only be updated when their controlled prop changes.
-      visibleDate:
-        parameters.visibleDate ??
-        parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.date()),
-      view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-      // Store elements that should be synchronized when the parameters change.
-      ...EventCalendarStore.getPartialStateFromParameters(parameters, adapter),
-    };
-
-    return new EventCalendarStore(initialState, parameters);
+    runEventCalendarStoreEffects(this);
   }
 
   private assertViewValidity(view: CalendarView) {
@@ -170,19 +81,6 @@ export class EventCalendarStore extends Store<State> {
       );
     }
   }
-
-  private setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
-    const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
-    const { adapter } = this.state;
-    const hasChange = !adapter.isEqual(this.state.visibleDate, visibleDate);
-
-    if (hasChange) {
-      if (visibleDateProp === undefined) {
-        this.set('visibleDate', visibleDate);
-      }
-      onVisibleDateChange?.(visibleDate, event);
-    }
-  };
 
   private setVisibleDateAndView = (
     visibleDate: SchedulerValidDate,
@@ -209,8 +107,8 @@ export class EventCalendarStore extends Store<State> {
 
     if (canSetVisibleDate || canSetView) {
       this.apply({
-        ...(canSetVisibleDate ? { visibleDate } : {}),
-        ...(canSetView ? { view } : {}),
+        ...(canSetVisibleDate ? { visibleDate } : undefined),
+        ...(canSetView ? { view } : undefined),
       });
     }
 
@@ -242,62 +140,6 @@ export class EventCalendarStore extends Store<State> {
   };
 
   /**
-   * Updates the state of the calendar based on the new parameters provided to the root component.
-   */
-  public updateStateFromParameters = (parameters: EventCalendarParameters, adapter: Adapter) => {
-    const partialState: Partial<State> = EventCalendarStore.getPartialStateFromParameters(
-      parameters,
-      adapter,
-    );
-
-    const initialParameters = this.initialParameters;
-
-    function updateModel(
-      controlledProp: 'view' | 'visibleDate',
-      defaultValueProp: 'defaultView' | 'defaultVisibleDate',
-    ) {
-      if (parameters[controlledProp] !== undefined) {
-        partialState[controlledProp] = parameters[controlledProp] as any;
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        const defaultValue = parameters[defaultValueProp];
-        const isControlled = parameters[controlledProp] !== undefined;
-        const initialDefaultValue = initialParameters?.[defaultValueProp];
-        const initialIsControlled = initialParameters?.[controlledProp] !== undefined;
-
-        if (initialIsControlled !== isControlled) {
-          warn(
-            [
-              `Event Calendar: A component is changing the ${
-                initialIsControlled ? '' : 'un'
-              }controlled ${controlledProp} state of Event Calendar to be ${initialIsControlled ? 'un' : ''}controlled.`,
-              'Elements should not switch from uncontrolled to controlled (or vice versa).',
-              `Decide between using a controlled or uncontrolled ${controlledProp} element for the lifetime of the component.`,
-              "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-              'More info: https://fb.me/react-controlled-components',
-            ].join('\n'),
-          );
-        }
-
-        if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
-          warn(
-            [
-              `Event Calendar: A component is changing the default ${controlledProp} state of an uncontrolled Event Calendar after being initialized. `,
-              `To suppress this warning opt to use a controlled Event Calendar.`,
-            ].join('\n'),
-            'error',
-          );
-        }
-      }
-    }
-
-    updateModel('view', 'defaultView');
-    updateModel('visibleDate', 'defaultVisibleDate');
-    this.apply(partialState);
-  };
-
-  /**
    * Sets the view of the calendar.
    */
   public setView = (view: CalendarView, event: React.UIEvent | Event) => {
@@ -309,96 +151,6 @@ export class EventCalendarStore extends Store<State> {
       }
       onViewChange?.(view, event);
     }
-  };
-
-  /**
-   * Updates an event in the calendar.
-   */
-  public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
-    const original = selectors.event(this.state, calendarEvent.id);
-    if (!original) {
-      throw new Error(
-        `Event Calendar: the original event was not found (id="${calendarEvent.id}").`,
-      );
-    }
-    if (original?.rrule) {
-      throw new Error(
-        'Event Calendar: this event is recurring. Use updateRecurringEvent(...) instead.',
-      );
-    }
-
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.map((ev) =>
-      ev.id === calendarEvent.id ? { ...ev, ...calendarEvent } : ev,
-    );
-    onEventsChange?.(updatedEvents);
-  };
-
-  /**
-   * Updates a recurring event in the calendar.
-   */
-  public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    const { adapter, events } = this.state;
-    const { onEventsChange } = this.parameters;
-    const { eventId, occurrenceStart, changes, scope } = params;
-
-    const original = selectors.event(this.state, eventId);
-    if (!original) {
-      throw new Error(`Event Calendar: the original event was not found (id="${eventId}").`);
-    }
-    if (!original.rrule) {
-      throw new Error(
-        'Event Calendar: the original event is not recurring. Use updateEvent(...) instead.',
-      );
-    }
-
-    let updatedEvents: CalendarEvent[] = [];
-
-    switch (scope) {
-      case 'this-and-following': {
-        updatedEvents = applyRecurringUpdateFollowing(
-          adapter,
-          events,
-          original,
-          occurrenceStart,
-          changes,
-        );
-        break;
-      }
-
-      case 'all': {
-        // TODO: Issue #19441 - Allow to edit recurring series => all events.
-        throw new Error('Event Calendar: scope="all" not implemented yet.');
-      }
-
-      case 'only-this': {
-        // TODO: Issue #19440 - Allow to edit recurring series => this event only.
-        throw new Error('Event Calendar: scope="only-this" not implemented yet.');
-      }
-
-      default: {
-        throw new Error(`Event Calendar: scope="${scope}" is not supported.`);
-      }
-    }
-
-    onEventsChange?.(updatedEvents);
-  };
-
-  /**
-   * Deletes an event from the calendar.
-   */
-  public deleteEvent = (eventId: CalendarEventId) => {
-    const { onEventsChange } = this.parameters;
-    const updatedEvents = this.state.events.filter((ev) => ev.id !== eventId);
-    onEventsChange?.(updatedEvents);
-  };
-
-  /**
-   * Goes to today's date without changing the view.
-   */
-  public goToToday = (event: React.UIEvent) => {
-    const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.date()), event);
   };
 
   /**
@@ -416,15 +168,6 @@ export class EventCalendarStore extends Store<State> {
    */
   public switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     this.setVisibleDateAndView(visibleDate, 'day', event);
-  };
-
-  /**
-   * Updates the visible resources.
-   */
-  public setVisibleResources = (visibleResources: Map<CalendarResourceId, boolean>) => {
-    if (this.state.visibleResources !== visibleResources) {
-      this.set('visibleResources', visibleResources);
-    }
   };
 
   /**

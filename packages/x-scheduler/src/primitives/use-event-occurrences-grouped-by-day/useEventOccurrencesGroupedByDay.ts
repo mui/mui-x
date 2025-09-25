@@ -1,14 +1,5 @@
-import {
-  CalendarEvent,
-  CalendarEventOccurrence,
-  CalendarProcessedDate,
-  SchedulerValidDate,
-} from '../models';
-import {
-  getDateKey,
-  getDaysTheOccurrenceIsVisibleOn,
-  getOccurrencesFromEvents,
-} from '../utils/event-utils';
+import { CalendarEvent, CalendarEventOccurrence, CalendarProcessedDate } from '../models';
+import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from '../utils/event-utils';
 import { Adapter } from '../utils/adapter/types';
 
 /**
@@ -35,15 +26,8 @@ export function innerGetEventOccurrencesGroupedByDay(
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
 
   for (const occurrence of occurrences) {
-    const eventDays: SchedulerValidDate[] = getDaysTheOccurrenceIsVisibleOn(
-      occurrence,
-      days,
-      adapter,
-      renderEventIn,
-    );
-
-    for (const day of eventDays) {
-      const dayKey = getDateKey(day, adapter);
+    const eventDays = getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter, renderEventIn);
+    for (const dayKey of eventDays) {
       const occurrenceType = occurrence.allDay ? 'allDay' : 'nonAllDay';
       occurrencesGroupedByDay.get(dayKey)![occurrenceType].push(occurrence);
     }

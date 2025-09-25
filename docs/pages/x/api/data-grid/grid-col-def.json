@@ -19,6 +19,7 @@
       "isPremiumPlan": true
     },
     "cellClassName": { "type": { "description": "GridCellClassNamePropType&lt;R, V&gt;" } },
+    "chartable": { "type": { "description": "boolean" }, "default": "true", "isPremiumPlan": true },
     "colSpan": {
       "type": { "description": "number | GridColSpanFn&lt;R, V, F&gt;" },
       "default": "1"

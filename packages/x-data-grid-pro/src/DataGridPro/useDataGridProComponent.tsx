@@ -170,8 +170,8 @@ export const useDataGridProComponent = (
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
-  useGridSorting(apiRef, props);
+  useGridFilter(apiRef, props, configuration);
+  useGridSorting(apiRef, props, configuration);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);
