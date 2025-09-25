@@ -96,7 +96,7 @@ Same changes as in `@mui/x-charts-pro@8.12.0`, plus:
 
 #### `@mui/x-tree-view@8.12.0`
 
-- [tree view] Allow to pass null to the icon slots (#19569) @flaviendelangle
+- [tree view] Allow to pass `null` to the icon slots (#19569) @flaviendelangle
 - [tree view] Fix `apiRef.current.isItemExpanded()` method (#19619) @flaviendelangle
 
 #### `@mui/x-tree-view-pro@8.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
