@@ -13,7 +13,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 
 - 🤝 Grid-Charts integration
 
-  <img width="500" alt="Text reads 'Auto-generate Charts from your Grid.', then the DataGrid charts integration in use, showing its configurator screen and a pie chart." src="https://github.com/user-attachments/assets/4f90d329-218e-4c87-895b-026ad7dbc6fb" />
+![Grid x Charts](https://github.com/user-attachments/assets/0817c36f-f87f-4688-8f30-fa0db638ca8c)
 
   👉 [🎥 Watch the full video](https://github.com/user-attachments/assets/28f1848e-dc85-4077-8756-a3e88afd4e54)
 
