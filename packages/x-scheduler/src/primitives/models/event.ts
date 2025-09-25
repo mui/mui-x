@@ -166,7 +166,7 @@ export interface CalendarOccurrencePlaceholder {
    */
   surfaceType: EventSurfaceType;
   /**
-   * The new start date and time ofF the event occurrence.
+   * The new start date and time of the event occurrence.
    */
   start: SchedulerValidDate;
   /**
