@@ -5,9 +5,9 @@ import { useAdapter } from '../../utils/adapter/useAdapter';
 import { useTimeGridColumnContext } from './TimeGridColumnContext';
 
 export function useGetDateFromPositionInColumn(
-  params: useGetDateFromPositionInColumn.Parameters,
+  parameters: useGetDateFromPositionInColumn.Parameters,
 ): useGetDateFromPositionInColumn.ReturnValue {
-  const { elementRef, snapMinutes } = params;
+  const { elementRef, snapMinutes } = parameters;
   const adapter = useAdapter();
   const { getCursorPositionInElementMs, start } = useTimeGridColumnContext();
 
