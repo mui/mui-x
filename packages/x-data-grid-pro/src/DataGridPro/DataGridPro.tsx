@@ -29,6 +29,8 @@ const configuration: GridConfiguration = {
     // @ts-ignore - TODO: Fix it
     useGridRowsOverridableMethods,
     useCellAggregationResult: () => null,
+    useSortValueGetter: (apiRef) => apiRef.current.getCellValue,
+    useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
 const releaseInfo = '__RELEASE_INFO__';

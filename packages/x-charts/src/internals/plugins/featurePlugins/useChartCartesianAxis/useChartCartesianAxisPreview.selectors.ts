@@ -76,7 +76,6 @@ export const selectorChartPreviewXScales = createSelector(
       axis: xAxes,
       seriesConfig,
       zoomMap,
-      zoomOptions,
       preferStrictDomainInLineCharts,
     });
   },
@@ -168,7 +167,6 @@ export const selectorChartPreviewYScales = createSelector(
       axis: yAxes,
       seriesConfig,
       zoomMap,
-      zoomOptions,
       preferStrictDomainInLineCharts,
     });
   },
