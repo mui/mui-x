@@ -25,6 +25,8 @@ import type { GridEventListener } from '../../../models/events';
 const noopCache: GridDataSourceCache = {
   clear: () => {},
   get: () => undefined,
+  getLast: () => Promise.resolve(undefined),
+  pushKey: () => {},
   set: () => {},
 };
 
@@ -105,6 +107,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         ...getRowsParams,
       };
 
+      cache.pushKey(fetchParams); // For cursor-based data source, keys need to be pushed as early as possible.
+
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
@@ -125,7 +129,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       lastRequestId.current = requestId;
 
       try {
-        const getRowsResponse = await getRows(fetchParams);
+        const getRowsResponse = await getRows({
+          ...fetchParams,
+          getCursor: async () => {
+            return (await cache.getLast(fetchParams))?.pageInfo?.nextCursor;
+          },
+        });
 
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => cache.set(key, response));

@@ -42,7 +42,7 @@ export interface GridGetRowsResponse {
    */
   pageInfo?: {
     hasNextPage?: boolean;
-    nextCursor?: string;
+    nextCursor?: any;
   };
 }
 
@@ -52,7 +52,16 @@ export interface GridDataSource {
    * @param {GridGetRowsParams} params The parameters required to fetch the rows.
    * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of type [GridGetRowsResponse].
    */
-  getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
+  getRows(
+    params: GridGetRowsParams & {
+      /**
+       * For cursor pagination only.
+       * To get the cursor to be used in the next request.
+       * @returns {Promise<any>} A promise that resolves the cursor.
+       */
+      getCursor: () => Promise<any>;
+    },
+  ): Promise<GridGetRowsResponse>;
   /**
    * This method will be called when the user updates a row.
    * @param {GridUpdateRowParams} params The parameters required to update the row.
@@ -74,6 +83,17 @@ export interface GridDataSourceCache {
    * @returns {GridGetRowsResponse} The value stored in the cache.
    */
   get: (key: GridGetRowsParams) => GridGetRowsResponse | undefined;
+  /**
+   * Resolve the last cache entry.
+   * @param {GridGetRowsParams} key The key of type `GridGetRowsParams`.
+   * @returns {GridGetRowsResponse} The earlier value of the specified key stored in the cache.
+   */
+  getLast: (key: GridGetRowsParams) => Promise<GridGetRowsResponse | undefined>;
+  /**
+   * Push a key to the cache key list.
+   * @param {GridGetRowsParams} key The key of type `GridGetRowsParams`.
+   */
+  pushKey: (key: GridGetRowsParams) => void;
   /**
    * Clear the cache.
    */
