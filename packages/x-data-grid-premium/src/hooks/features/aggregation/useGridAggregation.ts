@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import {
   gridColumnLookupSelector,
   useGridEvent,
@@ -103,7 +104,7 @@ export const useGridAggregation = (
         !!props.dataSource,
       );
       const aggregatedFields = Object.keys(aggregationRules);
-      const currentAggregationLookup = gridAggregationLookupSelector(apiRef) || {};
+      const currentAggregationLookup = gridAggregationLookupSelector(apiRef);
       const needsSorting = shouldApplySorting(aggregationRules, aggregatedFields);
       if (reason === 'sort' && !needsSorting) {
         // no need to re-apply aggregation on `sortedRowsSet` if sorting is not needed
@@ -192,7 +193,7 @@ export const useGridAggregation = (
 
       // processChunk() does nothing if there are no aggregated fields
       // make sure that the lookup is empty in this case
-      if (aggregatedFields.length === 0 && Object.keys(currentAggregationLookup).length > 0) {
+      if (aggregatedFields.length === 0 && !isObjectEmpty(currentAggregationLookup)) {
         apiRef.current.setState((state) => ({
           ...state,
           aggregation: { ...state.aggregation, lookup: {} },
