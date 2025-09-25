@@ -140,6 +140,9 @@ function PieArcPlot(props: PieArcPlotProps) {
           stroke={(theme.vars ?? theme).palette.text.primary}
           id={id}
           dataIndex={focusedIndex}
+          isFaded={false}
+          isHighlighted={false}
+          isFocused={false}
           strokeWidth={3}
         />
       )}
