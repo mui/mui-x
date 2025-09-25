@@ -7,6 +7,7 @@ import {
   GridContextProvider,
   GridValidRowModel,
   useGridSelector,
+  gridRowIdSelector,
 } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
@@ -35,7 +36,7 @@ import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration<GridPrivateApiPremium> = {
+const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPremium,
@@ -43,6 +44,23 @@ const configuration: GridConfiguration<GridPrivateApiPremium> = {
     useCellAggregationResult: (id, field) => {
       const apiRef = useGridApiContext();
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
+    },
+    useSortValueGetter: (apiRef) => (id, field) =>
+      gridCellAggregationResultSelector(apiRef, {
+        id,
+        field,
+      })?.value ?? apiRef.current.getCellValue(id, field),
+    useFilterValueGetter: (apiRef, props) => (row, column) => {
+      if (props.aggregationRowsScope === 'filtered') {
+        return apiRef.current.getRowValue(row, column);
+      }
+
+      return (
+        gridCellAggregationResultSelector(apiRef, {
+          id: gridRowIdSelector(apiRef, row),
+          field: column.field,
+        })?.value ?? apiRef.current.getRowValue(row, column)
+      );
     },
     useGridRowsOverridableMethods,
   },

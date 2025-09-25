@@ -4,6 +4,7 @@ import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
+  gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
   gridRowIdSelector,
   gridRowNodeSelector,
@@ -43,7 +44,6 @@ import {
   gridChartsIntegrationActiveChartIdSelector,
   gridChartableColumnsSelector,
 } from './gridChartsIntegrationSelectors';
-import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 import { isBlockedForSection } from './utils';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
@@ -195,17 +195,20 @@ export const useGridChartsIntegration = (
       }
 
       const columns = gridColumnLookupSelector(apiRef);
-      const unwrappedColumnGroupingModel = gridColumnGroupsUnwrappedModelSelector(apiRef);
+      const columnGroupPath = gridColumnGroupsUnwrappedModelSelector(apiRef)[field] ?? [];
+      const columnGroupLookup = gridColumnGroupsLookupSelector(apiRef);
 
       const column = columns[field];
 
       const columnName = column?.headerName || field;
-      if (!pivotActive || !unwrappedColumnGroupingModel[field]) {
+      if (!pivotActive || !columnGroupPath) {
         return columnName;
       }
 
-      const groupPath = unwrappedColumnGroupingModel[field].slice(-1)[0];
-      return [columnName, ...groupPath.split(COLUMN_GROUP_ID_SEPARATOR)].join(' - ');
+      const groupNames = columnGroupPath.map(
+        (group) => columnGroupLookup[group].headerName || group,
+      );
+      return [columnName, ...groupNames].join(' - ');
     },
     [apiRef, pivotActive, props.slotProps?.chartsPanel],
   );
