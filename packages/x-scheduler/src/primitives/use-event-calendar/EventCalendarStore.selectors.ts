@@ -57,7 +57,7 @@ export const selectors = {
   ),
   isCreatingNewEventInDayGridCell: createSelector((state: State, day: SchedulerValidDate) => {
     const placeholder = state.occurrencePlaceholder;
-    if (!placeholder || placeholder.surfaceType !== 'day-grid' || placeholder.eventId != null) {
+    if (placeholder?.surfaceType !== 'day-grid' || placeholder.eventId != null) {
       return false;
     }
     return state.adapter.isSameDay(day, placeholder.start);
@@ -65,7 +65,7 @@ export const selectors = {
   isCreatingNewEventInTimeRange: createSelector(
     (state: State, dayStart: SchedulerValidDate, dayEnd: SchedulerValidDate) => {
       const placeholder = state.occurrencePlaceholder;
-      if (!placeholder || placeholder.surfaceType !== 'time-grid' || placeholder.eventId != null) {
+      if (placeholder?.surfaceType !== 'time-grid' || placeholder.eventId != null) {
         return false;
       }
 
