@@ -45,7 +45,6 @@ Same changes as in `@mui/x-data-grid-pro@8.12.0`.
 #### `@mui/x-date-pickers@8.12.0`
 
 - [pickers] Ensure reference value is not updated for invalid values (#19635) @michelengelen
-- [pickers] Fix `apiRef.current.isItemExpanded()` method (#19619) @flaviendelangle
 - [pickers] Preserve time format when using single column layout on Time Range Picker (#19626) @sai6855
 - [pickers] Preserve time format when using single column layout on Date Time Picker and Date Time Range Picker (#19608) @sai6855
 
@@ -87,6 +86,7 @@ Same changes as in `@mui/x-charts-pro@8.12.0`.
 #### `@mui/x-tree-view@8.12.0`
 
 - [tree view] Allow to pass null to the icon slots (#19569) @flaviendelangle
+- [tree view] Fix `apiRef.current.isItemExpanded()` method (#19619) @flaviendelangle
 
 #### `@mui/x-tree-view-pro@8.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
