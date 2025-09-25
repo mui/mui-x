@@ -29,7 +29,7 @@ export class GridDataSourceCacheDefault {
 
   private getKey: (params: GridGetRowsParams) => string;
 
-  constructor({ ttl = 300_000, getKey = getKeyDefault }: GridDataSourceCacheDefaultConfig) {
+  constructor({ ttl = 300_000, getKey = getKeyDefault }: GridDataSourceCacheDefaultConfig = {}) {
     this.cache = {};
     this.cacheKeys = new Set();
     this.ttl = ttl;

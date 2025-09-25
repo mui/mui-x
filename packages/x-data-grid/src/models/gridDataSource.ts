@@ -84,18 +84,21 @@ export interface GridDataSourceCache {
    */
   get: (key: GridGetRowsParams) => GridGetRowsResponse | undefined;
   /**
+   * Clear the cache.
+   */
+  clear: () => void;
+}
+
+export interface GridDataSourceCursorCache extends GridDataSourceCache {
+  /**
+   * Push a key to the cache key list as soon as it is requested without waiting for the response.
+   * @param {GridGetRowsParams} key The key of type `GridGetRowsParams`.
+   */
+  pushKey: (key: GridGetRowsParams) => void;
+  /**
    * Resolve the last cache entry.
    * @param {GridGetRowsParams} key The key of type `GridGetRowsParams`.
    * @returns {GridGetRowsResponse} The earlier value of the specified key stored in the cache.
    */
   getLast: (key: GridGetRowsParams) => Promise<GridGetRowsResponse | undefined>;
-  /**
-   * Push a key to the cache key list.
-   * @param {GridGetRowsParams} key The key of type `GridGetRowsParams`.
-   */
-  pushKey: (key: GridGetRowsParams) => void;
-  /**
-   * Clear the cache.
-   */
-  clear: () => void;
 }
