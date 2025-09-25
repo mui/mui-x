@@ -45,6 +45,32 @@ describe('<DateField />', () => {
 
       expect(screen.getByRole('textbox', { description: 'field-helper' })).not.to.equal(null);
     });
+
+    it('should respect the `slotProps.textField.slotProps.htmlInput` on accessible DOM structure', () => {
+      render(
+        <DateField
+          enableAccessibleFieldDOMStructure
+          slotProps={{
+            textField: { slotProps: { htmlInput: { 'data-testid': 'test-html-input' } } },
+          }}
+        />,
+      );
+
+      expect(screen.getByTestId('test-html-input')).not.to.equal(null);
+    });
+
+    it('should respect the `slotProps.textField.slotProps.htmlInput` on non-accessible DOM structure', () => {
+      render(
+        <DateField
+          enableAccessibleFieldDOMStructure={false}
+          slotProps={{
+            textField: { slotProps: { htmlInput: { 'data-testid': 'test-html-input' } } },
+          }}
+        />,
+      );
+
+      expect(screen.getByTestId('test-html-input')).not.to.equal(null);
+    });
   });
 
   describe('slotProps.inputAdornment behavior', () => {
