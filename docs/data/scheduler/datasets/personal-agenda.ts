@@ -1,4 +1,5 @@
-// Fake data of a personal agenda
+// Personal Agenda Events Dataset
+
 import { DateTime } from 'luxon';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
 
@@ -101,6 +102,23 @@ export const initialEvents: CalendarEvent[] = [
     resource: 'work',
     readOnly: true,
   },
+  {
+    id: 'remote-1',
+    start: DateTime.fromISO('2025-07-02T09:00:00'),
+    end: DateTime.fromISO('2025-07-02T12:00:00'),
+    title: 'Remote work',
+    resource: 'work',
+  },
+
+  // Holiday events
+  {
+    id: 'holidays-1',
+    start: START_OF_FIRST_WEEK.minus({ day: 4 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 1 }),
+    title: 'Out of office',
+    resource: 'holidays',
+    allDay: true,
+  },
 
   // Workout recurring events
   {
@@ -132,8 +150,8 @@ export const initialEvents: CalendarEvent[] = [
   // Birthday events
   {
     id: 'birthdays-alice',
-    start: DateTime.fromISO('2025-07-14T03:00:00'),
-    end: DateTime.fromISO('2025-07-14T04:00:00'),
+    start: DateTime.fromISO('2025-07-03T03:00:00'),
+    end: DateTime.fromISO('2025-07-03T04:00:00'),
     title: "Alice's Birthday",
     resource: 'birthdays',
     allDay: true,
@@ -231,85 +249,11 @@ export const initialEvents: CalendarEvent[] = [
     title: 'Prescription Pickup',
     resource: 'medical',
   },
-
-  // All day events
-  {
-    id: 'allday-work-1',
-    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 9 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
-    title: 'All day Work Event 1',
-    allDay: true,
-    resource: 'work',
-  },
-  {
-    id: 'allday-work-2',
-    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 9 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 9 }),
-    title: 'All day Work Event 2',
-    allDay: true,
-    resource: 'work',
-  },
-  {
-    id: 'allday-workout-1',
-    start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 9 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
-    title: 'All day Workout Event 1',
-    allDay: true,
-    resource: 'workout',
-  },
-  {
-    id: 'allday-birthday-1',
-    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
-    title: 'All day Birthday Event 1',
-    allDay: true,
-    resource: 'birthdays',
-  },
-  {
-    id: 'allday-personal-1',
-    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
-    title: 'All day Personal Event 1',
-    allDay: true,
-    resource: 'personal',
-  },
-  {
-    id: 'allday-personal-2',
-    start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
-    title: 'All day Personal Event 2',
-    allDay: true,
-    resource: 'personal',
-  },
-  {
-    id: 'allday-personal-3',
-    start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }),
-    title: 'All day Personal Event 3',
-    allDay: true,
-    resource: 'personal',
-  },
-  {
-    id: 'allday-personal-recurrent-1',
-    start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 9 }).set({ day: 28 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 9 }).set({ day: 30 }),
-    title: 'Month-End Close',
-    allDay: true,
-    resource: 'personal',
-    rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [28] },
-  },
-  {
-    id: 'allday-medical-1',
-    start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 9 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 7, hour: 9 }),
-    title: 'All day Medical Event 1',
-    allDay: true,
-    resource: 'medical',
-  },
 ];
 
 export const resources: CalendarResource[] = [
   { name: 'Work', id: 'work', eventColor: 'violet' },
+  { name: 'Holidays', id: 'holidays', eventColor: 'red' },
   { name: 'Workout', id: 'workout', eventColor: 'jade' },
   { name: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
   { name: 'Personal', id: 'personal', eventColor: 'orange' },
