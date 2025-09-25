@@ -13,8 +13,10 @@ import { useAdapter } from './adapter/useAdapter';
  * const { daysPerPage = 12 } = props;
  * const daysPerPageRef = React.useRef(daysPerPage);
  * useInitializeView(() => ({
- *   siblingVisibleDateGetter: (date, delta) => adapter.addDays(date, daysPerPageRef.current * delta),
- *  }));
+ *   renderEventIn: 'every-day',
+ *   siblingVisibleDateGetter: ({ adapter, date, delta }) => adapter.addDays(date, daysPerPageRef.current * delta),
+ *   getVisibleDays: ({ adapter, visibleDate }) => [processDate(visibleDate, adapter)],
+ * }));
  * ```
  * @param parameters Parameters for the view.
  */

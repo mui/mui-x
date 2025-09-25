@@ -55,14 +55,12 @@ export const MonthView = React.memo(
 
     const weeks = React.useMemo(() => {
       const tempWeeks: CalendarProcessedDate[][] = [];
-      let lastDayWeekNumber: number | null = null;
-      for (let i = 0; i < days.length; i += 1) {
+      let weekNumber: number | null = null;
+      for (const day of days) {
         const lastWeek = tempWeeks[tempWeeks.length - 1];
-        const day = days[i];
         const dayWeekNumber = adapter.getWeekNumber(day.value);
-        const isNewWeek = lastDayWeekNumber !== dayWeekNumber;
-        if (isNewWeek) {
-          lastDayWeekNumber = dayWeekNumber;
+        if (weekNumber !== dayWeekNumber) {
+          weekNumber = dayWeekNumber;
           tempWeeks.push([day]);
         } else {
           lastWeek.push(day);
