@@ -16,6 +16,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   svgRef,
 }) => {
   const focusNextItem = useEventCallback(function focusNextItem() {
+    let updatedStore = false;
     store.update((state) => {
       let { type, seriesId } = state.keyboardNavigation.item ?? {};
       if (
@@ -40,7 +41,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
 
       const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
-
+      updatedStore = true;
       return {
         ...state,
         keyboardNavigation: {
@@ -53,9 +54,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         },
       };
     });
+    return updatedStore;
   });
 
   const focusPreviousItem = useEventCallback(function focusPreviousItem() {
+    let updatedStore = false;
     store.update((state) => {
       let { type, seriesId } = state.keyboardNavigation.item ?? {};
       if (
@@ -75,7 +78,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
             ...state,
             keyboardNavigation: {
               ...state.keyboardNavigation,
-              item: null, // No series to move the focus too.} };
+              item: null, // No series to move the focus too.
             },
           };
         }
@@ -84,7 +87,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       }
 
       const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
-
+      updatedStore = true;
       return {
         ...state,
         keyboardNavigation: {
@@ -98,6 +101,8 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         },
       };
     });
+
+    return updatedStore;
   });
 
   const focusPreviousSeries = useEventCallback(function focusPreviousSeries() {
@@ -201,34 +206,29 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
+      let updatedStore = false;
       switch (event.key) {
         case 'ArrowRight':
-          focusNextItem();
+          updatedStore = focusNextItem();
           break;
         case 'ArrowLeft':
-          focusPreviousItem();
+          updatedStore = focusPreviousItem();
           break;
         case 'ArrowDown': {
-          const updatedStore = focusPreviousSeries();
-
-          if (updatedStore) {
-            // prevents scrolling
-            event.preventDefault();
-          }
-
+          updatedStore = focusPreviousSeries();
           break;
         }
         case 'ArrowUp': {
-          const updatedStore = focusNextSeries();
-
-          if (updatedStore) {
-            // prevents scrolling
-            event.preventDefault();
-          }
+          updatedStore = focusNextSeries();
           break;
         }
         default:
           break;
+      }
+
+      if (updatedStore) {
+        // prevents scrolling
+        event.preventDefault();
       }
     }
 
