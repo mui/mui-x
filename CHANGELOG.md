@@ -39,7 +39,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 
 ![Grid x Charts](https://github.com/user-attachments/assets/0817c36f-f87f-4688-8f30-fa0db638ca8c)
 
-👉 [🎥 Watch the full video](https://github.com/user-attachments/assets/28f1848e-dc85-4077-8756-a3e88afd4e54)
+  👉 [🎥 Watch the full video](https://github.com/user-attachments/assets/28f1848e-dc85-4077-8756-a3e88afd4e54)
 
 - ⌨️ Charts keyboard navigation
 - ⚡️ Charts: Add new `renderer="svg-batch"` prop to Scatter charts that provides improved performance for large datasets
