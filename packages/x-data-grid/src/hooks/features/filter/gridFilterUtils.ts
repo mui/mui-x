@@ -5,6 +5,7 @@ import {
   GridFilterItem,
   GridFilterModel,
   GridLogicOperator,
+  GridRowModel,
   GridValidRowModel,
 } from '../../../models';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -157,6 +158,7 @@ export const removeDiacritics = (value: unknown) => {
 
 const getFilterCallbackFromItem = (
   filterItem: GridFilterItem,
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any,
   apiRef: RefObject<GridPrivateApiCommunity>,
 ): GridFilterItemApplier | null => {
   if (!filterItem.field || !filterItem.operator) {
@@ -209,7 +211,7 @@ const getFilterCallbackFromItem = (
   return {
     item: newFilterItem,
     fn: (row: GridValidRowModel) => {
-      let value = apiRef.current.getRowValue(row, column);
+      let value = filterValueGetter(row, column);
       if (ignoreDiacritics) {
         value = removeDiacritics(value);
       }
@@ -221,20 +223,26 @@ const getFilterCallbackFromItem = (
 let filterItemsApplierId = 1;
 
 /**
+ * @name filterValueGetter
+ * @param {GridRowModel} row The row to get the value from.
+ * @param {GridColDef} column The column that the filter is applied on.
+ *
  * Generates a method to easily check if a row is matching the current filter model.
  * @param {GridFilterModel} filterModel The model with which we want to filter the rows.
+ * @param {FilterValueGetterFn} filterValueGetter The function to get the value to filter by.
  * @param {RefObject<GridPrivateApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 const buildAggregatedFilterItemsApplier = (
   filterModel: GridFilterModel,
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any,
   apiRef: RefObject<GridPrivateApiCommunity>,
   disableEval: boolean,
 ): GridFilterItemApplierNotAggregated | null => {
   const { items } = filterModel;
 
   const appliers = items
-    .map((item) => getFilterCallbackFromItem(item, apiRef))
+    .map((item) => getFilterCallbackFromItem(item, filterValueGetter, apiRef))
     .filter((callback): callback is GridFilterItemApplier => !!callback);
 
   if (appliers.length === 0) {
@@ -300,13 +308,19 @@ export const shouldQuickFilterExcludeHiddenColumns = (filterModel: GridFilterMod
 };
 
 /**
+ * @name filterValueGetter
+ * @param {GridRowModel} row The row to get the value from.
+ * @param {GridColDef} column The column that the filter is applied on.
+ *
  * Generates a method to easily check if a row is matching the current quick filter.
  * @param {any[]} filterModel The model with which we want to filter the rows.
+ * @param {FilterValueGetterFn} filterValueGetter The function to get the value to filter by.
  * @param {RefObject<GridPrivateApiCommunity>} apiRef The API of the grid.
  * @returns {GridAggregatedFilterItemApplier | null} A method that checks if a row is matching the current filter model. If `null`, we consider that all the rows are matching the filters.
  */
 const buildAggregatedQuickFilterApplier = (
   filterModel: GridFilterModel,
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any,
   apiRef: RefObject<GridPrivateApiCommunity>,
 ): GridFilterItemApplierNotAggregated | null => {
   const quickFilterValues = filterModel.quickFilterValues?.filter(Boolean) ?? [];
@@ -369,7 +383,7 @@ const buildAggregatedQuickFilterApplier = (
         }
 
         const applier = appliers[v];
-        let value = apiRef.current.getRowValue(row, column);
+        let value = filterValueGetter(row, column);
 
         if (applier.fn === null) {
           continue;
@@ -393,15 +407,21 @@ const buildAggregatedQuickFilterApplier = (
 
 export const buildAggregatedFilterApplier = (
   filterModel: GridFilterModel,
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any,
   apiRef: RefObject<GridPrivateApiCommunity>,
   disableEval: boolean,
 ): GridAggregatedFilterItemApplier => {
   const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(
     filterModel,
+    filterValueGetter,
     apiRef,
     disableEval,
   );
-  const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(filterModel, apiRef);
+  const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(
+    filterModel,
+    filterValueGetter,
+    apiRef,
+  );
 
   return function isRowMatchingFilters(row, shouldApplyFilter, result) {
     result.passingFilterItems = isRowMatchingFilterItems?.(row, shouldApplyFilter) ?? null;
@@ -417,12 +437,13 @@ type FilterCache = {
 
 const filterModelItems = (
   cache: FilterCache,
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any,
   apiRef: RefObject<GridPrivateApiCommunity>,
   items: GridFilterItem[],
 ) => {
   if (!cache.cleanedFilterItems) {
     cache.cleanedFilterItems = items.filter(
-      (item) => getFilterCallbackFromItem(item, apiRef) !== null,
+      (item) => getFilterCallbackFromItem(item, filterValueGetter, apiRef) !== null,
     );
   }
   return cache.cleanedFilterItems;
@@ -432,10 +453,11 @@ export const passFilterLogic = (
   allFilterItemResults: (null | GridFilterItemResult)[],
   allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
+  filterValueGetter: (row: GridRowModel, column: GridColDef) => any,
   apiRef: RefObject<GridPrivateApiCommunity>,
   cache: FilterCache,
 ): boolean => {
-  const cleanedFilterItems = filterModelItems(cache, apiRef, filterModel.items);
+  const cleanedFilterItems = filterModelItems(cache, filterValueGetter, apiRef, filterModel.items);
   const cleanedFilterItemResults = allFilterItemResults.filter(isNotNull);
   const cleanedQuickFilterResults = allQuickFilterResults.filter(isNotNull);
 

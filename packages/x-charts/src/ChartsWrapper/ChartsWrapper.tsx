@@ -25,9 +25,10 @@ export interface ChartsWrapperProps {
   legendDirection?: Direction;
   /**
    * If `true`, the legend is not rendered.
+   * @default false
    */
   // eslint-disable-next-line react/no-unused-prop-types
-  hideLegend: boolean;
+  hideLegend?: boolean;
   /**
    * If `true`, the chart wrapper set `height: 100%`.
    * @default `false` if the `height` prop is set. And `true` otherwise.
@@ -58,7 +59,7 @@ const getAlignItems = (position: Position | undefined) => {
 };
 
 const getGridTemplateAreas = (
-  hideLegend: boolean,
+  hideLegend: boolean | undefined,
   direction: Direction | undefined,
   position: Position | undefined,
 ) => {
@@ -81,7 +82,7 @@ const getGridTemplateAreas = (
 };
 
 const getTemplateColumns = (
-  hideLegend: boolean,
+  hideLegend: boolean = false,
   direction: Direction = 'horizontal',
   horizontalPosition: Position['horizontal'] = 'end',
   width: number | undefined = undefined,
@@ -98,7 +99,7 @@ const getTemplateColumns = (
 };
 
 const getTemplateRows = (
-  hideLegend: boolean,
+  hideLegend: boolean = false,
   direction: Direction = 'horizontal',
   verticalPosition: Position['vertical'] = 'top',
 ) => {
@@ -208,8 +209,9 @@ ChartsWrapper.propTypes = {
   extendVertically: PropTypes.bool,
   /**
    * If `true`, the legend is not rendered.
+   * @default false
    */
-  hideLegend: PropTypes.bool.isRequired,
+  hideLegend: PropTypes.bool,
   /**
    * The direction of the legend.
    * @default 'horizontal'

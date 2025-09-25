@@ -18,10 +18,7 @@ export const TimelineCell = React.forwardRef(function TimelineCell(
   // TODO: Add aria-colindex using Composite.
   const props = React.useMemo(() => ({ role: 'cell' }), []);
 
-  const state: TimelineCell.State = React.useMemo(() => ({}), []);
-
   return useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
