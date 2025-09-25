@@ -62,14 +62,14 @@ export class GridDataSourceCacheDefault {
     this.cacheKeys.add(keyString);
   }
 
-  getLast(key: GridGetRowsParams): Promise<GridGetRowsResponse | undefined> {
+  async getLast(key: GridGetRowsParams): Promise<GridGetRowsResponse | undefined> {
     const cacheKeys = Array.from(this.cacheKeys);
     const prevKey = cacheKeys[cacheKeys.indexOf(this.getKey(key)) - 1];
     if (!prevKey) {
-      return Promise.resolve(undefined);
+      return undefined;
     }
     if (this.cache[prevKey]) {
-      return Promise.resolve(this.cache[prevKey].value);
+      return this.cache[prevKey].value;
     }
     return new Promise((resolve) => {
       const intervalId = setInterval(() => {
