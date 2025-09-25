@@ -7,7 +7,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
-import { CalendarEventOccurrence, CalendarProcessedDate } from '../../../../primitives/models';
+import { CalendarProcessedDate } from '../../../../primitives/models';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayGrid } from '../../../../primitives/day-grid';
@@ -49,7 +49,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
-    shouldAddPosition: shouldRenderOccurrenceInDayGrid,
+    shouldAddPosition: isMultiDayEvent,
   });
 
   const { start, end } = React.useMemo(
@@ -196,7 +196,3 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     </div>
   );
 });
-
-function shouldRenderOccurrenceInDayGrid(occurrence: CalendarEventOccurrence) {
-  return isMultiDayEvent(occurrence);
-}
