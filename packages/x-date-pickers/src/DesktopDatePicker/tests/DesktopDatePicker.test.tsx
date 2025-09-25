@@ -485,6 +485,32 @@ describe('<DesktopDatePicker />', () => {
 
       expect(screen.getByRole('textbox')).attribute('name').to.equal('test-field');
     });
+
+    it('should respect the `slotProps.textField.slotProps.htmlInput` on accessible DOM structure', () => {
+      render(
+        <DesktopDatePicker
+          enableAccessibleFieldDOMStructure
+          slotProps={{
+            textField: { slotProps: { htmlInput: { 'data-testid': 'test-html-input' } } },
+          }}
+        />,
+      );
+
+      expect(screen.getByTestId('test-html-input')).not.to.equal(null);
+    });
+
+    it('should respect the `slotProps.textField.slotProps.htmlInput` on non-accessible DOM structure', () => {
+      render(
+        <DesktopDatePicker
+          enableAccessibleFieldDOMStructure={false}
+          slotProps={{
+            textField: { slotProps: { htmlInput: { 'data-testid': 'test-html-input' } } },
+          }}
+        />,
+      );
+
+      expect(screen.getByTestId('test-html-input')).not.to.equal(null);
+    });
   });
 
   describe('slotProps.inputAdornment behavior', () => {
