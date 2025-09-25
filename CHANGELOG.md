@@ -40,7 +40,11 @@ Same changes as in `@mui/x-data-grid@8.12.0`.
 
 Same changes as in `@mui/x-data-grid-pro@8.12.0`, plus:
 
-- [charts-premium] Grid-Charts integration (#18021) @arminmeh
+- [DataGridPremium] Grid-Charts integration (#18021) @arminmeh
+- [DataGridPremium] Fix sorting and filtering of the tree group columns with aggregation (#19607) @arminmeh
+- [DataGridPremium] Disable aggregation on the grouping column by default (#19692) @arminmeh
+- [DataGridPremium] Do not rely on the group separation constant to retrieve the column name for the charts panel (#19677) @arminmeh
+- [DataGridPremium] Fix stale aggregation state (#19690) @arminmeh
 
 ### Date and Time Pickers
 
