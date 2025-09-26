@@ -156,7 +156,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
        conversationId,
        {
          metadata: {
-           userId: 'example-user-reference',
+           referenceId: 'example-user-reference',
          },
        },
      );
