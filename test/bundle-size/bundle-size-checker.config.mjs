@@ -6,6 +6,8 @@
 import path from 'path';
 import glob from 'fast-glob';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
+// eslint-disable-next-line import/no-relative-packages
+import generateReleaseInfo from '../../packages/x-license/generateReleaseInfo.js';
 
 const rootDir = path.resolve(import.meta.dirname, '../..');
 
@@ -72,6 +74,10 @@ export default defineConfig(async () => {
       ...treeViewProComponents,
     ],
     upload: !!process.env.CI,
+    replace: {
+      // Stabilize release info string
+      [JSON.stringify(generateReleaseInfo())]: JSON.stringify('__RELEASE_INFO__'),
+    },
     comment: false,
   };
 });
