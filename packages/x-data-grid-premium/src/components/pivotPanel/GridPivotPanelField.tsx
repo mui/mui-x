@@ -163,9 +163,9 @@ function AggregationSelect({
       getAvailableAggregationFunctions({
         aggregationFunctions: rootProps.aggregationFunctions,
         colDef,
-        isDataSource: false,
+        isDataSource: !!rootProps.dataSource,
       }),
-    [colDef, rootProps.aggregationFunctions],
+    [colDef, rootProps.aggregationFunctions, rootProps.dataSource],
   );
 
   const handleClick = (func: string) => {

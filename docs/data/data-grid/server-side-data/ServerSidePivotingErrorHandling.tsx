@@ -1,9 +1,11 @@
 import * as React from 'react';
 import {
+  GridPivotModel,
   DataGridPremium,
+  GridDataSource,
   useGridApiRef,
-  useKeepGroupedColumnsHidden,
   GridGetRowsError,
+  GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Snackbar from '@mui/material/Snackbar';
@@ -12,21 +14,41 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-export default function ServerSideRowGroupingErrorHandling() {
+const pivotModel: GridPivotModel = {
+  rows: [{ field: 'commodity' }, { field: 'traderName' }],
+  columns: [{ field: 'status' }],
+  values: [{ field: 'quantity', aggFunc: 'sum' }],
+};
+
+const aggregationFunctions = {
+  sum: { columnTypes: ['number'] },
+  avg: { columnTypes: ['number'] },
+  min: { columnTypes: ['number', 'date', 'dateTime'] },
+  max: { columnTypes: ['number', 'date', 'dateTime'] },
+  size: {},
+};
+
+export default function ServerSidePivotingErrorHandling() {
   const apiRef = useGridApiRef();
-  const [error, setError] = React.useState();
+  const [error, setError] = React.useState<string>();
   const [shouldRequestsFail, setShouldRequestsFail] = React.useState(false);
 
-  const { fetchRows, columns } = useMockServer(
+  const {
+    columns,
+    initialState: initialStateMock,
+    fetchRows,
+  } = useMockServer(
     {
-      rowGrouping: true,
+      rowLength: 200,
+      dataSet: 'Commodity',
+      maxColumns: 20,
     },
     {},
     shouldRequestsFail,
   );
 
-  const dataSource = React.useMemo(() => {
-    return {
+  const dataSource: GridDataSource = React.useMemo(
+    () => ({
       getRows: async (params) => {
         const urlParams = new URLSearchParams({
           paginationModel: JSON.stringify(params.paginationModel),
@@ -34,6 +56,7 @@ export default function ServerSideRowGroupingErrorHandling() {
           sortModel: JSON.stringify(params.sortModel),
           groupKeys: JSON.stringify(params.groupKeys),
           groupFields: JSON.stringify(params.groupFields),
+          pivotModel: JSON.stringify(params.pivotModel),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -41,21 +64,39 @@ export default function ServerSideRowGroupingErrorHandling() {
         return {
           rows: getRowsResponse.rows,
           rowCount: getRowsResponse.rowCount,
+          aggregateRow: getRowsResponse.aggregateRow,
+          pivotColumns: getRowsResponse.pivotColumns,
         };
       },
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
-    };
-  }, [fetchRows]);
+      getAggregatedValue: (row, field) => row[field],
+      getPivotColumnDef: (field, columnGroupPath) => ({
+        field: columnGroupPath
+          .map((path) =>
+            typeof path.value === 'string' ? path.value : path.value[path.field],
+          )
+          .concat(field)
+          .join('>->'),
+      }),
+    }),
+    [fetchRows],
+  );
 
-  const initialState = useKeepGroupedColumnsHidden({
-    apiRef,
-    initialState: {
-      rowGrouping: {
-        model: ['company', 'director'],
+  const initialState = React.useMemo(
+    () => ({
+      ...initialStateMock,
+      pivoting: {
+        model: pivotModel,
+        enabled: true,
       },
-    },
-  });
+      sidebar: {
+        open: true,
+        value: GridSidebarValue.Pivot,
+      },
+    }),
+    [initialStateMock],
+  );
 
   return (
     <div style={{ width: '100%' }}>
@@ -78,10 +119,14 @@ export default function ServerSideRowGroupingErrorHandling() {
           label="Make the requests fail"
         />
       </div>
-      <div style={{ height: 400, position: 'relative' }}>
+      <div style={{ height: 600, position: 'relative' }}>
         <DataGridPremium
+          apiRef={apiRef}
           columns={columns}
           dataSource={dataSource}
+          showToolbar
+          initialState={initialState}
+          aggregationFunctions={aggregationFunctions}
           onDataSourceError={(err) => {
             if (err instanceof GridGetRowsError) {
               if (!err.params.groupKeys || err.params.groupKeys.length === 0) {
@@ -97,9 +142,8 @@ export default function ServerSideRowGroupingErrorHandling() {
           slots={{
             noRowsOverlay: ErrorOverlay,
             noResultsOverlay: ErrorOverlay,
+            emptyPivotOverlay: ErrorOverlay,
           }}
-          apiRef={apiRef}
-          initialState={initialState}
         />
         <Snackbar
           open={!!error}
