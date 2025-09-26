@@ -138,7 +138,8 @@ function PieArcPlot(props: PieArcPlotProps) {
           cornerRadius={focusedItem.cornerRadius}
           skipAnimation
           stroke={(theme.vars ?? theme).palette.text.primary}
-          id={`${id}-focused`}
+          id={id}
+          className={'MuiPieArc-focusIndicator'}
           dataIndex={focusedIndex}
           isFaded={false}
           isHighlighted={false}

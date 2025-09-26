@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled, useTheme } from '@mui/material/styles';
@@ -88,6 +89,7 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
 
 const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
   const {
+    className,
     classes: innerClasses,
     color,
     dataIndex,
@@ -138,7 +140,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
-      className={classes.root}
+      className={clsx(classes.root, className)}
       fill={ownerState.color}
       opacity={ownerState.isFaded ? 0.3 : 1}
       filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}

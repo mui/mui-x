@@ -97,7 +97,7 @@ describe('<PieChart />', () => {
 
     // by default does not show focus indicator
     expect(
-      container.querySelector('.MuiPieArc-series-auto-generated-id-0-focused'),
+      container.querySelector('.MuiPieArc-focusIndicator'),
     ).not.toBeTruthy();
 
     // focus the chart
@@ -107,7 +107,7 @@ describe('<PieChart />', () => {
     await user.keyboard('{ArrowRight}');
     expect(
       container.querySelector(
-        '.MuiPieArc-series-auto-generated-id-0-focused.MuiPieArc-data-index-0',
+        '.MuiPieArc-focusIndicator.MuiPieArc-data-index-0',
       ),
     ).toBeTruthy();
 
@@ -115,7 +115,7 @@ describe('<PieChart />', () => {
     await user.keyboard('{ArrowRight}');
     expect(
       container.querySelector(
-        '.MuiPieArc-series-auto-generated-id-0-focused.MuiPieArc-data-index-1',
+        '.MuiPieArc-focusIndicator.MuiPieArc-data-index-1',
       ),
     ).toBeTruthy();
   });
