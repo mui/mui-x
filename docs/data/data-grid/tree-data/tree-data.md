@@ -165,6 +165,44 @@ const invalidRows = [{ path: ['X'] }, { path: ['Y'] }, { path: ['X', 'X'] }];
 
 :::
 
+## Drag-and-drop tree data reordering
+
+With row reordering, users can reorder tree data or move rows from one group to another.
+To enable this feature with row grouping, pass the `rowReordering` prop to the Data Grid component:
+
+```tsx
+<DataGridPro
+  columns={columns}
+  rows={rows}
+  treeData
+  getTreeDataPath={getTreeDataPath}
+  setTreeDataPath={setTreeDataPath}
+  rowReordering
+/>
+```
+
+:::warning
+In order for the cross parent operations to work where there will be a change in the path, you need to pass the `setTreeDataPath()` prop, that works reverse to how [`getTreeDataPath()`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-getTreeDataPath) works.
+:::
+
+{{"demo": "TreeDataReordering.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Sync row data with reordered data
+
+If you want to update the external row data, for example to persist it in the local storage, you can use the `onRowOrderChange()` callback and the Data Grid selectors to get the reordered data and sync with the external data.
+
+```tsx
+<DataGridPro onRowOrderChange={handleRowOrderChange} />
+```
+
+{{"demo": "TreeDataSyncRowData.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+Syncing the external rows and providing a fresh [rows prop](/x/react-data-grid/row-updates/#the-rows-prop) reference causes a full tree regeneration, whose one side effect is that the expanded rows state will be lost.
+
+To persist the expanded rows state, you can use the `isGroupExpandedByDefault()` callback with a dictionary, as done in the above demo.
+:::
+
 ## Lazy-loading tree data children
 
 See [Server-side data—Tree data](/x/react-data-grid/server-side-data/tree-data/) for details on lazy-loading tree data children.

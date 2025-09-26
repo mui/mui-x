@@ -5,7 +5,7 @@ import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
   GridRoot,
   GridContextProvider,
-  GridValidRowModel,
+  type GridValidRowModel,
   useGridSelector,
   gridRowIdSelector,
 } from '@mui/x-data-grid-pro';
@@ -14,7 +14,7 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
-  GridConfiguration,
+  type GridConfiguration,
   useGridApiInitialization,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
@@ -84,7 +84,11 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
   );
 
-  const props = useDataGridPremiumComponent(privateApiRef, initialProps, configuration);
+  const props = useDataGridPremiumComponent(
+    privateApiRef,
+    initialProps,
+    configuration as GridConfiguration,
+  );
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -640,11 +644,27 @@ DataGridPremiumRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
+   * Determines if a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * Allows to disable certain row reorder operations based on the context.
+   * The internal validation is still applied which allows maximum supported use-cases.
+   * Use `isValidRowReorder()` to omit some of the default validation rules.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder: PropTypes.func,
   /**
    * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
@@ -1315,6 +1335,15 @@ DataGridPremiumRaw.propTypes = {
    * @default 80
    */
   scrollEndThreshold: PropTypes.number,
+  /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath: PropTypes.func,
   /**
    * If `true`, vertical borders will be displayed between cells.
    * @default false

@@ -84,7 +84,7 @@ export interface GridPipeProcessingLookup {
     context: {
       sourceRowId: GridRowId;
       targetRowId: GridRowId;
-      dropPosition: 'above' | 'below';
+      dropPosition: 'above' | 'below' | 'over';
       dragDirection: 'up' | 'down';
     };
   };
