@@ -5,9 +5,6 @@ import {
   gridExpandedSortedRowIdsSelector,
   gridRowNodeSelector,
   gridRowMaximumTreeDepthSelector,
-  gridRowIdSelector,
-  GridValidRowModel,
-  GridColDef,
 } from '@mui/x-data-grid-pro';
 import {
   gridExpandedSortedRowIndexLookupSelector,
@@ -15,7 +12,6 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
-import { gridCellAggregationResultSelector } from '../aggregation/gridAggregationSelectors';
 import { rowGroupingReorderExecutor } from '../rowReorder/reorderExecutor';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -26,12 +22,7 @@ export const useGridRowsOverridableMethods = (
   props: Pick<DataGridPremiumProcessedProps, 'processRowUpdate' | 'onProcessRowUpdateError'>,
 ) => {
   const { processRowUpdate, onProcessRowUpdateError } = props;
-  const {
-    setRowIndex: setRowIndexPlain,
-    getCellValue,
-    getRowValue,
-    getRowFormattedValue,
-  } = useGridRowsOverridableMethodsCommunity(apiRef);
+  const { setRowIndex: setRowIndexPlain } = useGridRowsOverridableMethodsCommunity(apiRef);
 
   const flatTree = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) === 1;
 
@@ -82,37 +73,7 @@ export const useGridRowsOverridableMethods = (
     [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
-  const getCellValuePremium = React.useCallback(
-    (id: GridRowId, field: string) =>
-      gridCellAggregationResultSelector(apiRef, {
-        id,
-        field,
-      })?.value ?? getCellValue(id, field),
-    [apiRef, getCellValue],
-  );
-
-  const getRowValuePremium = React.useCallback(
-    (row: GridValidRowModel, colDef: GridColDef) =>
-      gridCellAggregationResultSelector(apiRef, {
-        id: gridRowIdSelector(apiRef, row),
-        field: colDef.field,
-      })?.value ?? getRowValue(row, colDef),
-    [apiRef, getRowValue],
-  );
-
-  const getRowFormattedValuePremium = React.useCallback(
-    (row: GridValidRowModel, colDef: GridColDef) =>
-      gridCellAggregationResultSelector(apiRef, {
-        id: gridRowIdSelector(apiRef, row),
-        field: colDef.field,
-      })?.formattedValue ?? getRowFormattedValue(row, colDef),
-    [apiRef, getRowFormattedValue],
-  );
-
   return {
     setRowIndex: flatTree ? setRowIndexPlain : setRowIndex,
-    getCellValue: getCellValuePremium,
-    getRowValue: getRowValuePremium,
-    getRowFormattedValue: getRowFormattedValuePremium,
   };
 };

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { GridTreeNode, GridRowId, GridRowModel } from '../gridRows';
+import { GridTreeNode, GridRowId } from '../gridRows';
 import { DataGridProcessedProps } from '../props/DataGridProps';
-import { GridColDef } from '../colDef/gridColDef';
 
 /**
  * Get the ARIA attributes for a row
@@ -31,8 +30,5 @@ export interface GridRowsOverridableMethodsInternalHook<Api> {
     >,
   ) => {
     setRowIndex: (rowId: GridRowId, targetIndex: number) => void;
-    getCellValue: (rowId: GridRowId, field: string) => any;
-    getRowValue: (row: GridRowModel, colDef: GridColDef) => any;
-    getRowFormattedValue: (row: GridRowModel, colDef: GridColDef) => any;
   };
 }

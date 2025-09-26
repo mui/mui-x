@@ -15,6 +15,7 @@ import {
   validateProps,
   GridConfiguration,
   useGridApiInitialization,
+  getRowValue,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -31,6 +32,7 @@ import { gridCellAggregationResultSelector } from '../hooks/features/aggregation
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
@@ -49,13 +51,10 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
         return apiRef.current.getRowValue(row, column);
       }
 
-      if (column.valueGetter) {
-        return column.valueGetter(row[column.field] as never, row, column, apiRef);
-      }
-
-      return row[column.field];
+      return getRowValue(row, column, apiRef);
     },
     useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
   },
 };
 const releaseInfo = '__RELEASE_INFO__';
