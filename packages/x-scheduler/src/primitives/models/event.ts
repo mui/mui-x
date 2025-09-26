@@ -119,6 +119,7 @@ export interface CalendarEventOccurrenceWithTimePosition extends CalendarEventOc
 }
 
 export interface CalendarEventOccurrenceTimePosition {
+  surfaceType: 'time-grid';
   /**
    * The first (1-based) index of the row / column the event should be rendered in.
    */
@@ -205,6 +206,8 @@ export interface CalendarProcessedDate {
  */
 export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
   Required<Pick<CalendarEvent, 'start' | 'end'>>;
+
+export type OccurrencesGroupedByDayMap = Map<string, CalendarEventOccurrence[]>;
 
 /**
  * The type of surface the event is being rendered on.

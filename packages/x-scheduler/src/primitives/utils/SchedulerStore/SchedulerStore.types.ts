@@ -2,9 +2,11 @@ import {
   CalendarEvent,
   CalendarEventColor,
   CalendarEventId,
+  CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
+  OccurrencesGroupedByDayMap,
   RecurringEventUpdatedProperties,
   SchedulerValidDate,
 } from '../../models';
@@ -57,6 +59,14 @@ export interface SchedulerState {
    * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
   occurrencePlaceholder: CalendarOccurrencePlaceholder | null;
+  /**
+   * TODO: Write JSDoc.
+   */
+  occurrencesLookup: Map<string, CalendarEventOccurrence>;
+  /**
+   * TODO: Write JSDoc.
+   */
+  occurrencesGroupedByDayLookup: OccurrencesGroupedByDayMap;
 }
 
 export interface SchedulerParameters {
