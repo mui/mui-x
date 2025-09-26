@@ -160,7 +160,7 @@ const PieChart = React.forwardRef(function PieChart(
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           {children}
-        </ChartsSurface>Keyboard
+        </ChartsSurface>
         {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProvider>
