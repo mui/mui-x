@@ -1,3 +1,4 @@
+import { nice } from '@mui/x-charts-vendor/d3-array';
 import { createScalarFormatter } from '../../../defaultValueFormatters';
 import { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
@@ -25,12 +26,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import {
-  applyDomainLimit,
-  getActualAxisExtrema,
-  getDomainLimit,
-  ScaleDefinition,
-} from './getAxisScale';
+import { getDomainLimit, ScaleDefinition } from './getAxisScale';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 
 function getRange(
@@ -184,11 +180,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
       DefaultedAxis<ContinuousScaleName, any, Readonly<ChartsAxisProps>>
     >;
     const scaleType = continuousAxis.scaleType ?? ('linear' as const);
-    const tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
+    let tickNumber = scaleTickNumberByRange(rawTickNumber, zoomRange);
 
     const filter = zoom === undefined && !zoomOption ? getFilters : undefined; // Do not apply filtering if zoom is already defined.
     if (filter) {
-      const [minData, maxData] = getAxisExtrema(
+      let [minData, maxData] = getAxisExtrema(
         axis,
         axisDirection,
         seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
@@ -196,8 +192,6 @@ export function computeAxisValue<T extends ChartSeriesType>({
         formattedSeries,
         filter,
       );
-      scale = scale.copy();
-      scale.domain([minData, maxData]);
 
       const domainLimit = getDomainLimit(
         axis,
@@ -207,7 +201,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         preferStrictDomainInLineCharts,
       );
 
-      const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
+      const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
 
       if (typeof domainLimit === 'function') {
         const { min, max } = domainLimit(minData, maxData);
@@ -215,8 +209,35 @@ export function computeAxisValue<T extends ChartSeriesType>({
         axisExtrema[1] = max;
       }
 
-      scale.domain(axisExtrema);
-      applyDomainLimit(scale, axis, domainLimit, rawTickNumber);
+      if (domainLimit === 'nice') {
+        [minData, maxData] = nice(
+          axisExtrema[0].valueOf(),
+          axisExtrema[1].valueOf(),
+          rawTickNumber,
+        );
+      }
+
+      [minData, maxData] = [axis.min?.valueOf() ?? minData, axis.max?.valueOf() ?? maxData];
+
+      const domain = scale.domain();
+      const scaleRange = scale.range();
+      const rangeSpan = Math.abs(scaleRange[1] - scaleRange[0]);
+      const domainSpan = Math.abs(domain[1].valueOf() - domain[0].valueOf());
+      const extremaSpan = Math.abs(maxData - minData);
+      const spanRatio = domainSpan / extremaSpan;
+      const startDiff = Math.abs(domain[0].valueOf() - minData);
+      const endDiff = Math.abs(domain[1].valueOf() - maxData);
+      const startRatio = startDiff / (startDiff + endDiff) || 0;
+      const endRatio = endDiff / (startDiff + endDiff) || 0;
+
+      const newRange = [
+        scaleRange[0].valueOf() + rangeSpan * startRatio * (spanRatio - 1),
+        scaleRange[1].valueOf() - rangeSpan * endRatio * (spanRatio - 1),
+      ];
+
+      scale = scale.copy();
+      scale.range(newRange);
+      tickNumber = rawTickNumber * spanRatio;
     }
 
     completeAxis[axis.id] = {

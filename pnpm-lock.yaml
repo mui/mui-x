@@ -1098,6 +1098,9 @@ importers:
       '@types/d3-timer':
         specifier: ^3.0.2
         version: 3.0.2
+      d3-array:
+        specifier: ^3.2.4
+        version: 3.2.4
       d3-color:
         specifier: ^3.1.0
         version: 3.1.0
@@ -1144,9 +1147,6 @@ importers:
       '@types/d3-time-format':
         specifier: ^4.0.3
         version: 4.0.3
-      d3-array:
-        specifier: ^3.2.4
-        version: 3.2.4
       d3-format:
         specifier: ^3.1.0
         version: 3.1.0

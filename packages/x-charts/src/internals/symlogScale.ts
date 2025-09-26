@@ -105,6 +105,13 @@ export function scaleSymlog<Range, Output = Range, Unknown = never>(
     };
   };
 
+  /* Adaptation of https://github.com/d3/d3-scale/blob/d6904a4bde09e16005e0ad8ca3e25b10ce54fa0d/src/symlog.js#L30 */
+  scale.copy = () => {
+    return scaleSymlog<Range, Output, Unknown>(scale.domain(), scale.range()).constant(
+      scale.constant(),
+    );
+  };
+
   return scale;
 }
 

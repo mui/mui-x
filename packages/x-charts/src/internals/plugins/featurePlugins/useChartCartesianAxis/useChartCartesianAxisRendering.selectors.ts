@@ -10,13 +10,16 @@ import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import { AxisId } from '../../../../models/axis';
+import { AxisId, ChartsAxisProps, DefaultedAxis, ScaleName } from '../../../../models/axis';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
-import { getXAxesScales, getYAxesScales } from './getAxisScale';
+import { getNormalizedAxisScale, getRange, ScaleDefinition } from './getAxisScale';
+import { isOrdinalScale } from '../../../scaleGuards';
+import { zoomScaleRange } from './zoom';
+import { getDefaultTickNumber } from '../../../ticks';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -68,59 +71,149 @@ const selectorChartYFilter = createSelector(
     zoomMap && zoomOptions && createAxisFilterMapper(zoomMap, zoomOptions, 'y'),
 );
 
+export const selectorDefaultXAxisTickNumber = createSelector(
+  [selectorChartDrawingArea],
+  function selectorDefaultXAxisTickNumber(drawingArea) {
+    return getDefaultTickNumber(drawingArea.width);
+  },
+);
+
+export const selectorDefaultYAxisTickNumber = createSelector(
+  [selectorChartDrawingArea],
+  function selectorDefaultYAxisTickNumber(drawingArea) {
+    return getDefaultTickNumber(drawingArea.height);
+  },
+);
+
+export const selectorChartNormalizedXScales = createSelector(
+  [
+    selectorChartRawXAxis,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorPreferStrictDomainInLineCharts,
+    selectorDefaultXAxisTickNumber,
+  ],
+  function selectorChartXScales(
+    axes,
+    formattedSeries,
+    seriesConfig,
+    preferStrictDomainInLineCharts,
+    defaultTickNumber,
+  ) {
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    axes?.forEach((eachAxis, axisIndex) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      scales[axis.id] = getNormalizedAxisScale(
+        axis,
+        'x',
+        seriesConfig,
+        axisIndex,
+        formattedSeries,
+        preferStrictDomainInLineCharts,
+        defaultTickNumber,
+      );
+    });
+
+    return scales;
+  },
+);
+
+export const selectorChartNormalizedYScales = createSelector(
+  [
+    selectorChartRawYAxis,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorPreferStrictDomainInLineCharts,
+    selectorDefaultYAxisTickNumber,
+  ],
+  function selectorChartYScales(
+    axes,
+    formattedSeries,
+    seriesConfig,
+    preferStrictDomainInLineCharts,
+    defaultTickNumber,
+  ) {
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    axes?.forEach((eachAxis, axisIndex) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      scales[axis.id] = getNormalizedAxisScale(
+        axis,
+        'y',
+        seriesConfig,
+        axisIndex,
+        formattedSeries,
+        preferStrictDomainInLineCharts,
+        defaultTickNumber,
+      );
+    });
+
+    return scales;
+  },
+);
+
 export const selectorChartXScales = createSelector(
   [
     selectorChartRawXAxis,
+    selectorChartNormalizedXScales,
     selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
     selectorChartZoomMap,
-    selectorPreferStrictDomainInLineCharts,
   ],
-  function selectorChartXScales(
-    axis,
-    drawingArea,
-    formattedSeries,
-    seriesConfig,
-    zoomMap,
-    preferStrictDomainInLineCharts,
-  ) {
-    return getXAxesScales({
-      drawingArea,
-      formattedSeries,
-      axis,
-      seriesConfig,
-      zoomMap,
-      preferStrictDomainInLineCharts,
+  function selectorChartYScales(axes, normalizedScales, drawingArea, zoomMap) {
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    axes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+      const zoom = zoomMap?.get(axis.id);
+
+      const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
+      const range = getRange(drawingArea, 'x', axis);
+
+      const scaleDefinition = normalizedScales[axis.id];
+      const scale = scaleDefinition.scale.copy();
+      const zoomedRange = zoomScaleRange(range, zoomRange);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = { ...scaleDefinition, scale } as ScaleDefinition;
     });
+
+    return scales;
   },
 );
 
 export const selectorChartYScales = createSelector(
   [
     selectorChartRawYAxis,
+    selectorChartNormalizedYScales,
     selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
     selectorChartZoomMap,
-    selectorPreferStrictDomainInLineCharts,
   ],
-  function selectorChartYScales(
-    axis,
-    drawingArea,
-    formattedSeries,
-    seriesConfig,
-    zoomMap,
-    preferStrictDomainInLineCharts,
-  ) {
-    return getYAxesScales({
-      drawingArea,
-      formattedSeries,
-      axis,
-      seriesConfig,
-      zoomMap,
-      preferStrictDomainInLineCharts,
+  function selectorChartYScales(axes, normalizedScales, drawingArea, zoomMap) {
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    axes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+      const zoom = zoomMap?.get(axis.id);
+
+      const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
+      const range = getRange(drawingArea, 'y', axis);
+
+      const scaleDefinition = normalizedScales[axis.id];
+      const scale = scaleDefinition.scale.copy();
+
+      const scaleRange = isOrdinalScale(scale) ? range.reverse() : range;
+      const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = { ...scaleDefinition, scale } as ScaleDefinition;
     });
+
+    return scales;
   },
 );
 
