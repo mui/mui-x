@@ -83,7 +83,7 @@ export type VirtualizerParams = {
   applyRowHeight?: (entry: HeightEntry, rowEntry: RowEntry) => void;
   virtualizeColumnsWithAutoRowHeight?: boolean;
 
-  resizeThrottleMs: number;
+  resizeThrottleMs?: number;
   onResize?: (lastSize: Size) => void;
   onWheel?: (event: React.WheelEvent) => void;
   onTouchMove?: (event: React.TouchEvent) => void;

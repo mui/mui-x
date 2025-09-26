@@ -247,7 +247,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     bottomPinnedHeight,
   ]);
 
-  const { resizeThrottleMs } = params;
+  const { resizeThrottleMs = 100 } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
     () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
