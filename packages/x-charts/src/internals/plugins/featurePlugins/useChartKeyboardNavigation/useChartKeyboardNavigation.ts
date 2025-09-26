@@ -43,6 +43,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
       return {
         ...state,
+        ...(state.interaction
+          ? { interaction: { ...state.interaction, lastUpdate: 'keyboard' } }
+          : {}),
         keyboardNavigation: {
           ...state.keyboardNavigation,
           item: {
@@ -75,7 +78,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
             ...state,
             keyboardNavigation: {
               ...state.keyboardNavigation,
-              item: null, // No series to move the focus too.} };
+              item: null, // No series to move the focus too.
             },
           };
         }
@@ -87,6 +90,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
       return {
         ...state,
+        ...(state.interaction
+          ? { interaction: { ...state.interaction, lastUpdate: 'keyboard' } }
+          : {}),
         keyboardNavigation: {
           ...state.keyboardNavigation,
           item: {
@@ -127,6 +133,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       setNewSeries = true;
       return {
         ...state,
+        ...(state.interaction
+          ? { interaction: { ...state.interaction, lastUpdate: 'keyboard' } }
+          : {}),
         keyboardNavigation: {
           ...state.keyboardNavigation,
           item: {
@@ -165,6 +174,9 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       setNewSeries = true;
       return {
         ...state,
+        ...(state.interaction
+          ? { interaction: { ...state.interaction, lastUpdate: 'keyboard' } }
+          : {}),
         keyboardNavigation: {
           ...state.keyboardNavigation,
           item: {
@@ -196,6 +208,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
 
   React.useEffect(() => {
     const element = svgRef.current;
+
     if (!element || !params.enableKeyboardNavigation) {
       return undefined;
     }
@@ -204,9 +217,11 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
       switch (event.key) {
         case 'ArrowRight':
           focusNextItem();
+
           break;
         case 'ArrowLeft':
           focusPreviousItem();
+
           break;
         case 'ArrowDown': {
           const updatedStore = focusPreviousSeries();
@@ -240,6 +255,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     };
   }, [
     svgRef,
+
     focusNextItem,
     focusPreviousItem,
     removeFocus,
@@ -265,9 +281,7 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     [store, params.enableKeyboardNavigation],
   );
 
-  return {
-    instance: {},
-  };
+  return {};
 };
 
 useChartKeyboardNavigation.getInitialState = (params) => ({

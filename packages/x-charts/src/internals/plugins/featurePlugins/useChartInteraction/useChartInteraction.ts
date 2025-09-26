@@ -13,7 +13,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     store.update((prev) => {
       return {
         ...prev,
-        interaction: { pointer: null, item: null },
+        interaction: { ...prev.interaction, pointer: null, item: null },
       };
     });
   });
@@ -85,6 +85,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
       interaction: {
         ...prev.interaction,
         pointer: coordinate,
+        lastUpdate: coordinate !== null ? 'pointer' : prev.interaction.lastUpdate,
       },
     }));
   });
@@ -100,7 +101,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
 };
 
 useChartInteraction.getInitialState = () => ({
-  interaction: { item: null, pointer: null },
+  interaction: { item: null, pointer: null, lastUpdate: 'pointer' },
 });
 
 useChartInteraction.params = {};
