@@ -7,7 +7,6 @@ import {
   GridContextProvider,
   GridValidRowModel,
   useGridSelector,
-  gridRowIdSelector,
 } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
@@ -45,22 +44,16 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
       const apiRef = useGridApiContext();
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
     },
-    useSortValueGetter: (apiRef) => (id, field) =>
-      gridCellAggregationResultSelector(apiRef, {
-        id,
-        field,
-      })?.value ?? apiRef.current.getCellValue(id, field),
     useFilterValueGetter: (apiRef, props) => (row, column) => {
-      if (props.aggregationRowsScope === 'filtered') {
+      if (props.aggregationRowsScope === 'all') {
         return apiRef.current.getRowValue(row, column);
       }
 
-      return (
-        gridCellAggregationResultSelector(apiRef, {
-          id: gridRowIdSelector(apiRef, row),
-          field: column.field,
-        })?.value ?? apiRef.current.getRowValue(row, column)
-      );
+      if (column.valueGetter) {
+        return column.valueGetter(row[column.field] as never, row, column, apiRef);
+      }
+
+      return row[column.field];
     },
     useGridRowsOverridableMethods,
   },

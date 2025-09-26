@@ -26,7 +26,6 @@ const configuration: GridConfiguration = {
     useGridRowAriaAttributes,
     useGridRowsOverridableMethods,
     useCellAggregationResult: () => null,
-    useSortValueGetter: (apiRef) => apiRef.current.getCellValue,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
