@@ -1,9 +1,7 @@
 .MonthViewContainer {
   --fixed-cell-width: 28px;
   --grid-template-columns-month-view: repeat(auto-fit, minmax(0, 1fr));
-}
 
-.MonthViewContainer {
   width: 100%;
   border-radius: var(--radius-4);
   border: 1px solid var(--border-color);
@@ -33,15 +31,15 @@
   grid-template-columns: var(--fixed-cell-width) var(--grid-template-columns-month-view);
 }
 
-.MonthViewHeaderCell:not(:first-child) {
-  border-inline-start: 1px solid var(--border-color);
-}
-
 .MonthViewHeaderCell {
   padding: var(--space-2);
   text-align: center;
   font-size: var(--font-size-2);
   line-height: var(--line-height-1);
+}
+
+.MonthViewHeaderCell:not(:first-child) {
+  border-inline-start: 1px solid var(--border-color);
 }
 
 .MonthViewWeekHeaderCell {
