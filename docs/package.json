@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
-    "@docsearch/react": "^3.9.0",
+    "@docsearch/react": "^4.1.0",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@emotion/server": "^11.11.0",
@@ -77,7 +77,7 @@
     "moment-jalaali": "catalog:",
     "moment-timezone": "catalog:",
     "motion": "catalog:",
-    "next": "^15.5.2",
+    "next": "^15.5.3",
     "nprogress": "^0.2.0",
     "postcss": "^8.5.6",
     "prop-types": "catalog:",
