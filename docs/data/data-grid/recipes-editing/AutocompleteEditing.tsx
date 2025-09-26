@@ -5,48 +5,46 @@ import {
   GridRenderEditCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid';
-import Autocomplete, { AutocompleteChangeReason } from '@mui/material/Autocomplete';
+import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 const countries = [
-  'United States',
-  'Canada',
-  'Mexico',
-  'Brazil',
   'Argentina',
-  'United Kingdom',
+  'Australia',
+  'Austria',
+  'Belgium',
+  'Brazil',
+  'Canada',
+  'China',
+  'Egypt',
   'France',
   'Germany',
-  'Italy',
-  'Spain',
-  'Portugal',
-  'Netherlands',
-  'Belgium',
-  'Switzerland',
-  'Austria',
-  'Poland',
-  'Russia',
-  'China',
-  'Japan',
-  'South Korea',
   'India',
-  'Australia',
+  'Italy',
+  'Japan',
+  'Mexico',
+  'Netherlands',
   'New Zealand',
+  'Poland',
+  'Portugal',
+  'Russia',
   'South Africa',
-  'Egypt',
+  'South Korea',
+  'Spain',
+  'Switzerland',
+  'United Kingdom',
+  'United States',
 ];
 
 function AutocompleteEditCell(props: GridRenderEditCellParams) {
   const { id, field, value, error } = props;
   const apiRef = useGridApiContext();
 
-  const handleChange = React.useCallback(
-    async (
-      _: React.SyntheticEvent,
-      newValue: string,
-      reason: AutocompleteChangeReason,
-    ) => {
+  const handleChange: NonNullable<
+    AutocompleteProps<any, any, any, any>['onChange']
+  > = React.useCallback(
+    async (_: React.SyntheticEvent, newValue, reason) => {
       await apiRef.current.setEditCellValue({
         id,
         field,
@@ -54,6 +52,7 @@ function AutocompleteEditCell(props: GridRenderEditCellParams) {
       });
 
       if (reason !== 'clear') {
+        // stop editing mode for actions other than clearing the value
         apiRef.current.stopCellEditMode({ id, field });
       }
     },
@@ -117,7 +116,7 @@ function AutocompleteEditCell(props: GridRenderEditCellParams) {
   );
 }
 
-const initialRows = [
+const rows = [
   { id: 1, country: countries[0] },
   { id: 2, country: countries[1] },
   { id: 3, country: countries[2] },
@@ -125,29 +124,20 @@ const initialRows = [
   { id: 5, country: countries[4] },
 ];
 
+const columns: GridColDef[] = [
+  {
+    field: 'country',
+    headerName: 'Country',
+    width: 200,
+    editable: true,
+    renderEditCell: (params) => <AutocompleteEditCell {...params} />,
+  },
+];
+
 export default function AutocompleteEditing() {
-  const [rows, setRows] = React.useState(initialRows);
-
-  const columns: GridColDef[] = [
-    {
-      field: 'country',
-      headerName: 'Country',
-      width: 200,
-      editable: true,
-      renderEditCell: (params) => <AutocompleteEditCell {...params} />,
-    },
-  ];
-
-  const processRowUpdate = React.useCallback((newRow: any) => {
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === newRow.id ? newRow : row)),
-    );
-    return newRow;
-  }, []);
-
   return (
     <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} processRowUpdate={processRowUpdate} />
+      <DataGrid rows={rows} columns={columns} />
     </Box>
   );
 }

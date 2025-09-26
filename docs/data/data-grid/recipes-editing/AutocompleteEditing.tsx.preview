@@ -1,1 +1,1 @@
-<DataGrid rows={rows} columns={columns} processRowUpdate={processRowUpdate} />
+<DataGrid rows={rows} columns={columns} />
