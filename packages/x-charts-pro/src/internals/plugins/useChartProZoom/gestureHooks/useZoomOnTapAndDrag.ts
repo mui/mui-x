@@ -66,7 +66,7 @@ export const useZoomOnTapAndDrag = (
             return zoom;
           }
 
-          const isZoomIn = event.detail.deltaY < 0;
+          const isZoomIn = event.detail.deltaY > 0;
           const scaleRatio = 1 + event.detail.deltaY / 100;
 
           // If the delta is 0, we didn't move
