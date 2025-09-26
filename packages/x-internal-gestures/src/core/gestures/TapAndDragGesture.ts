@@ -237,6 +237,34 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     this.dragTimeout = options.dragTimeout ?? this.dragTimeout;
     this.dragThreshold = options.dragThreshold ?? this.dragThreshold;
     this.dragDirection = options.dragDirection || this.dragDirection;
+
+    this.element.dispatchEvent(
+      new CustomEvent(`${this.panGesture.name}ChangeOptions`, {
+        detail: {
+          minPointers: this.minPointers,
+          maxPointers: this.maxPointers,
+          threshold: this.dragThreshold,
+          direction: this.dragDirection,
+          pointerMode: this.pointerMode,
+          requiredKeys: this.requiredKeys,
+          preventIf: this.preventIf,
+          pointerOptions: structuredClone(this.pointerOptions),
+        },
+      }),
+    );
+
+    this.element.dispatchEvent(
+      new CustomEvent(`${this.tapGesture.name}ChangeOptions`, {
+        detail: {
+          maxDistance: this.tapMaxDistance,
+          maxPointers: this.maxPointers,
+          pointerMode: this.pointerMode,
+          requiredKeys: this.requiredKeys,
+          preventIf: this.preventIf,
+          pointerOptions: structuredClone(this.pointerOptions),
+        },
+      }),
+    );
   }
 
   protected resetState(): void {

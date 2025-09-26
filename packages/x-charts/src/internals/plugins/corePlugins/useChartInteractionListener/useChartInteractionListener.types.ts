@@ -77,6 +77,7 @@ export type UpdateZoomInteractionListeners = {
     interaction: 'zoomTurnWheel',
     options?: Omit<TurnWheelGestureOptions<'zoomTurnWheel'>, 'name'>,
   ): void;
+  (interaction: 'zoomTapAndDrag', options?: Partial<PanGestureOptions<'zoomTapAndDrag'>>): void;
 };
 
 export interface UseChartInteractionListenerParameters {}

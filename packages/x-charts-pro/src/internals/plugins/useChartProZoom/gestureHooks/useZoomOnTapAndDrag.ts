@@ -17,6 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const useZoomOnTapAndDrag = (
   {
@@ -28,12 +29,32 @@ export const useZoomOnTapAndDrag = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const config = useSelector(store, selectorZoomInteractionConfig, ['tapAndDrag' as const]);
 
-  // Zoom on pinch
+  const isZoomOnTapAndDragEnabled = React.useMemo(
+    () => (Object.keys(optionsLookup).length > 0 && config) || false,
+    [optionsLookup, config],
+  );
+
+  React.useEffect(() => {
+    if (!isZoomOnTapAndDragEnabled) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('zoomTapAndDrag', {
+      requiredKeys: config!.requiredKeys,
+      pointerMode: config!.pointerMode,
+      pointerOptions: {
+        mouse: config!.mouse,
+        touch: config!.touch,
+      },
+    });
+  }, [config, isZoomOnTapAndDragEnabled, instance]);
+
+  // Zoom on tap and drag
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null) {
+    if (element === null || !isZoomOnTapAndDragEnabled) {
       return () => {};
     }
 
@@ -79,5 +100,13 @@ export const useZoomOnTapAndDrag = (
       zoomHandler.cleanup();
       rafThrottledCallback.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, store, instance, setZoomDataCallback]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomOnTapAndDragEnabled,
+    optionsLookup,
+    store,
+    instance,
+    setZoomDataCallback,
+  ]);
 };
