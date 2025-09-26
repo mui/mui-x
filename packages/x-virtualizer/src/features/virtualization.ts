@@ -650,16 +650,20 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
   };
 
-  useFirstRender(() => {
-    store.state = {
-      ...store.state,
-      legacyAPI,
-    };
-  });
-  React.useEffect(() => {
-    store.update({ legacyAPI });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, Object.values(legacyAPI));
+  if (params.legacy) {
+    /* eslint-disable react-hooks/rules-of-hooks */
+    useFirstRender(() => {
+      store.state = {
+        ...store.state,
+        legacyAPI,
+      };
+    });
+    React.useEffect(() => {
+      store.update({ legacyAPI });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, Object.values(legacyAPI));
+    /* eslint-enable react-hooks/rules-of-hooks */
+  }
 
   /* Placeholder API functions for colspan & rowspan to re-implement */
 

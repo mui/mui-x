@@ -157,6 +157,8 @@ export function useGridVirtualizer(
   const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
 
   const virtualizer = useVirtualizer({
+    legacy: true,
+
     refs: {
       container: apiRef.current.mainElementRef,
       scroller: apiRef.current.virtualScrollerRef,

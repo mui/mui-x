@@ -33,6 +33,8 @@ export type VirtualScrollerCompat = Virtualization.State['legacyAPI'];
 export type BaseState = Virtualization.State & Dimensions.State;
 
 export type VirtualizerParams = {
+  legacy?: boolean;
+
   refs: {
     container: RefObject<HTMLDivElement | null>;
     scroller: RefObject<HTMLDivElement | null>;
