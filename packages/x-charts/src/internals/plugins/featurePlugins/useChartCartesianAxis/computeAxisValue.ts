@@ -18,14 +18,19 @@ import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '..
 import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
-import { getAxisExtremum } from './getAxisExtremum';
+import { getAxisExtrema } from './getAxisExtrema';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import { applyDomainLimit, getDomainLimit, ScaleDefinition } from './getAxisScale';
+import {
+  applyDomainLimit,
+  getActualAxisExtrema,
+  getDomainLimit,
+  ScaleDefinition,
+} from './getAxisScale';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 
 function getRange(
@@ -183,7 +188,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
     const filter = zoom === undefined && !zoomOption ? getFilters : undefined; // Do not apply filtering if zoom is already defined.
     if (filter) {
-      const [minData, maxData] = getAxisExtremum(
+      const [minData, maxData] = getAxisExtrema(
         axis,
         axisDirection,
         seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
@@ -202,7 +207,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
         preferStrictDomainInLineCharts,
       );
 
-      const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
+      const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
 
       if (typeof domainLimit === 'function') {
         const { min, max } = domainLimit(minData, maxData);

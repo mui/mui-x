@@ -1,6 +1,7 @@
 export * from './base';
 export * from './AppendKeys';
 export * from './DefaultizedProps';
+export * from './GridChartsIntegration';
 export * from './MakeOptional';
 export * from './MakeRequired';
 export * from './MuiEvent';

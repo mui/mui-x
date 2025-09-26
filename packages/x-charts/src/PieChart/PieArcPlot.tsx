@@ -108,6 +108,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           dataIndex={index}
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
+          isFocused={item.isFocused}
           onClick={
             onItemClick &&
             ((event) => {

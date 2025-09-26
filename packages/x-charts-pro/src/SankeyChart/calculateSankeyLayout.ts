@@ -36,7 +36,7 @@ export function calculateSankeyLayout(
   } = nodeOptions ?? {};
 
   const {
-    color: linkColor = (theme.vars || theme).palette.text.primary,
+    color: linkColor = 'source',
     sort: linkSort = null,
     curveCorrection = 10,
   } = linkOptions ?? {};
@@ -98,10 +98,18 @@ export function calculateSankeyLayout(
       return l.source === link.source.id && l.target === link.target.id;
     });
 
+    let resolvedColor = originalLink?.color ?? linkColor;
+
+    if (resolvedColor === 'source') {
+      resolvedColor = link.source.color ?? linkColor;
+    } else if (resolvedColor === 'target') {
+      resolvedColor = link.target.color ?? linkColor;
+    }
+
     return {
       ...originalLink,
       ...link,
-      color: originalLink?.color ?? linkColor,
+      color: resolvedColor,
       path: improvedNaiveSankeyLinkPathHorizontal(link, curveCorrection),
     };
   });

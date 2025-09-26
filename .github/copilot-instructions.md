@@ -2,12 +2,16 @@
 
 ## Testing
 
+We use [Vitest](https://vitest.dev/api/) as our test runner.
+We use [chai](https://www.chaijs.com/guide/styles/#expect) as our assertion library.
 There are two main types of test in this repository: unit tests and browser tests. Both use the same files.
 
 To run tests:
 
 - `browser tests`: `pnpm test:browser`
+  - Browser tests are enabled for any package that has a `vitest.config.browser.mts` in its root
 - `unit tests`: `pnpm test:unit`
+  - Unit tests are enabled for any package that has a `vitest.config.jsdom.mts` in its root
 
 The following options work in both environments:
 
@@ -30,8 +34,8 @@ We use multiple formatters and scripts to ensure the code is consistent. Some of
 
 To format the code, run:
 
-- `pnpm prettier:all` should always be run
-- `pnpm eslint` should always be run
+- `pnpm prettier` should be run if you want to format the code using prettier
+- `pnpm eslint` should be run to get more info on linting errors
 - `pnpm proptypes` should be run when editing React components
 - `pnpm docs:api` should be run when editing React components or TypeScript types/interfaces
 - `pnpm docs:typescript:formatted` should be run when creating or editing the docs examples using typescript

@@ -31,7 +31,7 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
+import { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterChartPluginSignatures } from './ScatterChart.plugins';
 
 export interface ScatterChartSlots
@@ -115,7 +115,9 @@ export interface ScatterChartProps
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
-  onItemClick?: ScatterPlotProps['onItemClick'] | UseChartVoronoiSignature['params']['onItemClick'];
+  onItemClick?:
+    | ScatterPlotProps['onItemClick']
+    | UseChartClosestPointSignature['params']['onItemClick'];
 }
 
 /**
@@ -214,6 +216,7 @@ ScatterChart.propTypes = {
    * @default false
    */
   disableVoronoi: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */

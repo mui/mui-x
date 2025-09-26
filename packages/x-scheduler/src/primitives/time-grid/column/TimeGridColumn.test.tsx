@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { TimeGrid } from '@mui/x-scheduler/primitives/time-grid';
+import { EventCalendarProvider } from '@mui/x-scheduler/primitives/event-calendar-provider';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
 describe('<TimeGrid.Column />', () => {
@@ -13,7 +14,11 @@ describe('<TimeGrid.Column />', () => {
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {
-        return render(<TimeGrid.Root>{node}</TimeGrid.Root>);
+        return render(
+          <EventCalendarProvider events={[]}>
+            <TimeGrid.Root>{node}</TimeGrid.Root>
+          </EventCalendarProvider>,
+        );
       },
     }),
   );

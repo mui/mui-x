@@ -10,7 +10,7 @@ import {
   DefaultedXAxis,
   DefaultedAxis,
   CartesianChartSeriesType,
-  getAxisExtremum,
+  getAxisExtrema,
   isBandScaleConfig,
   getScale,
   getColorScale,
@@ -112,7 +112,7 @@ export function computeAxisValue({
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
     let range = getRange(drawingArea, axisDirection, axis);
 
-    const [minData, maxData] = getAxisExtremum(
+    const [minData, maxData] = getAxisExtrema(
       axis,
       axisDirection,
       seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,

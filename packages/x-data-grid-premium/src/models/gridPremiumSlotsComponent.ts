@@ -15,6 +15,12 @@ export interface GridPremiumSlotsComponent
    */
   aiAssistantPanel: React.JSXElementConstructor<any> | null;
   /**
+   * Component rendered when charts panel is open. Only needed when `chartsIntegration` prop is passed to the grid.
+   * Pass `GridChartsPanel` to render the default charts panel.
+   * @default null
+   */
+  chartsPanel: React.JSXElementConstructor<any> | null;
+  /**
    * Component rendered when pivot mode is enabled but no rows are defined.
    * @default GridEmptyPivotOverlay
    */

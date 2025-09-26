@@ -102,7 +102,8 @@
   "imports": [
     "import { ChartContainer } from '@mui/x-charts/ChartContainer';",
     "import { ChartContainer } from '@mui/x-charts';",
-    "import { ChartContainer } from '@mui/x-charts-pro';"
+    "import { ChartContainer } from '@mui/x-charts-pro';",
+    "import { ChartContainer } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "spread": true,
@@ -111,6 +112,6 @@
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/ChartContainer/ChartContainer.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li>\n<li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li>\n<li><a href=\"/x/react-charts/localization/\">Charts - Localization</a></li>\n<li><a href=\"/x/react-charts/plugins/\">Charts - Plugins</a></li></ul>",
   "cssComponent": false
 }
