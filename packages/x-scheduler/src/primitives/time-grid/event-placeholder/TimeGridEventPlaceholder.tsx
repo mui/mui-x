@@ -42,12 +42,12 @@ export const TimeGridEventPlaceholder = React.forwardRef(function TimeGridEventP
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const { state, props: eventProps } = useEvent({ start, end });
+  const { state } = useEvent({ start, end });
 
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef],
-    props: [props, eventProps, elementProps],
+    props: [props, elementProps],
   });
 });
 

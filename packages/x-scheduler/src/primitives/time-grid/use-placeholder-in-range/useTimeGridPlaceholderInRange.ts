@@ -20,7 +20,7 @@ export function useTimeGridPlaceholderInRange(
   const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
 
   return React.useMemo(() => {
-    if (!originalEvent || !rawPlaceholder) {
+    if (!rawPlaceholder) {
       return null;
     }
 
@@ -31,6 +31,18 @@ export function useTimeGridPlaceholderInRange(
       lastIndex: maxIndex,
     };
 
+    // Creation mode
+    if (!originalEvent) {
+      return {
+        id: `placeholder-${rawPlaceholder.occurrenceKey}`,
+        key: `placeholder-${rawPlaceholder.occurrenceKey}`,
+        title: '',
+        start: rawPlaceholder.start,
+        end: rawPlaceholder.end,
+        position,
+      };
+    }
+
     return {
       ...originalEvent,
       key: `placeholder-${rawPlaceholder.occurrenceKey}`,
@@ -38,7 +50,7 @@ export function useTimeGridPlaceholderInRange(
       end: rawPlaceholder.end,
       position,
     };
-  }, [originalEvent, rawPlaceholder, occurrences, maxIndex]);
+  }, [rawPlaceholder, occurrences, maxIndex, originalEvent]);
 }
 
 export namespace useTimeGridPlaceholderInRange {
