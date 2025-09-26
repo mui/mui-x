@@ -139,11 +139,12 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI Assistant.
    - Provide access to the row data with `allowAiAssistantDataSampling` prop – since this uses real data, it may lead to better processing results.
 
-6. Provide `userId` reference to be able track spend and limit the users.
-   The MUI Service support `metadata` property where you could store the user identification reference of your customers to easily track and manage usage.
+6. Optionally, provide `referenceId` in the metadata to track spending and set limits for each entity sharing your API key.
+   The MUI Service supports `metadata` property through which you can send the reference that will be stored with the request.
+   Later, use that reference in the request history analysis.
 
    ::warning
-   The `metadata` object would store only `userId` property. If you interested in storing more data, please [contact our support team](mailto:support@mui.com).
+   The `metadata` object would store only `referenceId` property. If you are interested in storing more data, please [contact our support team](mailto:support@mui.com).
    ::
 
    ```ts
