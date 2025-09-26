@@ -145,6 +145,7 @@
       "description": "Change the selection state of all the selectable rows in a range."
     },
     "selectRows": { "description": "Change the selection state of multiple rows." },
+    "setActiveChartId": { "description": "Sets the active chart id." },
     "setAggregationModel": {
       "description": "Sets the aggregation model to the one given by <code>model</code>."
     },
@@ -154,6 +155,11 @@
     "setCellSelectionModel": {
       "description": "Updates the cell selection model according to the value passed to the <code>newModel</code> argument.<br />Any cell already selected will be unselected."
     },
+    "setChartsPanelOpen": { "description": "Sets whether the charts side panel is open." },
+    "setChartSynchronizationState": {
+      "description": "Sets the synchronization state for a chart."
+    },
+    "setChartType": { "description": "Sets the chart type for the active chart." },
     "setColumnHeaderFilterFocus": {
       "description": "Sets the focus to the column header filter at the given <code>field</code>."
     },
@@ -254,6 +260,12 @@
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },
     "unstable_setVirtualization": { "description": "Enable/disable virtualization." },
+    "updateChartDimensionsData": {
+      "description": "Updates the dimensions data selection for the charts integration."
+    },
+    "updateChartValuesData": {
+      "description": "Updates the values data selection for the charts integration."
+    },
     "updateColumns": {
       "description": "Updates the definition of multiple columns at the same time."
     },

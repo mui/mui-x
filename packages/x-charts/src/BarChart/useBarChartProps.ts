@@ -13,7 +13,7 @@ import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
-import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
+import { BAR_CHART_PLUGINS, BarChartPluginSignatures } from './BarChart.plugins';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -119,7 +119,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       : yAxis;
   }, [defaultYAxis, hasHorizontalSeries, yAxis]);
 
-  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
+  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,

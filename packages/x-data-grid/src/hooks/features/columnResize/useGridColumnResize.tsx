@@ -92,7 +92,7 @@ function computeNewWidth(
   } else {
     newWidth += columnBounds.right - clickX;
   }
-  return newWidth;
+  return Math.round(newWidth);
 }
 
 function computeOffsetToSeparator(
@@ -852,5 +852,5 @@ function updateProperty(
   if (!element) {
     return;
   }
-  element.style[property] = `${parseInt(element.style[property], 10) + delta}px`;
+  element.style[property] = `${Math.round(parseFloat(element.style[property])) + delta}px`;
 }

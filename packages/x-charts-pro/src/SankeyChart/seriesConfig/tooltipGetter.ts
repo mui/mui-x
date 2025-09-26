@@ -1,7 +1,7 @@
 import type { TooltipGetter } from '@mui/x-charts/internals';
 
 export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
-  const { identifier } = params;
+  const { identifier, series } = params;
   if (!identifier) {
     return null;
   }
@@ -16,7 +16,11 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
       color: node.color,
       label: `${node.label}:`,
       value: node.value,
-      formattedValue: `${node.value}`,
+      formattedValue: series.valueFormatter(node.value, {
+        type: 'node',
+        nodeId: node.id,
+        location: 'tooltip',
+      }),
       markType: 'square' as const,
     };
   }
@@ -36,7 +40,12 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
       color: link.color,
       label: `${sourceLabel} → ${targetLabel}:`,
       value: link.value,
-      formattedValue: `${link.value}`,
+      formattedValue: series.valueFormatter(link.value, {
+        type: 'link',
+        sourceId: link.source.id,
+        targetId: link.target.id,
+        location: 'tooltip',
+      }),
       markType: 'line' as const,
     };
   }
