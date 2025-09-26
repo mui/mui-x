@@ -51,6 +51,6 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@653fdc30e6c40ffd9739e40c8a0576f4f4523ca1
         with:
-          mode: walltime
+          mode: instrumentation
           run: pnpm --filter @mui-x-internal/performance-charts test:performance
           token: ${{ secrets.CODSPEED_TOKEN }}
