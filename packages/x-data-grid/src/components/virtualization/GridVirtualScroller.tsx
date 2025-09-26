@@ -100,6 +100,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     getContainerProps,
     getScrollerProps,
     getContentProps,
+    getRenderZoneProps,
     getScrollbarVerticalProps,
     getScrollbarHorizontalProps,
     getRows,
@@ -123,7 +124,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         {getOverlay()}
 
         <Content {...getContentProps()}>
-          <RenderZone role="rowgroup">
+          <RenderZone role="rowgroup" {...getRenderZoneProps()}>
             {rows}
             {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
           </RenderZone>

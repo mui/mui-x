@@ -514,7 +514,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     [needsHorizontalScrollbar, autoHeight],
   );
 
-  const contentSize = React.useMemo(() => {
+  const contentStyle = React.useMemo(() => {
     const size: React.CSSProperties = {
       width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
       flexBasis: contentHeight,
@@ -527,6 +527,15 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
     return size;
   }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
+
+  const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
+  const renderZoneStyle = React.useMemo(
+    () =>
+      ({
+        transform: `translate3d(0, ${offsetTop}px, 0)`,
+      }) as React.CSSProperties,
+    [offsetTop],
+  );
 
   const scrollRestoreCallback = React.useRef<Function | null>(null);
   const contentNodeRef = React.useCallback(
@@ -634,8 +643,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
     getContentProps: () => ({
       ref: contentNodeRef,
-      style: contentSize,
+      style: contentStyle,
       role: 'presentation',
+    }),
+    getRenderZoneProps: () => ({
+      style: renderZoneStyle,
     }),
     getScrollbarVerticalProps: () => ({
       ref: refSetter('scrollbarVertical'),
