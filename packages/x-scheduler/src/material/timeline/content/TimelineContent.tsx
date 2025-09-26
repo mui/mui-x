@@ -26,6 +26,12 @@ const getEndBoundaries = (adapter: Adapter, view: TimelineView, start: Scheduler
 
   return endBoundaries[view];
 };
+const getStartDate = (adapter: Adapter, view: TimelineView, start: SchedulerValidDate) => {
+  if (view === 'weeks') {
+    return adapter.startOfWeek(start);
+  }
+  return start;
+};
 
 type UnitType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
 
@@ -49,7 +55,10 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   const visibleDate = useStore(store, selectors.visibleDate);
   const view = useStore(store, selectors.view);
 
-  const start = visibleDate;
+  const start = React.useMemo(
+    () => getStartDate(adapter, view, visibleDate),
+    [adapter, view, visibleDate],
+  );
   const end = React.useMemo(() => getEndBoundaries(adapter, view, start), [adapter, view, start]);
 
   const resourcesWithOccurrences = useEventOccurrencesGroupedByResource({
