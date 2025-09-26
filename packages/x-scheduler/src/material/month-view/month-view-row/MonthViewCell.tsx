@@ -2,88 +2,97 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
-import {
-  CalendarEvent,
-  CalendarEventOccurrenceWithPosition,
-  SchedulerValidDate,
-} from '../../../primitives/models';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
-import { useEventCalendarContext } from '../../internals/hooks/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
+import { isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
-import { getEventWithLargestRowIndex } from '../../../primitives/utils/event-utils';
+import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
+import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopoverContext';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { day, events, allDayEvents, maxEvents, dayIndexInRow, rowLength } = props;
+  const { day, row, maxEvents } = props;
   const adapter = useAdapter();
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const placeholder = DayGrid.usePlaceholderInDay(day);
+  const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
+  const isCreation = useStore(store, selectors.isCreatingNewEventInDayGridCell, day.value);
 
-  const isCurrentMonth = adapter.isSameMonth(day, visibleDate);
-  const isFirstDayOfMonth = adapter.isSameDay(day, adapter.startOfMonth(day));
-  const isToday = React.useMemo(() => adapter.isSameDay(day, adapter.date()), [adapter, day]);
+  const cellRef = React.useRef<HTMLDivElement | null>(null);
+  const handleRef = useMergedRefs(ref, cellRef);
 
-  const draggedEvent = React.useMemo(() => {
-    if (!initialDraggedEvent || !placeholder) {
-      return null;
-    }
+  const { startEditing } = useEventPopoverContext();
 
-    return { ...initialDraggedEvent, start: placeholder.start, end: placeholder.end };
-  }, [initialDraggedEvent, placeholder]);
+  const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
+  const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
+  const isToday = React.useMemo(() => adapter.isSameDay(day.value, adapter.date()), [adapter, day]);
 
-  const visibleAllDayEvents = allDayEvents.slice(0, maxEvents);
-  const visibleEvents = events.slice(0, maxEvents - visibleAllDayEvents.length);
-  const hiddenCount = events.length + allDayEvents.length - maxEvents;
-
-  const rowCount =
-    1 +
-    getEventWithLargestRowIndex(allDayEvents) +
-    visibleEvents.length +
-    (hiddenCount > 0 ? 1 : 0);
+  const visibleOccurrences =
+    day.withPosition.length > maxEvents
+      ? day.withPosition.slice(0, maxEvents - 1)
+      : day.withPosition;
+  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
   const cellNumberContent = (
     <span className="MonthViewCellNumber">
       {isFirstDayOfMonth
-        ? adapter.formatByString(day, adapter.formats.shortDate)
-        : adapter.formatByString(day, adapter.formats.dayOfMonth)}
+        ? adapter.formatByString(day.value, adapter.formats.shortDate)
+        : adapter.formatByString(day.value, adapter.formats.dayOfMonth)}
     </span>
   );
 
+  // Day number header + max events
+  const rowCount = 1 + maxEvents;
+
+  const handleDoubleClick = () => {
+    store.setOccurrencePlaceholder({
+      eventId: null,
+      occurrenceKey: 'create-placeholder',
+      surfaceType: 'day-grid',
+      start: adapter.startOfDay(day.value),
+      end: adapter.endOfDay(day.value),
+      originalStart: null,
+      lockSurfaceType: true,
+    });
+  };
+
+  React.useEffect(() => {
+    if (!isCreation || !placeholder || !cellRef.current) {
+      return;
+    }
+    startEditing(cellRef.current, placeholder);
+  }, [isCreation, placeholder, startEditing]);
+
   return (
     <DayGrid.Cell
-      ref={ref}
-      key={day.toString()}
-      value={day}
+      ref={handleRef}
+      key={day.key}
+      value={day.value}
       data-current={isToday ? '' : undefined}
       className={clsx(
         'MonthViewCell',
         !isCurrentMonth && 'OtherMonth',
         isToday && 'Today',
-        isWeekend(adapter, day) && 'Weekend',
+        isWeekend(adapter, day.value) && 'Weekend',
       )}
-      style={
-        {
-          '--row-count': rowCount,
-        } as React.CSSProperties
-      }
+      style={{ '--row-count': rowCount } as React.CSSProperties}
+      onDoubleClick={handleDoubleClick}
     >
       {hasDayView ? (
         <button
           type="button"
           className="MonthViewCellNumberButton"
-          onClick={(event) => instance.switchToDay(day, event)}
+          onClick={(event) => store.switchToDay(day.value, event)}
           tabIndex={0}
         >
           {cellNumberContent}
@@ -92,60 +101,41 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         cellNumberContent
       )}
       <div className="MonthViewCellEvents">
-        {visibleAllDayEvents.map((event) => {
-          const durationInDays = diffIn(adapter, event.end, day, 'days') + 1;
-          const gridColumnSpan = Math.min(durationInDays, rowLength - dayIndexInRow); // Don't exceed available columns
-          const shouldRenderEvent = adapter.isSameDay(event.start, day) || dayIndexInRow === 0;
+        {visibleOccurrences.map((occurrence) => {
+          if (occurrence.position.isInvisible) {
+            return (
+              <DayGridEvent
+                key={occurrence.key}
+                occurrence={occurrence}
+                variant="invisible"
+                ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
+              />
+            );
+          }
 
-          return shouldRenderEvent ? (
+          return (
             <EventPopoverTrigger
-              key={`${event.id}-${day.toString()}`}
-              event={event}
+              key={occurrence.key}
+              occurrence={occurrence}
               render={
                 <DayGridEvent
-                  event={event}
-                  variant="allDay"
-                  ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-                  gridRow={event.eventRowIndex}
-                  columnSpan={gridColumnSpan}
+                  occurrence={occurrence}
+                  variant={occurrence.allDay ? 'allDay' : 'compact'}
+                  ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
                 />
               }
             />
-          ) : (
-            <DayGridEvent
-              key={`invisible-${event.id}-${day.toString()}`}
-              event={event}
-              variant="invisible"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-              aria-hidden="true"
-              gridRow={event.eventRowIndex}
-            />
           );
         })}
-        {visibleEvents.map((event) => (
-          <EventPopoverTrigger
-            key={event.id}
-            event={event}
-            render={
-              <DayGridEvent
-                event={event}
-                variant="compact"
-                ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-              />
-            }
-          />
-        ))}
-        {hiddenCount > 0 && events.length > 0 && (
+        {hiddenCount > 0 && (
           <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
         )}
-        {draggedEvent != null && (
-          <div className="MonthViewDraggedEventContainer">
+        {placeholder != null && (
+          <div className="MonthViewPlaceholderEventContainer">
             <DayGridEvent
-              event={draggedEvent}
-              variant="dragPlaceholder"
-              ariaLabelledBy={`MonthViewHeaderCell-${day.toString()}`}
-              gridRow={1} // TODO: Fix
-              columnSpan={diffIn(adapter, draggedEvent.end, day, 'days') + 1}
+              occurrence={placeholder}
+              variant="placeholder"
+              ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
             />
           </div>
         )}
@@ -155,10 +145,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 });
 
 interface MonthViewCellProps {
-  day: SchedulerValidDate;
-  events: CalendarEvent[];
-  allDayEvents: CalendarEventOccurrenceWithPosition[];
+  day: useEventOccurrencesWithDayGridPosition.DayData;
+  row: useEventOccurrencesWithDayGridPosition.ReturnValue;
   maxEvents: number;
-  dayIndexInRow: number;
-  rowLength: number;
 }

@@ -7,7 +7,10 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { usUnemploymentRate } from '../dataset/usUnemploymentRate';
+import {
+  dateAxisFormatter,
+  usUnemploymentRate,
+} from '../dataset/usUnemploymentRate';
 import { globalGdpPerCapita } from '../dataset/globalGdpPerCapita';
 import { globalBirthPerWoman } from '../dataset/globalBirthsPerWoman';
 import {
@@ -36,17 +39,7 @@ const lineXAxis = {
   scaleType: 'time',
   id: 'x',
   data: usUnemploymentRate.map((d) => d.date),
-  valueFormatter: (v, context) =>
-    v.toLocaleDateString(undefined, {
-      month:
-        // eslint-disable-next-line no-nested-ternary
-        context.location === 'tick'
-          ? undefined
-          : context.location === 'tooltip'
-            ? 'long'
-            : 'short',
-      year: 'numeric',
-    }),
+  valueFormatter: dateAxisFormatter,
 };
 
 const lineSettings = {

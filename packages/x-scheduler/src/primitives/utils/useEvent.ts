@@ -33,9 +33,7 @@ export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue 
     });
   });
 
-  const props = React.useMemo(() => ({}), []);
-
-  return { state, props };
+  return { state };
 }
 
 export namespace useEvent {
@@ -52,7 +50,6 @@ export namespace useEvent {
 
   export interface ReturnValue {
     state: State;
-    props: React.HTMLAttributes<HTMLDivElement>;
   }
 
   export interface State {

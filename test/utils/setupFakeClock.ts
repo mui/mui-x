@@ -7,7 +7,7 @@ declare global {
 }
 
 // Use a "real timestamp" so that we see a useful date instead of "00:00"
-const DEFAULT_TIMESTAMP = 'Mon Aug 18 14:11:54 2014 -0500';
+const DEFAULT_TIMESTAMP = '2014-08-18T14:11:54-05:00';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let fakeClock: ReturnType<typeof useFakeTimers> | undefined;

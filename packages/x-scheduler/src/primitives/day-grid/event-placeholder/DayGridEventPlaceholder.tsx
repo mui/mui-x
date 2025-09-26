@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 
+const EVENT_PLACEHOLDER_PROPS = { style: { pointerEvents: 'none' as const } };
+
 export const DayGridEventPlaceholder = React.forwardRef(function DayGridEventPlaceholder(
   componentProps: DayGridEventPlaceholder.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -15,11 +17,9 @@ export const DayGridEventPlaceholder = React.forwardRef(function DayGridEventPla
     ...elementProps
   } = componentProps;
 
-  const ref = React.useRef<HTMLDivElement>(null);
-
   return useRenderElement('div', componentProps, {
-    ref: [forwardedRef, ref],
-    props: [elementProps],
+    ref: [forwardedRef],
+    props: [elementProps, EVENT_PLACEHOLDER_PROPS],
   });
 });
 

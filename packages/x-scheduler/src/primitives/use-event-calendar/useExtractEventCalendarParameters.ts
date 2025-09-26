@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventCalendarParameters } from './useEventCalendar.types';
+import { EventCalendarParameters } from './EventCalendarStore.types';
 
 export function useExtractEventCalendarParameters<P extends EventCalendarParameters>(
   props: P,
