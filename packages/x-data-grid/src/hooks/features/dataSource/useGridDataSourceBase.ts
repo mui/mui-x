@@ -85,6 +85,13 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
     async (parentId, params) => {
+      // Avoid breaking the flow if a pre-populated cache is provided on initialization (i.e. when strategy = "none")
+      // Context: https://github.com/mui/mui-x/issues/19650
+      const currentStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
+      if (currentStrategy !== DataSourceRowsUpdateStrategy.Default) {
+        return;
+      }
+
       const getRows = props.dataSource?.getRows;
       if (!getRows) {
         return;
