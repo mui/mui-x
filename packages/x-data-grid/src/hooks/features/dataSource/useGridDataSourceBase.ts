@@ -8,7 +8,7 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
-import { GridStrategyGroup } from '../../core/strategyProcessing';
+import { GRID_DEFAULT_STRATEGY, GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridPaginationModelSelector } from '../pagination/gridPaginationSelector';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
@@ -85,10 +85,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
     async (parentId, params) => {
-      // Avoid breaking the flow if a pre-populated cache is provided on initialization (i.e. when strategy = "none")
+      // Return early if the proper strategy isn't set yet
       // Context: https://github.com/mui/mui-x/issues/19650
       const currentStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
-      if (currentStrategy !== DataSourceRowsUpdateStrategy.Default) {
+      if (currentStrategy === GRID_DEFAULT_STRATEGY) {
         return;
       }
 
