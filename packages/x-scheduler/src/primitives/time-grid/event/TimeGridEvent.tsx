@@ -70,7 +70,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const { state: eventState, props: eventProps } = useEvent({ start, end });
+  const { state: eventState } = useEvent({ start, end });
 
   const state: TimeGridEvent.State = React.useMemo(
     () => ({ ...eventState, dragging: isDragging, resizing: isResizing }),
@@ -134,7 +134,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef, ref],
-    props: [props, eventProps, elementProps, getButtonProps],
+    props: [props, elementProps, getButtonProps],
   });
 
   return (

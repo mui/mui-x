@@ -209,13 +209,16 @@
 .DayTimeGridColumn {
   display: flex;
   flex-direction: column;
-  position: relative;
-  flex: 1;
 }
 
 .DayTimeGridColumn[data-weekend],
 .DayTimeGridAllDayEventsCell[data-weekend] {
   background: var(--weekend-background);
+}
+
+.DayTimeGridColumnInteractiveLayer {
+  position: relative;
+  flex: 1;
 }
 
 .DayTimeGridCurrentTimeIndicator {
