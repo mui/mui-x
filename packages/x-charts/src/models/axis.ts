@@ -9,6 +9,7 @@ import type {
   ScaleThreshold,
   ScaleTime,
   ScaleSymLog,
+  NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
@@ -441,12 +442,12 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * The minimal value of the domain.
    * If not provided, it gets computed to display the entire chart data.
    */
-  min?: number | Date;
+  min?: NumberValue;
   /**
    * The maximal value of the domain.
    * If not provided, it gets computed to display the entire chart data.
    */
-  max?: number | Date;
+  max?: NumberValue;
   /**
    * The data used by `'band'` and `'point'` scales.
    */
@@ -479,7 +480,10 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * - 'strict': Set the domain to the min/max value provided. No extra space is added.
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
-  domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+  domainLimit?:
+    | 'nice'
+    | 'strict'
+    | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
