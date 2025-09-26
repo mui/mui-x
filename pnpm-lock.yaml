@@ -55,8 +55,8 @@ catalogs:
       specifier: ^1.55.0
       version: 1.55.0
     '@react-spring/web':
-      specifier: ^10.0.2
-      version: 10.0.2
+      specifier: ^10.0.3
+      version: 10.0.3
     '@types/chance':
       specifier: ^1.1.7
       version: 1.1.7
@@ -193,8 +193,8 @@ catalogs:
       specifier: 19.1.1
       version: 19.1.1
     react-router:
-      specifier: ^7.7.1
-      version: 7.7.1
+      specifier: ^7.9.1
+      version: 7.9.2
     react-transition-group:
       specifier: ^4.4.5
       version: 4.4.5
@@ -643,7 +643,7 @@ importers:
         version: link:../packages/x-tree-view-pro/build
       '@react-spring/web':
         specifier: 'catalog:'
-        version: 10.0.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 10.0.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@tanstack/query-core':
         specifier: ^5.90.1
         version: 5.90.2
@@ -760,7 +760,7 @@ importers:
         version: 7.62.0(react@19.1.1)
       react-router:
         specifier: 'catalog:'
-        version: 7.7.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-runner:
         specifier: ^1.0.5
         version: 1.0.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -1701,8 +1701,8 @@ importers:
         specifier: 'catalog:'
         version: 2.1.1
       lucide-react:
-        specifier: ^0.542.0
-        version: 0.542.0(react@19.1.1)
+        specifier: ^0.544.0
+        version: 0.544.0(react@19.1.1)
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
@@ -1982,7 +1982,7 @@ importers:
         version: 1.55.0
       '@react-spring/web':
         specifier: 'catalog:'
-        version: 10.0.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 10.0.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
@@ -2024,7 +2024,7 @@ importers:
         version: 19.1.1(react@19.1.1)
       react-router:
         specifier: 'catalog:'
-        version: 7.7.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -2142,7 +2142,7 @@ importers:
         version: 19.1.1(react@19.1.1)
       react-router:
         specifier: 'catalog:'
-        version: 7.7.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -2274,7 +2274,7 @@ importers:
         version: 19.1.1(react@19.1.1)
       react-router:
         specifier: 'catalog:'
-        version: 7.7.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-transition-group:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -3251,8 +3251,8 @@ packages:
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
     engines: {node: '>=0.1.90'}
 
-  '@csstools/color-helpers@5.0.2':
-    resolution: {integrity: sha512-JqWH1vsgdGcw2RR6VliXXdA0/59LttzlU8UlRT/iUUsEeWfYq8I+K0yhihEUTTHLRm1EXvpsCx3083EU15ecsA==}
+  '@csstools/color-helpers@5.1.0':
+    resolution: {integrity: sha512-S11EXWJyy0Mz5SYvRmY8nJYTFFd1LCNV+7cXyAgQtOOuzb4EsgfqDufL+9esx72/eLhsRdGZwaldu/h+E4t4BA==}
     engines: {node: '>=18'}
 
   '@csstools/css-calc@2.1.4':
@@ -3262,8 +3262,8 @@ packages:
       '@csstools/css-parser-algorithms': ^3.0.5
       '@csstools/css-tokenizer': ^3.0.4
 
-  '@csstools/css-color-parser@3.0.10':
-    resolution: {integrity: sha512-TiJ5Ajr6WRd1r8HSiwJvZBiJOqtH86aHpUjq5aEKWHiII2Qfjqd/HCWKPOW8EP4vcspXbHnXrwIDlu5savQipg==}
+  '@csstools/css-color-parser@3.1.0':
+    resolution: {integrity: sha512-nbtKwh3a6xNVIp/VRuXV64yTKnb1IjTAEEh3irzS+HkKjAOYLTGNb9pmVNntZ8iVBHcWDA2Dof0QtPgFI1BaTA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@csstools/css-parser-algorithms': ^3.0.5
@@ -4953,29 +4953,29 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@react-spring/animated@10.0.2':
-    resolution: {integrity: sha512-GaVMfinZ6/Aid1v44ESf45H5jOj7cVbDuNVDDkvsVJAPRLgPl8+q8IJsmZGl77+cHpC/nw2X+4B9fOtil+LIOQ==}
+  '@react-spring/animated@10.0.3':
+    resolution: {integrity: sha512-7MrxADV3vaUADn2V9iYhaIL6iOWRx9nCJjYrsk2AHD2kwPr6fg7Pt0v+deX5RnCDmCKNnD6W5fasiyM8D+wzJQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@react-spring/core@10.0.2':
-    resolution: {integrity: sha512-GTV2I3cHlE1nGqInn2vWHdMD8Wrszlmfq+G5UYrF8TRK/pWu+oMJE+7SI6NbYuCvLPLY9F2cmCiZsKqBSTXXbQ==}
+  '@react-spring/core@10.0.3':
+    resolution: {integrity: sha512-D4DwNO68oohDf/0HG2G0Uragzb9IA1oXblxrd6MZAcBcUQG2EHUWXewjdECMPLNmQvlYVyyBRH6gPxXM5DX7DQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@react-spring/rafz@10.0.2':
-    resolution: {integrity: sha512-UaLbq3sE80YqBx5/g3PKE6zQ4R24/UGg/jjXbxhSyt4w+O52m3sj3xZxSru6dkXyC2QciXO1pg8sGWqpn8foUg==}
+  '@react-spring/rafz@10.0.3':
+    resolution: {integrity: sha512-Ri2/xqt8OnQ2iFKkxKMSF4Nqv0LSWnxXT4jXFzBDsHgeeH/cHxTLupAWUwmV9hAGgmEhBmh5aONtj3J6R/18wg==}
 
-  '@react-spring/shared@10.0.2':
-    resolution: {integrity: sha512-fG8UTo7iTx8+pbMIp41rrAYtBxJ56qqcNs6Sqy4meogbSfPlk5kJSSeKAvF02regPpgzi9rWZA+dR3HL240ilw==}
+  '@react-spring/shared@10.0.3':
+    resolution: {integrity: sha512-geCal66nrkaQzUVhPkGomylo+Jpd5VPK8tPMEDevQEfNSWAQP15swHm+MCRG4wVQrQlTi9lOzKzpRoTL3CA84Q==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@react-spring/types@10.0.2':
-    resolution: {integrity: sha512-BCJyfNrR0CVsyquRjEXvMFCa+jwFMC+qpdRvT8TNepD+JWB+8lsgbDKrrUbbhexUQhy5pTmk2wHTteYpLPEnig==}
+  '@react-spring/types@10.0.3':
+    resolution: {integrity: sha512-H5Ixkd2OuSIgHtxuHLTt7aJYfhMXKXT/rK32HPD/kSrOB6q6ooeiWAXkBy7L8F3ZxdkBb9ini9zP9UwnEFzWgQ==}
 
-  '@react-spring/web@10.0.2':
-    resolution: {integrity: sha512-94Gb91dWdua217UskhLYrX61HEn8Tm0xvlIfDiG7HIxXLHcu6sqVfmX2pp2C/n6MxCsWpYcVejVih1PJ2/y4HQ==}
+  '@react-spring/web@10.0.3':
+    resolution: {integrity: sha512-ndU+kWY81rHsT7gTFtCJ6mrVhaJ6grFmgTnENipzmKqot4HGf5smPNK+cZZJqoGeDsj9ZsiWPW4geT/NyD484A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -9346,8 +9346,8 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  lucide-react@0.542.0:
-    resolution: {integrity: sha512-w3hD8/SQB7+lzU2r4VdFyzzOzKnUjTZIF/MQJGSSvni7Llewni4vuViRppfRAa2guOsY5k4jZyxw/i9DQHv+dw==}
+  lucide-react@0.544.0:
+    resolution: {integrity: sha512-t5tS44bqd825zAW45UQxpG2CvcC4urOwn2TrwSH8u+MjeE+1NnWl6QqeQ/6NdjMqdOygyiT9p3Ev0p1NJykxjw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -10593,8 +10593,8 @@ packages:
     resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
     engines: {node: '>=0.10.0'}
 
-  react-router@7.7.1:
-    resolution: {integrity: sha512-jVKHXoWRIsD/qS6lvGveckwb862EekvapdHJN/cGmzw40KnJH5gg53ujOJ4qX6EKIK9LSBfFed/xiQ5yeXNrUA==}
+  react-router@7.9.2:
+    resolution: {integrity: sha512-i2TPp4dgaqrOqiRGLZmqh2WXmbdFknUyiCRmSKs0hf6fWXkTKg5h56b+9F22NbGRAMxjYfqQnpi63egzD2SuZA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
@@ -12431,7 +12431,7 @@ snapshots:
   '@asamuzakjp/css-color@3.2.0':
     dependencies:
       '@csstools/css-calc': 2.1.4(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
-      '@csstools/css-color-parser': 3.0.10(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
+      '@csstools/css-color-parser': 3.1.0(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 10.4.3
@@ -13856,16 +13856,16 @@ snapshots:
 
   '@colors/colors@1.6.0': {}
 
-  '@csstools/color-helpers@5.0.2': {}
+  '@csstools/color-helpers@5.1.0': {}
 
   '@csstools/css-calc@2.1.4(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)':
     dependencies:
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
 
-  '@csstools/css-color-parser@3.0.10(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)':
+  '@csstools/css-color-parser@3.1.0(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)':
     dependencies:
-      '@csstools/color-helpers': 5.0.2
+      '@csstools/color-helpers': 5.1.0
       '@csstools/css-calc': 2.1.4(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
@@ -15672,35 +15672,35 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@react-spring/animated@10.0.2(react@19.1.1)':
+  '@react-spring/animated@10.0.3(react@19.1.1)':
     dependencies:
-      '@react-spring/shared': 10.0.2(react@19.1.1)
-      '@react-spring/types': 10.0.2
+      '@react-spring/shared': 10.0.3(react@19.1.1)
+      '@react-spring/types': 10.0.3
       react: 19.1.1
 
-  '@react-spring/core@10.0.2(react@19.1.1)':
+  '@react-spring/core@10.0.3(react@19.1.1)':
     dependencies:
-      '@react-spring/animated': 10.0.2(react@19.1.1)
-      '@react-spring/shared': 10.0.2(react@19.1.1)
-      '@react-spring/types': 10.0.2
+      '@react-spring/animated': 10.0.3(react@19.1.1)
+      '@react-spring/shared': 10.0.3(react@19.1.1)
+      '@react-spring/types': 10.0.3
       react: 19.1.1
 
-  '@react-spring/rafz@10.0.2': {}
+  '@react-spring/rafz@10.0.3': {}
 
-  '@react-spring/shared@10.0.2(react@19.1.1)':
+  '@react-spring/shared@10.0.3(react@19.1.1)':
     dependencies:
-      '@react-spring/rafz': 10.0.2
-      '@react-spring/types': 10.0.2
+      '@react-spring/rafz': 10.0.3
+      '@react-spring/types': 10.0.3
       react: 19.1.1
 
-  '@react-spring/types@10.0.2': {}
+  '@react-spring/types@10.0.3': {}
 
-  '@react-spring/web@10.0.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@react-spring/web@10.0.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@react-spring/animated': 10.0.2(react@19.1.1)
-      '@react-spring/core': 10.0.2(react@19.1.1)
-      '@react-spring/shared': 10.0.2(react@19.1.1)
-      '@react-spring/types': 10.0.2
+      '@react-spring/animated': 10.0.3(react@19.1.1)
+      '@react-spring/core': 10.0.3(react@19.1.1)
+      '@react-spring/shared': 10.0.3(react@19.1.1)
+      '@react-spring/types': 10.0.3
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
@@ -20803,7 +20803,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-react@0.542.0(react@19.1.1):
+  lucide-react@0.544.0(react@19.1.1):
     dependencies:
       react: 19.1.1
 
@@ -22295,7 +22295,7 @@ snapshots:
 
   react-refresh@0.17.0: {}
 
-  react-router@7.7.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  react-router@7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       cookie: 1.0.2
       react: 19.1.1
