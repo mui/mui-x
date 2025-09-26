@@ -2,8 +2,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
-import { getColorClassName } from '../../internals/utils/color-utils';
-import { DEFAULT_EVENT_COLOR } from '../../../primitives/utils/SchedulerStore';
 import { Timeline as TimelinePrimitive } from '../../../primitives/timeline';
 import { selectors } from '../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../primitives/utils/useTimelineStoreContext';
@@ -98,7 +96,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
             </TimelinePrimitive.Cell>
           </TimelinePrimitive.Row>
           <TimelinePrimitive.SubGrid className="TitleSubGrid">
-            {({ resourceId }) => <TimelineTitleCell key={resourceId} resourceId={resourceId} />}
+            {({ resource }) => <TimelineTitleCell key={resource.id} resource={resource} />}
           </TimelinePrimitive.SubGrid>
         </div>
         <div className="EventSubGridContainer">
@@ -108,9 +106,9 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
             </TimelinePrimitive.Cell>
           </TimelinePrimitive.Row>
           <TimelinePrimitive.SubGrid className="EventSubGrid">
-            {({ resourceId, occurrences }) => (
+            {({ resource, occurrences }) => (
               <TimelineEventRow
-                key={resourceId}
+                key={resource.id}
                 start={start}
                 end={end}
                 occurrences={occurrences}

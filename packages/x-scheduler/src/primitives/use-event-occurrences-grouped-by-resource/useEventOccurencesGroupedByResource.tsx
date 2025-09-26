@@ -20,10 +20,19 @@ export function useEventOccurrencesGroupedByResource(
   const store = useTimelineStoreContext();
   const events = useStore(store, selectors.events);
   const visibleResources = useStore(store, selectors.visibleResourcesMap);
+  const resources = useStore(store, selectors.resources);
 
   return React.useMemo(
-    () => innerGetEventOccurrencesGroupedByResource(adapter, events, visibleResources, start, end),
-    [adapter, events, visibleResources, start, end],
+    () =>
+      innerGetEventOccurrencesGroupedByResource(
+        adapter,
+        events,
+        visibleResources,
+        resources,
+        start,
+        end,
+      ),
+    [adapter, events, visibleResources, resources, start, end],
   );
 }
 
@@ -34,7 +43,7 @@ export namespace useEventOccurrencesGroupedByResource {
   }
 
   export type ReturnValue = {
-    resourceId: string;
+    resource: CalendarResource;
     occurrences: CalendarEventOccurrence[];
   }[];
 }
@@ -47,9 +56,10 @@ export function innerGetEventOccurrencesGroupedByResource(
   adapter: Adapter,
   events: CalendarEvent[],
   visibleResources: Map<string, boolean>,
+  resources: CalendarResource[],
   start: SchedulerValidDate,
   end: SchedulerValidDate,
-): { resourceId: string; occurrences: CalendarEventOccurrence[] }[] {
+): { resource: CalendarResource; occurrences: CalendarEventOccurrence[] }[] {
   const occurrencesGroupedByResource = new Map<string, CalendarEventOccurrence[]>();
 
   const occurrences = getOccurrencesFromEvents({ adapter, start, end, events, visibleResources });
@@ -68,9 +78,15 @@ export function innerGetEventOccurrencesGroupedByResource(
       occurrencesGroupedByResource.get(resourceId)!.push(occurrence);
     }
   }
+  const filteredResources = resources.filter((resources) =>
+    occurrencesGroupedByResource.has(resources.id),
+  );
 
-  return Array.from(occurrencesGroupedByResource.entries()).map(([resourceId, occurrences]) => ({
-    resourceId,
-    occurrences,
+  // Sort by resource.name (localeCompare for stable alphabetical ordering).
+  filteredResources.sort((a, b) => a.name.localeCompare(b.name));
+
+  return filteredResources.map((resource) => ({
+    resource,
+    occurrences: occurrencesGroupedByResource.get(resource.id)!,
   }));
 }
