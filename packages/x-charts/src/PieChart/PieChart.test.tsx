@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen, act } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/describeConformance';
-import { pieArcClasses, PieChart } from '@mui/x-charts/PieChart';
+import { pieArcClasses, pieClasses, PieChart } from '@mui/x-charts/PieChart';
 
 describe('<PieChart />', () => {
   const { render } = createRenderer();
@@ -74,5 +74,49 @@ describe('<PieChart />', () => {
     rerender(<PieChart height={100} width={100} series={[]} hideLegend />);
 
     expect(screen.queryByRole('tooltip')).to.equal(null);
+  });
+
+  it('should show focus indicator when navigating with keyboard', async () => {
+    const { container, user } = render(
+      <PieChart
+        enableKeyboardNavigation
+        data-testid="chart"
+        height={100}
+        width={100}
+        series={[
+          {
+            data: [
+              { id: 0, value: 10 },
+              { id: 1, value: 20 },
+            ],
+          },
+        ]}
+        hideLegend
+      />,
+    );
+
+    // by default does not show focus indicator
+    expect(
+      container.querySelector('.MuiPieArc-series-auto-generated-id-0-focused'),
+    ).not.toBeTruthy();
+
+    // focus the chart
+    await act(async () => screen.getByTestId('chart').focus());
+
+    // Focus the first arc
+    await user.keyboard('{ArrowRight}');
+    expect(
+      container.querySelector(
+        '.MuiPieArc-series-auto-generated-id-0-focused.MuiPieArc-data-index-0',
+      ),
+    ).toBeTruthy();
+
+    // Focus the second arc
+    await user.keyboard('{ArrowRight}');
+    expect(
+      container.querySelector(
+        '.MuiPieArc-series-auto-generated-id-0-focused.MuiPieArc-data-index-1',
+      ),
+    ).toBeTruthy();
   });
 });
