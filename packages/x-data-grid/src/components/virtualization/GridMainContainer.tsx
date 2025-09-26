@@ -4,8 +4,10 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
-import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
-import { GridOverlayType } from '../base/GridOverlays';
+import type {
+  GridOverlayType,
+  GridLoadingOverlayVariant,
+} from '../../hooks/features/overlays/gridOverlaysInterfaces';
 
 const GridPanelAnchor = styled('div')({
   position: 'absolute',

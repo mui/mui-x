@@ -48,6 +48,7 @@ import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
+import { gridDimensionsSelector } from '../dimensions';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -121,6 +122,20 @@ function getResizeDirection(separator: HTMLElement, isRtl: boolean) {
     return flipResizeDirection(side);
   }
   return side;
+}
+
+function getPinnedWidthProperty(isRtl: boolean, pinnedPosition: GridPinnedColumnPosition) {
+  if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+    return isRtl ? '--DataGrid-rightPinnedWidth' : '--DataGrid-leftPinnedWidth';
+  }
+  return isRtl ? '--DataGrid-leftPinnedWidth' : '--DataGrid-rightPinnedWidth';
+}
+
+function getPinnedWidth(dimensions: any, isRtl: boolean, pinnedPosition: GridPinnedColumnPosition) {
+  if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+    return isRtl ? dimensions.rightPinnedWidth : dimensions.leftPinnedWidth;
+  }
+  return isRtl ? dimensions.leftPinnedWidth : dimensions.rightPinnedWidth;
 }
 
 function preventClick(event: MouseEvent) {
@@ -351,6 +366,7 @@ export const useGridColumnResize = (
       div.style.setProperty('--width', finalWidth);
     });
 
+    const dimensions = gridDimensionsSelector(apiRef);
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
       false,
@@ -366,6 +382,11 @@ export const useGridColumnResize = (
       refs.leftPinnedHeadersAfter.forEach((header) => {
         updateProperty(header, 'left', widthDiff);
       });
+
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        getPinnedWidthProperty(isRtl, pinnedPosition),
+        `${getPinnedWidth(dimensions, isRtl, pinnedPosition) + columnWidthDiff}px`,
+      );
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
@@ -377,6 +398,11 @@ export const useGridColumnResize = (
       refs.rightPinnedHeadersBefore.forEach((header) => {
         updateProperty(header, 'right', widthDiff);
       });
+
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        getPinnedWidthProperty(isRtl, pinnedPosition),
+        `${getPinnedWidth(dimensions, isRtl, pinnedPosition) + columnWidthDiff}px`,
+      );
     }
   };
 
