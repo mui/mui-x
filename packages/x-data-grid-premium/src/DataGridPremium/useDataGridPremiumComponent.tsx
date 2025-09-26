@@ -217,7 +217,7 @@ export const useDataGridPremiumComponent = (
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props, configuration as GridConfiguration);
   useGridRowSpanning(apiRef, props);
-  useGridParamsApi(apiRef, props);
+  useGridParamsApi(apiRef, props, configuration as GridConfiguration);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
@@ -226,7 +226,7 @@ export const useDataGridPremiumComponent = (
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props, configuration as GridConfiguration);
-  useGridSorting(apiRef, props, configuration as GridConfiguration);
+  useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);

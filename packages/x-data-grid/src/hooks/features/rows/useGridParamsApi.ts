@@ -14,7 +14,7 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { gridRowNodeSelector } from './gridRowsSelector';
-import { getRowValue as getRowValueFn } from './gridRowsUtils';
+import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export class MissingRowIdError extends Error {}
 
@@ -29,6 +29,7 @@ export class MissingRowIdError extends Error {}
 export function useGridParamsApi(
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
+  configuration: GridConfiguration,
 ) {
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
@@ -134,42 +135,6 @@ export function useGridParamsApi(
     [apiRef, props.listView, props.listViewColumn?.field],
   );
 
-  const getCellValue = React.useCallback<GridParamsApi['getCellValue']>(
-    (id, field) => {
-      const colDef = apiRef.current.getColumn(field);
-
-      const row = apiRef.current.getRow(id);
-      if (!row) {
-        throw new MissingRowIdError(`No row with id #${id} found`);
-      }
-
-      if (!colDef || !colDef.valueGetter) {
-        return row[field];
-      }
-
-      return colDef.valueGetter(row[colDef.field] as never, row, colDef, apiRef);
-    },
-    [apiRef],
-  );
-
-  const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
-    (row, colDef) => getRowValueFn(row, colDef, apiRef),
-    [apiRef],
-  );
-
-  const getRowFormattedValue = React.useCallback<GridParamsApi['getRowFormattedValue']>(
-    (row, colDef) => {
-      const value = getRowValue(row, colDef);
-
-      if (!colDef || !colDef.valueFormatter) {
-        return value;
-      }
-
-      return colDef.valueFormatter(value as never, row, colDef, apiRef);
-    },
-    [apiRef, getRowValue],
-  );
-
   const getColumnHeaderElement = React.useCallback<GridParamsApi['getColumnHeaderElement']>(
     (field) => {
       if (!apiRef.current.rootElementRef!.current) {
@@ -199,12 +164,13 @@ export function useGridParamsApi(
     [apiRef],
   );
 
+  const overridableRowsMethods = configuration.hooks.useGridRowsOverridableMethods(apiRef, props);
   const paramsApi: GridParamsApi = {
-    getCellValue,
+    getCellValue: overridableRowsMethods.getCellValue,
     getCellParams,
     getCellElement,
-    getRowValue,
-    getRowFormattedValue,
+    getRowValue: overridableRowsMethods.getRowValue,
+    getRowFormattedValue: overridableRowsMethods.getRowFormattedValue,
     getRowParams,
     getRowElement,
     getColumnHeaderParams,
