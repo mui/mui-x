@@ -8,6 +8,7 @@ import {
   validateProps,
   useGridApiInitialization,
   useGridRowsOverridableMethods,
+  useGridParamsOverridableMethods,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -27,6 +28,7 @@ const configuration: GridConfiguration = {
     useGridAriaAttributes: useGridAriaAttributesPro,
     useGridRowAriaAttributes: useGridRowAriaAttributesPro,
     useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },

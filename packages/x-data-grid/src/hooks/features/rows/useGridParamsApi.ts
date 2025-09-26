@@ -164,7 +164,7 @@ export function useGridParamsApi(
     [apiRef],
   );
 
-  const overridableRowsMethods = configuration.hooks.useGridRowsOverridableMethods(apiRef, props);
+  const overridableRowsMethods = configuration.hooks.useGridParamsOverridableMethods(apiRef);
   const paramsApi: GridParamsApi = {
     getCellValue: overridableRowsMethods.getCellValue,
     getCellParams,
