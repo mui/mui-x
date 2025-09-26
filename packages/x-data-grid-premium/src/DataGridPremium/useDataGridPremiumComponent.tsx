@@ -121,7 +121,7 @@ import {
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
   inProps: DataGridPremiumProcessedProps,
-  configuration: GridConfiguration<GridPrivateApiPremium>,
+  configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumProcessedProps>,
 ) => {
   const pivotPropsOverrides = useGridSelector(apiRef, gridPivotPropsOverridesSelector);
 
@@ -225,8 +225,8 @@ export const useDataGridPremiumComponent = (
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
-  useGridSorting(apiRef, props);
+  useGridFilter(apiRef, props, configuration as GridConfiguration);
+  useGridSorting(apiRef, props, configuration as GridConfiguration);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
   useGridColumnResize(apiRef, props);

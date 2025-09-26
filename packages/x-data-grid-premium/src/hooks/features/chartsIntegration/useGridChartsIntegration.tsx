@@ -4,6 +4,7 @@ import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
+  gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
   gridRowIdSelector,
   gridRowNodeSelector,
@@ -43,7 +44,6 @@ import {
   gridChartsIntegrationActiveChartIdSelector,
   gridChartableColumnsSelector,
 } from './gridChartsIntegrationSelectors';
-import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 import { isBlockedForSection } from './utils';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
@@ -52,7 +52,10 @@ import {
   getAggregationFunctionLabel,
   getAvailableAggregationFunctions,
 } from '../aggregation/gridAggregationUtils';
-import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
+import {
+  gridAggregationModelSelector,
+  gridCellAggregationResultSelector,
+} from '../aggregation/gridAggregationSelectors';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 
@@ -195,17 +198,20 @@ export const useGridChartsIntegration = (
       }
 
       const columns = gridColumnLookupSelector(apiRef);
-      const unwrappedColumnGroupingModel = gridColumnGroupsUnwrappedModelSelector(apiRef);
+      const columnGroupPath = gridColumnGroupsUnwrappedModelSelector(apiRef)[field] ?? [];
+      const columnGroupLookup = gridColumnGroupsLookupSelector(apiRef);
 
       const column = columns[field];
 
       const columnName = column?.headerName || field;
-      if (!pivotActive || !unwrappedColumnGroupingModel[field]) {
+      if (!pivotActive || !columnGroupPath) {
         return columnName;
       }
 
-      const groupPath = unwrappedColumnGroupingModel[field].slice(-1)[0];
-      return [columnName, ...groupPath.split(COLUMN_GROUP_ID_SEPARATOR)].join(' - ');
+      const groupNames = columnGroupPath.map(
+        (group) => columnGroupLookup[group].headerName || group,
+      );
+      return [columnName, ...groupNames].join(' - ');
     },
     [apiRef, pivotActive, props.slotProps?.chartsPanel],
   );
@@ -370,10 +376,12 @@ export const useGridChartsIntegration = (
             targetRow = gridRowNodeSelector(apiRef, rowTree[rowId]!.parent!);
           }
 
-          const value: string | { label: string } | null = apiRef.current.getRowValue(
-            targetRow,
-            dataColumns[j],
-          );
+          const value: string | { label: string } | null =
+            gridCellAggregationResultSelector(apiRef, {
+              id: gridRowIdSelector(apiRef, targetRow),
+              field: dataColumns[j].field,
+            })?.value ?? apiRef.current.getRowValue(targetRow, dataColumns[j]);
+
           if (value !== null) {
             data[dataColumns[j].dataFieldName].push(
               typeof value === 'object' && 'label' in value ? value.label : value,

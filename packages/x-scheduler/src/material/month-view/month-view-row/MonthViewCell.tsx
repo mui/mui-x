@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
 import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
@@ -11,6 +12,7 @@ import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
+import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopoverContext';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
@@ -24,6 +26,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
+  const isCreation = useStore(store, selectors.isCreatingNewEventInDayGridCell, day.value);
+
+  const cellRef = React.useRef<HTMLDivElement | null>(null);
+  const handleRef = useMergedRefs(ref, cellRef);
+
+  const { startEditing } = useEventPopoverContext();
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
@@ -46,9 +54,28 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   // Day number header + max events
   const rowCount = 1 + maxEvents;
 
+  const handleDoubleClick = () => {
+    store.setOccurrencePlaceholder({
+      eventId: null,
+      occurrenceKey: 'create-placeholder',
+      surfaceType: 'day-grid',
+      start: adapter.startOfDay(day.value),
+      end: adapter.endOfDay(day.value),
+      originalStart: null,
+      lockSurfaceType: true,
+    });
+  };
+
+  React.useEffect(() => {
+    if (!isCreation || !placeholder || !cellRef.current) {
+      return;
+    }
+    startEditing(cellRef.current, placeholder);
+  }, [isCreation, placeholder, startEditing]);
+
   return (
     <DayGrid.Cell
-      ref={ref}
+      ref={handleRef}
       key={day.key}
       value={day.value}
       data-current={isToday ? '' : undefined}
@@ -59,6 +86,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         isWeekend(adapter, day.value) && 'Weekend',
       )}
       style={{ '--row-count': rowCount } as React.CSSProperties}
+      onDoubleClick={handleDoubleClick}
     >
       {hasDayView ? (
         <button
