@@ -9,7 +9,7 @@ import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearHeader } from '.
 import { useEventOccurrencesGroupedByResource } from '../../../primitives/use-event-occurrences-grouped-by-resource';
 import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
 import { Adapter } from '../../../primitives/utils/adapter/types';
-import { diffIn } from '../../..//primitives/utils/date-utils';
+import { diffIn } from '../../../primitives/utils/date-utils';
 import { SchedulerValidDate, TimelineView } from '../../../primitives';
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineEventRow from './timeline-event-row/TimelineEventRow';
@@ -86,7 +86,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   }, [view]);
 
   return (
-    <div className="TimelineViewContent" ref={forwardedRef} {...other}>
+    <section className="TimelineViewContent" ref={forwardedRef} {...other}>
       <TimelinePrimitive.Root
         items={resourcesWithOccurrences}
         className="TimelineRoot"

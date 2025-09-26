@@ -36,9 +36,9 @@ export const Timeline = React.forwardRef(function Timeline(
         className={clsx('TimelineViewContainer', 'mui-x-scheduler', forwardedProps.className)}
         {...forwardedProps}
       >
-        <div className="TimelineHeaderToolbar">
+        <header className="TimelineHeaderToolbar">
           <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={store.setView} />
-        </div>
+        </header>
         <TimelineContent />
       </div>
     </TimelineStoreContext.Provider>

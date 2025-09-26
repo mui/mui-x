@@ -11,7 +11,7 @@ describe('<ViewSwitcher />', () => {
     resources: [],
   };
 
-  // Rendering the HeaderToolbar insead of the ViewSwitcher directly - ViewSwitcher takes views as a prop from toolbar
+  // Rendering the HeaderToolbar instead of the ViewSwitcher directly - ViewSwitcher takes views as a prop from toolbar
   it('should render the first three views + Arrow down for the default set of views', () => {
     const { container } = render(
       <StandaloneView {...standaloneDefaults}>

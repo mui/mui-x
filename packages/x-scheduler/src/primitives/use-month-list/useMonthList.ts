@@ -42,7 +42,7 @@ export namespace useMonthList {
 
   export interface ReturnValueParameters {
     /**
-     * The date to get the months in month for.
+     * The base date from which the month list will be generated.
      */
     date: SchedulerValidDate;
     /**
