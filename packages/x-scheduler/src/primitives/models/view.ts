@@ -1,6 +1,10 @@
 import { Adapter } from '../utils/adapter/types';
 import { SchedulerValidDate } from './date';
-import { CalendarProcessedDate } from './event';
+import {
+  CalendarEventOccurrenceDayGridPosition,
+  CalendarProcessedDate,
+  OccurrencesGroupedByDayMap,
+} from './event';
 
 export type CalendarView = 'week' | 'day' | 'month' | 'agenda';
 
@@ -12,6 +16,9 @@ export interface CalendarViewConfig {
   siblingVisibleDateGetter: (parameters: SiblingVisibleDateGetterParameters) => SchedulerValidDate;
   // TODO: Support updates
   getVisibleDays: (parameters: GetVisibleDaysParameters) => CalendarProcessedDate[];
+  buildOccurrencesPositionLookup: (
+    parameters: BuildOccurrencesPositionLookupParameters,
+  ) => Map<string, { surfaceType: 'day-grid'; position: CalendarEventOccurrenceDayGridPosition }>;
 }
 
 interface SiblingVisibleDateGetterParameters {
@@ -24,4 +31,20 @@ interface GetVisibleDaysParameters {
   adapter: Adapter;
   visibleDate: SchedulerValidDate;
   showWeekends: boolean;
+}
+
+export interface BuildOccurrencesPositionLookupParameters {
+  /**
+   * The date adapter to use.
+   */
+  adapter: Adapter;
+  /**
+   * The days to add the occurrences to.
+   */
+  days: CalendarProcessedDate[];
+  /**
+   * The occurrences Map as returned by `useEventOccurrences()`.
+   * It should contain the occurrences for each requested day but can also contain occurrences for other days.
+   */
+  occurrencesMap: OccurrencesGroupedByDayMap;
 }
