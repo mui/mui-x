@@ -1,5 +1,16 @@
 @import '../../../../styles/colors.css';
 
+.EventCard {
+  &[data-dragging],
+  &[data-resizing] {
+    opacity: 0.5;
+  }
+
+  &:hover .EventResizeHandler {
+    opacity: 1;
+  }
+}
+
 .DayGridEventTitle {
   margin: 0;
   color: var(--event-primary-text);
@@ -24,15 +35,19 @@
   background-color: var(--event-background);
   cursor: pointer;
   height: fit-content;
+  position: relative;
 }
 
 .EventCard--allDay,
-.EventCard--invisible {
+.EventCard--invisible,
+.EventCard--placeholder {
   container-type: inline-size;
   border-radius: var(--radius-3);
   background-color: var(--event-background);
-  height: fit-content;
+  min-width: 18px;
+  height: auto;
   cursor: pointer;
+  position: relative;
   z-index: 1;
   grid-row: var(--grid-row);
   grid-column: 1;
@@ -50,6 +65,10 @@
   height: 18px;
 }
 
+.EventCard--placeholder {
+  z-index: 2;
+}
+
 .EventCard--compact .DayGridEventCardContent {
   margin: 0;
   height: var(--line-height-1);
@@ -60,7 +79,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-1) var(--space-2);
+  padding-inline: var(--space-2);
 }
 
 .EventCard--compact:active {
@@ -97,5 +116,23 @@
   .DayGridEventTitle {
     margin-inline-start: var(--space-1);
     padding-inline-end: var(--space-3);
+  }
+}
+
+.DayGridEventResizeHandler {
+  position: absolute;
+  width: 4px;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  cursor: ew-resize;
+  opacity: 0;
+
+  &[data-start] {
+    left: 0;
+  }
+
+  &[data-end] {
+    right: 0;
   }
 }

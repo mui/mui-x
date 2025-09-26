@@ -6,7 +6,6 @@ import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { TreeViewItemPlugin, TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
-import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import {
   TreeViewChildrenItemContext,
@@ -59,7 +58,6 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         itemMetaLookup: newItemMetaLookup,
         itemModelLookup: newItemModelLookup,
       });
-      publishTreeViewEvent(instance, 'removeItem', { id: item.id });
     };
   });
 

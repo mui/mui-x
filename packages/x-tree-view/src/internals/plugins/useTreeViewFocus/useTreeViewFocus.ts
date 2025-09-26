@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { EventHandlers } from '@mui/utils/types';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
-import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { TreeViewCancellableEvent } from '../../../models';
 import { focusSelectors } from './useTreeViewFocus.selectors';
 import { expansionSelectors } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
@@ -45,7 +45,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     }
   };
 
-  const focusItem = useEventCallback((event: React.SyntheticEvent, itemId: string) => {
+  const focusItem = useEventCallback((event: React.SyntheticEvent | null, itemId: string) => {
     // If we receive an itemId, and it is visible, the focus will be set to it
     if (isItemVisible(itemId)) {
       innerFocusItem(event, itemId);
@@ -69,12 +69,25 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     setFocusedItemId(null);
   });
 
-  useInstanceEventHandler(instance, 'removeItem', ({ id }) => {
+  // Whenever the items change, we need to ensure the focused item is still present.
+  useStoreEffect(store, itemsSelectors.itemMetaLookup, () => {
     const focusedItemId = focusSelectors.focusedItemId(store.state);
-    const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
-    if (focusedItemId === id && defaultFocusableItemId != null) {
-      innerFocusItem(null, defaultFocusableItemId);
+    if (focusedItemId == null) {
+      return;
     }
+
+    const hasItemBeenRemoved = !itemsSelectors.itemMeta(store.state, focusedItemId);
+    if (!hasItemBeenRemoved) {
+      return;
+    }
+
+    const defaultFocusableItemId = focusSelectors.defaultFocusableItemId(store.state);
+    if (defaultFocusableItemId == null) {
+      setFocusedItemId(null);
+      return;
+    }
+
+    innerFocusItem(null, defaultFocusableItemId);
   });
 
   const createRootHandleFocus =

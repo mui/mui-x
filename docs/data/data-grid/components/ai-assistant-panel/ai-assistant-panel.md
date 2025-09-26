@@ -31,7 +31,7 @@ The demo below shows how to add an AI assistant panel trigger to a custom toolba
 ## Anatomy
 
 ```tsx
-import { AiAssistantPanelTrigger } from '@mui/x-data-grid';
+import { AiAssistantPanelTrigger } from '@mui/x-data-grid-premium';
 
 <AiAssistantPanelTrigger />;
 ```

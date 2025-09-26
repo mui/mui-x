@@ -13,6 +13,11 @@ export const enUS: SchedulerTranslations = {
   other: 'Other',
   today: 'Today',
   week: 'Week',
+  time: 'Time',
+  days: 'Days',
+  months: 'Months',
+  weeks: 'Weeks',
+  years: 'Years',
 
   // Preferences menu
   preferencesMenu: 'Settings',

@@ -4,6 +4,14 @@ import type { TimeGridEvent } from './TimeGridEvent';
 
 export interface TimeGridEventContext {
   /**
+   * Whether this event is starting before the column starts.
+   */
+  doesEventStartBeforeColumnStart: boolean;
+  /**
+   * Whether this event is ending after the column ends.
+   */
+  doesEventEndAfterColumnEnd: boolean;
+  /**
    * Sets whether the event is being resized.
    */
   setIsResizing: (isResizing: boolean) => void;

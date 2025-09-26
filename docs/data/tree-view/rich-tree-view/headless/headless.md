@@ -189,14 +189,14 @@ const useCustomPlugin = ({ params }) => {
 function useTreeItemState(itemId: string) {
   const {
     customPlugin,
-    // ...other elements returned by the context
+    // ...the other elements returned by the context
   } = useTreeViewContext<DefaultTreeViewPluginSignatures>();
 
-  // ...rest of the `useTreeItemState` hook content
+  // ...the rest of the `useTreeItemState` hook content
 
   return {
     customPlugin,
-    // ...other elements returned by `useTreeItemState`
+    // ...the other elements returned by `useTreeItemState`
   };
 }
 

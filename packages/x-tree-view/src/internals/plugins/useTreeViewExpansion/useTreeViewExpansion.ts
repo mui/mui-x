@@ -98,7 +98,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
   const isItemExpanded: UseTreeViewExpansionPublicAPI['isItemExpanded'] = useEventCallback(
     (itemId) => {
-      return expansionSelectors.isItemExpandable(store.state, itemId);
+      return expansionSelectors.isItemExpanded(store.state, itemId);
     },
   );
 
