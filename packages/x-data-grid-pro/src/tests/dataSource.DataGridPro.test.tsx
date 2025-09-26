@@ -13,7 +13,7 @@ import {
 import { spy } from 'sinon';
 import { getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { TestCache } from '@mui/x-data-grid/internals';
+import { GridDataSourceCacheDefault as TestCache } from '@mui/x-data-grid/hooks';
 
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
