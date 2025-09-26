@@ -2,6 +2,7 @@ import {
   CalendarEvent,
   CalendarEventColor,
   CalendarEventId,
+  CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
@@ -61,7 +62,11 @@ export interface SchedulerState {
   /**
    * TODO: Write JSDoc.
    */
-  tempEventOccurrencesMap: OccurrencesGroupedByDayMap;
+  occurrencesLookup: Map<string, CalendarEventOccurrence>;
+  /**
+   * TODO: Write JSDoc.
+   */
+  occurrencesGroupedByDayLookup: OccurrencesGroupedByDayMap;
 }
 
 export interface SchedulerParameters {

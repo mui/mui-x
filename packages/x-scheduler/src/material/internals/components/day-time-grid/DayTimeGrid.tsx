@@ -14,7 +14,6 @@ import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
-import { isMultiDayEvent } from '../../../../primitives/utils/event-utils';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -44,12 +43,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const ampm = useStore(store, selectors.ampm);
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
-
-  const occurrences = useEventOccurrencesWithDayGridPosition({
-    days,
-    occurrencesMap,
-    shouldAddPosition: isMultiDayEvent,
-  });
 
   const { start, end } = React.useMemo(
     () => ({

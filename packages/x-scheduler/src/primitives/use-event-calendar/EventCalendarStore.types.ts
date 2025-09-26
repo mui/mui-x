@@ -3,6 +3,8 @@ import {
   CalendarView,
   CalendarPreferencesMenuConfig,
   CalendarViewConfig,
+  CalendarEventOccurrenceTimePosition,
+  CalendarEventOccurrenceDayGridPosition,
 } from '../models';
 import { SchedulerState, SchedulerParameters } from '../utils/SchedulerStore';
 
@@ -29,6 +31,14 @@ export interface EventCalendarState extends SchedulerState {
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
+  /**
+   * TODO: Write JSDoc.
+   */
+  occurrencesPositionLookup: Map<
+    string,
+    | { surfaceType: 'time-grid'; position: CalendarEventOccurrenceTimePosition }
+    | { surfaceType: 'day-grid'; position: CalendarEventOccurrenceDayGridPosition }
+  >;
 }
 
 export interface EventCalendarParameters extends SchedulerParameters {

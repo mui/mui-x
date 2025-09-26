@@ -76,11 +76,14 @@ export const selectors = {
   ),
   event: eventSelector,
   isEventReadOnly: isEventReadOnlySelector,
+  occurrence: createSelector((state: State, occurrenceKey: string | null | undefined) =>
+    occurrenceKey == null ? undefined : state.occurrencesLookup?.get(occurrenceKey),
+  ),
   occurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder),
   hasOccurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder !== null),
   isOccurrenceMatchingThePlaceholder: createSelector(
     (state: State, occurrenceKey: string) =>
       state.occurrencePlaceholder?.occurrenceKey === occurrenceKey,
   ),
-  occurrencesByDayMap: createSelector((state: State) => state.tempEventOccurrencesMap),
+  occurrencesByDayMap: createSelector((state: State) => state.occurrencesGroupedByDayLookup),
 };
