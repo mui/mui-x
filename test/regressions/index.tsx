@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
+import * as sinon from 'sinon';
 import { setupFakeClock, restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
 import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
 import TestViewer from './TestViewer';
@@ -36,7 +37,17 @@ main();
 async function main() {
   setupFakeClock();
 
+  // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
+  // The output of `toLocaleString` may be implementation dependent
+  const toLocaleStringStub = sinon
+    .stub(Date.prototype, 'toLocaleString')
+    .callsFake(function toLocaleString(this: Date) {
+      return this.toISOString();
+    });
+
   testsBySuite = (await import('./testsBySuite')).testsBySuite;
+
+  toLocaleStringStub.restore();
 
   restoreFakeClock();
 
