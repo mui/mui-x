@@ -54,6 +54,7 @@ export const checkGroupChildrenExpansion = (
   node: GridGroupNode,
   defaultGroupingExpansionDepth: number,
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'],
+  prevChildrenExpanded?: boolean,
 ) => {
   let childrenExpanded: boolean;
   if (node.id === GRID_ROOT_GROUP_ID) {
@@ -62,7 +63,9 @@ export const checkGroupChildrenExpansion = (
     childrenExpanded = isGroupExpandedByDefault(node);
   } else {
     childrenExpanded =
-      defaultGroupingExpansionDepth === -1 || defaultGroupingExpansionDepth > node.depth;
+      defaultGroupingExpansionDepth === -1 ||
+      defaultGroupingExpansionDepth > node.depth ||
+      (prevChildrenExpanded ?? false);
   }
 
   return childrenExpanded;
@@ -72,11 +75,13 @@ export const updateGroupDefaultExpansion = (
   node: GridGroupNode,
   defaultGroupingExpansionDepth: number,
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'],
+  prevChildrenExpanded?: boolean,
 ) => {
   const childrenExpanded = checkGroupChildrenExpansion(
     node,
     defaultGroupingExpansionDepth,
     isGroupExpandedByDefault,
+    prevChildrenExpanded,
   );
   node.childrenExpanded = childrenExpanded;
   return node;

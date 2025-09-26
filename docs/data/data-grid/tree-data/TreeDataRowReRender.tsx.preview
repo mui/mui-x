@@ -1,0 +1,11 @@
+<Button onClick={() => setIndex((prev) => prev + 1)}>
+  Update rows reference
+</Button>
+<div style={{ height: 400 }}>
+  <DataGridPro
+    treeData
+    rows={rows}
+    columns={columns}
+    getTreeDataPath={getTreeDataPath}
+  />
+</div>
