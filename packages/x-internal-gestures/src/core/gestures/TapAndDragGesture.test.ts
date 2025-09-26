@@ -44,23 +44,23 @@ describe('TapAndDrag Gesture', () => {
 
     // Add event listeners
     gestureTarget.addEventListener('tapAndDragStart', (event) => {
-      const detail = (event as CustomEvent).detail;
+      const detail = event.detail;
       events.push(
-        `tapAndDragStart: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
+        `tapAndDragStart: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
       );
     });
 
     gestureTarget.addEventListener('tapAndDrag', (event) => {
       const detail = (event as CustomEvent).detail;
       events.push(
-        `tapAndDrag: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
+        `tapAndDrag: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
       );
     });
 
     gestureTarget.addEventListener('tapAndDragEnd', (event) => {
       const detail = (event as CustomEvent).detail;
       events.push(
-        `tapAndDragEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.dragDirection.horizontal, detail.dragDirection.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.dragDirection.mainAxis}`,
+        `tapAndDragEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
       );
     });
   });
@@ -302,7 +302,7 @@ describe('TapAndDrag Gesture', () => {
       tapMaxDistance: 15,
       dragTimeout: 500,
       dragThreshold: 10,
-      dragDirection: ['up', 'down'],
+      direction: ['up', 'down'],
     });
   });
 
@@ -320,7 +320,7 @@ describe('TapAndDrag Gesture', () => {
       tapMaxDistance: 15,
       dragTimeout: 500,
       dragThreshold: 10,
-      dragDirection: ['left', 'right'],
+      direction: ['left', 'right'],
     });
   });
 });
