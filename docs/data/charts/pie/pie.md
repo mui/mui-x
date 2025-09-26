@@ -8,6 +8,19 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot,
 
 <p class="description">Pie charts express portions of a whole, using arcs or angles within a circle.</p>
 
+## Overview
+
+Pie charts are ideal for showing proportions of a whole.
+They excel at visualizing how categories contribute to a total, making relative shares easy to compare at a glance.
+Here are the basic requirements to create a pie chart:
+
+- One categorical dimension (each category represented as a slice)
+- One numerical metric representing the value or size of each slice (converted into percentage of the whole)
+
+The pie chart below compares survival rates of passengers in different classes on the Titanic:
+
+{{"demo": "TitanicPie.js"}}
+
 ## Basics
 
 Pie charts series must contain a `data` property containing an array of objects.
