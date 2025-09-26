@@ -16,11 +16,15 @@ To enable zooming and panning, set the `zoom` prop to `true` on the wanted axis.
 
 Enabling zoom will enable all the interactions, which are made to be as intuitive as possible.
 
-The following actions are supported:
+The following actions are enabled by default:
 
 - **Scroll**: Zoom in/out by scrolling the mouse wheel.
 - **Drag**: Pan the chart by dragging the mouse.
 - **Pinch**: Zoom in/out by pinching the chart.
+
+Additional zoom interactions can be enabled through configuration:
+
+- **Tap and drag**: Zoom in/out by tapping once and then dragging vertically.
 
 {{"demo": "ZoomScatterChart.js"}}
 {{"demo": "ZoomBarChart.js"}}
@@ -143,13 +147,25 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 ```jsx
 <BarChartPro
   zoomInteractionConfig={{
-    // Enable both wheel and pinch zoom
-    zoom: ['wheel', 'pinch'],
+    // Enable wheel, pinch, and tap-and-drag zoom
+    zoom: ['wheel', 'pinch', 'tapAndDrag'],
     // Enable drag panning
     pan: ['drag'],
   }}
 />
 ```
+
+**Zoom** interactions:
+
+- **`wheel`**: Zoom in/out by scrolling the mouse wheel (default)
+- **`pinch`**: Zoom in/out by pinching on touch devices (default)
+- **`tapAndDrag`**: Zoom in/out by tapping once and then dragging vertically. Dragging up zooms in, dragging down zooms out.
+
+**Pan** interactions:
+
+- **`drag`**: Pan the chart by dragging with the mouse or touch (default)
+
+{{"demo": "ZoomAndPanInteractions.js"}}
 
 ### Key modifiers
 
