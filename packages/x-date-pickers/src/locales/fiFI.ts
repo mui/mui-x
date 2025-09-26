@@ -42,7 +42,7 @@ const fiFIPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Valitse päivä ja aika',
   timePickerToolbarTitle: 'Valitse aika',
   dateRangePickerToolbarTitle: 'Valitse aikaväli',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Valitse aikaväli',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -65,7 +65,7 @@ const fiFIPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Valitse päivä, valittu päivä on ${formattedDate}` : 'Valitse päivä',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Valitse aika, valittu aika on ${formattedTime}` : 'Valitse aika',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: formattedRange => formattedRange ? `Valitse aikaväli, valittu väli on ${formattedRange}` : 'Valitse aikaväli',
   fieldClearLabel: 'Tyhjennä arvo',
 
   // Table labels
