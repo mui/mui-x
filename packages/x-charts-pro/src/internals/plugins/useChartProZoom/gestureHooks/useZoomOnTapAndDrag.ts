@@ -41,11 +41,11 @@ export const useZoomOnTapAndDrag = (
       setZoomDataCallback((prev) => {
         return prev.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
-          if (!option || event.detail.dragDirection.mainAxis !== 'vertical') {
+          if (!option) {
             return zoom;
           }
 
-          const isZoomIn = event.detail.deltaY > 0;
+          const isZoomIn = event.detail.deltaY < 0;
           const scaleRatio = 1 + event.detail.deltaY / 100;
 
           // If the delta is 0, we didn't move
@@ -54,8 +54,8 @@ export const useZoomOnTapAndDrag = (
           }
 
           const point = getSVGPoint(element, {
-            clientX: event.detail.centroid.x,
-            clientY: event.detail.centroid.y,
+            clientX: event.detail.initialCentroid.x,
+            clientY: event.detail.initialCentroid.y,
           });
 
           const centerRatio =
@@ -73,7 +73,7 @@ export const useZoomOnTapAndDrag = (
       });
     });
 
-    const zoomHandler = instance.addInteractionListener('tapAndDrag', rafThrottledCallback);
+    const zoomHandler = instance.addInteractionListener('zoomTapAndDrag', rafThrottledCallback);
 
     return () => {
       zoomHandler.cleanup();

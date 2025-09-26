@@ -64,7 +64,7 @@ export type AddInteractionListener = {
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'tapAndDrag' | 'tapAndDragStart' | 'tapAndDragEnd',
+    interaction: 'zoomTapAndDrag' | 'zoomTapAndDragStart' | 'zoomTapAndDragEnd',
     callback: (event: TapAndDragEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
