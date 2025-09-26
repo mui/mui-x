@@ -29,6 +29,7 @@ export function isWeekend(adapter: Adapter, value: SchedulerValidDate): boolean 
  */
 
 const MS_MIN = 60000;
+const MS_HOUR = 3600000;
 const MS_DAY = 86400000;
 const MS_WEEK = 7 * MS_DAY;
 
@@ -36,13 +37,18 @@ export function diffIn(
   adapter: Adapter,
   a: SchedulerValidDate,
   b: SchedulerValidDate,
-  unit: 'minutes' | 'days' | 'weeks' | 'months' | 'years',
+  unit: 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years',
 ): number {
   switch (unit) {
     case 'minutes': {
       const msA = adapter.toJsDate(a).getTime();
       const msB = adapter.toJsDate(b).getTime();
       return Math.floor((msA - msB) / MS_MIN);
+    }
+    case 'hours': {
+      const msA = adapter.toJsDate(a).getTime();
+      const msB = adapter.toJsDate(b).getTime();
+      return Math.floor((msA - msB) / MS_HOUR);
     }
     case 'days': {
       const yA = adapter.getYear(a);

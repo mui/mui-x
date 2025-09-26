@@ -9,7 +9,7 @@ import { Adapter } from '../utils/adapter/types';
 export function useEventOccurrencesWithTimelinePosition(
   parameters: useEventOccurrencesWithTimelinePosition.Parameters,
 ): useEventOccurrencesWithTimelinePosition.ReturnValue {
-  const { occurrences, maxColumnSpan } = parameters;
+  const { occurrences, maxSpan } = parameters;
   const adapter = useAdapter();
 
   return React.useMemo(() => {
@@ -17,12 +17,7 @@ export function useEventOccurrencesWithTimelinePosition(
 
     const { firstIndexLookup, maxIndex } = buildFirstIndexLookup(conflicts);
 
-    const lastIndexLookup = buildLastIndexLookup(
-      conflicts,
-      firstIndexLookup,
-      maxIndex,
-      maxColumnSpan,
-    );
+    const lastIndexLookup = buildLastIndexLookup(conflicts, firstIndexLookup, maxIndex, maxSpan);
 
     const occurrencesWithPosition = occurrences.map((occurrence) => ({
       ...occurrence,
@@ -33,7 +28,7 @@ export function useEventOccurrencesWithTimelinePosition(
     }));
 
     return { occurrences: occurrencesWithPosition, maxIndex };
-  }, [adapter, occurrences, maxColumnSpan]);
+  }, [adapter, occurrences, maxSpan]);
 }
 
 export namespace useEventOccurrencesWithTimelinePosition {
@@ -45,7 +40,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
     /**
      * Maximum amount of columns an event can span across.
      */
-    maxColumnSpan: number;
+    maxSpan: number;
   }
 
   export interface ReturnValue {
@@ -178,9 +173,9 @@ function buildLastIndexLookup(
   conflicts: OccurrenceConflicts[],
   firstIndexLookup: OccurrenceIndexLookup,
   maxIndex: number,
-  maxColumnSpan: number,
+  maxSpan: number,
 ) {
-  if (maxColumnSpan < 2) {
+  if (maxSpan < 2) {
     return firstIndexLookup;
   }
 
@@ -196,7 +191,7 @@ function buildLastIndexLookup(
     while (
       !usedIndexes.has(lastIndex + 1) &&
       lastIndex < maxIndex &&
-      lastIndex - firstIndex < maxColumnSpan - 1
+      lastIndex - firstIndex < maxSpan - 1
     ) {
       lastIndex += 1;
     }
