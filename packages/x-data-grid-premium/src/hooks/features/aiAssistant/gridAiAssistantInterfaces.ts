@@ -77,9 +77,9 @@ export type PromptResolverOptions = {
    */
   metadata?: {
     /**
-     * The user ID that would be stored for you to identify the user that made the request and then to be able to track the usage for each unique user.
+     * The reference ID that would be stored for you to identify the entity that made the request and then to be able to track the usage for each unique user/entity.
      */
-    userId?: string;
+    referenceId?: string;
   };
 };
 
