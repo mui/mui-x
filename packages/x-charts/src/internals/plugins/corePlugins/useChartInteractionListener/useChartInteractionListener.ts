@@ -38,6 +38,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     | TurnWheelGesture<'zoomTurnWheel'>
     | TapGesture<'tap'>
     | PressGesture<'quickPress'>
+    | TapAndDragGesture<'tapAndDrag'>
   > | null>(null);
 
   React.useEffect(() => {
