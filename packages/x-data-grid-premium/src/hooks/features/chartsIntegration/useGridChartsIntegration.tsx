@@ -156,7 +156,6 @@ export const useGridChartsIntegration = (
     | 'experimentalFeatures'
   >,
 ) => {
-  const activeChartId = React.useRef<string>(gridChartsIntegrationActiveChartIdSelector(apiRef));
   const visibleDimensions = React.useRef<Record<string, GridColDef[]>>({});
   const visibleValues = React.useRef<Record<string, GridColDef[]>>({});
   const schema = React.useMemo(
@@ -167,6 +166,7 @@ export const useGridChartsIntegration = (
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable =
     !!props.chartsIntegration && !!props.experimentalFeatures?.charts && !!context;
+  const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const orderedFields = gridColumnFieldsSelector(apiRef);
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const pivotActive = gridPivotActiveSelector(apiRef);
@@ -257,19 +257,16 @@ export const useGridChartsIntegration = (
     const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
     if (
-      visibleDimensions.current[activeChartId.current]?.length > 0 &&
+      visibleDimensions.current[activeChartId]?.length > 0 &&
       // if there was row grouping or if we are adding more than one dimension, set the new grouping model
-      (rowGroupingModel.length > 0 ||
-        visibleDimensions.current[activeChartId.current].length > 1) &&
+      (rowGroupingModel.length > 0 || visibleDimensions.current[activeChartId].length > 1) &&
       // if row grouping model starts with dimensions in the same order, we don't have to do anything
-      visibleDimensions.current[activeChartId.current].some(
+      visibleDimensions.current[activeChartId].some(
         (item, index) => item.field !== rowGroupingModel[index],
       )
     ) {
       // if pivoting is enabled, then the row grouping model is driven by the pivoting rows
-      const newGroupingModel = visibleDimensions.current[activeChartId.current].map(
-        (item) => item.field,
-      );
+      const newGroupingModel = visibleDimensions.current[activeChartId].map((item) => item.field);
       if (pivotActive) {
         apiRef.current.setPivotModel((prev) => ({
           ...prev,
@@ -285,15 +282,11 @@ export const useGridChartsIntegration = (
       }
     }
 
-    if (
-      !pivotActive &&
-      visibleValues.current[activeChartId.current] &&
-      rowGroupingModel.length > 0
-    ) {
+    if (!pivotActive && visibleValues.current[activeChartId] && rowGroupingModel.length > 0) {
       // with row grouping add the aggregation model to the newly added value dataset
       const aggregatedFields = Object.keys(aggregationModel);
 
-      visibleValues.current[activeChartId.current].forEach((item) => {
+      visibleValues.current[activeChartId].forEach((item) => {
         const hasAggregation = aggregatedFields.includes(item.field);
         if (!hasAggregation) {
           apiRef.current.setAggregationModel({
@@ -308,7 +301,14 @@ export const useGridChartsIntegration = (
         }
       });
     }
-  }, [apiRef, props.aggregationFunctions, props.dataSource, pivotActive, aggregationModel]);
+  }, [
+    apiRef,
+    props.aggregationFunctions,
+    props.dataSource,
+    activeChartId,
+    pivotActive,
+    aggregationModel,
+  ]);
 
   const handleRowDataUpdate = React.useCallback(
     (chartIds: string[]) => {
@@ -324,9 +324,10 @@ export const useGridChartsIntegration = (
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
       const rowsPerDepth = gridFilteredSortedDepthRowEntriesSelector(apiRef);
+      const currentChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
       const defaultDepth = Math.max(
         0,
-        (visibleDimensions.current[activeChartId.current]?.length ?? 0) - 1,
+        (visibleDimensions.current[currentChartId]?.length ?? 0) - 1,
       );
       const rowsAtDefaultDepth = (rowsPerDepth[defaultDepth] ?? []).length;
 
@@ -645,8 +646,6 @@ export const useGridChartsIntegration = (
           activeChartId: chartId,
         },
       }));
-
-      activeChartId.current = chartId;
     },
     [apiRef, isChartsIntegrationAvailable],
   );
@@ -721,8 +720,8 @@ export const useGridChartsIntegration = (
   >(
     (field, originSection, targetSection, targetField, placementRelativeToTargetField) => {
       const columns = gridColumnLookupSelector(apiRef);
-      const dimensions = gridChartsDimensionsSelector(apiRef, activeChartId.current);
-      const values = gridChartsValuesSelector(apiRef, activeChartId.current);
+      const dimensions = gridChartsDimensionsSelector(apiRef, activeChartId);
+      const values = gridChartsValuesSelector(apiRef, activeChartId);
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
 
       if (targetSection) {
@@ -740,8 +739,8 @@ export const useGridChartsIntegration = (
         const currentTargetItems = targetSection === 'dimensions' ? dimensions : values;
         const currentMaxItems =
           targetSection === 'dimensions'
-            ? chartStateLookup[activeChartId.current]?.maxDimensions
-            : chartStateLookup[activeChartId.current]?.maxValues;
+            ? chartStateLookup[activeChartId]?.maxDimensions
+            : chartStateLookup[activeChartId]?.maxValues;
 
         if (currentMaxItems && currentTargetItems.length >= currentMaxItems) {
           return;
@@ -762,7 +761,7 @@ export const useGridChartsIntegration = (
         // if the target is another section, remove the field from the origin section
         if (targetSection !== originSection) {
           currentItems.splice(fieldIndex, 1);
-          method(activeChartId.current, currentItems);
+          method(activeChartId, currentItems);
         }
       }
 
@@ -795,9 +794,9 @@ export const useGridChartsIntegration = (
           const targetIndex =
             placementRelativeToTargetField === 'top' ? targetFieldIndex : targetFieldIndex + 1;
           remainingItems.splice(targetIndex, 0, { field, hidden });
-          method(activeChartId.current, remainingItems);
+          method(activeChartId, remainingItems);
         } else {
-          method(activeChartId.current, [...remainingItems, { field, hidden }]);
+          method(activeChartId, [...remainingItems, { field, hidden }]);
         }
       }
     },
@@ -805,6 +804,7 @@ export const useGridChartsIntegration = (
       apiRef,
       props.aggregationFunctions,
       props.dataSource,
+      activeChartId,
       chartStateLookup,
       updateChartDimensionsData,
       updateChartValuesData,
@@ -885,10 +885,10 @@ export const useGridChartsIntegration = (
   );
 
   React.useEffect(() => {
-    if (!activeChartId.current && availableChartIds.length > 0) {
+    if (!activeChartId && availableChartIds.length > 0) {
       setActiveChartId(availableChartIds[0]);
     }
-  }, [availableChartIds, setActiveChartId]);
+  }, [availableChartIds, activeChartId, setActiveChartId]);
 
   const isInitialized = React.useRef(false);
   React.useEffect(() => {
