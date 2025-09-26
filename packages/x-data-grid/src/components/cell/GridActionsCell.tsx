@@ -92,12 +92,16 @@ function GridActionsCell(props: GridActionsCellProps) {
     child.focus({ preventScroll: true });
   }, [focusedButtonIndex]);
 
+  const firstFocusableButtonIndex = actions.findIndex((o) => !o.props.disabled);
   React.useEffect(() => {
+    if (hasFocus && focusedButtonIndex === -1) {
+      setFocusedButtonIndex(firstFocusableButtonIndex);
+    }
     if (!hasFocus) {
       setFocusedButtonIndex(-1);
       ignoreCallToFocus.current = false;
     }
-  }, [hasFocus]);
+  }, [hasFocus, focusedButtonIndex, firstFocusableButtonIndex]);
 
   React.useImperativeHandle(
     focusElementRef,
