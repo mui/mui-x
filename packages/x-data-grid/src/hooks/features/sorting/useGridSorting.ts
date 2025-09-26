@@ -33,7 +33,6 @@ import {
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
-import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export const sortingStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
@@ -66,7 +65,6 @@ export const useGridSorting = (
     | 'disableMultipleColumnsSorting'
     | 'multipleColumnsSortingMode'
   >,
-  configuration: GridConfiguration,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
 
@@ -142,7 +140,6 @@ export const useGridSorting = (
    * API METHODS
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
-    const sortValueGetter = configuration.hooks.useSortValueGetter(apiRef);
     apiRef.current.setState((state) => {
       if (props.sortingMode === 'server') {
         logger.debug('Skipping sorting rows as sortingMode = server');
@@ -160,7 +157,7 @@ export const useGridSorting = (
       }
 
       const sortModel = gridSortModelSelector(apiRef);
-      const sortRowList = buildAggregatedSortingApplier(sortModel, sortValueGetter, apiRef);
+      const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
       const sortedRows = apiRef.current.applyStrategyProcessor('sorting', {
         sortRowList,
       });
@@ -172,7 +169,7 @@ export const useGridSorting = (
     });
 
     apiRef.current.publishEvent('sortedRowsSet');
-  }, [apiRef, logger, configuration, props.sortingMode]);
+  }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
     (model) => {

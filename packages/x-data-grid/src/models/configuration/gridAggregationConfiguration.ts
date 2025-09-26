@@ -17,15 +17,9 @@ export type GetCellAggregationResultFn = (
   formattedValue?: any;
 } | null;
 
-export type SortValueGetterFn = (id: GridRowId, field: string) => any;
 export type FilterValueGetterFn = (row: GridRowModel, colDef: GridColDef) => any;
 
 export interface GridAggregationInternalHooks<Api, Props> {
   useCellAggregationResult: GetCellAggregationResultFn;
-  /**
-   * @param {RefObject<Api>} apiRef The API reference
-   * @returns {SortValueGetterFn} The function to get the value to sort by
-   */
-  useSortValueGetter: (apiRef: RefObject<Api>) => SortValueGetterFn;
   useFilterValueGetter: (apiRef: RefObject<Api>, props: Props) => FilterValueGetterFn;
 }

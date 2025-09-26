@@ -101,6 +101,7 @@ export {
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+export { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
