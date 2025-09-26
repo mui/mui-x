@@ -1,4 +1,4 @@
 // @ts-nocheck
-const baseline = import('@mui/monorepo/.markdownlint-cli2.mjs');
+import baseline from '@mui/monorepo/.markdownlint-cli2.mjs';
 
 export default baseline;
