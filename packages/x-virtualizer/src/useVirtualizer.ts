@@ -28,11 +28,13 @@ import {
 /* eslint-disable jsdoc/require-returns-type */
 
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
-export type VirtualScrollerCompat = Virtualization.State['getters'];
+export type VirtualScrollerCompat = Virtualization.State['legacyAPI'];
 
 export type BaseState = Virtualization.State & Dimensions.State;
 
 export type VirtualizerParams = {
+  legacy?: boolean;
+
   refs: {
     container: RefObject<HTMLDivElement | null>;
     scroller: RefObject<HTMLDivElement | null>;
@@ -83,7 +85,7 @@ export type VirtualizerParams = {
   applyRowHeight?: (entry: HeightEntry, rowEntry: RowEntry) => void;
   virtualizeColumnsWithAutoRowHeight?: boolean;
 
-  resizeThrottleMs: number;
+  resizeThrottleMs?: number;
   onResize?: (lastSize: Size) => void;
   onWheel?: (event: React.WheelEvent) => void;
   onTouchMove?: (event: React.TouchEvent) => void;

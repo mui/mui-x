@@ -94,12 +94,13 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const virtualScroller = apiRef.current.virtualizer.api.useVirtualization().getters;
+  const virtualScroller = apiRef.current.virtualizer.api.useVirtualization().legacyAPI;
 
   const {
     getContainerProps,
     getScrollerProps,
     getContentProps,
+    getRenderZoneProps,
     getScrollbarVerticalProps,
     getScrollbarHorizontalProps,
     getRows,
@@ -123,7 +124,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         {getOverlay()}
 
         <Content {...getContentProps()}>
-          <RenderZone role="rowgroup">
+          <RenderZone role="rowgroup" {...getRenderZoneProps()}>
             {rows}
             {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
           </RenderZone>

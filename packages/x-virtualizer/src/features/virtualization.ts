@@ -74,7 +74,7 @@ export const Virtualization = {
 export namespace Virtualization {
   export type State = {
     virtualization: VirtualizationState;
-    getters: ReturnType<typeof useVirtualization>['getters'];
+    legacyAPI: ReturnType<typeof useVirtualization>['legacyAPI'];
   };
   export type API = ReturnType<typeof useVirtualization>;
 }
@@ -89,7 +89,7 @@ function initializeState(params: VirtualizerParams) {
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
-    getters: null as unknown as ReturnType<typeof useVirtualization>['getters'],
+    legacyAPI: null as unknown as ReturnType<typeof useVirtualization>['legacyAPI'],
   };
   return state;
 }
@@ -111,7 +111,7 @@ type RequiredAPI = Dimensions.API & AbstractAPI;
 function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: RequiredAPI) {
   const {
     refs,
-    dimensions: { rowHeight, columnsTotalWidth },
+    dimensions: { rowHeight, columnsTotalWidth = 0 },
     virtualization: { isRtl = false, rowBufferPx = 150, columnBufferPx = 150 },
     colspan,
     initialState,
@@ -514,7 +514,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     [needsHorizontalScrollbar, autoHeight],
   );
 
-  const contentSize = React.useMemo(() => {
+  const contentStyle = React.useMemo(() => {
     const size: React.CSSProperties = {
       width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
       flexBasis: contentHeight,
@@ -527,6 +527,15 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
     return size;
   }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
+
+  const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
+  const renderZoneStyle = React.useMemo(
+    () =>
+      ({
+        transform: `translate3d(0, ${offsetTop}px, 0)`,
+      }) as React.CSSProperties,
+    [offsetTop],
+  );
 
   const scrollRestoreCallback = React.useRef<Function | null>(null);
   const contentNodeRef = React.useCallback(
@@ -613,7 +622,8 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   };
 
-  const getters = {
+  // Legacy API, cannot change without a breaking change in the grid (GridDetailPanels, etc)
+  const legacyAPI = {
     setPanels,
     getOffsetTop,
     getRows,
@@ -633,8 +643,11 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
     getContentProps: () => ({
       ref: contentNodeRef,
-      style: contentSize,
+      style: contentStyle,
       role: 'presentation',
+    }),
+    getRenderZoneProps: () => ({
+      style: renderZoneStyle,
     }),
     getScrollbarVerticalProps: () => ({
       ref: refSetter('scrollbarVertical'),
@@ -649,16 +662,20 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }),
   };
 
-  useFirstRender(() => {
-    store.state = {
-      ...store.state,
-      getters,
-    };
-  });
-  React.useEffect(() => {
-    store.update({ getters });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, Object.values(getters));
+  if (params.legacy) {
+    /* eslint-disable react-hooks/rules-of-hooks */
+    useFirstRender(() => {
+      store.state = {
+        ...store.state,
+        legacyAPI,
+      };
+    });
+    React.useEffect(() => {
+      store.update({ legacyAPI });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, Object.values(legacyAPI));
+    /* eslint-enable react-hooks/rules-of-hooks */
+  }
 
   /* Placeholder API functions for colspan & rowspan to re-implement */
 
@@ -675,7 +692,7 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
   };
 
   return {
-    getters,
+    legacyAPI,
     useVirtualization: () => useStore(store, (state) => state),
     setPanels,
     forceUpdateRenderContext,

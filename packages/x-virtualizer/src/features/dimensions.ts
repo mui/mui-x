@@ -16,11 +16,11 @@ import type { BaseState, VirtualizerParams } from '../useVirtualizer';
 
 export type DimensionsParams = {
   rowHeight: number;
-  columnsTotalWidth: number;
-  leftPinnedWidth: number;
-  rightPinnedWidth: number;
-  topPinnedHeight: number;
-  bottomPinnedHeight: number;
+  columnsTotalWidth?: number;
+  leftPinnedWidth?: number;
+  rightPinnedWidth?: number;
+  topPinnedHeight?: number;
+  bottomPinnedHeight?: number;
   scrollbarSize?: number;
 };
 
@@ -113,11 +113,11 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     refs,
     dimensions: {
       rowHeight,
-      columnsTotalWidth,
-      leftPinnedWidth,
-      rightPinnedWidth,
-      topPinnedHeight,
-      bottomPinnedHeight,
+      columnsTotalWidth = 0,
+      leftPinnedWidth = 0,
+      rightPinnedWidth = 0,
+      topPinnedHeight = 0,
+      bottomPinnedHeight = 0,
     },
     onResize,
   } = params;
@@ -247,7 +247,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
     bottomPinnedHeight,
   ]);
 
-  const { resizeThrottleMs } = params;
+  const { resizeThrottleMs = 100 } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
     () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
