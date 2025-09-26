@@ -4,20 +4,24 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 
 const knobs = {
   // Zoom interactions
-  wheelZoom: {
+  wheel: {
+    displayName: 'Wheel',
     knob: 'switch',
     defaultValue: true,
   },
-  pinchZoom: {
+  pinch: {
+    displayName: 'Pinch',
     knob: 'switch',
     defaultValue: true,
   },
-  tapAndDragZoom: {
+  tapAndDrag: {
+    displayName: 'Tap and drag',
     knob: 'switch',
     defaultValue: false,
   },
   // Pan interactions
-  dragPan: {
+  drag: {
+    displayName: 'Drag',
     knob: 'switch',
     defaultValue: true,
   },
@@ -31,19 +35,19 @@ export default function ZoomAndPanInteractions() {
       renderDemo={(props) => {
         // Build zoom interactions array
         const zoomInteractions = [];
-        if (props.wheelZoom) {
+        if (props.wheel) {
           zoomInteractions.push('wheel');
         }
-        if (props.pinchZoom) {
+        if (props.pinch) {
           zoomInteractions.push('pinch');
         }
-        if (props.tapAndDragZoom) {
+        if (props.tapAndDrag) {
           zoomInteractions.push('tapAndDrag');
         }
 
         // Build pan interactions array
         const panInteractions = [];
-        if (props.dragPan) {
+        if (props.drag) {
           panInteractions.push('drag');
         }
 
@@ -76,19 +80,19 @@ export default function ZoomAndPanInteractions() {
       getCode={({ props }) => {
         // Build zoom interactions array for code generation
         const zoomInteractions = [];
-        if (props.wheelZoom) {
+        if (props.wheel) {
           zoomInteractions.push('wheel');
         }
-        if (props.pinchZoom) {
+        if (props.pinch) {
           zoomInteractions.push('pinch');
         }
-        if (props.tapAndDragZoom) {
+        if (props.tapAndDrag) {
           zoomInteractions.push('tapAndDrag');
         }
 
         // Build pan interactions array
         const panInteractions = [];
-        if (props.dragPan) {
+        if (props.drag) {
           panInteractions.push('drag');
         }
 
