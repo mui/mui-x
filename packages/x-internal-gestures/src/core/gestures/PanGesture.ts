@@ -188,6 +188,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     super.updateOptions(options);
 
     this.direction = options.direction || this.direction;
+    this.threshold = options.threshold ?? this.threshold;
   }
 
   protected resetState(): void {

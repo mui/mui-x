@@ -302,7 +302,7 @@ describe('TapAndDrag Gesture', () => {
       tapMaxDistance: 15,
       dragTimeout: 500,
       dragThreshold: 10,
-      direction: ['up', 'down'],
+      dragDirection: ['up', 'down'],
     });
   });
 
@@ -314,13 +314,13 @@ describe('TapAndDrag Gesture', () => {
     expect(TapAndDragGesture).toBeClonable({
       preventDefault: true,
       stopPropagation: true,
-      minPointers: 1,
-      maxPointers: 1,
+      minPointers: 2,
+      maxPointers: 2,
       preventIf: ['press'],
       tapMaxDistance: 15,
       dragTimeout: 500,
       dragThreshold: 10,
-      direction: ['left', 'right'],
+      dragDirection: ['left', 'right'],
     });
   });
 });
