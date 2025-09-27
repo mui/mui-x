@@ -13,20 +13,8 @@ import { GesturePhase, GestureState } from '../Gesture';
 import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
 import { PointerData } from '../PointerManager';
 import { TargetElement } from '../types/TargetElement';
+import { Direction } from '../types/Direction';
 import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
-
-/**
- * The direction of movement for the pan gesture
- * This type defines the detected directions based on the vertical and horizontal components
- * The values can be 'up', 'down', 'left', 'right' or null if not applicable.
- *
- * The null values indicate that the gesture is not moving in that direction.
- */
-export type Direction = {
-  vertical: 'up' | 'down' | null;
-  horizontal: 'left' | 'right' | null;
-  mainAxis: 'horizontal' | 'vertical' | 'diagonal' | null;
-};
 
 /**
  * Configuration options for PanGesture
@@ -200,6 +188,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     super.updateOptions(options);
 
     this.direction = options.direction || this.direction;
+    this.threshold = options.threshold ?? this.threshold;
   }
 
   protected resetState(): void {

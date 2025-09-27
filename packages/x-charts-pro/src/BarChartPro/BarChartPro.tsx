@@ -1927,7 +1927,7 @@ BarChartPro.propTypes = {
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['pinch', 'wheel']),
+        PropTypes.oneOf(['pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.any,
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -1937,6 +1937,11 @@ BarChartPro.propTypes = {
           pointerMode: PropTypes.any,
           requiredKeys: PropTypes.array,
           type: PropTypes.oneOf(['pinch']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
         }),
       ]).isRequired,
     ),
