@@ -239,6 +239,9 @@ export const useGridRowSpanning = (
   const updateRowSpanningState = React.useCallback(
     (renderContext: GridRenderContext, resetState: boolean = false) => {
       const { range, rows: visibleRows } = getVisibleRows(apiRef);
+      if (resetState) {
+        store.set('rowSpanning', EMPTY_STATE);
+      }
       if (range === null || !isRowContextInitialized(renderContext)) {
         return;
       }
@@ -291,7 +294,7 @@ export const useGridRowSpanning = (
   );
 
   // Reset events trigger a full re-computation of the row spanning state:
-  // - The `unstable_rowSpanning` prop is updated (feature flag)
+  // - The `rowSpanning` prop is updated (feature flag)
   // - The filtering is applied
   // - The sorting is applied
   // - The `paginationModel` is updated
