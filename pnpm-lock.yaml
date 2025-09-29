@@ -127,8 +127,8 @@ catalogs:
       specifier: ^2.6.2
       version: 2.6.2
     babel-plugin-react-remove-properties:
-      specifier: ^0.3.0
-      version: 0.3.0
+      specifier: ^0.3.1
+      version: 0.3.1
     babel-plugin-transform-react-remove-prop-types:
       specifier: ^0.4.24
       version: 0.4.24
@@ -376,7 +376,7 @@ importers:
         version: 5.0.2
       babel-plugin-react-remove-properties:
         specifier: 'catalog:'
-        version: 0.3.0
+        version: 0.3.1
       babel-plugin-search-and-replace:
         specifier: ^1.1.1
         version: 1.1.1
@@ -673,7 +673,7 @@ importers:
         version: 5.1.0
       babel-plugin-react-remove-properties:
         specifier: 'catalog:'
-        version: 0.3.0
+        version: 0.3.1
       babel-plugin-transform-react-remove-prop-types:
         specifier: 'catalog:'
         version: 0.4.24
@@ -6543,8 +6543,8 @@ packages:
     resolution: {integrity: sha512-G5R+xmo5LS41A4UyZjOjV0mp9AvkuCyUOAJ6TOv/jTZS+VKh7L7HUDRcCSOb0YCM/u0fFarh7Diz0wjY8rFNFg==}
     engines: {node: '>=10', npm: '>=6'}
 
-  babel-plugin-react-remove-properties@0.3.0:
-    resolution: {integrity: sha512-vbxegtXGyVcUkCvayLzftU95vuvpYFV85pRpeMpohMHeEY46Qe0VNWfkVVcCbaZ12CXHzDFOj0esumATcW83ng==}
+  babel-plugin-react-remove-properties@0.3.1:
+    resolution: {integrity: sha512-JQ0oEgC4P6TZxSqEaoPZdbgE2L38Kz7RgTgGcOUUR24Z19OiGhnhdXkXkwwsYyx6LOr/bMY5ljDADhxDr/JQug==}
 
   babel-plugin-search-and-replace@1.1.1:
     resolution: {integrity: sha512-fjP2VTF3mxxOUnc96mdK22llH92A6gu7A5AFapJmgnqsQi3bqLduIRP0FpA2r5vRZOYPpnX4rE5izQlpsMBjSA==}
@@ -17738,7 +17738,7 @@ snapshots:
       babel-plugin-macros: 3.1.0
       require-from-string: 2.0.2
 
-  babel-plugin-react-remove-properties@0.3.0: {}
+  babel-plugin-react-remove-properties@0.3.1: {}
 
   babel-plugin-search-and-replace@1.1.1: {}
 
