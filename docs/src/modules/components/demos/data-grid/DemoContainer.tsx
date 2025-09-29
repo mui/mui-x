@@ -1,10 +1,22 @@
 import * as React from 'react';
 import { Theme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import Paper from '@mui/material/Paper';
+import MultiFileCodeViewer from './MultiFileCodeViewer';
 
-function DemoContainer({ theme, children }: { theme: Theme; children: React.ReactNode }) {
+interface DemoContainerProps {
+  theme: Theme;
+  children: React.ReactNode;
+  sourceFiles?: Record<string, string>;
+  defaultExpandedFile?: string;
+}
+
+function DemoContainer({ theme, children, sourceFiles, defaultExpandedFile }: DemoContainerProps) {
   const docsTheme = useTheme();
   const docsMode = docsTheme?.palette?.mode;
+  const [showCode, setShowCode] = React.useState(false);
 
   const modifiedTheme = React.useMemo(() => {
     if (docsMode) {
@@ -15,12 +27,51 @@ function DemoContainer({ theme, children }: { theme: Theme; children: React.Reac
 
   return (
     <ThemeProvider theme={modifiedTheme}>
-      <Box
-        sx={{
-          height: { xs: 'calc(100vh - 300px)', md: 'calc(100vh - 250px)' }, // TODO: Find a way to fill height without magic number,
-        }}
-      >
-        {children}
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box
+          sx={{
+            height: { xs: 'calc(100vh - 300px)', md: 'calc(100vh - 250px)' }, // TODO: Find a way to fill height without magic number,
+          }}
+        >
+          {children}
+        </Box>
+
+        {sourceFiles && (
+          <Paper
+            component="div"
+            elevation={0}
+            sx={{
+              width: '100%',
+              marginTop: 1,
+              border: '1px solid',
+              borderColor: 'divider',
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0,
+              backgroundColor: 'background.paper',
+              display: 'flex',
+              padding: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            <Button
+              size="small"
+              variant="outlined"
+              sx={{ color: 'primary.main', px: 1, boxShadow: 'none' }}
+              onClick={() => setShowCode(!showCode)}
+            >
+              {showCode ? 'Hide' : 'Show'} code
+            </Button>
+            {/* Add stackblitz/GitHub buttons too? */}
+          </Paper>
+        )}
+
+        {sourceFiles && (
+          <Collapse in={showCode}>
+            <MultiFileCodeViewer files={sourceFiles} defaultFile={defaultExpandedFile} />
+          </Collapse>
+        )}
       </Box>
     </ThemeProvider>
   );
