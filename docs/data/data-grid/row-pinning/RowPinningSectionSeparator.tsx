@@ -22,7 +22,7 @@ type SectionSeparator = NonNullable<DataGridProProps['pinnedRowsSectionSeparator
 
 export default function RowPinningSectionSeparator() {
   const [separator, setSeparator] =
-    React.useState<SectionSeparator>('border+shadow');
+    React.useState<SectionSeparator>('border-and-shadow');
 
   return (
     <div style={{ width: '100%' }}>
@@ -34,9 +34,9 @@ export default function RowPinningSectionSeparator() {
           name="pinned-columns-section-separator"
         >
           <FormControlLabel
-            value="border+shadow"
+            value="border-and-shadow"
             control={<Radio />}
-            label={<code>&quot;border+shadow&quot;</code>}
+            label={<code>&quot;border-and-shadow&quot;</code>}
           />
           <FormControlLabel
             value="border"

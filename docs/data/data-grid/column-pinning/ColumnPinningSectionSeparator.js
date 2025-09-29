@@ -14,7 +14,7 @@ import {
 } from '@mui/x-data-grid-generator';
 
 export default function ColumnPinningSectionSeparator() {
-  const [separator, setSeparator] = React.useState('border+shadow');
+  const [separator, setSeparator] = React.useState('border-and-shadow');
 
   return (
     <div style={{ width: '100%' }}>
@@ -26,9 +26,9 @@ export default function ColumnPinningSectionSeparator() {
           name="pinned-columns-section-separator"
         >
           <FormControlLabel
-            value="border+shadow"
+            value="border-and-shadow"
             control={<Radio />}
-            label={<code>&quot;border+shadow&quot;</code>}
+            label={<code>&quot;border-and-shadow&quot;</code>}
           />
           <FormControlLabel
             value="border"

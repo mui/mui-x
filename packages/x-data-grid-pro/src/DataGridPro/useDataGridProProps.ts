@@ -56,8 +56,8 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   lazyLoadingRequestThrottleMs: 500,
   listView: false,
   multipleColumnsSortingMode: 'withModifierKey',
-  pinnedColumnsSectionSeparator: 'border+shadow',
-  pinnedRowsSectionSeparator: 'border+shadow',
+  pinnedColumnsSectionSeparator: 'border-and-shadow',
+  pinnedRowsSectionSeparator: 'border-and-shadow',
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;

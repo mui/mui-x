@@ -682,9 +682,9 @@
     "pinnedColumnsSectionSeparator": {
       "type": {
         "name": "enum",
-        "description": "'border'<br>&#124;&nbsp;'border+shadow'<br>&#124;&nbsp;'shadow'"
+        "description": "'border-and-shadow'<br>&#124;&nbsp;'border'<br>&#124;&nbsp;'shadow'"
       },
-      "default": "'border+shadow'"
+      "default": "'border-and-shadow'"
     },
     "pinnedRows": {
       "type": {
@@ -693,8 +693,8 @@
       }
     },
     "pinnedRowsSectionSeparator": {
-      "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'border+shadow'" },
-      "default": "'border+shadow'"
+      "type": { "name": "enum", "description": "'border-and-shadow'<br>&#124;&nbsp;'border'" },
+      "default": "'border-and-shadow'"
     },
     "pivotActive": { "type": { "name": "bool" }, "default": "false" },
     "pivotingColDef": {

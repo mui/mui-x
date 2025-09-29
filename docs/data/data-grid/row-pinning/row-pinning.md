@@ -49,7 +49,7 @@ The demo below uses the `actions` column type to provide buttons that let the us
 ## Pinned rows appearance
 
 By default, the pinned rows sections are separated from non-pinned rows with a border and a shadow that appears when there is scroll.
-You can change the appearance by setting the [`pinnedRowsSectionSeparator`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-pinnedRowsSectionSeparator) prop to `'border'` or `'border+shadow'`.
+You can change the appearance by setting the [`pinnedRowsSectionSeparator`](/x/api/data-grid/data-grid-pro/#data-grid-pro-prop-pinnedRowsSectionSeparator) prop to `'border'` or `'border-and-shadow'`.
 
 {{"demo": "RowPinningSectionSeparator.js", "bg": "inline"}}
 
