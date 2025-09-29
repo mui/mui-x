@@ -46,12 +46,14 @@ export function WeeksHeader() {
           </div>
           <div className="WeekDaysRow">
             {week.map((day) => (
-              <div
+              <time
+                dateTime={day.date.key}
+                key={day.date.key}
                 className="WeekDayCell WeekDay"
                 data-weekend={isWeekend(adapter, day.date.value) ? '' : undefined}
               >
                 {adapter.format(day.date.value, 'weekdayShort')}
-              </div>
+              </time>
             ))}
           </div>
         </div>

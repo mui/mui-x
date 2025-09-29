@@ -126,6 +126,6 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
           </TimelinePrimitive.SubGrid>
         </div>
       </TimelinePrimitive.Root>
-    </div>
+    </section>
   );
 });

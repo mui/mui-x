@@ -33,12 +33,17 @@ export function DaysHeader() {
               <p className="MonthStartLabel">{adapter.format(day.value, 'monthShort')}</p>
             </div>
           )}
-          <p className="WeekDay" data-weekend={isWeekend(adapter, day.value) ? '' : undefined}>
-            {adapter.format(day.value, 'weekdayShort')}
-          </p>
-          <p className="DayNumber" data-weekend={isWeekend(adapter, day.value) ? '' : undefined}>
-            {adapter.format(day.value, 'dayOfMonth')}
-          </p>
+          <time dateTime={day.key} className="DayHeaderTime">
+            <span className="WeekDay" data-weekend={isWeekend(adapter, day.value) ? '' : undefined}>
+              {adapter.format(day.value, 'weekdayShort')}
+            </span>
+            <span
+              className="DayNumber"
+              data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
+            >
+              {adapter.format(day.value, 'dayOfMonth')}
+            </span>
+          </time>
         </div>
       ))}
     </div>

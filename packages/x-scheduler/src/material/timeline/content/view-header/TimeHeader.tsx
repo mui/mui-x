@@ -30,7 +30,9 @@ export function TimeHeader() {
     <div className="TimeHeader">
       {days.map((day) => (
         <div key={day.key} className="TimeHeaderCell">
-          <div className="DayLabel">{adapter.format(day.value, 'normalDateWithWeekday')}</div>
+          <time dateTime={day.key} className="DayLabel">
+            {adapter.format(day.value, 'normalDateWithWeekday')}
+          </time>
           <div className="TimeCellsRow">
             {/* TODO: Make sure it works across DST */}
             {Array.from({ length: 24 }, (_, hour) => (

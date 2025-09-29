@@ -2,6 +2,11 @@
   display: flex;
   width: calc(var(--unit-count) * var(--days-cell-width));
 }
+.DayHeaderTime {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 .WeeksHeader {
   display: flex;
   min-width: calc(var(--unit-count) * 7 * var(--weeks-cell-width));
