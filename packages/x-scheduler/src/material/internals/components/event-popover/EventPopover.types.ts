@@ -22,7 +22,7 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 export interface EventPopoverContextValue {
-  startEditing: (event: React.MouseEvent, occurrence: CalendarEventOccurrence) => void;
+  startEditing: (currentTarget: HTMLElement, occurrence: CalendarEventOccurrence) => void;
 }
 
 export interface EventPopoverProviderProps {

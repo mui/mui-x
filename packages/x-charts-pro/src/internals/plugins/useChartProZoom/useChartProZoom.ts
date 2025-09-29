@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
   ChartPlugin,
   AxisId,
-  DefaultizedZoomOptions,
   ZoomData,
   useSelector,
   selectorChartZoomOptionsLookup,
@@ -11,50 +10,38 @@ import {
   selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
 import { calculateZoom } from './calculateZoom';
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
+import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
+import { initializeZoomData } from './initializeZoomData';
 
-// It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
-export function initializeZoomData(
-  options: Record<AxisId, Pick<DefaultizedZoomOptions, 'axisId' | 'minStart' | 'maxEnd'>>,
-  zoomData?: readonly ZoomData[],
-) {
-  const zoomDataMap = new Map<AxisId, ZoomData>();
-
-  zoomData?.forEach((zoom) => {
-    const option = options[zoom.axisId];
-    if (option) {
-      zoomDataMap.set(zoom.axisId, zoom);
-    }
-  });
-
-  return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => {
-    if (zoomDataMap.has(axisId)) {
-      return zoomDataMap.get(axisId)!;
-    }
-
-    return {
-      axisId,
-      start,
-      end,
-    };
-  });
-}
-
-export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
-  store,
-  instance,
-  svgRef,
-  params,
-}) => {
-  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
+export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginData) => {
+  const { store, params } = pluginData;
+  const {
+    zoomData: paramsZoomData,
+    onZoomChange: onZoomChangeProp,
+    zoomInteractionConfig,
+  } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+
+  useEffectAfterFirstRender(() => {
+    store.update((prevState) => {
+      return {
+        ...prevState,
+        zoom: {
+          ...prevState.zoom,
+          zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
+        },
+      };
+    });
+  }, [store, zoomInteractionConfig]);
 
   // Manage controlled state
   React.useEffect(() => {
@@ -200,8 +187,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   }, [removeIsInteracting]);
 
   // Add events
-  const pluginData = { store, instance, svgRef };
-
   usePanOnDrag(pluginData, setZoomDataCallback);
 
   useZoomOnWheel(pluginData, setZoomDataCallback);
@@ -248,12 +233,7 @@ useChartProZoom.params = {
   initialZoom: true,
   onZoomChange: true,
   zoomData: true,
-};
-
-useChartProZoom.getDefaultizedParams = ({ params }) => {
-  return {
-    ...params,
-  };
+  zoomInteractionConfig: true,
 };
 
 useChartProZoom.getInitialState = (params) => {
@@ -272,6 +252,7 @@ useChartProZoom.getInitialState = (params) => {
       zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
+      zoomInteractionConfig: initializeZoomInteractionConfig(params.zoomInteractionConfig),
     },
   };
 };
