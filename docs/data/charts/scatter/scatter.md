@@ -154,7 +154,8 @@ However, this comes with the following limitations:
 
 - CSS styling of single `circle` elements is no longer possible;
 - Overriding the `marker` slot is not supported;
-- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible.
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible;
+- `disableHover` for scatter series does not work.
 
 On top of that, there's also some differences in behavior:
 
