@@ -30,7 +30,6 @@ import {
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
 import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
-import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -357,13 +356,19 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
 
     const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
-    const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+    const showLeftBorder = shouldCellShowLeftBorder(
+      pinnedPosition,
+      indexInSection,
+      rootProps.showCellVerticalBorder,
+      rootProps.pinnedColumnsSectionSeparator,
+    );
     const showRightBorder = shouldCellShowRightBorder(
       pinnedPosition,
       indexInSection,
       sectionLength,
       rootProps.showCellVerticalBorder,
       gridHasFiller,
+      rootProps.pinnedColumnsSectionSeparator,
     );
 
     return (
@@ -481,9 +486,6 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
-      {scrollbarWidth !== 0 && (
-        <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} borderTop={!isFirstVisible} />
-      )}
     </div>
   );
 });

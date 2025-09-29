@@ -17,6 +17,7 @@ import {
   isSpanValid,
   zoomAtPoint,
 } from './useZoom.utils';
+import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
 export const useZoomOnPinch = (
   {
@@ -28,12 +29,27 @@ export const useZoomOnPinch = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const isZoomEnabled = Object.keys(optionsLookup).length > 0;
+  const config = useSelector(store, selectorZoomInteractionConfig, ['pinch' as const]);
+
+  const isZoomOnPinchEnabled = React.useMemo(
+    () => (Object.keys(optionsLookup).length > 0 && config) || false,
+    [optionsLookup, config],
+  );
+
+  React.useEffect(() => {
+    if (!isZoomOnPinchEnabled) {
+      return;
+    }
+
+    instance.updateZoomInteractionListeners('zoomPinch', {
+      requiredKeys: config!.requiredKeys,
+    });
+  }, [config, isZoomOnPinchEnabled, instance]);
 
   // Zoom on pinch
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomEnabled) {
+    if (element === null || !isZoomOnPinchEnabled) {
       return () => {};
     }
 
@@ -73,11 +89,19 @@ export const useZoomOnPinch = (
       });
     });
 
-    const zoomHandler = instance.addInteractionListener('pinch', rafThrottledCallback);
+    const zoomHandler = instance.addInteractionListener('zoomPinch', rafThrottledCallback);
 
     return () => {
       zoomHandler.cleanup();
       rafThrottledCallback.clear();
     };
-  }, [svgRef, drawingArea, isZoomEnabled, optionsLookup, store, instance, setZoomDataCallback]);
+  }, [
+    svgRef,
+    drawingArea,
+    isZoomOnPinchEnabled,
+    optionsLookup,
+    store,
+    instance,
+    setZoomDataCallback,
+  ]);
 };
