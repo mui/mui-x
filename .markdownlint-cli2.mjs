@@ -1,4 +1,3 @@
-// @ts-nocheck
-import baseline from '@mui/monorepo/.markdownlint-cli2.mjs';
+import { createBaseConfig } from '@mui/internal-code-infra/markdownlint';
 
-export default baseline;
+export default createBaseConfig();
