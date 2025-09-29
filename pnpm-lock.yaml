@@ -193,7 +193,7 @@ catalogs:
       specifier: 19.1.1
       version: 19.1.1
     react-router:
-      specifier: ^7.9.1
+      specifier: ^7.9.2
       version: 7.9.2
     react-transition-group:
       specifier: ^4.4.5
