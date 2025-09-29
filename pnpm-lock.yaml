@@ -15585,7 +15585,7 @@ snapshots:
       agent-base: 7.1.4
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
       - supports-color
@@ -18094,7 +18094,7 @@ snapshots:
       '@npmcli/fs': 4.0.0
       fs-minipass: 3.0.3
       glob: 11.0.3
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
       minipass: 7.1.2
       minipass-collect: 2.0.1
       minipass-flush: 1.0.5
@@ -20238,7 +20238,7 @@ snapshots:
 
   hosted-git-info@9.0.0:
     dependencies:
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
 
   html-encoding-sniffer@4.0.0:
     dependencies:
