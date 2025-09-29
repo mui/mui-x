@@ -23,7 +23,6 @@ import { applyRecurringUpdateFollowing } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import {
   buildEventLookups,
-  getCalendarEventFromModel,
   getUpdatedEventModelFromPartialCalendarEvent,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
