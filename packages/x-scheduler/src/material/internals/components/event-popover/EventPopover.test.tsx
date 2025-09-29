@@ -8,7 +8,7 @@ import { Popover } from '@base-ui-components/react/popover';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
-import { DEFAULT_EVENT_COLOR } from '../../../../primitives/use-event-calendar';
+import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
 
 const adapter = getAdapter();
 
@@ -97,8 +97,8 @@ describe('<EventPopover />', () => {
       key: '1',
       title: 'Running test',
       description: 'Morning run',
-      start: adapter.setMinutes(adapter.setHours(occurrence.start, 0), 0),
-      end: adapter.setMinutes(adapter.setHours(occurrence.end, 23), 59),
+      start: adapter.startOfDay(occurrence.start),
+      end: adapter.endOfDay(occurrence.end),
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
@@ -141,10 +141,11 @@ describe('<EventPopover />', () => {
   });
 
   it('should handle read-only events', () => {
+    const readOnlyOccurrence = { ...occurrence, readOnly: true };
     render(
-      <StandaloneView events={[occurrence]} resources={resources}>
+      <StandaloneView events={[readOnlyOccurrence]} resources={resources}>
         <Popover.Root open>
-          <EventPopover {...defaultProps} occurrence={{ ...occurrence, readOnly: true }} />
+          <EventPopover {...defaultProps} occurrence={readOnlyOccurrence} />
         </Popover.Root>
       </StandaloneView>,
     );

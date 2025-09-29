@@ -1,6 +1,7 @@
 {
   "name": "LegendItemParams",
   "imports": [
+    "import { LegendItemParams } from '@mui/x-charts-premium'",
     "import { LegendItemParams } from '@mui/x-charts-pro'",
     "import { LegendItemParams } from '@mui/x-charts'"
   ],

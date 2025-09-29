@@ -11,7 +11,7 @@ describe('View - EventCalendarStore', () => {
   describe('Method: setView', () => {
     it('should update view and call onViewChange when value changes and is uncontrolled', () => {
       const onViewChange = spy();
-      const store = EventCalendarStore.create({ ...DEFAULT_PARAMS, onViewChange }, adapter);
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, onViewChange }, adapter);
 
       store.setView('day', {} as any);
 
@@ -22,7 +22,7 @@ describe('View - EventCalendarStore', () => {
 
     it('should NOT mutate store but calls onViewChange when is controlled', () => {
       const onViewChange = spy();
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         { ...DEFAULT_PARAMS, view: 'week', onViewChange },
         adapter,
       );
@@ -36,7 +36,7 @@ describe('View - EventCalendarStore', () => {
 
     it('should do nothing if setting the same view: no state change, no callback', () => {
       const onViewChange = spy();
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         { ...DEFAULT_PARAMS, defaultView: 'month', onViewChange },
         adapter,
       );
@@ -48,7 +48,7 @@ describe('View - EventCalendarStore', () => {
     });
 
     it('should throw when switching to a view not included in the allowed views', () => {
-      const store = EventCalendarStore.create(
+      const store = new EventCalendarStore(
         { ...DEFAULT_PARAMS, views: ['day', 'agenda'], defaultView: 'day' },
         adapter,
       );
@@ -59,7 +59,7 @@ describe('View - EventCalendarStore', () => {
 
   describe('Method: setViewConfig', () => {
     it('should set config and cleanup to null', () => {
-      const store = EventCalendarStore.create(DEFAULT_PARAMS, adapter);
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
       const siblingVisibleDateGetter = spy((d: SchedulerValidDate) => d);
       const cleanup = store.setViewConfig({ siblingVisibleDateGetter });

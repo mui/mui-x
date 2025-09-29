@@ -33,8 +33,6 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
     (side === 'start' && !doesEventStartBeforeColumnStart) ||
     (side === 'end' && !doesEventEndAfterColumnEnd);
 
-  const props = React.useMemo(() => ({}), []);
-
   const state: TimeGridEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
     [side],
@@ -43,7 +41,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
   React.useEffect(() => {
     const domElement = ref.current;
     if (!domElement || !enabled) {
-      return () => {};
+      return undefined;
     }
 
     return draggable({
@@ -65,7 +63,7 @@ export const TimeGridEventResizeHandler = React.forwardRef(function TimeGridEven
     enabled,
     state,
     ref: [forwardedRef, ref],
-    props: [props, elementProps],
+    props: [elementProps],
   });
 });
 

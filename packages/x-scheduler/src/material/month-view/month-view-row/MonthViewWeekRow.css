@@ -10,6 +10,40 @@
   color: var(--secondary-text-color);
 }
 
+.MonthViewCellNumber,
+.MonthViewCellNumberButton {
+  grid-row: 1;
+  justify-self: end;
+}
+
+.MonthViewCellNumberButton {
+  width: fit-content;
+  align-self: flex-end;
+  border-radius: var(--radius-4);
+}
+
+/* Hovered */
+.MonthViewCellNumberButton:hover {
+  background: var(--interactive-hover-bg);
+}
+
+/* Active */
+.MonthViewCellNumberButton:active {
+  background: var(--interactive-active-bg);
+}
+
+/* Focused */
+.MonthViewCellNumberButton:focus-visible {
+  background: var(--interactive-focused-bg);
+  outline: var(--outline-focus);
+  outline-offset: var(--outline-focus-offset);
+}
+
+/* Focused and hovered */
+.MonthViewCellNumberButton:focus-visible:hover {
+  background: var(--interactive-focused-hover-bg);
+}
+
 .MonthViewCell {
   display: grid;
   /* Setting the row heights to 18px here to make sure that even empty rows have the exact height of an all day event */
@@ -32,11 +66,6 @@
 
 .MonthViewCell[data-current] {
   background-color: var(--primary-2);
-}
-.MonthViewCellNumber,
-.MonthViewCellNumberButton {
-  grid-row: 1;
-  justify-self: end;
 }
 
 .MonthViewCell[data-current] .MonthViewCellNumber {
@@ -70,34 +99,6 @@
   background: var(--primary-7);
 }
 
-.MonthViewCellNumberButton {
-  width: fit-content;
-  align-self: flex-end;
-  border-radius: var(--radius-4);
-}
-
-/* Hovered */
-.MonthViewCellNumberButton:hover {
-  background: var(--interactive-hover-bg);
-}
-
-/* Active */
-.MonthViewCellNumberButton:active {
-  background: var(--interactive-active-bg);
-}
-
-/* Focused */
-.MonthViewCellNumberButton:focus-visible {
-  background: var(--interactive-focused-bg);
-  outline: var(--outline-focus);
-  outline-offset: var(--outline-focus-offset);
-}
-
-/* Focused and hovered */
-.MonthViewCellNumberButton:focus-visible:hover {
-  background: var(--interactive-focused-hover-bg);
-}
-
 .MonthViewCellEvents {
   position: relative;
   display: grid;
@@ -112,9 +113,14 @@
   padding-inline-start: var(--space-1);
 }
 
-.MonthViewDraggedEventContainer {
+.MonthViewPlaceholderEventContainer {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  /* Setting the row heights to 18px here to make sure that even empty rows have the exact height of an all day event */
+  grid-template-rows: repeat(var(--row-count), minmax(auto, 18px));
+  gap: var(--space-1);
 }
