@@ -52,12 +52,22 @@ import {
   getAggregationFunctionLabel,
   getAvailableAggregationFunctions,
 } from '../aggregation/gridAggregationUtils';
-import {
-  gridAggregationModelSelector,
-  gridCellAggregationResultSelector,
-} from '../aggregation/gridAggregationSelectors';
+import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
+
+const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
+  chartStateLookup: {},
+  setChartState: () => {},
+};
+
+export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
+  synced: true,
+  dimensions: [],
+  values: [],
+  type: '',
+  configuration: {},
+};
 
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
@@ -126,19 +136,6 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
       charts,
     } as GridChartsIntegrationState,
   };
-};
-
-const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
-  chartStateLookup: {},
-  setChartState: () => {},
-};
-
-export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
-  synced: true,
-  dimensions: [],
-  values: [],
-  type: '',
-  configuration: {},
 };
 
 export const useGridChartsIntegration = (
@@ -324,7 +321,11 @@ export const useGridChartsIntegration = (
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
       const rowsPerDepth = gridFilteredSortedDepthRowEntriesSelector(apiRef);
-      const defaultDepth = Math.max(0, (visibleDimensions.current[activeChartId]?.length ?? 0) - 1);
+      const currentChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
+      const defaultDepth = Math.max(
+        0,
+        (visibleDimensions.current[currentChartId]?.length ?? 0) - 1,
+      );
       const rowsAtDefaultDepth = (rowsPerDepth[defaultDepth] ?? []).length;
 
       // keep only unique columns and transform the grouped column to carry the correct field name to get the grouped value
@@ -376,11 +377,10 @@ export const useGridChartsIntegration = (
             targetRow = gridRowNodeSelector(apiRef, rowTree[rowId]!.parent!);
           }
 
-          const value: string | { label: string } | null =
-            gridCellAggregationResultSelector(apiRef, {
-              id: gridRowIdSelector(apiRef, targetRow),
-              field: dataColumns[j].field,
-            })?.value ?? apiRef.current.getRowValue(targetRow, dataColumns[j]);
+          const value: string | { label: string } | null = apiRef.current.getRowValue(
+            targetRow,
+            dataColumns[j],
+          );
 
           if (value !== null) {
             data[dataColumns[j].dataFieldName].push(
@@ -405,7 +405,7 @@ export const useGridChartsIntegration = (
         });
       });
     },
-    [apiRef, activeChartId, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
+    [apiRef, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(
