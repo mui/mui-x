@@ -18,7 +18,7 @@ import { GestureState } from '../Gesture';
 import type { KeyboardManager } from '../KeyboardManager';
 import { PointerGesture, type PointerGestureOptions } from '../PointerGesture';
 import { type PointerManager } from '../PointerManager';
-import { createEventName } from '../utils';
+import { createEventName, preventDefault } from '../utils';
 import { PanGesture, type PanEvent, type PanGestureEventData } from './PanGesture';
 import { TapGesture } from './TapGesture';
 
@@ -147,7 +147,7 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
   /**
    * Function to restore the original touch-action value
    */
-  private restoreTouchActionCallback: (() => void) | null = null;
+  private restoreCallback: (() => void) | null = null;
 
   private tapGesture: TapGesture<GestureName>;
 
@@ -303,23 +303,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     };
   }
 
-  private setTouchAction(): void {
-    if (this.touchAction && this.restoreTouchActionCallback === null) {
-      const currentTouchAction = (this.element as HTMLElement).style.touchAction;
-      (this.element as HTMLElement).style.touchAction = this.touchAction;
-      this.restoreTouchActionCallback = () => {
-        (this.element as HTMLElement).style.touchAction = currentTouchAction;
-      };
-    }
-  }
-
-  private restoreTouchAction(): void {
-    if (this.restoreTouchActionCallback) {
-      this.restoreTouchActionCallback();
-      this.restoreTouchActionCallback = null;
-    }
-  }
-
   /**
    * This can be empty because the TapAndDragGesture relies on TapGesture and PanGesture to handle pointer events
    * The internal gestures will manage their own state and events, while this class coordinates between them
@@ -386,5 +369,26 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     this.element.dispatchEvent(
       new CustomEvent(createEventName(this.name, event.detail.phase), event),
     );
+  }
+
+  private setTouchAction(): void {
+    this.element.addEventListener('touchstart', preventDefault, { passive: false });
+
+    if (this.touchAction && this.restoreCallback === null) {
+      const currentTouchAction = (this.element as HTMLElement).style.touchAction;
+      (this.element as HTMLElement).style.touchAction = this.touchAction;
+      this.restoreCallback = () => {
+        (this.element as HTMLElement).style.touchAction = currentTouchAction;
+      };
+    }
+  }
+
+  private restoreTouchAction(): void {
+    this.element.removeEventListener('touchstart', preventDefault);
+
+    if (this.restoreCallback) {
+      this.restoreCallback();
+      this.restoreCallback = null;
+    }
   }
 }
