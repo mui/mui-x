@@ -29,7 +29,9 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   store,
 }) => {
   const nestedDataManager = useRefWithInit(() => new NestedDataManager(instance)).current;
-  const cache = useRefWithInit(() => params.dataSourceCache ?? new DataSourceCacheDefault({})).current;
+  const cache = useRefWithInit(
+    () => params.dataSourceCache ?? new DataSourceCacheDefault({}),
+  ).current;
 
   const setDataSourceLoading: UseTreeViewLazyLoadingInstance['setDataSourceLoading'] =
     useEventCallback((itemId, isLoading) => {
