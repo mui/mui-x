@@ -255,7 +255,6 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     };
   }, [
     svgRef,
-
     focusNextItem,
     focusPreviousItem,
     removeFocus,
