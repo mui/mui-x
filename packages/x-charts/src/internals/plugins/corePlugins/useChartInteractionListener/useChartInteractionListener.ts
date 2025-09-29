@@ -89,7 +89,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             tapMaxDistance: 10,
             dragThreshold: 10,
             dragTimeout: 1000,
-            touchAction: 'none',
           }),
         ],
       });

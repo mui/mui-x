@@ -54,15 +54,6 @@ export type TapAndDragGestureOptions<GestureName extends string> =
      * If not specified, all directions are allowed
      */
     dragDirection?: Array<'up' | 'down' | 'left' | 'right'>;
-
-    /**
-     * Touch-action value to apply during the tap phase.
-     * When specified, this touch-action is set after tap detection,
-     * and restored when the drag timeout expires or drag starts.
-     * This helps prevent browser scrolling/zooming during tap-and-drag gestures.
-     * @see https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-     */
-    touchAction?: string;
   };
 
 /**
@@ -144,11 +135,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
    */
   private touchAction: string | undefined;
 
-  /**
-   * Function to restore the original touch-action value
-   */
-  private restoreCallback: (() => void) | null = null;
-
   private tapGesture: TapGesture<GestureName>;
 
   private panGesture: PanGesture<GestureName>;
@@ -167,7 +153,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     this.dragTimeout = options.dragTimeout ?? 1000;
     this.dragThreshold = options.dragThreshold ?? 0;
     this.dragDirection = options.dragDirection || ['up', 'down', 'left', 'right'];
-    this.touchAction = options.touchAction;
     this.tapGesture = new TapGesture({
       name: `${this.name}-tap` as GestureName,
       maxDistance: this.tapMaxDistance,
@@ -205,7 +190,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
       dragTimeout: this.dragTimeout,
       dragThreshold: this.dragThreshold,
       dragDirection: [...this.dragDirection],
-      touchAction: this.touchAction,
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
@@ -258,7 +242,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     this.dragTimeout = options.dragTimeout ?? this.dragTimeout;
     this.dragThreshold = options.dragThreshold ?? this.dragThreshold;
     this.dragDirection = options.dragDirection || this.dragDirection;
-    this.touchAction = options.touchAction ?? this.touchAction;
 
     this.element.dispatchEvent(
       new CustomEvent(`${this.panGesture.name}ChangeOptions`, {
@@ -373,22 +356,9 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
 
   private setTouchAction(): void {
     this.element.addEventListener('touchstart', preventDefault, { passive: false });
-
-    if (this.touchAction && this.restoreCallback === null) {
-      const currentTouchAction = (this.element as HTMLElement).style.touchAction;
-      (this.element as HTMLElement).style.touchAction = this.touchAction;
-      this.restoreCallback = () => {
-        (this.element as HTMLElement).style.touchAction = currentTouchAction;
-      };
-    }
   }
 
   private restoreTouchAction(): void {
     this.element.removeEventListener('touchstart', preventDefault);
-
-    if (this.restoreCallback) {
-      this.restoreCallback();
-      this.restoreCallback = null;
-    }
   }
 }
