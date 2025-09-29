@@ -25,7 +25,7 @@ const excludeLabels = ['dependencies', 'scope: scheduler'];
  * @type {string[]}
  * Tags found in title to exclude the commit from the changelog
  */
-const excludeTitleTags = ['[charts-premium]'];
+const excludeTitleTags = [];
 
 /**
  * @type {string}
@@ -288,6 +288,7 @@ async function generateChangelog({
   const pickersProCommits = [];
   const chartsCommits = [];
   const chartsProCommits = [];
+  const chartsPremiumCommits = [];
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
@@ -326,6 +327,9 @@ async function generateChangelog({
         case 'DateTimeRangePicker':
         case 'TimeRangePicker':
           pickersProCommits.push(commitItem);
+          break;
+        case 'charts-premium':
+          chartsPremiumCommits.push(commitItem);
           break;
         case 'charts-pro':
           chartsProCommits.push(commitItem);
@@ -416,10 +420,8 @@ async function generateChangelog({
       .join('\n');
   };
 
-  const proIcon =
-    '[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")';
-  const premiumIcon =
-    '[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")';
+  const proIcon = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
+  const premiumIcon = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
 
   /**
    * Generates a changelog section for a product
@@ -575,6 +577,7 @@ ${logProductSection({
   packageName: 'x-charts',
   baseCommits: chartsCommits,
   proCommits: chartsProCommits,
+  premiumCommits: chartsPremiumCommits,
   changelogKey: 'charts',
 })}
 

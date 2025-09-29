@@ -21,7 +21,15 @@ This package is not published yet.
 
 ## Recurrence
 
-Recurring events use an `rrule` object to define their repeating pattern.
+You can use the `rrule` property on your event model to define its repeating pattern:
+
+```ts
+const event = {
+  // ...other even properties
+  rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TH'] },
+};
+```
+
 The scheduler expands recurring events only for the visible range, keeps the original duration and handles all-day and multi-day spans.
 
 {{"demo": "Recurrence.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -54,7 +62,7 @@ Below are the shapes we support, with small examples.
 
     ```tsx
     // Every month on the 15th
-    rrule={{ freq: 'MONTHLY', interval: 1, byMonthDay: [15] }}
+    rrule: { freq: 'MONTHLY', interval: 1, byMonthDay: [15] }
     ```
 
   - `byDay` with one ordinal entry (`2TU` represents 2nd Tuesday, `-1FR` represents last Friday, etc).
@@ -62,10 +70,10 @@ Below are the shapes we support, with small examples.
 
     ```tsx
     // Second Tuesday of every month
-    rrule={{ freq: 'MONTHLY', interval: 1, byDay: ['2TU'] }}
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['2TU'] }
 
     // Last Friday of every month
-    rrule={{ freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] }}
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['-1FR'] }
 
     ```
 
@@ -73,25 +81,38 @@ Below are the shapes we support, with small examples.
 
   ```tsx
   // Every year on the event's start date
-  rrule={{ freq: 'YEARLY', interval: 1 }}
+  rrule: { freq: 'YEARLY', interval: 1 }
   ```
 
 - End of rule, use `count` or `until` (inclusive), only one at a time. If neither `count` nor `until` is provided, the series never ends.
 
   ```tsx
   // Never ends (default)
-  rrule={{ freq: 'DAILY', interval: 1 }}
+  rrule: { freq: 'DAILY', interval: 1 }
 
   // Stop after 5 occurrences
-  rrule={{ freq: 'DAILY', count: 5 }}
+  rrule: { freq: 'DAILY', count: 5 }
 
   // Until a date (inclusive)
-  rrule={{ freq: 'WEEKLY', byDay: ['TU'], until: DateTime.fromISO('2025-12-31T23:59:59Z') }}
+  rrule: { freq: 'WEEKLY', byDay: ['TU'], until: DateTime.fromISO('2025-12-31T23:59:59Z') }
   ```
 
 :::info
 **Standards compliance**: This scheduler follows the iCalendar **RRULE** standard from **RFC 5545**. We do not support every rule or combination yet. If you want more information about a specific rule, see **[RFC 5545 §3.3.10 Recurrence Rule](https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10)**.
 :::
+
+## All day events
+
+You can use the `allDay` property on your event model to define it as all-day:
+
+```ts
+const event = {
+  // ...other even properties
+  allDay: true,
+};
+```
+
+{{"demo": "AllDay.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Drag interactions
 

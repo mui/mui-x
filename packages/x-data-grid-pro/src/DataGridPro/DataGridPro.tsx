@@ -7,6 +7,7 @@ import {
   GridConfiguration,
   validateProps,
   useGridApiInitialization,
+  useGridParamsOverridableMethods,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -28,8 +29,8 @@ const configuration: GridConfiguration = {
     useGridRowAriaAttributes: useGridRowAriaAttributesPro,
     // @ts-ignore - TODO: Fix it
     useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
     useCellAggregationResult: () => null,
-    useSortValueGetter: (apiRef) => apiRef.current.getCellValue,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };

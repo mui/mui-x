@@ -5,14 +5,19 @@ import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
 import {
-  addRoundedOffsetToDate,
   EVENT_DRAG_PRECISION_MINUTE,
-  isDraggingTimeGridEvent,
-  isDraggingTimeGridEventResizeHandler,
+  buildIsValidDropTarget,
+  EVENT_DRAG_PRECISION_MS,
 } from '../../utils/drag-utils';
 import { TimeGridColumnContext } from './TimeGridColumnContext';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
 import { selectors } from '../../use-event-calendar';
+
+const isValidDropTarget = buildIsValidDropTarget([
+  'TimeGridEvent',
+  'TimeGridEventResizeHandler',
+  'DayGridEvent',
+]);
 
 export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTarget.Parameters) {
   const { start, end } = parameters;
@@ -45,41 +50,56 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
       data: Record<string, unknown>,
       input: { clientY: number },
     ): CalendarOccurrencePlaceholder | undefined => {
+      if (!isValidDropTarget(data)) {
+        return undefined;
+      }
+
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
-      // Move event
-      if (isDraggingTimeGridEvent(data)) {
+      const createDropData = (
+        newStart: SchedulerValidDate,
+        newEnd: SchedulerValidDate,
+      ): CalendarOccurrencePlaceholder => ({
+        start: newStart,
+        end: newEnd,
+        eventId: data.eventId,
+        occurrenceKey: data.occurrenceKey,
+        surfaceType: 'time-grid',
+        originalStart: data.start,
+      });
+
+      const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
+        const roundedOffset =
+          Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
+
+        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
+        return adapter.addSeconds(date, roundedOffset / 1000);
+      };
+
+      // Move a Time Grid Event within the Time Grid
+      if (data.source === 'TimeGridEvent') {
         // TODO: Avoid JS Date conversion
         const eventDurationMinute =
           (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
           (60 * 1000);
 
-        const newStartDate = addRoundedOffsetToDate({
-          adapter,
-          date: start,
-          offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs,
-        });
+        const newStartDate = addOffsetToDate(
+          start,
+          cursorOffsetMs - data.initialCursorPositionInEventMs,
+        );
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
 
-        return {
-          start: newStartDate,
-          end: newEndDate,
-          eventId: data.eventId,
-          occurrenceKey: data.occurrenceKey,
-          surfaceType: 'time-grid',
-          originalStart: data.start,
-        };
+        return createDropData(newStartDate, newEndDate);
       }
 
-      // Resize event
-      if (isDraggingTimeGridEventResizeHandler(data)) {
+      // Resize a Time Grid Event
+      if (data.source === 'TimeGridEventResizeHandler') {
         if (data.side === 'start') {
-          const cursorDate = addRoundedOffsetToDate({
-            adapter,
-            date: start,
-            offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs,
-          });
+          const cursorDate = addOffsetToDate(
+            start,
+            cursorOffsetMs - data.initialCursorPositionInEventMs,
+          );
 
           // Ensure the new start date is not after or too close to the end date.
           const maxStartDate = adapter.addMinutes(data.end, -EVENT_DRAG_PRECISION_MINUTE);
@@ -87,38 +107,33 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
             ? cursorDate
             : maxStartDate;
 
-          return {
-            start: newStartDate,
-            end: data.end,
-            eventId: data.eventId,
-            occurrenceKey: data.occurrenceKey,
-            surfaceType: 'time-grid',
-            originalStart: data.start,
-          };
+          return createDropData(newStartDate, data.end);
         }
 
-        // TODO: Avoid JS Date conversion
-        const eventDurationMs =
-          adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime();
+        if (data.side === 'end') {
+          // TODO: Avoid JS Date conversion
+          const eventDurationMs =
+            adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime();
 
-        const cursorDate = addRoundedOffsetToDate({
-          adapter,
-          date: start,
-          offsetMs: cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
-        });
+          const cursorDate = addOffsetToDate(
+            start,
+            cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
+          );
 
-        // Ensure the new end date is not before or too close to the start date.
-        const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
-        const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
+          // Ensure the new end date is not before or too close to the start date.
+          const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
+          const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
 
-        return {
-          start: data.start,
-          end: newEndDate,
-          eventId: data.eventId,
-          occurrenceKey: data.occurrenceKey,
-          surfaceType: 'time-grid',
-          originalStart: data.start,
-        };
+          return createDropData(data.start, newEndDate);
+        }
+      }
+
+      // Move a Day Grid Event into the Time Grid
+      if (data.source === 'DayGridEvent') {
+        const newStartDate = addOffsetToDate(start, cursorOffsetMs);
+        const newEndDate = adapter.addMinutes(newStartDate, 60);
+
+        return createDropData(newStartDate, newEndDate);
       }
 
       return undefined;
@@ -132,9 +147,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
 
     return dropTargetForElements({
       element: ref.current,
-      canDrop: (arg) =>
-        isDraggingTimeGridEvent(arg.source.data) ||
-        isDraggingTimeGridEventResizeHandler(arg.source.data),
+      canDrop: (arg) => isValidDropTarget(arg.source.data),
       onDrag: ({ source: { data }, location }) => {
         const newPlaceholder = getEventDropData(data, location.current.input);
         if (newPlaceholder) {
@@ -142,7 +155,7 @@ export function useTimeGridColumnDropTarget(parameters: useTimeGridColumnDropTar
         }
       },
       onDragStart: ({ source: { data } }) => {
-        if (isDraggingTimeGridEvent(data) || isDraggingTimeGridEventResizeHandler(data)) {
+        if (isValidDropTarget(data)) {
           store.setOccurrencePlaceholder({
             eventId: data.eventId,
             occurrenceKey: data.occurrenceKey,

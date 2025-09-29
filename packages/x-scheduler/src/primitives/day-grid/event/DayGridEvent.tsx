@@ -44,7 +44,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const ref = React.useRef<HTMLDivElement>(null);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
   const { start: rowStart, end: rowEnd } = useDayGridRowContext();
-  const { state: eventState, props: eventProps } = useEvent({ start, end });
+  const { state: eventState } = useEvent({ start, end });
   const store = useEventCalendarStoreContext();
   const hasPlaceholder = useStore(store, selectors.hasOccurrencePlaceholder);
   const isDragging = useStore(store, selectors.isOccurrenceMatchingThePlaceholder, occurrenceKey);
@@ -122,7 +122,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef, ref],
-    props: [props, eventProps, elementProps, getButtonProps],
+    props: [props, elementProps, getButtonProps],
   });
 
   return (

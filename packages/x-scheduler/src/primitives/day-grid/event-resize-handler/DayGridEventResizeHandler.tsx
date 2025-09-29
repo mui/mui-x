@@ -33,8 +33,6 @@ export const DayGridEventResizeHandler = React.forwardRef(function DayGridEventR
     (side === 'start' && !doesEventStartBeforeRowStart) ||
     (side === 'end' && !doesEventEndAfterRowEnd);
 
-  const props = React.useMemo(() => ({}), []);
-
   const state: DayGridEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
     [side],
@@ -65,7 +63,7 @@ export const DayGridEventResizeHandler = React.forwardRef(function DayGridEventR
     enabled,
     state,
     ref: [forwardedRef, ref],
-    props: [props, elementProps],
+    props: [elementProps],
   });
 });
 

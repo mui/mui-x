@@ -33,10 +33,7 @@ export const TimelineSubGrid = React.forwardRef(function TimelineSubGrid<Item = 
 
   const props = React.useMemo(() => ({ role: 'rowgroup', children }), [children]);
 
-  const state: TimelineSubGrid.State = React.useMemo(() => ({}), []);
-
   return useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });
