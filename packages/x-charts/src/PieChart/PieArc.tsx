@@ -23,6 +23,8 @@ export interface PieArcClasses {
    * Needs to be suffixed with the series ID: `.${pieArcClasses.series}-${seriesId}`.
    */
   series: string;
+  /** Styles applied to the focus indicator element. */
+  focusIndicator: string;
 }
 
 export type PieArcClassKey = keyof PieArcClasses;
@@ -47,6 +49,7 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
   'highlighted',
   'faded',
   'series',
+  'focusIndicator',
 ]);
 
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
