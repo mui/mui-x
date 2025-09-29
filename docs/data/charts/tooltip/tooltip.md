@@ -138,7 +138,7 @@ With composition, you can use your component inside the `ChartDataProvider`.
 
 ```jsx
 <ChartDataProvider>
-  <ChartSurface>{/* ... */}</ChartSurface>
+  <ChartsSurface>{/* ... */}</ChartsSurface>
   <CustomItemTooltip />
 </ChartDataProvider>
 ```
