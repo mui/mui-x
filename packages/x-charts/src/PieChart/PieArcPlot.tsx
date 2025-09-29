@@ -128,7 +128,6 @@ function PieArcPlot(props: PieArcPlotProps) {
       {/* Render the focus indicator last, so it can align nicely over all arcs */}
       {focusedItem && (
         <Arc
-          key={focusedItem.dataIndex}
           startAngle={focusedItem.startAngle}
           endAngle={focusedItem.endAngle}
           paddingAngle={focusedItem.paddingAngle}
