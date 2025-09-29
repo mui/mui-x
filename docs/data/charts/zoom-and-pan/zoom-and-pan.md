@@ -24,7 +24,7 @@ The following actions are enabled by default:
 
 Additional zoom interactions can be enabled through configuration:
 
-- **Tap and drag**: Zoom in/out by tapping once and then dragging vertically.
+- **Tap and drag**: Zoom in/out by tapping twice and then dragging vertically.
 
 {{"demo": "ZoomScatterChart.js"}}
 {{"demo": "ZoomBarChart.js"}}
@@ -159,7 +159,7 @@ The `zoomInteractionConfig` prop allows you to specify which interactions are en
 
 - **`wheel`**: Zoom in/out by scrolling the mouse wheel (default)
 - **`pinch`**: Zoom in/out by pinching on touch devices (default)
-- **`tapAndDrag`**: Zoom in/out by tapping once and then dragging vertically. Dragging up zooms in, dragging down zooms out.
+- **`tapAndDrag`**: Zoom in/out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
 
 **Pan** interactions:
 

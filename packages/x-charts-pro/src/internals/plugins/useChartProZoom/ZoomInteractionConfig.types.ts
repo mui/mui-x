@@ -5,6 +5,7 @@ export type ZoomInteractionConfig = {
    * Defines the interactions that trigger zooming.
    * - `wheel`: Zooms in or out when the mouse wheel is scrolled.
    * - `pinch`: Zooms in or out when a pinch gesture is detected.
+   * - `tapAndDrag`: Zooms in or out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
    *
    * @default ['wheel', 'pinch']
    */
