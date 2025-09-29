@@ -57,7 +57,7 @@ export default function ZoomAndPanInteractions() {
         };
 
         return (
-          <div style={{ width: '100%', margin: 4 }}>
+          <div style={{ width: '100%' }}>
             <ScatterChartPro
               height={300}
               xAxis={[
@@ -69,6 +69,7 @@ export default function ZoomAndPanInteractions() {
               yAxis={[
                 {
                   zoom: true,
+                  width: 40,
                 },
               ]}
               series={series}
