@@ -9,7 +9,7 @@ components: ChartsAxis, ChartsReferenceLine, ChartsText, ChartsXAxis, ChartsYAxi
 <p class="description">Define, format, and customize Chart axes.</p>
 
 An axis is a reference line that data points are measured against in a chart.
-The MUI X Line Chart, Bar Chart, and Scatter Chart give you customization options for both x-axes and y-axes to suit a wide range of use cases.
+The MUI X Line Chart, Bar Chart, Scatter Chart, and Heatmap give you customization options for both x-axes and y-axes to suit a wide range of use cases.
 
 ## Creating custom axes
 
@@ -17,7 +17,7 @@ Use the `xAxis` and `yAxis` props to define custom axes.
 These props expect an array of objects.
 
 In the demo below, two lines are rendered using the same data points.
-One uses linear axes and the other is logarithmic.
+One has a linear y-axis and the other has a logarithmic one.
 Each axis definition is identified by its property `id`.
 Then each series specifies the axis it uses with the `xAxisId` and `yAxisId` properties.
 
@@ -26,7 +26,7 @@ Then each series specifies the axis it uses with the `xAxisId` and `yAxisId` pro
 :::info
 ID management, as shown in the example above, is not necessary for most common use cases.
 
-If you don't provide `xAxisId` or `yAxisId` then the series uses the first axis defined.
+If you don't provide `xAxisId` or `yAxisId` then the series uses the axis defined first.
 This is why you won't see definitions of `id`, `xAxisId`, or `yAxisId` in most demos in the Charts docs—they rely on the default values.
 :::
 
@@ -135,10 +135,10 @@ If you use composition you can pass these as props to the `<ChartsGrid />` compo
 Use the `tickNumber` property to customize the number of ticks.
 
 :::info
-This number does _not_ necessarily represent the exact number of ticks that will be displayed.
-This is because D3 automatically places ticks to optimize for human readability, and it will round up or down from the provided `tickNumber` as needed to accomplish this.
+This number does _not_ necessarily represent the exact number of ticks displayed.
+This is because D3 automatically places ticks to optimize for human readability, and it rounds up or down from the provided `tickNumber` as needed to accomplish this.
 
-For example, if you set `tickNumber=5` but there are only four years to display on the axis, the component will render four total ticks (one for each year) instead of trying to divide four years into five.
+For example, if you set `tickNumber=5` but there are only four years to display on the axis, the component renders four total ticks (one for each year) instead of trying to divide four years into five.
 :::
 
 To better control how the ticks render, you can also provide `tickMinStep` and `tickMaxStep`, which compute `tickNumber` so that the step between two ticks respects the minimum and maximum values.
@@ -150,9 +150,9 @@ In the demo below, the top axis has a `tickMinStep` of half a day, and the botto
 ### Fixed tick position
 
 If you want more control over the tick position, you can use the `tickInterval` property.
-This property accepts an array of values that define where ticks will be placed.
+This property accepts an array of values that define exactly where ticks are placed.
 
-For axes with the`'point'` scale type, the `tickInterval` property can be a filtering function of the type `(value, index) => boolean`.
+For axes with the `'point'` scale type, the `tickInterval` property can be a filtering function of the type `(value, index) => boolean`.
 
 In the demo below, both axes are set to `scaleType='point'`.
 The top axis demonstrates the default behavior with a tick for each point.
