@@ -155,10 +155,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
           event.preventDefault();
           return {
             ...prevState,
+            ...(prevState.interaction && {
+              interaction: { ...prevState.interaction, lastUpdate: 'keyboard' },
+            }),
             keyboardNavigation: {
               ...prevState.keyboardNavigation,
               item: newFocusedItem,
-              lastUpdate: 'keyboard',
             },
           };
         }
