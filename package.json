@@ -137,7 +137,7 @@
     "jss": "^10.10.0",
     "jss-plugin-template": "^10.10.0",
     "jss-rtl": "^0.3.0",
-    "lerna": "^8.2.4",
+    "lerna": "^9.0.0",
     "lodash": "catalog:",
     "magic-string": "^0.30.19",
     "markdownlint-cli2": "^0.18.1",
