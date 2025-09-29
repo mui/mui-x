@@ -1,5 +1,12 @@
 import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  reactMajor,
+  waitFor,
+} from '@mui/internal-test-utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -306,6 +313,45 @@ describe('<DataGridPro /> - Tree data', () => {
         />,
       );
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
+    });
+  });
+
+  describe('apiRef: expandAllRows', () => {
+    it('should expand all rows', async () => {
+      render(<Test />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+      act(() => apiRef.current?.expandAllRows());
+
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
+    });
+  });
+
+  describe('apiRef: collapseAllRows', () => {
+    it('should collapse all rows', () => {
+      render(<Test defaultGroupingExpansionDepth={-1} />);
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
+      act(() => apiRef.current?.collapseAllRows());
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
     });
   });
 
