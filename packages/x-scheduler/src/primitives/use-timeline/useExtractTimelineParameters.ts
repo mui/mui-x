@@ -16,6 +16,10 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
     ampm,
     eventColor,
     showCurrentTimeIndicator,
+    view,
+    views,
+    defaultView,
+    onViewChange,
     ...forwardedProps
   } = props;
 
@@ -32,6 +36,10 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
       ampm,
       eventColor,
       showCurrentTimeIndicator,
+      view,
+      views,
+      defaultView,
+      onViewChange,
     }),
     [
       events,
@@ -45,6 +53,10 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
       ampm,
       eventColor,
       showCurrentTimeIndicator,
+      view,
+      views,
+      defaultView,
+      onViewChange,
     ],
   );
 
