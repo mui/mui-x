@@ -2,6 +2,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
   GridColumnGroupingModel,
+  GridRowModel,
   gridStringOrNumberComparator,
 } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -65,8 +66,14 @@ export const getPropsOverrides = (
    * Column group headers are sorted by the leaf columns order in the column definition.
    * Store the values of each column group path to be able to sort them by pivot column sort order.
    * The values are stored by the column group level which allows easier sorting by going through the column group levels in reverse order.
+   * Store raw value to be able to determine if the value was formatted on the client using `getRowValue`.
+   * Values sent from the server as strings will not be sorted on the client.
    */
-  const columnGroupPathValues: { field: string; pathValues: string[] }[] = [];
+  const columnGroupPathValues: {
+    field: string;
+    pathValues: string[];
+    pathValuesRaw: (string | GridRowModel)[];
+  }[] = [];
 
   uniquePaths.forEach((columnPath) => {
     const columnPathValues = columnPath.map((path) => path.value);
@@ -98,7 +105,11 @@ export const getPropsOverrides = (
           ? path
           : apiRef.current.getRowValue(path, initialColumns.get(visiblePivotColumns[index].field)!),
       );
-      columnGroupPathValues.push({ field: pivotFieldName, pathValues: combinedPathValues });
+      columnGroupPathValues.push({
+        field: pivotFieldName,
+        pathValues: combinedPathValues.slice(0, -1),
+        pathValuesRaw: columnPathValues,
+      });
 
       // Build the hierarchy for column groups
       for (let i = 0; i < combinedPathValues.length - 1; i += 1) {
@@ -157,7 +168,13 @@ export const getPropsOverrides = (
     if (!sort) {
       continue;
     }
+
     columnGroupPathValues.sort((a, b) => {
+      // Do not sort values that are returned as strings
+      if (typeof a.pathValuesRaw[i] === 'string' && typeof b.pathValuesRaw[i] === 'string') {
+        return 0;
+      }
+
       return (
         (sort === 'asc' ? 1 : -1) *
         gridStringOrNumberComparator(a.pathValues[i], b.pathValues[i], {} as any, {} as any)
