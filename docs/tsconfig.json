@@ -16,7 +16,6 @@
     "next-env.d.ts",
     "next.config.mjs",
     "docs-env.d.ts",
-    "docs-config.d.ts",
     "src",
     "pages/**/*.ts*",
     "data",

@@ -65,7 +65,6 @@
       ],
       "test/*": ["./test/*"],
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
-      "docs/config": ["./docs/config.ts"],
       "docsx/*": ["./docs/*"]
     },
     "types": ["@vitest/browser/providers/playwright"]
