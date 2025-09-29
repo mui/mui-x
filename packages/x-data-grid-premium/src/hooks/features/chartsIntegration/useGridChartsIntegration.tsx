@@ -4,6 +4,7 @@ import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridColDef,
+  gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
   gridRowIdSelector,
   gridRowNodeSelector,
@@ -43,7 +44,6 @@ import {
   gridChartsIntegrationActiveChartIdSelector,
   gridChartableColumnsSelector,
 } from './gridChartsIntegrationSelectors';
-import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 import { isBlockedForSection } from './utils';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';
@@ -55,6 +55,19 @@ import {
 import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
+
+const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
+  chartStateLookup: {},
+  setChartState: () => {},
+};
+
+export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
+  synced: true,
+  dimensions: [],
+  values: [],
+  type: '',
+  configuration: {},
+};
 
 export const chartsIntegrationStateInitializer: GridStateInitializer<
   Pick<
@@ -125,19 +138,6 @@ export const chartsIntegrationStateInitializer: GridStateInitializer<
   };
 };
 
-const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
-  chartStateLookup: {},
-  setChartState: () => {},
-};
-
-export const EMPTY_CHART_INTEGRATION_CONTEXT_STATE: ChartState = {
-  synced: true,
-  dimensions: [],
-  values: [],
-  type: '',
-  configuration: {},
-};
-
 export const useGridChartsIntegration = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -195,17 +195,20 @@ export const useGridChartsIntegration = (
       }
 
       const columns = gridColumnLookupSelector(apiRef);
-      const unwrappedColumnGroupingModel = gridColumnGroupsUnwrappedModelSelector(apiRef);
+      const columnGroupPath = gridColumnGroupsUnwrappedModelSelector(apiRef)[field] ?? [];
+      const columnGroupLookup = gridColumnGroupsLookupSelector(apiRef);
 
       const column = columns[field];
 
       const columnName = column?.headerName || field;
-      if (!pivotActive || !unwrappedColumnGroupingModel[field]) {
+      if (!pivotActive || !columnGroupPath) {
         return columnName;
       }
 
-      const groupPath = unwrappedColumnGroupingModel[field].slice(-1)[0];
-      return [columnName, ...groupPath.split(COLUMN_GROUP_ID_SEPARATOR)].join(' - ');
+      const groupNames = columnGroupPath.map(
+        (group) => columnGroupLookup[group].headerName || group,
+      );
+      return [columnName, ...groupNames].join(' - ');
     },
     [apiRef, pivotActive, props.slotProps?.chartsPanel],
   );
@@ -318,7 +321,11 @@ export const useGridChartsIntegration = (
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
       const rowsPerDepth = gridFilteredSortedDepthRowEntriesSelector(apiRef);
-      const defaultDepth = Math.max(0, (visibleDimensions.current[activeChartId]?.length ?? 0) - 1);
+      const currentChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
+      const defaultDepth = Math.max(
+        0,
+        (visibleDimensions.current[currentChartId]?.length ?? 0) - 1,
+      );
       const rowsAtDefaultDepth = (rowsPerDepth[defaultDepth] ?? []).length;
 
       // keep only unique columns and transform the grouped column to carry the correct field name to get the grouped value
@@ -374,6 +381,7 @@ export const useGridChartsIntegration = (
             targetRow,
             dataColumns[j],
           );
+
           if (value !== null) {
             data[dataColumns[j].dataFieldName].push(
               typeof value === 'object' && 'label' in value ? value.label : value,
@@ -397,7 +405,7 @@ export const useGridChartsIntegration = (
         });
       });
     },
-    [apiRef, activeChartId, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
+    [apiRef, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(

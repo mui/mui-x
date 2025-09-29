@@ -20,10 +20,8 @@ export const DayGridCell = React.forwardRef(function DayGridCell(
 
   const dropTargetRef = useDayGridCellDropTarget({ value });
   const props = React.useMemo(() => ({ role: 'gridcell' }), []);
-  const state: DayGridCell.State = React.useMemo(() => ({}), []);
 
   return useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef, dropTargetRef],
     props: [props, elementProps],
   });

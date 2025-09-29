@@ -1,4 +1,4 @@
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
@@ -44,7 +44,7 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
     }
   };
 
-  useEnhancedEffect(() => {
+  useIsoLayoutEffect(() => {
     store.set('label', { ...store.state.items, isItemEditable: params.isItemEditable });
   }, [store, params.isItemEditable]);
 
