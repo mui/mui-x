@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewItemsSignature, SetItemChildrenParameters } from './useTreeViewItems.types';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';

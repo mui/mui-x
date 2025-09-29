@@ -206,6 +206,9 @@ jobs:
           name: ESLint
           command: pnpm eslint:ci
       - run:
+          name: Stylelint
+          command: pnpm stylelint
+      - run:
           name: Lint JSON
           command: pnpm jsonlint
       - run:

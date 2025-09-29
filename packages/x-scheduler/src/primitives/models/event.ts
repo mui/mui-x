@@ -164,7 +164,7 @@ export interface CalendarOccurrencePlaceholder {
    * The type of surface the draft should be rendered on.
    * This is useful to make sure the placeholder is only rendered in the correct grid.
    */
-  surfaceType: 'day-grid' | 'time-grid';
+  surfaceType: EventSurfaceType;
   /**
    * The new start date and time of the event occurrence.
    */
@@ -178,6 +178,11 @@ export interface CalendarOccurrencePlaceholder {
    * It can be null when creating a new event.
    */
   originalStart: SchedulerValidDate | null;
+  /**
+   * Whether to lock the surface type of the placeholder.
+   * When true, the surfaceType will not be updated when editing the placeholder.
+   */
+  lockSurfaceType?: boolean;
 }
 
 export interface CalendarProcessedDate {
@@ -200,3 +205,8 @@ export interface CalendarProcessedDate {
  */
 export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
   Required<Pick<CalendarEvent, 'start' | 'end'>>;
+
+/**
+ * The type of surface the event is being rendered on.
+ */
+export type EventSurfaceType = 'day-grid' | 'time-grid';

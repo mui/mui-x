@@ -37,14 +37,22 @@ const selectorCheckboxSelectionStatus = createSelector(
 
     traverseDescendants(itemId);
 
-    if (hasSelectedDescendant && hasUnSelectedDescendant) {
+    const shouldSelectBasedOnDescendants = selectionSelectors.propagationRules(state).parents;
+    if (shouldSelectBasedOnDescendants) {
+      if (hasSelectedDescendant && hasUnSelectedDescendant) {
+        return 'indeterminate';
+      }
+      if (hasSelectedDescendant && !hasUnSelectedDescendant) {
+        return 'checked';
+      }
+      return 'empty';
+    }
+
+    if (hasSelectedDescendant) {
       return 'indeterminate';
     }
 
-    const shouldSelectBasedOnDescendants = selectionSelectors.propagationRules(state).parents;
-    return shouldSelectBasedOnDescendants && hasSelectedDescendant && !hasUnSelectedDescendant
-      ? 'checked'
-      : 'empty';
+    return 'empty';
   },
 );
 

@@ -15,6 +15,7 @@ import {
   validateProps,
   GridConfiguration,
   useGridApiInitialization,
+  getRowValue,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -31,11 +32,12 @@ import { gridCellAggregationResultSelector } from '../hooks/features/aggregation
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration<GridPrivateApiPremium> = {
+const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPremium,
@@ -44,7 +46,15 @@ const configuration: GridConfiguration<GridPrivateApiPremium> = {
       const apiRef = useGridApiContext();
       return useGridSelector(apiRef, gridCellAggregationResultSelector, { id, field });
     },
+    useFilterValueGetter: (apiRef, props) => (row, column) => {
+      if (props.aggregationRowsScope === 'all') {
+        return apiRef.current.getRowValue(row, column);
+      }
+
+      return getRowValue(row, column, apiRef);
+    },
     useGridRowsOverridableMethods,
+    useGridParamsOverridableMethods,
   },
 };
 const releaseInfo = '__RELEASE_INFO__';
