@@ -88,7 +88,10 @@ export const useGridDataSourcePremium = (
       if (response.pivotColumns) {
         const getPivotColumnDef = props.dataSource?.getPivotColumnDef;
         if (!getPivotColumnDef) {
-          throw new Error('MUI X: No `getPivotColumnDef` method provided with the dataSource.');
+          throw new Error(
+            'MUI X: No `getPivotColumnDef()` method provided with the `dataSource` prop, but response contains `pivotColumns`\n\n\
+            See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) documentation for more details.',
+          );
         }
 
         const visiblePivotColumns = pivotModel.columns.filter((column) => !column.hidden);
