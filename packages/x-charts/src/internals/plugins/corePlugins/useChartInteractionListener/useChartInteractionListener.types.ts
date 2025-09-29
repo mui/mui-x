@@ -8,6 +8,7 @@ import {
   TapEvent,
   TurnWheelEvent,
   type TapAndDragEvent,
+  type TapAndDragGestureOptions,
   type TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
 import { ChartPluginSignature } from '../../models';
@@ -77,7 +78,10 @@ export type UpdateZoomInteractionListeners = {
     interaction: 'zoomTurnWheel',
     options?: Omit<TurnWheelGestureOptions<'zoomTurnWheel'>, 'name'>,
   ): void;
-  (interaction: 'zoomTapAndDrag', options?: Partial<PanGestureOptions<'zoomTapAndDrag'>>): void;
+  (
+    interaction: 'zoomTapAndDrag',
+    options?: Omit<TapAndDragGestureOptions<'zoomTapAndDrag'>, 'name'>,
+  ): void;
 };
 
 export interface UseChartInteractionListenerParameters {}
