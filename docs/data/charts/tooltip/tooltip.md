@@ -134,29 +134,14 @@ You can replace the default tooltip in single component charts by using slots.
 <LineChart slots={{ tooltip: CustomItemTooltip }} />
 ```
 
-With composition, you can use your component inside the container.
-
-```jsx
-<ChartContainer>
-  // ...
-  <CustomItemTooltip />
-</ChartContainer>
-```
-
-:::warning
-If your custom tooltip is an HTML element and does not use portal, it cannot render inside the ChartContainer.
-Otherwise it would render an HTML element inside an SVG.
-
-The solution is to render your tooltip as a descendant the ChartDataProvider so it can access the chart data, but outside ChartSurface so it isn't rendered inside an SVG element.
+With composition, you can use your component inside the `ChartDataProvider`.
 
 ```jsx
 <ChartDataProvider>
-  <ChartSurface>{/* ... */}</ChartSurface>
-  <CustomItemTooltip disablePortal />
+  <ChartsSurface>{/* ... */}</ChartsSurface>
+  <CustomItemTooltip />
 </ChartDataProvider>
 ```
-
-:::
 
 ## Creating a tooltip
 
