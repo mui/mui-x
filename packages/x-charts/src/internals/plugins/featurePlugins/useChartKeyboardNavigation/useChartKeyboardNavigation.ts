@@ -181,12 +181,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         prev.keyboardNavigation.enableKeyboardNavigation === params.enableKeyboardNavigation
           ? prev
           : {
-              ...prev,
-              keyboardNavigation: {
-                ...prev.keyboardNavigation,
-                enableKeyboardNavigation: !!params.enableKeyboardNavigation,
-              },
+            ...prev,
+            keyboardNavigation: {
+              ...prev.keyboardNavigation,
+              enableKeyboardNavigation: !!params.enableKeyboardNavigation,
             },
+          },
       ),
 
     [store, params.enableKeyboardNavigation],
