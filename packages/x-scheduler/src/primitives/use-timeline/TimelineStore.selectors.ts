@@ -1,7 +1,6 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector } from '@base-ui-components/utils/store';
 import { selectors as schedulerSelectors } from '../utils/SchedulerStore';
 import { TimelineState as State } from './TimelineStore.types';
-import { CalendarResource } from '../models';
 
 export const selectors = {
   ...schedulerSelectors,
