@@ -4,6 +4,8 @@ import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { Timeline } from '@mui/x-scheduler/material/timeline';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives';
+import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { diffIn } from '@mui/x-scheduler/primitives/utils/date-utils';
 
 const baseResources: CalendarResource[] = [
   { id: 'resource-1', name: 'Engineering', eventColor: 'blue' },
@@ -38,6 +40,7 @@ describe('<Timeline />', () => {
   const { render } = createSchedulerRenderer({
     clockConfig: new Date('2025-07-03T00:00:00Z'),
   });
+  const adapter = getAdapter();
 
   const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
   function mountTimeline(options?: {
@@ -120,6 +123,122 @@ describe('<Timeline />', () => {
       baseEvents.forEach((eventItem) => {
         expect(screen.getByText(eventItem.title)).not.to.equal(null);
       });
+    });
+
+    it('renders events correctly in the time view', () => {
+      const totalWidth = 4608; // 72 hours * 64px
+      const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
+      mountTimeline({ view: 'time' });
+
+      const event = screen.getByText('Spec Review');
+      expect(event).not.to.equal(null);
+      const xPositioning = event.style.getPropertyValue('--x-position');
+
+      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+
+      expect(eventPosition).to.be.greaterThanOrEqual(hourBoundaries.start);
+      expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
+    });
+    it('renders events correctly in the days view', () => {
+      const totalWidth = 2520; // 8 weeks * 7 days * 64px
+      const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
+      mountTimeline({ view: 'days' });
+
+      const event = screen.getByText('Architecture Session');
+      expect(event).not.to.equal(null);
+      const xPositioning = event.style.getPropertyValue('--x-position');
+
+      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+
+      expect(eventPosition).to.be.greaterThanOrEqual(dayBoundaries.start);
+      expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
+    });
+    it('renders events correctly in the weeks view', () => {
+      const totalWidth = 3584; // 21 hours * 120px
+      const startOfWeek = adapter.startOfWeek(visibleDate);
+      const weekDayNumber = diffIn(adapter, baseEvents[0].start, startOfWeek, 'days');
+      const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
+
+      mountTimeline({ view: 'weeks' });
+
+      const event = screen.getByText('Spec Review');
+      expect(event).not.to.equal(null);
+      const xPositioning = event.style.getPropertyValue('--x-position');
+
+      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+
+      expect(eventPosition).to.be.greaterThanOrEqual(dayBoundaries.start);
+      expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
+    });
+    it('renders events correctly in the month view', () => {
+      const extendedEvents: CalendarEvent[] = [
+        ...baseEvents,
+        {
+          id: 'event-4',
+          title: 'Next month',
+          start: DateTime.fromISO('2025-08-04T13:00:00Z'),
+          end: DateTime.fromISO('2025-09-04T14:30:00Z'),
+          resource: 'resource-1',
+        },
+      ];
+
+      mountTimeline({ events: extendedEvents, view: 'months' });
+
+      const totalWidth = 2160; // 12 months * 180px
+      const event1 = screen.getByText('Spec Review');
+      expect(event1).not.to.equal(null);
+      const xPositioning = event1.style.getPropertyValue('--x-position');
+
+      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+
+      expect(eventPosition).to.be.lessThanOrEqual(180); // first month
+
+      const event2 = screen.getByText('Next month');
+      expect(event2).not.to.equal(null);
+      const xPositioning2 = event2.style.getPropertyValue('--x-position');
+
+      const eventPosition2 = (totalWidth * parseFloat(xPositioning2)) / 100;
+
+      expect(eventPosition2).to.be.greaterThanOrEqual(180); // second month
+      expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
+    });
+    it('renders events correctly in the month view', () => {
+      const extendedEvents: CalendarEvent[] = [
+        {
+          id: 'event-1',
+          title: 'This year',
+          start: DateTime.fromISO('2025-08-03T13:00:00Z'),
+          end: DateTime.fromISO('2025-09-04T14:30:00Z'),
+          resource: 'resource-1',
+        },
+        {
+          id: 'event-2',
+          title: 'Next year',
+          start: DateTime.fromISO('2026-08-03T13:00:00Z'),
+          end: DateTime.fromISO('2026-09-04T14:30:00Z'),
+          resource: 'resource-1',
+        },
+      ];
+
+      mountTimeline({ events: extendedEvents, view: 'years' });
+
+      const totalWidth = 800;
+      const event1 = screen.getByText('This year');
+      expect(event1).not.to.equal(null);
+      const xPositioning = event1.style.getPropertyValue('--x-position');
+
+      const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
+
+      expect(eventPosition).to.be.lessThanOrEqual(200); // 2025
+
+      const event2 = screen.getByText('Next year');
+      expect(event2).not.to.equal(null);
+      const xPositioning2 = event2.style.getPropertyValue('--x-position');
+
+      const eventPosition2 = (totalWidth * parseFloat(xPositioning2)) / 100;
+
+      expect(eventPosition2).to.be.greaterThanOrEqual(200); // 2026
+      expect(eventPosition2).to.be.lessThanOrEqual(400); // 2026
     });
   });
 
