@@ -1,12 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  reactMajor,
-  waitFor,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
   getColumnHeaderCell,
