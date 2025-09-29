@@ -6,11 +6,7 @@ import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
-import {
-  GridGetRowsResponse,
-  GridDataSourceCache,
-  GridDataSourceCursorCache,
-} from '../../../models/gridDataSource';
+import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -26,16 +22,14 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 import type { GridStrategyProcessor } from '../../core/strategyProcessing';
 import type { GridEventListener } from '../../../models/events';
 
-const noopCache: GridDataSourceCursorCache = {
+const noopCache: GridDataSourceCache = {
   clear: () => {},
   get: () => undefined,
   set: () => {},
-  pushKey: () => {},
-  getLast: () => Promise.resolve(undefined),
 };
 
 function getCache(
-  cacheProp?: GridDataSourceCache | GridDataSourceCursorCache | null,
+  cacheProp?: GridDataSourceCache | null,
   options: GridDataSourceCacheDefaultConfig = {},
 ) {
   if (cacheProp === null) {
@@ -111,11 +105,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         ...getRowsParams,
       };
 
-      if ('pushKey' in cache && typeof cache.pushKey === 'function') {
-        // For cursor-based data source, keys need to be pushed as early as possible.
-        cache.pushKey(fetchParams);
-      }
-
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
@@ -136,15 +125,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       lastRequestId.current = requestId;
 
       try {
-        const getRowsResponse = await getRows({
-          ...fetchParams,
-          getCursor: async () => {
-            if (!('getLast' in cache) || typeof cache.getLast !== 'function') {
-              throw new Error('MUI X: `cache.getLast()` is missing.');
-            }
-            return (await cache.getLast(fetchParams))?.pageInfo?.nextCursor;
-          },
-        });
+        const getRowsResponse = await getRows(fetchParams);
 
         const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
         cacheResponses.forEach((response, key) => cache.set(key, response));

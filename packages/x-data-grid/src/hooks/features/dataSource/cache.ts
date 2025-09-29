@@ -23,15 +23,12 @@ export function getKeyDefault(params: GridGetRowsParams) {
 export class GridDataSourceCacheDefault {
   private cache: Record<string, { value: GridGetRowsResponse; expiry: number }>;
 
-  private cacheKeys: Set<string>;
-
   private ttl: number;
 
   private getKey: (params: GridGetRowsParams) => string;
 
-  constructor({ ttl = 300_000, getKey = getKeyDefault }: GridDataSourceCacheDefaultConfig = {}) {
+  constructor({ ttl = 300_000, getKey = getKeyDefault }: GridDataSourceCacheDefaultConfig) {
     this.cache = {};
-    this.cacheKeys = new Set();
     this.ttl = ttl;
     this.getKey = getKey;
   }
@@ -57,36 +54,7 @@ export class GridDataSourceCacheDefault {
     return entry.value;
   }
 
-  pushKey(key: GridGetRowsParams) {
-    const keyString = this.getKey(key);
-    this.cacheKeys.add(keyString);
-  }
-
-  async getLast(key: GridGetRowsParams): Promise<GridGetRowsResponse | undefined> {
-    const cacheKeys = Array.from(this.cacheKeys);
-    const prevKey = cacheKeys[cacheKeys.indexOf(this.getKey(key)) - 1];
-    if (!prevKey) {
-      return undefined;
-    }
-    if (this.cache[prevKey]) {
-      return this.cache[prevKey].value;
-    }
-    return new Promise((resolve) => {
-      const intervalId = setInterval(() => {
-        if (this.cache[prevKey]) {
-          clearInterval(intervalId);
-          resolve(this.cache[prevKey].value);
-        }
-      }, 100);
-    });
-  }
-
   clear() {
     this.cache = {};
-    this.cacheKeys.clear();
-  }
-
-  size() {
-    return Object.keys(this.cache).length;
   }
 }
