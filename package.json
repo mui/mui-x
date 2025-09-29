@@ -156,7 +156,7 @@
     "sinon": "^21.0.0",
     "stream-browserify": "^3.0.0",
     "string-replace-loader": "^3.2.0",
-    "stylelint": "^16.23.1",
+    "stylelint": "^16.24.0",
     "stylelint-config-tailwindcss": "^1.0.0",
     "terser-webpack-plugin": "^5.3.14",
     "tsx": "catalog:",
