@@ -516,7 +516,7 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(webpack@5.101.3)
       stylelint:
-        specifier: ^16.23.1
+        specifier: ^16.24.0
         version: 16.24.0(typescript@5.9.2)
       stylelint-config-tailwindcss:
         specifier: ^1.0.0
