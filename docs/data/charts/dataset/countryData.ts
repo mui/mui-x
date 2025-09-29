@@ -273,3 +273,17 @@ export const oecdCountries = [
   'GBR',
   'USA',
 ] as const;
+
+export const flags = {
+  BEL: '🇧🇪',
+  CHE: '🇨🇭',
+  DEU: '🇩🇪',
+  DNK: '🇩🇰',
+  ESP: '🇪🇸',
+  FRA: '🇫🇷',
+  ITA: '🇮🇹',
+  NOR: '🇳🇴',
+  POL: '🇵🇱',
+  PRT: '🇵🇹',
+  SWE: '🇸🇪',
+} as const;
