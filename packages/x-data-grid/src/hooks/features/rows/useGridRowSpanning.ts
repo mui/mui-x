@@ -239,14 +239,11 @@ export const useGridRowSpanning = (
   const updateRowSpanningState = React.useCallback(
     (renderContext: GridRenderContext, resetState: boolean = false) => {
       const { range, rows: visibleRows } = getVisibleRows(apiRef);
-      if (range === null) {
-        if (resetState) {
-          store.set('rowSpanning', EMPTY_STATE);
-        }
-        return;
+      if (resetState && store.getSnapshot().rowSpanning !== EMPTY_STATE) {
+        store.set('rowSpanning', EMPTY_STATE);
       }
 
-      if (!isRowContextInitialized(renderContext)) {
+      if (range === null || !isRowContextInitialized(renderContext)) {
         return;
       }
 
