@@ -16,7 +16,7 @@ export default function TreeDataFullExample() {
       <Button onClick={() => apiRef.current?.expandAllRows()}>Expand all</Button>
       <Button onClick={() => apiRef.current?.collapseAllRows()}>Collapse all</Button>
       <div style={{ height: 400 }}>
-        <DataGridPro loading={loading} {...data} />
+        <DataGridPro loading={loading} {...data} apiRef={apiRef} />
       </div>
     </div>
   );
