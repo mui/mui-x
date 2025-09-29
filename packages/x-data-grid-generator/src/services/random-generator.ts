@@ -82,8 +82,8 @@ function dateRecent(days?: number, refDate?: string) {
 
   // some time from now to N days ago, in milliseconds. We round to the nearest second to avoid
   // platform specific differences in milliseconds rounding.
-  const past = date.getTime() - seconds * 1000;
-  date.setTime(past);
+  const past = Math.floor(date.getTime() / 1000) - seconds;
+  date.setTime(past * 1000);
 
   return date;
 }
