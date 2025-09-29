@@ -8,6 +8,7 @@ import type { GridCSSVariablesInterface } from '../../constants/cssVariables';
 import { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridPrivateApiCommon } from '../api/gridApiCommon';
 import type { GridPrivateApiCommunity } from '../api/gridApiCommunity';
+import type { GridParamsOverridableMethodsInternalHook } from './gridParamsConfiguration';
 
 export interface GridAriaAttributesInternalHook {
   useGridAriaAttributes: () => React.HTMLAttributes<HTMLElement>;
@@ -17,7 +18,8 @@ export interface GridInternalHook<Api, Props>
   extends GridAriaAttributesInternalHook,
     GridRowAriaAttributesInternalHook,
     GridAggregationInternalHooks<Api, Props>,
-    GridRowsOverridableMethodsInternalHook<Api> {
+    GridRowsOverridableMethodsInternalHook<Api>,
+    GridParamsOverridableMethodsInternalHook<Api> {
   useCSSVariables: () => { id: string; variables: GridCSSVariablesInterface };
 }
 
