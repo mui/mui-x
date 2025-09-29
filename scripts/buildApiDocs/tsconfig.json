@@ -14,7 +14,7 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "docs/config": ["../../docs/docs-config.d.ts"],
+      "docs/config": ["../../docs/config.ts"],
       "@mui-internal/api-docs-builder": [
         "../../node_modules/@mui/monorepo/packages/api-docs-builder/index.ts"
       ],
