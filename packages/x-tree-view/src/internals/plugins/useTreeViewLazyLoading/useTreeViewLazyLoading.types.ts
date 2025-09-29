@@ -6,7 +6,7 @@ import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
-type DataSource<R extends {}> = {
+export type DataSource<R extends {}> = {
   /**
    * Used to determine the number of children the item has.
    * Only relevant for lazy-loaded trees.
