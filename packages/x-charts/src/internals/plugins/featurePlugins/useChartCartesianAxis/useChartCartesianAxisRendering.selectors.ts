@@ -17,6 +17,7 @@ import {
 } from './useChartCartesianAxisLayout.selectors';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
 import { getXAxesScales, getYAxesScales } from './getAxisScale';
+import { getDefaultTickNumber } from '../../../ticks';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -68,6 +69,20 @@ const selectorChartYFilter = createSelector(
     zoomMap && zoomOptions && createAxisFilterMapper(zoomMap, zoomOptions, 'y'),
 );
 
+export const selectorDefaultXAxisTickNumber = createSelector(
+  [selectorChartDrawingArea],
+  function selectorDefaultXAxisTickNumber(drawingArea) {
+    return getDefaultTickNumber(drawingArea.width);
+  },
+);
+
+export const selectorDefaultYAxisTickNumber = createSelector(
+  [selectorChartDrawingArea],
+  function selectorDefaultYAxisTickNumber(drawingArea) {
+    return getDefaultTickNumber(drawingArea.height);
+  },
+);
+
 export const selectorChartXScales = createSelector(
   [
     selectorChartRawXAxis,
@@ -76,6 +91,7 @@ export const selectorChartXScales = createSelector(
     selectorChartSeriesConfig,
     selectorChartZoomMap,
     selectorPreferStrictDomainInLineCharts,
+    selectorDefaultXAxisTickNumber,
   ],
   function selectorChartXScales(
     axis,
@@ -84,6 +100,7 @@ export const selectorChartXScales = createSelector(
     seriesConfig,
     zoomMap,
     preferStrictDomainInLineCharts,
+    defaultTickNumber,
   ) {
     return getXAxesScales({
       drawingArea,
@@ -92,6 +109,7 @@ export const selectorChartXScales = createSelector(
       seriesConfig,
       zoomMap,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     });
   },
 );
@@ -104,6 +122,7 @@ export const selectorChartYScales = createSelector(
     selectorChartSeriesConfig,
     selectorChartZoomMap,
     selectorPreferStrictDomainInLineCharts,
+    selectorDefaultYAxisTickNumber,
   ],
   function selectorChartYScales(
     axis,
@@ -112,6 +131,7 @@ export const selectorChartYScales = createSelector(
     seriesConfig,
     zoomMap,
     preferStrictDomainInLineCharts,
+    defaultTickNumber,
   ) {
     return getYAxesScales({
       drawingArea,
@@ -120,6 +140,7 @@ export const selectorChartYScales = createSelector(
       seriesConfig,
       zoomMap,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     });
   },
 );
