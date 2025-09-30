@@ -78,6 +78,7 @@ function dateRecent(days?: number, refDate?: string) {
     max: (days || 1) * 24 * 3600 * 1000,
   };
 
+  // some time from now to N days ago, in milliseconds
   const past = date.getTime() - chance.integer(range);
   date.setTime(past);
 
