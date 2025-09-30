@@ -75,15 +75,16 @@ function TestViewer(props: any) {
 }
 
 function MockTime(props: React.PropsWithChildren<{ shouldAdvanceTime: boolean }>) {
-  const [ready, setReady] = React.useState(false);
+  const [dispose, setDispose] = React.useState<(() => void) | null>(null);
+  const [prevShouldAdvanceTime, setPrevShouldAdvanceTime] = React.useState(props.shouldAdvanceTime);
 
-  React.useEffect(() => {
-    const dispose = setupFakeClock(props.shouldAdvanceTime);
-    setReady(true);
-    return dispose;
-  }, [props.shouldAdvanceTime]);
+  if (!dispose || prevShouldAdvanceTime !== props.shouldAdvanceTime) {
+    dispose?.();
+    setDispose(() => setupFakeClock(props.shouldAdvanceTime));
+    setPrevShouldAdvanceTime(props.shouldAdvanceTime);
+  }
 
-  return ready ? props.children : null;
+  return props.children;
 }
 
 function LoadFont(props: any) {

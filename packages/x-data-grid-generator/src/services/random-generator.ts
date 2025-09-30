@@ -74,16 +74,12 @@ function dateRecent(days?: number, refDate?: string) {
   }
 
   const range = {
-    min: 1,
-    max: (days || 1) * 24 * 3600,
+    min: 1000,
+    max: (days || 1) * 24 * 3600 * 1000,
   };
 
-  const seconds = chance.integer(range);
-
-  // some time from now to N days ago, in milliseconds. We round to the nearest second to avoid
-  // platform specific differences in milliseconds rounding.
-  const past = Math.floor(date.getTime() / 1000) - seconds;
-  date.setTime(past * 1000);
+  const past = date.getTime() - chance.integer(range);
+  date.setTime(past);
 
   return date;
 }
