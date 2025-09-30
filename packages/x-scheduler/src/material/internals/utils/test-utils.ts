@@ -20,3 +20,8 @@ export async function toggleShowWeekNumber(user) {
   const menuItem = await screen.findByRole('menuitemcheckbox', { name: /show week number/i });
   await user.click(menuItem);
 }
+
+export async function toggleAmpmFormat(user) {
+  const menuItem = await screen.findByRole('menuitemcheckbox', { name: /use am\/pm format/i });
+  await user.click(menuItem);
+}

@@ -15,10 +15,12 @@ export const DEFAULT_VIEW: CalendarView = 'week';
 export const DEFAULT_PREFERENCES: CalendarPreferences = {
   showWeekends: true,
   showWeekNumber: false,
+  ampm: true,
 };
 export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
+  toggleAmpm: true,
 };
 
 const deriveStateFromParameters = (parameters: EventCalendarParameters) => ({

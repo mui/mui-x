@@ -53,14 +53,14 @@ export interface EventCalendarParameters extends SchedulerParameters {
   onViewChange?: (view: CalendarView, event: React.UIEvent | Event) => void;
   /**
    * Preferences for the calendar.
-   * @default { showWeekends: true, showWeekNumber: false }
+   * @default { showWeekends: true, showWeekNumber: false, ampm: true }
    */
   preferences?: Partial<CalendarPreferences>;
   /**
    * Config of the preferences menu.
    * Defines which options are visible in the menu.
    * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true }
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true }
    */
   preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
 }

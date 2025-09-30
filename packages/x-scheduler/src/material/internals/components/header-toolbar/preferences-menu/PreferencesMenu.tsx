@@ -50,6 +50,11 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
       preferenceKey: 'showWeekNumber',
       label: translations.showWeekNumber,
     },
+    {
+      configKey: 'toggleAmpm',
+      preferenceKey: 'ampm',
+      label: translations.useAmPmFormat,
+    },
   ];
 
   const visibleOptions = preferenceOptions.filter(

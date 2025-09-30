@@ -23,6 +23,7 @@ export interface SchedulerTranslations {
   preferencesMenu: string;
   showWeekends: string;
   showWeekNumber: string;
+  useAmPmFormat: string;
 
   // WeekView
   allDay: string;

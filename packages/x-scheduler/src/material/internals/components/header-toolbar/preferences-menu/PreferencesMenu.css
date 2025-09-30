@@ -7,6 +7,14 @@
   padding: var(--space-1);
 }
 
+.mui-x-scheduler .PreferencesMenuContainer .CheckboxItem[data-checked] {
+  background: var(--surface);
+}
+
+.mui-x-scheduler .PreferencesMenuContainer .CheckboxItem[data-checked]:hover {
+  background: var(--interactive-hover-bg);
+}
+
 .SettingsIcon {
   margin: var(--space-05);
 }

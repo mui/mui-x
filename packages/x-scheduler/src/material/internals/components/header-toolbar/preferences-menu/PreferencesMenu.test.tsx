@@ -48,6 +48,7 @@ describe('<PreferencesMenu />', () => {
         preferencesMenuConfig={{
           toggleWeekendVisibility: false,
           toggleWeekNumberVisibility: false,
+          toggleAmpm: false,
         }}
       >
         <PreferencesMenu />
@@ -61,7 +62,11 @@ describe('<PreferencesMenu />', () => {
     const { user } = render(
       <StandaloneView
         events={[]}
-        preferencesMenuConfig={{ toggleWeekendVisibility: false, toggleWeekNumberVisibility: true }}
+        preferencesMenuConfig={{
+          toggleWeekendVisibility: false,
+          toggleWeekNumberVisibility: true,
+          toggleAmpm: true,
+        }}
       >
         <PreferencesMenu />
       </StandaloneView>,
@@ -79,7 +84,11 @@ describe('<PreferencesMenu />', () => {
     const { user } = render(
       <StandaloneView
         events={[]}
-        preferencesMenuConfig={{ toggleWeekendVisibility: true, toggleWeekNumberVisibility: false }}
+        preferencesMenuConfig={{
+          toggleWeekendVisibility: true,
+          toggleWeekNumberVisibility: false,
+          toggleAmpm: true,
+        }}
       >
         <PreferencesMenu />
       </StandaloneView>,
@@ -89,5 +98,28 @@ describe('<PreferencesMenu />', () => {
 
     expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).to.equal(null);
+  });
+
+  it('should hide ampm option when toggleAmpm is false', async () => {
+    const { user } = render(
+      <StandaloneView
+        events={[]}
+        preferencesMenuConfig={{
+          toggleWeekendVisibility: true,
+          toggleWeekNumberVisibility: true,
+          toggleAmpm: false,
+        }}
+      >
+        <PreferencesMenu />
+      </StandaloneView>,
+    );
+
+    await openPreferencesMenu(user);
+
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(
+      null,
+    );
+    expect(screen.queryByRole('menuitemcheckbox', { name: /use am\/pm format/i })).to.equal(null);
   });
 });

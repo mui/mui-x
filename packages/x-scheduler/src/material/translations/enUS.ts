@@ -23,6 +23,7 @@ export const enUS: SchedulerTranslations = {
   preferencesMenu: 'Settings',
   showWeekends: 'Show weekends',
   showWeekNumber: 'Show week number',
+  useAmPmFormat: 'Use AM/PM format',
 
   // WeekView
   allDay: 'All day',
