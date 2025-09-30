@@ -61,6 +61,7 @@ interface UseMockServerOptions {
   editable?: boolean;
   treeData?: AddPathToDemoDataOptions;
   rowGrouping?: boolean;
+  derivedColumns?: boolean;
 }
 
 interface GridMockServerData {
@@ -70,7 +71,10 @@ interface GridMockServerData {
 }
 
 interface ColumnsOptions
-  extends Pick<UseMockServerOptions, 'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'> {}
+  extends Pick<
+    UseMockServerOptions,
+    'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
+  > {}
 
 const GET_DEFAULT_DATASET_OPTIONS: (isRowGrouping: boolean) => UseMockServerOptions = (
   isRowGrouping,
@@ -102,6 +106,29 @@ const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] |
   }
   if (options.maxColumns) {
     columns = columns.slice(0, options.maxColumns);
+  }
+  if (options.derivedColumns) {
+    columns = columns.reduce((acc, col: GridColDefGenerator) => {
+      acc.push(col);
+      if (col.type === 'date' || col.type === 'dateTime') {
+        acc.push({
+          type: 'date',
+          field: `${col.field}-year`,
+          generateData: (row) => new Date(row[col.field].getFullYear(), 0, 1),
+          editable: false,
+          derivedFrom: col.field,
+        });
+        acc.push({
+          type: 'date',
+          field: `${col.field}-month`,
+          generateData: (row) =>
+            new Date(row[col.field].getFullYear(), row[col.field].getMonth(), 1),
+          editable: false,
+          derivedFrom: col.field,
+        });
+      }
+      return acc;
+    }, [] as GridColDefGenerator[]);
   }
   return columns;
 };
@@ -174,21 +201,34 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       editable: options.editable,
       maxColumns: options.maxColumns,
       visibleFields: options.visibleFields,
+      derivedColumns: options.derivedColumns,
     });
-  }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
+  }, [
+    options.dataSet,
+    options.editable,
+    options.maxColumns,
+    options.visibleFields,
+    options.derivedColumns,
+  ]);
 
   const initialState = React.useMemo(
     () => getInitialState(columns, options.treeData?.groupingField),
     [columns, options.treeData?.groupingField],
   );
 
-  const columnsWithDefaultColDef: GridColDef[] = React.useMemo(
+  const columnsWithDerivedColDef: GridColDef[] = React.useMemo(
     () =>
       columns.map((column) => ({
         ...defaultColDef[column.type || 'string'],
         ...column,
       })),
     [columns],
+  );
+
+  const columnsWithDefaultColDef: GridColDef[] = React.useMemo(
+    () =>
+      (columnsWithDerivedColDef as GridColDefGenerator[]).filter((column) => !column.derivedFrom),
+    [columnsWithDerivedColDef],
   );
 
   const getGroupKey = React.useMemo(() => {
@@ -231,7 +271,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     (async () => {
       let rowData;
       const rowLength = options.rowLength;
-      if (rowLength > 1000) {
+      if (rowLength > 1000 && !options.derivedColumns) {
         rowData = await getRealGridData(1000, columns);
         rowData = await extrapolateSeed(rowLength, rowData);
       } else {
@@ -271,6 +311,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     options.treeData?.averageChildren,
     options.dataSet,
     options.maxColumns,
+    options.derivedColumns,
     index,
   ]);
 
@@ -342,7 +383,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           dataRef.current?.rows ?? [],
           params,
           serverOptionsWithDefault,
-          columnsWithDefaultColDef,
+          columnsWithDerivedColDef,
         );
 
         getRowsResponse = {
@@ -382,6 +423,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       serverOptions?.useCursorPagination,
       isTreeData,
       columnsWithDefaultColDef,
+      columnsWithDerivedColDef,
       nestedPagination,
       isRowGrouping,
     ],
