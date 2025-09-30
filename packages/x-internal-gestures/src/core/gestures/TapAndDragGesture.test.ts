@@ -147,7 +147,7 @@ describe('TapAndDrag Gesture', () => {
   it('should reset if drag timeout is exceeded', async () => {
     // Use short timeout for testing
     gestureManager.setGestureOptions('tapAndDrag', target, {
-      dragTimeout: 100,
+      dragTimeout: 10,
     });
 
     // First perform a tap
@@ -159,7 +159,7 @@ describe('TapAndDrag Gesture', () => {
 
     // Wait longer than the timeout
     await new Promise<void>((resolve) => {
-      setTimeout(() => resolve(), 150);
+      setTimeout(() => resolve(), 15);
     });
 
     // Then try to perform a drag - should not work since timeout exceeded
