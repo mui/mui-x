@@ -77,7 +77,7 @@ class Cache {
 export default function ServerSideCursorNonBlocking() {
   const { columns, initialState, fetchRows } = useMockServer(
     {},
-    { useCursorPagination: true, minDelay: 300, maxDelay: 1000 },
+    { useCursorPagination: true, minDelay: 200, maxDelay: 500 },
   );
   const cache = React.useMemo(() => new Cache(), []);
 

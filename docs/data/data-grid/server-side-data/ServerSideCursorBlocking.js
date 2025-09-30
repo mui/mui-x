@@ -5,7 +5,7 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 export default function ServerSideCursorBlocking() {
   const { columns, initialState, fetchRows } = useMockServer(
     {},
-    { useCursorPagination: true, minDelay: 1000, maxDelay: 2000 },
+    { useCursorPagination: true, minDelay: 200, maxDelay: 500 },
   );
   const mapPageToNextCursor = React.useRef({});
   const [paginationModel, setPaginationModel] = React.useState({
