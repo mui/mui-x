@@ -266,19 +266,19 @@ export class SchedulerStore<
       return undefined;
     }
 
-    const modelBefore = selectors.event(this.state, eventId);
-    if (!modelBefore) {
+    const original = selectors.event(this.state, eventId);
+    if (!original) {
       throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
     }
 
     const changes: RecurringEventUpdatedProperties = { start, end };
-    if (surfaceType === 'time-grid' && modelBefore.allDay) {
+    if (surfaceType === 'time-grid' && original.allDay) {
       changes.allDay = false;
-    } else if (surfaceType === 'day-grid' && !modelBefore.allDay) {
+    } else if (surfaceType === 'day-grid' && !original.allDay) {
       changes.allDay = true;
     }
 
-    if (modelBefore.rrule) {
+    if (original.rrule) {
       let scope: RecurringUpdateEventScope;
       if (chooseRecurringEventScope) {
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.

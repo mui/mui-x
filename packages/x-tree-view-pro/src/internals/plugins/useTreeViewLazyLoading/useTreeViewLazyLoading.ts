@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import useLazyRef from '@mui/utils/useLazyRef';
-import useEventCallback from '@mui/utils/useEventCallback';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import {
   itemsSelectors,
   expansionSelectors,
@@ -42,11 +42,11 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   const isLazyLoadingEnabled = !!params.dataSource;
   const firstRenderRef = React.useRef(true);
 
-  const nestedDataManager = useLazyRef<NestedDataManager, void>(
+  const nestedDataManager = useRefWithInit<NestedDataManager>(
     () => new NestedDataManager(instance),
   ).current;
 
-  const cacheRef = useLazyRef<DataSourceCache, void>(() => getCache(params.dataSourceCache));
+  const cacheRef = useRefWithInit<DataSourceCache>(() => getCache(params.dataSourceCache));
 
   const setDataSourceLoading = useEventCallback((itemId: TreeViewItemId, isLoading: boolean) => {
     if (!isLazyLoadingEnabled) {
