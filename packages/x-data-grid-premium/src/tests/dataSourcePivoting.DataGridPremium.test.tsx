@@ -566,81 +566,161 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     expect(getRowValues(0)).to.deep.equal(['John (1)', '100']);
   });
 
-  it('should sort the column groups based on the pivot columns sort order', async () => {
-    const pivotModel: GridPivotModel = {
-      rows: [{ field: 'traderName' }],
-      columns: [{ field: 'letter', sort: 'desc' }],
-      values: [{ field: 'quantity', aggFunc: 'sum' }],
-    };
+  describe('sorting', () => {
+    it('should not sort the column groups returned as string', async () => {
+      const pivotModel: GridPivotModel = {
+        rows: [{ field: 'traderName' }],
+        columns: [{ field: 'letter', sort: 'desc' }],
+        values: [{ field: 'quantity', aggFunc: 'sum' }],
+      };
 
-    const mockPivotColumns = [
-      {
-        group: 'A',
-        children: [],
-      },
-      {
-        group: 'Z',
-        children: [],
-      },
-      {
-        group: 'C',
-        children: [],
-      },
-    ];
+      const mockPivotColumns = [
+        {
+          group: 'A',
+          children: [],
+        },
+        {
+          group: 'Z',
+          children: [],
+        },
+        {
+          group: 'C',
+          children: [],
+        },
+      ];
 
-    const mockRows = [
-      {
-        id: 1,
-        group: 'John',
-        descendantCount: 1,
-        'A>->quantity': 100,
-        'Z>->quantity': 200,
-        'C>->quantity': 300,
-      },
-    ];
+      const mockRows = [
+        {
+          id: 1,
+          group: 'John',
+          descendantCount: 1,
+          'A>->quantity': 100,
+          'Z>->quantity': 200,
+          'C>->quantity': 300,
+        },
+      ];
 
-    const mockResponse = {
-      rows: mockRows,
-      rowCount: 1,
-      aggregateRow: { 'A>->quantity': 100, 'Z>->quantity': 200, 'C>->quantity': 300 },
-      pivotColumns: mockPivotColumns,
-    };
+      const mockResponse = {
+        rows: mockRows,
+        rowCount: 1,
+        aggregateRow: { 'A>->quantity': 100, 'Z>->quantity': 200, 'C>->quantity': 300 },
+        pivotColumns: mockPivotColumns,
+      };
 
-    render(
-      <TestDataSourcePivoting
-        columns={[
-          { field: 'id', headerName: 'ID' },
-          { field: 'traderName', headerName: 'Trader' },
-          { field: 'letter', headerName: 'Letter' },
-          { field: 'quantity', headerName: 'Quantity', type: 'number' },
-        ]}
-        mockResponse={mockResponse}
-        initialState={{
-          pivoting: {
-            enabled: true,
-            model: pivotModel,
-          },
-        }}
-      />,
-    );
+      render(
+        <TestDataSourcePivoting
+          columns={[
+            { field: 'id', headerName: 'ID' },
+            { field: 'traderName', headerName: 'Trader' },
+            { field: 'letter', headerName: 'Letter' },
+            { field: 'quantity', headerName: 'Quantity', type: 'number' },
+          ]}
+          mockResponse={mockResponse}
+          initialState={{
+            pivoting: {
+              enabled: true,
+              model: pivotModel,
+            },
+          }}
+        />,
+      );
 
-    await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      });
+
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal([
+          '',
+          'A',
+          'Z',
+          'C',
+          'Trader',
+          'Quantitysum',
+          'Quantitysum',
+          'Quantitysum',
+        ]);
+      });
+
+      expect(getRowValues(0)).to.deep.equal(['John (1)', '100', '200', '300']); // A, Z, C
     });
 
-    await waitFor(() => {
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        '',
-        'Z',
-        'C',
-        'A',
-        'Trader',
-        'Quantitysum',
-        'Quantitysum',
-        'Quantitysum',
-      ]);
-    });
+    it('should sort the column groups returned as object based on the pivot columns sort order', async () => {
+      const pivotModel: GridPivotModel = {
+        rows: [{ field: 'traderName' }],
+        columns: [{ field: 'letter', sort: 'desc' }],
+        values: [{ field: 'quantity', aggFunc: 'sum' }],
+      };
 
-    expect(getRowValues(0)).to.deep.equal(['John (1)', '200', '300', '100']); // Z, C, A
+      const mockPivotColumns = [
+        {
+          group: { letter: 'A' },
+          children: [],
+        },
+        {
+          group: { letter: 'Z' },
+          children: [],
+        },
+        {
+          group: { letter: 'C' },
+          children: [],
+        },
+      ];
+
+      const mockRows = [
+        {
+          id: 1,
+          group: 'John',
+          descendantCount: 1,
+          'A>->quantity': 100,
+          'Z>->quantity': 200,
+          'C>->quantity': 300,
+        },
+      ];
+
+      const mockResponse = {
+        rows: mockRows,
+        rowCount: 1,
+        aggregateRow: { 'A>->quantity': 100, 'Z>->quantity': 200, 'C>->quantity': 300 },
+        pivotColumns: mockPivotColumns,
+      };
+
+      render(
+        <TestDataSourcePivoting
+          columns={[
+            { field: 'id', headerName: 'ID' },
+            { field: 'traderName', headerName: 'Trader' },
+            { field: 'letter', headerName: 'Letter' },
+            { field: 'quantity', headerName: 'Quantity', type: 'number' },
+          ]}
+          mockResponse={mockResponse}
+          initialState={{
+            pivoting: {
+              enabled: true,
+              model: pivotModel,
+            },
+          }}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      });
+
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal([
+          '',
+          'Z',
+          'C',
+          'A',
+          'Trader',
+          'Quantitysum',
+          'Quantitysum',
+          'Quantitysum',
+        ]);
+      });
+
+      expect(getRowValues(0)).to.deep.equal(['John (1)', '200', '300', '100']); // Z, C, A
+    });
   });
 });
