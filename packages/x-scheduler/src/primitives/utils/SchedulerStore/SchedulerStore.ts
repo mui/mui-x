@@ -45,7 +45,7 @@ export class SchedulerStore<
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
-  private timeoutManager = new TimeoutManager();
+  protected timeoutManager = new TimeoutManager();
 
   public constructor(
     parameters: Parameters,
