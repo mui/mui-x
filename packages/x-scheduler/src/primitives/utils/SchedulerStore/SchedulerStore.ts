@@ -8,6 +8,7 @@ import {
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
+  RecurringEventUpdatedProperties,
   SchedulerValidDate,
 } from '../../models';
 import {
@@ -163,6 +164,24 @@ export class SchedulerStore<
   };
 
   /**
+   * Creates a new event in the calendar.
+   */
+  public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
+    const existing = selectors.event(this.state, calendarEvent.id);
+    if (existing) {
+      throw new Error(
+        `Event Calendar: an event with id="${calendarEvent.id}" already exists. Use updateEvent(...) instead.`,
+      );
+    }
+
+    const { onEventsChange } = this.parameters;
+    const updatedEvents = [...this.state.events, calendarEvent];
+    onEventsChange?.(updatedEvents);
+
+    return calendarEvent;
+  };
+
+  /**
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: Partial<CalendarEvent> & Pick<CalendarEvent, 'id'>) => {
@@ -241,14 +260,25 @@ export class SchedulerStore<
     // TODO: Try to do a single state update.
     this.setOccurrencePlaceholder(null);
 
-    const { eventId, start, end, originalStart } = data;
+    const { eventId, start, end, originalStart, surfaceType } = data;
 
     if (eventId == null || originalStart == null) {
-      // TODO: Create a new event.
       return undefined;
     }
 
-    if (selectors.event(this.state, eventId)?.rrule) {
+    const original = selectors.event(this.state, eventId);
+    if (!original) {
+      throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+    }
+
+    const changes: RecurringEventUpdatedProperties = { start, end };
+    if (surfaceType === 'time-grid' && original.allDay) {
+      changes.allDay = false;
+    } else if (surfaceType === 'day-grid' && !original.allDay) {
+      changes.allDay = true;
+    }
+
+    if (original.rrule) {
       let scope: RecurringUpdateEventScope;
       if (chooseRecurringEventScope) {
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
@@ -260,12 +290,12 @@ export class SchedulerStore<
       return this.updateRecurringEvent({
         eventId,
         occurrenceStart: originalStart,
-        changes: { start, end },
+        changes,
         scope,
       });
     }
 
-    return this.updateEvent({ id: eventId, start, end });
+    return this.updateEvent({ id: eventId, ...changes });
   }
 
   /**

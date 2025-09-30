@@ -1,4 +1,4 @@
-import useLazyRef from '@mui/utils/useLazyRef';
+import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../models';
 import { getLookupFromArray } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.utils';
 
@@ -58,7 +58,7 @@ export function useApplyPropagationToSelectedItemsOnMount(
     selectionPropagation,
   } = parameters;
 
-  return useLazyRef(() => {
+  return useRefWithInit(() => {
     const lookup = getLookupFromArray(selectedItems);
 
     function walk(items: any[], isParentSelected: boolean) {

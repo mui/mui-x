@@ -534,11 +534,22 @@
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": { "type": { "name": "object" } },
+    "pinnedColumnsSectionSeparator": {
+      "type": {
+        "name": "enum",
+        "description": "'border-and-shadow'<br>&#124;&nbsp;'border'<br>&#124;&nbsp;'shadow'"
+      },
+      "default": "'border-and-shadow'"
+    },
     "pinnedRows": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
+    },
+    "pinnedRowsSectionSeparator": {
+      "type": { "name": "enum", "description": "'border-and-shadow'<br>&#124;&nbsp;'border'" },
+      "default": "'border-and-shadow'"
     },
     "processRowUpdate": {
       "type": { "name": "func" },
