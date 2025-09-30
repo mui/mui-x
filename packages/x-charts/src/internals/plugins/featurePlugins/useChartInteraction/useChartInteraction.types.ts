@@ -7,6 +7,8 @@ import {
 
 export type Coordinate = { x: number; y: number };
 
+export type InteractionUpdateSource = 'pointer' | 'keyboard';
+
 export interface UseChartInteractionInstance {
   /**
    * Remove all interaction.
@@ -39,6 +41,11 @@ export interface UseChartInteractionState {
      * The x/y SVG coordinate of the "main" pointer
      */
     pointer: Coordinate | null;
+    /**
+     * The last interaction highlight update.
+     * Used to decide if highlight should be based on pointer position or keyboard navigation.
+     */
+    lastUpdate: InteractionUpdateSource;
   };
 }
 
