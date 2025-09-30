@@ -130,11 +130,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
    */
   private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
 
-  /**
-   * Touch-action value to apply during the tap phase
-   */
-  private touchAction: string | undefined;
-
   private tapGesture: TapGesture<GestureName>;
 
   private panGesture: PanGesture<GestureName>;
