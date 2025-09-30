@@ -159,9 +159,9 @@ export class SchedulerStore<
     this.apply(newState);
   };
 
-  public disposeEffect() {
+  public disposeEffect = () => {
     return this.timeoutManager.clearAll;
-  }
+  };
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
