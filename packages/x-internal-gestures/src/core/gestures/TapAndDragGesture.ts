@@ -139,14 +139,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
 
   private panGesture: PanGesture<GestureName>;
 
-  private tapHandlerBound: () => void;
-
-  private dragStartHandlerBound: (event: PanEvent) => void;
-
-  private dragMoveHandlerBound: (event: PanEvent) => void;
-
-  private dragEndHandlerBound: (event: PanEvent) => void;
-
   constructor(options: TapAndDragGestureOptions<GestureName>) {
     super(options);
     this.tapMaxDistance = options.tapMaxDistance ?? 10;
@@ -173,10 +165,6 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
       preventIf: this.preventIf,
       pointerOptions: structuredClone(this.pointerOptions),
     });
-    this.tapHandlerBound = this.tapHandler.bind(this);
-    this.dragStartHandlerBound = this.dragStartHandler.bind(this);
-    this.dragMoveHandlerBound = this.dragMoveHandler.bind(this);
-    this.dragEndHandlerBound = this.dragEndHandler.bind(this);
   }
 
   public clone(overrides?: Record<string, unknown>): TapAndDragGesture<GestureName> {
@@ -208,30 +196,30 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     super.init(element, pointerManager, gestureRegistry, keyboardManager);
     this.tapGesture.init(element, pointerManager, gestureRegistry, keyboardManager);
     this.panGesture.init(element, pointerManager, gestureRegistry, keyboardManager);
-    this.element.addEventListener(this.tapGesture.name, this.tapHandlerBound);
+    this.element.addEventListener(this.tapGesture.name, this.tapHandler);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.addEventListener(`${this.panGesture.name}Start`, this.dragStartHandlerBound);
+    this.element.addEventListener(`${this.panGesture.name}Start`, this.dragStartHandler);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.addEventListener(this.panGesture.name, this.dragMoveHandlerBound);
+    this.element.addEventListener(this.panGesture.name, this.dragMoveHandler);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.addEventListener(`${this.panGesture.name}End`, this.dragEndHandlerBound);
+    this.element.addEventListener(`${this.panGesture.name}End`, this.dragEndHandler);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.addEventListener(`${this.panGesture.name}Cancel`, this.dragEndHandlerBound);
+    this.element.addEventListener(`${this.panGesture.name}Cancel`, this.dragEndHandler);
   }
 
   public destroy(): void {
     this.resetState();
     this.tapGesture.destroy();
     this.panGesture.destroy();
-    this.element.removeEventListener(this.tapGesture.name, this.tapHandlerBound);
+    this.element.removeEventListener(this.tapGesture.name, this.tapHandler);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.removeEventListener(`${this.panGesture.name}Start`, this.dragStartHandlerBound);
+    this.element.removeEventListener(`${this.panGesture.name}Start`, this.dragStartHandler);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.removeEventListener(this.panGesture.name, this.dragMoveHandlerBound);
+    this.element.removeEventListener(this.panGesture.name, this.dragMoveHandler);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.removeEventListener(`${this.panGesture.name}End`, this.dragEndHandlerBound);
+    this.element.removeEventListener(`${this.panGesture.name}End`, this.dragEndHandler);
     // @ts-expect-error, PointerEvent is correct.
-    this.element.removeEventListener(`${this.panGesture.name}Cancel`, this.dragEndHandlerBound);
+    this.element.removeEventListener(`${this.panGesture.name}Cancel`, this.dragEndHandler);
     super.destroy();
   }
 
@@ -292,7 +280,7 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
    */
   protected handlePointerEvent(): void {}
 
-  private tapHandler(): void {
+  private tapHandler = (): void => {
     if (this.state.phase !== 'waitingForTap') {
       return;
     }
@@ -306,9 +294,9 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
       // Timeout expired, reset gesture
       this.resetState();
     }, this.dragTimeout);
-  }
+  };
 
-  private dragStartHandler(event: PanEvent): void {
+  private dragStartHandler = (event: PanEvent) => {
     if (this.state.phase !== 'tapDetected') {
       return;
     }
@@ -328,9 +316,9 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     this.element.dispatchEvent(
       new CustomEvent(createEventName(this.name, event.detail.phase), event),
     );
-  }
+  };
 
-  private dragMoveHandler(event: PanEvent): void {
+  private dragMoveHandler = (event: PanEvent): void => {
     if (this.state.phase !== 'dragging') {
       return;
     }
@@ -339,9 +327,9 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     this.element.dispatchEvent(
       new CustomEvent(createEventName(this.name, event.detail.phase), event),
     );
-  }
+  };
 
-  private dragEndHandler(event: PanEvent): void {
+  private dragEndHandler = (event: PanEvent): void => {
     if (this.state.phase !== 'dragging') {
       return;
     }
@@ -352,7 +340,7 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     this.element.dispatchEvent(
       new CustomEvent(createEventName(this.name, event.detail.phase), event),
     );
-  }
+  };
 
   private setTouchAction(): void {
     this.element.addEventListener('touchstart', preventDefault, { passive: false });
