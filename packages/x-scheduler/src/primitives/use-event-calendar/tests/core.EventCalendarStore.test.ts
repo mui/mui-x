@@ -15,9 +15,8 @@ const DEFAULT_PARAMS = { events: [] };
 
 describe('Core - EventCalendarStore', () => {
   describe('create', () => {
-    useFakeTimers();
-
     it('should initialize default state', () => {
+      const clock = useFakeTimers();
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
       const expectedState = {
@@ -41,6 +40,7 @@ describe('Core - EventCalendarStore', () => {
       };
 
       expect(store.state).to.deep.equal(expectedState);
+      clock.restore();
     });
   });
 
