@@ -1,13 +1,13 @@
 'use client';
 import { useStore } from '@base-ui-components/utils/store';
 import { SchedulerValidDate } from '../models';
-import { useEventCalendarStoreContext } from './useEventCalendarStoreContext';
+import { useSchedulerStoreContext } from './useSchedulerStoreContext';
 import { selectors } from './SchedulerStore';
 
 export function useEvent(parameters: useEvent.Parameters): useEvent.ReturnValue {
   const { start, end } = parameters;
 
-  const store = useEventCalendarStoreContext();
+  const store = useSchedulerStoreContext();
   const state = useStore(store, selectors.isOccurrenceStartedOrEnded, start, end);
 
   return { state };
