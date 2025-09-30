@@ -15,8 +15,7 @@ import {
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { ChartSeriesConfig } from '../../models';
-import { GetZoomAxisFilters, ZoomData } from './zoom.types';
-import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { ZoomData } from './zoom.types';
 import { zoomScaleRange } from './zoom';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
 import { getTickNumber } from '../../../ticks';
@@ -26,17 +25,16 @@ import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 
-type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
+type GetAxesScalesParams<T extends ChartSeriesType = ChartSeriesType> = {
   drawingArea: ChartDrawingArea;
   formattedSeries: ProcessedSeries<T>;
   seriesConfig: ChartSeriesConfig<T>;
   zoomMap?: Map<AxisId, ZoomData>;
-  zoomOptions?: Record<AxisId, DefaultizedZoomOptions>;
-  getFilters?: GetZoomAxisFilters;
   /**
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
   preferStrictDomainInLineCharts?: boolean;
+  defaultTickNumber: number;
 };
 
 function getRange(
@@ -58,30 +56,27 @@ export function getXAxesScales<T extends ChartSeriesType>({
   axis: axes = [],
   seriesConfig,
   zoomMap,
-  zoomOptions,
-  getFilters,
   preferStrictDomainInLineCharts,
-}: ComputeCommonParams<T> & {
+  defaultTickNumber,
+}: GetAxesScalesParams<T> & {
   axis?: DefaultedAxis[];
 }) {
   const scales: Record<AxisId, ScaleDefinition> = {};
 
   axes.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
 
     scales[axis.id] = getAxisScale(
       axis,
       'x',
-      zoomOption,
       zoom,
       drawingArea,
       seriesConfig,
       axisIndex,
       formattedSeries,
       preferStrictDomainInLineCharts,
-      getFilters,
+      defaultTickNumber,
     );
   });
 
@@ -94,30 +89,27 @@ export function getYAxesScales<T extends ChartSeriesType>({
   axis: axes = [],
   seriesConfig,
   zoomMap,
-  zoomOptions,
-  getFilters,
   preferStrictDomainInLineCharts,
-}: ComputeCommonParams<T> & {
+  defaultTickNumber,
+}: GetAxesScalesParams<T> & {
   axis?: DefaultedAxis[];
 }) {
   const scales: Record<AxisId, ScaleDefinition> = {};
 
   axes.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
-    const zoomOption = zoomOptions?.[axis.id];
     const zoom = zoomMap?.get(axis.id);
 
     scales[axis.id] = getAxisScale(
       axis,
       'y',
-      zoomOption,
       zoom,
       drawingArea,
       seriesConfig,
       axisIndex,
       formattedSeries,
       preferStrictDomainInLineCharts,
-      getFilters,
+      defaultTickNumber,
     );
   });
 
@@ -137,7 +129,6 @@ export type ScaleDefinition =
 function getAxisScale<T extends ChartSeriesType>(
   axis: Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>,
   axisDirection: 'x' | 'y',
-  zoomOption: DefaultizedZoomOptions | undefined,
   zoom: ZoomData | undefined,
   drawingArea: ChartDrawingArea,
   seriesConfig: ChartSeriesConfig<T>,
@@ -147,19 +138,10 @@ function getAxisScale<T extends ChartSeriesType>(
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
   preferStrictDomainInLineCharts: boolean | undefined,
-  getFilters?: GetZoomAxisFilters,
+  defaultTickNumber: number,
 ): ScaleDefinition {
   const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
   const range = getRange(drawingArea, axisDirection, axis);
-
-  const [minData, maxData] = getAxisExtrema(
-    axis,
-    axisDirection,
-    seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
-    axisIndex,
-    formattedSeries,
-    zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.
-  );
 
   if (isBandScaleConfig(axis)) {
     const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
@@ -191,6 +173,13 @@ function getAxisScale<T extends ChartSeriesType>(
     preferStrictDomainInLineCharts,
   );
 
+  const [minData, maxData] = getAxisExtrema(
+    axis,
+    axisDirection,
+    seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
+    axisIndex,
+    formattedSeries,
+  );
   const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
 
   if (typeof domainLimit === 'function') {
@@ -199,7 +188,7 @@ function getAxisScale<T extends ChartSeriesType>(
     axisExtrema[1] = max;
   }
 
-  const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtrema });
+  const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
 
   const zoomedRange = zoomScaleRange(range, zoomRange);
 

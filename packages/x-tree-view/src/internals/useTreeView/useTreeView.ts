@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { Store } from '@mui/x-internals/store';
-import useForkRef from '@mui/utils/useForkRef';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { EventHandlers } from '@mui/utils/types';
 import {
   TreeViewAnyPluginSignature,
@@ -81,7 +81,7 @@ export const useTreeView = <
   const instance = useRefWithInit(() => ({}) as TreeViewInstance<TSignatures>).current;
   const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignatures>>(apiRef);
   const innerRootRef = React.useRef<HTMLUListElement>(null);
-  const handleRootRef = useForkRef(innerRootRef, rootRef);
+  const handleRootRef = useMergedRefs(innerRootRef, rootRef);
 
   const store = useRefWithInit(() => {
     const initialState = {} as TreeViewState<TSignaturesWithCorePluginSignatures>;

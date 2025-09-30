@@ -69,11 +69,11 @@
   padding: var(--space-6);
 }
 
-.EventPopoverMainContent > :not(:first-child):not(.EventPopoverSeparator) {
+.EventPopoverMainContent > :not(:first-child, .EventPopoverSeparator) {
   margin-block-start: var(--space-5);
 }
 
-.EventPopoverMainContent > :not(:last-child):not(.EventPopoverSeparator) {
+.EventPopoverMainContent > :not(:last-child, .EventPopoverSeparator) {
   margin-block-end: var(--space-5);
 }
 

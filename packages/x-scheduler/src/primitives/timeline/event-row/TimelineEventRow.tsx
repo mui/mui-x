@@ -23,12 +23,9 @@ export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
   // TODO: Add aria-rowindex using Composite.
   const props = React.useMemo(() => ({ role: 'row' }), []);
 
-  const state: TimelineEventRow.State = React.useMemo(() => ({}), []);
-
   const contextValue: TimelineEventRowContext = React.useMemo(() => ({ start, end }), [start, end]);
 
   const element = useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });

@@ -25,7 +25,7 @@ export function useDayGridPlaceholderInDay(
   const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
 
   return React.useMemo(() => {
-    if (!originalEvent || !rawPlaceholder) {
+    if (!rawPlaceholder) {
       return null;
     }
 
@@ -38,6 +38,22 @@ export function useDayGridPlaceholderInDay(
         positionIndex = found.position.index;
         break;
       }
+    }
+
+    // Creation mode
+    if (!originalEvent) {
+      return {
+        id: `placeholder-${rawPlaceholder.occurrenceKey}`,
+        key: `placeholder-${rawPlaceholder.occurrenceKey}`,
+        title: '',
+        allDay: true,
+        start: day,
+        end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+        position: {
+          index: positionIndex,
+          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+        },
+      };
     }
 
     return {
