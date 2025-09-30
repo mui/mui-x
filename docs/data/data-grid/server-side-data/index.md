@@ -168,14 +168,6 @@ In a real-world scenario you would replace this with your own server-side data-f
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
-### With the cursor pagination
-
-The `getRows()` **must** return the `pageInfo.nextCursor` value in its response to be used for cursor navigation.
-
-The cursor can be retrieved from `getCursor()` method of the `getRows()` parameters, which returns a promise that resolves the last cursor.
-
-{{"demo": "ServerSideCursorDataSource.js", "bg": "inline"}}
-
 ## Data caching
 
 The Data Source caches fetched data by default.
@@ -249,51 +241,6 @@ export interface GridDataSourceCache {
 }
 ```
 
-### Create a cursor-based cache
-
-For cursor-based pagination, implement the `GridDataSourceCursorCache` interface with two additional methods:
-
-- **`pushKey()`**: Tracks request order before responses arrive
-- **`getLast()`**: Wait until the previous page's cursor resolves
-
-```tsx
-class CustomCursorCache extends GridDataSourceCacheDefault {
-  private cacheKeys = new Set<string>();
-
-  pushKey(key: GridGetRowsParams) {
-    const keyString = this.getKey(key);
-    this.cacheKeys.add(keyString);
-  }
-
-  async getLast(key: GridGetRowsParams): Promise<GridGetRowsResponse | undefined> {
-    const cacheKeys = Array.from(this.cacheKeys);
-    const prevKey = cacheKeys[cacheKeys.indexOf(this.getKey(key)) - 1];
-    if (!prevKey) {
-      return undefined;
-    }
-    if (this.cache[prevKey]) {
-      return this.cache[prevKey].value;
-    }
-    return new Promise((resolve) => {
-      const intervalId = setInterval(() => {
-        if (this.cache[prevKey]) {
-          clearInterval(intervalId);
-          resolve(this.cache[prevKey].value);
-        }
-      }, 100);
-    });
-  }
-}
-
-const cursorCache = new CustomCursorCache();
-
-<DataGrid
-  columns={columns}
-  dataSource={cursorBasedDataSource}
-  dataSourceCache={cursorCache}
-/>;
-```
-
 ### Disable caching
 
 To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
@@ -303,12 +250,6 @@ To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
 ```
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
-
-:::info
-For [cursor-based Data Source](#with-the-cursor-based-data-source), if you disable the cache, the `params.getCursor()` method will always resolve to `undefined` because the cache is used to store the cursors.
-
-You need to implement your own caching mechanism to store the cursors on the client or handle cursor management on the server.
-:::
 
 ## Updating server-side data
 

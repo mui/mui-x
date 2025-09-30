@@ -2,16 +2,31 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
-export default function ServerSideCursorDataSource() {
+export default function ServerSideCursorBlocking() {
   const { columns, initialState, fetchRows } = useMockServer(
     {},
-    { useCursorPagination: true },
+    { useCursorPagination: true, minDelay: 1000, maxDelay: 2000 },
   );
+  const mapPageToNextCursor = React.useRef({});
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 10,
+  });
+
+  const handlePaginationModelChange = (newPaginationModel) => {
+    // We have the cursor, we can allow the page transition.
+    if (
+      newPaginationModel.page === 0 ||
+      mapPageToNextCursor.current[newPaginationModel.page - 1]
+    ) {
+      setPaginationModel(newPaginationModel);
+    }
+  };
 
   const dataSource = React.useMemo(
     () => ({
       getRows: async (params) => {
-        const cursor = await params.getCursor();
+        const cursor = mapPageToNextCursor.current[paginationModel.page - 1];
         const urlParams = new URLSearchParams({
           paginationModel: JSON.stringify(params.paginationModel),
           filterModel: JSON.stringify(params.filterModel),
@@ -21,16 +36,15 @@ export default function ServerSideCursorDataSource() {
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
         );
+        mapPageToNextCursor.current[params.paginationModel?.page || 0] =
+          getRowsResponse.pageInfo?.nextCursor;
         return {
           rows: getRowsResponse.rows,
           rowCount: getRowsResponse.rowCount,
-          pageInfo: {
-            nextCursor: getRowsResponse.pageInfo?.nextCursor,
-          },
         };
       },
     }),
-    [fetchRows],
+    [fetchRows, paginationModel],
   );
 
   return (
@@ -41,8 +55,10 @@ export default function ServerSideCursorDataSource() {
         pagination
         initialState={{
           ...initialState,
-          pagination: { paginationModel: { pageSize: 10, page: 0 }, rowCount: 0 },
+          pagination: { rowCount: 0 },
         }}
+        paginationModel={paginationModel}
+        onPaginationModelChange={handlePaginationModelChange}
         pageSizeOptions={[10, 20, 50]}
       />
     </div>

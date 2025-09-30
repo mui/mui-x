@@ -4,7 +4,9 @@
   pagination
   initialState={{
     ...initialState,
-    pagination: { paginationModel: { pageSize: 10, page: 0 }, rowCount: 0 },
+    pagination: { rowCount: 0 },
   }}
+  paginationModel={paginationModel}
+  onPaginationModelChange={handlePaginationModelChange}
   pageSizeOptions={[10, 20, 50]}
 />
