@@ -1,7 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mouseGesture, touchGesture } from '../../testing';
 import { GestureManager } from '../GestureManager';
-import { TapAndDragGesture } from './TapAndDragGesture';
+import { TapAndDragGesture, type TapAndDragEvent } from './TapAndDragGesture';
+
+const formatTapAndDragEvent = (event: TapAndDragEvent) => {
+  const detail = event.detail;
+  const dx = Math.floor(detail.totalDeltaX);
+  const dy = Math.floor(detail.totalDeltaY);
+  const direction =
+    [detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null;
+  const mainAxis = detail.direction.mainAxis || null;
+  return `${event.type}: deltaX: ${dx} | deltaY: ${Math.floor(dy)} | direction: ${direction} | mainAxis: ${mainAxis}`;
+};
 
 describe('TapAndDrag Gesture', () => {
   let container: HTMLElement;
@@ -43,26 +53,15 @@ describe('TapAndDrag Gesture', () => {
     const gestureTarget = gestureManager.registerElement('tapAndDrag', target);
 
     // Add event listeners
-    gestureTarget.addEventListener('tapAndDragStart', (event) => {
-      const detail = event.detail;
-      events.push(
-        `tapAndDragStart: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
-      );
-    });
-
-    gestureTarget.addEventListener('tapAndDrag', (event) => {
-      const detail = (event as CustomEvent).detail;
-      events.push(
-        `tapAndDrag: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
-      );
-    });
-
-    gestureTarget.addEventListener('tapAndDragEnd', (event) => {
-      const detail = (event as CustomEvent).detail;
-      events.push(
-        `tapAndDragEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
-      );
-    });
+    gestureTarget.addEventListener('tapAndDragStart', (event) =>
+      events.push(formatTapAndDragEvent(event)),
+    );
+    gestureTarget.addEventListener('tapAndDrag', (event) =>
+      events.push(formatTapAndDragEvent(event)),
+    );
+    gestureTarget.addEventListener('tapAndDragEnd', (event) =>
+      events.push(formatTapAndDragEvent(event)),
+    );
   });
 
   afterEach(() => {
