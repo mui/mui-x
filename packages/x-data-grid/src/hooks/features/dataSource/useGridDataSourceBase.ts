@@ -279,6 +279,15 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   }, [props.dataSourceCache, options.cacheOptions]);
 
   React.useEffect(() => {
+    // Return early if the proper strategy isn't set yet
+    // Context: https://github.com/mui/mui-x/issues/19650
+    const strategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
+    if (
+      strategy !== DataSourceRowsUpdateStrategy.Default &&
+      strategy !== DataSourceRowsUpdateStrategy.LazyLoading
+    ) {
+      return undefined;
+    }
     if (props.dataSource) {
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
