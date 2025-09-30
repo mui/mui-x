@@ -26,7 +26,6 @@ describe('Core - EventCalendarStore', () => {
         visibleResources: new Map(),
         areEventsDraggable: false,
         areEventsResizable: false,
-        ampm: true,
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
         preferences: DEFAULT_PREFERENCES,

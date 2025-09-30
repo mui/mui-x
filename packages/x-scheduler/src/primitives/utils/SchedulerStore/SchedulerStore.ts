@@ -82,7 +82,6 @@ export class SchedulerStore<
       resources: parameters.resources ?? DEFAULT_RESOURCES,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
-      ampm: parameters.ampm ?? true,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
     };

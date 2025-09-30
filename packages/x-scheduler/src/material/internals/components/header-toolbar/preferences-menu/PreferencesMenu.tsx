@@ -6,8 +6,8 @@ import { useStore } from '@base-ui-components/utils/store';
 import { CheckIcon, Settings } from 'lucide-react';
 import { Menu } from '@base-ui-components/react/menu';
 import {
-  CalendarPreferences,
-  CalendarPreferencesMenuConfig,
+  EventCalendarPreferences,
+  EventCalendarPreferencesMenuConfig,
 } from '../../../../../primitives/models/preferences';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
@@ -27,7 +27,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const preferences = useStore(store, selectors.preferences);
   const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
 
-  const handleToggle = (key: keyof CalendarPreferences, checked: boolean, event: Event) => {
+  const handleToggle = (key: keyof EventCalendarPreferences, checked: boolean, event: Event) => {
     store.setPreferences({ [key]: checked }, event);
   };
 
@@ -36,8 +36,8 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   }
 
   const preferenceOptions: {
-    configKey: keyof CalendarPreferencesMenuConfig;
-    preferenceKey: keyof CalendarPreferences;
+    configKey: keyof EventCalendarPreferencesMenuConfig;
+    preferenceKey: keyof EventCalendarPreferences;
     label: string;
   }[] = [
     {

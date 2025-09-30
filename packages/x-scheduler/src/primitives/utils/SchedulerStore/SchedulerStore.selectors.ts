@@ -44,7 +44,6 @@ const isEventReadOnlySelector = createSelector(
 
 export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
-  ampm: createSelector((state: State) => state.ampm),
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   resources: createSelector((state: State) => state.resources),
   events: createSelector((state: State) => state.events),
