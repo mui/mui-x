@@ -59,6 +59,11 @@ export const useZoomOnTapAndDrag = (
     }
 
     const rafThrottledCallback = rafThrottle((event: TapAndDragEvent) => {
+      // If the delta is 0, we didn't move
+      if (event.detail.deltaY === 0) {
+        return;
+      }
+
       setZoomDataCallback((prev) => {
         return prev.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
@@ -68,11 +73,6 @@ export const useZoomOnTapAndDrag = (
 
           const isZoomIn = event.detail.deltaY > 0;
           const scaleRatio = 1 + event.detail.deltaY / 100;
-
-          // If the delta is 0, we didn't move
-          if (event.detail.deltaY === 0) {
-            return zoom;
-          }
 
           const point = getSVGPoint(element, {
             clientX: event.detail.initialCentroid.x,
