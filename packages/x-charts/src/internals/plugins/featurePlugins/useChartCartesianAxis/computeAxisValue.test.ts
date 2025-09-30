@@ -61,4 +61,19 @@ describe('scaleRangeAndTickNumber', () => {
     expect(result.range).to.deep.equal([0, 100]);
     expect(result.tickNumber).to.equal(0);
   });
+
+  describe('edge cases', () => {
+    it('ensure the value of the min and max is inside the original range', () => {
+      // https://github.com/mui/mui-x/pull/19691#discussion_r2390781136
+      const scale = scaleLinear([0, 7], [255, 20]);
+      const minData = 4;
+      const maxData = 7;
+      const tickNumber = 4;
+
+      const result = scaleRangeAndTickNumber(scale, minData, maxData, tickNumber);
+      scale.range(result.range);
+      expect(scale(4)).to.eq(255);
+      expect(scale(7)).to.eq(20);
+    });
+  });
 });

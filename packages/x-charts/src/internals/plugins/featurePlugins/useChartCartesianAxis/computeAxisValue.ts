@@ -223,6 +223,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       /* Here we're applying the filterMode: 'discard' to the range. Basically, we're scaling the range so that the
        * domain limits line up with the drawing area limits. */
       const scaled = scaleRangeAndTickNumber(scale, minData, maxData, rawTickNumber);
+      console.log({ original: scale.range(), new: scaled.range });
 
       scale = scale.copy();
       scale.range(scaled.range);
