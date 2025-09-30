@@ -26,10 +26,20 @@
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
+    "collapseAllRows": {
+      "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
     "dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
     "deleteFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
+    },
+    "expandAllRows": {
+      "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isProPlan": true
     },
     "exportDataAsCsv": {
       "type": { "description": "(options?: GridCsvExportOptions) =&gt; void" },
