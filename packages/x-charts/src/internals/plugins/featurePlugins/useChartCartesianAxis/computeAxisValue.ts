@@ -26,7 +26,7 @@ import { ComputedAxisConfig, DefaultizedZoomOptions } from './useChartCartesianA
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
-import { getDomainLimit, ScaleDefinition } from './getAxisScale';
+import { getActualAxisExtrema, getDomainLimit, ScaleDefinition } from './getAxisScale';
 import { isBandScale, isOrdinalScale } from '../../../scaleGuards';
 
 function getRange(
@@ -201,12 +201,12 @@ export function computeAxisValue<T extends ChartSeriesType>({
         preferStrictDomainInLineCharts,
       );
 
-      const axisExtrema = [axis.min ?? minData, axis.max ?? maxData];
+      const axisExtrema = getActualAxisExtrema(axis, minData, maxData);
 
       if (typeof domainLimit === 'function') {
         const { min, max } = domainLimit(minData, maxData);
-        axisExtrema[0] = min;
-        axisExtrema[1] = max;
+        minData = min;
+        maxData = max;
       }
 
       if (domainLimit === 'nice') {
@@ -219,6 +219,8 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
       [minData, maxData] = [axis.min?.valueOf() ?? minData, axis.max?.valueOf() ?? maxData];
 
+      /* Here we're applying the filterMode: 'discard' to the range. Basically, we're scaling the range so that the
+       * domain limits line up with the drawing area limits. */
       const domain = scale.domain();
       const scaleRange = scale.range();
       const rangeSpan = Math.abs(scaleRange[1] - scaleRange[0]);

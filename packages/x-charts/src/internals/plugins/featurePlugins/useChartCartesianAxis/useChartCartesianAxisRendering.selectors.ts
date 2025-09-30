@@ -93,7 +93,7 @@ export const selectorChartNormalizedXScales = createSelector(
     selectorPreferStrictDomainInLineCharts,
     selectorDefaultXAxisTickNumber,
   ],
-  function selectorChartXScales(
+  function selectorChartNormalizedXScales(
     axes,
     formattedSeries,
     seriesConfig,
@@ -128,7 +128,7 @@ export const selectorChartNormalizedYScales = createSelector(
     selectorPreferStrictDomainInLineCharts,
     selectorDefaultYAxisTickNumber,
   ],
-  function selectorChartYScales(
+  function selectorChartNormalizedYScales(
     axes,
     formattedSeries,
     seriesConfig,
@@ -162,7 +162,7 @@ export const selectorChartXScales = createSelector(
     selectorChartDrawingArea,
     selectorChartZoomMap,
   ],
-  function selectorChartYScales(axes, normalizedScales, drawingArea, zoomMap) {
+  function selectorChartXScales(axes, normalizedScales, drawingArea, zoomMap) {
     const scales: Record<AxisId, ScaleDefinition> = {};
 
     axes?.forEach((eachAxis) => {
