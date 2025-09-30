@@ -15,9 +15,7 @@ const DEFAULT_PARAMS = { events: [] };
 
 describe('Core - EventCalendarStore', () => {
   describe('create', () => {
-    useFakeTimers({
-      shouldClearNativeTimers: true,
-    });
+    useFakeTimers();
 
     it('should initialize default state', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
