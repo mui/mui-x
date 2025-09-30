@@ -148,7 +148,10 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
   /**
    * Handle pointer events for the tap gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Find which element (if any) is being targeted
@@ -257,7 +260,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
       default:
         break;
     }
-  }
+  };
 
   /**
    * Fire the main tap event when a valid tap is detected

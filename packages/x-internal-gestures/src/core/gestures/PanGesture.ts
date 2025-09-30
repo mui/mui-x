@@ -224,7 +224,10 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
   /**
    * Handle pointer events for the pan gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
@@ -368,7 +371,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit pan-specific events with additional data

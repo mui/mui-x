@@ -174,7 +174,10 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
   /**
    * Handle pointer events for the press gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
@@ -278,7 +281,7 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit press-specific events with additional data
