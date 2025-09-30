@@ -99,7 +99,7 @@ In case of a problem, another method to generate the changelog is available at t
 
 3. Click "Run workflow"
 4. Refresh the page to see the newly created workflow, and click it.
-5. The next screen will say "@username requested your review to deploy to npm-publish", click "Review deployments" and authorize your workflow run. **Never approve workflow runs you didn't initiaite.**
+5. The next screen shows "@username requested your review to deploy to npm-publish", click "Review deployments" and authorize your workflow run. **Never approve workflow runs you didn't initiaite.**
 
 The action publishes packages, and prepares the GitHub release. The release tag is created during GitHub release. The GitHub release is created in draft mode.
 
