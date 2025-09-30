@@ -1,3 +1,4 @@
+import { useFakeTimers } from 'sinon';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 import {
   DEFAULT_PREFERENCES,
@@ -14,6 +15,10 @@ const DEFAULT_PARAMS = { events: [] };
 
 describe('Core - EventCalendarStore', () => {
   describe('create', () => {
+    useFakeTimers({
+      shouldClearNativeTimers: true,
+    });
+
     it('should initialize default state', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
@@ -24,6 +29,7 @@ describe('Core - EventCalendarStore', () => {
         resources: DEFAULT_RESOURCES,
         events: [],
         visibleResources: new Map(),
+        nowUpdatedEveryMinute: adapter.date(),
         areEventsDraggable: false,
         areEventsResizable: false,
         ampm: true,
