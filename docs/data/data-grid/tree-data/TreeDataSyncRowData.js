@@ -101,25 +101,6 @@ export default function TreeDataSyncRowData() {
   const [rows, setRows] = React.useState(initialRows);
   const [loading, setLoading] = React.useState(false);
 
-  // WORKAROUND: To persist the expanded parents across re-renders
-  // Context: https://github.com/mui/mui-x/issues/210#issuecomment-1006411492
-  const expandedParents = React.useRef(new Set([]));
-
-  const isGroupExpandedByDefault = React.useCallback((node) => {
-    return expandedParents.current.has(node.id);
-  }, []);
-
-  React.useEffect(() => {
-    return apiRef.current?.subscribeEvent('rowExpansionChange', (node) => {
-      if (node.childrenExpanded) {
-        expandedParents.current.add(node.id);
-      } else {
-        expandedParents.current.delete(node.id);
-      }
-    });
-  }, [apiRef]);
-  // WORKAROUND ends here
-
   const handleRowOrderChange = React.useCallback(() => {
     setLoading(true);
     const updatedOrderedDataRows = gridOrderedDataRowsSelector(apiRef);
@@ -140,7 +121,6 @@ export default function TreeDataSyncRowData() {
         treeData
         rowReordering
         disableRowSelectionOnClick
-        isGroupExpandedByDefault={isGroupExpandedByDefault}
         onRowOrderChange={handleRowOrderChange}
         getTreeDataPath={getTreeDataPath}
         setTreeDataPath={setTreeDataPath}

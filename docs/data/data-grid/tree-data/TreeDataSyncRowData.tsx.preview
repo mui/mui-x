@@ -6,7 +6,6 @@
   treeData
   rowReordering
   disableRowSelectionOnClick
-  isGroupExpandedByDefault={isGroupExpandedByDefault}
   onRowOrderChange={handleRowOrderChange}
   getTreeDataPath={getTreeDataPath}
   setTreeDataPath={setTreeDataPath}
