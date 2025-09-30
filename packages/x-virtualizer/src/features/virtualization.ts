@@ -498,7 +498,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       if (panel) {
         rowElements.push(panel);
       }
-      if (rowParams.position === undefined && isLastVisibleInSection) {
+      if (
+        rowParams.position === undefined &&
+        isLastVisibleInSection &&
+        renderInfiniteLoadingTrigger
+      ) {
         rowElements.push(renderInfiniteLoadingTrigger(id));
       }
     });
