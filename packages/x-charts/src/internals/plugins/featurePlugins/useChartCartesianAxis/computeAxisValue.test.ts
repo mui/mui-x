@@ -1,4 +1,4 @@
-import { scaleLinear } from '@mui/x-charts-vendor/d3-scale';
+import { scaleLinear, scaleLog } from '@mui/x-charts-vendor/d3-scale';
 import { scaleRangeAndTickNumber } from './computeAxisValue';
 
 describe('scaleRangeAndTickNumber', () => {
@@ -74,6 +74,17 @@ describe('scaleRangeAndTickNumber', () => {
       scale.range(result.range);
       expect(scale(4)).to.eq(255);
       expect(scale(7)).to.eq(20);
+    });
+
+    it('works with a non-linear scale', () => {
+      const scale = scaleLog([1, 1000], [0, 100]);
+      const minData = 10;
+      const maxData = 100;
+      const tickNumber = 4;
+
+      const result = scaleRangeAndTickNumber(scale, minData, maxData, tickNumber);
+      expect(result.range).to.deep.equal([-50, 150]);
+      expect(result.tickNumber).to.equal(8);
     });
   });
 });
