@@ -18,3 +18,11 @@ This package is not published yet.
 ## Basic example
 
 {{"demo": "BasicTimeline.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Preferences
+
+You can customize the Timeline with the preferences prop.
+
+Available properties:
+
+- `ampm`: Sets the initial time format. `true` uses 12-hour (AM/PM), `false` uses 24-hour. Defaults to `true`.
