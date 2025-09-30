@@ -8,6 +8,7 @@ import { Keyboard } from './features/keyboard';
 import { Rowspan } from './features/rowspan';
 import { Virtualization } from './features/virtualization';
 import { DEFAULT_PARAMS } from './constants';
+import type { LayoutMode } from './constants';
 import type { HeightEntry, RowSpacing } from './models/dimensions';
 import type { ColspanParams } from './features/colspan';
 import type { DimensionsParams } from './features/dimensions';
@@ -35,6 +36,12 @@ export type BaseState = Virtualization.State & Dimensions.State;
 
 export type VirtualizerParams = {
   legacy?: boolean;
+  /**
+   * The layout mode to use.
+   * - DataGrid: legacy DataGrid mode with support for both rows and columns virtualization.
+   * - ListSimple: only rows virtualization is supported. This mode is optimized for simpler use cases like lists.
+   */
+  layout: LayoutMode;
 
   refs: {
     container: RefObject<HTMLDivElement | null>;

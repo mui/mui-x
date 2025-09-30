@@ -13,6 +13,7 @@ import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internal
 import { PinnedRows, PinnedColumns } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions } from './dimensions';
+import { LayoutMode } from '../constants';
 import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import {
   PinnedRowPosition,
@@ -514,32 +515,58 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       ({
         overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
         overflowY: autoHeight ? 'hidden' : undefined,
+        position: params.layout === LayoutMode.ListSimple ? 'relative' : undefined,
       }) as React.CSSProperties,
     [needsHorizontalScrollbar, autoHeight],
   );
 
   const contentStyle = React.useMemo(() => {
-    const size: React.CSSProperties = {
-      width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-      flexBasis: contentHeight,
-      flexShrink: 0,
-    };
+    switch (params.layout) {
+      case LayoutMode.DataGrid: {
+        const style: React.CSSProperties = {
+          width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
+          flexBasis: contentHeight,
+          flexShrink: 0,
+        };
 
-    if (size.flexBasis === 0) {
-      size.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
+        if (style.flexBasis === 0) {
+          style.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
+        }
+
+        return style;
+      }
+      case LayoutMode.ListSimple: {
+        const style: React.CSSProperties = {
+          position: 'absolute',
+          display: 'inline-block',
+          width: '100%',
+          height: contentHeight,
+          top: 0,
+          left: 0,
+          zIndex: -1,
+        };
+        return style;
+      }
     }
-
-    return size;
   }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
 
   const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
-  const renderZoneStyle = React.useMemo(
-    () =>
-      ({
-        transform: `translate3d(0, ${offsetTop}px, 0)`,
-      }) as React.CSSProperties,
-    [offsetTop],
-  );
+  const positionerStyle = React.useMemo(() => {
+    switch (params.layout) {
+      case LayoutMode.DataGrid: {
+        const style: React.CSSProperties = {
+          transform: `translate3d(0, ${offsetTop}px, 0)`,
+        };
+        return style;
+      }
+      case LayoutMode.ListSimple: {
+        const style: React.CSSProperties = {
+          height: offsetTop,
+        };
+        return style;
+      }
+    }
+  }, [offsetTop]);
 
   const scrollRestoreCallback = React.useRef<Function | null>(null);
   const contentNodeRef = React.useCallback(
@@ -659,8 +686,8 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       style: contentStyle,
       role: 'presentation',
     }),
-    getRenderZoneProps: () => ({
-      style: renderZoneStyle,
+    getPositionerProps: () => ({
+      style: positionerStyle,
     }),
     getScrollbarVerticalProps: () => ({
       ref: refSetter('scrollbarVertical'),

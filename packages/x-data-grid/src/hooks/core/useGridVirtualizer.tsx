@@ -6,7 +6,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { useVirtualizer, Dimensions } from '@mui/x-virtualizer';
+import { useVirtualizer, LayoutMode, Dimensions } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
 import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
@@ -158,6 +158,7 @@ export function useGridVirtualizer(
 
   const virtualizer = useVirtualizer({
     legacy: true,
+    layout: LayoutMode.DataGrid,
 
     refs: {
       container: apiRef.current.mainElementRef,
