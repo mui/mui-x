@@ -282,7 +282,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     // Return early if the proper strategy isn't set yet
     // Context: https://github.com/mui/mui-x/issues/19650
     const strategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
-    if (strategy !== DataSourceRowsUpdateStrategy.Default && strategy !== DataSourceRowsUpdateStrategy.LazyLoading) {
+    if (
+      strategy !== DataSourceRowsUpdateStrategy.Default &&
+      strategy !== DataSourceRowsUpdateStrategy.LazyLoading
+    ) {
       return undefined;
     }
     if (props.dataSource) {
