@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { diffIn } from '@mui/x-scheduler/primitives/utils/date-utils';
 import { Timeline } from '@mui/x-scheduler/material/timeline';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives';
+import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { diffIn } from '@mui/x-scheduler/primitives/utils/date-utils';
 
 const baseResources: CalendarResource[] = [
   { id: 'resource-1', name: 'Engineering', eventColor: 'blue' },
