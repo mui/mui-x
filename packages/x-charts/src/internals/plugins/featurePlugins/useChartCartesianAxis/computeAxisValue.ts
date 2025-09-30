@@ -261,6 +261,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   };
 }
 
+const MIN_SCALE = 0.01;
 export function scaleRangeAndTickNumber(
   scale: D3ContinuousScale,
   minData: number,
@@ -271,6 +272,12 @@ export function scaleRangeAndTickNumber(
   const scaleRange = scale.range();
   const rangeSpan = Math.abs(scaleRange[1] - scaleRange[0]);
   const domainSpan = Math.abs(domain[1].valueOf() - domain[0].valueOf());
+
+  if (minData === maxData) {
+    minData = minData * (1 - MIN_SCALE);
+    maxData = maxData * (1 + MIN_SCALE);
+  }
+
   const extremaSpan = Math.abs(maxData - minData);
   const spanRatio = extremaSpan === 0 ? 1 : domainSpan / extremaSpan;
   const startDiff = Math.abs(domain[0].valueOf() - minData);
@@ -285,7 +292,7 @@ export function scaleRangeAndTickNumber(
     scaleRange[1].valueOf() - sign * rangeSpan * endRatio * (spanRatio - 1),
   ];
 
-  const tickNumber = extremaSpan === 0 ? 0 : unscaledTickNumber * spanRatio;
+  const tickNumber = extremaSpan === 0 ? unscaledTickNumber : unscaledTickNumber * spanRatio;
 
   return { range, tickNumber };
 }
