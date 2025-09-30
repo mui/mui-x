@@ -2,10 +2,12 @@
 import * as React from 'react';
 import { SchedulerParameters, SchedulerState, SchedulerStore } from './SchedulerStore';
 
-export const SchedulerStoreContext = React.createContext<Omit<
-  SchedulerStore<SchedulerState, SchedulerParameters>,
-  'updateStateFromParameters' | 'disposeEffect' | 'update'
-> | null>(null);
+// TODO: Use Remove `update: any` for the update method once `useStore` uses `ReadonlyStore`
+interface CustomSchedulerStore extends SchedulerStore<SchedulerState, SchedulerParameters> {
+  update: any;
+}
+
+export const SchedulerStoreContext = React.createContext<CustomSchedulerStore | null>(null);
 
 export function useSchedulerStoreContext() {
   const context = React.useContext(SchedulerStoreContext);
