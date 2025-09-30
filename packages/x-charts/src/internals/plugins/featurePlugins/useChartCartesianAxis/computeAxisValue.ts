@@ -13,6 +13,7 @@ import {
   DefaultedAxis,
   AxisValueFormatterContext,
   ComputedAxis,
+  D3ContinuousScale,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '../../../colorScale';
@@ -221,25 +222,11 @@ export function computeAxisValue<T extends ChartSeriesType>({
 
       /* Here we're applying the filterMode: 'discard' to the range. Basically, we're scaling the range so that the
        * domain limits line up with the drawing area limits. */
-      const domain = scale.domain();
-      const scaleRange = scale.range();
-      const rangeSpan = Math.abs(scaleRange[1] - scaleRange[0]);
-      const domainSpan = Math.abs(domain[1].valueOf() - domain[0].valueOf());
-      const extremaSpan = Math.abs(maxData - minData);
-      const spanRatio = domainSpan / extremaSpan;
-      const startDiff = Math.abs(domain[0].valueOf() - minData);
-      const endDiff = Math.abs(domain[1].valueOf() - maxData);
-      const startRatio = startDiff / (startDiff + endDiff) || 0;
-      const endRatio = endDiff / (startDiff + endDiff) || 0;
-
-      const newRange = [
-        scaleRange[0].valueOf() + rangeSpan * startRatio * (spanRatio - 1),
-        scaleRange[1].valueOf() - rangeSpan * endRatio * (spanRatio - 1),
-      ];
+      const scaled = scaleRangeAndTickNumber(scale, minData, maxData, rawTickNumber);
 
       scale = scale.copy();
-      scale.range(newRange);
-      tickNumber = rawTickNumber * spanRatio;
+      scale.range(scaled.range);
+      tickNumber = scaled.tickNumber;
     }
 
     completeAxis[axis.id] = {
@@ -271,4 +258,33 @@ export function computeAxisValue<T extends ChartSeriesType>({
     axis: completeAxis,
     axisIds: allAxis.map(({ id }) => id),
   };
+}
+
+export function scaleRangeAndTickNumber(
+  scale: D3ContinuousScale,
+  minData: number,
+  maxData: number,
+  unscaledTickNumber: number,
+) {
+  const domain = scale.domain();
+  const scaleRange = scale.range();
+  const rangeSpan = Math.abs(scaleRange[1] - scaleRange[0]);
+  const domainSpan = Math.abs(domain[1].valueOf() - domain[0].valueOf());
+  const extremaSpan = Math.abs(maxData - minData);
+  const spanRatio = extremaSpan === 0 ? 1 : domainSpan / extremaSpan;
+  const startDiff = Math.abs(domain[0].valueOf() - minData);
+  const endDiff = Math.abs(domain[1].valueOf() - maxData);
+  const startRatio = startDiff / (startDiff + endDiff) || 0;
+  const endRatio = endDiff / (startDiff + endDiff) || 0;
+
+  const sign = scaleRange[1] <= scaleRange[0] ? 1 : -1;
+
+  const range = [
+    scaleRange[0].valueOf() + sign * rangeSpan * startRatio * (spanRatio - 1),
+    scaleRange[1].valueOf() - sign * rangeSpan * endRatio * (spanRatio - 1),
+  ];
+
+  const tickNumber = extremaSpan === 0 ? 0 : unscaledTickNumber * spanRatio;
+
+  return { range, tickNumber };
 }
