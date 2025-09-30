@@ -82,7 +82,7 @@ export type TapAndDragGestureState = GestureState & {
   /** Current phase of the tap and drag gesture */
   phase: TapAndDragPhase;
   /** Timeout used to time drag interactions */
-  dragTimeoutId: NodeJS.Timeout | number | null;
+  dragTimeoutId: ReturnType<typeof setTimeout> | null;
 };
 
 /**
