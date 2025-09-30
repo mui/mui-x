@@ -517,7 +517,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         overflowY: autoHeight ? 'hidden' : undefined,
         position: params.layout === LayoutMode.ListSimple ? 'relative' : undefined,
       }) as React.CSSProperties,
-    [needsHorizontalScrollbar, autoHeight],
+    [needsHorizontalScrollbar, autoHeight, params.layout],
   );
 
   const contentStyle = React.useMemo(() => {
@@ -547,8 +547,16 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         };
         return style;
       }
+      default:
+        throw new Error('MUI: Unsupported layout' + params.layout);
     }
-  }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar, minimalContentHeight]);
+  }, [
+    columnsTotalWidth,
+    contentHeight,
+    needsHorizontalScrollbar,
+    minimalContentHeight,
+    params.layout,
+  ]);
 
   const offsetTop = rowsMeta.positions[renderContext.firstRowIndex] ?? 0;
   const positionerStyle = React.useMemo(() => {
@@ -565,8 +573,10 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         };
         return style;
       }
+      default:
+        throw new Error('MUI: Unsupported layout' + params.layout);
     }
-  }, [offsetTop]);
+  }, [offsetTop, params.layout]);
 
   const scrollRestoreCallback = React.useRef<Function | null>(null);
   const contentNodeRef = React.useCallback(
@@ -651,15 +661,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       refs[name].current = node;
       setRefTick((tick) => tick + 1);
     }
-  };
-
-  const props = {
-    container: {},
-    scroller: {},
-    content: {},
-    scrollbarVertical: {},
-    scrollbarHorizontal: {},
-    scrollArea: {},
   };
 
   // Legacy API, cannot change without a breaking change in the grid (GridDetailPanels, etc)
