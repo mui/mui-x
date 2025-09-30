@@ -8,7 +8,7 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
-import { GRID_DEFAULT_STRATEGY, GridStrategyGroup } from '../../core/strategyProcessing';
+import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridPaginationModelSelector } from '../pagination/gridPaginationSelector';
 import { gridGetRowsParamsSelector } from './gridDataSourceSelector';
@@ -85,13 +85,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
     async (parentId, params) => {
-      // Return early if the proper strategy isn't set yet
-      // Context: https://github.com/mui/mui-x/issues/19650
-      const currentStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
-      if (currentStrategy === GRID_DEFAULT_STRATEGY) {
-        return;
-      }
-
       const getRows = props.dataSource?.getRows;
       if (!getRows) {
         return;
@@ -286,6 +279,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   }, [props.dataSourceCache, options.cacheOptions]);
 
   React.useEffect(() => {
+    // Return early if the proper strategy isn't set yet
+    // Context: https://github.com/mui/mui-x/issues/19650
+    const strategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
+    if (strategy !== DataSourceRowsUpdateStrategy.Default && strategy !== DataSourceRowsUpdateStrategy.LazyLoading) {
+      return undefined;
+    }
     if (props.dataSource) {
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
