@@ -64,7 +64,7 @@ export type PointerGestureEventData<
  *     });
  *   }
  *
- *   handlePointerEvent(pointers, event) {
+ *   handlePointerEvent = (pointers, event) => {
  *     // Handle pointer events here
  *   }
  * }
@@ -107,9 +107,7 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
   ): void {
     super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
-    this.unregisterHandler = this.pointerManager!.registerGestureHandler(
-      this.handlePointerEvent.bind(this),
-    );
+    this.unregisterHandler = this.pointerManager!.registerGestureHandler(this.handlePointerEvent);
   }
 
   protected updateOptions(options: typeof this.mutableOptionsType): void {
