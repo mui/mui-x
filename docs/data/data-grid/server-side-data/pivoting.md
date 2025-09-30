@@ -60,7 +60,7 @@ Use `pivotModel` on the server to pivot the data for each `getRows()` call.
 The server should return both the pivoted `rows` and the `pivotColumns` structure that defines how the pivot columns should be organized.
 
 ```tsx
-const getRows: async (params) => {
+const getRows = async (params) => {
   const urlParams = new URLSearchParams({
     // Example: JSON.stringify({
     //   rows: [{ field: 'company' }],
@@ -81,7 +81,7 @@ const getRows: async (params) => {
     // Defined structure of pivot columns
     pivotColumns: getRowsResponse.pivotColumns,
   };
-}
+};
 ```
 
 With the required props and parameters in place, server-side pivoting should now be implemented in your Data Grid, as shown in the demo below:
@@ -174,12 +174,35 @@ Since the formatted value is not known on the server, rows contain pivot data in
 
 {{"demo": "ServerSidePivotingColumnStructureComplex.js", "bg": "inline"}}
 
+### Column sorting
+
+Pivot column sort parameter is processed differently for different column group types.
+
+Column groups returned as strings are considered formatted and sorted on the server, and the Data Grid does not sort these values on the client-side.
+
+Column groups returned as part of the row model are formatted on the client.
+The result of `valueGetter()` is used to get the group value that is used for sorting.
+
+## Derived columns in pivot mode
+
+In pivot mode, it's often useful to group data by year or quarter.
+For server-side pivoting, the Data Grid does not add any derived columns automatically, unlike [client-side pivoting](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode), because it is not known which aggregation capabilities are available on your server.
+
+Use the `getPivotDerivedColumn()` prop to add supported derived columns.
+This prop is called for each original column and returns an array of derived columns, or `undefined` if no derived columns are needed.
+
+:::success
+To sort the derived columns by a value different from the column header name—to display months of the year, use `valueGetter()` to return the month number for sorting and use `valueFormatter()` for the column header name.
+:::
+
+{{"demo": "ServerSidePivotingDerivedColumns.js", "bg": "inline"}}
+
 ## Error handling
 
 If an error occurs during a `getRows()` call, the Data Grid displays an error indicator in the row group cell.
 `onDataSourceError()` is also triggered with an error containing the params described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).
 
-The demo below renders a custom Snackbar component to display an error message when the requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.
+The demo below renders a custom Snackbar component to display an error message when requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.
 
 {{"demo": "ServerSidePivotingErrorHandling.js", "bg": "inline"}}
 
