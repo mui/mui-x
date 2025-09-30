@@ -211,10 +211,10 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
 
     const dimensions = Dimensions.selectors.dimensions(store.state);
     const maxScrollTop = Math.ceil(
-      dimensions.minimumSize.height - dimensions.viewportOuterSize.height,
+      dimensions.contentSize.height - dimensions.viewportInnerSize.height,
     );
     const maxScrollLeft = Math.ceil(
-      dimensions.minimumSize.width - dimensions.viewportInnerSize.width,
+      dimensions.contentSize.width - dimensions.viewportInnerSize.width,
     );
 
     // Clamp the scroll position to the viewport to avoid re-calculating the render context for scroll bounce

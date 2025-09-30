@@ -45,6 +45,17 @@ Default styles can be applied to all links using the `linkOptions` prop:
 
 {{"demo": "SankeyLinkStyling.js"}}
 
+### Link color keywords
+
+Link colors can use special keyword values to automatically inherit colors from their connected nodes:
+
+- `'source'` - The link inherits the color of its source node
+- `'target'` - The link inherits the color of its target node
+
+This feature works for both individual link colors and the default link color in `linkOptions`:
+
+{{"demo": "SankeyLinkKeywordColors.js"}}
+
 ### Node alignment
 
 The node alignment determines how nodes are positioned within the Sankey chart. The layout follows these principles:
@@ -69,6 +80,23 @@ In some instances, this creates better-looking connections but is dependent on t
 Higher values create plumper links, while lower values create thinner connections. The default value is `10`.
 
 {{"demo": "SankeyCurveCorrection.js"}}
+
+## Value formatting
+
+You can customize how values are displayed in tooltips and labels using the `valueFormatter` prop.
+This function receives the numeric value and a context object that provides information about what type of element is being formatted.
+
+The context object contains:
+
+- `location`: either `'tooltip'` or `'label'` to indicate where the formatted value is used
+- `type`: either `'node'` or `'link'` to indicate what is being formatted
+- `nodeId`: for nodes, the ID of the node being formatted
+- `sourceId` and `targetId`: for links, the IDs of the source and target nodes
+
+In the following demo, the value formatter adds relevant units to the values.
+And when pointer is on top of a node, it display "total" to the tooltip.
+
+{{"demo": "SankeyValueFormatter.js"}}
 
 ## Sorting
 

@@ -7,18 +7,15 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
-import {
-  CalendarEventOccurrence,
-  CalendarPrimitiveEventData,
-  CalendarProcessedDate,
-} from '../../../../primitives/models';
+import { CalendarProcessedDate } from '../../../../primitives/models';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { TimeGrid } from '../../../../primitives/time-grid';
 import { DayGrid } from '../../../../primitives/day-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarContext } from '../../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { isMultiDayEvent } from '../../../../primitives/utils/event-utils';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -40,7 +37,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
 
@@ -49,10 +46,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
 
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
-  const daysWithOccurrences = useEventOccurrencesWithDayGridPosition({
+  const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
-    shouldAddPosition: shouldRenderOccurrenceInDayGrid,
+    shouldAddPosition: isMultiDayEvent,
   });
 
   const { start, end } = React.useMemo(
@@ -68,13 +65,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       !adapter.isBeforeDay(now, days[0].value) &&
       !adapter.isAfterDay(now, days[days.length - 1].value),
     [adapter, days, now],
-  );
-
-  const handleEventChangeFromPrimitive = React.useCallback(
-    (data: CalendarPrimitiveEventData) => {
-      instance.updateEvent({ id: data.eventId, start: data.start, end: data.end });
-    },
-    [instance],
   );
 
   useIsoLayoutEffect(() => {
@@ -127,7 +117,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   <button
                     type="button"
                     className="DayTimeGridHeaderButton"
-                    onClick={(event) => instance.switchToDay(day.value, event)}
+                    onClick={(event) => store.switchToDay(day.value, event)}
                     tabIndex={0}
                   >
                     {renderHeaderContent(day)}
@@ -143,7 +133,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           ref={allDayHeaderWrapperRef}
           className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
           data-weekend={lastIsWeekend ? '' : undefined}
-          onEventChange={handleEventChangeFromPrimitive}
         >
           <div
             className="DayTimeGridAllDayEventsCell DayTimeGridAllDayEventsHeaderCell"
@@ -159,13 +148,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             role="row"
             style={{ '--column-count': days.length } as React.CSSProperties}
           >
-            {daysWithOccurrences.map((day) => (
-              <DayGridCell key={day.key} day={day} />
+            {occurrences.days.map((day) => (
+              <DayGridCell key={day.key} day={day} row={occurrences} />
             ))}
           </DayGrid.Row>
           <div className="ScrollablePlaceholder" />
         </DayGrid.Root>
-        <TimeGrid.Root className="DayTimeGridRoot" onEventChange={handleEventChangeFromPrimitive}>
+        <TimeGrid.Root className="DayTimeGridRoot">
           <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
             <div className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">
@@ -190,7 +179,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
               <div className="DayTimeGridGrid">
-                {daysWithOccurrences.map((day, index) => (
+                {occurrences.days.map((day, index) => (
                   <TimeGridColumn
                     key={day.key}
                     day={day}
@@ -207,8 +196,3 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     </div>
   );
 });
-
-// TODO: Allow to render some multi-day events that are not all-day in the Day Grid.
-function shouldRenderOccurrenceInDayGrid(occurrence: CalendarEventOccurrence) {
-  return !!occurrence.allDay;
-}

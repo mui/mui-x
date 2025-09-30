@@ -17,6 +17,10 @@ import {
   ChartsRotationAxisProps,
   PolarAxisDefaultized,
   ScaleName,
+  type AxisScaleConfig,
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type ComputedAxis,
 } from '../models/axis';
 
 /**
@@ -58,13 +62,15 @@ export function useYAxes() {
  * @param {AxisId | undefined} axisId - If provided returns the x axis with axisId, else returns the values for the default x axis.
  * @returns The X axis.
  */
-export function useXAxis(axisId?: AxisId) {
+export function useXAxis<T extends keyof AxisScaleConfig>(
+  axisId?: AxisId,
+): ComputedAxis<T, any, ChartsXAxisProps> {
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
 
   const id = axisId ?? xAxisIds[0];
 
-  return xAxis[id];
+  return xAxis[id] as ComputedAxis<T, any, ChartsXAxisProps>;
 }
 
 /**
@@ -72,13 +78,15 @@ export function useXAxis(axisId?: AxisId) {
  * @param {AxisId | undefined} axisId - If provided returns the y axis with axisId, else returns the values for the default y axis.
  * @returns The Y axis.
  */
-export function useYAxis(axisId?: AxisId) {
+export function useYAxis<T extends keyof AxisScaleConfig>(
+  axisId?: AxisId,
+): ComputedAxis<T, any, ChartsYAxisProps> {
   const store = useStore<[UseChartCartesianAxisSignature]>();
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
 
   const id = axisId ?? yAxisIds[0];
 
-  return yAxis[id];
+  return yAxis[id] as ComputedAxis<T, any, ChartsYAxisProps>;
 }
 
 export function useRotationAxes() {

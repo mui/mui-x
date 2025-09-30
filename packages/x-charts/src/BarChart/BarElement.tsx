@@ -7,6 +7,7 @@ import { BarElementOwnerState, useUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
+import { useIsItemFocused } from '../hooks/useIsItemFocused';
 
 export interface BarElementSlots {
   /**
@@ -67,6 +68,11 @@ function BarElement(props: BarElementProps) {
     seriesId: id,
     dataIndex,
   });
+  const isFocused = useIsItemFocused({
+    seriesType: 'bar',
+    seriesId: id,
+    dataIndex,
+  });
 
   const ownerState = {
     id,
@@ -75,6 +81,7 @@ function BarElement(props: BarElementProps) {
     color,
     isFaded,
     isHighlighted,
+    isFocused,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -103,6 +110,7 @@ function BarElement(props: BarElementProps) {
       fill: color,
       skipAnimation,
       layout,
+      'data-focused': isFocused || undefined,
     },
     className: classes.root,
     ownerState,

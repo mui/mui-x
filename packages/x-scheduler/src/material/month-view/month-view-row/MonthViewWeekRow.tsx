@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
-import { useEventCalendarContext } from '../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
@@ -17,10 +17,10 @@ const adapter = getAdapter();
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const { maxEvents, days, occurrencesMap, firstDayRef } = props;
 
-  const { store } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const preferences = useStore(store, selectors.preferences);
   const translations = useTranslations();
-  const daysWithEvents = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
+  const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
   const { start, end } = React.useMemo(
@@ -51,12 +51,13 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           {weekNumber}
         </div>
       )}
-      {daysWithEvents.map((day, dayIdx) => (
+      {occurrences.days.map((day, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}
           key={day.key}
           day={day}
           maxEvents={maxEvents}
+          row={occurrences}
         />
       ))}
     </DayGrid.Row>

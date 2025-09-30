@@ -4,13 +4,20 @@
   "imports": [
     "import { PieArc } from '@mui/x-charts/PieChart';",
     "import { PieArc } from '@mui/x-charts';",
-    "import { PieArc } from '@mui/x-charts-pro';"
+    "import { PieArc } from '@mui/x-charts-pro';",
+    "import { PieArc } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {
       "key": "faded",
       "className": "MuiPieArc-faded",
       "description": "Styles applied to the root element when faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "focusIndicator",
+      "className": "MuiPieArc-focusIndicator",
+      "description": "Styles applied to the focus indicator element.",
       "isGlobal": false
     },
     {

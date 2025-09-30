@@ -7,7 +7,7 @@ import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 import { useInitializeView } from '../../primitives/utils/useInitializeView';
 import { AgendaViewProps } from './AgendaView.types';
 import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { useEventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
@@ -27,7 +27,7 @@ export const AgendaView = React.memo(
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
     const { className, ...other } = props;
-    const { store } = useEventCalendarContext();
+    const store = useEventCalendarStoreContext();
     const today = adapter.date();
     const visibleDate = useStore(store, selectors.visibleDate);
     const preferences = useStore(store, selectors.preferences);

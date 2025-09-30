@@ -146,13 +146,43 @@ export type CalendarEventColor =
   | 'blue';
 
 /**
- * Object forwarded to the `onEventChange` handler of the Day Grid Root and Time Grid Root parts.
+ * Object representing the placeholder of an event occurrence.
+ * It is used when creating a new event or when dragging an event occurrence.
  */
-export interface CalendarPrimitiveEventData {
-  eventId: string | number;
-  columnId: string | null;
+export interface CalendarOccurrencePlaceholder {
+  /**
+   * The id of the event being changed.
+   * It can be null when creating a new event.
+   */
+  eventId: CalendarEventId | null;
+  /**
+   * The key of the event occurrence being changed.
+   * It can be null when creating a new event.
+   */
+  occurrenceKey: string | null;
+  /**
+   * The type of surface the draft should be rendered on.
+   * This is useful to make sure the placeholder is only rendered in the correct grid.
+   */
+  surfaceType: EventSurfaceType;
+  /**
+   * The new start date and time of the event occurrence.
+   */
   start: SchedulerValidDate;
+  /**
+   * The new end date and time of the event occurrence.
+   */
   end: SchedulerValidDate;
+  /**
+   * The start date and time of the event occurrence before the change.
+   * It can be null when creating a new event.
+   */
+  originalStart: SchedulerValidDate | null;
+  /**
+   * Whether to lock the surface type of the placeholder.
+   * When true, the surfaceType will not be updated when editing the placeholder.
+   */
+  lockSurfaceType?: boolean;
 }
 
 export interface CalendarProcessedDate {
@@ -175,3 +205,8 @@ export interface CalendarProcessedDate {
  */
 export type RecurringEventUpdatedProperties = Partial<CalendarEvent> &
   Required<Pick<CalendarEvent, 'start' | 'end'>>;
+
+/**
+ * The type of surface the event is being rendered on.
+ */
+export type EventSurfaceType = 'day-grid' | 'time-grid';

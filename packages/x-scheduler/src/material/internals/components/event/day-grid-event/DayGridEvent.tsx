@@ -10,7 +10,7 @@ import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarContext } from '../../../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
 import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
@@ -35,8 +35,9 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   const id = useId(idProp);
   const translations = useTranslations();
-  const { store } = useEventCalendarContext();
-  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence);
+  const store = useEventCalendarStoreContext();
+  const isDraggable = useStore(store, selectors.isEventDraggable);
+  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'day-grid');
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, occurrence.resource);
   const color = useStore(store, selectors.eventColor, occurrence.id);
@@ -46,7 +47,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     switch (variant) {
       case 'allDay':
       case 'invisible':
-      case 'dragPlaceholder':
+      case 'placeholder':
         return (
           <React.Fragment>
             <p
@@ -141,7 +142,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ...other,
   };
 
-  if (variant === 'dragPlaceholder') {
+  if (variant === 'placeholder') {
     return (
       <DayGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
         {content}
@@ -152,13 +153,20 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   return (
     <DayGrid.Event
       eventId={occurrence.id}
+      occurrenceKey={occurrence.key}
       start={occurrence.start}
       end={occurrence.end}
       isDraggable={isDraggable}
       aria-hidden={variant === 'invisible'}
       {...sharedProps}
     >
+      {isResizable && (
+        <DayGrid.EventResizeHandler side="start" className="DayGridEventResizeHandler" />
+      )}
       {content}
+      {isResizable && (
+        <DayGrid.EventResizeHandler side="end" className="DayGridEventResizeHandler" />
+      )}
     </DayGrid.Event>
   );
 });

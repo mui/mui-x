@@ -711,15 +711,69 @@ export function countYearlyOccurrencesUpToExact(
 }
 
 /**
+ * Computes the ordinal for a MONTHLY BYDAY rule for a given date.
+ * @returns {number} - The ordinal: -1 for last, otherwise 1..5.
+ */
+export function computeMonthlyOrdinal(adapter: Adapter, date: SchedulerValidDate): number {
+  const monthStart = adapter.startOfMonth(date);
+  const { numToByDay } = getByDayMaps(adapter);
+  const code = numToByDay[adapter.getDayOfWeek(date)];
+
+  // Is it the last same-weekday of the month? (-1)
+  const lastSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, -1)!;
+  if (adapter.isSameDay(adapter.startOfDay(date), lastSameWeekday)) {
+    return -1;
+  }
+
+  // First same-weekday of the month (1..5)
+  const firstSameWeekday = nthWeekdayOfMonth(adapter, monthStart, code, 1)!;
+  const daysDiff = diffIn(adapter, adapter.startOfDay(date), firstSameWeekday, 'days');
+  return Math.floor(daysDiff / 7) + 1;
+}
+
+/**
+ * Realigns a WEEKLY BYDAY pattern when splitting “this and following”.
+ * Swaps the weekday of the edited occurrence (oldRefDay) with the weekday of the new
+ * series start (newStart), preserving the rest of the pattern and avoiding duplicates.
+ * @returns {ByDayValue[]} - The realigned BYDAY list (deduplicated).
+ */
+export function realignWeeklyByDay(
+  adapter: Adapter,
+  byDays: ByDayCode[],
+  oldRefDay: SchedulerValidDate,
+  newStart: SchedulerValidDate,
+): ByDayCode[] {
+  const { numToByDay, byDayToNum } = getByDayMaps(adapter);
+  const oldCode = numToByDay[adapter.getDayOfWeek(oldRefDay)];
+  const newCode = numToByDay[adapter.getDayOfWeek(newStart)];
+
+  if (oldCode === newCode) {
+    return byDays;
+  }
+
+  const swapped = Array.from(new Set(byDays.map((d) => (d === oldCode ? newCode : d))));
+
+  swapped.sort((a, b) => byDayToNum[a] - byDayToNum[b]);
+
+  return swapped;
+}
+
+/**
  * Decide the RRULE for the split (new) segment when editing "this and following".
  *
  * Rules:
  * - If user provided changes.rrule → use it as-is (preserve COUNT/UNTIL).
  * - If changes.rrule is explicitly undefined → non-recurring one-off.
  * - If changes.rrule is omitted → inherit pattern and recompute boundaries:
- *     * original COUNT → COUNT = remaining occurrences from split day
- *     * original UNTIL → keep the same UNTIL
- *     * no boundaries → just inherit the pattern
+ *   * WEEKLY: if `changes.start` is provided, realign BYDAY by swapping the weekday of the
+ *     edited occurrence with the weekday of the new start (dedupe if needed).
+ *   * MONTHLY:
+ *       - If BYMONTHDAY is present: set it to the day of `changes.start`.
+ *       - If BYDAY (ordinal) is present: recompute `{ord}{code}` using `computeMonthlyOrdinal`
+ *         and the weekday of `changes.start`.
+ *   * Boundaries:
+ *       - If original had COUNT: set COUNT = remaining occurrences from the split day.
+ *       - If original had UNTIL: keep the same UNTIL.
  */
 export function decideSplitRRule(
   adapter: Adapter,
@@ -746,8 +800,38 @@ export function decideSplitRRule(
   }
 
   // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
+  let realignedRule: Omit<RRuleSpec, 'count' | 'until'> = { ...baseRule };
   const splitDayStart = adapter.startOfDay(splitStart);
 
+  // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
+  if (originalRule.freq === 'WEEKLY' && baseRule.byDay?.length && changes.start) {
+    realignedRule = {
+      ...realignedRule,
+      byDay: realignWeeklyByDay(
+        adapter,
+        baseRule.byDay as ByDayCode[],
+        adapter.startOfDay(splitStart),
+        changes.start,
+      ),
+    };
+  }
+  // Freq MONTHLY realignment
+  if (originalRule.freq === 'MONTHLY' && changes.start) {
+    // A) BYMONTHDAY → set to the new calendar day
+    if (baseRule.byMonthDay?.length) {
+      realignedRule = { ...realignedRule, byMonthDay: [adapter.getDate(changes.start)] };
+    }
+
+    // B) Ordinal BYDAY → recompute ordinal + weekday for the new date
+    if (baseRule.byDay?.length) {
+      const { numToByDay } = getByDayMaps(adapter);
+      const code = numToByDay[adapter.getDayOfWeek(changes.start)];
+      const ord = computeMonthlyOrdinal(adapter, changes.start);
+      realignedRule = { ...realignedRule, byDay: [`${ord}${code}` as ByDayValue] };
+    }
+  }
+
+  // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
     const dayBefore = adapter.addDays(splitDayStart, -1);
     const occurrencesBeforeSplit = estimateOccurrencesUpTo(
@@ -757,14 +841,14 @@ export function decideSplitRRule(
       dayBefore,
     );
     const remaining = Math.max(0, originalRule.count - occurrencesBeforeSplit);
-    return remaining > 0 ? { ...baseRule, count: remaining } : undefined;
+    return remaining > 0 ? { ...realignedRule, count: remaining } : undefined;
   }
 
   if (originalRule.until) {
-    return { ...baseRule, until: originalRule.until };
+    return { ...realignedRule, until: originalRule.until };
   }
 
-  return { ...baseRule };
+  return { ...realignedRule };
 }
 
 /**

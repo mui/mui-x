@@ -2,51 +2,40 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
+import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useAdapter } from '../../../primitives/utils/adapter/useAdapter';
 import { DayGrid } from '../../../primitives/day-grid';
-import { useEventCalendarContext } from '../../../primitives/utils/useEventCalendarContext';
+import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
-import { diffIn, isWeekend } from '../../../primitives/utils/date-utils';
+import { isWeekend } from '../../../primitives/utils/date-utils';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { selectors } from '../../../primitives/use-event-calendar';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
+import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopoverContext';
 import './MonthViewWeekRow.css';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { day, maxEvents } = props;
+  const { day, row, maxEvents } = props;
   const adapter = useAdapter();
-  const { store, instance } = useEventCalendarContext();
+  const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const placeholder = DayGrid.usePlaceholderInDay(day.value);
+  const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
   const hasDayView = useStore(store, selectors.hasDayView);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const initialDraggedEvent = useStore(store, selectors.event, placeholder?.eventId ?? null);
+  const isCreation = useStore(store, selectors.isCreatingNewEventInDayGridCell, day.value);
+
+  const cellRef = React.useRef<HTMLDivElement | null>(null);
+  const handleRef = useMergedRefs(ref, cellRef);
+
+  const { startEditing } = useEventPopoverContext();
 
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
   const isToday = React.useMemo(() => adapter.isSameDay(day.value, adapter.date()), [adapter, day]);
-
-  const draggedOccurrence = React.useMemo(() => {
-    if (!initialDraggedEvent || !placeholder) {
-      return null;
-    }
-
-    return {
-      ...initialDraggedEvent,
-      start: placeholder.start,
-      end: placeholder.end,
-      key: `dragged-${initialDraggedEvent.id}`,
-      position: {
-        // TODO: Apply the same index as the initial event if present in the row, 1 otherwise
-        index: 1,
-        daySpan: diffIn(adapter, placeholder.end, day.value, 'days') + 1,
-      },
-    };
-  }, [adapter, day.value, initialDraggedEvent, placeholder]);
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
@@ -62,12 +51,31 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     </span>
   );
 
-  // Day number header + visible events + "+x more" indicator (if any)
-  const rowCount = 1 + visibleOccurrences.length + (hiddenCount > 0 ? 1 : 0);
+  // Day number header + max events
+  const rowCount = 1 + maxEvents;
+
+  const handleDoubleClick = () => {
+    store.setOccurrencePlaceholder({
+      eventId: null,
+      occurrenceKey: 'create-placeholder',
+      surfaceType: 'day-grid',
+      start: adapter.startOfDay(day.value),
+      end: adapter.endOfDay(day.value),
+      originalStart: null,
+      lockSurfaceType: true,
+    });
+  };
+
+  React.useEffect(() => {
+    if (!isCreation || !placeholder || !cellRef.current) {
+      return;
+    }
+    startEditing(cellRef.current, placeholder);
+  }, [isCreation, placeholder, startEditing]);
 
   return (
     <DayGrid.Cell
-      ref={ref}
+      ref={handleRef}
       key={day.key}
       value={day.value}
       data-current={isToday ? '' : undefined}
@@ -78,12 +86,13 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         isWeekend(adapter, day.value) && 'Weekend',
       )}
       style={{ '--row-count': rowCount } as React.CSSProperties}
+      onDoubleClick={handleDoubleClick}
     >
       {hasDayView ? (
         <button
           type="button"
           className="MonthViewCellNumberButton"
-          onClick={(event) => instance.switchToDay(day.value, event)}
+          onClick={(event) => store.switchToDay(day.value, event)}
           tabIndex={0}
         >
           {cellNumberContent}
@@ -121,11 +130,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         {hiddenCount > 0 && (
           <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
         )}
-        {draggedOccurrence != null && (
-          <div className="MonthViewDraggedEventContainer">
+        {placeholder != null && (
+          <div className="MonthViewPlaceholderEventContainer">
             <DayGridEvent
-              occurrence={draggedOccurrence}
-              variant="dragPlaceholder"
+              occurrence={placeholder}
+              variant="placeholder"
               ariaLabelledBy={`MonthViewHeaderCell-${day.key}`}
             />
           </div>
@@ -137,5 +146,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
 interface MonthViewCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
+  row: useEventOccurrencesWithDayGridPosition.ReturnValue;
   maxEvents: number;
 }

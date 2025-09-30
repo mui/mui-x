@@ -7,7 +7,7 @@ import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { EventCalendarContext } from '../../primitives/utils/useEventCalendarContext';
+import { EventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { DateNavigator } from '../internals/components/date-navigator';
@@ -20,24 +20,13 @@ import {
 import '../index.css';
 import './EventCalendar.css';
 
-function ErrorCallout() {
-  return (
-    <div className="ErrorCallout">
-      <p>
-        <span>The Timeline view is currently only available on its own, rendered inside the </span>
-        <span className="CodeSnippet">{'<StandaloneView/>'}</span> component.
-      </p>
-    </div>
-  );
-}
-
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
-  const contextValue = useEventCalendar(parameters);
-  const view = useStore(contextValue.store, selectors.view);
+  const store = useEventCalendar(parameters);
+  const view = useStore(store, selectors.view);
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
@@ -58,15 +47,12 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     case 'agenda':
       content = <AgendaView />;
       break;
-    case 'timeline':
-      content = <ErrorCallout />;
-      break;
     default:
       content = null;
   }
 
   return (
-    <EventCalendarContext.Provider value={contextValue}>
+    <EventCalendarStoreContext.Provider value={store}>
       <TranslationsProvider translations={translations}>
         <div
           {...other}
@@ -96,6 +82,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
           </div>
         </div>
       </TranslationsProvider>
-    </EventCalendarContext.Provider>
+    </EventCalendarStoreContext.Provider>
   );
 });
