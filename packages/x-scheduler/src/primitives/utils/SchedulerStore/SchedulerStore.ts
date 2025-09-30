@@ -23,9 +23,12 @@ import { Adapter } from '../adapter/types';
 import { applyRecurringUpdateFollowing } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
+import { TimeoutManager } from '../TimeoutManager';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
+
+const ONE_MINUTE_IN_MS = 60 * 1000;
 
 /**
  * Instance shared by the Event Calendar and the Timeline components.
@@ -42,6 +45,8 @@ export class SchedulerStore<
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
+  private timeoutManager = new TimeoutManager();
+
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
@@ -52,6 +57,7 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       adapter,
       occurrencePlaceholder: null,
+      nowUpdatedEveryMinute: adapter.date(),
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
@@ -65,6 +71,17 @@ export class SchedulerStore<
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
+
+    const currentDate = new Date();
+    const timeUntilNextMinuteMs =
+      ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
+
+    this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
+      this.set('nowUpdatedEveryMinute', adapter.date());
+      this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
+        this.set('nowUpdatedEveryMinute', adapter.date());
+      });
+    });
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
@@ -141,6 +158,10 @@ export class SchedulerStore<
 
     this.apply(newState);
   };
+
+  public cleanup() {
+    this.timeoutManager.clearAll();
+  }
 
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
