@@ -2,8 +2,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
-import { restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
-import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
+// eslint-disable-next-line import/no-relative-packages
+import '../utils/setupFakeClock';
+// eslint-disable-next-line import/no-relative-packages
+import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense';
 import TestViewer from './TestViewer';
 import { type Test, testsBySuite } from './testsBySuite';
 
