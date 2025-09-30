@@ -9,7 +9,7 @@ import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
 import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
@@ -80,7 +80,7 @@ export namespace Dimensions {
   export type API = ReturnType<typeof useDimensions>;
 }
 
-function initializeState(params: VirtualizerParams): Dimensions.State {
+function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...params.dimensions,
@@ -106,7 +106,7 @@ function initializeState(params: VirtualizerParams): Dimensions.State {
   };
 }
 
-function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api: {}) {
+function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
   const {
@@ -285,7 +285,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
 function useRowsMeta(
   store: Store<BaseState>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   updateDimensions: Function,
 ) {
   const heightCache = store.state.rowHeights;

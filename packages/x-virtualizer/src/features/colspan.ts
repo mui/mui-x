@@ -1,7 +1,7 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { Store } from '@mui/x-internals/store';
 import type { integer } from '@mui/x-internals/types';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import type { ColumnWithWidth, RowId } from '../models';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Virtualization } from './virtualization';
@@ -30,7 +30,7 @@ export namespace Colspan {
   export type API = ReturnType<typeof useColspan>;
 }
 
-function initializeState(_params: VirtualizerParams) {
+function initializeState(_params: ParamsWithDefaults) {
   return {
     colspanMap: new Map(),
   };
@@ -38,7 +38,7 @@ function initializeState(_params: VirtualizerParams) {
 
 function useColspan(
   store: Store<BaseState & Colspan.State>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   api: Virtualization.API,
 ) {
   const getColspan = params.colspan?.getColspan;

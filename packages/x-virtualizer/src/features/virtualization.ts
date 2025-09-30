@@ -13,7 +13,7 @@ import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internal
 import { PinnedRows, PinnedColumns } from '../models/core';
 import type { CellColSpanInfo } from '../models/colspan';
 import { Dimensions } from './dimensions';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import {
   PinnedRowPosition,
   RenderContext,
@@ -79,7 +79,7 @@ export namespace Virtualization {
   export type API = ReturnType<typeof useVirtualization>;
 }
 
-function initializeState(params: VirtualizerParams) {
+function initializeState(params: ParamsWithDefaults) {
   const state: Virtualization.State = {
     virtualization: {
       enabled: !platform.isJSDOM,
@@ -108,7 +108,7 @@ type AbstractAPI = {
 
 type RequiredAPI = Dimensions.API & AbstractAPI;
 
-function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, api: RequiredAPI) {
+function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, api: RequiredAPI) {
   const {
     refs,
     dimensions: { rowHeight, columnsTotalWidth = 0 },
@@ -622,6 +622,15 @@ function useVirtualization(store: Store<BaseState>, params: VirtualizerParams, a
     }
   };
 
+  const props = {
+    container: {},
+    scroller: {},
+    content: {},
+    scrollbarVertical: {},
+    scrollbarHorizontal: {},
+    scrollArea: {},
+  };
+
   // Legacy API, cannot change without a breaking change in the grid (GridDetailPanels, etc)
   const legacyAPI = {
     setPanels,
@@ -706,7 +715,7 @@ type RenderContextInputs = ReturnType<typeof inputsSelector>;
 
 function inputsSelector(
   store: Store<BaseState>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   api: RequiredAPI,
   enabledForRows: boolean,
   enabledForColumns: boolean,
