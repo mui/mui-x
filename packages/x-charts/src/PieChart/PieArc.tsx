@@ -86,8 +86,8 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
     outerRadius: number;
     paddingAngle: number;
     startAngle: number;
-    /** @default false */
-    skipAnimation: boolean;
+    skipAnimation?: boolean;
+    skipInteraction?: boolean;
   };
 
 const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
@@ -109,6 +109,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     paddingAngle,
     skipAnimation,
     stroke: strokeProp,
+    skipInteraction,
     ...other
   } = props;
 
@@ -126,7 +127,10 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
   };
   const classes = useUtilityClasses(ownerState);
 
-  const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
+  const interactionProps = useInteractionItemProps(
+    { type: 'pie', seriesId: id, dataIndex },
+    skipInteraction,
+  );
   const animatedProps = useAnimatePieArc({
     cornerRadius,
     startAngle,
