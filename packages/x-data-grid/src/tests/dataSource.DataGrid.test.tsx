@@ -14,8 +14,8 @@ import {
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCell } from 'test/utils/helperFn';
-import { GridDataSourceCacheDefault as TestCache } from '@mui/x-data-grid/hooks';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
+import { TestCache } from '../internals/utils';
 
 const pageSizeOptions = [10, 20];
 const serverOptions = { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false };

@@ -16,7 +16,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { isJSDOM } from 'test/utils/skipIf';
-import { GridDataSourceCacheDefault as TestCache } from '@mui/x-data-grid/hooks';
+import { TestCache } from '@mui/x-data-grid/internals';
 
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
