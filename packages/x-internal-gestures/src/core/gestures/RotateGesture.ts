@@ -136,7 +136,10 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
   /**
    * Handle pointer events for the rotate gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Find which element (if any) is being targeted
@@ -261,7 +264,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit rotate-specific events with additional data
