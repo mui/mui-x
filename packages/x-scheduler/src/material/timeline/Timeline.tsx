@@ -11,7 +11,7 @@ export function Timeline(props: TimelineProps) {
 
   return (
     <TimelineStoreContext.Provider value={store}>
-      <SchedulerStoreContext.Provider value={store}>
+      <SchedulerStoreContext.Provider value={store as any}>
         <div {...forwardedProps}>Hello world</div>
       </SchedulerStoreContext.Provider>
     </TimelineStoreContext.Provider>

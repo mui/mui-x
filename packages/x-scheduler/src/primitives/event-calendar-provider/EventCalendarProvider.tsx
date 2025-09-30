@@ -9,7 +9,9 @@ export function EventCalendarProvider(props: EventCalendarProvider.Props) {
 
   return (
     <EventCalendarStoreContext.Provider value={store}>
-      <SchedulerStoreContext.Provider value={store}>{children}</SchedulerStoreContext.Provider>
+      <SchedulerStoreContext.Provider value={store as any}>
+        {children}
+      </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>
   );
 }

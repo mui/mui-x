@@ -54,7 +54,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
 
   return (
     <EventCalendarStoreContext.Provider value={store}>
-      <SchedulerStoreContext.Provider value={store}>
+      <SchedulerStoreContext.Provider value={store as any}>
         <TranslationsProvider translations={translations}>
           <div
             {...other}
