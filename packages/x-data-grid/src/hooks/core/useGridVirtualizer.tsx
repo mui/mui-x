@@ -36,6 +36,7 @@ import {
   rowHeightWarning,
 } from '../features/rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../features/columns/gridColumnsUtils';
+import { useGridOverlays } from '../features/overlays/useGridOverlays';
 
 function identity<T>(x: T) {
   return x;
@@ -129,6 +130,8 @@ export function useGridVirtualizer(
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
+  const overlayState = useGridOverlays(apiRef, rootProps);
+
   const dimensionsParams = {
     rowHeight,
     headerHeight,
@@ -198,6 +201,10 @@ export function useGridVirtualizer(
     pinnedColumns,
 
     autoHeight,
+    disableHorizontalScroll: listView,
+    disableVerticalScroll:
+      overlayState.overlayType === 'noColumnsOverlay' ||
+      overlayState.loadingOverlayVariant === 'skeleton',
     minimalContentHeight,
     getRowHeight: React.useMemo(() => {
       if (!getRowHeight) {

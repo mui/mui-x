@@ -196,6 +196,14 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
       }
     }
 
+    if (params.disableHorizontalScroll) {
+      hasScrollX = false;
+    }
+
+    if (params.disableVerticalScroll) {
+      hasScrollY = false;
+    }
+
     const rowWidth = Math.max(
       viewportOuterSize.width,
       columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
@@ -238,6 +246,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     containerNode,
     params.dimensions.scrollbarSize,
     params.autoHeight,
+    params.disableHorizontalScroll,
+    params.disableVerticalScroll,
     onResize,
     rowHeight,
     columnsTotalWidth,
