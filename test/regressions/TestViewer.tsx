@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { styled } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
-import { fakeClock, setupFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
+// eslint-disable-next-line import/no-relative-packages
+import { fakeClock, setupFakeClock } from '../utils/setupFakeClock';
 
 const StyledBox = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isDataGridTest' && prop !== 'isDataGridPivotTest',
