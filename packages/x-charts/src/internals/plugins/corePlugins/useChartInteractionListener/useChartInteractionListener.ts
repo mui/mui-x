@@ -80,26 +80,19 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           }),
           new TapGesture({
             name: 'tap',
-            maxDistance: 10,
             preventIf: ['pan', 'zoomPan', 'zoomPinch'],
           }),
           new PressGesture({
             name: 'quickPress',
             duration: 50,
-            maxDistance: 10,
           }),
           new TapAndDragGesture({
             name: 'zoomTapAndDrag',
-            tapMaxDistance: 10,
             dragThreshold: 10,
-            dragTimeout: 1000,
           }),
           new PressAndDragGesture({
             name: 'zoomPressAndDrag',
-            pressDuration: 50,
-            pressMaxDistance: 10,
             dragThreshold: 10,
-            dragTimeout: 1000,
           }),
         ],
       });
