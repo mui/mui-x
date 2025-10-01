@@ -345,8 +345,16 @@ const pages: MuiPage[] = [
                 pathname: '/x/api/data-grid/grid-excel-export-options',
                 title: 'GridExcelExportOptions',
               },
+              
             ],
           },
+        ],
+      },
+      {
+        pathname: '/x/tutorials',
+        subheader: 'Tutorials',
+        children: [
+          { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
         ],
       },
     ],
