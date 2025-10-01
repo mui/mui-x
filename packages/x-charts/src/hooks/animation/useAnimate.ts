@@ -99,7 +99,7 @@ export function useAnimate<Props extends {}, Elem extends Element, T extends {} 
     skip,
   });
 
-   const usedProps = skip ? transformProps(props) : transformProps(lastInterpolatedProps);
+  const usedProps = skip ? transformProps(props) : transformProps(lastInterpolatedProps);
 
   return {
     ...usedProps,
