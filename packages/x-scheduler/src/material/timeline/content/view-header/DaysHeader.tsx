@@ -1,14 +1,17 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
 import { useDayList } from '../../../../primitives/use-day-list';
 import { selectors } from '../../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
-
+import { DAYS_UNIT_COUNT } from '../../constants';
+import { HeaderProps } from './Headers.types';
 import './Headers.css';
 
-export function DaysHeader() {
+export function DaysHeader(props: HeaderProps) {
+  const { className, amount, ...other } = props;
   const adapter = useAdapter();
   const getDayList = useDayList();
   const store = useTimelineStoreContext();
@@ -19,16 +22,16 @@ export function DaysHeader() {
     () =>
       getDayList({
         date: visibleDate,
-        amount: 21,
+        amount: amount || DAYS_UNIT_COUNT,
       }),
     [getDayList, visibleDate],
   );
 
   return (
-    <div className="DaysHeader">
+    <div className={clsx('DaysHeader', className)} {...other}>
       {days.map((day, index) => (
         <div key={day.key} className="DayHeaderCell">
-          {(adapter.startOfMonth(day.value).hasSame(day.value, 'day') || index === 0) && (
+          {(adapter.getDate(day.value) === 1 || index === 0) && (
             <div className="MonthStart">
               <p className="MonthStartLabel">{adapter.format(day.value, 'monthShort')}</p>
             </div>

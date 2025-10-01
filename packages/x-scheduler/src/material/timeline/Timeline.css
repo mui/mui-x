@@ -21,10 +21,11 @@
 }
 
 .TimelineRoot {
+  height: 100%;
   display: grid;
   grid-template-columns: minmax(100px, auto) 1fr;
 
-  grid-template-rows: auto repeat(var(--row-count, 1), auto);
+  grid-template-rows: auto repeat(var(--row-count, 0), auto) minmax(auto, 1fr);
   align-items: stretch;
 }
 

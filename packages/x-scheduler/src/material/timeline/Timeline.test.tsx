@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { screen } from '@mui/internal-test-utils';
 import { diffIn } from '@mui/x-scheduler/primitives/utils/date-utils';
 import { Timeline } from '@mui/x-scheduler/material/timeline';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives';
+import { CalendarEvent, CalendarResource, TimelineView } from '@mui/x-scheduler/primitives';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 
@@ -44,10 +44,10 @@ describe('<Timeline />', () => {
 
   const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
   function mountTimeline(options?: {
-    resources?: any[];
-    events?: any[];
-    view?: any;
-    views?: any[];
+    resources?: CalendarResource[];
+    events?: CalendarEvent[];
+    view?: TimelineView;
+    views?: TimelineView[];
   }) {
     return render(
       <Timeline
@@ -83,7 +83,7 @@ describe('<Timeline />', () => {
   });
 
   describe('events', () => {
-    it('renders all visible Events events', () => {
+    it('should render all visible events', () => {
       mountTimeline();
       baseEvents.forEach((eventItem) => {
         expect(screen.getByText(eventItem.title)).not.to.equal(null);
@@ -109,7 +109,7 @@ describe('<Timeline />', () => {
       expect(screen.queryByText('Out of range')).to.equal(null);
     });
 
-    it('keeps events visible after rerender', () => {
+    it('should keep events visible after rerender', () => {
       const { rerender: localRerender } = mountTimeline();
       localRerender(
         <Timeline
@@ -125,7 +125,7 @@ describe('<Timeline />', () => {
       });
     });
 
-    it('renders events correctly in the time view', () => {
+    it('should render events correctly in the time view', () => {
       const totalWidth = 4608; // 72 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
       mountTimeline({ view: 'time' });
@@ -139,7 +139,7 @@ describe('<Timeline />', () => {
       expect(eventPosition).to.be.greaterThanOrEqual(hourBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
     });
-    it('renders events correctly in the days view', () => {
+    it('should render events correctly in the days view', () => {
       const totalWidth = 2520; // 8 weeks * 7 days * 64px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
       mountTimeline({ view: 'days' });
@@ -153,7 +153,7 @@ describe('<Timeline />', () => {
       expect(eventPosition).to.be.greaterThanOrEqual(dayBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
-    it('renders events correctly in the weeks view', () => {
+    it('should render events correctly in the weeks view', () => {
       const totalWidth = 3584; // 21 hours * 120px
       const startOfWeek = adapter.startOfWeek(visibleDate);
       const weekDayNumber = diffIn(adapter, baseEvents[0].start, startOfWeek, 'days');
@@ -170,7 +170,7 @@ describe('<Timeline />', () => {
       expect(eventPosition).to.be.greaterThanOrEqual(dayBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
-    it('renders events correctly in the month view', () => {
+    it('should render events correctly in the month view', () => {
       const extendedEvents: CalendarEvent[] = [
         ...baseEvents,
         {
@@ -202,7 +202,7 @@ describe('<Timeline />', () => {
       expect(eventPosition2).to.be.greaterThanOrEqual(180); // second month
       expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
     });
-    it('renders events correctly in the month view', () => {
+    it('should render events correctly in the month view', () => {
       const extendedEvents: CalendarEvent[] = [
         {
           id: 'event-1',
@@ -243,7 +243,7 @@ describe('<Timeline />', () => {
   });
 
   describe('views', () => {
-    it('renders the correct header and updates CSS variable when switching views', async () => {
+    it('should render the correct header and updates CSS variable when switching views', async () => {
       const { container: firstContainer } = mountTimeline({
         view: 'time',
         views: ['days', 'time'],

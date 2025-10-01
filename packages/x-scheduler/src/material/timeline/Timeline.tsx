@@ -24,9 +24,6 @@ export const Timeline = React.forwardRef(function Timeline(
   const { parameters, forwardedProps } = useExtractTimelineParameters(props);
   const store = useTimeline(parameters);
 
-  const containerRef = React.useRef<HTMLElement | null>(null);
-  const handleRef = useMergedRefs(forwardedRef, containerRef);
-
   const view = useStore(store, selectors.view);
   const views = useStore(store, selectors.views);
 
@@ -34,7 +31,7 @@ export const Timeline = React.forwardRef(function Timeline(
     <TimelineStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
         <div
-          ref={handleRef}
+          ref={forwardedRef}
           className={clsx('TimelineViewContainer', 'mui-x-scheduler', forwardedProps.className)}
           {...forwardedProps}
         >

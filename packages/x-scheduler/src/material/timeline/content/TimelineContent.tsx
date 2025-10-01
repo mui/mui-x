@@ -14,14 +14,22 @@ import { SchedulerValidDate, TimelineView } from '../../../primitives';
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineEventRow from './timeline-event-row/TimelineEventRow';
 import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';
+import {
+  DAYS_UNIT_COUNT,
+  MONTHS_UNIT_COUNT,
+  TIME_UNITS_COUNT,
+  UNIT,
+  WEEKS_UNIT_COUNT,
+  YEARS_UNIT_COUNT,
+} from '../constants';
 
 const getEndBoundaries = (adapter: Adapter, view: TimelineView, start: SchedulerValidDate) => {
   const endBoundaries = {
-    time: adapter.addHours(start, 72),
-    days: adapter.addDays(start, 21),
-    weeks: adapter.addWeeks(start, 8),
-    months: adapter.addMonths(start, 12),
-    years: adapter.addYears(start, 4),
+    time: adapter.addHours(start, 24 * TIME_UNITS_COUNT),
+    days: adapter.addDays(start, DAYS_UNIT_COUNT),
+    weeks: adapter.addWeeks(start, WEEKS_UNIT_COUNT),
+    months: adapter.addMonths(start, MONTHS_UNIT_COUNT),
+    years: adapter.addYears(start, YEARS_UNIT_COUNT),
   };
 
   return endBoundaries[view];
@@ -31,16 +39,6 @@ const getStartDate = (adapter: Adapter, view: TimelineView, start: SchedulerVali
     return adapter.startOfWeek(start);
   }
   return start;
-};
-
-type UnitType = 'hours' | 'days' | 'weeks' | 'months' | 'years';
-
-const UNIT: Record<TimelineView, UnitType> = {
-  time: 'hours',
-  days: 'days',
-  weeks: 'weeks',
-  months: 'months',
-  years: 'years',
 };
 
 export const TimelineContent = React.forwardRef(function TimelineContent(
@@ -94,7 +92,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
           {
             '--unit-count': diff,
             '--unit-width': `var(--${view}-cell-width)`,
-            '--row-count': resources.length,
+            '--row-count': resources.length - 1,
           } as React.CSSProperties
         }
       >

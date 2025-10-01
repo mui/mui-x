@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
@@ -7,9 +8,13 @@ import { useWeekList } from '../../../../primitives/use-week-list';
 import { selectors } from '../../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
 import { CalendarProcessedDate } from '../../../../primitives';
+import { HeaderProps } from './Headers.types';
+import { MONTHS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
 
-export function WeeksHeader() {
+export function WeeksHeader(props: HeaderProps) {
+  const { className, amount, ...other } = props;
+
   const adapter = useAdapter();
   const getDayList = useDayList();
   const getWeekList = useWeekList();
@@ -20,7 +25,7 @@ export function WeeksHeader() {
   const weeks = React.useMemo(() => {
     const weeksFirstDays = getWeekList({
       date: visibleDate,
-      amount: 8,
+      amount: amount || MONTHS_UNIT_COUNT,
     });
 
     const tempWeeks: { date: CalendarProcessedDate }[][] = [];
@@ -37,7 +42,7 @@ export function WeeksHeader() {
   }, [getWeekList, getDayList, visibleDate]);
 
   return (
-    <div className="WeeksHeader">
+    <div className={clsx('WeeksHeader', className)} {...other}>
       {weeks.map((week) => (
         <div key={`${week[0].date.key}-week`} className="TimeHeaderCell">
           <div className="DayLabel">

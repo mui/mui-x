@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { clsx } from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { Adapter } from '../../../../primitives/utils/adapter/types';
 import { selectors } from '../../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
 import { SchedulerValidDate } from '../../../../primitives/models';
+import { HeaderProps } from './Headers.types';
+import { YEARS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
 
 const getYears = (adapter: Adapter, date: SchedulerValidDate, amount: number) => {
@@ -22,16 +25,21 @@ const getYears = (adapter: Adapter, date: SchedulerValidDate, amount: number) =>
   return years;
 };
 
-export function YearHeader() {
+export function YearHeader(props: HeaderProps) {
+  const { className, amount, ...other } = props;
+
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
 
   const visibleDate = useStore(store, selectors.visibleDate);
 
-  const years = getYears(adapter, visibleDate, 4);
+  const years = React.useMemo(
+    () => getYears(adapter, visibleDate, amount || YEARS_UNIT_COUNT),
+    [adapter, visibleDate, amount],
+  );
 
   return (
-    <div className="YearsHeader">
+    <div className={clsx('YearsHeader', className)} {...other}>
       {years.map((year) => (
         <div key={`${adapter.getYear(year)}`} className="YearLabel">
           {adapter.getYear(year)}

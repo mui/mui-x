@@ -1,13 +1,17 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { useMonthList } from '../../../../primitives/use-month-list';
 import { selectors } from '../../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
-
+import { MONTHS_UNIT_COUNT } from '../../constants';
+import { HeaderProps } from './Headers.types';
 import './Headers.css';
 
-export function MonthsHeader() {
+export function MonthsHeader(props: HeaderProps) {
+  const { className, amount, ...other } = props;
+
   const adapter = useAdapter();
   const getMonthList = useMonthList();
   const store = useTimelineStoreContext();
@@ -18,13 +22,13 @@ export function MonthsHeader() {
     () =>
       getMonthList({
         date: visibleDate,
-        amount: 12,
+        amount: amount || MONTHS_UNIT_COUNT,
       }),
     [getMonthList, visibleDate],
   );
 
   return (
-    <div className="MonthsHeader">
+    <div className={clsx('MonthsHeader', className)} {...other}>
       {months.map((month, index) => {
         const monthNumber = adapter.getMonth(month.value);
 
