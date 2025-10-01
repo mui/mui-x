@@ -43,7 +43,6 @@ export function getAxisExtrema<T extends CartesianChartSeriesType>(
   formattedSeries: ProcessedSeries<T>,
   getFilters?: GetZoomAxisFilters,
 ): [number, number] {
-  performance.mark('getAxisExtremum-start');
   const cartesianChartTypes = Object.keys(seriesConfig).filter(isCartesianSeriesType);
 
   let extrema: [number, number] = [Infinity, -Infinity];
@@ -62,8 +61,6 @@ export function getAxisExtrema<T extends CartesianChartSeriesType>(
     extrema = [Math.min(extrema[0], min), Math.max(extrema[1], max)];
   }
 
-  performance.mark('getAxisExtremum-end');
-  performance.measure('getAxisExtremum', 'getAxisExtremum-start', 'getAxisExtremum-end');
   if (Number.isNaN(extrema[0]) || Number.isNaN(extrema[1])) {
     return [Infinity, -Infinity];
   }

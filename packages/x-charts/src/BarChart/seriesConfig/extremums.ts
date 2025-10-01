@@ -1,3 +1,4 @@
+import { start } from 'node:repl';
 import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
 import { findMinMax } from '../../internals/findMinMax';
 
@@ -25,10 +26,8 @@ const getValueExtremum =
   (direction: 'x' | 'y'): CartesianExtremumGetter<'bar'> =>
   (params) => {
     const { series, axis, getFilters, isDefaultAxis } = params;
-    performance.mark(`getValueExtremum-start-${direction}`);
-    const start = performance.now();
 
-    const result: [number, number] = Object.keys(series)
+    return Object.keys(series)
       .filter((seriesId) => {
         const axisId = direction === 'x' ? series[seriesId].xAxisId : series[seriesId].yAxisId;
         return axisId === axis.id || (isDefaultAxis && axisId === undefined);
@@ -63,11 +62,6 @@ const getValueExtremum =
         },
         [Infinity, -Infinity],
       );
-
-    const end = performance.now();
-    performance.measure(`getValueExtremum-${direction}`, { detail: { direction }, start, end });
-
-    return result;
   };
 
 export const getExtremumX: CartesianExtremumGetter<'bar'> = (params) => {
