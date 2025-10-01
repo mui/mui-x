@@ -14,6 +14,10 @@ import { selectors } from '../../../primitives/use-event-calendar';
 import { useEventOccurrencesWithDayGridPosition } from '../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopoverContext';
 import './MonthViewWeekRow.css';
+import { Popover } from '@base-ui-components/react';
+import MoreEventsPopover, {
+  MoreEventsPopoverTrigger,
+} from '../../internals/components/more-events-popover/MoreEventsPopover';
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
@@ -41,7 +45,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     day.withPosition.length > maxEvents
       ? day.withPosition.slice(0, maxEvents - 1)
       : day.withPosition;
-  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
+  const invisibleOccurrences =
+    day.withPosition.length > maxEvents ? day.withPosition.slice(maxEvents - 1) : [];
+  const hiddenCount = invisibleOccurrences.length;
 
   const cellNumberContent = (
     <span className="MonthViewCellNumber">
@@ -128,7 +134,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           );
         })}
         {hiddenCount > 0 && (
-          <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)}</p>
+          <MoreEventsPopoverTrigger
+            occurrences={invisibleOccurrences}
+            render={
+              <p className="MonthViewMoreEvents">{translations.hiddenEvents(hiddenCount)} </p>
+            }
+          />
         )}
         {placeholder != null && (
           <div className="MonthViewPlaceholderEventContainer">

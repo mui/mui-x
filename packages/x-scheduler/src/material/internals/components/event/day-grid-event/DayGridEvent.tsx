@@ -72,7 +72,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         return (
           <div className="DayGridEventCardWrapper">
             <span
-              className="ResourceLegendColor"
+              className="EventColorIndicator"
               role="img"
               aria-label={
                 resource?.name

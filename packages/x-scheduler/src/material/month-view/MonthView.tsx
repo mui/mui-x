@@ -17,6 +17,7 @@ import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import './MonthView.css';
+import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 
 const adapter = getAdapter();
 const CELL_PADDING = 8;
@@ -81,41 +82,43 @@ export const MonthView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          <DayGrid.Root className="MonthViewRoot">
-            <div
-              className={clsx(
-                'MonthViewHeader',
-                'MonthViewRowGrid',
-                preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
-              )}
-            >
-              {preferences.showWeekNumber && (
-                <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
-              )}
-              {weeks[0].map((weekDay) => (
-                <div
-                  key={weekDay.key}
-                  id={`MonthViewHeaderCell-${weekDay.key}`}
-                  role="columnheader"
-                  className="MonthViewHeaderCell"
-                  aria-label={adapter.format(weekDay.value, 'weekday')}
-                >
-                  {adapter.formatByString(weekDay.value, 'ccc')}
-                </div>
-              ))}
-            </div>
-            <div className="MonthViewBody">
-              {weeks.map((week, weekIdx) => (
-                <MonthViewWeekRow
-                  key={weekIdx}
-                  maxEvents={maxEvents}
-                  days={week}
-                  occurrencesMap={occurrencesMap}
-                  firstDayRef={weekIdx === 0 ? cellRef : undefined}
-                />
-              ))}
-            </div>
-          </DayGrid.Root>
+          <MoreEventsPopoverProvider containerRef={containerRef}>
+            <DayGrid.Root className="MonthViewRoot">
+              <div
+                className={clsx(
+                  'MonthViewHeader',
+                  'MonthViewRowGrid',
+                  preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+                )}
+              >
+                {preferences.showWeekNumber && (
+                  <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+                )}
+                {weeks[0].map((weekDay) => (
+                  <div
+                    key={weekDay.key}
+                    id={`MonthViewHeaderCell-${weekDay.key}`}
+                    role="columnheader"
+                    className="MonthViewHeaderCell"
+                    aria-label={adapter.format(weekDay.value, 'weekday')}
+                  >
+                    {adapter.formatByString(weekDay.value, 'ccc')}
+                  </div>
+                ))}
+              </div>
+              <div className="MonthViewBody">
+                {weeks.map((week, weekIdx) => (
+                  <MonthViewWeekRow
+                    key={weekIdx}
+                    maxEvents={maxEvents}
+                    days={week}
+                    occurrencesMap={occurrencesMap}
+                    firstDayRef={weekIdx === 0 ? cellRef : undefined}
+                  />
+                ))}
+              </div>
+            </DayGrid.Root>
+          </MoreEventsPopoverProvider>
         </EventPopoverProvider>
       </div>
     );
