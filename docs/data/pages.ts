@@ -345,7 +345,6 @@ const pages: MuiPage[] = [
                 pathname: '/x/api/data-grid/grid-excel-export-options',
                 title: 'GridExcelExportOptions',
               },
-              
             ],
           },
         ],
