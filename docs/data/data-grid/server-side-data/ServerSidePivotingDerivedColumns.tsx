@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
-const derivedColumns: GridColDef[] = [];
+const derivedColumns: Map<string, GridColDef> = new Map();
 const getYearField = (field: string) => `${field}-year`;
 const getMonthField = (field: string) => `${field}-month`;
 const getPivotDerivedColumns: DataGridPremiumProps['getPivotDerivedColumns'] = (
@@ -29,8 +29,8 @@ const getPivotDerivedColumns: DataGridPremiumProps['getPivotDerivedColumns'] = (
       valueFormatter: (month) =>
         new Date(0, month).toLocaleString(undefined, { month: 'long' }),
     };
-    derivedColumns.push(yearField);
-    derivedColumns.push(monthField);
+    derivedColumns.set(yearField.field, yearField);
+    derivedColumns.set(monthField.field, monthField);
     return [yearField, monthField];
   }
   return undefined;
@@ -90,7 +90,7 @@ export default function ServerSidePivotingDerivedColumns() {
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
       getPivotColumnDef: (field, columnGroupPath) => ({
-        ...(derivedColumns.find((col) => col.field === field) || {}),
+        ...(derivedColumns.get(field) || {}),
         field: columnGroupPath
           .map((path) =>
             typeof path.value === 'string' ? path.value : path.value[path.field],
