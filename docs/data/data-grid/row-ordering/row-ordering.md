@@ -121,7 +121,7 @@ The above demo uses row grouping to demonstrate the concept. You can check more 
 
 ## Row reordering with tree data
 
-This feature allows users to reorder rows within tree data to adjust the order of groups and their contents directly in the grid.
+Users can drag and drop rows to move between parents, or convert leaf nodes into parent groups.
 
 For more details, see [Tree data—Drag-and-drop tree data reordering](/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering).
 
