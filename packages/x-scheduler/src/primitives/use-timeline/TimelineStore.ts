@@ -60,7 +60,6 @@ export class TimelineStore extends SchedulerStore<TimelineState, TimelineParamet
     if (view !== this.state.view) {
       this.assertViewValidity(view);
       if (viewProp === undefined) {
-        console.log('Switching view to', view);
         this.set('view', view);
       }
       onViewChange?.(view, event);
