@@ -2,146 +2,34 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
-import {
-  UseTreeViewItemsSignature,
-  UseTreeViewItemsParametersWithDefaults,
-  UseTreeViewItemsState,
-  AddItemsParameters,
-} from './useTreeViewItems.types';
+import { UseTreeViewItemsSignature, SetItemChildrenParameters } from './useTreeViewItems.types';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
-import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
+import {
+  BuildItemsLookupConfig,
+  buildItemsLookups,
+  buildItemsState,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { itemsSelectors } from './useTreeViewItems.selectors';
 import { idSelectors } from '../../corePlugins/useTreeViewId';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
-
-interface ProcessItemsLookupsParameters
-  extends Pick<
-    UseTreeViewItemsParametersWithDefaults<TreeViewBaseItem>,
-    | 'items'
-    | 'isItemDisabled'
-    | 'getItemLabel'
-    | 'getItemChildren'
-    | 'getItemId'
-    | 'disabledItemsFocusable'
-  > {
-  initialDepth?: number;
-  initialParentId?: string | null;
-  getChildrenCount?: (item: TreeViewBaseItem) => number;
-  ignoreChildren?: boolean;
-}
-
-type State = UseTreeViewItemsState<any>['items'];
-
-const checkId = (
-  id: string | null,
-  item: TreeViewBaseItem,
-  itemMetaLookup: State['itemMetaLookup'],
-) => {
-  if (id == null) {
-    throw new Error(
-      [
-        'MUI X: The Tree View component requires all items to have a unique `id` property.',
-        'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-        'An item was provided without id in the `items` prop:',
-        JSON.stringify(item),
-      ].join('\n'),
-    );
-  }
-
-  if (itemMetaLookup[id] != null) {
-    throw new Error(
-      [
-        'MUI X: The Tree View component requires all items to have a unique `id` property.',
-        'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-        `Two items were provided with the same id in the \`items\` prop: "${id}"`,
-      ].join('\n'),
-    );
-  }
-};
-
-const processItemsLookups = ({
-  disabledItemsFocusable,
-  items,
-  isItemDisabled,
-  getItemLabel,
-  getItemChildren,
-  getItemId,
-  initialDepth = 0,
-  initialParentId = null,
-  getChildrenCount,
-  ignoreChildren = false,
-}: ProcessItemsLookupsParameters): Omit<State, 'loading' | 'error' | 'domStructure'> => {
-  const itemMetaLookup: State['itemMetaLookup'] = {};
-  const itemModelLookup: State['itemModelLookup'] = {};
-  const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
-    [TREE_VIEW_ROOT_PARENT_ID]: [],
-  };
-
-  const processItem = (item: TreeViewBaseItem, depth: number, parentId: string | null) => {
-    const id: string = getItemId ? getItemId(item) : (item as any).id;
-    checkId(id, item, itemMetaLookup);
-    const label = getItemLabel ? getItemLabel(item) : (item as { label: string }).label;
-    if (label == null) {
-      throw new Error(
-        [
-          'MUI X: The Tree View component requires all items to have a `label` property.',
-          'Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.',
-          'An item was provided without label in the `items` prop:',
-          JSON.stringify(item),
-        ].join('\n'),
-      );
-    }
-    const children = getItemChildren
-      ? getItemChildren(item)
-      : (item as { children?: TreeViewBaseItem[] }).children;
-
-    itemMetaLookup[id] = {
-      id,
-      label,
-      parentId,
-      idAttribute: undefined,
-      expandable: getChildrenCount ? getChildrenCount(item) > 0 : !!children?.length,
-      disabled: isItemDisabled ? isItemDisabled(item) : false,
-      depth,
-    };
-
-    itemModelLookup[id] = item;
-    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-    if (!itemOrderedChildrenIdsLookup[parentIdWithDefault]) {
-      itemOrderedChildrenIdsLookup[parentIdWithDefault] = [];
-    }
-    itemOrderedChildrenIdsLookup[parentIdWithDefault].push(id);
-
-    // if lazy loading is enabled, we don't want to process children passed through the `items` prop
-    if (!ignoreChildren) {
-      children?.forEach((child) => processItem(child, depth + 1, id));
-    }
-  };
-
-  items?.forEach((item) => processItem(item, initialDepth, initialParentId));
-
-  const itemChildrenIndexesLookup: State['itemChildrenIndexesLookup'] = {};
-  Object.keys(itemOrderedChildrenIdsLookup).forEach((parentId) => {
-    itemChildrenIndexesLookup[parentId] = buildSiblingIndexes(
-      itemOrderedChildrenIdsLookup[parentId],
-    );
-  });
-
-  return {
-    disabledItemsFocusable,
-    itemMetaLookup,
-    itemModelLookup,
-    itemOrderedChildrenIdsLookup,
-    itemChildrenIndexesLookup,
-  };
-};
 
 export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,
   params,
   store,
 }) => {
+  const itemsConfig: BuildItemsLookupConfig = React.useMemo(
+    () => ({
+      isItemDisabled: params.isItemDisabled,
+      getItemLabel: params.getItemLabel,
+      getItemChildren: params.getItemChildren,
+      getItemId: params.getItemId,
+    }),
+    [params.isItemDisabled, params.getItemLabel, params.getItemChildren, params.getItemId],
+  );
+
   const getItem = React.useCallback(
     (itemId: string) => itemsSelectors.itemModel(store.state, itemId),
     [store],
@@ -153,13 +41,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     },
     [store],
   );
-
-  const setTreeViewLoading = useEventCallback((isLoading: boolean) => {
-    store.set('items', { ...store.state.items, loading: isLoading });
-  });
-  const setTreeViewError = useEventCallback((error: Error | null) => {
-    store.set('items', { ...store.state.items, error });
-  });
 
   const setIsItemDisabled = useEventCallback(
     ({ itemId, shouldBeDisabled }: { itemId: string; shouldBeDisabled?: boolean }) => {
@@ -220,108 +101,86 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
   const areItemUpdatesPrevented = React.useCallback(() => areItemUpdatesPreventedRef.current, []);
 
-  const addItems = ({
+  const setItemChildren = ({
     items,
     parentId,
-    depth,
     getChildrenCount,
-  }: AddItemsParameters<TreeViewBaseItem>) => {
-    if (items) {
-      const newState = processItemsLookups({
-        disabledItemsFocusable: params.disabledItemsFocusable,
-        items,
-        isItemDisabled: params.isItemDisabled,
-        getItemId: params.getItemId,
-        getItemLabel: params.getItemLabel,
-        getItemChildren: params.getItemChildren,
-        getChildrenCount,
-        initialDepth: depth,
-        initialParentId: parentId,
-        ignoreChildren: true,
-      });
+  }: SetItemChildrenParameters<TreeViewBaseItem>) => {
+    const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+    const parentDepth = parentId == null ? -1 : itemsSelectors.itemDepth(store.state, parentId);
 
-      let newItems;
-      if (parentId) {
-        newItems = {
-          itemModelLookup: { ...store.state.items.itemModelLookup, ...newState.itemModelLookup },
-          itemMetaLookup: { ...store.state.items.itemMetaLookup, ...newState.itemMetaLookup },
-          itemOrderedChildrenIdsLookup: {
-            ...newState.itemOrderedChildrenIdsLookup,
-            ...store.state.items.itemOrderedChildrenIdsLookup,
-          },
-          itemChildrenIndexesLookup: {
-            ...newState.itemChildrenIndexesLookup,
-            ...store.state.items.itemChildrenIndexesLookup,
-          },
-        };
-      } else {
-        newItems = {
-          itemModelLookup: newState.itemModelLookup,
-          itemMetaLookup: newState.itemMetaLookup,
-          itemOrderedChildrenIdsLookup: newState.itemOrderedChildrenIdsLookup,
-          itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
-        };
+    const { metaLookup, modelLookup, orderedChildrenIds, childrenIndexes } = buildItemsLookups({
+      config: itemsConfig,
+      items,
+      parentId,
+      depth: parentDepth + 1,
+      isItemExpandable: getChildrenCount ? (item) => getChildrenCount(item) > 0 : () => false,
+      otherItemsMetaLookup: itemsSelectors.itemMetaLookup(store.state),
+    });
+
+    const lookups = {
+      itemModelLookup: { ...store.state.items.itemModelLookup, ...modelLookup },
+      itemMetaLookup: { ...store.state.items.itemMetaLookup, ...metaLookup },
+      itemOrderedChildrenIdsLookup: {
+        ...store.state.items.itemOrderedChildrenIdsLookup,
+        [parentIdWithDefault]: orderedChildrenIds,
+      },
+      itemChildrenIndexesLookup: {
+        ...store.state.items.itemChildrenIndexesLookup,
+        [parentIdWithDefault]: childrenIndexes,
+      },
+    };
+
+    store.set('items', { ...store.state.items, ...lookups });
+  };
+
+  const removeChildren = useEventCallback((parentId: string | null) => {
+    const newMetaMap = Object.keys(store.state.items.itemMetaLookup).reduce((acc, key) => {
+      const item = store.state.items.itemMetaLookup[key];
+      if (item.parentId === parentId) {
+        return acc;
       }
-      store.set('items', { ...store.state.items, ...newItems });
+      return { ...acc, [item.id]: item };
+    }, {});
+
+    const newItemOrderedChildrenIdsLookup = { ...store.state.items.itemOrderedChildrenIdsLookup };
+    const newItemChildrenIndexesLookup = { ...store.state.items.itemChildrenIndexesLookup };
+    const cleanId = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
+    delete newItemChildrenIndexesLookup[cleanId];
+    delete newItemOrderedChildrenIdsLookup[cleanId];
+
+    store.set('items', {
+      ...store.state.items,
+      itemMetaLookup: newMetaMap,
+      itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
+      itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
+    });
+  });
+
+  const addExpandableItems = useEventCallback((items: TreeViewItemId[]) => {
+    const newItemMetaLookup = { ...store.state.items.itemMetaLookup };
+    for (const itemId of items) {
+      newItemMetaLookup[itemId] = { ...newItemMetaLookup[itemId], expandable: true };
     }
-  };
-
-  const removeChildren = (parentId: string | undefined) => {
-    if (parentId == null) {
-      store.set('items', {
-        ...store.state.items,
-        itemMetaLookup: {},
-        itemOrderedChildrenIdsLookup: {},
-        itemChildrenIndexesLookup: {},
-      });
-    } else {
-      const newMetaMap = Object.keys(store.state.items.itemMetaLookup).reduce((acc, key) => {
-        const item = store.state.items.itemMetaLookup[key];
-        if (item.parentId === parentId) {
-          return acc;
-        }
-        return { ...acc, [item.id]: item };
-      }, {});
-
-      const newItemOrderedChildrenIdsLookup = { ...store.state.items.itemOrderedChildrenIdsLookup };
-      const newItemChildrenIndexesLookup = { ...store.state.items.itemChildrenIndexesLookup };
-      delete newItemChildrenIndexesLookup[parentId];
-      delete newItemOrderedChildrenIdsLookup[parentId];
-
-      store.set('items', {
-        ...store.state.items,
-        itemMetaLookup: newMetaMap,
-        itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
-        itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
-      });
-    }
-  };
+    store.set('items', {
+      ...store.state.items,
+      itemMetaLookup: newItemMetaLookup,
+    });
+  });
 
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
       return;
     }
 
-    const newState = processItemsLookups({
+    const newState = buildItemsState({
       disabledItemsFocusable: params.disabledItemsFocusable,
       items: params.items,
-      isItemDisabled: params.isItemDisabled,
-      getItemId: params.getItemId,
-      getItemLabel: params.getItemLabel,
-      getItemChildren: params.getItemChildren,
+      config: itemsConfig,
     });
 
     store.set('items', { ...store.state.items, ...newState });
-  }, [
-    instance,
-    store,
-    params.items,
-    params.disabledItemsFocusable,
-    params.isItemDisabled,
-    params.getItemId,
-    params.getItemLabel,
-    params.getItemChildren,
-  ]);
+  }, [instance, store, params.items, params.disabledItemsFocusable, itemsConfig]);
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
   const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: TreeViewItemId) => {
@@ -351,29 +210,25 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemDOMElement,
       preventItemUpdates,
       areItemUpdatesPrevented,
-      addItems,
-      setTreeViewLoading,
-      setTreeViewError,
+      setItemChildren,
       removeChildren,
+      addExpandableItems,
       handleItemClick,
     },
   };
 };
 
 useTreeViewItems.getInitialState = (params) => ({
-  items: {
-    ...processItemsLookups({
-      disabledItemsFocusable: params.disabledItemsFocusable,
-      items: params.items,
+  items: buildItemsState({
+    items: params.items,
+    disabledItemsFocusable: params.disabledItemsFocusable,
+    config: {
       isItemDisabled: params.isItemDisabled,
       getItemId: params.getItemId,
       getItemLabel: params.getItemLabel,
       getItemChildren: params.getItemChildren,
-    }),
-    loading: false,
-    error: null,
-    domStructure: 'nested',
-  },
+    },
+  }),
 });
 
 useTreeViewItems.applyDefaultValuesToParams = ({ params }) => ({
