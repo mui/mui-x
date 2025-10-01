@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type {
-  GridPivotingPropsOverrides,
+  GridPivotingDynamicPropsOverrides,
   GridPivotModel,
 } from '../pivoting/gridPivotingInterfaces';
 import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
@@ -23,7 +23,7 @@ export const getPropsOverrides = (
   pivotModel: GridPivotModel,
   initialColumns: Map<string, GridColDef>,
   apiRef: RefObject<GridPrivateApiPremium>,
-): GridPivotingPropsOverrides => {
+): GridPivotingDynamicPropsOverrides => {
   const visiblePivotColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visiblePivotValues = pivotModel.values.filter((value) => !value.hidden);
   const columnDefinitions: Record<string, GridColDef> = Object.fromEntries(

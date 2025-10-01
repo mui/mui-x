@@ -28,6 +28,7 @@ import type {
   GridPivotingApi,
   GridPivotingPrivateApi,
   GridPivotingPropsOverrides,
+  GridPivotingStaticPropsOverrides,
   GridPivotingState,
   GridPivotModel,
 } from './gridPivotingInterfaces';
@@ -185,11 +186,8 @@ export const useGridPivoting = (
       if (active && pivotModel) {
         const { rows, columns } = nonPivotDataRef.current || { rows: [], columns: new Map() };
 
-        let propsOverrides: GridPivotingPropsOverrides = getPivotForcedProps(
-          pivotModel,
-          columns,
-          props.groupingColDef,
-        );
+        let propsOverrides: GridPivotingPropsOverrides | GridPivotingStaticPropsOverrides =
+          getPivotForcedProps(pivotModel, columns, props.groupingColDef);
 
         // without data source, add more props overrides based on the data
         if (!isLoading && !props.dataSource) {

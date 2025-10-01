@@ -16,7 +16,11 @@ import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPrem
 import type { GridAggregationModel } from '../aggregation';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
-import type { GridPivotingPropsOverrides, GridPivotModel } from './gridPivotingInterfaces';
+import type {
+  GridPivotingStaticPropsOverrides,
+  GridPivotingDynamicPropsOverrides,
+  GridPivotModel,
+} from './gridPivotingInterfaces';
 import { defaultGetAggregationPosition } from '../aggregation/gridAggregationUtils';
 
 interface GridColumnGroupPivoting extends Omit<GridColumnGroup, 'children'> {
@@ -111,7 +115,7 @@ export const getPivotForcedProps = (
   pivotModel: GridPivotModel,
   columns: Map<string, GridColDef>,
   groupingColDef: DataGridPremiumProcessedProps['groupingColDef'],
-): GridPivotingPropsOverrides => {
+): GridPivotingStaticPropsOverrides => {
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
   const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visibleValues = pivotModel.values.filter((value) => !value.hidden);
@@ -158,7 +162,7 @@ export const createPivotPropsFromRows = ({
   pivotModel: GridPivotModel;
   pivotingColDef: DataGridPremiumProcessedProps['pivotingColDef'];
   apiRef: RefObject<GridApiPremium>;
-}): GridPivotingPropsOverrides => {
+}): GridPivotingDynamicPropsOverrides => {
   const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
   const visibleValues = pivotModel.values.filter((value) => !value.hidden);

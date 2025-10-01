@@ -7,23 +7,29 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
-export type GridPivotingPropsOverrides = Partial<{
-  rows: DataGridPremiumProcessedProps['rows'];
-  columns: DataGridPremiumProcessedProps['columns'];
+export type GridPivotingStaticPropsOverrides = {
   rowGroupingModel: DataGridPremiumProcessedProps['rowGroupingModel'];
-  aggregationModel: DataGridPremiumProcessedProps['aggregationModel'];
   getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
   columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'];
-  columnGroupingModel: DataGridPremiumProcessedProps['columnGroupingModel'];
   groupingColDef: DataGridPremiumProcessedProps['groupingColDef'];
   headerFilters: DataGridPremiumProcessedProps['headerFilters'];
   disableAggregation: DataGridPremiumProcessedProps['disableAggregation'];
   disableRowGrouping: DataGridPremiumProcessedProps['disableRowGrouping'];
-}>;
+};
+
+export type GridPivotingDynamicPropsOverrides = {
+  rows?: DataGridPremiumProcessedProps['rows'];
+  columns: DataGridPremiumProcessedProps['columns'];
+  aggregationModel: DataGridPremiumProcessedProps['aggregationModel'];
+  columnGroupingModel: DataGridPremiumProcessedProps['columnGroupingModel'];
+};
+
+export type GridPivotingPropsOverrides = GridPivotingStaticPropsOverrides &
+  GridPivotingDynamicPropsOverrides;
 
 export interface GridPivotingState extends GridPivotingStatePartial {
   model: GridPivotModel;
-  propsOverrides: GridPivotingPropsOverrides | undefined;
+  propsOverrides: GridPivotingPropsOverrides | GridPivotingStaticPropsOverrides | {} | undefined;
 }
 
 export interface GridPivotingInitialState {
