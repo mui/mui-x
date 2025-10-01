@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { EventCalendarParameters } from './EventCalendarStore.types';
 
-export function useExtractEventCalendarParameters<P extends EventCalendarParameters>(
-  props: P,
-): UseExtractEventCalendarParametersReturnValue<P> {
+export function useExtractEventCalendarParameters<
+  EventModel extends {},
+  P extends EventCalendarParameters<EventModel>,
+>(props: P): UseExtractEventCalendarParametersReturnValue<EventModel, P> {
   const {
     events,
     onEventsChange,
@@ -25,7 +26,7 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     ...forwardedProps
   } = props;
 
-  const parameters: EventCalendarParameters = React.useMemo(
+  const parameters: EventCalendarParameters<EventModel> = React.useMemo(
     () => ({
       events,
       onEventsChange,
@@ -66,10 +67,16 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     ],
   );
 
-  return { parameters, forwardedProps: forwardedProps as Omit<P, keyof EventCalendarParameters> };
+  return {
+    parameters,
+    forwardedProps: forwardedProps as Omit<P, keyof EventCalendarParameters<EventModel>>,
+  };
 }
 
-interface UseExtractEventCalendarParametersReturnValue<P extends EventCalendarParameters> {
-  parameters: EventCalendarParameters;
-  forwardedProps: Omit<P, keyof EventCalendarParameters>;
+interface UseExtractEventCalendarParametersReturnValue<
+  EventModel extends {},
+  P extends EventCalendarParameters<EventModel>,
+> {
+  parameters: EventCalendarParameters<EventModel>;
+  forwardedProps: Omit<P, keyof EventCalendarParameters<EventModel>>;
 }

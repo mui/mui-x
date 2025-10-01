@@ -10,6 +10,11 @@ import {
 } from '../models';
 import { diffIn, mergeDateAndTime } from './date-utils';
 import { getDateKey } from './event-utils';
+import { SchedulerState } from './SchedulerStore';
+import {
+  createEventModel,
+  getUpdatedEventModelFromPartialCalendarEvent,
+} from './SchedulerStore/SchedulerStore.utils';
 
 /**
  * Build BYDAY<->number maps using a known ISO Monday (2025-01-06).
@@ -857,13 +862,17 @@ export function decideSplitRRule(
  * - a new series starting at the edited occurrence with the requested changes.
  * @returns The updated list of events with the split applied.
  */
-export function applyRecurringUpdateFollowing(
-  adapter: Adapter,
-  events: CalendarEvent[],
+export function applyRecurringUpdateFollowing<EventModel extends {}>(
+  state: Pick<
+    SchedulerState<EventModel>,
+    'adapter' | 'eventIds' | 'eventModelLookup' | 'eventModelStructure'
+  >,
   originalEvent: CalendarEvent,
   occurrenceStart: SchedulerValidDate,
   changes: RecurringEventUpdatedProperties,
-): CalendarEvent[] {
+): EventModel[] {
+  const { adapter, eventIds, eventModelLookup, eventModelStructure } = state;
+
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
   const untilDate = adapter.addDays(occurrenceDayStart, -1);
@@ -888,6 +897,27 @@ export function applyRecurringUpdateFollowing(
   );
   const newEventId = `${originalEvent.id}::${adapter.format(changes.start, 'keyboardDate')}`;
 
+  // 4) Build the final events list: old series (updated or dropped) + new event
+  const newEvents: EventModel[] = [];
+  for (const id of eventIds) {
+    const oldEventModel = eventModelLookup.get(id)!;
+    if (id === originalEvent.id) {
+      if (shouldDropOldSeries) {
+        continue;
+      } else {
+        newEvents.push(
+          getUpdatedEventModelFromPartialCalendarEvent(
+            oldEventModel,
+            { rrule: truncatedRule },
+            eventModelStructure,
+          ),
+        );
+      }
+    } else {
+      newEvents.push(oldEventModel);
+    }
+  }
+
   const newEvent: CalendarEvent = {
     ...originalEvent,
     ...changes,
@@ -898,14 +928,7 @@ export function applyRecurringUpdateFollowing(
     extractedFromId: originalEvent.id,
   };
 
-  // 4) Build the final events list: old series (updated or dropped) + new event
-  const updatedEvents = shouldDropOldSeries
-    ? [...events.filter((event) => event.id !== originalEvent.id), newEvent]
-    : [
-        ...events.map((event) =>
-          event.id === originalEvent.id ? { ...originalEvent, rrule: truncatedRule } : event,
-        ),
-        newEvent,
-      ];
-  return updatedEvents;
+  newEvents.push(createEventModel(newEvent, eventModelStructure));
+
+  return newEvents;
 }
