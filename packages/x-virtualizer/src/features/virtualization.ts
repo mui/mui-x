@@ -548,7 +548,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         return style;
       }
       default:
-        throw new Error('MUI: Unsupported layout' + params.layout);
+        throw new Error(`MUI: Unsupported layout: ${params.layout}`);
     }
   }, [
     columnsTotalWidth,
@@ -574,7 +574,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         return style;
       }
       default:
-        throw new Error('MUI: Unsupported layout' + params.layout);
+        throw new Error(`MUI: Unsupported layout: ${params.layout}`);
     }
   }, [offsetTop, params.layout]);
 

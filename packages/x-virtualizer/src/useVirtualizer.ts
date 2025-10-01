@@ -175,11 +175,13 @@ export const useVirtualizer = (params: VirtualizerParams) => {
 function mergeDefaults<T>(params: any, defaults: any): T {
   const result = { ...params };
   for (const key in defaults) {
-    const value = (defaults as any)[key];
-    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-      (result as any)[key] = mergeDefaults((params as any)[key] ?? {}, value);
-    } else {
-      (result as any)[key] = (params as any)[key] ?? value;
+    if (Object.hasOwn(defaults, key)) {
+      const value = (defaults as any)[key];
+      if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+        (result as any)[key] = mergeDefaults((params as any)[key] ?? {}, value);
+      } else {
+        (result as any)[key] = (params as any)[key] ?? value;
+      }
     }
   }
   return result;
