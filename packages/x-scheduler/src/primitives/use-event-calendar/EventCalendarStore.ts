@@ -104,8 +104,8 @@ export class EventCalendarStore extends SchedulerStore<
 
     if (canSetVisibleDate || canSetView) {
       this.apply({
-        ...(canSetVisibleDate ? { visibleDate } : {}),
-        ...(canSetView ? { view } : {}),
+        ...(canSetVisibleDate ? { visibleDate } : undefined),
+        ...(canSetView ? { view } : undefined),
       });
     }
 

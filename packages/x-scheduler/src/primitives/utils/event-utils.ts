@@ -7,6 +7,9 @@ import {
 import { Adapter } from './adapter/types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
 
+export const EVENT_CREATION_PRECISION_MINUTE = 30;
+export const EVENT_CREATION_DEFAULT_LENGTH_MINUTE = 30;
+
 /**
  *  Returns the key of the days an event occurrence should be visible on.
  */
@@ -106,4 +109,13 @@ interface GetOccurrencesFromEventsParameters {
   end: SchedulerValidDate;
   events: CalendarEvent[];
   visibleResources: Map<string, boolean>;
+}
+
+// TODO: Allow to render some multi-day events that are not all-day in the Day Grid.
+export function isMultiDayEvent(event: CalendarEvent | CalendarEventOccurrence) {
+  if (event.allDay) {
+    return true;
+  }
+
+  return false;
 }

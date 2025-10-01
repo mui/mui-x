@@ -712,7 +712,13 @@
       "description": "The pagination model of type GridPaginationModel which refers to current <code>page</code> and <code>pageSize</code>."
     },
     "pinnedColumns": { "description": "The column fields to display pinned to left or right." },
+    "pinnedColumnsSectionSeparator": {
+      "description": "Sets the type of separator between pinned columns and non-pinned columns."
+    },
     "pinnedRows": { "description": "Rows data to pin on top or bottom." },
+    "pinnedRowsSectionSeparator": {
+      "description": "Sets the type of separator between pinned rows and non-pinned rows."
+    },
     "processRowUpdate": {
       "description": "Callback called before updating a row with new values in the row and cell editing.",
       "typeDescriptions": {

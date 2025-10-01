@@ -12,6 +12,8 @@ import { computeAxisValue } from './computeAxisValue';
 import {
   selectorChartZoomAxisFilters,
   selectorChartZoomOptionsLookup,
+  selectorDefaultXAxisTickNumber,
+  selectorDefaultYAxisTickNumber,
 } from './useChartCartesianAxisRendering.selectors';
 import { AxisId } from '../../../../models/axis';
 import { ZoomData } from './zoom.types';
@@ -51,6 +53,7 @@ export const selectorChartPreviewXScales = createSelector(
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
     selectorPreferStrictDomainInLineCharts,
+    selectorDefaultXAxisTickNumber,
     (_, axisId: AxisId) => axisId,
   ],
   function selectorChartPreviewXScales(
@@ -60,6 +63,7 @@ export const selectorChartPreviewXScales = createSelector(
     seriesConfig,
     zoomOptions,
     preferStrictDomainInLineCharts,
+    defaultTickNumber,
     axisId,
   ) {
     const hasAxis = xAxes?.some((axis) => axis.id === axisId);
@@ -76,8 +80,8 @@ export const selectorChartPreviewXScales = createSelector(
       axis: xAxes,
       seriesConfig,
       zoomMap,
-      zoomOptions,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     });
   },
 );
@@ -143,6 +147,7 @@ export const selectorChartPreviewYScales = createSelector(
     selectorChartSeriesConfig,
     selectorChartZoomOptionsLookup,
     selectorPreferStrictDomainInLineCharts,
+    selectorDefaultYAxisTickNumber,
     (_, axisId: AxisId) => axisId,
   ],
   function selectorChartPreviewYScales(
@@ -152,6 +157,7 @@ export const selectorChartPreviewYScales = createSelector(
     seriesConfig,
     zoomOptions,
     preferStrictDomainInLineCharts,
+    defaultTickNumber,
     axisId,
   ) {
     const hasAxis = yAxes?.some((axis) => axis.id === axisId);
@@ -168,8 +174,8 @@ export const selectorChartPreviewYScales = createSelector(
       axis: yAxes,
       seriesConfig,
       zoomMap,
-      zoomOptions,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     });
   },
 );

@@ -10,6 +10,7 @@ import {
 } from '../../primitives/use-timeline';
 import { TimelineStoreContext } from '../../primitives/utils/useTimelineStoreContext';
 import { TimelineView } from '../../primitives/models/view';
+import { SchedulerStoreContext } from '../../primitives/utils/useSchedulerStoreContext';
 import { TimelineProps } from './Timeline.types';
 import { ViewSwitcher } from '../internals/components/header-toolbar/view-switcher';
 import { TimelineContent } from './content';
@@ -31,16 +32,18 @@ export const Timeline = React.forwardRef(function Timeline(
 
   return (
     <TimelineStoreContext.Provider value={store}>
-      <div
-        ref={handleRef}
-        className={clsx('TimelineViewContainer', 'mui-x-scheduler', forwardedProps.className)}
-        {...forwardedProps}
-      >
-        <header className="TimelineHeaderToolbar">
-          <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={store.setView} />
-        </header>
-        <TimelineContent />
-      </div>
+      <SchedulerStoreContext.Provider value={store as any}>
+        <div
+          ref={handleRef}
+          className={clsx('TimelineViewContainer', 'mui-x-scheduler', forwardedProps.className)}
+          {...forwardedProps}
+        >
+          <header className="TimelineHeaderToolbar">
+            <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={store.setView} />
+          </header>
+          <TimelineContent />
+        </div>
+      </SchedulerStoreContext.Provider>
     </TimelineStoreContext.Provider>
   );
 });

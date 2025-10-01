@@ -22,8 +22,9 @@ import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import {
   CalendarEventOccurrence,
-  RecurringEventUpdatedProperties,
   CalendarResourceId,
+  RecurringEventUpdatedProperties,
+  SchedulerValidDate,
 } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
@@ -33,6 +34,7 @@ import {
   detectRecurrenceKeyFromRule,
   RecurrencePresetKey,
 } from '../../../../primitives/utils/recurrence-utils';
+import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
 import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
 
 export const EventPopover = React.forwardRef(function EventPopover(
@@ -47,9 +49,77 @@ export const EventPopover = React.forwardRef(function EventPopover(
   const isEventReadOnly = useStore(store, selectors.isEventReadOnly, occurrence.id);
   const resources = useStore(store, selectors.resources);
   const color = useStore(store, selectors.eventColor, occurrence.id);
+  const rawPlaceholder = useStore(store, selectors.occurrencePlaceholder);
+
+  const fmtDate = (d: SchedulerValidDate) => adapter.formatByString(d, 'yyyy-MM-dd');
+  const fmtTime = (d: SchedulerValidDate) => adapter.formatByString(d, 'HH:mm');
 
   const [errors, setErrors] = React.useState<Form.Props['errors']>({});
   const [isAllDay, setIsAllDay] = React.useState<boolean>(Boolean(occurrence.allDay));
+  const [when, setWhen] = React.useState(() => ({
+    startDate: fmtDate(occurrence.start),
+    endDate: fmtDate(occurrence.end),
+    startTime: fmtTime(occurrence.start),
+    endTime: fmtTime(occurrence.end),
+  }));
+
+  function computeRange(next: typeof when, nextIsAllDay = isAllDay) {
+    if (nextIsAllDay) {
+      const newStart = adapter.startOfDay(adapter.date(next.startDate));
+      const newEnd = adapter.endOfDay(adapter.date(next.endDate));
+      return { start: newStart, end: newEnd, surfaceType: 'day-grid' as const };
+    }
+    // fallback values
+    const startTime = next.startTime || '12:00';
+    const endTime = next.endTime || '12:30';
+
+    const newStart = adapter.date(`${next.startDate}T${startTime}`);
+    const newEnd = adapter.date(`${next.endDate}T${endTime}`);
+
+    return { start: newStart, end: newEnd, surfaceType: 'time-grid' as const };
+  }
+
+  function pushPlaceholder(next: typeof when, nextIsAllDay = isAllDay) {
+    if (!rawPlaceholder || rawPlaceholder.eventId != null) {
+      return;
+    }
+
+    const { start, end, surfaceType } = computeRange(next, nextIsAllDay);
+    const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
+      ? rawPlaceholder.surfaceType
+      : surfaceType;
+
+    store.setOccurrencePlaceholder({
+      eventId: null,
+      occurrenceKey: rawPlaceholder.occurrenceKey,
+      surfaceType: surfaceTypeToUse,
+      start,
+      end,
+      originalStart: null,
+      lockSurfaceType: rawPlaceholder.lockSurfaceType,
+    });
+  }
+
+  const handleChangeDateOrTimeField =
+    (field: keyof typeof when) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const value = event.currentTarget.value;
+      setErrors({});
+      setWhen((prev) => {
+        const next = { ...prev, [field]: value };
+        pushPlaceholder(next);
+        return next;
+      });
+    };
+
+  const handleToggleAllDay = (checked: boolean) => {
+    if (isEventReadOnly) {
+      return;
+    }
+
+    setIsAllDay(checked);
+    pushPlaceholder(when, checked);
+  };
 
   const recurrencePresets = React.useMemo(
     () => buildRecurrencePresets(adapter, occurrence.start),
@@ -94,19 +164,35 @@ export const EventPopover = React.forwardRef(function EventPopover(
     [adapter, occurrence.rrule, occurrence.start],
   );
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  function validateRange(
+    start: SchedulerValidDate,
+    end: SchedulerValidDate,
+    allDay: boolean,
+  ): null | { field: 'startDate' | 'startTime' } {
+    const startDay = adapter.startOfDay(start);
+    const endDay = adapter.startOfDay(end);
+    // endDay <= startDay → date error
+    if (adapter.isAfter(startDay, endDay)) {
+      return { field: 'startDate' };
+    }
+
+    if (adapter.isEqual(startDay, endDay)) {
+      if (!allDay && !adapter.isAfter(end, start)) {
+        // end <= start → hour error
+        return { field: 'startTime' };
+      }
+    }
+    return null;
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const { start, end } = computeRange(when, isAllDay);
+
     const form = new FormData(event.currentTarget);
-
-    const startDateValue = form.get('startDate');
-    const startTimeValue = form.get('startTime');
-    const endDateValue = form.get('endDate');
-    const endTimeValue = form.get('endTime');
     const recurrenceValue = form.get('recurrence') as RecurrencePresetKey;
-
     const recurrenceModified =
       defaultRecurrenceKey !== 'custom' && recurrenceValue !== defaultRecurrenceKey;
-
     // TODO: This will change after implementing the custom recurrence editing tab.
     const rrule =
       recurrenceModified && recurrenceValue ? recurrencePresets[recurrenceValue] : undefined;
@@ -115,42 +201,29 @@ export const EventPopover = React.forwardRef(function EventPopover(
     const resourceValue =
       resourceRawValue === '' ? undefined : (resourceRawValue as CalendarResourceId);
 
-    const startISO = startTimeValue
-      ? `${startDateValue}T${startTimeValue}`
-      : `${startDateValue}T00:00`;
-    const endISO = endTimeValue ? `${endDateValue}T${endTimeValue}` : `${endDateValue}T23:59`;
-
-    const start = adapter.date(startISO);
-    const end = adapter.date(endISO);
-
     setErrors({});
-
-    if (adapter.isAfter(start, end) || adapter.isEqual(start, end)) {
-      const isSameDay = adapter.isEqual(adapter.startOfDay(start), adapter.startOfDay(end));
-
-      setErrors({
-        [isSameDay ? 'startTime' : 'startDate']: translations.startDateAfterEndDateError,
-      });
-
+    const err = validateRange(start, end, isAllDay);
+    if (err) {
+      setErrors({ [err.field]: translations.startDateAfterEndDateError });
       return;
     }
 
-    const payload = {
+    const metaChanges = {
       title: (form.get('title') as string).trim(),
       description: (form.get('description') as string).trim(),
-      start,
-      end,
       allDay: isAllDay,
       resource: resourceValue,
     };
 
-    if (occurrence.rrule) {
+    if (rawPlaceholder && rawPlaceholder.eventId == null) {
+      store.createEvent({ id: crypto.randomUUID(), ...metaChanges, start, end, rrule });
+    } else if (occurrence.rrule) {
       const changes: RecurringEventUpdatedProperties = {
-        ...payload,
+        ...metaChanges,
+        start,
+        end,
         ...(recurrenceModified ? { rrule } : {}),
       };
-
-      // TODO: Issues #19440 and #19441 - Add support for editing a single occurrence or all occurrences.
       store.updateRecurringEvent({
         eventId: occurrence.id,
         occurrenceStart: occurrence.start,
@@ -158,11 +231,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
         scope: 'this-and-following',
       });
     } else {
-      store.updateEvent({
-        id: occurrence.id,
-        rrule,
-        ...payload,
-      });
+      store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule });
     }
 
     onClose();
@@ -283,9 +352,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         <Input
                           className="EventPopoverInput"
                           type="date"
-                          defaultValue={
-                            adapter.formatByString(occurrence.start, 'yyyy-MM-dd') ?? ''
-                          }
+                          value={when.startDate}
+                          onChange={handleChangeDateOrTimeField('startDate')}
                           aria-describedby="startDate-error"
                           required
                           readOnly={isEventReadOnly}
@@ -299,7 +367,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           <Input
                             className="EventPopoverInput"
                             type="time"
-                            defaultValue={adapter.formatByString(occurrence.start, 'HH:mm') ?? ''}
+                            value={when.startTime}
+                            onChange={handleChangeDateOrTimeField('startTime')}
                             aria-describedby="startTime-error"
                             required
                             readOnly={isEventReadOnly}
@@ -315,7 +384,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         <Input
                           className="EventPopoverInput"
                           type="date"
-                          defaultValue={adapter.formatByString(occurrence.end, 'yyyy-MM-dd') ?? ''}
+                          value={when.endDate}
+                          onChange={handleChangeDateOrTimeField('endDate')}
                           required
                           readOnly={isEventReadOnly}
                         />
@@ -328,7 +398,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
                           <Input
                             className="EventPopoverInput"
                             type="time"
-                            defaultValue={adapter.formatByString(occurrence.end, 'HH:mm') ?? ''}
+                            value={when.endTime}
+                            onChange={handleChangeDateOrTimeField('endTime')}
                             required
                             readOnly={isEventReadOnly}
                           />
@@ -358,7 +429,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
                         className="AllDayCheckboxRoot"
                         id="enable-all-day-checkbox"
                         checked={isAllDay}
-                        onCheckedChange={setIsAllDay}
+                        onCheckedChange={handleToggleAllDay}
                         readOnly={isEventReadOnly}
                       >
                         <Checkbox.Indicator className="AllDayCheckboxIndicator">
@@ -454,20 +525,17 @@ export const EventPopover = React.forwardRef(function EventPopover(
   );
 });
 
-const EventPopoverContext = React.createContext<EventPopoverContextValue>({
-  startEditing: () => {},
-});
-
 export function EventPopoverProvider(props: EventPopoverProviderProps) {
   const { containerRef, children } = props;
+  const store = useEventCalendarStoreContext();
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
   const [selectedOccurrence, setSelectedOccurrence] =
     React.useState<CalendarEventOccurrence | null>(null);
 
   const startEditing = useEventCallback(
-    (event: React.MouseEvent, occurrence: CalendarEventOccurrence) => {
-      setAnchor(event.currentTarget as HTMLElement);
+    (anchorElement: HTMLElement, occurrence: CalendarEventOccurrence) => {
+      setAnchor(anchorElement);
       setSelectedOccurrence(occurrence);
       setIsPopoverOpen(true);
     },
@@ -477,6 +545,7 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
     if (!isPopoverOpen) {
       return;
     }
+    store.setOccurrencePlaceholder(null);
     setIsPopoverOpen(false);
     setAnchor(null);
     setSelectedOccurrence(null);
@@ -506,12 +575,12 @@ export function EventPopoverProvider(props: EventPopoverProviderProps) {
 
 export function EventPopoverTrigger(props: EventPopoverTriggerProps) {
   const { occurrence, ...other } = props;
-  const { startEditing } = React.useContext(EventPopoverContext);
+  const { startEditing } = useEventPopoverContext();
 
   return (
     <Popover.Trigger
       nativeButton={false}
-      onClick={(event) => startEditing(event, occurrence)}
+      onClick={(event) => startEditing(event.currentTarget, occurrence)}
       {...other}
     />
   );

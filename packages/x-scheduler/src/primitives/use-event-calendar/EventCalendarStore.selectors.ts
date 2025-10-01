@@ -1,7 +1,8 @@
 import { createSelector } from '@base-ui-components/utils/store';
 import { selectors as schedulerSelectors } from '../utils/SchedulerStore';
 import { EventCalendarState as State } from './EventCalendarStore.types';
-import { SchedulerValidDate } from '../models';
+import { CalendarEventId, SchedulerValidDate, EventSurfaceType } from '../models';
+import { isMultiDayEvent } from '../utils/event-utils';
 
 export const selectors = {
   ...schedulerSelectors,
@@ -10,7 +11,48 @@ export const selectors = {
   preferences: createSelector((state: State) => state.preferences),
   preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
-  isDayView: createSelector((state: State) => state.view === 'day'),
+  isEventDraggable: createSelector(
+    schedulerSelectors.isEventReadOnly,
+    (state: State) => state.areEventsDraggable,
+    (state: State) => state.view,
+    (isEventReadOnly, areEventsDraggable, _eventId: CalendarEventId) => {
+      if (isEventReadOnly || !areEventsDraggable) {
+        return false;
+      }
+
+      return true;
+    },
+  ),
+  isEventResizable: createSelector(
+    schedulerSelectors.isEventReadOnly,
+    schedulerSelectors.event,
+    (state: State) => state.areEventsResizable,
+    (state: State) => state.view,
+    (
+      isEventReadOnly,
+      event,
+      areEventsResizable,
+      view,
+      _eventId: CalendarEventId,
+      surfaceType: EventSurfaceType,
+    ) => {
+      if (isEventReadOnly || !areEventsResizable) {
+        return false;
+      }
+
+      // There is only one day cell in the day view
+      if (view === 'day' && surfaceType === 'day-grid') {
+        return false;
+      }
+
+      // In month view, only multi-day events can be resized
+      if (view === 'month' && surfaceType === 'day-grid' && !isMultiDayEvent(event!)) {
+        return false;
+      }
+
+      return true;
+    },
+  ),
   occurrencePlaceholderToRenderInDayCell: createSelector(
     (state: State, day: SchedulerValidDate, rowStart: SchedulerValidDate) => {
       if (
@@ -53,6 +95,30 @@ export const selectors = {
       }
 
       return state.occurrencePlaceholder;
+    },
+  ),
+  isCreatingNewEventInDayCell: createSelector((state: State, day: SchedulerValidDate) => {
+    const placeholder = state.occurrencePlaceholder;
+    if (placeholder?.surfaceType !== 'day-grid' || placeholder.eventId != null) {
+      return false;
+    }
+    return state.adapter.isSameDay(day, placeholder.start);
+  }),
+  isCreatingNewEventInTimeRange: createSelector(
+    (state: State, dayStart: SchedulerValidDate, dayEnd: SchedulerValidDate) => {
+      const placeholder = state.occurrencePlaceholder;
+      if (placeholder?.surfaceType !== 'time-grid' || placeholder.eventId != null) {
+        return false;
+      }
+
+      if (!state.adapter.isSameDay(placeholder.start, dayStart)) {
+        return false;
+      }
+
+      const startsBeforeEnd = state.adapter.isBefore(placeholder.start, dayEnd);
+      const endsAfterStart = state.adapter.isAfter(placeholder.end, dayStart);
+
+      return startsBeforeEnd && endsAfterStart;
     },
   ),
 };

@@ -8,6 +8,7 @@ import {
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
+  RecurringEventUpdatedProperties,
   SchedulerValidDate,
 } from '../../models';
 import {
@@ -22,9 +23,12 @@ import { Adapter } from '../adapter/types';
 import { applyRecurringUpdateFollowing } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';
+import { TimeoutManager } from '../TimeoutManager';
 
 export const DEFAULT_RESOURCES: CalendarResource[] = [];
 export const DEFAULT_EVENT_COLOR: CalendarEventColor = 'jade';
+
+const ONE_MINUTE_IN_MS = 60 * 1000;
 
 /**
  * Instance shared by the Event Calendar and the Timeline components.
@@ -41,6 +45,8 @@ export class SchedulerStore<
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
+  protected timeoutManager = new TimeoutManager();
+
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
@@ -51,6 +57,7 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       adapter,
       occurrencePlaceholder: null,
+      nowUpdatedEveryMinute: adapter.date(),
       visibleResources: new Map(),
       visibleDate:
         parameters.visibleDate ??
@@ -64,6 +71,17 @@ export class SchedulerStore<
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
+
+    const currentDate = new Date();
+    const timeUntilNextMinuteMs =
+      ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
+
+    this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
+      this.set('nowUpdatedEveryMinute', adapter.date());
+      this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
+        this.set('nowUpdatedEveryMinute', adapter.date());
+      });
+    });
 
     if (process.env.NODE_ENV !== 'production') {
       this.initialParameters = parameters;
@@ -141,6 +159,10 @@ export class SchedulerStore<
     this.apply(newState);
   };
 
+  public disposeEffect = () => {
+    return this.timeoutManager.clearAll;
+  };
+
   protected setVisibleDate = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
@@ -160,6 +182,24 @@ export class SchedulerStore<
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
     this.setVisibleDate(adapter.startOfDay(adapter.date()), event);
+  };
+
+  /**
+   * Creates a new event in the calendar.
+   */
+  public createEvent = (calendarEvent: CalendarEvent): CalendarEvent => {
+    const existing = selectors.event(this.state, calendarEvent.id);
+    if (existing) {
+      throw new Error(
+        `Event Calendar: an event with id="${calendarEvent.id}" already exists. Use updateEvent(...) instead.`,
+      );
+    }
+
+    const { onEventsChange } = this.parameters;
+    const updatedEvents = [...this.state.events, calendarEvent];
+    onEventsChange?.(updatedEvents);
+
+    return calendarEvent;
   };
 
   /**
@@ -241,14 +281,25 @@ export class SchedulerStore<
     // TODO: Try to do a single state update.
     this.setOccurrencePlaceholder(null);
 
-    const { eventId, start, end, originalStart } = data;
+    const { eventId, start, end, originalStart, surfaceType } = data;
 
     if (eventId == null || originalStart == null) {
-      // TODO: Create a new event.
       return undefined;
     }
 
-    if (selectors.event(this.state, eventId)?.rrule) {
+    const original = selectors.event(this.state, eventId);
+    if (!original) {
+      throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+    }
+
+    const changes: RecurringEventUpdatedProperties = { start, end };
+    if (surfaceType === 'time-grid' && original.allDay) {
+      changes.allDay = false;
+    } else if (surfaceType === 'day-grid' && !original.allDay) {
+      changes.allDay = true;
+    }
+
+    if (original.rrule) {
       let scope: RecurringUpdateEventScope;
       if (chooseRecurringEventScope) {
         // TODO: Issue #19440 + #19441 - Allow to edit all events or only this event.
@@ -260,12 +311,12 @@ export class SchedulerStore<
       return this.updateRecurringEvent({
         eventId,
         occurrenceStart: originalStart,
-        changes: { start, end },
+        changes,
         scope,
       });
     }
 
-    return this.updateEvent({ id: eventId, start, end });
+    return this.updateEvent({ id: eventId, ...changes });
   }
 
   /**

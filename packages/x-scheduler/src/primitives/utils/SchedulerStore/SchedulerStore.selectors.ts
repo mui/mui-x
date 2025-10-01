@@ -1,5 +1,11 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { CalendarEvent, CalendarEventId, CalendarResource, CalendarResourceId } from '../../models';
+import {
+  CalendarEvent,
+  CalendarEventId,
+  CalendarResource,
+  CalendarResourceId,
+  SchedulerValidDate,
+} from '../../models';
 import { SchedulerState as State } from './SchedulerStore.types';
 
 const eventByIdMapSelector = createSelectorMemoized(
@@ -46,6 +52,7 @@ export const selectors = {
   visibleDate: createSelector((state: State) => state.visibleDate),
   ampm: createSelector((state: State) => state.ampm),
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
+  nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
   resources: createSelector((state: State) => state.resources),
   events: createSelector((state: State) => state.events),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),
@@ -76,22 +83,21 @@ export const selectors = {
   ),
   event: eventSelector,
   isEventReadOnly: isEventReadOnlySelector,
-  isEventDraggable: createSelector(
-    isEventReadOnlySelector,
-    (state: State) => state.areEventsDraggable,
-    (isEventReadOnly, areEventsDraggable, _eventId: CalendarEventId) =>
-      !isEventReadOnly && areEventsDraggable,
-  ),
-  isEventResizable: createSelector(
-    isEventReadOnlySelector,
-    (state: State) => state.areEventsResizable,
-    (isEventReadOnly, areEventsResizable, _eventId: CalendarEventId) =>
-      !isEventReadOnly && areEventsResizable,
-  ),
   occurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder),
   hasOccurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder !== null),
   isOccurrenceMatchingThePlaceholder: createSelector(
     (state: State, occurrenceKey: string) =>
       state.occurrencePlaceholder?.occurrenceKey === occurrenceKey,
+  ),
+  // TODO: Pass the occurrence key instead of the start and end dates once the occurrences are stored in the state.
+  isOccurrenceStartedOrEnded: createSelector(
+    (state: State) => state.adapter,
+    (state: State) => state.nowUpdatedEveryMinute,
+    (adapter, now, start: SchedulerValidDate, end: SchedulerValidDate) => {
+      return {
+        started: adapter.isBefore(start, now) || adapter.isEqual(start, now),
+        ended: adapter.isBefore(end, now),
+      };
+    },
   ),
 };

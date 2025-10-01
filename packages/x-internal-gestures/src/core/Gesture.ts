@@ -270,13 +270,13 @@ export abstract class Gesture<GestureName extends string> {
     const changeOptionsEventName = `${this.name}ChangeOptions`;
     (this.element as CustomEventListener).addEventListener(
       changeOptionsEventName,
-      this.handleOptionsChange.bind(this),
+      this.handleOptionsChange,
     );
 
     const changeStateEventName = `${this.name}ChangeState`;
     (this.element as CustomEventListener).addEventListener(
       changeStateEventName,
-      this.handleStateChange.bind(this),
+      this.handleStateChange,
     );
   }
 
@@ -284,11 +284,11 @@ export abstract class Gesture<GestureName extends string> {
    * Handle option change events
    * @param event Custom event with new options in the detail property
    */
-  private handleOptionsChange(event: CustomEvent<typeof this.mutableOptionsType>): void {
+  private handleOptionsChange = (event: CustomEvent<typeof this.mutableOptionsType>): void => {
     if (event && event.detail) {
       this.updateOptions(event.detail);
     }
-  }
+  };
 
   /**
    * Update the gesture options with new values
@@ -332,11 +332,11 @@ export abstract class Gesture<GestureName extends string> {
    * Handle state change events
    * @param event Custom event with new state values in the detail property
    */
-  private handleStateChange(event: CustomEvent<typeof this.mutableStateType>): void {
+  private handleStateChange = (event: CustomEvent<typeof this.mutableStateType>): void => {
     if (event && event.detail) {
       this.updateState(event.detail);
     }
-  }
+  };
 
   /**
    * Update the gesture state with new values
@@ -440,13 +440,13 @@ export abstract class Gesture<GestureName extends string> {
     const changeOptionsEventName = `${this.name}ChangeOptions`;
     (this.element as CustomEventListener).removeEventListener(
       changeOptionsEventName,
-      this.handleOptionsChange.bind(this),
+      this.handleOptionsChange,
     );
 
     const changeStateEventName = `${this.name}ChangeState`;
     (this.element as CustomEventListener).removeEventListener(
       changeStateEventName,
-      this.handleStateChange.bind(this),
+      this.handleStateChange,
     );
   }
 
