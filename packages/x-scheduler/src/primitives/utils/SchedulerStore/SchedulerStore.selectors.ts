@@ -95,7 +95,7 @@ export const selectors = {
     (state: State) => state.nowUpdatedEveryMinute,
     (adapter, now, start: SchedulerValidDate, end: SchedulerValidDate) => {
       return {
-        started: adapter.isBefore(start, now),
+        started: adapter.isBefore(start, now) || adapter.isEqual(start, now),
         ended: adapter.isBefore(end, now),
       };
     },
