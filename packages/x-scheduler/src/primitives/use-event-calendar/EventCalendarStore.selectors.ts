@@ -97,7 +97,7 @@ export const selectors = {
       return state.occurrencePlaceholder;
     },
   ),
-  isCreatingNewEventInDayGridCell: createSelector((state: State, day: SchedulerValidDate) => {
+  isCreatingNewEventInDayCell: createSelector((state: State, day: SchedulerValidDate) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.eventId != null) {
       return false;

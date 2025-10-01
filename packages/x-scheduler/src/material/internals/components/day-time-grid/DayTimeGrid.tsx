@@ -6,11 +6,9 @@ import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
-import { useOnEveryMinuteStart } from '../../../../primitives/utils/useOnEveryMinuteStart';
 import { CalendarProcessedDate } from '../../../../primitives/models';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
-import { TimeGrid } from '../../../../primitives/time-grid';
-import { DayGrid } from '../../../../primitives/day-grid';
+import { CalendarGrid } from '../../../../primitives/calendar-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
@@ -30,8 +28,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const adapter = useAdapter();
   const translations = useTranslations();
-  const [now, setNow] = React.useState(() => adapter.date());
-  useOnEveryMinuteStart(() => setNow(adapter.date()));
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -40,7 +36,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const store = useEventCalendarStoreContext();
   const visibleDate = useStore(store, selectors.visibleDate);
   const hasDayView = useStore(store, selectors.hasDayView);
-
+  const now = useStore(store, selectors.nowUpdatedEveryMinute);
   const ampm = useStore(store, selectors.ampm);
   const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
@@ -96,7 +92,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 
   return (
-    <div
+    <CalendarGrid.Root
       ref={handleRef}
       className={clsx('DayTimeGridContainer', 'mui-x-scheduler', className)}
       {...other}
@@ -129,7 +125,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             ))}
           </div>
         </div>
-        <DayGrid.Root
+        <div
           ref={allDayHeaderWrapperRef}
           className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
           data-weekend={lastIsWeekend ? '' : undefined}
@@ -141,7 +137,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           >
             {translations.allDay}
           </div>
-          <DayGrid.Row
+          <CalendarGrid.DayRow
             start={start}
             end={end}
             className="DayTimeGridAllDayEventsRow"
@@ -151,11 +147,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             {occurrences.days.map((day) => (
               <DayGridCell key={day.key} day={day} row={occurrences} />
             ))}
-          </DayGrid.Row>
+          </CalendarGrid.DayRow>
           <div className="ScrollablePlaceholder" />
-        </DayGrid.Root>
-        <TimeGrid.Root className="DayTimeGridRoot">
-          <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
+        </div>
+        <div className="DayTimeGridRoot">
+          <CalendarGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
             <div className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">
                 {/* TODO: Handle DST days where there are not exactly 24 hours */}
@@ -190,9 +186,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
             </div>
-          </TimeGrid.ScrollableContent>
-        </TimeGrid.Root>
+          </CalendarGrid.ScrollableContent>
+        </div>
       </EventPopoverProvider>
-    </div>
+    </CalendarGrid.Root>
   );
 });
