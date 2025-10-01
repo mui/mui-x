@@ -7,11 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.13.1
 
-<!-- generated comparing v8.13.0..master -->
-
 _Oct 1, 2025_
-
-We'd like to extend a big thank you to the contributor who made this release possible. Here are some highlights ✨:
 
 - 🐛 Fix `@mui/x-charts-pro` failure on import due to missing `@mui/x-internals` release
 
