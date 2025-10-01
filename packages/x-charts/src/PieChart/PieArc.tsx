@@ -179,10 +179,8 @@ PieArc.propTypes = {
   isHighlighted: PropTypes.bool.isRequired,
   outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,
-  /**
-   * @default false
-   */
-  skipAnimation: PropTypes.bool.isRequired,
+  skipAnimation: PropTypes.bool,
+  skipInteraction: PropTypes.bool,
   startAngle: PropTypes.number.isRequired,
 } as any;
 
