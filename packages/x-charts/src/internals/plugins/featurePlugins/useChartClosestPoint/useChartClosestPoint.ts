@@ -94,7 +94,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
         const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
         const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
-        const maxRadius = disableClosestPoint ? aSeries.markerSize : voronoiMaxRadius;
+        const maxRadius = voronoiMaxRadius === 'item' ? aSeries.markerSize : voronoiMaxRadius;
 
         const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
         const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
