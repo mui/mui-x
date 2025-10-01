@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { getAdapter } from '../../../primitives/utils/adapter/getAdapter';
-import { DayGrid } from '../../../primitives/day-grid';
+import { CalendarGrid } from '../../../primitives/calendar-grid';
 import { useEventCalendarStoreContext } from '../../../primitives/utils/useEventCalendarStoreContext';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
@@ -32,7 +32,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   );
 
   return (
-    <DayGrid.Row
+    <CalendarGrid.DayRow
       key={weekNumber}
       start={start}
       end={end}
@@ -60,6 +60,6 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           row={occurrences}
         />
       ))}
-    </DayGrid.Row>
+    </CalendarGrid.DayRow>
   );
 }
