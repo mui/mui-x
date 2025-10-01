@@ -106,7 +106,7 @@ In these cases, you can pass a callback to the `isValidRowReorder()` prop.
 This callback is fired _during_ the drag operation so it provides information about the dragged row and potential row where it is being dropped.
 It is called with a `ReorderValidationContext` object to allow disabling specific reorder operations based on the context.
 
-The demo below prohibits reordering certain rows under the same parent and only allows cross-parent operations.
+The demo below prohibits reordering leaf rows under the same parent and only allows cross-parent operations.
 
 {{"demo": "RowReorderingValidation.js", "bg": "inline"}}
 
