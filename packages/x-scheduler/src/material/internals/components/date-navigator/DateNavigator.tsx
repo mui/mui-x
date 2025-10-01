@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useStore } from '@base-ui-components/utils/store';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
@@ -16,7 +16,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   props: DateNavigatorProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, ...other } = props;
+  const { className, isSidePanelOpen, setIsSidePanelOpen, ...other } = props;
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
   const view = useStore(store, selectors.view);
@@ -29,6 +29,17 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
       className={clsx('DateNavigatorContainer', className)}
       {...other}
     >
+      <button
+        aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
+        className={clsx('OutlinedNeutralButton', 'Button', 'IconButton')}
+        onClick={() => setIsSidePanelOpen(!isSidePanelOpen)}
+      >
+        {isSidePanelOpen ? (
+          <PanelLeftClose size={20} strokeWidth={1.5} className="Icon" />
+        ) : (
+          <PanelLeftOpen size={20} strokeWidth={1.5} className="Icon" />
+        )}
+      </button>
       <p className="DateNavigatorLabel" aria-live="polite">
         {adapter.format(visibleDate, 'month')} {adapter.format(visibleDate, 'year')}
       </p>

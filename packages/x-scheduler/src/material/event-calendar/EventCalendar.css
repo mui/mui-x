@@ -4,32 +4,34 @@
 
 .EventCalendarRoot {
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr;
   gap: var(--space-4);
   height: 100%;
 }
 
 .EventCalendarSidePanel {
-  width: 250px;
-  min-width: 250px;
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  padding: var(--space-4) 0 var(--space-4) var(--space-4);
 }
 
 .EventCalendarMainPanel {
-  flex: 1 1 100%;
-  display: flex;
+  grid-row: 2;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
   flex-direction: column;
   gap: var(--space-4);
-  padding: var(--space-4) var(--space-4) var(--space-4) 0;
+  min-height: 0;
 }
 
 .EventCalendarMainPanel.StretchView {
   max-height: 100%;
-  height: 100dvh;
-  height: 100vh;
+  overflow: hidden;
 }
 
 .EventCalendarContent {
@@ -41,6 +43,9 @@
 
 .EventCalendarContent.StretchView {
   max-height: none;
+}
+.EventCalendarContent.FullWidth {
+  grid-column: 1 / -1;
 }
 
 .EventCalendarMonthCalendarPlaceholder {

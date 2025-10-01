@@ -19,6 +19,10 @@ export interface SchedulerTranslations {
   weeks: string;
   years: string;
 
+  // DateNavigator
+  closeSidePanel: string;
+  openSidePanel: string;
+
   // PreferencesMenu
   preferencesMenu: string;
   showWeekends: string;

@@ -9,6 +9,7 @@ import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEv
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { PreferencesMenu } from './preferences-menu';
 import './HeaderToolbar.css';
+import { DateNavigator } from '../date-navigator';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,
@@ -31,13 +32,15 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       )}
       {...other}
     >
-      <div className="PrimaryActionWrapper">
-        {showViewSwitcher && <ViewSwitcher />}
-        <button className="Button OutlinedNeutralButton" onClick={store.goToToday} type="button">
-          {translations.today}
-        </button>
+      <div className="HeaderToolbarActions">
+        <div className="PrimaryActionWrapper">
+          {showViewSwitcher && <ViewSwitcher />}
+          <button className="Button OutlinedNeutralButton" onClick={store.goToToday} type="button">
+            {translations.today}
+          </button>
+        </div>
+        <PreferencesMenu />
       </div>
-      <PreferencesMenu />
     </header>
   );
 });

@@ -1,4 +1,6 @@
 .DateNavigatorContainer {
+  grid-column: 1/ 2;
+  grid-template-columns: subgrid;
   display: flex;
   align-items: center;
   justify-content: space-between;

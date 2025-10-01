@@ -19,6 +19,10 @@ export const enUS: SchedulerTranslations = {
   weeks: 'Weeks',
   years: 'Years',
 
+  // DateNavigator
+  closeSidePanel: 'Close side panel',
+  openSidePanel: 'Open side panel',
+
   // Preferences menu
   preferencesMenu: 'Settings',
   showWeekends: 'Show weekends',
