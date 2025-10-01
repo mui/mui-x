@@ -25,11 +25,10 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(true);
-
   const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
   const store = useEventCalendar(parameters);
   const view = useStore(store, selectors.view);
+  const isSidePanelOpen = useStore(store, selectors.isSidePanelOpen);
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
@@ -63,10 +62,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
             className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
             ref={forwardedRef}
           >
-            <DateNavigator
-              isSidePanelOpen={isSidePanelOpen}
-              setIsSidePanelOpen={setIsSidePanelOpen}
-            />
+            <DateNavigator />
 
             <HeaderToolbar />
 

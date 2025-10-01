@@ -39,6 +39,7 @@ const mapper: SchedulerParametersToStateMapper<EventCalendarState, EventCalendar
           },
     viewConfig: null,
     view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+    isSidePanelOpen: parameters.isSidePanelOpen ?? true,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<EventCalendarState> = {
@@ -180,5 +181,14 @@ export class EventCalendarStore extends SchedulerStore<
   public setViewConfig = (config: CalendarViewConfig) => {
     this.set('viewConfig', config);
     return () => this.set('viewConfig', null);
+  };
+
+  /**
+   * Sets the open state of the side panel.
+   */
+  public setIsSidePanelOpen = (isSidePanelOpen: boolean) => {
+    if (isSidePanelOpen !== this.state.isSidePanelOpen) {
+      this.set('isSidePanelOpen', isSidePanelOpen);
+    }
   };
 }

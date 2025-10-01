@@ -29,6 +29,10 @@ export interface EventCalendarState extends SchedulerState {
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
+  /**
+   * Whether the side panel is open or not.
+   */
+  isSidePanelOpen: boolean;
 }
 
 export interface EventCalendarParameters extends SchedulerParameters {
@@ -63,4 +67,10 @@ export interface EventCalendarParameters extends SchedulerParameters {
    * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true }
    */
   preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
+
+  /**
+   * Whether the side panel is open or not.
+   * @default true
+   */
+  isSidePanelOpen?: boolean;
 }

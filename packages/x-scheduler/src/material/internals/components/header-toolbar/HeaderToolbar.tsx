@@ -9,7 +9,6 @@ import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEv
 import { selectors } from '../../../../primitives/use-event-calendar';
 import { PreferencesMenu } from './preferences-menu';
 import './HeaderToolbar.css';
-import { DateNavigator } from '../date-navigator';
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,

@@ -11,6 +11,7 @@ export const selectors = {
   preferences: createSelector((state: State) => state.preferences),
   preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
+  isSidePanelOpen: createSelector((state: State) => state.isSidePanelOpen),
   isEventDraggable: createSelector(
     schedulerSelectors.isEventReadOnly,
     (state: State) => state.areEventsDraggable,
