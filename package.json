@@ -1,5 +1,5 @@
 {
-  "version": "8.12.1",
+  "version": "8.13.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -79,7 +79,7 @@
     "@mui/icons-material": "catalog:",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.7",
     "@mui/internal-bundle-size-checker": "^1.0.9-canary.46",
-    "@mui/internal-code-infra": "^0.0.3-canary.15",
+    "@mui/internal-code-infra": "^0.0.3-canary.17",
     "@mui/internal-markdown": "^2.0.6",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",

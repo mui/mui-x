@@ -1,1 +1,0 @@
-export { TimeGridCurrentTimeIndicator } from './TimeGridCurrentTimeIndicator';
