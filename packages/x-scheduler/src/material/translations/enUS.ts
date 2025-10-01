@@ -20,10 +20,12 @@ export const enUS: SchedulerTranslations = {
   years: 'Years',
 
   // Preferences menu
+  amPm12h: 'AM/PM (1:00PM)',
+  hour24h: '24-hour (13:00)',
   preferencesMenu: 'Settings',
   showWeekends: 'Show weekends',
   showWeekNumber: 'Show week number',
-  useAmPmFormat: 'Use AM/PM format',
+  timeFormat: 'Time format',
 
   // WeekView
   allDay: 'All day',
