@@ -2,7 +2,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import {
   selectors,
   useExtractTimelineParameters,

@@ -24,7 +24,7 @@ export function DaysHeader(props: HeaderProps) {
         date: visibleDate,
         amount: amount || DAYS_UNIT_COUNT,
       }),
-    [getDayList, visibleDate],
+    [getDayList, visibleDate, amount],
   );
 
   return (

@@ -39,7 +39,7 @@ export function WeeksHeader(props: HeaderProps) {
     }
 
     return tempWeeks;
-  }, [getWeekList, getDayList, visibleDate]);
+  }, [getWeekList, getDayList, visibleDate, amount]);
 
   return (
     <div className={clsx('WeeksHeader', className)} {...other}>

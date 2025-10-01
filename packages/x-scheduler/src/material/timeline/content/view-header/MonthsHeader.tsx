@@ -24,7 +24,7 @@ export function MonthsHeader(props: HeaderProps) {
         date: visibleDate,
         amount: amount || MONTHS_UNIT_COUNT,
       }),
-    [getMonthList, visibleDate],
+    [getMonthList, visibleDate, amount],
   );
 
   return (

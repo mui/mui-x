@@ -27,7 +27,7 @@ export function TimeHeader(props: HeaderProps) {
         date: visibleDate,
         amount: amount || TIME_UNITS_COUNT,
       }),
-    [getDayList, visibleDate],
+    [getDayList, visibleDate, amount],
   );
 
   return (
