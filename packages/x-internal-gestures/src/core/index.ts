@@ -17,11 +17,19 @@ export { PanGesture } from './gestures/PanGesture';
 export { PinchGesture } from './gestures/PinchGesture';
 export { PressGesture } from './gestures/PressGesture';
 export { RotateGesture } from './gestures/RotateGesture';
+export { TapAndDragGesture } from './gestures/TapAndDragGesture';
 export { TapGesture } from './gestures/TapGesture';
 export { TurnWheelGesture } from './gestures/TurnWheelGesture';
 
 // Export types
-export type { GestureEventData, GestureOptions, GesturePhase, GestureState } from './Gesture';
+export type {
+  GestureEventData,
+  GestureOptions,
+  GesturePhase,
+  GestureState,
+  PointerMode,
+  BaseGestureOptions,
+} from './Gesture';
 export type { PointerGestureEventData, PointerGestureOptions } from './PointerGesture';
 
 export type { PointerData, PointerManagerOptions } from './PointerManager';
@@ -45,6 +53,11 @@ export type {
   RotateGestureEventData,
   RotateGestureOptions,
 } from './gestures/RotateGesture';
+export type {
+  TapAndDragEvent,
+  TapAndDragGestureEventData,
+  TapAndDragGestureOptions,
+} from './gestures/TapAndDragGesture';
 export type { TapEvent, TapGestureEventData, TapGestureOptions } from './gestures/TapGesture';
 export type {
   TurnWheelEvent,
@@ -53,3 +66,4 @@ export type {
 } from './gestures/TurnWheelGesture';
 
 export type { GestureElement } from './types/GestureElement';
+export type { Direction } from './types/Direction';

@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
@@ -17,10 +16,7 @@ export const DayGridRoot = React.forwardRef(function DayGridRoot(
 
   const props = React.useMemo(() => ({ role: 'grid' }), []);
 
-  const state: DayGridRoot.State = React.useMemo(() => ({}), []);
-
   return useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });

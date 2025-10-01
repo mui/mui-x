@@ -6,7 +6,7 @@ import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useTimelineEventRowContext } from '../event-row/TimelineEventRowContext';
 import { useEvent } from '../../utils/useEvent';
 import { TimelineEventCssVars } from './TimelineEventCssVars';
-import { useEventPosition } from '../../utils/useEventPosition';
+import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 
 export const TimelineEvent = React.forwardRef(function TimelineEvent(
   componentProps: TimelineEvent.Props,
@@ -31,7 +31,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const { start: rowStart, end: rowEnd } = useTimelineEventRowContext();
 
-  const { position, duration } = useEventPosition({
+  const { position, duration } = useElementPositionInCollection({
     start,
     end,
     collectionStart: rowStart,
@@ -49,12 +49,12 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const props = React.useMemo(() => ({ style }), [style]);
 
-  const { state, props: eventProps } = useEvent({ start, end });
+  const { state } = useEvent({ start, end });
 
   return useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef],
-    props: [props, eventProps, elementProps, getButtonProps],
+    props: [props, elementProps, getButtonProps],
   });
 });
 

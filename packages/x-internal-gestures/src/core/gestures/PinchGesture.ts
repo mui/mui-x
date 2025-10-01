@@ -148,6 +148,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -178,7 +179,10 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
   /**
    * Handle pointer events for the pinch gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Find which element (if any) is being targeted
@@ -188,7 +192,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
     }
 
     // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement)) {
+    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
       if (this.isActive) {
         // If the gesture was active but now should be prevented, end it gracefully
         this.emitPinchEvent(targetElement, 'cancel', pointersArray, event);
@@ -289,7 +293,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit pinch-specific events with additional data

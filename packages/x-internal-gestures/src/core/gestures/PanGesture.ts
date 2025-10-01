@@ -13,20 +13,8 @@ import { GesturePhase, GestureState } from '../Gesture';
 import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
 import { PointerData } from '../PointerManager';
 import { TargetElement } from '../types/TargetElement';
+import { Direction } from '../types/Direction';
 import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
-
-/**
- * The direction of movement for the pan gesture
- * This type defines the detected directions based on the vertical and horizontal components
- * The values can be 'up', 'down', 'left', 'right' or null if not applicable.
- *
- * The null values indicate that the gesture is not moving in that direction.
- */
-export type Direction = {
-  vertical: 'up' | 'down' | null;
-  horizontal: 'left' | 'right' | null;
-  mainAxis: 'horizontal' | 'vertical' | 'diagonal' | null;
-};
 
 /**
  * Configuration options for PanGesture
@@ -185,6 +173,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -199,6 +188,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     super.updateOptions(options);
 
     this.direction = options.direction || this.direction;
+    this.threshold = options.threshold ?? this.threshold;
   }
 
   protected resetState(): void {
@@ -223,7 +213,10 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
   /**
    * Handle pointer events for the pan gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
@@ -241,7 +234,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     }
 
     // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement)) {
+    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
       // If the gesture was active but now should be prevented, cancel it gracefully
       this.cancel(targetElement, pointersArray, event);
       return;
@@ -367,7 +360,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit pan-specific events with additional data

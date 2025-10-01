@@ -7,12 +7,17 @@ import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { EventCalendarContext } from '../internals/hooks/useEventCalendarContext';
+import { EventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { DateNavigator } from '../internals/components/date-navigator';
 import { ResourceLegend } from '../internals/components/resource-legend';
-import { useEventCalendar, selectors } from '../../primitives/use-event-calendar';
+import {
+  useEventCalendar,
+  selectors,
+  useExtractEventCalendarParameters,
+} from '../../primitives/use-event-calendar';
+import { SchedulerStoreContext } from '../../primitives/utils/useSchedulerStoreContext';
 import '../index.css';
 import './EventCalendar.css';
 
@@ -20,40 +25,14 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
+  const store = useEventCalendar(parameters);
+  const view = useStore(store, selectors.view);
   const {
-    events: eventsProp,
-    onEventsChange,
-    resources: resourcesProp,
-    view: viewProp,
-    defaultView,
-    views,
-    visibleDate: visibleDateProp,
-    defaultVisibleDate,
-    onVisibleDateChange,
-    areEventsDraggable,
-    areEventsResizable,
-    ampm,
+    // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
-    className,
     ...other
-  } = props;
-
-  const contextValue = useEventCalendar({
-    events: eventsProp,
-    onEventsChange,
-    resources: resourcesProp,
-    view: viewProp,
-    defaultView,
-    views,
-    visibleDate: visibleDateProp,
-    defaultVisibleDate,
-    onVisibleDateChange,
-    areEventsDraggable,
-    areEventsResizable,
-    ampm,
-  });
-
-  const view = useStore(contextValue.store, selectors.view);
+  } = forwardedProps;
 
   let content: React.ReactNode;
   switch (view) {
@@ -74,41 +53,38 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   }
 
   return (
-    <EventCalendarContext.Provider value={contextValue}>
-      <TranslationsProvider translations={translations}>
-        <div
-          className={clsx(className, 'EventCalendarRoot', 'mui-x-scheduler')}
-          ref={forwardedRef}
-          {...other}
-        >
-          <aside className="EventCalendarSidePanel">
-            <DateNavigator />
-            <section
-              className="EventCalendarMonthCalendarPlaceholder"
-              // TODO: Add localization
-              aria-label="Month calendar"
-            >
-              Month Calendar
-            </section>
-            <ResourceLegend />
-          </aside>
+    <EventCalendarStoreContext.Provider value={store}>
+      <SchedulerStoreContext.Provider value={store as any}>
+        <TranslationsProvider translations={translations}>
           <div
-            className={clsx(
-              'EventCalendarMainPanel',
-              view === 'month' && 'EventCalendarMainPanel--month',
-            )}
+            {...other}
+            className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
+            ref={forwardedRef}
           >
-            <HeaderToolbar />
-            <section
-              // TODO: Add localization
-              className="EventCalendarContent"
-              aria-label="Calendar content"
-            >
-              {content}
-            </section>
+            <aside className="EventCalendarSidePanel">
+              <DateNavigator />
+              <section
+                className="EventCalendarMonthCalendarPlaceholder"
+                // TODO: Add localization
+                aria-label="Month calendar"
+              >
+                Month Calendar
+              </section>
+              <ResourceLegend />
+            </aside>
+            <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
+              <HeaderToolbar />
+              <section
+                // TODO: Add localization
+                className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
+                aria-label="Calendar content"
+              >
+                {content}
+              </section>
+            </div>
           </div>
-        </div>
-      </TranslationsProvider>
-    </EventCalendarContext.Provider>
+        </TranslationsProvider>
+      </SchedulerStoreContext.Provider>
+    </EventCalendarStoreContext.Provider>
   );
 });

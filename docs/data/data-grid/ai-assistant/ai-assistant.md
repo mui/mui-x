@@ -66,7 +66,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 1. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
 
    :::warning
-   Avoid exposing the API key to the client by using a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
+   Do not expose the API key to the public. Instead, keep it private, use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
 
    This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
 
@@ -87,7 +87,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    :::
 
 2. Enable the AI Assistant feature by adding the `aiAssistant` prop.
-   This adds a new button to the Toolbar that controlls the Assistant Panel open state.
+   This adds a new button to the Toolbar that controls the Assistant Panel's open state.
 3. Provide `<GridAiAssistantPanel />` as a component for the `aiAssistantPanel` slot.
    Slot is by default `null` to prevent bundling of the panel and its child components in the projects that are not using the AI Assistant feature.
 4. Provide the `onPrompt()` callback to pass the user's prompts to the service.
@@ -138,6 +138,30 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
 5. Provide data examples in either of the following ways:
    - Fill the `examples` prop in the `columns` array – this is recommended if you want to avoid exposing the row data to the AI Assistant.
    - Provide access to the row data with `allowAiAssistantDataSampling` prop – since this uses real data, it may lead to better processing results.
+
+6. Optionally, provide `referenceId` in the metadata to track spending and set limits for each entity sharing your API key.
+   The MUI Service supports `metadata` property through which you can send the reference that will be stored with the request.
+   Later, use that reference in the request history analysis.
+
+   ::warning
+   The `metadata` object would store only `referenceId` property. If you are interested in storing more data, please [contact our support team](mailto:support@mui.com).
+   ::
+
+   ```ts
+   function processPrompt(query: string, context: string, conversationId?: string) {
+     return unstable_gridDefaultPromptResolver(
+       `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+       query,
+       context,
+       conversationId,
+       {
+         metadata: {
+           referenceId: 'example-user-reference',
+         },
+       },
+     );
+   }
+   ```
 
 ### With a custom service
 

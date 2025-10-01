@@ -1,4 +1,5 @@
-// Fake data of a personal agenda
+// Personal Agenda Events Dataset
+
 import { DateTime } from 'luxon';
 import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
 
@@ -8,51 +9,56 @@ const START_OF_FIRST_WEEK = defaultVisibleDate.startOf('week');
 
 export const initialEvents: CalendarEvent[] = [
   // Work events
-  // TODO: Replace all the duplicated events with a single recurring event
-  ...Array.from({ length: 52 }, (_1, i) =>
-    Array.from({ length: 5 }, (_2, j) => ({
-      id: `work-daily-standup-${i * 5 + j + 1}`,
-      start: START_OF_FIRST_WEEK.plus({ days: i * 7 + j }).set({ hour: 9 }),
-      end: START_OF_FIRST_WEEK.plus({ days: i * 7 + j }).set({ hour: 9, minute: 30 }),
-      title: 'Daily Standup',
-      resource: 'work',
-    })),
-  ).flat(1),
-  ...Array.from({ length: 52 / 2 }, (_1, i) => ({
-    id: `work-retro-${i + 1}`,
-    start: START_OF_FIRST_WEEK.plus({ weeks: 2 * i }).set({ hour: 16, weekday: 2 }),
-    end: START_OF_FIRST_WEEK.plus({ weeks: 2 * i }).set({ hour: 17, weekday: 2 }),
+  {
+    id: 'work-daily-standup',
+    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9, minute: 0 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 9, minute: 30 }),
+    title: 'Daily Standup',
+    resource: 'work',
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'TU', 'WE', 'TH', 'FR'] },
+  },
+  {
+    id: 'work-retro',
+    start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 16 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 17 }),
     title: 'Team Retrospective',
     resource: 'work',
-  })),
-  ...Array.from({ length: 52 / 2 }, (_1, i) => ({
-    id: `work-backlog-grooming-${i + 1}`,
-    start: START_OF_FIRST_WEEK.plus({ weeks: 2 * i + 1 }).set({ hour: 14, weekday: 3 }),
-    end: START_OF_FIRST_WEEK.plus({ weeks: 2 * i + 1 }).set({ hour: 15, weekday: 3 }),
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['TU'] },
+  },
+  {
+    id: 'work-backlog-grooming',
+    start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 3, hour: 14 }),
+    end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 3, hour: 15 }),
     title: 'Backlog Grooming',
     resource: 'work',
-  })),
-  ...Array.from({ length: 52 / 3 }, (_1, i) => ({
-    id: `1-on-1-john-${i + 1}`,
-    start: START_OF_FIRST_WEEK.plus({ weeks: 3 * i + 1 }).set({ hour: 10, weekday: 3 }),
-    end: START_OF_FIRST_WEEK.plus({ weeks: 3 * i + 1 }).set({ hour: 11, weekday: 3 }),
+    rrule: { freq: 'WEEKLY', interval: 2, byDay: ['WE'] },
+  },
+  {
+    id: 'work-1on1-john',
+    start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 3, hour: 10 }),
+    end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 3, hour: 11 }),
     title: '1-on-1 with John',
     resource: 'work',
-  })),
-  ...Array.from({ length: 52 / 3 }, (_1, i) => ({
-    id: `1-on-1-abigail-${i + 1}`,
-    start: START_OF_FIRST_WEEK.plus({ weeks: 3 * i }).set({ hour: 10, weekday: 4 }),
-    end: START_OF_FIRST_WEEK.plus({ weeks: 3 * i }).set({ hour: 11, weekday: 4 }),
+    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['WE'] },
+  },
+  {
+    id: 'work-1on1-abigail',
+    start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 10 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 11 }),
     title: '1-on-1 with Abigail',
     resource: 'work',
-  })),
-  ...Array.from({ length: 52 / 3 }, (_1, i) => ({
-    id: `1-on-1-hailey-${i + 1}`,
-    start: START_OF_FIRST_WEEK.plus({ weeks: 3 * i + 1 }).set({ hour: 10, weekday: 1 }),
-    end: START_OF_FIRST_WEEK.plus({ weeks: 3 * i + 1 }).set({ hour: 11, weekday: 1 }),
+    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['TH'] },
+  },
+  {
+    id: 'work-1on1-hailey',
+    start: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 10 }),
+    end: START_OF_FIRST_WEEK.plus({ weeks: 1 }).set({ weekday: 1, hour: 11 }),
     title: '1-on-1 with Hailey',
     resource: 'work',
-  })),
+    rrule: { freq: 'WEEKLY', interval: 3, byDay: ['MO'] },
+  },
+
+  // Non-recurring work events
   {
     id: 'client-call-1',
     start: DateTime.fromISO('2025-07-03T16:00:00'),
@@ -94,67 +100,83 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-08T17:00:00'),
     title: 'Design review Scheduler',
     resource: 'work',
+    readOnly: true,
+  },
+  {
+    id: 'remote-1',
+    start: DateTime.fromISO('2025-07-02T09:00:00'),
+    end: DateTime.fromISO('2025-07-02T12:00:00'),
+    title: 'Remote work',
+    resource: 'work',
   },
 
-  // Workout events
-  ...Array.from({ length: 52 }, (_1, i) => [
-    {
-      id: `workout-run-${i + 1}-monday`,
-      start: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ hour: 7 }),
-      end: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ hour: 7, minute: 45 }),
-      title: 'Footing',
-      resource: 'workout',
-    },
-    {
-      id: `workout-run-${i + 1}-wednesday`,
-      start: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ weekday: 3, hour: 7 }),
-      end: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ weekday: 3, hour: 7, minute: 45 }),
-      title: 'Footing',
-      resource: 'workout',
-    },
-    {
-      id: `workout-run-${i + 1}-sunday`,
-      start: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ weekday: 7, hour: 9 }),
-      end: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ weekday: 7, hour: 10, minute: 30 }),
-      title: 'Long run',
-      resource: 'workout',
-    },
-    {
-      id: `workout-gym-${i + 1}-tuesday`,
-      start: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ weekday: 4, hour: 18, minute: 30 }),
-      end: START_OF_FIRST_WEEK.plus({ weeks: i }).set({ weekday: 4, hour: 20 }),
-      title: 'Gym session',
-      resource: 'workout',
-    },
-  ]).flat(1),
+  // Holiday events
+  {
+    id: 'holidays-1',
+    start: START_OF_FIRST_WEEK.minus({ day: 4 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 1 }),
+    title: 'Out of office',
+    resource: 'holidays',
+    allDay: true,
+  },
+
+  // Workout recurring events
+  {
+    id: 'workout-running',
+    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 7, minute: 0 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 7, minute: 45 }),
+    title: 'Running',
+    resource: 'workout',
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['MO', 'WE'] },
+  },
+  {
+    id: 'workout-long-run',
+    start: START_OF_FIRST_WEEK.set({ weekday: 7, hour: 9 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 7, hour: 10, minute: 30 }),
+    title: 'Long run',
+    resource: 'workout',
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['SU'] },
+  },
+  {
+    id: 'workout-gym-class',
+    start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 18 }),
+    end: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 19 }),
+    title: 'Evening Gym Class',
+    allDay: false,
+    resource: 'workout',
+    rrule: { freq: 'WEEKLY', interval: 1, byDay: ['TU', 'TH'] },
+  },
 
   // Birthday events
   {
-    id: 'birthdays-1',
-    start: DateTime.fromISO('2025-07-14T03:00:00'),
-    end: DateTime.fromISO('2025-07-14T04:00:00'),
+    id: 'birthdays-alice',
+    start: DateTime.fromISO('2025-07-03T03:00:00'),
+    end: DateTime.fromISO('2025-07-03T04:00:00'),
     title: "Alice's Birthday",
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
+    readOnly: true,
+    rrule: { freq: 'YEARLY', interval: 1 },
   },
   {
-    id: 'birthdays-2',
+    id: 'birthdays-bob',
     start: DateTime.fromISO('2025-07-18T03:00:00'),
     end: DateTime.fromISO('2025-07-18T04:00:00'),
-    title: `Bob's Birthday`,
+    title: "Bob's Birthday",
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
+    readOnly: true,
+    rrule: { freq: 'YEARLY', interval: 1 },
   },
   {
-    id: 'birthdays-3',
+    id: 'birthdays-richard',
     start: DateTime.fromISO('2025-07-25T03:00:00'),
     end: DateTime.fromISO('2025-07-25T04:00:00'),
-    title: `Richard's Birthday`,
+    title: "Richard's Birthday",
     resource: 'birthdays',
-    // @ts-expect-error
     allDay: true,
+    readOnly: true,
+    rrule: { freq: 'YEARLY', interval: 1 },
   },
 
   // Personal events
@@ -164,6 +186,7 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-04T22:00:00'),
     title: 'Dinner with Friends',
     resource: 'personal',
+    readOnly: true,
   },
   {
     id: 'dinner-with-friends-2',
@@ -171,6 +194,7 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-15T21:00:00'),
     title: 'Dinner with Friends',
     resource: 'personal',
+    readOnly: true,
   },
   {
     id: 'dinner-with-friends-3',
@@ -178,6 +202,7 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-28T21:30:00'),
     title: 'Dinner with Friends',
     resource: 'personal',
+    readOnly: true,
   },
   {
     id: 'shopping-1',
@@ -192,6 +217,14 @@ export const initialEvents: CalendarEvent[] = [
     end: DateTime.fromISO('2025-07-26T16:00:00'),
     title: 'Shopping',
     resource: 'personal',
+  },
+  {
+    id: 'community-workshop',
+    start: START_OF_FIRST_WEEK.set({ month: 7, day: 26, hour: 10 }),
+    end: START_OF_FIRST_WEEK.set({ month: 7, day: 26, hour: 12 }),
+    title: 'Community Workshop',
+    resource: 'personal',
+    rrule: { freq: 'MONTHLY', interval: 1, byDay: ['4SA'] },
   },
 
   // Medical events
@@ -219,9 +252,10 @@ export const initialEvents: CalendarEvent[] = [
 ];
 
 export const resources: CalendarResource[] = [
-  { name: 'Work', id: 'work', color: 'violet' },
-  { name: 'Workout', id: 'workout', color: 'jade' },
-  { name: 'Birthdays', id: 'birthdays', color: 'lime' },
-  { name: 'Personal', id: 'personal', color: 'orange' },
-  { name: 'Medical', id: 'medical', color: 'indigo' },
+  { name: 'Work', id: 'work', eventColor: 'violet' },
+  { name: 'Holidays', id: 'holidays', eventColor: 'red' },
+  { name: 'Workout', id: 'workout', eventColor: 'jade' },
+  { name: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
+  { name: 'Personal', id: 'personal', eventColor: 'orange' },
+  { name: 'Medical', id: 'medical', eventColor: 'indigo' },
 ];

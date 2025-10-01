@@ -4,13 +4,9 @@ productId: x-charts
 components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
 ---
 
-# Charts - Toolbar 🧪
+# Charts - Toolbar
 
 <p class="description">Charts can display a toolbar for easier access to certain functionality.</p>
-
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
-:::
 
 Charts provide a toolbar that can be enabled to give users quick access to certain features.
 
@@ -29,6 +25,13 @@ For example, if the chart is not zoomable, the zoom buttons will not be displaye
 ## Customization
 
 The toolbar is highly customizable, built to integrate with any design system.
+
+:::info
+If you're replacing the toolbar by a custom one, the container should have the CSS class `chartsToolbarClasses.root`.
+
+This class is used by the `<ChartsWrapper />` to place the toolbar relatively to the legend and the chart.
+If you use composition without `<ChartsWrapper />` you can ignore this info.
+:::
 
 ### Slots
 

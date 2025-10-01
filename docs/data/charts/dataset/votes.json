@@ -1,0 +1,46 @@
+[
+  {
+    "country": "Romania (2020)",
+    "turnout": 33.2
+  },
+  {
+    "country": "Bulgaria (2024)",
+    "turnout": 33.4
+  },
+  {
+    "country": "Albania (2021)",
+    "turnout": 46.3
+  },
+  {
+    "country": "United Kingdom (2024)",
+    "turnout": 60.0
+  },
+  {
+    "country": "Spain (2023)",
+    "turnout": 66.0
+  },
+  {
+    "country": "France (2024)",
+    "turnout": 66.7
+  },
+  {
+    "country": "Germany (2021)",
+    "turnout": 76.4
+  },
+  {
+    "country": "Sweden (2022)",
+    "turnout": 83.8
+  },
+  {
+    "country": "Malta (2022)",
+    "turnout": 85.6
+  },
+  {
+    "country": "Turkey (2023)",
+    "turnout": 87.0
+  },
+  {
+    "country": "Belgium (2024)",
+    "turnout": 88.5
+  }
+]

@@ -10,7 +10,7 @@ import {
   DefaultedXAxis,
   DefaultedAxis,
   CartesianChartSeriesType,
-  getAxisExtremum,
+  getAxisExtrema,
   isBandScaleConfig,
   getScale,
   getColorScale,
@@ -20,7 +20,7 @@ import {
   getCartesianAxisTriggerTooltip,
   isDateData,
   createDateFormatter,
-  calculateDefaultTickNumber,
+  getDefaultTickNumber,
 } from '@mui/x-charts/internals';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '@mui/x-charts/models';
 
@@ -113,7 +113,7 @@ export function computeAxisValue({
     const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
     let range = getRange(drawingArea, axisDirection, axis);
 
-    const [minData, maxData] = getAxisExtremum(
+    const [minData, maxData] = getAxisExtrema(
       axis,
       axisDirection,
       seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
@@ -153,7 +153,7 @@ export function computeAxisValue({
       };
 
       if (isDateData(axis.data)) {
-        const dateFormatter = createDateFormatter(axis, scaleRange);
+        const dateFormatter = createDateFormatter(axis.data, scaleRange, axis.tickNumber);
         completeAxis[axis.id].valueFormatter = axis.valueFormatter ?? dateFormatter;
       }
     }
@@ -191,11 +191,11 @@ export function computeAxisValue({
       axisExtremums[1] = max;
     }
 
-    const rawTickNumber = getTickNumber({
-      ...axis,
-      domain: axisExtremums,
-      defaultTickNumber: calculateDefaultTickNumber(range),
-    });
+    const rawTickNumber = getTickNumber(
+      axis,
+      axisExtremums,
+      getDefaultTickNumber(Math.abs(range[1] - range[0])),
+    );
     const tickNumber = scaleTickNumberByRange(rawTickNumber, range);
 
     const scale = getScale(scaleType, axisExtremums, range);

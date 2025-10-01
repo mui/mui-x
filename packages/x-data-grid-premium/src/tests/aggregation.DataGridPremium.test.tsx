@@ -384,6 +384,37 @@ describe('<DataGridPremium /> - Aggregation', () => {
           expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '3', '4', '', '5']);
         });
       });
+
+      it('should aggregate correctly when getAggregationPosition returns footer only for root group', async () => {
+        // This test covers the regression where aggregators receive empty arrays
+        // when getAggregationPosition returns 'footer' only for the root group (depth === -1)
+        await render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              aggregation: { model: { id: 'max' } },
+            }}
+            defaultGroupingExpansionDepth={-1}
+            getAggregationPosition={(group: GridGroupNode) =>
+              group.depth === -1 ? 'footer' : null
+            }
+          />,
+        );
+
+        // Should show aggregated value '5' for root group in footer,
+        // not '0' due to empty values array in aggregator
+        expect(getColumnValues(1)).to.deep.equal([
+          '',
+          '0',
+          '1',
+          '2',
+          '3',
+          '4',
+          '',
+          '5',
+          '5' /* Agg root - should be 5, not 0 */,
+        ]);
+      });
     });
   });
 
@@ -464,6 +495,71 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */, '1', '1']);
+    });
+
+    it('should not apply filtering on the aggregated values for aggregationRowsScope = "filtered"', async () => {
+      await render(
+        <TreeDataTest
+          rows={[
+            {
+              hierarchy: ['A'],
+            },
+            {
+              hierarchy: ['A', 'A'],
+            },
+            {
+              hierarchy: ['A', 'A', 'A'],
+              value: 1,
+            },
+            {
+              hierarchy: ['A', 'A', 'B'],
+              value: 1,
+            },
+          ]}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */, '1', '1']);
+      await act(async () =>
+        apiRef.current?.setFilterModel({
+          items: [{ field: 'value', operator: '=', value: 2 }],
+        }),
+      );
+
+      expect(getColumnValues(1)).to.deep.equal([]);
+    });
+
+    it('should apply filtering on the aggregated values for aggregationRowsScope = "all"', async () => {
+      await render(
+        <TreeDataTest
+          aggregationRowsScope="all"
+          rows={[
+            {
+              hierarchy: ['A'],
+            },
+            {
+              hierarchy: ['A', 'A'],
+            },
+            {
+              hierarchy: ['A', 'A', 'A'],
+              value: 1,
+            },
+            {
+              hierarchy: ['A', 'A', 'B'],
+              value: 1,
+            },
+          ]}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */, '1', '1']);
+      await act(async () =>
+        apiRef.current?.setFilterModel({
+          items: [{ field: 'value', operator: '=', value: 2 }],
+        }),
+      );
+
+      expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */]);
     });
   });
 

@@ -106,6 +106,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -135,7 +136,10 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
   /**
    * Handle pointer events for the rotate gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Find which element (if any) is being targeted
@@ -145,7 +149,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
     }
 
     // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement)) {
+    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
       if (this.isActive) {
         // If the gesture was active but now should be prevented, end it gracefully
         this.emitRotateEvent(targetElement, 'cancel', pointersArray, event);
@@ -260,7 +264,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit rotate-specific events with additional data

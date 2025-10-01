@@ -78,6 +78,7 @@ import {
   listViewStateInitializer,
   propsStateInitializer,
   rowReorderStateInitializer,
+  type GridConfiguration,
 } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -112,10 +113,15 @@ import {
   aiAssistantStateInitializer,
 } from '../hooks/features/aiAssistant/useGridAiAssistant';
 import { useGridSidebar, sidebarStateInitializer } from '../hooks/features/sidebar/useGridSidebar';
+import {
+  chartsIntegrationStateInitializer,
+  useGridChartsIntegration,
+} from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
   inProps: DataGridPremiumProcessedProps,
+  configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumProcessedProps>,
 ) => {
   const pivotPropsOverrides = useGridSelector(apiRef, gridPivotPropsOverridesSelector);
 
@@ -194,6 +200,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
+  useGridInitializeState(chartsIntegrationStateInitializer, apiRef, props);
 
   useGridVirtualizer(apiRef, props);
   useGridSidebar(apiRef, props);
@@ -208,9 +215,9 @@ export const useDataGridPremiumComponent = (
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
+  useGridRows(apiRef, props, configuration as GridConfiguration);
   useGridRowSpanning(apiRef, props);
-  useGridParamsApi(apiRef, props);
+  useGridParamsApi(apiRef, props, configuration as GridConfiguration);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
@@ -218,7 +225,7 @@ export const useDataGridPremiumComponent = (
   useGridEditing(apiRef, props);
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
+  useGridFilter(apiRef, props, configuration as GridConfiguration);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);
   useGridColumnReorder(apiRef, props);
@@ -243,6 +250,7 @@ export const useDataGridPremiumComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
   useGridAiAssistant(apiRef, props);
+  useGridChartsIntegration(apiRef, props);
   useGridPivotingExportState(apiRef);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.

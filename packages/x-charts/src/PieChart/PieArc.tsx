@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
@@ -22,6 +23,8 @@ export interface PieArcClasses {
    * Needs to be suffixed with the series ID: `.${pieArcClasses.series}-${seriesId}`.
    */
   series: string;
+  /** Styles applied to the focus indicator element. */
+  focusIndicator: string;
 }
 
 export type PieArcClassKey = keyof PieArcClasses;
@@ -32,6 +35,8 @@ interface PieArcOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  isFocused: boolean;
+  stroke?: string;
   classes?: Partial<PieArcClasses>;
 }
 
@@ -44,6 +49,7 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
   'highlighted',
   'faded',
   'series',
+  'focusIndicator',
 ]);
 
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
@@ -65,13 +71,11 @@ const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
-})<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
-  // Got to move stroke to an element prop instead of style.
-  stroke: (theme.vars || theme).palette.background.paper,
+})<{ ownerState: PieArcOwnerState }>({
   transitionProperty: 'opacity, fill, filter',
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
-}));
+});
 
 export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
@@ -88,12 +92,14 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
 
 const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
   const {
+    className,
     classes: innerClasses,
     color,
     dataIndex,
     id,
     isFaded,
     isHighlighted,
+    isFocused,
     onClick,
     cornerRadius,
     startAngle,
@@ -102,8 +108,12 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     outerRadius,
     paddingAngle,
     skipAnimation,
+    stroke: strokeProp,
     ...other
   } = props;
+
+  const theme = useTheme();
+  const stroke = strokeProp ?? (theme.vars || theme).palette.background.paper;
 
   const ownerState = {
     id,
@@ -112,6 +122,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     color,
     isFaded,
     isHighlighted,
+    isFocused,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -132,10 +143,11 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
-      className={classes.root}
+      className={clsx(classes.root, className)}
       fill={ownerState.color}
       opacity={ownerState.isFaded ? 0.3 : 1}
       filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      stroke={stroke}
       strokeWidth={1}
       strokeLinejoin="round"
       data-highlighted={ownerState.isHighlighted || undefined}
@@ -159,6 +171,7 @@ PieArc.propTypes = {
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
+  isFocused: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,

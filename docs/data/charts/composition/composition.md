@@ -190,7 +190,7 @@ This component defines a rectangular clip path that acts as a boundary.
 </ChartContainer>
 ```
 
-The following demo allows you to toggle clipping for scatter and line plots.
+The following demo lets you toggle clipping for scatter and line plots.
 Observe how line markers extend beyond the clip area, rendering on top of the axes.
 
 {{"demo": "LimitOverflow.js" }}
@@ -225,45 +225,30 @@ To add a legend, use the `<ChartsLegend />` component.
 
 :::warning
 The Charts Legend is an HTML element since v8.
-It must be rendered inside the Data Provider to get the data, but outside the Surface since it's not an SVG element.
+It must be rendered inside the Data Provider to get access to the data, but outside the Surface since it's not an SVG element.
 
 ```jsx
+// ✅ Correct
 <ChartDataProvider>
   <ChartsLegend />
   <ChartsSurface>{/* SVG components */}</ChartsSurface>
 </ChartDataProvider>
+
+// ❌ Incorrect
+<ChartContainer>
+  <ChartsLegend />
+</ChartContainer>
 ```
 
 :::
 
-See [HTML components](/x/react-charts/components/#html-components) documentation for more information.
-
-### Additional information
-
-To add a legend to your chart, you can use `<ChartsLegend />`.
-
-Most of the props are explained in the [legend page](/x/react-charts/legend/).
-The demos use the `slotProps.legend` object, but with composition, you can pass props directly to `<ChartsLegend />`.
-
-```jsx
-// With single component chart
-<BarChart
-  slotProps={{
-    legend: {
-      direction: 'horizontal',
-    }
-  }}
-/>
-
-// With composition
-<ChartContainer>
-  <ChartsLegend direction="horizontal" />
-</ChartContainer>
-```
+See [HTML components](/x/react-charts/components/#html-components) documentation for more information on how to use custom legends.
 
 ### Interaction
 
 You can also add interactive elements such as `<ChartsAxisHighlight />` and `<ChartsTooltip />`.
+
+{{"demo": "LegendTooltipComposition.js" }}
 
 :::info
 By default, the container listens to mouse events to keep track of where the mouse is located on the chart.

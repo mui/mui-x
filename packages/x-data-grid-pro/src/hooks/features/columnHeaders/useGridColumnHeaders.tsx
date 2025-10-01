@@ -40,8 +40,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   }, [classes]);
 };
 
-const filterItemsCache: Record<GridStateColDef['field'], GridFilterItem> = Object.create(null);
-
 export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
   const { headerGroupingMaxDepth, hasOtherElementInTabSequence } = props;
@@ -80,6 +78,10 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
 
   const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
+  const filterItemsCache = React.useRef<Record<GridStateColDef['field'], GridFilterItem>>(
+    Object.create(null),
+  ).current;
+
   const getFilterItem = React.useCallback(
     (colDef: GridStateColDef) => {
       const filterModelItem = filterModel?.items.find(
@@ -99,6 +101,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
       filterItemsCache[colDef.field] = defaultItem;
       return defaultItem;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [filterModel],
   );
 
@@ -137,13 +140,19 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
       const indexInSection = i;
       const sectionLength = renderedColumns.length;
 
-      const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+      const showLeftBorder = shouldCellShowLeftBorder(
+        pinnedPosition,
+        indexInSection,
+        rootProps.showColumnVerticalBorder,
+        rootProps.pinnedColumnsSectionSeparator,
+      );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
         indexInSection,
         sectionLength,
         rootProps.showColumnVerticalBorder,
         gridHasFiller,
+        rootProps.pinnedColumnsSectionSeparator,
       );
 
       filters.push(

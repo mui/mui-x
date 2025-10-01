@@ -207,6 +207,12 @@ const pages: MuiPage[] = [
             ],
           },
           {
+            pathname: '/x/react-data-grid/charts-integration',
+            plan: 'premium',
+            unstable: true,
+            title: 'Charts integration',
+          },
+          {
             pathname: '/x/react-data-grid/ai-assistant',
             plan: 'premium',
             newFeature: true,
@@ -241,6 +247,12 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/components/pivot-panel',
             title: 'Pivot Panel',
+            planned: true,
+            plan: 'premium',
+          },
+          {
+            pathname: '/x/react-data-grid/components/charts-panel',
+            title: 'Charts Panel',
             planned: true,
             plan: 'premium',
           },
@@ -501,6 +513,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
       { pathname: '/x/react-charts/quickstart', title: 'Quickstart' },
+      { pathname: '/x/react-charts/examples', title: 'Examples' },
       {
         pathname: '/x/react-chart-components',
         subheader: 'Components',
@@ -553,11 +566,16 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts-funnel',
             title: 'Funnel',
             plan: 'pro',
-            unstable: true,
             children: [
               { pathname: '/x/react-charts/funnel', title: 'Funnel overview' },
               { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
             ],
+          },
+          { pathname: '/x/react-charts/sankey', plan: 'pro', unstable: true },
+          {
+            pathname: '/x/react-charts/#planned-charts',
+            title: 'Future Components',
+            planned: true,
           },
           {
             pathname: '/x/react-charts/main-features',
@@ -584,7 +602,13 @@ const pages: MuiPage[] = [
                 title: 'Export',
                 plan: 'pro',
               },
-              { pathname: '/x/react-charts/toolbar', title: 'Toolbar', unstable: true },
+              { pathname: '/x/react-charts/toolbar', title: 'Toolbar' },
+              {
+                pathname: '/x/react-charts/data-grid-integration',
+                title: 'Data Grid integration',
+                plan: 'premium',
+                unstable: true,
+              },
             ],
           },
           {
@@ -609,6 +633,10 @@ const pages: MuiPage[] = [
                       { pathname: '/x/api/charts/radar-series', title: 'RadarSeries' },
                       { pathname: '/x/api/charts/scatter-series', title: 'ScatterSeries' },
                       {
+                        pathname: '/x/api/charts/legend-item-params',
+                        title: 'LegendItemParams',
+                      },
+                      {
                         pathname: '/x/api/charts/chart-image-export-options',
                         title: 'ChartImageExportOptions',
                       },
@@ -620,15 +648,18 @@ const pages: MuiPage[] = [
                   },
                 ],
               },
-            ],
-          },
-          {
-            pathname: '/x/react-charts-future',
-            subheader: 'Future components',
-            children: [
-              { pathname: '/x/react-charts/treemap', title: 'Treemap', planned: true },
-              { pathname: '/x/react-charts/sankey', plan: 'pro', planned: true },
-              { pathname: '/x/react-charts/gantt', plan: 'pro', planned: true },
+              {
+                pathname: '/x/react-charts/hooks-group',
+                title: 'Hooks',
+                children: [
+                  { pathname: '/x/react-charts/hooks', title: 'Overview' },
+                  { pathname: '/x/react-charts/hooks/use-series', title: 'useSeries' },
+                  { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
+                  { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
+                  { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
+                ],
+              },
+              { pathname: '/x/react-charts/plugins', title: 'Plugins' },
             ],
           },
         ],

@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PieArc, PieArcProps } from './PieArc';
+import { useTheme } from '@mui/material/styles';
+import { useFocusedItem } from '../hooks/useFocusedItem';
+import { PieArc, PieArcProps, pieArcClasses } from './PieArc';
 import {
   ComputedPieRadius,
   DefaultizedPieSeriesType,
@@ -74,6 +76,8 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...other
   } = props;
 
+  const theme = useTheme();
+
   const transformedData = useTransformData({
     innerRadius,
     outerRadius,
@@ -84,6 +88,9 @@ function PieArcPlot(props: PieArcPlotProps) {
     faded,
     data,
   });
+
+  const { dataIndex: focusedIndex = -1 } = useFocusedItem() ?? {};
+  const focusedItem = focusedIndex !== -1 ? transformedData[focusedIndex] : null;
 
   if (data.length === 0) {
     return null;
@@ -108,6 +115,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           dataIndex={index}
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
+          isFocused={item.isFocused}
           onClick={
             onItemClick &&
             ((event) => {
@@ -117,6 +125,27 @@ function PieArcPlot(props: PieArcPlotProps) {
           {...slotProps?.pieArc}
         />
       ))}
+      {/* Render the focus indicator last, so it can align nicely over all arcs */}
+      {focusedItem && (
+        <Arc
+          startAngle={focusedItem.startAngle}
+          endAngle={focusedItem.endAngle}
+          paddingAngle={focusedItem.paddingAngle}
+          innerRadius={focusedItem.innerRadius}
+          color={focusedItem.color}
+          outerRadius={focusedItem.outerRadius}
+          cornerRadius={focusedItem.cornerRadius}
+          skipAnimation
+          stroke={(theme.vars ?? theme).palette.text.primary}
+          id={id}
+          className={pieArcClasses.focusIndicator}
+          dataIndex={focusedIndex}
+          isFaded={false}
+          isHighlighted={false}
+          isFocused={false}
+          strokeWidth={3}
+        />
+      )}
     </g>
   );
 }
