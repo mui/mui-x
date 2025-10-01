@@ -17,6 +17,7 @@ import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
+import { useZoomOnTapAndDrag } from './gestureHooks/useZoomOnTapAndDrag';
 import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 import { initializeZoomData } from './initializeZoomData';
 
@@ -192,6 +193,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   useZoomOnWheel(pluginData, setZoomDataCallback);
 
   useZoomOnPinch(pluginData, setZoomDataCallback);
+
+  useZoomOnTapAndDrag(pluginData, setZoomDataCallback);
 
   const zoom = React.useCallback(
     (step: number) => {
