@@ -5,6 +5,7 @@ export type ZoomInteractionConfig = {
    * Defines the interactions that trigger zooming.
    * - `wheel`: Zooms in or out when the mouse wheel is scrolled.
    * - `pinch`: Zooms in or out when a pinch gesture is detected.
+   * - `tapAndDrag`: Zooms in or out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out.
    *
    * @default ['wheel', 'pinch']
    */
@@ -30,7 +31,7 @@ export type DefaultizedZoomInteractionConfig = {
   pan: Entry<PanInteraction>;
 };
 
-export type ZoomInteraction = WheelInteraction | PinchInteraction;
+export type ZoomInteraction = WheelInteraction | PinchInteraction | TapAndDragInteraction;
 export type PanInteraction = DragInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
@@ -89,6 +90,13 @@ export type PinchInteraction = Unpack<
 export type DragInteraction = Unpack<
   {
     type: 'drag';
+  } & AllModeProp &
+    AllKeysProp
+>;
+
+export type TapAndDragInteraction = Unpack<
+  {
+    type: 'tapAndDrag';
   } & AllModeProp &
     AllKeysProp
 >;

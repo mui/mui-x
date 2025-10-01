@@ -8,7 +8,7 @@ import {
   ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { PinchEvent } from '@mui/x-internal-gestures/core';
+import { type TapAndDragEvent } from '@mui/x-internal-gestures/core';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
@@ -19,7 +19,7 @@ import {
 } from './useZoom.utils';
 import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
-export const useZoomOnPinch = (
+export const useZoomOnTapAndDrag = (
   {
     store,
     instance,
@@ -29,33 +29,38 @@ export const useZoomOnPinch = (
 ) => {
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['pinch' as const]);
+  const config = useSelector(store, selectorZoomInteractionConfig, ['tapAndDrag' as const]);
 
-  const isZoomOnPinchEnabled = React.useMemo(
+  const isZoomOnTapAndDragEnabled = React.useMemo(
     () => (Object.keys(optionsLookup).length > 0 && config) || false,
     [optionsLookup, config],
   );
 
   React.useEffect(() => {
-    if (!isZoomOnPinchEnabled) {
+    if (!isZoomOnTapAndDragEnabled) {
       return;
     }
 
-    instance.updateZoomInteractionListeners('zoomPinch', {
+    instance.updateZoomInteractionListeners('zoomTapAndDrag', {
       requiredKeys: config!.requiredKeys,
+      pointerMode: config!.pointerMode,
+      pointerOptions: {
+        mouse: config!.mouse,
+        touch: config!.touch,
+      },
     });
-  }, [config, isZoomOnPinchEnabled, instance]);
+  }, [config, isZoomOnTapAndDragEnabled, instance]);
 
-  // Zoom on pinch
+  // Zoom on tap and drag
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !isZoomOnPinchEnabled) {
+    if (element === null || !isZoomOnTapAndDragEnabled) {
       return () => {};
     }
 
-    const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
-      // If the delta is 0, it means the pinch gesture is not valid.
-      if (event.detail.direction === 0) {
+    const rafThrottledCallback = rafThrottle((event: TapAndDragEvent) => {
+      // If the delta is 0, we didn't move
+      if (event.detail.deltaY === 0) {
         return;
       }
 
@@ -66,12 +71,12 @@ export const useZoomOnPinch = (
             return zoom;
           }
 
-          const isZoomIn = event.detail.direction > 0;
-          const scaleRatio = 1 + event.detail.deltaScale;
+          const isZoomIn = event.detail.deltaY > 0;
+          const scaleRatio = 1 + event.detail.deltaY / 100;
 
           const point = getSVGPoint(element, {
-            clientX: event.detail.centroid.x,
-            clientY: event.detail.centroid.y,
+            clientX: event.detail.initialCentroid.x,
+            clientY: event.detail.initialCentroid.y,
           });
 
           const centerRatio =
@@ -89,7 +94,7 @@ export const useZoomOnPinch = (
       });
     });
 
-    const zoomHandler = instance.addInteractionListener('zoomPinch', rafThrottledCallback);
+    const zoomHandler = instance.addInteractionListener('zoomTapAndDrag', rafThrottledCallback);
 
     return () => {
       zoomHandler.cleanup();
@@ -98,7 +103,7 @@ export const useZoomOnPinch = (
   }, [
     svgRef,
     drawingArea,
-    isZoomOnPinchEnabled,
+    isZoomOnTapAndDragEnabled,
     optionsLookup,
     store,
     instance,

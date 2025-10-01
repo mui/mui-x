@@ -6,7 +6,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 import * as sinon from 'sinon';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 
-describe.skipIf(isJSDOM)('<BarChartPro /> - ZoomInteractionConfig Keys and Modes', () => {
+describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
   const { render } = createRenderer();
 
   const barChartProps = {
