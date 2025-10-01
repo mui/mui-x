@@ -18,6 +18,7 @@ describe('Core - TimelineStore', () => {
         areEventsDraggable: false,
         areEventsResizable: false,
         eventColor: 'jade',
+        nowUpdatedEveryMinute: adapter.date(),
         showCurrentTimeIndicator: true,
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),

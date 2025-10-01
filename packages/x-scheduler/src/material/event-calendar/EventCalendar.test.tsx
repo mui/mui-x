@@ -4,8 +4,9 @@ import { screen } from '@mui/internal-test-utils';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import {
+  changeTo24HoursFormat,
+  changeToAmpmFormat,
   openPreferencesMenu,
-  toggleAmpmFormat,
   toggleShowWeekends,
   toggleShowWeekNumber,
 } from '../internals/utils/test-utils';
@@ -200,14 +201,14 @@ describe('EventCalendar', () => {
 
       // Disable AM/PM format
       await openPreferencesMenu(user);
-      await toggleAmpmFormat(user);
+      await changeTo24HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
 
       // Show AM/PM format again
       await openPreferencesMenu(user);
-      await toggleAmpmFormat(user);
+      await changeToAmpmFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
@@ -233,14 +234,14 @@ describe('EventCalendar', () => {
 
       // Disable AM/PM format
       await openPreferencesMenu(user);
-      await toggleAmpmFormat(user);
+      await changeTo24HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
 
       // Show AM/PM format again
       await openPreferencesMenu(user);
-      await toggleAmpmFormat(user);
+      await changeToAmpmFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
@@ -266,14 +267,14 @@ describe('EventCalendar', () => {
 
       // Disable AM/PM format
       await openPreferencesMenu(user);
-      await toggleAmpmFormat(user);
+      await changeTo24HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
 
       // Show AM/PM format again
       await openPreferencesMenu(user);
-      await toggleAmpmFormat(user);
+      await changeToAmpmFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);

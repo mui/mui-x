@@ -120,6 +120,6 @@ describe('<PreferencesMenu />', () => {
     expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(
       null,
     );
-    expect(screen.queryByRole('menuitemcheckbox', { name: /use am\/pm format/i })).to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: /time format/i })).to.equal(null);
   });
 });

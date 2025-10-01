@@ -21,7 +21,28 @@ export async function toggleShowWeekNumber(user) {
   await user.click(menuItem);
 }
 
-export async function toggleAmpmFormat(user) {
-  const menuItem = await screen.findByRole('menuitemcheckbox', { name: /use am\/pm format/i });
-  await user.click(menuItem);
+async function openTimeFormatSubmenu(user) {
+  const trigger = await screen.findByRole('menuitem', { name: /Time format/i });
+  await user.hover(trigger);
+  await screen.findByRole('group', { name: /Time format/i });
+}
+
+export async function changeTo24HoursFormat(user) {
+  await openTimeFormatSubmenu(user);
+
+  const h24Radio = screen.getByRole('menuitemradio', {
+    name: /24-hour \(13:00\)/i,
+  });
+
+  await user.click(h24Radio);
+}
+
+export async function changeToAmpmFormat(user) {
+  await openTimeFormatSubmenu(user);
+
+  const h12Radio = screen.getByRole('menuitemradio', {
+    name: /12-hour \(1:00 PM\)/i,
+  });
+
+  await user.click(h12Radio);
 }
