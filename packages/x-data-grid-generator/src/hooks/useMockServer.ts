@@ -317,7 +317,14 @@ export const useMockServer = <T extends GridGetRowsResponse>(
 
   const fetchRows = React.useCallback(
     async (requestUrl: string): Promise<T> => {
-      if (!requestUrl || !isDataReady) {
+      // wait until data is ready
+      while (!isDataReady) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => {
+          setTimeout(resolve, 100);
+        });
+      }
+      if (!requestUrl) {
         return sendEmptyResponse<T>();
       }
       const params = decodeParams(requestUrl);
