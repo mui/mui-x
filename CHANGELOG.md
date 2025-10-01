@@ -5,6 +5,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.13.1
+
+_Oct 1, 2025_
+
+- 🐛 Fix `@mui/x-charts-pro` failure on import due to missing `@mui/x-internals` release
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.13.1`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.13.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.13.1`.
+
+#### `@mui/x-data-grid-premium@8.13.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.13.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.12.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.12.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.13.1`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.13.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.13.1`, plus:
+
+- [charts-pro] Fix `@mui/x-charts-pro` failure on import due to missing `@mui/x-internals` release @bernardobelchior
+
+#### `@mui/x-charts-premium@8.13.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.13.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.13.1`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.13.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.13.1`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.12.0`
+
+Internal changes.
+
 ## 8.13.0
 
 _Oct 1, 2025_
