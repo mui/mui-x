@@ -17,6 +17,7 @@ export default function Recurrence() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
+        isSidePanelOpen={false}
       />
     </div>
   );

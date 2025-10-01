@@ -17,6 +17,7 @@ export default function FullEventCalendar() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
+        isSidePanelOpen={false}
       />
     </div>
   );

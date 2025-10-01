@@ -17,6 +17,7 @@ export default function AllDay() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
+        isSidePanelOpen={false}
       />
     </div>
   );
