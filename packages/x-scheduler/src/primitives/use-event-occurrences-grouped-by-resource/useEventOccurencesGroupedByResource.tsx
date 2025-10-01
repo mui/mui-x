@@ -78,8 +78,8 @@ export function innerGetEventOccurrencesGroupedByResource(
       occurrencesGroupedByResource.get(resourceId)!.push(occurrence);
     }
   }
-  const filteredResources = resources.filter((resources) =>
-    occurrencesGroupedByResource.has(resources.id),
+  const filteredResources = resources.filter((resource) =>
+    occurrencesGroupedByResource.has(resource.id),
   );
 
   // Sort by resource.name (localeCompare for stable alphabetical ordering).
