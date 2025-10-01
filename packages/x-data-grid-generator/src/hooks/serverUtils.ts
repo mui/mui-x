@@ -353,7 +353,7 @@ const computePivotAggregations = (
   pivotColumnKeys: string[],
   rows: GridValidRowModel[],
   visibleValues: any[],
-  columnsWithDefaultColDef: GridColDef[],
+  columnTypeMap: Map<string, GridColDef['type']>,
   groupId: string = 'root',
   columnGroupIdSeparator: string = '>->',
 ): Record<string, any> => {
@@ -375,7 +375,7 @@ const computePivotAggregations = (
 
       if (pivotValueConfig) {
         const availableAggregationFunctions = getAvailableAggregationFunctions(
-          columnsWithDefaultColDef.find(({ field }) => field === pivotValueConfig.field)?.type,
+          columnTypeMap.get(pivotValueConfig.field),
         );
         const aggregationFunction = availableAggregationFunctions.get(pivotValueConfig.aggFunc);
         if (aggregationFunction) {
@@ -835,6 +835,12 @@ export const processPivotingRows = (
   const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
   const visibleValues = pivotModel.values.filter((value) => !value.hidden);
 
+  // Create column lookup map for O(1) access
+  const columnLookup = new Map<string, GridColDef>();
+  for (const column of columnsWithDefaultColDef) {
+    columnLookup.set(column.field, column);
+  }
+
   if (visibleRows.length === 0) {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -864,7 +870,7 @@ export const processPivotingRows = (
 
       for (let i = 0; i < visibleColumns.length; i += 1) {
         const { field: colGroupField } = visibleColumns[i];
-        const column = columnsWithDefaultColDef.find(({ field }) => field === colGroupField);
+        const column = columnLookup.get(colGroupField);
         if (!column) {
           continue;
         }
@@ -882,7 +888,7 @@ export const processPivotingRows = (
       // Create pivot columns for each value field within this column group
       visibleValues.forEach((pivotValue) => {
         let valueKey = pivotValue.field;
-        const column = columnsWithDefaultColDef.find(({ field }) => field === valueKey);
+        const column = columnLookup.get(valueKey);
         if (!column) {
           return;
         }
@@ -952,7 +958,7 @@ export const processPivotingRows = (
     rowsWithPaths = filteredRows.reduce<GridValidRowModel[]>((acc, row) => {
       const partialPath = visibleRows.map((pivotRow) => {
         const field = pivotRow.field;
-        const colDef = columnsWithDefaultColDef.find(({ field: f }) => f === field);
+        const colDef = columnLookup.get(field);
         if (colDef?.groupingValueGetter) {
           return colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef);
         }
@@ -1001,6 +1007,13 @@ export const processPivotingRows = (
     childRows = findTreeDataRowChildren(filteredRowsWithGroups, queryOptions.groupKeys || []);
   }
 
+  const columnTypeMap = new Map<string, GridColDef['type']>();
+  for (const column of columnsWithDefaultColDef) {
+    if (column.type) {
+      columnTypeMap.set(column.field, column.type);
+    }
+  }
+
   let childRowsWithDescendantCounts = childRows.map((row) => {
     const descendants = findTreeDataRowChildren(
       filteredRowsWithGroups,
@@ -1025,7 +1038,7 @@ export const processPivotingRows = (
         pivotColumnKeys,
         descendants,
         visibleValues,
-        columnsWithDefaultColDef,
+        columnTypeMap,
         row.id,
         columnGroupIdSeparator,
       );
@@ -1084,7 +1097,7 @@ export const processPivotingRows = (
         (row) => typeof row.id !== 'string' || !row.id.startsWith('auto-generated-parent-'),
       ),
       visibleValues,
-      columnsWithDefaultColDef,
+      columnTypeMap,
       'root',
       columnGroupIdSeparator,
     );
