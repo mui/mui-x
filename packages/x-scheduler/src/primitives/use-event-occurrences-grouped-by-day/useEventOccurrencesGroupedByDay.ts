@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { CalendarEvent, CalendarEventOccurrence, CalendarProcessedDate } from '../models';
 import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from '../utils/event-utils';
-import { useAdapter } from '../utils/adapter/useAdapter';
-import { useEventCalendarStoreContext } from '../utils/useEventCalendarStoreContext';
+import { useAdapter } from '../use-adapter/useAdapter';
+import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 import { selectors } from '../use-event-calendar';
-import { Adapter } from '../utils/adapter/types';
+import { Adapter } from '../use-adapter/types';
 
 /**
  * Gets all the event occurrences for the given days.

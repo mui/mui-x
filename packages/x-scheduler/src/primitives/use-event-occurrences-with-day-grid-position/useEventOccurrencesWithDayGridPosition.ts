@@ -6,7 +6,7 @@ import {
   CalendarProcessedDate,
 } from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { useAdapter } from '../utils/adapter/useAdapter';
+import { useAdapter } from '../use-adapter/useAdapter';
 import { diffIn } from '../utils/date-utils';
 
 /**

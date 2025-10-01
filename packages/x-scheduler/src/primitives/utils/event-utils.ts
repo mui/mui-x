@@ -4,7 +4,7 @@ import {
   CalendarProcessedDate,
   CalendarEventOccurrence,
 } from '../models';
-import { Adapter } from './adapter/types';
+import { Adapter } from '../use-adapter/types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurrence-utils';
 
 export const EVENT_CREATION_PRECISION_MINUTE = 30;

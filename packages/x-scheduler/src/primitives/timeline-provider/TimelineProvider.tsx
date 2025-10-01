@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TimelineParameters, useTimeline } from '../use-timeline';
-import { TimelineStoreContext } from '../utils/useTimelineStoreContext';
-import { SchedulerStoreContext } from '../utils/useSchedulerStoreContext';
+import { TimelineStoreContext } from '../use-timeline-store-context/useTimelineStoreContext';
+import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 
 export function TimelineProvider(props: TimelineProvider.Props) {
   const { children, ...parameters } = props;

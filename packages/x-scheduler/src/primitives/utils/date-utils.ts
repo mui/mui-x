@@ -1,5 +1,5 @@
 import { SchedulerValidDate } from '../models';
-import { Adapter } from './adapter/types';
+import { Adapter } from '../use-adapter/types';
 
 export function mergeDateAndTime(
   adapter: Adapter,

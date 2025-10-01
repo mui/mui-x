@@ -4,13 +4,13 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
-import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { useInitializeView } from '../../primitives/utils/useInitializeView';
+import { useDayList } from '../../primitives/use-day-list';
+import { useAdapter } from '../../primitives/use-adapter';
+import { useEventCalendarView } from '../../primitives/use-event-calendar-view';
 import { MonthViewProps } from './MonthView.types';
-import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../primitives/use-event-calendar-store-context';
 import { selectors } from '../../primitives/use-event-calendar';
-import { useWeekList } from '../../primitives/use-week-list/useWeekList';
+import { useWeekList } from '../../primitives/use-week-list';
 import { CalendarGrid } from '../../primitives/calendar-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
@@ -18,7 +18,6 @@ import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import './MonthView.css';
 
-const adapter = getAdapter();
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
 const EVENT_HEIGHT = 18;
@@ -35,6 +34,7 @@ export const MonthView = React.memo(
     const cellRef = React.useRef<HTMLDivElement>(null);
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
+    const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
     const preferences = useStore(store, selectors.preferences);
     const visibleDate = useStore(store, selectors.visibleDate);
@@ -56,7 +56,7 @@ export const MonthView = React.memo(
 
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
-    useInitializeView(() => ({
+    useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addMonths(adapter.startOfMonth(date), delta),
     }));

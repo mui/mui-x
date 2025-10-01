@@ -5,13 +5,13 @@ import { CalendarEventOccurrenceWithTimePosition } from '../../../../primitives'
 import { CalendarGrid } from '../../../../primitives/calendar-grid';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
-import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { useAdapter } from '../../../../primitives/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/use-event-occurrences-with-timeline-position';
 import { EventPopoverTrigger } from '../event-popover';
-import { SchedulerValidDate } from '../../../../primitives/models/date';
+import { SchedulerValidDate } from '../../../../primitives/models';
 import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 import {
   EVENT_CREATION_DEFAULT_LENGTH_MINUTE,

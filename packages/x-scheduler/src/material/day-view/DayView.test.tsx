@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { spy } from 'sinon';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { getAdapter } from '@mui/x-scheduler/primitives/use-adapter';
 
 describe('<DayView />', () => {
   const { render } = createSchedulerRenderer();

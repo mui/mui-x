@@ -8,7 +8,7 @@ import {
   RecurringEventUpdatedProperties,
   SchedulerValidDate,
 } from '../../models';
-import { Adapter } from '../adapter/types';
+import { Adapter } from '../../use-adapter/types';
 
 export interface SchedulerState {
   /**

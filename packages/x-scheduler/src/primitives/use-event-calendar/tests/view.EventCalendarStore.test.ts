@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
-import { SchedulerValidDate } from '@mui/x-scheduler/primitives/models/date';
+import { SchedulerValidDate } from '@mui/x-scheduler/primitives/models';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { getAdapter } from '../../utils/adapter/getAdapter';
+import { getAdapter } from '../../use-adapter';
 
 const DEFAULT_PARAMS = { events: [] };
 

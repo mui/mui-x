@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useExtractTimelineParameters, useTimeline } from '../../primitives/use-timeline';
-import { TimelineStoreContext } from '../../primitives/utils/useTimelineStoreContext';
-import { SchedulerStoreContext } from '../../primitives/utils/useSchedulerStoreContext';
+import { TimelineStoreContext } from '../../primitives/use-timeline-store-context';
+import { SchedulerStoreContext } from '../../primitives/use-scheduler-store-context';
 import { TimelineProps } from './Timeline.types';
 import '../index.css';
 

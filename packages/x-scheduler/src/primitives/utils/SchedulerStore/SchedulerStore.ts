@@ -19,7 +19,7 @@ import {
   SchedulerModelUpdater,
   RecurringUpdateEventScope,
 } from './SchedulerStore.types';
-import { Adapter } from '../adapter/types';
+import { Adapter } from '../../use-adapter/types';
 import { applyRecurringUpdateFollowing } from '../recurrence-utils';
 import { selectors } from './SchedulerStore.selectors';
 import { shouldUpdateOccurrencePlaceholder } from './SchedulerStore.utils';

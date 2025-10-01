@@ -4,16 +4,14 @@ import clsx from 'clsx';
 import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
+import { useAdapter } from '../../../../../primitives/use-adapter';
+import { selectors } from '../../../../../primitives/use-event-calendar';
+import { useEventCalendarStoreContext } from '../../../../../primitives/use-event-calendar-store-context';
 import { TimeGridEventProps } from './TimeGridEvent.types';
-import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
 import { CalendarGrid } from '../../../../../primitives/calendar-grid';
 import { getColorClassName } from '../../../utils/color-utils';
-import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
 import './TimeGridEvent.css';
 import '../index.css';
-
-const adapter = getAdapter();
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
@@ -23,7 +21,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   const id = useId(idProp);
   const store = useEventCalendarStoreContext();
-
+  const adapter = useAdapter();
   const isRecurring = Boolean(occurrence.rrule);
   const isDraggable = useStore(store, selectors.isEventDraggable);
   const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'time-grid');

@@ -17,7 +17,7 @@ import {
   EventPopoverProviderProps,
   EventPopoverTriggerProps,
 } from './EventPopover.types';
-import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { useAdapter } from '../../../../primitives/use-adapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import {
@@ -27,7 +27,7 @@ import {
   SchedulerValidDate,
 } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
 import './EventPopover.css';
 import {
   buildRecurrencePresets,

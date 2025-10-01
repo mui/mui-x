@@ -5,7 +5,7 @@ import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler/prim
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { getAdapter } from '@mui/x-scheduler/primitives/use-adapter';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';

@@ -7,7 +7,7 @@ import { spy } from 'sinon';
 import { MonthView } from '@mui/x-scheduler/material/month-view';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { EventCalendar } from '../event-calendar';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { getAdapter } from '../../primitives/use-adapter';
 
 const events: CalendarEvent[] = [
   {

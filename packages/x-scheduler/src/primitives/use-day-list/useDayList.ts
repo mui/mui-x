@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { isWeekend } from '../utils/date-utils';
 import { CalendarProcessedDate, SchedulerValidDate } from '../models';
-import { useAdapter } from '../utils/adapter/useAdapter';
+import { useAdapter } from '../use-adapter/useAdapter';
 import { processDate } from '../utils/event-utils';
 
 export function useDayList(): useDayList.ReturnValue {

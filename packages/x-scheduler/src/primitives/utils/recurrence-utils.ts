@@ -1,4 +1,4 @@
-import { Adapter } from './adapter/types';
+import { Adapter } from '../use-adapter/types';
 import {
   ByDayCode,
   ByDayValue,

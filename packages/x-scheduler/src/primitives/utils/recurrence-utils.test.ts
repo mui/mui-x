@@ -27,7 +27,7 @@ import {
 } from './recurrence-utils';
 import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
-import { Adapter } from './adapter/types';
+import { Adapter } from '../use-adapter/types';
 
 describe('recurrence-utils', () => {
   const adapter = getAdapter();

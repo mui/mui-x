@@ -6,7 +6,7 @@ import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/material/week-view';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
+import { getAdapter } from '@mui/x-scheduler/primitives/use-adapter';
 
 const allDayEvents = [
   {
