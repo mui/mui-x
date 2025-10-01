@@ -12,14 +12,17 @@ _Oct 1, 2025_
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The chart zoom now supports the `tapAndDrag` gesture. Zoom in/out by tapping twice and dragging vertically.
+- ➡️ Data Grid grouping rows now persist their expansion state when the rows are updated.
+- 📜 Updated Data Grid vertical scrollbar to include pinned rows and aggregation sections.
+- 📌 Improved the appearance of [pinned columns](https://mui.com/x/react-data-grid/column-pinning/#pinned-columns-appearance) and [pinned rows](https://mui.com/x/react-data-grid/row-pinning/#pinned-rows-appearance) sections in the Data Grid.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 Special thanks go out to the community members for their valuable contributions:
-@arminmeh, @mapache-salvaje, @sai6855
+@sai6855
 
 The following are all team members who have contributed to this release:
-@alexfauquette, @bernardobelchior, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @KenanYusuf, @MBilalShafi, @mnajdova, @rita-codes, @siriwatknp
+@alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @KenanYusuf, @mapache-salvaje, @MBilalShafi, @mnajdova, @rita-codes, @siriwatknp
 
 ### Data Grid
 
@@ -27,7 +30,7 @@ The following are all team members who have contributed to this release:
 
 - [DataGrid] Add scroll shadows and fix scrollbar overlap (#16476) @KenanYusuf
 - [DataGrid] Fix row spanning stale state issue (#19733) @MBilalShafi
-- [DataGrid] Fix toolbar slotProps not being applied (#19769) @sai6855
+- [DataGrid] Fix toolbar `slotProps` not being applied (#19769) @sai6855
 - [DataGrid] Skip calling `fetchRows()` when strategy is not initialized (#19728) @MBilalShafi
 
 #### `@mui/x-data-grid-pro@8.13.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -71,6 +74,31 @@ Same changes as in `@mui/x-date-pickers@8.12.0`.
 
 Same changes as in `@mui/x-charts@8.13.0`, plus:
 
+Charts now allow fine-grained control for zoom interactions
+
+```jsx
+// default values
+<BarChartPro
+  zoomInteractionConfig={{
+    // Enable both wheel and pinch zoom
+    zoom: ['wheel', 'onPinch'],
+    // Enable drag panning
+    pan: ['drag'],
+  }}
+/>
+
+// custom (no pinch)
+<BarChartPro
+  zoomInteractionConfig={{
+    // Only zoom when Control key is pressed
+    zoom: [{ type: 'wheel', keys: ['Control'] }],
+    // Only pan when Shift key is pressed
+    pan: [{ type: 'drag', keys: ['Shift'] }],
+  }}
+/>
+```
+
+- [charts-pro] Allow zoom interactions to be configured (#18646) @JCQuintas
 - [charts-pro] Fix zoom preview having wrong domain in some cases (#19723) @bernardobelchior
 
 #### `@mui/x-charts-premium@8.13.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
@@ -84,7 +112,7 @@ Same changes as in `@mui/x-charts-pro@8.13.0`.
 - [tree view] Export the `apiRef` type of each Tree View component (#19543) @flaviendelangle
 - [tree view] Fix indeterminate checkbox state (#19544) @flaviendelangle
 - [tree view] Improve the lazy loading initial expansion (#19284) @flaviendelangle
-- [tree view] Use Base UI utils whenever possible (#19502) @flaviendelangle
+- [tree view] Use Base UI utils whenever possible (#19502) @flaviendelangle
 
 #### `@mui/x-tree-view-pro@8.13.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
