@@ -11,7 +11,7 @@ import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
-import { DayGrid } from '../../primitives/day-grid';
+import { CalendarGrid } from '../../primitives/calendar-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
@@ -81,7 +81,7 @@ export const MonthView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          <DayGrid.Root className="MonthViewRoot">
+          <CalendarGrid.Root className="MonthViewRoot">
             <div
               className={clsx(
                 'MonthViewHeader',
@@ -115,7 +115,7 @@ export const MonthView = React.memo(
                 />
               ))}
             </div>
-          </DayGrid.Root>
+          </CalendarGrid.Root>
         </EventPopoverProvider>
       </div>
     );

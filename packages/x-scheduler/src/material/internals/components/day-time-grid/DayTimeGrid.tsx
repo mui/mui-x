@@ -8,8 +8,7 @@ import { useEventOccurrencesGroupedByDay } from '../../../../primitives/use-even
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { CalendarProcessedDate } from '../../../../primitives/models';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
-import { TimeGrid } from '../../../../primitives/time-grid';
-import { DayGrid } from '../../../../primitives/day-grid';
+import { CalendarGrid } from '../../../../primitives/calendar-grid';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { diffIn, isWeekend } from '../../../../primitives/utils/date-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
@@ -93,7 +92,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 
   return (
-    <div
+    <CalendarGrid.Root
       ref={handleRef}
       className={clsx('DayTimeGridContainer', 'mui-x-scheduler', className)}
       {...other}
@@ -126,7 +125,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             ))}
           </div>
         </div>
-        <DayGrid.Root
+        <div
           ref={allDayHeaderWrapperRef}
           className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
           data-weekend={lastIsWeekend ? '' : undefined}
@@ -138,7 +137,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           >
             {translations.allDay}
           </div>
-          <DayGrid.Row
+          <CalendarGrid.DayRow
             start={start}
             end={end}
             className="DayTimeGridAllDayEventsRow"
@@ -148,11 +147,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             {occurrences.days.map((day) => (
               <DayGridCell key={day.key} day={day} row={occurrences} />
             ))}
-          </DayGrid.Row>
+          </CalendarGrid.DayRow>
           <div className="ScrollablePlaceholder" />
-        </DayGrid.Root>
-        <TimeGrid.Root className="DayTimeGridRoot">
-          <TimeGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
+        </div>
+        <div className="DayTimeGridRoot">
+          <CalendarGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
             <div className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">
                 {/* TODO: Handle DST days where there are not exactly 24 hours */}
@@ -187,9 +186,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </div>
             </div>
-          </TimeGrid.ScrollableContent>
-        </TimeGrid.Root>
+          </CalendarGrid.ScrollableContent>
+        </div>
       </EventPopoverProvider>
-    </div>
+    </CalendarGrid.Root>
   );
 });
