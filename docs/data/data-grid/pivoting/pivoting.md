@@ -114,6 +114,10 @@ const columns: GridColDef[] = [{ field: 'id', pivotable: false }];
 In pivot mode, it's often useful to group data by a year or quarter.
 The Data Grid automatically generates year and quarter columns for each **Date** column for this purpose.
 
+:::success
+Use [pivotingColDef()](/x/api/data-grid/data-grid-premium/#data-grid-premium-prop-pivotingColDef) to customize derived columns definition.
+:::
+
 For example, the sales dataset used throughout the examples has a **Quarter** column.
 But in a real-world dataset, each sales record would typically have a precise **Transaction Date** field, as in the following demo.
 
