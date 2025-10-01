@@ -302,6 +302,45 @@ export const useGridRows = (
     [apiRef],
   );
 
+  const expandAllRows = React.useCallback<GridRowProApi['expandAllRows']>(() => {
+    const tree = { ...gridRowTreeSelector(apiRef) };
+
+    const traverse = (nodeId: GridRowId) => {
+      const node = tree[nodeId];
+      if (node?.type === 'group') {
+        tree[nodeId] = { ...node, childrenExpanded: true };
+        node.children.forEach(traverse);
+      }
+    };
+    traverse(GRID_ROOT_GROUP_ID);
+
+    apiRef.current.setState((state) => ({
+      ...state,
+      rows: { ...state.rows, tree },
+    }));
+    apiRef.current.publishEvent('rowExpansionChange', tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+  }, [apiRef]);
+
+  const collapseAllRows = React.useCallback<GridRowProApi['collapseAllRows']>(() => {
+    const tree = { ...gridRowTreeSelector(apiRef) };
+
+    const traverse = (nodeId: GridRowId) => {
+      const node = tree[nodeId];
+      if (node?.type === 'group') {
+        tree[nodeId] = { ...node, childrenExpanded: false };
+        node.children.forEach(traverse);
+      }
+    };
+    traverse(GRID_ROOT_GROUP_ID);
+
+    apiRef.current.setState((state) => ({
+      ...state,
+      rows: { ...state.rows, tree },
+    }));
+
+    apiRef.current.publishEvent('rowExpansionChange', tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+  }, [apiRef]);
+
   const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
     (id) => (gridRowNodeSelector(apiRef, id) as any) ?? null,
     [apiRef],
@@ -455,6 +494,8 @@ export const useGridRows = (
     setRowIndex,
     setRowChildrenExpansion,
     getRowGroupChildren,
+    expandAllRows,
+    collapseAllRows,
   };
 
   const rowProPrivateApi: GridRowProPrivateApi = {
