@@ -32,11 +32,15 @@ describe('useAnimate', () => {
   });
 
   it('starts animating from initial props', async () => {
+    let providedProps: { width: number } | null = null;
     function TestComponent() {
-      const [ref] = useAnimateInternal(
+      const [ref, props] = useAnimateInternal(
         { width: 100 },
         { initialProps: { width: 0 }, createInterpolator: interpolateWidth, applyProps },
       );
+
+      // eslint-disable-next-line react-compiler/react-compiler
+      providedProps = props;
 
       return (
         <svg>
@@ -47,6 +51,7 @@ describe('useAnimate', () => {
 
     render(<TestComponent />);
 
+    expect(providedProps).to.deep.equal({ width: 0 });
     await waitFor(() => {
       expect(lastCallWidth()).to.be.equal(100);
     });
@@ -87,11 +92,15 @@ describe('useAnimate', () => {
   });
 
   it('animates from current state to new props if props change while animating', async () => {
+    let providedProps: { width: number } | null = null;
     function TestComponent({ width }: { width: number }) {
-      const [ref] = useAnimateInternal(
+      const [ref, props] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 1000 } },
       );
+
+      // eslint-disable-next-line react-compiler/react-compiler
+      providedProps = props;
 
       return (
         <svg>
@@ -101,6 +110,7 @@ describe('useAnimate', () => {
     }
 
     const { rerender } = render(<TestComponent width={2000} />);
+    expect(providedProps).to.deep.equal({ width: 1000 });
     expect(callCount()).to.be.equal(0);
 
     await waitNextFrame();
@@ -112,6 +122,8 @@ describe('useAnimate', () => {
     expect(lastCallWidth()).to.be.lessThan(2000);
 
     rerender(<TestComponent width={0} />);
+    expect(providedProps!.width).to.be.greaterThan(1000);
+    expect(providedProps!.width).to.be.lessThan(2000);
 
     await waitNextFrame();
 
