@@ -33,7 +33,7 @@ describe('useAnimate', () => {
 
   it('starts animating from initial props', async () => {
     function TestComponent() {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width: 100 },
         { initialProps: { width: 0 }, createInterpolator: interpolateWidth, applyProps },
       );
@@ -57,7 +57,7 @@ describe('useAnimate', () => {
 
   it('animates from current props to new props', async () => {
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps },
       );
@@ -88,7 +88,7 @@ describe('useAnimate', () => {
 
   it('animates from current state to new props if props change while animating', async () => {
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 1000 } },
       );
@@ -131,7 +131,7 @@ describe('useAnimate', () => {
       width: number;
       skipAnimation?: boolean;
     }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -170,7 +170,7 @@ describe('useAnimate', () => {
 
   it('does not start animation if `skip` is true from the beginning', async () => {
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -197,7 +197,7 @@ describe('useAnimate', () => {
 
   it('resumes animation if `skip` becomes false after having been true', async () => {
     function TestComponent({ width, skip }: { width: number; skip: boolean }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -244,7 +244,7 @@ describe('useAnimate', () => {
 
     function TestComponent({ width }: { width: number }) {
       const [mountPath, setMountPath] = React.useState(true);
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 0 } },
       );
@@ -283,7 +283,7 @@ describe('useAnimate', () => {
 
   it('stops animation when the hook is unmounted', async () => {
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 0 } },
       );
