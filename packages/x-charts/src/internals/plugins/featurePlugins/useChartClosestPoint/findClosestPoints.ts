@@ -53,10 +53,12 @@ export function findClosestPoints(
           return vmrx * vmrx + vmry * vmry;
         };
 
-  const pointX =
-    xZoomStart + ((svgPointX - drawingArea.left) / drawingArea.width) * (xZoomEnd - xZoomStart);
-  const pointY =
-    yZoomStart + (1 - (svgPointY - drawingArea.top) / drawingArea.height) * (yZoomEnd - yZoomStart);
+  const isXIncreasing = xScale.range()[1] > xScale.range()[0];
+  const isYIncreasing = yScale.range()[1] > yScale.range()[0];
+  const xRatio = (svgPointX - drawingArea.left) / drawingArea.width;
+  const yRatio = (svgPointY - drawingArea.top) / drawingArea.height;
+  const pointX = xZoomStart + (isXIncreasing ? xRatio : 1 - xRatio) * (xZoomEnd - xZoomStart);
+  const pointY = yZoomStart + (isYIncreasing ? yRatio : 1 - yRatio) * (yZoomEnd - yZoomStart);
 
   return flatbush.neighbors(
     pointX,

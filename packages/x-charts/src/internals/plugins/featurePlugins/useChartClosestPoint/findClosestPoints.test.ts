@@ -204,4 +204,37 @@ describe('findClosestPoints', () => {
       });
     });
   });
+
+  describe('reversed axes', () => {
+    it('finds the closest point', () => {
+      const svgPoint = { x: 500, y: 500 };
+      const seriesData = [
+        { x: 40, y: 10 },
+        { x: 40, y: 999 },
+      ];
+      const xScale = scaleLinear()
+        .domain([0, 100])
+        .range([drawingArea.left, drawingArea.left + drawingArea.width].reverse());
+      const yScale = scaleLog()
+        .domain([1, 10_000])
+        .range([drawingArea.top, drawingArea.top + drawingArea.height].reverse());
+      const flatbush = prepareFlatbush(seriesData, xScale, yScale);
+
+      const closestPoint = findClosestPoints(
+        flatbush,
+        drawingArea,
+        seriesData,
+        xScale,
+        yScale,
+        noZoom.start, // x
+        noZoom.end, // x
+        noZoom.start, // y
+        noZoom.end, // y
+        svgPoint.x,
+        svgPoint.y,
+      );
+
+      expect(closestPoint).to.deep.eq([1]);
+    });
+  });
 });

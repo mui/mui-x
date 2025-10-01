@@ -75,7 +75,8 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         return 'outside-chart';
       }
 
-      let closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined;
+      let closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined =
+        undefined;
 
       for (const seriesId of seriesOrder ?? []) {
         const aSeries = (series ?? {})[seriesId];
@@ -120,12 +121,12 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         }
 
         const point = aSeries.data[closestPointIndex];
-        const scaledX = xAxis[xAxisId].scale(point.x);
-        const scaledY = yAxis[yAxisId].scale(point.y);
+        const scaledX = xScale(point.x);
+        const scaledY = yScale(point.y);
 
         const distSq = (scaledX! - svgPoint.x) ** 2 + (scaledY! - svgPoint.y) ** 2;
 
-        if (closestPoint === undefined || distSq < closestPoint?.distanceSq) {
+        if (closestPoint === undefined || distSq < closestPoint.distanceSq) {
           closestPoint = {
             dataIndex: closestPointIndex,
             seriesId,
