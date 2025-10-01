@@ -12,10 +12,21 @@ _Oct 1, 2025_
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The chart zoom now supports the `tapAndDrag` gesture. Zoom in/out by tapping twice and dragging vertically.
-- 🔎 The chart now allow fine-grained control for zoom interactions
+- 🔎 Charts now allow [fine-grained control for zoom interactions](https://mui.com/x/react-charts/zoom-and-pan/#zoom-interactions-configuration).
+  ```jsx
+  <BarChartPro
+    zoomInteractionConfig={{
+      // Only zoom when Control key is pressed
+      zoom: [{ type: 'wheel', keys: ['Control'] }],
+      // Only pan when Shift key is pressed
+      pan: [{ type: 'drag', keys: ['Shift'] }],
+    }}
+  />
+  ```
 - ➡️ Data Grid grouping rows now persist their expansion state when the rows are updated.
 - 📜 Updated Data Grid vertical scrollbar to include pinned rows and aggregation sections.
 - 📌 Improved the appearance of [pinned columns](https://mui.com/x/react-data-grid/column-pinning/#pinned-columns-appearance) and [pinned rows](https://mui.com/x/react-data-grid/row-pinning/#pinned-rows-appearance) sections in the Data Grid.
+- 🚀 Tree View now fetches the children of expanded items on mount when using lazy loading.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -69,35 +80,10 @@ Same changes as in `@mui/x-date-pickers@8.12.0`.
 - [charts] Make axis highlight reflect the keyboard interaction (#19631) @alexfauquette
 - [charts] Prevent horizontal scroll on keyboard navigation (#19704) @alexfauquette
 - [charts] Simplify gestures by removing bindings (#19767) @JCQuintas
-- [charts][docs] Revise the Axis doc (DX-38) (#19052) @mapache-salvaje
 
 #### `@mui/x-charts-pro@8.13.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@8.13.0`, plus:
-
-Charts now allow fine-grained control for zoom interactions
-
-```jsx
-// default values
-<BarChartPro
-  zoomInteractionConfig={{
-    // Enable both wheel and pinch zoom
-    zoom: ['wheel', 'onPinch'],
-    // Enable drag panning
-    pan: ['drag'],
-  }}
-/>
-
-// custom (no pinch)
-<BarChartPro
-  zoomInteractionConfig={{
-    // Only zoom when Control key is pressed
-    zoom: [{ type: 'wheel', keys: ['Control'] }],
-    // Only pan when Shift key is pressed
-    pan: [{ type: 'drag', keys: ['Shift'] }],
-  }}
-/>
-```
 
 - [charts-pro] Allow zoom interactions to be configured (#18646) @JCQuintas
 - [charts-pro] Fix zoom preview having wrong domain in some cases (#19723) @bernardobelchior
@@ -129,6 +115,7 @@ Internal changes.
 
 - [docs] Add a recipe to customize editing component with Autocomplete (#19651) @siriwatknp
 - [docs] Refine the electricity scatter tooltip (#19689) @alexfauquette
+- [docs] Revise the Axis doc (#19052) @mapache-salvaje
 - [docs] Remove reference to nonexistent `FocusedMark` API page (#19773) @bernardobelchior
 
 ### Core
