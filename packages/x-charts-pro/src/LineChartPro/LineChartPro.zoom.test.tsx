@@ -419,4 +419,93 @@ describe.skipIf(isJSDOM)('<LineChartPro /> - Zoom', () => {
     // When the issue happens, the ticks are gone.
     expect(getAxisTickValues('x', container).length).toBeGreaterThan(0);
   });
+
+  it('should pan on press and drag', async () => {
+    const onZoomChange = sinon.spy();
+    const { user, container } = render(
+      <LineChartPro
+        {...lineChartProps}
+        initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
+        onZoomChange={onZoomChange}
+        zoomInteractionConfig={{
+          pan: ['pressAndDrag'],
+        }}
+      />,
+      options,
+    );
+
+    expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
+
+    const svg = container.querySelector('svg')!;
+
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target: svg,
+        coords: { x: 15, y: 20 },
+      },
+    ]);
+
+    await act(async () => new Promise((r) => setTimeout(r, 510))); // wait for press delay
+
+    // we drag one position so C should be visible
+    await user.pointer([
+      {
+        target: svg,
+        coords: { x: 135, y: 20 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target: svg,
+        coords: { x: 135, y: 20 },
+      },
+    ]);
+    // Wait the animation frame
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.equal(1);
+    expect(getAxisTickValues('x', container)).to.deep.equal(['C']);
+  });
+
+  it('should not pan on press and drag if there is no press', async () => {
+    const onZoomChange = sinon.spy();
+    const { user, container } = render(
+      <LineChartPro
+        {...lineChartProps}
+        initialZoom={[{ axisId: 'x', start: 75, end: 100 }]}
+        onZoomChange={onZoomChange}
+        zoomInteractionConfig={{
+          pan: ['pressAndDrag'],
+        }}
+      />,
+      options,
+    );
+
+    expect(getAxisTickValues('x', container)).to.deep.equal(['D']);
+
+    const svg = container.querySelector('svg')!;
+
+    // we drag one position so C should be visible
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target: svg,
+        coords: { x: 15, y: 20 },
+      },
+      {
+        target: svg,
+        coords: { x: 135, y: 20 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target: svg,
+        coords: { x: 135, y: 20 },
+      },
+    ]);
+    // Wait the animation frame
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.equal(0);
+    expect(getAxisTickValues('x', container)).to.deep.equal(['D']); // no change
+  });
 });
