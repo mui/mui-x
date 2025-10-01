@@ -13,3 +13,4 @@ export { getDistance } from './getDistance';
 export { getVelocity } from './getVelocity';
 export { isDirectionAllowed } from './isDirectionAllowed';
 export { getPinchDirection } from './getPinchDirection';
+export { preventDefault } from './preventDefault';

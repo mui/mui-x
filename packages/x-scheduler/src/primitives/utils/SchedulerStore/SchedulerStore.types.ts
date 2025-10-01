@@ -53,6 +53,10 @@ export interface SchedulerState {
    * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
   occurrencePlaceholder: CalendarOccurrencePlaceholder | null;
+  /**
+   * The current date and time, updated every minute.
+   */
+  nowUpdatedEveryMinute: SchedulerValidDate;
 }
 
 export interface SchedulerParameters {

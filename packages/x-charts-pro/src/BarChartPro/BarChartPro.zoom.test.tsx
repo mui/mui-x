@@ -197,4 +197,55 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     expect(onZoomChange.callCount).to.be.above(0);
     expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
   });
+
+  it('should zoom on tap and drag', async () => {
+    const onZoomChange = sinon.spy();
+    const { user } = render(
+      <BarChartPro
+        {...barChartProps}
+        onZoomChange={onZoomChange}
+        zoomInteractionConfig={{
+          zoom: ['tapAndDrag'],
+        }}
+      />,
+      options,
+    );
+
+    expect(getAxisTickValues('x')).to.deep.equal(['A', 'B', 'C', 'D']);
+
+    const svg = document.querySelector('svg')!;
+
+    // Perform tap and drag gesture - tap once, then drag vertically up to zoom in
+    await user.pointer([
+      {
+        keys: '[MouseLeft>]',
+        target: svg,
+        coords: { x: 50, y: 50 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target: svg,
+        coords: { x: 50, y: 50 },
+      },
+      {
+        keys: '[MouseLeft>]',
+        target: svg,
+        coords: { x: 50, y: 50 },
+      },
+      {
+        target: svg,
+        coords: { x: 50, y: 80 },
+      },
+      {
+        keys: '[/MouseLeft]',
+        target: svg,
+        coords: { x: 50, y: 80 },
+      },
+    ]);
+    await act(async () => new Promise((r) => requestAnimationFrame(r)));
+
+    expect(onZoomChange.callCount).to.be.above(0);
+    // Should have zoomed in to show fewer ticks
+    expect(getAxisTickValues('x').length).to.be.lessThan(4);
+  });
 });
