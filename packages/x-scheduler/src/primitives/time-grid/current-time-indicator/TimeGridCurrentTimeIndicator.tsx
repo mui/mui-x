@@ -1,13 +1,15 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { useOnEveryMinuteStart } from '../../utils/useOnEveryMinuteStart';
 import { useTimeGridColumnContext } from '../column/TimeGridColumnContext';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { TimeGridCurrentTimeIndicatorCssVars } from './TimeGridCurrentTimeIndicatorCssVars';
 import { mergeDateAndTime } from '../../utils/date-utils';
+import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { selectors } from '../../use-event-calendar';
 
 export const TimeGridCurrentTimeIndicator = React.forwardRef(function TimeGridCurrentTimeIndicator(
   componentProps: TimeGridCurrentTimeIndicator.Props,
@@ -24,13 +26,12 @@ export const TimeGridCurrentTimeIndicator = React.forwardRef(function TimeGridCu
   } = componentProps;
 
   const { start: columnStart, end: columnEnd } = useTimeGridColumnContext();
-
-  const [baseNow, setBaseNow] = React.useState(() => adapter.date());
-  useOnEveryMinuteStart(() => setBaseNow(adapter.date()));
+  const store = useEventCalendarStoreContext();
+  const now = useStore(store, selectors.nowUpdatedEveryMinute);
 
   const nowForColumn = React.useMemo(
-    () => mergeDateAndTime(adapter, columnStart, baseNow),
-    [adapter, columnStart, baseNow],
+    () => mergeDateAndTime(adapter, columnStart, now),
+    [adapter, columnStart, now],
   );
 
   const endForCalc = React.useMemo(

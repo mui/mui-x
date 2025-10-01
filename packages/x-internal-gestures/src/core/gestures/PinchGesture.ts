@@ -179,7 +179,10 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
   /**
    * Handle pointer events for the pinch gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Find which element (if any) is being targeted
@@ -290,7 +293,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit pinch-specific events with additional data
