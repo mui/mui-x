@@ -30,7 +30,6 @@ describe('PressAndDragGesture', () => {
           pressMaxDistance: 10,
           dragTimeout: 500,
           dragThreshold: 5,
-          touchAction: 'none',
         }),
       ],
     });

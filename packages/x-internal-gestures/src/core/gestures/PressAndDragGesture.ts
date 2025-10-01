@@ -62,15 +62,6 @@ export type PressAndDragGestureOptions<GestureName extends string> =
      * If not specified, all directions are allowed
      */
     dragDirection?: Array<'up' | 'down' | 'left' | 'right'>;
-
-    /**
-     * The touch-action CSS property to set during the press phase.
-     * If provided, this value will be temporarily applied to prevent browser scrolling/zooming.
-     * The original touch-action will be restored after the press phase.
-     * Common values: 'none', 'pan-x', 'pan-y', 'manipulation'
-     * @default undefined (no touch-action modification)
-     */
-    touchAction?: string;
   };
 
 /**
@@ -108,7 +99,6 @@ export type PressAndDragGestureState = GestureState & {
  *
  * This gesture composes press and drag logic patterns from PressGesture and PanGesture
  * into a single coordinated gesture that handles press-then-drag interactions.
- * Useful for panning operations where you want to hold first before dragging.
  */
 export class PressAndDragGesture<GestureName extends string> extends PointerGesture<GestureName> {
   protected state: PressAndDragGestureState = {
@@ -151,11 +141,6 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
    */
   private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
 
-  /**
-   * Touch action to set during press phase
-   */
-  private touchAction?: string;
-
   private pressGesture: PressGesture<GestureName>;
 
   private panGesture: PanGesture<GestureName>;
@@ -167,7 +152,6 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
     this.dragTimeout = options.dragTimeout ?? 1000;
     this.dragThreshold = options.dragThreshold ?? 0;
     this.dragDirection = options.dragDirection || ['up', 'down', 'left', 'right'];
-    this.touchAction = options.touchAction;
 
     this.pressGesture = new PressGesture({
       name: `${this.name}-press` as GestureName,
@@ -205,7 +189,6 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
       dragTimeout: this.dragTimeout,
       dragThreshold: this.dragThreshold,
       dragDirection: [...this.dragDirection],
-      touchAction: this.touchAction,
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
@@ -226,7 +209,7 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
     this.panGesture.init(element, pointerManager, gestureRegistry, keyboardManager);
 
     // Listen to press gesture events
-    this.element.addEventListener(`${this.pressGesture.name}Start`, this.pressHandler);
+    this.element.addEventListener(this.pressGesture.name, this.pressHandler);
 
     // Listen to pan gesture events for dragging
     // @ts-expect-error, PointerEvent is correct.
@@ -244,7 +227,7 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
     this.pressGesture.destroy();
     this.panGesture.destroy();
 
-    this.element.removeEventListener(`${this.pressGesture.name}Start`, this.pressHandler);
+    this.element.removeEventListener(this.pressGesture.name, this.pressHandler);
     // @ts-expect-error, PointerEvent is correct.
     this.element.removeEventListener(`${this.panGesture.name}Start`, this.dragStartHandler);
     // @ts-expect-error, PointerEvent is correct.
@@ -265,7 +248,6 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
     this.dragTimeout = options.dragTimeout ?? this.dragTimeout;
     this.dragThreshold = options.dragThreshold ?? this.dragThreshold;
     this.dragDirection = options.dragDirection || this.dragDirection;
-    this.touchAction = options.touchAction ?? this.touchAction;
 
     // Update internal gesture options
     this.element.dispatchEvent(
@@ -325,10 +307,7 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
 
     this.state.phase = 'pressDetected';
 
-    // Set touch action if specified
-    if (this.touchAction) {
-      this.setTouchAction();
-    }
+    this.setTouchAction();
 
     // Start timeout to wait for drag start
     this.state.dragTimeoutId = setTimeout(() => {
@@ -385,14 +364,14 @@ export class PressAndDragGesture<GestureName extends string> extends PointerGest
   };
 
   private setTouchAction(): void {
-    if (this.touchAction) {
-      this.element.addEventListener('touchstart', preventDefault, { passive: false });
-    }
+    this.element.addEventListener('touchstart', preventDefault, { passive: false });
+    this.element.addEventListener('touchmove', preventDefault, { passive: false });
+    this.element.addEventListener('touchend', preventDefault, { passive: false });
   }
 
   private restoreTouchAction(): void {
-    if (this.touchAction) {
-      this.element.removeEventListener('touchstart', preventDefault);
-    }
+    this.element.removeEventListener('touchstart', preventDefault);
+    this.element.removeEventListener('touchmove', preventDefault);
+    this.element.removeEventListener('touchend', preventDefault);
   }
 }
