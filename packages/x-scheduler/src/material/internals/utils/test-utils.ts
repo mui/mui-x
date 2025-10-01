@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 
 export function getPreferencesMenu() {
   return screen.queryByRole('button', { name: /settings/i });
@@ -21,14 +21,14 @@ export async function toggleShowWeekNumber(user) {
   await user.click(menuItem);
 }
 
-async function openTimeFormatSubmenu(user) {
+async function openTimeFormatSubmenu() {
   const trigger = await screen.findByRole('menuitem', { name: /Time format/i });
-  await user.hover(trigger);
+  fireEvent.click(trigger);
   await screen.findByRole('group', { name: /Time format/i });
 }
 
 export async function changeTo24HoursFormat(user) {
-  await openTimeFormatSubmenu(user);
+  await openTimeFormatSubmenu();
 
   const h24Radio = screen.getByRole('menuitemradio', {
     name: /24-hour \(13:00\)/i,
@@ -38,10 +38,10 @@ export async function changeTo24HoursFormat(user) {
 }
 
 export async function changeToAmpmFormat(user) {
-  await openTimeFormatSubmenu(user);
+  await openTimeFormatSubmenu();
 
   const h12Radio = screen.getByRole('menuitemradio', {
-    name: /AM\/PM \(1:00 PM\)/i,
+    name: /AM\/PM \(1:00PM\)/i,
   });
 
   await user.click(h12Radio);

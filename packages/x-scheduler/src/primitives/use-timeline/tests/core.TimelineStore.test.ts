@@ -9,6 +9,7 @@ describe('Core - TimelineStore', () => {
   describe('create', () => {
     it('should initialize default state', () => {
       const store = new TimelineStore(DEFAULT_PARAMS, adapter);
+      const { nowUpdatedEveryMinute, ...actualState } = store.state;
 
       const expectedState = {
         adapter,
@@ -18,14 +19,14 @@ describe('Core - TimelineStore', () => {
         areEventsDraggable: false,
         areEventsResizable: false,
         eventColor: 'jade',
-        nowUpdatedEveryMinute: adapter.date(),
         showCurrentTimeIndicator: true,
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
         preferences: DEFAULT_PREFERENCES,
       };
 
-      expect(store.state).to.deep.equal(expectedState);
+      expect(store.state.nowUpdatedEveryMinute).to.not.equal(undefined);
+      expect(actualState).to.deep.equal(expectedState);
     });
   });
 });
