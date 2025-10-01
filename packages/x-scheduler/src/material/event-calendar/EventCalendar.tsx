@@ -25,10 +25,11 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(true);
+
   const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
   const store = useEventCalendar(parameters);
   const view = useStore(store, selectors.view);
-  const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(true);
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
