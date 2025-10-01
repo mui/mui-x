@@ -23,9 +23,9 @@ For pivoting on the client side, see [Pivoting](/x/react-data-grid/pivoting/).
 
 ## Prerequisites
 
-Server-side pivoting is an extension of its client-side counterpart, so we recommend reviewing [the client-side pivoting doc](/x/react-data-grid/pivoting/) to understand the underlying data structures and core implementation before proceeding.
+Server-side pivoting is an extension of its client-side counterpart, it is recommended to review [the client-side pivoting doc](/x/react-data-grid/pivoting/) to understand the underlying data structures and core implementation before proceeding.
 
-To be able to dynamically load pivoted data from the server, you must create a Data Source and pass the `dataSource` prop to the Data Grid, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
+To dynamically load pivoted data from the server, create a Data Source and pass it in the `dataSource` prop, as detailed in the [Server-side data overview](/x/react-data-grid/server-side-data/).
 
 ## Implementing server-side pivoting
 
