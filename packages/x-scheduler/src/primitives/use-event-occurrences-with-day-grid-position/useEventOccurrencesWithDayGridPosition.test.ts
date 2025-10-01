@@ -1,13 +1,11 @@
+import { adapter } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
-import { getAdapter } from '../utils/adapter/getAdapter';
 import { processDate } from '../utils/event-utils';
 import { CalendarEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
-  const adapter = getAdapter();
-
   const days = [
     processDate(adapter.date('2024-01-15'), adapter),
     processDate(adapter.date('2024-01-16'), adapter),

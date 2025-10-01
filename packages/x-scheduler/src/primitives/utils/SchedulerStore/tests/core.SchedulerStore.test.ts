@@ -1,7 +1,6 @@
-import { getAdapter } from '../../adapter/getAdapter';
+import { adapter } from 'test/utils/scheduler';
 import { storeClasses, buildEvent, getIds } from './utils';
 
-const adapter = getAdapter();
 const DEFAULT_PARAMS = { events: [] };
 
 storeClasses.forEach((storeClass) => {

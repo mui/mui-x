@@ -1,9 +1,8 @@
+import { adapter } from 'test/utils/scheduler';
 import { CalendarEventOccurrence } from '@mui/x-scheduler/primitives/models';
 import { getDaysTheOccurrenceIsVisibleOn, processDate } from './event-utils';
-import { getAdapter } from './adapter/getAdapter';
 
 describe('event-utils', () => {
-  const adapter = getAdapter();
   const createEventOccurrence = (
     id: string,
     start: string,

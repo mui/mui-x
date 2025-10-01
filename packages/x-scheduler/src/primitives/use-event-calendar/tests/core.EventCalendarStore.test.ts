@@ -1,5 +1,5 @@
 import { useFakeTimers } from 'sinon';
-import { getAdapter } from '../../utils/adapter/getAdapter';
+import { adapter } from 'test/utils/scheduler';
 import {
   DEFAULT_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
@@ -10,7 +10,6 @@ import {
 import { CalendarView } from '../../models';
 import { DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
 
-const adapter = getAdapter();
 const DEFAULT_PARAMS = { events: [] };
 
 describe('Core - EventCalendarStore', () => {

@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { adapter } from 'test/utils/scheduler';
 import {
   ByDayCode,
   ByDayValue,
@@ -25,13 +26,10 @@ import {
   applyRecurringUpdateFollowing,
   decideSplitRRule,
 } from './recurrence-utils';
-import { getAdapter } from './adapter/getAdapter';
 import { diffIn } from './date-utils';
 import { Adapter } from '../use-adapter/types';
 
 describe('recurrence-utils', () => {
-  const adapter = getAdapter();
-
   describe('getByDayMaps', () => {
     type MiniAdapter = Pick<Adapter<any>, 'date' | 'addDays' | 'getDayOfWeek'>;
 

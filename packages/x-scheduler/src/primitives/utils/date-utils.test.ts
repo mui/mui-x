@@ -1,10 +1,8 @@
 import { DateTime } from 'luxon';
-import { getAdapter } from './adapter/getAdapter';
+import { adapter } from 'test/utils/scheduler';
 import { diffIn, isWeekend, mergeDateAndTime } from './date-utils';
 
 describe('date-utils', () => {
-  const adapter = getAdapter();
-
   describe('mergeDateAndTime', () => {
     it('merges hour/minute/second/ms from timeParam into dateParam', () => {
       const date = DateTime.fromISO('2025-03-10T00:00:00Z');

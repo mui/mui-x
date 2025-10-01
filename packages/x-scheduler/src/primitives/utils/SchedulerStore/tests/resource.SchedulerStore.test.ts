@@ -1,11 +1,9 @@
 import { spy } from 'sinon';
 import { CalendarResourceId } from '@mui/x-scheduler/primitives/models';
-import { getAdapter } from '../../adapter/getAdapter';
+import { adapter } from 'test/utils/scheduler';
 import { storeClasses } from './utils';
 
 const DEFAULT_PARAMS = { events: [] };
-
-const adapter = getAdapter();
 
 storeClasses.forEach((storeClass) => {
   describe(`Resource - ${storeClass.name}`, () => {
