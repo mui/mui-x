@@ -112,7 +112,7 @@ The demo below prohibits reordering leaf rows under the same parent and only all
 
 :::warning
 The row reorder feature has an internal validation ruleset that makes sure that only the supported use-cases are allowed.
-So the `isValidRowReorder()` callback should only be used to omit some of the supported use-cases, not adding new ones.
+`isValidRowReorder()` should only be used to omit some of the supported use-cases, not add new ones.
 :::
 
 :::info
