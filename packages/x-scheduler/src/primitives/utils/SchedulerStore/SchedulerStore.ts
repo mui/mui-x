@@ -57,6 +57,7 @@ export class SchedulerStore<
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.date()),
+      occurrencesGroupedByDayLookup: new Map(),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);

@@ -1,9 +1,9 @@
 import { renderHook } from '@mui/internal-test-utils';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
 import { getAdapter } from '../utils/adapter/getAdapter';
-import { processDate } from '../utils/event-utils';
+import { getOccurrencesFromEvents, processDate } from '../utils/event-utils';
 import { CalendarEvent } from '../models';
-import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
+import { getEventOccurrencesGroupedByDay } from '../use-event-calendar/EventCalendarStore.utils';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const adapter = getAdapter();
@@ -16,13 +16,16 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   function testHook(events: CalendarEvent[]) {
     const { result } = renderHook(() => {
-      const occurrencesMap = innerGetEventOccurrencesGroupedByDay(
+      const start = adapter.startOfDay(days[0].value);
+      const end = adapter.endOfDay(days[days.length - 1].value);
+      const occurrences = getOccurrencesFromEvents({
         adapter,
-        days,
-        'every-day',
+        start,
+        end,
         events,
-        new Map(),
-      );
+        visibleResources: new Map(),
+      });
+      const occurrencesMap = getEventOccurrencesGroupedByDay(adapter, days, occurrences);
       return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });
 

@@ -9,6 +9,7 @@ import {
 import { Adapter } from '../utils/adapter/types';
 import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+import { runEventCalendarStoreEffects } from './EventCalendarStore.utils';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -65,6 +66,8 @@ export class EventCalendarStore extends SchedulerStore<
         return null;
       });
     }
+
+    runEventCalendarStoreEffects(this);
   }
 
   private assertViewValidity(view: CalendarView) {
@@ -126,7 +129,14 @@ export class EventCalendarStore extends SchedulerStore<
       return;
     }
 
-    this.setVisibleDate(siblingVisibleDateGetter(this.state.visibleDate, delta), event);
+    this.setVisibleDate(
+      siblingVisibleDateGetter({
+        adapter: this.state.adapter,
+        date: this.state.visibleDate,
+        delta,
+      }),
+      event,
+    );
   };
 
   /**
