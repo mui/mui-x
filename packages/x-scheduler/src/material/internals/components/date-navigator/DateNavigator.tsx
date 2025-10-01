@@ -31,6 +31,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
       {...other}
     >
       <button
+        type="button"
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
         className={clsx('OutlinedNeutralButton', 'Button', 'IconButton')}
         onClick={() => store.setIsSidePanelOpen(!isSidePanelOpen)}
