@@ -13,15 +13,6 @@
   font-weight: var(--font-weight-1);
 }
 
-/* Map DateNavigator and PrimaryActionWrapper to columns */
-.HeaderToolbarContainer > .DateNavigatorContainer {
-  grid-column: 1;
-}
-.HeaderToolbarContainer > .PrimaryActionWrapper {
-  grid-column: 2;
-  justify-self: end;
-}
-
 .HeaderToolbarActions {
   display: flex;
 }
@@ -41,4 +32,12 @@
 .HeaderToolbarContainer.SinglePrimaryAction {
   display: flex;
   justify-content: flex-end;
+}
+
+.HeaderToolbarContainer > .DateNavigatorContainer {
+  grid-column: 1;
+}
+.HeaderToolbarContainer > .PrimaryActionWrapper {
+  grid-column: 2;
+  justify-self: end;
 }
