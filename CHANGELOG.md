@@ -12,6 +12,7 @@ _Oct 1, 2025_
 We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The chart zoom now supports the `tapAndDrag` gesture. Zoom in/out by tapping twice and dragging vertically.
+- 🔎 The chart now allow fine-grained control for zoom interactions
 - ➡️ Data Grid grouping rows now persist their expansion state when the rows are updated.
 - 📜 Updated Data Grid vertical scrollbar to include pinned rows and aggregation sections.
 - 📌 Improved the appearance of [pinned columns](https://mui.com/x/react-data-grid/column-pinning/#pinned-columns-appearance) and [pinned rows](https://mui.com/x/react-data-grid/row-pinning/#pinned-rows-appearance) sections in the Data Grid.
