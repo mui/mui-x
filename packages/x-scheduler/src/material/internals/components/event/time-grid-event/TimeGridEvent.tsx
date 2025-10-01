@@ -77,6 +77,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       </React.Fragment>
     );
   }, [
+    adapter,
     isBetween30and60Minutes,
     isLessThan30Minutes,
     titleLineCountRegularVariant,

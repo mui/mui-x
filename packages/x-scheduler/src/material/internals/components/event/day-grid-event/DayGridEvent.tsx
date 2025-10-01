@@ -111,6 +111,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         );
     }
   }, [
+    adapter,
     variant,
     occurrence.title,
     occurrence?.allDay,

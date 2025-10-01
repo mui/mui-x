@@ -52,7 +52,7 @@ export const MonthView = React.memo(
       );
 
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };
-    }, [getWeekList, getDayList, visibleDate, preferences.showWeekends]);
+    }, [adapter, getWeekList, getDayList, visibleDate, preferences.showWeekends]);
 
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
