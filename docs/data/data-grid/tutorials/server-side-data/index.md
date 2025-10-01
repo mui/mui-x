@@ -13,7 +13,9 @@ This tutorial walks you through building a Data Grid that fetches data from a se
 - Understanding of TypeScript interfaces
 - Familiarity with async/await and fetch API
 
-## 1. Create the project structure
+## Part one: app setup
+
+### 1. Create the project structure
 
 Create a new directory and set up the folder structure:
 
@@ -23,7 +25,7 @@ cd server-side-data
 mkdir client server
 ```
 
-## 2. Initialize the server
+### 2. Initialize the server
 
 Navigate to the server directory and initialize:
 
@@ -58,7 +60,7 @@ Create a `tsconfig.json` file:
 }
 ```
 
-## 3. Initialize the client
+### 3. Initialize the client
 
 Navigate to the client directory and create a React app with Vite in TypeScript:
 
@@ -74,7 +76,7 @@ Install MUI dependencies:
 pnpm install @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid-pro @fontsource/roboto
 ```
 
-## 4. Set up the server code
+### 4. Set up the server code
 
 Create `server/src/index.ts`:
 
@@ -211,7 +213,7 @@ app.listen(PORT, () => {
 - Results are paginated using `page` and `pageSize` parameters
 - Data is returned in the format expected by the Data Grid
 
-## 5. Set up the client code
+### 5. Set up the client code
 
 Update `client/src/App.tsx`:
 
@@ -240,7 +242,7 @@ function App() {
 export default App;
 ```
 
-## 6. Add scripts to package.json files
+### 6. Add scripts to package.json files
 
 In `server/package.json`, add:
 
@@ -254,7 +256,7 @@ In `server/package.json`, add:
 }
 ```
 
-## 7. Run the application
+### 7. Run the application
 
 Start the server:
 
@@ -272,7 +274,9 @@ pnpm run dev
 
 The server runs on `http://localhost:3001` and the client on `http://localhost:5173`.
 
-## 8. Understanding the data structure
+## Part two: Data Grid setup
+
+### 8. Define the data structure
 
 Define what your data looks like by creating interfaces that match your server response:
 
@@ -300,7 +304,7 @@ interface ApiResponse {
 - `ApiResponse` defines what the server sends back, including metadata like total count and pagination info
 - The `total` field tells the grid how many total rows exist
 
-## 9. Setting up the grid columns
+### 9. Define the grid columns
 
 Define how each column should appear and behave:
 
@@ -322,7 +326,7 @@ const columns: GridColDef[] = [
 - `width` sets the initial column width in pixels
 - Each column automatically supports sorting and filtering
 
-## 10. Understanding GridDataSource
+### 10. Set up GridDataSource
 
 The `GridDataSource` tells the grid how to fetch data:
 
@@ -339,7 +343,7 @@ const dataSource: GridDataSource = useMemo(() => ({
 - `params` contains all the information about what data the grid needs
 - Wrap it in `useMemo` to prevent recreating the function on every render
 
-## 11. Building the URL parameters
+### 11. Build the URL parameters
 
 Inside `getRows`, construct the API call with the grid's current state:
 
@@ -358,7 +362,7 @@ const urlParams = new URLSearchParams({
 - `params.sortModel` contains which columns are sorted and in what direction
 - `params.filterModel` contains any active filters
 
-## 12. Making the API call
+### 12. Make the API call
 
 Fetch the data from your server:
 
@@ -372,7 +376,7 @@ if (!response.ok) {
 const result: ApiResponse = await response.json();
 ```
 
-## 13. Returning the data to the grid
+### 13. Return the data to the grid
 
 Return the data in the format the grid expects:
 
@@ -383,9 +387,9 @@ return {
 };
 ```
 
-## 14. Putting it all together
+### 14. Put it all together
 
-Combining steps 10 through 13, the complete `getRows` function should look like this:
+Combining all the previous steps in part two, the complete `getRows` function should look like this:
 
 ```ts
 const dataSource: GridDataSource = useMemo(() => ({
@@ -413,7 +417,7 @@ const dataSource: GridDataSource = useMemo(() => ({
 }), []);
 ```
 
-## 15. Rendering the Data Grid Pro
+### 15. Render the Data Grid
 
 Finally, render the grid with your configuration:
 
@@ -434,7 +438,7 @@ Finally, render the grid with your configuration:
 - `pageSizeOptions` lets users choose how many rows to see per page
 - `disableRowSelectionOnClick` prevents row selection when clicking cells
 
-## 16. Adding the UI wrapper
+### 16. Add the UI wrapper
 
 Wrap everything in a container:
 
@@ -459,17 +463,7 @@ return (
 );
 ```
 
-## How the data flow works
-
-1. **User Interaction**: User clicks pagination, sorts a column, or applies a filter
-2. **Grid State Change**: The grid updates its internal state (pagination, sorting, filtering)
-3. **Data Request**: Grid calls your `getRows` function with the new parameters
-4. **API Call**: Construct a URL with the parameters and fetch from the server
-5. **Server Processing**: Server applies pagination, sorting, and filtering to the data
-6. **Response**: Server returns only the data needed for the current page
-7. **Grid Update**: Grid displays the new data and updates pagination controls
-
-## Complete component code
+### Complete component code
 
 Here is the complete `EmployeeDataGrid.tsx` component for reference:
 
