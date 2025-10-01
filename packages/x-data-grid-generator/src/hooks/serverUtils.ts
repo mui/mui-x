@@ -50,7 +50,15 @@ export interface PageInfo {
 }
 
 export interface DefaultServerOptions {
+  /**
+   * The minimum response delay in milliseconds.
+   * For a large dataset, the response delay can be larger than the minimum delay.
+   */
   minDelay: number;
+  /**
+   * The maximum response delay in milliseconds
+   * For a large dataset, the response delay can be larger than the maximum delay.
+   */
   maxDelay: number;
   useCursorPagination?: boolean;
 }

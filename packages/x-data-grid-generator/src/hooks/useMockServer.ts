@@ -317,12 +317,21 @@ export const useMockServer = <T extends GridGetRowsResponse>(
 
   const fetchRows = React.useCallback(
     async (requestUrl: string): Promise<T> => {
+      let dataDelay = 0;
+      const waitInterval = 10;
+      const waitTimeout = 500 * waitInterval; // 5 seconds
       // wait until data is ready
       while (!isDataReady) {
+        // prevent infinite loop with a timeout
+        if (dataDelay > waitTimeout) {
+          return sendEmptyResponse<T>();
+        }
+
         // eslint-disable-next-line no-await-in-loop
         await new Promise((resolve) => {
-          setTimeout(resolve, 100);
+          setTimeout(resolve, waitInterval);
         });
+        dataDelay += waitInterval;
       }
       if (!requestUrl) {
         return sendEmptyResponse<T>();
@@ -343,7 +352,9 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       };
 
       if (shouldRequestsFailRef.current) {
-        const { minDelay, maxDelay } = serverOptionsWithDefault;
+        // substract the delay made by waiting for data to be ready
+        const minDelay = Math.max(0, serverOptionsWithDefault.minDelay - dataDelay);
+        const maxDelay = Math.max(0, serverOptionsWithDefault.maxDelay - dataDelay);
         const delay = randomInt(minDelay, maxDelay);
         return new Promise<T>((_, reject) => {
           if (verbose) {
