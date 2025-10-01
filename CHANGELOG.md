@@ -129,6 +129,7 @@ Internal changes.
 
 - [docs] Add a recipe to customize editing component with Autocomplete (#19651) @siriwatknp
 - [docs] Refine the electricity scatter tooltip (#19689) @alexfauquette
+- [docs] Remove reference to nonexistent `FocusedMark` API page (#19773) @bernardobelchior
 
 ### Core
 
