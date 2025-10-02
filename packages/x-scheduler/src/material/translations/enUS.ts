@@ -20,7 +20,7 @@ export const enUS: SchedulerTranslations = {
   years: 'Years',
 
   // Preferences menu
-  amPm12h: 'AM/PM (1:00PM)',
+  amPm12h: '12-hour (1:00PM)',
   hour24h: '24-hour (13:00)',
   preferencesMenu: 'Settings',
   showWeekends: 'Show weekends',

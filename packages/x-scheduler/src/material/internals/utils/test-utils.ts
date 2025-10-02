@@ -37,11 +37,11 @@ export async function changeTo24HoursFormat(user) {
   await user.click(h24Radio);
 }
 
-export async function changeToAmpmFormat(user) {
+export async function changeTo12HoursFormat(user) {
   await openTimeFormatSubmenu();
 
   const h12Radio = screen.getByRole('menuitemradio', {
-    name: /AM\/PM \(1:00PM\)/i,
+    name: /12-hour \(1:00PM\)/i,
   });
 
   await user.click(h12Radio);

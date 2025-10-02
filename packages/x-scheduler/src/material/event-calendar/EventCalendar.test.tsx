@@ -5,7 +5,7 @@ import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import {
   changeTo24HoursFormat,
-  changeToAmpmFormat,
+  changeTo12HoursFormat,
   openPreferencesMenu,
   toggleShowWeekends,
   toggleShowWeekNumber,
@@ -196,19 +196,19 @@ describe('EventCalendar', () => {
     it('should allow to change the time format using the UI in the week view', async () => {
       const { user } = render(<EventCalendar events={[]} />);
 
-      // AM/PM format should be visible by default
+      // 12 hours format should be visible by default
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
 
-      // Disable AM/PM format
+      // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
 
-      // Show AM/PM format again
+      // Show 12 hours format again
       await openPreferencesMenu(user);
-      await changeToAmpmFormat(user);
+      await changeTo12HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
@@ -229,19 +229,19 @@ describe('EventCalendar', () => {
         />,
       );
 
-      // AM/PM format should be visible by default
+      // 12 hours format should be visible by default
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
 
-      // Disable AM/PM format
+      // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
 
-      // Show AM/PM format again
+      // Show 12 hours format again
       await openPreferencesMenu(user);
-      await changeToAmpmFormat(user);
+      await changeTo12HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
@@ -262,19 +262,19 @@ describe('EventCalendar', () => {
         />,
       );
 
-      // AM/PM format should be visible by default
+      // 12 hours format should be visible by default
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
 
-      // Disable AM/PM format
+      // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
 
-      // Show AM/PM format again
+      // Show 12 hours format again
       await openPreferencesMenu(user);
-      await changeToAmpmFormat(user);
+      await changeTo12HoursFormat(user);
       await user.click(document.body);
 
       expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
