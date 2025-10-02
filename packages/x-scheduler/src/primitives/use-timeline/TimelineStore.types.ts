@@ -1,4 +1,5 @@
 import { TimelineView } from '../models';
+import { TimelinePreferences } from '../models/preferences';
 import { SchedulerState, SchedulerParameters } from '../utils/SchedulerStore';
 
 export interface TimelineState extends SchedulerState {
@@ -10,6 +11,11 @@ export interface TimelineState extends SchedulerState {
    * The views available in the timeline.
    */
   views: TimelineView[];
+  /**
+   * Preferences for the timeline.
+   *
+   */
+  preferences: TimelinePreferences;
 }
 
 export interface TimelineParameters extends SchedulerParameters {
@@ -32,4 +38,9 @@ export interface TimelineParameters extends SchedulerParameters {
    * Event handler called when the view changes.
    */
   onViewChange?: (view: TimelineView, event: React.UIEvent | Event) => void;
+  /**
+   * Preferences for the timeline.
+   * @default { ampm: true }
+   */
+  preferences?: Partial<TimelinePreferences>;
 }

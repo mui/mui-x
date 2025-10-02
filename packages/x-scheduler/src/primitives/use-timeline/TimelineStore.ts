@@ -1,4 +1,6 @@
 import { TimelineView } from '../models';
+// timeline/TimelineStore.ts
+import { TimelinePreferences } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
@@ -9,12 +11,16 @@ export const DEFAULT_VIEW: TimelineView = 'time';
 const deriveStateFromParameters = (parameters: TimelineParameters) => ({
   views: parameters.views ?? DEFAULT_VIEWS,
 });
+export const DEFAULT_PREFERENCES: TimelinePreferences = {
+  ampm: true,
+};
 
 const mapper: SchedulerParametersToStateMapper<TimelineState, TimelineParameters> = {
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
     view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+    preferences: { ...DEFAULT_PREFERENCES, ...parameters.preferences },
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<TimelineState> = {
