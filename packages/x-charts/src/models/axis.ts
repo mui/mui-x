@@ -603,6 +603,12 @@ export function isPointScaleConfig(
   return scaleConfig.scaleType === 'point';
 }
 
+export function isContinuousScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<ContinuousScaleName> {
+  return scaleConfig.scaleType !== 'point' && scaleConfig.scaleType !== 'band';
+}
+
 export function isSymlogScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' } {
