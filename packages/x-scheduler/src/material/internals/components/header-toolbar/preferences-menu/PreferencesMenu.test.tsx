@@ -48,6 +48,7 @@ describe('<PreferencesMenu />', () => {
         preferencesMenuConfig={{
           toggleWeekendVisibility: false,
           toggleWeekNumberVisibility: false,
+          toggleAmpm: false,
         }}
       >
         <PreferencesMenu />
@@ -64,6 +65,7 @@ describe('<PreferencesMenu />', () => {
         preferencesMenuConfig={{
           toggleWeekendVisibility: false,
           toggleWeekNumberVisibility: true,
+          toggleAmpm: true,
         }}
       >
         <PreferencesMenu />
@@ -85,6 +87,7 @@ describe('<PreferencesMenu />', () => {
         preferencesMenuConfig={{
           toggleWeekendVisibility: true,
           toggleWeekNumberVisibility: false,
+          toggleAmpm: true,
         }}
       >
         <PreferencesMenu />
@@ -95,5 +98,28 @@ describe('<PreferencesMenu />', () => {
 
     expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).to.equal(null);
+  });
+
+  it('should hide ampm option when toggleAmpm is false', async () => {
+    const { user } = render(
+      <StandaloneView
+        events={[]}
+        preferencesMenuConfig={{
+          toggleWeekendVisibility: true,
+          toggleWeekNumberVisibility: true,
+          toggleAmpm: false,
+        }}
+      >
+        <PreferencesMenu />
+      </StandaloneView>,
+    );
+
+    await openPreferencesMenu(user);
+
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show weekends/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitemcheckbox', { name: /show week number/i })).not.to.equal(
+      null,
+    );
+    expect(screen.queryByRole('menuitem', { name: /time format/i })).to.equal(null);
   });
 });

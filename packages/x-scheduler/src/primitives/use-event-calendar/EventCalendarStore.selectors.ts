@@ -10,6 +10,9 @@ export const selectors = {
   views: createSelector((state: State) => state.views),
   preferences: createSelector((state: State) => state.preferences),
   preferencesMenuConfig: createSelector((state: State) => state.preferencesMenuConfig),
+  ampm: createSelector((state: State) => state.preferences.ampm),
+  showWeekends: createSelector((state: State) => state.preferences.showWeekends),
+  showWeekNumber: createSelector((state: State) => state.preferences.showWeekNumber),
   hasDayView: createSelector((state: State) => state.views.includes('day')),
   isEventDraggable: createSelector(
     schedulerSelectors.isEventReadOnly,
@@ -97,7 +100,7 @@ export const selectors = {
       return state.occurrencePlaceholder;
     },
   ),
-  isCreatingNewEventInDayGridCell: createSelector((state: State, day: SchedulerValidDate) => {
+  isCreatingNewEventInDayCell: createSelector((state: State, day: SchedulerValidDate) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.eventId != null) {
       return false;

@@ -24,9 +24,12 @@ export interface SchedulerTranslations {
   openSidePanel: string;
 
   // PreferencesMenu
+  amPm12h: string;
+  hour24h: string;
   preferencesMenu: string;
   showWeekends: string;
   showWeekNumber: string;
+  timeFormat: string;
 
   // WeekView
   allDay: string;

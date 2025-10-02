@@ -1,4 +1,12 @@
-export interface CalendarPreferences {
+export interface SchedulerPreferences {
+  /**
+   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
+   * @default true
+   */
+  ampm: boolean;
+}
+
+export interface EventCalendarPreferences extends SchedulerPreferences {
   /**
    * Whether weekends are shown in the calendar.
    * @default true
@@ -16,7 +24,9 @@ export interface CalendarPreferences {
   isSidePanelOpen: boolean;
 }
 
-export interface CalendarPreferencesMenuConfig {
+export interface TimelinePreferences extends SchedulerPreferences {}
+
+export interface EventCalendarPreferencesMenuConfig {
   /**
    * Whether the menu item to toggle weekend visibility is visible.
    * @default true
@@ -27,4 +37,9 @@ export interface CalendarPreferencesMenuConfig {
    * @default true
    */
   toggleWeekNumberVisibility: boolean;
+  /**
+   * Whether the menu item to toggle AM/PM time format is visible.
+   * @default false
+   */
+  toggleAmpm: boolean;
 }

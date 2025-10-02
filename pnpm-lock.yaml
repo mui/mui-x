@@ -285,8 +285,8 @@ importers:
         specifier: ^1.0.9-canary.46
         version: 1.0.9-canary.46(@types/node@24.5.2)(rollup@4.50.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.15
-        version: 0.0.3-canary.15(@typescript-eslint/parser@8.44.1(eslint@9.36.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0))(eslint@9.36.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.24.0(typescript@5.9.2))(typescript@5.9.2)
+        specifier: ^0.0.3-canary.17
+        version: 0.0.3-canary.17(@typescript-eslint/parser@8.44.1(eslint@9.36.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0))(eslint@9.36.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.24.0(typescript@5.9.2))(typescript@5.9.2)
       '@mui/internal-markdown':
         specifier: ^2.0.6
         version: 2.0.9
@@ -4109,8 +4109,8 @@ packages:
     resolution: {integrity: sha512-KyKMYVpN8ScUkhgmo6LwXoaVf5c49c2qNeX39s/xLALrmFycOqd2q+ElN6wXLrYT7VkgJQhMHj77PcKhoBpm4A==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.15':
-    resolution: {integrity: sha512-it0jOQ1b6HxVysQVf7spOcvQiJi2YfVvrmu2+/ArU1eNlnRtqjIuhh0Y3KdguX9rV0Sr9yykO0tfUFRAYSx3zg==}
+  '@mui/internal-code-infra@0.0.3-canary.17':
+    resolution: {integrity: sha512-+9R21uphQTbFQIVmjMz+SqioYjGs6N7fgLaLgCdUykmqUFsLp/MeJuv+91l94MFAt7TYUrOD/3OzK4mCq4BcaQ==}
     hasBin: true
     peerDependencies:
       eslint: ^9.0.0
@@ -14938,7 +14938,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.15(@typescript-eslint/parser@8.44.1(eslint@9.36.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0))(eslint@9.36.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.24.0(typescript@5.9.2))(typescript@5.9.2)':
+  '@mui/internal-code-infra@0.0.3-canary.17(@typescript-eslint/parser@8.44.1(eslint@9.36.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.44.1(eslint@9.36.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.36.0))(eslint@9.36.0)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.24.0(typescript@5.9.2))(typescript@5.9.2)':
     dependencies:
       '@argos-ci/core': 4.1.5
       '@babel/cli': 7.28.3(@babel/core@7.28.4)

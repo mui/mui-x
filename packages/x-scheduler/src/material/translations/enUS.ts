@@ -24,9 +24,12 @@ export const enUS: SchedulerTranslations = {
   openSidePanel: 'Open side panel',
 
   // Preferences menu
+  amPm12h: '12-hour (1:00PM)',
+  hour24h: '24-hour (13:00)',
   preferencesMenu: 'Settings',
   showWeekends: 'Show weekends',
   showWeekNumber: 'Show week number',
+  timeFormat: 'Time format',
 
   // WeekView
   allDay: 'All day',
