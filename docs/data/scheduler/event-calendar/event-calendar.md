@@ -162,7 +162,7 @@ In your custom view, you have to use the `useInitializeView()` hook to register 
 
 ```tsx
 import { DateTime } from 'luxon'
-import { useInitializeView } from '@mui/x-scheduler/material/internals/hooks/useInitializeView'; // TODO: Move this to a public folder.
+import { useInitializeView } from '@mui/x-scheduler/internals/hooks/useInitializeView'; // TODO: Move this to a public folder.
 
 function CustomView() {
   const adapter = useAdapter();
@@ -223,7 +223,7 @@ The following demo shows one event for each palette:
 ### Translations
 
 ```tsx
-import { frFR } from '@mui/x-scheduler/material/translations/frFR';
+import { frFR } from '@mui/x-scheduler/translations/frFR';
 
 <EventCalendar translations={frFR} />;
 ```

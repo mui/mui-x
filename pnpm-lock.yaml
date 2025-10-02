@@ -1622,6 +1622,62 @@ importers:
 
   packages/x-scheduler:
     dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@base-ui-components/react':
+        specifier: ^1.0.0-beta.3
+        version: 1.0.0-beta.3(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@base-ui-components/utils':
+        specifier: ^0.1.1
+        version: 0.1.1(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@floating-ui/react':
+        specifier: ^0.27.16
+        version: 0.27.16(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+      '@mui/x-scheduler-headless':
+        specifier: workspace:*
+        version: link:../x-scheduler-headless/build
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      lucide-react:
+        specifier: ^0.544.0
+        version: 0.544.0(react@19.1.1)
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: 2.0.12(@babel/core@7.28.4)(@playwright/test@1.55.1)(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(chai@5.2.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@types/luxon':
+        specifier: 'catalog:'
+        version: 3.7.1
+      '@types/prop-types':
+        specifier: 'catalog:'
+        version: 15.7.15
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.5.0
+      luxon:
+        specifier: 'catalog:'
+        version: 3.7.2
+      react:
+        specifier: 'catalog:'
+        version: 19.1.1
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.1.1(react@19.1.1)
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.0.1
+      use-isomorphic-layout-effect:
+        specifier: ^1.2.1
+        version: 1.2.1(@types/react@19.1.13)(react@19.1.1)
+    publishDirectory: build
+
+  packages/x-scheduler-headless:
+    dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
         specifier: ^1.7.7
         version: 1.7.7
@@ -1643,21 +1699,9 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
-      lucide-react:
-        specifier: ^0.544.0
-        version: 0.544.0(react@19.1.1)
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      reselect:
-        specifier: 'catalog:'
-        version: 5.1.1
-      use-sync-external-store:
-        specifier: 'catalog:'
-        version: 1.5.0(react@19.1.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -2188,6 +2232,9 @@ importers:
       '@mui/x-scheduler':
         specifier: workspace:*
         version: link:../../packages/x-scheduler/build
+      '@mui/x-scheduler-headless':
+        specifier: workspace:*
+        version: link:../../packages/x-scheduler-headless/build
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../../packages/x-tree-view/build

@@ -24,7 +24,7 @@ const GRID_PACKAGES = [
 ];
 const PICKERS_PACKAGES = ['x-date-pickers', 'x-date-pickers-pro'];
 const TREE_VIEW_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
-const SCHEDULER_PACKAGES = ['x-scheduler'];
+const SCHEDULER_PACKAGES = ['x-scheduler', 'x-scheduler-headless'];
 
 // Enable React Compiler Plugin rules globally
 const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
@@ -72,6 +72,8 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-date-pickers-pro',
   '@mui/x-tree-view',
   '@mui/x-tree-view-pro',
+  '@mui/x-scheduler',
+  '@mui/x-scheduler-headless',
 ];
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
@@ -324,9 +326,6 @@ export default defineConfig(
                 // Allow any import depth with any internal packages
                 '!@mui/internal-*/**',
 
-                // The scheduler import strategy is not determined yet
-                '!@mui/x-scheduler/**',
-
                 // Exceptions (QUESTION: Keep or remove?)
                 '!@mui/x-data-grid/internals/demo',
                 '!@mui/x-date-pickers/internals/demo',
@@ -349,7 +348,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['packages/x-scheduler/**/*{.tsx,.ts,.js}'],
+    files: ['packages/x-scheduler/**/*{.tsx,.ts,.js}', 'packages/x-scheduler-headless/**/*{.tsx,.ts,.js}'],
     rules: {
       // Base UI lint rules
       '@typescript-eslint/no-redeclare': 'off',
@@ -371,6 +370,7 @@ export default defineConfig(
     'x-date-pickers',
     'x-date-pickers-pro',
     'x-scheduler',
+    'x-scheduler-headless',
     'x-tree-view',
     'x-tree-view-pro',
     'x-license',
@@ -413,7 +413,7 @@ export default defineConfig(
 
   // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
   {
-    files: ['packages/x-scheduler/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
+    files: ['packages/x-scheduler-headless/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
     rules: {
       'react-compiler/react-compiler': 'off',
     },
@@ -423,6 +423,7 @@ export default defineConfig(
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071
     files: [
       `packages/x-scheduler/src/**/*.${EXTENSION_TS}`,
+      `packages/x-scheduler-headless/src/**/*.${EXTENSION_TS}`,
       `packages/x-virtualizer/src/**/*.${EXTENSION_TS}`,
     ],
     rules: {
