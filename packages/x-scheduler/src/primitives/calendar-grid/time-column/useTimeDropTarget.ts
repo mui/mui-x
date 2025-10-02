@@ -185,6 +185,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
             start: placeholder.start,
             end: placeholder.end,
           };
+          store.setOccurrencePlaceholder(null);
           store.createEvent(event);
         }
       },
