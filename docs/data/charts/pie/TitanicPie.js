@@ -61,14 +61,14 @@ const classData = classes.map((pClass) => {
 });
 
 const classSurvivalData = classes.flatMap((pClass) => {
-  const classTotal = classData.find((d) => d.id === pClass).value;
+  const classTotal = classData.find((d) => d.id === pClass)?.value || 0;
   const baseColor = classColors[pClass];
   return titanicData
     .filter((item) => item.Class === pClass)
     .sort((a, b) => (a.Survived > b.Survived ? 1 : -1))
     .map((item) => ({
       id: `${pClass}-${item.Survived}`,
-      label: `${item.Survived}`,
+      label: item.Survived,
       value: item.Count,
       percentage: (item.Count / classTotal) * 100,
       color: item.Survived === 'Yes' ? baseColor : `${baseColor}80`, // 80 is 50% opacity for 'No'
@@ -111,7 +111,8 @@ const survivalData = [
 const survivalClassData = [...titanicData]
   .sort((a) => (a.Survived === 'Yes' ? -1 : 1))
   .map((item) => {
-    const baseColor = survivalData.find((d) => d.id === item.Survived)?.color;
+    const baseColor =
+      survivalData.find((d) => d.id === item.Survived)?.color || '#000000';
     return {
       id: `${item.Class}-${item.Survived}`,
       label: `${item.Class} class:`,
@@ -119,10 +120,10 @@ const survivalClassData = [...titanicData]
       percentage:
         (item.Count /
           (item.Survived === 'Yes'
-            ? survivalData[0].value
-            : survivalData[1].value)) *
+            ? survivalData[0]?.value || 1
+            : survivalData[1]?.value || 1)) *
         100,
-      color: hexToRgba(baseColor, opacityMap[item.Class]),
+      color: hexToRgba(baseColor, opacityMap[item.Class] || 1),
     };
   });
 
@@ -223,8 +224,11 @@ export default function TitanicPie() {
                 innerRadius: middleRadius,
                 outerRadius: middleRadius + 20,
                 data: survivalClassData,
-                arcLabel: (item) =>
-                  `${item.id.split('-')[0]} (${item.percentage.toFixed(0)}%)`,
+                arcLabel: (item) => {
+                  const id = item.id || '';
+                  const percentage = item.percentage || 0;
+                  return `${id.split('-')[0]} (${percentage.toFixed(0)}%)`;
+                },
                 arcLabelRadius: 160,
                 valueFormatter: ({ value }) =>
                   `${value} out of ${totalCount} (${((value / totalCount) * 100).toFixed(0)}%)`,

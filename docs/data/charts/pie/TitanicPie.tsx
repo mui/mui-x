@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import * as React from 'react';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import Box from '@mui/material/Box';
@@ -82,7 +81,7 @@ const classData: ChartDatum[] = classes.map((pClass: ClassType) => {
 });
 
 const classSurvivalData: ChartDatum[] = classes.flatMap((pClass: ClassType) => {
-  const classTotal = classData.find((d: ChartDatum) => d.id === pClass)?.value || 0;
+  const classTotal = classData.find((d: ChartDatum) => d.id === pClass)!.value ?? 0;
   const baseColor = classColors[pClass];
   return titanicData
     .filter((item: TitanicDatum) => item.Class === pClass)
@@ -132,9 +131,9 @@ const survivalData: ChartDatum[] = [
 const survivalClassData: ChartDatum[] = [...titanicData]
   .sort((a: TitanicDatum) => (a.Survived === 'Yes' ? -1 : 1))
   .map((item: TitanicDatum) => {
-    const baseColor =
-      survivalData.find((d: ChartDatum) => d.id === item.Survived)?.color ||
-      '#000000';
+    const baseColor = survivalData.find(
+      (d: ChartDatum) => d.id === item.Survived,
+    )!.color;
     return {
       id: `${item.Class}-${item.Survived}`,
       label: `${item.Class} class:`,
@@ -142,8 +141,8 @@ const survivalClassData: ChartDatum[] = [...titanicData]
       percentage:
         (item.Count /
           (item.Survived === 'Yes'
-            ? survivalData[0]?.value || 1
-            : survivalData[1]?.value || 1)) *
+            ? survivalData[0]!.value
+            : survivalData[1]!.value)) *
         100,
       color: hexToRgba(baseColor, opacityMap[item.Class] || 1),
     };
