@@ -3,7 +3,7 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
+import { CalendarEvent, CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
   buildIsValidDropTarget,
@@ -17,6 +17,7 @@ const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
   'CalendarGridTimeEventResizeHandler',
   'CalendarGridDayEvent',
+  'CalendarGridExternalEvent',
 ]);
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
@@ -46,10 +47,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
     });
 
   const getEventDropData = useEventCallback(
-    (
-      data: Record<string, unknown>,
-      input: { clientY: number },
-    ): CalendarOccurrencePlaceholder | undefined => {
+    (data: any, input: { clientY: number }): CalendarOccurrencePlaceholder | undefined => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
@@ -59,14 +57,27 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       const createDropData = (
         newStart: SchedulerValidDate,
         newEnd: SchedulerValidDate,
-      ): CalendarOccurrencePlaceholder => ({
-        start: newStart,
-        end: newEnd,
-        eventId: data.eventId,
-        occurrenceKey: data.occurrenceKey,
-        surfaceType: 'time-grid',
-        originalStart: data.start,
-      });
+      ): CalendarOccurrencePlaceholder => {
+        if (data.source === 'CalendarGridExternalEvent') {
+          return {
+            type: 'external-drag',
+            surfaceType: 'time-grid',
+            start: newStart,
+            end: newEnd,
+            eventData: data.eventData,
+          };
+        }
+
+        return {
+          type: 'internal-drag-or-resize',
+          surfaceType: 'time-grid',
+          start: newStart,
+          end: newEnd,
+          eventId: data.eventId,
+          occurrenceKey: data.occurrenceKey,
+          originalStart: data.start,
+        };
+      };
 
       const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
         const roundedOffset =
@@ -136,6 +147,13 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         return createDropData(newStartDate, newEndDate);
       }
 
+      // Move an External Event into the Time Grid
+      if (data.source === 'CalendarGridExternalEvent') {
+        const cursorDate = addOffsetToDate(start, cursorOffsetMs);
+
+        return createDropData(cursorDate, adapter.addMinutes(cursorDate, 60));
+      }
+
       return undefined;
     },
   );
@@ -154,24 +172,20 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           store.setOccurrencePlaceholder(newPlaceholder);
         }
       },
-      onDragStart: ({ source: { data } }) => {
-        if (isValidDropTarget(data)) {
-          store.setOccurrencePlaceholder({
-            eventId: data.eventId,
-            occurrenceKey: data.occurrenceKey,
-            surfaceType: 'time-grid',
-            start: data.start,
-            end: data.end,
-            originalStart: data.start,
-          });
-        }
-      },
       onDrop: ({ source: { data }, location }) => {
-        const newEvent =
+        const placeholder =
           getEventDropData(data, location.current.input) ??
           selectors.occurrencePlaceholder(store.state);
-        if (newEvent) {
-          store.applyOccurrencePlaceholder(newEvent);
+
+        if (placeholder?.type === 'internal-drag-or-resize') {
+          store.applyOccurrencePlaceholder(placeholder);
+        } else if (placeholder?.type === 'external-drag') {
+          const event: CalendarEvent = {
+            ...placeholder.eventData,
+            start: placeholder.start,
+            end: placeholder.end,
+          };
+          store.createEvent(event);
         }
       },
     });

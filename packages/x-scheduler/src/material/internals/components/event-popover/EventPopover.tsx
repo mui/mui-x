@@ -80,7 +80,7 @@ export const EventPopover = React.forwardRef(function EventPopover(
   }
 
   function pushPlaceholder(next: typeof when, nextIsAllDay = isAllDay) {
-    if (!rawPlaceholder || rawPlaceholder.eventId != null) {
+    if (rawPlaceholder?.type !== 'creation') {
       return;
     }
 
@@ -90,12 +90,10 @@ export const EventPopover = React.forwardRef(function EventPopover(
       : surfaceType;
 
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: rawPlaceholder.occurrenceKey,
+      type: 'creation',
       surfaceType: surfaceTypeToUse,
       start,
       end,
-      originalStart: null,
       lockSurfaceType: rawPlaceholder.lockSurfaceType,
     });
   }

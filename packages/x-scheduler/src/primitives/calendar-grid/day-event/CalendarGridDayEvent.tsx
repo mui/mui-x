@@ -8,13 +8,14 @@ import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
 import { useEvent } from '../../utils/useEvent';
-import { CalendarEventId, SchedulerValidDate } from '../../models';
+import { SchedulerValidDate } from '../../models';
 import { useAdapter } from '../../utils/adapter/useAdapter';
 import { diffIn } from '../../utils/date-utils';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
 import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import type { CalendarGridSharedEventDragData } from '../../utils/drag-utils';
 
 const EVENT_PROPS_WHILE_DRAGGING = { style: { pointerEvents: 'none' as const } };
 
@@ -162,9 +163,7 @@ export namespace CalendarGridDayEvent {
     isDraggable?: boolean;
   }
 
-  export interface SharedDragData {
-    eventId: CalendarEventId;
-    occurrenceKey: string;
+  export interface SharedDragData extends CalendarGridSharedEventDragData {
     start: SchedulerValidDate;
     end: SchedulerValidDate;
   }

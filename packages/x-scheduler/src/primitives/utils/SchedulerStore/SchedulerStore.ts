@@ -278,14 +278,16 @@ export class SchedulerStore<
     data: CalendarOccurrencePlaceholder,
     chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
   ) {
+    if (data.type !== 'internal-drag-or-resize') {
+      throw new Error(
+        'Scheduler: store.applyOccurrencePlaceholder can only be used for "internal-drag-or-resize" placeholders. Use store.createEvent for other placeholders.',
+      );
+    }
+
     // TODO: Try to do a single state update.
     this.setOccurrencePlaceholder(null);
 
     const { eventId, start, end, originalStart, surfaceType } = data;
-
-    if (eventId == null || originalStart == null) {
-      return undefined;
-    }
 
     const original = selectors.event(this.state, eventId);
     if (!original) {

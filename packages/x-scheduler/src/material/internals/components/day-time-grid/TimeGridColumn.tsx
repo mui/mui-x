@@ -93,12 +93,10 @@ function ColumnInteractiveLayer({
   const handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const draftRange = computeInitialRange(event);
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: 'create-placeholder',
+      type: 'creation',
       surfaceType: 'time-grid',
       start: draftRange.start,
       end: draftRange.end,
-      originalStart: null,
     });
   };
 

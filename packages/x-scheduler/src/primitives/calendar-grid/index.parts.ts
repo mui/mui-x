@@ -1,5 +1,6 @@
 export { CalendarGridRoot as Root } from './root/CalendarGridRoot';
 export { CalendarGridScrollableContent as ScrollableContent } from './scrollable-content/CalendarGridScrollableContent';
+export { CalendarGridExternalEvent as ExternalEvent } from './external-event/CalendarGridExternalEvent';
 
 export { CalendarGridDayRow as DayRow } from './day-row/CalendarGridDayRow';
 export { CalendarGridDayCell as DayCell } from './day-cell/CalendarGridDayCell';

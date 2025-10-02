@@ -113,18 +113,6 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
           store.setOccurrencePlaceholder(newPlaceholder);
         }
       },
-      onDragStart: ({ source: { data } }) => {
-        if (isValidDropTarget(data)) {
-          store.setOccurrencePlaceholder({
-            occurrenceKey: data.occurrenceKey,
-            eventId: data.eventId,
-            start: data.start,
-            end: data.end,
-            originalStart: data.start,
-            surfaceType: 'day-grid',
-          });
-        }
-      },
       onDrop: ({ source: { data } }) => {
         const newEvent = getEventDropData(data) ?? selectors.occurrencePlaceholder(store.state);
         if (newEvent) {
