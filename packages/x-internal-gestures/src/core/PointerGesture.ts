@@ -92,8 +92,6 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
 
   protected abstract readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
-  protected readonly pointerOptionsType!: Required<BasePointerGestureOptions>;
-
   /**
    * Minimum number of simultaneous pointers required to activate the gesture.
    * The gesture will not start until at least this many pointers are active.

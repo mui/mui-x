@@ -231,9 +231,6 @@ export abstract class Gesture<GestureName extends string> {
   /** @internal For types. The state that can be changed at runtime */
   protected abstract readonly mutableStateType: Partial<typeof this.state>;
 
-  /** @internal For types. The pointer specific options */
-  protected abstract readonly pointerOptionsType: Required<BaseGestureOptions>;
-
   /**
    * Create a new gesture instance with the specified options
    *
