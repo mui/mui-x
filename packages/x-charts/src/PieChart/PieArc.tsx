@@ -91,8 +91,8 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
      */
     skipAnimation?: boolean;
     /**
-     * If `true`, the default event handler are disabled.
-     * Those are used for example to display a tooltip or highlight the arc on hover.
+     * If `true`, the default event handlers are disabled.
+     * Those are used, for example, to display a tooltip or highlight the arc on hover.
      */
     skipInteraction?: boolean;
   };
@@ -191,8 +191,8 @@ PieArc.propTypes = {
    */
   skipAnimation: PropTypes.bool,
   /**
-   * If `true`, the default event handler are disabled.
-   * Those are used for example to display a tooltip or highlight the arc on hover.
+   * If `true`, the default event handlers are disabled.
+   * Those are used, for example, to display a tooltip or highlight the arc on hover.
    */
   skipInteraction: PropTypes.bool,
   startAngle: PropTypes.number.isRequired,
