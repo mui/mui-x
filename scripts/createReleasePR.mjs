@@ -667,7 +667,7 @@ function createPrBody(newVersion) {
 
 ### Publish GitHub release
 
-- [ ] Go to the new release on GitHub releases page (or create one if you didn't use the publish action to create it)
+- [ ] Go to the new release on [GitHub releases](https://github.com/mui/mui-x/releases) page and publish the draft.
 
 ### Announce
 
