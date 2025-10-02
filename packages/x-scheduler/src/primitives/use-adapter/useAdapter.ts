@@ -9,9 +9,10 @@ export function useAdapter() {
   return DO_NOT_USE_THIS_VARIABLE_ADAPTER_CLASS;
 }
 
-const MS_MIN = 60000;
-const MS_DAY = 86400000;
-const MS_WEEK = 7 * MS_DAY;
+const MS_MIN = 60 * 1000;
+const MS_HOUR = MS_MIN * 60;
+const MS_DAY = MS_HOUR * 24;
+const MS_WEEK = MS_DAY * 7;
 
 /**
  * Calculate the difference between two dates in the specified unit.
@@ -21,13 +22,18 @@ export function diffIn(
   adapter: Adapter,
   a: SchedulerValidDate,
   b: SchedulerValidDate,
-  unit: 'minutes' | 'days' | 'weeks' | 'months' | 'years',
+  unit: 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years',
 ): number {
   switch (unit) {
     case 'minutes': {
       const msA = adapter.toJsDate(a).getTime();
       const msB = adapter.toJsDate(b).getTime();
       return Math.floor((msA - msB) / MS_MIN);
+    }
+    case 'hours': {
+      const msA = adapter.toJsDate(a).getTime();
+      const msB = adapter.toJsDate(b).getTime();
+      return Math.floor((msA - msB) / MS_HOUR);
     }
     case 'days': {
       const yA = adapter.getYear(a);

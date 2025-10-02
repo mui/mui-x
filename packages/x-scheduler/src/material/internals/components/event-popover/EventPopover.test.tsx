@@ -3,9 +3,9 @@ import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler/primitives/constants';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { Popover } from '@base-ui-components/react/popover';
-import { DEFAULT_EVENT_COLOR } from '../../../../primitives/constants';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 
