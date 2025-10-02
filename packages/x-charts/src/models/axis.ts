@@ -427,6 +427,34 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
       tickNumber?: number;
     };
 
+type MinMaxConfig<S extends ScaleName = ScaleName> = S extends ContinuousScaleName
+  ? S extends 'utc' | 'time'
+    ? {
+        /**
+         * The minimal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        min?: Date;
+        /**
+         * The maximal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        max?: Date;
+      }
+    : {
+        /**
+         * The minimal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        min?: number;
+        /**
+         * The maximal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        max?: number;
+      }
+  : {};
+
 /**
  * Config that is shared between cartesian and polar axes.
  */
@@ -437,16 +465,6 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * The ID must be unique across all axes in this chart.
    */
   id: AxisId;
-  /**
-   * The minimal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  min?: number | Date;
-  /**
-   * The maximal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  max?: number | Date;
   /**
    * The data used by `'band'` and `'point'` scales.
    */
@@ -499,6 +517,7 @@ export type PolarAxisConfig<
    */
   offset?: number;
 } & CommonAxisConfig<S, V> &
+  MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisConfigExtension;
@@ -519,6 +538,7 @@ export type AxisConfig<
    */
   offset?: number;
 } & CommonAxisConfig<S, V> &
+  MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisSideConfig<AxisProps> &
