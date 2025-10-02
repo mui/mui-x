@@ -207,10 +207,10 @@ describe('findClosestPoints', () => {
 
   describe('reversed axes', () => {
     it('finds the closest point', () => {
-      const svgPoint = { x: 500, y: 500 };
+      const svgPoint = { x: 400, y: 500 };
       const seriesData = [
         { x: 40, y: 10 },
-        { x: 40, y: 999 },
+        { x: 60, y: 999 },
       ];
       const xScale = scaleLinear()
         .domain([0, 100])
