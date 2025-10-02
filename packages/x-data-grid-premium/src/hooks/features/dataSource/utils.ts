@@ -26,9 +26,13 @@ export const getPropsOverrides = (
 ): GridPivotingDynamicPropsOverrides => {
   const visiblePivotColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visiblePivotValues = pivotModel.values.filter((value) => !value.hidden);
-  const columnDefinitions: Record<string, GridColDef> = Object.fromEntries(
-    initialColumns.entries(),
-  );
+  const columns: GridColDef[] = [];
+  const columnDefinitions: Record<string, GridColDef> = {};
+  initialColumns.forEach((value, key) => {
+    columnDefinitions[key] = value;
+    columns.push(value);
+  });
+
   // Build column grouping model from pivot column paths
   const columnGroupingModel: GridColumnGroupingModel = [];
   const columnGroupingModelLookup = new Map<string, any>();
@@ -182,12 +186,14 @@ export const getPropsOverrides = (
     });
   }
 
-  const sortedNewColumns = visiblePivotColumns.length
-    ? columnGroupPathValues.map((pathValue) => newColumns[pathValue.field])
-    : [];
+  if (visiblePivotColumns.length > 0) {
+    for (let i = 0; i < columnGroupPathValues.length; i += 1) {
+      columns.push(newColumns[columnGroupPathValues[i].field]);
+    }
+  }
 
   return {
-    columns: [...Object.values(columnDefinitions), ...sortedNewColumns],
+    columns,
     columnGroupingModel,
     aggregationModel,
   };
