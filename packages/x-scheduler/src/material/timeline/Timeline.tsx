@@ -7,9 +7,9 @@ import {
   useExtractTimelineParameters,
   useTimeline,
 } from '../../primitives/use-timeline';
-import { TimelineStoreContext } from '../../primitives/utils/useTimelineStoreContext';
+import { TimelineStoreContext } from '../../primitives/use-timeline-store-context';
 import { TimelineView } from '../../primitives/models';
-import { SchedulerStoreContext } from '../../primitives/utils/useSchedulerStoreContext';
+import { SchedulerStoreContext } from '../../primitives/use-scheduler-store-context';
 import { TimelineProps } from './Timeline.types';
 import { ViewSwitcher } from '../internals/components/header-toolbar/view-switcher';
 import { TimelineContent } from './content';

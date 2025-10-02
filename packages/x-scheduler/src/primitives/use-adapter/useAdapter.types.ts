@@ -1,4 +1,4 @@
-import { SchedulerValidDate } from '../../models';
+import { SchedulerValidDate } from '../models';
 
 type FieldSectionType =
   | 'year'

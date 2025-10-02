@@ -1,10 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { useAdapter } from '../../../../primitives/use-adapter';
 import { useDayList } from '../../../../primitives/use-day-list';
 import { selectors } from '../../../../primitives/use-timeline';
-import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
+import { useTimelineStoreContext } from '../../../../primitives/use-timeline-store-context';
 import { HeaderProps } from './Headers.types';
 import { TIME_UNITS_COUNT } from '../../constants';
 import './Headers.css';

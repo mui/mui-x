@@ -1,12 +1,10 @@
+import { adapter } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { useEventOccurrencesWithTimelinePosition } from './useEventOccurrencesWithTimelinePosition';
-import { getAdapter } from '../utils/adapter/getAdapter';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { CalendarEvent } from '../models';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
-  const adapter = getAdapter();
-
   const collectionStart = adapter.date('2024-01-15');
   const collectionEnd = adapter.endOfDay(adapter.date('2024-01-15'));
 

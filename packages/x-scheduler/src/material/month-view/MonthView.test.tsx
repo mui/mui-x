@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { DateTime } from 'luxon';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
 import { spy } from 'sinon';
 import { MonthView } from '@mui/x-scheduler/material/month-view';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { EventCalendar } from '../event-calendar';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 
 const events: CalendarEvent[] = [
   {
@@ -64,7 +63,6 @@ const allDayEvents: CalendarEvent[] = [
 
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
-  const adapter = getAdapter();
 
   const standaloneDefaults = {
     events,

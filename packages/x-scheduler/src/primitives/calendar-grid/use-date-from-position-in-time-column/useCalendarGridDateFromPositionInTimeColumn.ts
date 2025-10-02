@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { SchedulerValidDate } from '../../models';
-import { useAdapter } from '../../utils/adapter/useAdapter';
+import { useAdapter } from '../../use-adapter/useAdapter';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 
 export function useCalendarGridGetDateFromPositionInColumn(
