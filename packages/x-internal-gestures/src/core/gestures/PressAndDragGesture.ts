@@ -1,16 +1,18 @@
 /**
- * TapAndDragGesture - Detects tap followed by drag gestures using composition
+ * PressAndDragGesture - Detects press followed by drag gestures using composition
  *
- * This gesture uses internal TapGesture and PanGesture instances to:
- * 1. First, detect a tap (quick touch without movement)
- * 2. Then, track drag movements on the next pointer down
+ * This gesture uses internal PressGesture and PanGesture instances to:
+ * 1. First, detect a press (hold for specified duration without movement)
+ * 2. Then, track drag movements from the press position
  *
  * The gesture fires events when:
- * - A tap is completed (tap phase)
+ * - A press is completed (press phase)
  * - Drag movement begins and passes threshold (dragStart)
  * - Drag movement continues (drag)
  * - Drag movement ends (dragEnd)
  * - The gesture is canceled at any point
+ *
+ * This is ideal for panning operations where you want to hold first, then drag.
  */
 
 import type { ActiveGesturesRegistry } from '../ActiveGesturesRegistry';
@@ -20,23 +22,29 @@ import { PointerGesture, type PointerGestureOptions } from '../PointerGesture';
 import { type PointerManager } from '../PointerManager';
 import { createEventName, preventDefault } from '../utils';
 import { PanGesture, type PanEvent, type PanGestureEventData } from './PanGesture';
-import { TapGesture } from './TapGesture';
+import { PressGesture } from './PressGesture';
 
 /**
- * Configuration options for TapAndDragGesture
- * Extends PointerGestureOptions with tap and drag specific settings
+ * Configuration options for PressAndDragGesture
+ * Extends PointerGestureOptions with press and drag specific settings
  */
-export type TapAndDragGestureOptions<GestureName extends string> =
+export type PressAndDragGestureOptions<GestureName extends string> =
   PointerGestureOptions<GestureName> & {
     /**
-     * Maximum distance in pixels a pointer can move during the tap phase for it to still be considered a tap
-     * @default 10
+     * Duration in milliseconds required to hold before the press gesture is recognized
+     * @default 500
      */
-    tapMaxDistance?: number;
+    pressDuration?: number;
 
     /**
-     * Maximum time in milliseconds between the tap completion and the start of the drag
-     * If exceeded, the gesture will reset and wait for a new tap
+     * Maximum distance in pixels a pointer can move during the press phase for it to still be considered a press
+     * @default 10
+     */
+    pressMaxDistance?: number;
+
+    /**
+     * Maximum time in milliseconds between the press completion and the start of the drag
+     * If exceeded, the gesture will reset and wait for a new press
      * @default 1000
      */
     dragTimeout?: number;
@@ -57,64 +65,69 @@ export type TapAndDragGestureOptions<GestureName extends string> =
   };
 
 /**
- * Event data specific to tap and drag gesture events
+ * Event data specific to press and drag gesture events
  * Contains information about the gesture state, position, and movement
  */
-export type TapAndDragGestureEventData<
+export type PressAndDragGestureEventData<
   CustomData extends Record<string, unknown> = Record<string, unknown>,
 > = PanGestureEventData<CustomData> & {};
 
 /**
- * Type definition for the CustomEvent created by TapAndDragGesture
+ * Type definition for the CustomEvent created by PressAndDragGesture
  */
-export type TapAndDragEvent<CustomData extends Record<string, unknown> = Record<string, unknown>> =
-  CustomEvent<TapAndDragGestureEventData<CustomData>>;
+export type PressAndDragEvent<
+  CustomData extends Record<string, unknown> = Record<string, unknown>,
+> = CustomEvent<PressAndDragGestureEventData<CustomData>>;
 
 /**
- * Represents the current phase of the TapAndDrag gesture
+ * Represents the current phase of the PressAndDrag gesture
  */
-export type TapAndDragPhase = 'waitingForTap' | 'tapDetected' | 'waitingForDrag' | 'dragging';
+export type PressAndDragPhase = 'waitingForPress' | 'pressDetected' | 'waitingForDrag' | 'dragging';
 
 /**
- * State tracking for the TapAndDragGesture
+ * State tracking for the PressAndDragGesture
  */
-export type TapAndDragGestureState = GestureState & {
-  /** Current phase of the tap and drag gesture */
-  phase: TapAndDragPhase;
+export type PressAndDragGestureState = GestureState & {
+  /** Current phase of the press and drag gesture */
+  phase: PressAndDragPhase;
   /** Timeout used to time drag interactions */
   dragTimeoutId: ReturnType<typeof setTimeout> | null;
 };
 
 /**
- * TapAndDragGesture class for handling tap followed by drag interactions
+ * PressAndDragGesture class for handling press followed by drag interactions
  *
- * This gesture composes tap and drag logic patterns from TapGesture and PanGesture
- * into a single coordinated gesture that handles tap-then-drag interactions.
+ * This gesture composes press and drag logic patterns from PressGesture and PanGesture
+ * into a single coordinated gesture that handles press-then-drag interactions.
  */
-export class TapAndDragGesture<GestureName extends string> extends PointerGesture<GestureName> {
-  protected state: TapAndDragGestureState = {
-    phase: 'waitingForTap',
+export class PressAndDragGesture<GestureName extends string> extends PointerGesture<GestureName> {
+  protected state: PressAndDragGestureState = {
+    phase: 'waitingForPress',
     dragTimeoutId: null,
   };
 
   protected readonly isSinglePhase!: false;
 
-  protected readonly eventType!: TapAndDragEvent;
+  protected readonly eventType!: PressAndDragEvent;
 
-  protected readonly optionsType!: TapAndDragGestureOptions<GestureName>;
+  protected readonly optionsType!: PressAndDragGestureOptions<GestureName>;
 
   protected readonly mutableOptionsType!: Omit<typeof this.optionsType, 'name'>;
 
   protected readonly mutableStateType!: Omit<Partial<typeof this.state>, 'phase' | 'dragTimeoutId'>;
 
   /**
-   * Maximum distance a pointer can move during tap for it to still be considered a tap
-   * (Following TapGesture pattern)
+   * Duration required for press recognition
    */
-  private tapMaxDistance: number;
+  private pressDuration: number;
 
   /**
-   * Maximum time between tap completion and drag start
+   * Maximum distance a pointer can move during press for it to still be considered a press
+   */
+  private pressMaxDistance: number;
+
+  /**
+   * Maximum time between press completion and drag start
    */
   private dragTimeout: number;
 
@@ -128,25 +141,29 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
    */
   private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
 
-  private tapGesture: TapGesture<GestureName>;
+  private pressGesture: PressGesture<GestureName>;
 
   private panGesture: PanGesture<GestureName>;
 
-  constructor(options: TapAndDragGestureOptions<GestureName>) {
+  constructor(options: PressAndDragGestureOptions<GestureName>) {
     super(options);
-    this.tapMaxDistance = options.tapMaxDistance ?? 10;
+    this.pressDuration = options.pressDuration ?? 500;
+    this.pressMaxDistance = options.pressMaxDistance ?? 10;
     this.dragTimeout = options.dragTimeout ?? 1000;
     this.dragThreshold = options.dragThreshold ?? 0;
     this.dragDirection = options.dragDirection || ['up', 'down', 'left', 'right'];
-    this.tapGesture = new TapGesture({
-      name: `${this.name}-tap` as GestureName,
-      maxDistance: this.tapMaxDistance,
+
+    this.pressGesture = new PressGesture({
+      name: `${this.name}-press` as GestureName,
+      duration: this.pressDuration,
+      maxDistance: this.pressMaxDistance,
       maxPointers: this.maxPointers,
       pointerMode: this.pointerMode,
       requiredKeys: this.requiredKeys,
       preventIf: this.preventIf,
       pointerOptions: structuredClone(this.pointerOptions),
     });
+
     this.panGesture = new PanGesture({
       name: `${this.name}-pan` as GestureName,
       minPointers: this.minPointers,
@@ -160,14 +177,15 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     });
   }
 
-  public clone(overrides?: Record<string, unknown>): TapAndDragGesture<GestureName> {
-    return new TapAndDragGesture({
+  public clone(overrides?: Record<string, unknown>): PressAndDragGesture<GestureName> {
+    return new PressAndDragGesture({
       name: this.name,
       preventDefault: this.preventDefault,
       stopPropagation: this.stopPropagation,
       minPointers: this.minPointers,
       maxPointers: this.maxPointers,
-      tapMaxDistance: this.tapMaxDistance,
+      pressDuration: this.pressDuration,
+      pressMaxDistance: this.pressMaxDistance,
       dragTimeout: this.dragTimeout,
       dragThreshold: this.dragThreshold,
       dragDirection: [...this.dragDirection],
@@ -187,9 +205,13 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     keyboardManager: KeyboardManager,
   ): void {
     super.init(element, pointerManager, gestureRegistry, keyboardManager);
-    this.tapGesture.init(element, pointerManager, gestureRegistry, keyboardManager);
+    this.pressGesture.init(element, pointerManager, gestureRegistry, keyboardManager);
     this.panGesture.init(element, pointerManager, gestureRegistry, keyboardManager);
-    this.element.addEventListener(this.tapGesture.name, this.tapHandler);
+
+    // Listen to press gesture events
+    this.element.addEventListener(this.pressGesture.name, this.pressHandler);
+
+    // Listen to pan gesture events for dragging
     // @ts-expect-error, PointerEvent is correct.
     this.element.addEventListener(`${this.panGesture.name}Start`, this.dragStartHandler);
     // @ts-expect-error, PointerEvent is correct.
@@ -202,9 +224,10 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
 
   public destroy(): void {
     this.resetState();
-    this.tapGesture.destroy();
+    this.pressGesture.destroy();
     this.panGesture.destroy();
-    this.element.removeEventListener(this.tapGesture.name, this.tapHandler);
+
+    this.element.removeEventListener(this.pressGesture.name, this.pressHandler);
     // @ts-expect-error, PointerEvent is correct.
     this.element.removeEventListener(`${this.panGesture.name}Start`, this.dragStartHandler);
     // @ts-expect-error, PointerEvent is correct.
@@ -213,17 +236,20 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     this.element.removeEventListener(`${this.panGesture.name}End`, this.dragEndHandler);
     // @ts-expect-error, PointerEvent is correct.
     this.element.removeEventListener(`${this.panGesture.name}Cancel`, this.dragEndHandler);
+
     super.destroy();
   }
 
   protected updateOptions(options: typeof this.mutableOptionsType): void {
     super.updateOptions(options);
 
-    this.tapMaxDistance = options.tapMaxDistance ?? this.tapMaxDistance;
+    this.pressDuration = options.pressDuration ?? this.pressDuration;
+    this.pressMaxDistance = options.pressMaxDistance ?? this.pressMaxDistance;
     this.dragTimeout = options.dragTimeout ?? this.dragTimeout;
     this.dragThreshold = options.dragThreshold ?? this.dragThreshold;
     this.dragDirection = options.dragDirection || this.dragDirection;
 
+    // Update internal gesture options
     this.element.dispatchEvent(
       new CustomEvent(`${this.panGesture.name}ChangeOptions`, {
         detail: {
@@ -240,9 +266,10 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
     );
 
     this.element.dispatchEvent(
-      new CustomEvent(`${this.tapGesture.name}ChangeOptions`, {
+      new CustomEvent(`${this.pressGesture.name}ChangeOptions`, {
         detail: {
-          maxDistance: this.tapMaxDistance,
+          duration: this.pressDuration,
+          maxDistance: this.pressMaxDistance,
           maxPointers: this.maxPointers,
           pointerMode: this.pointerMode,
           requiredKeys: this.requiredKeys,
@@ -262,23 +289,23 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
 
     this.isActive = false;
     this.state = {
-      phase: 'waitingForTap',
+      phase: 'waitingForPress',
       dragTimeoutId: null,
     };
   }
 
   /**
-   * This can be empty because the TapAndDragGesture relies on TapGesture and PanGesture to handle pointer events
+   * This can be empty because the PressAndDragGesture relies on PressGesture and PanGesture to handle pointer events
    * The internal gestures will manage their own state and events, while this class coordinates between them
    */
   protected handlePointerEvent(): void {}
 
-  private tapHandler = (): void => {
-    if (this.state.phase !== 'waitingForTap') {
+  private pressHandler = (): void => {
+    if (this.state.phase !== 'waitingForPress') {
       return;
     }
 
-    this.state.phase = 'tapDetected';
+    this.state.phase = 'pressDetected';
 
     this.setTouchAction();
 
@@ -290,7 +317,7 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
   };
 
   private dragStartHandler = (event: PanEvent) => {
-    if (this.state.phase !== 'tapDetected') {
+    if (this.state.phase !== 'pressDetected') {
       return;
     }
 
@@ -300,6 +327,7 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
       this.state.dragTimeoutId = null;
     }
 
+    // Restore touch action since we're now dragging
     this.restoreTouchAction();
 
     this.state.phase = 'dragging';
@@ -337,9 +365,13 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
 
   private setTouchAction(): void {
     this.element.addEventListener('touchstart', preventDefault, { passive: false });
+    this.element.addEventListener('touchmove', preventDefault, { passive: false });
+    this.element.addEventListener('touchend', preventDefault, { passive: false });
   }
 
   private restoreTouchAction(): void {
     this.element.removeEventListener('touchstart', preventDefault);
+    this.element.removeEventListener('touchmove', preventDefault);
+    this.element.removeEventListener('touchend', preventDefault);
   }
 }
