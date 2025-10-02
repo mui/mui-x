@@ -1,17 +1,19 @@
 import { ActiveGesturesRegistry } from './ActiveGesturesRegistry';
-import { Gesture, GestureEventData, GestureOptions } from './Gesture';
+import {
+  Gesture,
+  GestureEventData,
+  GestureOptions,
+  type BaseGestureOptions,
+  type PointerMode,
+} from './Gesture';
 import type { KeyboardManager } from './KeyboardManager';
 import { PointerData, PointerManager } from './PointerManager';
 import { TargetElement } from './types/TargetElement';
 
 /**
- * Configuration options for pointer-based gestures, extending the base GestureOptions.
- *
- * These options provide fine-grained control over how pointer events are interpreted
- * and when the gesture should be recognized.
+ * Base configuration options that can be overridden per pointer mode.
  */
-export interface PointerGestureOptions<GestureName extends string>
-  extends GestureOptions<GestureName> {
+export type BasePointerGestureOptions = BaseGestureOptions & {
   /**
    * Minimum number of pointers required to activate the gesture.
    * The gesture will not start until at least this many pointers are active.
@@ -27,7 +29,16 @@ export interface PointerGestureOptions<GestureName extends string>
    * @default Infinity (no maximum)
    */
   maxPointers?: number;
-}
+};
+
+/**
+ * Configuration options for pointer-based gestures, extending the base GestureOptions.
+ *
+ * These options provide fine-grained control over how pointer events are interpreted
+ * and when the gesture should be recognized.
+ */
+export interface PointerGestureOptions<GestureName extends string>
+  extends GestureOptions<GestureName, BasePointerGestureOptions> {}
 
 export type PointerGestureEventData<
   CustomData extends Record<string, unknown> = Record<string, unknown>,
@@ -81,6 +92,8 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
 
   protected abstract readonly mutableOptionsType: Omit<typeof this.optionsType, 'name'>;
 
+  protected readonly pointerOptionsType!: Required<BasePointerGestureOptions>;
+
   /**
    * Minimum number of simultaneous pointers required to activate the gesture.
    * The gesture will not start until at least this many pointers are active.
@@ -115,6 +128,30 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
 
     this.minPointers = options.minPointers ?? this.minPointers;
     this.maxPointers = options.maxPointers ?? this.maxPointers;
+  }
+
+  protected getBaseConfig() {
+    return {
+      requiredKeys: this.requiredKeys,
+      minPointers: this.minPointers,
+      maxPointers: this.maxPointers,
+    };
+  }
+
+  protected isMinPointersMet(pointers: PointerData[], pointerMode: string): boolean {
+    const config = this.getEffectiveConfig(pointerMode as PointerMode, this.getBaseConfig());
+    return pointers.length >= config.minPointers;
+  }
+
+  protected isMaxPointersMet(pointers: PointerData[], pointerMode: string): boolean {
+    const config = this.getEffectiveConfig(pointerMode as PointerMode, this.getBaseConfig());
+    return pointers.length <= config.maxPointers;
+  }
+
+  protected isWithinPointerCount(pointers: PointerData[], pointerMode: string): boolean {
+    return (
+      this.isMinPointersMet(pointers, pointerMode) && this.isMaxPointersMet(pointers, pointerMode)
+    );
   }
 
   /**
