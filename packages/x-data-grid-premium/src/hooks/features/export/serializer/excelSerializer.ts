@@ -1,4 +1,4 @@
-import type * as Excel from 'exceljs';
+import type * as Excel from '@cherniavskii/exceljs-fork';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridRowId,
