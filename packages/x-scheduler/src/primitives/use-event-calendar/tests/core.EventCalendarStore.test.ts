@@ -1,3 +1,4 @@
+import { useFakeTimers } from 'sinon';
 import { getAdapter } from '../../utils/adapter/getAdapter';
 import {
   DEFAULT_PREFERENCES,
@@ -15,6 +16,7 @@ const DEFAULT_PARAMS = { events: [] };
 describe('Core - EventCalendarStore', () => {
   describe('create', () => {
     it('should initialize default state', () => {
+      const clock = useFakeTimers();
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
       const expectedState = {
@@ -24,9 +26,9 @@ describe('Core - EventCalendarStore', () => {
         resources: DEFAULT_RESOURCES,
         events: [],
         visibleResources: new Map(),
+        nowUpdatedEveryMinute: adapter.date(),
         areEventsDraggable: false,
         areEventsResizable: false,
-        ampm: true,
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
         preferences: DEFAULT_PREFERENCES,
@@ -37,6 +39,7 @@ describe('Core - EventCalendarStore', () => {
       };
 
       expect(store.state).to.deep.equal(expectedState);
+      clock.restore();
     });
   });
 

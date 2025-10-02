@@ -42,10 +42,6 @@ export interface SchedulerState {
    */
   areEventsResizable: boolean;
   /**
-   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
-   */
-  ampm: boolean;
-  /**
    * The color palette used for all events.
    */
   eventColor: CalendarEventColor;
@@ -57,6 +53,10 @@ export interface SchedulerState {
    * The placeholder occurrence of the event being created or the event occurrences being dragged
    */
   occurrencePlaceholder: CalendarOccurrencePlaceholder | null;
+  /**
+   * The current date and time, updated every minute.
+   */
+  nowUpdatedEveryMinute: SchedulerValidDate;
 }
 
 export interface SchedulerParameters {
@@ -96,11 +96,6 @@ export interface SchedulerParameters {
    * @default false
    */
   areEventsResizable?: boolean;
-  /**
-   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
-   * @default true
-   */
-  ampm?: boolean;
   /**
    * Whether the component should display the current time indicator.
    * @default true

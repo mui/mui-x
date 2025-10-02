@@ -15,6 +15,12 @@
       "isGlobal": false
     },
     {
+      "key": "focusIndicator",
+      "className": "MuiPieArc-focusIndicator",
+      "description": "Styles applied to the focus indicator element.",
+      "isGlobal": false
+    },
+    {
       "key": "highlighted",
       "className": "MuiPieArc-highlighted",
       "description": "Styles applied to the root element when highlighted.",

@@ -7,6 +7,10 @@
       "nodeName": "the root element",
       "conditions": "faded"
     },
+    "focusIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focus indicator element"
+    },
     "highlighted": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element",

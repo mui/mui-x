@@ -19,7 +19,6 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     areEventsResizable,
     preferences,
     preferencesMenuConfig,
-    ampm,
     eventColor,
     showCurrentTimeIndicator,
     ...forwardedProps
@@ -41,7 +40,6 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       areEventsResizable,
       preferences,
       preferencesMenuConfig,
-      ampm,
       eventColor,
       showCurrentTimeIndicator,
     }),
@@ -60,7 +58,6 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       areEventsResizable,
       preferences,
       preferencesMenuConfig,
-      ampm,
       eventColor,
       showCurrentTimeIndicator,
     ],

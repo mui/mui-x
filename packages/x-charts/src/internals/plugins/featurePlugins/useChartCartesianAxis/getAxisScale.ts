@@ -34,6 +34,7 @@ type GetAxesScalesParams<T extends ChartSeriesType = ChartSeriesType> = {
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
   preferStrictDomainInLineCharts?: boolean;
+  defaultTickNumber: number;
 };
 
 function getRange(
@@ -56,6 +57,7 @@ export function getXAxesScales<T extends ChartSeriesType>({
   seriesConfig,
   zoomMap,
   preferStrictDomainInLineCharts,
+  defaultTickNumber,
 }: GetAxesScalesParams<T> & {
   axis?: DefaultedAxis[];
 }) {
@@ -74,6 +76,7 @@ export function getXAxesScales<T extends ChartSeriesType>({
       axisIndex,
       formattedSeries,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     );
   });
 
@@ -87,6 +90,7 @@ export function getYAxesScales<T extends ChartSeriesType>({
   seriesConfig,
   zoomMap,
   preferStrictDomainInLineCharts,
+  defaultTickNumber,
 }: GetAxesScalesParams<T> & {
   axis?: DefaultedAxis[];
 }) {
@@ -105,6 +109,7 @@ export function getYAxesScales<T extends ChartSeriesType>({
       axisIndex,
       formattedSeries,
       preferStrictDomainInLineCharts,
+      defaultTickNumber,
     );
   });
 
@@ -133,6 +138,7 @@ function getAxisScale<T extends ChartSeriesType>(
    * @deprecated To remove in v9. This is an experimental feature to avoid breaking change.
    */
   preferStrictDomainInLineCharts: boolean | undefined,
+  defaultTickNumber: number,
 ): ScaleDefinition {
   const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
   const range = getRange(drawingArea, axisDirection, axis);
@@ -182,7 +188,7 @@ function getAxisScale<T extends ChartSeriesType>(
     axisExtrema[1] = max;
   }
 
-  const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtrema });
+  const rawTickNumber = getTickNumber(axis, axisExtrema, defaultTickNumber);
 
   const zoomedRange = zoomScaleRange(range, zoomRange);
 
