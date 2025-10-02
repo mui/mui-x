@@ -27,7 +27,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
     occurrences: day.withoutPosition,
-    maxColumnSpan: Infinity,
+    maxSpan: Infinity,
   });
 
   return (
