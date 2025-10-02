@@ -17,19 +17,9 @@ import {
   selectors,
   useExtractEventCalendarParameters,
 } from '../../primitives/use-event-calendar';
+import { SchedulerStoreContext } from '../../primitives/utils/useSchedulerStoreContext';
 import '../index.css';
 import './EventCalendar.css';
-
-function ErrorCallout() {
-  return (
-    <div className="ErrorCallout">
-      <p>
-        <span>The Timeline view is currently only available on its own, rendered inside the </span>
-        <span className="CodeSnippet">{'<StandaloneView/>'}</span> component.
-      </p>
-    </div>
-  );
-}
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -58,44 +48,43 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
     case 'agenda':
       content = <AgendaView />;
       break;
-    case 'timeline':
-      content = <ErrorCallout />;
-      break;
     default:
       content = null;
   }
 
   return (
     <EventCalendarStoreContext.Provider value={store}>
-      <TranslationsProvider translations={translations}>
-        <div
-          {...other}
-          className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
-          ref={forwardedRef}
-        >
-          <aside className="EventCalendarSidePanel">
-            <DateNavigator />
-            <section
-              className="EventCalendarMonthCalendarPlaceholder"
-              // TODO: Add localization
-              aria-label="Month calendar"
-            >
-              Month Calendar
-            </section>
-            <ResourceLegend />
-          </aside>
-          <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
-            <HeaderToolbar />
-            <section
-              // TODO: Add localization
-              className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
-              aria-label="Calendar content"
-            >
-              {content}
-            </section>
+      <SchedulerStoreContext.Provider value={store as any}>
+        <TranslationsProvider translations={translations}>
+          <div
+            {...other}
+            className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
+            ref={forwardedRef}
+          >
+            <aside className="EventCalendarSidePanel">
+              <DateNavigator />
+              <section
+                className="EventCalendarMonthCalendarPlaceholder"
+                // TODO: Add localization
+                aria-label="Month calendar"
+              >
+                Month Calendar
+              </section>
+              <ResourceLegend />
+            </aside>
+            <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
+              <HeaderToolbar />
+              <section
+                // TODO: Add localization
+                className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
+                aria-label="Calendar content"
+              >
+                {content}
+              </section>
+            </div>
           </div>
-        </div>
-      </TranslationsProvider>
+        </TranslationsProvider>
+      </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>
   );
 });

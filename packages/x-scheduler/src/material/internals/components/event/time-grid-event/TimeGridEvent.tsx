@@ -6,7 +6,7 @@ import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
-import { TimeGrid } from '../../../../../primitives/time-grid';
+import { CalendarGrid } from '../../../../../primitives/calendar-grid';
 import { getColorClassName } from '../../../utils/color-utils';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
@@ -25,8 +25,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const store = useEventCalendarStoreContext();
 
   const isRecurring = Boolean(occurrence.rrule);
-  const isDraggable = useStore(store, selectors.isEventDraggable, occurrence);
-  const isResizable = useStore(store, selectors.isEventResizable, occurrence);
+  const isDraggable = useStore(store, selectors.isEventDraggable);
+  const isResizable = useStore(store, selectors.isEventResizable, occurrence.id, 'time-grid');
   const color = useStore(store, selectors.eventColor, occurrence.id);
   const ampm = useStore(store, selectors.ampm);
   const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
@@ -118,21 +118,21 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   if (variant === 'placeholder') {
     return (
-      <TimeGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
+      <CalendarGrid.TimeEventPlaceholder aria-hidden={true} {...sharedProps}>
         {content}
-      </TimeGrid.EventPlaceholder>
+      </CalendarGrid.TimeEventPlaceholder>
     );
   }
 
   return (
-    <TimeGrid.Event isDraggable={isDraggable} {...sharedProps}>
+    <CalendarGrid.TimeEvent isDraggable={isDraggable} {...sharedProps}>
       {isResizable && (
-        <TimeGrid.EventResizeHandler side="start" className="TimeGridEventResizeHandler" />
+        <CalendarGrid.TimeEventResizeHandler side="start" className="TimeGridEventResizeHandler" />
       )}
       {content}
       {isResizable && (
-        <TimeGrid.EventResizeHandler side="end" className="TimeGridEventResizeHandler" />
+        <CalendarGrid.TimeEventResizeHandler side="end" className="TimeGridEventResizeHandler" />
       )}
-    </TimeGrid.Event>
+    </CalendarGrid.TimeEvent>
   );
 });

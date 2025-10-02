@@ -24,8 +24,6 @@ export const TimelineRoot = React.forwardRef(function TimelineRoot(
 
   const props = React.useMemo(() => ({ role: 'grid' }), []);
 
-  const state: TimelineRoot.State = React.useMemo(() => ({}), []);
-
   const store = useRefWithInit(() => new Store<State>({ items: itemsProp })).current;
 
   const contextValue = React.useMemo(() => ({ store }), [store]);
@@ -35,7 +33,6 @@ export const TimelineRoot = React.forwardRef(function TimelineRoot(
   }, [store, itemsProp]);
 
   const element = useRenderElement('div', componentProps, {
-    state,
     ref: [forwardedRef],
     props: [props, elementProps],
   });

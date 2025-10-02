@@ -1,10 +1,15 @@
 import {
   MoveEvent,
   PanEvent,
+  PanGestureOptions,
   PinchEvent,
+  PinchGestureOptions,
   PressEvent,
   TapEvent,
   TurnWheelEvent,
+  type TapAndDragEvent,
+  type TapAndDragGestureOptions,
+  type TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
 import { ChartPluginSignature } from '../../models';
 
@@ -12,32 +17,35 @@ export type ChartInteraction =
   | 'pan'
   | 'panStart'
   | 'panEnd'
-  | 'pinch'
-  | 'pinchStart'
-  | 'pinchEnd'
+  | 'zoomPan'
+  | 'zoomPanStart'
+  | 'zoomPanEnd'
+  | 'zoomPinch'
+  | 'zoomPinchStart'
+  | 'zoomPinchEnd'
   | 'move'
   | 'moveStart'
   | 'moveEnd'
   | 'quickPress'
   | 'quickPressEnd'
-  | 'turnWheel'
+  | 'zoomTurnWheel'
   | 'tap';
 
 export type InteractionListenerResult = { cleanup: () => void };
 
 export type AddInteractionListener = {
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'pan' | 'panStart' | 'panEnd',
+    interaction: 'pan' | 'panStart' | 'panEnd' | 'zoomPan' | 'zoomPanStart' | 'zoomPanEnd',
     callback: (event: PanEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'pinch' | 'pinchStart' | 'pinchEnd',
+    interaction: 'zoomPinch' | 'zoomPinchStart' | 'zoomPinchEnd',
     callback: (event: PinchEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
-    interaction: 'turnWheel',
+    interaction: 'zoomTurnWheel',
     callback: (event: TurnWheelEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
@@ -56,6 +64,24 @@ export type AddInteractionListener = {
     callback: (event: PressEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'zoomTapAndDrag' | 'zoomTapAndDragStart' | 'zoomTapAndDragEnd',
+    callback: (event: TapAndDragEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): InteractionListenerResult;
+};
+
+export type UpdateZoomInteractionListeners = {
+  (interaction: 'zoomPan', options?: Omit<PanGestureOptions<'zoomPan'>, 'name'>): void;
+  (interaction: 'zoomPinch', options?: Omit<PinchGestureOptions<'zoomPinch'>, 'name'>): void;
+  (
+    interaction: 'zoomTurnWheel',
+    options?: Omit<TurnWheelGestureOptions<'zoomTurnWheel'>, 'name'>,
+  ): void;
+  (
+    interaction: 'zoomTapAndDrag',
+    options?: Omit<TapAndDragGestureOptions<'zoomTapAndDrag'>, 'name'>,
+  ): void;
 };
 
 export interface UseChartInteractionListenerParameters {}
@@ -70,6 +96,13 @@ export interface UseChartInteractionListenerInstance {
    * @param callback The callback to call when the interaction occurs.
    */
   addInteractionListener: AddInteractionListener;
+  /**
+   * Updates the zoom interaction listeners with the provided options.
+   *
+   * @param interaction The interaction to update.
+   * @param options The options to apply to the interaction.
+   */
+  updateZoomInteractionListeners: UpdateZoomInteractionListeners;
 }
 
 export type UseChartInteractionListenerSignature = ChartPluginSignature<{

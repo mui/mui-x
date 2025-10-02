@@ -28,7 +28,8 @@
 
 .mui-x-scheduler .MainItem,
 .RadioItem,
-.CheckboxItem {
+.CheckboxItem,
+.SubmenuTrigger {
   background: var(--surface);
   user-select: none;
   display: flex;
@@ -41,7 +42,8 @@
 }
 
 .mui-x-scheduler .CheckboxItem,
-.RadioItem {
+.RadioItem,
+.SubmenuTrigger {
   justify-content: space-between;
   cursor: pointer;
 }

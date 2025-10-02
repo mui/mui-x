@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Timeline } from '@mui/x-scheduler/primitives/timeline';
+import { TimelineProvider } from '@mui/x-scheduler/primitives/timeline-provider';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { DateTime } from 'luxon';
 
@@ -12,7 +13,11 @@ describe('<Timeline.EventRow />', () => {
   describeConformance(<Timeline.EventRow start={start} end={end} />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
-      return render(<Timeline.Root items={[]}>{node}</Timeline.Root>);
+      return render(
+        <TimelineProvider events={[]}>
+          <Timeline.Root items={[]}>{node}</Timeline.Root>
+        </TimelineProvider>,
+      );
     },
   }));
 });

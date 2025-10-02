@@ -124,7 +124,13 @@ export class PointerManager {
     new Set();
 
   public constructor(options: PointerManagerOptions) {
-    this.root = (options.root ?? document.getRootNode({ composed: true })) as HTMLElement;
+    this.root =
+      // User provided root element
+      (options.root as HTMLElement) ??
+      // Fallback to document root or body, this fixes shadow DOM scenarios
+      (document.getRootNode({ composed: true }) as HTMLElement) ??
+      // Fallback to document body, for some testing environments
+      document.body;
     this.touchAction = options.touchAction || 'auto';
     this.passive = options.passive ?? false;
     this.preventEventInterruption = options.preventEventInterruption ?? false;

@@ -11,7 +11,7 @@ import { MonthViewProps } from './MonthView.types';
 import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
 import { selectors } from '../../primitives/use-event-calendar';
 import { useWeekList } from '../../primitives/use-week-list/useWeekList';
-import { DayGrid } from '../../primitives/day-grid';
+import { CalendarGrid } from '../../primitives/calendar-grid';
 import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
@@ -36,7 +36,8 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
 
     const store = useEventCalendarStoreContext();
-    const preferences = useStore(store, selectors.preferences);
+    const showWeekends = useStore(store, selectors.showWeekends);
+    const showWeekNumber = useStore(store, selectors.showWeekNumber);
     const visibleDate = useStore(store, selectors.visibleDate);
     const translations = useTranslations();
 
@@ -48,11 +49,11 @@ export const MonthView = React.memo(
         amount: 'end-of-month',
       });
       const tempWeeks = weekFirstDays.map((week) =>
-        getDayList({ date: week, amount: 'week', excludeWeekends: !preferences.showWeekends }),
+        getDayList({ date: week, amount: 'week', excludeWeekends: !showWeekends }),
       );
 
       return { weeks: tempWeeks, days: tempWeeks.flat(1) };
-    }, [getWeekList, getDayList, visibleDate, preferences.showWeekends]);
+    }, [getWeekList, getDayList, visibleDate, showWeekends]);
 
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
@@ -81,15 +82,15 @@ export const MonthView = React.memo(
         {...other}
       >
         <EventPopoverProvider containerRef={containerRef}>
-          <DayGrid.Root className="MonthViewRoot">
+          <CalendarGrid.Root className="MonthViewRoot">
             <div
               className={clsx(
                 'MonthViewHeader',
                 'MonthViewRowGrid',
-                preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+                showWeekNumber ? 'WithWeekNumber' : undefined,
               )}
             >
-              {preferences.showWeekNumber && (
+              {showWeekNumber && (
                 <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
               )}
               {weeks[0].map((weekDay) => (
@@ -115,7 +116,7 @@ export const MonthView = React.memo(
                 />
               ))}
             </div>
-          </DayGrid.Root>
+          </CalendarGrid.Root>
         </EventPopoverProvider>
       </div>
     );

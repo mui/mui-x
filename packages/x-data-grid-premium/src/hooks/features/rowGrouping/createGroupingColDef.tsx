@@ -35,6 +35,7 @@ const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
   type: 'custom',
   disableReorder: true,
   chartable: false,
+  aggregable: false,
 };
 
 const GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT: Pick<
