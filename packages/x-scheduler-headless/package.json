@@ -26,6 +26,8 @@
     "./use-event-calendar": "./src/use-event-calendar/index.ts",
     "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
     "./use-event-calendar-view": "./src/use-event-calendar-view/index.ts",
+    "./use-event-occurrences-grouped-by-day": "./src/use-event-occurrences-grouped-by-day/index.ts",
+    "./use-event-occurrences-grouped-by-resource": "./src/use-event-occurrences-grouped-by-resource/index.ts",
     "./use-event-occurrences-with-day-grid-position": "./src/use-event-occurrences-with-day-grid-position/index.ts",
     "./use-event-occurrences-with-timeline-position": "./src/use-event-occurrences-with-timeline-position/index.ts",
     "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
