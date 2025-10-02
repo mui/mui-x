@@ -6,7 +6,7 @@ components: ChartsClipPath, ChartsSurface
 
 # Charts - Custom components
 
-<p class="description">Create custom chart componenents using the provided hooks.</p>
+<p class="description">Create custom chart components using the provided hooks.</p>
 
 ## Interact with dimensions
 
