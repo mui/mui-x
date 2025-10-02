@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { DayGrid } from '../../../../primitives/day-grid';
+import { CalendarGrid } from '../../../../primitives/calendar-grid';
 import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
 import { isWeekend } from '../../../../primitives/utils/date-utils';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
@@ -16,10 +16,10 @@ import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
   const adapter = useAdapter();
-  const placeholder = DayGrid.usePlaceholderInDay(day.value, row);
+  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
   const store = useEventCalendarStoreContext();
   const cellRef = React.useRef<HTMLDivElement | null>(null);
-  const isCreation = useStore(store, selectors.isCreatingNewEventInDayGridCell, day.value);
+  const isCreation = useStore(store, selectors.isCreatingNewEventInDayCell, day.value);
 
   const { startEditing } = useEventPopoverContext();
 
@@ -42,7 +42,7 @@ export function DayGridCell(props: DayGridCellProps) {
   }, [isCreation, placeholder, startEditing]);
 
   return (
-    <DayGrid.Cell
+    <CalendarGrid.DayCell
       ref={cellRef}
       value={day.value}
       className="DayTimeGridAllDayEventsCell"
@@ -93,7 +93,7 @@ export function DayGridCell(props: DayGridCellProps) {
           </div>
         )}
       </div>
-    </DayGrid.Cell>
+    </CalendarGrid.DayCell>
   );
 }
 

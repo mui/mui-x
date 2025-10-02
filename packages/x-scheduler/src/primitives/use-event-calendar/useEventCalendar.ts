@@ -1,4 +1,5 @@
 'use client';
+import { useOnMount } from '@base-ui-components/utils/useOnMount';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
 import { useAdapter } from '../utils/adapter/useAdapter';
@@ -13,6 +14,8 @@ export function useEventCalendar(parameters: EventCalendarParameters): EventCale
     () => store.updateStateFromParameters(parameters, adapter),
     [store, adapter, parameters],
   );
+
+  useOnMount(store.disposeEffect);
 
   return store;
 }

@@ -5,7 +5,7 @@ import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
-import { DayGrid } from '../../../../../primitives/day-grid';
+import { CalendarGrid } from '../../../../../primitives/calendar-grid';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
@@ -144,14 +144,14 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   if (variant === 'placeholder') {
     return (
-      <DayGrid.EventPlaceholder aria-hidden={true} {...sharedProps}>
+      <CalendarGrid.DayEventPlaceholder aria-hidden={true} {...sharedProps}>
         {content}
-      </DayGrid.EventPlaceholder>
+      </CalendarGrid.DayEventPlaceholder>
     );
   }
 
   return (
-    <DayGrid.Event
+    <CalendarGrid.DayEvent
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
       start={occurrence.start}
@@ -161,12 +161,12 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       {...sharedProps}
     >
       {isResizable && (
-        <DayGrid.EventResizeHandler side="start" className="DayGridEventResizeHandler" />
+        <CalendarGrid.DayEventResizeHandler side="start" className="DayGridEventResizeHandler" />
       )}
       {content}
       {isResizable && (
-        <DayGrid.EventResizeHandler side="end" className="DayGridEventResizeHandler" />
+        <CalendarGrid.DayEventResizeHandler side="end" className="DayGridEventResizeHandler" />
       )}
-    </DayGrid.Event>
+    </CalendarGrid.DayEvent>
   );
 });
