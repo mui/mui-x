@@ -3,11 +3,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
-import { CheckIcon, Settings } from 'lucide-react';
+import { CheckIcon, ChevronRight, Settings } from 'lucide-react';
 import { Menu } from '@base-ui-components/react/menu';
 import {
-  CalendarPreferences,
-  CalendarPreferencesMenuConfig,
+  EventCalendarPreferences,
+  EventCalendarPreferencesMenuConfig,
 } from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useEventCalendarStoreContext } from '../../../../../primitives/use-event-calendar-store-context';
@@ -27,8 +27,12 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const preferences = useStore(store, selectors.preferences);
   const preferencesMenuConfig = useStore(store, selectors.preferencesMenuConfig);
 
-  const handleToggle = (key: keyof CalendarPreferences, checked: boolean, event: Event) => {
+  const handleToggle = (key: keyof EventCalendarPreferences, checked: boolean, event: Event) => {
     store.setPreferences({ [key]: checked }, event);
+  };
+
+  const handleTimeFormatChange = (value: '12' | '24', event: Event) => {
+    store.setPreferences({ ampm: value === '12' }, event);
   };
 
   if (preferencesMenuConfig === false) {
@@ -36,8 +40,8 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   }
 
   const preferenceOptions: {
-    configKey: keyof CalendarPreferencesMenuConfig;
-    preferenceKey: keyof CalendarPreferences;
+    configKey: keyof EventCalendarPreferencesMenuConfig;
+    preferenceKey: keyof EventCalendarPreferences;
     label: string;
   }[] = [
     {
@@ -56,7 +60,9 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
     (option) => !!preferencesMenuConfig?.[option.configKey],
   );
 
-  if (visibleOptions.length === 0) {
+  const showTimeFormatSubmenu = preferencesMenuConfig?.toggleAmpm;
+
+  if (!showTimeFormatSubmenu && visibleOptions.length === 0) {
     return null;
   }
 
@@ -87,6 +93,37 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
                   </Menu.CheckboxItemIndicator>
                 </Menu.CheckboxItem>
               ))}
+              {showTimeFormatSubmenu && (
+                <Menu.SubmenuRoot>
+                  <Menu.SubmenuTrigger className="SubmenuTrigger">
+                    <span>{translations.timeFormat}</span>
+                    <ChevronRight size={14} strokeWidth={1.5} />
+                  </Menu.SubmenuTrigger>
+
+                  <Menu.Portal>
+                    <Menu.Positioner className="MenuPositioner" alignOffset={-4} sideOffset={4}>
+                      <Menu.Popup className="MenuPopup">
+                        <Menu.RadioGroup
+                          aria-label={translations.timeFormat}
+                          value={preferences.ampm ? '12' : '24'}
+                          onValueChange={(val, eventDetails) =>
+                            handleTimeFormatChange(val, eventDetails.event)
+                          }
+                        >
+                          <Menu.RadioItem value="12" className="RadioItem">
+                            <span>{translations.amPm12h}</span>
+                            <Menu.RadioItemIndicator className="RadioItemIndicator" />
+                          </Menu.RadioItem>
+                          <Menu.RadioItem value="24" className="RadioItem">
+                            <span>{translations.hour24h}</span>
+                            <Menu.RadioItemIndicator className="RadioItemIndicator" />
+                          </Menu.RadioItem>
+                        </Menu.RadioGroup>
+                      </Menu.Popup>
+                    </Menu.Positioner>
+                  </Menu.Portal>
+                </Menu.SubmenuRoot>
+              )}
             </Menu.Popup>
           </Menu.Positioner>
         </Menu.Portal>

@@ -8,8 +8,7 @@ import {
   RRuleSpec,
   SchedulerValidDate,
 } from '../models';
-import { mergeDateAndTime } from './date-utils';
-import { getDateKey } from './event-utils';
+import { mergeDateAndTime, getDateKey } from './date-utils';
 import { diffIn } from '../use-adapter';
 
 /**

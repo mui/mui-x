@@ -30,7 +30,7 @@ export const AgendaView = React.memo(
     const store = useEventCalendarStoreContext();
     const today = adapter.date();
     const visibleDate = useStore(store, selectors.visibleDate);
-    const preferences = useStore(store, selectors.preferences);
+    const showWeekends = useStore(store, selectors.showWeekends);
 
     const getDayList = useDayList();
     const days = React.useMemo(
@@ -38,9 +38,9 @@ export const AgendaView = React.memo(
         getDayList({
           date: visibleDate,
           amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: !preferences.showWeekends,
+          excludeWeekends: !showWeekends,
         }),
-      [getDayList, preferences.showWeekends, visibleDate],
+      [getDayList, showWeekends, visibleDate],
     );
     const occurrences = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
@@ -81,9 +81,8 @@ export const AgendaView = React.memo(
               </header>
               <ul className="EventsList">
                 {occurrences.get(day.key)!.map((occurrence) => (
-                  <li>
+                  <li key={occurrence.key}>
                     <EventPopoverTrigger
-                      key={occurrence.key}
                       occurrence={occurrence}
                       render={
                         <AgendaEvent

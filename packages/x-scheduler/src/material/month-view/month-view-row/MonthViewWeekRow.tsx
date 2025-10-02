@@ -17,7 +17,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
 
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const preferences = useStore(store, selectors.preferences);
+  const showWeekNumber = useStore(store, selectors.showWeekNumber);
   const translations = useTranslations();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
@@ -38,10 +38,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       className={clsx(
         'MonthViewRow',
         'MonthViewRowGrid',
-        preferences.showWeekNumber ? 'WithWeekNumber' : undefined,
+        showWeekNumber ? 'WithWeekNumber' : undefined,
       )}
     >
-      {preferences.showWeekNumber && (
+      {showWeekNumber && (
         <div
           className="MonthViewWeekNumberCell"
           role="rowheader"

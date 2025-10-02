@@ -50,7 +50,6 @@ storeClasses.forEach((storeClass) => {
           ],
           areEventsDraggable: true,
           areEventsResizable: true,
-          ampm: false,
           showCurrentTimeIndicator: false,
         };
 
@@ -59,7 +58,6 @@ storeClasses.forEach((storeClass) => {
         expect(getIds(store.state.resources)).to.deep.equal(['r1', 'r2']);
         expect(store.state.areEventsDraggable).to.equal(true);
         expect(store.state.areEventsResizable).to.equal(true);
-        expect(store.state.ampm).to.equal(false);
         expect(store.state.showCurrentTimeIndicator).to.equal(false);
       });
 

@@ -1,6 +1,6 @@
 import { CalendarProcessedDate, SchedulerValidDate } from '../models';
 import { Adapter } from '../use-adapter';
-import { getDateKey } from '../utils/event-utils';
+import { getDateKey } from '../utils/date-utils';
 
 /**
  * Creates a CalendarProcessedDate object from a date object.

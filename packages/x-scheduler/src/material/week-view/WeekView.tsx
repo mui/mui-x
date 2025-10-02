@@ -17,7 +17,7 @@ export const WeekView = React.memo(
     const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
     const visibleDate = useStore(store, selectors.visibleDate);
-    const preferences = useStore(store, selectors.preferences);
+    const showWeekends = useStore(store, selectors.showWeekends);
     const getDayList = useDayList();
 
     const days = React.useMemo(
@@ -25,9 +25,9 @@ export const WeekView = React.memo(
         getDayList({
           date: adapter.startOfWeek(visibleDate),
           amount: 'week',
-          excludeWeekends: !preferences.showWeekends,
+          excludeWeekends: !showWeekends,
         }),
-      [adapter, getDayList, visibleDate, preferences.showWeekends],
+      [adapter, getDayList, visibleDate, showWeekends],
     );
 
     useEventCalendarView(() => ({
