@@ -61,7 +61,7 @@ const classData = classes.map((pClass) => {
 });
 
 const classSurvivalData = classes.flatMap((pClass) => {
-  const classTotal = classData.find((d) => d.id === pClass)?.value || 0;
+  const classTotal = classData.find((d) => d.id === pClass).value ?? 0;
   const baseColor = classColors[pClass];
   return titanicData
     .filter((item) => item.Class === pClass)
@@ -111,8 +111,7 @@ const survivalData = [
 const survivalClassData = [...titanicData]
   .sort((a) => (a.Survived === 'Yes' ? -1 : 1))
   .map((item) => {
-    const baseColor =
-      survivalData.find((d) => d.id === item.Survived)?.color || '#000000';
+    const baseColor = survivalData.find((d) => d.id === item.Survived).color;
     return {
       id: `${item.Class}-${item.Survived}`,
       label: `${item.Class} class:`,
@@ -120,8 +119,8 @@ const survivalClassData = [...titanicData]
       percentage:
         (item.Count /
           (item.Survived === 'Yes'
-            ? survivalData[0]?.value || 1
-            : survivalData[1]?.value || 1)) *
+            ? survivalData[0].value
+            : survivalData[1].value)) *
         100,
       color: hexToRgba(baseColor, opacityMap[item.Class] || 1),
     };
