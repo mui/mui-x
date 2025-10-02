@@ -708,7 +708,10 @@ export const processRowGroupingRows = (
       const partialPath = groupFields.map((field) => {
         const colDef = columnsWithDefaultColDef.find(({ field: f }) => f === field);
         if (colDef?.groupingValueGetter) {
-          return colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef);
+          return String(colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef));
+        }
+        if (colDef?.valueGetter) {
+          return String(colDef.valueGetter(row[field] as never, row, colDef, apiRef));
         }
         return String(row[field]);
       });
@@ -968,7 +971,10 @@ export const processPivotingRows = (
         const field = pivotRow.field;
         const colDef = columnLookup.get(field);
         if (colDef?.groupingValueGetter) {
-          return colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef);
+          return String(colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef));
+        }
+        if (colDef?.valueGetter) {
+          return String(colDef.valueGetter(row[field] as never, row, colDef, apiRef));
         }
         return String(row[field]);
       });
