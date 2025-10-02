@@ -1,10 +1,10 @@
 import { warn } from '@base-ui-components/utils/warn';
 import {
-  CalendarPreferences,
+  EventCalendarPreferences,
   CalendarView,
   CalendarViewConfig,
   SchedulerValidDate,
-  CalendarPreferencesMenuConfig,
+  EventCalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../utils/adapter/types';
 import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
@@ -12,13 +12,15 @@ import { EventCalendarState, EventCalendarParameters } from './EventCalendarStor
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
-export const DEFAULT_PREFERENCES: CalendarPreferences = {
+export const DEFAULT_PREFERENCES: EventCalendarPreferences = {
   showWeekends: true,
   showWeekNumber: false,
+  ampm: true,
 };
-export const DEFAULT_PREFERENCES_MENU_CONFIG: CalendarPreferencesMenuConfig = {
+export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
   toggleWeekendVisibility: true,
   toggleWeekNumberVisibility: true,
+  toggleAmpm: true,
 };
 
 const deriveStateFromParameters = (parameters: EventCalendarParameters) => ({
@@ -164,7 +166,7 @@ export class EventCalendarStore extends SchedulerStore<
    * Updates some preferences of the calendar.
    */
   public setPreferences = (
-    partialPreferences: Partial<CalendarPreferences>,
+    partialPreferences: Partial<EventCalendarPreferences>,
     _event: React.UIEvent | Event,
   ) => {
     this.set('preferences', {
