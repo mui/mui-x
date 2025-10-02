@@ -42,10 +42,6 @@ export interface SchedulerState {
    */
   areEventsResizable: boolean;
   /**
-   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
-   */
-  ampm: boolean;
-  /**
    * The color palette used for all events.
    */
   eventColor: CalendarEventColor;
@@ -100,11 +96,6 @@ export interface SchedulerParameters {
    * @default false
    */
   areEventsResizable?: boolean;
-  /**
-   * Whether the component should display the time in 12-hour format with AM/PM meridiem.
-   * @default true
-   */
-  ampm?: boolean;
   /**
    * Whether the component should display the current time indicator.
    * @default true

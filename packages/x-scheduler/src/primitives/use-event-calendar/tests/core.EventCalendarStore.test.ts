@@ -29,7 +29,6 @@ describe('Core - EventCalendarStore', () => {
         nowUpdatedEveryMinute: adapter.date(),
         areEventsDraggable: false,
         areEventsResizable: false,
-        ampm: true,
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
         preferences: DEFAULT_PREFERENCES,
