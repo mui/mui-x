@@ -348,7 +348,10 @@ export default defineConfig(
     },
   },
   {
-    files: ['packages/x-scheduler/**/*{.tsx,.ts,.js}', 'packages/x-scheduler-headless/**/*{.tsx,.ts,.js}'],
+    files: [
+      'packages/x-scheduler/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-headless/**/*{.tsx,.ts,.js}',
+    ],
     rules: {
       // Base UI lint rules
       '@typescript-eslint/no-redeclare': 'off',

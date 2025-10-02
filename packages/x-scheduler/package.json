@@ -19,6 +19,7 @@
     "./event-calendar": "./src/event-calendar/index.ts",
     "./month-view": "./src/month-view/index.ts",
     "./standalone-view": "./src/standalone-view/index.ts",
+    "./translations": "./src/translations/index.ts",
     "./week-view": "./src/week-view/index.ts",
     "./timeline": "./src/timeline/index.ts",
     "./translations/enUS": "./src/translations/enUS.ts",
