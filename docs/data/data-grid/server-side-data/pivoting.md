@@ -57,7 +57,7 @@ In addition to the standard parameters, the `getRows()` callback receives the [`
 This corresponds to the current pivot configuration and contains the visible rows, columns, and values from the pivot model.
 Use `pivotModel` on the server to pivot the data for each `getRows()` call.
 
-The server should return both the pivoted `rows` and the `pivotColumns` structure that defines how the pivot columns should be organized.
+The server should return both the pivoted `rows` and the [`pivotColumns` structure](#pivot-columns-structure) that defines how the pivot columns should be organized.
 
 ```tsx
 const getRows = async (params) => {
@@ -78,7 +78,7 @@ const getRows = async (params) => {
     rows: getRowsResponse.rows,
     rowCount: getRowsResponse.rowCount,
     aggregateRow: getRowsResponse.aggregateRow,
-    // Defined structure of pivot columns
+    // Defined structure of pivot columns, see `Pivot columns structure` section below
     pivotColumns: getRowsResponse.pivotColumns,
   };
 };
