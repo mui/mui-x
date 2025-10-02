@@ -258,7 +258,7 @@ export default function ChartDemoPropsForm<
           [`& .${formLabelClasses.root}`]: {
             fontWeight: 'lg',
           },
-          '& > *': {
+          '&& > *': {
             px: 3,
           },
         }}
