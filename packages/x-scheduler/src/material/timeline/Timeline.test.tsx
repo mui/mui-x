@@ -43,7 +43,7 @@ describe('<Timeline />', () => {
   const adapter = getAdapter();
 
   const visibleDate = DateTime.fromISO('2025-07-03T00:00:00Z');
-  function mountTimeline(options?: {
+  function renderTimeline(options?: {
     resources?: CalendarResource[];
     events?: CalendarEvent[];
     view?: TimelineView;
@@ -62,7 +62,7 @@ describe('<Timeline />', () => {
 
   describe('resources', () => {
     it('renders all resource titles', () => {
-      mountTimeline();
+      renderTimeline();
 
       baseResources.forEach((resourceItem) => {
         expect(screen.getByText(resourceItem.name)).not.to.equal(null);
@@ -76,7 +76,7 @@ describe('<Timeline />', () => {
         ...baseResources,
         { id: 'resource-3', name: 'QA', eventColor: 'red' },
       ];
-      mountTimeline({ resources: extendedResources });
+      renderTimeline({ resources: extendedResources });
 
       expect(screen.queryByText('QA')).to.equal(null);
     });
@@ -84,7 +84,7 @@ describe('<Timeline />', () => {
 
   describe('events', () => {
     it('should render all visible events', () => {
-      mountTimeline();
+      renderTimeline();
       baseEvents.forEach((eventItem) => {
         expect(screen.getByText(eventItem.title)).not.to.equal(null);
       });
@@ -102,7 +102,7 @@ describe('<Timeline />', () => {
         },
       ];
 
-      mountTimeline({ events: extendedEvents });
+      renderTimeline({ events: extendedEvents });
       baseEvents.forEach((eventItem) => {
         expect(screen.getByText(eventItem.title)).not.to.equal(null);
       });
@@ -111,7 +111,7 @@ describe('<Timeline />', () => {
     });
 
     it('should keep events visible after rerender', () => {
-      const { rerender: localRerender } = mountTimeline();
+      const { rerender: localRerender } = renderTimeline();
       localRerender(
         <Timeline
           resources={baseResources}
@@ -129,7 +129,7 @@ describe('<Timeline />', () => {
     it('should render events correctly in the time view', () => {
       const totalWidth = 4608; // 72 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
-      mountTimeline({ view: 'time' });
+      renderTimeline({ view: 'time' });
 
       const event = screen.getByText('Spec Review');
       expect(event).not.to.equal(null);
@@ -144,7 +144,7 @@ describe('<Timeline />', () => {
     it('should render events correctly in the days view', () => {
       const totalWidth = 2520; // 8 weeks * 7 days * 64px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
-      mountTimeline({ view: 'days' });
+      renderTimeline({ view: 'days' });
 
       const event = screen.getByText('Architecture Session');
       expect(event).not.to.equal(null);
@@ -162,7 +162,7 @@ describe('<Timeline />', () => {
       const weekDayNumber = diffIn(adapter, baseEvents[0].start, startOfWeek, 'days');
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
-      mountTimeline({ view: 'weeks' });
+      renderTimeline({ view: 'weeks' });
 
       const event = screen.getByText('Spec Review');
       expect(event).not.to.equal(null);
@@ -186,7 +186,7 @@ describe('<Timeline />', () => {
         },
       ];
 
-      mountTimeline({ events: extendedEvents, view: 'months' });
+      renderTimeline({ events: extendedEvents, view: 'months' });
 
       const totalWidth = 2160; // 12 months * 180px
       const event1 = screen.getByText('Spec Review');
@@ -224,7 +224,7 @@ describe('<Timeline />', () => {
         },
       ];
 
-      mountTimeline({ events: extendedEvents, view: 'years' });
+      renderTimeline({ events: extendedEvents, view: 'years' });
 
       const totalWidth = 800;
       const event1 = screen.getByText('This year');
@@ -248,7 +248,7 @@ describe('<Timeline />', () => {
 
   describe('views', () => {
     it('should render the correct header and updates CSS variable when switching views', async () => {
-      const { container: firstContainer } = mountTimeline({
+      const { container: firstContainer } = renderTimeline({
         view: 'time',
         views: ['days', 'time'],
       });
@@ -261,7 +261,7 @@ describe('<Timeline />', () => {
       const daysSwitchControl = screen.getByRole('button', { name: /days/i });
       expect(daysSwitchControl).not.to.equal(null);
 
-      const { container: secondContainer } = mountTimeline({
+      const { container: secondContainer } = renderTimeline({
         view: 'days',
         views: ['days', 'time'],
       });

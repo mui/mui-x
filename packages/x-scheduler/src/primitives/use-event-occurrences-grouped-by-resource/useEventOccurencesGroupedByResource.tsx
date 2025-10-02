@@ -67,10 +67,6 @@ export function innerGetEventOccurrencesGroupedByResource(
   for (const occurrence of occurrences) {
     const resourceId = occurrence.resource;
 
-    if (adapter.isAfter(occurrence.start, end) || adapter.isBefore(occurrence.end, start)) {
-      continue;
-    }
-
     if (resourceId) {
       if (!occurrencesGroupedByResource.has(resourceId)) {
         occurrencesGroupedByResource.set(resourceId, []);
