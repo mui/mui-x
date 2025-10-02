@@ -14,6 +14,7 @@ describe('Preferences - EventCalendarStore', () => {
       expect(store.state.preferences).to.deep.equal({
         showWeekends: true,
         showWeekNumber: true,
+        isSidePanelOpen: true,
         ampm: true,
       });
     });
@@ -25,6 +26,7 @@ describe('Preferences - EventCalendarStore', () => {
       expect(store.state.preferences).to.deep.equal({
         showWeekends: false,
         showWeekNumber: true,
+        isSidePanelOpen: true,
         ampm: true,
       });
     });
@@ -37,6 +39,7 @@ describe('Preferences - EventCalendarStore', () => {
       expect(store.state.preferences).to.deep.equal({
         showWeekends: false,
         showWeekNumber: true,
+        isSidePanelOpen: true,
         ampm: true,
       });
     });
