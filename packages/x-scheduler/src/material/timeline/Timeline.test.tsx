@@ -142,7 +142,7 @@ describe('<Timeline />', () => {
     });
 
     it('should render events correctly in the days view', () => {
-      const totalWidth = 2520; // 8 weeks * 7 days * 64px
+      const totalWidth = 2520; // 21 days * 120px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
       renderTimeline({ view: 'days' });
 
@@ -157,7 +157,7 @@ describe('<Timeline />', () => {
     });
 
     it('should render events correctly in the weeks view', () => {
-      const totalWidth = 3584; // 21 hours * 120px
+      const totalWidth = 3584; // 64px * 7 days * 8 weeks
       const startOfWeek = adapter.startOfWeek(visibleDate);
       const weekDayNumber = diffIn(adapter, baseEvents[0].start, startOfWeek, 'days');
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
