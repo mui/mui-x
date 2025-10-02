@@ -2,11 +2,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mouseGesture, touchGesture } from '../testing';
 import { GestureManager } from './GestureManager';
 import { TapGesture } from './gestures/TapGesture';
+import { PanGesture } from './gestures/PanGesture';
 
 describe('Gesture PointerOptions', () => {
   let container: HTMLElement;
   let target: HTMLElement;
-  let gestureManager: GestureManager<'universalTap', TapGesture<'universalTap'>>;
+  let gestureManager: GestureManager<any, any>;
   let events: string[];
 
   beforeEach(() => {
@@ -47,7 +48,7 @@ describe('Gesture PointerOptions', () => {
 
     const gestureTarget = gestureManager.registerElement(['universalTap'], target);
     gestureTarget.addEventListener('universalTap', (event) =>
-      events.push(`${event.detail.srcEvent.pointerType}:universalTap`),
+      events.push(`${(event as any).detail.srcEvent.pointerType}:universalTap`),
     );
 
     await touchGesture.tap({ target });
@@ -64,5 +65,86 @@ describe('Gesture PointerOptions', () => {
     const keyupControl = new KeyboardEvent('keyup', { key: 'Control' });
     window.dispatchEvent(keyupControl);
     expect(events).toEqual(['touch:universalTap', 'mouse:universalTap']);
+  });
+
+  it('should respect pointer mode-specific minPointers configuration', async () => {
+    // Create gesture with different minPointers requirements for different pointer modes
+    gestureManager = new GestureManager({
+      gestures: [
+        new PanGesture({
+          name: 'universalPan',
+          minPointers: 1, // Default requires 1 pointer
+          pointerOptions: {
+            touch: { minPointers: 2 }, // Touch requires 2 pointers
+          },
+        }),
+      ],
+    });
+
+    const gestureTarget = gestureManager.registerElement(['universalPan'], target);
+    gestureTarget.addEventListener('universalPanStart', (event) =>
+      events.push(`${(event as any).detail.srcEvent.pointerType}:universalPanStart`),
+    );
+
+    // Test touch with 1 pointer - should NOT trigger
+    await touchGesture.pan({ target, distance: 10 });
+    expect(events).toEqual([]);
+
+    // Test touch with 2 pointers - should trigger
+    await touchGesture.pan({
+      target,
+      distance: 10,
+      steps: 2,
+      pointers: { amount: 2 },
+    });
+    expect(events).toEqual(['touch:universalPanStart']);
+  });
+
+  it('should respect pointer mode-specific maxPointers configuration', async () => {
+    // Create gesture with different maxPointers limits for different pointer modes
+    gestureManager = new GestureManager({
+      gestures: [
+        new PanGesture({
+          name: 'universalPan',
+          maxPointers: 3, // Default allows up to 3 pointers
+          pointerOptions: {
+            touch: { maxPointers: 2 }, // Touch allows up to 2 pointers
+          },
+        }),
+      ],
+    });
+
+    const gestureTarget = gestureManager.registerElement(['universalPan'], target);
+    gestureTarget.addEventListener('universalPanStart', (event) =>
+      events.push(`${(event as CustomEvent).detail.srcEvent.pointerType}:universalPanStart`),
+    );
+
+    // Test touch with 3 pointers - should NOT trigger (exceeds limit)
+    await touchGesture.pan({
+      target,
+      distance: 10,
+      pointers: { amount: 3 },
+    });
+    expect(events).toEqual([]);
+
+    // Test touch with 2 pointers - should trigger (within limit)
+    await touchGesture.pan({
+      target,
+      distance: 10,
+      pointers: { amount: 2 },
+    });
+    expect(events).toEqual(['touch:universalPanStart']);
+
+    // Test touch with 1 pointer - should trigger
+    await touchGesture.pan({ target, distance: 10 });
+    expect(events).toEqual(['touch:universalPanStart', 'touch:universalPanStart']);
+
+    // Test mouse with 1 pointer - should trigger (within limit)
+    await mouseGesture.pan({ target, distance: 10 });
+    expect(events).toEqual([
+      'touch:universalPanStart',
+      'touch:universalPanStart',
+      'mouse:universalPanStart',
+    ]);
   });
 });
