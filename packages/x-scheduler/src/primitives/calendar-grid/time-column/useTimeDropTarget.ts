@@ -65,6 +65,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
             start: newStart,
             end: newEnd,
             eventData: data.eventData,
+            onEventDrop: data.onEventDrop,
           };
         }
 
@@ -187,6 +188,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           };
           store.setOccurrencePlaceholder(null);
           store.createEvent(event);
+          placeholder.onEventDrop?.();
         }
       },
     });

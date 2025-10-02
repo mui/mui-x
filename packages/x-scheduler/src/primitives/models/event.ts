@@ -202,6 +202,10 @@ interface CalendarOccurrencePlaceholderExternalDrag extends CalendarOccurrencePl
    * The data of the event to insert in the Event Calendar when dropped.
    */
   eventData: CalendarOccurrencePlaceholderExternalDragData;
+  /**
+   * Callback fired when the event is dropped into the Event Calendar.
+   */
+  onEventDrop?: () => void;
 }
 
 /**

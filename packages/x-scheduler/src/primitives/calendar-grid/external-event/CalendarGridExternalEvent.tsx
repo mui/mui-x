@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-// import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useButton } from '../../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
@@ -19,6 +19,7 @@ export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridE
     render,
     // Internal props
     data,
+    onEventDrop,
     isDraggable = false,
     // Props forwarded to the DOM element
     ...elementProps
@@ -40,6 +41,7 @@ export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridE
   const getDragData = useEventCallback(() => ({
     source: 'CalendarGridExternalEvent',
     eventData: data,
+    onEventDrop,
     eventId: data.id,
     occurrenceKey: `external-${data.id}`,
   }));
@@ -53,9 +55,6 @@ export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridE
     return draggable({
       element: ref.current!,
       getInitialData: getDragData,
-      // onGenerateDragPreview: ({ nativeSetDragImage }) => {
-      //   disableNativeDragPreview({ nativeSetDragImage });
-      // },
       onDragStart: () => setIsDragging(true),
       onDrop: () => setIsDragging(false),
     });
@@ -88,10 +87,15 @@ export namespace CalendarGridExternalEvent {
      * @default false
      */
     isDraggable?: boolean;
+    /**
+     * Callback fired when the event is dropped into the Event Calendar.
+     */
+    onEventDrop?: () => void;
   }
 
   export interface DragData extends CalendarGridSharedEventDragData {
     source: 'CalendarGridExternalEvent';
     eventData: CalendarOccurrencePlaceholderExternalDragData;
+    onEventDrop?: () => void;
   }
 }
