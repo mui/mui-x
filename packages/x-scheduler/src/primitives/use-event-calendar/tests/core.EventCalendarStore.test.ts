@@ -1,5 +1,5 @@
-import { useFakeTimers } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
+import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import {
   DEFAULT_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
@@ -14,8 +14,9 @@ const DEFAULT_PARAMS = { events: [] };
 
 describe('Core - EventCalendarStore', () => {
   describe('create', () => {
+    createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
+
     it('should initialize default state', () => {
-      const clock = useFakeTimers();
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
 
       const expectedState = {
@@ -39,7 +40,6 @@ describe('Core - EventCalendarStore', () => {
       };
 
       expect(store.state).to.deep.equal(expectedState);
-      clock.restore();
     });
   });
 
