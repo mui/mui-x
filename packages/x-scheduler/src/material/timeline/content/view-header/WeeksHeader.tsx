@@ -9,7 +9,7 @@ import { selectors } from '../../../../primitives/use-timeline';
 import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
 import { CalendarProcessedDate } from '../../../../primitives';
 import { HeaderProps } from './Headers.types';
-import { MONTHS_UNIT_COUNT } from '../../constants';
+import { WEEKS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
 
 export function WeeksHeader(props: HeaderProps) {
@@ -25,7 +25,7 @@ export function WeeksHeader(props: HeaderProps) {
   const weeks = React.useMemo(() => {
     const weeksFirstDays = getWeekList({
       date: visibleDate,
-      amount: amount || MONTHS_UNIT_COUNT,
+      amount: amount || WEEKS_UNIT_COUNT,
     });
 
     const tempWeeks: { date: CalendarProcessedDate }[][] = [];

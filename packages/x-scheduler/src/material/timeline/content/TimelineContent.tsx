@@ -64,6 +64,8 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
     end,
   });
 
+  console.log(start, end);
+
   const diff = diffIn(adapter, end, start, UNIT[view]);
 
   const header = React.useMemo(() => {
