@@ -44,7 +44,6 @@
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@types/format-util": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },

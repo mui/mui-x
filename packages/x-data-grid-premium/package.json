@@ -45,7 +45,6 @@
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@types/format-util": "catalog:",
     "clsx": "catalog:",
     "exceljs": "catalog:",
     "prop-types": "catalog:"

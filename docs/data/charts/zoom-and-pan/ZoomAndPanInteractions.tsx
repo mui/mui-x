@@ -26,6 +26,11 @@ const knobs = {
     knob: 'switch',
     defaultValue: true,
   },
+  pressAndDrag: {
+    displayName: 'Press and drag',
+    knob: 'switch',
+    defaultValue: false,
+  },
 } as const;
 
 export default function ZoomAndPanInteractions() {
@@ -50,6 +55,9 @@ export default function ZoomAndPanInteractions() {
         const panInteractions: any[] = [];
         if (props.drag) {
           panInteractions.push('drag');
+        }
+        if (props.pressAndDrag) {
+          panInteractions.push('pressAndDrag');
         }
 
         const zoomInteractionConfig = {
@@ -96,6 +104,9 @@ export default function ZoomAndPanInteractions() {
         const panInteractions: any[] = [];
         if (props.drag) {
           panInteractions.push('drag');
+        }
+        if (props.pressAndDrag) {
+          panInteractions.push('pressAndDrag');
         }
 
         const zoomConfig =

@@ -26,6 +26,8 @@ describe('Core - TimelineStore', () => {
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
         preferences: DEFAULT_PREFERENCES,
+        view: 'time',
+        views: ['time', 'days', 'weeks', 'months', 'years'],
       };
 
       expect(store.state).to.deep.equal(expectedState);

@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@babel/runtime": "catalog:",
+    "@mui/icons-material": "catalog:",
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@mui/x-charts-premium": "workspace:*",

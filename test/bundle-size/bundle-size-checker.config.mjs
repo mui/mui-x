@@ -4,7 +4,7 @@
  * This file determines which packages and components will have their bundle sizes measured.
  */
 import path from 'path';
-import glob from 'fast-glob';
+import { globby } from 'globby';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
 // eslint-disable-next-line import/no-relative-packages
 import generateReleaseInfo from '../../packages/x-license/generateReleaseInfo.js';
@@ -13,7 +13,7 @@ const rootDir = path.resolve(import.meta.dirname, '../..');
 
 async function findComponents(packageFolder, packageName) {
   const pkgBuildFolder = path.join(rootDir, `packages/${packageFolder}/build`);
-  const pkgFiles = await glob(path.join(pkgBuildFolder, '([A-Z])*/index.js'));
+  const pkgFiles = await globby(path.join(pkgBuildFolder, '([A-Z])*/index.js'));
   const pkgComponents = pkgFiles.map((componentPath) => {
     const componentName = path.basename(path.dirname(componentPath));
     return `${packageName}/${componentName}`;

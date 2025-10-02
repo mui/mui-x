@@ -25,4 +25,4 @@ This package is not published yet.
 
 ## Timeline
 
-- [Timeline](/x/react-scheduler/timeline/)
+- [Timeline](/x/react-scheduler/timeline/) ([full screen demo](/x/react-scheduler/full-screen-timeline/))
