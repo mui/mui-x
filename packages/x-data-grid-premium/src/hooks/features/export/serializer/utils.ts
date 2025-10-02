@@ -117,7 +117,8 @@ export async function createValueOptionsSheetIfNeeded(
   valueOptionsWorksheet.columns = Object.keys(valueOptionsData).map((key) => ({ key }));
 
   Object.entries(valueOptionsData).forEach(([field, { values }]) => {
-    valueOptionsWorksheet.getColumn(field).values = values;
+    // TODO: fix this in exceljs fork
+    valueOptionsWorksheet.getColumn(field).values = values as any;
   });
 }
 
