@@ -89,6 +89,7 @@ describe('<Timeline />', () => {
         expect(screen.getByText(eventItem.title)).not.to.equal(null);
       });
     });
+
     it('does not render events out of range', () => {
       const extendedEvents: CalendarEvent[] = [
         ...baseEvents,
@@ -139,6 +140,7 @@ describe('<Timeline />', () => {
       expect(eventPosition).to.be.greaterThanOrEqual(hourBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
     });
+
     it('should render events correctly in the days view', () => {
       const totalWidth = 2520; // 8 weeks * 7 days * 64px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
@@ -153,6 +155,7 @@ describe('<Timeline />', () => {
       expect(eventPosition).to.be.greaterThanOrEqual(dayBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
+
     it('should render events correctly in the weeks view', () => {
       const totalWidth = 3584; // 21 hours * 120px
       const startOfWeek = adapter.startOfWeek(visibleDate);
@@ -170,6 +173,7 @@ describe('<Timeline />', () => {
       expect(eventPosition).to.be.greaterThanOrEqual(dayBoundaries.start);
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
+
     it('should render events correctly in the month view', () => {
       const extendedEvents: CalendarEvent[] = [
         ...baseEvents,

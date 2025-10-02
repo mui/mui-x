@@ -11,6 +11,7 @@
 
 .WeeksHeader {
   display: flex;
+  /* TODO: update this calculation when we add the option to hide weekends */
   min-width: calc(var(--unit-count) * 7 * var(--weeks-cell-width));
 }
 
