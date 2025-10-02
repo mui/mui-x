@@ -659,8 +659,6 @@ function createPrBody(newVersion) {
 - [ ] Choose "Run workflow" dropdown
   > **Branch:** master
   > **Commit SHA to release from:** the commit that contains the merged release on master. This commit is linked to the GitHub release.
-  > **Run in dry-run mode:** Used for debugging.
-  > **Create GitHub release:** Keep selected if you want a GitHub release to be automatically created from the changelog (in draft mode).
 - [ ] Click "Run workflow"
 
 ### Publish the documentation
