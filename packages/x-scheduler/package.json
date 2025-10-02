@@ -14,7 +14,6 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
-    ".": "./src/index.ts",
     "./agenda-view": "./src/agenda-view/index.ts",
     "./day-view": "./src/day-view/index.ts",
     "./event-calendar": "./src/event-calendar/index.ts",
