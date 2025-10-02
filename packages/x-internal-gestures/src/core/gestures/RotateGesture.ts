@@ -162,7 +162,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
     // Check if we have enough pointers for a rotation (at least 2)
-    if (relevantPointers.length < this.minPointers || relevantPointers.length > this.maxPointers) {
+    if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
       if (this.isActive) {
         // End the gesture if it was active
         this.emitRotateEvent(targetElement, 'end', relevantPointers, event);
@@ -243,7 +243,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
           );
 
           // If we have less than the minimum required pointers, end the gesture
-          if (remainingPointers.length < this.minPointers) {
+          if (!this.isMinPointersMet(remainingPointers, event.pointerType)) {
             if (event.type === 'pointercancel') {
               this.emitRotateEvent(targetElement, 'cancel', relevantPointers, event);
             }

@@ -243,8 +243,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     // Filter pointers to only include those targeting our element or its children
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
-    // Check if we have enough pointers and not too many
-    if (relevantPointers.length < this.minPointers || relevantPointers.length > this.maxPointers) {
+    if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
       // Cancel or end the gesture if it was active
       this.cancel(targetElement, relevantPointers, event);
       return;
@@ -268,7 +267,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
         break;
 
       case 'pointermove':
-        if (this.state.startCentroid && relevantPointers.length >= this.minPointers) {
+        if (this.state.startCentroid && this.isMinPointersMet(pointersArray, event.pointerType)) {
           // Calculate current centroid
           const currentCentroid = calculateCentroid(relevantPointers);
 
@@ -339,11 +338,12 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       case 'forceCancel':
         // If the gesture was active (threshold was reached), emit end event
         if (this.isActive && this.state.movementThresholdReached) {
+          const remainingPointers = relevantPointers.filter(
+            (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
+          );
+
           // If we have less than the minimum required pointers, end the gesture
-          if (
-            relevantPointers.filter((p) => p.type !== 'pointerup' && p.type !== 'pointercancel')
-              .length < this.minPointers
-          ) {
+          if (!this.isMinPointersMet(remainingPointers, event.pointerType)) {
             // End the gesture
             const currentCentroid = this.state.lastCentroid || this.state.startCentroid!;
             if (event.type === 'pointercancel') {
