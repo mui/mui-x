@@ -14,16 +14,19 @@ import type { GridAggregationModel } from '../aggregation/gridAggregationInterfa
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 
 export interface GridGetRowsResponsePivotColumn {
+  key: string;
   group: string | GridRowModel;
   children?: GridGetRowsResponsePivotColumn[];
 }
 
 /**
  * Path to a pivot column group.
+ * @param {string} key Pivot column key.
  * @param {string} field Pivot column field.
  * @param {string | GridRowModel} value Path value that is either a string or a part of row model needed to get the formatted value of the original column.
  */
 export interface GridDataSourcePivotColumnGroupPath {
+  key: string;
   field: string;
   value: string | GridRowModel;
 }
@@ -37,8 +40,10 @@ export interface GridGetRowsResponsePremium extends GridGetRowsResponse {
   aggregateRow?: GridValidRowModel;
   /**
    * Defines the structure of pivot columns to be created from the pivoted data.
-   * Each node in the tree must have a `group` property that is either a string or a part of a row model needed to get the formatted value of the original column.
-   * `children` is a list of the next level nodes.
+   * Each node in the tree must have a `key` and `group` property.
+   * `key` is used to identify the column group and will be passed to the `pivotingColDef` callback as the column path parameter.
+   * `group` is either a string or a part of a row model needed to get the formatted value of the original column.
+   * optionally,`children` is a list of the next level nodes.
    * Each node at the last level of the tree will be a column group containing each pivot value as a column.
    *
    * Structure:
@@ -48,11 +53,13 @@ export interface GridGetRowsResponsePremium extends GridGetRowsResponse {
    *     (e.g. `{date: "2025-01-01"}` could be formatted as `"Jan 2025"`)
    *
    * Examples:
-   * - `[{group: "Yes"}, {group: "No"}]` - Creates column groups with values "Yes" and "No"
-   * - `[{group: "2025", children: [{group: "January"}, {group: "February"}]}]` - Creates a column group with value "2025"
+   * - `[{key: "Y", group: "Yes"}, {key: "N", group: "No"}]` - Creates column groups with values "Yes" and "No"
+   * - `[{key: "2025", group: "2025", children: [{key: "January", group: "January"}, {key: "February", group: "February"}]}]` - Creates a column group with value "2025"
    *   that has column groups "January" and "February"
-   * - `[{group: {date: "2025-01-01"}, children: [{group: {date: "2025-01-01"}}]}, {group: {date: "2025-02-01"}, children: [{group: {date: "2025-02-01"}}]}]` - Creates two levels
-   *   of column groups with values returned from the value formatters of the columns used for pivoting.
+   * - `[
+   *      {key: "2025-01", group: {date: "2025-01-01"}, children: [{key: "01", group: {date: "2025-01-01"}}]},
+   *      {key: "2025-02", group: {date: "2025-02-01"}, children: [{key: "02", group: {date: "2025-02-01"}}]},
+   *    ]` - Creates two levels of column groups with values returned from the value formatters of the columns used for pivoting.
    *   Even though the same values are passed, the header names can be different based on the valueFormatter or valueGetter.
    *   One pivoting column may format the date as a year and the other as a month.
    */
@@ -92,20 +99,6 @@ export interface GridDataSourcePremium extends Omit<GridDataSource, 'getRows'> {
    * @returns {string} The aggregated value for a specific aggregated column.
    */
   getAggregatedValue?: (row: GridValidRowModel, field: GridColDef['field']) => string;
-  /**
-   * Used to customize the column definition for pivot columns. Useful to target specific pivot value in the rows response.
-   * @param {string} field The field of the pivot value.
-   * @param {GridDataSourcePivotColumnGroupPath[]} columnGroupPath The path to the column.
-   * It is an array of all parent column groups with the original field name and the value passed from the `pivotColumns` response.
-   * @param {GridColDef[]} columns All columns definitions from the non-pivoted columns.
-   * @returns {Partial<GridColDef>} Partial column definition overrides for the pivot column.
-   * The returned part will be merged with the original column definition and certain forced properties for the pivoting column.
-   */
-  getPivotColumnDef?: (
-    field: string,
-    columnGroupPath: GridDataSourcePivotColumnGroupPath[],
-    columns: Record<string, GridColDef>,
-  ) => Partial<GridColDef>;
 }
 
 export interface GridDataSourceApiBasePremium extends Omit<GridDataSourceApiBase, 'fetchRows'> {

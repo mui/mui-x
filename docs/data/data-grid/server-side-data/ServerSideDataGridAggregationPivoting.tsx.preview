@@ -3,5 +3,6 @@
   dataSource={dataSource}
   showToolbar
   initialState={initialStateUpdated}
+  pivotingColDef={pivotingColDef}
   aggregationFunctions={aggregationFunctions}
 />

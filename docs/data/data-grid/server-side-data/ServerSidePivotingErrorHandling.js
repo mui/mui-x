@@ -26,6 +26,10 @@ const aggregationFunctions = {
   size: {},
 };
 
+const pivotingColDef = (originalColumnField, columnGroupPath) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
+
 export default function ServerSidePivotingErrorHandling() {
   const apiRef = useGridApiRef();
   const [error, setError] = React.useState();
@@ -69,14 +73,6 @@ export default function ServerSidePivotingErrorHandling() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value[path.field],
-          )
-          .concat(field)
-          .join('>->'),
-      }),
     }),
     [fetchRows],
   );
@@ -125,6 +121,7 @@ export default function ServerSidePivotingErrorHandling() {
           showToolbar
           initialState={initialState}
           aggregationFunctions={aggregationFunctions}
+          pivotingColDef={pivotingColDef}
           onDataSourceError={(err) => {
             if (err instanceof GridGetRowsError) {
               if (!err.params.groupKeys || err.params.groupKeys.length === 0) {

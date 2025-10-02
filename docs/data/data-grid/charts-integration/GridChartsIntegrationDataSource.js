@@ -30,6 +30,10 @@ const aggregationFunctions = {
   size: {},
 };
 
+const pivotingColDef = (originalColumnField, columnGroupPath) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
+
 export default function GridChartsIntegrationDataSource() {
   const apiRef = useGridApiRef();
 
@@ -63,14 +67,6 @@ export default function GridChartsIntegrationDataSource() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value[path.field],
-          )
-          .concat(field)
-          .join('>->'),
-      }),
     };
   }, [fetchRows]);
 
@@ -153,6 +149,7 @@ export default function GridChartsIntegrationDataSource() {
             }}
             initialState={initialStateUpdated}
             aggregationFunctions={aggregationFunctions}
+            pivotingColDef={pivotingColDef}
             experimentalFeatures={{
               charts: true,
             }}

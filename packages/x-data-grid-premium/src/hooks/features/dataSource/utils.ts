@@ -8,30 +8,22 @@ import {
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type {
   GridPivotingDynamicPropsOverrides,
+  PivotingColDefCallback,
   GridPivotModel,
 } from '../pivoting/gridPivotingInterfaces';
 import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
-import type {
-  GridDataSourcePivotColumnGroupPath,
-  GridDataSourcePremium,
-  GridGetRowsResponsePivotColumn,
-} from './models';
+import type { GridDataSourcePivotColumnGroupPath, GridGetRowsResponsePivotColumn } from './models';
 
 export const getPropsOverrides = (
   pivotColumns: GridGetRowsResponsePivotColumn[],
-  getPivotColumnDef: NonNullable<GridDataSourcePremium['getPivotColumnDef']>,
+  pivotingColDef: PivotingColDefCallback,
   pivotModel: GridPivotModel,
   initialColumns: Map<string, GridColDef>,
   apiRef: RefObject<GridPrivateApiPremium>,
 ): GridPivotingDynamicPropsOverrides => {
   const visiblePivotColumns = pivotModel.columns.filter((column) => !column.hidden);
   const visiblePivotValues = pivotModel.values.filter((value) => !value.hidden);
-  const columns: GridColDef[] = [];
-  const columnDefinitions: Record<string, GridColDef> = {};
-  initialColumns.forEach((value, key) => {
-    columnDefinitions[key] = value;
-    columns.push(value);
-  });
+  const columns: GridColDef[] = Array.from(initialColumns.values());
 
   // Build column grouping model from pivot column paths
   const columnGroupingModel: GridColumnGroupingModel = [];
@@ -58,7 +50,10 @@ export const getPropsOverrides = (
 
     remainingColumns.forEach((column) => {
       processPath(
-        [...currentPath, { field: visiblePivotColumns[level].field, value: column.group }],
+        [
+          ...currentPath,
+          { key: column.key, field: visiblePivotColumns[level].field, value: column.group },
+        ],
         column.children || [],
         level + 1,
       );
@@ -80,12 +75,13 @@ export const getPropsOverrides = (
   }[] = [];
 
   uniquePaths.forEach((columnPath) => {
+    const columnPathKeys = columnPath.map((path) => path.key);
     const columnPathValues = columnPath.map((path) => path.value);
     visiblePivotValues.forEach((pivotValue) => {
       // Find the original column definition for the last field
       const originalColumn = initialColumns.get(pivotValue.field);
       // get the overrides defined from the data source definition
-      const overrides = getPivotColumnDef(pivotValue.field, columnPath, columnDefinitions);
+      const overrides = pivotingColDef(pivotValue.field, columnPathKeys);
 
       // Create new column definition based on original column
       const newColumnDef = {

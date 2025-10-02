@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  DataGridPremiumProps,
   GridDataSource,
   GridPivotModel,
 } from '@mui/x-data-grid-premium';
@@ -19,6 +20,13 @@ const aggregationFunctions = {
   max: { columnTypes: ['number', 'date', 'dateTime'] },
   size: {},
 };
+
+const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
+  originalColumnField,
+  columnGroupPath,
+) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
 
 export default function ServerSideDataGridAggregationPivoting() {
   const { columns, initialState, fetchRows } = useMockServer({
@@ -49,14 +57,6 @@ export default function ServerSideDataGridAggregationPivoting() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value[path.field],
-          )
-          .concat(field)
-          .join('>->'),
-      }),
     }),
     [fetchRows],
   );
@@ -79,6 +79,7 @@ export default function ServerSideDataGridAggregationPivoting() {
         dataSource={dataSource}
         showToolbar
         initialState={initialStateUpdated}
+        pivotingColDef={pivotingColDef}
         aggregationFunctions={aggregationFunctions}
       />
     </div>

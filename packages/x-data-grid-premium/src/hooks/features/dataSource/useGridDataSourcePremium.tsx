@@ -81,10 +81,11 @@ export const useGridDataSourcePremium = (
       }
 
       if (response.pivotColumns) {
-        const getPivotColumnDef = props.dataSource?.getPivotColumnDef;
-        if (!getPivotColumnDef) {
+        const pivotingColDef = props.pivotingColDef;
+        if (!pivotingColDef || typeof pivotingColDef !== 'function') {
           throw new Error(
-            'MUI X: No `getPivotColumnDef()` method provided with the `dataSource` prop, but response contains `pivotColumns`\n\n\
+            'MUI X: No `pivotingColDef()` prop provided with to the Data Grid, but response contains `pivotColumns`.\n\n\
+            You need a callback to return at least a field column prop for each generated pivot column.\n\n\
             See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) documentation for more details.',
           );
         }
@@ -92,7 +93,7 @@ export const useGridDataSourcePremium = (
         // Update the grid state with new columns and column grouping model
         const partialPropsOverrides = getPropsOverrides(
           response.pivotColumns,
-          getPivotColumnDef,
+          pivotingColDef,
           pivotModel,
           initialColumns,
           apiRef,
@@ -117,7 +118,7 @@ export const useGridDataSourcePremium = (
         response,
       };
     },
-    [apiRef, props.dataSource, initialColumns, pivotModel],
+    [apiRef, props.pivotingColDef, initialColumns, pivotModel],
   );
 
   const resolveGroupAggregation = React.useCallback<

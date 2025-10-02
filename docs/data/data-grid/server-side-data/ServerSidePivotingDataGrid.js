@@ -16,6 +16,10 @@ const aggregationFunctions = {
   size: {},
 };
 
+const pivotingColDef = (originalColumnField, columnGroupPath) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
+
 export default function ServerSidePivotingDataGrid() {
   const {
     columns,
@@ -51,14 +55,6 @@ export default function ServerSidePivotingDataGrid() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value[path.field],
-          )
-          .concat(field)
-          .join('>->'),
-      }),
     }),
     [fetchRows],
   );
@@ -85,6 +81,7 @@ export default function ServerSidePivotingDataGrid() {
         pageSizeOptions={[10, 20, 50]}
         initialState={initialState}
         aggregationFunctions={aggregationFunctions}
+        pivotingColDef={pivotingColDef}
       />
     </div>
   );

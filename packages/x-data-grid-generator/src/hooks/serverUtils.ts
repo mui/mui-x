@@ -904,9 +904,13 @@ export const processPivotingRows = (
           return;
         }
         if (visibleColumns.length > 0) {
-          const columnGroupPathValue = columnGroupPath.map(
-            (path, pathIndex) => path[visibleColumns[pathIndex].field],
-          );
+          const columnGroupPathValue = columnGroupPath.map((path, pathIndex) => {
+            const value = path[visibleColumns[pathIndex].field];
+            if (value instanceof Date) {
+              return value.toLocaleDateString();
+            }
+            return value;
+          });
           valueKey = `${columnGroupPathValue.join(columnGroupIdSeparator)}${columnGroupIdSeparator}${pivotValue.field}`;
         }
         uniqueColumnGroups.set(valueKey, [...columnGroupPath, pivotValue.field]);
@@ -929,8 +933,11 @@ export const processPivotingRows = (
 
       for (let i = 0; i < columnGroupPath.length - 1; i += 1) {
         const groupValue = columnGroupPath[i];
-        const groupKey =
+        let groupKey =
           typeof groupValue === 'string' ? groupValue : groupValue[visibleColumns[i].field];
+        if (groupKey instanceof Date) {
+          groupKey = groupKey.toLocaleDateString();
+        }
         const pathKey = currentPath ? `${currentPath}-${groupKey}` : groupKey;
 
         if (!currentLevel.has(groupKey)) {
@@ -949,7 +956,8 @@ export const processPivotingRows = (
     const convertMapToArray = (
       map: Map<string, { group: string | GridRowModel; children: Map<string, any> }>,
     ): GridGetRowsResponsePivotColumn[] => {
-      return Array.from(map.values()).map((group) => ({
+      return Array.from(map.entries()).map(([key, group]) => ({
+        key,
         group: group.group,
         ...(group.children.size > 0 ? { children: convertMapToArray(group.children) } : {}),
       }));

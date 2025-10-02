@@ -59,7 +59,7 @@
     "dataSource": {
       "type": {
         "name": "shape",
-        "description": "{ getAggregatedValue?: func, getChildrenCount?: func, getGroupKey?: func, getPivotColumnDef?: func, getRows: func, updateRow?: func }"
+        "description": "{ getAggregatedValue?: func, getChildrenCount?: func, getGroupKey?: func, getRows: func, updateRow?: func }"
       }
     },
     "dataSourceCache": {
@@ -700,7 +700,7 @@
     "pivotingColDef": {
       "type": {
         "name": "union",
-        "description": "func<br>&#124;&nbsp;{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', flex?: number, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }"
+        "description": "func<br>&#124;&nbsp;{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', field?: string, flex?: number, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }"
       },
       "default": "undefined"
     },

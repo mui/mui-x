@@ -297,7 +297,6 @@
   { "name": "GridDataSourceCacheDefault", "kind": "Class" },
   { "name": "GridDataSourceCacheDefaultConfig", "kind": "TypeAlias" },
   { "name": "GridDataSourceGroupNode", "kind": "Interface" },
-  { "name": "GridDataSourcePivotColumnGroupPath", "kind": "Interface" },
   { "name": "GridDataSourcePrivateApi", "kind": "Interface" },
   { "name": "GridDataSourceState", "kind": "Interface" },
   { "name": "gridDateComparator", "kind": "Variable" },

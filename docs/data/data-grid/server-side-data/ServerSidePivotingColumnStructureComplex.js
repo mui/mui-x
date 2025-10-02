@@ -27,18 +27,27 @@ const aggregationFunctions = {
   size: {},
 };
 
+const pivotingColDef = (originalColumnField, columnGroupPath) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
+
 const pivotColumns = [
   {
+    key: 'A15',
     group: 'A15',
     children: [
-      { group: { date: '2024-01-01' } },
-      { group: { date: '2025-01-01' } },
-      { group: { date: '2026-01-01' } },
+      { key: '2024', group: { date: '2024-01-01' } },
+      { key: '2025', group: { date: '2025-01-01' } },
+      { key: '2026', group: { date: '2026-01-01' } },
     ],
   },
   {
+    key: 'C11',
     group: 'C11',
-    children: [{ group: { date: '2024-01-01' } }, { group: { date: '2025-01-01' } }],
+    children: [
+      { key: '2024', group: { date: '2024-01-01' } },
+      { key: '2025', group: { date: '2025-01-01' } },
+    ],
   },
 ];
 
@@ -46,48 +55,48 @@ const rows = [
   {
     id: 1,
     group: 'A',
-    'A15>->2024-01-01>->quantity': 100,
-    'A15>->2025-01-01>->quantity': 200,
-    'A15>->2026-01-01>->quantity': 200,
-    'C11>->2024-01-01>->quantity': 150,
-    'C11>->2025-01-01>->quantity': 300,
+    'A15>->2024>->quantity': 100,
+    'A15>->2025>->quantity': 200,
+    'A15>->2026>->quantity': 200,
+    'C11>->2024>->quantity': 150,
+    'C11>->2025>->quantity': 300,
     descendantCount: 2,
   },
   {
     id: 2,
     group: 'B',
-    'A15>->2024-01-01>->quantity': 100,
-    'A15>->2025-01-01>->quantity': 200,
-    'C11>->2024-01-01>->quantity': 150,
-    'C11>->2025-01-01>->quantity': 300,
+    'A15>->2024>->quantity': 100,
+    'A15>->2025>->quantity': 200,
+    'C11>->2024>->quantity': 150,
+    'C11>->2025>->quantity': 300,
     descendantCount: 1,
   },
   {
     id: 3,
     group: 'C',
-    'A15>->2024-01-01>->quantity': 100,
-    'A15>->2025-01-01>->quantity': 200,
-    'C11>->2024-01-01>->quantity': 150,
-    'C11>->2025-01-01>->quantity': 300,
+    'A15>->2024>->quantity': 100,
+    'A15>->2025>->quantity': 200,
+    'C11>->2024>->quantity': 150,
+    'C11>->2025>->quantity': 300,
     descendantCount: 3,
   },
   {
     id: 4,
     group: 'D',
-    'A15>->2024-01-01>->quantity': 100,
-    'A15>->2025-01-01>->quantity': 200,
-    'A15>->2026-01-01>->quantity': 200,
-    'C11>->2024-01-01>->quantity': 150,
-    'C11>->2025-01-01>->quantity': 300,
+    'A15>->2024>->quantity': 100,
+    'A15>->2025>->quantity': 200,
+    'A15>->2026>->quantity': 200,
+    'C11>->2024>->quantity': 150,
+    'C11>->2025>->quantity': 300,
     descendantCount: 4,
   },
   {
     id: 5,
     group: 'E',
-    'A15>->2024-01-01>->quantity': 100,
-    'A15>->2025-01-01>->quantity': 200,
-    'C11>->2024-01-01>->quantity': 150,
-    'C11>->2025-01-01>->quantity': 300,
+    'A15>->2024>->quantity': 100,
+    'A15>->2025>->quantity': 200,
+    'C11>->2024>->quantity': 150,
+    'C11>->2025>->quantity': 300,
     descendantCount: 2,
   },
 ];
@@ -100,11 +109,11 @@ export default function ServerSidePivotingColumnStructureComplex() {
           rows,
           rowCount: rows.length,
           aggregateRow: {
-            'A15>->2024-01-01>->quantity': 500,
-            'A15>->2025-01-01>->quantity': 1000,
-            'A15>->2026-01-01>->quantity': 400,
-            'C11>->2024-01-01>->quantity': 750,
-            'C11>->2025-01-01>->quantity': 1500,
+            'A15>->2024>->quantity': 500,
+            'A15>->2025>->quantity': 1000,
+            'A15>->2026>->quantity': 400,
+            'C11>->2024>->quantity': 750,
+            'C11>->2025>->quantity': 1500,
           },
           pivotColumns,
         };
@@ -112,18 +121,6 @@ export default function ServerSidePivotingColumnStructureComplex() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        field: columnGroupPath
-          .map((path) => {
-            if (typeof path.value === 'string') {
-              return path.value;
-            }
-            // year is a derived column that gets its value via `valueGetter()` using the `date` property
-            return path.field === 'year' ? path.value.date : path.value[path.field];
-          })
-          .concat(field)
-          .join('>->'),
-      }),
     }),
     [],
   );
@@ -137,6 +134,7 @@ export default function ServerSidePivotingColumnStructureComplex() {
         columnGroupHeaderHeight={36}
         pivotActive
         pivotModel={pivotModel}
+        pivotingColDef={pivotingColDef}
         aggregationFunctions={aggregationFunctions}
         disableColumnMenu
         disableColumnSorting

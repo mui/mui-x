@@ -15,6 +15,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 import { getColumnHeadersTextContent, getRowValues } from 'test/utils/helperFn';
+import { PivotingColDefCallback } from '../hooks/features/pivoting/gridPivotingInterfaces';
 
 describe('<DataGridPremium /> - Data source pivoting', () => {
   const { render } = createRenderer();
@@ -41,14 +42,23 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
   function TestDataSourcePivoting(
     props: Partial<DataGridPremiumProps> & {
       mockResponse?: GridGetRowsResponse;
-      getPivotColumnDef?: GridDataSource['getPivotColumnDef'];
+      pivotingColDef?: PivotingColDefCallback;
     },
   ) {
     apiRef = useGridApiRef();
-    const { mockResponse, getPivotColumnDef: getPivotColumnDefProp, ...rest } = props;
+    const { mockResponse, pivotingColDef, ...rest } = props;
     const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
       { rowLength: 10, maxColumns: 1 },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
+    );
+
+    const pivotingColDefCallback = React.useMemo<PivotingColDefCallback>(
+      () =>
+        pivotingColDef ??
+        ((field, columnGroupPath) => ({
+          field: columnGroupPath.concat(field).join('>->'),
+        })),
+      [pivotingColDef],
     );
 
     const dataSource: GridDataSource = React.useMemo(() => {
@@ -81,16 +91,8 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
         getGroupKey: (row) => row.group,
         getChildrenCount: (row) => row.descendantCount,
         getAggregatedValue: (row, field) => row[field],
-        getPivotColumnDef:
-          getPivotColumnDefProp ??
-          ((field, columnGroupPath) => ({
-            field: columnGroupPath
-              .map((path) => (typeof path.value === 'string' ? path.value : path.value[path.field]))
-              .concat(field)
-              .join('>->'),
-          })),
       };
-    }, [mockResponse, fetchRows, getPivotColumnDefProp]);
+    }, [mockResponse, fetchRows]);
 
     if (!isReady) {
       return null;
@@ -105,6 +107,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
           columns={columns}
           disableVirtualization
           aggregationFunctions={aggregationFunctions}
+          pivotingColDef={pivotingColDefCallback}
           {...rest}
         />
       </div>
@@ -172,9 +175,11 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
 
     const mockPivotColumns = [
       {
+        key: 'pending',
         group: 'pending',
       },
       {
+        key: 'completed',
         group: 'completed',
       },
     ];
@@ -355,23 +360,29 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     // Mock complex pivot columns structure
     const mockPivotColumns = [
       {
+        key: 'filled',
         group: 'filled',
         children: [
           {
+            key: 'north',
             group: 'north',
           },
           {
+            key: 'south',
             group: 'south',
           },
         ],
       },
       {
+        key: 'unfilled',
         group: 'unfilled',
         children: [
           {
+            key: 'east',
             group: 'east',
           },
           {
+            key: 'west',
             group: 'west',
           },
         ],
@@ -513,6 +524,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
 
     const mockPivotColumns = [
       {
+        key: 'filled',
         group: 'filled',
         children: [],
       },
@@ -536,7 +548,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
           { field: 'quantity', headerName: 'Quantity', type: 'number' },
         ]}
         mockResponse={mockResponse}
-        getPivotColumnDef={() => ({
+        pivotingColDef={() => ({
           field: 'custom_field_name',
           headerName: 'Custom Quantity',
         })}
@@ -576,14 +588,17 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
 
       const mockPivotColumns = [
         {
+          key: 'A',
           group: 'A',
           children: [],
         },
         {
+          key: 'Z',
           group: 'Z',
           children: [],
         },
         {
+          key: 'C',
           group: 'C',
           children: [],
         },
@@ -654,14 +669,17 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
 
       const mockPivotColumns = [
         {
+          key: 'A',
           group: { letter: 'A' },
           children: [],
         },
         {
+          key: 'Z',
           group: { letter: 'Z' },
           children: [],
         },
         {
+          key: 'C',
           group: { letter: 'C' },
           children: [],
         },

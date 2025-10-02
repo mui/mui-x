@@ -3,6 +3,7 @@ import {
   DataGridPremium,
   GridPivotModel,
   GridDataSource,
+  DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
@@ -19,6 +20,13 @@ const aggregationFunctions = {
   max: { columnTypes: ['number', 'date', 'dateTime'] },
   size: {},
 };
+
+const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
+  originalColumnField,
+  columnGroupPath,
+) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
 
 export default function ServerSidePivotingGroupExpansion() {
   const {
@@ -55,14 +63,6 @@ export default function ServerSidePivotingGroupExpansion() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value[path.field],
-          )
-          .concat(field)
-          .join('>->'),
-      }),
     }),
     [fetchRows],
   );
@@ -86,6 +86,7 @@ export default function ServerSidePivotingGroupExpansion() {
         showToolbar
         initialState={initialState}
         aggregationFunctions={aggregationFunctions}
+        pivotingColDef={pivotingColDef}
         defaultGroupingExpansionDepth={-1}
       />
     </div>

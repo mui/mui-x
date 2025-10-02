@@ -16,6 +16,10 @@ const aggregationFunctions = {
   size: {},
 };
 
+const pivotingColDef = (originalColumnField, columnGroupPath) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
+
 export default function ServerSideDataGridAggregationPivoting() {
   const { columns, initialState, fetchRows } = useMockServer({
     maxColumns: 20,
@@ -45,14 +49,6 @@ export default function ServerSideDataGridAggregationPivoting() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value[path.field],
-          )
-          .concat(field)
-          .join('>->'),
-      }),
     }),
     [fetchRows],
   );
@@ -75,6 +71,7 @@ export default function ServerSideDataGridAggregationPivoting() {
         dataSource={dataSource}
         showToolbar
         initialState={initialStateUpdated}
+        pivotingColDef={pivotingColDef}
         aggregationFunctions={aggregationFunctions}
       />
     </div>

@@ -4,5 +4,6 @@
   showToolbar
   initialState={initialState}
   aggregationFunctions={aggregationFunctions}
+  pivotingColDef={pivotingColDef}
   defaultGroupingExpansionDepth={-1}
 />

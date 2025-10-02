@@ -29,26 +29,26 @@ To dynamically load pivoted data from the server, create a Data Source and pass 
 
 ## Implementing server-side pivoting
 
-To implement server-side pivoting, add the `getPivotColumnDef()` method to the Data Source.
-This method customizes the column definition for pivot columns based on the pivot value and column group path.
-It must at least override the field name to target the row property holding the pivoted data.
+To implement server-side pivoting, add the [Server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/#implementating-server-side-row-grouping) and [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/#implementing-server-side-aggregation) properties to the Data Source.
+
+Additionally, use [pivotingColDef()](/x/api/data-grid/data-grid-premium/#data-grid-premium-prop-pivotingColDef) as a callback to customize the column definition for pivot columns based on the pivot value and column group path.
+You must at least override the field name to target the row property holding the pivoted data.
 
 ```tsx
 const customDataSource: GridDataSource = {
   getRows: async (params) => {
     // Fetch the data from the server
   },
-  getPivotColumnDef: (field, columnGroupPath) => {
-    // Customize the column definition for pivot columns
-    return {
-      field: columnGroupPath
-        .map((path) =>
-          typeof path.value === 'string' ? path.value : path.value[path.field],
-        )
-        .concat(field)
-        .join('>->'),
-      // Add other column customizations as needed
-    };
+  getGroupKey: (row) => {
+    // Return the group key for the row, e.g. `name`
+    return row.name;
+  },
+  getChildrenCount: (row) => {
+    // Return the number of children for the row
+    return row.childrenCount;
+  },
+  getAggregatedValue: (row, field) => {
+    return row[`${field}Aggregate`];
   },
 };
 ```
@@ -110,8 +110,8 @@ interface GridGetRowsResponsePivotColumn {
 
 #### Structure examples
 
-- `[{group: "Yes"}, {group: "No"}]` - Creates column groups with values "Yes" and "No"
-- `[{group: "2025", children: [{group: {quarter: "2025-01-01"}}, {group: {quarter: "2025-04-01"}}]}]`, along with the snippet below, creates a column group with the value "2025" that has column groups "Q1" and "Q2":
+- `[{key: "Y", group: "Yes"}, {key: "N", group: "No"}]` - Creates column groups with values "Yes" and "No"
+- `[{key: "2025", group: "2025", children: [{key: ""2025-01-01"", group: {quarter: "2025-01-01"}}, {key: "2025-04-01", group: {quarter: "2025-04-01"}}]}]`, along with the snippet below, creates a column group with the value "2025" that has column groups "Q1" and "Q2":
 
   ```tsx
   const columns = [
@@ -129,7 +129,7 @@ interface GridGetRowsResponsePivotColumn {
   };
   ```
 
-- `[{group: {date: "2025-01-01"}, children: [{group: {date: "2025-01-01"}}]}]`, along with the snippet below, creates a column group with the value "2025" that has column group "Q1":
+- `[{key: "25", group: {date: "2025-01-01"}, children: [{key: "01", group: {date: "2025-01-01"}}]}]`, along with the snippet below, creates a column group with the value "2025" that has column group "Q1":
 
   ```tsx
   const columns = [
@@ -157,10 +157,10 @@ interface GridGetRowsResponsePivotColumn {
 
 Each node in the last level of the pivot column structure gets all pivot value columns to complete the Data Grid's column structure.
 
-The demo below returns a static response to demonstrate how the column structure is created from the `pivotColumns` response.
+The demo below returns a static response to demonstrate how the column structure is created from the `pivotColumns` response and how the pivot column field can be defined with `pivotingColDef()`.
 
 In this case, all groups are strings formatted on the server.
-Pivot data is retrieved from fields whose names are constructed by combining the group values and pivot value field name.
+Pivot data is retrieved from fields whose names are constructed by combining the group keys and pivot value field name.
 
 {{"demo": "ServerSidePivotingColumnStructureSimple.js", "bg": "inline"}}
 
@@ -170,7 +170,7 @@ In this case, the `pivotColumns` response returns an object for each year that n
 Each object contains a `date` property because `year` is a derived column that gets its value via `valueGetter()` using that `date` property.
 
 The Data Grid runs `valueGetter()` on the `year` field and uses the result as a label for the second level column group.
-Since the formatted value is not known on the server, rows contain pivot data in fields whose names are created using the raw value of the column group.
+Since the formatted value is not known on the server, rows contain pivot data in fields whose names are created using the column group keys.
 
 {{"demo": "ServerSidePivotingColumnStructureComplex.js", "bg": "inline"}}
 

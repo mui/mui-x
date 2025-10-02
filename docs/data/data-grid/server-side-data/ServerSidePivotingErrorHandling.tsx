@@ -6,6 +6,7 @@ import {
   useGridApiRef,
   GridGetRowsError,
   GridSidebarValue,
+  DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Snackbar from '@mui/material/Snackbar';
@@ -27,6 +28,13 @@ const aggregationFunctions = {
   max: { columnTypes: ['number', 'date', 'dateTime'] },
   size: {},
 };
+
+const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
+  originalColumnField,
+  columnGroupPath,
+) => ({
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
 
 export default function ServerSidePivotingErrorHandling() {
   const apiRef = useGridApiRef();
@@ -71,14 +79,6 @@ export default function ServerSidePivotingErrorHandling() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value[path.field],
-          )
-          .concat(field)
-          .join('>->'),
-      }),
     }),
     [fetchRows],
   );
@@ -127,6 +127,7 @@ export default function ServerSidePivotingErrorHandling() {
           showToolbar
           initialState={initialState}
           aggregationFunctions={aggregationFunctions}
+          pivotingColDef={pivotingColDef}
           onDataSourceError={(err) => {
             if (err instanceof GridGetRowsError) {
               if (!err.params.groupKeys || err.params.groupKeys.length === 0) {

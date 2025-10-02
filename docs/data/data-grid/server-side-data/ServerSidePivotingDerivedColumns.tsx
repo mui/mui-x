@@ -53,6 +53,14 @@ const aggregationFunctions = {
   size: {},
 };
 
+const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
+  originalColumnField,
+  columnGroupPath,
+) => ({
+  ...(derivedColumns.get(originalColumnField) || {}),
+  field: columnGroupPath.concat(originalColumnField).join('>->'),
+});
+
 export default function ServerSidePivotingDerivedColumns() {
   const {
     columns,
@@ -89,15 +97,6 @@ export default function ServerSidePivotingDerivedColumns() {
       getGroupKey: (row) => row.group,
       getChildrenCount: (row) => row.descendantCount,
       getAggregatedValue: (row, field) => row[field],
-      getPivotColumnDef: (field, columnGroupPath) => ({
-        ...(derivedColumns.get(field) || {}),
-        field: columnGroupPath
-          .map((path) =>
-            typeof path.value === 'string' ? path.value : path.value[path.field],
-          )
-          .concat(field)
-          .join('>->'),
-      }),
     }),
     [fetchRows],
   );
@@ -124,6 +123,7 @@ export default function ServerSidePivotingDerivedColumns() {
         pageSizeOptions={[10, 20, 50]}
         initialState={initialState}
         aggregationFunctions={aggregationFunctions}
+        pivotingColDef={pivotingColDef}
         getPivotDerivedColumns={getPivotDerivedColumns}
       />
     </div>
