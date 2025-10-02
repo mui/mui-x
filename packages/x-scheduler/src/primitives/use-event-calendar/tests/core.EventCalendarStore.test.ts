@@ -37,7 +37,6 @@ describe('Core - EventCalendarStore', () => {
         viewConfig: null,
         occurrencePlaceholder: null,
         visibleDate: adapter.startOfDay(adapter.date()),
-        isSidePanelOpen: true,
       };
 
       expect(store.state).to.deep.equal(expectedState);

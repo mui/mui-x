@@ -22,7 +22,6 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
     ampm,
     eventColor,
     showCurrentTimeIndicator,
-    isSidePanelOpen,
     ...forwardedProps
   } = props;
 
@@ -45,7 +44,6 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       ampm,
       eventColor,
       showCurrentTimeIndicator,
-      isSidePanelOpen,
     }),
     [
       events,
@@ -65,7 +63,6 @@ export function useExtractEventCalendarParameters<P extends EventCalendarParamet
       ampm,
       eventColor,
       showCurrentTimeIndicator,
-      isSidePanelOpen,
     ],
   );
 

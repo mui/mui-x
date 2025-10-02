@@ -18,7 +18,7 @@ export default function DefaultView() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultView="month"
-        isSidePanelOpen={false}
+        preferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

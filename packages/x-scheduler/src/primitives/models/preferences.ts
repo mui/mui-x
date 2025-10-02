@@ -9,6 +9,11 @@ export interface CalendarPreferences {
    * @default false
    */
   showWeekNumber: boolean;
+  /**
+   * Whether the side panel is open.
+   * @default true
+   */
+  isSidePanelOpen: boolean;
 }
 
 export interface CalendarPreferencesMenuConfig {

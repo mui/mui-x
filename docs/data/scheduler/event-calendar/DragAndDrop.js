@@ -19,7 +19,7 @@ export default function DragAndDrop() {
         onEventsChange={setEvents}
         areEventsDraggable
         areEventsResizable
-        isSidePanelOpen={false}
+        preferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

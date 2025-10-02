@@ -18,7 +18,7 @@ export default function RemoveViews() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         views={['week', 'month']}
-        isSidePanelOpen={false}
+        preferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

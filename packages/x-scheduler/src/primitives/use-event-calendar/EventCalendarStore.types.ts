@@ -1,8 +1,8 @@
 import {
   CalendarPreferences,
   CalendarView,
-  CalendarPreferencesMenuConfig,
   CalendarViewConfig,
+  CalendarPreferencesMenuConfig,
 } from '../models';
 import { SchedulerState, SchedulerParameters } from '../utils/SchedulerStore';
 
@@ -29,10 +29,6 @@ export interface EventCalendarState extends SchedulerState {
    * Should not be used in selectors, only in event handlers.
    */
   viewConfig: CalendarViewConfig | null;
-  /**
-   * Whether the side panel is open or not.
-   */
-  isSidePanelOpen: boolean;
 }
 
 export interface EventCalendarParameters extends SchedulerParameters {
@@ -61,16 +57,10 @@ export interface EventCalendarParameters extends SchedulerParameters {
    */
   preferences?: Partial<CalendarPreferences>;
   /**
-   * Config of the preferences menu.
-   * Defines which options are visible in the menu.
-   * If `false`, the menu will be entirely hidden.
-   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true }
+   * Config of the preferences.
+   * Defines which options are visible in the.
+   * If `false`, the preferences menu and side panel toggle will be entirely hidden.
+   * @default { toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleSidePanel: true }
    */
   preferencesMenuConfig?: Partial<CalendarPreferencesMenuConfig> | false;
-
-  /**
-   * Whether the side panel is open or not.
-   * @default true
-   */
-  isSidePanelOpen?: boolean;
 }

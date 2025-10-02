@@ -61,7 +61,10 @@ describe('<PreferencesMenu />', () => {
     const { user } = render(
       <StandaloneView
         events={[]}
-        preferencesMenuConfig={{ toggleWeekendVisibility: false, toggleWeekNumberVisibility: true }}
+        preferencesMenuConfig={{
+          toggleWeekendVisibility: false,
+          toggleWeekNumberVisibility: true,
+        }}
       >
         <PreferencesMenu />
       </StandaloneView>,
@@ -79,7 +82,10 @@ describe('<PreferencesMenu />', () => {
     const { user } = render(
       <StandaloneView
         events={[]}
-        preferencesMenuConfig={{ toggleWeekendVisibility: true, toggleWeekNumberVisibility: false }}
+        preferencesMenuConfig={{
+          toggleWeekendVisibility: true,
+          toggleWeekNumberVisibility: false,
+        }}
       >
         <PreferencesMenu />
       </StandaloneView>,

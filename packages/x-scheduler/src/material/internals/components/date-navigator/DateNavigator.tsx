@@ -21,7 +21,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const translations = useTranslations();
   const view = useStore(store, selectors.view);
   const visibleDate = useStore(store, selectors.visibleDate);
-  const isSidePanelOpen = useStore(store, selectors.isSidePanelOpen);
+  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
 
   return (
     <header
@@ -34,7 +34,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         type="button"
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
         className={clsx('OutlinedNeutralButton', 'Button', 'IconButton')}
-        onClick={() => store.setIsSidePanelOpen(!isSidePanelOpen)}
+        onClick={(event) => store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event)}
       >
         {isSidePanelOpen ? (
           <PanelLeftClose size={20} strokeWidth={1.5} className="Icon" />

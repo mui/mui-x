@@ -4,5 +4,5 @@
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
   views={['week', 'month']}
-  isSidePanelOpen={false}
+  preferences={{ isSidePanelOpen: false }}
 />
