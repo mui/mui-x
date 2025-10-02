@@ -93,6 +93,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           new PressAndDragGesture({
             name: 'zoomPressAndDrag',
             dragThreshold: 10,
+            preventIf: ['zoomPinch'],
           }),
         ],
       });
