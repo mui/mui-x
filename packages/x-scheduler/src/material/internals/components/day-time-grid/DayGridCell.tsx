@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { CalendarGrid } from '../../../../primitives/calendar-grid';
-import { useAdapter } from '../../../../primitives/use-adapter';
-import { isWeekend } from '../../../../primitives/utils/date-utils';
+import { useAdapter, isWeekend } from '../../../../primitives/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';

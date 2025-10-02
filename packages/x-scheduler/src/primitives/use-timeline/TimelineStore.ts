@@ -1,4 +1,4 @@
-import { Adapter } from '../use-adapter/types';
+import { Adapter } from '../use-adapter/useAdapter.types';
 import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
 

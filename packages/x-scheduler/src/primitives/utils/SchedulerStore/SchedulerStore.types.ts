@@ -2,13 +2,14 @@ import {
   CalendarEvent,
   CalendarEventColor,
   CalendarEventId,
+  CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
   CalendarResource,
   CalendarResourceId,
   RecurringEventUpdatedProperties,
   SchedulerValidDate,
 } from '../../models';
-import { Adapter } from '../../use-adapter/types';
+import { Adapter } from '../../use-adapter/useAdapter.types';
 
 export interface SchedulerState {
   /**
@@ -61,6 +62,12 @@ export interface SchedulerState {
    * The current date and time, updated every minute.
    */
   nowUpdatedEveryMinute: SchedulerValidDate;
+  /**
+   * Checks whether the event is a multi-day event.
+   * A multi day event is rendered in the day grid instead of the time grid when both are available.
+   * It can also be styled differently in the day grid.
+   */
+  isMultiDayEvent: (event: CalendarEvent | CalendarEventOccurrence) => boolean;
 }
 
 export interface SchedulerParameters {

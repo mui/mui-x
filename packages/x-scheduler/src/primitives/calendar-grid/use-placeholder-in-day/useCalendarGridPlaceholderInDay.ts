@@ -5,8 +5,7 @@ import { selectors } from '../../use-event-calendar';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
-import { diffIn } from '../../utils/date-utils';
-import { useAdapter } from '../../use-adapter/useAdapter';
+import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
 
 export function useCalendarGridPlaceholderInDay(
   day: SchedulerValidDate,

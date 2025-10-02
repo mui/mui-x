@@ -3,9 +3,9 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { buildIsValidDropTarget } from '../../utils/drag-utils';
-import { useAdapter } from '../../use-adapter/useAdapter';
+import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
 import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
-import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
+import { mergeDateAndTime } from '../../utils/date-utils';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
 

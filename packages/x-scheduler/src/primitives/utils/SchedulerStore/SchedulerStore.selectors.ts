@@ -53,6 +53,7 @@ export const selectors = {
   ampm: createSelector((state: State) => state.ampm),
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),
   nowUpdatedEveryMinute: createSelector((state: State) => state.nowUpdatedEveryMinute),
+  isMultiDayEvent: createSelector((state: State) => state.isMultiDayEvent),
   resources: createSelector((state: State) => state.resources),
   events: createSelector((state: State) => state.events),
   visibleResourcesMap: createSelector((state: State) => state.visibleResources),

@@ -6,8 +6,7 @@ import {
   CalendarProcessedDate,
 } from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { useAdapter } from '../use-adapter/useAdapter';
-import { diffIn } from '../utils/date-utils';
+import { useAdapter, diffIn } from '../use-adapter/useAdapter';
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).

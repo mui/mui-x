@@ -6,7 +6,7 @@ import {
   FieldFormatTokenMap,
   Adapter,
   SchedulerTimezone,
-} from './types';
+} from './useAdapter.types';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year

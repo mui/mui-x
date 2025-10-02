@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { spy } from 'sinon';
 import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
+import { screen } from '@mui/internal-test-utils';
 import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler/primitives/models';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
-import { spy } from 'sinon';
 import { Popover } from '@base-ui-components/react/popover';
+import { DEFAULT_EVENT_COLOR } from '../../../../primitives/constants';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
-import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
 
 const occurrence: CalendarEventOccurrence = {
   id: '1',

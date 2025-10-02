@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { useEventOccurrencesWithDayGridPosition } from './useEventOccurrencesWithDayGridPosition';
-import { processDate } from '../utils/event-utils';
+import { processDate } from '../process-date';
 import { CalendarEvent } from '../models';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 
