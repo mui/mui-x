@@ -107,16 +107,6 @@ export const useFieldState = <
     onError: internalPropsWithDefaults.onError,
   });
 
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
-
   const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
 
   const sectionsValueBoundaries = React.useMemo(
@@ -208,6 +198,32 @@ export const useFieldState = <
     () => state.sections.every((section) => section.value === ''),
     [state.sections],
   );
+
+  const hasIncompleteSections = React.useMemo(() => {
+    return valueManager.areValuesEqual(adapter, value, valueManager.emptyValue) && !areAllSectionsEmpty;
+  }, [valueManager, adapter, value, areAllSectionsEmpty]);
+
+  // Call onError when incomplete sections state changes
+  const previousIncompleteSectionsRef = React.useRef(hasIncompleteSections);
+  React.useEffect(() => {
+    const onError = internalPropsWithDefaults.onError;
+    if (onError && hasIncompleteSections !== previousIncompleteSectionsRef.current) {
+      // Call onError with 'invalidDate' when there are incomplete sections
+      // Cast to TError since 'invalidDate' is a valid error for date/time fields
+      onError(hasIncompleteSections ? ('invalidDate' as TError) : (null as TError), value);
+    }
+    previousIncompleteSectionsRef.current = hasIncompleteSections;
+  }, [hasIncompleteSections, internalPropsWithDefaults.onError, value]);
+
+  const error = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    return hasValidationError || hasIncompleteSections;
+  }, [hasValidationError, errorProp, hasIncompleteSections]);
 
   const publishValue = (newValue: TValue) => {
     const context: FieldChangeHandlerContext<TError> = {
