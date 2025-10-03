@@ -440,10 +440,15 @@ export default function ChartDemoPropsForm<
           if (knob === 'title') {
             return (
               <React.Fragment>
-                <Typography variant="body2" fontWeight="bold" sx={{ pt: i !== 0 ? 2 : 0 }}>
+                <Typography
+                  key={propName}
+                  variant="body2"
+                  fontWeight="bold"
+                  sx={{ pt: i !== 0 ? 2 : 0 }}
+                >
                   {title}
                 </Typography>
-                <Divider sx={{ opacity: 0.5 }} />
+                <Divider key={`${propName}-divider`} sx={{ opacity: 0.5 }} />
               </React.Fragment>
             );
           }

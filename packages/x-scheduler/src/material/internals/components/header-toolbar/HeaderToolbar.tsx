@@ -33,15 +33,17 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       )}
       {...other}
     >
-      <div className="PrimaryActionWrapper">
-        {showViewSwitcher && (
-          <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
-        )}
-        <button className="Button OutlinedNeutralButton" onClick={store.goToToday} type="button">
-          {translations.today}
-        </button>
+      <div className="HeaderToolbarActions">
+        <div className="PrimaryActionWrapper">
+          {showViewSwitcher && (
+            <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
+          )}
+          <button className="Button OutlinedNeutralButton" onClick={store.goToToday} type="button">
+            {translations.today}
+          </button>
+        </div>
+        <PreferencesMenu />
       </div>
-      <PreferencesMenu />
     </header>
   );
 });
