@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/primitives/standalone-event';
 import { CalendarOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/primitives/models';
@@ -9,31 +10,26 @@ import {
 } from '../datasets/personal-agenda';
 import classes from './ExternalDrag.module.css';
 
-const initialExternalEvents: CalendarOccurrencePlaceholderExternalDragData[] = [
-  {
-    id: 'external-1',
-    title: 'External Event 1',
-  },
-  {
-    id: 'external-2',
-    title: 'External Event 2',
-  },
-  {
-    id: 'external-3',
-    title: 'External Event 3',
-  },
-];
+const initialExternalEvents: CalendarOccurrencePlaceholderExternalDragData[] =
+  Array.from({ length: 12 }, (_, index) => ({
+    id: `external-event-${index + 1}`,
+    title: `External Event ${index + 1}`,
+  }));
 
 export default function ExternalDragAndDrop() {
   const [events, setEvents] = React.useState(initialEvents);
   const [externalEvents, setExternalEvents] = React.useState(initialExternalEvents);
 
-  const handleEventDrop = (event: CalendarOccurrencePlaceholderExternalDragData) => {
-    setExternalEvents((prev) => prev.filter((e) => e.id !== event.id));
+  const handleEventDrop = (
+    removedEvent: CalendarOccurrencePlaceholderExternalDragData,
+  ) => {
+    setExternalEvents((prev) =>
+      prev.filter((event) => event.id !== removedEvent.id),
+    );
   };
 
   return (
-    <div className={classes.Container}>
+    <div className={clsx(classes.Container, 'mui-x-scheduler')}>
       <div className={classes.ExternalEventsContainer}>
         {externalEvents.map((event) => (
           <StandaloneEvent
@@ -41,7 +37,7 @@ export default function ExternalDragAndDrop() {
             isDraggable
             data={event}
             onEventDrop={() => handleEventDrop(event)}
-            className={classes.ExternalEvent}
+            className={clsx(classes.ExternalEvent)}
           >
             {event.title}
           </StandaloneEvent>
@@ -56,6 +52,8 @@ export default function ExternalDragAndDrop() {
           areEventsDraggable
           areEventsResizable
           canDropEventsToTheOutside
+          preferences={{ isSidePanelOpen: false }}
+          className={classes.EventCalendar}
         />
       </div>
     </div>

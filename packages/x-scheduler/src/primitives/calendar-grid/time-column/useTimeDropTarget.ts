@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useAdapter } from '../../utils/adapter/useAdapter';
+import { useAdapter } from '../../use-adapter/useAdapter';
 import { SchedulerValidDate } from '../../models';
 import {
   EVENT_DRAG_PRECISION_MINUTE,

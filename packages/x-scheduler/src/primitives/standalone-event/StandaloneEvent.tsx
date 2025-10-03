@@ -66,9 +66,7 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
       onDragStart: ({ location }) => setDragPosition(location.initial.input),
       onDrag: (param) => {
         const { location } = param;
-        if (
-          location.current.dropTargets.some((el) => el.data.source === 'CalendarGridTimeColumn')
-        ) {
+        if (location.current.dropTargets.some((el) => el.data.isSchedulerDropTarget)) {
           setDragPosition(null);
         } else {
           setDragPosition(location.current.input);

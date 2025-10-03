@@ -8,9 +8,9 @@ import { Menu } from '@base-ui-components/react/menu';
 import {
   EventCalendarPreferences,
   EventCalendarPreferencesMenuConfig,
-} from '../../../../../primitives/models/preferences';
+} from '../../../../../primitives/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../../../../primitives/use-event-calendar-store-context';
 import { selectors } from '../../../../../primitives/use-event-calendar';
 import './PreferencesMenu.css';
 

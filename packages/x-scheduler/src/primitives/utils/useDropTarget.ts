@@ -3,7 +3,7 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { CalendarOccurrencePlaceholder, EventSurfaceType, SchedulerValidDate } from '../models';
 import { EventDropData, EventDropDataLookup } from './drag-utils';
-import { useSchedulerStoreContext } from './useSchedulerStoreContext';
+import { useSchedulerStoreContext } from '../use-scheduler-store-context';
 import { selectors } from './SchedulerStore';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
@@ -42,6 +42,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
 
     return dropTargetForElements({
       element: ref.current,
+      getData: () => ({ isSchedulerDropTarget: true, surfaceType }),
       canDrop: (arg) => isValidDropTarget(arg.source.data),
       onDrag: ({ source: { data }, location }) => {
         const newPlaceholder = getEventDropData({

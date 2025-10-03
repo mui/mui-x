@@ -15,6 +15,10 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
     areEventsResizable,
     eventColor,
     showCurrentTimeIndicator,
+    view,
+    views,
+    defaultView,
+    onViewChange,
     preferences,
     ...forwardedProps
   } = props;
@@ -31,6 +35,10 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
       areEventsResizable,
       eventColor,
       showCurrentTimeIndicator,
+      view,
+      views,
+      defaultView,
+      onViewChange,
       preferences,
     }),
     [
@@ -44,6 +52,10 @@ export function useExtractTimelineParameters<P extends TimelineParameters>(
       areEventsResizable,
       eventColor,
       showCurrentTimeIndicator,
+      view,
+      views,
+      defaultView,
+      onViewChange,
       preferences,
     ],
   );

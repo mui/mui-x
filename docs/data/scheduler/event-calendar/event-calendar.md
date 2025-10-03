@@ -116,6 +116,8 @@ const event = {
 
 ## Drag interactions
 
+### Drag and resize events
+
 You can enable the drag and drop using the `areEventsDraggable` and `areEventsResizable` props.
 When `areEventsDraggable` is `true`, the events can be dragged to another point in time.
 When `areEventsResizable` is `true`, the event extremities can be dragged to change its duration.

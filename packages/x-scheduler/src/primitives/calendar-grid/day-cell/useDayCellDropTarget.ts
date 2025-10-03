@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { buildIsValidDropTarget } from '../../utils/drag-utils';
-import { useAdapter } from '../../utils/adapter/useAdapter';
+import { useAdapter, diffIn } from '../../use-adapter';
 import { SchedulerValidDate } from '../../models';
-import { diffIn, mergeDateAndTime } from '../../utils/date-utils';
+import { mergeDateAndTime } from '../../utils/date-utils';
 import { useDropTarget } from '../../utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([

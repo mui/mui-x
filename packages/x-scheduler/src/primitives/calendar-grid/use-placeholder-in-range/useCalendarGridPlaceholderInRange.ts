@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
-import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { selectors } from '../../use-event-calendar';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 
@@ -33,7 +33,6 @@ export function useCalendarGridPlaceholderInRange(
       end: rawPlaceholder.end,
     };
 
-    // Creation mode
     if (rawPlaceholder.type === 'creation') {
       return {
         ...sharedProperties,

@@ -1,9 +1,7 @@
+import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { getAdapter } from '../../utils/adapter/getAdapter';
 
 const DEFAULT_PARAMS = { events: [] };
-
-const adapter = getAdapter();
 
 describe('Preferences - EventCalendarStore', () => {
   describe('Method: setPreferences', () => {
@@ -14,6 +12,7 @@ describe('Preferences - EventCalendarStore', () => {
       expect(store.state.preferences).to.deep.equal({
         showWeekends: true,
         showWeekNumber: true,
+        isSidePanelOpen: true,
         ampm: true,
       });
     });
@@ -25,6 +24,7 @@ describe('Preferences - EventCalendarStore', () => {
       expect(store.state.preferences).to.deep.equal({
         showWeekends: false,
         showWeekNumber: true,
+        isSidePanelOpen: true,
         ampm: true,
       });
     });
@@ -37,6 +37,7 @@ describe('Preferences - EventCalendarStore', () => {
       expect(store.state.preferences).to.deep.equal({
         showWeekends: false,
         showWeekNumber: true,
+        isSidePanelOpen: true,
         ampm: true,
       });
     });

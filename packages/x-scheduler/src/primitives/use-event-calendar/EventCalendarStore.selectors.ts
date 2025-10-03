@@ -2,7 +2,6 @@ import { createSelector } from '@base-ui-components/utils/store';
 import { selectors as schedulerSelectors } from '../utils/SchedulerStore';
 import { EventCalendarState as State } from './EventCalendarStore.types';
 import { CalendarEventId, SchedulerValidDate, EventSurfaceType } from '../models';
-import { isMultiDayEvent } from '../utils/event-utils';
 
 export const selectors = {
   ...schedulerSelectors,
@@ -31,11 +30,13 @@ export const selectors = {
     schedulerSelectors.event,
     (state: State) => state.areEventsResizable,
     (state: State) => state.view,
+    (state: State) => state.isMultiDayEvent,
     (
       isEventReadOnly,
       event,
       areEventsResizable,
       view,
+      isMultiDayEvent,
       _eventId: CalendarEventId,
       surfaceType: EventSurfaceType,
     ) => {

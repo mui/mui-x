@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
 import { CalendarViewConfig } from '../models';
-import { useEventCalendarStoreContext } from './useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
 
 /**
  * Initializes the view on the event calendar.
@@ -9,13 +9,13 @@ import { useEventCalendarStoreContext } from './useEventCalendarStoreContext';
  * ```ts
  * const { daysPerPage = 12 } = props;
  * const daysPerPageRef = React.useRef(daysPerPage);
- * useInitializeView(() => ({
+ * useEventCalendarView(() => ({
  *   siblingVisibleDateGetter: (date, delta) => adapter.addDays(date, daysPerPageRef.current * delta),
  *  }));
  * ```
  * @param parameters Parameters for the view.
  */
-export function useInitializeView(parameters: () => CalendarViewConfig) {
+export function useEventCalendarView(parameters: () => CalendarViewConfig) {
   const store = useEventCalendarStoreContext();
   const initialParameters = React.useRef(parameters);
 

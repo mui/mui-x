@@ -12,8 +12,8 @@ import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTim
 import { useEvent } from '../../utils/useEvent';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
-import { useAdapter } from '../../utils/adapter/useAdapter';
-import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { useAdapter } from '../../use-adapter/useAdapter';
+import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { selectors } from '../../use-event-calendar';
 import type { CalendarGridSharedEventDragData } from '../../utils/drag-utils';
 import { SchedulerValidDate } from '../../models';

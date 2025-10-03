@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
+    "@mui/icons-material": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@mui/types": "^7.4.6",

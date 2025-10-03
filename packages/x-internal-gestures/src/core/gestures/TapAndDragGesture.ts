@@ -120,13 +120,11 @@ export class TapAndDragGesture<GestureName extends string> extends PointerGestur
 
   /**
    * Movement threshold for drag activation
-   * (Following PanGesture pattern)
    */
   private dragThreshold: number;
 
   /**
    * Allowed directions for the drag gesture
-   * (Following PanGesture pattern)
    */
   private dragDirection: Array<'up' | 'down' | 'left' | 'right'>;
 

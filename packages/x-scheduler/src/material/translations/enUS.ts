@@ -19,6 +19,10 @@ export const enUS: SchedulerTranslations = {
   weeks: 'Weeks',
   years: 'Years',
 
+  // DateNavigator
+  closeSidePanel: 'Close side panel',
+  openSidePanel: 'Open side panel',
+
   // Preferences menu
   amPm12h: '12-hour (1:00PM)',
   hour24h: '24-hour (13:00)',

@@ -4,18 +4,16 @@ import clsx from 'clsx';
 import { useId } from '@base-ui-components/utils/useId';
 import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
-import { getAdapter } from '../../../../../primitives/utils/adapter/getAdapter';
+import { useAdapter } from '../../../../../primitives/use-adapter';
 import { AgendaEventProps } from './AgendaEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { selectors } from '../../../../../primitives/use-event-calendar';
-import { useEventCalendarStoreContext } from '../../../../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../../../../primitives/use-event-calendar-store-context';
 import './AgendaEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
 import '../index.css';
-
-const adapter = getAdapter();
 
 export const AgendaEvent = React.forwardRef(function AgendaEvent(
   props: AgendaEventProps,
@@ -33,6 +31,7 @@ export const AgendaEvent = React.forwardRef(function AgendaEvent(
 
   const id = useId(idProp);
   const translations = useTranslations();
+  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const ampm = useStore(store, selectors.ampm);
   const resource = useStore(store, selectors.resource, occurrence.resource);

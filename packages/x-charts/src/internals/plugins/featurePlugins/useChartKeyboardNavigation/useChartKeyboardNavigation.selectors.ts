@@ -94,3 +94,13 @@ export const selectorChartsKeyboardYAxisIndex = createSelector(
   ],
   createSelectAxisHighlight('y'),
 );
+
+export const selectorChartsKeyboardItem = createSelector(
+  [selectorChartsFocusedSeriesType, selectorChartsFocusedSeriesId, selectorChartsFocusedDataIndex],
+  function selectorChartsKeyboardItem(seriesType, seriesId, dataIndex) {
+    if (seriesId === undefined) {
+      return null;
+    }
+    return { seriesId, dataIndex: seriesType === 'line' ? undefined : dataIndex };
+  },
+);

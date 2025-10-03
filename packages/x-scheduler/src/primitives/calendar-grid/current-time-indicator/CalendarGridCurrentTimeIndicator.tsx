@@ -3,12 +3,12 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { useAdapter } from '../../utils/adapter/useAdapter';
+import { useAdapter } from '../../use-adapter/useAdapter';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
 import { mergeDateAndTime } from '../../utils/date-utils';
-import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { selectors } from '../../use-event-calendar';
 
 export const CalendarGridCurrentTimeIndicator = React.forwardRef(

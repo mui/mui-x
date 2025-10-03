@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SchedulerValidDate } from '../models';
-import { useAdapter } from '../utils/adapter/useAdapter';
+import { useAdapter } from '../use-adapter/useAdapter';
 
 export function useWeekList(): useWeekList.ReturnValue {
   const adapter = useAdapter();

@@ -11,13 +11,14 @@ import { Input } from '@base-ui-components/react/input';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { Select } from '@base-ui-components/react/select';
+import { DEFAULT_EVENT_COLOR } from '../../../../primitives/constants';
 import {
   EventPopoverContextValue,
   EventPopoverProps,
   EventPopoverProviderProps,
   EventPopoverTriggerProps,
 } from './EventPopover.types';
-import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
+import { useAdapter } from '../../../../primitives/use-adapter';
 import { getColorClassName } from '../../utils/color-utils';
 import { useTranslations } from '../../utils/TranslationsContext';
 import {
@@ -25,17 +26,12 @@ import {
   CalendarResourceId,
   RecurringEventUpdatedProperties,
   SchedulerValidDate,
+  RecurrencePresetKey,
 } from '../../../../primitives/models';
 import { selectors } from '../../../../primitives/use-event-calendar';
-import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
 import './EventPopover.css';
-import {
-  buildRecurrencePresets,
-  detectRecurrenceKeyFromRule,
-  RecurrencePresetKey,
-} from '../../../../primitives/utils/recurrence-utils';
 import { EventPopoverContext, useEventPopoverContext } from './EventPopoverContext';
-import { DEFAULT_EVENT_COLOR } from '../../../../primitives/utils/SchedulerStore';
 
 export const EventPopover = React.forwardRef(function EventPopover(
   props: EventPopoverProps,
@@ -120,8 +116,8 @@ export const EventPopover = React.forwardRef(function EventPopover(
   };
 
   const recurrencePresets = React.useMemo(
-    () => buildRecurrencePresets(adapter, occurrence.start),
-    [adapter, occurrence.start],
+    () => store.buildRecurrencePresets(occurrence.start),
+    [store, occurrence.start],
   );
   const weekday = adapter.format(occurrence.start, 'weekday');
   const normalDate = adapter.format(occurrence.start, 'normalDate');
@@ -157,9 +153,9 @@ export const EventPopover = React.forwardRef(function EventPopover(
     ];
   }, [resources, translations.labelNoResource]);
 
-  const defaultRecurrenceKey = React.useMemo<RecurrencePresetKey | 'custom' | null>(
-    () => detectRecurrenceKeyFromRule(adapter, occurrence.rrule, occurrence.start),
-    [adapter, occurrence.rrule, occurrence.start],
+  const defaultRecurrenceKey = React.useMemo(
+    () => store.getRecurrencePresetKeyFromRule(occurrence.rrule, occurrence.start),
+    [store, occurrence.rrule, occurrence.start],
   );
 
   function validateRange(

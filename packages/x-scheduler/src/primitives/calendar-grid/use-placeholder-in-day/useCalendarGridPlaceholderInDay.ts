@@ -2,11 +2,10 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { CalendarEventOccurrenceWithDayGridPosition, SchedulerValidDate } from '../../models';
 import { selectors } from '../../use-event-calendar';
-import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
-import { diffIn } from '../../utils/date-utils';
-import { useAdapter } from '../../utils/adapter/useAdapter';
+import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
 
 export function useCalendarGridPlaceholderInDay(
   day: SchedulerValidDate,
@@ -22,11 +21,48 @@ export function useCalendarGridPlaceholderInDay(
     day,
     rowStart,
   );
-  const originalEvent = useStore(store, selectors.event, rawPlaceholder?.eventId ?? null);
+
+  const originalEventId =
+    rawPlaceholder?.type === 'internal-drag-or-resize' ? rawPlaceholder.eventId : null;
+  const originalEvent = useStore(store, selectors.event, originalEventId);
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
       return null;
+    }
+
+    const sharedProperties = {
+      key: 'occurrence-placeholder',
+      start: rawPlaceholder.start,
+      end: rawPlaceholder.end,
+    };
+
+    // Creation mode
+    if (rawPlaceholder.type === 'creation') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: '',
+        allDay: true,
+        start: day,
+        end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+        position: {
+          index: 1,
+          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+        },
+      };
+    }
+
+    if (rawPlaceholder.type === 'external-drag') {
+      return {
+        ...sharedProperties,
+        id: 'occurrence-placeholder',
+        title: rawPlaceholder.eventData.title ?? '',
+        position: {
+          index: 1,
+          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+        },
+      };
     }
 
     let positionIndex = 1;
@@ -40,27 +76,9 @@ export function useCalendarGridPlaceholderInDay(
       }
     }
 
-    // Creation mode
-    if (!originalEvent) {
-      return {
-        id: `placeholder-${rawPlaceholder.occurrenceKey}`,
-        key: `placeholder-${rawPlaceholder.occurrenceKey}`,
-        title: '',
-        allDay: true,
-        start: day,
-        end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
-        position: {
-          index: positionIndex,
-          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
-        },
-      };
-    }
-
     return {
-      ...originalEvent,
-      key: `placeholder-${rawPlaceholder.occurrenceKey}`,
-      start: day,
-      end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+      ...originalEvent!,
+      ...sharedProperties,
       position: {
         index: positionIndex,
         daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,

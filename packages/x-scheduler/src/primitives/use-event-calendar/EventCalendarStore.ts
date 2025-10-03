@@ -6,7 +6,7 @@ import {
   SchedulerValidDate,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
-import { Adapter } from '../utils/adapter/types';
+import { Adapter } from '../use-adapter/useAdapter.types';
 import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 
@@ -15,6 +15,7 @@ export const DEFAULT_VIEW: CalendarView = 'week';
 export const DEFAULT_PREFERENCES: EventCalendarPreferences = {
   showWeekends: true,
   showWeekNumber: false,
+  isSidePanelOpen: true,
   ampm: true,
 };
 export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig = {
