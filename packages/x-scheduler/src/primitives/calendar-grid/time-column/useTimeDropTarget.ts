@@ -1,17 +1,15 @@
 'use client';
 import * as React from 'react';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
 import { useAdapter } from '../../utils/adapter/useAdapter';
-import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
+import { SchedulerValidDate } from '../../models';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
   buildIsValidDropTarget,
   EVENT_DRAG_PRECISION_MS,
 } from '../../utils/drag-utils';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
-import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
-import { selectors } from '../../use-event-calendar';
+import { useDropTarget } from '../../utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
@@ -25,7 +23,6 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
-  const store = useEventCalendarStoreContext();
 
   // TODO: Avoid JS date conversion
   const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
@@ -46,39 +43,13 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       return Math.round(collectionDurationMs * positionY);
     });
 
-  const getEventDropData = useEventCallback(
-    (data: any, input: { clientY: number }): CalendarOccurrencePlaceholder | undefined => {
+  const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
+    ({ data, createDropData, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
-
-      const createDropData = (
-        newStart: SchedulerValidDate,
-        newEnd: SchedulerValidDate,
-      ): CalendarOccurrencePlaceholder => {
-        if (data.source === 'CalendarGridExternalEvent') {
-          return {
-            type: 'external-drag',
-            surfaceType: 'time-grid',
-            start: newStart,
-            end: newEnd,
-            eventData: data.eventData,
-            onEventDrop: data.onEventDrop,
-          };
-        }
-
-        return {
-          type: 'internal-drag-or-resize',
-          surfaceType: 'time-grid',
-          start: newStart,
-          end: newEnd,
-          eventId: data.eventId,
-          occurrenceKey: data.occurrenceKey,
-          originalStart: data.start,
-        };
-      };
 
       const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
         const roundedOffset =
@@ -102,7 +73,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
         const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
 
-        return createDropData(newStartDate, newEndDate);
+        return createDropData(data, newStartDate, newEndDate);
       }
 
       // Resize a Time Grid Event
@@ -119,7 +90,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
             ? cursorDate
             : maxStartDate;
 
-          return createDropData(newStartDate, data.end);
+          return createDropData(data, newStartDate, data.end);
         }
 
         if (data.side === 'end') {
@@ -136,7 +107,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
           const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
 
-          return createDropData(data.start, newEndDate);
+          return createDropData(data, data.start, newEndDate);
         }
       }
 
@@ -145,63 +116,26 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         const newStartDate = addOffsetToDate(start, cursorOffsetMs);
         const newEndDate = adapter.addMinutes(newStartDate, 60);
 
-        return createDropData(newStartDate, newEndDate);
+        return createDropData(data, newStartDate, newEndDate);
       }
 
       // Move an External Event into the Time Grid
       if (data.source === 'CalendarGridExternalEvent') {
         const cursorDate = addOffsetToDate(start, cursorOffsetMs);
 
-        return createDropData(cursorDate, adapter.addMinutes(cursorDate, 60));
+        return createDropData(data, cursorDate, adapter.addMinutes(cursorDate, 60));
       }
 
       return undefined;
     },
   );
 
-  React.useEffect(() => {
-    if (!ref.current) {
-      return undefined;
-    }
-
-    return dropTargetForElements({
-      element: ref.current,
-      canDrop: (arg) => isValidDropTarget(arg.source.data),
-      getData: () => ({ source: 'CalendarGridTimeColumn' }),
-      onDrag: ({ source: { data }, location }) => {
-        const newPlaceholder = getEventDropData(data, location.current.input);
-        if (newPlaceholder) {
-          store.setOccurrencePlaceholder(newPlaceholder);
-        }
-      },
-      onDrop: ({ source: { data }, location }) => {
-        const placeholder =
-          getEventDropData(data, location.current.input) ??
-          selectors.occurrencePlaceholder(store.state);
-
-        if (placeholder?.type === 'internal-drag-or-resize') {
-          store.applyInternalDragOrResizeOccurrencePlaceholder(placeholder);
-        } else if (placeholder?.type === 'external-drag') {
-          store.applyExternalDragOccurrencePlaceholder(placeholder);
-        }
-      },
-      onDragLeave: () => {
-        const currentPlaceholder = selectors.occurrencePlaceholder(store.state);
-        if (currentPlaceholder?.surfaceType !== 'time-grid') {
-          return;
-        }
-
-        const type = currentPlaceholder.type;
-        const shouldHidePlaceholder =
-          type === 'external-drag' ||
-          (type === 'internal-drag-or-resize' && selectors.canDropEventsToTheOutside(store.state));
-
-        if (shouldHidePlaceholder) {
-          store.setOccurrencePlaceholder({ ...currentPlaceholder, isHidden: true });
-        }
-      },
-    });
-  }, [adapter, getEventDropData, store]);
+  useDropTarget({
+    ref,
+    surfaceType: 'time-grid',
+    getEventDropData,
+    isValidDropTarget,
+  });
 
   return { getCursorPositionInElementMs, ref };
 }
