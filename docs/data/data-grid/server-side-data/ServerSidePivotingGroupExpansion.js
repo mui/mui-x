@@ -25,11 +25,14 @@ export default function ServerSidePivotingGroupExpansion() {
     columns,
     initialState: initialStateMock,
     fetchRows,
-  } = useMockServer({
-    rowLength: 5,
-    dataSet: 'Commodity',
-    maxColumns: 20,
-  });
+  } = useMockServer(
+    {
+      rowLength: 5,
+      dataSet: 'Commodity',
+      maxColumns: 20,
+    },
+    { useCursorPagination: false },
+  );
 
   const dataSource = React.useMemo(
     () => ({

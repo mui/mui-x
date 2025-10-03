@@ -44,11 +44,14 @@ const pivotingColDef: DataGridPremiumProps['pivotingColDef'] = (
 export default function GridChartsIntegrationDataSource() {
   const apiRef = useGridApiRef();
 
-  const { fetchRows, initialState, columns } = useMockServer({
-    rowLength: 1000,
-    dataSet: 'Commodity',
-    maxColumns: 20,
-  });
+  const { fetchRows, initialState, columns } = useMockServer(
+    {
+      rowLength: 1000,
+      dataSet: 'Commodity',
+      maxColumns: 20,
+    },
+    { useCursorPagination: false },
+  );
 
   const dataSource: GridDataSource = React.useMemo(() => {
     return {

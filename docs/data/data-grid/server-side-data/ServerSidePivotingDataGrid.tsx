@@ -33,11 +33,14 @@ export default function ServerSidePivotingDataGrid() {
     columns,
     initialState: initialStateMock,
     fetchRows,
-  } = useMockServer({
-    rowLength: 2000,
-    dataSet: 'Commodity',
-    maxColumns: 20,
-  });
+  } = useMockServer(
+    {
+      rowLength: 2000,
+      dataSet: 'Commodity',
+      maxColumns: 20,
+    },
+    { useCursorPagination: false },
+  );
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({

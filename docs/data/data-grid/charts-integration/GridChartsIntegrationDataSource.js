@@ -37,11 +37,14 @@ const pivotingColDef = (originalColumnField, columnGroupPath) => ({
 export default function GridChartsIntegrationDataSource() {
   const apiRef = useGridApiRef();
 
-  const { fetchRows, initialState, columns } = useMockServer({
-    rowLength: 1000,
-    dataSet: 'Commodity',
-    maxColumns: 20,
-  });
+  const { fetchRows, initialState, columns } = useMockServer(
+    {
+      rowLength: 1000,
+      dataSet: 'Commodity',
+      maxColumns: 20,
+    },
+    { useCursorPagination: false },
+  );
 
   const dataSource = React.useMemo(() => {
     return {

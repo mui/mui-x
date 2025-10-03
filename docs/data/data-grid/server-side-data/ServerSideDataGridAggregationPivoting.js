@@ -21,9 +21,12 @@ const pivotingColDef = (originalColumnField, columnGroupPath) => ({
 });
 
 export default function ServerSideDataGridAggregationPivoting() {
-  const { columns, initialState, fetchRows } = useMockServer({
-    maxColumns: 20,
-  });
+  const { columns, initialState, fetchRows } = useMockServer(
+    {
+      maxColumns: 20,
+    },
+    { useCursorPagination: false },
+  );
 
   const dataSource = React.useMemo(
     () => ({

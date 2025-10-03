@@ -51,7 +51,7 @@ export default function ServerSidePivotingErrorHandling() {
       dataSet: 'Commodity',
       maxColumns: 20,
     },
-    {},
+    { useCursorPagination: false },
     shouldRequestsFail,
   );
 

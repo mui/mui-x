@@ -55,12 +55,15 @@ export default function ServerSidePivotingDerivedColumns() {
     columns,
     initialState: initialStateMock,
     fetchRows,
-  } = useMockServer({
-    rowLength: 2000,
-    dataSet: 'Commodity',
-    maxColumns: 20,
-    derivedColumns: true,
-  });
+  } = useMockServer(
+    {
+      rowLength: 2000,
+      dataSet: 'Commodity',
+      maxColumns: 20,
+      derivedColumns: true,
+    },
+    { useCursorPagination: false },
+  );
 
   const dataSource = React.useMemo(
     () => ({
