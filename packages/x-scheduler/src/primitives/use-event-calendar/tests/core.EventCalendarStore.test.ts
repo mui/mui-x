@@ -30,6 +30,8 @@ describe('Core - EventCalendarStore', () => {
         isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
+        canDragEventsFromTheOutside: false,
+        canDropEventsToTheOutside: false,
         showCurrentTimeIndicator: true,
         eventColor: 'jade',
         preferences: DEFAULT_PREFERENCES,
