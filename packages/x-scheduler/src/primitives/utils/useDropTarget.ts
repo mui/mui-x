@@ -18,7 +18,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     }
 
     const createDropData: useDropTarget.CreateDropData = (data, newStart, newEnd) => {
-      if (data.source === 'CalendarGridExternalEvent') {
+      if (data.source === 'StandaloneEvent') {
         return {
           type: 'external-drag',
           surfaceType,

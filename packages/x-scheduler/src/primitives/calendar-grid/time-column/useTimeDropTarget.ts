@@ -15,7 +15,7 @@ const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
   'CalendarGridTimeEventResizeHandler',
   'CalendarGridDayEvent',
-  'CalendarGridExternalEvent',
+  'StandaloneEvent',
 ]);
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
@@ -119,8 +119,8 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         return createDropData(data, newStartDate, newEndDate);
       }
 
-      // Move an External Event into the Time Grid
-      if (data.source === 'CalendarGridExternalEvent') {
+      // Move an Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
         const cursorDate = addOffsetToDate(start, cursorOffsetMs);
 
         return createDropData(data, cursorDate, adapter.addMinutes(cursorDate, 60));

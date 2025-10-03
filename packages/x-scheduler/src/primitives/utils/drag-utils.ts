@@ -2,7 +2,7 @@ import type { CalendarGridDayEvent } from '../calendar-grid/day-event/CalendarGr
 import type { CalendarGridDayEventResizeHandler } from '../calendar-grid/day-event-resize-handler/CalendarGridDayEventResizeHandler';
 import type { CalendarGridTimeEvent } from '../calendar-grid/time-event/CalendarGridTimeEvent';
 import type { CalendarGridTimeEventResizeHandler } from '../calendar-grid/time-event-resize-handler/CalendarGridTimeEventResizeHandler';
-import { CalendarGridExternalEvent } from '../calendar-grid/external-event/CalendarGridExternalEvent';
+import type { StandaloneEvent } from '../standalone-event';
 
 export const EVENT_DRAG_PRECISION_MINUTE = 15;
 export const EVENT_DRAG_PRECISION_MS = EVENT_DRAG_PRECISION_MINUTE * 60 * 1000;
@@ -12,7 +12,7 @@ export interface EventDropDataLookup {
   CalendarGridTimeEventResizeHandler: CalendarGridTimeEventResizeHandler.DragData;
   CalendarGridDayEvent: CalendarGridDayEvent.DragData;
   CalendarGridDayEventResizeHandler: CalendarGridDayEventResizeHandler.DragData;
-  CalendarGridExternalEvent: CalendarGridExternalEvent.DragData;
+  StandaloneEvent: StandaloneEvent.DragData;
 }
 
 /**

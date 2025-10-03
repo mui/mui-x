@@ -3,14 +3,14 @@ import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useButton } from '../../../base-ui-copy/utils/useButton';
-import { useRenderElement } from '../../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../../base-ui-copy/utils/types';
-import { CalendarOccurrencePlaceholderExternalDragData } from '../../models';
-import { CalendarGridSharedEventDragData } from '../../utils/drag-utils';
+import { useButton } from '../../base-ui-copy/utils/useButton';
+import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
+import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { CalendarOccurrencePlaceholderExternalDragData } from '../models';
+import { CalendarGridSharedEventDragData } from '../utils/drag-utils';
 
-export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridExternalEvent(
-  componentProps: CalendarGridExternalEvent.Props,
+export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
+  componentProps: StandaloneEvent.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -38,13 +38,13 @@ export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridE
 
   const isDragging = dragPosition != null;
 
-  const state: CalendarGridExternalEvent.State = React.useMemo(
+  const state: StandaloneEvent.State = React.useMemo(
     () => ({ dragging: isDragging }),
     [isDragging],
   );
 
   const getDragData = useEventCallback(() => ({
-    source: 'CalendarGridExternalEvent',
+    source: 'StandaloneEvent',
     eventData: data,
     onEventDrop,
     eventId: data.id,
@@ -107,7 +107,7 @@ export const CalendarGridExternalEvent = React.forwardRef(function CalendarGridE
   );
 });
 
-export namespace CalendarGridExternalEvent {
+export namespace StandaloneEvent {
   export interface State {
     /**
      * Whether the event is being dragged.
@@ -132,7 +132,7 @@ export namespace CalendarGridExternalEvent {
   }
 
   export interface DragData extends CalendarGridSharedEventDragData {
-    source: 'CalendarGridExternalEvent';
+    source: 'StandaloneEvent';
     eventData: CalendarOccurrencePlaceholderExternalDragData;
     onEventDrop?: () => void;
   }

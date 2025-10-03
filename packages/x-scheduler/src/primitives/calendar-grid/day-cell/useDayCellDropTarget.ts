@@ -11,7 +11,7 @@ const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
   'CalendarGridDayEventResizeHandler',
   'CalendarGridTimeEvent',
-  'CalendarGridExternalEvent',
+  'StandaloneEvent',
 ]);
 
 export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
@@ -83,8 +83,8 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
         );
       }
 
-      // Move an External Event into the Time Grid
-      if (data.source === 'CalendarGridExternalEvent') {
+      // Move an Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
         return createDropData(data, adapter.startOfDay(value), adapter.endOfDay(value));
       }
 

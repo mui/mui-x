@@ -28,6 +28,7 @@
     "./primitives/event-calendar-provider": "./src/primitives/event-calendar-provider/index.ts",
     "./primitives/models": "./src/primitives/models/index.ts",
     "./primitives/calendar-grid": "./src/primitives/calendar-grid/index.ts",
+    "./primitives/standalone-event": "./src/primitives/standalone-event/index.ts",
     "./primitives/timeline": "./src/primitives/timeline/index.ts",
     "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
     "./primitives/use-event-calendar": "./src/primitives/use-event-calendar/index.ts",
