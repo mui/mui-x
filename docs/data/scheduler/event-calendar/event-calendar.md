@@ -161,7 +161,7 @@ This sections is only here to track what the DX will look like once available.
 In your custom view, you have to use the `useEventCalendarView()` hook to register your view in the parent component.
 
 ```tsx
-import { DateTime } from 'luxon'
+import { DateTime } from 'luxon';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 
 function CustomView() {
