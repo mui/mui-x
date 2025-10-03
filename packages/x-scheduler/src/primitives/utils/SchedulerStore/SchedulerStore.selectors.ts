@@ -87,6 +87,7 @@ export const selectors = {
   hasOccurrencePlaceholder: createSelector((state: State) => state.occurrencePlaceholder !== null),
   isOccurrenceMatchingThePlaceholder: createSelector(
     (state: State, occurrenceKey: string) =>
+      state.occurrencePlaceholder?.type === 'internal-drag-or-resize' &&
       state.occurrencePlaceholder?.occurrenceKey === occurrenceKey,
   ),
   // TODO: Pass the occurrence key instead of the start and end dates once the occurrences are stored in the state.
