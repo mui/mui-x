@@ -1,6 +1,9 @@
 <DataGridPro
   rows={rows}
   columns={columns}
+  slots={{
+    detailPanelsToggle: CustomDetailPanelsToggle,
+  }}
   getDetailPanelContent={getDetailPanelContent}
   getDetailPanelHeight={getDetailPanelHeight}
 />
