@@ -1,23 +1,28 @@
 import * as React from 'react';
 import { spy as sinonSpy, SinonSpy } from 'sinon';
-import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event-calendar-store-context/useEventCalendarStoreContext';
 
-export function StoreSpy({
+export function StoreSpy<T>({
+  Context,
   method,
   onSpyReady,
 }: {
-  method: 'updateRecurringEvent' | 'updateEvent' | 'createEvent';
+  Context: React.Context<T | null>;
+  method: Extract<keyof T, string>;
   onSpyReady: (sp: SinonSpy) => void;
 }) {
-  const store = React.useContext(EventCalendarStoreContext);
+  const store = React.useContext(Context);
   if (!store) {
-    throw new Error('StoreSpy must be used inside StandaloneView');
+    throw new Error('StoreSpy must be used inside the matching Provider');
   }
 
   const spyRef = React.useRef<SinonSpy | null>(null);
 
   React.useEffect(() => {
-    const sp = sinonSpy(store as any, method);
+    const fn = (store as any)[method];
+    if (typeof fn !== 'function') {
+      throw new Error(`Method "${String(method)}" not found or is not a function on store`);
+    }
+    const sp = sinonSpy(store as any, method as any);
     spyRef.current = sp;
     onSpyReady(sp);
 

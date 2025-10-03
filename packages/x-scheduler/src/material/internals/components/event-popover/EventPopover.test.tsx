@@ -13,6 +13,7 @@ import { CalendarEventOccurrence, CalendarResource } from '@mui/x-scheduler/prim
 import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler/primitives/constants';
 import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
 import { Popover } from '@base-ui-components/react/popover';
+import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event-calendar-store-context/useEventCalendarStoreContext';
 import { EventPopover } from './EventPopover';
 import { getColorClassName } from '../../utils/color-utils';
 
@@ -267,6 +268,7 @@ describe('<EventPopover />', () => {
             <EventPopover {...defaultProps} occurrence={creationOccurrence} />
           </Popover.Root>
           <StateWatcher
+            Context={EventCalendarStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -312,6 +314,7 @@ describe('<EventPopover />', () => {
             <EventPopover {...defaultProps} occurrence={creationOccurrence} />
           </Popover.Root>
           <StateWatcher
+            Context={EventCalendarStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -357,6 +360,7 @@ describe('<EventPopover />', () => {
             <EventPopover {...defaultProps} occurrence={creationOccurrence as any} />
           </Popover.Root>
           <StateWatcher
+            Context={EventCalendarStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -399,11 +403,13 @@ describe('<EventPopover />', () => {
         <StandaloneView events={[]} resources={resources} onEventsChange={onEventsChange}>
           <PlaceholderSeeder placeholder={placeholder} />
           <StoreSpy
+            Context={EventCalendarStoreContext}
             method="createEvent"
             onSpyReady={(sp) => {
               createEventSpy = sp;
             }}
           />
+
           <Popover.Root open>
             <EventPopover {...defaultProps} occurrence={creationOccurrence} />
           </Popover.Root>
@@ -450,6 +456,7 @@ describe('<EventPopover />', () => {
         const { user } = render(
           <StandaloneView events={[originalRecurringEvent]} resources={resources}>
             <StoreSpy
+              Context={EventCalendarStoreContext}
               method="updateRecurringEvent"
               onSpyReady={(sp) => {
                 updateRecurringEventSpy = sp;
@@ -496,6 +503,7 @@ describe('<EventPopover />', () => {
         const { user } = render(
           <StandaloneView events={[originalRecurringEvent]} resources={resources}>
             <StoreSpy
+              Context={EventCalendarStoreContext}
               method="updateRecurringEvent"
               onSpyReady={(sp) => {
                 updateRecurringEventSpy = sp;
@@ -544,6 +552,7 @@ describe('<EventPopover />', () => {
         const { user } = render(
           <StandaloneView events={[originalRecurringEvent]} resources={resources}>
             <StoreSpy
+              Context={EventCalendarStoreContext}
               method="updateRecurringEvent"
               onSpyReady={(sp) => {
                 updateRecurringEventSpy = sp;
@@ -584,6 +593,7 @@ describe('<EventPopover />', () => {
         const { user } = render(
           <StandaloneView events={[nonRecurringEvent]} resources={resources}>
             <StoreSpy
+              Context={EventCalendarStoreContext}
               method="updateEvent"
               onSpyReady={(sp) => {
                 updateEventSpy = sp;
@@ -629,6 +639,7 @@ describe('<EventPopover />', () => {
         const { user } = render(
           <StandaloneView events={[nonRecurringEvent]} resources={resources}>
             <StoreSpy
+              Context={EventCalendarStoreContext}
               method="updateEvent"
               onSpyReady={(sp) => {
                 updateEventSpy = sp;

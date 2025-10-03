@@ -1,19 +1,17 @@
 import * as React from 'react';
-import { EventCalendarStoreContext } from '@mui/x-scheduler/primitives/use-event-calendar-store-context/useEventCalendarStoreContext';
-import { EventCalendarState } from '@mui/x-scheduler/primitives/use-event-calendar/EventCalendarStore.types';
 
-type Selector<T> = (state: EventCalendarState) => T;
-
-export function StateWatcher<T>({
+export function StateWatcher({
+  Context,
   selector,
   onValueChange,
 }: {
-  selector: Selector<T>;
-  onValueChange: (value: T) => void;
+  Context: React.Context<any>;
+  selector: (state: any) => any;
+  onValueChange: (value: any) => void;
 }) {
-  const store = React.useContext(EventCalendarStoreContext);
+  const store = React.useContext(Context);
   if (!store) {
-    throw new Error('StateWatcher must be used inside StandaloneView');
+    throw new Error('StateWatcher must be used inside the matching Provider');
   }
 
   const getSelected = React.useCallback(() => selector(store.getSnapshot()), [store, selector]);
