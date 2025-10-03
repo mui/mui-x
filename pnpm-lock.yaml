@@ -27,6 +27,9 @@ catalogs:
     '@babel/traverse':
       specifier: ^7.28.4
       version: 7.28.4
+    '@cherniavskii/exceljs-fork':
+      specifier: ^4.4.0
+      version: 4.4.0
     '@emotion/cache':
       specifier: ^11.14.0
       version: 11.14.0
@@ -153,9 +156,6 @@ catalogs:
     dayjs:
       specifier: ^1.11.13
       version: 1.11.13
-    exceljs:
-      specifier: ^4.4.0
-      version: 4.4.0
     jscodeshift:
       specifier: 17.3.0
       version: 17.3.0
@@ -644,9 +644,6 @@ importers:
       dayjs:
         specifier: 'catalog:'
         version: 1.11.13
-      exceljs:
-        specifier: 'catalog:'
-        version: 4.4.0
       fg-loadcss:
         specifier: ^3.1.0
         version: 3.1.0
@@ -1264,6 +1261,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.4
+      '@cherniavskii/exceljs-fork':
+        specifier: 'catalog:'
+        version: 4.4.0
       '@emotion/react':
         specifier: ^11.9.0
         version: 11.14.0(@types/react@19.1.13)(react@19.1.1)
@@ -1288,9 +1288,6 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
-      exceljs:
-        specifier: 'catalog:'
-        version: 4.4.0
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
@@ -3173,6 +3170,10 @@ packages:
 
   '@cacheable/utils@2.0.1':
     resolution: {integrity: sha512-sxHjO6wKn4/0wHCFYbh6tljj+ciP9BKgyBi09NLsor3sN+nu/Rt3FwLw6bYp7bp8usHpmcwUozrB/u4RuSw/eg==}
+
+  '@cherniavskii/exceljs-fork@4.4.0':
+    resolution: {integrity: sha512-GUa1d4cxwiQG0QoJ7IMUkDGmMU107HoJFMzZSFhcNXKQjHPH82X/zeydoA5iqSJJIlv3PF4qAYZ6gI5DGL+2IA==}
+    engines: {node: '>=8.3.0'}
 
   '@codspeed/core@4.0.1':
     resolution: {integrity: sha512-fJ53arfgtzCDZa8DuGJhpTZ3Ll9A1uW5nQ2jSJnfO4Hl5MRD2cP8P4vPvIUAGbdbjwCxR1jat6cW8OloMJkJXw==}
@@ -7704,10 +7705,6 @@ packages:
   eventsource-parser@3.0.6:
     resolution: {integrity: sha512-Vo1ab+QXPzZ4tCa8SwIHJFaSzy4R6SHf7BY79rFBDf0idraZWAkYrDjDj8uWaSm3S2TK+hJ7/t1CEmZ7jXw+pg==}
     engines: {node: '>=18.0.0'}
-
-  exceljs@4.4.0:
-    resolution: {integrity: sha512-XctvKaEMaj1Ii9oDOqbW/6e1gXknSY4g/aLCDicOXqBE4M0nRWkUu0PTp++UPNzoFY12BNHMfs/VadKIS6llvg==}
-    engines: {node: '>=8.3.0'}
 
   execa@5.0.0:
     resolution: {integrity: sha512-ov6w/2LCiuyO4RLYGdpFGjkcs0wMTgGE8PrkTHikeUy5iJekXyPIKUjifk5CsE0pt7sMCrMZ3YNqoCj6idQOnQ==}
@@ -13732,6 +13729,18 @@ snapshots:
 
   '@cacheable/utils@2.0.1': {}
 
+  '@cherniavskii/exceljs-fork@4.4.0':
+    dependencies:
+      archiver: 5.3.2
+      dayjs: 1.11.13
+      fast-csv: 4.3.6
+      jszip: 3.10.1
+      readable-stream: 3.6.2
+      saxes: 5.0.1
+      tmp: 0.2.5
+      unzipper: 0.10.14
+      uuid: 8.3.2
+
   '@codspeed/core@4.0.1':
     dependencies:
       axios: 1.12.2
@@ -19093,18 +19102,6 @@ snapshots:
   events@3.3.0: {}
 
   eventsource-parser@3.0.6: {}
-
-  exceljs@4.4.0:
-    dependencies:
-      archiver: 5.3.2
-      dayjs: 1.11.13
-      fast-csv: 4.3.6
-      jszip: 3.10.1
-      readable-stream: 3.6.2
-      saxes: 5.0.1
-      tmp: 0.2.5
-      unzipper: 0.10.14
-      uuid: 8.3.2
 
   execa@5.0.0:
     dependencies:

@@ -1,9 +1,9 @@
-import type * as Excel from 'exceljs';
+import type * as Excel from '@cherniavskii/exceljs-fork';
 import type { GridColumnGroupLookup } from '@mui/x-data-grid/internals';
 import type { GridExcelExportOptions } from '../gridExcelExportInterface';
 
 export const getExcelJs = async () => {
-  const excelJsModule = await import('exceljs');
+  const excelJsModule = await import('@cherniavskii/exceljs-fork');
   return excelJsModule.default ?? excelJsModule;
 };
 
@@ -117,7 +117,8 @@ export async function createValueOptionsSheetIfNeeded(
   valueOptionsWorksheet.columns = Object.keys(valueOptionsData).map((key) => ({ key }));
 
   Object.entries(valueOptionsData).forEach(([field, { values }]) => {
-    valueOptionsWorksheet.getColumn(field).values = values;
+    // TODO: fix this in exceljs fork
+    valueOptionsWorksheet.getColumn(field).values = values as any;
   });
 }
 
