@@ -9,6 +9,7 @@ import {
   PolarAxisDefaultized,
   AxisId,
   PolarAxisConfig,
+  isContinuousScaleConfig,
 } from '../../../../models/axis';
 import { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -171,7 +172,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       }
     }
 
-    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+    if (!isContinuousScaleConfig(axis)) {
       // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
       return;
     }
