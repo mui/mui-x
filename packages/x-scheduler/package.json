@@ -24,6 +24,7 @@
     "./material/timeline": "./src/material/timeline/index.ts",
     "./material/translations/enUS": "./src/material/translations/enUS.ts",
     "./material/translations/frFR": "./src/material/translations/frFR.ts",
+    "./primitives/build-is-valid-drop-target": "./src/primitives/build-is-valid-drop-target/index.ts",
     "./primitives/calendar-grid": "./src/primitives/calendar-grid/index.ts",
     "./primitives/constants": "./src/primitives/constants/index.ts",
     "./primitives/event-calendar-provider": "./src/primitives/event-calendar-provider/index.ts",
