@@ -64,6 +64,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       {
         id: DEFAULT_X_AXIS_KEY,
         scaleType: 'band',
+        isNumerical: true,
         data: Array.from(
           { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
           (_, index) => index,
@@ -78,6 +79,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       {
         id: DEFAULT_Y_AXIS_KEY,
         scaleType: 'band',
+        isNumerical: true,
         data: Array.from(
           { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
           (_, index) => index,
