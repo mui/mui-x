@@ -278,7 +278,14 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
+  }, [
+    isNotVisible,
+    rowHeight,
+    styleProp,
+    heightEntry.spacingTop,
+    heightEntry.spacingBottom,
+    rootProps.rowSpacingType,
+  ]);
 
   // HACK: Sometimes, the rowNode has already been removed from the state but the row is still rendered.
   if (!rowNode) {
