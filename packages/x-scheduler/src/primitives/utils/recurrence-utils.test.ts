@@ -1605,7 +1605,7 @@ describe('recurrence-utils', () => {
       expect(updatedEventsList[0].rrule).to.equal(undefined);
     });
 
-    it('should keep the original date and only apply the new time when editing a later occurrence', () => {
+    it('should keep the original date and just update hours/minutes when changing the time of a later occurrence', () => {
       const original = makeRecurringEvent();
       const events = [original];
 
