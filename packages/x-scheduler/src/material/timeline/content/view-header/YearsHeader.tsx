@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { clsx } from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
-import { Adapter } from '../../../../primitives/utils/adapter/types';
+import { useAdapter, Adapter } from '../../../../primitives/use-adapter';
 import { selectors } from '../../../../primitives/use-timeline';
-import { useTimelineStoreContext } from '../../../../primitives/utils/useTimelineStoreContext';
+import { useTimelineStoreContext } from '../../../../primitives/use-timeline-store-context';
 import { SchedulerValidDate } from '../../../../primitives/models';
 import { HeaderProps } from './Headers.types';
 import { YEARS_UNIT_COUNT } from '../../constants';

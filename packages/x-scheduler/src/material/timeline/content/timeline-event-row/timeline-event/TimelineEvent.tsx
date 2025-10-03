@@ -6,7 +6,7 @@ import { Timeline } from '../../../../../primitives/timeline';
 import { getColorClassName } from '../../../../internals/utils/color-utils';
 import { selectors } from '../../../../../primitives/use-timeline';
 import { TimelineEventProps } from './TimelineEvent.types';
-import { useTimelineStoreContext } from '../../../../../primitives/utils/useTimelineStoreContext';
+import { useTimelineStoreContext } from '../../../../../primitives/use-timeline-store-context';
 
 import './TimelineEvent.css';
 

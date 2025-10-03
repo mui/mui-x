@@ -1,5 +1,5 @@
 import { TimelinePreferences, TimelineView } from '../models';
-import { Adapter } from '../utils/adapter/types';
+import { Adapter } from '../use-adapter';
 import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
 

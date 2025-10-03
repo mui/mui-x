@@ -1,11 +1,9 @@
 import { spy } from 'sinon';
+import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { getAdapter } from '../../utils/adapter/getAdapter';
 import { CalendarView } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
-
-const adapter = getAdapter();
 
 describe('Date - EventCalendarStore', () => {
   describe('Method: switchToDay', () => {

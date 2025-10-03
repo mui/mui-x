@@ -2,13 +2,11 @@ import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { DateTime } from 'luxon';
 import { spy } from 'sinon';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
 
 describe('<DayView />', () => {
   const { render } = createSchedulerRenderer();
-  const adapter = getAdapter();
 
   describe('time navigation', () => {
     it('should go to start of previous day when clicking on the Previous Day button', async () => {
