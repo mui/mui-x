@@ -1,9 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridGroupNode,
   gridOrderedDataRowsSelector,
-  GridRowId,
   GridValidRowModel,
   useGridApiRef,
   type DataGridProProps,
