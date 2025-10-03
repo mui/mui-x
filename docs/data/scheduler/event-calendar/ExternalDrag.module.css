@@ -19,6 +19,6 @@
 .ExternalEvent {
   padding: 4px 8px;
   border-radius: 4px;
-    border: 1px solid var(--jade-11);
-  background-color: var(--jade-3)
+  border: 1px solid var(--jade-11);
+  background-color: var(--jade-3);
 }
