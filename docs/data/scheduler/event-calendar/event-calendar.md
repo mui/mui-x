@@ -158,17 +158,17 @@ The Event Calendar does not support custom views yet.
 This sections is only here to track what the DX will look like once available.
 :::
 
-In your custom view, you have to use the `useInitializeView()` hook to register your view in the parent component.
+In your custom view, you have to use the `useEventCalendarView()` hook to register your view in the parent component.
 
 ```tsx
 import { DateTime } from 'luxon'
-import { useInitializeView } from '@mui/x-scheduler/internals/hooks/useInitializeView'; // TODO: Move this to a public folder.
+import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 
 function CustomView() {
   const adapter = useAdapter();
 
-  useInitializeView(() => ({
-    siblingVisibleDateGetter: (date, delta) => date..plus({ days: delta }),
+  useEventCalendarView(() => ({
+    siblingVisibleDateGetter: (date, delta) => date.plus({ days: delta }),
   }));
 }
 ```
