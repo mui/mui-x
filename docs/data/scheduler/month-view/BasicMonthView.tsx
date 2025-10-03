@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
-import { MonthView } from '@mui/x-scheduler/material/month-view';
+import { CalendarEvent } from '@mui/x-scheduler/models';
+import { StandaloneView } from '@mui/x-scheduler/standalone-view';
+import { MonthView } from '@mui/x-scheduler/month-view';
 import {
   initialEvents,
   defaultVisibleDate,

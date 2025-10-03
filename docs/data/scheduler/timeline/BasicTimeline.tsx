@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
-import { Timeline } from '@mui/x-scheduler/material/timeline';
+import { CalendarEvent } from '@mui/x-scheduler/models';
+import { Timeline } from '@mui/x-scheduler/timeline';
 import {
   defaultVisibleDate,
   initialEvents,

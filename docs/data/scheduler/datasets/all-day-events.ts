@@ -2,7 +2,7 @@
 // Non-realistic set focused on edge cases of all-day events positioning.
 
 import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/models';
 
 export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
 

@@ -19,6 +19,7 @@ module.exports = {
       '@mui/x-charts-premium': path.resolve(__dirname, './packages/x-charts-premium/src'),
       '@mui/x-charts-vendor': path.resolve(__dirname, './packages/x-charts-vendor'),
       '@mui/x-scheduler': path.resolve(__dirname, './packages/x-scheduler/src'),
+      '@mui/x-scheduler-headless': path.resolve(__dirname, './packages/x-scheduler-headless/src'),
       '@mui/x-tree-view': path.resolve(__dirname, './packages/x-tree-view/src'),
       '@mui/x-tree-view-pro': path.resolve(__dirname, './packages/x-tree-view-pro/src'),
       '@mui/x-license': path.resolve(__dirname, './packages/x-license/src'),
