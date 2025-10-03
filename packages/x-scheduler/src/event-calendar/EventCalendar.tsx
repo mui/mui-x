@@ -16,10 +16,10 @@ import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
-import { DateNavigator } from '../internals/components/date-navigator';
 import { ResourceLegend } from '../internals/components/resource-legend';
 import '../index.css';
 import './EventCalendar.css';
+import { DateNavigator } from '../internals/components/date-navigator';
 
 export const EventCalendar = React.forwardRef(function EventCalendar(
   props: EventCalendarProps,
@@ -28,6 +28,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
   const { parameters, forwardedProps } = useExtractEventCalendarParameters(props);
   const store = useEventCalendar(parameters);
   const view = useStore(store, selectors.view);
+  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
@@ -61,22 +62,31 @@ export const EventCalendar = React.forwardRef(function EventCalendar(
             className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
             ref={forwardedRef}
           >
-            <aside className="EventCalendarSidePanel">
-              <DateNavigator />
-              <section
-                className="EventCalendarMonthCalendarPlaceholder"
-                // TODO: Add localization
-                aria-label="Month calendar"
-              >
-                Month Calendar
-              </section>
-              <ResourceLegend />
-            </aside>
+            <DateNavigator />
+
+            <HeaderToolbar />
+
             <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
-              <HeaderToolbar />
+              {isSidePanelOpen && (
+                <aside className="EventCalendarSidePanel">
+                  <section
+                    className="EventCalendarMonthCalendarPlaceholder"
+                    // TODO: Add localization
+                    aria-label="Month calendar"
+                  >
+                    Month Calendar
+                  </section>
+                  <ResourceLegend />
+                </aside>
+              )}
+
               <section
                 // TODO: Add localization
-                className={clsx('EventCalendarContent', view === 'month' && 'StretchView')}
+                className={clsx(
+                  'EventCalendarContent',
+                  view === 'month' && 'StretchView',
+                  !isSidePanelOpen && 'FullWidth',
+                )}
                 aria-label="Calendar content"
               >
                 {content}
