@@ -164,7 +164,11 @@ export const useGridDataSourcePremium = (
     'aggregationModelChange',
     runIf(!pivotActive, () => debouncedFetchRows()),
   );
-  useGridEvent(apiRef, 'pivotModeChange', () => debouncedFetchRows());
+  useGridEvent(
+    apiRef,
+    'pivotModeChange',
+    runIf(!pivotActive, () => debouncedFetchRows()),
+  );
   useGridEvent(
     apiRef,
     'pivotModelChange',
