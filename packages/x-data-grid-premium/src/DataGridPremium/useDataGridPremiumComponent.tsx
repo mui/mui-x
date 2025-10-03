@@ -79,6 +79,7 @@ import {
   propsStateInitializer,
   rowReorderStateInitializer,
   type GridConfiguration,
+  useFirstRender,
 } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -254,6 +255,9 @@ export const useDataGridPremiumComponent = (
   useGridPivotingExportState(apiRef);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
+  useFirstRender(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
   React.useEffect(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });
