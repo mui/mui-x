@@ -3,11 +3,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
 import { useStore } from '@base-ui-components/utils/store';
-import { getAdapter } from '../../primitives/utils/adapter/getAdapter';
-import { useInitializeView } from '../../primitives/utils/useInitializeView';
+import { useAdapter } from '../../primitives/use-adapter';
+import { useEventCalendarView } from '../../primitives/use-event-calendar-view';
 import { AgendaViewProps } from './AgendaView.types';
-import { useDayList } from '../../primitives/use-day-list/useDayList';
-import { useEventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
+import { useDayList } from '../../primitives/use-day-list';
+import { useEventCalendarStoreContext } from '../../primitives/use-event-calendar-store-context';
 import { selectors } from '../../primitives/use-event-calendar';
 import { useEventOccurrencesGroupedByDay } from '../../primitives/use-event-occurrences-grouped-by-day';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
@@ -17,8 +17,6 @@ import './AgendaView.css';
 // TODO: Create a prop to allow users to customize the number of days in agenda view
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
-const adapter = getAdapter();
-
 export const AgendaView = React.memo(
   React.forwardRef(function AgendaView(
     props: AgendaViewProps,
@@ -27,10 +25,12 @@ export const AgendaView = React.memo(
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
     const { className, ...other } = props;
+
+    const adapter = useAdapter();
     const store = useEventCalendarStoreContext();
     const today = adapter.date();
     const visibleDate = useStore(store, selectors.visibleDate);
-    const preferences = useStore(store, selectors.preferences);
+    const showWeekends = useStore(store, selectors.showWeekends);
 
     const getDayList = useDayList();
     const days = React.useMemo(
@@ -38,13 +38,13 @@ export const AgendaView = React.memo(
         getDayList({
           date: visibleDate,
           amount: AGENDA_VIEW_DAYS_AMOUNT,
-          excludeWeekends: !preferences.showWeekends,
+          excludeWeekends: !showWeekends,
         }),
-      [getDayList, preferences.showWeekends, visibleDate],
+      [getDayList, showWeekends, visibleDate],
     );
     const occurrences = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
 
-    useInitializeView(() => ({
+    useEventCalendarView(() => ({
       siblingVisibleDateGetter: (date, delta) =>
         adapter.addDays(date, AGENDA_VIEW_DAYS_AMOUNT * delta),
     }));
@@ -81,9 +81,8 @@ export const AgendaView = React.memo(
               </header>
               <ul className="EventsList">
                 {occurrences.get(day.key)!.map((occurrence) => (
-                  <li>
+                  <li key={occurrence.key}>
                     <EventPopoverTrigger
-                      key={occurrence.key}
                       occurrence={occurrence}
                       render={
                         <AgendaEvent
