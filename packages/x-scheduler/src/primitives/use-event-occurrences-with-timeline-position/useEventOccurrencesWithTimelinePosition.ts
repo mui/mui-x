@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CalendarEventOccurrence, CalendarEventOccurrenceWithTimePosition } from '../models';
-import { useAdapter } from '../utils/adapter/useAdapter';
-import { Adapter } from '../utils/adapter/types';
+import { useAdapter } from '../use-adapter/useAdapter';
+import { Adapter } from '../use-adapter/useAdapter.types';
 
 /**
  * Places event occurrences for a timeline UI.

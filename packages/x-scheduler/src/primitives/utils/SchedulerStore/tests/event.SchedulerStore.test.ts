@@ -1,8 +1,6 @@
 import { spy } from 'sinon';
-import { getAdapter } from '../../adapter/getAdapter';
+import { adapter } from 'test/utils/scheduler';
 import { buildEvent, storeClasses } from './utils';
-
-const adapter = getAdapter();
 
 storeClasses.forEach((storeClass) => {
   describe(`Event - ${storeClass.name}`, () => {

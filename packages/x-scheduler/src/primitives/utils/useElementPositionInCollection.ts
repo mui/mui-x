@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAdapter } from './adapter/useAdapter';
+import { useAdapter } from '../use-adapter/useAdapter';
 import { SchedulerValidDate } from '../models';
 
 export function useElementPositionInCollection(

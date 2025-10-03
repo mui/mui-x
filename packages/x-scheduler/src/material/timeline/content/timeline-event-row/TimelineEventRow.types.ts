@@ -1,4 +1,4 @@
-import { CalendarEventOccurrence, SchedulerValidDate } from '../../../../primitives';
+import { CalendarEventOccurrence, SchedulerValidDate } from '../../../../primitives/models';
 
 export type TimelineEventRowProps = {
   start: SchedulerValidDate;

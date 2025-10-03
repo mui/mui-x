@@ -1,22 +1,23 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
-import { CalendarEventOccurrenceWithTimePosition } from '../../../../primitives';
-import { CalendarGrid } from '../../../../primitives/calendar-grid';
-import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
-import { isWeekend } from '../../../../primitives/utils/date-utils';
-import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
-import { selectors } from '../../../../primitives/use-event-calendar';
-import { useAdapter } from '../../../../primitives/utils/adapter/useAdapter';
-import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
-import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/use-event-occurrences-with-timeline-position';
-import { EventPopoverTrigger } from '../event-popover';
-import { SchedulerValidDate } from '../../../../primitives/models/date';
-import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
+import {
+  CalendarEventOccurrenceWithTimePosition,
+  SchedulerValidDate,
+} from '../../../../primitives/models';
 import {
   EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
   EVENT_CREATION_PRECISION_MINUTE,
-} from '../../../../primitives/utils/event-utils';
+} from '../../../../primitives/constants';
+import { CalendarGrid } from '../../../../primitives/calendar-grid';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
+import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
+import { selectors } from '../../../../primitives/use-event-calendar';
+import { useAdapter, isWeekend } from '../../../../primitives/use-adapter';
+import { useEventOccurrencesWithDayGridPosition } from '../../../../primitives/use-event-occurrences-with-day-grid-position';
+import { useEventOccurrencesWithTimelinePosition } from '../../../../primitives/use-event-occurrences-with-timeline-position';
+import { EventPopoverTrigger } from '../event-popover';
+import { useEventPopoverContext } from '../event-popover/EventPopoverContext';
 import './DayTimeGrid.css';
 
 export function TimeGridColumn(props: TimeGridColumnProps) {

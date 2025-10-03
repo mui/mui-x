@@ -7,10 +7,9 @@ import {
   SchedulerValidDate,
 } from '../models';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
-import { useAdapter } from '../utils/adapter/useAdapter';
-import { useTimelineStoreContext } from '../utils/useTimelineStoreContext';
+import { useAdapter, Adapter } from '../use-adapter';
+import { useTimelineStoreContext } from '../use-timeline-store-context';
 import { selectors } from '../use-timeline';
-import { Adapter } from '../utils/adapter/types';
 
 export function useEventOccurrencesGroupedByResource(
   parameters: useEventOccurrencesGroupedByResource.Parameters,

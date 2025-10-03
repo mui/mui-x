@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CalendarProcessedDate, SchedulerValidDate } from '../models';
-import { useAdapter } from '../utils/adapter/useAdapter';
-import { processDate } from '../utils/event-utils';
+import { useAdapter } from '../use-adapter';
+import { processDate } from '../process-date';
 
 export function useMonthList(): useMonthList.ReturnValue {
   const adapter = useAdapter();
