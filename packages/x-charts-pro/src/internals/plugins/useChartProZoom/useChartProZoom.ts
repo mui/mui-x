@@ -18,6 +18,7 @@ import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
 import { useZoomOnTapAndDrag } from './gestureHooks/useZoomOnTapAndDrag';
+import { usePanOnPressAndDrag } from './gestureHooks/usePanOnPressAndDrag';
 import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
 import { initializeZoomData } from './initializeZoomData';
 
@@ -189,6 +190,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
 
   // Add events
   usePanOnDrag(pluginData, setZoomDataCallback);
+
+  usePanOnPressAndDrag(pluginData, setZoomDataCallback);
 
   useZoomOnWheel(pluginData, setZoomDataCallback);
 

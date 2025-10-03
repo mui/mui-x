@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useAdapter } from '../../utils/adapter/useAdapter';
+import { useAdapter } from '../../use-adapter/useAdapter';
 import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
 import {
   EVENT_DRAG_PRECISION_MINUTE,
@@ -10,7 +10,7 @@ import {
   EVENT_DRAG_PRECISION_MS,
 } from '../../utils/drag-utils';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
-import { useEventCalendarStoreContext } from '../../utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { selectors } from '../../use-event-calendar';
 
 const isValidDropTarget = buildIsValidDropTarget([

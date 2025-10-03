@@ -4,19 +4,19 @@ import clsx from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useStore } from '@base-ui-components/utils/store';
 import { DateNavigatorProps } from './DateNavigator.types';
-import { getAdapter } from '../../../../primitives/utils/adapter/getAdapter';
+import { useAdapter } from '../../../../primitives/use-adapter';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { useEventCalendarStoreContext } from '../../../../primitives/utils/useEventCalendarStoreContext';
+import { useEventCalendarStoreContext } from '../../../../primitives/use-event-calendar-store-context';
 import { selectors } from '../../../../primitives/use-event-calendar';
 import './DateNavigator.css';
-
-const adapter = getAdapter();
 
 export const DateNavigator = React.forwardRef(function DateNavigator(
   props: DateNavigatorProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { className, ...other } = props;
+
+  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
   const view = useStore(store, selectors.view);

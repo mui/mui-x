@@ -1,6 +1,11 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "skipAnimation": { "description": "If <code>true</code>, the animation is disabled." },
+    "skipInteraction": {
+      "description": "If <code>true</code>, the default event handlers are disabled. Those are used, for example, to display a tooltip or highlight the arc on hover."
+    }
+  },
   "classDescriptions": {
     "faded": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",

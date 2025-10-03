@@ -5,6 +5,7 @@ import {
   MoveGesture,
   PanGesture,
   PinchGesture,
+  PressAndDragGesture,
   PressGesture,
   TapAndDragGesture,
   TapGesture,
@@ -19,27 +20,30 @@ import {
 
 const preventDefault = (event: Event) => event.preventDefault();
 
+type GestureManagerTyped = GestureManager<
+  string,
+  | PanGesture<'pan'>
+  | PanGesture<'zoomPan'>
+  | MoveGesture<'move'>
+  | PinchGesture<'zoomPinch'>
+  | TurnWheelGesture<'zoomTurnWheel'>
+  | TapGesture<'tap'>
+  | PressGesture<'quickPress'>,
+  | PanGesture<'pan'>
+  | PanGesture<'zoomPan'>
+  | MoveGesture<'move'>
+  | PinchGesture<'zoomPinch'>
+  | TurnWheelGesture<'zoomTurnWheel'>
+  | TapGesture<'tap'>
+  | PressGesture<'quickPress'>
+  | TapAndDragGesture<'zoomTapAndDrag'>
+  | PressAndDragGesture<'zoomPressAndDrag'>
+>;
+
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
   svgRef,
 }) => {
-  const gestureManagerRef = React.useRef<GestureManager<
-    string,
-    | PanGesture<'pan'>
-    | PanGesture<'zoomPan'>
-    | MoveGesture<'move'>
-    | PinchGesture<'zoomPinch'>
-    | TurnWheelGesture<'zoomTurnWheel'>
-    | TapGesture<'tap'>
-    | PressGesture<'quickPress'>,
-    | PanGesture<'pan'>
-    | PanGesture<'zoomPan'>
-    | MoveGesture<'move'>
-    | PinchGesture<'zoomPinch'>
-    | TurnWheelGesture<'zoomTurnWheel'>
-    | TapGesture<'tap'>
-    | PressGesture<'quickPress'>
-    | TapAndDragGesture<'zoomTapAndDrag'>
-  > | null>(null);
+  const gestureManagerRef = React.useRef<GestureManagerTyped | null>(null);
 
   React.useEffect(() => {
     const svg = svgRef.current;
@@ -58,7 +62,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             name: 'zoomPan',
             threshold: 0,
             maxPointers: 1,
-            preventIf: ['zoomTapAndDrag'],
+            preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
           }),
           new MoveGesture({
             name: 'move',
@@ -76,19 +80,20 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           }),
           new TapGesture({
             name: 'tap',
-            maxDistance: 10,
             preventIf: ['pan', 'zoomPan', 'zoomPinch'],
           }),
           new PressGesture({
             name: 'quickPress',
             duration: 50,
-            maxDistance: 10,
           }),
           new TapAndDragGesture({
             name: 'zoomTapAndDrag',
-            tapMaxDistance: 10,
             dragThreshold: 10,
-            dragTimeout: 1000,
+          }),
+          new PressAndDragGesture({
+            name: 'zoomPressAndDrag',
+            dragThreshold: 10,
+            preventIf: ['zoomPinch'],
           }),
         ],
       });
@@ -111,6 +116,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
         'tap',
         'quickPress',
         'zoomTapAndDrag',
+        'zoomPressAndDrag',
       ],
       svg,
     );
