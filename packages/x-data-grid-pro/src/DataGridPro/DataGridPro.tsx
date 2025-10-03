@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
 import {
-  GridConfiguration,
+  type GridConfiguration,
   validateProps,
   useGridApiInitialization,
   useGridParamsOverridableMethods,
@@ -22,12 +22,11 @@ import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
+const configuration: GridConfiguration<GridPrivateApiPro> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
     useGridRowAriaAttributes: useGridRowAriaAttributesPro,
-    // @ts-ignore - TODO: Fix it
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
     useCellAggregationResult: () => null,
@@ -46,7 +45,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props.apiRef,
     props,
   );
-  useDataGridProComponent(privateApiRef, props, configuration);
+  useDataGridProComponent(privateApiRef, props, configuration as GridConfiguration);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -54,7 +53,11 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   }
 
   return (
-    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
+    <GridContextProvider
+      privateApiRef={privateApiRef}
+      configuration={configuration as GridConfiguration}
+      props={props}
+    >
       <GridRoot
         className={props.className}
         style={props.style}
