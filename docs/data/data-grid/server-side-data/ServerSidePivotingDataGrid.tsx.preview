@@ -1,0 +1,10 @@
+<DataGridPremium
+  columns={columns}
+  dataSource={dataSource}
+  showToolbar
+  pagination
+  pageSizeOptions={[10, 20, 50]}
+  initialState={initialState}
+  aggregationFunctions={aggregationFunctions}
+  pivotingColDef={pivotingColDef}
+/>

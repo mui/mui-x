@@ -59,8 +59,13 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     );
   }, [apiRef, props.dataSource]);
 
-  const [defaultRowsUpdateStrategyActive, setDefaultRowsUpdateStrategyActive] =
-    React.useState(false);
+  const [currentStrategy, setCurrentStrategy] = React.useState<DataSourceRowsUpdateStrategy>(
+    apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) as DataSourceRowsUpdateStrategy,
+  );
+
+  const defaultRowsUpdateStrategyActive = React.useMemo(() => {
+    return currentStrategy === DataSourceRowsUpdateStrategy.Default;
+  }, [currentStrategy]);
 
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
@@ -182,9 +187,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const handleStrategyActivityChange = React.useCallback<
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
-    setDefaultRowsUpdateStrategyActive(
-      apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) ===
-        DataSourceRowsUpdateStrategy.Default,
+    setCurrentStrategy(
+      apiRef.current.getActiveStrategy(
+        GridStrategyGroup.DataSource,
+      ) as DataSourceRowsUpdateStrategy,
     );
   }, [apiRef]);
 
@@ -281,10 +287,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   React.useEffect(() => {
     // Return early if the proper strategy isn't set yet
     // Context: https://github.com/mui/mui-x/issues/19650
-    const strategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
     if (
-      strategy !== DataSourceRowsUpdateStrategy.Default &&
-      strategy !== DataSourceRowsUpdateStrategy.LazyLoading
+      currentStrategy !== DataSourceRowsUpdateStrategy.Default &&
+      currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoading
     ) {
       return undefined;
     }
@@ -297,7 +302,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       // ignore the current request on unmount
       lastRequestId.current += 1;
     };
-  }, [apiRef, props.dataSource]);
+  }, [apiRef, props.dataSource, currentStrategy]);
 
   return {
     api: { public: dataSourceApi },
