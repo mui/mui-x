@@ -500,6 +500,9 @@ importers:
 
   docs:
     dependencies:
+      '@atlaskit/pragmatic-drag-and-drop':
+        specifier: ^1.7.7
+        version: 1.7.7
       '@babel/core':
         specifier: 'catalog:'
         version: 7.28.4

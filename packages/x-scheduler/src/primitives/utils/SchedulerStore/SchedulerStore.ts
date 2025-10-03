@@ -6,6 +6,8 @@ import {
   CalendarEventId,
   CalendarEventOccurrence,
   CalendarOccurrencePlaceholder,
+  CalendarOccurrencePlaceholderExternalDrag,
+  CalendarOccurrencePlaceholderInternalDragOrResize,
   CalendarResource,
   CalendarResourceId,
   RecurringEventUpdatedProperties,
@@ -111,6 +113,8 @@ export class SchedulerStore<
       resources: parameters.resources ?? DEFAULT_RESOURCES,
       areEventsDraggable: parameters.areEventsDraggable ?? false,
       areEventsResizable: parameters.areEventsResizable ?? false,
+      canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
+      canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
       eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
     };
@@ -285,18 +289,14 @@ export class SchedulerStore<
   /**
    * Applies the data from the placeholder occurrence to the event it represents.
    */
-  public async applyOccurrencePlaceholder(
-    data: CalendarOccurrencePlaceholder,
+  public async applyInternalDragOrResizeOccurrencePlaceholder(
+    placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
     chooseRecurringEventScope?: () => Promise<RecurringUpdateEventScope>,
   ) {
     // TODO: Try to do a single state update.
     this.setOccurrencePlaceholder(null);
 
-    const { eventId, start, end, originalStart, surfaceType } = data;
-
-    if (eventId == null || originalStart == null) {
-      return undefined;
-    }
+    const { eventId, start, end, originalEvent, surfaceType } = placeholder;
 
     const original = selectors.event(this.state, eventId);
     if (!original) {
@@ -321,7 +321,7 @@ export class SchedulerStore<
 
       return this.updateRecurringEvent({
         eventId,
-        occurrenceStart: originalStart,
+        occurrenceStart: originalEvent.start,
         changes,
         scope,
       });
@@ -329,6 +329,20 @@ export class SchedulerStore<
 
     return this.updateEvent({ id: eventId, ...changes });
   }
+
+  public applyExternalDragOccurrencePlaceholder = (
+    placeholder: CalendarOccurrencePlaceholderExternalDrag,
+  ) => {
+    const event: CalendarEvent = {
+      ...placeholder.eventData,
+      start: placeholder.start,
+      end: placeholder.end,
+      allDay: placeholder.surfaceType === 'day-grid',
+    };
+    this.setOccurrencePlaceholder(null);
+    this.createEvent(event);
+    placeholder.onEventDrop?.();
+  };
 
   /**
    * Deletes an event from the calendar.

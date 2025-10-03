@@ -55,12 +55,10 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   const handleDoubleClick = () => {
     store.setOccurrencePlaceholder({
-      eventId: null,
-      occurrenceKey: 'create-placeholder',
+      type: 'creation',
       surfaceType: 'day-grid',
       start: adapter.startOfDay(day.value),
       end: adapter.endOfDay(day.value),
-      originalStart: null,
       lockSurfaceType: true,
     });
   };

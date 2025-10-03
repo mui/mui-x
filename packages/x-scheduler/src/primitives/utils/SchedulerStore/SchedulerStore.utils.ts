@@ -13,17 +13,15 @@ export function shouldUpdateOccurrencePlaceholder(
     return next !== previous;
   }
 
-  for (const key in next) {
-    if (key === 'start' || key === 'end' || key === 'originalStart') {
-      if (!adapter.isEqual(next[key], previous[key])) {
+  const untypedPrevious = previous as Record<string, any>;
+  const untypedNext = next as Record<string, any>;
+
+  for (const key in untypedNext) {
+    if (key === 'start' || key === 'end') {
+      if (!adapter.isEqual(untypedNext[key], untypedPrevious[key])) {
         return true;
       }
-    } else if (
-      !Object.is(
-        next[key as keyof CalendarOccurrencePlaceholder],
-        previous?.[key as keyof CalendarOccurrencePlaceholder],
-      )
-    ) {
+    } else if (!Object.is(untypedNext[key], untypedPrevious[key])) {
       return true;
     }
   }
