@@ -286,11 +286,11 @@ describe('<EventPopover />', () => {
 
       const { user } = render(
         <StandaloneView events={[]} resources={resources}>
-          {/* <EventCalendarStoreContext.Provider value={mockStore as any}> */}
-          <Popover.Root open>
-            <EventPopover {...defaultProps} occurrence={creationOccurrence} />
-          </Popover.Root>
-          {/* </EventCalendarStoreContext.Provider> */}
+          <EventCalendarStoreContext.Provider value={mockStore as any}>
+            <Popover.Root open>
+              <EventPopover {...defaultProps} occurrence={creationOccurrence} />
+            </Popover.Root>
+          </EventCalendarStoreContext.Provider>
         </StandaloneView>,
       );
 
