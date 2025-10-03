@@ -7,7 +7,8 @@ import { PanGesture } from './gestures/PanGesture';
 describe('Gesture PointerOptions', () => {
   let container: HTMLElement;
   let target: HTMLElement;
-  let gestureManager: GestureManager<any, any>;
+  let gestureTapManager: GestureManager<'universalTap', TapGesture<'universalTap'>>;
+  let gesturePanManager: GestureManager<'universalPan', PanGesture<'universalPan'>>;
   let events: string[];
 
   beforeEach(() => {
@@ -27,13 +28,14 @@ describe('Gesture PointerOptions', () => {
   });
 
   afterEach(() => {
-    gestureManager?.destroy();
+    gestureTapManager?.destroy();
+    gesturePanManager?.destroy();
     document.body.removeChild(container);
   });
 
   it('should respect pointer mode-specific required keys configuration', async () => {
     // Create gesture with different key requirements for different pointer modes
-    gestureManager = new GestureManager({
+    gestureTapManager = new GestureManager({
       gestures: [
         new TapGesture({
           name: 'universalTap',
@@ -46,9 +48,9 @@ describe('Gesture PointerOptions', () => {
       ],
     });
 
-    const gestureTarget = gestureManager.registerElement(['universalTap'], target);
+    const gestureTarget = gestureTapManager.registerElement(['universalTap'], target);
     gestureTarget.addEventListener('universalTap', (event) =>
-      events.push(`${(event as any).detail.srcEvent.pointerType}:universalTap`),
+      events.push(`${event.detail.srcEvent.pointerType}:universalTap`),
     );
 
     await touchGesture.tap({ target });
@@ -69,7 +71,7 @@ describe('Gesture PointerOptions', () => {
 
   it('should respect pointer mode-specific minPointers configuration', async () => {
     // Create gesture with different minPointers requirements for different pointer modes
-    gestureManager = new GestureManager({
+    gesturePanManager = new GestureManager({
       gestures: [
         new PanGesture({
           name: 'universalPan',
@@ -81,9 +83,9 @@ describe('Gesture PointerOptions', () => {
       ],
     });
 
-    const gestureTarget = gestureManager.registerElement(['universalPan'], target);
+    const gestureTarget = gesturePanManager.registerElement(['universalPan'], target);
     gestureTarget.addEventListener('universalPanStart', (event) =>
-      events.push(`${(event as any).detail.srcEvent.pointerType}:universalPanStart`),
+      events.push(`${event.detail.srcEvent.pointerType}:universalPanStart`),
     );
 
     // Test touch with 1 pointer - should NOT trigger
@@ -102,7 +104,7 @@ describe('Gesture PointerOptions', () => {
 
   it('should respect pointer mode-specific maxPointers configuration', async () => {
     // Create gesture with different maxPointers limits for different pointer modes
-    gestureManager = new GestureManager({
+    gesturePanManager = new GestureManager({
       gestures: [
         new PanGesture({
           name: 'universalPan',
@@ -114,9 +116,9 @@ describe('Gesture PointerOptions', () => {
       ],
     });
 
-    const gestureTarget = gestureManager.registerElement(['universalPan'], target);
+    const gestureTarget = gesturePanManager.registerElement(['universalPan'], target);
     gestureTarget.addEventListener('universalPanStart', (event) =>
-      events.push(`${(event as CustomEvent).detail.srcEvent.pointerType}:universalPanStart`),
+      events.push(`${event.detail.srcEvent.pointerType}:universalPanStart`),
     );
 
     // Test touch with 3 pointers - should NOT trigger (exceeds limit)
