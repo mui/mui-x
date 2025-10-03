@@ -163,11 +163,9 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
     // Filter pointers to only include those targeting our element or its children
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
-    // Check if we have enough pointers and not too many
     if (
       this.shouldPreventGesture(targetElement, event.pointerType) ||
-      relevantPointers.length < this.minPointers ||
-      relevantPointers.length > this.maxPointers
+      !this.isWithinPointerCount(relevantPointers, event.pointerType)
     ) {
       if (this.isActive) {
         // Cancel the gesture if it was active
