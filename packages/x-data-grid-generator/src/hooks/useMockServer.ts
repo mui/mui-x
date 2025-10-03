@@ -321,7 +321,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       const waitInterval = 10;
       const waitTimeout = 500 * waitInterval; // 5 seconds
       // wait until data is ready
-      while (!isDataReady) {
+      while (dataRef.current === null) {
         // prevent infinite loop with a timeout
         if (dataDelay > waitTimeout) {
           return sendEmptyResponse<T>();
@@ -434,7 +434,6 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     },
     [
       dataRef,
-      isDataReady,
       serverOptions?.verbose,
       serverOptions?.minDelay,
       serverOptions?.maxDelay,
