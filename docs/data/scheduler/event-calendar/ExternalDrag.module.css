@@ -1,0 +1,16 @@
+.Container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ExternalEventsContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.ExternalEvent {
+  border: 1px solid gray;
+  padding: 4px 8px;
+}

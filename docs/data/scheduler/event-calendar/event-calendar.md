@@ -122,6 +122,10 @@ When `areEventsResizable` is `true`, the event extremities can be dragged to cha
 
 {{"demo": "DragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### External drag and drop
+
+{{"demo": "ExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Customization
 
 ### Available views
