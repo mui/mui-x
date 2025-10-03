@@ -1,10 +1,8 @@
 import { spy } from 'sinon';
-import { getAdapter } from '../../adapter/getAdapter';
+import { adapter } from 'test/utils/scheduler';
 import { storeClasses } from './utils';
 
 const DEFAULT_PARAMS = { events: [] };
-
-const adapter = getAdapter();
 
 storeClasses.forEach((storeClass) => {
   describe(`Date - ${storeClass.name}`, () => {

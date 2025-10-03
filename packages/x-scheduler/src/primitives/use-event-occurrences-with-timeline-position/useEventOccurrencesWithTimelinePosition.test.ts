@@ -1,16 +1,14 @@
+import { adapter } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { useEventOccurrencesWithTimelinePosition } from './useEventOccurrencesWithTimelinePosition';
-import { getAdapter } from '../utils/adapter/getAdapter';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { CalendarEvent } from '../models';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
-  const adapter = getAdapter();
-
   const collectionStart = adapter.date('2024-01-15');
   const collectionEnd = adapter.endOfDay(adapter.date('2024-01-15'));
 
-  function testHook(events: CalendarEvent[], maxColumnSpan: number) {
+  function testHook(events: CalendarEvent[], maxSpan: number) {
     const { result } = renderHook(() => {
       const occurrences = getOccurrencesFromEvents({
         adapter,
@@ -19,7 +17,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         events,
         visibleResources: new Map(),
       });
-      return useEventOccurrencesWithTimelinePosition({ occurrences, maxColumnSpan });
+      return useEventOccurrencesWithTimelinePosition({ occurrences, maxSpan });
     });
 
     return result.current;
@@ -100,7 +98,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.occurrences[1].position).to.deep.equal({ firstIndex: 1, lastIndex: 1 });
   });
 
-  it('should span non overlapping events across all the available columns when maxColumnSpan is large enough', () => {
+  it('should span non overlapping events across all the available columns when maxSpan is large enough', () => {
     const result = testHook(
       [
         createEvent('A', '2024-01-15T10:00:00', '2024-01-15T11:00:00'),
@@ -117,7 +115,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.occurrences[3].position).to.deep.equal({ firstIndex: 1, lastIndex: 3 });
   });
 
-  it('should not span non overlapping events across all the available columns when maxColumnSpan=1', () => {
+  it('should not span non overlapping events across all the available columns when maxSpan=1', () => {
     const result = testHook(
       [
         createEvent('A', '2024-01-15T10:00:00', '2024-01-15T11:00:00'),
@@ -134,7 +132,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.occurrences[3].position).to.deep.equal({ firstIndex: 1, lastIndex: 1 });
   });
 
-  it('should respect maxColumnSpan for non overlapping events when maxColumnSpan is lower than the free space', () => {
+  it('should respect maxSpan for non overlapping events when maxSpan is lower than the free space', () => {
     const result = testHook(
       [
         createEvent('A', '2024-01-15T10:00:00', '2024-01-15T11:00:00'),
@@ -151,7 +149,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.occurrences[3].position).to.deep.equal({ firstIndex: 1, lastIndex: 2 });
   });
 
-  it('should span overlapping events across all the available columns when maxColumnSpan is large enough', () => {
+  it('should span overlapping events across all the available columns when maxSpan is large enough', () => {
     const result = testHook(
       [
         createEvent('A', '2024-01-15T10:00:00', '2024-01-15T12:00:00'),
@@ -177,7 +175,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
     expect(result.occurrences[4].position).to.deep.equal({ firstIndex: 1, lastIndex: 3 });
   });
 
-  it('should respect maxColumnSpan for overlapping events when maxColumnSpan is lower than the free space', () => {
+  it('should respect maxSpan for overlapping events when maxSpan is lower than the free space', () => {
     const result = testHook(
       [
         createEvent('A', '2024-01-15T10:00:00', '2024-01-15T12:00:00'),

@@ -7,7 +7,7 @@ import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
-import { EventCalendarStoreContext } from '../../primitives/utils/useEventCalendarStoreContext';
+import { EventCalendarStoreContext } from '../../primitives/use-event-calendar-store-context';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from '../internals/components/header-toolbar';
 import { ResourceLegend } from '../internals/components/resource-legend';
@@ -16,7 +16,7 @@ import {
   selectors,
   useExtractEventCalendarParameters,
 } from '../../primitives/use-event-calendar';
-import { SchedulerStoreContext } from '../../primitives/utils/useSchedulerStoreContext';
+import { SchedulerStoreContext } from '../../primitives/use-scheduler-store-context';
 import '../index.css';
 import './EventCalendar.css';
 import { DateNavigator } from '../internals/components/date-navigator';

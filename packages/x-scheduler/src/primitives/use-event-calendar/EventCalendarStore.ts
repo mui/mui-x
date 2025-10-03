@@ -6,7 +6,7 @@ import {
   SchedulerValidDate,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
-import { Adapter } from '../utils/adapter/types';
+import { Adapter } from '../use-adapter/useAdapter.types';
 import { SchedulerParametersToStateMapper, SchedulerStore } from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 

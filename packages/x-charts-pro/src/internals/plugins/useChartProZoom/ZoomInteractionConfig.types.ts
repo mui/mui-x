@@ -13,6 +13,7 @@ export type ZoomInteractionConfig = {
   /**
    * Defines the interactions that trigger panning.
    * - `drag`: Pans the chart when dragged with the mouse.
+   * - `pressAndDrag`: Pans the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures.
    *
    * @default ['drag']
    */
@@ -32,7 +33,7 @@ export type DefaultizedZoomInteractionConfig = {
 };
 
 export type ZoomInteraction = WheelInteraction | PinchInteraction | TapAndDragInteraction;
-export type PanInteraction = DragInteraction;
+export type PanInteraction = DragInteraction | PressAndDragInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
 export type PanInteractionName = PanInteraction['type'];
@@ -97,6 +98,13 @@ export type DragInteraction = Unpack<
 export type TapAndDragInteraction = Unpack<
   {
     type: 'tapAndDrag';
+  } & AllModeProp &
+    AllKeysProp
+>;
+
+export type PressAndDragInteraction = Unpack<
+  {
+    type: 'pressAndDrag';
   } & AllModeProp &
     AllKeysProp
 >;

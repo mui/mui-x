@@ -1,9 +1,7 @@
+import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { getAdapter } from '../../utils/adapter/getAdapter';
 
 const DEFAULT_PARAMS = { events: [] };
-
-const adapter = getAdapter();
 
 describe('Preferences - EventCalendarStore', () => {
   describe('Method: setPreferences', () => {
