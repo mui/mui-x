@@ -1967,6 +1967,12 @@ importers:
       '@mui/x-license':
         specifier: workspace:*
         version: link:../packages/x-license/build
+      '@mui/x-scheduler':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler/build
+      '@mui/x-scheduler-headless':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler-headless/build
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.55.1
