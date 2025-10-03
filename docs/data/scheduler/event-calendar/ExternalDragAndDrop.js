@@ -26,7 +26,7 @@ export default function ExternalDragAndDrop() {
   };
 
   return (
-    <div className={classes.Container}>
+    <div className={clsx(classes.Container, 'mui-x-scheduler')}>
       <div className={classes.ExternalEventsContainer}>
         {externalEvents.map((event) => (
           <StandaloneEvent
@@ -34,7 +34,7 @@ export default function ExternalDragAndDrop() {
             isDraggable
             data={event}
             onEventDrop={() => handleEventDrop(event)}
-            className={classes.ExternalEvent}
+            className={clsx(classes.ExternalEvent)}
           >
             {event.title}
           </StandaloneEvent>
@@ -50,7 +50,7 @@ export default function ExternalDragAndDrop() {
           areEventsResizable
           canDropEventsToTheOutside
           preferences={{ isSidePanelOpen: false }}
-          className={clsx(classes.EventCalendar, 'palette-jade')}
+          className={classes.EventCalendar}
         />
       </div>
     </div>
