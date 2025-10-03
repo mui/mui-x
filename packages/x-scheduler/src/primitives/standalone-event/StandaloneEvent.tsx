@@ -91,13 +91,10 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
             top: dragPosition.clientY,
             left: dragPosition.clientX,
             pointerEvents: 'none',
-            backgroundColor: 'red',
-            height: 50,
-            width: 200,
             zIndex: 9999,
           }}
         >
-          {data.title}
+          {element}
         </div>
       )}
       {element}
