@@ -162,7 +162,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
     const pointersArray = Array.from(pointers.values());
 
     // Only activate if we're within pointer count constraints
-    if (pointersArray.length >= this.minPointers && pointersArray.length <= this.maxPointers) {
+    if (this.isWithinPointerCount(pointersArray, event.pointerType)) {
       this.isActive = true;
       const currentPosition = { x: event.clientX, y: event.clientY };
       this.state.lastPosition = currentPosition;
@@ -226,8 +226,7 @@ export class MoveGesture<GestureName extends string> extends PointerGesture<Gest
       return;
     }
 
-    // Make sure we're still within pointer count constraints
-    if (pointersArray.length < this.minPointers || pointersArray.length > this.maxPointers) {
+    if (!this.isWithinPointerCount(pointersArray, event.pointerType)) {
       return;
     }
 
