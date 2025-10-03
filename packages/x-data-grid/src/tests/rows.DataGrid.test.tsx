@@ -248,8 +248,9 @@ describe('<DataGrid /> - Rows', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        'MUI X: Missing the `getActions` property in the `GridColDef`.',
-        reactMajor < 19 && 'MUI X: Missing the `getActions` property in the `GridColDef`.',
+        'MUI X: Missing the `getActions` property in the `GridColDef` or `children` prop in the `GridActionsCell` component.',
+        reactMajor < 19 &&
+          'MUI X: Missing the `getActions` property in the `GridColDef` or `children` prop in the `GridActionsCell` component.',
         reactMajor < 19 && 'The above error occurred in the <GridActionsCell> component',
       ]);
     });
@@ -424,7 +425,7 @@ describe('<DataGrid /> - Rows', () => {
       await user.click(firstCell);
 
       await user.keyboard('{ArrowRight}');
-      expect(secondCell).to.have.property('tabIndex', -1);
+      expect(secondCell).to.have.property('tabIndex', 0);
 
       const printButton = screen.getByRole('menuitem', { name: 'print' });
       const menuButton = screen.getByRole('menuitem', { name: 'more' });
