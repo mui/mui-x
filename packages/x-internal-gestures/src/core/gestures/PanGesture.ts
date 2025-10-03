@@ -267,7 +267,10 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
         break;
 
       case 'pointermove':
-        if (this.state.startCentroid && this.isMinPointersMet(pointersArray, event.pointerType)) {
+        if (
+          this.state.startCentroid &&
+          this.isWithinPointerCount(pointersArray, event.pointerType)
+        ) {
           // Calculate current centroid
           const currentCentroid = calculateCentroid(relevantPointers);
 
@@ -342,8 +345,8 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
           );
 
-          // If we have less than the minimum required pointers, end the gesture
-          if (!this.isMinPointersMet(remainingPointers, event.pointerType)) {
+          // If we no longer meet the pointer count requirements, end the gesture
+          if (!this.isWithinPointerCount(remainingPointers, event.pointerType)) {
             // End the gesture
             const currentCentroid = this.state.lastCentroid || this.state.startCentroid!;
             if (event.type === 'pointercancel') {

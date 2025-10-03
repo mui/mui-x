@@ -136,20 +136,9 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
     };
   }
 
-  protected isMinPointersMet(pointers: PointerData[], pointerMode: string): boolean {
-    const config = this.getEffectiveConfig(pointerMode as PointerMode, this.getBaseConfig());
-    return pointers.length >= config.minPointers;
-  }
-
-  protected isMaxPointersMet(pointers: PointerData[], pointerMode: string): boolean {
-    const config = this.getEffectiveConfig(pointerMode as PointerMode, this.getBaseConfig());
-    return pointers.length <= config.maxPointers;
-  }
-
   protected isWithinPointerCount(pointers: PointerData[], pointerMode: string): boolean {
-    return (
-      this.isMinPointersMet(pointers, pointerMode) && this.isMaxPointersMet(pointers, pointerMode)
-    );
+    const config = this.getEffectiveConfig(pointerMode as PointerMode, this.getBaseConfig());
+    return pointers.length >= config.minPointers && pointers.length <= config.maxPointers;
   }
 
   /**

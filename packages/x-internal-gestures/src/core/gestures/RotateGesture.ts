@@ -242,8 +242,8 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
           );
 
-          // If we have less than the minimum required pointers, end the gesture
-          if (!this.isMinPointersMet(remainingPointers, event.pointerType)) {
+          // If we no longer meet the pointer count requirements, end the gesture
+          if (!this.isWithinPointerCount(remainingPointers, event.pointerType)) {
             if (event.type === 'pointercancel') {
               this.emitRotateEvent(targetElement, 'cancel', relevantPointers, event);
             }
