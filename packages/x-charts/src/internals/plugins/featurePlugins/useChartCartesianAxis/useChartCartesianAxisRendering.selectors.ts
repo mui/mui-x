@@ -10,14 +10,18 @@ import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
 import { ZoomAxisFilters, ZoomData } from './zoom.types';
 import { createZoomLookup } from './createZoomLookup';
-import { AxisId } from '../../../../models/axis';
+import { AxisId, ChartsAxisProps, DefaultedAxis, ScaleName } from '../../../../models/axis';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 import { selectorPreferStrictDomainInLineCharts } from '../../corePlugins/useChartExperimentalFeature';
-import { getXAxesScales, getYAxesScales } from './getAxisScale';
 import { getDefaultTickNumber } from '../../../ticks';
+import { getNormalizedAxisScale, getRange, ScaleDefinition } from './getAxisScale';
+import { isOrdinalScale } from '../../../scaleGuards';
+import { zoomScaleRange } from './zoom';
+import { SeriesId } from '../../../../models/seriesType/common';
+import { Flatbush } from '../../../Flatbush';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -57,6 +61,11 @@ export const selectorChartAxisZoomOptionsLookup = createSelector(
   (axisLookup, axisId) => axisLookup[axisId],
 );
 
+export const selectorChartAxisZoomData = createSelector(
+  [selectorChartZoomMap, (_, axisId: AxisId) => axisId],
+  (zoomMap, axisId) => zoomMap?.get(axisId),
+);
+
 const selectorChartXFilter = createSelector(
   [selectorChartZoomMap, selectorChartZoomOptionsLookup],
   (zoomMap, zoomOptions) =>
@@ -83,65 +92,135 @@ export const selectorDefaultYAxisTickNumber = createSelector(
   },
 );
 
-export const selectorChartXScales = createSelector(
+export const selectorChartNormalizedXScales = createSelector(
   [
     selectorChartRawXAxis,
-    selectorChartDrawingArea,
     selectorChartSeriesProcessed,
     selectorChartSeriesConfig,
-    selectorChartZoomMap,
     selectorPreferStrictDomainInLineCharts,
     selectorDefaultXAxisTickNumber,
   ],
-  function selectorChartXScales(
-    axis,
-    drawingArea,
+  function selectorChartNormalizedXScales(
+    axes,
     formattedSeries,
     seriesConfig,
-    zoomMap,
     preferStrictDomainInLineCharts,
     defaultTickNumber,
   ) {
-    return getXAxesScales({
-      drawingArea,
-      formattedSeries,
-      axis,
-      seriesConfig,
-      zoomMap,
-      preferStrictDomainInLineCharts,
-      defaultTickNumber,
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    axes?.forEach((eachAxis, axisIndex) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      scales[axis.id] = getNormalizedAxisScale(
+        axis,
+        'x',
+        seriesConfig,
+        axisIndex,
+        formattedSeries,
+        preferStrictDomainInLineCharts,
+        defaultTickNumber,
+      );
     });
+
+    return scales;
+  },
+);
+
+export const selectorChartNormalizedYScales = createSelector(
+  [
+    selectorChartRawYAxis,
+    selectorChartSeriesProcessed,
+    selectorChartSeriesConfig,
+    selectorPreferStrictDomainInLineCharts,
+    selectorDefaultYAxisTickNumber,
+  ],
+  function selectorChartNormalizedYScales(
+    axes,
+    formattedSeries,
+    seriesConfig,
+    preferStrictDomainInLineCharts,
+    defaultTickNumber,
+  ) {
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    axes?.forEach((eachAxis, axisIndex) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+
+      scales[axis.id] = getNormalizedAxisScale(
+        axis,
+        'y',
+        seriesConfig,
+        axisIndex,
+        formattedSeries,
+        preferStrictDomainInLineCharts,
+        defaultTickNumber,
+      );
+    });
+
+    return scales;
+  },
+);
+
+export const selectorChartXScales = createSelector(
+  [
+    selectorChartRawXAxis,
+    selectorChartNormalizedXScales,
+    selectorChartDrawingArea,
+    selectorChartZoomMap,
+  ],
+  function selectorChartXScales(axes, normalizedScales, drawingArea, zoomMap) {
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    axes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+      const zoom = zoomMap?.get(axis.id);
+
+      const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
+      const range = getRange(drawingArea, 'x', axis);
+
+      const scaleDefinition = normalizedScales[axis.id];
+      const scale = scaleDefinition.scale.copy();
+      const zoomedRange = zoomScaleRange(range, zoomRange);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = { ...scaleDefinition, scale } as ScaleDefinition;
+    });
+
+    return scales;
   },
 );
 
 export const selectorChartYScales = createSelector(
   [
     selectorChartRawYAxis,
+    selectorChartNormalizedYScales,
     selectorChartDrawingArea,
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
     selectorChartZoomMap,
-    selectorPreferStrictDomainInLineCharts,
-    selectorDefaultYAxisTickNumber,
   ],
-  function selectorChartYScales(
-    axis,
-    drawingArea,
-    formattedSeries,
-    seriesConfig,
-    zoomMap,
-    preferStrictDomainInLineCharts,
-    defaultTickNumber,
-  ) {
-    return getYAxesScales({
-      drawingArea,
-      formattedSeries,
-      axis,
-      seriesConfig,
-      zoomMap,
-      preferStrictDomainInLineCharts,
-      defaultTickNumber,
+  function selectorChartYScales(axes, normalizedScales, drawingArea, zoomMap) {
+    const scales: Record<AxisId, ScaleDefinition> = {};
+
+    axes?.forEach((eachAxis) => {
+      const axis = eachAxis as Readonly<DefaultedAxis<ScaleName, any, Readonly<ChartsAxisProps>>>;
+      const zoom = zoomMap?.get(axis.id);
+
+      const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
+      const range = getRange(drawingArea, 'y', axis);
+
+      const scaleDefinition = normalizedScales[axis.id];
+      const scale = scaleDefinition.scale.copy();
+
+      const scaleRange = isOrdinalScale(scale) ? range.reverse() : range;
+      const zoomedRange = zoomScaleRange(scaleRange, zoomRange);
+
+      scale.range(zoomedRange);
+
+      scales[axis.id] = { ...scaleDefinition, scale } as ScaleDefinition;
     });
+
+    return scales;
   },
 );
 
@@ -277,5 +356,74 @@ export const selectorChartRawAxis = createSelector(
     }
 
     return axis;
+  },
+);
+
+export const selectorChartDefaultXAxisId = createSelector(
+  [selectorChartRawXAxis],
+  (xAxes) => xAxes![0].id,
+);
+
+export const selectorChartDefaultYAxisId = createSelector(
+  [selectorChartRawYAxis],
+  (yAxes) => yAxes![0].id,
+);
+
+const EMPTY_MAP = new Map<SeriesId, Flatbush>();
+export const selectorChartSeriesEmptyFlatbushMap = () => EMPTY_MAP;
+
+export const selectorChartSeriesFlatbushMap = createSelector(
+  [
+    selectorChartSeriesProcessed,
+    selectorChartNormalizedXScales,
+    selectorChartNormalizedYScales,
+    selectorChartDefaultXAxisId,
+    selectorChartDefaultYAxisId,
+  ],
+  function selectChartSeriesFlatbushMap(
+    allSeries,
+    xAxesScaleMap,
+    yAxesScaleMap,
+    defaultXAxisId,
+    defaultYAxisId,
+  ) {
+    // FIXME: Do we want to support non-scatter series here?
+    const validSeries = allSeries.scatter;
+    const flatbushMap = new Map<SeriesId, Flatbush>();
+
+    if (!validSeries) {
+      return flatbushMap;
+    }
+
+    validSeries.seriesOrder.forEach((seriesId) => {
+      const {
+        data,
+        xAxisId = defaultXAxisId,
+        yAxisId = defaultYAxisId,
+      } = validSeries.series[seriesId];
+
+      const flatbush = new Flatbush(data.length);
+
+      const originalXScale = xAxesScaleMap[xAxisId]?.scale;
+      const originalYScale = yAxesScaleMap[yAxisId]?.scale;
+
+      for (const datum of data) {
+        // Add the points using a [0, 1] range so that we don't need to recreate the Flatbush structure when zooming.
+        // This doesn't happen in practice, though, because currently the scales depend on the drawing area.
+        flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
+      }
+
+      flatbush.finish();
+      flatbushMap.set(seriesId, flatbush);
+    });
+
+    return flatbushMap;
+  },
+);
+
+export const selectorChartSeriesFlatbush = createSelector(
+  [selectorChartSeriesFlatbushMap, (_, seriesId: SeriesId) => seriesId],
+  function selectChartSeriesFlatbush(flatbushMap, seriesId) {
+    return flatbushMap.get(seriesId);
   },
 );
