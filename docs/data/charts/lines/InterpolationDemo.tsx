@@ -16,6 +16,8 @@ const curveTypes: CurveType[] = [
   'step',
   'stepBefore',
   'stepAfter',
+  'bumpX',
+  'bumpY',
 ];
 
 function getExample(curveType: CurveType) {
