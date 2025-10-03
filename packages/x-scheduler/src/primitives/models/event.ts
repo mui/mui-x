@@ -193,9 +193,9 @@ export interface CalendarOccurrencePlaceholderInternalDragOrResize
    */
   occurrenceKey: string;
   /**
-   * The start date and time of the event occurrence before the change.
+   * The data of the event to use when dropping the event outside of the Event Calendar.
    */
-  originalStart: SchedulerValidDate;
+  originalEvent: CalendarEvent;
 }
 
 export interface CalendarOccurrencePlaceholderExternalDrag

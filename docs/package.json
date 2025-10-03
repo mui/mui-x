@@ -17,6 +17,7 @@
     "populate:demos": "tsx scripts/populatePickersDemos"
   },
   "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
     "@babel/core": "catalog:",
     "@babel/runtime": "catalog:",
     "@docsearch/react": "^4.1.0",

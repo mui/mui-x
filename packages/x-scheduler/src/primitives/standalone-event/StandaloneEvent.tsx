@@ -30,12 +30,11 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
 
   const ref = React.useRef<HTMLDivElement>(null);
   const { getButtonProps, buttonRef } = useButton({ disabled: !isInteractive });
+  const [isDragging, setIsDragging] = React.useState(false);
   const [dragPosition, setDragPosition] = React.useState<{
     clientX: number;
     clientY: number;
   } | null>(null);
-
-  const isDragging = dragPosition != null;
 
   const state: StandaloneEvent.State = React.useMemo(
     () => ({ dragging: isDragging }),
@@ -62,7 +61,10 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      onDragStart: ({ location }) => setDragPosition(location.initial.input),
+      onDragStart: ({ location }) => {
+        setDragPosition(location.initial.input);
+        setIsDragging(true);
+      },
       onDrag: (param) => {
         const { location } = param;
         if (location.current.dropTargets.some((el) => el.data.isSchedulerDropTarget)) {
@@ -71,7 +73,10 @@ export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
           setDragPosition(location.current.input);
         }
       },
-      onDrop: () => setDragPosition(null),
+      onDrop: () => {
+        setDragPosition(null);
+        setIsDragging(false);
+      },
     });
   }, [isDraggable, getDragData]);
 

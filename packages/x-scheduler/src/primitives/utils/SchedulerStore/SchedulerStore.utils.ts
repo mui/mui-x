@@ -17,7 +17,7 @@ export function shouldUpdateOccurrencePlaceholder(
   const untypedNext = next as Record<string, any>;
 
   for (const key in untypedNext) {
-    if (key === 'start' || key === 'end' || key === 'originalStart') {
+    if (key === 'start' || key === 'end') {
       if (!adapter.isEqual(untypedNext[key], untypedPrevious[key])) {
         return true;
       }

@@ -296,7 +296,7 @@ export class SchedulerStore<
     // TODO: Try to do a single state update.
     this.setOccurrencePlaceholder(null);
 
-    const { eventId, start, end, originalStart, surfaceType } = placeholder;
+    const { eventId, start, end, originalEvent, surfaceType } = placeholder;
 
     const original = selectors.event(this.state, eventId);
     if (!original) {
@@ -321,7 +321,7 @@ export class SchedulerStore<
 
       return this.updateRecurringEvent({
         eventId,
-        occurrenceStart: originalStart,
+        occurrenceStart: originalEvent.start,
         changes,
         scope,
       });

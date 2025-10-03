@@ -7,7 +7,7 @@ import {
   EVENT_DRAG_PRECISION_MINUTE,
   buildIsValidDropTarget,
   EVENT_DRAG_PRECISION_MS,
-} from '../../utils/drag-utils';
+} from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../utils/useDropTarget';
 
